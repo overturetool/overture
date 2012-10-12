@@ -87,6 +87,34 @@ public class GenericTabItem
             
         }
     }
+    
+    private IResizeCallback callback = null;
+    public void registerResizeCallback(IResizeCallback callback){
+    	
+    	this.callback = callback;
+    }
+    
+    private void handleResize(){
+    	
+    	if(this.callback != null)
+    		this.callback.handleResize(this);
+    }
+    
+    
+    public boolean isCanvasOverrun()
+    {
+    	Rectangle rect = theFigure.getBounds();
+    	
+    	int figWidth = rect.width;
+    	int figHeight = rect.height;
+    	
+    	Point tabFolderSize = theTabItem.getParent().getSize();
+    	int tabFolderWidth = tabFolderSize.x;
+    	int tabFolderHeight = tabFolderSize.y;
+    	
+    	
+    	return figWidth > tabFolderWidth || figHeight > tabFolderHeight;
+    }
 
     public Long getXMax()
     {
