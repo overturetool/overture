@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.geometry.Point;
+import org.overture.ide.plugins.showtrace.viewer.NormalLabel;
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.*;
 
