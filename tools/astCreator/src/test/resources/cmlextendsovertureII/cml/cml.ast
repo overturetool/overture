@@ -1,0 +1,37 @@
+Packages
+base eu.compassresearch.ast.node;
+analysis eu.compassresearch.ast.analysis;
+ 
+ 
+Tokens
+
+
+Abstract Syntax Tree
+
+source {->  package='eu.compassresearch.ast.program'}
+      = {file} [name]: java_String (file): java_File
+      | {tcpStream} [ip]: java_String [port]: java_String (stream): java_Stream 
+      | {inputStream} [origin]: java_String (stream): java_Stream
+      ;
+
+/*
+ Declarations 
+*/
+declaration {-> package='eu.compassresearch.ast.declarations'}
+    // --- True declarations
+    = {channelName} 
+    	[singleType]: declaration.#Single.type
+    | #Single
+	;
+
+#Single {-> package='eu.compassresearch.ast.declarations'}
+	= {type}  
+    	[identifiers]:LexIdentifierToken* 
+    	(type):type
+	| {expression}
+    	[identifiers]:LexIdentifierToken* 
+    	[expression]:exp
+    ;
+
+    
+ Aspect Declaration
