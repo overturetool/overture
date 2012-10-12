@@ -12,7 +12,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 
 	private final Long ELEMENT_SIZE = 18L;
 
-	
 	public OverviewEventViewer()
 	{
 	}

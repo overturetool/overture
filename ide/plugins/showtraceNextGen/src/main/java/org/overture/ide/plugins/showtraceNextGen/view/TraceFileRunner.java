@@ -40,7 +40,6 @@ public class TraceFileRunner implements ITraceRunner
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
 	{
 		data.reset();
-		
 		ArchitectureViewer viewer = new ArchitectureViewer();
 		viewer.drawArchitecture(tab, data.getCPUs(), data.getBuses());	
 	}
@@ -54,7 +53,6 @@ public class TraceFileRunner implements ITraceRunner
 	public void drawCpu(GenericTabItem tab, Long cpuId, Long eventStartTime)
 			throws Exception 
 	{
-		System.out.println("************* CPU : " + cpuId + "**************");
 		drawView(tab, eventStartTime, EventViewType.CPU, cpuId);		
 	}
 	
@@ -74,13 +72,11 @@ public class TraceFileRunner implements ITraceRunner
 			viewer.drawView(tab, data.getConnectedBuses(cpuId));
 		}
 			
-		Long eventTime = eventStartTime;
-		boolean canvasOverrun = false; //TODO MAA: Check for canvas overrun
-		//int eventCounter = 0;
-		
 		//Draw events as long as there is room and time
-		while(!canvasOverrun && eventTime <= data.getMaxEventTime()) 
+		Long eventTime = eventStartTime;
+		while(!tab.isCanvasOverrun() && eventTime <= data.getMaxEventTime()) 
 		{
+			//Get all events at the current time
 			for(Object event : data.getEvents(eventTime))
 			{		
 				if(viewType == EventViewType.CPU && !data.isEventForCpu(event, cpuId)) 
@@ -91,14 +87,11 @@ public class TraceFileRunner implements ITraceRunner
 				if(handler == null)
 					throw new Exception("No eventhandler registered for event: " + event.getClass());
 
-				//System.out.println(eventCounter++ + " - " + ((INextGenEvent)event).getTime() +" CPU " + event.toString());
-				
 				if(!handler.handleEvent(event, viewType, tab))
 					throw new Exception("Failed to handle Overview event: " + event.getClass());						
 			}
 			
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
-			//canvasOverrun = tab.isCanvasOverrun();
 		}
 	}
 	

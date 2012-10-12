@@ -100,7 +100,6 @@ public class GenericTabItem
     		this.callback.handleResize(this);
     }
     
-    
     public boolean isCanvasOverrun()
     {
     	Rectangle rect = theFigure.getBounds();
@@ -130,7 +129,6 @@ public class GenericTabItem
     {
         return theTabItem.getText();
     }
-
 
     public Long getHorizontalSize()
     {
