@@ -93,17 +93,17 @@ public class GenericTabItem
         }
     }
     
-    private IResizeCallback callback = null;
-    public void registerResizeCallback(IResizeCallback callback){
-    	
-    	this.callback = callback;
-    }
-    
-    private void handleResize(){
-    	
-    	if(this.callback != null)
-    		this.callback.handleResize(this);
-    }
+//    private IResizeCallback callback = null;
+//    public void registerResizeCallback(IResizeCallback callback){
+//    	
+//    	this.callback = callback;
+//    }
+//    
+//    private void handleResize(){
+//    	
+//    	if(this.callback != null)
+//    		this.callback.handleResize(this);
+//    }
     
     public boolean isCanvasOverrun()
     {
@@ -163,8 +163,8 @@ public class GenericTabItem
             ymax = ymax < yfig ? yfig : ymax;
             theFigure.add(aFigure);
             
-            Dimension figSize = theFigure.getSize();
-            theCanvas.setSize(theFigure.getSize().width, theFigure.getSi)
+//            Dimension figSize = theFigure.getSize();
+//            theCanvas.setSize(theFigure.getSize().width, theFigure.getSi)
         }
     }
     
@@ -261,8 +261,8 @@ public class GenericTabItem
 			int currentX = folder.getSize().x;
 			int currentY = folder.getSize().y;
 			
-			if(currentX > lastX || currentY > lastY)
-				handleResize();
+//			if(currentX > lastX || currentY > lastY)
+//				handleResize();
 		}
     	
     }
