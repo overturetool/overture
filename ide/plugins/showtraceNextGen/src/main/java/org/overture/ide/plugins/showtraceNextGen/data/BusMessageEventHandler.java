@@ -24,8 +24,7 @@ public class BusMessageEventHandler extends EventHandler {
 		TraceThread receiverThread = bEvent.message.receiverThread != null ? data.getThread(bEvent.message.receiverThread.id) : null;
 		TraceBus bus = data.getBUS(new Long(bEvent.message.bus.id));
 		TraceObject fromObject = data.getObject(new Long(bEvent.message.object.id));
-		
-		
+
 		TraceObject toObject = data.getObject(new Long(bEvent.message.callerThread.object.id));
 		TraceOperation op = data.getOperation(bEvent.message.operation.classDef.name + bEvent.message.operation.name);
 		
@@ -39,6 +38,7 @@ public class BusMessageEventHandler extends EventHandler {
 			eventViewer.drawMessageActivated(tab, fromCpu, fromObject, bus, op);
 			break;
 		case COMPLETED:
+			System.out.println("BusMsg COMPLETED. From Object: "+ fromObject.getId() + " To Object: " + toObject.getId() + " event:" + event.toString());
 			eventViewer.drawMessageCompleted(tab, toCpu, callerthread, bus, op, fromObject);
 			
 	        //If this is a reply to an earlier request then unblock the thread which did the request

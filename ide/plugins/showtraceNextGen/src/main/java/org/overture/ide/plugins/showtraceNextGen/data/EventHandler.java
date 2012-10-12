@@ -28,7 +28,15 @@ public abstract class EventHandler {
 		//Set viewer used in handle
 		switch(viewType)
 		{
-			case OVERVIEW: eventViewer = overviewViewer;	break;
+			case OVERVIEW: 
+				eventViewer = overviewViewer;	
+				//if(conjectureData.IsConjecturePresent(event.time))
+				//{
+				//	Vector<TraceCPU> cpus = data.GetCpuFromThreadId(conjectureData.GetConjectureThreadId(event.time));
+				//  for(TraceCPU cpu : cpus)
+				//	  overviewViewer.DrawConjecture(cpu, conjectureName);
+				//}
+				break;
 			case CPU: eventViewer = cpuViewer; break;
 			default: return false;
 		}
