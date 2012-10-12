@@ -36,8 +36,8 @@ public class GenerateTree extends AstCreatorBaseMojo {
 
 		if (isCrcEqual(treeName)) {
 			if (toStringAstFile.exists() && isCrcEqual(toStringAstFile)) {
-				if (extendedast == null || extendedast.isEmpty()
-						|| isCrcEqual(new File(getResourcesDir(), extendedast))) {
+				if (extendedAst == null || extendedAst.isEmpty()
+						|| isCrcEqual(new File(getResourcesDir(), extendedAst))) {
 					getLog().info(
 							"Nothing to generate, source already up-to-date");
 					return;
@@ -46,7 +46,6 @@ public class GenerateTree extends AstCreatorBaseMojo {
 		}
 
 		if (deletePackageOnGenerate != null) {
-
 			for (String relatevePath : deletePackageOnGenerate) {
 				relatevePath = relatevePath.replace('.', File.separatorChar);
 				getLog().info("Deleteting folder: " + relatevePath);
@@ -68,10 +67,13 @@ public class GenerateTree extends AstCreatorBaseMojo {
 
 			getLog().info("Generator starting with input: " + treeName);
 			Environment env1 = null;
-			if (extendedast == null) {
+			if (extendedName == null && extendedAst != null) {
+			    getLog().error("Missing extendedName for AST extension of: " + extendedAst);
+			} else if (extendedAst == null) {
 				generateSingleAst(treeName, toStringAstFile, generated, env1);
 			} else {
-				File extendedAstFile = new File(getResourcesDir(), extendedast);
+				File extendedAstFile = new File(getResourcesDir(), extendedAst);
+			        getLog().info("Generator starting with extension input: " + extendedAstFile);
 				if (!extendedAstFile.exists()) {
 					getLog().equals(
 							"Extended AST file does not exist: "
@@ -81,7 +83,7 @@ public class GenerateTree extends AstCreatorBaseMojo {
 				try {
 					Main.create(new FileInputStream(treeName),
 							new FileInputStream(extendedAstFile), generated,
-							"Interpreter", generateVdm());
+							extendedName, generateVdm());
 				} catch (Exception e) {
 					getLog().error(e);
 				}

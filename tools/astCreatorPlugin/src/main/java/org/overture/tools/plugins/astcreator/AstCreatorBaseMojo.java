@@ -22,13 +22,21 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 * @required
 	 */
 	protected String ast;
-
+ 
 	/**
 	 * The prefix of the generated classes.
 	 * 
 	 * @parameter
 	 */
-	protected String extendedast;
+	protected String extendedAst;
+
+	/**
+	 * The prefix of the extended generated classes.
+	 * 
+	 * @parameter
+	 */
+	protected String extendedName;
+
 	// /**
 	// * The package of the generated classes.
 	// *
