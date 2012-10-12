@@ -150,32 +150,30 @@ public class CpuEventViewer  extends TraceEventViewer {
 	{
 		Long busX = bus.getX();
 		String toolTipLabel = op.getName();
-	
 		Long objX = obj.getX();
 		
-		//Add request line to object
-//		Line verticalMarkerSource = new Line(objX, tab.getYMax(), objX, tab.getYMax() + ELEMENT_SIZE);
-//		verticalMarkerSource.setLineWidth(MARKER_THICKNESS);
-//		verticalMarkerSource.setForegroundColor(ColorConstants.blue);
-//		tab.addFigure(verticalMarkerSource);
-		
-//		Long arrowYPos = tab.getYMax();
+		//Draw Bus Marker
 		drawMarker(tab, busX, tab.getYMax(), busX, tab.getYMax() + ELEMENT_SIZE, ColorConstants.darkGray);	
+		
+		//Draw Message Arrow
 		drawHorizontalArrow(tab, busX + BUSMSG_ARROW_OFFSET, objX - BUSMSG_ARROW_OFFSET, tab.getYMax(), " " , toolTipLabel, ColorConstants.darkGreen);
-		
-		//Draw Bus Marker		
-		
-		//Draw Request Line
-//		Line line = new Line(busX, arrowYPos, busX, arrowYPos);
-//		line.setForegroundColor(ColorConstants.lightGray);
-//		line.setDot();
-//		tab.addFigure(line);
-		
 	}
 	
 	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
-		//TODO 
+		
+		Long busX = bus.getX();
+		String toolTipLabel = " Return from  " + op.getName();
+
+		Long objX = object.getX();
+		Long arrowYPos = tab.getYMax();
+		
+		//Draw Bus Marker		
+		drawMarker(tab, busX, tab.getYMax(), busX, tab.getYMax() + ELEMENT_SIZE, ColorConstants.lightGray);	
+
+		//Draw message arrow
+		drawHorizontalArrow(tab, objX - BUSMSG_ARROW_OFFSET, busX+BUSMSG_ARROW_OFFSET, arrowYPos, " " , toolTipLabel, ColorConstants.darkGreen);
+		
 	}
 	
 	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
@@ -184,24 +182,11 @@ public class CpuEventViewer  extends TraceEventViewer {
 		String toolTipLabel = " Call " + op.getName();
 
 		Long objX = object.getX();
-		
-		//Add request line to object
-//		Line verticalMarkerSource = new Line(objX, tab.getYMax(), objX, tab.getYMax() + ELEMENT_SIZE);
-//		verticalMarkerSource.setLineWidth(MARKER_THICKNESS);
-//		verticalMarkerSource.setForegroundColor(ColorConstants.blue);
-//		tab.addFigure(verticalMarkerSource);
-		
 		Long arrowYPos = tab.getYMax();
 		
 		//Draw Bus Marker		
 		drawMarker(tab, busX, tab.getYMax(), busX, tab.getYMax() + ELEMENT_SIZE, ColorConstants.lightGray);	
-		
-		//Draw Request Line
-//		Line line = new Line(busX, arrowYPos, busX, arrowYPos);
-//		line.setForegroundColor(ColorConstants.lightGray);
-//		line.setDot();
-//		tab.addFigure(line);
-		
+
 		//Draw message arrow
 		drawHorizontalArrow(tab, objX - BUSMSG_ARROW_OFFSET, busX+BUSMSG_ARROW_OFFSET, arrowYPos, " " , toolTipLabel, ColorConstants.darkGreen);
 	

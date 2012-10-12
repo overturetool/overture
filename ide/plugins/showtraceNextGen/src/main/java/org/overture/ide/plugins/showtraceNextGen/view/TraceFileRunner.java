@@ -76,7 +76,7 @@ public class TraceFileRunner implements ITraceRunner
 			
 		Long eventTime = eventStartTime;
 		boolean canvasOverrun = false; //TODO MAA: Check for canvas overrun
-		int eventCounter = 0;
+		//int eventCounter = 0;
 		
 		//Draw events as long as there is room and time
 		while(!canvasOverrun && eventTime <= data.getMaxEventTime()) 
@@ -91,13 +91,13 @@ public class TraceFileRunner implements ITraceRunner
 				if(handler == null)
 					throw new Exception("No eventhandler registered for event: " + event.getClass());
 
-				System.out.println(eventCounter++ + " - " + ((INextGenEvent)event).getTime() +" CPU " + event.toString());
+				//System.out.println(eventCounter++ + " - " + ((INextGenEvent)event).getTime() +" CPU " + event.toString());
 				
 				if(!handler.handleEvent(event, viewType, tab))
 					throw new Exception("Failed to handle Overview event: " + event.getClass());						
 			}
 			
-			eventTime = data.getCurrentEventTime() + 1; //Get next event time
+			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
 	}
 	
