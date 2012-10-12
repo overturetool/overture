@@ -264,6 +264,7 @@ public class TraceData
         return res; 
 	}
 	
+	//Events
 	public Long getMaxEventTime()
 	{
 		return getEvents().lastKey();
@@ -331,6 +332,11 @@ public class TraceData
         {
 			isForThisCpu = (((NextGenOperationEvent)event).thread.cpu.id == cpuId.intValue());			
         }
+        else if(event instanceof NextGenBusMessageReplyRequestEvent)
+        {
+        	int fromCpu = ((NextGenBusMessageReplyRequestEvent)event).replyMessage.fromCpu.id;
+        	isForThisCpu = (fromCpu == cpuId.intValue());
+        }
         else if(event instanceof NextGenBusMessageEvent)
         {
         	NextGenBusMessageEvent busMsg = (NextGenBusMessageEvent)event;
@@ -343,7 +349,7 @@ public class TraceData
 				{
 					case ACTIVATE: 		isForThisCpu = (fromCpu == cpuId); break;
 					case COMPLETED: 	isForThisCpu = (toCpu == cpuId); break;
-					case REPLY_REQUEST: isForThisCpu = (fromCpu == cpuId); break;
+					//case REPLY_REQUEST: isForThisCpu = (fromCpu == cpuId); break;
 					case REQUEST: 		isForThisCpu = (fromCpu == cpuId); break;
 					default: 			isForThisCpu = false;
 				}

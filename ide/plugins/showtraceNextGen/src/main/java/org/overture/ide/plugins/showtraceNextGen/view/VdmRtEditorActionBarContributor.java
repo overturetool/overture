@@ -75,7 +75,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		};
 		openValidationAction.setToolTipText("Open the validation conjecture file");
 		openValidationAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor("IMG_OBJS_WARN_TSK"));
-		openValidationAction.setEnabled(false);
+		openValidationAction.setEnabled(true);
 
 		exportDiagramAction = new Action("Export to JPG")
 		{
@@ -90,7 +90,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		};
 		exportDiagramAction.setToolTipText("Save all diagrams as JPG");
 		exportDiagramAction.setImageDescriptor(TracefileViewerPlugin.getImageDescriptor((new StringBuilder("icons")).append(File.separator).append("print.gif").toString()));
-		exportDiagramAction.setEnabled(false);
+		exportDiagramAction.setEnabled(true);
 
 		moveHorizontalAction = new Action("Move time")
 		{
@@ -105,7 +105,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		};
 		moveHorizontalAction.setToolTipText("Move time in the views");
 		moveHorizontalAction.setImageDescriptor(TracefileViewerPlugin.getImageDescriptor((new StringBuilder("icons")).append(File.separator).append("panhor.gif").toString()));
-		moveHorizontalAction.setEnabled(false);
+		moveHorizontalAction.setEnabled(true);
 
 		moveNextHorizontalAction = new Action("Move next")
 		{
@@ -119,7 +119,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 			}
 		};
 		moveNextHorizontalAction.setToolTipText("Move time to next time");
-		moveNextHorizontalAction.setEnabled(false);
+		moveNextHorizontalAction.setEnabled(true);
 
 		movePreviousHorizontalAction = new Action("Move Previous")
 		{
@@ -133,7 +133,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 			}
 		};
 		movePreviousHorizontalAction.setToolTipText("Move time to Previous time");
-		movePreviousHorizontalAction.setEnabled(false);
+		movePreviousHorizontalAction.setEnabled(true);
 	}
 
 	public void contributeToMenu(IMenuManager manager)

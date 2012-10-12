@@ -43,8 +43,7 @@ public class TraceThread
     }
     
     public TraceObject getCurrentObject()
-    {
-    	
+    {	
     	return objectStack.peek();
     }
     

@@ -28,6 +28,7 @@ import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
@@ -79,13 +80,44 @@ public class GenericTabItem
         	theTabItem = new TabItem(theFolder, 0);
             theTabItem.setText(theName);
             theTabItem.setControl(theCanvas);
+            
             //theFigure.
             //theFigure.setSize(3000, 3000);
+            
+            theFolder.addControlListener(new ResizeListener(theFolder));
+            
             
             theFont = new Font(theTabItem.getDisplay(), "MS Gothic", 12, 0);
             return;
             
         }
+    }
+    
+    private IResizeCallback callback = null;
+    public void registerResizeCallback(IResizeCallback callback){
+    	
+    	this.callback = callback;
+    }
+    
+    private void handleResize(){
+    	
+    	if(this.callback != null)
+    		this.callback.handleResize(this);
+    }
+    
+    public boolean isCanvasOverrun()
+    {
+    	Rectangle rect = theFigure.getBounds();
+    	
+    	int figWidth = rect.width;
+    	int figHeight = rect.height;
+    	
+    	Point tabFolderSize = theTabItem.getParent().getSize();
+    	int tabFolderWidth = tabFolderSize.x;
+    	int tabFolderHeight = tabFolderSize.y;
+    	
+    	
+    	return figWidth > tabFolderWidth || figHeight > tabFolderHeight;
     }
 
     public Long getXMax()
@@ -102,7 +134,6 @@ public class GenericTabItem
     {
         return theTabItem.getText();
     }
-
 
     public Long getHorizontalSize()
     {
@@ -131,6 +162,9 @@ public class GenericTabItem
             int yfig = rect.y + rect.height - 2;
             ymax = ymax < yfig ? yfig : ymax;
             theFigure.add(aFigure);
+            
+            Dimension figSize = theFigure.getSize();
+            theCanvas.setSize(theFigure.getSize().width, theFigure.getSi)
         }
     }
     
@@ -202,6 +236,35 @@ public class GenericTabItem
         theTabItem.dispose();
         if(theFont != null)
             theFont.dispose();
+    }
+    
+    final class ResizeListener implements org.eclipse.swt.events.ControlListener
+    {
+    	private int lastX;
+    	private int lastY;
+    	
+    	public ResizeListener(TabFolder tabFolder)
+    	{
+    		Point size = tabFolder.getSize();
+    		lastX = size.x;
+    		lastY = size.y;
+    	}
+    	
+		public void controlMoved(ControlEvent e) {
+			//Do nothing
+		}
+
+		public void controlResized(ControlEvent e) {
+			
+			TabFolder folder = (TabFolder) e.getSource();
+			
+			int currentX = folder.getSize().x;
+			int currentY = folder.getSize().y;
+			
+			if(currentX > lastX || currentY > lastY)
+				handleResize();
+		}
+    	
     }
 
 }
