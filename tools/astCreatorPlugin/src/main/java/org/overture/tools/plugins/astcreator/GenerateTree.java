@@ -46,7 +46,6 @@ public class GenerateTree extends AstCreatorBaseMojo {
 		}
 
 		if (deletePackageOnGenerate != null) {
-
 			for (String relatevePath : deletePackageOnGenerate) {
 				relatevePath = relatevePath.replace('.', File.separatorChar);
 				getLog().info("Deleteting folder: " + relatevePath);
@@ -68,10 +67,18 @@ public class GenerateTree extends AstCreatorBaseMojo {
 
 			getLog().info("Generator starting with input: " + treeName);
 			Environment env1 = null;
-			if (extendedAst == null) {
+			if (extendedName == null && extendedAst != null) {
+				getLog().error(
+						"Missing extendedName for AST extension of: "
+								+ extendedAst);
+			} else if (extendedAst == null) {
 				generateSingleAst(treeName, toStringAstFile, generated, env1);
 			} else {
 				File extendedAstFile = new File(getResourcesDir(), extendedAst);
+				getLog().info(
+						"Generator starting with extension input: "
+								+ extendedAstFile);
+
 				if (!extendedAstFile.exists()) {
 					getLog().equals(
 							"Extended AST file does not exist: "

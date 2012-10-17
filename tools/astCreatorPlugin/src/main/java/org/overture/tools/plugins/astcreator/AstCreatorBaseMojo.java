@@ -21,7 +21,7 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	 * @required
 	 */
 	protected String ast;
-
+ 
 	/**
 	 * The prefix of the generated classes.
 	 * 
@@ -30,8 +30,7 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	protected String extendedAst;
 
 	/**
-	 * 
-	 * The name for the extension, will be used to name extension classes
+	 * The prefix of the extended generated classes.
 	 * 
 	 * @parameter
 	 */
