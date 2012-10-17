@@ -11,7 +11,8 @@ import com.lausdahl.ast.creator.Main;
 public class CmlExtendsOvertureTest extends TestCase {
 
 	public void test() throws Exception {
-		InputStream cmlSource = getClass().getResourceAsStream("/cml.ast");
+		InputStream cmlSource = getClass().getResourceAsStream(
+				"/cmlextendsovertureII/cml/cml.ast");
 		InputStream ovtSource = getClass().getResourceAsStream(
 				"/cmlextendsovertureII/ovt/overtureII.astv2");
 		File outputFolder = new File("../../testdata/generatedCode");

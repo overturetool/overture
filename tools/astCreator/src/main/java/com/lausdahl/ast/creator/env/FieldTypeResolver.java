@@ -12,11 +12,17 @@ public class FieldTypeResolver {
 
 		IInterfaceDefinition type = null;
 		try {
-			type = env.lookupTagPath(unresolvedTypeName, false);
+			// favor specialized over general
+			if (type == null)
+				type = env.lookupTagPath(unresolvedTypeName, false);
+
+			// if too many specialized options generlize
 			if (type == null)
 				type = env.lookupTagPath(unresolvedTypeName, true);
+
 			if (type == null)
 				type = searchType(unresolvedTypeName, env);
+
 		} catch (AstCreatorException e) {
 			e.printStackTrace();
 		}

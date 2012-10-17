@@ -245,7 +245,7 @@ exp {-> package='eu.compassresearch.ast.expressions'}
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
-    |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp /*cml*/
+    |   {if} [test]:exp [then]:exp [elseList]:exp.elseIf* [else]:exp /*cml*/
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
@@ -483,10 +483,6 @@ type {-> package='eu.compassresearch.ast.types'}
     |   {real} 
     ;
 
-field {-> package='eu.compassresearch.ast.types'}
-    =   {field} [access]:specifier.access [tagname]:LexNameToken 
-                [tag]:java_String (type):type [equalityAbstraction]:java_Boolean
-    ;
 
 specifier  {-> package='eu.compassresearch.ast.types'}
   = {access} [access]:access [static]:static [async]:async [location]:location 

@@ -85,7 +85,8 @@ public class ExtensionGenerator2 {
 			Environment baseEnv) {
 		// Copy over all class definitions
 		for (IClassDefinition cdef : baseEnv.getClasses())
-			result.getClasses().add(cdef);
+			if (!isUtilityOrTemplateClass(cdef, baseEnv))
+				result.getClasses().add(cdef);
 
 		// Copy over all interfaces from base
 		for (IInterfaceDefinition idef : baseEnv.getInterfaces())
@@ -103,7 +104,7 @@ public class ExtensionGenerator2 {
 	// - Create function: boolean willGenerateExtensionFor(iDef,baseEnv)
 	// - Create function: boolean isUtilityOrTemplateClass(iDef, env)
 	// - Create function: void includeClassesFromExtension(result, extEnv)
-	private static boolean willGenerateExtentionFor(IInterfaceDefinition iDef,
+	private static boolean willGenerateExtensionFor(IInterfaceDefinition iDef,
 			Environment base) {
 		IInterfaceDefinition overtureEquivalent = base.lookUpType(iDef
 				.getName().getName());
@@ -122,9 +123,10 @@ public class ExtensionGenerator2 {
 	private static void includeClassesFromExtension(Environment result,
 			Environment ext, Environment base) {
 		for (IClassDefinition cDef : ext.getClasses()) {
-			if (!willGenerateExtentionFor(cDef, base))
+			if (!willGenerateExtensionFor(cDef, base)) {
 				if (!isUtilityOrTemplateClass(cDef, ext))
 					result.getClasses().add(cDef);
+			}
 		}
 	}
 
@@ -134,7 +136,7 @@ public class ExtensionGenerator2 {
 	private static void includeInterfacesFromExtension(Environment result,
 			Environment extEnv, Environment base) {
 		for (IInterfaceDefinition iDef : extEnv.getInterfaces())
-			if (!willGenerateExtentionFor(iDef, base))
+			if (!willGenerateExtensionFor(iDef, base))
 				result.getInterfaces().add(iDef);
 
 	}
@@ -172,7 +174,7 @@ public class ExtensionGenerator2 {
 			Environment result, Environment ext, Environment base) {
 		Map<String, IInterfaceDefinition> replacementMap = new HashMap<String, IInterfaceDefinition>();
 		for (IInterfaceDefinition iDef : ext.getInterfaces()) {
-			if (willGenerateExtentionFor(iDef, base)) {
+			if (willGenerateExtensionFor(iDef, base)) {
 				// Lookup base production in the base environment, e.g. the one
 				// to extend
 				IInterfaceDefinition baseProduction = base.lookUpType(iDef
@@ -341,9 +343,15 @@ public class ExtensionGenerator2 {
 			if (def instanceof BaseClassDefinition) {
 				BaseClassDefinition bcdef = (BaseClassDefinition) def;
 				for (Field f : bcdef.getFields()) {
-					IInterfaceDefinition type = (f.type == null ? result
-							.lookupTagPath(f.getUnresolvedType(), true)
-							: f.type);
+					String rawTypeToResolved = f.getUnresolvedType();
+					IInterfaceDefinition type = null;
+					if (f.type != null)
+						type = f.type;
+					else
+						type = result.lookupTagPath(rawTypeToResolved, false);
+					if (result.treeNodeInterfaces.containsKey(type))
+						type = result.treeNodeInterfaces.get(type);
+
 					if (type != null) {
 						f.type = type;
 						if (type instanceof ExternalJavaClassDefinition) {
@@ -354,12 +362,10 @@ public class ExtensionGenerator2 {
 								f.isTokenField = true;
 						}
 					} else
-						throw new AstCreatorException(
-								"The extension points to production: "
-										+ f.getUnresolvedType()
-										+ " in alternative "
-										+ def.getName().getName()
-										+ " which does not exists.", null, true);
+						throw new AstCreatorException("Field '" + f.toString()
+								+ "' has unresolved type: \""
+								+ f.getUnresolvedType() + "\" in alternative "
+								+ def.getName().getName() + ".", null, true);
 				}
 			}
 
@@ -498,7 +504,7 @@ public class ExtensionGenerator2 {
 		c2t = ext.classToType.entrySet();
 		for (Entry<IClassDefinition, ClassType> e : c2t)
 			// if (!isTemplateClass(e.getKey(), ext))
-			if (!willGenerateExtentionFor(e.getKey(), base))
+			if (!willGenerateExtensionFor(e.getKey(), base))
 				result.classToType.put(e.getKey(), e.getValue());
 
 	}

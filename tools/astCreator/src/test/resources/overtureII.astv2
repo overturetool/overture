@@ -306,8 +306,8 @@ maplet {-> package='org.overture.ast.patterns'}
     ;    
     
 pair {-> package='org.overture.ast.patterns'}
-    = {patternType} [pattern]:pattern (type):type
-    | {patternListType} [patterns]:pattern* (type):type
+    = {patternType} [pattern]:pattern 
+    | {patternListType} [patterns]:pattern* 
     ; 
     
 bind {-> package='org.overture.ast.patterns'}
@@ -686,7 +686,7 @@ Aspect Declaration
     ;
     
 %pair
-    = [resolved]:java_Boolean
+    = [resolved]:java_Boolean (type):type
     ;
     
 %type->#invariant
@@ -705,3 +705,4 @@ Aspect Declaration
 %objectDesignator
     = [location]:location
     ;
+    

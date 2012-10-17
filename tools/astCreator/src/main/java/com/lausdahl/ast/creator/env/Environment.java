@@ -163,8 +163,9 @@ public class Environment extends BaseEnvironment {
 	 * For example: exp.#Binary.plus
 	 * 
 	 * @param path
+	 *            - the tag path to look up
 	 * @param generalize
-	 *            - if true: lookupTagPath will generalize to the must general
+	 *            - if true: lookupTagPath will generalize to the most general
 	 *            class, which must be unique, if not an AstCreatorException is
 	 *            thrown.
 	 * 
@@ -173,12 +174,19 @@ public class Environment extends BaseEnvironment {
 	 * 
 	 * @return The unique alternative or production pointed out by the path.
 	 * @throws AstCreatorException
+	 *             - when a path look up gives an ambiguous result with
+	 *             generalize true.
 	 */
 	public IInterfaceDefinition lookupTagPath(String path, boolean generalize)
 			throws AstCreatorException {
-
+		if (path == null)
+			return null;
 		List<IClassDefinition> possibleResult = null;
+
 		String[] parts = path.split("\\.");
+
+		if (parts.length == 1)
+			return lookupByTag(path);
 
 		// okay we have a path a.b.c and so on.
 		// Lookup all interface and classes for each a.b.c... and
@@ -192,6 +200,10 @@ public class Environment extends BaseEnvironment {
 				if (cdef.getName().getTag().equals(part))
 					current.add(cdef);
 			}
+
+			if (current.size() == 0)
+				throw new AstCreatorException("The path \"" + path
+						+ "\" does not exists from " + part, null, true);
 
 			// first iteration, initialise possibleResult rather than search for
 			// a valid parent.
@@ -212,13 +224,14 @@ public class Environment extends BaseEnvironment {
 						}
 				possibleResult.removeAll(tbr);
 
-			} else {
-				// suppose 'a.b.c' is the path and we are in the second
-				// iteration.
-				// Then 'a' is in possibleResult and 'b' and 'b'' will be in
-				// current.
-				// now only 'b' (not 'b'') has 'a' as parent and therefore the
-				// validContinuation is only 'b'.
+			}
+			// suppose 'a.b.c' is the path and we are in the second
+			// iteration.
+			// Then 'a' is in possibleResult and 'b' and 'b'' will be in
+			// current.
+			// now only 'b' (not 'b'') has 'a' as parent and therefore the
+			// validContinuation is only 'b'.
+			if (possibleResult != current) {
 				List<IClassDefinition> validContinuation = new LinkedList<IClassDefinition>();
 				for (IClassDefinition parentIdef : possibleResult)
 					for (IClassDefinition childIdef : current) {
@@ -231,22 +244,24 @@ public class Environment extends BaseEnvironment {
 					}
 				possibleResult = validContinuation;
 			}
+
 		}
 
 		// So we may end up with multiple result that are inheritances of
 		// each other, this makes sure we only return the most general one.
 		List<IClassDefinition> tbr = new LinkedList<IClassDefinition>();
-		for (int i = 0; i < possibleResult.size(); i++)
-			for (int j = i + 1; j < possibleResult.size(); j++) {
-				IClassDefinition ith = possibleResult.get(i);
-				IClassDefinition jth = possibleResult.get(j);
-				if (ith == jth)
-					tbr.add(jth);
-				else if (isSuperTo(ith, jth))
-					tbr.add(jth);
-				else if (isSuperTo(jth, ith))
-					tbr.add(ith);
-			}
+		if (generalize)
+			for (int i = 0; i < possibleResult.size(); i++)
+				for (int j = i + 1; j < possibleResult.size(); j++) {
+					IClassDefinition ith = possibleResult.get(i);
+					IClassDefinition jth = possibleResult.get(j);
+					if (ith == jth)
+						tbr.add(jth);
+					else if (isSuperTo(ith, jth))
+						tbr.add(jth);
+					else if (isSuperTo(jth, ith))
+						tbr.add(ith);
+				}
 
 		for (IClassDefinition d : tbr)
 			possibleResult.remove(d);
@@ -264,15 +279,16 @@ public class Environment extends BaseEnvironment {
 			return found;
 		}
 
-		if (generalize) {
-			StringBuilder message = new StringBuilder();
-			message.append("Searching for tag \"" + path
-					+ "\" gave multiple possibilities:\n");
-			for (IInterfaceDefinition p : possibleResult)
-				message.append("\t" + p.toString() + "\n");
-			throw new AstCreatorException(message.toString(), null, true);
-		} else
-			return null;
+		StringBuilder message = new StringBuilder();
+		message.append("Searching for tag \"" + path
+				+ "\" gave multiple possibilities:\n");
+		for (IInterfaceDefinition p : possibleResult)
+			message.append("\t" + p.toString() + "\n");
+		message.append("Typically this means that \""
+				+ path
+				+ "\" is missing its prefix. E.g. [else]:elseIf in the definition file "
+				+ "instead of [else]:exp.elseIf, which would disambiguate elseIf from std.elseIf.");
+		throw new AstCreatorException(message.toString(), null, true);
 	}
 
 	public IInterfaceDefinition lookupByTag(String tag) {

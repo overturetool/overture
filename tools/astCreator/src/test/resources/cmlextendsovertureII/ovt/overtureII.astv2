@@ -67,7 +67,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
-    |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
+    |   {if} [test]:exp [then]:exp [elseList]:exp.elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
@@ -340,8 +340,8 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [measure]:LexNameToken
                             
-                            (predef):explicitFunction 
-                            (postdef):explicitFunction
+                            (predef):definition.explicitFunction 
+                            (postdef):definition.explicitFunction
                             (measureDef):definition
                             (paramDefinitionList):definition*
                             
@@ -367,8 +367,8 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp 
                             [measure]:LexNameToken 
                              
-                            (predef):explicitFunction 
-                            (postdef):explicitFunction 
+                            (predef):definition.explicitFunction 
+                            (postdef):definition.explicitFunction 
                             (measureDef):definition
                             
                             (recursive):java_Boolean
@@ -686,7 +686,7 @@ Aspect Declaration
     ;
     
 %pair
-    = [resolved]:java_Boolean
+    = [resolved]:java_Boolean (type):type
     ;
     
 %type->#invariant

@@ -39,8 +39,12 @@ public class Field {
 	public List<String> getRequiredImports(Environment env) {
 		List<String> imports = new Vector<String>();
 		if (isList) {
-			imports.add(getInternalType(unresolvedType, env).getName()
-					.getCanonicalName());
+			if (type == null)
+				imports.add(getInternalType(unresolvedType, env).getName()
+						.getCanonicalName());
+			else
+				imports.add(type.getName().getCanonicalName());
+
 			if (isTypeExternalNotNode()) {
 				imports.add(Environment.vectorDef.getName().getCanonicalName());
 			}
@@ -74,7 +78,8 @@ public class Field {
 			imports.add(defIntf.getName().getCanonicalName());
 		}
 
-		IClassDefinition def = env.lookUp(getType(env));
+		IClassDefinition def = env.lookUpPreferSameContext(getType(env),
+				type.getAstPackage());
 		if (def != null) {
 			imports.add(def.getName().getCanonicalName());
 		}
