@@ -143,7 +143,7 @@ public class ExtensionGenerator2 {
 
 	private static JavaName makeExtensionJavaName(
 			IInterfaceDefinition baseProduction, Environment ext,
-			Environment base,String extensionTargetPackage) {
+			Environment base, String extensionTargetPackage) {
 		String newNameStr = ext.getName()
 				+ baseProduction.getName().getRawName();
 		JavaName newName = new JavaName(ext.getDefaultPackage(), newNameStr);
@@ -154,13 +154,13 @@ public class ExtensionGenerator2 {
 		return newName;
 	}
 
-//	private static String computeExtensionPackageName(Environment ext,
-//			Environment base, IInterfaceDefinition baseProduction) {
-//		String cmlPackage = ext.getAstPackage()
-//				+ baseProduction.getName().getPackageName()
-//						.replace(base.getAstPackage(), "");
-//		return cmlPackage;
-//	}
+	// private static String computeExtensionPackageName(Environment ext,
+	// Environment base, IInterfaceDefinition baseProduction) {
+	// String cmlPackage = ext.getAstPackage()
+	// + baseProduction.getName().getPackageName()
+	// .replace(base.getAstPackage(), "");
+	// return cmlPackage;
+	// }
 
 	// 4) Generate interfaces and base classes for the interfaces to be extended
 	// in the ext env
@@ -181,7 +181,7 @@ public class ExtensionGenerator2 {
 				// Create the new Cml Production as a sub-interface of the base
 				// production
 				JavaName newName = makeExtensionJavaName(baseProduction, ext,
-						base,iDef.getName().getPackageName());
+						base, iDef.getName().getPackageName());
 				InterfaceDefinition extProduction = new InterfaceDefinition(
 						newName, result.getAstPackage());
 				extProduction.supers.add(baseProduction);
@@ -262,9 +262,9 @@ public class ExtensionGenerator2 {
 				System.out.println("Crap!");
 
 			// In our running example let us Create the PCmlExpBase class
-			String cmlPackage = e.getValue().getName().getPackageName(); 
+			String cmlPackage = e.getValue().getName().getPackageName();
 			JavaName newName = makeExtensionJavaName(baseProductionBase, ext,
-					base,cmlPackage);
+					base, cmlPackage);
 			IClassDefinition extensionProductionBase = ClassFactory.create(
 					cmlPackage, newName.getRawName(), baseProductionBase,
 					base.classToType.get(baseProductionBase), result);
@@ -532,6 +532,10 @@ public class ExtensionGenerator2 {
 
 		result.setTemplateAnalysisPackage(base.getAnalysisPackage());
 		result.setTemplateDefaultPackage(base.getDefaultPackage());
+
+		System.out.println("***********************************************");
+		System.out.println("AST Creator Extensions");
+		System.out.println("***********************************************");
 
 		// 1 every class and interface from the base environment is added to
 		// result
