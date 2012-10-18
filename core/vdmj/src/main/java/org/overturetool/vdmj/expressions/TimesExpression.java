@@ -71,9 +71,13 @@ public class TimesExpression extends NumericBinaryExpression
 		{
 			return rn;
 		}
-		else if (ln instanceof NaturalType && rn instanceof NaturalType)
+		else if (ln instanceof NaturalType)
 		{
 			return ln;
+		}
+		else if (rn instanceof NaturalType)
+		{
+			return rn;
 		}
 		else
 		{
