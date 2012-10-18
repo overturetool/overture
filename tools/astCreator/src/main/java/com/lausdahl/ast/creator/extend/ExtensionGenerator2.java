@@ -39,7 +39,7 @@ import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2 {
 
-	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen\n";
+	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen, Anders Kaels Malmos\n";
 	private final Environment base;
 
 	public ExtensionGenerator2(Environment base) {

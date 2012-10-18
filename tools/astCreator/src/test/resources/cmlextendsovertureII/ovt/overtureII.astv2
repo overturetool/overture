@@ -34,8 +34,6 @@ Tokens
   java_Integer = 'java:java.lang.Integer';
   java_String = 'java:java.lang.String';
   java_Long = 'java:java.lang.Long';
-  java_File  = 'java:java.io.File';
-  java_Stream = 'java:java.io.InputStream';
      
   static = 'static';
   async = 'async';
@@ -67,7 +65,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
     |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
-    |   {if} [test]:exp [then]:exp [elseList]:exp.elseIf* [else]:exp
+    |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
     |   {iota} [bind]:bind [predicate]:exp
     |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
@@ -195,16 +193,12 @@ exp {-> package='org.overture.ast.expressions'}
 modifier {-> package='org.overture.ast.expressions'}
     = {record} [tag]:LexIdentifierToken [value]:exp
     ;
-    
+//AKM: Found in VDM spec pattern should a list of patterns
 alternative {-> package='org.overture.ast.expressions'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern 
+    = {case} [location]:location [cexp]:exp [pattern]:pattern* 
              [result]:exp [defs]:definition*  (type):type (expType):type
     ;
-
-
-/*
- Types
-*/    
+    
 type {-> package='org.overture.ast.types'}
     =   #basic
     |   {bracket} (type):type
@@ -340,8 +334,8 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [measure]:LexNameToken
                             
-                            (predef):definition.explicitFunction 
-                            (postdef):definition.explicitFunction
+                            (predef):explicitFunction 
+                            (postdef):explicitFunction
                             (measureDef):definition
                             (paramDefinitionList):definition*
                             
@@ -361,14 +355,14 @@ definition {-> package='org.overture.ast.definitions'}
     |   {external} (state):definition [readOnly]:java_Boolean (oldname):LexNameToken
     |   {implicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatterns]:pair.patternListType*
-                            [result]:pair.patternType
+                            [result]:pair.patternType*  //AKM: Found in VDM spec, should be a list of patternpairs
                             (body):exp
                             [precondition]:exp 
                             [postcondition]:exp 
                             [measure]:LexNameToken 
                              
-                            (predef):definition.explicitFunction 
-                            (postdef):definition.explicitFunction 
+                            (predef):explicitFunction 
+                            (postdef):explicitFunction 
                             (measureDef):definition
                             
                             (recursive):java_Boolean
@@ -686,7 +680,7 @@ Aspect Declaration
     ;
     
 %pair
-    = [resolved]:java_Boolean (type):type
+    = [resolved]:java_Boolean
     ;
     
 %type->#invariant
