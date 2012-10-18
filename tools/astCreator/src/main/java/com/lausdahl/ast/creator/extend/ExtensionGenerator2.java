@@ -344,8 +344,11 @@ public class ExtensionGenerator2 {
 					IInterfaceDefinition type = null;
 					if (f.type != null)
 						type = f.type;
-					else
+					else{
 						type = result.lookupTagPath(rawTypeToResolved, false);
+						if(result.treeNodeInterfaces.containsKey(type))
+							type = result.treeNodeInterfaces.get(type);
+					}
 					if (result.treeNodeInterfaces.containsKey(type))
 						type = result.treeNodeInterfaces.get(type);
 
