@@ -185,9 +185,6 @@ public class Environment extends BaseEnvironment {
 
 		String[] parts = path.split("\\.");
 
-		if (parts.length == 1)
-			return lookupByTag(path);
-
 		// okay we have a path a.b.c and so on.
 		// Lookup all interface and classes for each a.b.c... and
 		// see if we can build a valid path of object e.g. here a is
@@ -205,7 +202,7 @@ public class Environment extends BaseEnvironment {
 				throw new AstCreatorException("The path \"" + path
 						+ "\" does not exists from " + part, null, true);
 
-			// first iteration, initialise possibleResult rather than search for
+			// first iteration, initialize possibleResult rather than search for
 			// a valid parent.
 			if (possibleResult == null) {
 				possibleResult = current;
@@ -231,18 +228,20 @@ public class Environment extends BaseEnvironment {
 			// current.
 			// now only 'b' (not 'b'') has 'a' as parent and therefore the
 			// validContinuation is only 'b'.
-			if (possibleResult != current) {
+			boolean didSomething = false;
+			if (possibleResult != current || possibleResult.size() > 1) {
 				List<IClassDefinition> validContinuation = new LinkedList<IClassDefinition>();
 				for (IClassDefinition parentIdef : possibleResult)
 					for (IClassDefinition childIdef : current) {
 
 						if (isSuperTo(parentIdef, childIdef)) {
+							didSomething = true;
 							validContinuation.add(childIdef);
 							if (generalize)
 								validContinuation.add(parentIdef);
 						}
 					}
-				possibleResult = validContinuation;
+				if (didSomething) possibleResult = validContinuation;
 			}
 
 		}

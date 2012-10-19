@@ -2,12 +2,12 @@
 Packages
 base eu.compassresearch.ast.node;
 analysis eu.compassresearch.ast.analysis;
-  
+
 Tokens
   java_File = 'java:java.io.File';
   java_Stream = 'java:java.io.InputStream';
-  
-     
+
+
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
  *
@@ -68,7 +68,6 @@ definition {-> package='eu.compassresearch.ast.definitions'}
     		(state):definition 
     		[readOnly]:java_Boolean 
     		(oldname):LexNameToken
-    |   #function
     |   {inherited} 
     		(superdef):definition 
     		[oldname]:LexNameToken //is access missing here
@@ -98,7 +97,7 @@ definition {-> package='eu.compassresearch.ast.definitions'}
     		(invType):type.#invariant 
             [invPattern]:pattern 
             [invExpression]:exp 
-            [invdef]:definition.explicitFunction 
+            [invdef]:definition.explicitFunction
 			[infinite]:java_Boolean //is access missing here
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
@@ -137,7 +136,7 @@ definition {-> package='eu.compassresearch.ast.definitions'}
  	   | {operation} 
  	   		[operations]:definition.#operation*
  	   | {function} 
- 	   		[functionDefinitions]:definition.#function*
+ 	   		[functionDefinitions]:definition*
  	   | {value} 
  	   		[valueDefinitions]: definition*
  	   | {initial} 
@@ -183,100 +182,12 @@ definition {-> package='eu.compassresearch.ast.definitions'}
     ;
 
 /*
-#function {-> package='eu.compassresearch.ast.definitions'}
-    =  {explicit}  [typeParams]:LexNameToken* 
-                            [paramPatternList]:pattern**
-                            (type):type.function 
-                            (body):exp 
-                            [precondition]:exp 
-                            [postcondition]:exp
-                            [measure]:LexNameToken
-                            
-                            (predef):definition.explicitFunction 
-                            (postdef):definition.explicitFunction
-                            (measureDef):definition
-                            (paramDefinitionList):definition*
-                            
-                            (recursive):java_Boolean
-                            (isUndefined):java_Boolean
-                            (measureLexical):java_Integer
-                            
-                            (expectedResult):type
-                            (actualResult):type
-                            
-                            (isTypeInvariant):java_Boolean
-                            (isCurried):java_Boolean 
-                            
-                            (typeInvariant):java_Boolean
-                            //[poluFuncs]:???Map<TypeList, FunctionValue>
-	|   {implicit}  [typeParams]:LexNameToken* 
-                            [paramPatterns]:pair.patternListType*
-                            [result]:pair*
-                            [precondition]:exp 
-                            [postcondition]:exp 
-                            (predef):definition.explicitFunction 
-                            (postdef):definition.explicitFunction 
-                            (measureDef):definition
-                            (recursive):java_Boolean
-                            (isUndefined):java_Boolean 
-                            (measureLexical):java_Integer
-                             
-                            (actualResult):type
-                            (type):type.function
-                            //[poluFuncs]:???Map<TypeList, FunctionValue>
-	;
-*/
-
-/*
     Expressions
 */    
 exp {-> package='eu.compassresearch.ast.expressions'}
-    =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition /*cml*/
-    |   #Unary /*cml*/
-    |   #Binary /*cml*/
-    |   {bracketed} [expression]:exp /*cml*/
-    |   {cases} [expression]:exp [cases]:alternative.case* [others]:exp /*cml*/
-    |   {elseIf} [elseIf]:exp [then]:exp  /*cml*/
-    |   {exists1}  [bind]:bind [predicate]:exp [def]:definition
-    |   {exists} [bindList]:multipleBind* [predicate]:exp
-    |   {ioat} [bindList]:multipleBind* [predicate]:exp
-    |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
-    |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
-    |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.explicitFunction (impdef):definition.implicitFunction
-    |   {history} [hop]:LexToken [opnames]:LexNameToken*
-    |   {if} [test]:exp [then]:exp [elseList]:exp.elseIf* [else]:exp /*cml*/
-    |   {iota} [bind]:bind [predicate]:exp
-    |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
-    |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
-    |   {isOfClass} [className]:LexNameToken (classType):type.class [exp]:exp
-    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* (functionType):type.function     
-    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp [def]:definition.multiBindList
-    |   {letDef} [localDefs]:definition* [expression]:exp
-    |   {def} [localDefs]:definition* [expression]:exp
-    |   #Map
-    |   {maplet}  [left]:exp [right]:exp
-    |   {mkBasic} [arg]:exp
-    |   {mkType} [typeName]:LexNameToken [args]:exp* (recordType):type.#invariant.record (argTypes):type*
-    |   {mu} [record]:exp (recordType):type.#invariant.record [modifiers]:modifier.record* (modTypes):type*
-    |   {new} [className]:LexIdentifierToken [args]:exp* (classdef):definition.#paragraph.class (ctorDefinition):definition
-    |   {nil} 
-    |   {notYetSpecified} 
-    |   {postOp} [opname]:LexNameToken (preexpression):exp (postexpression):exp (errors):case.error* (state):definition.#paragraph.state [errorLocation]:location
-    |   {pre} [function]:exp [args]:exp*
-    |   {preOp} [opname]:LexNameToken (expression):exp  (errors):case.error* (state):definition.#paragraph.state
-    |   {sameBaseClass} [left]:exp [right]:exp
-    |   {sameClass} [left]:exp [right]:exp
-    |   {self} [name]:LexNameToken
-    |   #Seq
+    =   {bracketed} [expression]:exp /*cml*/
     |   #Set
-    |   #literal
     |   {stateInit} (state):definition.#paragraph.state  
-    |   {subclassResponsibility} 
-    |   {subseq} [seq]:exp [from]:exp [to]:exp (ftype):type (ttype):type
-    |   {tuple} [args]:exp* (types):type*
-    |   {undefined}
-    |   {variable} [name]:LexNameToken [original]:java_String (vardef):definition
     |   {name} [name]:LexNameToken        
     |   {record} [name]:LexNameToken [exprs]: exp*
     |   {tupleSelect} [tuple]:exp [entry]:java_Integer
@@ -293,115 +204,14 @@ exp {-> package='eu.compassresearch.ast.expressions'}
  	| {enumeration} [renamePairs]:pair.rename*
     ;
     
-#literal {-> package='eu.compassresearch.ast.expressions'}
-	= {string} [value]:LexStringToken
-	| {quote} [value]:LexQuoteToken   
-	| {char} [value]:LexCharacterToken
-	| {boolean} [value]:LexBooleanToken 
-	| {int} [value]:LexIntegerToken
-	| {real} [value]:LexRealToken
-    ; 
-   
-#Unary {-> package='eu.compassresearch.ast.expressions'}
-    =   {absolute} 
-    |   {cardinality}  
-    |   {distConcat} 
-    |   {distIntersect}  
-    |   {distMerge} 
-    |   {distUnion} 
-    |   {elements}
-    |   {floor}  
-    |   {head} 
-    |   {indices}  
-    |   {len} 
-    |   {mapDomain} 
-    |   {mapInverse} (mapType):type.#Map
-    |   {mapRange} 
-    |   {not}  
-    |   {powerSet} 
-    |   {reverse}  
-    |   {tail} 
-    |   {unaryMinus}
-    |   {unaryPlus}       
-    ;
-
-
-#Binary {-> package='eu.compassresearch.ast.expressions'}
-    =   #Boolean
-    |   {comp} 
-    |   {domainResBy}
-    |   {domainResTo}
-    |   {equals}
-    |   {inSet}
-    |   {mapUnion}
-    |   {notEqual}
-    |   {notInSet}
-    |   #Numeric
-    |   {modify}
-    |   {properSubset}
-    |   {rangeResBy}
-    |   {rangeResTo}
-    |   {seqConcat}
-    |   {setDifference}
-    |   {setIntersect}
-    |   {setUnion}
-    |   {starStar}
-    |   {subset}
-    ;
-    
-
-    
-#Boolean {-> package='eu.compassresearch.ast.expressions'}
-    =   {and}
-    |   {equivalent}
-    |   {implies}
-    |   {or}
-    ;
-    
-#Numeric {-> package='eu.compassresearch.ast.expressions'}
-    =   {div}
-    |   {divide}
-    |   {greaterEqual}
-    |   {greater}
-    |   {lessEqual}
-    |   {less}
-    |   {mod}
-    |   {plus}
-    |   {rem}
-    |   {substract}
-    |   {times}
-    ;
-    
-#Map {-> package='eu.compassresearch.ast.expressions'}
-    =   {mapComp} [first]:exp.maplet [bindings]:multipleBind* [predicate]:exp
-    |   {mapEnum} [members]:exp.maplet* (domTypes):type* (rngTypes):type*
-    ;
-    
-#Seq {-> package='eu.compassresearch.ast.expressions'}
-    =   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
-    |   {seqEnum} [members]:exp* (types):type*
-    ;
-    
 #Set {-> package='eu.compassresearch.ast.expressions'}
-    =   {setComp} [first]:exp [bindings]:multipleBind* [predicate]:exp
-    |   {setEnum} [members]:exp* (types):type*
-    |   {setRange} [first]:exp [last]:exp (ftype):type (ltype):type
-    |   #Chanset
+    =   #Chanset
     ;
     
 #Chanset {-> package='eu.compassresearch.ast.expressions'}
 	= {identifier} [identifier]:LexIdentifierToken
 	| {enum} [identifiers]:LexIdentifierToken*
 	| {comp} [channelNameExp]:exp.#Channel.name [bindings]:multipleBind* [predicate]:exp 
-    ;
-    
-modifier {-> package='eu.compassresearch.ast.expressions'}
-    = {record} [tag]:LexIdentifierToken [value]:exp
-    ;
-    
-alternative {-> package='eu.compassresearch.ast.expressions'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern*
-             [result]:exp [defs]:definition*  (type):type (expType):type
     ;
     
 /* 
@@ -484,110 +294,18 @@ type {-> package='eu.compassresearch.ast.types'}
     ;
 
 
-specifier  {-> package='eu.compassresearch.ast.types'}
-  = {access} [access]:access [static]:static [async]:async [location]:location 
-  ;
-
 access  {-> package='eu.compassresearch.ast.definitions'}
-    =   {public}
-    |   {protected}
-    |   {private}
-    | 	{logical} 
+    =   {logical}
     ;
 
 /* 
 	Patterns 
 */
-
-pattern {-> package='eu.compassresearch.ast.patterns'}
-    =   {boolean} [value]:LexBooleanToken
-    |   {character} [value]:LexCharacterToken
-    |   {concatenation} [left]:pattern [right]:pattern
-    |   {expression} [exp]:exp
-    |   {identifier} [name]:LexNameToken
-    |   {ignore} 
-    |   {integer} [value]:LexIntegerToken
-    |   {nil}
-    |   {quote} [value]:LexQuoteToken
-    |   {real} [value]:LexRealToken
-    |   {record} [typename]:LexNameToken [plist]:pattern* (type):type
-    |   {seq} [plist]:pattern*
-    |   {set} [plist]:pattern*
-    |   {string} [value]:LexStringToken
-    |   {tuple} [plist]:pattern*
-    |   {union} [left]:pattern [right]:pattern
-    ;
     
 pair {-> package='eu.compassresearch.ast.patterns'}
-    = {patternType} [pattern]:pattern (type):type
-    | {patternListType} [patterns]:pattern* (type):type
-    | {identifierType} [identifier]:LexIdentifierToken (type):type
+    = {identifierType} [identifier]:LexIdentifierToken (type):type
     | {rename} [from]:exp.#Channel.name [to]:exp.#Channel.name
     ; 
-    
-bind {-> package='eu.compassresearch.ast.patterns'}
-    =   {set} [pattern]:pattern [set]:exp //binds
-    |   {type} [pattern]:pattern (type):type //binds
-    ;
-
-//This is used in PExp and PDefinition
-multipleBind {-> package='eu.compassresearch.ast.patterns'}
-    =   {set}  [set]:exp //binds
-    |   {type} (type):type //binds
-    ;
-
-patternBind {-> package='eu.compassresearch.ast.patterns'}
-    = {def} [location]:location [pattern]:pattern [bind]:bind (defs):definition* (type):type
-    ;
-
-/* 
-	Modules -- this might get kicked out 
-*/
-
-modules {-> package='eu.compassresearch.ast.modules'}
-    = {module}  [name]:LexIdentifierToken 
-                [imports]:imports.module
-                [exports]:exports.module
-                [defs]:definition*
-                [files]:clonableFile*
-                (importdefs):definition*
-                (exportdefs):definition*
-              // [delegate]:Delegate
-              	[isFlat]:java_Boolean
-                (typeChecked):java_Boolean
-                [isDLModule]:java_Boolean //The typechecker needs to know this, since the actual exports does not exists in a DLModule
-    ;
-
-
-imports {-> package='eu.compassresearch.ast.modules'} 
-    = {module} [name]:LexIdentifierToken [imports]:imports.fromModule* //no root
-    | {fromModule} [name]:LexIdentifierToken [signatures]:import** //no root
-//    | {signatures} [importList]:import*
-    ;
-    
-import {-> package='eu.compassresearch.ast.modules'}
-    =   {all}
-    |   {type} [def]:definition.type
-    |   #value
-    ;
-    
-#value {-> package='eu.compassresearch.ast.modules'}
-    =   {value}//since we cant instanciate #value
-    |   {function} [typeParams]:LexNameToken*
-    |   {operation}
-    ;
-    
-exports {-> package='eu.compassresearch.ast.modules'}
-    =   {module} [exports]:export**
-    ;
-
-export {-> package='eu.compassresearch.ast.modules'}
-    =   {all}
-    |   {function} [nameList]:LexNameToken* (exportType):type
-    |   {operation} [nameList]:LexNameToken* (exportType):type
-    |   {type} [name]:LexNameToken [struct]:java_Boolean
-    |   {value} [nameList]:LexNameToken* (exportType):type
-    ;
 
 /*
 	Process
@@ -790,7 +508,7 @@ parameter {-> package='eu.compassresearch.ast.actions'}
 	= {let} [action]:action [localDefinitions]:definition*
 	| {block} [declareStatement]:action.#Statement.declare [action]:action	
 	| {nonDeterministicIf} 
-		[alternatives]: action.#Statement.nonDeterministicAlt*
+		[alternatives]:action.#Statement.nonDeterministicAlt*
 	| {nonDeterministicAlt} 
 		[guard]:exp 
 		[action]:action
@@ -827,7 +545,7 @@ parameter {-> package='eu.compassresearch.ast.actions'}
 		(classdef):definition.#paragraph.class 
 		(ctorDefinition):definition
 	| {nonDeterministicDo} 
-		[alternatives]: action.#Statement.nonDeterministicAlt*
+		[alternatives]:action.#Statement.nonDeterministicAlt*
 	| {forSet} 
 		[pattern]:pattern 
 		[set]:exp 
@@ -855,93 +573,12 @@ parameter {-> package='eu.compassresearch.ast.actions'}
     | {multiple} [assignments]:action.#Statement.#GeneralAssignment.single*
 	;
 
-stateDesignator {-> package='eu.compassresearch.ast.actions'}
-    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
-    |   {identifier} [name]:LexNameToken
-    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
-    ;
-    
-objectDesignator {-> package='eu.compassresearch.ast.actions'}
-    =   {apply} [object]:objectDesignator [args]:exp*
-    |   {field} [object]:objectDesignator [className]:LexNameToken [fieldName]:LexIdentifierToken (field):LexNameToken
-    |   {name} [name]:LexNameToken [expression]:exp.variable
-    |   {self} [self]:LexNameToken
-    ;
-
 alternativeAction {-> package='eu.compassresearch.ast.actions'}
     = {case} [location]:location [pattern]:pattern* [result]:action (defs):definition* 
     ;
-
-clause {-> package='eu.compassresearch.ast.actions'}
-    = {external} [location]:location [mode]:mode [identifiers]:LexNameToken* (type):type
-    ;
-
-mode {-> package='eu.compassresearch.ast.actions'}
-	= {read}
-	| {write}
-	;
-    
-case {-> package='eu.compassresearch.ast.actions'}
-    = {error} [name]:LexIdentifierToken [left]:exp [right]:exp
-    ;
-    
-/*
-    Statements -- !!!!!!!!these are the old VDM statements and are only kept here for the moment for convenience
-*/
-/*
-stm {-> package='eu.compassresearch.ast.statements'}
-    =   {always} [always]:stm [body]:stm
-    |   {assignment} [target]:stateDesignator [exp]:exp (targetType):type (expType):type 
-                     (classDefinition):definition.#paragraph.class (stateDefinition):definition.state (inConstructor):java_Boolean
-    |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
-    |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken 
-                     [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
-    |   {call} [name]:LexNameToken [args]:exp*
-    |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
-    |   {classInvariant} [name]:LexNameToken [invDefs]:definition*
-    |   {elseIf} [elseIf]:exp [thenStm]:stm
-    |   {error}
-    |   {exit} [expression]:exp (expType):type
-    |   {forAll} [pattern]:pattern [set]:exp [statement]:stm
-    |   {forIndex} [var]:LexNameToken [from]:exp [to]:exp [by]:exp [statement]:stm
-    |   {forPatternBind} [patternBind]:patternBind.def [reverse]:java_Boolean [exp]:exp [statement]:stm (seqType):type.#seq
-    |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
-    |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm (def):definition.multiBindList
-    |   #LetDef
-    |   {notYetSpecified} [opname]:LexNameToken [args]:exp*
-    |   {return} [expression]:exp
-    |   #SimpleBlock
-    |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
-    |   {start} [obj]:exp
-    |   {subclassResponsibility}
-    |   {trap} [patternBind]:patternBind.def [with]:stm [body]:stm
-    |   {while} [exp]:exp [statement]:stm
-    ; 
-    
-#LetDef {-> package='eu.compassresearch.ast.statements'}
-    =   {def}
-    ;
-    
-#SimpleBlock {-> package='eu.compassresearch.ast.statements'}
-    =   {block} [assignmentDefs]:definition*
-    |   {nonDeterministic}
-    ;
-
-alternativeStm {-> package='eu.compassresearch.ast.statements'}
-    = {case} [location]:location [cexp]:exp [pattern]:pattern [result]:stm (defs):definition* (ctype):type 
-    ;
-    
-stmtAlternative {-> package='eu.compassresearch.ast.statements'}
-    = {tixe} [patternBind]:patternBind.def [statement]:stm (exp):type
-    ;
-*/
-    
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
-
-%source = [paragraphs]: definition.#paragraph*
-	;
-
+	
 %action =  [location]:location
 	;
 	
@@ -954,62 +591,15 @@ Aspect Declaration
 						[rightAction]:action
 	;	
 
-%bind = [location]:location
+%action->#Statement = (type):type
     ;
 
 %communicationParameter = [location]:location
 	; 
 
-
 %declaration =  [location]:location [nameScope]:nameScope
 	;
-
-%definition 
-    =   [location]:location 
-        (name):LexIdentifierToken // Names are specialised Identifiers carrying an additional module property
-        [nameScope]:nameScope 
-        [used]:java_Boolean 
-//      (classDefinition):definition.#paragraph.class 
-//	    (declaration):declaration
-        [access]:specifier.access
-        (type):type 
-        // [pass]:pass
-    ;
-
-%exp->#Unary =  [exp]:exp
-    ;
-
-%exp = (type):type [location]:location
-    ;
-
-%exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
-    ; 
     
-%exp->#set 
-    = (setType):type.set
-    ;
-
-%export 
-    =   [location]:location [definition]:definition*
-    ;
-
-%mode = [location]:location
-	;
-
-%multipleBind = [location]:location [plist]:pattern*
-    ;
-
-%objectDesignator
-    = [location]:location
-    ;
-
-%pair
-    = [resolved]:java_Boolean
-    ;
-
-%pattern = [location]:location [definitions]:definition* [resolved]:java_Boolean
-    ;
-
 %parametrisation = [location]:location [declaration]:declaration.#Single.type 
 	;
 
@@ -1022,32 +612,5 @@ Aspect Declaration
 %parameter = [location]:location
 	; 
 
-%stateDesignator 
-    = [location]:location (type):type
-    ;
-
-%type = [location]:location [resolved]:java_Boolean (definitions):definition*
-     ; 
-
-%type->#Map = (from):type (to):type [empty]:java_Boolean
-    ;
-
-%type->#invariant
-    =   (opaque):java_Boolean
-        (invDef):definition.explicitFunction
-    ; 
-
-%type->#seq
-    = (seqof):type [empty]:java_Boolean
-    ;
-
-%action->#Statement = (type):type
-		   ;
-
-%import
-    =   [location]:location [name]:LexNameToken [renamed]:LexNameToken [from]:modules.module
-    ;  
-    
-%import->#value 
-    = (importType):type
-    ;
+%source = [paragraphs]: definition.#paragraph*
+	;

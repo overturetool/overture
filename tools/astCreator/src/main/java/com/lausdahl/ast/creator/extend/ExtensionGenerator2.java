@@ -39,7 +39,7 @@ import com.lausdahl.ast.creator.utils.ClassFactory;
 
 public class ExtensionGenerator2 {
 
-	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen\n";
+	private static final String COMPASS_JAVA_DOC_STRING = "*\n* Extensions by the COMPASS Project\n* @author Rasmus Winther Lauritsen, Anders Kaels Malmos\n";
 	private final Environment base;
 
 	public ExtensionGenerator2(Environment base) {
@@ -344,8 +344,11 @@ public class ExtensionGenerator2 {
 					IInterfaceDefinition type = null;
 					if (f.type != null)
 						type = f.type;
-					else
+					else{
 						type = result.lookupTagPath(rawTypeToResolved, false);
+						if(result.treeNodeInterfaces.containsKey(type))
+							type = result.treeNodeInterfaces.get(type);
+					}
 					if (result.treeNodeInterfaces.containsKey(type))
 						type = result.treeNodeInterfaces.get(type);
 
