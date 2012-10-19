@@ -1,4 +1,4 @@
-Overture 1.2.3 Release Notes - 12/10/2012
+Overture 1.2.3 Release Notes - 19/10/2012
 =========================================
 
 
