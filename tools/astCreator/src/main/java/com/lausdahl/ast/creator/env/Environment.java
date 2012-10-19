@@ -237,7 +237,8 @@ public class Environment extends BaseEnvironment {
 						if (isSuperTo(parentIdef, childIdef)) {
 							didSomething = true;
 							validContinuation.add(childIdef);
-							if (generalize)
+							if (generalize || 
+									(possibleResult.size() == 2 && parts.length > 1 && !parentIdef.getAstPackage().equals(childIdef.getAstPackage())))
 								validContinuation.add(parentIdef);
 						}
 					}
