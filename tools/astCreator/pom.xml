@@ -8,19 +8,19 @@
   <groupId>org.overturetool.tools</groupId>
   <artifactId>astCreator</artifactId>
  
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <name>AST Creator</name>
- <dependencies>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.2</version>
-        </dependency>
-    </dependencies>
- 
+
+  <dependencies>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr-runtime</artifactId>
+      <version>3.2</version>
+    </dependency>
+  </dependencies>
 </project>
