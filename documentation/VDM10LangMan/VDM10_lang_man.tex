@@ -3496,6 +3496,105 @@ In this example the {\bf\ttfamily threadid} expression is used in two places:
   \end{lstlisting}
 \end{description}
 
+
+\section{Narrow Expressions}
+
+\begin{description}
+\item[Syntax:]
+  \Rule{expression}{
+    \ldots \dsep
+    \Ruleref{narrow expression} \dsep
+    \ldots
+    }
+
+  \Rule{narrow expression}{
+    \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+    }
+    
+    \item[Semantics:] The {\it narrow expression} convert the given {\tt expression} value into given {\tt type}.
+Downcasting in class inheritance, and narrowing Union type are permit.
+However, conversions between unrelated types become type errors.
+    
+    \item[Examples:] In following examples, there is no difference in the results of running the Test() and Test'(), 
+    But, there is a type error (DEF) in Test().
+
+      \begin{lstlisting}
+class S
+end S
+
+class C1 is subclass of S
+
+instance variables
+public a : nat := 1;
+
+end C1
+
+class C2 is subclass of S
+
+instance variables
+public b : nat := 2;
+
+end C2
+
+class A
+
+operations
+public
+Test: () ==>  seq of nat
+Test() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> e.a,
+                (isofclass(C2, e)) -> e.b
+               end | i in set inds list ];
+
+public
+Test': () ==>  seq of nat
+Test'() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> narrow_(e, C1).a,
+                (isofclass(C2, e)) -> narrow_(e, C2).b
+               end | i in set inds list ];
+end A
+      \end{lstlisting}
+      
+      \begin{lstlisting}
+class A
+
+types
+public C1 :: a : nat;
+public C2 :: b : nat;
+public S = C1 | C2;
+
+operations
+public
+Test: () ==> nat
+Test() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = s
+   in
+     return c.a;
+
+public
+Test': () ==> nat
+Test'() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = narrow_(s, C1)
+   in
+     return c.a;
+end A
+      \end{lstlisting}
+
+\end{description}
+
+
 \section{Is Expressions}
 
 \begin{description}
@@ -10688,6 +10787,13 @@ For VDM-RT where time is explicit it looks like:
 \Ruledef{lambda expression}{
   \Lop{lambda}, \Ruleref{type bind list}, \Lit{\&}, \Ruleref{expression}
   }
+
+\subsection{The narrow Expression}
+
+\Ruledef{narrow expression}{
+  \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+  }
+
 
 \subsection{The New Expression (VDM++ and VDM-RT)}
 
