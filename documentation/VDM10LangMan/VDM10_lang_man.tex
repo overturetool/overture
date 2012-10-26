@@ -4367,6 +4367,34 @@ subsequences. The pivot is used to partition the list into those
 values less than the pivot and those values greater, and these two
 partitions are recursively sorted.
 
+
+Maplet pattern match patterns to elements of a maplet.
+\begin{lstlisting}
+let {a |-> b} = {1 |-> 2} in mk_(a,b) = mk_(1,2)
+\end{lstlisting}
+
+Maplet pattern list match patterns to elements of each maplet in a map.
+\begin{lstlisting}
+let {1 |-> a,a |-> b,b |-> c} = {1 |-> 4,2 |-> 3,4 |-> 2} in
+c = 3
+\end{lstlisting}
+
+Map munion pattern can be used to decompose a map for recursive function calls.
+Following \texttt{map2seq} function converts a map to a seq of maplet.
+\begin{lstlisting}
+public map2seq[@T1, @T2] : 
+    map @T1 to @T2 -> seq of (map @T1 to @T2)
+map2seq(m) ==
+  cases m:
+    ({|->})	-> [],
+    {- |-> -}	-> [m],
+    m1 munion m2 -> 
+        map2seq[@T1, @T2] (m1) ^  map2seq[@T1, @T2] (m2)
+ end;
+\end{lstlisting}
+Here, in the third cases clause a map munion pattern is used to decompose \texttt{m} 
+into two maps.
+
 Tuple patterns can be used to bind tuple components to
 identifiers. For instance since the function \texttt{promoted} defined
 above returns a pair, the following value definition binds the winning
