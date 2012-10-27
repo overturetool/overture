@@ -52,3 +52,5 @@ target/
 ###################################
 /core/parser/bin
 /core/ast/out.svg
+/testdata
+

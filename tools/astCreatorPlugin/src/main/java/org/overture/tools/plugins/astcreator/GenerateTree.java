@@ -29,34 +29,40 @@ public class GenerateTree extends AstCreatorBaseMojo {
 
 		treeName = new File(getResourcesDir(), ast);
 
-		getLog().info("Preparing tree generating...");
+		getLog().info("Preparing for tree generation...");
 
-		File toStringAstFile = new File(treeName.getAbsolutePath()
-				+ ".tostring");
+		File toStringAstFile = new File(treeName.getAbsolutePath() + ".tostring");
 
+		getLog().info("Checking if generation required.");
 		if (isCrcEqual(treeName)) {
-			if (toStringAstFile.exists() && isCrcEqual(toStringAstFile)) {
-				if (extendedAst == null || extendedAst.isEmpty()
-						|| isCrcEqual(new File(getResourcesDir(), extendedAst))) {
-					getLog().info(
-							"Nothing to generate, source already up-to-date");
-					return;
-				}
+		    getLog().info("Primary AST unchanged");
+		    /* FIXME find out what the toString file was all about and possibly reinstate this
+		     * -jwc/22Oct2012
+		     */
+		    //if (toStringAstFile.exists() && isCrcEqual(toStringAstFile)) {
+		        //getLog().info("Primary AST toString unchanged");
+			if (extendedAst == null || extendedAst.isEmpty()
+			    || isCrcEqual(new File(getResourcesDir(), extendedAst))) {
+			    getLog().info("Extended AST unchanged");
+			    getLog().info("Nothing to generate, source already up-to-date");
+			    return;
 			}
+			getLog().info("Extended AST generation needed");
+		    //}
+		    //getLog().info("Primary AST toString generation needed");
 		}
+		getLog().info("Generating...");
 
 		if (deletePackageOnGenerate != null) {
-			for (String relatevePath : deletePackageOnGenerate) {
-				relatevePath = relatevePath.replace('.', File.separatorChar);
-				getLog().info("Deleteting folder: " + relatevePath);
-				File f = new File(getGeneratedFolder(), relatevePath.replace(
+			for (String relativePath : deletePackageOnGenerate) {
+				relativePath = relativePath.replace('.', File.separatorChar);
+				getLog().info("Deleting folder: " + relativePath);
+				File f = new File(getGeneratedFolder(), relativePath.replace(
 						'/', File.separatorChar));
 				if (f.exists()) {
 					deleteDir(f);
 				} else {
-					getLog().warn(
-							"Folder not found and delete skipped: "
-									+ relatevePath);
+					getLog().warn("Folder not found and delete skipped: " + relativePath);
 				}
 			}
 
@@ -68,35 +74,14 @@ public class GenerateTree extends AstCreatorBaseMojo {
 			getLog().info("Generator starting with input: " + treeName);
 			Environment env1 = null;
 			if (extendedName == null && extendedAst != null) {
-				getLog().error(
-						"Missing extendedName for AST extension of: "
-								+ extendedAst);
+			    getLog().error("Missing extendedName for AST extension of: " + extendedAst);
 			} else if (extendedAst == null) {
-				generateSingleAst(treeName, toStringAstFile, generated, env1);
+			    generateSingleAst(treeName, toStringAstFile, generated, env1);
 			} else {
-				File extendedAstFile = new File(getResourcesDir(), extendedAst);
-				getLog().info(
-						"Generator starting with extension input: "
-								+ extendedAstFile);
-
-				if (!extendedAstFile.exists()) {
-					getLog().equals(
-							"Extended AST file does not exist: "
-									+ extendedAstFile.getAbsolutePath());
-					return;
-				}
-				try {
-					Main.create(new FileInputStream(treeName),
-							new FileInputStream(extendedAstFile), generated,
-							extendedName, generateVdm());
-				} catch (Exception e) {
-					getLog().error(e);
-				}
+			    generateExtendedAst(treeName, extendedAst, toStringAstFile, generated);
 			}
 		} else {
-			getLog().error(
-					"Cannot find input file: " + treeName.getAbsolutePath());
-
+		    getLog().error("Cannot find input file: " + treeName.getAbsolutePath());
 		}
 	}
 
@@ -113,25 +98,46 @@ public class GenerateTree extends AstCreatorBaseMojo {
 		// "generated-sources/astCreator".replace('/', File.separatorChar));
 		return outputDirectory;
 	}
+	    
+    public void generateSingleAst(File treeName, File toStringAstFile, File generated, Environment env1) {
+	try {
+	    env1 = Main.create(new FileInputStream(treeName.getAbsolutePath()),
+			       generated, true, generateVdm());
+	    setCrc(treeName);
+	    setCrc(toStringAstFile);
+	} catch (Exception e) {
+	    getLog().error(e);
+	}
+	if (env1 != null) {
+	    getLog().info("Generator completed with "
+			  + env1.getAllDefinitions().size()
+			  + " generated files.\n\n");
+	}
+    }
 
-	public void generateSingleAst(File treeName, File toStringAstFile,
-			File generated, Environment env1) {
-		try {
-			env1 = Main.create(new FileInputStream(treeName.getAbsolutePath()),
-					generated, true, generateVdm());
-			setCrc(treeName);
-			setCrc(toStringAstFile);
-		} catch (Exception e) {
-			getLog().error(e);
-		}
-		if (env1 != null) {
-			getLog().info(
-					"Generator completed with "
-							+ env1.getAllDefinitions().size()
-							+ " generated files.\n\n");
-		}
+    public void generateExtendedAst(File treeName, String extendedAst, File toStringAstFile, File generated) {
+	File extendedAstFile = new File(getResourcesDir(), extendedAst);
+
+	File toStringExtendedAstFile = new File(extendedAstFile.getAbsolutePath() + ".tostring");
+
+	getLog().info("Generator starting with extension input: " + extendedAstFile);
+	
+	if (!extendedAstFile.exists()) {
+	    getLog().equals("Extended AST file does not exist: " + extendedAstFile.getAbsolutePath());
+	    return;
 	}
 
+	try {
+	    Main.create(new FileInputStream(treeName), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm());
+	    setCrc(treeName);
+	    setCrc(toStringAstFile);
+	    setCrc(extendedAstFile);
+	    setCrc(toStringExtendedAstFile);
+	} catch (Exception e) {
+	    getLog().error(e);
+	}
+    }
+    
 	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
