@@ -344,9 +344,9 @@ public class ExtensionGenerator2 {
 					IInterfaceDefinition type = null;
 					if (f.type != null)
 						type = f.type;
-					else{
+					else {
 						type = result.lookupTagPath(rawTypeToResolved, false);
-						if(result.treeNodeInterfaces.containsKey(type))
+						if (result.treeNodeInterfaces.containsKey(type))
 							type = result.treeNodeInterfaces.get(type);
 					}
 					if (result.treeNodeInterfaces.containsKey(type))
@@ -991,7 +991,7 @@ public class ExtensionGenerator2 {
 		extNewDef.setGenericArguments(genericArguments);
 		result.addInterface(extNewDef);
 		IInterfaceDefinition iAnalysis = result.lookUpType("I" + name);
-		extNewDef.supers.add(iAnalysis);
+		// extNewDef.supers.add(iAnalysis);
 		extNewDef.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
 
 		// Add methods for the analysis and apply functions for the classes
