@@ -867,7 +867,12 @@ public class ExtensionGenerator2 {
 		IClassDefinition baseAdaptor = result
 				.lookUp("DepthFirstAnalysisAdaptor");
 		extAdaptor.setSuper(baseAdaptor);
-
+		
+		// Find the interface I<extensions name>Analysis interface and implement it
+		IInterfaceDefinition extensionAnalysisInterface = result
+				.lookUpInterface("I"+ extEnv.getName()+"Analysis");
+		extAdaptor.addInterface(extensionAnalysisInterface);
+				
 		// Find the base visitedNode field
 		// FIXME "".get(0) is not the best way of getting the field :)
 		Field queue = baseAdaptor.getFields().get(0);
