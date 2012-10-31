@@ -81,6 +81,7 @@ import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 
 public class TypeCheckerExpVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>
@@ -92,10 +93,9 @@ public class TypeCheckerExpVisitor extends
 	private static final long serialVersionUID = 1L;
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
-	public TypeCheckerExpVisitor(TypeCheckVisitor typeCheckVisitor)
+	public TypeCheckerExpVisitor(QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
 		this.rootVisitor = typeCheckVisitor;
-
 	}
 
 	@Override

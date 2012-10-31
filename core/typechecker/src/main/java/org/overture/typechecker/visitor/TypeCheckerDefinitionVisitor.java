@@ -100,7 +100,7 @@ public class TypeCheckerDefinitionVisitor extends
 	private static final long serialVersionUID = 4115263650076333819L;
 	private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
-	public TypeCheckerDefinitionVisitor(TypeCheckVisitor typeCheckVisitor)
+	public TypeCheckerDefinitionVisitor(QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
 		this.rootVisitor = typeCheckVisitor;
 	}
