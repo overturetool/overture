@@ -227,11 +227,12 @@ public class ExtensionGenerator2 {
 			Environment result, Environment ext, Environment base,
 			Map<String, IInterfaceDefinition> replacementMap) {
 		Map<String, IClassDefinition> classReplacementMap = new HashMap<String, IClassDefinition>();
+		final String extentionName = ext.getName();
 		// Generate the base classes
 		for (Entry<String, IInterfaceDefinition> e : replacementMap.entrySet()) {
 			final IInterfaceDefinition baseProduction = base.lookUpType(e
 					.getKey());
-
+			
 			// Lookup the base production base class e.g. PExpBase that will be
 			// the super class
 			// for out to be created PCmlExpBase. Examplified of course
@@ -288,7 +289,8 @@ public class ExtensionGenerator2 {
 					result.append("public " + returnType + " kind"
 							+ baseProduction.getName().getPrefix()
 							+ baseProduction.getName().getRawName() + "()");
-					result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
+					//result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
+					result.append("{ return "+ returnType +"." +extentionName + baseProduction.getName().getRawName().toUpperCase() +"; }");
 					return result.toString();
 				}
 
