@@ -10,6 +10,7 @@
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>typechecker</artifactId>
 	<name>The VDM Type Checker </name>
+        <version>2.2.1</version>
 
 	<dependencies>
 		<dependency>

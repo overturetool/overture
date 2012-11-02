@@ -1029,12 +1029,12 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAElseIfExp(AElseIfExp node, TypeCheckInfo question) throws AnalysisException
 	{
 
-		if (!PTypeAssistantTC.isType(node.getElseIf().apply(this, question), ABooleanBasicType.class))
+		if (!PTypeAssistantTC.isType(node.getElseIf().apply(rootVisitor, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3086, "Else clause is not a boolean", node.getLocation(), node);
 		}
 
-		node.setType(node.getThen().apply(this, question));
+		node.setType(node.getThen().apply(rootVisitor, question));
 		return node.getType();
 	}
 
@@ -1430,7 +1430,7 @@ public class TypeCheckerExpVisitor extends
 	{
 
 		question.qualifiers = null;
-		if (!PTypeAssistantTC.isType(node.getTest().apply(this, question), ABooleanBasicType.class))
+		if (!PTypeAssistantTC.isType(node.getTest().apply(rootVisitor, question), ABooleanBasicType.class))
 		{
 			TypeChecker.report(3108, "If expression is not a boolean", node.getLocation());
 		}
@@ -2051,7 +2051,7 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question) throws AnalysisException
 	{
-		node.setType(node.getPostexpression().apply(this, question));
+		node.setType(node.getPostexpression().apply(rootVisitor, question));
 		return node.getType();
 	}
 
