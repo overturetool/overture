@@ -25,6 +25,7 @@ package org.overturetool.vdmj.pog;
 
 import org.overturetool.vdmj.expressions.CaseAlternative;
 import org.overturetool.vdmj.expressions.CasesExpression;
+import org.overturetool.vdmj.expressions.Expression;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
@@ -38,7 +39,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		{
 			sb.append(prefix);
 
-			if (alt.pattern.getVariableNames().size() == 0)
+			if (alt.pattern.isSimple())
 			{
 				sb.append(exp.exp);
 				sb.append(" = ");
@@ -46,14 +47,16 @@ public class CasesExhaustiveObligation extends ProofObligation
 			}
 			else
 			{
+				Expression matching = alt.pattern.getMatchingExpression();
+				
 	    		sb.append("(exists ");
-	    		sb.append(alt.pattern);
+	    		sb.append(matching);
 	    		sb.append(":");
 	    		sb.append(exp.expType);
 	    		sb.append(" & ");
 	    		sb.append(exp.exp);
 	    		sb.append(" = ");
-	    		sb.append(alt.pattern);
+	    		sb.append(matching);
 	    		sb.append(")");
 			}
 

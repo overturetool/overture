@@ -236,12 +236,13 @@ public class TuplePattern extends Pattern
 	@Override
 	public boolean isConstrained()
 	{
-		for (Pattern p: plist)
-		{
-			if (p.isConstrained()) return true;
-		}
+		return plist.isConstrained();
+	}
 
-		return false;
+	@Override
+	public boolean isSimple()
+	{
+		return plist.isSimple();
 	}
 
 	@Override

@@ -67,7 +67,14 @@ public class MapEnumExpression extends MapExpression
 	@Override
 	public String toString()
 	{
-		return "{" + Utils.listToString(members) + "}";
+		if (members.isEmpty())
+		{
+			return "{|->}";
+		}
+		else
+		{
+			return "{" + Utils.listToString(members) + "}";
+		}
 	}
 
 	@Override

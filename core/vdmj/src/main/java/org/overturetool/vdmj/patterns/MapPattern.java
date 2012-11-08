@@ -96,7 +96,14 @@ public class MapPattern extends Pattern
 	@Override
 	public String toString()
 	{
-		return Utils.listToString("{", maplets, ", ", "}");
+		if (maplets.isEmpty())
+		{
+			return "{|->}";
+		}
+		else
+		{
+			return Utils.listToString("{", maplets, ", ", "}");
+		}
 	}
 
 	@Override
@@ -287,6 +294,17 @@ public class MapPattern extends Pattern
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isSimple()
+	{
+		for (MapletPattern p: maplets)
+		{
+			if (!p.isSimple()) return false;
+		}
+
+		return true;
 	}
 
 	@Override

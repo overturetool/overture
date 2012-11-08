@@ -333,6 +333,12 @@ public class UnionPattern extends Pattern
 	}
 
 	@Override
+	public boolean isSimple()
+	{
+		return left.isSimple() && right.isSimple();
+	}
+
+	@Override
 	public List<IdentifierPattern> findIdentifiers()
 	{
 		List<IdentifierPattern> list = new Vector<IdentifierPattern>();

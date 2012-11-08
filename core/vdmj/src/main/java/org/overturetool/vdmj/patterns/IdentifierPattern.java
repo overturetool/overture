@@ -108,6 +108,12 @@ public class IdentifierPattern extends Pattern
 		return constrained;	// The variable may be constrained to be the same as another occurrence
 	}
 
+	@Override
+	public boolean isSimple()
+	{
+		return false;
+	}
+
 	public void setConstrained(boolean c)
 	{
 		constrained = c;

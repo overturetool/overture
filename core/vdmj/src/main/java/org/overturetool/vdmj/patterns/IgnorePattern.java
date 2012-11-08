@@ -92,4 +92,10 @@ public class IgnorePattern extends Pattern
 	{
 		return false;
 	}
+
+	@Override
+	public boolean isSimple()
+	{
+		return false;
+	}
 }
