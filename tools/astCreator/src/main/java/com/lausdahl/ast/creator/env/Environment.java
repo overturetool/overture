@@ -30,7 +30,7 @@ public class Environment extends BaseEnvironment {
 	public final String TAG_IQuestionAnswer = "IQuestionAnswer";
 	public BaseClassDefinition analysisException;
 
-	private final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
+	private List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
 
 	public final Map<IInterfaceDefinition, IInterfaceDefinition> treeNodeInterfaces = new Hashtable<IInterfaceDefinition, IInterfaceDefinition>();
 
@@ -63,6 +63,7 @@ public class Environment extends BaseEnvironment {
 	public static Environment getFromBase(Environment base,
 			String extAnalysisPackage, String extDefaultPackage) {
 		Environment res = new Environment("extended_" + base.name);
+		res.toStringAddOn = base.toStringAddOn;
 		res.setAnalysisPackages(extAnalysisPackage);
 		res.setDefaultPackages(extDefaultPackage);
 		res.classes.clear();
@@ -237,12 +238,16 @@ public class Environment extends BaseEnvironment {
 						if (isSuperTo(parentIdef, childIdef)) {
 							didSomething = true;
 							validContinuation.add(childIdef);
-							if (generalize || 
-									(possibleResult.size() == 2 && parts.length > 1 && !parentIdef.getAstPackage().equals(childIdef.getAstPackage())))
+							if (generalize
+									|| (possibleResult.size() == 2
+											&& parts.length > 1 && !parentIdef
+											.getAstPackage().equals(
+													childIdef.getAstPackage())))
 								validContinuation.add(parentIdef);
 						}
 					}
-				if (didSomething) possibleResult = validContinuation;
+				if (didSomething)
+					possibleResult = validContinuation;
 			}
 
 		}

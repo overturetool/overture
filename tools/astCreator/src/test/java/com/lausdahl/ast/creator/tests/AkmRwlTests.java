@@ -47,9 +47,13 @@ public class AkmRwlTests extends TestCase {
 				"/extend2/ovt_merge.ast");
 		InputStream ovt = getClass().getResourceAsStream("/overtureII.astv2");
 		InputStream cml = getClass().getResourceAsStream("/ucml.ast");
+		InputStream ovtToString = getClass().getResourceAsStream(
+				"/overtureII.astv2.tostring");
+		InputStream cmlToString = getClass().getResourceAsStream(
+				"/cml.ast.tostring");
 		Assert.assertNotNull("Ast file 1 cannot be found", cmlAST);
 		Assert.assertNotNull("Ast file 2 cannot be found", ovtAST);
-		Main.create(ovt, cml, output, "Cml", false);
+		Main.create(ovtToString, cmlToString, ovt, cml, output, "Cml", false);
 
 		// Main.create(ovt, output, true, false);
 	}

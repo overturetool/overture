@@ -45,9 +45,9 @@ import com.lausdahl.ast.creator.utils.EnumUtil;
 
 public class Generator {
 
-	public Environment generate(InputStream inputFile, String envName,
-			boolean doTypeHierarchyCheck) throws IOException,
-			AstCreatorException {
+	public Environment generate(InputStream toStringFile,
+			InputStream inputFile, String envName, boolean doTypeHierarchyCheck)
+			throws IOException, AstCreatorException {
 		Environment env = null;
 
 		try {
@@ -64,17 +64,19 @@ public class Generator {
 			}
 		}
 
-		try {
-			ToStringAddOnReader reader = new ToStringAddOnReader();
-			reader.readAndAdd(inputFile + ".tostring", env);
-		} catch (AstCreatorException e) {
-			if (e.fatal) {
-				throw e;
-			} else {
-				System.err.println(e.getMessage());
+		if (toStringFile != null) {
+			System.out.println("Generating toString add on...");
+			try {
+				ToStringAddOnReader reader = new ToStringAddOnReader();
+				reader.readAndAdd(toStringFile, env);
+			} catch (AstCreatorException e) {
+				if (e.fatal) {
+					throw e;
+				} else {
+					System.err.println(e.getMessage());
+				}
 			}
 		}
-
 		// SourceFileWriter.write(outputFolder, env1);
 		return env;
 	}

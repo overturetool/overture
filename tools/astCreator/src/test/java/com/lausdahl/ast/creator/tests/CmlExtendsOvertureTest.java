@@ -21,7 +21,8 @@ public class CmlExtendsOvertureTest extends TestCase {
 		Assert.assertNotNull("Unable to load Overture Souce Ast file",
 				ovtSource);
 
-		Main.create(ovtSource, cmlSource, outputFolder, "CML", false);
+		Main.create(null, null, ovtSource, cmlSource, outputFolder, "CML",
+				false);
 	}
 
 }

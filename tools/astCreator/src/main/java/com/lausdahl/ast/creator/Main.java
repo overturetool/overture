@@ -27,6 +27,8 @@ public class Main {
 		OvertureII, OvertureII_Interpreter, Test, TestInterpreter, TestInterpreterBase, TestInterpreterExtend, Nested
 	}
 
+	public static final String TO_STRING_FILE_NAME_EXT = ".tostring";
+
 	/**
 	 * Set this to false to generate the overture II AST
 	 */
@@ -120,7 +122,7 @@ public class Main {
 			case Nested: {
 				System.out.println("Generator starting with input: " + input1);
 
-				Environment env1 = create(new FileInputStream(input1),
+				Environment env1 = create(null, new FileInputStream(input1),
 						generated, true, GENERATE_VDM);
 				System.out.println("\n\nGenerator completed with "
 						+ env1.getAllDefinitions().size()
@@ -131,14 +133,15 @@ public class Main {
 			case TestInterpreter:
 			case TestInterpreterExtend: {
 				System.out.println("Generator starting with input: " + input1);
-				Main.create(new FileInputStream(input1), new FileInputStream(
-						input2), generated, "Interpreter", GENERATE_VDM);
+				Main.create(null, null, new FileInputStream(input1),
+						new FileInputStream(input2), generated, "Interpreter",
+						GENERATE_VDM);
 				System.out.println("Done.");
 			}
 				break;
 			case Test: {
 				System.out.println("TESTING...");
-				Environment env1 = create(new FileInputStream(input1),
+				Environment env1 = create(null, new FileInputStream(input1),
 						generated, true, GENERATE_VDM);
 				System.out.println(env1);
 				// Main.create(new File(INPUT_FILENAME), new
@@ -195,11 +198,13 @@ public class Main {
 		return null;
 	}
 
-	public static Environment create(InputStream inputFile, File outputBase,
-			boolean write, boolean generateVdm) throws IOException,
-			InstantiationException, IllegalAccessException, AstCreatorException {
+	public static Environment create(InputStream toStringFile,
+			InputStream inputFile, File outputBase, boolean write,
+			boolean generateVdm) throws IOException, InstantiationException,
+			IllegalAccessException, AstCreatorException {
 		Generator generator = new Generator();
-		Environment env = generator.generate(inputFile, "Base", true);
+		Environment env = generator.generate(toStringFile, inputFile, "Base",
+				true);
 		generator.runPostGeneration(env);
 
 		if (write) {
@@ -228,7 +233,8 @@ public class Main {
 	 * @throws Exception
 	 *             - Apparently many things can go wrong !
 	 */
-	public static void create(InputStream ast1, InputStream ast2,
+	public static void create(InputStream ast1ToString,
+			InputStream ast2ToString, InputStream ast1, InputStream ast2,
 			File generated, String extendName, boolean generateVdm)
 			throws Exception {
 		System.out.println("Generating base and extension tree, standby ... ");
@@ -237,11 +243,12 @@ public class Main {
 		Generator generator = new Generator();
 
 		// Create the base AST environment
-		Environment base = generator.generate(ast1, "Base", true);
+		Environment base = generator.generate(ast1ToString, ast1, "Base", true);
 		// generator.runPostGeneration(base);
 
 		// Create the extended tree with loose ends so do not test for integrity
-		Environment envExtOnly = generator.generate(ast2, extendName, false);
+		Environment envExtOnly = generator.generate(ast2ToString, ast2,
+				extendName, false);
 
 		// Run extension generator the modify envExtBase and enrich it with the
 		// new extension nodes.

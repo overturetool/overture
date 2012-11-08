@@ -1,0 +1,32 @@
+To String Extensions
+// import packages used by external $$ java code
+import org.overture.ast.util.Utils;
+import org.overture.ast.util.ToStringUtil;
+
+
+%source->file = [name] 
+%source->inputStream = [origin]
+// %source->tcpStream = "" [ip] ":" [port] ""
+
+// Actions
+%action->specification = "[" +
+            $($[externals]$.isEmpty() ? "" : "\n\text " + $[externals]$) +
+            ($[precondition]$ == null ? "" : "\n\tpre " + $[precondition]$) +
+            ($[postcondition]$ == null ? "" : "\n\tpost " + $[postcondition]$) +
+            ($[errors]$.isEmpty() ? "" : "\n\terrs " + $[errors]$)$ + "]" 
+%action->communication = [identifier] "->" [action]
+%action->skip = "Skip"
+
+//  Expressions
+ 
+//  Patterns
+
+//  Definitions
+
+//  Statements
+
+//Access
+                                    
+%access->logical ="logical"
+
+//designator
