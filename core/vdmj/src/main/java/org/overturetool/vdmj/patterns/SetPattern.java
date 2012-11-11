@@ -277,12 +277,13 @@ public class SetPattern extends Pattern
 			return true;	// Set types are various, so we must permute
 		}
 
-		for (Pattern p: plist)
-		{
-			if (p.isConstrained()) return true;
-		}
+		return plist.isConstrained();
+	}
 
-		return false;
+	@Override
+	public boolean isSimple()
+	{
+		return plist.isSimple();
 	}
 
 	@Override

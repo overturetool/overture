@@ -202,6 +202,17 @@ public abstract class Pattern implements Serializable
 	{
 		return true;
 	}
+	
+	/**
+	 * @return True if the pattern is a simple value that can match only
+	 * one value for certain. Most pattern types are like this, but any
+	 * that include variables or ignore patterns are not. 
+	 */
+	
+	public boolean isSimple()
+	{
+		return true;
+	}
 
 	/**
 	 * An expression that matches the pattern. This is used in

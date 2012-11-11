@@ -150,4 +150,9 @@ public class MapletPattern implements Serializable
 
 		return (from.getPossibleType().isUnion() || to.getPossibleType().isUnion());
 	}
+
+	public boolean isSimple()
+	{
+		return from.isSimple() && to.isSimple();
+	}
 }
