@@ -36,6 +36,14 @@ public abstract class Method
 		}
 	}
 
+	public static Method newMethod(Class<? extends Method> method,IClassDefinition c,Environment env) throws InstantiationException, IllegalAccessException
+	{
+		Method m = method.newInstance();
+		m.setClassDefinition(c);
+		m.setEnvironment(env);
+		return m;
+	}
+	
 	public boolean isConstructor = false;
 	public boolean isAbstract = false;
 	protected String javaDoc = "";
