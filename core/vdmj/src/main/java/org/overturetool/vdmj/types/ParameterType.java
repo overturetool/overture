@@ -30,8 +30,13 @@ import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.ParameterValue;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 
 public class ParameterType extends Type
@@ -197,6 +202,25 @@ public class ParameterType extends Type
 		}
 
 		return new ProductType(location, tl);
+	}
+	
+	@Override
+	public ValueList getAllValues(Context ctxt) throws ValueException
+	{
+		Value t = ctxt.lookup(name);
+
+		if (t == null)
+		{
+			abort(4008, "No such type parameter @" + name + " in scope", ctxt);
+		}
+		else if (t instanceof ParameterValue)
+		{
+			ParameterValue tv = (ParameterValue)t;
+			return tv.type.getAllValues(ctxt);
+		}
+		
+		abort(4009, "Type parameter/local variable name clash, @" + name, ctxt);
+		return null;
 	}
 
 	@Override
