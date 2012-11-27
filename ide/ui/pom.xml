@@ -21,8 +21,7 @@
     <dependency>
         <groupId>org.overturetool.core</groupId>
         <artifactId>typechecker</artifactId>
-        <version>2.2.0</version>
-        <scope>compile</scope>
+        <version>2.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jface</groupId>

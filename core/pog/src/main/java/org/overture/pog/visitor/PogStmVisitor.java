@@ -61,6 +61,11 @@ public class PogStmVisitor extends
 		this.rootVisitor = pogVisitor;
 	}
 
+	public PogStmVisitor(PogParamVisitor pogGeneralVisitor) {
+	    this.rootVisitor=null;
+	    //TODO not yet implemented
+	}
+
 	@Override
 	public ProofObligationList defaultPStm(PStm node, POContextStack question)
 	{

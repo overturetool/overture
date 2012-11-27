@@ -49,7 +49,7 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogDefinitionVisitor extends
-		QuestionAnswerAdaptor<POContextStack, ProofObligationList>
+		PogParamDefinitionVisitor<POContextStack, ProofObligationList>
 {
 
 	/**
@@ -61,6 +61,12 @@ public class PogDefinitionVisitor extends
 	public PogDefinitionVisitor(PogVisitor pogVisitor)
 	{
 		this.rootVisitor = pogVisitor;
+	}
+
+	public PogDefinitionVisitor(PogParamVisitor pogGeneralVisitor) {
+	    // TODO Auto-generated constructor stub, RWL And fix the null assignment it not supposed to there !
+	    rootVisitor = null;
+
 	}
 
 	@Override
