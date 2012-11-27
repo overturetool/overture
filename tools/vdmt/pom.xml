@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.overturetool.tools</groupId>
 		<artifactId>tools</artifactId>
-		<version>2.2.0</version>
+		<version>2.2.1<!--Replaceable: Main Version--></version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.tools</groupId>
