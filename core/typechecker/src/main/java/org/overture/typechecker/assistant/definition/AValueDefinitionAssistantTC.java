@@ -21,28 +21,26 @@ public class AValueDefinitionAssistantTC {
 	public static PDefinition findName(AValueDefinition d, LexNameToken sought,
 			NameScope scope) {
 
-		if (scope.matches(NameScope.NAMES))
-		{
-			return PDefinitionListAssistantTC.findName(d.getDefs(),sought, scope);
+		if (scope.matches(NameScope.NAMES)) {
+			return PDefinitionListAssistantTC.findName(d.getDefs(), sought,
+					scope);
 		}
 
 		return null;
 	}
 
 	public static void unusedCheck(AValueDefinition d) {
-		if (d.getUsed())	// Indicates all definitions exported (used)
+		if (d.getUsed()) // Indicates all definitions exported (used)
 		{
 			return;
 		}
 
-		if (d.getDefs() != null)
-		{
-    		for (PDefinition def: d.getDefs())
-    		{
-    			PDefinitionAssistantTC.unusedCheck(def);
-    		}
+		if (d.getDefs() != null) {
+			for (PDefinition def : d.getDefs()) {
+				PDefinitionAssistantTC.unusedCheck(def);
+			}
 		}
-		
+
 	}
 
 	public static List<PDefinition> getDefinitions(AValueDefinition d) {
@@ -56,17 +54,18 @@ public class AValueDefinitionAssistantTC {
 	public static void typeResolve(AValueDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
-		
-		 //d.setType(getType(d));
-		if(d.getType() != null)
-			d.setType(PTypeAssistantTC.typeResolve(d.getType(),null,rootVisitor,question));
-		
-		
+
+		// d.setType(getType(d));
+		if (d.getType() != null)
+			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null,
+					rootVisitor, question));
+
 	}
 
 	public static PType getType(AValueDefinition def) {
-		return def.getType() != null ? def.getType() :
-			(def.getExpType() != null ? def.getExpType() : AstFactory.newAUnknownType(def.getLocation()));
+		return def.getType() != null ? def.getType()
+				: (def.getExpType() != null ? def.getExpType() : AstFactory
+						.newAUnknownType(def.getLocation()));
 	}
 
 	public static LexNameList getOldNames(AValueDefinition def) {
@@ -74,18 +73,14 @@ public class AValueDefinitionAssistantTC {
 	}
 
 	public static boolean equals(AValueDefinition def, Object other) {
-		if (other instanceof AValueDefinition)
-		{
-			AValueDefinition vdo = (AValueDefinition)other;
+		if (other instanceof AValueDefinition) {
+			AValueDefinition vdo = (AValueDefinition) other;
 
-			if (def.getDefs().size() == vdo.getDefs().size())
-			{
+			if (def.getDefs().size() == vdo.getDefs().size()) {
 				Iterator<PDefinition> diter = vdo.getDefs().iterator();
 
-				for (PDefinition d: def.getDefs())
-				{
-					if (!PDefinitionAssistantTC.equals(diter.next(),d))
-					{
+				for (PDefinition d : def.getDefs()) {
+					if (!PDefinitionAssistantTC.equals(diter.next(), d)) {
 						return false;
 					}
 				}
@@ -96,7 +91,5 @@ public class AValueDefinitionAssistantTC {
 
 		return false;
 	}
-
-	
 
 }
