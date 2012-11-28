@@ -29,7 +29,9 @@ import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.NaturalOneType;
 import org.overturetool.vdmj.types.NaturalType;
+import org.overturetool.vdmj.types.Seq1Type;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.NaturalValue;
@@ -60,7 +62,14 @@ public class LenExpression extends UnaryExpression
 			report(3116, "Argument to 'len' is not a sequence");
 		}
 
-		return new NaturalType(location);
+		if (etype.isType(Seq1Type.class))
+		{
+			return new NaturalOneType(location);
+		}
+		else
+		{
+			return new NaturalType(location);
+		}
 	}
 
 	@Override

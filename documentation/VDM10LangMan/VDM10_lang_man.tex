@@ -222,7 +222,8 @@
         Kenneth Lausdahl\\
         Nick Battle\\
         John Fitzgerald\\
-        Sune Wolff}
+        Sune Wolff\\
+        Shin Sahara}
 
 \date{February 2011}
 \reportno{TR-001}     
@@ -3496,6 +3497,105 @@ In this example the {\bf\ttfamily threadid} expression is used in two places:
   \end{lstlisting}
 \end{description}
 
+
+\section{Narrow Expressions}
+
+\begin{description}
+\item[Syntax:]
+  \Rule{expression}{
+    \ldots \dsep
+    \Ruleref{narrow expression} \dsep
+    \ldots
+    }
+
+  \Rule{narrow expression}{
+    \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+    }
+    
+    \item[Semantics:] The {\it narrow expression} convert the given {\tt expression} value into given {\tt type}.
+Downcasting in class inheritance, and narrowing Union type are permit.
+However, conversions between unrelated types become type errors.
+    
+    \item[Examples:] In following examples, there is no difference in the results of running the Test() and Test'(), 
+    But, there is a type error (DEF) in Test().
+
+      \begin{lstlisting}
+class S
+end S
+
+class C1 is subclass of S
+
+instance variables
+public a : nat := 1;
+
+end C1
+
+class C2 is subclass of S
+
+instance variables
+public b : nat := 2;
+
+end C2
+
+class A
+
+operations
+public
+Test: () ==>  seq of nat
+Test() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> e.a,
+                (isofclass(C2, e)) -> e.b
+               end | i in set inds list ];
+
+public
+Test': () ==>  seq of nat
+Test'() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> narrow_(e, C1).a,
+                (isofclass(C2, e)) -> narrow_(e, C2).b
+               end | i in set inds list ];
+end A
+      \end{lstlisting}
+      
+      \begin{lstlisting}
+class A
+
+types
+public C1 :: a : nat;
+public C2 :: b : nat;
+public S = C1 | C2;
+
+operations
+public
+Test: () ==> nat
+Test() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = s
+   in
+     return c.a;
+
+public
+Test': () ==> nat
+Test'() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = narrow_(s, C1)
+   in
+     return c.a;
+end A
+      \end{lstlisting}
+
+\end{description}
+
+
 \section{Is Expressions}
 
 \begin{description}
@@ -4057,6 +4157,8 @@ an access modifier allowing access to it outside the defining class.
     \Ruleref{set union pattern} \dsep
     \Ruleref{seq enum pattern} \dsep
     \Ruleref{seq conc pattern} \dsep
+    \Ruleref{map enumeration pattern} \dsep
+    \Ruleref{map muinon pattern} \dsep
     \Ruleref{tuple pattern} \dsep
     \Ruleref{record pattern}
     }
@@ -4084,6 +4186,22 @@ an access modifier allowing access to it outside the defining class.
   \Rule{seq conc pattern}{
     \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
     }
+
+  \Rule{map enumeration pattern}{
+    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
+    }
+
+  \Rule{maplet pattern list}{
+     \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}
+    }
+
+  \Rule{maplet pattern}{
+    \Ruleref{pattern}, \Lit{|->}, \Ruleref{pattern}
+  }
+
+   \Rule{map muinon pattern}{
+    \Ruleref{pattern}, \Lit{\keyw{munion}}, \Ruleref{pattern}
+  }
 
   \Rule{tuple pattern}{
     \Lop{mk\_(}, \Ruleref{pattern}, \Lit{,}, \Ruleref{pattern list}, \Lit{)}
@@ -4137,6 +4255,15 @@ an access modifier allowing access to it outside the defining class.
     can be concatenated to form the original sequence value. In the
     VDM interpreters the two subsequences will always be chosen so that they
     are non-empty.
+
+  \item A {\it map enumeration pattern} fits only map values. 
+
+  \item A {\it maplet pattern list} are matched to distinct elements of a map; 
+   all elements must be matched.
+
+  \item A {\it map munion pattern} fits only map values. 
+   The two patterns are matched to a partition of two sub maps of a map.
+   In the VDM interpreters the two sub maps will always be chosen such that they are non-empty and disjoint.
 
   \item A {\it tuple pattern} fits only tuples with the same number of
     elements. Each of the patterns are matched against the corresponding
@@ -4239,6 +4366,34 @@ used to decompose \texttt{l} into an arbitrary pivot element and two
 subsequences. The pivot is used to partition the list into those
 values less than the pivot and those values greater, and these two
 partitions are recursively sorted.
+
+
+Maplet pattern match patterns to elements of a maplet.
+\begin{lstlisting}
+let {a |-> b} = {1 |-> 2} in mk_(a,b) = mk_(1,2)
+\end{lstlisting}
+
+Maplet pattern list match patterns to elements of each maplet in a map.
+\begin{lstlisting}
+let {1 |-> a,a |-> b,b |-> c} = {1 |-> 4,2 |-> 3,4 |-> 2} in
+c = 3
+\end{lstlisting}
+
+Map munion pattern can be used to decompose a map for recursive function calls.
+Following \texttt{map2seq} function converts a map to a seq of maplet.
+\begin{lstlisting}
+public map2seq[@T1, @T2] : 
+    map @T1 to @T2 -> seq of (map @T1 to @T2)
+map2seq(m) ==
+  cases m:
+    ({|->})	-> [],
+    {- |-> -}	-> [m],
+    m1 munion m2 -> 
+        map2seq[@T1, @T2] (m1) ^  map2seq[@T1, @T2] (m2)
+ end;
+\end{lstlisting}
+Here, in the third cases clause a map munion pattern is used to decompose \texttt{m} 
+into two maps.
 
 Tuple patterns can be used to bind tuple components to
 identifiers. For instance since the function \texttt{promoted} defined
@@ -10689,6 +10844,13 @@ For VDM-RT where time is explicit it looks like:
   \Lop{lambda}, \Ruleref{type bind list}, \Lit{\&}, \Ruleref{expression}
   }
 
+\subsection{The narrow Expression}
+
+\Ruledef{narrow expression}{
+  \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+  }
+
+
 \subsection{The New Expression (VDM++ and VDM-RT)}
 
   \Ruledef{new expression}{
@@ -11129,6 +11291,8 @@ In VDM++ and VDM-RT a call statement looks like:
   \Ruleref{set union pattern} \dsep
   \Ruleref{seq enum pattern} \dsep
   \Ruleref{seq conc pattern} \dsep
+  \Ruleref{map enumeration pattern} \dsep
+  \Ruleref{map muinon pattern} \dsep
   \Ruleref{tuple pattern} \dsep
   \Ruleref{record pattern}
   }
@@ -11156,6 +11320,22 @@ In VDM++ and VDM-RT a call statement looks like:
 
 \Ruledef{seq conc pattern}{
   \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
+  }
+
+\Ruledef{map enumeration pattern}{
+    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
+    }
+
+\Ruledef{maplet pattern list}{
+     \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}
+    }
+
+\Ruledef{maplet pattern}{
+    \Ruleref{pattern}, \Lit{|->}, \Ruleref{pattern}
+  }
+
+\Ruledef{map muinon pattern}{
+    \Ruleref{pattern}, \Lit{\keyw{munion}}, \Ruleref{pattern}
   }
 
 \Ruledef{tuple pattern}{

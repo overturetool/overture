@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.overture.ide.platform
 Bundle-SymbolicName: org.overture.ide.platform;singleton:=true
-Bundle-Version: 2.1.2
+Bundle-Version: 2.1.3
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -13,4 +13,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Overture
 Bundle-Activator: org.overture.ide.platform.Activator
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.1.3.jar,
+ vdmj-2.1.3.jar,
+ cglib-2.1.3.jar

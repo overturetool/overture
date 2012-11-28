@@ -12,3 +12,10 @@ come after you with sharp, pointy objects.
 
 Note: there is still some version number magic in the MANIFEST.MF files
 
+----
+
+At release, we also need to update 
+  ide/build/build.properties 
+  ide/platform/src/main/java/org/overture/ide/platform/splash/SplashHandler.java
+To make sure that user-visible release number is correct
+

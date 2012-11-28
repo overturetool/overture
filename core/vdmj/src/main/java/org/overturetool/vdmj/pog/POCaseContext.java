@@ -45,7 +45,7 @@ public class POCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (pattern.getVariableNames().size() == 0)
+		if (pattern.isSimple())
 		{
     		sb.append(pattern);
     		sb.append(" = ");
@@ -54,17 +54,19 @@ public class POCaseContext extends POContext
 		}
 		else
 		{
+			Expression matching = pattern.getMatchingExpression();
+			
     		sb.append("exists ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(":");
     		sb.append(type);
     		sb.append(" & ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(" = ");
     		sb.append(exp);
 
     		sb.append(" =>\nlet ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(" = ");
     		sb.append(exp);
     		sb.append(" in");

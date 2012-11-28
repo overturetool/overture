@@ -177,19 +177,22 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource != null && resource instanceof IFile)
 			{
-				IFile file = (IFile) resource;
-				try
-				{
-					String contentTypeId = file.getContentDescription().getContentType().getId();
-					if (SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
-					{
-						return editorPart;
-					}
-				} catch (CoreException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				return editorPart;
+//				IFile file = (IFile) resource;
+//				try
+//				{
+////					String contentTypeId = file.getContentDescription().getContentType().getId();
+//					return editorPart;
+////					if (SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
+////					{
+////						System.err.println();
+////						return editorPart;
+////					}
+//				} catch (CoreException e)
+//				{
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 			}
 		}
 		return null;

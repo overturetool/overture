@@ -76,8 +76,13 @@ public class SequenceTraceNode extends TraceNode
 
 			for (int i=0; i<count; i++)
 			{
-				CallSequence subseq = nodetests.get(i).get(select[i]);
-				seq.addAll(subseq);
+				TestSequence ith = nodetests.get(i);
+				
+				if (!ith.isEmpty())
+				{
+					CallSequence subseq = ith.get(select[i]);
+					seq.addAll(subseq);
+				}
 			}
 
 			tests.add(seq);

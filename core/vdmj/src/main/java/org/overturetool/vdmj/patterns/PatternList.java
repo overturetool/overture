@@ -109,4 +109,24 @@ public class PatternList extends Vector<Pattern>
 
 		return list;
 	}
+
+	public boolean isConstrained()
+	{
+		for (Pattern p: this)
+		{
+			if (p.isConstrained()) return true;		// NB. OR
+		}
+
+		return false;
+	}
+
+	public boolean isSimple()
+	{
+		for (Pattern p: this)
+		{
+			if (!p.isSimple()) return false;		// NB. AND
+		}
+
+		return true;
+	}
 }

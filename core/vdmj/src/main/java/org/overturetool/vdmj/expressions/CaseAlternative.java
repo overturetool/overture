@@ -65,7 +65,7 @@ public class CaseAlternative implements Serializable
 	@Override
 	public String toString()
 	{
-		return "case " + pattern + " -> " + result;
+		return pattern + " -> " + result;
 	}
 
 	public Type typeCheck(Environment base, NameScope scope, Type expType)
