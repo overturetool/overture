@@ -23,7 +23,7 @@ import org.overture.ide.ui.editor.syntax.IVdmKeywords;
 public class VdmSlKeywords implements IVdmKeywords {
 
 	public static final String[] reservedwords = { "abs", "all", "always",
-			"and", "as", "be", "bool", "by", "card", "cases", "char", "comp",
+			"and", "as", "atomic","be", "bool", "by", "card", "cases", "char", "comp",
 			"compose", "conc", "dcl", "def", "definitions", "dinter", "div",
 			"dlmodule", "do", "dom", "dunion", "elems", "else", "elseif",
 			"end", "error", "errs", "exists", "exists1", "exit", "exports",

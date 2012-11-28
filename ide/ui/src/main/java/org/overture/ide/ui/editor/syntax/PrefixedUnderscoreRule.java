@@ -82,7 +82,7 @@ public class PrefixedUnderscoreRule implements IRule
 				c = scanner.read();
 				sb.append((char) c);
 				scanner.unread();// we just need to check the next char not consume it
-				if (Character.isJavaIdentifierStart(c))
+				if (Character.isJavaIdentifierStart(c)||Character.isWhitespace(c)||c=='(')
 				{
 					return fToken;
 				}
