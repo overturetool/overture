@@ -32,6 +32,8 @@ import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordPatternRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
+import org.overture.ide.ui.IVdmUiConstants;
+import org.overture.ide.ui.VdmUIPlugin;
 
 public abstract class VdmCodeScanner extends RuleBasedScanner
 {
@@ -57,28 +59,36 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new VdmWhitespaceDetector()));
 
+		boolean highspeed =VdmUIPlugin.getDefault().getPreferenceStore().contains(IVdmUiConstants.ENABLE_EDITOR_FAST_RECONFILER) &&VdmUIPlugin.getDefault().getPreferenceStore().getBoolean(IVdmUiConstants.ENABLE_EDITOR_FAST_RECONFILER);
 		// TODO: this is a hack to get latex related stuff commented
-		rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
-		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
+		if(!highspeed)
+		{
+			rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
+			rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
+		}
 
 		if(fgKeywords.supportsQuoteTypes())
 		{
 			rules.add(new WordPatternRule(new QuoteWordDetector(), "<", ">", type));
 		}
 		
-		if(fgKeywords.supportsTypleSelect())
+		if(!highspeed)
 		{
-			rules.add(new TupleSelectRule(stringBold));
-		}
+			if(fgKeywords.supportsTypleSelect())
+			{
+				rules.add(new TupleSelectRule(stringBold));
+			}
+			
+				
+			for (String prefix : fgKeywords.getUnderscorePrefixKeywords())
+			{
+				rules.add(new PrefixedUnderscoreRule(prefix,keyword));
+			}
 		
-		for (String prefix : fgKeywords.getUnderscorePrefixKeywords())
-		{
-			rules.add(new PrefixedUnderscoreRule(prefix,keyword));
-		}
-	
-		for (String prefix : fgKeywords.getUnderscorePrefixReservedWords())
-		{
-			rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
+			for (String prefix : fgKeywords.getUnderscorePrefixReservedWords())
+			{
+				rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
+			}
 		}
 		
 		WordRule wordRuleWithSpaces = new WordRule(new VdmMultipleWordDetector(), Token.UNDEFINED);

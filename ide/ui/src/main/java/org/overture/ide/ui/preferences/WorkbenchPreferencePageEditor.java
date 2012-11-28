@@ -33,6 +33,7 @@ IWorkbenchPreferencePage {
 	protected void createFieldEditors()
 	{
 		addField(new BooleanFieldEditor(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, "Syntax checking while you type", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IVdmUiConstants.ENABLE_EDITOR_FAST_RECONFILER, "Enable fast reconcile", getFieldEditorParent()));
 	}
 	
 	@Override
@@ -46,6 +47,7 @@ IWorkbenchPreferencePage {
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, true);
+		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_FAST_RECONFILER, false);
 		super.performDefaults();
 	}
 
@@ -53,6 +55,7 @@ IWorkbenchPreferencePage {
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_RECONFILER, true);
+		store.setDefault(IVdmUiConstants.ENABLE_EDITOR_FAST_RECONFILER, false);
 	}
 
 }

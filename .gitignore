@@ -34,6 +34,9 @@
 *.blg
 *.bbl
 *.pdfsync
+*.nav
+*.vrb
+*.snm
 
 # OS generated files #
 ######################
@@ -57,4 +60,10 @@ target/
 *.vdmppcov
 *.covtbl
 generated
+.crc
+.status
+/tools/packworkspace/examples/
+/tools/packworkspace/Reports/
+/tools/packworkspace/Web/
+/tools/packworkspace/rss.xml
 
