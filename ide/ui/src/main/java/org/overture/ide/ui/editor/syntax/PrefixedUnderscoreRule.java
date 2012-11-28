@@ -30,26 +30,23 @@ public class PrefixedUnderscoreRule implements IRule
 
 	IToken fToken = null;
 
-	private String fPrefix;
+	final private char[] fPrefix;
+	final private int fLength;
 
 	public PrefixedUnderscoreRule(String prefix, IToken token)
 	{
 		fToken = token;
-		fPrefix = prefix;
+		fPrefix = prefix.toCharArray();
+		fLength = fPrefix.length;
 	}
 
 	public IToken evaluate(ICharacterScanner scanner)
 	{
 		StringBuffer sb = new StringBuffer();
-		int c = -1;// scanner.read();
-		// sb.append((char)c);
-		// if (c == EOF) {
-		// scanner.unread();
-		// return Token.EOF;
-		// }
+		int c = -1;
 
 		int readCount = 0;
-		for (int i = 0; i < fPrefix.toCharArray().length; i++)
+		for (int i = 0; i < fLength; i++)
 		{
 			c = scanner.read();
 			if (c == EOF)
@@ -59,7 +56,7 @@ public class PrefixedUnderscoreRule implements IRule
 			}
 			sb.append((char) c);
 			readCount++;
-			if (c != fPrefix.toCharArray()[i])
+			if (c != fPrefix[i])
 			{
 
 				for (int j = 0; j < readCount; j++)
@@ -72,7 +69,7 @@ public class PrefixedUnderscoreRule implements IRule
 			}
 		}
 
-		if (readCount == fPrefix.length())
+		if (readCount == fLength)
 		{
 			c = scanner.read();
 			sb.append((char) c);
@@ -95,30 +92,5 @@ public class PrefixedUnderscoreRule implements IRule
 		}
 
 		return Token.UNDEFINED;
-
-		// if(readCount == fPrefix.length()-1)
-		// {
-		// // c = scanner.read();
-		// // sb.append((char)c);
-		// // readCount++;
-		// if(c=='_')
-		// {
-		// c = scanner.read();
-		// sb.append((char)c);
-		// scanner.unread();//we just need to check the next char not consume it
-		// if(Character.isJavaIdentifierStart(c))
-		// {
-		// return fToken;
-		// }
-		// }
-		// }
-		//		
-		// for (int i = 0; i < readCount; i++)
-		// {
-		// scanner.unread();
-		// }
-
-		// return Token.UNDEFINED;
-
 	}
 }
