@@ -49,17 +49,20 @@ import org.overture.pog.obligation.SeqApplyObligation;
  * @since 1.0
  */
 public class PogParamVisitor<Q extends POContextStack, A extends ProofObligationList>
-	extends QuestionAnswerAdaptor<Q,A> {
+	extends QuestionAnswerAdaptor<POContextStack, ProofObligationList> {
+
+
 
     /**
-	 * 
-	 */
-    private static final long serialVersionUID = 7733055823057810142L;
+     * 
+     */
+    private static final long serialVersionUID = 1671456307479822942L;
     private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
     private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
     private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
 	    this);
-
+    
+    
     @Override
     // See [1] pg. 167 for the definition
     public ProofObligationList caseAModuleModules(AModuleModules node,
@@ -69,6 +72,7 @@ public class PogParamVisitor<Q extends POContextStack, A extends ProofObligation
 
     }
 
+    
     @Override
     public ProofObligationList defaultPExp(PExp node, POContextStack question)
 	    throws AnalysisException {
@@ -83,6 +87,8 @@ public class PogParamVisitor<Q extends POContextStack, A extends ProofObligation
 	return new ProofObligationList();
     }
 
+    
+    
     @Override
     public ProofObligationList caseACaseAlternative(ACaseAlternative node,
 	    POContextStack question) throws AnalysisException {

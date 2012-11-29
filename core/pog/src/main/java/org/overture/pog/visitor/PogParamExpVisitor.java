@@ -68,22 +68,24 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	 */
     private static final long serialVersionUID = 7899640121529246521L;
     final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
-
-    public PogParamExpVisitor(PogVisitor pogVisitor) {
-	this.rootVisitor = pogVisitor;
-
-    }
-
-    public PogParamExpVisitor(PogParamVisitor pogParamVisitor) {
-	this.rootVisitor = (QuestionAnswerAdaptor<POContextStack, ProofObligationList>) pogParamVisitor;
-    }
-
-
+    final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> mainVisitor;
+    
+    // Added a mainVisitor hack to enable use from the compassVisitors -ldc
+    
+    public PogParamExpVisitor(
+	    QuestionAnswerAdaptor<POContextStack, ProofObligationList> parentVisitor, 
+	    QuestionAnswerAdaptor<POContextStack, ProofObligationList> mainVisitor) {
+	this.rootVisitor=parentVisitor;
+	this.mainVisitor=mainVisitor;
+	}
 
     public PogParamExpVisitor(
 	    QuestionAnswerAdaptor<POContextStack, ProofObligationList> parentVisitor) {
 	this.rootVisitor=parentVisitor;
+	this.mainVisitor=this;
 	}
+    
+    
 
     @Override
     // RWL see [1] pg. 57: 6.12 Apply Expressions
@@ -156,10 +158,10 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		    .getArgs().get(0), question));
 	}
 
-	obligations.addAll(node.getRoot().apply(this, question));
+	obligations.addAll(node.getRoot().apply(mainVisitor, question));
 
 	for (PExp arg : node.getArgs()) {
-	    obligations.addAll(arg.apply(this, question));
+	    obligations.addAll(arg.apply(mainVisitor, question));
 	}
 
 	return obligations;
@@ -215,7 +217,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	if (node.getOthers() != null) {
-	    obligations.addAll(node.getOthers().apply(this, question));
+	    obligations.addAll(node.getOthers().apply(mainVisitor, question));
 	}
 
 	for (int i = 0; i < count; i++)
@@ -235,7 +237,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	obligations.add(new MapSetOfCompatibleObligation(node, question));
 
 	question.push(new POForAllPredicateContext(node));
-	obligations.addAll(node.getFirst().apply(this, question));
+	obligations.addAll(node.getFirst().apply(mainVisitor, question));
 	question.pop();
 
 	boolean finiteTest = false;
@@ -253,7 +255,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	PExp predicate = node.getPredicate();
 	if (predicate != null) {
 	    question.push(new POForAllContext(node));
-	    obligations.addAll(predicate.apply(this, question));
+	    obligations.addAll(predicate.apply(mainVisitor, question));
 	    question.pop();
 	}
 
@@ -265,7 +267,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList defaultSUnaryExp(SUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
@@ -273,8 +275,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList defaultSBinaryExp(SBinaryExp node,
 	    POContextStack question) throws AnalysisException {
 	ProofObligationList obligations = new ProofObligationList();
-	obligations.addAll(node.getLeft().apply(this, question));
-	obligations.addAll(node.getRight().apply(this, question));
+	obligations.addAll(node.getLeft().apply(mainVisitor, question));
+	obligations.addAll(node.getRight().apply(mainVisitor, question));
 	return obligations;
     }
 
@@ -297,7 +299,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	ProofObligationList obligations = new ProofObligationList();
 	question.push(new POImpliesContext(node.getElseIf()));
-	obligations.addAll(node.getThen().apply(this, question));
+	obligations.addAll(node.getThen().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -308,7 +310,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    POContextStack question) throws AnalysisException {
 	ProofObligationList obligations = new ProofObligationList();
 	question.push(new POForAllContext(node));
-	obligations.addAll(node.getPredicate().apply(this, question));
+	obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 	question.pop();
 	return obligations;
     }
@@ -323,7 +325,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	question.push(new POForAllContext(node));
-	obligations.addAll(node.getPredicate().apply(this, question));
+	obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -332,14 +334,14 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseAFieldExp(AFieldExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getObject().apply(this, question);
+	return node.getObject().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAFieldNumberExp(AFieldNumberExp node,
 	    POContextStack question) throws AnalysisException {
 
-	ProofObligationList obligations = node.getTuple().apply(this, question);
+	ProofObligationList obligations = node.getTuple().apply(mainVisitor, question);
 
 	PType type = node.getType();
 
@@ -370,7 +372,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	question.push(new POForAllContext(node));
-	obligations.addAll(node.getPredicate().apply(this, question));
+	obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 	question.pop();
 	return obligations;
     }
@@ -379,7 +381,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList caseAFuncInstatiationExp(
 	    AFuncInstatiationExp node, POContextStack question)
 	    throws AnalysisException {
-	return node.getFunction().apply(this, question);
+	return node.getFunction().apply(mainVisitor, question);
     }
 
     @Override
@@ -394,22 +396,22 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseAIfExp(AIfExp node, POContextStack question)
 	    throws AnalysisException {
-	ProofObligationList obligations = node.getTest().apply(this, question);
+	ProofObligationList obligations = node.getTest().apply(mainVisitor, question);
 
 	question.push(new POImpliesContext(node.getTest()));
-	obligations.addAll(node.getThen().apply(this, question));
+	obligations.addAll(node.getThen().apply(mainVisitor, question));
 	question.pop();
 
 	question.push(new PONotImpliesContext(node.getTest()));
 
 	for (AElseIfExp e : node.getElseList()) {
-	    obligations.addAll(e.apply(this, question));
+	    obligations.addAll(e.apply(mainVisitor, question));
 	    question.push(new PONotImpliesContext(e.getElseIf()));
 
 	}
 
 	int sizeBefore = question.size();
-	obligations.addAll(node.getElse().apply(this, question));
+	obligations.addAll(node.getElse().apply(mainVisitor, question));
 	assert sizeBefore <= question.size();
 
 	for (int i = 0; i < node.getElseList().size(); i++)
@@ -434,7 +436,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	obligations.add(new UniqueExistenceObligation(node, question));
 
 	question.push(new POForAllContext(node));
-	obligations.addAll(node.getPredicate().apply(this, question));
+	obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 	question.pop();
 	return obligations;
     }
@@ -449,14 +451,14 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	} else if (basicType != null) {
 	    question.noteType(node.getTest(), basicType);
 	}
-	return node.getTest().apply(this, question);
+	return node.getTest().apply(mainVisitor, question);
     }
 
     @Override
     // RWL See [1] pg. 64-65
     public ProofObligationList caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
@@ -466,7 +468,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	question.noteType(node.getExp(), node.getClassType());
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
@@ -481,7 +483,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	question.push(new POForAllContext(node));
-	obligations.addAll(node.getExpression().apply(this, question));
+	obligations.addAll(node.getExpression().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -498,12 +500,12 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	PExp suchThat = node.getSuchThat();
 	if (suchThat != null) {
 	    question.push(new POForAllContext(node));
-	    obligations.addAll(suchThat.apply(this, question));
+	    obligations.addAll(suchThat.apply(mainVisitor, question));
 	    question.pop();
 	}
 
 	question.push(new POForAllPredicateContext(node));
-	obligations.addAll(node.getValue().apply(this, question));
+	obligations.addAll(node.getValue().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -523,7 +525,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	question.push(new POLetDefContext(node));
-	obligations.addAll(node.getExpression().apply(this, question));
+	obligations.addAll(node.getExpression().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -537,7 +539,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	// RWL Question, are we going
 	question.push(new PODefContext(node));
-	obligations.addAll(node.getExpression().apply(this, question));
+	obligations.addAll(node.getExpression().apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -554,15 +556,15 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList caseAMapletExp(AMapletExp node,
 	    POContextStack question) throws AnalysisException {
 
-	ProofObligationList obligations = node.getLeft().apply(this, question);
-	obligations.addAll(node.getRight().apply(this, question));
+	ProofObligationList obligations = node.getLeft().apply(mainVisitor, question);
+	obligations.addAll(node.getRight().apply(mainVisitor, question));
 	return obligations;
     }
 
     @Override
     public ProofObligationList caseAMkBasicExp(AMkBasicExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getArg().apply(this, question);
+	return node.getArg().apply(mainVisitor, question);
     }
 
     @Override
@@ -573,7 +575,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	@SuppressWarnings("unchecked")
 	Queue<PExp> args = (Queue<PExp>) node.getArgs().clone();
 	for (PExp arg : args)
-	    obligations.addAll(arg.apply(this, question));
+	    obligations.addAll(arg.apply(mainVisitor, question));
 
 	@SuppressWarnings("unchecked")
 	Queue<PType> argTypes = (Queue<PType>) node.getArgTypes().clone();
@@ -620,7 +622,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	int i = 0;
 	for (ARecordModifier mod : modifiers) {
-	    obligations.addAll(mod.getValue().apply(this, question));
+	    obligations.addAll(mod.getValue().apply(mainVisitor, question));
 	    AFieldField f = findField(recordType, mod.getTag());
 	    PType mType = mTypes.get(i++);
 	    if (f != null)
@@ -640,7 +642,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	ProofObligationList obligations = new ProofObligationList();
 
 	for (PExp exp : node.getArgs())
-	    obligations.addAll(exp.apply(this, question));
+	    obligations.addAll(exp.apply(mainVisitor, question));
 
 	return obligations;
     }
@@ -690,8 +692,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    POContextStack question) throws AnalysisException {
 	ProofObligationList obligations = new ProofObligationList();
 
-	obligations.addAll(node.getLeft().apply(this, question));
-	obligations.addAll(node.getRight().apply(this, question));
+	obligations.addAll(node.getLeft().apply(mainVisitor, question));
+	obligations.addAll(node.getRight().apply(mainVisitor, question));
 
 	return obligations;
     }
@@ -699,8 +701,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseASameClassExp(ASameClassExp node,
 	    POContextStack question) throws AnalysisException {
-	ProofObligationList list = node.getLeft().apply(this, question);
-	list.addAll(node.getRight().apply(this, question));
+	ProofObligationList list = node.getLeft().apply(mainVisitor, question);
+	list.addAll(node.getRight().apply(mainVisitor, question));
 	return list;
     }
 
@@ -743,9 +745,9 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseASubseqExp(ASubseqExp node,
 	    POContextStack question) throws AnalysisException {
-	ProofObligationList list = node.getSeq().apply(this, question);
-	list.addAll(node.getFrom().apply(this, question));
-	list.addAll(node.getTo().apply(this, question));
+	ProofObligationList list = node.getSeq().apply(mainVisitor, question);
+	list.addAll(node.getFrom().apply(mainVisitor, question));
+	list.addAll(node.getTo().apply(mainVisitor, question));
 	return list;
     }
 
@@ -766,7 +768,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    POContextStack question) throws AnalysisException {
 	ProofObligationList obligations = new ProofObligationList();
 	for (PExp exp : node.getArgs())
-	    obligations.addAll(exp.apply(this, question));
+	    obligations.addAll(exp.apply(mainVisitor, question));
 	return obligations;
     }
 
@@ -780,7 +782,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
@@ -788,21 +790,21 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    ACardinalityUnaryExp node, POContextStack question)
 	    throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseADistConcatUnaryExp(
 	    ADistConcatUnaryExp node, POContextStack question)
 	    throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseADistIntersectUnaryExp(
 	    ADistIntersectUnaryExp node, POContextStack question)
 	    throws AnalysisException {
-	ProofObligationList obligations = node.getExp().apply(this, question);
+	ProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 	obligations.add(new org.overture.pog.obligation.NonEmptySetObligation(
 		node.getExp(), question));
 	return obligations;
@@ -820,47 +822,47 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseADistUnionUnaryExp(ADistUnionUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAElementsUnaryExp(AElementsUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAFloorUnaryExp(AFloorUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAIndicesUnaryExp(AIndicesUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseALenUnaryExp(ALenUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAMapInverseUnaryExp(
 	    AMapInverseUnaryExp node, POContextStack question)
 	    throws AnalysisException {
-	ProofObligationList obligations = node.getExp().apply(this, question);
+	ProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 	if (!node.getMapType().getEmpty()) {
 	    obligations
 		    .add(new org.overture.pog.obligation.InvariantObligation(
@@ -872,31 +874,31 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseANotUnaryExp(ANotUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAPowerSetUnaryExp(APowerSetUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAReverseUnaryExp(AReverseUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	ProofObligationList obligations = node.getExp().apply(this, question);
+	ProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 	obligations.add(new NonEmptySeqObligation(node.getExp(), question));
 
 	return obligations;
@@ -907,13 +909,13 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    AUnaryMinusUnaryExp node, POContextStack question)
 	    throws AnalysisException {
 
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
     public ProofObligationList caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
 	    POContextStack question) throws AnalysisException {
-	return node.getExp().apply(this, question);
+	return node.getExp().apply(mainVisitor, question);
     }
 
     @Override
@@ -996,8 +998,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	PExp right = leftRight[RIGHT];
 
 	ProofObligationList obligations = new ProofObligationList();
-	obligations.addAll(left.apply(this, question));
-	obligations.addAll(right.apply(this, question));
+	obligations.addAll(left.apply(mainVisitor, question));
+	obligations.addAll(right.apply(mainVisitor, question));
 	return obligations;
     }
 
@@ -1065,8 +1067,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		    question));
 	}
 
-	obligations.addAll(left.apply(this, question));
-	obligations.addAll(right.apply(this, question));
+	obligations.addAll(left.apply(mainVisitor, question));
+	obligations.addAll(right.apply(mainVisitor, question));
 	return obligations;
     }
 
@@ -1193,10 +1195,10 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    question.pop();
 	}
 
-	obligations.addAll(lExp.apply(this, question));
+	obligations.addAll(lExp.apply(mainVisitor, question));
 
 	question.push(new POImpliesContext(lExp));
-	obligations.addAll(rExp.apply(this, question));
+	obligations.addAll(rExp.apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -1226,8 +1228,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 			    question));
 	}
 
-	obligations.addAll(lExp.apply(this, question));
-	obligations.addAll(rExp.apply(this, question));
+	obligations.addAll(lExp.apply(mainVisitor, question));
+	obligations.addAll(rExp.apply(mainVisitor, question));
 
 	return obligations;
     }
@@ -1274,9 +1276,9 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    question.pop();
 	}
 
-	obligations.addAll(lExp.apply(this, question));
+	obligations.addAll(lExp.apply(mainVisitor, question));
 	question.push(new PONotImpliesContext(lExp));
-	obligations.addAll(rExp.apply(this, question));
+	obligations.addAll(rExp.apply(mainVisitor, question));
 	question.pop();
 
 	return obligations;
@@ -1340,8 +1342,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		    question));
 	}
 
-	obligations.addAll(left.apply(this, question));
-	obligations.addAll(right.apply(this, question));
+	obligations.addAll(left.apply(mainVisitor, question));
+	obligations.addAll(right.apply(mainVisitor, question));
 	return obligations;
 
     }
@@ -1418,7 +1420,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	List<AMapletExp> members = node.getMembers();
 
 	for (AMapletExp maplet : members) {
-	    obligations.addAll(maplet.apply(this, question));
+	    obligations.addAll(maplet.apply(mainVisitor, question));
 	}
 
 	if (members.size() > 1)
@@ -1434,7 +1436,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	PExp first = node.getFirst();
 	question.push(new POForAllPredicateContext(node));
-	obligations.addAll(first.apply(this, question));
+	obligations.addAll(first.apply(mainVisitor, question));
 	question.pop();
 
 	obligations.addAll(node.getSetBind().apply(rootVisitor, question));
@@ -1442,7 +1444,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	PExp predicate = node.getPredicate();
 	if (predicate != null) {
 	    question.push(new POForAllContext(node));
-	    obligations.addAll(predicate.apply(this, question));
+	    obligations.addAll(predicate.apply(mainVisitor, question));
 	    question.pop();
 	}
 
@@ -1456,7 +1458,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	ProofObligationList obligations = new ProofObligationList();
 
 	for (PExp e : node.getMembers())
-	    obligations.addAll(e.apply(this, question));
+	    obligations.addAll(e.apply(mainVisitor, question));
 
 	return obligations;
     }
@@ -1471,7 +1473,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	ProofObligationList obligations = new ProofObligationList();
 	question.push(new POForAllPredicateContext(node));
-	obligations.addAll(first.apply(this, question));
+	obligations.addAll(first.apply(mainVisitor, question));
 	question.pop();
 
 	List<PMultipleBind> bindings = node.getBindings();
@@ -1493,7 +1495,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	if (predicate != null) {
 	    question.push(new POForAllContext(node));
-	    obligations.addAll(predicate.apply(this, question));
+	    obligations.addAll(predicate.apply(mainVisitor, question));
 	    question.pop();
 	}
 
@@ -1506,7 +1508,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	ProofObligationList obligations = new ProofObligationList();
 
 	for (PExp e : node.getMembers())
-	    obligations.addAll(e.apply(this, question));
+	    obligations.addAll(e.apply(mainVisitor, question));
 
 	return obligations;
 
@@ -1517,8 +1519,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    POContextStack question) throws AnalysisException {
 	PExp last = node.getLast();
 	PExp first = node.getFirst();
-	ProofObligationList obligations = first.apply(this, question);
-	obligations.addAll(last.apply(this, question));
+	ProofObligationList obligations = first.apply(mainVisitor, question);
+	obligations.addAll(last.apply(mainVisitor, question));
 	return obligations;
 
     }
