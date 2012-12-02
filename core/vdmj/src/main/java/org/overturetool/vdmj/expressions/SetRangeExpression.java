@@ -87,8 +87,8 @@ public class SetRangeExpression extends SetExpression
 
 		try
 		{
-    		long from = first.eval(ctxt).intValue(ctxt);
-    		long to = last.eval(ctxt).intValue(ctxt);
+    		long from = (long)Math.ceil(first.eval(ctxt).realValue(ctxt));
+    		long to = (long)Math.floor(last.eval(ctxt).realValue(ctxt));
     		ValueSet set = new ValueSet();
 
     		for (long i=from; i<= to; i++)
