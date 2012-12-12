@@ -148,7 +148,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 					(stexp == null || stexp.eval(evalContext).boolValue(ctxt)))
 				{
 					TraceNode exp = body.expand(evalContext);
-					exp.setVariables(new TraceVariableList(evalContext, def.getDefinitions()));
+					exp.addVariables(new TraceVariableList(evalContext, def.getDefinitions()));
 					node.alternatives.add(exp);
 				}
 			}

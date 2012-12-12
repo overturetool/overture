@@ -25,27 +25,20 @@ package org.overturetool.vdmj.traces;
 
 public abstract class TraceNode
 {
-	private TraceVariableList variables = null;
+	private TraceVariableList variables = new TraceVariableList();
 
 	@Override
 	abstract public String toString();
 
 	abstract public TestSequence getTests();
 
-	public void setVariables(TraceVariableList variables)
+	public void addVariables(TraceVariableList variables)
 	{
-		this.variables = variables;
+		this.variables.addAll(variables);
 	}
 
 	public CallSequence getVariables()
 	{
-		if (variables == null)
-		{
-			return new CallSequence();
-		}
-		else
-		{
-			return variables.getVariables();
-		}
+		return variables.getVariables();
 	}
 }
