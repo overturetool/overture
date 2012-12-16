@@ -551,12 +551,14 @@ public class SubTypeObligation extends ProofObligation
 
     				if (ant.getWeight() > nt.getWeight())
     				{
-            			if (nt instanceof NaturalOneType)
+    					boolean isWhole = ant.getWeight() < 3;
+    					
+            			if (isWhole && nt instanceof NaturalOneType)
             			{
           					sb.append(exp);
            					sb.append(" > 0");
             			}
-            			else if (nt instanceof NaturalType)
+            			else if (isWhole && nt instanceof NaturalType)
             			{
            					sb.append(exp);
            					sb.append(" >= 0");

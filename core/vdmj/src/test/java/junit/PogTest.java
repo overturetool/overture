@@ -26,6 +26,8 @@ package junit;
 import java.io.File;
 import java.net.URL;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -44,6 +46,7 @@ public class PogTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		Settings.release = Release.DEFAULT;
 	}
 
 	@Override

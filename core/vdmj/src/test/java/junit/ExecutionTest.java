@@ -26,6 +26,8 @@ package junit;
 import java.io.File;
 import java.net.URL;
 
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.CommandReader;
 import org.overturetool.vdmj.commands.ModuleCommandReader;
 import org.overturetool.vdmj.lex.Dialect;
@@ -45,6 +47,7 @@ public class ExecutionTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
+		Settings.release = Release.DEFAULT;
 	}
 
 	@Override

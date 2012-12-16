@@ -349,6 +349,9 @@ as the expected and actual values.
 2298, "Map patterns not available in VDM classic"
 2299, "Expecting {|->} empty map pattern"
 2300, "mk_<type> must have a single argument"
+2301, "Expecting narrow_(expression, type)"
+2302, "Expecting ')' after narrow_ expression"
+2303, "Narrow not available in VDM classic"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
@@ -665,6 +668,7 @@ as the expected and actual values.
 3314, "Map pattern is not matched against map type"
 3315, "Matching expression is not a map type"
 3316, "Expecting number in periodic argument"
+3317, "Expression can never match narrow type"
 
 
 4000, "Cannot instantiate abstract class <class>"

@@ -47,6 +47,7 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.patterns.Bind;
+import org.overturetool.vdmj.patterns.MapUnionPattern;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -663,6 +664,18 @@ public class ExpressionReader extends SyntaxReader
     							exp = readPreExpression(ve);
     							break;
     						}
+    						else if (name.startsWith("narrow_"))
+    						{
+    							if (Settings.release == Release.CLASSIC)
+    							{
+    								throwMessage(2303, "Narrow not available in VDM classic", ve.name);
+    							}
+    							else
+    							{
+    								exp = readNarrowExpression(ve);
+    							}
+    							break;
+    						}
      					}
 
     					// So we're a function/operation call, a list subsequence or
@@ -1163,6 +1176,30 @@ public class ExpressionReader extends SyntaxReader
 		}
 
 		checkFor(Token.KET, 2133, "Expecting ')' after is_ expression");
+		return exp;
+	}
+
+	private Expression readNarrowExpression(VariableExpression ve)
+		throws LexException, ParserException
+	{
+		NarrowExpression exp = null;
+
+		Expression test = readExpression();
+		checkFor(Token.COMMA, 2301, "Expecting narrow_(expression, type)");
+		TypeReader tr = getTypeReader();
+		Type type = tr.readType();
+
+		if (type instanceof UnresolvedType)
+		{
+			UnresolvedType nt = (UnresolvedType)type;
+			exp = new NarrowExpression(ve.location, nt.typename, test);
+		}
+		else
+		{
+			exp = new NarrowExpression(ve.location, type, test);
+		}
+
+		checkFor(Token.KET, 2302, "Expecting ')' after narrow_ expression");
 		return exp;
 	}
 

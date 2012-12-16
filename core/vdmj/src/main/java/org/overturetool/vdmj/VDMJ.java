@@ -218,6 +218,7 @@ abstract public class VDMJ
     		{
     			if (i.hasNext())
     			{
+    				interpret = true;
        				remoteName = i.next();
     			}
     			else
@@ -287,7 +288,7 @@ abstract public class VDMJ
 
 		ExitStatus status = null;
 
-		if (filenames.isEmpty() && !interpret)
+		if (filenames.isEmpty() && (!interpret || remoteClass != null))
 		{
 			usage("You didn't specify any files");
 			status = ExitStatus.EXIT_ERRORS;

@@ -1377,6 +1377,23 @@ abstract public class CommandReader
 		{
 			file = interpreter.getDefaultFile();
 		}
+		
+		if (file == null || file.getPath().equals("?"))
+		{
+			Set<File> files = interpreter.getSourceFiles();
+			
+			if (files.size() > 1)
+			{
+				println("Assuming file " + file.getPath());
+			}
+			else if (files.isEmpty())
+			{
+				println("No files defined");
+				return;
+			}
+
+			file = files.iterator().next();
+		}
 
 		Statement stmt = interpreter.findStatement(file, line);
 
@@ -1479,6 +1496,23 @@ abstract public class CommandReader
 		if (file == null)
 		{
 			file = interpreter.getDefaultFile();
+		}
+
+		if (file == null || file.getPath().equals("?"))
+		{
+			Set<File> files = interpreter.getSourceFiles();
+			
+			if (files.size() > 1)
+			{
+				println("Assuming file " + file.getPath());
+			}
+			else if (files.isEmpty())
+			{
+				println("No files defined");
+				return;
+			}
+
+			file = files.iterator().next();
 		}
 
 		Statement stmt = interpreter.findStatement(file, line);

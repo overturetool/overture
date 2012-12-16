@@ -63,6 +63,26 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("postcond", ResultType.TRUE);
 	}
+
+	public void test_Typeparams()
+	{
+		evaluate("typeparams", ResultType.TRUE);
+	}
+
+	public void test_Setrange()
+	{
+		evaluate("setrange", ResultType.TRUE);
+	}
+
+	public void test_Inference()
+	{
+		evaluate("inference", ResultType.TRUE);
+	}
+
+	public void test_Narrow()
+	{
+		evaluate("narrow", ResultType.TRUE, 0, Release.VDM_10);
+	}
 	
 	public void test_ValueFactory()
 	{
