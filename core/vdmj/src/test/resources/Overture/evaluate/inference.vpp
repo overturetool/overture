@@ -1,0 +1,8 @@
+class A
+functions
+	public f: () -> nat
+	f() ==
+		let N1:nat1 = 1, N0:nat = 0 in
+			let p = N1 * N0 in
+				p;
+end A

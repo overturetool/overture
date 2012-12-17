@@ -1,0 +1,4 @@
+let obj = new A() in
+	obj.size[bool]() = 2 and
+	obj.size[bool * bool]() = 4 and
+	obj.size[[bool]]() = 3

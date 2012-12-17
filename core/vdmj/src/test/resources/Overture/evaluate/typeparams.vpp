@@ -1,0 +1,7 @@
+class A
+functions
+	public size[@T]: () -> nat
+	size() ==
+		card { x | x:@T };
+		
+end A

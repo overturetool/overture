@@ -1,0 +1,6 @@
+class A
+functions
+	public f: () -> set of nat
+	f() == {1.1, ..., 3.3};
+	
+end A

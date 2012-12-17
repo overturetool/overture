@@ -1,0 +1,7 @@
+class A
+functions
+	public f: real -> nat
+	f(r) ==
+		narrow_(r, nat);
+		
+end A
