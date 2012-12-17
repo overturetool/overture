@@ -37,6 +37,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
+import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.RecordValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
@@ -91,9 +92,12 @@ public class NarrowExpression extends Expression
 			if (typedef == null)
 			{
 				report(3113, "Unknown type name '" + typename + "'");
+				result = new UnknownType(location);
 			}
-			
-			result = typedef.getType();
+			else
+			{
+				result = typedef.getType();
+			}
 		}
 		
 		if (!TypeComparator.compatible(result, exptype))
