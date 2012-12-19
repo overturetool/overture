@@ -23,6 +23,7 @@
 
 package org.overture.typechecker;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -43,6 +44,16 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 
 public class PublicClassEnvironment extends Environment
 {
+	
+	public List<PDefinition> getDefinitions()
+	{
+		List<PDefinition> res = new LinkedList<PDefinition>();
+		for (PDefinition d : classes)
+		{
+			res.add(d);
+		}
+		return res;
+	}
 	private final List<SClassDefinition> classes;
 
 	public PublicClassEnvironment(List<SClassDefinition> classes)

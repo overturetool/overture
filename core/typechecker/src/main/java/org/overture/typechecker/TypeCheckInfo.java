@@ -2,7 +2,9 @@ package org.overture.typechecker;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -30,6 +32,23 @@ public class TypeCheckInfo
 	 */
 	private static final Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
 
+	@SuppressWarnings("unchecked")
+	private static<T> Stack<T> lookupListForType(Class<T> clz)
+	{
+		Object o = context.get(clz);
+		if (o instanceof List<?>)
+		{
+			List<?> list = List.class.cast(o);
+			if (list.size() > 0)
+			{
+				Object first = list.get(0);
+				if (first != null && clz.isInstance(first))
+					return ((Stack<T>)list);
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns the value associated with key. 
 	 * 
@@ -39,13 +58,12 @@ public class TypeCheckInfo
 	 */
 	public <T>  T contextGet(Class<T> key)
 	{
-		synchronized ( TypeCheckInfo.class)
+		synchronized ( TypeCheckInfo.class )
 		{
-			Object candidate = context.get(key);
-			if (key.isInstance(candidate))
-			{
-				return key.cast(candidate);
-			}
+			Stack<T> contextStack = lookupListForType(key);
+			if (contextStack != null)
+				return contextStack.peek();
+			
 		}
 		return null;
 	}
@@ -60,7 +78,13 @@ public class TypeCheckInfo
 	{
 		synchronized(TypeCheckInfo.class)
 		{
-			context.put(key, value);
+			Stack<T> contextStack = lookupListForType(key);
+			if (contextStack == null)
+			{
+				contextStack = new Stack<T>();
+				context.put(key, contextStack);
+			}
+			contextStack.push(value);
 		}
 	}
 
@@ -75,11 +99,10 @@ public class TypeCheckInfo
 	{
 		synchronized(TypeCheckInfo.class)
 		{
-			Object candidate = contextGet(key);
-			if (key.isInstance(candidate))
+			Stack<T> contextStack = lookupListForType(key);
+			if (contextStack != null)
 			{
-				context.remove(key);
-				return key.cast(candidate);
+				return contextStack.pop();
 			}
 		}
 		return null;

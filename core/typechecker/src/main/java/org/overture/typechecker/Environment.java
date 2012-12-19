@@ -59,7 +59,18 @@ abstract public class Environment
 	{
 		this.outer = outer;
 	}
-
+	
+	/**
+	 * The the definitions that this environment can find
+	 * @return
+	 */
+	public abstract List<PDefinition> getDefinitions();
+	
+	/**
+	 * Get the outer enclosing environment of this env.
+	 * @return
+	 */
+	public Environment getOuter() { return outer; }
 	/**
 	 * Check whether the list of definitions passed contains any duplicates,
 	 * or whether any names in the list hide the same name further down the

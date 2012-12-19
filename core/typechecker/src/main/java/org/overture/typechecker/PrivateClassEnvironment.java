@@ -24,6 +24,7 @@
 package org.overture.typechecker;
 
 
+import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.definitions.ABusClassDefinition;
@@ -43,6 +44,10 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 
 public class PrivateClassEnvironment extends Environment
 {
+	public List<PDefinition> getDefinitions()
+	{
+		return classdef.getDefinitions();
+	}
 	private final SClassDefinition classdef;
 
 	public PrivateClassEnvironment(SClassDefinition classdef)

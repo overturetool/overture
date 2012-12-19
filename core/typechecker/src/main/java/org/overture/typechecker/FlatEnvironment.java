@@ -47,6 +47,10 @@ public class FlatEnvironment extends Environment
 	protected final List<PDefinition> definitions;
 	private boolean limitStateScope = false;
 
+	public List<PDefinition> getDefinitions() {
+		return definitions;
+	}
+	
 	public FlatEnvironment(List<PDefinition> definitions)
 	{
 		super(null);

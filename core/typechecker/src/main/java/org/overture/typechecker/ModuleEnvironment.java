@@ -23,6 +23,7 @@
 
 package org.overture.typechecker;
 
+import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.definitions.AStateDefinition;
@@ -45,6 +46,11 @@ public class ModuleEnvironment extends Environment
 {
 	private final AModuleModules module;
 
+	public List<PDefinition> getDefinitions()
+	{
+		return module.getDefs();
+	}
+	
 	public ModuleEnvironment(AModuleModules module)
 	{
 		super(null);
