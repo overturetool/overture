@@ -348,6 +348,11 @@ public class ExtensionGenerator2 {
 						type = f.type;
 					else {
 						type = result.lookupTagPath(rawTypeToResolved, false);
+						if (type == null)
+						    {
+							System.out.println(""+rawTypeToResolved+" cannot be found"); 
+							System.exit(-1);
+						    }
 						if (result.treeNodeInterfaces.containsKey(type))
 							type = result.treeNodeInterfaces.get(type);
 					}
