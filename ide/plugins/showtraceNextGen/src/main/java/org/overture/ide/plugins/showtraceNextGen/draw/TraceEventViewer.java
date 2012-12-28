@@ -1,6 +1,8 @@
 
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
+import java.util.Vector;
+
 import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
@@ -8,6 +10,11 @@ import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 public abstract class TraceEventViewer extends TraceViewer {
 
 	protected final Long RESOURCE_VINTERVAL = new Long(50L);
+	
+	//General
+	public abstract void drawTimelines(GenericTabItem tab);
+	
+	public abstract void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses);
 	
 	//Threads
 	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread);

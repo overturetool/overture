@@ -1,6 +1,8 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -12,14 +14,16 @@ import org.overture.ide.plugins.showtraceNextGen.view.*;
 public class OverviewEventViewer extends TraceEventViewer {
 
 	private final Long ELEMENT_SIZE = 18L;
+	private static List<Point> timeLineStart = new ArrayList<Point>();
 
 	public OverviewEventViewer()
 	{
 	}
 
-	public void drawOverview(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
+	public void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
 	{
         Long yPos = RESOURCE_VINTERVAL / 2L;
+        timeLineStart.clear();
         
         //Draw CPU labels in reverse order
         Collections.reverse(cpus);
@@ -35,8 +39,8 @@ public class OverviewEventViewer extends TraceEventViewer {
             cpu.setY(yPos + 10L);
             yPos += RESOURCE_VINTERVAL;
             
-            //Draw CPU line
-            drawTimeline(tab, cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
+            timeLineStart.add(new Point(cpu.getX().intValue(), cpu.getY().intValue()));
+            //drawTimeline(tab, cpu.getX(), cpu.getY(), tab.getHorizontalSize(), cpu.getY());
         }
 
         //Draw Bus labels
@@ -51,14 +55,26 @@ public class OverviewEventViewer extends TraceEventViewer {
             bus.setY(yPos + 10L);
             yPos = new Long(yPos.longValue() + RESOURCE_VINTERVAL.longValue());
             
-            //Draw Bus line
-            drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
+            timeLineStart.add(new Point(bus.getX().intValue(), bus.getY().intValue()));
+            //drawTimeline(tab, bus.getX(), bus.getY(), tab.getHorizontalSize(), bus.getY());
         }
         
 		//Add spacer between bus/cpu objects and timeline
 		Line spacer = new Line(0L, 0L, CPU_X_START, 0L);
 		spacer.setForegroundColor(ColorConstants.white);
 		tab.addFigure(spacer);
+	}
+	
+
+	@Override
+	public void drawTimelines(GenericTabItem tab) {
+		for(Point start : timeLineStart)
+		{
+			Long x = new Long(start.x);
+			Long y = new Long(start.y);
+			
+			drawTimeline(tab, x, y, tab.getHorizontalSize(), y);
+		}
 	}
 	
 	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
@@ -336,4 +352,5 @@ public class OverviewEventViewer extends TraceEventViewer {
         
         tab.addBackgroundFigure(label);
 	}
+
 }
