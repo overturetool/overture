@@ -156,18 +156,18 @@ public class GenericTabItem
 
     public Long getHorizontalSize()
     {
-        //return new Long(theFigure.getSize().width);
-    	return new Long(theCanvas.getSize().x);
+    	return new Long(theFigure.getSize().width);
+    	//return new Long(theCanvas.getSize().x);
     }
 
     public Long getVerticalSize()
-    {
-        //return new Long(theFigure.getSize().height);
-    	return new Long(theCanvas.getSize().y);
+    {  	
+        return new Long(theFigure.getSize().height);
+    	//return new Long(theCanvas.getSize().y);
     }
 
     public void addFigure(IFigure aFigure)
-    {
+    { 	
         if(!$assertionsDisabled && aFigure == null)
             throw new AssertionError();
         if(!$assertionsDisabled && theFigure == null)
@@ -180,13 +180,13 @@ public class GenericTabItem
             xmax = xmax < xfig ? xfig : xmax;
             int yfig = rect.y + rect.height - 2;
             ymax = ymax < yfig ? yfig : ymax;
-            theFigure.add(aFigure);
-            
-
+                    
 			Point currentFolderSize = theTabItem.getParent().getSize();
 			int currentX = currentFolderSize.x;
 			int currentY = currentFolderSize.y;
             sizeCanvas(currentX, currentY);
+            
+            theFigure.add(aFigure);
         }
     }
     
@@ -261,21 +261,27 @@ public class GenericTabItem
     }
     
     private void sizeCanvas(int currentX, int currentY){
-    	
+    	theFigure.setSize(xmax, ymax);
+    	/*
     	if(allowedDirection == AllowedOverrunDirection.Both)
 		{
     		if(xmax > currentX || ymax > currentY)
-    			theCanvas.setSize(xmax, ymax);
+    		{
+    			theFigure.setSize(xmax, ymax);
+    			//theCanvas.setSize(xmax, ymax);
+    		}
 			return; //handleResize()
 		}
 		else if(allowedDirection == AllowedOverrunDirection.Horizontal)
 		{
-    			theCanvas.setSize(xmax, currentY);
+				theFigure.setSize(xmax, currentY);
+    			//theCanvas.setSize(xmax, currentY);
 		}
 		else //Allows vertical overrun
 		{
-			theCanvas.setSize(currentX, ymax);
-		}
+			theFigure.setSize(currentX, ymax);
+			//theCanvas.setSize(currentX, ymax);
+		}*/
     	
     }
     
@@ -296,7 +302,8 @@ public class GenericTabItem
 		}
 
 		public void controlResized(ControlEvent e) {
-				
+			
+			
 			TabFolder folder = (TabFolder) e.getSource();
 			Point currentFolderSize = folder.getSize();
 			
@@ -304,7 +311,6 @@ public class GenericTabItem
 			int currentY = currentFolderSize.y;
 			
 			sizeCanvas(currentX, currentY);
-			
 			//theCanvas.setSize(3000, 3000);
 							
 			if(currentX > lastX || currentY > lastY)
