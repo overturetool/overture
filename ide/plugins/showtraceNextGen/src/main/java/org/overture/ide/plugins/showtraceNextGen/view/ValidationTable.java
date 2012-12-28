@@ -228,7 +228,8 @@ public class ValidationTable
         for(cnt = 0; cnt < 6; cnt++)
             theTable.getColumn(cnt).pack();
 
-        theViewer.updateOverviewPage();
+        //MVQ; This is called from 
+        //theViewer.updateOverviewPage();
     }
 
     private Table theTable;

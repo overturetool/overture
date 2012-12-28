@@ -19,10 +19,10 @@ public class NextGenThreadEvent implements Serializable, INextGenEvent{
 	}
 	
 	public NextGenThread thread;
-	public long time;
+	public NextGenTimeStamp time;
 	public ThreadEventType type;
 	
-	public NextGenThreadEvent(NextGenThread thread, long time, ThreadEventType t) 
+	public NextGenThreadEvent(NextGenThread thread, NextGenTimeStamp time, ThreadEventType t) 
 	{
 		this.thread = thread;
 		this.time = time;
@@ -44,12 +44,12 @@ public class NextGenThreadEvent implements Serializable, INextGenEvent{
 			s.append(" objref: "); s.append(this.thread.object==null ? "no object" : this.thread.object.id);
 			s.append(" clnm: \""); s.append(this.thread.object==null ? "no object" : this.thread.object.classDef.name);	s.append("\"");	
 			s.append(" cpunm: "); s.append(thread.object != null ? thread.object.cpu.id : "0");
-			s.append(" time: " ); s.append(time);
+			s.append(" time: " ); s.append(time.toString());
 			break;
 		case KILL: 
 			s.append("Kill");
 			s.append(" -> id:"); s.append(this.thread.id);
-			s.append(" time: " ); s.append(time);
+			s.append(" time: " ); s.append(time.toString());
 			break;
 		default:
 			break;
@@ -62,7 +62,7 @@ public class NextGenThreadEvent implements Serializable, INextGenEvent{
 
 	
 	
-	public long getTime() {		
+	public NextGenTimeStamp getTime() {		
 		return time;
 	}
 

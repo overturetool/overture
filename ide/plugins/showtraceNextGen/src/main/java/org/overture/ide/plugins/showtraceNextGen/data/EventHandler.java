@@ -38,7 +38,7 @@ public abstract class EventHandler {
 				eventViewer = overviewViewer;
 				
 				//Draw conjectures on the overview
-				Vector<Conjecture> cons = conjectures.getConjecture(event.getTime());
+				Vector<Conjecture> cons = conjectures.getConjecture(event.getTime().getAbsoluteTime());
 				
 				for(Conjecture c : cons)
 				{
@@ -56,10 +56,10 @@ public abstract class EventHandler {
 		}
 		
 		//Check event time and draw marker if needed
-		if(data.getLastMarkerTime() == null || data.getLastMarkerTime() != event.getTime())
+		if(data.getLastMarkerTime() == null || data.getLastMarkerTime() != event.getTime().getAbsoluteTime())
 		{
-			eventViewer.drawTimeMarker(tab, event.getTime());
-			data.setLastMarkerTime(event.getTime());
+			eventViewer.drawTimeMarker(tab, event.getTime().getAbsoluteTime());
+			data.setLastMarkerTime(event.getTime().getAbsoluteTime());
 		}
 		
 		//Handle the event

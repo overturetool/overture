@@ -7,6 +7,6 @@ public class EventComparator implements Comparator<INextGenEvent>
 {
     public int compare(INextGenEvent event1, INextGenEvent event2)
     {
-        return (int)(event1.getTime() - event2.getTime());
+        return (int)(event1.getTime().getAbsoluteTime() - event2.getTime().getAbsoluteTime());
     }
 }

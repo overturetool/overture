@@ -80,7 +80,9 @@ public class NextGenRTLogger {
 	//private ArrayList<INextGenEvent> events = new ArrayList<INextGenEvent>();
 	private Map<Long, ArrayList<INextGenEvent>> events = new TreeMap<Long, ArrayList<INextGenEvent>>();
 	private NextGenBus vBus;
-	private String logFile = null;	
+	private String logFile = null;
+	private long currentAbsoluteTime = -1L;
+	private int currentRelativeTime = -1;
 		
 	private NextGenRTLogger()
 	{		
@@ -136,6 +138,19 @@ public class NextGenRTLogger {
 
 	public void log(RTMessage message) 
 	{
+		//Keep track of relative time among events happening at the same wall clock time
+		if(currentAbsoluteTime != message.getLogTime())
+		{
+			currentRelativeTime = 0;
+		}
+		else
+		{
+			currentRelativeTime++;
+		}
+		
+		currentAbsoluteTime = message.getLogTime();
+		
+		NextGenTimeStamp logTime = new NextGenTimeStamp(currentAbsoluteTime, currentRelativeTime);
 		
 		/**
 		 * Declarations: CPUs and Busses
@@ -167,19 +182,19 @@ public class NextGenRTLogger {
 		if(message instanceof RTThreadCreateMessage)
 		{
 			RTThreadMessage m = (RTThreadCreateMessage) message;
-			this.createThread(m.thread,m.cpuNumber,m.getLogTime());
+			this.createThread(m.thread,m.cpuNumber,logTime);
 		}
 		
 		if(message instanceof RTThreadSwapMessage)
 		{
 			RTThreadSwapMessage m = (RTThreadSwapMessage) message;
-			this.addThreadSwap(m.thread,m.cpuNumber,m.getType(),m.overhead,m.delay,m.getLogTime());
+			this.addThreadSwap(m.thread,m.cpuNumber,m.getType(),m.overhead,m.delay,logTime);
 		}
 		
 		if(message instanceof RTThreadKillMessage)
 		{
 			RTThreadKillMessage m = (RTThreadKillMessage) message;
-			this.addThreadKill(m.thread,m.cpuNumber,m.getLogTime());
+			this.addThreadKill(m.thread,m.cpuNumber,logTime);
 		}
 		
 		/**
@@ -188,7 +203,7 @@ public class NextGenRTLogger {
 		if(message instanceof RTOperationMessage)
 		{
 			RTOperationMessage m = (RTOperationMessage) message;
-			this.treatOperationMessage(m);
+			this.treatOperationMessage(m, logTime);
 		}
 		
 		/**
@@ -197,7 +212,7 @@ public class NextGenRTLogger {
 		if(message instanceof RTBusMessage)
 		{
 			RTBusMessage m = (RTBusMessage) message;
-			this.treatBusMessage(m);
+			this.treatBusMessage(m, logTime);
 		}	
 	}
 	
@@ -296,7 +311,9 @@ public class NextGenRTLogger {
         {
         	for(INextGenEvent e : entry.getValue())
         	{
-	        	out.append(Long.toString(e.getTime()));
+	        	out.append(Long.toString(e.getTime().getAbsoluteTime()));
+	        	out.append(", ");
+	        	out.append(Long.toString(e.getTime().getRelativeTime()));
 	        	out.append(" -> ");
 	        	out.append(e.toString());
 	        	out.newLine();
@@ -342,7 +359,7 @@ public class NextGenRTLogger {
 		
 	}
 	
-	private void treatBusMessage(RTBusMessage message) {
+	private void treatBusMessage(RTBusMessage message, NextGenTimeStamp time) {
 				
 		MessagePacket mp = message.message;
 		NextGenBusMessage busMessage = null;
@@ -362,7 +379,7 @@ public class NextGenRTLogger {
 					this.objectMap.get(mp.target.objectReference));
 			
 			this.busMessage.put(mp.msgId, busMessage);			
-			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage, NextGenBusMessageEventType.REQUEST, message.getLogTime());
+			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage, NextGenBusMessageEventType.REQUEST, time);
 
 			addEvent(e);
 		}
@@ -370,14 +387,14 @@ public class NextGenRTLogger {
 		if(message instanceof RTBusActivateMessage)
 		{
 			busMessage = this.busMessage.get(mp.msgId);
-			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage,NextGenBusMessageEventType.ACTIVATE, message.getLogTime());
+			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage,NextGenBusMessageEventType.ACTIVATE, time);
 			addEvent(e);
 		}		
 		
 		if(message instanceof RTBusCompletedMessage)
 		{
 			busMessage = this.busMessage.get(mp.msgId);
-			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage,NextGenBusMessageEventType.COMPLETED, message.getLogTime());
+			NextGenBusMessageEvent e = new NextGenBusMessageEvent(busMessage,NextGenBusMessageEventType.COMPLETED, time);
 			addEvent(e);
 		}
 		
@@ -398,7 +415,7 @@ public class NextGenRTLogger {
 					busMessage.object);
 			
 			this.busMessage.put(mp.msgId, replyBusMessage);
-			NextGenBusMessageEvent e = new NextGenBusMessageReplyRequestEvent(busMessage,replyBusMessage, message.getLogTime());
+			NextGenBusMessageEvent e = new NextGenBusMessageReplyRequestEvent(busMessage,replyBusMessage, time);
 			addEvent(e);
 		}
 		
@@ -426,7 +443,7 @@ public class NextGenRTLogger {
 		return this.objectMap.get(objref.intValue());
 	}
 	
-	private void treatOperationMessage(RTOperationMessage m) {
+	private void treatOperationMessage(RTOperationMessage m, NextGenTimeStamp time) {
 		
 	
 		String opName = m.operationVal.name.toString();
@@ -468,7 +485,7 @@ public class NextGenRTLogger {
 		} 
 
 		
-		NextGenOperationEvent opEvent = new NextGenOperationEvent(getThread(m.threadId),m.getLogTime(),op, obj ,eventType);
+		NextGenOperationEvent opEvent = new NextGenOperationEvent(getThread(m.threadId),time,op, obj ,eventType);
 				
 		addEvent(opEvent);
 		
@@ -478,7 +495,7 @@ public class NextGenRTLogger {
 		return this.operationMap.get(className + opName);		
 	}
 
-	private void addThreadKill(ISchedulableThread thread, CPUResource cpuNumber,long time) {
+	private void addThreadKill(ISchedulableThread thread, CPUResource cpuNumber, NextGenTimeStamp time) {
 		
 		NextGenThread t = this.threadMap.get(thread.getId());		
 		NextGenThreadEvent threadEvent = new NextGenThreadEvent(t, time, NextGenThreadEvent.ThreadEventType.KILL);
@@ -486,7 +503,7 @@ public class NextGenRTLogger {
 		addEvent(threadEvent);
 	}
 
-	private void addThreadSwap(ISchedulableThread thread, CPUResource cpuNumber, SwapType swapType, int overhead, long delay, Long time) {
+	private void addThreadSwap(ISchedulableThread thread, CPUResource cpuNumber, SwapType swapType, int overhead, long delay, NextGenTimeStamp time) {
 		
 		NextGenThread t = this.threadMap.get(thread.getId());		
 		ThreadEventSwapType ngSwapType = null;
@@ -550,7 +567,7 @@ public class NextGenRTLogger {
 		return classDef;
 	}
 	
-	private void createThread(ISchedulableThread thread, CPUResource cpuNumber,long time) 
+	private void createThread(ISchedulableThread thread, CPUResource cpuNumber, NextGenTimeStamp time) 
 	{		
 		long threadId = thread.getId();
 		
@@ -676,17 +693,17 @@ public class NextGenRTLogger {
 
 		in.close();
 		
-		//printDataStructure("c:\\readFromFile_structure.txt");
+		printDataStructure("d:\\readFromFile_structure.txt");
 	}
 		
 	private void addEvent(INextGenEvent event)
 	{
-		Long eventTime = event.getTime();
+		NextGenTimeStamp eventTime = event.getTime();
 		
-		if(!events.containsKey(eventTime))
-			events.put(eventTime, new ArrayList<INextGenEvent>());
+		if(!events.containsKey(eventTime.getAbsoluteTime()))
+			events.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
 		
-		ArrayList<INextGenEvent> eventList = events.get(eventTime);
+		ArrayList<INextGenEvent> eventList = events.get(eventTime.getAbsoluteTime());
 		eventList.add(event);
 	}
 }
