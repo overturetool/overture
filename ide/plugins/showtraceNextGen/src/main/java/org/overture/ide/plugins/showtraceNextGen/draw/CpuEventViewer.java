@@ -9,7 +9,7 @@ import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 
 public class CpuEventViewer  extends TraceEventViewer {
 
-	public void drawView(GenericTabItem tab, Vector<TraceBus> buses)
+	public void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
 	{
 		Long currentXPos = BUS_X_START; 
 		Long yPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
@@ -50,6 +50,13 @@ public class CpuEventViewer  extends TraceEventViewer {
 		spacer.setForegroundColor(ColorConstants.white);
 		tab.addFigure(spacer);
 	}
+	
+	@Override
+	public void drawTimelines(GenericTabItem tab) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 	@Override
 	public void drawTimeMarker(GenericTabItem tab, Long markerTime) {
