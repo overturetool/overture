@@ -1,5 +1,7 @@
 package org.overture.ide.plugins.showtraceNextGen.draw;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.draw2d.ColorConstants;
@@ -8,9 +10,11 @@ import org.overture.ide.plugins.showtraceNextGen.data.*;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 
 public class CpuEventViewer  extends TraceEventViewer {
-
+	private static List<Point> timeLineStart = new ArrayList<Point>();
+	
 	public void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses)
 	{
+		timeLineStart.clear();
 		Long currentXPos = BUS_X_START; 
 		Long yPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
 
@@ -36,9 +40,10 @@ public class CpuEventViewer  extends TraceEventViewer {
 			//Draw Object timeline
 			Long lineXPos = currentXPos + new Long(CPU_WIDTH/2);
 			Long lineYStartPos = yPos;
-			Long lineYEndPos = tab.getVerticalSize();
-			drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
-
+			//Long lineYEndPos = tab.getVerticalSize();
+			//drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+			timeLineStart.add(new Point(lineXPos.intValue(), lineYStartPos.intValue()));
+			
 			bus.setX(currentXPos + new Long((CPU_WIDTH/2))); 
 			bus.setY(yPos);
 
@@ -53,8 +58,13 @@ public class CpuEventViewer  extends TraceEventViewer {
 	
 	@Override
 	public void drawTimelines(GenericTabItem tab) {
-		// TODO Auto-generated method stub
-		
+		for(Point start : timeLineStart)
+		{
+			Long x = new Long(start.x);
+			Long y = new Long(start.y);
+			
+			drawTimeline(tab, x, y, x, tab.getVerticalSize());
+		}
 	}
 	
 
@@ -324,12 +334,13 @@ public class CpuEventViewer  extends TraceEventViewer {
 			nrr.setSize(objWidth, CPU_HEIGHT);
 			tab.addFigure(nrr);
 
-			//Draw Object timeline
+			//Save Object timeline
 			Long lineXPos = objectXPos + new Long(objWidth/2);
 			Long lineYStartPos = objectYPos;
-			Long lineYEndPos = tab.getVerticalSize();
-			drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
-
+			//Long lineYEndPos = tab.getVerticalSize();
+			//drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
+			timeLineStart.add(new Point(lineXPos.intValue(), lineYStartPos.intValue()));
+			
 			//Update Object
 			pobj.setY(objectYPos);			
 			pobj.setVisible(true);

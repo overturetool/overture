@@ -193,7 +193,8 @@ public class GenericTabItem
     public void addBackgroundFigure(IFigure bFigure)
     {
     	//Add figure and dont update xmax and ymax
-        theFigure.add(bFigure);
+       // theFigure.add(bFigure);
+        theFigure.add(bFigure, 0);
     }
 
     public Font getCurrentFont()
