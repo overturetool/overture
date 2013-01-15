@@ -46,7 +46,7 @@ public class ProcessCommandLine extends CommandLine
 	public ProcessCommandLine(
 		Dialect dialect, Release release, List<File> loadedFiles, String expression)
 	{
-		super(dialect, release, null);
+		super(dialect, release, null, null);
 		this.loadedFiles = loadedFiles;
 		this.expression = expression;
 	}
@@ -54,7 +54,7 @@ public class ProcessCommandLine extends CommandLine
 	public ProcessCommandLine(
 			Dialect dialect, Release release, List<File> loadedFiles, String expression, File logFile)
 		{
-			super(dialect, release, null);
+			super(dialect, release, null, null);
 			this.loadedFiles = loadedFiles;
 			this.expression = expression;
 			this.logFile = logFile;

@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmjc;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -39,15 +42,18 @@ public class VDMJC
 
 		try
 		{
-			Dialect dialect = Dialect.VDM_PP;
+			Dialect dialect = Dialect.VDM_SL;
 			String startLine = null;
+			List<File> pathnames = new Vector<File>();
 
 			if (args.length > 0)
 			{
 				List<String> cmds = new Vector<String>();
 
-				for (String arg: args)
+				for (Iterator<String> i = Arrays.asList(args).iterator(); i.hasNext();)
 				{
+					String arg = i.next();
+
 					if (arg.equals("-vdmpp"))
 					{
 						dialect = Dialect.VDM_PP;
@@ -60,6 +66,26 @@ public class VDMJC
 					{
 						dialect = Dialect.VDM_RT;
 					}
+		    		else if (arg.equals("-path"))
+		    		{
+		    			if (i.hasNext())
+		    			{
+		       				File path = new File(i.next());
+		       				
+		       				if (path.isDirectory())
+		       				{
+		       					pathnames.add(path);
+		       				}
+		       				else
+		       				{
+		       					System.out.println(path + " is not a directory");
+		       				}
+		    			}
+		    			else
+		    			{
+		    				System.out.println("-path option requires a directory");
+		    			}
+		    		}
 					else if (arg.startsWith("-"))
 					{
 						System.err.println("Usage: VDMJC [-vdmpp | -vdmsl | -vdmrt] [command]");
@@ -86,7 +112,7 @@ public class VDMJC
 			}
 
 			System.out.println("Dialect is " + dialect.name() + " " + Release.DEFAULT);
-			new CommandLine(dialect, Release.DEFAULT, startLine).run();
+			new CommandLine(dialect, Release.DEFAULT, startLine, pathnames).run();
 			System.exit(0);
 		}
 		catch (Exception e)

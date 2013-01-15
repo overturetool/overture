@@ -43,16 +43,18 @@ public class CommandLine
 	protected Dialect dialect;
 	protected Release release;
 	private String startLine = null;
+	private final List<File> pathnames;
 
 	protected static Queue<String> messages = new ConcurrentLinkedQueue<String>();
 
 	protected static Queue<String> scriptMessages = new ConcurrentLinkedQueue<String>();
 
-	public CommandLine(Dialect dialect, Release release, String startLine)
+	public CommandLine(Dialect dialect, Release release, String startLine, List<File> pathnames)
 	{
 		this.dialect = dialect;
 		this.release = release;
 		this.startLine = startLine;
+		this.pathnames = pathnames;
 	}
 
 	public static void message(String msg)
@@ -90,29 +92,45 @@ public class CommandLine
 		while (it.hasNext())
 		{
 			String name = it.next();
-			File dir = new File(name);
+			File file = new File(name);
 
-			if (dir.exists())
+			if (file.exists())
 			{
-				if (dir.isDirectory())
+				if (file.isDirectory())
 				{
- 					for (File file: dir.listFiles(dialect.getFilter()))
+ 					for (File subfile: file.listFiles(dialect.getFilter()))
 					{
-						if (file.isFile())
+						if (subfile.isFile())
 						{
-							files.add(file);
+							files.add(subfile);
 						}
 					}
 				}
     			else
     			{
-    				files.add(dir);
-    			}
+   					files.add(file);
+   				}
 			}
 			else
 			{
-				println("Cannot find file " + name);
 				OK = false;
+
+				for (File path: pathnames)
+				{
+					File pfile = new File(path, name);
+					
+					if (pfile.exists())
+					{
+						files.add(pfile);
+						OK = true;
+						break;
+					}
+				}
+
+				if (!OK)
+				{
+					println("Cannot find file " + name);
+				}
 			}
 		}
 
