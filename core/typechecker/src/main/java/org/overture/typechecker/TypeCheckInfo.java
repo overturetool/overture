@@ -32,6 +32,11 @@ public class TypeCheckInfo
 	 */
 	private static final Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
 
+    public static void clearContext()
+    {
+	context.clear();
+    }
+
 	@SuppressWarnings("unchecked")
 	private static<T> Stack<T> lookupListForType(Class<T> clz)
 	{
@@ -108,6 +113,7 @@ public class TypeCheckInfo
 		return null;
 	}
 
+    
 
 	final public Environment env;
 	public NameScope scope;
