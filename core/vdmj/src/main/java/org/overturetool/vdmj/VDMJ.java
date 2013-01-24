@@ -285,6 +285,8 @@ abstract public class VDMJ
     				}
     				else
     				{
+    					boolean OK = false;
+    					
     					for (File path: pathnames)
     					{
     						File pfile = new File(path, arg);
@@ -292,8 +294,14 @@ abstract public class VDMJ
     						if (pfile.exists())
     						{
     							filenames.add(pfile);
+    							OK = true;
     							break;
     						}
+    					}
+    					
+    					if (!OK)
+    					{
+    						usage("Cannot find file " + file);
     					}
     				}
     			}
