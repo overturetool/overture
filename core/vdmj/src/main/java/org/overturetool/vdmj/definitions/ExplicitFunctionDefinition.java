@@ -319,7 +319,7 @@ public class ExplicitFunctionDefinition extends Definition
 		}
 		else if (measure != null)
 		{
-			if (base.isVDMPP()) measure.setTypeQualifier(type.parameters);
+			if (base.isVDMPP()) measure.setTypeQualifier(getMeasureParams());
 			measuredef = base.findName(measure, scope);
 
 			if (measuredef == null)
@@ -346,13 +346,19 @@ public class ExplicitFunctionDefinition extends Definition
 				{
 					measure.report(3310, "Measure must also be polymorphic");
 				}
-				
+				else if (this.typeParams != null && efd.typeParams != null
+						&& !this.typeParams.equals(efd.typeParams))
+				{
+					measure.report(3318, "Measure's type parameters must match function's");
+					detail2("Actual", efd.typeParams, "Expected", typeParams);
+				}
+		
 				FunctionType mtype = (FunctionType)measuredef.getType();
 
-				if (!TypeComparator.compatible(mtype.parameters, type.parameters))
+				if (!TypeComparator.compatible(mtype.parameters, getMeasureParams()))
 				{
 					measure.report(3303, "Measure parameters different to function");
-					detail2(measure.name, mtype.parameters, name.name, type.parameters);
+					detail2(measure.name, mtype.parameters, "Expected", getMeasureParams());
 				}
 
 				if (!(mtype.result instanceof NaturalType))
@@ -412,6 +418,22 @@ public class ExplicitFunctionDefinition extends Definition
 		}
 
 		return ftype;
+	}
+	
+	private TypeList getMeasureParams()
+	{
+		TypeList params = new TypeList();
+		params.addAll(type.parameters);
+		Type rtype = type.result;
+		
+		while (rtype instanceof FunctionType)
+		{
+			FunctionType ftype = (FunctionType)rtype;
+			params.addAll(ftype.parameters);
+			rtype = ftype.result;
+		}
+		
+		return params;
 	}
 
 	private Type checkParams(ListIterator<PatternList> plists, FunctionType ftype)

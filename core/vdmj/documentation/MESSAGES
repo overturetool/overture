@@ -669,6 +669,7 @@ as the expected and actual values.
 3315, "Matching expression is not a map type"
 3316, "Expecting number in periodic argument"
 3317, "Expression can never match narrow type"
+3318, "Measure's type parameters must match function's"
 
 
 4000, "Cannot instantiate abstract class <class>"

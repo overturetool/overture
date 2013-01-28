@@ -21,7 +21,7 @@ functions
 	f(a) == if a = 1 then 1 else fid[@T](-a) + f[@T](a-1)
 	measure fid;
 	
-	public fid[@X]: @X -> nat
+	public fid[@T]: @T -> nat
 	fid(a) == if a < 0 then 1 else a;
 	
 thread

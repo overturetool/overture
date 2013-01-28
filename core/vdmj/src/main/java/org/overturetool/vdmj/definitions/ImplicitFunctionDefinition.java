@@ -346,6 +346,12 @@ public class ImplicitFunctionDefinition extends Definition
 				{
 					measure.report(3310, "Measure must also be polymorphic");
 				}
+				else if (this.typeParams != null && efd.typeParams != null
+						&& !this.typeParams.equals(efd.typeParams))
+				{
+					measure.report(3318, "Measure's type parameters must match function's");
+					detail2("Actual", efd.typeParams, "Expected", typeParams);
+				}
 				
 				FunctionType mtype = (FunctionType)measuredef.getType();
 

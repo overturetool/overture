@@ -83,6 +83,11 @@ public class ClassTest extends OvertureTest
 	{
 		evaluate("narrow", ResultType.TRUE, 0, Release.VDM_10);
 	}
+
+	public void test_Curried()
+	{
+		evaluate("curried", ResultType.TRUE);
+	}
 	
 	public void test_ValueFactory()
 	{

@@ -80,6 +80,7 @@ public class FunctionValue extends Value
 	private Map<Long, Stack<Value>> measureValues = null;
 	private Set<Long> measuringThreads = null;
 	private Set<Long> callingThreads = null;
+	private ValueList curriedArgs = null;
 	private boolean isMeasure = false;
 
 	public ObjectValue self = null;
@@ -87,10 +88,11 @@ public class FunctionValue extends Value
 	public boolean uninstantiated = false;
 	private ClassDefinition classdef = null;
 
-	public FunctionValue(LexLocation location, String name, FunctionType type,
+	private FunctionValue(LexLocation location, String name, FunctionType type,
 		List<PatternList> paramPatternList, Expression body,
 		FunctionValue precondition, FunctionValue postcondition,
-		Context freeVariables, boolean checkInvariants)
+		Context freeVariables, boolean checkInvariants, ValueList curriedArgs,
+		LexNameToken measureName, Map<Long, Stack<Value>> measureValues)
 	{
 		this.location = location;
 		this.name = name;
@@ -102,6 +104,13 @@ public class FunctionValue extends Value
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = checkInvariants;
+		this.curriedArgs = curriedArgs;
+		
+		if (Settings.measureChecks && measureName != null)
+		{
+			this.measureName = measureName;
+			this.measureValues = measureValues;	// NB. a copy of the base FunctionValue's
+		}
 	}
 
 	public FunctionValue(LexLocation location, String name, FunctionType type,
@@ -376,8 +385,6 @@ public class FunctionValue extends Value
 					{
 						measure = (FunctionValue)measure.clone();
 						measure.uninstantiated = false;
-						measure.type = new FunctionType(
-							measure.location, measure.type.partial, type.parameters, measure.type.result);
 						measure.typeValues = typeValues;
 					}
 
@@ -385,12 +392,28 @@ public class FunctionValue extends Value
 					measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
 					measure.isMeasure = true;
 				}
+				
+				// If this is a curried function, then the measure is called with all of the
+				// previously applied argument values, in addition to the argValues.
+				
+				ValueList measureArgs = null;
+				
+				if (curriedArgs == null)
+				{
+					measureArgs = argValues;
+				}
+				else
+				{
+					measureArgs = new ValueList();
+					measureArgs.addAll(curriedArgs);	// Previous args
+					measureArgs.addAll(argValues);		// Final args
+				}
 
 				// We disable the swapping and time (RT) as measure checks should be "free".
 
 				measure.measuringThreads.add(tid);
 				evalContext.threadState.setAtomic(true);
-				Value mv = measure.eval(measure.location, argValues, evalContext);
+				Value mv = measure.eval(measure.location, measureArgs, evalContext);
 				evalContext.threadState.setAtomic(false);
 				measure.measuringThreads.remove(tid);
 
@@ -487,13 +510,27 @@ public class FunctionValue extends Value
 				{
 					evalContext.putAll(freeVariables);
 				}
+				
+				// Curried arguments are collected so that we can invoke any measure functions
+				// once we reach the final apply that does not return a function.
+				
+				ValueList argList = new ValueList();
+				
+				if (curriedArgs != null)
+				{
+					argList.addAll(curriedArgs);
+				}
+				
+				argList.addAll(argValues);
 
     			FunctionValue rv = new FunctionValue(location, "curried",
     				(FunctionType)type.result,
     				paramPatternList.subList(1, paramPatternList.size()),
-    				body, newpre, newpost, evalContext, false);
+    				body, newpre, newpost, evalContext, false, argList,
+    				measureName, measureValues);
 
     			rv.setSelf(self);
+    			rv.typeValues = typeValues;
 
         		return rv;
 			}
@@ -586,7 +623,7 @@ public class FunctionValue extends Value
 
 		return new FunctionValue(location, name, (FunctionType)type.result,
 			paramPatternList.subList(1, paramPatternList.size()),
-			body, precondition, postcondition, newFreeVariables, false);
+			body, precondition, postcondition, newFreeVariables, false, null, null, null);
 	}
 
 	@Override
@@ -594,7 +631,8 @@ public class FunctionValue extends Value
 	{
 		FunctionValue copy = new FunctionValue(location, name, type,
 			paramPatternList, body, precondition, postcondition,
-			freeVariables, checkInvariants);
+			freeVariables, checkInvariants, curriedArgs,
+			measureName, measureValues);
 
 		copy.typeValues = typeValues;
 		return copy;
