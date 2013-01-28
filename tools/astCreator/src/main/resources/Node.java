@@ -2,12 +2,15 @@
 package %generated.node%;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.overture.ast.node.INode;
 
 import %org.overture.ast.analysis.IAnalysis%;
 import %org.overture.ast.analysis.IAnswer%;
@@ -62,6 +65,27 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 //	 */
 //	abstract void replaceChild(%Node% oldChild, Node newChild);
 //
+	public void replaceChild(%INode% oldChild, %INode% newChild) {
+		
+		Class<?> me = getClass();
+		for ( Field f : me.getFields())
+		{
+			f.setAccessible(true);
+			try {
+				Object valueInF = f.get(this);
+				if (valueInF == oldChild)
+					f.set(this, newChild);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+	
+	}
+
+	
+	
 //	/**
 //	 * Replaces this node by {@code node} in the AST. If this node has no parent
 //	 * node, this results in a {@link NullPointerException}.

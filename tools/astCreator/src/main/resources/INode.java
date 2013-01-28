@@ -43,6 +43,17 @@ public interface %INode%
 	public abstract void removeChild(%INode% child);
 
 	/**
+	 * If {%code oldChild} pointed to by any field of this {@link %INode} instance
+	 * replace it with {@code newChild}.
+	 * 
+	 * @param %INode% oldChild 
+	 * @param %INode% newChild
+	 * @throws RuntimeException in particular if {@code newChild} has an improper type 
+	 * for the field pointing to {@code oldChild}.
+	 */
+	public void replaceChild(%INode% oldChild, %INode% newChild);
+	
+	/**
 	 * Returns the nearest ancestor of this node (including itself)
 	 * which is a subclass of {@code classType}.
 	 * @param classType the superclass used
