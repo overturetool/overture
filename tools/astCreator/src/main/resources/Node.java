@@ -68,7 +68,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public void replaceChild(%INode% oldChild, %INode% newChild) {
 		
 		Class<?> me = getClass();
-		for ( Field f : me.getDeclaredFields()))
+		for (Field f : me.getDeclaredFields() )
 		{
 			f.setAccessible(true);
 			try {
@@ -84,8 +84,6 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	
 	}
 
-	
-	
 //	/**
 //	 * Replaces this node by {@code node} in the AST. If this node has no parent
 //	 * node, this results in a {@link NullPointerException}.
