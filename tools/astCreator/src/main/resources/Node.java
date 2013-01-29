@@ -68,7 +68,7 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public void replaceChild(%INode% oldChild, %INode% newChild) {
 		
 		Class<?> me = getClass();
-		for ( Field f : me.getFields())
+		for ( Field f : me.getDeclaredFields()))
 		{
 			f.setAccessible(true);
 			try {
