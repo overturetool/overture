@@ -2188,7 +2188,7 @@ define a polymorphic version of this function:
 so \texttt{filter[\keyw{real}](\keyw{lambda} x:\keyw{real} \&
   \keyw{floor} x = x, [2.3,0.7,-2.1,3])} $\equiv$  \texttt{[3]}.
 
-
+\vspace{1ex}
 Functions may also return functions as results. An example of this is
 the function \texttt{fmap}:
 \begin{lstlisting}
@@ -2200,6 +2200,23 @@ the function \texttt{fmap}:
 \end{lstlisting}
 So \texttt{fmap[\keyw{nat}](\keyw{lambda} x:\keyw{nat} \& x * x)([1,2,3,4,5])} $\equiv$ 
 \texttt{[ 1,4,9,16,25 ]}.
+
+\vspace{1ex}
+\noindent Since the \texttt{fmap} function is recursive, it ought to have a \keyw{measure}
+function defined. In the case of curried functions, the measure function's parameters
+are the same as a de-curried version of the recursive function's parameters. For
+the \texttt{fmap} example, this would be:
+\begin{lstlisting}
+  m[@elem]: (@elem -> @elem) * seq of @elem -> nat
+  m(-, l) == len l;
+\end{lstlisting}
+Note that the measure function is also polymorphic, and must have the same type
+parameters as the function it measures. The proof obligation will also be polymorphic:
+\begin{lstlisting}
+(forall f:(@elem -> @elem), l:seq of (@elem) &
+  (not (l = []) =>
+    m[@elem](f, l) > m[@elem](f, (tl l))))
+\end{lstlisting}
 
 \chapter{Expressions}\label{chap:expr}
 
