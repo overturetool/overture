@@ -116,34 +116,30 @@ public class ApplyExpression extends Expression
 
 		if (inFunction)
 		{
-			LexNameToken called = null;
+			Definition called = getRecursiveDefinition(env);
 
-			if (root instanceof VariableExpression)
-    		{
-    			VariableExpression var = (VariableExpression)root;
-    			called = var.name;
-    		}
-			else if (root instanceof FuncInstantiationExpression)
+			if (called instanceof ExplicitFunctionDefinition)
 			{
-				FuncInstantiationExpression fie = (FuncInstantiationExpression)root;
-
-				if (fie.expdef != null)
+				ExplicitFunctionDefinition def = (ExplicitFunctionDefinition)called;
+				
+				if (def.isCurried)
 				{
-					called = fie.expdef.name;
-				}
-				else if (fie.impdef != null)
-				{
-					called = fie.impdef.name;
+					// Only recursive if this apply is the last - so our type is not a function.
+					
+					if (type instanceof FunctionType && ((FunctionType)type).result instanceof FunctionType)
+					{
+						called = null;
+					}
 				}
 			}
-
+			
 			if (called != null)
 			{
     			if (func instanceof ExplicitFunctionDefinition)
     			{
     				ExplicitFunctionDefinition def = (ExplicitFunctionDefinition)func;
 
-        			if (called.equals(def.name))
+        			if (called == def)	// The same definition
         			{
         				recursive = def;
         				def.recursive = true;
@@ -153,7 +149,7 @@ public class ApplyExpression extends Expression
     			{
     				ImplicitFunctionDefinition def = (ImplicitFunctionDefinition)func;
 
-        			if (called.equals(def.name))
+        			if (called == def)	// The same definition
         			{
         				recursive = def;
         				def.recursive = true;
@@ -493,5 +489,78 @@ public class ApplyExpression extends Expression
 		subs.addAll(root.getSubExpressions());
 		subs.add(this);
 		return subs;
+	}
+	
+	private Definition getRecursiveDefinition(Environment env)
+	{
+		LexNameToken fname = null;
+		
+		if (root instanceof ApplyExpression)
+		{
+			ApplyExpression aexp = (ApplyExpression)root;
+			return aexp.getRecursiveDefinition(env);
+		}
+		else if (root instanceof VariableExpression)
+		{
+			VariableExpression var = (VariableExpression)root;
+			fname = var.name;
+		}
+		else if (root instanceof FuncInstantiationExpression)
+		{
+			FuncInstantiationExpression fie = (FuncInstantiationExpression)root;
+
+			if (fie.expdef != null)
+			{
+				fname = fie.expdef.name;
+			}
+			else if (fie.impdef != null)
+			{
+				fname = fie.impdef.name;
+			}
+		}
+			
+		if (fname != null)
+		{
+			return env.findName(fname, NameScope.NAMESANDSTATE);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public String getMeasureApply(LexNameToken measure)
+	{
+		return getMeasureApply(measure, true);
+	}
+	
+	/**
+	 * Create a measure application string from this apply, turning the root function
+	 * name into the measure name passed, and collapsing curried argument sets into one. 
+	 */
+	private String getMeasureApply(LexNameToken measure, boolean close)
+	{
+		String start = null;
+		
+		if (root instanceof ApplyExpression)
+		{
+			ApplyExpression aexp = (ApplyExpression)root;
+			start = aexp.getMeasureApply(measure, false);
+		}
+		else if (root instanceof VariableExpression)
+		{
+			start = measure.getName() + "(";
+		}
+		else if (root instanceof FuncInstantiationExpression)
+		{
+			FuncInstantiationExpression fie = (FuncInstantiationExpression)root;
+			start = measure.getName() + "[" + Utils.listToString(fie.actualTypes) + "](";
+		}
+		else
+		{
+			start = root.toString() + "(";
+		}
+		
+		return start  + Utils.listToString(args) + (close ? ")" : ", ");
 	}
 }

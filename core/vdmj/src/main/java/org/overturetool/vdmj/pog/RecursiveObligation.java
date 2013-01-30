@@ -26,25 +26,47 @@ package org.overturetool.vdmj.pog;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.expressions.ApplyExpression;
+import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.types.PatternListTypePair;
+import org.overturetool.vdmj.util.Utils;
 
 public class RecursiveObligation extends ProofObligation
 {
 	public RecursiveObligation(
 		ExplicitFunctionDefinition def, ApplyExpression apply, POContextStack ctxt)
 	{
-		super(def.location, POType.RECURSIVE, ctxt);
+		super(apply.location, POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(def.measure.getName());
+		
+		if (def.typeParams != null)
+		{
+			sb.append("[");
+			
+			for (LexNameToken type: def.typeParams)
+			{
+				sb.append("@");
+				sb.append(type);
+			}
+			
+			sb.append("]");
+		}
+		
+		String sep = "";
 		sb.append("(");
-		sb.append(def.paramPatternList.get(0));
+		
+		for (PatternList plist: def.paramPatternList)
+		{
+			 sb.append(sep);
+			 sb.append(Utils.listToString(plist));
+			 sep = ", ";
+		}
+
 		sb.append(")");
 		sb.append(def.measureLexical > 0 ? " LEX" + def.measureLexical + "> " : " > ");
-		sb.append(def.measure.getName());
-		sb.append("(");
-		sb.append(apply.args);
-		sb.append(")");
+		sb.append(apply.getMeasureApply(def.measure));
 
 		value = ctxt.getObligation(sb.toString());
 	}
