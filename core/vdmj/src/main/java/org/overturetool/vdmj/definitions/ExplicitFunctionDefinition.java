@@ -424,13 +424,17 @@ public class ExplicitFunctionDefinition extends Definition
 	{
 		TypeList params = new TypeList();
 		params.addAll(type.parameters);
-		Type rtype = type.result;
 		
-		while (rtype instanceof FunctionType)
+		if (isCurried)
 		{
-			FunctionType ftype = (FunctionType)rtype;
-			params.addAll(ftype.parameters);
-			rtype = ftype.result;
+			Type rtype = type.result;
+
+			while (rtype instanceof FunctionType)
+			{
+				FunctionType ftype = (FunctionType)rtype;
+				params.addAll(ftype.parameters);
+				rtype = ftype.result;
+			}
 		}
 		
 		return params;
