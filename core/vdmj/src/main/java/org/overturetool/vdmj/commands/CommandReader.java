@@ -483,9 +483,18 @@ abstract public class CommandReader
 		try
 		{
    			long before = System.currentTimeMillis();
-   			interpreter.runtrace(line, testNo, debug, reduction, reductionType, 0);
+   			boolean passed = interpreter.runtrace(line, testNo, debug, reduction, reductionType, 0);
    			long after = System.currentTimeMillis();
 			println("Executed in " + (double)(after-before)/1000 + " secs. ");
+			
+			if (passed)
+			{
+				println("All tests passed");
+			}
+			else
+			{
+				println("Some tests failed or indeterminate");
+			}
 
 			if (RTLogger.getLogSize() > 0)
 			{
