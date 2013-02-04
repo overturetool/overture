@@ -1,4 +1,5 @@
-PATH=$PATH:/cygdrive/d/Program\ Files/MiKTeX\ 2.9/miktex/bin
+# Execute the commands necessary to rebuild the Language Reference Manual.
+# (Works with MikTeX 2.9 on Windows!)
 
 echo First pass...
 pdflatex -quiet VDM10_lang_man
