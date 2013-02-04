@@ -46,6 +46,15 @@ public abstract class Method {
 
 	}
 
+	public static Method newMethod(Class<? extends Method> method,
+                                       IClassDefinition c) 
+            throws InstantiationException, IllegalAccessException
+	{
+		Method m = method.newInstance();
+		m.setClassDefinition(c);
+		return m;
+	}
+
 	public boolean isConstructor = false;
 	public boolean isAbstract = false;
 	protected String javaDoc = "";
