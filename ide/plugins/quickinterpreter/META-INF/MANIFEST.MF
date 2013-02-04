@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.2.0
+Bundle-Version: 2.2.1
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.plugins.quickinterpreter
@@ -16,9 +16,9 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
  org.overture.ide.core;bundle-version="0.3.0"
 Bundle-Activator: org.overture.ide.plugins.quickinterpreter.Activator
 Bundle-ClassPath: .,
- ast-2.2.0.jar,
- interpreter-2.2.0.jar,
- parser-2.2.0.jar,
- pog-2.2.0.jar,
+ ast-2.2.1.jar,
+ interpreter-2.2.1.jar,
+ parser-2.2.1.jar,
+ pog-2.2.1.jar,
  testframework-2.2.1.jar,
  typechecker-2.2.1.jar

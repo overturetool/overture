@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.overture.ide.platform
 Bundle-SymbolicName: org.overture.ide.platform;singleton:=true
-Bundle-Version: 2.2.0
+Bundle-Version: 2.2.1
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -14,6 +14,6 @@ Bundle-Vendor: Overture
 Bundle-Activator: org.overture.ide.platform.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- ast-2.2.0.jar,
- parser-2.2.0.jar,
+ ast-2.2.1.jar,
+ parser-2.2.1.jar,
  testframework-2.2.1.jar
