@@ -1,0 +1,617 @@
+\begin{vdm_al}
+class TracefileChecker is subclass of OmlVisitor
+
+instance variables
+  -- keep track of the current line
+  line : nat := 1;
+  
+  -- count the number of errors encountered
+  errors : TracefileMarker;
+  
+  -- in case of a severe error, abort checking altogether
+  severe : bool := false
+
+functions
+  private nat2str: nat -> seq of char
+  nat2str (num) ==
+    if num < 10
+    then ["0123456789"(num+1)]
+    else nat2str(num div 10) ^ nat2str(num mod 10);
+    
+operations
+  --
+  -- CONSTRUCTOR
+  --
+  public TracefileChecker: TracefileMarker ==> TracefileChecker
+  TracefileChecker (tfmark) == errors := tfmark;
+  
+  public addError: seq of char ==> ()
+  addError (pstr) == errors.addError(pstr,line);
+  
+  public addWarning: seq of char * [nat] ==> ()
+  addWarning (pstr,pline) ==
+    if pline = nil
+    then errors.addWarning(pstr,line)
+    else errors.addWarning(pstr,pline);
+  
+  public hasErrors : () ==> bool
+  hasErrors () == return errors.errorCount() > 0;
+  
+  public hasWarnings : () ==> bool
+  hasWarnings () == return errors.warningCount() > 0;
+
+  --
+  -- TOP-LEVEL ENTRY POINT
+  --
+  public visitTraceFile: IOmlTraceFile ==> ()
+  visitTraceFile (pitf) ==
+    ( def tracefile = pitf.getTrace() in
+        for event in tracefile do
+          ( if not severe then visitTraceEvent(event);
+            line := line + 1 );
+      if not hasErrors()
+      then ( postMessageCheck();
+             postOperCheck() ) );
+
+  --
+  -- ORDERING OF EVENTS ON RESOURCES
+  --
+  
+instance variables
+  -- keep track of the time on each CPU
+  cputime: map nat to nat := { 0 |-> 0 };
+  
+  -- keep track of the time on each BUS
+  bustime: map nat to nat := { 0 |-> 0 }
+  
+operations
+  private checkTimeOnCpu: nat * nat ==> bool
+  checkTimeOnCpu (cpunm, ctime) ==
+    if cputime(cpunm) <= ctime
+    then ( cputime := cputime ++ {cpunm |-> ctime};
+           return true )
+    else ( let str = " seen "^nat2str(cputime(cpunm))^" before "^nat2str(ctime) in
+           addError("inconsistent use of time on cpu "^nat2str(cpunm)^str);
+           severe := true;
+           return false );
+             
+  private checkTimeOnBus: nat * nat ==> bool
+  checkTimeOnBus (busid, ctime) ==
+    if bustime(busid) <= ctime
+    then ( bustime := bustime ++ {busid |-> ctime};
+           return true )
+    else ( let str = " seen "^nat2str(bustime(busid))^" before "^nat2str(ctime) in
+           addError("inconsistent use of time on bus "^nat2str(busid)^str);
+           severe := true;
+           return false );    
+  
+  --
+  -- THREADS
+  --
+  
+instance variables
+  -- keep track of the thread status
+  threads : map nat to bool := {|->};
+  
+  -- keep track of the thread deployment
+  thrcpu : map nat to nat := {|->};
+
+  -- keep track of the current thread per cpu
+  curthr : map nat to [nat] := {0 |-> nil}
+
+operations
+
+  --
+  -- THREADSWAPIN
+  --
+
+  public visitThreadSwapIn: IOmlThreadSwapIn ==> ()
+  visitThreadSwapIn (pthr) ==
+    def thrid = pthr.getId();
+        cpunm = pthr.getCpunm();
+        ctime = pthr.getObstime() in
+      ( -- basic sanity check
+        if not hasCPU(cpunm) then return;
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not hasThread(thrid) then return;
+        if not hasLiveThread(thrid) then return;
+        if not hasThreadOnCpu(thrid,cpunm) then return;
+        if pthr.hasObjref()
+        then def objref = pthr.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,cpunm) then return );
+        -- now check the current thread on the cpu
+        if curthr(cpunm) = nil
+        then curthr := curthr ++ {cpunm |-> thrid}
+        else addError("thread (id = " ^nat2str(curthr(cpunm))^ ") is still active on cpu " ^nat2str(cpunm)) );
+
+  private isCurrentThreadOnCpu: nat * nat ==> bool
+  isCurrentThreadOnCpu (thrid, cpunm) ==
+    if curthr(cpunm) = nil
+    then ( dcl str : seq of char := " (there is no active thread)";
+           addError("thread " ^nat2str(thrid)^ " is not the active thread on cpu "
+                    ^nat2str(cpunm)^ str);
+           return false )
+    else if curthr(cpunm) = thrid
+         then return true
+         else ( dcl str : seq of char := " (active thread = " ^nat2str(curthr(cpunm))^ ")";
+                addError("thread " ^nat2str(thrid)^ " is not the active thread on cpu "
+                         ^nat2str(cpunm)^ str);
+                return false )
+    pre thrid in set dom threads and
+        thrid in set dom thrcpu and
+        cpunm in set dom cpus and
+        cpunm in set dom curthr;
+
+  private isNotCurrentThreadOnCpu: nat * nat ==> bool
+  isNotCurrentThreadOnCpu (thrid, cpunm) ==
+    if curthr(cpunm) = nil
+    then return true
+    else if curthr(cpunm) = thrid
+         then ( addError("thread " ^nat2str(thrid)^ " is still active cpu " ^nat2str(cpunm));
+                return false )
+         else return true
+    pre thrid in set dom threads and
+        thrid in set dom thrcpu and
+        cpunm in set dom cpus and
+        cpunm in set dom curthr;
+
+  --
+  -- DELAYEDTHREADSWAPIN
+  --
+  
+  public visitDelayedThreadSwapIn: IOmlDelayedThreadSwapIn ==> ()
+  visitDelayedThreadSwapIn (pthr) ==
+    def thrid = pthr.getId();
+        cpunm = pthr.getCpunm();
+        ctime = pthr.getObstime() in
+      ( -- basic sanity check
+        if not hasCPU(cpunm) then return;
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not hasThread(thrid) then return;
+        if not hasLiveThread(thrid) then return;
+        if not hasThreadOnCpu(thrid,cpunm) then return;
+        if pthr.hasObjref()
+        then def objref = pthr.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,cpunm) then return );
+        -- now check the current thread on the cpu
+        if curthr(cpunm) = nil
+        then curthr := curthr ++ {cpunm |-> thrid}
+        else addError("thread (id = " ^nat2str(curthr(cpunm))^ ") is still active on cpu " ^nat2str(cpunm)) );
+
+  --
+  -- THREADSWAPOUT
+  --
+  
+  public visitThreadSwapOut: IOmlThreadSwapOut ==> ()
+  visitThreadSwapOut (pthr) == 
+    def thrid = pthr.getId();
+        cpunm = pthr.getCpunm();
+        ctime = pthr.getObstime() in
+      ( -- basic sanity check
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not checkThreadOnCpu(thrid,cpunm) then return;
+        if pthr.hasObjref()
+        then def objref = pthr.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,cpunm) then return );
+        -- update the administration
+        curthr := curthr ++ {cpunm |-> nil} );
+
+  private checkThreadOnCpu: nat * nat ==> bool
+  checkThreadOnCpu (thrid, cpunm) ==
+    ( if not hasCPU(cpunm) then return false;
+      if not hasThread(thrid) then return false;
+      if not hasLiveThread(thrid) then return false;
+      if not hasThreadOnCpu(thrid,cpunm) then return false;
+      return isCurrentThreadOnCpu(thrid,cpunm) );
+
+  --
+  -- THREADCREATE
+  --
+  
+  public visitThreadCreate: IOmlThreadCreate ==> ()
+  visitThreadCreate (pthr) ==
+    def thrid = pthr.getId();
+        cpunm = pthr.getCpunm();
+        ctime = pthr.getObstime() in
+      ( -- check for a unique thread identifier
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if thrid in set dom threads
+        then addError("thread (id = " ^nat2str(thrid)^ ") is not unique")
+        else threads := threads munion {thrid |-> true};
+        -- check for a valid cpu and update the admin
+        if hasCPU(cpunm)
+        then thrcpu := thrcpu munion {thrid |-> cpunm} );
+
+  public hasThread: nat ==> bool
+  hasThread (pid) ==
+    if pid in set dom threads
+    then return true
+    else ( addError ("thread (id = " ^nat2str(pid)^ ") does not exist");
+           return false );
+  
+  public hasThreadOnCpu: nat * nat ==> bool
+  hasThreadOnCpu (thrid, cpunm) ==
+    if thrcpu(thrid) = cpunm
+    then return true
+    else ( addError("thread (id = " ^nat2str(thrid)^ ") is deployed on cpu "
+                    ^nat2str(thrcpu(thrid))^ " in stead of cpu "^nat2str(cpunm));
+           return false )
+    pre thrid in set dom threads and
+        thrid in set dom thrcpu and
+        cpunm in set dom cpus;
+                 
+  public hasLiveThread: nat ==> bool
+  hasLiveThread (pid) ==
+    if threads(pid)
+    then return true
+    else ( addError("thread (id = " ^nat2str(pid)^ ") is already dead");
+           return false )
+    pre pid in set dom threads;
+
+  --
+  -- THREADKILL
+  --
+  
+  public visitThreadKill: IOmlThreadKill ==> ()
+  visitThreadKill (pthr) ==
+    def thrid = pthr.getId();
+        cpunm = pthr.getCpunm();
+        ctime = pthr.getObstime() in
+      ( -- basic sanity check
+        if not hasCPU(cpunm) then return;
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not hasThread(thrid) then return;
+        if not hasLiveThread(thrid) then return;
+        if not hasThreadOnCpu(thrid,cpunm) then return;
+        if not isNotCurrentThreadOnCpu(thrid,cpunm) then return;
+        -- update the thread administration
+        threads := threads ++ {thrid |-> false} )
+
+  --
+  -- OPERATIONS
+  --
+
+instance variables
+  opreq : map seq of char to nat := {|->};
+  opact : map seq of char to nat := {|->};
+  opfin : map seq of char to nat := {|->}
+  
+operations
+
+  --
+  -- check whether all operations were successfully completed
+  --
+  
+  private postOperCheck: () ==> ()
+  postOperCheck () ==
+    for all opname in set dom opreq do
+      ( if hasRequest (opname) > hasActivate (opname)
+        then addWarning("Operation \"" ^opname^ "\" is still pending", nil)
+        else if hasActivate (opname) > hasCompleted (opname)
+             then addWarning("Operation \"" ^opname^ "\" is still active", nil) );
+  --
+  -- OPREQUEST
+  --
+  
+  public visitOpRequest: IOmlOpRequest ==> ()
+  visitOpRequest (por) ==
+    def thrid = por.getId();
+        opname = por.getOpname();
+        cpunm = por.getCpunm();
+        ctime = por.getObstime() in
+      ( -- basic sanity check
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not checkThreadOnCpu(thrid,cpunm) then return;
+        if por.hasObjref()
+        then def objref = por.getObjref() in
+               if not hasObject(objref) then return;
+        -- update the administration
+        if opname in set dom opreq
+        then def rcnt = opreq(opname)+1 in
+               opreq := opreq ++ {opname |-> rcnt}
+        else opreq := opreq munion {opname |-> 1} );
+        
+  private hasRequest: seq of char ==> nat
+  hasRequest (pnm) ==
+    if pnm in set dom opreq
+    then return opreq(pnm)
+    else return 0;
+    
+  --
+  -- OPACTIVATE
+  -- 
+  
+  public visitOpActivate: IOmlOpActivate ==> ()
+  visitOpActivate (poa) ==
+    def thrid = poa.getId();
+        opname = poa.getOpname();
+        cpunm = poa.getCpunm();
+        ctime = poa.getObstime() in
+      ( -- basic sanity check
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not checkThreadOnCpu(thrid,cpunm) then return;
+        if poa.hasObjref()
+        then def objref = poa.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,cpunm) then return );
+        -- check for valid activate
+        if hasActivate(opname) >= hasRequest (opname)
+        then ( addError ("Operation \"" ^opname^ "\" is activated more than requested");
+               return );
+        -- update the administration
+        if opname in set dom opact
+        then def ract = opact(opname)+1 in
+               opact := opact ++ {opname |-> ract}
+        else opact := opact munion {opname |-> 1} );
+  
+  private hasActivate: seq of char ==> nat
+  hasActivate (pnm) ==
+    if pnm in set dom opact
+    then return opact(pnm)
+    else return 0;
+    
+  --
+  -- OPCOMPLETED
+  --
+  
+  public visitOpCompleted: IOmlOpCompleted ==> ()
+  visitOpCompleted (poc) ==
+    def thrid = poc.getId();
+        opname = poc.getOpname();
+        cpunm = poc.getCpunm();
+        ctime = poc.getObstime() in
+      ( -- basic sanity check
+        if not checkTimeOnCpu(cpunm,ctime) then return;
+        if not checkThreadOnCpu(thrid,cpunm) then return;
+        if poc.hasObjref()
+        then def objref = poc.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,cpunm) then return );
+        -- check for valid completed
+        if hasCompleted(opname) >= hasActivate(opname)
+        then ( addError ("Operation \"" ^opname^ "\" is completed more than activated");
+               return );
+        -- update the administration
+        if opname in set dom opfin
+        then def rfin = opfin(opname) in
+               opfin := opfin ++ {opname |-> rfin}
+        else opfin := opfin munion {opname |-> 1} );
+
+  private hasCompleted: seq of char ==> nat
+  hasCompleted (pnm) ==
+    if pnm in set dom opfin
+    then return opfin(pnm)
+    else return 0;
+    
+  --
+  -- MESSAGES
+  --
+
+instance variables
+  msgs : map nat to nat := {|->}
+  
+operations
+
+  --
+  -- check whether all message were processed
+  --
+  
+  private postMessageCheck: () ==> ()
+  postMessageCheck () ==
+    for all msg in set dom msgs do
+      ( if msgs(msg) = 1
+        then addWarning ("Message (id = " ^nat2str(msg)^ ") is still pending", nil)
+        else if msgs(msg) = 2
+             then addWarning ("Message (id = " ^nat2str(msg)^ ") is still in transit", nil) );
+        
+  --
+  -- MESSAGE REQUEST
+  --
+  
+  public visitMessageRequest: IOmlMessageRequest ==> ()
+  visitMessageRequest (pmr) ==
+    def busid = pmr.getBusid();
+        msgid = pmr.getMsgid();
+        frcpu = pmr.getFromcpu();
+        tocpu = pmr.getTocpu();
+        callthr = pmr.getCallthr();
+        ctime = pmr.getObstime() in
+      ( -- basic sanity check
+        if not hasBUS(busid) then return;
+        if not checkTimeOnBus(busid,ctime) then return;
+        if not hasCPU(frcpu) then return;
+        if not hasCPU(tocpu) then return;
+        if not connectsCpus(busid, frcpu, tocpu) then return;
+        if not hasThreadOnCpu(callthr,frcpu) then return;
+        if pmr.hasObjref()
+        then def objref = pmr.getObjref() in
+               ( if not hasObject(objref) then return;
+                 if not hasObjectOnCpu(objref,tocpu) then return );
+        -- check for a valid message
+        if msgid in set dom msgs
+        then addError ("message (id = " ^nat2str(msgid)^ ") is not unique")
+        else msgs := msgs munion {msgid |-> 1} );
+               
+  --
+  -- REPLY REQUEST
+  --
+  
+  public visitReplyRequest: IOmlReplyRequest ==> ()
+  visitReplyRequest (prr) ==
+    def busid = prr.getBusid();
+        msgid = prr.getMsgid();
+        origmsgid = prr.getOrigmsgid();
+        frcpu = prr.getFromcpu();
+        tocpu = prr.getTocpu();
+        callthr = prr.getCallthr();
+        calleethr = prr.getCalleethr();
+        ctime = prr.getObstime() in
+      ( -- basic sanity check
+        if not hasBUS(busid) then return;
+        if not checkTimeOnBus(busid,ctime) then return;
+        if not hasCPU(frcpu) then return;
+        if not hasCPU(tocpu) then return;
+        if not connectsCpus(busid, frcpu, tocpu) then return;
+        if not hasThreadOnCpu(callthr,tocpu) then return;
+        if not hasThreadOnCpu(calleethr,frcpu) then return;
+        -- check for a valid message
+        if origmsgid not in set dom msgs
+        then addError ("message (origmsgid = " ^nat2str(origmsgid)^ ") does not exist");
+        if msgid in set dom msgs
+        then addError ("message (id = " ^nat2str(msgid)^ ") is not unique")
+        else msgs := msgs munion {msgid |-> 1} );               
+
+  --
+  -- MESSAGE ACTIVATE
+  --
+  
+  public visitMessageActivate: IOmlMessageActivate ==> ()
+  visitMessageActivate (pma) ==
+    def msgid = pma.getMsgid() in
+      if msgid in set dom msgs
+      then ( if msgs(msgid) = 1
+             then msgs := msgs ++ {msgid |-> 2}
+             else addError ("message (id = " ^nat2str(msgid)^ ") can not be activated") )
+      else addError ("message (id = " ^nat2str(msgid)^ ") is unknown");
+
+  --
+  -- MESSAGE COMPLETED
+  --
+  
+  public visitMessageCompleted: IOmlMessageCompleted ==> ()
+  visitMessageCompleted (pmc) ==
+    def msgid = pmc.getMsgid() in
+      if msgid in set dom msgs
+      then ( if msgs(msgid) = 2
+             then msgs := msgs ++ {msgid |-> 3}
+             else addError ("message (id = " ^nat2str(msgid)^ ") can not be completed") )
+      else addError ("message (id = " ^nat2str(msgid)^ ") is unknown");
+
+  --
+  -- ARCHITECTURE
+  -- 
+
+instance variables
+  -- keep track of all the cpus
+  cpus : map nat to seq of char := {0 |-> "vCPU0"};
+  
+  -- keep track of all the buses
+  buses : map nat to seq of char := {0 |-> "vBUS"};
+  topos : map nat to set of nat := {0 |-> {0}};
+  
+  -- keep track of all the objects
+  objs : map nat to nat := {|->}
+  
+operations
+
+  --
+  -- CPUDECL
+  --
+  
+  public visitCPUdecl: IOmlCPUdecl ==> ()
+  visitCPUdecl (picd) == 
+    def id = picd.getId();
+        name = picd.getName() in
+      ( -- check the cpu identifier
+        if id in set dom cpus
+        then ( addError ("cpu (id = " ^nat2str(id)^ ") is not unique");
+               return );
+        -- check the cpu name
+        if name in set rng cpus
+        then ( addError ("cpu (name = \"" ^name^ "\" is not unique");
+               return );
+        -- add the cpu to the list of cpus
+        cpus := cpus munion {id |-> name};
+        cputime := cputime munion {id |-> 0};
+        -- add the cpu to the topology of vBUS(0)
+        topos := topos ++ {0 |-> topos(0) union {id}} );
+
+  private hasCPU: nat ==> bool
+  hasCPU (pid) ==
+    if pid in set dom cpus
+    then return true
+    else ( addError("CPU (id = " ^nat2str(pid)^ ") is not known");
+           return false );
+           
+  --
+  -- BUSDECL
+  --
+  
+  public visitBUSdecl: IOmlBUSdecl ==> ()
+  visitBUSdecl (pibd) == 
+    def id = pibd.getId();
+        name = pibd.getName();
+        topo = pibd.getTopo() in
+      ( -- check the bus identifier
+        if id in set dom buses
+        then ( addError ("bus (id = " ^nat2str(id)^ ") is not unique");
+               return );
+        -- check the cpu name
+        if name in set rng buses
+        then ( addError ("bus (name = \"" ^name^ "\" is not unique");
+               return );
+        -- add the bus to the list of buses
+        buses := buses munion {id |-> name};
+        bustime := bustime munion {id |-> 0};
+        -- add the topology information
+        topos := topos munion {id |-> topo} );
+
+  private hasBUS: nat ==> bool
+  hasBUS (pid) ==
+    if pid in set dom buses
+    then return true
+    else ( addError("BUS (id = " ^nat2str(pid)^ ") is not known");
+           return false );
+
+  private connectsCpus: nat * nat * nat ==> bool
+  connectsCpus (pbus, pcpu1, pcpu2) ==
+    ( dcl res : bool := true;
+      if pcpu1 not in set topos(pbus)
+      then ( addError ("CPU (id = " ^nat2str(pcpu1)^ ") is not connected to BUS " ^ nat2str(pbus));
+             res := false );
+      if pcpu2 not in set topos(pbus)
+      then ( addError ("CPU (id = " ^nat2str(pcpu2)^ ") is not connected to BUS " ^ nat2str(pbus));
+             res := false );
+      return res );
+      
+  --
+  -- DEPLOYOBJ
+  --
+  
+  public visitDeployObj: IOmlDeployObj ==> ()
+  visitDeployObj (pido) ==
+    def objref = pido.getObjref();
+        cpunm = pido.getCpunm() in
+      ( -- basic sanity check
+        if not hasCPU(cpunm) then return;
+        if objref in set dom objs
+        then ( if objs(objref) = 0
+               then objs := objs ++ {objref |-> cpunm}
+               else addError ("Object (id = " ^nat2str(objref)^
+                              ") can not be moved from cpu " ^nat2str(objs(objref))^
+                              " to cpu " ^nat2str(objref) ) )
+        else objs := objs munion {objref |-> cpunm} );
+
+  private hasObject: nat ==> bool
+  hasObject (pid) ==
+    if pid in set dom objs
+    then return true
+    else ( addError ("Object (id = " ^nat2str(pid)^ ") does not exist");
+           return false );
+           
+  private hasObjectOnCpu: nat * nat ==> bool
+  hasObjectOnCpu (pobj, pcpu) ==
+    if objs(pobj) = pcpu
+    then return true
+    else ( addError ("Object (id = " ^nat2str(pobj)^
+                     ") is deployed on cpu " ^nat2str(objs(pobj))^
+                     " in stead of cpu " ^nat2str(pcpu) );
+           return false )
+    pre pobj in set dom objs and
+        pcpu in set dom cpus
+                     
+end TracefileChecker
+\end{vdm_al}

@@ -1,0 +1,34 @@
+\begin{vdm_al}
+class IMarker
+operations
+  public delete: () ==> ()
+  delete () == skip
+end IMarker
+\end{vdm_al}
+
+\begin{vdm_al}
+class TracefileMarker
+
+instance variables
+  private markers  : set of IMarker := {};
+  private errors   : nat := 0;
+  private warnings : nat := 0
+  
+operations
+  public addError: seq of char * [nat] ==> ()
+  addError (-,-) == skip;
+  
+  public addWarning: seq of char * [nat] ==> ()
+  addWarning (-,-) == skip;
+  
+  public errorCount: () ==> nat
+  errorCount () == return errors;
+  
+  public warningCount: () ==> nat
+  warningCount () == return warnings;
+  
+  public dispose: () ==> ()
+  dispose () == for all mark in set markers do mark.delete()
+  
+end TracefileMarker
+\end{vdm_al}

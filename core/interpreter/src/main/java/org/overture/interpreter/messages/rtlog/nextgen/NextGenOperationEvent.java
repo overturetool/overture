@@ -17,12 +17,12 @@ public class NextGenOperationEvent implements Serializable, INextGenEvent{
 	}
 	
 	public NextGenThread thread;	
-	public long time;
+	public NextGenTimeStamp time;
 	public NextGenOperation operation;
 	public NextGenObject object;
 	public OperationEventType type;
 	
-	public NextGenOperationEvent(NextGenThread thread, long time, NextGenOperation operation, NextGenObject object, OperationEventType type) 
+	public NextGenOperationEvent(NextGenThread thread, NextGenTimeStamp time, NextGenOperation operation, NextGenObject object, OperationEventType type) 
 	{
 		this.thread = thread;
 		
@@ -58,12 +58,12 @@ public class NextGenOperationEvent implements Serializable, INextGenEvent{
 		s.append(" clnm: \"" ); s.append(this.operation.classDef.name); s.append("\""); 
 		s.append(" cpunm: "); s.append(this.object==null ? "0" : this.object.cpu.id);
 		s.append(" async: "); s.append(this.operation.isAsync);
-		s.append(" time: "); s.append(this.time);
+		s.append(" time: "); s.append(this.time.toString());
 		
 		return s.toString();
 	}
 
-	public long getTime() {
+	public NextGenTimeStamp getTime() {
 		return time;
 	}
 	
