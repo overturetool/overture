@@ -32,7 +32,7 @@ import org.overturetool.vdmj.types.Type;
 public class IntegerValue extends RationalValue
 {
 	private static final long serialVersionUID = 1L;
-	protected long longVal;
+	protected final long longVal;
 
 	public IntegerValue(long value)
 	{
