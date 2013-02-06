@@ -111,7 +111,8 @@ public class RenamedDefinition extends Definition
 		}
 		else
 		{
-			return def.findName(sought, scope);
+			// Renamed definitions hide the original name
+			return null; // def.findName(sought, scope);
 		}
 	}
 
