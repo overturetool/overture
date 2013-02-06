@@ -18,7 +18,7 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 
 	private Field visitedNodesField;
 
-    	public AnalysisDepthFirstAdaptorCaseMethod()
+	public AnalysisDepthFirstAdaptorCaseMethod()
 	{
 		super(null);
 	}
@@ -32,7 +32,7 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 		super(c);
 	}
 
-    	public void setVisitedNodesField(Field visitedNodesField)
+	public void setVisitedNodesField(Field visitedNodesField)
 	{
 		this.visitedNodesField = visitedNodesField;
 	}
@@ -57,11 +57,12 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 		String thisNodeMethodName = NameUtil.getClassName(AnalysisUtil
 				.getCaseClass(env, c).getName().getName());
 		this.name = "case" + thisNodeMethodName;
-                    // RWL Manuel merge, commented out in astV2
-                    //		this.arguments
-                    //		.add(new Argument(
-                    //				AnalysisUtil.getCaseClass(env, classDefinition)
-                    //						.getName().getName(), "node"));
+
+//		this.arguments
+//		.add(new Argument(
+//				AnalysisUtil.getCaseClass(env, classDefinition)
+//				.getName().getName(), "node"));
+		this.setupArguments(env);
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
 		this.requiredImports.add(env.analysisException.getName()
@@ -110,7 +111,7 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 						+ ".contains(e))\n");
 				bodySb.append("\t\t\t\t{\n");
 				bodySb.append("\t\t\t\t\t"+wrapForMerge("e.apply(" + getCallArguments()
-					)	+ ");\n");
+						)	+ ");\n");
 				bodySb.append("\t\t\t\t}\n");
 				bodySb.append("\t\t\t}\n");
 
@@ -151,7 +152,7 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 	private String wrapForMerge(String call)
 	{
 		return (addReturnToBody? "mergeReturns(retVal,"
-                        : "" )+call + (addReturnToBody?")":"")+"";
+				: "" )+call + (addReturnToBody?")":"")+"";
 	}
 
 	private String getCallArguments()
