@@ -36,7 +36,12 @@ public class VdmTypeCreator
 	{
 		try
 		{
-			return convert(type.getName());
+			String module = null;
+			if(type.getNamespace()!=null && type.getNamespace() instanceof Class)
+			{
+				module = type.getNamespace().getName();
+			}
+			return convert(type.getName(),module);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -44,7 +49,7 @@ public class VdmTypeCreator
 		}
 	}
 
-	public PType convert(String type)
+	public PType convert(String type,String module)
 	{
 
 		if (basicTypes.contains(type.toLowerCase()))
@@ -72,7 +77,7 @@ public class VdmTypeCreator
 		}
 		else
 		{
-			String module = "";
+			//String module = "";
 			String name = "";
 			if (type.contains("::"))
 			{
@@ -135,7 +140,7 @@ public class VdmTypeCreator
 		PTypeList types = new PTypeList();
 		for (String t : typeStrings)
 		{
-			types.add(convert(t));
+			types.add(convert(t,null));
 		}
 		return types;
 	}
@@ -163,7 +168,7 @@ public class VdmTypeCreator
 		{
 			if(lit.getName().startsWith("<") && lit.getName().endsWith(">"))
 			{
-				types.add(convert(lit.getName()));
+				types.add(convert(lit.getName(),null));
 			}else
 			{
 				System.out.println("Problem with conversion of enumeration: "+ elem.getName() );

@@ -176,7 +176,7 @@ public class Uml2Vdm
 					console.out.println("\tConverting inner type= " + innerTypeName + " : "
 							+ innerTypeTypeName);
 					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
-					innerTypeDef.setType(tc.convert(innerTypeTypeName));
+					innerTypeDef.setType(tc.convert(innerTypeTypeName,null));
 					c.getDefinitions().add(innerTypeDef);
 				}
 			}else if (elem instanceof Enumeration)

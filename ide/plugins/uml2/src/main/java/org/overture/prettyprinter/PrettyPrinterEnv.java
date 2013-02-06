@@ -3,6 +3,17 @@ package org.overture.prettyprinter;
 public class PrettyPrinterEnv
 {
 	StringBuilder sb = new StringBuilder();
+	String className = "";
+	
+	public void setClassName(String name)
+	{
+		this.className = name;
+	}
+	
+	public String getClassName()
+	{
+		return this.className ;
+	}
 	
 	public String increaseIdent()
 	{
