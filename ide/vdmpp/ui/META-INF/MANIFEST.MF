@@ -19,5 +19,5 @@ Export-Package: org.overture.ide.vdmpp.ui.editor.core,
 Bundle-ClassPath: .,
  ast-2.2.0.jar,
  parser-2.2.0.jar,
- testframework-2.2.0.jar,
+ testframework-2.2.1.jar,
  typechecker-2.2.0.jar
