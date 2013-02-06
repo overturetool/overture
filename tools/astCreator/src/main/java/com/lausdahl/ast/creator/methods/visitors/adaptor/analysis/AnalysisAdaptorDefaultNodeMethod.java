@@ -10,37 +10,33 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 {
 	public AnalysisAdaptorDefaultNodeMethod()
 	{
-		super(null,null);
+		super(null);
 	}
 
-	public AnalysisAdaptorDefaultNodeMethod(Environment env)
-	{
-		super(null,env);
-		
-	}
+	
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		Set<String> temp = super.getRequiredImports();
+		Set<String> temp = super.getRequiredImports(env);
 		temp.add(classDefinition.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 	
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature();
+		Set<String> temp =super.getRequiredImportsSignature(env);
 		temp.add(classDefinition.getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
-		super.prepare();
+		super.prepare(env);
 		setClassDefinition(env.iNode);
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
@@ -52,7 +48,7 @@ public class AnalysisAdaptorDefaultNodeMethod extends AnalysisMethodTemplate
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
 		this.name = "default"+defaultPostFix + NameUtil.getClassName(c.getName().getName());
-		setupArguments();
+		setupArguments(env);
 		// this.annotation="@override";
 		
 		this.body = "\t\t"+ (addReturnToBody ? "return null;" : "")

@@ -2,7 +2,7 @@ package com.lausdahl.ast.creator.methods.visitors.adaptor.answer;
 
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
-import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisDepthFirstAdaptorCaseMethod;
+import com.lausdahl.ast.creator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
 
 public class AnswerDepthFirstAdaptorCaseMethod extends AnalysisDepthFirstAdaptorCaseMethod
 {
@@ -11,17 +11,17 @@ public class AnswerDepthFirstAdaptorCaseMethod extends AnalysisDepthFirstAdaptor
 		super(null, null);
 	}
 
-	public AnswerDepthFirstAdaptorCaseMethod(IClassDefinition c, Environment env)
+	public AnswerDepthFirstAdaptorCaseMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
-		super.prepare();
+		super.prepare(env);
 		this.returnType = "A";
 	}
 }

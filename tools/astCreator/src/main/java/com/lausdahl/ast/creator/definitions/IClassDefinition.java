@@ -8,8 +8,7 @@ import com.lausdahl.ast.creator.ToStringAddOn;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 
-public interface IClassDefinition extends IInterfaceDefinition
-{
+public interface IClassDefinition extends IInterfaceDefinition {
 	Set<IInterfaceDefinition> getInterfaces();
 
 	JavaName getName();
@@ -24,18 +23,18 @@ public interface IClassDefinition extends IInterfaceDefinition
 
 	void addField(Field field);
 
-	boolean hasField(String name);
+	boolean hasField(String name, Environment env);
 
-	boolean refinesField(String name);
+	boolean refinesField(String name, Environment env);
 
-	public boolean isRefinedField(Field field);
+	public boolean isRefinedField(Field field, Environment env);
 
 	public List<Field> getInheritedFields();
 
-	public void checkFieldTypeHierarchy() throws AstCreatorException;
+	public void checkFieldTypeHierarchy(Environment e)
+			throws AstCreatorException;
 
-	public enum ClassType
-	{
+	public enum ClassType {
 		Production, Alternative, Token, Custom, Unknown, SubProduction
 	}
 
@@ -45,7 +44,7 @@ public interface IClassDefinition extends IInterfaceDefinition
 
 	List<ToStringAddOn> getToStringAddOns();
 
-	void updateEnvironment(Environment environment);
-	
 	public void addInterface(IInterfaceDefinition intf);
+
+	public String getAstPackage();
 }

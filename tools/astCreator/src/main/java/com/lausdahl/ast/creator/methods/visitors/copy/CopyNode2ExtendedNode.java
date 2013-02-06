@@ -29,15 +29,15 @@ public class CopyNode2ExtendedNode extends Method
 
 	public CopyNode2ExtendedNode()
 	{
-		super(null, null);
+		super(null);
 
 	}
 
 	public CopyNode2ExtendedNode(IClassDefinition source,
-			IClassDefinition destination, Environment env, Environment envDest,
+			IClassDefinition destination, Environment envDest,
 			IClassDefinition factory)
 	{
-		super(source, env);
+		super(source);
 		this.destination = destination;
 		// this.env = env;
 		this.envDest = envDest;
@@ -49,7 +49,7 @@ public class CopyNode2ExtendedNode extends Method
 	 * @exception
 	 */
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		boolean throwsError = false;
@@ -117,16 +117,16 @@ public class CopyNode2ExtendedNode extends Method
 					from = sourceFields.next();
 				}
 
-				if (from != null && to.getName().equals(from.getName()))
+				if (from != null && to.getName(env).equals(from.getName(env)))
 				{
-					doInset(bodySb, to, from);
+					doInset(bodySb, to, from, env);
 					if (sourceFields.hasNext())
 					{
 						from = sourceFields.next();
 					}
 				} else
 				{
-					doInset(bodySb, to, null);
+					doInset(bodySb, to, null, env);
 				}
 			}
 
@@ -170,21 +170,21 @@ public class CopyNode2ExtendedNode extends Method
 		this.javaDoc = sb.toString();
 	}
 
-	private void doInset(StringBuilder sb, Field to, Field from)
+	private void doInset(StringBuilder sb, Field to, Field from,Environment env)
 	{
 		if (from == null)
 		{
 			sb.append("null," + nl);
 			return;
 		}
-		if (classDefinition.refinesField(from.getName())
-				&& !classDefinition.isRefinedField(from))
+		if (classDefinition.refinesField(from.getName(env),env)
+				&& !classDefinition.isRefinedField(from,env))
 		{
 			return;
 		}
 
-		Method getMethod = new GetMethod(classDefinition, from, env);
-		getMethod.getJavaSourceCode();
+		Method getMethod = new GetMethod(classDefinition, from);
+		getMethod.getJavaSourceCode(env);
 		String getMethodName = getMethod.name;
 		String getter = "node." + getMethodName + "()";
 		sb.append("(" + getter + " == null ? null : ");
@@ -223,7 +223,7 @@ public class CopyNode2ExtendedNode extends Method
 					sb.append(cast + "checkCache(" + getter + "," + getter
 							+ ".apply(this))");
 				}
-			} else if (JavaTypes.isPrimitiveType(to.getType()))
+			} else if (JavaTypes.isPrimitiveType(to.getType(env)))
 			{
 				sb.append(getter);
 			} else
@@ -262,7 +262,7 @@ public class CopyNode2ExtendedNode extends Method
 	{
 		if (!convertArgTypes.contains(from.type.getName().getCanonicalName()))
 		{
-			factory.addMethod(new ConvertMethod(factory, envDest, from, to));
+			factory.addMethod(new ConvertMethod(factory,  from, to));
 			convertArgTypes.add(from.type.getName().getCanonicalName());
 		}
 	}
@@ -271,13 +271,13 @@ public class CopyNode2ExtendedNode extends Method
 	{
 		if (!convertArgTypes.contains(from.getName().getCanonicalName()))
 		{
-			factory.addMethod(new ConvertMethod(factory, envDest, from, to));
+			factory.addMethod(new ConvertMethod(factory, from, to));
 			convertArgTypes.add(from.getName().getCanonicalName());
 		}
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
 		// imports.add("org.overturetool.util" + ".Factory");

@@ -8,25 +8,25 @@ public class QuestionAnswerAdaptorDefaultMethod extends AnalysisAdaptorDefaultMe
 {
 	public QuestionAnswerAdaptorDefaultMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public QuestionAnswerAdaptorDefaultMethod(IClassDefinition c, Environment env)
+	public QuestionAnswerAdaptorDefaultMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		addReturnToBody = true;
-		super.prepare();
+		super.prepare(env);
 		this.returnType="A";
 	}
 
 	@Override
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
-		super.setupArguments();
+		super.setupArguments(env);
 		this.arguments.add(new Argument("Q", "question"));
 	}
 }

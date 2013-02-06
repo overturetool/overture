@@ -12,9 +12,9 @@ public abstract class AnalysisMethodTemplate extends Method
 	protected IInterfaceDefinition intf;
 	protected String defaultPostFix = "";
 
-	public AnalysisMethodTemplate(IClassDefinition c, Environment env)
+	public AnalysisMethodTemplate(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 		intf = c;
 	}
 
@@ -26,9 +26,9 @@ public abstract class AnalysisMethodTemplate extends Method
 	}
 	
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
-		super.prepare();
+		super.prepare(env);
 		throwsDefinitions.add(env.analysisException);
 	}
 
@@ -46,7 +46,7 @@ public abstract class AnalysisMethodTemplate extends Method
 		return tmp;
 	}
 
-	protected void setupArguments()
+	protected void setupArguments(Environment env)
 	{
 		if (classDefinition == null)
 		{

@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator.methods.visitors.adaptor.analysis;
+package com.lausdahl.ast.creator.methods.analysis.depthfirst;
 
 import java.util.Iterator;
 import java.util.List;
@@ -11,28 +11,25 @@ import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisMethodTemplate;
 import com.lausdahl.ast.creator.utils.NameUtil;
 
-public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
-{
+public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate  {
+
 	private Field visitedNodesField;
 
 	public AnalysisDepthFirstAdaptorCaseMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c,
-			Environment source, Field visitedNodesField)
-	{
-		super(null, null);
+	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c, Field visitedNodesField) {
+		super(null);
 		this.visitedNodesField = visitedNodesField;
 	}
 
-	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c,
-			Environment env)
-	{
-		super(c, env);
+	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c) {
+		super(c);
 	}
 
 	public void setVisitedNodesField(Field visitedNodesField)
@@ -41,8 +38,7 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 	}
 
 	@Override
-	protected void prepare()
-	{
+	protected void prepare(Environment env) {
 		throwsDefinitions.add(env.analysisException);
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
@@ -58,50 +54,44 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 				+ "} node\n");
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
-		String thisNodeMethodName = NameUtil.getClassName(AnalysisUtil.getCaseClass(env, c).getName().getName());
+		String thisNodeMethodName = NameUtil.getClassName(AnalysisUtil
+				.getCaseClass(env, c).getName().getName());
 		this.name = "case" + thisNodeMethodName;
-		// this.arguments.add(new Argument(AnalysisUtil.getCaseClass(env, classDefinition).getName().getName(),
-		// "node"));
-		setupArguments();
+
+//		this.arguments
+//		.add(new Argument(
+//				AnalysisUtil.getCaseClass(env, classDefinition)
+//				.getName().getName(), "node"));
+		this.setupArguments(env);
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
-		this.requiredImports.add(env.analysisException.getName().getCanonicalName());
+		this.requiredImports.add(env.analysisException.getName()
+				.getCanonicalName());
 
 		StringBuffer bodySb = new StringBuffer();
 
-		// bodySb.append("\t\tif(_"+visitedNodesField.name+".contains(node))\n");
-		// bodySb.append("\t\t{ //already visiting this node from other path\n");
-		// bodySb.append("\t\t\treturn;\n");
-		// bodySb.append("\t\t}\n");
-
-		// bodySb.append("\t\tif(node instanceof "+env.iNode.getName()+")\n");
-		// bodySb.append("\t\t{\n");
 		bodySb.append("\t\t_visitedNodes.add(node);\n");
-		// bodySb.append("\t\t}\n");
 
 		if(addReturnToBody)
 		{
 			bodySb.append("\t\tA retVal = createNewReturnValue("+getAdditionalBodyCallArguments()+");\n");
 		}
-		
+
 		bodySb.append("\t\t"+wrapForMerge("in" + thisNodeMethodName + "("
 				+ getAdditionalBodyCallArguments() )+");\n\n");
 		List<Field> allFields = new Vector<Field>();
 		allFields.addAll(c.getInheritedFields());
 		allFields.addAll(c.getFields());
-		for (Field f : allFields)
-		{
-			if (f.isTokenField)
-			{
+		for (Field f : allFields) {
+			if (f.isTokenField) {
 				continue;
 			}
-			Method getMethod = new GetMethod(c, f, env);
-			getMethod.getJavaSourceCode();
+			Method getMethod = new GetMethod(c, f);
+			getMethod.getJavaSourceCode(env);
 			String getMethodName = getMethod.name;
 			String getter = "node." + getMethodName + "()";
-
-			if (!f.isList)
-			{
+			requiredImports.addAll(getMethod.getRequiredImports(env));
+			if (!f.isList) {
 				bodySb.append("\t\tif(" + getter + " != null && !_"
 						+ visitedNodesField.name + ".contains(" + getter
 						+ ")) \n");
@@ -109,34 +99,32 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 				bodySb.append("\t\t\t" +wrapForMerge( getter + ".apply("
 						+ getCallArguments() )+ ");\n");
 				bodySb.append("\t\t}\n");
-			} else if (f.isList && !f.isDoubleList)
-			{
+			} else if (f.isList && !f.isDoubleList) {
 				bodySb.append("\t\t{\n");
-				bodySb.append("\t\t\tList<" + f.getInnerTypeForList()
-						+ "> copy = new ArrayList<" + f.getInnerTypeForList()
-						+ ">(" + getter + ");\n");
-				bodySb.append("\t\t\tfor( " + f.getInnerTypeForList()
+				bodySb.append("\t\t\tList<" + f.getInnerTypeForList(env)
+						+ "> copy = new ArrayList<"
+						+ f.getInnerTypeForList(env) + ">(" + getter + ");\n");
+				bodySb.append("\t\t\tfor( " + f.getInnerTypeForList(env)
 						+ " e : copy) \n");
 				bodySb.append("\t\t\t{\n");
 				bodySb.append("\t\t\t\tif(!_" + visitedNodesField.name
 						+ ".contains(e))\n");
 				bodySb.append("\t\t\t\t{\n");
 				bodySb.append("\t\t\t\t\t"+wrapForMerge("e.apply(" + getCallArguments()
-					)	+ ");\n");
+						)	+ ");\n");
 				bodySb.append("\t\t\t\t}\n");
 				bodySb.append("\t\t\t}\n");
 
 				bodySb.append("\t\t}\n");
-			} else if (f.isDoubleList)
-			{
+			} else if (f.isDoubleList) {
 				bodySb.append("\t\t{\n");
-				bodySb.append("\t\t\tList<List<" + f.getInnerTypeForList()
+				bodySb.append("\t\t\tList<List<" + f.getInnerTypeForList(env)
 						+ ">> copy = new ArrayList<List<"
-						+ f.getInnerTypeForList() + ">>(" + getter + ");\n");
-				bodySb.append("\t\t\tfor( List<" + f.getInnerTypeForList()
+						+ f.getInnerTypeForList(env) + ">>(" + getter + ");\n");
+				bodySb.append("\t\t\tfor( List<" + f.getInnerTypeForList(env)
 						+ "> list : copy) {\n");
 
-				bodySb.append("\t\t\t\tfor( " + f.getInnerTypeForList()
+				bodySb.append("\t\t\t\tfor( " + f.getInnerTypeForList(env)
 						+ " e : list) \n");
 				bodySb.append("\t\t\t{\n");
 				bodySb.append("\t\t\t\t\tif(!_" + visitedNodesField.name
@@ -150,42 +138,21 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 				bodySb.append("\t\t\t}\n");
 
 				bodySb.append("\t\t}\n");
-				// List<List<PExp>> copy = new ArrayList<List<PExp>>(node.getFf());
-				// for (List<PExp> list : copy)
-				// {
-				// for( PExp e : list) {
-				// e.apply(this);
-				// }
-				// }
 			}
 		}
 
 		bodySb.append("\n\t\t"+wrapForMerge("out" + thisNodeMethodName + "("
 				+ getAdditionalBodyCallArguments() )+ ");\n");
-		// bodySb.append("\t\t_"+visitedNodesField.name+".remove(node);\n");
 		if (addReturnToBody)
 		{
 			bodySb.append("\t\treturn retVal;");
 		}
 		this.body = bodySb.toString();
-		// this.annotation="@override";
-		// if (cd.getSuperDef() != null
-		// && !(cd instanceof ExternalJavaClassDefinition))
-		// {
-		// this.body = "\t\t"
-		// + (addReturnToBody ? "return " : "")
-		// + "default"
-		// + InterfaceDefinition.javaClassName(c.getSuperDef().getName()
-		// + "(" + getAdditionalBodyCallArguments() + ");");
-		// } else
-		// {
-		// this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
-		// }
 	}
-	
 	private String wrapForMerge(String call)
 	{
-		return (addReturnToBody?"mergeReturns(retVal,":"")+call + (addReturnToBody?")":"")+"";
+		return (addReturnToBody? "mergeReturns(retVal,"
+				: "" )+call + (addReturnToBody?")":"")+"";
 	}
 
 	private String getCallArguments()
@@ -213,18 +180,14 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
-	{
-		Set<String> imports = super.getRequiredImports();
-		for (Field f : classDefinition.getFields())
-		{
-			if (f.isTokenField)
-			{
+	public Set<String> getRequiredImports(Environment env) {
+		Set<String> imports = super.getRequiredImports(env);
+		for (Field f : classDefinition.getFields()) {
+			if (f.isTokenField) {
 				continue;
 			}
-			if (f.isList || f.isDoubleList)
-			{
-				f.getInnerTypeForList();
+			if (f.isList || f.isDoubleList) {
+				f.getInnerTypeForList(env);
 				imports.add(f.type.getName().getCanonicalName());
 			}
 		}

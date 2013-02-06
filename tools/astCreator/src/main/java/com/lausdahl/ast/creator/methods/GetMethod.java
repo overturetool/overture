@@ -12,42 +12,42 @@ public class GetMethod extends Method
 {
 	Field f;
 
-	public GetMethod(IClassDefinition c, Field f,Environment env)
+	public GetMethod(IClassDefinition c, Field f)
 	{
-		super(c,env);
+		super(c);
 		this.f = f;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 
 		javaDoc = "\t/**\n";
 		//javaDoc += "\t * Returns the {@link "+f.getType()+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node.\n";
-		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType(true))+"} node which is the {@code "+f.getName()+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
+		javaDoc += "\t * @return the {@link "+NameUtil.stripGenerics(f.getType(true,env))+"} node which is the {@code "+f.getName(env)+"} child of this {@link "+classDefinition.getName().getName()+"} node\n";
 		javaDoc += "\t*/";
 
 		this.name = "get"
-				+ NameUtil.javaClassName(f.getName());
+				+ NameUtil.javaClassName(f.getName(env));
 		// this.arguments.add(new Argument(f.getType(), "value"));
-		this.returnType = f.getType(true);
+		this.returnType = f.getType(true,env);
 		StringBuilder sb = new StringBuilder();
 
 		String cast ="";
-		if(classDefinition.isRefinedField(f))
+		if(classDefinition.isRefinedField(f,env))
 		{
-			cast = f.getCast();
+			cast = f.getCast(env);
 		}
-		sb.append("\t\treturn "+cast+"this."+ f.getName() + ";");
+		sb.append("\t\treturn "+cast+"this."+ f.getName(env) + ";");
 
 		this.body = sb.toString();
 	}
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImports());
+		list.addAll(super.getRequiredImports(env));
 		//list.add(NameUtil.stripGenerics(f.i.getType()));
 		
 		if(f.isList && !f.isDoubleList)
@@ -66,10 +66,10 @@ public class GetMethod extends Method
 	}
 	
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImportsSignature());
+		list.addAll(super.getRequiredImportsSignature(env));
 		//list.add(NameUtil.stripGenerics(f.getType()));
 		return list;
 	}

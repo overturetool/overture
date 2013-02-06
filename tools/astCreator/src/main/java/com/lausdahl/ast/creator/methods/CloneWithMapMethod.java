@@ -17,12 +17,12 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 public class CloneWithMapMethod extends CloneMethod
 {
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		this.name = "clone";
 
-		this.returnType = getSpecializedTypeName(c);
+		this.returnType = getSpecializedTypeName(c,env);
 		this.requiredImports.add("java.util.Map");
 
 		this.arguments.add(new Argument("Map<" + env.iNode.getName().getName() + ","
@@ -44,7 +44,7 @@ public class CloneWithMapMethod extends CloneMethod
 
 		for (Field field :  classDefinition.getInheritedFields())
 		{
-			if (!classDefinition.refinesField(field.getName()))
+			if (!classDefinition.refinesField(field.getName(env),env))
 			{
 				fields.add(field);
 			}
@@ -70,11 +70,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 
 						if (f.structureType == StructureType.Graph)
@@ -91,7 +91,7 @@ public class CloneWithMapMethod extends CloneMethod
 						} else
 						{
 
-							if (JavaTypes.isPrimitiveType(f.getType())
+							if (JavaTypes.isPrimitiveType(f.getType(env))
 									|| f.type instanceof ExternalEnumJavaClassDefinition)
 							{
 								tmp += ("\t\t\t" + name + ",\n");
@@ -116,11 +116,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : fields)
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						tmp += ("get"
 								+ NameUtil.getClassName(name) + "(), ");
@@ -140,14 +140,13 @@ public class CloneWithMapMethod extends CloneMethod
 		this.body = sb.toString();
 	}
 
-	public CloneWithMapMethod(IClassDefinition c, ClassType classType,
-			Environment env)
+	public CloneWithMapMethod(IClassDefinition c, ClassType classType)
 	{
-		super(c, classType, env);
+		super(c, classType);
 	}
 
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 
 		skip = true;
@@ -188,11 +187,11 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : c.getFields())
 					{
-						String name = f.getName();
+						String name = f.getName(env);
 
-						if (classDefinition.isRefinedField(f))
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						if (f.isList)
 						{
@@ -217,10 +216,10 @@ public class CloneWithMapMethod extends CloneMethod
 					String tmp = "";
 					for (Field f : c.getFields())
 					{
-						String name = f.getName();
-						if (classDefinition.isRefinedField(f))
+						String name = f.getName(env);
+						if (classDefinition.isRefinedField(f,env))
 						{
-							name = f.getCast() + name;
+							name = f.getCast(env) + name;
 						}
 						tmp += ("get"
 								+ NameUtil.getClassName(name) + "(), ");
@@ -241,10 +240,10 @@ public class CloneWithMapMethod extends CloneMethod
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
-		imports.addAll(super.getRequiredImports());
+		imports.addAll(super.getRequiredImports(env));
 		imports.add(env.iNode.getName().getCanonicalName());
 		imports.add("java.util.Map");
 		return imports;

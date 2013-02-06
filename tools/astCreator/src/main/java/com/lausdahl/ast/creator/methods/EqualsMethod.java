@@ -6,13 +6,13 @@ import com.lausdahl.ast.creator.env.Environment;
 public class EqualsMethod extends Method
 {
 
-	public EqualsMethod(IClassDefinition c, Environment env)
+	public EqualsMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "equals";
 		this.javaDoc = "\t/**\n\t* Essentially this.toString().equals(o.toString()).\n\t**/";

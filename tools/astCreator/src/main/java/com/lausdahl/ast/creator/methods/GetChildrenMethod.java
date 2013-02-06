@@ -10,13 +10,13 @@ import com.lausdahl.ast.creator.env.Environment;
 
 public class GetChildrenMethod extends Method {
 
-	public GetChildrenMethod(IClassDefinition c, Environment env) {
-		super(c, env);
+	public GetChildrenMethod(IClassDefinition c) {
+		super(c);
 	}
 	
 	@Override
-	public Set<String> getRequiredImports() {
-		Set<String> imports =  super.getRequiredImports();
+	public Set<String> getRequiredImports(Environment env) {
+		Set<String> imports =  super.getRequiredImports(env);
 		imports.add("java.util.Map");
 		imports.add("java.util.HashMap");
 		imports.add(env.iNode.getName().getCanonicalName());
@@ -24,7 +24,7 @@ public class GetChildrenMethod extends Method {
 	}
 
 	@Override
-	protected void prepare() {
+	protected void prepare(Environment env) {
 		this.name = "getChildren";
 
 		this.returnType = "Map<String,Object>";
@@ -54,7 +54,7 @@ public class GetChildrenMethod extends Method {
 		sb.append("\t\t}\n");
 		
 		for (Field field : fields) {
-			sb.append("\t\tfields.put(\""+field.getName()+"\",this."+field.getName()+");\n");
+			sb.append("\t\tfields.put(\""+field.getName(env)+"\",this."+field.getName(env)+");\n");
 		}
 		
 		sb.append("\t\treturn fields;");

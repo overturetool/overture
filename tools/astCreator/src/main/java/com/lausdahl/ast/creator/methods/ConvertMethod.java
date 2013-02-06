@@ -15,29 +15,29 @@ public class ConvertMethod extends Method
 	IClassDefinition fromCDef;
 	IClassDefinition toCDef;
 
-	public ConvertMethod(IClassDefinition c, Environment env, Field from,
+	public ConvertMethod(IClassDefinition c, Field from,
 			Field to)
 	{
-		super(c, env);
+		super(c);
 		this.from = from;
 		this.to = to;
 	}
 
-	public ConvertMethod(IClassDefinition c, Environment env,
+	public ConvertMethod(IClassDefinition c,
 			IClassDefinition from, IClassDefinition to)
 	{
-		super(c, env);
+		super(c);
 		this.fromCDef = from;
 		this.toCDef = to;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "convert";
 		if (from != null)
 		{
-			this.returnType = to.getType();
+			this.returnType = to.getType(env);
 		} else
 		{
 			this.returnType = toCDef.getName().getName();
@@ -61,7 +61,7 @@ public class ConvertMethod extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
 		if (to != null)

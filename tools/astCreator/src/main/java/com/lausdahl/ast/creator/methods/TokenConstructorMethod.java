@@ -11,32 +11,32 @@ public class TokenConstructorMethod extends Method
 	private Field f;
 
 
-	public TokenConstructorMethod(IClassDefinition c,Field f, String tokenName,Environment env)
+	public TokenConstructorMethod(IClassDefinition c,Field f, String tokenName)
 	{
-		super(c,env);
+		super(c);
 		this.f = f;
 		this.tokenName = tokenName;
 	}
 
 	
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		isConstructor = true;
 		name = classDefinition.getName().getName();
 		returnType = "";
-		body = "\t\t" + f.getName()
+		body = "\t\t" + f.getName(env)
 				+ " = \""
 				+ tokenName + "\";";
 	}
 	
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 		isConstructor = true;
 		name = classDefinition.getName().getName();
 		returnType = "";
-		body = "\t\t" + f.getName()
+		body = "\t\t" + f.getName(env)
 				+ " := \""
 				+ tokenName + "\";";
 	}

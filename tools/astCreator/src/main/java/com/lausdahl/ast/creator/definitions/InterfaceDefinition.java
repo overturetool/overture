@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
-public class InterfaceDefinition implements IInterfaceDefinition
-{
+public class InterfaceDefinition implements IInterfaceDefinition {
 	public List<Method> methods = new Vector<Method>();
 	public Set<IInterfaceDefinition> imports = new HashSet<IInterfaceDefinition>();
 	List<String> genericArguments = new Vector<String>();
@@ -19,46 +19,50 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	public static boolean VDM = false;
 	private String tag = "";
 	protected String annotation = "";
-	protected String javaDoc = "/**\n" + "* Generated file by AST Creator\n"
-			+ "* @author Kenneth Lausdahl\n" + "*\n" + "*/\n";
-
+	protected String extJavaDoc = "";
+	// private String javaDoc =
+	private String astPackage;
 	public boolean filterMethodsIfInherited = false;
 	private boolean isFinal = false;
 	private boolean isAbstract = false;
+	private boolean isWritten = false;
 
-	public InterfaceDefinition(JavaName name)
-	{
-		this.name = name;
+	public String getJavaDoc() {
+		return "/**\n" + "* Generated file by AST Creator\n"
+				+ "* @author Kenneth Lausdahl\n" + extJavaDoc + "*\n" + "*/\n";
 	}
 
-	public JavaName getName()
-	{
+	public void setExtJavaDoc(String extJavaDoc) {
+		this.extJavaDoc = extJavaDoc;
+	}
+
+	public InterfaceDefinition(JavaName name, String astPackage) {
+		this.name = name;
+		this.astPackage = astPackage;
+	}
+
+	public JavaName getName() {
 		return name;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getName()
 	 */
 
-	public String getNameWithGenericArguments()
-	{
+	public String getNameWithGenericArguments() {
 		String tmp = name.getPrefix() + this.name.getRawName();
-		if (tmp.contains("<"))
-		{
+		if (tmp.contains("<")) {
 			tmp = tmp.replace("<", name.getPostfix() + "<");
-		} else if (genericArguments.isEmpty())
-		{
+		} else if (genericArguments.isEmpty()) {
 			tmp += name.getPostfix();
-		} else
-		{
+		} else {
 			String tmp1 = tmp + name.getPostfix() + "<";
-			for (String arg : genericArguments)
-			{
+			for (String arg : genericArguments) {
 				tmp1 += arg + ", ";
 			}
-			if (!genericArguments.isEmpty())
-			{
+			if (!genericArguments.isEmpty()) {
 				tmp1 = tmp1.substring(0, tmp1.length() - 2);
 			}
 			tmp = tmp1 + ">";
@@ -68,32 +72,29 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getImports()
 	 */
 
-	public Set<String> getImports()
-	{
+	public Set<String> getImports(Environment env) {
 		Set<String> imports = new HashSet<String>();
 
-//		for (IInterfaceDefinition i : this.imports)
-//		{
-//			imports.add(i.getName().getCanonicalName());
-//		}
+		// for (IInterfaceDefinition i : this.imports)
+		// {
+		// imports.add(i.getName().getCanonicalName());
+		// }
 		// imports.addAll(this.imports);
-		for (Method m : filter(methods))
-		{
-			if(m.isConstructor)
-			{
+		for (Method m : filter(methods)) {
+			int a;
+			if (m.isConstructor) {
 				continue;
 			}
-			for (String string : m.getRequiredImportsSignature())
-			{
+			for (String string : m.getRequiredImportsSignature(env)) {
 				imports.add(string);
 			}
 		}
 
-		for (IInterfaceDefinition i : supers)
-		{
+		for (IInterfaceDefinition i : supers) {
 			imports.add(i.getName().getCanonicalName());
 		}
 
@@ -102,91 +103,88 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#isFinal()
 	 */
 
-	public boolean isFinal()
-	{
+	public boolean isFinal() {
 		return isFinal;
 	}
 
-	public void setFinal(boolean isFinal)
-	{
+	public void setFinal(boolean isFinal) {
 		this.isFinal = isFinal;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#isAbstract()
 	 */
 
-	public boolean isAbstract()
-	{
+	public boolean isAbstract() {
 		return isAbstract;
 	}
 
-	public void setAbstract(boolean isAbstract)
-	{
+	public void setAbstract(boolean isAbstract) {
 		this.isAbstract = isAbstract;
 	}
 
 	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		try
-		{
-			return getJavaSourceCode(sb);
-		} catch (Throwable e)
-		{
-
-		}
-		return sb.toString();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getSignatureName()
-	 */
-
-	public String getSignatureName()
-	{
+	public String toString() {
 		return getName().getName();
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
+	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getSignatureName()
+	 */
+
+	public String getSignatureName() {
+		return getName().getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getJavaSourceCode()
 	 */
 
-	public String getJavaSourceCode(StringBuilder sb)
-	{
+	public String getJavaSourceCode(StringBuilder sb, Environment env) {
 
 		sb.append(IInterfaceDefinition.copurightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
-		if (getName().getPackageName() != null)
-		{
+		if (getName().getPackageName() != null) {
 			sb.append("\npackage " + getName().getPackageName() + ";\n\n\n");
 		}
 
-		for (String importName : getImports())
-		{
+		for (String importName : getImports(env)) {
 			sb.append("import " + importName + ";\n");
 		}
 
-		sb.append("\n\n" + javaDoc);
+		sb.append("\n\n" + getJavaDoc());
 		sb.append("public interface " + getName().getName());
 
 		sb.append(getGenericsString());
 
-		if (!supers.isEmpty())
-		{
+		if (!supers.isEmpty()) {
 			sb.append(" extends ");
 			StringBuilder intfs = new StringBuilder();
-			for (IInterfaceDefinition intfName : supers)
-			{
-				intfs.append(intfName.getName().getName() + ", ");
+			for (IInterfaceDefinition intfName : supers) {
+				String genericStr = "";
+				List<String> gas = intfName.getGenericArguments();
+				for (String ga : gas) {
+					if ("".equals(genericStr))
+						genericStr = "<";
+					else
+						genericStr += ", ";
+					genericStr += ga;
+				}
+				if (!"".equals(genericStr))
+					genericStr += ">";
+
+				intfs.append(intfName.getName().getName() + genericStr + ", ");
 			}
 			sb.append(intfs.subSequence(0, intfs.length() - 2));
 		}
@@ -200,32 +198,27 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		//
 		// tmp += "\n{\n\n";
 
-		for (Method m : filter(methods))
-		{
-			if (m.isConstructor)
-			{
+		for (Method m : filter(methods)) {
+			if (m.isConstructor) {
 				continue;
 			}
-			sb.append(m.getJavaDoc() + "\n");
-			sb.append(m.getSignature() + ";\n");
+			sb.append(m.getJavaDoc(env) + "\n");
+			sb.append(m.getSignature(env) + ";\n");
 		}
 
 		sb.append("\n}\n");
 		return sb.toString();
 	}
 
-	public String getGenericsString()
-	{
+	public String getGenericsString() {
 		StringBuilder sb = new StringBuilder();
-		if (!this.genericArguments.isEmpty())
-		{
+		if (!this.genericArguments.isEmpty()) {
 			sb.append("<");
-			for (Iterator<String> itr = this.genericArguments.iterator(); itr.hasNext();)
-			{
+			for (Iterator<String> itr = this.genericArguments.iterator(); itr
+					.hasNext();) {
 				String type = itr.next();
 				sb.append(type);
-				if (itr.hasNext())
-				{
+				if (itr.hasNext()) {
 					sb.append(", ");
 				}
 			}
@@ -234,8 +227,7 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return sb.toString();
 	}
 
-	private List<Method> filter(List<Method> methods2)
-	{
+	private List<Method> filter(List<Method> methods2) {
 		// List<Method> filtered = new Vector<Method>();
 		// if(filterMethodsIfInherited)
 		// {
@@ -263,23 +255,22 @@ public class InterfaceDefinition implements IInterfaceDefinition
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.lausdahl.ast.creator.IInterfaceDefinition#getVdmSourceCode()
 	 */
 
-	public String getVdmSourceCode(StringBuilder sb)
-	{
+	public String getVdmSourceCode(StringBuilder sb) {
 		return "";
 	}
 
-	protected List<String> getGenericClassArguments()
-	{
+	protected List<String> getGenericClassArguments() {
 		List<String> args = new Vector<String>();
 
-		if (getNameWithGenericArguments().contains("<"))
-		{
-			String tmp = getNameWithGenericArguments().substring(getNameWithGenericArguments().indexOf('<') + 1, getNameWithGenericArguments().indexOf('>'));
-			for (String string : tmp.split(","))
-			{
+		if (getNameWithGenericArguments().contains("<")) {
+			String tmp = getNameWithGenericArguments().substring(
+					getNameWithGenericArguments().indexOf('<') + 1,
+					getNameWithGenericArguments().indexOf('>'));
+			for (String string : tmp.split(",")) {
 				args.add(string);
 
 			}
@@ -287,13 +278,11 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return args;
 	}
 
-	public void setTag(String tag)
-	{
+	public void setTag(String tag) {
 		this.tag = tag;
 	}
 
-	public String getTag()
-	{
+	public String getTag() {
 		return this.tag;
 	}
 
@@ -305,41 +294,32 @@ public class InterfaceDefinition implements IInterfaceDefinition
 	// }
 	// }
 
-	public void setGenericArguments(List<String> arguments)
-	{
-		if (arguments != null)
-		{
+	public void setGenericArguments(List<String> arguments) {
+		if (arguments != null) {
 			this.genericArguments.addAll(arguments);
 		}
 	}
 
-	public List<String> getGenericArguments()
-	{
+	public List<String> getGenericArguments() {
 		return this.genericArguments;
 	}
 
-	public void setAnnotation(String annotation)
-	{
+	public void setAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
-	public List<Method> getMethods()
-	{
+	public List<Method> getMethods() {
 		return methods;
 	}
 
-	public Set<Method> getMethod(String name)
-	{
+	public Set<Method> getMethod(String name) {
 		Set<Method> matches = new HashSet<Method>();
-		for (IInterfaceDefinition s : supers)
-		{
+		for (IInterfaceDefinition s : supers) {
 			matches.addAll(s.getMethod(name));
 		}
 
-		for (Method m : methods)
-		{
-			if (m.name.equals(name))
-			{
+		for (Method m : methods) {
+			if (m.name != null && m.name.equals(name)) {
 				matches.add(m);
 			}
 		}
@@ -347,19 +327,30 @@ public class InterfaceDefinition implements IInterfaceDefinition
 		return matches;
 	}
 
-	public void addMethod(Method m)
-	{
+	public void addMethod(Method m) {
 		this.methods.add(m);
 	}
 
-	public Set<IInterfaceDefinition> getSuperDefs()
-	{
+	public Set<IInterfaceDefinition> getSuperDefs() {
 		return this.supers;
 	}
 
-//	@Override
-//	public int hashCode()
-//	{
-//		return getName().hashCode();
-//	}
+	public boolean isJavaSourceWritten() {
+		return isWritten;
+	}
+
+	public void setJavaSourceWritten(boolean isWritten) {
+		this.isWritten = isWritten;
+	}
+
+	// @Override
+	// public int hashCode()
+	// {
+	// return getName().hashCode();
+	// }
+
+	public String getAstPackage() {
+		return astPackage;
+	}
+
 }

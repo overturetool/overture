@@ -13,14 +13,14 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class ConstructorMethod extends Method
 {
-	public ConstructorMethod(IClassDefinition c, Environment env)
+	public ConstructorMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 		isConstructor=true;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		skip = classDefinition.getFields().isEmpty();
 		this.name = classDefinition.getName().getName();
@@ -46,14 +46,14 @@ public class ConstructorMethod extends Method
 		skip = skip && fields.isEmpty();
 		for (Field f : fields)
 		{
-			if (classDefinition.refinesField(f.getName()))
+			if (classDefinition.refinesField(f.getName(env), env))
 			{
 				// This field is refined in the sub class, so skip it and null the super class field.
 				sb.append("null,");
 			} else
 			{
-				String name = f.getName().replaceAll("_", "") + "_";
-				this.arguments.add(new Argument(f.getMethodArgumentType(), name));
+				String name = f.getName(env).replaceAll("_", "") + "_";
+				this.arguments.add(new Argument(f.getMethodArgumentType(env), name));
 				sb.append(name + ",");
 			}
 		}
@@ -65,19 +65,19 @@ public class ConstructorMethod extends Method
 
 		for (Field f : classDefinition.getFields())
 		{
-			String name = f.getName().replaceAll("_", "");
-			this.arguments.add(new Argument(f.getMethodArgumentType(), name
+			String name = f.getName(env).replaceAll("_", "");
+			this.arguments.add(new Argument(f.getMethodArgumentType(env), name
 					+ "_"));
 			sb.append("\t\t");
 			sb.append("this.set");
-			sb.append(NameUtil.javaClassName(f.getName()));
+			sb.append(NameUtil.javaClassName(f.getName(env)));
 			sb.append("(");
 			sb.append(name + "_");
 			sb.append(");\n");
 			if (f.structureType == StructureType.Tree)
 			{
 				sbDoc.append("\t* @param " + name + "_ the {@link "
-						+ NameUtil.stripGenerics(f.getType()) + "} node for the {@code " + name
+						+ NameUtil.stripGenerics(f.getType(env)) + "} node for the {@code " + name
 						+ "} child of this {@link " + classDefinition.getName().getName()
 						+ "} node\n");
 			} else
@@ -85,7 +85,7 @@ public class ConstructorMethod extends Method
 				sbDoc.append("\t* @param "
 						+ name
 						+ "_ the {@link "
-						+ NameUtil.stripGenerics(f.getType())
+						+ NameUtil.stripGenerics(f.getType(env))
 						+ "} <b>graph</a> node for the {@code "
 						+ name
 						+ "} child of this {@link "
@@ -113,10 +113,10 @@ public class ConstructorMethod extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> list = new HashSet<String>();
-		list.addAll(super.getRequiredImports());
+		list.addAll(super.getRequiredImports(env));
 		if (env.isTreeNode(classDefinition ))
 		{
 
@@ -126,12 +126,12 @@ public class ConstructorMethod extends Method
 			for (Field field : fields)
 			{
 
-				if (classDefinition.refinesField(field.getName()))
+				if (classDefinition.refinesField(field.getName(env),env))
 				{
 					continue;
 				}
 
-				list.addAll(field.getRequiredImports());
+				list.addAll(field.getRequiredImports(env));
 				if (field.isList && !field.isDoubleList)
 				{
 					list.add(Environment.listDef.getName().getCanonicalName());
@@ -153,7 +153,7 @@ public class ConstructorMethod extends Method
 
 			for (Field field : classDefinition.getFields())
 			{
-				list.addAll(field.getRequiredImports());
+				list.addAll(field.getRequiredImports(env));
 				if (field.isList && !field.isDoubleList)
 				{
 					list.add(Environment.listDef.getName().getCanonicalName());

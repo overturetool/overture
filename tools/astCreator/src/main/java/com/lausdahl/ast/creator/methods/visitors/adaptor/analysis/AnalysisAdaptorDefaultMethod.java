@@ -10,36 +10,36 @@ public class AnalysisAdaptorDefaultMethod extends AnalysisMethodTemplate
 {
 	public AnalysisAdaptorDefaultMethod()
 	{
-		super(null, null);
+		super(null);
 	}
 
-	public AnalysisAdaptorDefaultMethod(IClassDefinition c, Environment env)
+	public AnalysisAdaptorDefaultMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 	
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		Set<String> temp = super.getRequiredImports();
+		Set<String> temp = super.getRequiredImports(env);
 		temp.add(AnalysisUtil.getClass(env, classDefinition).getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 	
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
-		Set<String> temp =super.getRequiredImportsSignature();
+		Set<String> temp =super.getRequiredImportsSignature(env);
 		temp.add(AnalysisUtil.getClass(env, classDefinition).getName().getCanonicalName());
 		temp.add(env.getTaggedDef(env.TAG_IAnalysis).getName().getCanonicalName());
 		return temp;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
-		super.prepare();
+		super.prepare(env);
 		IClassDefinition c = classDefinition;
 		// CommonTreeClassDefinition cd = (CommonTreeClassDefinition) c;
 		StringBuilder sb = new StringBuilder();
@@ -52,7 +52,7 @@ public class AnalysisAdaptorDefaultMethod extends AnalysisMethodTemplate
 		sb.append("\t*/");
 		this.javaDoc = sb.toString();
 		this.name = "default"+defaultPostFix + AnalysisUtil.getClass(env, c).getName().getName();//NameUtil.getClassName(c.getName().getName());
-		setupArguments();
+		setupArguments(env);
 		// this.annotation="@override";
 		if (c.getSuperDef() != null)
 		{

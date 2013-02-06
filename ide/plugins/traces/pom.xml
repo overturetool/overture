@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.overture.ide</groupId>
     <artifactId>org.overture.ide.plugins</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.overture.ide.plugins</groupId>
@@ -15,33 +15,33 @@
     <!-- dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>traces</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency-->
    
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.ui</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide</groupId>
       <artifactId>org.overture.ide.debug</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmsl</groupId>
       <artifactId>org.overture.ide.vdmsl.debug</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmpp</groupId>
       <artifactId>org.overture.ide.vdmpp.debug</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overture.ide.vdmrt</groupId>
       <artifactId>org.overture.ide.vdmrt.debug</artifactId>
-      <version>2.2.0</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.core</groupId>
@@ -86,12 +86,12 @@
     <dependency>
     	<groupId>org.overture.ide</groupId>
     	<artifactId>org.overture.ide.core</artifactId>
-    	<version>2.2.0</version>
+    	<version>${project.version}</version>
     </dependency>
     <dependency>
     	<groupId>org.overturetool.core.combinatorialtesting</groupId>
     	<artifactId>ctutils</artifactId>
-    	<version>2.2.0</version>
+    	<version>${project.version}</version>
     </dependency>
   </dependencies>
 

@@ -7,19 +7,19 @@ public class ParentGetMethod extends Method
 {
 	Field f;
 	String structureClassName;
-	public ParentGetMethod(String structureClassName, Field f,Environment env)
+	public ParentGetMethod(String structureClassName, Field f)
 	{
-		super(null,env);
+		super(null);
 		this.f = f;
 		this.structureClassName = structureClassName;
 	}
 	
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		name = "parent";
 		returnType = structureClassName;
-		body = "\t\treturn " + f.getName() + ";";
+		body = "\t\treturn " + f.getName(env) + ";";
 	}
 
 }

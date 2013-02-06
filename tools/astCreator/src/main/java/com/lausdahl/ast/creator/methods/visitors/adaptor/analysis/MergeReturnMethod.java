@@ -11,19 +11,19 @@ public class MergeReturnMethod extends Method
 {
 	String mergeTypeName = "Object";
 
-	public MergeReturnMethod(IClassDefinition c, Environment env)
+	public MergeReturnMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	public MergeReturnMethod(String mergeType)
 	{
-		super(null, null);
+		super(null);
 		this.mergeTypeName = mergeType;
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.arguments.add(new Argument(mergeTypeName, "original"));
 		this.arguments.add(new Argument(mergeTypeName, "new_"));
@@ -33,13 +33,13 @@ public class MergeReturnMethod extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
 		return new HashSet<String>();
 	}
 
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
 		return new HashSet<String>();
 	}

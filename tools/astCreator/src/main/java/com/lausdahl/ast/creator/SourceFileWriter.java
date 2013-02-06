@@ -35,7 +35,8 @@ public class SourceFileWriter
 		outputFolder.mkdirs();
 
 		System.out.println("Copying base classes to destination...");
-		copyBaseClasses(outputFolder, env.getDefaultPackage(), env.getAnalysisPackage(), env);
+		
+		copyBaseClasses(outputFolder, env.getTemplateDefaultPackage(), env.getTemplateAnalysisPackage(), env);
 		System.out.println("Writing source files.:");
 		long startTime = System.currentTimeMillis();
 		int i = 80;
@@ -55,7 +56,7 @@ public class SourceFileWriter
 				i = 80;
 				System.out.println();
 			}
-			SourceFileWriter.write(outputFolder, def);
+			SourceFileWriter.write(outputFolder, def, env);
 			// SourceFileWriter.write(generatedVdm, def, false);
 		}
 		long endTime = System.currentTimeMillis();
@@ -188,14 +189,15 @@ public class SourceFileWriter
 		}
 	}
 
-	public static void write(File generated, IInterfaceDefinition def)
+	public static void write(File generated, IInterfaceDefinition def, Environment env)
 	{
-		write(generated, def, true);
+		write(generated, def, true, env);
 	}
 
 	private static void write(File generated, IInterfaceDefinition def,
-			boolean writeJava)
+			boolean writeJava, Environment env)
 	{
+		if (def.isJavaSourceWritten()) return;
 		try
 		{
 			String name = null;
@@ -204,7 +206,7 @@ public class SourceFileWriter
 			if (writeJava)
 			{
 				name = def.getName().getName();
-				content = def.getJavaSourceCode(new StringBuilder());
+				content = def.getJavaSourceCode(new StringBuilder(), env);
 			} else
 			{
 				InterfaceDefinition.VDM = true;
@@ -231,6 +233,7 @@ public class SourceFileWriter
 		{
 			e.printStackTrace();
 		}
+		//def.setJavaSourceWritten(true);
 	}
 
 	private static File createFolder(File src, String packageName)

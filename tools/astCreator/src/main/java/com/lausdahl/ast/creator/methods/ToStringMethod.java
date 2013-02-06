@@ -16,15 +16,15 @@ import com.lausdahl.ast.creator.env.Environment;
 public class ToStringMethod extends Method
 {
 
-	public ToStringMethod(IClassDefinition c, Environment env)
+	public ToStringMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	String bodyCache = null;
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.name = "toString";
 		this.returnType = "String";
@@ -48,9 +48,9 @@ public class ToStringMethod extends Method
 					for (Field f : classDefinition.getFields())
 					{
 						tmp += " ("
-								+ f.getName()
+								+ f.getName(env)
 								+ "!=null?"
-								+ f.getName()
+								+ f.getName(env)
 								+ ".toString():this.getClass().getSimpleName())+";
 					}
 					if (!classDefinition.getFields().isEmpty())
@@ -102,10 +102,10 @@ public class ToStringMethod extends Method
 							boolean found = false;
 							for (Field f : classDefinition.getInheritedFields())
 							{
-								if (f.getName().equals("_" + p.content))
+								if (f.getName(env).equals("_" + p.content))
 								{
 
-									tmp += f.getName();
+									tmp += f.getName(env);
 									found = true;
 									break;
 								}
@@ -115,9 +115,9 @@ public class ToStringMethod extends Method
 							{
 								for (Field f : classDefinition.getFields())
 								{
-									if (f.getName().equals("_" + p.content))
+									if (f.getName(env).equals("_" + p.content))
 									{
-										tmp += f.getName();
+										tmp += f.getName(env);
 										found = true;
 										break;
 									}
@@ -202,7 +202,7 @@ public class ToStringMethod extends Method
 //	}
 
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 	}
 

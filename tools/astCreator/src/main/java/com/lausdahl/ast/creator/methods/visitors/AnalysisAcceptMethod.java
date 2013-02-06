@@ -8,18 +8,29 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class AnalysisAcceptMethod extends Method
 {
+	private String privilegedBody;
+	
+	
+	public String getPrivilegedBody() {
+		return privilegedBody;
+	}
+
+	public void setPrivilegedBody(String privilegedBody) {
+		this.privilegedBody = privilegedBody;
+	}
+
 	public AnalysisAcceptMethod()
 	{
-		super(null,null);
+		super(null);
 	}
 
 	public AnalysisAcceptMethod(IClassDefinition c,Environment env)
 	{
-		super(c,env);
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		IInterfaceDefinition argDef = env.getTaggedDef(env.TAG_IAnalysis);
@@ -35,14 +46,15 @@ public class AnalysisAcceptMethod extends Method
 		name = "apply";
 		annotation = "@Override";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "analysis"));
-		body = "\t\tanalysis.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);";
+		body = privilegedBody == null ? "\t\tanalysis.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this);" : privilegedBody;
 		throwsDefinitions.add(env.analysisException);
 	}
 	
+	
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
-		super.prepareVdm();
+		super.prepareVdm(env);
 		optionalVdmArgument = false;
 	}
 }

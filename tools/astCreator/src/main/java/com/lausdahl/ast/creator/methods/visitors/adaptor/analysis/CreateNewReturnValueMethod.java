@@ -13,15 +13,15 @@ public class CreateNewReturnValueMethod extends Method
 	String varName = "retVal";
 	private Argument arg = new Argument("Q", "question");
 
-	public CreateNewReturnValueMethod(IClassDefinition c, Environment env)
+	public CreateNewReturnValueMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 	}
 
 	public CreateNewReturnValueMethod(IClassDefinition c, String returnType,
 			boolean hasArgument)
 	{
-		super(c, null);
+		super(c);
 		this.returnType = returnType;
 		if (!hasArgument)
 		{
@@ -30,7 +30,7 @@ public class CreateNewReturnValueMethod extends Method
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		this.arguments.add(new Argument(classDefinition.getName().getName(), "node"));
 		if (arg != null)
@@ -42,13 +42,13 @@ public class CreateNewReturnValueMethod extends Method
 	}
 
 	@Override
-	public Set<String> getRequiredImports()
+	public Set<String> getRequiredImports(Environment env)
 	{
-		return getRequiredImportsSignature();
+		return getRequiredImportsSignature(env);
 	}
 
 	@Override
-	public Set<String> getRequiredImportsSignature()
+	public Set<String> getRequiredImportsSignature(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
 		if (!(classDefinition instanceof PredefinedClassDefinition))

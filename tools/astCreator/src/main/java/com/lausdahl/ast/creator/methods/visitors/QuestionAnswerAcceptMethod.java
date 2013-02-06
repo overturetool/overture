@@ -8,18 +8,30 @@ import com.lausdahl.ast.creator.utils.NameUtil;
 
 public class QuestionAnswerAcceptMethod extends Method
 {
-	public QuestionAnswerAcceptMethod()
-	{
-		super(null,null);
+	private String privilegedBody = null;
+	
+	
+	
+	public String getPrivilegedBody() {
+		return privilegedBody;
 	}
 
-	public QuestionAnswerAcceptMethod(IClassDefinition c,Environment env)
+	public void setPrivilegedBody(String privilegedBody) {
+		this.privilegedBody = privilegedBody;
+	}
+
+	public QuestionAnswerAcceptMethod()
 	{
-		super(c,env);
+		super(null);
+	}
+
+	public QuestionAnswerAcceptMethod(IClassDefinition c)
+	{
+		super(c);
 	}
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		IClassDefinition c = classDefinition;
 		StringBuilder sb = new StringBuilder();
@@ -39,12 +51,12 @@ public class QuestionAnswerAcceptMethod extends Method
 		returnType = "<Q, A> A";
 		arguments.add(new Argument(NameUtil.getGenericName(argDef), "caller"));
 		arguments.add(new Argument("Q", "question"));
-		body = "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this, question);";
+		body = (privilegedBody == null ? "\t\treturn caller.case" + AnalysisUtil.getCaseClass(env, c).getName().getName() + "(this, question);" : privilegedBody);
 		throwsDefinitions.add(env.analysisException);
 	}
 	
 	@Override
-	protected void prepareVdm()
+	protected void prepareVdm(Environment env)
 	{
 		optionalVdmArgument=false;
 		IClassDefinition c = classDefinition;

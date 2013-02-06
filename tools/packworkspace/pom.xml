@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-
 		<groupId>org.overturetool.tools</groupId>
 		<artifactId>tools</artifactId>
-		<version>2.2.0</version>
+		<version>2.2.1<!--Replaceable: Main Version--></version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overturetool.tools</groupId>
 	<artifactId>packworkspace</artifactId>
-	<version>2.1.1</version>
 	<name>Overture Examples Workspace packer</name>
 	<build>
 		<plugins>
@@ -35,7 +33,7 @@
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
 			<artifactId>vdmj</artifactId>
-			<version>2.1.1</version>
+			<version>2.2.1</version>
 		</dependency>
 	</dependencies>
 </project>

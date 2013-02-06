@@ -7,16 +7,16 @@ public class CheckCacheMethod extends Method
 {
 
 
-	public CheckCacheMethod(IClassDefinition c, Environment env)
+	public CheckCacheMethod(IClassDefinition c)
 	{
-		super(c, env);
+		super(c);
 		
 	}
 
 
 
 	@Override
-	protected void prepare()
+	protected void prepare(Environment env)
 	{
 		StringBuilder sbDoc = new StringBuilder();
 		sbDoc.append("\t/**\n");

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.2.0
+Bundle-Version: 2.2.1
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: Developer Utilities for Overture
@@ -13,9 +13,7 @@ Require-Bundle: org.eclipse.ui.console;bundle-version="3.3.1",
  org.overture.ide.ui;bundle-version="2.2.0"
 Bundle-Activator: org.overture.ide.plugins.developerutils.OvertureDeveliperUtilsPlugin
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
- org.overture.ide.ui-2.2.0.jar,
- ast-2.2.0.jar,
- parser-2.2.0.jar,
+ ast-2.2.1.jar,
+ parser-2.2.1.jar,
  testframework-2.2.1.jar,
- typechecker-2.2.0.jar
+ typechecker-2.2.1.jar

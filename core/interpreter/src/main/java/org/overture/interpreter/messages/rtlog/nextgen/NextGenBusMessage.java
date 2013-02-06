@@ -15,6 +15,7 @@ public class NextGenBusMessage implements Serializable {
 	public NextGenCpu fromCpu;
 	public NextGenCpu toCpu;
 	public NextGenThread callerThread;
+	public NextGenThread receiverThread;
 	public NextGenOperation operation;
 	public Integer size;
 	public NextGenObject object;	
@@ -29,6 +30,22 @@ public class NextGenBusMessage implements Serializable {
 		this.fromCpu = fromCpu;
 		this.toCpu = toCpu;
 		this.callerThread = callerThread;
+		this.receiverThread = null;
+		this.operation = operation;
+		this.size = size;
+		this.object = object;
+	}
+	
+	public NextGenBusMessage(Long id, NextGenBus bus, NextGenCpu fromCpu, NextGenCpu toCpu,
+			NextGenThread callerThread, NextGenThread receiverThread, NextGenOperation operation,
+			int size, NextGenObject object) 
+	{
+		this.id = id;
+		this.bus = bus;
+		this.fromCpu = fromCpu;
+		this.toCpu = toCpu;
+		this.callerThread = callerThread;
+		this.receiverThread = receiverThread;
 		this.operation = operation;
 		this.size = size;
 		this.object = object;
@@ -46,6 +63,7 @@ public class NextGenBusMessage implements Serializable {
 		s.append(" fromCpu: "); s.append(this.fromCpu.id);
 		s.append(" toCpu: "); s.append(this.toCpu.id);
 		s.append(" callerThread: "); s.append(this.callerThread.id);
+		s.append(" receiverThread: "); s.append(this.receiverThread != null ? this.receiverThread.id : "no receiver");
 		s.append(" operation: "); s.append(this.operation!= null ? this.operation.name : "no op");
 		s.append(" size: "); s.append(this.size);
 		s.append(" object: "); s.append(this.object!=null ? this.object.id : "no object");
