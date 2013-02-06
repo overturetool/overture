@@ -137,7 +137,8 @@ public class Context extends LexNameTokenMap<Value>
 		}
 
 		Context result = new Context(location, title, below);
-
+		result.threadState = threadState;
+		
 		for (LexNameToken var: keySet())
 		{
 			Value v = get(var);
