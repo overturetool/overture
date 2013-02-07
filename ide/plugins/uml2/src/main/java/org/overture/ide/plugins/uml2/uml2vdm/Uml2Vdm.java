@@ -39,6 +39,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -146,6 +147,7 @@ public class Uml2Vdm
 			{
 				Class innerType = (Class) elem;
 				String innerTypeName = innerType.getName();
+				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(innerType.getVisibility());
 				if (innerType.getGeneralizations().isEmpty())
 				{
 					boolean createdType = false;
@@ -159,6 +161,7 @@ public class Uml2Vdm
 								console.out.println("\tConverting inner record type= " + innerTypeName);
 								ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 								innerTypeDef.setType(tc.createRecord(innerType));
+								innerTypeDef.setAccess(access);
 								c.getDefinitions().add(innerTypeDef);
 								createdType = true;
 								break;
@@ -177,6 +180,7 @@ public class Uml2Vdm
 							+ innerTypeTypeName);
 					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 					innerTypeDef.setType(tc.convert(innerTypeTypeName,null));
+					innerTypeDef.setAccess(access);
 					c.getDefinitions().add(innerTypeDef);
 				}
 			}else if (elem instanceof Enumeration)
@@ -185,6 +189,8 @@ public class Uml2Vdm
 				console.out.println("\tConverting inner enumeration type= " + innerTypeName);
 				ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 				innerTypeDef.setType(tc.createEnumeration((Enumeration)elem));
+				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(((Enumeration) elem).getVisibility());
+				innerTypeDef.setAccess(access);
 				c.getDefinitions().add(innerTypeDef);
 			}
 		}
