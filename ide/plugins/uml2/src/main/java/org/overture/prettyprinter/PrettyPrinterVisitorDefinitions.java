@@ -14,7 +14,6 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.EDefinition;
-import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
@@ -22,7 +21,6 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -183,7 +181,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		
-sb.append(node.getAccess().getAccess()+" ");
+		sb.append(node.getAccess().getAccess()+" ");
 		sb.append(node.getName()
 				+ (node.getType() instanceof ARecordInvariantType ? " :: "
 						: " = ") + node.getType().apply(this, question));
