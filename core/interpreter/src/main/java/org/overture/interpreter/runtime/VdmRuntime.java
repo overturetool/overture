@@ -34,6 +34,13 @@ public class VdmRuntime
 		runtimeState.clear();
 	}
 	
+	public static void initialize(IQuestionAnswer<Context, Value> expressionRuntime)
+	{
+		VdmRuntime.expressionRuntime = expressionRuntime; 
+		statementRuntime = expressionRuntime; 
+		runtimeState.clear();
+	}
+	
 	public static IQuestionAnswer<Context, Value> getExpressionEvaluator()
 	{
 		if(expressionRuntime == null)
