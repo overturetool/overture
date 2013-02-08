@@ -15,10 +15,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Property;
@@ -50,7 +50,7 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.prettyprinter.PrettyPrinterEnv;
-import org.overture.prettyprinter.PrettyPrinterVisitor; 
+import org.overture.prettyprinter.PrettyPrinterVisitor;
 
 public class Uml2Vdm
 {
@@ -193,6 +193,22 @@ public class Uml2Vdm
 				innerTypeDef.setAccess(access);
 				c.getDefinitions().add(innerTypeDef);
 			}
+//			else if (elem instanceof Association)
+//			{
+//				Association ass = (Association) elem;
+//				if(ass.getOwnedEnds().size()==2)
+//				{
+//					for (Property end : ass.getOwnedEnds())
+//					{
+//						if(!end.getName().isEmpty())
+//						{
+//							console.out.println("\tConverting association property= " + end.getName());
+//						}
+//					}
+//					
+//				}
+//			
+//			}
 		}
 
 		for (Property att : class_.getOwnedAttributes())
@@ -216,7 +232,7 @@ public class Uml2Vdm
 				createOperation(c, op);
 			}
 		}
-
+		
 		return c;
 	}
 

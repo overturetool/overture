@@ -211,7 +211,7 @@ public class Vdm2Uml
 					+ def.getName().name);
 			// TODO static
 			Class referencedClass = getClassName(defType);
-			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+			Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
 			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 		} else
 		{
@@ -350,17 +350,11 @@ public class Vdm2Uml
 					+ def.getName().name);
 			// TODO static
 			Class referencedClass = getClassName(defType);
-			int lower = 1;
-			if(Vdm2UmlUtil.isOptional(defType))
-			{
-				lower = 0;
-			}
-			else
-			{
-				lower = Vdm2UmlUtil.extractLower(defType);
-			}
 			
-			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, lower, Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+				int lower = Vdm2UmlUtil.extractLower(defType);
+			
+			
+			Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, lower, Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
 			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			
 		} else
