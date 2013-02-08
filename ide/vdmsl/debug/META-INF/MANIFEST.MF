@@ -15,13 +15,9 @@ Export-Package: org.overture.ide.vdmsl.debug,
  org.overture.ide.vdmsl.debug.ui.launchconfigurations
 Bundle-Activator: org.overture.ide.vdmsl.debug.Activator
 Bundle-ClassPath: .,
- org.overture.ide.core-2.2.0.jar,
- org.overture.ide.debug-2.2.0.jar,
- org.overture.ide.ui-2.2.0.jar,
- org.overture.ide.vdmsl.core-2.2.0.jar,
- ast-2.2.0.jar,
- interpreter-2.2.0.jar,
- parser-2.2.0.jar,
- pog-2.2.0.jar,
+ ast-2.2.1.jar,
+ interpreter-2.2.1.jar,
+ parser-2.2.1.jar,
+ pog-2.2.1.jar,
  testframework-2.2.1.jar,
- typechecker-2.2.0.jar
+ typechecker-2.2.1.jar

@@ -693,7 +693,7 @@ public class NextGenRTLogger {
 
 		in.close();
 		
-		printDataStructure("d:\\readFromFile_structure.txt");
+		//printDataStructure("d:\\readFromFile_structure.txt");
 	}
 		
 	private void addEvent(INextGenEvent event)
