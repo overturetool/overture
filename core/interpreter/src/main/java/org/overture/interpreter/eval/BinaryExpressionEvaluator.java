@@ -34,7 +34,7 @@ import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
-import org.overture.ast.expressions.ASubstractNumericBinaryExp;
+import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -635,8 +635,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	}
 
 	@Override
-	public Value caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, Context ctxt) throws AnalysisException
+	public Value caseASubtractNumericBinaryExp(
+			ASubtractNumericBinaryExp node, Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered

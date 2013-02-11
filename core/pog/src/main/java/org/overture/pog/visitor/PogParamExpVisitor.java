@@ -1398,8 +1398,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     }
 
     @Override
-    public ProofObligationList caseASubstractNumericBinaryExp(
-	    ASubstractNumericBinaryExp node, POContextStack question)
+    public ProofObligationList caseASubtractNumericBinaryExp(
+	    ASubtractNumericBinaryExp node, POContextStack question)
 	    throws AnalysisException {
 	return handleNumericBinaryExpression(node, question);
     }

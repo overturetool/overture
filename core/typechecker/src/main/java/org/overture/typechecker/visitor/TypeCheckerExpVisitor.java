@@ -556,8 +556,8 @@ public class TypeCheckerExpVisitor extends
 	}
 
 	@Override
-	public PType caseASubstractNumericBinaryExp(
-			ASubstractNumericBinaryExp node, TypeCheckInfo question)
+	public PType caseASubtractNumericBinaryExp(
+			ASubtractNumericBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException {
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
