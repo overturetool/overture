@@ -1571,8 +1571,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-    		long from = node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
-    		long to =  node.getLast().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+			long from = (long) Math.ceil(node.getFirst().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt));
+			long to =   (long) Math.floor(node.getLast().apply(VdmRuntime.getExpressionEvaluator(), ctxt).realValue(ctxt));
     		ValueSet set = new ValueSet();
 
     		for (long i=from; i<= to; i++)
