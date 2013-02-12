@@ -595,10 +595,12 @@ public class TypeCheckerExpVisitor extends
 		} else if (rn instanceof AIntNumericBasicType) {
 			node.setType(rn);
 			return rn;
-		} else if (ln instanceof ANatNumericBasicType
-				&& rn instanceof ANatNumericBasicType) {
+		} else if (ln instanceof ANatNumericBasicType) {
 			node.setType(ln);
 			return ln;
+		} else if (rn instanceof ANatNumericBasicType) {	
+			node.setType(rn);
+			return rn;
 		} else {
 			node.setType(AstFactory.newANatOneNumericBasicType(ln.getLocation()));
 			return node.getType();
