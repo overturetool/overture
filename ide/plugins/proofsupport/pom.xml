@@ -1,16 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.overture.ide</groupId>
     <artifactId>org.overture.ide.plugins</artifactId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+  <packaging>eclipse-plugin</packaging>
+  <packaging>source-plugin</packaging>
+
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.proofsupport</artifactId>
   <name>Overture IDE Proofsupport plugin</name>
-  <packaging>eclipse-plugin</packaging>
- 
-  <packaging>source-plugin</packaging>
-<description>Graphical tool which provides a userinterface for the proofobligation discharge.</description>
-
+  <description>Graphical tool which provides a userinterface for the proofobligation discharge.</description>
 </project>

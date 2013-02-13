@@ -1,56 +1,61 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>org.overturetool.tools</groupId>
-		<artifactId>tools</artifactId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overturetool.tools</groupId>
-	<artifactId>overturetemplategen</artifactId>
-	<version>2.1.0</version>
-	<name>overturetemplategen</name>
-	<organization>
-		<name>Overture Tool Project</name>
-		<url>www.overturetool.org</url>
-	</organization>
-	<developers>
-		<developer>
-			<id>Kenneth Lausdahl</id>
-			<name>Kenneth Lausdahl</name>
-			<roles>
-				<role>developer</role>
-			</roles>
-		</developer>
-	</developers>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>org.overture.tools.overturetemplategen.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				 <version>2.2.2</version>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>org.overture.tools.overturetemplategen.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overturetool.tools</groupId>
+    <artifactId>tools</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
+
+  <groupId>org.overturetool.tools</groupId>
+  <artifactId>overturetemplategen</artifactId>
+  <version>2.1.0</version>
+  <name>overturetemplategen</name>
+
+  <organization>
+    <name>Overture Tool Project</name>
+    <url>www.overturetool.org</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>Kenneth Lausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <roles>
+	<role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-jar-plugin</artifactId>
+	<version>2.3.2</version>
+	<configuration>
+	  <archive>
+	    <manifest>
+	      <mainClass>org.overture.tools.overturetemplategen.Main</mainClass>
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+      <plugin>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>2.2.2</version>
+	<configuration>
+	  <descriptorRefs>
+	    <descriptorRef>jar-with-dependencies</descriptorRef>
+	  </descriptorRefs>
+	  <archive>
+	    <manifest>
+	      <mainClass>org.overture.tools.overturetemplategen.Main</mainClass>
+	    </manifest>
+	  </archive>
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

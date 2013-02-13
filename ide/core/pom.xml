@@ -1,33 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.core</artifactId>
   <name>org.overture.ide.core</name>
 
   <dependencies>
-    <!--dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>vdmj</artifactId>
-      <version>${project.version}</version>
-    </dependency-->
     <dependency>
-            <groupId>org.overturetool.core</groupId>
-            <artifactId>ast</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.overturetool.core</groupId>
-            <artifactId>parser</artifactId>
-            <version>${project.version}</version>
-        </dependency>       
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>       
     <dependency>
       <groupId>org.eclipse.core</groupId>
       <artifactId>org.eclipse.core.runtime</artifactId>
@@ -79,5 +76,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

@@ -1,19 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>core</artifactId>
-		<groupId>org.overturetool</groupId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>combinatorialtesting</artifactId>
-	<packaging>pom</packaging>
-	<name>Combinatorial Testing</name>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<modules>
-		<module>ctutils</module>
-		<module>ctruntime</module>
-			
-	</modules>
+  <parent>
+    <artifactId>core</artifactId>
+    <groupId>org.overturetool</groupId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
+
+  <packaging>pom</packaging>
+
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>combinatorialtesting</artifactId>
+  <name>Combinatorial Testing</name>
+
+  <modules>
+    <module>ctutils</module>
+    <module>ctruntime</module>			
+  </modules>
 </project>

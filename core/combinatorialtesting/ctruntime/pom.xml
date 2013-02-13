@@ -1,68 +1,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 	
-	<parent>
-		<groupId>org.overturetool.core</groupId>
-		<artifactId>combinatorialtesting</artifactId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<groupId>org.overturetool.core.combinatorialtesting</groupId>
-	<artifactId>ctruntime</artifactId>
-	<name>Combinatorial Testing Runtime</name>
+  <parent>
+    <groupId>org.overturetool.core</groupId>
+    <artifactId>combinatorialtesting</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
 
-	<!--dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>vdmj</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>parser</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+  <groupId>org.overturetool.core.combinatorialtesting</groupId>
+  <artifactId>ctruntime</artifactId>
+  <name>Combinatorial Testing Runtime</name>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core.combinatorialtesting</groupId>
+      <artifactId>ctutils</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>interpreter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
-		<dependency>
-			<groupId>org.overturetool.core.vdmtools</groupId>
-			<artifactId>vdmtoolsapi</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-	</dependencies-->
-
-
-	
-
-
-	<developers>
-		<developer>
-			<id>KennethLausdahl</id>
-			<name>Kenneth Lausdahl</name>
-			<email />
-			<url>http://www.lausdahl.com</url>
-			<organization>IHA</organization>
-			<organizationUrl>http://iha.dk</organizationUrl>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		
-	</developers>
-	<dependencies>
-		<dependency>
-			<groupId>
-				org.overturetool.core.combinatorialtesting
-			</groupId>
-			<artifactId>ctutils</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>interpreter</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
-	</dependencies>
+  <developers>
+    <developer>
+      <id>KennethLausdahl</id>
+      <name>Kenneth Lausdahl</name>
+      <email />
+      <url>http://www.lausdahl.com</url>
+      <organization>IHA</organization>
+      <organizationUrl>http://iha.dk</organizationUrl>
+      <roles>
+	<role>developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>  
+  </developers>
 </project>

@@ -1,43 +1,45 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>potrans</artifactId>
-	<name>The Proof Obligation Translator</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
+
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>potrans</artifactId>
+  <name>The Proof Obligation Translator</name>
+  <version>2.1.1</version>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core.vdmtools</groupId>
+      <artifactId>cglib</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.overturetool.tools</groupId>
+	<artifactId>vdmt</artifactId>
 	<version>2.1.1</version>
-	
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core.vdmtools</groupId>
-			<artifactId>cglib</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>vdmt</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-					</importPackages>
-					<excludePackages />
-					<excludeClasses />
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+	<configuration>
+	  <importPackages>
+	    <param>org.overturetool.ast.itf</param>
+	  </importPackages>
+	  <excludePackages />
+	  <excludeClasses />
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

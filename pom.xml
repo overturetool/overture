@@ -1,16 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <packaging>pom</packaging>
+
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
-  <packaging>pom</packaging>
   <version>2.2.1<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
   
   <modules>
     <module>core</module>
     <module>tools</module>
+    <!--
+	The ide module will now be built using Tycho, so lets remove
+	it from the main build cycle (as JWC has had trouble
+	integrating mixed tycho-maven and pure-maven build setups in
+	the past). -jwc/13Feb2013
+
     <module>ide</module>
+    -->
   </modules>
 
   <properties>
@@ -29,45 +38,38 @@
 
   <repositories>
     <repository>
-      <id>OvertureMT4Em2Repo</id>
-      <name>Overture Project's MT4E-generated Maven Repository of Eclipse 3.7.2 files</name>
-      <url>http://build.overturetool.org/builds/mt4e-m2repo-eclipse3.7.2/</url>
+      <id>overture.sf.net</id>
+      <name>Overture SF Snapshots</name>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <url>http://overture.sourceforge.net/maven/repo</url>
       <layout>default</layout>
     </repository>
-	
-	 <repository>
-          <id>overture.sf.net</id>
-          <name>Overture SF Snapshots</name>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <url>http://overture.sourceforge.net/maven/repo</url>
-          <layout>default</layout>
-        </repository>
-		
-		 <repository>
-          <id>IHA</id>
-          <name>Build server Snapshots</name>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <url>http://build.overturetool.org/builds/overture-m2repo</url>
-          <layout>default</layout>
-        </repository>
+    
+    <repository>
+      <id>IHA</id>
+      <name>Build server Snapshots</name>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <url>http://build.overturetool.org/builds/overture-m2repo</url>
+      <layout>default</layout>
+    </repository>
   </repositories>
 
   <build>
@@ -125,7 +127,7 @@
 	<artifactId>maven-site-plugin</artifactId>
 	<version>2.0.1</version>
       </plugin>
-      
+
       <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-release-plugin</artifactId>

@@ -1,83 +1,73 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>ast</artifactId>
-	<name>The Overture Abstract Syntax Tree </name>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.overturetool.tools</groupId>
-				<artifactId>astcreatorplugin</artifactId>
-				<version>1.1.8</version>
-				<executions>
-					<execution>
-						<id>java</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate</goal>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
 
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<deletePackageOnGenerate>
-						<param>vdm.generated.node</param>
-						<param>org.overture.ast</param>
-					</deletePackageOnGenerate>
-					<ast>overtureII.astv2</ast>
-					<!--outputDirectory>${project.basedir}/src/main/java</outputDirectory -->
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>ast</artifactId>
+  <name>The Overture Abstract Syntax Tree </name>
 
-				</configuration>
-			</plugin>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.overturetool.tools</groupId>
+	<artifactId>astcreatorplugin</artifactId>
+	<version>1.1.8</version>
+	<executions>
+	  <execution>
+	    <id>java</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>generate</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <deletePackageOnGenerate>
+	    <param>vdm.generated.node</param>
+	    <param>org.overture.ast</param>
+	  </deletePackageOnGenerate>
+	  <ast>overtureII.astv2</ast>
+	</configuration>
+      </plugin>
+    </plugins>
 
-		</plugins>
-		<pluginManagement>
-			<plugins>
-
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.overturetool.tools
-										</groupId>
-										<artifactId>
-											astcreatorplugin
-										</artifactId>
-										<versionRange>
-											[1.0.1,)
-										</versionRange>
-										<goals>
-											<goal>generate</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<!-- ignore></ignore -->
-										<execute>
-											<runOnIncremental>false</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
+    <pluginManagement>
+      <plugins>
+	<!--This plugin's configuration is used to store Eclipse m2e settings 
+	    only. It has no influence on the Maven build itself. -->
+	<plugin>
+	  <groupId>org.eclipse.m2e</groupId>
+	  <artifactId>lifecycle-mapping</artifactId>
+	  <version>1.0.0</version>
+	  <configuration>
+	    <lifecycleMappingMetadata>
+	      <pluginExecutions>
+		<pluginExecution>
+		  <pluginExecutionFilter>
+		    <groupId>org.overturetool.tools</groupId>
+		    <artifactId>astcreatorplugin</artifactId>
+		    <versionRange>[1.0.1,)</versionRange>
+		    <goals>
+		      <goal>generate</goal>
+		    </goals>
+		  </pluginExecutionFilter>
+		  <action>
+		    <execute>
+		      <runOnIncremental>false</runOnIncremental>
+		    </execute>
+		  </action>
+		</pluginExecution>
+	      </pluginExecutions>
+	    </lifecycleMappingMetadata>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

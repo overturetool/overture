@@ -1,13 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.overturetool.tools</groupId>
     <artifactId>tools</artifactId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+  <packaging>maven-plugin</packaging>
+
   <groupId>org.overturetool.tools</groupId>
   <artifactId>astcreatorplugin</artifactId>
-  <packaging>maven-plugin</packaging>
   <version>1.1.8</version>
   <name>AST Creator Maven plug-in</name>
  
@@ -28,6 +32,7 @@
       </plugin>
     </plugins>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -46,5 +51,4 @@
       <version>1.1.8</version>
     </dependency>
   </dependencies>
-
 </project>

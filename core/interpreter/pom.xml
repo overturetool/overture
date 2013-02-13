@@ -1,118 +1,106 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
-		<version>2.2.1<!--Replaceable: Main Version--></version>
-	</parent>
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>interpreter</artifactId>
-	<name>The VDM Interpreter </name>
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>core</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>ast</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>typechecker</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>pog</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>testframework</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+  <groupId>org.overturetool.core</groupId>
+  <artifactId>interpreter</artifactId>
+  <name>The VDM Interpreter </name>
 
-	<build>
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>pog</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>testframework</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
-	  <!-- <sourceDirectory>src/main/java_</sourceDirectory> -->
-	  <!-- <testSourceDirectory>src/test/java</testSourceDirectory> -->
-	  <plugins>
-	    <plugin>
-	      <groupId>org.overturetool.tools</groupId>
-	      <artifactId>astcreatorplugin</artifactId>
-	      <version>1.0.4</version>
-	      <executions>
-                    <execution>
-                        <id>java</id>
-                        <!--phase>generate-sources</phase-->
-                        <goals>
-                            <!--goal>astcreate</goal-->
-
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                <folderToDeletePreGenerate>org/overture/interpreter/ast</folderToDeletePreGenerate>
-                    <ast>../../../../ast/src/main/resources/overtureII.astv2</ast>
-                    <extendedast>overtureII.astv2</extendedast>
-                    <names>
-                        <param>VDM</param>
-                    </names>
-
-                </configuration>
-            </plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*Test?.java</include>
-						<include>**/*TestSuite.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.overturetool.tools
-										</groupId>
-										<artifactId>
-											astcreatorplugin
-										</artifactId>
-										<versionRange>
-											[1.0.1,)
-										</versionRange>
-										<goals>
-											<goal>astcreate</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
-
-
-	
+  <build>
+    <plugins>
+      <!-- <plugin> -->
+      <!-- 	<groupId>org.overturetool.tools</groupId> -->
+      <!-- 	<artifactId>astcreatorplugin</artifactId> -->
+      <!-- 	<version>1.0.4</version> -->
+      <!-- 	<executions> -->
+      <!--     <execution> -->
+      <!--       <id>java</id> -->
+      <!--     < ! - -  <phase>generate-sources</phase> --> - - >
+      <!--       <goals> -->
+      <!--     < ! - -    <goal>astcreate</goal> --> - - >
+      <!--       </goals> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!--   <configuration> -->
+      <!--     <folderToDeletePreGenerate>org/overture/interpreter/ast</folderToDeletePreGenerate> -->
+      <!--     <ast>../../../../ast/src/main/resources/overtureII.astv2</ast> -->
+      <!--     <extendedast>overtureII.astv2</extendedast> -->
+      <!--     <names> -->
+      <!--       <param>VDM</param> -->
+      <!--     </names>   -->
+      <!--   </configuration> -->
+      <!-- </plugin> -->
+      <plugin>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+	  <testFailureIgnore>true</testFailureIgnore>
+	  <includes>
+	    <include>**/*Test.java</include>
+	    <include>**/*Test?.java</include>
+	    <include>**/*TestSuite.java</include>
+	  </includes>
+	</configuration>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+	<!-- This plugin's configuration is used to store Eclipse m2e
+	     settings only. It has no influence on the Maven build
+	     itself. -->
+	<plugin>
+	  <groupId>org.eclipse.m2e</groupId>
+	  <artifactId>lifecycle-mapping</artifactId>
+	  <version>1.0.0</version>
+	  <configuration>
+	    <lifecycleMappingMetadata>
+	      <pluginExecutions>
+		<pluginExecution>
+		  <pluginExecutionFilter>
+		    <groupId>org.overturetool.tools</groupId>
+		    <artifactId>astcreatorplugin</artifactId>
+		    <versionRange>[1.0.1,)</versionRange>
+		    <goals>
+		      <goal>astcreate</goal>
+		    </goals>
+		  </pluginExecutionFilter>
+		  <action>
+		    <ignore></ignore>
+		  </action>
+		</pluginExecution>
+	      </pluginExecutions>
+	    </lifecycleMappingMetadata>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>
