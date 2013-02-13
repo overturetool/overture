@@ -1,8 +1,0 @@
-class ExtExt
-  is subclass of Extended
-
-values
-  package = "nl.marcelverhoef.extext";
-  javadir = "d:\\workspace\\test\\src"
-
-end ExtExt
