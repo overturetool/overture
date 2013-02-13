@@ -58,7 +58,9 @@ public class TokenValue extends Value
     		if (val instanceof TokenValue)
     		{
     			TokenValue tok = (TokenValue)val;
-    			return tok.hash == hash;
+    			return (tok.hash == hash) &&
+    					((tok.value.isNumeric() && value.isNumeric()) ||
+    					 (tok.value.getClass() == value.getClass()));
     		}
 		}
 
