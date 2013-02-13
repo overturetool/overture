@@ -41,6 +41,12 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+# Backup files #
+################
+*~
+.#*
+\#*#
+
 # maven target directories #
 ############################
 target/
