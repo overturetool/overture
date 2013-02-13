@@ -54,6 +54,11 @@ public class Vdm2Uml
 	private Map<String, Class> classes = new HashMap<String, Class>();
 	private boolean extendedAssociationMapping = false;
 
+	public Vdm2Uml(boolean preferAssociations)
+	{
+		extendedAssociationMapping = preferAssociations;
+	}
+
 	public Model convert(String name, List<SClassDefinition> classes)
 	{
 		try
@@ -206,7 +211,7 @@ public class Vdm2Uml
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: "
-					+ def.getName().name);
+					+ name);
 			// TODO static
 //			Type referencedClass = Vdm2UmlAssociationUtil.getType(classes, defType);
 //			Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
@@ -214,7 +219,7 @@ public class Vdm2Uml
 			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_,true);
 		} else
 		{
-			console.out.println("\tAdding property for value: " + (def.getName()!=null?def.getName():def.getPattern()));
+			console.out.println("\tAdding property for value: " + name);
 			Property s = class_.createOwnedAttribute(name, umlType);
 			// s.setIsStatic(true);
 			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));

@@ -94,5 +94,15 @@
              sequence="Ctrl+Alt+I">
        </key>
     </extension>
+    
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.uml2.preferences.WorkbenchPreferencePageMain"
+            id="org.overture.ide.plugins.uml2.pageMain"
+            name="UML Translation">
+      </page>
+   </extension>
 
 </plugin>

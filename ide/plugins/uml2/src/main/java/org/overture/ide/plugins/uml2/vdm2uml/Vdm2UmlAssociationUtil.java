@@ -264,7 +264,7 @@ public class Vdm2UmlAssociationUtil
 			
 			//Map unique
 			prop.setIsUnique(mType.kindSMapType()==EMapType.INMAP);
-			Property targetProp = association.getMemberEnd("", referencedClass);
+			Property targetProp = association.getMemberEnd("", null);
 			targetProp.setIsUnique(true);
 			
 		}
