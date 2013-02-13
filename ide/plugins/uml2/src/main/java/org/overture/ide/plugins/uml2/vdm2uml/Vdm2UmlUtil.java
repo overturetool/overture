@@ -21,9 +21,11 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -213,5 +215,7 @@ public class Vdm2UmlUtil
 		return (defType instanceof AOptionalType);
 
 	}
+	
+	
 
 }

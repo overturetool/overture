@@ -37,7 +37,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
@@ -92,26 +91,20 @@ public class Uml2Vdm
 			console.out.println("#\n# Starting translation of model: "+ model.getName()+"\n#");
 			console.out.println("# Into: "+outputDir+"\n#");
 			console.out.println("-------------------------------------------------------------------------");
-			Map<String, String> classes = new HashMap<String, String>();
+			Map<String, AClassClassDefinition> classes = new HashMap<String, AClassClassDefinition>();
 			for (Element e : model.getOwnedElements())
 			{
 				if (e instanceof Class)
 				{
 					Class class_ = (Class) e;
 					console.out.println("Converting: " + class_.getName());
-					try
-					{
-						classes.put(class_.getName(), createClass(class_).apply(new PrettyPrinterVisitor(), new PrettyPrinterEnv()));
-					} catch (AnalysisException e1)
-					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					classes.put(class_.getName(), createClass(class_));
 				}
 			}
+			
 
 			console.out.println("Writing source files");
-			for (Entry<String, String> c : classes.entrySet())
+			for (Entry<String, AClassClassDefinition> c : classes.entrySet())
 			{
 				writeClassFile(outputDir, c);
 			}
@@ -119,7 +112,7 @@ public class Uml2Vdm
 		}
 	}
 
-	private void writeClassFile(File outputDir, Entry<String, String> c)
+	private void writeClassFile(File outputDir, Entry<String, AClassClassDefinition> c)
 	{
 		try
 		{
@@ -128,15 +121,19 @@ public class Uml2Vdm
 					+ "." + extension));
 			PrintWriter out = new PrintWriter(outFile);
 
-			out.println(c.getValue());
+			out.println(c.getValue().apply(new PrettyPrinterVisitor(), new PrettyPrinterEnv()));
 			out.close();
 		} catch (IOException e)
 		{
 			e.printStackTrace();
+		} catch (AnalysisException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
-	private INode createClass(Class class_)
+	private AClassClassDefinition createClass(Class class_)
 	{
 		AClassClassDefinition c = AstFactory.newAClassClassDefinition();
 		c.setName(new LexNameToken(class_.getName(), class_.getName(), null));
@@ -259,6 +256,7 @@ public class Uml2Vdm
 		AFunctionType type = AstFactory.newAFunctionType(null, true, parameterTypes, tc.convert(op.getType()));
 
 		AExplicitFunctionDefinition operation = AstFactory.newAExplicitFunctionDefinition(name, null, null, type, paramPatternList, AstFactory.newAUndefinedExp(null), null, null, false, null);
+		operation.setAccess(Uml2VdmUtil.createAccessSpecifier(op.getVisibility(), op.isStatic(), false));
 		c.getDefinitions().add(operation);
 	}
 
@@ -280,6 +278,7 @@ public class Uml2Vdm
 		AOperationType type = AstFactory.newAOperationType(null, parameterTypes, tc.convert(op.getType()));
 
 		AExplicitOperationDefinition operation = AstFactory.newAExplicitOperationDefinition(name, type, parameters, null, null, AstFactory.newANotYetSpecifiedStm(null));
+		operation.setAccess(Uml2VdmUtil.createAccessSpecifier(op.getVisibility(), op.isStatic(), false));
 		c.getDefinitions().add(operation);
 	}
 
@@ -290,7 +289,7 @@ public class Uml2Vdm
 		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
-			Settings.dialect = Dialect.VDM_SL;
+			Settings.dialect = Dialect.VDM_PP;
 			ParserResult<PExp> resExp = null;
 			boolean failed = false;
 			try
@@ -327,7 +326,7 @@ public class Uml2Vdm
 		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
-			Settings.dialect = Dialect.VDM_SL;
+			Settings.dialect = Dialect.VDM_PP;
 			ParserResult<PExp> resExp = null;
 			boolean failed = false;
 			try

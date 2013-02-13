@@ -30,6 +30,7 @@ public class UmlTypeCreatorBase
 	public final String templateSetName = "Set<T>";
 	public final String templateSeqName = "Seq<T>";
 	public final String templateMapName = "Map<D,R>";
+	public final static String NAME_SEPERATOR = "::";
 
 	protected static String getTemplateUnionName(int templateNameCount)
 	{
@@ -66,7 +67,7 @@ public class UmlTypeCreatorBase
 		return names;
 	}
 
-	public String getName(PType type)
+	public static String getName(PType type)
 	{
 		switch (type.kindPType())
 		{
@@ -84,11 +85,11 @@ public class UmlTypeCreatorBase
 				{
 					case NAMED:
 						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
-								+ "::"
+								+ NAME_SEPERATOR
 								+ ((ANamedInvariantType) type).getName().name;
 					case RECORD:
 						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
-								+ "::"
+								+ NAME_SEPERATOR
 								+ ((ARecordInvariantType) type).getName().name;
 						
 				}
@@ -131,7 +132,7 @@ public class UmlTypeCreatorBase
 				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 				{
 					LexNameToken name = ATypeDefinition.class.cast(type.getAncestor(ATypeDefinition.class)).getName();
-					return name.module + "::" + name.name;
+					return name.module + NAME_SEPERATOR + name.name;
 				}
 				String name = "Union<";
 				for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
