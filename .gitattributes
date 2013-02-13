@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+# (I don't think we really want autodetection on -jwc/16Nov2012)
+#*        text=auto
+
+*.MF	 text
+*.ast	 text
+*.astv2	 text
+*.bat	 text eol=crlf
+*.cml	 text
+*.g	 text
+*.html	 text
+*.ini	 text
+*.java	 text
+*.lex	 text
+*.ml	 text
+*.properties	 text
+*.py	 text
+*.rule	 text
+*.sh	 text
+*.tex	 text
+*.txt	 text
+*.vdmsl	 text
+*.xml	 text
+*.y	 text
