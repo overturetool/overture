@@ -44,9 +44,9 @@
       <!-- 	<executions> -->
       <!--     <execution> -->
       <!--       <id>java</id> -->
-      <!--     < ! - -  <phase>generate-sources</phase> --> - - >
+      <!--     < ! - -  <phase>generate-sources</phase> - - > -->
       <!--       <goals> -->
-      <!--     < ! - -    <goal>astcreate</goal> --> - - >
+      <!--     < ! - -    <goal>astcreate</goal> - - > -->
       <!--       </goals> -->
       <!--     </execution> -->
       <!--   </executions> -->

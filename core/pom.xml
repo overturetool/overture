@@ -25,6 +25,7 @@
     <module>vdmtools</module>
     <module>showtrace</module>
     <module>prettyprinting</module>
+    <module>umltrans</module>
   </modules>
 
   <reporting>
