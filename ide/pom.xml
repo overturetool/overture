@@ -35,14 +35,6 @@
     <module>build</module>
   </modules>
 
-  <!-- <dependencies> -->
-  <!--   <dependency> -->
-  <!--     <groupId>org.overturetool</groupId> -->
-  <!--     <artifactId>core</artifactId> -->
-  <!--     <version>${project.version}</version> -->
-  <!--   </dependency> -->
-  <!-- </dependencies> -->
-
   <reporting>
     <plugins>
       <plugin>

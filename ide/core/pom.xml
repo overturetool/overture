@@ -15,10 +15,6 @@
   <name>org.overture.ide.core</name>
 
   <dependencies>
-    <!-- I believe this bit of the dependencies (including the
-         copy-deps) would work perfectly fine if the interpreter and
-         testframework were the only things present
-         here. -jwc/14Feb2013 -->
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
@@ -47,6 +43,36 @@
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.combinatorialtesting</groupId>
+      <artifactId>ctutils</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.combinatorialtesting</groupId>
+      <artifactId>ctruntime</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>stdlib</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core.vdmtools</groupId>
+      <artifactId>cglib</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>umltrans</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>showtrace</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

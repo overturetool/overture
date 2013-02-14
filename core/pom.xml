@@ -26,6 +26,11 @@
     <module>showtrace</module>
     <module>prettyprinting</module>
     <module>umltrans</module>
+    <module>potrans</module>
+    <!-- disabled modules; status unknown -jwc/14Feb2013 -->
+    <!-- <module>proofsupport</module> -->
+    <!-- <module>vdm2java</module> -->
+    <!-- <module>vdmj_compatibility_tests</module> -->
   </modules>
 
   <reporting>
