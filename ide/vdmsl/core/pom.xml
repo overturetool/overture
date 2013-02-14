@@ -8,17 +8,10 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.core</artifactId>
   <name>org.overture.ide.vdmsl.core</name>
   
-  <dependencies>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
 </project>

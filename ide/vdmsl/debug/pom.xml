@@ -7,31 +7,10 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide.vdmsl</groupId>
   <artifactId>org.overture.ide.vdmsl.debug</artifactId>
   <name>org.overture.ide.vdmsl.debug</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.core</artifactId>
-      <version>2.2.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.debug</artifactId>
-      <version>2.2.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide.vdmsl</groupId>
-      <artifactId>org.overture.ide.vdmsl.core</artifactId>
-      <version>2.2.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
 </project>
