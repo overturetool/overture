@@ -8,9 +8,6 @@ Bundle-Name: org.overture.ide.parsers.vdmj
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.parsers.vdmj;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.core;bundle-version="2.2.1"
+Require-Bundle: org.overture.ide.core
 Bundle-Activator: org.overture.ide.parsers.vdmj.Activator
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- parser-2.2.1.jar,
- testframework-2.2.1.jar
+Bundle-ClassPath: .

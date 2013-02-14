@@ -27,11 +27,11 @@
     <module>vdmsl</module>
     <module>vdmpp</module>
     <module>vdmrt</module>
-    <module>platform</module>
+    <module>help</module>
     <module>parsers</module>
     <module>builders</module>
     <module>plugins</module>
-    <module>help</module>
+    <module>platform</module>
     <module>build</module>
   </modules>
 
