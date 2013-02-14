@@ -25,6 +25,21 @@
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <!-- <dependency> -->
+    <!--   <groupId>org.overturetool.core</groupId> -->
+    <!--   <artifactId>pog</artifactId> -->
+    <!--   <version>${project.version}</version> -->
+    <!-- </dependency> -->
+    <!-- <dependency> -->
+    <!--   <groupId>org.overturetool.core</groupId> -->
+    <!--   <artifactId>interpreter</artifactId> -->
+    <!--   <version>${project.version}</version> -->
+    <!-- </dependency> -->
   </dependencies>
 
   <build>

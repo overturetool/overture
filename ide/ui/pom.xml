@@ -8,75 +8,77 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.ui</artifactId>
   <name>org.overture.ide.ui</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.overturetool.core</groupId>
-        <artifactId>typechecker</artifactId>
-        <version>${project.version}</version>
-        <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jface</groupId>
-      <artifactId>org.eclipse.jface.text</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.swt</groupId>
-      <artifactId>org.eclipse.swt</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.swt</groupId>
-      <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.ide</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.navigator</artifactId>
-      <version>3.5.101</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.navigator.resources</artifactId>
-      <version>3.4.300</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.editors</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.views</artifactId>
-      <version>3.6.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.console</artifactId>
-      <version>3.5.100</version>
-    </dependency>
-  </dependencies>
+  <!-- <dependencies> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.overture.ide</groupId> -->
+  <!--     <artifactId>org.overture.ide.core</artifactId> -->
+  <!--     <version>${project.version}</version> -->
+  <!--     <type>jar</type> -->
+  <!--     <scope>compile</scope> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--       <groupId>org.overturetool.core</groupId> -->
+  <!--       <artifactId>typechecker</artifactId> -->
+  <!--       <version>${project.version}</version> -->
+  <!--       <scope>compile</scope> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.jface</groupId> -->
+  <!--     <artifactId>org.eclipse.jface.text</artifactId> -->
+  <!--     <version>3.7.2</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.swt</groupId> -->
+  <!--     <artifactId>org.eclipse.swt</artifactId> -->
+  <!--     <version>3.7.2</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.swt</groupId> -->
+  <!--     <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId> -->
+  <!--     <version>3.7.2</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui</artifactId> -->
+  <!--     <version>3.7.0</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.ide</artifactId> -->
+  <!--     <version>3.7.0</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.navigator</artifactId> -->
+  <!--     <version>3.5.101</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.navigator.resources</artifactId> -->
+  <!--     <version>3.4.300</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.editors</artifactId> -->
+  <!--     <version>3.7.0</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.views</artifactId> -->
+  <!--     <version>3.6.0</version> -->
+  <!--   </dependency> -->
+  <!--   <dependency> -->
+  <!--     <groupId>org.eclipse.ui</groupId> -->
+  <!--     <artifactId>org.eclipse.ui.console</artifactId> -->
+  <!--     <version>3.5.100</version> -->
+  <!--   </dependency> -->
+  <!-- </dependencies> -->
 
   <reporting>
     <plugins>
