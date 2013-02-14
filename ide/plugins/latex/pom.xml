@@ -8,92 +8,10 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.latex</artifactId>
   <name>org.overture.ide.plugins.latex</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>interpreter</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide.vdmpp</groupId>
-      <artifactId>org.overture.ide.vdmpp.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide.vdmrt</groupId>
-      <artifactId>org.overture.ide.vdmrt.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide.vdmsl</groupId>
-      <artifactId>org.overture.ide.vdmsl.core</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.ui</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-dependency-plugin</artifactId>
-	<version>2.1</version>
-	<executions>
-	  <execution>
-	    <id>copy-dependencies</id>
-	    <phase>process-sources</phase>
-	    <goals>
-	      <goal>copy-dependencies</goal>
-	    </goals>
-	    <configuration>
-	      <outputDirectory>${basedir}</outputDirectory>
-	      <overWriteReleases>false</overWriteReleases>
-	      <overWriteSnapshots>false</overWriteSnapshots>
-	      <overWriteIfNewer>true</overWriteIfNewer>
-	    </configuration>
-	  </execution>
-	</executions>
-      </plugin>
-      <plugin>
-	<artifactId>maven-clean-plugin</artifactId>
-	<version>2.3</version>
-	<configuration>
-	  <filesets>
-	    <fileset>
-	      <directory>${basedir}</directory>
-	      <includes>
-		<include>*.jar</include>
-	      </includes>
-	      <followSymlinks>false</followSymlinks>
-	    </fileset>
-	  </filesets>
-	</configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

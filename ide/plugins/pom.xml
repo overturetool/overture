@@ -22,10 +22,12 @@
     <module>externaleditor</module>
     <module>latex</module>
     <module>poviewer</module>
-    <!--module>umltrans</module-->
-    <!--module>showtrace</module-->
     <module>traces</module>
     <module>developerutils</module>
     <module>uml2</module>
+    <module>showtrace</module>
+    <!-- disabled modules; status in question -jwc/14Feb2013 -->
+    <!-- <module>umltrans</module> -->
+    <!-- <module>proofsupport</module> -->
   </modules>
 </project>

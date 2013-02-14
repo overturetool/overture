@@ -9,19 +9,16 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.coverageeditor;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
- org.overture.ide.vdmpp.core;bundle-version="0.3.0",
- org.overture.ide.vdmrt.core;bundle-version="0.3.0",
- org.overture.ide.vdmsl.core;bundle-version="0.3.0",
+ org.overture.ide.vdmpp.core,
+ org.overture.ide.vdmrt.core,
+ org.overture.ide.vdmsl.core,
  org.eclipse.jface.text;bundle-version="3.5.0",
- org.overture.ide.core;bundle-version="0.3.0",
+ org.overture.ide.core,
  org.eclipse.ui.editors;bundle-version="3.5.0",
- org.overture.ide.ui;bundle-version="0.3.0",
- org.overture.ide.vdmpp.ui;bundle-version="0.3.0",
- org.overture.ide.vdmrt.ui;bundle-version="0.3.0",
- org.overture.ide.vdmsl.ui;bundle-version="0.3.0"
+ org.overture.ide.ui,
+ org.overture.ide.vdmpp.ui,
+ org.overture.ide.vdmrt.ui,
+ org.overture.ide.vdmsl.ui
 Bundle-Activator: org.overture.ide.plugins.coverageeditor.Activator
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- parser-2.2.1.jar,
- testframework-2.2.1.jar,
- typechecker-2.2.1.jar
+Bundle-ClassPath: .
+

@@ -8,101 +8,11 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.developerutils</artifactId>
   <name>Developer Utilities for Overture</name>
   <description>Developer Utilities for Overture.</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overture.ide</groupId>
-      <artifactId>org.overture.ide.ui</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.core</groupId>
-      <artifactId>org.eclipse.core.resources</artifactId>
-      <version>3.7.101</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.debug</groupId>
-      <artifactId>org.eclipse.debug.core</artifactId>
-      <version>3.7.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.debug</groupId>
-      <artifactId>org.eclipse.debug.ui</artifactId>
-      <version>3.7.102</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.console</artifactId>
-      <version>3.5.100</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.ui</groupId>
-      <artifactId>org.eclipse.ui.ide</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.swt</groupId>
-      <artifactId>org.eclipse.swt</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.swt</groupId>
-      <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
-      <version>3.7.2</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.overture.ide</groupId>
-    	<artifactId>org.overture.ide.core</artifactId>
-    	<version>${project.version}</version>
-    </dependency>   
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-dependency-plugin</artifactId>
-	<version>2.1</version>
-	<executions>
-	  <execution>
-	    <id>copy-dependencies</id>
-	    <phase>process-sources</phase>
-	    <goals>
-	      <goal>copy-dependencies</goal>
-	    </goals>
-	    <configuration>
-	      <outputDirectory>${basedir}</outputDirectory>
-	      <overWriteReleases>false</overWriteReleases>
-	      <overWriteSnapshots>false</overWriteSnapshots>
-	      <overWriteIfNewer>true</overWriteIfNewer>
-	    </configuration>
-	  </execution>
-	</executions>
-      </plugin>      
-      <plugin>
-	<artifactId>maven-clean-plugin</artifactId>
-	<version>2.3</version>
-	<configuration>
-	  <filesets>
-	    <fileset>
-	      <directory>${basedir}</directory>
-	      <includes>
-		<include>*.jar</include>
-	      </includes>
-	      <followSymlinks>false</followSymlinks>
-	    </fileset>
-	  </filesets>
-	</configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
