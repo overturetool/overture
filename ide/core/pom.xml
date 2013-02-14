@@ -16,8 +16,9 @@
 
   <dependencies>
     <!-- I believe this bit of the dependencies (including the
-         copy-deps) would work perfectly fine if the interpreter were
-         the only thing present here. -jwc/14Feb2013 -->
+         copy-deps) would work perfectly fine if the interpreter and
+         testframework were the only things present
+         here. -jwc/14Feb2013 -->
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
@@ -41,6 +42,11 @@
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>interpreter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

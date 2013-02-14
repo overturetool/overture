@@ -8,17 +8,13 @@ Bundle-Name: org.overture.ide.vdmrt.ui
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.vdmrt.ui;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.overture.ide.ui;bundle-version="0.3.0",
- org.overture.ide.core;bundle-version="0.3.0",
- org.overture.ide.vdmrt.core;bundle-version="0.3.0",
- org.overture.ide.vdmpp.ui;bundle-version="0.3.0",
+Require-Bundle: org.overture.ide.ui,
+ org.overture.ide.core,
+ org.overture.ide.vdmrt.core,
+ org.overture.ide.vdmpp.ui,
+ org.overture.ide.vdmpp.core,
  org.eclipse.debug.ui;bundle-version="3.5.2",
- org.eclipse.ui.workbench.texteditor;bundle-version="3.5.1",
- org.overture.ide.vdmpp.core;bundle-version="0.3.0"
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.5.1"
 Bundle-Activator: org.overture.ide.vdmrt.ui.VdmRtUIPlugin
 Export-Package: org.overture.ide.vdmrt.ui.editor.core
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- parser-2.2.1.jar,
- testframework-2.2.1.jar,
- typechecker-2.2.1.jar
+Bundle-ClassPath: .
