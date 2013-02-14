@@ -50,4 +50,6 @@ Export-Package: org.overture.ast.analysis,
  org.overture.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.2.1.jar,
+ parser-2.2.1.jar

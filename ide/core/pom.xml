@@ -8,6 +8,8 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
+
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.core</artifactId>
   <name>org.overture.ide.core</name>
@@ -17,23 +19,11 @@
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
-    </dependency>       
-    <dependency>
-      <groupId>org.eclipse.core</groupId>
-      <artifactId>org.eclipse.core.runtime</artifactId>
-      <version>3.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.core</groupId>
-      <artifactId>org.eclipse.core.resources</artifactId>
-      <version>3.7.101</version>
     </dependency>
   </dependencies>
 
