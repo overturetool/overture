@@ -15,6 +15,9 @@
   <name>org.overture.ide.core</name>
 
   <dependencies>
+    <!-- I believe this bit of the dependencies (including the
+         copy-deps) would work perfectly fine if the interpreter were
+         the only thing present here. -jwc/14Feb2013 -->
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
@@ -30,16 +33,16 @@
       <artifactId>typechecker</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!-- <dependency> -->
-    <!--   <groupId>org.overturetool.core</groupId> -->
-    <!--   <artifactId>pog</artifactId> -->
-    <!--   <version>${project.version}</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>org.overturetool.core</groupId> -->
-    <!--   <artifactId>interpreter</artifactId> -->
-    <!--   <version>${project.version}</version> -->
-    <!-- </dependency> -->
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>pog</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>interpreter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>

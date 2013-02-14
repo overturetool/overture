@@ -24,7 +24,6 @@
     <module>core</module>
     <module>ui</module>
     <module>debug</module>
-    <module>debugger</module>
     <module>vdmsl</module>
     <module>vdmpp</module>
     <module>vdmrt</module>
