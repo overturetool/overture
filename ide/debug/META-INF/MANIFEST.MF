@@ -28,4 +28,10 @@ Export-Package: org.overture.ide.debug.core,
  org.overture.typechecker.visitor
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.2.1.jar,
+ interpreter-2.2.1.jar,
+ parser-2.2.1.jar,
+ pog-2.2.1.jar,
+ testframework-2.2.1.jar,
+ typechecker-2.2.1.jar

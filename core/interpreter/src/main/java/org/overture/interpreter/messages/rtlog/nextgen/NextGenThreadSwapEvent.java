@@ -1,7 +1,9 @@
 package org.overture.interpreter.messages.rtlog.nextgen;
 
+import java.io.Serializable;
 
-public class NextGenThreadSwapEvent extends NextGenThreadEvent implements INextGenEvent {
+
+public class NextGenThreadSwapEvent extends NextGenThreadEvent implements Serializable, INextGenEvent {
 	
 	
 	/**
@@ -20,7 +22,7 @@ public class NextGenThreadSwapEvent extends NextGenThreadEvent implements INextG
 	public int overhead;
 	public long delay;
 	
-	public NextGenThreadSwapEvent(NextGenThread thread, long time, ThreadEventSwapType swapType, int overhead, long delay)
+	public NextGenThreadSwapEvent(NextGenThread thread, NextGenTimeStamp time, ThreadEventSwapType swapType, int overhead, long delay)
 	{
 		super(thread, time, ThreadEventType.SWAP);
 		this.swapType = swapType;
@@ -53,7 +55,7 @@ public class NextGenThreadSwapEvent extends NextGenThreadEvent implements INextG
 		s.append(" objref: "); s.append(this.thread.object==null ? "no object" : this.thread.object.id);
 		s.append(" clnm: "); s.append(this.thread.object==null ? "no object" : this.thread.object.classDef.name);
 		s.append(" overhead: "); s.append(this.overhead);
-		s.append(" time: " ); s.append(time);
+		s.append(" time: " ); s.append(time.toString());
 		
 		return s.toString();
 	}

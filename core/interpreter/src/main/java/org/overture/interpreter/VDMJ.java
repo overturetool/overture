@@ -70,6 +70,7 @@ abstract public class VDMJ
 	public static void main(String[] args)
 	{
 		List<File> filenames = new Vector<File>();
+		List<File> pathnames = new Vector<File>();
 		List<String> largs = Arrays.asList(args);
 		VDMJ controller = null;
 		Dialect dialect = Dialect.VDM_SL;
@@ -221,6 +222,7 @@ abstract public class VDMJ
     		{
     			if (i.hasNext())
     			{
+    				interpret = true;
        				remoteName = i.next();
     			}
     			else
@@ -239,6 +241,26 @@ abstract public class VDMJ
     				usage("-default option requires a name");
     			}
     		}
+    		else if (arg.equals("-path"))
+    		{
+    			if (i.hasNext())
+    			{
+       				File path = new File(i.next());
+       				
+       				if (path.isDirectory())
+       				{
+       					pathnames.add(path);
+       				}
+       				else
+       				{
+       					usage(path + " is not a directory");
+       				}
+    			}
+    			else
+    			{
+    				usage("-path option requires a directory");
+    			}
+    		}
     		else if (arg.startsWith("-"))
     		{
     			usage("Unknown option " + arg);
@@ -246,21 +268,46 @@ abstract public class VDMJ
     		else
     		{
     			// It's a file or a directory
-    			File dir = new File(arg);
+    			File file = new File(arg);
 
-				if (dir.isDirectory())
+				if (file.isDirectory())
 				{
- 					for (File file: dir.listFiles(dialect.getFilter()))
+ 					for (File subFile: file.listFiles(dialect.getFilter()))
 					{
-						if (file.isFile())
+						if (subFile.isFile())
 						{
-							filenames.add(file);
+							filenames.add(subFile);
 						}
 					}
 				}
     			else
     			{
-    				filenames.add(dir);
+    				if (file.exists())
+    				{
+    					filenames.add(file);
+    				}
+    				else
+    				{
+    					boolean OK = false;
+    					
+    					for (File path: pathnames)
+    					{
+    						File pfile = new File(path, arg);
+    						
+    						if (pfile.exists())
+    						{
+    							filenames.add(pfile);
+    							OK = true;
+    							break;
+    						}
+    					}
+    					
+    					if (!OK)
+    					{
+    						usage("Cannot find file " + file);
+    					}
+    					
+    				}
     			}
     		}
 		}
@@ -290,7 +337,7 @@ abstract public class VDMJ
 
 		ExitStatus status = null;
 
-		if (filenames.isEmpty() && !interpret)
+		if (filenames.isEmpty() && (!interpret || remoteClass != null))
 		{
 			usage("You didn't specify any files");
 			status = ExitStatus.EXIT_ERRORS;
@@ -393,6 +440,7 @@ abstract public class VDMJ
 		System.err.println("-vdmsl: parse files as VDM-SL");
 		System.err.println("-vdmpp: parse files as VDM++");
 		System.err.println("-vdmrt: parse files as VDM-RT");
+		System.err.println("-path: search path for files");
 		System.err.println("-r <release>: VDM language release");
 		System.err.println("-w: suppress warning messages");
 		System.err.println("-q: suppress information messages");

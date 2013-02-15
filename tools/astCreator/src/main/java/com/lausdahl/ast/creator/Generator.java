@@ -2,6 +2,7 @@ package com.lausdahl.ast.creator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,12 +15,13 @@ import com.lausdahl.ast.creator.definitions.GenericArgumentedIInterfceDefinition
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IClassDefinition.ClassType;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
+import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
 import com.lausdahl.ast.creator.env.BaseEnvironment;
 import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.SetMethod;
-import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod;
+import com.lausdahl.ast.creator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnswerAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.QuestionAcceptMethod;
@@ -28,18 +30,24 @@ import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdapto
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultNodeMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisAdaptorDefaultTokenMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisMethodTemplate;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.CreateNewReturnValueMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.MergeReturnMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorDefaultNodeMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerAdaptorDefaultTokenMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.answer.AnswerDepthFirstAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorDefaultNodeMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionAdaptorDefaultTokenMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.question.QuestionDepthFirstAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorDefaultMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorDefaultNodeMethod;
 import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerAdaptorDefaultTokenMethod;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.questionanswer.QuestionAnswerDepthFirstAdaptorCaseMethod;
 import com.lausdahl.ast.creator.utils.ClassFactory;
 import com.lausdahl.ast.creator.utils.EnumUtil;
 
@@ -101,8 +109,55 @@ public class Generator {
 		System.out.print("Question-Answer...");
 		createQuestionAnswer(env);
 		System.out.print("Depth-First...");
-		createdepthFirstAdaptor(env);
+		// createdepthFirstAdaptor(env);
+		DepthFirstGeneratorConfig dconfig = new DepthFirstGeneratorConfig();
+		dconfig.interfaceTag = env.TAG_IAnalysis;
+		dconfig.type = "";
+		dconfig.genericArguments = new Vector<String>();
+		dconfig.defaultMethod = AnalysisAdaptorDefaultMethod.class;
+		dconfig.depthfirstCase = AnalysisDepthFirstAdaptorCaseMethod.class;
+		dconfig.caseM = AnalysisAdaptorCaseMethod.class;
+		dconfig.defaultNode = AnalysisAdaptorDefaultNodeMethod.class;
+		dconfig.defaultToken = AnalysisAdaptorDefaultTokenMethod.class;
+		createdepthFirstAdaptor(env, dconfig);
+
+		dconfig.interfaceTag = env.TAG_IAnswer;
+		dconfig.type = "Answer";
+		dconfig.genericArguments = Arrays.asList(new String[] { "A" });
+		dconfig.defaultMethod = AnswerAdaptorDefaultMethod.class;
+		dconfig.depthfirstCase = AnswerDepthFirstAdaptorCaseMethod.class;
+		dconfig.caseM = AnswerAdaptorCaseMethod.class;
+		dconfig.defaultNode = AnswerAdaptorDefaultNodeMethod.class;
+		dconfig.defaultToken = AnswerAdaptorDefaultTokenMethod.class;
+		dconfig.returnType="A";
+		createdepthFirstAdaptor(env, dconfig);
+
+		dconfig.interfaceTag = env.TAG_IQuestion;
+		dconfig.type = "Question";
+		dconfig.genericArguments = Arrays.asList(new String[] { "Q" });
+		dconfig.defaultMethod = QuestionAdaptorDefaultMethod.class;
+		dconfig.depthfirstCase = QuestionDepthFirstAdaptorCaseMethod.class;
+		dconfig.caseM = QuestionAdaptorCaseMethod.class;
+		dconfig.defaultNode = QuestionAdaptorDefaultNodeMethod.class;
+		dconfig.defaultToken = QuestionAdaptorDefaultTokenMethod.class;
+		dconfig.returnType=null;
+		createdepthFirstAdaptor(env, dconfig);
+
+		dconfig.interfaceTag = env.TAG_IQuestionAnswer;
+		dconfig.type = "QuestionAnswer";
+		dconfig.genericArguments = Arrays.asList(new String[] { "Q", "A" });
+		dconfig.defaultMethod = QuestionAnswerAdaptorDefaultMethod.class;
+		dconfig.depthfirstCase = QuestionAnswerDepthFirstAdaptorCaseMethod.class;
+		dconfig.caseM = QuestionAnswerAdaptorCaseMethod.class;
+		dconfig.defaultNode = QuestionAnswerAdaptorDefaultNodeMethod.class;
+		dconfig.defaultToken = QuestionAnswerAdaptorDefaultTokenMethod.class;
+		dconfig.returnType="A";
+		createdepthFirstAdaptor(env, dconfig);
+
 		System.out.println();
+
+		// TODO test
+		// createQuestionAnswerDepthFirst(env);
 	}
 
 	public void createInterfacesForNodePoints(Environment env) {
@@ -254,88 +309,76 @@ public class Generator {
 				env.TAG_IQuestionAnswer);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static void extendedVisitor(String intfName,
-			List<String> genericArguments, Class accept, Class caseM,
-			Class defaultCase, Class defaultNodeMethod,
-			Class defaultTokenMethod, Environment env, String tag)
-			throws InstantiationException, IllegalAccessException {
-		InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(
-				env.getTemplateAnalysisPackage() + ".intf", "I" + intfName),
-				env.getAstPackage());
-		answerIntf.setTag(tag);
-		answerIntf.setGenericArguments(genericArguments);
-		env.addInterface(answerIntf);
-		answerIntf.supers.add(BaseEnvironment.serializableDef);
+			List<String> genericArguments, Class<? extends Method> accept,
+			Class<? extends Method> caseM, Class<? extends Method> defaultCase,
+			Class<? extends Method> defaultNodeMethod,
+			Class<? extends Method> defaultTokenMethod, Environment env,
+                                           String tag) throws InstantiationException, IllegalAccessException 
+    {
+        InterfaceDefinition answerIntf = new InterfaceDefinition(new JavaName(
+                                                                              env.getTemplateAnalysisPackage() + ".intf", "I" + intfName),
+                                                                 env.getAstPackage());
+            answerIntf.setTag(tag);
+            answerIntf.setGenericArguments(genericArguments);
+            env.addInterface(answerIntf);
+            answerIntf.supers.add(BaseEnvironment.serializableDef);
 
-		for (IClassDefinition c : getClasses(env.getClasses(), env)) {
-			switch (env.classToType.get(c)) {
-			case Alternative:
-			case Token: {
-				Method m = (Method) accept.newInstance();
-				m.setClassDefinition(c);
-				c.addMethod(m);
+            for (IClassDefinition c : getClasses(env.getClasses(), env)) {
+                switch (env.classToType.get(c)) {
+                case Alternative:
+                case Token: {
+                    Method m = Method.newMethod(accept,c);
+                    c.addMethod(m);
+                        
+                    m = Method.newMethod(caseM, c);
+                    answerIntf.methods.add(m);
+                    break;
+                }
+                case Production:
+                case SubProduction: {
+                    break;
+                } //case SubProduction
+                }// switch
+            } // for IClassDefinition c
 
-				m = (Method) caseM.newInstance();
-				m.setClassDefinition(c);
-				answerIntf.methods.add(m);
-				break;
-			}
-			case Production:
-			case SubProduction: {
-				break;
-			}
-			}
-
-		}
-
-		IClassDefinition answerClass = ClassFactory.createCustom(new JavaName(
-				env.getTemplateAnalysisPackage(), intfName + "Adaptor"), env);
-		answerClass.setGenericArguments(answerIntf.getGenericArguments());
-		answerClass.addInterface(answerIntf);
+            IClassDefinition answerClass = 
+                ClassFactory.createCustom(new JavaName(
+                                                       env.getTemplateAnalysisPackage(), 
+                                                       intfName + "Adaptor"), env);
+            
+            answerClass.setGenericArguments(answerIntf.getGenericArguments());
+            answerClass.addInterface(answerIntf);
 
 		for (IClassDefinition c : env.getClasses()) {
 			if (env.isTreeNode(c)) {
 				switch (env.classToType.get(c)) {
 				case Alternative:
 				case Token: {
-					Method m = (Method) caseM.newInstance();
-					m.setClassDefinition(c);
-					// m.setEnvironment(env);
-					answerClass.addMethod(m);
+                                    Method m =
+                                        Method.newMethod(caseM,c);
+                                    answerClass.addMethod(m);
 				}
-					break;
+                                    break;
 				case SubProduction:
-					// {
-					// Method m = (Method) caseM.newInstance();
-					// m.setClassDefinition(c);
-					// m.setEnvironment(env);
-					// answerClass.addMethod(m);
-					// }
 				case Production: {
-					Method m = (Method) defaultCase.newInstance();
-					m.setClassDefinition(c);
-					// m.setEnvironment(env);
-					answerClass.addMethod(m);
+                                    Method m = Method.newMethod(defaultCase, c);
+                                    answerClass.addMethod(m);
 				}
-					break;
-
+                                    break;
 				case Custom:
 					break;
 				case Unknown:
-					break;
+                                    break;
 
 				}
 			}
 		}
 
-		Method m = (Method) defaultNodeMethod.newInstance();
-		// m.setEnvironment(env);
-		answerClass.addMethod(m);
-
-		m = (Method) defaultTokenMethod.newInstance();
-		// m.setEnvironment(env);
-		answerClass.addMethod(m);
+            Method m = Method.newMethod(defaultNodeMethod, null);
+            answerClass.addMethod(m);
+            m = Method.newMethod(defaultTokenMethod,null);
+            answerClass.addMethod(m);
 	}
 
 	public static List<IClassDefinition> getClasses(
@@ -349,19 +392,35 @@ public class Generator {
 		return classes;
 	}
 
-	private void createdepthFirstAdaptor(Environment source) {
+	private static class DepthFirstGeneratorConfig
+	{
+		public String interfaceTag;
+		public String type;
+		public List<String> genericArguments;
+		public Class<? extends Method> defaultMethod;
+		public Class<? extends Method> depthfirstCase;
+		public Class<? extends Method> caseM;
+		public Class<? extends Method> defaultNode;
+		public Class<? extends Method> defaultToken;
+		public String returnType = null;
+	}
+
+	private void createdepthFirstAdaptor(Environment source,
+			final DepthFirstGeneratorConfig config)
+			throws InstantiationException, IllegalAccessException
+	{
 		IClassDefinition adaptor = ClassFactory.createCustom(new JavaName(
 				source.getTemplateAnalysisPackage(),
-				"DepthFirstAnalysisAdaptor"), source);
-		// adaptor.setAnnotation("@SuppressWarnings(\"unused\")");
-		adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
+				"DepthFirstAnalysisAdaptor" + config.type ), source);
+
+                // adaptor.addInterface(source.getTaggedDef(source.TAG_IAnalysis));
+		adaptor.addInterface(source.getTaggedDef(config.interfaceTag));
+		adaptor.setGenericArguments(config.genericArguments);
 		Field queue = new Field();
 		queue.name = "visitedNodes";
 		queue.accessspecifier = AccessSpecifier.Protected;
-		queue.type = new GenericArgumentedIInterfceDefinition(
-				BaseEnvironment.setDef, source.iNode.getName().getName());
-		// TODO
-		// queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
+		queue.type = new GenericArgumentedIInterfceDefinition(BaseEnvironment.setDef, source.iNode.getName().getName());
+		// TODO queue.setCustomInitializer("new java.util.LinkedList<"+source.iNode.getName().getName()+">()");
 		queue.setCustomInitializer("new java.util.HashSet<"
 				+ source.iNode.getName().getName() + ">()");
 		adaptor.addField(queue);
@@ -371,91 +430,84 @@ public class Generator {
 
 		for (IClassDefinition c : Generator.getClasses(source.getClasses(),
 				source)) {
-			// if (source.classToType.get(c) !=
-			// IClassDefinition.ClassType.Production)
-			// {
-			// // continue;
-			// Method m = new DepthFirstCaseMethod(c, source);
-			// m.setClassDefinition(c);
-			// m.setEnvironment(source);
-			// adaptor.addMethod(m);
-			// }
-
 			switch (source.classToType.get(c)) {
 
 			case Custom:
 				break;
 			case Production:
 			case SubProduction: {
-				AnalysisAdaptorDefaultMethod mIn = new AnalysisAdaptorDefaultMethod(
-						c);
-				mIn.setDefaultPostfix("In");
-				mIn.setClassDefinition(c);
-				// mIn.setEnvironment(source);
-				adaptor.addMethod(mIn);
-
-				AnalysisAdaptorDefaultMethod mOut = new AnalysisAdaptorDefaultMethod(
-						c);
+                            AnalysisMethodTemplate mIn = (AnalysisMethodTemplate)
+                                Method.newMethod(config.defaultMethod, c);
+                            mIn.setDefaultPostfix("In");
+                            adaptor.addMethod(mIn);
+                            AnalysisMethodTemplate  mOut = (AnalysisMethodTemplate) 
+                                Method.newMethod(config.defaultMethod,c);
 				mOut.setDefaultPostfix("Out");
-				mOut.setClassDefinition(c);
-				// mOut.setEnvironment(source);
 				adaptor.addMethod(mOut);
 			}
-				break;
+                            break;
 			case Alternative:
 			case Token: {
-				// continue;
-				Method m = new DepthFirstCaseMethod(c, queue);
-				m.setClassDefinition(c);
-				// m.setEnvironment(source);
-				adaptor.addMethod(m);
+                            AnalysisDepthFirstAdaptorCaseMethod m
+                                = (AnalysisDepthFirstAdaptorCaseMethod)
+                                Method.newMethod(config.depthfirstCase,c);
+				m.setVisitedNodesField(queue);
+                            adaptor.addMethod(m);
 			}
-				break;
+                            break;
 			case Unknown:
-				break;
-
+                            break;
 			}
 
-			AnalysisAdaptorCaseMethod mIn = new AnalysisAdaptorCaseMethod(c);
+			AnalysisAdaptorCaseMethod mIn = 
+                            (AnalysisAdaptorCaseMethod)
+                            Method.newMethod(config.caseM,c);
 			mIn.setMethodNamePrefix("in");
 			mIn.setDefaultPostfix("In");
-			mIn.setClassDefinition(c);
-			// mIn.setEnvironment(source);
 			adaptor.addMethod(mIn);
 
-			AnalysisAdaptorCaseMethod mOut = new AnalysisAdaptorCaseMethod(c);
+                            AnalysisAdaptorCaseMethod mOut = 
+                                (AnalysisAdaptorCaseMethod)
+                                Method.newMethod(config.caseM,c);
 			mOut.setMethodNamePrefix("out");
 			mOut.setDefaultPostfix("Out");
-			mOut.setClassDefinition(c);
-			// mOut.setEnvironment(source);
 			adaptor.addMethod(mOut);
-
+		}
+		{
+                    AnalysisAdaptorDefaultNodeMethod mOut = 
+                        (AnalysisAdaptorDefaultNodeMethod)
+                        Method.newMethod(config.defaultNode, null);
+                    mOut.setDefaultPostfix("Out");
+                    adaptor.addMethod(mOut);
+                    
+                    AnalysisAdaptorDefaultNodeMethod mIn = 
+                        (AnalysisAdaptorDefaultNodeMethod)
+                        Method.newMethod(config.defaultNode, null);
+                    mIn.setDefaultPostfix("In");
+                    adaptor.addMethod(mIn);
 		}
 
 		{
-			AnalysisAdaptorDefaultNodeMethod mOut = new AnalysisAdaptorDefaultNodeMethod();
-			mOut.setDefaultPostfix("Out");
-			// mOut.setEnvironment(source);
-			adaptor.addMethod(mOut);
+                    AnalysisAdaptorDefaultTokenMethod mOut = 
+                        (AnalysisAdaptorDefaultTokenMethod)
+                        Method.newMethod(config.defaultToken, null);
+                    mOut.setDefaultPostfix("Out");
+                    adaptor.addMethod(mOut);
 
-			AnalysisAdaptorDefaultNodeMethod mIn = new AnalysisAdaptorDefaultNodeMethod();
-			mIn.setDefaultPostfix("In");
-			// mIn.setEnvironment(source);
-			adaptor.addMethod(mIn);
+                    AnalysisAdaptorDefaultTokenMethod mIn = 
+                        (AnalysisAdaptorDefaultTokenMethod)
+                        Method.newMethod(config.defaultToken, null);
+                    mIn.setDefaultPostfix("In");
+                    adaptor.addMethod(mIn);
 		}
 
+		if(config.returnType!=null)
 		{
-			AnalysisAdaptorDefaultTokenMethod mOut = new AnalysisAdaptorDefaultTokenMethod();
-			mOut.setDefaultPostfix("Out");
-			// mOut.setEnvironment(source);
-			adaptor.addMethod(mOut);
-
-			AnalysisAdaptorDefaultTokenMethod mIn = new AnalysisAdaptorDefaultTokenMethod();
-			mIn.setDefaultPostfix("In");
-			// mIn.setEnvironment(source);
-			adaptor.addMethod(mIn);
-		}
-
-		// FIXME adaptor.getImports().addAll(source.getAllDefinitions());
-	}
+                    adaptor.addMethod(new MergeReturnMethod(config.returnType));
+                    adaptor.addMethod(new CreateNewReturnValueMethod(source.iNode, config.returnType,config.genericArguments.size()>1));
+                    adaptor.addMethod(new CreateNewReturnValueMethod(new PredefinedClassDefinition("","Object"), config.returnType,config.genericArguments.size()>1));
+                    adaptor.setAbstract(true);
+                }
+                // FIXME adaptor.getImports().addAll(source.getAllDefinitions());
+        }
 }

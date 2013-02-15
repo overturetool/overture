@@ -41,6 +41,18 @@ public class ExpressionTestCase extends InterpreterBaseTestCase
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
+	
+	@Override
+	protected File createResultFile(String filename)
+	{
+		return new File(filename + ".result");
+	}
+
+	@Override
+	protected File getResultFile(String filename)
+	{
+		return new File(filename + ".result");
+	}
 
 	@Override
 	public void test() throws Exception

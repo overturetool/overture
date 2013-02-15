@@ -30,15 +30,14 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
+import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.editor.autoedit.VdmAutoEditStrategy;
 import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
-import org.overture.ide.ui.editor.partitioning.VdmDamagerRepairer;
 import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 import org.overture.ide.ui.editor.syntax.VdmColorProvider;
 import org.overture.ide.ui.editor.syntax.VdmMultiLineCommentScanner;
@@ -105,19 +104,19 @@ public abstract class VdmSourceViewerConfiguration extends
 				vdmCodeScanner = getVdmCodeScanner();
 			}
 
-			VdmDamagerRepairer dr = new VdmDamagerRepairer(getVdmSingleLineCommentScanner());
+			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getVdmSingleLineCommentScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 			reconciler.setRepairer(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 
-			dr = new VdmDamagerRepairer(getVdmMultiLineCommentScanner());
+			dr = new DefaultDamagerRepairer(getVdmMultiLineCommentScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.MULTILINE_COMMENT);
 			reconciler.setRepairer(dr, VdmPartitionScanner.MULTILINE_COMMENT);
 
-			dr = new VdmDamagerRepairer(getVdmStringScanner());
+			dr = new DefaultDamagerRepairer(getVdmStringScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.STRING);
 			reconciler.setRepairer(dr, VdmPartitionScanner.STRING);
 
-			dr = new VdmDamagerRepairer(getVdmCodeScanner());
+			dr = new DefaultDamagerRepairer(getVdmCodeScanner());
 			reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 			reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		}

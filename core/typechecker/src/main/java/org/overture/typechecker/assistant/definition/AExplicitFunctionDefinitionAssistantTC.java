@@ -35,6 +35,28 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantTC {
 
+	public static List<PType> getMeasureParams(AExplicitFunctionDefinition node)
+	{		
+		AFunctionType functionType = node.getType();
+		
+		List<PType> params = new LinkedList<PType>();
+		params.addAll(functionType.getParameters());
+		
+		if(node.getIsCurried())
+		{
+			PType rtype = functionType.getResult();
+		
+			while (rtype instanceof AFunctionType)
+			{
+				AFunctionType ftype = (AFunctionType) rtype;
+				params.addAll(ftype.getParameters());
+				rtype = ftype.getResult();
+			}
+		}
+		
+		return params;
+	}
+	
 	public static PType checkParams(AExplicitFunctionDefinition node,
 			ListIterator<List<PPattern>> plists,
 			AFunctionType ftype) {

@@ -21,7 +21,7 @@ import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.KindMethod;
 import com.lausdahl.ast.creator.methods.Method;
-import com.lausdahl.ast.creator.methods.analysis.depthfirst.DepthFirstCaseMethod;
+import com.lausdahl.ast.creator.methods.analysis.depthfirst.AnalysisDepthFirstAdaptorCaseMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisAcceptMethod;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
 import com.lausdahl.ast.creator.methods.visitors.AnswerAcceptMethod;
@@ -918,12 +918,11 @@ public class ExtensionGenerator2 {
 			case Alternative:
 			case Token: {
 
-				IClassDefinition superDef = c.getSuperDef();
-
-				// continue;
-				Method m = new DepthFirstCaseMethod(c, queue);
+				// IClassDefinition superDef = c.getSuperDef();
+				
+				AnalysisDepthFirstAdaptorCaseMethod m =new AnalysisDepthFirstAdaptorCaseMethod();  
+				m.setVisitedNodesField(queue);
 				m.setClassDefinition(c);
-				// m.setEnvironment(source);
 				extAdaptor.addMethod(m);
 
 			}

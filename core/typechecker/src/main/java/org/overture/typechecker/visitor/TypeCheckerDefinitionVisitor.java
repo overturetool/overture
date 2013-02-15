@@ -384,8 +384,7 @@ public class TypeCheckerDefinitionVisitor extends
 					node);
 		} else if (node.getMeasure() != null) {
 			if (question.env.isVDMPP())
-				node.getMeasure().setTypeQualifier(
-						node.getType().getParameters());
+				node.getMeasure().setTypeQualifier(AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
 			node.setMeasureDef(question.env.findName(node.getMeasure(),
 					question.scope));
 
@@ -417,18 +416,25 @@ public class TypeCheckerDefinitionVisitor extends
 									.getMeasure().getLocation(), node
 									.getMeasure());
 				}
+				else if (node.getTypeParams() != null && efd.getTypeParams() != null
+						&& !node.getTypeParams().equals(efd.getTypeParams()))
+				{
+					TypeCheckerErrors.report(3318, "Measure's type parameters must match function's", node
+							.getMeasure().getLocation(), node
+							.getMeasure());
+					TypeChecker.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
+				}
 
 				AFunctionType mtype = (AFunctionType) efd.getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), node
-						.getType().getParameters())) {
+				if (!TypeComparator.compatible(mtype.getParameters(), AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node))) {
 					TypeCheckerErrors.report(3303,
 							"Measure parameters different to function", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
 					TypeChecker.detail2(node.getMeasure().getName(),
-							mtype.getParameters(), node.getName().getName(),
-							node.getType().getParameters());
+							mtype.getParameters(), "Expected",
+							AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {
@@ -625,6 +631,14 @@ public class TypeCheckerDefinitionVisitor extends
 							"Measure must also be polymorphic", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
+				}
+				else if (node.getTypeParams() != null && efd.getTypeParams() != null
+						&& !node.getTypeParams().equals(efd.getTypeParams()))
+				{
+					TypeCheckerErrors.report(3318, "Measure's type parameters must match function's", node
+							.getMeasure().getLocation(), node
+							.getMeasure());
+					TypeCheckerErrors.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
 				}
 
 				AFunctionType mtype = (AFunctionType) node.getMeasureDef()

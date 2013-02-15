@@ -480,10 +480,13 @@ public class SubTypeObligation extends ProofObligation {
 
 					if (SNumericBasicTypeAssistantTC.getWeight(ant) > SNumericBasicTypeAssistantTC
 							.getWeight(nt)) {
-						if (nt instanceof ANatOneNumericBasicType) {
+						
+						boolean isWhole = SNumericBasicTypeAssistantTC.getWeight(ant) < 3;
+						
+						if (isWhole && nt instanceof ANatOneNumericBasicType) {
 							sb.append(exp);
 							sb.append(" > 0");
-						} else if (nt instanceof ANatNumericBasicType) {
+						} else if (isWhole && nt instanceof ANatNumericBasicType) {
 							sb.append(exp);
 							sb.append(" >= 0");
 						} else {

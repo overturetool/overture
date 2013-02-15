@@ -10,7 +10,7 @@ public class NextGenBusMessageReplyRequestEvent extends NextGenBusMessageEvent {
 		
 	public NextGenBusMessage replyMessage;
 	
-	public NextGenBusMessageReplyRequestEvent(NextGenBusMessage originalMessage, NextGenBusMessage replyMessage, long time) 
+	public NextGenBusMessageReplyRequestEvent(NextGenBusMessage originalMessage, NextGenBusMessage replyMessage, NextGenTimeStamp time) 
 	{
 		super(originalMessage, NextGenBusMessageEventType.REPLY_REQUEST, time);
 		this.replyMessage = replyMessage;
@@ -28,7 +28,7 @@ public class NextGenBusMessageReplyRequestEvent extends NextGenBusMessageEvent {
 		s.append(" callthr: "); s.append(this.message.callerThread.id);
 		s.append(" calleethr: "); s.append(this.replyMessage.callerThread.id);
 		s.append(" size: "); s.append(this.replyMessage.size);
-		s.append(" time: "); s.append(time);
+		s.append(" time: "); s.append(time.toString());
 		
 		
 		return s.toString();

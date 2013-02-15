@@ -14,4 +14,10 @@ Require-Bundle: org.overture.ide.debug,
 Export-Package: org.overture.ide.vdmsl.debug,
  org.overture.ide.vdmsl.debug.ui.launchconfigurations
 Bundle-Activator: org.overture.ide.vdmsl.debug.Activator
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ ast-2.2.1.jar,
+ interpreter-2.2.1.jar,
+ parser-2.2.1.jar,
+ pog-2.2.1.jar,
+ testframework-2.2.1.jar,
+ typechecker-2.2.1.jar

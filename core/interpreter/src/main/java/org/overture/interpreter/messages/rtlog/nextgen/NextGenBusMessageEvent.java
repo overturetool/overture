@@ -20,10 +20,10 @@ public class NextGenBusMessageEvent implements Serializable, INextGenEvent {
 
 	public NextGenBusMessage message;
 	public NextGenBusMessageEventType type;
-	public long time;
+	public NextGenTimeStamp time;
 	
 	
-	public NextGenBusMessageEvent(NextGenBusMessage message, NextGenBusMessageEventType type, long time) 
+	public NextGenBusMessageEvent(NextGenBusMessage message, NextGenBusMessageEventType type, NextGenTimeStamp time) 
 	{
 		this.message = message;
 		this.type = type;
@@ -39,12 +39,12 @@ public class NextGenBusMessageEvent implements Serializable, INextGenEvent {
 		case ACTIVATE:
 			s.append("MessageActivate ->");
 			s.append(" msgid: "); s.append(message.id);
-			s.append(" time: "); s.append(time);
+			s.append(" time: "); s.append(time.toString());
 			break;
 		case COMPLETED:
 			s.append("MessageCompleted ->");
 			s.append(" msgid: "); s.append(message.id);
-			s.append(" time: "); s.append(time);
+			s.append(" time: "); s.append(time.toString());
 			break;		
 		case REQUEST:			
 			s.append("MessageRequest ->");
@@ -56,7 +56,7 @@ public class NextGenBusMessageEvent implements Serializable, INextGenEvent {
 			s.append(" opname: \""); s.append(this.message.operation.name); s.append("\"");
 			s.append(" objref: "); s.append(this.message.object.id);
 			s.append(" size: "); s.append(this.message.size);
-			s.append(" time: "); s.append(time);			
+			s.append(" time: "); s.append(time.toString());			
 			break;
 		default:
 			break;
@@ -66,7 +66,7 @@ public class NextGenBusMessageEvent implements Serializable, INextGenEvent {
 		return s.toString();
 	}
 
-	public long getTime() {
+	public NextGenTimeStamp getTime() {
 		return time;
 	}
 	

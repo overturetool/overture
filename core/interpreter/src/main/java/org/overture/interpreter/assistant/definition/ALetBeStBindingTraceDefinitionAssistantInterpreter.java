@@ -82,7 +82,7 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 					(term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
 					TraceNode exp = PTraceDefinitionAssistantInterpreter.expand(term.getBody(),evalContext);
-					exp.setVariables(new TraceVariableList(evalContext, AMultiBindListDefinitionAssistantTC.getDefinitions(term.getDef())));
+					exp.addVariables(new TraceVariableList(evalContext, AMultiBindListDefinitionAssistantTC.getDefinitions(term.getDef())));
 					node.alternatives.add(exp);
 				}
 			}

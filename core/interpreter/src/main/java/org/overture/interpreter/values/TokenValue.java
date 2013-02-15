@@ -34,12 +34,10 @@ public class TokenValue extends Value
 {
 	private static final long serialVersionUID = 1L;
 	private final Value value;
-	private final int hash;
 
 	public TokenValue(Value exp)
 	{
 		this.value = exp.deref();
-		this.hash = exp.hashCode();
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class TokenValue extends Value
     		if (val instanceof TokenValue)
     		{
     			TokenValue tok = (TokenValue)val;
-    			return tok.hash == hash;
+    			return tok.value.equals(value);
     		}
 		}
 
@@ -68,7 +66,7 @@ public class TokenValue extends Value
 	@Override
 	public int hashCode()
 	{
-		return hash;
+		return value.hashCode();
 	}
 
 	@Override

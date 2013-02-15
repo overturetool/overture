@@ -743,6 +743,7 @@ public class TracefileVisitor extends OmlVisitor
     private void drawCpuDetail(GenericTabItem pgti, tdCPU cpu)
         throws CGException
     {
+    	System.out.println("************* CPU : " + cpu.getId() + "**************");
         Boolean cond_3 = null;
         Long var1_4 = null;
         Vector unArg_5 = null;
@@ -759,6 +760,7 @@ public class TracefileVisitor extends OmlVisitor
             Vector unArg_8 = null;
             unArg_8 = cpu.getTimes();
             rest_uhist = new Vector(unArg_8.subList(1, unArg_8.size()));
+            int eventCounter = 0;
             for(Boolean cont = new Boolean(true); cont.booleanValue();)
             {
                 ov_ucurrenttime = UTIL.NumberToLong(UTIL.clone(event_utime));
@@ -770,12 +772,16 @@ public class TracefileVisitor extends OmlVisitor
                 for(Iterator enm_84 = sq_19.iterator(); enm_84.hasNext();)
                 {
                     IOmlTraceEvent elem_20 = (IOmlTraceEvent)enm_84.next();
+                    
                     event = elem_20;
                     Boolean cond_25 = null;
                     Long var2_27 = null;
                     var2_27 = pgti.getVerticalSize();
                     cond_25 = new Boolean(ov_uypos.longValue() < var2_27.longValue());
                     if(cond_25.booleanValue())
+                    {
+                    	System.out.println(eventCounter++ + " - " + event_utime + " Visitor: Processing IOMTraceEvent: " + event.getClass());
+                    	
                         if((new Boolean(event instanceof IOmlThreadCreate)).booleanValue())
                             drawCpuThreadCreate(pgti, (IOmlThreadCreate)event);
                         else
@@ -808,6 +814,7 @@ public class TracefileVisitor extends OmlVisitor
                         else
                         if((new Boolean(event instanceof IOmlMessageCompleted)).booleanValue())
                             drawCpuMessageCompleted(pgti, (IOmlMessageCompleted)event);
+                    }
                 }
 
                 Boolean cond_85 = null;

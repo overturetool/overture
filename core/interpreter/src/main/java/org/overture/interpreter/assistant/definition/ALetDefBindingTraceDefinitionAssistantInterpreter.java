@@ -20,7 +20,7 @@ public class ALetDefBindingTraceDefinitionAssistantInterpreter
 		}
 
 		TraceNode node = PTraceDefinitionAssistantInterpreter.expand(term.getBody(),evalContext);
-		node.setVariables(new TraceVariableList(evalContext, term.getLocalDefs()));
+		node.addVariables(new TraceVariableList(evalContext, term.getLocalDefs()));
 		return node;
 	}
 

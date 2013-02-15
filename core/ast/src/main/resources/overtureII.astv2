@@ -170,7 +170,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {mod}
     |   {plus}
     |   {rem}
-    |   {substract}
+    |   {subtract}
     |   {times}
     ;
     

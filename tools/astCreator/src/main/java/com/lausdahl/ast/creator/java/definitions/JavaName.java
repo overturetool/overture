@@ -46,7 +46,7 @@ public class JavaName implements Cloneable
 
 	public String getCanonicalName()
 	{
-		return this.packageName + (this.packageName != null ? "." : "")
+		return this.packageName + (this.packageName != null || this.packageName.isEmpty()? "." : "")
 				+ getName();
 	}
 

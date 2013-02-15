@@ -1,5 +1,6 @@
 package com.lausdahl.ast.creator.methods.analysis.depthfirst;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -10,18 +11,30 @@ import com.lausdahl.ast.creator.env.Environment;
 import com.lausdahl.ast.creator.methods.GetMethod;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.visitors.AnalysisUtil;
+import com.lausdahl.ast.creator.methods.visitors.adaptor.analysis.AnalysisMethodTemplate;
 import com.lausdahl.ast.creator.utils.NameUtil;
 
-public class DepthFirstCaseMethod extends Method {
+public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate  {
+
 	private Field visitedNodesField;
 
-	public DepthFirstCaseMethod(IClassDefinition c, Field visitedNodesField) {
+	public AnalysisDepthFirstAdaptorCaseMethod()
+	{
+		super(null);
+	}
+
+	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c, Field visitedNodesField) {
 		super(null);
 		this.visitedNodesField = visitedNodesField;
 	}
 
-	public DepthFirstCaseMethod(IClassDefinition c) {
+	public AnalysisDepthFirstAdaptorCaseMethod(IClassDefinition c) {
 		super(c);
+	}
+
+	public void setVisitedNodesField(Field visitedNodesField)
+	{
+		this.visitedNodesField = visitedNodesField;
 	}
 
 	@Override
@@ -44,10 +57,12 @@ public class DepthFirstCaseMethod extends Method {
 		String thisNodeMethodName = NameUtil.getClassName(AnalysisUtil
 				.getCaseClass(env, c).getName().getName());
 		this.name = "case" + thisNodeMethodName;
-		this.arguments
-				.add(new Argument(
-						AnalysisUtil.getCaseClass(env, classDefinition)
-								.getName().getName(), "node"));
+
+//		this.arguments
+//		.add(new Argument(
+//				AnalysisUtil.getCaseClass(env, classDefinition)
+//				.getName().getName(), "node"));
+		this.setupArguments(env);
 		this.requiredImports.add("java.util.ArrayList");
 		this.requiredImports.add("java.util.List");
 		this.requiredImports.add(env.analysisException.getName()
@@ -55,17 +70,15 @@ public class DepthFirstCaseMethod extends Method {
 
 		StringBuffer bodySb = new StringBuffer();
 
-		// bodySb.append("\t\tif(_"+visitedNodesField.name+".contains(node))\n");
-		// bodySb.append("\t\t{ //already visiting this node from other path\n");
-		// bodySb.append("\t\t\treturn;\n");
-		// bodySb.append("\t\t}\n");
-
-		// bodySb.append("\t\tif(node instanceof "+env.iNode.getName()+")\n");
-		// bodySb.append("\t\t{\n");
 		bodySb.append("\t\t_visitedNodes.add(node);\n");
-		// bodySb.append("\t\t}\n");
 
-		bodySb.append("\t\tin" + thisNodeMethodName + "(node);\n\n");
+		if(addReturnToBody)
+		{
+			bodySb.append("\t\tA retVal = createNewReturnValue("+getAdditionalBodyCallArguments()+");\n");
+		}
+
+		bodySb.append("\t\t"+wrapForMerge("in" + thisNodeMethodName + "("
+				+ getAdditionalBodyCallArguments() )+");\n\n");
 		List<Field> allFields = new Vector<Field>();
 		allFields.addAll(c.getInheritedFields());
 		allFields.addAll(c.getFields());
@@ -83,7 +96,8 @@ public class DepthFirstCaseMethod extends Method {
 						+ visitedNodesField.name + ".contains(" + getter
 						+ ")) \n");
 				bodySb.append("\t\t{\n");
-				bodySb.append("\t\t\t" + getter + ".apply(this);\n");
+				bodySb.append("\t\t\t" +wrapForMerge( getter + ".apply("
+						+ getCallArguments() )+ ");\n");
 				bodySb.append("\t\t}\n");
 			} else if (f.isList && !f.isDoubleList) {
 				bodySb.append("\t\t{\n");
@@ -96,7 +110,8 @@ public class DepthFirstCaseMethod extends Method {
 				bodySb.append("\t\t\t\tif(!_" + visitedNodesField.name
 						+ ".contains(e))\n");
 				bodySb.append("\t\t\t\t{\n");
-				bodySb.append("\t\t\t\t\te.apply(this);\n");
+				bodySb.append("\t\t\t\t\t"+wrapForMerge("e.apply(" + getCallArguments()
+						)	+ ");\n");
 				bodySb.append("\t\t\t\t}\n");
 				bodySb.append("\t\t\t}\n");
 
@@ -115,41 +130,53 @@ public class DepthFirstCaseMethod extends Method {
 				bodySb.append("\t\t\t\t\tif(!_" + visitedNodesField.name
 						+ ".contains(e))\n");
 				bodySb.append("\t\t\t\t\t{\n");
-				bodySb.append("\t\t\t\t\t\te.apply(this);\n");
+				bodySb.append("\t\t\t\t\t\t"+wrapForMerge("e.apply(" + getCallArguments()
+						)+ ");\n");
 				bodySb.append("\t\t\t\t\t}\n");
 				bodySb.append("\t\t\t\t}\n");
 
 				bodySb.append("\t\t\t}\n");
 
 				bodySb.append("\t\t}\n");
-				// List<List<PExp>> copy = new
-				// ArrayList<List<PExp>>(node.getFf());
-				// for (List<PExp> list : copy)
-				// {
-				// for( PExp e : list) {
-				// e.apply(this);
-				// }
-				// }
 			}
 		}
 
-		bodySb.append("\n\t\tout" + thisNodeMethodName + "(node);\n");
-		// bodySb.append("\t\t_"+visitedNodesField.name+".remove(node);\n");
-
+		bodySb.append("\n\t\t"+wrapForMerge("out" + thisNodeMethodName + "("
+				+ getAdditionalBodyCallArguments() )+ ");\n");
+		if (addReturnToBody)
+		{
+			bodySb.append("\t\treturn retVal;");
+		}
 		this.body = bodySb.toString();
-		// this.annotation="@override";
-		// if (cd.getSuperDef() != null
-		// && !(cd instanceof ExternalJavaClassDefinition))
-		// {
-		// this.body = "\t\t"
-		// + (addReturnToBody ? "return " : "")
-		// + "default"
-		// + InterfaceDefinition.javaClassName(c.getSuperDef().getName()
-		// + "(" + getAdditionalBodyCallArguments() + ");");
-		// } else
-		// {
-		// this.body = "" + (addReturnToBody ? "\t\treturn null;" : "");
-		// }
+	}
+	private String wrapForMerge(String call)
+	{
+		return (addReturnToBody? "mergeReturns(retVal,"
+				: "" )+call + (addReturnToBody?")":"")+"";
+	}
+
+	private String getCallArguments()
+	{
+		String callArgs = "this";
+		Iterator<Argument> itr = arguments.iterator();
+		if (itr.hasNext())
+		{
+			itr.next();// Skip first
+			if (itr.hasNext())
+			{
+				callArgs += ", ";
+			}
+		}
+		while (itr.hasNext())
+		{
+			callArgs += itr.next().name;
+			if (itr.hasNext())
+			{
+				callArgs += ", ";
+			}
+
+		}
+		return callArgs;
 	}
 
 	@Override

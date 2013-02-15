@@ -17,12 +17,15 @@ import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.Utils;
 
 public class PrettyPrinterVisitorDefinitions extends
@@ -38,6 +41,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuffer sb = new StringBuffer();
+		question.setClassName(node.getName().name);
 
 		sb.append("class " + node.getName());
 		sb.append("\n");
@@ -158,7 +162,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append(node.toString());
+		sb.append( node.getName()+":"+node.getType().apply(this,question)+" := "+node.getExpression());
 		return sb.toString() + ";";
 	}
 
@@ -167,7 +171,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append(node.toString());
+		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(this,question)) + " = " +node.getExpression());//node.toString());
 		return sb.toString() + ";";
 	}
 
@@ -176,7 +180,8 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-
+		
+		sb.append(node.getAccess().getAccess()+" ");
 		sb.append(node.getName()
 				+ (node.getType() instanceof ARecordInvariantType ? " :: "
 						: " = ") + node.getType().apply(this, question));
@@ -315,6 +320,33 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		return tmp + ";\n";
 	}
+	
+	@Override
+	public String defaultSInvariantType(SInvariantType node,
+			PrettyPrinterEnv question) throws AnalysisException
+	{
+		LexNameToken name = null;
+		switch(node.kindSInvariantType())
+		{
+			case NAMED:
+				name = ((ANamedInvariantType)node).getName();
+				break;
+			case RECORD:
+				name = ((ARecordInvariantType)node).getName();
+				break;
+			
+		}
+		if(name !=null)
+		{
+			if(name.getModule()!=null && !name.getModule().equals(question.getClassName()))
+			{
+				return name.module+"`"+name.getName();
+			}
+			return name.getName();
+		}
+		
+		return "unresolved";
+	}
 
 	@Override
 	public String defaultPStm(PStm node, PrettyPrinterEnv question)
@@ -338,4 +370,6 @@ public class PrettyPrinterVisitorDefinitions extends
 		return "undefined";
 	}
 
+	
+	
 }

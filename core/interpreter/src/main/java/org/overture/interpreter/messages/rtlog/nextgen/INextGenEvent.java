@@ -2,6 +2,6 @@ package org.overture.interpreter.messages.rtlog.nextgen;
 
 public interface INextGenEvent {
 	
-	public long getTime();
+	public NextGenTimeStamp getTime();
 
 }
