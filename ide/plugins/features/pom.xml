@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overture.ide</groupId>
+    <artifactId>org.overture.ide.plugins</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
+  
+  <packaging>pom</packaging>
+
+  <groupId>org.overture.ide.plugins</groupId>
+  <artifactId>features</artifactId>
+  <name>Overture IDE Eclipse plugin features</name>
+  
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+  
+  <modules>
+    <module>coverageeditor</module>
+    <module>csk</module>
+    <module>ct</module>
+    <module>developerutils</module>
+    <module>latex</module>
+    <module>poviewer</module>
+    <module>quickinterpreter</module>
+    <module>realtimelogviewer</module>
+    <module>uml2</module>
+    <!-- disabled modules; status in quesion -jwc/16Feb2013 -->
+    <!-- <module>umltrans</module> -->
+  </modules>
+
+</project>

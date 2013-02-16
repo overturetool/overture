@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overture.ide.plugins</groupId>
+    <artifactId>features</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+  </parent>
+  
+  <packaging>eclipse-feature</packaging>
+
+  <groupId>org.overture.ide.plugins.features</groupId>
+  <artifactId>org.overture.ide.plugins.features.coverageeditor</artifactId>
+  <name>Overture IDE Eclipse Coverage Editor feature</name>
+  
+  <properties>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+  
+</project>

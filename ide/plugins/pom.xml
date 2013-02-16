@@ -30,5 +30,7 @@
     <!-- disabled modules; status in question -jwc/14Feb2013 -->
     <!-- <module>umltrans</module> -->
     <!-- <module>proofsupport</module> -->
+    <!-- features last -->
+    <module>features</module>
   </modules>
 </project>

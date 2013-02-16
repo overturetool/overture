@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.overture.ide.features.plugins.coverageeditor"
-      label="Coverage Eeditor"
-      version="1.0.0.qualifier">
+      id="org.overture.ide.plugins.features.coverageeditor"
+      label="Coverage Editor"
+      version="2.2.1">
 
    <description>
       %description

@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.core"
       label="Overture Core"
-      version="0.3.0.qualifier"
+      version="2.2.1"
       plugin="org.overture.ide.platform">
 
    <description>
@@ -158,7 +158,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.overture.ide.debugger.vdmj"
+         id="org.overture.ide.debug"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

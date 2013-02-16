@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.uml2"
       label="UML2 Transformation"
-      version="1.0.0.qualifier">
+      version="2.2.1">
 
    <description>
       %description

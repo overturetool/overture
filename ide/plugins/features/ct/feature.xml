@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.ct"
       label="Combinatorial Testing"
-      version="1.0.0.qualifier">
+      version="2.2.1">
 
    <description>
       %description
@@ -27,10 +27,10 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.overture.ide.plugins.ctruntime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
+   <!-- <plugin -->
+   <!--       id="org.overture.ide.plugins.ctruntime" -->
+   <!--       download-size="0" -->
+   <!--       install-size="0" -->
+   <!--       version="0.0.0"/> -->
 
 </feature>
