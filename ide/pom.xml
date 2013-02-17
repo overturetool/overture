@@ -32,7 +32,8 @@
     <module>builders</module>
     <module>plugins</module>
     <module>platform</module>
-    <module>build</module>
+    <module>product</module>
+    <!-- <module>build</module> -->
   </modules>
 
   <reporting>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <description>Overture</description>
+  <feature url="features/org.overture.ide.features.core_0.0.0.qualifier.jar" id="org.overture.ide.features.core" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.coverageeditor_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.coverageeditor" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.csk_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.csk" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.ct_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.ct" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.latex_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.latex" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.poviewer_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.poviewer" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.quickinterpreter_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.quickinterpreter" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <feature url="features/org.overture.ide.plugins.features.realtimelogviewer_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.realtimelogviewer" version="0.0.0">
+    <category name="Overture"/>
+  </feature>
+  <!-- <feature url="features/org.overture.ide.plugins.features.umltrans_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.umltrans" version="0.0.0"> -->
+  <!--    <category name="Overture"/> -->
+  <!-- </feature> -->
+  <category-def name="Overture" label="Overture">
+    <description>The Overture Project</description>
+  </category-def>
+</site>

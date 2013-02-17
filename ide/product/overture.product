@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+<product name="Overture Tools"
+	 uid="org.overture.ide.platform.product"
+	 id="org.overture.ide.platform.product"
+	 application="org.eclipse.ui.ide.workbench"
+	 version="2.2.1"
+	 useFeatures="true"
+	 includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
+      <text>
+         %aboutText
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Xmx512m</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/org.overture.ide.platform/icons/ctool16/overture_misc.png" i32="/org.overture.ide.platform/icons/ctool32/overture_misc.png" i48="/org.overture.ide.platform/icons/ctool48/overture_misc.png" i64="/org.overture.ide.platform/icons/ctool64/overture_misc.png" i128="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
+
+   <splash
+      location="org.overture.ide.platform"
+      startupProgressRect="75,235,300,20"
+      startupMessageRect="75,250,300,15"
+      startupForegroundColor="FFFFFF" />
+   <launcher name="overture">
+      <linux icon="/org.overture.ide.platform/icons/full/overture.xpm"/>
+      <macosx icon="/org.overture.ide.platform/icons/full/overture.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/org.overture.ide.platform/icons/full/overture.ico"/>
+         <bmp
+            winSmallHigh="/org.overture.ide.platform/resources/16.bmp"
+            winSmallLow="/org.overture.ide.platform/resources/816.bmp"
+            winMediumHigh="/org.overture.ide.platform/resources/32.bmp"
+            winMediumLow="/org.overture.ide.platform/resources/832.bmp"
+            winLargeHigh="/org.overture.ide.platform/resources/48.bmp"
+            winLargeLow="/org.overture.ide.platform/resources/848.bmp"/>
+      </win>
+   </launcher>
+
+   <intro introId="org.overture.ide.platform.intro"/>
+
+   <vm>
+   </vm>
+
+   <license>
+        <url>www.overturetool.org</url>
+        <text>
+   Overture Tools 
+
+Overture is an open source tool for the Vienna Development Method (VDM). 
+The tool supports different VDM dialects which include the ISO VDM-SL
+standard, as well as the object-oriented extension VDM++ and the real-time
+extension of that called VDM-RT. 
+
+Copyright (C) 2010 Overture contributors and others
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.overture.ide.features.rcp" version="2.2.1"/>
+   </features>
+
+
+</product>
