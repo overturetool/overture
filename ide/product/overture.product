@@ -4,57 +4,64 @@
 	 uid="org.overture.ide.platform.product"
 	 id="org.overture.ide.platform.product"
 	 application="org.eclipse.ui.ide.workbench"
-	 version="2.2.1"
+	 version="0.0.0"
 	 useFeatures="true"
 	 includeLaunchers="true">
 
-   <aboutInfo>
-      <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
-      <text>
-         %aboutText
-      </text>
-   </aboutInfo>
+  <aboutInfo>
+    <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
+    <text>
+      %aboutText
+    </text>
+  </aboutInfo>
 
-   <configIni use="default">
-   </configIni>
+  <configIni use="default">
+  </configIni>
 
-   <launcherArgs>
-      <vmArgs>-Xmx512m</vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
-   </launcherArgs>
+  <launcherArgs>
+    <vmArgs>-Xmx512m</vmArgs>
+    <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+  </launcherArgs>
 
-   <windowImages i16="/org.overture.ide.platform/icons/ctool16/overture_misc.png" i32="/org.overture.ide.platform/icons/ctool32/overture_misc.png" i48="/org.overture.ide.platform/icons/ctool48/overture_misc.png" i64="/org.overture.ide.platform/icons/ctool64/overture_misc.png" i128="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
-
-   <splash
+  <windowImages
+      i16="/icons/ctool16/overture_misc.png"
+      i32="/icons/ctool32/overture_misc.png"
+      i48="/icons/ctool48/overture_misc.png"
+      i64="/icons/ctool64/overture_misc.png"
+      i128="/icons/ctool128/overture_misc.png" />
+  
+  <splash
       location="org.overture.ide.platform"
       startupProgressRect="75,235,300,20"
       startupMessageRect="75,250,300,15"
       startupForegroundColor="FFFFFF" />
-   <launcher name="overture">
-      <linux icon="/org.overture.ide.platform/icons/full/overture.xpm"/>
-      <macosx icon="/org.overture.ide.platform/icons/full/overture.icns"/>
-      <solaris/>
-      <win useIco="true">
-         <ico path="/org.overture.ide.platform/icons/full/overture.ico"/>
-         <bmp
-            winSmallHigh="/org.overture.ide.platform/resources/16.bmp"
-            winSmallLow="/org.overture.ide.platform/resources/816.bmp"
-            winMediumHigh="/org.overture.ide.platform/resources/32.bmp"
-            winMediumLow="/org.overture.ide.platform/resources/832.bmp"
-            winLargeHigh="/org.overture.ide.platform/resources/48.bmp"
-            winLargeLow="/org.overture.ide.platform/resources/848.bmp"/>
-      </win>
-   </launcher>
 
-   <intro introId="org.overture.ide.platform.intro"/>
+  <launcher name="overture">
+    <linux icon="/icons/full/overture.xpm"/>
+    <macosx icon="/icons/full/overture.icns"/>
+    <solaris/>
+    <win useIco="true">
+      <ico path="/icons/full/overture.ico"/>
+      <!-- Bizarrely, these files don't seem to be in the repo anywhere. -jwc/18Feb2013 -->
+      <bmp
+          winSmallHigh="/org.overture.ide.platform/resources/16.bmp"
+          winSmallLow="/org.overture.ide.platform/resources/816.bmp"
+          winMediumHigh="/org.overture.ide.platform/resources/32.bmp"
+          winMediumLow="/org.overture.ide.platform/resources/832.bmp"
+          winLargeHigh="/org.overture.ide.platform/resources/48.bmp"
+          winLargeLow="/org.overture.ide.platform/resources/848.bmp"/>
+    </win>
+  </launcher>
 
-   <vm>
-   </vm>
+  <intro introId="org.overture.ide.platform.intro"/>
 
-   <license>
-        <url>www.overturetool.org</url>
-        <text>
-   Overture Tools 
+  <vm>
+  </vm>
+
+  <license>
+    <url>www.overturetool.org</url>
+    <text>
+Overture Tools 
 
 Overture is an open source tool for the Vienna Development Method (VDM). 
 The tool supports different VDM dialects which include the ISO VDM-SL
@@ -75,15 +82,14 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-         </text>
-   </license>
+    </text>
+  </license>
 
-   <plugins>
-   </plugins>
+  <plugins>
+  </plugins>
 
-   <features>
-      <feature id="org.overture.ide.features.rcp" version="2.2.1"/>
-   </features>
-
+  <features>
+    <feature id="org.overture.ide.features.rcp" version="0.0.0"/>
+  </features>
 
 </product>
