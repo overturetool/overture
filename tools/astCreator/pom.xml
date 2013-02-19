@@ -8,7 +8,6 @@
     <version>2.2.1<!--Replaceable: Main Version--></version>
   </parent>
 
-  <groupId>org.overturetool.tools</groupId>
   <artifactId>astCreator</artifactId> 
   <version>1.1.9</version>
   <name>AST Creator</name>

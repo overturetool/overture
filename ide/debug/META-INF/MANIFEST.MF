@@ -23,15 +23,7 @@ Require-Bundle: org.eclipse.debug.core;bundle-version="3.5.0";visibility:=reexpo
 Export-Package: org.overture.ide.debug.core,
  org.overture.ide.debug.core.launching,
  org.overture.ide.debug.ui.launchconfigurations,
- org.overture.ide.debug.ui.launching,
- org.overture.typechecker,
- org.overture.typechecker.visitor
+ org.overture.ide.debug.ui.launching
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- interpreter-2.2.1.jar,
- parser-2.2.1.jar,
- pog-2.2.1.jar,
- testframework-2.2.1.jar,
- typechecker-2.2.1.jar
+Bundle-ClassPath: .

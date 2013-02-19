@@ -33,7 +33,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.overture.ide.features.plugins.coverageeditor"
+         id="org.overture.ide.plugins.features.coverageeditor"
          version="0.0.0"/>
 
    <includes
