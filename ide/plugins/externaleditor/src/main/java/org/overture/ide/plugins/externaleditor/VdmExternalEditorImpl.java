@@ -62,6 +62,8 @@ public class VdmExternalEditorImpl extends VdmExternalEditor
 				case VDM_SL:
 					config = new VdmSlSourceViewerConfiguration();
 					break;
+				case CML:
+					break;
 				
 			}
 			super.fVdmSourceViewer = config;

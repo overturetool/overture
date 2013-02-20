@@ -54,6 +54,8 @@ public class LibraryUtil
 			case VDM_SL:
 				extension="vdmsl";
 				break;
+			case CML:
+				break;
 
 		}
 			selection.setIoChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("IO."+extension)).exists());

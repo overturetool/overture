@@ -162,30 +162,30 @@
     <!-- </repository> -->
   </repositories>
 
-  <profiles>
-    <profile>
-      <id>nocompile</id>
-      <build>
-	<plugins>
-	  <plugin>
-	    <artifactId>maven-compiler-plugin</artifactId>
-	    <configuration>
-	      <source>1.5</source>
-	      <target>1.5</target>
-	    </configuration>
-	    <executions>
-	      <execution>
-		<id>default-compile</id>
-		<configuration>
-		  <excludes>
-		    <exclude>**/*.*</exclude>
-		  </excludes>
-		</configuration>
-	      </execution>
-	    </executions>
-	  </plugin>
-	</plugins>
-      </build>
-    </profile>
-  </profiles>
+  <!-- <profiles> -->
+  <!--   <profile> -->
+  <!--     <id>nocompile</id> -->
+  <!--     <build> -->
+  <!-- 	<plugins> -->
+  <!-- 	  <plugin> -->
+  <!-- 	    <artifactId>maven-compiler-plugin</artifactId> -->
+  <!-- 	    <configuration> -->
+  <!-- 	      <source>1.5</source> -->
+  <!-- 	      <target>1.5</target> -->
+  <!-- 	    </configuration> -->
+  <!-- 	    <executions> -->
+  <!-- 	      <execution> -->
+  <!-- 		<id>default-compile</id> -->
+  <!-- 		<configuration> -->
+  <!-- 		  <excludes> -->
+  <!-- 		    <exclude>**/*.*</exclude> -->
+  <!-- 		  </excludes> -->
+  <!-- 		</configuration> -->
+  <!-- 	      </execution> -->
+  <!-- 	    </executions> -->
+  <!-- 	  </plugin> -->
+  <!-- 	</plugins> -->
+  <!--     </build> -->
+  <!--   </profile> -->
+  <!-- </profiles> -->
 </project>

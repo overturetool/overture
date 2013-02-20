@@ -17,7 +17,11 @@
    </license>
 
    <includes
-         id="org.eclipse.emf"
+         id="org.eclipse.emf.common"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.ecore"
          version="0.0.0"/>
 
    <requires>
@@ -30,13 +34,6 @@
 
    <plugin
          id="org.overture.ide.plugins.uml2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -64,13 +61,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.mapping"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.uml2.common"
          download-size="0"
          install-size="0"
@@ -79,6 +69,13 @@
 
    <plugin
          id="org.eclipse.uml2.uml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.mapping.ecore2xml"
          download-size="0"
          install-size="0"
          version="0.0.0"

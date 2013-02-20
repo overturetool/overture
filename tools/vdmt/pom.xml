@@ -93,9 +93,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>2.7</version>
+        <version>3.0</version>
         <configuration>
-          <targetjdk>1.5</targetjdk>
+          <targetjdk>1.6</targetjdk>
           <rulesets>
             <ruleset>/rulesets/basic.xml</ruleset>
             <ruleset>/rulesets/controversial.xml</ruleset>

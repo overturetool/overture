@@ -75,6 +75,8 @@ public class VdmTools
 			case VDM_SL:
 				sb.append(HEADER2_SL);
 				break;
+			case CML:
+				break;
 		}
 
 		sb.append(files.size());
@@ -121,6 +123,8 @@ public class VdmTools
 						break;
 					case VDM_SL:
 						commandArgs.add(toPlatformPath(vdmToolsPath + "/vdmgde.app/Contents/MacOS/vdmgde"));;
+						break;
+					case CML:
 						break;
 				}
 				commandArgs.add(projectFileName +".prj");
@@ -183,6 +187,8 @@ public class VdmTools
 				break;
 			case VDM_SL:
 				path = store.getString(ICskConstants.VSLGDE_PATH);
+				break;
+			case CML:
 				break;
 		}
 

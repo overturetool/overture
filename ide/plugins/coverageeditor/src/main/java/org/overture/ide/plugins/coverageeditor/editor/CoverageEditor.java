@@ -204,7 +204,6 @@ public abstract class CoverageEditor
 
 		switch (project.getDialect())
 		{
-
 			case VDM_PP:
 			case VDM_RT:
 			{
@@ -221,6 +220,8 @@ public abstract class CoverageEditor
 				reader = new ModuleReader(ltr);
 				modules.addAll(reader.readModules());
 			}
+				break;
+			case CML:
 				break;
 		}
 		SourceLocationConverter converter = new SourceLocationConverter(content);

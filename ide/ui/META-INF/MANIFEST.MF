@@ -7,7 +7,8 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.ui
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.ui;singleton:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
+ JavaSE-1.7
 Bundle-Activator: org.overture.ide.ui.VdmUIPlugin
 Require-Bundle: org.eclipse.ui;bundle-version="3.5.1";visibility:=reexport,
  org.eclipse.ui.editors;bundle-version="3.5.0";visibility:=reexport,
@@ -33,8 +34,4 @@ Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.utility,
  org.overture.ide.ui.utility.ast,
  org.overture.ide.ui.wizard
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- parser-2.2.1.jar,
- testframework-2.2.1.jar,
- typechecker-2.2.1.jar
+Bundle-ClassPath: .

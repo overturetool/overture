@@ -13,13 +13,5 @@ Require-Bundle: org.eclipse.draw2d;bundle-version="3.5.2",
  org.eclipse.core.runtime;bundle-version="3.7.0",
  org.overture.ide.core;bundle-version="2.2.0"
 Bundle-Activator: org.overture.ide.plugins.showtraceNextGen.view.TracefileViewerPlugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-ClassPath: .,
- ast-2.2.1.jar,
- interpreter-2.2.1.jar,
- parser-2.2.1.jar,
- pog-2.2.1.jar,
- showtrace-2.2.1.jar,
- testframework-2.2.1.jar,
- typechecker-2.2.1.jar,
- cglib-2.1.1.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .

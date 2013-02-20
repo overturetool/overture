@@ -11,5 +11,4 @@
   <groupId>org.overturetool.core.vdmtools</groupId>
   <artifactId>corba</artifactId>
   <name>VDM Tools CORBA interface</name>
-  <version>2.1.1</version>
 </project>
