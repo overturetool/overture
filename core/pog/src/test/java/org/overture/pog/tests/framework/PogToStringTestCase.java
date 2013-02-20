@@ -105,24 +105,53 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 	protected boolean assertEqualResults(List<String> expected,
 			List<String> actual)
 	{
+				
+		if(expected.size() != actual.size())
+		{
+			System.out.println("The expected number of generated POs differs from what was actually generated.");
+			return false;
+		}
 		
-		boolean errorFound = true;
+		boolean testPasssed = true;
+		
 		for (String string : actual) {
+			
+			/*
+			 * The order of the POs is not assumed to be the same
+			 */
 			if(!expected.contains(string))
 			{
-				System.out.println("PO found but not expected: " + string);
-				errorFound = false;
+				/*
+				 * String permutations are also accepted as valid POs. This will be the case
+				 * when the parameter order is different
+				 */
+				if(!PogTestHelper.containsPermutation(string, expected))
+				{
+					
+					/*
+					 * A valid PO may still exist. Sometimes PO parameters differ in name
+					 * considering two equivalent POs. For example, a parameter may be called
+					 * "any24" for an expected PO, while it is referred to as "any32" in another.
+					 * Currently this is dealt with by considering whether the closest match
+					 * passes a tolerance check.
+					 */
+					StringComparison comp = PogTestHelper.findClosestMatch(string, expected);
+					
+					if(comp == null || !PogTestHelper.ToleranceCheckPassed(comp))
+					{
+						testPasssed = false;
+						
+						System.out.println("\nNo equivalent PO found Deviation:" + comp.getDistLengthRatio());
+						System.out.println();
+						System.out.println("Actual  PO: " +  comp.getActual());
+						System.out.println("Closest PO: " + comp.getResultStr());
+						System.out.println("\n");
+					}
+				}
 			}
 		}
 		
-		for (String string : expected) {
-			if(!actual.contains(string))
-			{
-				System.out.println("PO expected but not found: " + string);
-				errorFound = false;
-			}
-		}
-		return errorFound;
+		return testPasssed;
 	}
 
 	/** Write the object to a Base64 string. */
