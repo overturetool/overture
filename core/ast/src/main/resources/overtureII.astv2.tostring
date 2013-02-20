@@ -8,7 +8,7 @@ import org.overture.ast.util.ToStringUtil;
 
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->boolean_const =  [value] 
-%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "others " + $ [others] + $"\n")$ + "end)" 
+%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + "end)" 
 %exp->charLiteral =  "'" + $_value.unicode$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
@@ -52,7 +52,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->variable = [original]
 
 //
-%alternative->case ="case "  [pattern] + " -> "  [result] 
+%alternative->case = [pattern] + " -> "  [result] 
 
 %exp->#Unary->absolute ="(abs "  [exp]+")"
 %exp->#Unary->cardinality ="(card "  [exp]+")"
@@ -78,7 +78,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#binary = "(" + [left] " " + [op] + " " [right] + ")"
 
 %exp->#Map->mapComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
-%exp->#Map->mapEnum = "{" + $Utils.listToString($[members]$)$ + "}"
+%exp->#Map->mapEnum = "" + $($[members]$.isEmpty() ? "{|->}" : "{" + Utils.listToString($[members]$) + "}") + ""$
  
 %exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
 %exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
@@ -138,6 +138,7 @@ import org.overture.ast.util.ToStringUtil;
 %pattern->string = [value]
 %pattern->tuple = "mk_"  "(" + $Utils.listToString($[plist]$)$ + ")"
 %pattern->union = [left] " union " [right]
+%pattern->map = "" + $($[maplets]$.isEmpty() ? "{|->}" : Utils.listToString("{", $[maplets]$, ", ", "}"))$
 
   
 
