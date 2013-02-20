@@ -23,11 +23,16 @@
 
 package org.overture.pog.obligation;
 
+import java.util.List;
+
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.util.Utils;
+import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
 
 public class RecursiveObligation extends ProofObligation
 {
@@ -39,18 +44,37 @@ public class RecursiveObligation extends ProofObligation
 	public RecursiveObligation(
 		AExplicitFunctionDefinition def, AApplyExp apply, POContextStack ctxt)
 	{
-		super(def.getLocation(), POType.RECURSIVE, ctxt);
+		super(apply.getLocation(), POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(def.getMeasure().getName());
+			
+		if (def.getTypeParams() != null && !def.getTypeParams().isEmpty())
+		{
+			sb.append("[");
+			
+			for (LexNameToken type: def.getTypeParams())
+			{
+				sb.append("@");
+				sb.append(type);
+			}
+			
+			sb.append("]");
+		}
+		
+		String sep = "";
 		sb.append("(");
-		sb.append(Utils.listToString(def.getParamPatternList().get(0)));
+		
+		for (List<PPattern> plist: def.getParamPatternList())
+		{
+			 sb.append(sep);
+			 sb.append(Utils.listToString(plist));
+			 sep = ", ";
+		}
+
 		sb.append(")");
 		sb.append(def.getMeasureLexical() > 0 ? " LEX" + def.getMeasureLexical() + "> " : " > ");
-		sb.append(def.getMeasure().getName());
-		sb.append("(");
-		sb.append(Utils.listToString(apply.getArgs()));
-		sb.append(")");
+		sb.append(AApplyExpAssistantTC.getMeasureApply(apply, def.getMeasure()));
 
 		value = ctxt.getObligation(sb.toString());
 	}

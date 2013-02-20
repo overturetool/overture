@@ -2,13 +2,21 @@ package org.overture.typechecker.assistant.expression;
 
 import java.util.List;
 
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.ast.util.Utils;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -124,5 +132,84 @@ public class AApplyExpAssistantTC {
 		LexNameList list = PExpAssistantTC.getOldNames(expression.getArgs());
 		list.addAll( PExpAssistantTC.getOldNames(expression.getRoot()));
 		return list;
+	}
+	
+	//Added added
+	
+	
+	public static PDefinition getRecursiveDefinition(AApplyExp node, TypeCheckInfo question)
+	{
+		LexNameToken fname = null;
+		PExp root = node.getRoot();
+		
+		
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp) root;
+			return getRecursiveDefinition(aexp, question);
+		}
+		else if (root instanceof AVariableExp)
+		{
+			AVariableExp var = (AVariableExp) root;
+			fname = var.getName();
+		}
+		else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
+
+			if (fie.getExpdef() != null)
+			{
+				fname = fie.getExpdef().getName();
+			}
+			else if (fie.getImpdef() != null)
+			{
+				fname = fie.getImpdef().getName();
+			}
+		}
+			
+		if (fname != null)
+		{
+			return question.env.findName(fname, question.scope);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	public static String getMeasureApply(AApplyExp node, LexNameToken measure)
+	{
+		return getMeasureApply(node, measure, true);
+	}
+	
+	/**
+	 * Create a measure application string from this apply, turning the root function
+	 * name into the measure name passed, and collapsing curried argument sets into one. 
+	 */
+	public static String getMeasureApply(AApplyExp node, LexNameToken measure, boolean close)
+	{
+		String start = null;
+		PExp root = node.getRoot();
+		
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp)root;
+			start = getMeasureApply(aexp, measure, false);
+		}
+		else if (root instanceof AVariableExp)
+		{
+			start = measure.getName() + "(";
+		}
+		else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp)root;
+			start = measure.getName() + "[" + Utils.listToString(fie.getActualTypes()) + "](";
+		}
+		else
+		{
+			start = root.toString() + "(";
+		}
+		
+		return start  + Utils.listToString(node.getArgs()) + (close ? ")" : ", ");
 	}
 }
