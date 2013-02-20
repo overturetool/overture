@@ -80,5 +80,10 @@ public class AUnionPatternAssistantTC {
 		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
 		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
 	}
-
+	
+	public static boolean isSimple(AUnionPattern p)
+	{
+		return PPatternAssistantTC.isSimple(p.getLeft()) && PPatternAssistantTC.isSimple(p.getRight());
+	}
+	
 }

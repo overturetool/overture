@@ -62,5 +62,10 @@ public class AConcatenationPatternAssistantTC extends AConcatenationPatternAssis
 		PExp re = PPatternAssistantTC.getMatchingExpression(ccp.getRight());
 		return  AstFactory.newASeqConcatBinaryExp(le, op, re);
 	}
-
+	
+	public static boolean isSimple(AConcatenationPattern p)
+	{
+		return PPatternAssistantTC.isSimple(p.getLeft()) && PPatternAssistantTC.isSimple(p.getRight());
+	}
+	
 }

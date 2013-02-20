@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AProductType;
@@ -96,5 +97,10 @@ public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
 	public static PExp getMatchingExpression(ATuplePattern tp) {
 		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));				
 	}
-
+	
+	public static boolean isSimple(ATuplePattern p)
+	{
+		return PPatternListAssistantTC.isSimple(p.getPlist());
+	}
+	
 }

@@ -18,5 +18,10 @@ public class AIgnorePatternAssistantTC {
 		LexNameToken any = new LexNameToken("", "any" + var++, iptrn.getLocation());
 		return AstFactory.newAVariableExp(any);
 	}
-
+	
+	public static boolean isSimple(AIgnorePattern p)
+	{
+		return false;
+	}
+	
 }

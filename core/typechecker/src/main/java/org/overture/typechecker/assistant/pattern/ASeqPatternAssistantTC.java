@@ -10,6 +10,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASeqPattern;
+import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -84,6 +85,11 @@ public class ASeqPatternAssistantTC extends ASeqPatternAssistant {
 
 	public static PExp getMatchingExpression(ASeqPattern seqp) {
 		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
+	}
+	
+	public static boolean isSimple(ASeqPattern p)
+	{
+		return PPatternListAssistantTC.isSimple(p.getPlist());
 	}
 
 }

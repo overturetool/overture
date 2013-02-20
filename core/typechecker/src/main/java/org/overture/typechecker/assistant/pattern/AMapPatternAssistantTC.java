@@ -68,5 +68,16 @@ public class AMapPatternAssistantTC {
 		
 		return defs;
 	}
+	
+	public static boolean isSimple(AMapPattern p)
+	{
+		for (AMapletPatternMaplet mp : p.getMaplets()) {
+			
+			if(!AMapletPatternMapletAssistantTC.isSimple(mp))
+				return false;
+			
+		}
+		return true;
+	}
 
 }
