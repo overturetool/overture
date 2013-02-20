@@ -22,6 +22,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -186,8 +187,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    var.setName(new LexNameToken("", var.getName().getIdentifier()));
 	}
 
-	ProofObligation po = new NonEmptySeqObligation(fake, question);
-	obligations.add(po);
+	if(!PTypeAssistantTC.isType(exp.getType(), ASeq1SeqType.class))
+		obligations.add(new NonEmptySeqObligation(fake, question));
 
 	return obligations;
     }
@@ -899,7 +900,9 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     public ProofObligationList caseATailUnaryExp(ATailUnaryExp node,
 	    POContextStack question) throws AnalysisException {
 	ProofObligationList obligations = node.getExp().apply(mainVisitor, question);
-	obligations.add(new NonEmptySeqObligation(node.getExp(), question));
+	
+	if(!PTypeAssistantTC.isType(node.getExp().getType(), ASeq1SeqType.class))
+		obligations.add(new NonEmptySeqObligation(node.getExp(), question));
 
 	return obligations;
     }
