@@ -21,6 +21,7 @@ import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class ARecordPatternAssistantInterpreter extends ARecordPatternAssistantTC
 {
@@ -119,12 +120,7 @@ public class ARecordPatternAssistantInterpreter extends ARecordPatternAssistantT
 
 	public static boolean isConstrained(ARecordPattern pattern)
 	{
-		for (PPattern p: pattern.getPlist())
-		{
-			if (PPatternAssistantInterpreter.isConstrained(p)) return true;
-		}
-
-		return false;
+		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
 	public static List<AIdentifierPattern> findIndentifiers(

@@ -27,6 +27,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 
 public class POCaseContext extends POContext
@@ -47,7 +48,7 @@ public class POCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.getVariableNames(pattern).size() == 0)
+		if (PPatternAssistantTC.isSimple(pattern))
 		{
     		sb.append(pattern);
     		sb.append(" = ");
@@ -56,17 +57,19 @@ public class POCaseContext extends POContext
 		}
 		else
 		{
+			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			
     		sb.append("exists ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(":");
     		sb.append(type);
     		sb.append(" & ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(" = ");
     		sb.append(exp);
 
     		sb.append(" =>\nlet ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(" = ");
     		sb.append(exp);
     		sb.append(" in");

@@ -60,5 +60,5 @@ public class AMapPatternMapletAssistantInterpreter extends
 
 		return list;
 	}
-
+	
 }

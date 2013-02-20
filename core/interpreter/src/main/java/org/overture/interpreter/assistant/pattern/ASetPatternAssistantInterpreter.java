@@ -146,12 +146,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 			return true;	// Set types are various, so we must permute
 		}
 
-		for (PPattern p: pattern.getPlist())
-		{
-			if (PPatternAssistantInterpreter.isConstrained(p)) return true;
-		}
-
-		return false;
+		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
 	public static int getLength(ASetPattern pattern)
@@ -170,5 +165,4 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 
 		return list;
 	}
-
 }
