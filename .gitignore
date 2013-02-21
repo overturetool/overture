@@ -37,7 +37,7 @@
 ######################
 .DS_Store*
 ehthumbs.db
-Icon?
+Icon^M^M
 Thumbs.db
 
 # maven target directories #
