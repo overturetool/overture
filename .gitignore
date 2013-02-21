@@ -38,8 +38,12 @@ nextGenLog.*
 ######################
 .DS_Store*
 ehthumbs.db
-Icon?
 Thumbs.db
+
+# Be careful not to touch the next exclusion as it targets the OS X
+# icon file "Icon\r" (that's a carriage return, or ^M, at the end).
+# In emacs it should look like "Icon^M^M"
+Icon
 
 # Backup files #
 ################

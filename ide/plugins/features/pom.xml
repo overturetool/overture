@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <groupId>org.overture.ide.plugins</groupId>
-  <artifactId>features</artifactId>
+  <artifactId>org.overture.ide.plugins.features</artifactId>
   <name>Overture IDE Eclipse plugin features</name>
   
   <properties>
