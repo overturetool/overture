@@ -10,9 +10,9 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.core;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.7
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0";visibility:=reexport,
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.core.expressions,
- org.eclipse.core.resources;bundle-version="3.5.2";visibility:=reexport
+ org.eclipse.core.resources;visibility:=reexport
 Export-Package: jp.co.csk.vdm.toolbox.VDM,
  jp.co.csk.vdm.toolbox.VDM.ValueParser,
  jp.co.csk.vdm.toolbox.VDM.quotes,

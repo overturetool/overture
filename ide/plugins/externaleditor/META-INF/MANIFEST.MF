@@ -9,7 +9,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.externaleditor;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.7
-Require-Bundle: org.eclipse.debug.ui;bundle-version="3.5.1",
+Require-Bundle: org.eclipse.debug.ui,
  org.overture.ide.core,
  org.overture.ide.ui,
  org.overture.ide.vdmpp.ui,
