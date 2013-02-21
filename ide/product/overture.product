@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="0.0.0" useFeatures="true" includeLaunchers="true">
+<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.2.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.overture.ide.platform/icons/ctool128/overture_misc.png"/>
+      <image path="/icons/ctool128/overture_misc.png"/>
       <text>
          %aboutText
       </text>
@@ -12,19 +12,6 @@
 
    <configIni use="default">
    </configIni>
-
-   <configurations> 
-     <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" /> 
-     <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
-     <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
-     <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
-     <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-
-     <!-- Disable update manager. It seems as if this could be achieved by the first line, but in 
-          fact the second line sets reconcile to false (see org.eclipse.equinox.p2.publisher.eclipse.ConfigCUsAction#publishBundleCUs) -->
-     <property name="org.eclipse.update.reconcile" value="false" />
-     <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4"/>
-   </configurations> 
 
    <launcherArgs>
       <vmArgs>-Xmx512m</vmArgs>
@@ -39,11 +26,11 @@
       startupMessageRect="75,250,300,15"
       startupForegroundColor="FFFFFF" />
    <launcher name="Overture">
-      <linux icon="icons/full/overture.xpm"/>
-      <macosx icon="icons/full/overture.icns"/>
-      <solaris />
+      <linux icon="/icons/overture.xpm"/>
+      <macosx icon="/icons/overture.icns"/>
+      <solaris/>
       <win useIco="true">
-         <ico path="icons/full/overture.ico"/>
+         <ico path="/icons/overture.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -107,5 +94,15 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="org.eclipse.equinox.p2.extras.feature"/>
    </features>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+      <property name="osgi.instance.area.default" value="@user.home/Documents/Overture/workspace" />
+   </configurations>
 
 </product>

@@ -20,7 +20,7 @@
        </property>
        <property
              name="aboutImage"
-             value="icons/ctool128/overture_misc.png">
+             value="/icons/ctool128/overture_misc.png">
        </property>
        <property
              name="startupForegroundColor"
