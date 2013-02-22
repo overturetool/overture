@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.internal.UIPlugin;
+import org.eclipse.ui.PlatformUI;
 import org.overture.ide.ui.VdmUIPlugin;
 
 public abstract class VdmNewFileWizard extends Wizard implements
@@ -99,7 +99,6 @@ public abstract class VdmNewFileWizard extends Wizard implements
 		return super.canFinish() && _pageOne.getErrorMessage() == null;
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public boolean performFinish()
 	{
@@ -121,7 +120,7 @@ public abstract class VdmNewFileWizard extends Wizard implements
 		}
 		try
 		{
-			IDE.openEditor(UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
+			IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
 			file.touch(null);
 			file.refreshLocal(IResource.DEPTH_ONE, null);
 		} catch (CoreException e)
