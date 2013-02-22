@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapPattern;
+import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -162,5 +163,5 @@ public class AMapPatternAssistantInterpreter
 
 		return list;
 	}
-
+	
 }

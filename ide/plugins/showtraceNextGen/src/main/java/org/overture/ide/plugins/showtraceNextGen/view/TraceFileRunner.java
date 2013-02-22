@@ -53,9 +53,7 @@ public class TraceFileRunner implements ITraceRunner
 	{
 		data.reset();
 		TraceEventViewer viewer = null;
-		
-		System.out.println(viewType + " Starting Draw from time: " + eventStartTime);
-		
+	
 		//Draw pre-defined content
 		if(viewType == EventViewType.OVERVIEW)
 		{
@@ -69,13 +67,18 @@ public class TraceFileRunner implements ITraceRunner
 		}
 			
 		//Draw events as long as there is room and time
-		Long eventTime = eventStartTime;
+		Long eventTime = 0L;
+		EventViewType currentView = viewType;
 		Long lastEventTime = data.getMaxEventTime();
 		boolean canvasOverrun = tab.isCanvasOverrun();
 		while(!canvasOverrun && eventTime <= lastEventTime) 
 		{
 			//Get all events at the current time
 			ArrayList<INextGenEvent> currentEvents = data.getEvents(eventTime);
+			
+			//TODO: Remove DUMMY. Introduced to hack time travels
+			currentView = (data.getCurrentEventTime() < eventStartTime) ? EventViewType.DUMMY : viewType;
+			
 			for(Object event : currentEvents)
 			{		
 				if(viewType == EventViewType.CPU && !TraceData.isEventForCpu(event, cpuId)) 
@@ -86,18 +89,13 @@ public class TraceFileRunner implements ITraceRunner
 				if(handler == null)
 					throw new Exception("No eventhandler registered for event: " + event.getClass());
 
-				if(!handler.handleEvent(event, viewType, tab))
+				if(!handler.handleEvent(event, currentView, tab))
 					throw new Exception("Failed to handle Overview event: " + event.getClass());						
 			}
 			
 			canvasOverrun = tab.isCanvasOverrun();
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
-		
-		if(canvasOverrun)
-			System.out.println(viewType + " Breaking with Canvas Overrun!");
-		else
-			System.out.println(viewType + " Breaking with end of events!");
 		
 		if(viewer != null) 
 			viewer.drawTimelines(tab);

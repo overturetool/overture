@@ -18,6 +18,7 @@ import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class AConcatenationPatternAssistantInterpreter extends
 		AConcatenationPatternAssistantTC
@@ -193,5 +194,5 @@ public class AConcatenationPatternAssistantInterpreter extends
 		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getRight()));
 		return list;
 	}
-
+	
 }

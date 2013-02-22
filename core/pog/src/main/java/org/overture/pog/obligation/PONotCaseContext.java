@@ -48,7 +48,7 @@ public class PONotCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.getVariableNames(pattern).size() == 0)
+		if (PPatternAssistantTC.isSimple(pattern))
 		{
 			sb.append("not ");
     		sb.append(pattern);
@@ -57,12 +57,14 @@ public class PONotCaseContext extends POContext
 		}
 		else
 		{
+			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			
     		sb.append("not exists ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(":");
     		sb.append(type);
     		sb.append(" & ");
-    		sb.append(pattern);
+    		sb.append(matching);
     		sb.append(" = ");
     		sb.append(exp);
 		}

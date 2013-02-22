@@ -18,6 +18,7 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 {
@@ -108,12 +109,7 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 
 	public static boolean isConstrained(ASeqPattern pattern)
 	{
-		for (PPattern p: pattern.getPlist())
-		{
-			if (PPatternAssistantInterpreter.isConstrained(p)) return true;
-		}
-
-		return false;
+		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
 	public static int getLength(ASeqPattern pattern)

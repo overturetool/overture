@@ -121,34 +121,37 @@ public class TypeCheckerExpVisitor extends
 				|| func instanceof AImplicitFunctionDefinition || func instanceof APerSyncDefinition);
 
 		if (inFunction) {
-			LexNameToken called = null;
+			PDefinition called = AApplyExpAssistantTC.getRecursiveDefinition(node, question);
 
-			if (node.getRoot() instanceof AVariableExp) {
-				AVariableExp var = (AVariableExp) node.getRoot();
-				called = var.getName();
-			} else if (node.getRoot() instanceof AFuncInstatiationExp) {
-				AFuncInstatiationExp fie = (AFuncInstatiationExp) node
-						.getRoot();
-
-				if (fie.getExpdef() != null) {
-					called = fie.getExpdef().getName();
-				} else if (fie.getImpdef() != null) {
-					called = fie.getImpdef().getName();
+			if (called instanceof AExplicitFunctionDefinition) {
+				
+				AExplicitFunctionDefinition def = (AExplicitFunctionDefinition)called;
+				
+				if (def.getIsCurried())
+				{
+					// Only recursive if this apply is the last - so our type is not a function.
+					
+					if (node.getType() instanceof AFunctionType && ((AFunctionType)node.getType()).getResult() instanceof AFunctionType)
+					{
+						called = null;
+					}
 				}
+				
 			}
 
 			if (called != null) {
-				if (func instanceof AExplicitFunctionDefinition) {
+				if (func instanceof AExplicitFunctionDefinition)
+				{
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) func;
 
-					if (LexNameTokenAssistent.isEqual(called, def.getName())) {
+					if (called == def) {
 						node.setRecursive(def);
 						def.setRecursive(true);
 					}
 				} else if (func instanceof AImplicitFunctionDefinition) {
 					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) func;
 
-					if (LexNameTokenAssistent.isEqual(called, def.getName())) {
+					if (called == def) {
 						node.setRecursive(def);
 						def.setRecursive(true);
 					}

@@ -9,6 +9,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -66,6 +67,16 @@ public class PPatternListAssistantTC {
 		}
 
 		return list;
+	}
+	
+	public static boolean isSimple(LinkedList<PPattern> p)
+	{
+		for (PPattern pattern: p)
+		{
+			if (!PPatternAssistantTC.isSimple(pattern)) return false;		// NB. AND
+		}
+
+		return true;
 	}
 	
 }

@@ -30,5 +30,5 @@ public class AIgnorePatternAssistantInterpreter extends
 	{
 		return PPatternAssistantInterpreter.ANY;	// Special value meaning "any length"
 	}
-
+	
 }

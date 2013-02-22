@@ -3,6 +3,7 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 import java.util.Vector;
 
 import org.overture.ide.plugins.showtraceNextGen.draw.CpuEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.DummyViewer;
 import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.draw.TraceEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
@@ -10,13 +11,15 @@ import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public abstract class EventHandler {
 	
-	public enum EventViewType {OVERVIEW, CPU};
+	//TODO: Remove DUMMY type and viewer. Hack to handle timeshifting
+	public enum EventViewType {OVERVIEW, CPU, DUMMY};
 	
 	protected ConjectureData conjectures;
 	protected TraceData data;
 	protected TraceEventViewer eventViewer;
 	protected CpuEventViewer cpuViewer;
 	protected OverviewEventViewer overviewViewer;
+	protected DummyViewer dummyViewer;
 
 	public EventHandler(TraceData data, ConjectureData conjectures)
 	{
@@ -24,6 +27,7 @@ public abstract class EventHandler {
 		this.data = data;
 		this.cpuViewer = new CpuEventViewer();
 		this.overviewViewer = new OverviewEventViewer();
+		this.dummyViewer = new DummyViewer();
 	}
 	
 	public boolean handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
@@ -52,6 +56,7 @@ public abstract class EventHandler {
 
 				break;
 			case CPU: eventViewer = cpuViewer; break;
+			case DUMMY: eventViewer = dummyViewer; break;
 			default: return false;
 		}
 		

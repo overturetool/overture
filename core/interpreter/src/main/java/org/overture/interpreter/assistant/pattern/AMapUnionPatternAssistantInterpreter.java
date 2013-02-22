@@ -19,6 +19,7 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class AMapUnionPatternAssistantInterpreter extends
 		AMapUnionPatternAssistantTC
@@ -217,5 +218,5 @@ public class AMapUnionPatternAssistantInterpreter extends
 		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
 		return list;
 	}
-
+	
 }

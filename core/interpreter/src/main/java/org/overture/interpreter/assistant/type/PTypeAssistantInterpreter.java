@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.type;
 
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ASetType;
@@ -37,6 +38,8 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 				return ASetTypeAssistantInterpreter.getAllValues((ASetType)type,ctxt);
 			case UNION:
 				return AUnionTypeAssistantInterpreter.getAllValues((AUnionType)type,ctxt);
+			case PARAMETER:
+				return AParameterTypeAssistantInterpreter.getAllValues((AParameterType) type, ctxt);
 			default:
 				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
 		}

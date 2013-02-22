@@ -18,6 +18,7 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 {
@@ -102,12 +103,7 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 
 	public static boolean isConstrained(ATuplePattern pattern)
 	{
-		for (PPattern p: pattern.getPlist())
-		{
-			if (PPatternAssistantInterpreter.isConstrained(p)) return true;
-		}
-
-		return false;
+		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
 	public static List<AIdentifierPattern> findIdentifiers(
@@ -122,5 +118,5 @@ public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 
 		return list;
 	}
-
+	
 }

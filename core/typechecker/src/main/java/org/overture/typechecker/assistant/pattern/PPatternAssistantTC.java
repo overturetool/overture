@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.pattern.ASetPatternAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -253,6 +254,38 @@ public class PPatternAssistantTC extends PPatternAssistant
 		default:
 			assert false : "Should not happen";
 			return null;
+		}
+	}
+	
+	public static boolean isSimple(PPattern p)
+	{
+		
+		switch (p.kindPPattern()) {
+		case CONCATENATION:
+			return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) p);
+		case IDENTIFIER:
+			return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) p);
+		case IGNORE:
+			return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) p);
+		case MAPUNION:
+			return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) p);
+		case RECORD:
+			return ARecordPatternAssistantTC.isSimple((ARecordPattern) p);
+		case SEQ:
+			return ASeqPatternAssistantTC.isSimple((ASeqPattern) p);
+		case SET:
+			return ASetPatternAssistantTC.isSimple((ASetPattern) p);
+		case TUPLE:
+			return ATuplePatternAssistantTC.isSimple((ATuplePattern) p);
+		case UNION:
+			return AUnionPatternAssistantTC.isSimple((AUnionPattern) p);
+		default:
+			/*
+			 * True if the pattern is a simple value that can match only
+			 * one value for certain. Most pattern types are like this, but any
+			 * that include variables or ignore patterns are not.
+			 */ 
+			return true;
 		}
 	}
 	

@@ -46,5 +46,10 @@ public class AMapletPatternMapletAssistantTC {
 		list.addAll(PPatternAssistantTC.getDefinitions(p.getTo(), map.getTo(), scope));
 		return list;
 	}
+	
+	public static boolean isSimple(AMapletPatternMaplet p)
+	{
+		return PPatternAssistantTC.isSimple(p.getFrom()) && PPatternAssistantTC.isSimple(p.getTo());
+	}
 
 }

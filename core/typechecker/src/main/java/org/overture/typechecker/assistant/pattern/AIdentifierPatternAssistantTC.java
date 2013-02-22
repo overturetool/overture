@@ -26,5 +26,10 @@ public class AIdentifierPatternAssistantTC {
 	public static PExp getMatchingExpression(AIdentifierPattern idp) {
 		return AstFactory.newAVariableExp(idp.getName().clone());
 	}
+	
+	public static boolean isSimple(AIdentifierPattern p)
+	{
+		return false;
+	}
 
 }

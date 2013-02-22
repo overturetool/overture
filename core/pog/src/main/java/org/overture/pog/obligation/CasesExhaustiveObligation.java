@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class CasesExhaustiveObligation extends ProofObligation
@@ -44,21 +45,24 @@ public class CasesExhaustiveObligation extends ProofObligation
 		{
 			sb.append(prefix);
 
-			if (PPatternAssistantTC.getVariableNames(alt.getPattern()).size() == 0)
+			if (PPatternAssistantTC.isSimple(alt.getPattern()))
 			{
 				sb.append(exp.getExpression());
 				sb.append(" = ");
 				sb.append(alt.getPattern());
 			} else
 			{
+				
+				PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
+				
 				sb.append("(exists ");
-				sb.append(alt.getPattern());
+				sb.append(matching);
 				sb.append(":");
 				sb.append(exp.getExpression().getType());
 				sb.append(" & ");
 				sb.append(exp.getExpression());
 				sb.append(" = ");
-				sb.append(alt.getPattern());
+				sb.append(matching);
 				sb.append(")");
 			}
 
@@ -68,3 +72,4 @@ public class CasesExhaustiveObligation extends ProofObligation
 		value = ctxt.getObligation(sb.toString());
 	}
 }
+;
