@@ -12,8 +12,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.uml2.uml.AggregationKind;
-import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Operation;
@@ -35,7 +33,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -45,18 +42,22 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class Vdm2Uml
 {
-	private UmlConsole console=new UmlConsole();
+	private UmlConsole console = new UmlConsole();
 	UmlTypeCreator utc = new UmlTypeCreator(new UmlTypeCreator.ClassTypeLookup()
 	{
 		public Class lookup(AClassType type)
 		{
 			return classes.get(type.getName().name);
 		}
-	},console);
+	}, console);
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
-	
+	private boolean extendedAssociationMapping = false;
 
+	public Vdm2Uml(boolean preferAssociations)
+	{
+		extendedAssociationMapping = preferAssociations;
+	}
 
 	public Model convert(String name, List<SClassDefinition> classes)
 	{
@@ -88,7 +89,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy,console).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
@@ -205,18 +206,20 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if (defType instanceof AClassType)
+		//if (defType instanceof AClassType)
+		if (PTypeAssistantInterpreter.isClass(defType)
+				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: "
-					+ def.getName().name);
+					+ name);
 			// TODO static
-			Class referencedClass = getClassName(defType);
-			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
-			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+//			Type referencedClass = Vdm2UmlAssociationUtil.getType(classes, defType);
+//			Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
+//			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_,true);
 		} else
 		{
-			console.out.println("\tAdding property for value: "
-					+ def.getName());
+			console.out.println("\tAdding property for value: " + name);
 			Property s = class_.createOwnedAttribute(name, umlType);
 			// s.setIsStatic(true);
 			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
@@ -340,29 +343,17 @@ public class Vdm2Uml
 		String name = def.getName().name;
 		PType defType = PDefinitionAssistantTC.getType(def);
 
-		
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if (PTypeAssistantInterpreter.isClass(defType))
+		if (PTypeAssistantInterpreter.isClass(defType)
+				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().name);
-			// TODO static
-			Class referencedClass = getClassName(defType);
-			int lower = 1;
-			if(Vdm2UmlUtil.isOptional(defType))
-			{
-				lower = 0;
-			}
-			else
-			{
-				lower = Vdm2UmlUtil.extractLower(defType);
-			}
-			
-			Association association = class_.createAssociation(false, AggregationKind.NONE_LITERAL, name, lower, Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
-			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
-			
+
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_,false);
+
 		} else
 		{
 			console.out.println("\tAdding property for instance variable: "
@@ -370,33 +361,18 @@ public class Vdm2Uml
 			Property attribute = class_.createOwnedAttribute(name, type);
 			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
-			
-			if(Vdm2UmlUtil.isOptional(defType))
+
+			if (Vdm2UmlUtil.isOptional(defType))
 			{
 				attribute.setLower(0);
 			}
-			
+
 			if (def.getExpression() != null)
 			{
 				attribute.setDefault(def.getExpression().toString());
 			}
 		}
 
-	}
-
-	private Class getClassName(PType defType)
-	{
-		switch (defType.kindPType())
-		{
-			case CLASS:
-				return classes.get(((AClassType) defType).getName().name);
-			case OPTIONAL:
-				return getClassName(((AOptionalType)defType).getType());
-			default:
-				break;
-		}
-
-		return null;
 	}
 
 	private Class buildClass(SClassDefinition sClass)

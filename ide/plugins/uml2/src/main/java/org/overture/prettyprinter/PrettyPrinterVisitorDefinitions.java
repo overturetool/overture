@@ -17,15 +17,12 @@ import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.Utils;
 
 public class PrettyPrinterVisitorDefinitions extends
@@ -35,6 +32,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	 * 
 	 */
 	private static final long serialVersionUID = 5018749137104836194L;
+	final static TypePrettyPrinterVisitor typePrinter = new TypePrettyPrinterVisitor();
 
 	@Override
 	public String caseAClassClassDefinition(AClassClassDefinition node,
@@ -162,7 +160,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getName()+":"+node.getType().apply(this,question)+" := "+node.getExpression());
+		sb.append( node.getName()+":"+node.getType().apply(typePrinter,question)+" := "+node.getExpression());
 		return sb.toString() + ";";
 	}
 
@@ -171,7 +169,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(this,question)) + " = " +node.getExpression());//node.toString());
+		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(typePrinter,question)) + " = " +node.getExpression());//node.toString());
 		return sb.toString() + ";";
 	}
 
@@ -184,7 +182,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		sb.append(node.getAccess().getAccess()+" ");
 		sb.append(node.getName()
 				+ (node.getType() instanceof ARecordInvariantType ? " :: "
-						: " = ") + node.getType().apply(this, question));
+						: " = ") + node.getType().apply(typePrinter, question));
 		return sb.toString() + ";";
 	}
 
@@ -205,7 +203,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		for (AFieldField f : node.getFields())
 		{
 			sb.append(question.getIdent() + f.getTag() + " : "
-					+ f.getType().apply(this, question) + "\n");
+					+ f.getType().apply(typePrinter, question) + "\n");
 		}
 		question.decreaseIdent();
 
@@ -231,7 +229,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		{
 			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
 			{
-				type += iterator.next();
+				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
 				{
 					type += " * ";
@@ -240,7 +238,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " ==> " + d.getType().getResult();
+		type += " ==> " + d.getType().getResult().apply(typePrinter,question);
 
 		String tmp = d.getAccess()
 				+ " "
@@ -289,7 +287,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		{
 			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
 			{
-				type += iterator.next();
+				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
 				{
 					type += " * ";
@@ -299,7 +297,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		}
 
 		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
-				+ d.getType().getResult();
+				+ d.getType().getResult().apply(typePrinter,question);
 
 		String tmp = question.getIdent()
 				+ accessStr
@@ -321,32 +319,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		return tmp + ";\n";
 	}
 	
-	@Override
-	public String defaultSInvariantType(SInvariantType node,
-			PrettyPrinterEnv question) throws AnalysisException
-	{
-		LexNameToken name = null;
-		switch(node.kindSInvariantType())
-		{
-			case NAMED:
-				name = ((ANamedInvariantType)node).getName();
-				break;
-			case RECORD:
-				name = ((ARecordInvariantType)node).getName();
-				break;
-			
-		}
-		if(name !=null)
-		{
-			if(name.getModule()!=null && !name.getModule().equals(question.getClassName()))
-			{
-				return name.module+"`"+name.getName();
-			}
-			return name.getName();
-		}
-		
-		return "unresolved";
-	}
+	
 
 	@Override
 	public String defaultPStm(PStm node, PrettyPrinterEnv question)

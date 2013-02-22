@@ -23,6 +23,7 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -48,49 +49,28 @@ public class Vdm2UmlUtil
 
 	public static int extractUpper(PType type)
 	{
-
-		int upper = 1;
-
-		if (PTypeAssistantTC.isType(type, ASetType.class))
+		if (PTypeAssistantTC.isType(type, ASetType.class)
+				|| PTypeAssistantTC.isType(type, SSeqType.class)
+				|| PTypeAssistantTC.isType(type, SMapType.class))
 		{
-			upper = LiteralUnlimitedNatural.UNLIMITED;
-		} else if (PTypeAssistantTC.isType(type, ASeqSeqType.class))
-		{
-			upper = LiteralUnlimitedNatural.UNLIMITED;
-		} else if (PTypeAssistantTC.isType(type, ASeq1SeqType.class))
-		{
-			upper = LiteralUnlimitedNatural.UNLIMITED;
-		} else if (PTypeAssistantTC.isType(type, SMapType.class))
-		{
-			upper = LiteralUnlimitedNatural.UNLIMITED;
-		} else if (PTypeAssistantTC.isType(type, AOptionalType.class))
-		{
+			return LiteralUnlimitedNatural.UNLIMITED;
 
 		}
 
-		return upper;
+		return 1;
 	}
 
 	public static int extractLower(PType type)
 	{
-		int lower = 0;
-
-		if (PTypeAssistantTC.isType(type, ASetType.class))
+		if (PTypeAssistantTC.isType(type, ASetType.class)
+				|| PTypeAssistantTC.isType(type, ASeqSeqType.class)
+				|| PTypeAssistantTC.isType(type, SMapType.class)
+				|| PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
-		} else if (PTypeAssistantTC.isType(type, ASeqSeqType.class))
-		{
-		} else if (PTypeAssistantTC.isType(type, ASeq1SeqType.class))
-		{
-			lower = 1;
-		} else if (PTypeAssistantTC.isType(type, SMapType.class))
-		{
-
-		} else if (PTypeAssistantTC.isType(type, AOptionalType.class))
-		{
-
+			return 0;
 		}
 
-		return lower;
+		return 1;
 	}
 
 	public static boolean extractIsOrdered(PType type)
@@ -138,7 +118,6 @@ public class Vdm2UmlUtil
 
 		return isUnique;
 	}
-
 
 	public static boolean isClassActive(SClassDefinition sClass)
 	{
@@ -216,7 +195,6 @@ public class Vdm2UmlUtil
 		return false;
 	}
 
-
 	public static boolean isUnionOfQuotes(AUnionType type)
 	{
 		for (PType t : type.getTypes())
@@ -233,7 +211,9 @@ public class Vdm2UmlUtil
 	public static boolean isOptional(PType defType)
 	{
 		return (defType instanceof AOptionalType);
-		
+
 	}
+	
+	
 
 }
