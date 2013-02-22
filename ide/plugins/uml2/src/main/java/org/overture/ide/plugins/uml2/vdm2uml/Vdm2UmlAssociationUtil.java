@@ -107,8 +107,9 @@ public class Vdm2UmlAssociationUtil
 			case SET:
 				ASetType setType = (ASetType) type;
 				return isSimpleType(setType.getSetof());
+			default:
+				return false;
 		}
-		return false;
 	}
 
 	public static Type getReferenceClass(PType type, Map<String, Class> classes)

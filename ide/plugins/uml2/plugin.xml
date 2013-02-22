@@ -103,6 +103,6 @@
             id="org.overture.ide.plugins.uml2.pageMain"
             name="UML Translation">
       </page>
-   </extension>
+    </extension>	
 
 </plugin>
