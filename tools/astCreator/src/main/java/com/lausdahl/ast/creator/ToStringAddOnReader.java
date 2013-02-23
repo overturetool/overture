@@ -222,6 +222,8 @@ public class ToStringAddOnReader {
 		case SubProduction:
 			name += "Base";
 			break;
+		default:
+			break;
 		}
 
 		return name;

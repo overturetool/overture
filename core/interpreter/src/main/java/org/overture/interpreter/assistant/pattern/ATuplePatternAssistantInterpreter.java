@@ -18,7 +18,6 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
 {

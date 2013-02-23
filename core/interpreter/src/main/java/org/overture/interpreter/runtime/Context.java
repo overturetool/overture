@@ -24,8 +24,6 @@
 package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.debug.DBGPReader;

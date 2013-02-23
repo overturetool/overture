@@ -10,7 +10,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.traces.AlternativeTraceNode;
 import org.overture.interpreter.traces.StatementTraceNode;
 import org.overture.interpreter.traces.TraceNode;

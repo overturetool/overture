@@ -145,10 +145,10 @@ public class ExtensionGenerator
         // TODO RWL it way be here we need to do some change
         
         // update env for all
-        for (IClassDefinition def : baseEnv.getClasses())
-          {
-            // def.updateEnvironment(baseEnv);
-          }
+//        for (IClassDefinition def : baseEnv.getClasses())
+//          {
+//            // def.updateEnvironment(baseEnv);
+//          }
         
         return baseEnv;
       }

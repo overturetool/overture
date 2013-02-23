@@ -24,6 +24,8 @@ public class NameUtil
 				case SubProduction:
 					name+=tmpSuper.getName().getRawName();
 					break;
+				default:
+					break;
 			}
 			tmpSuper = tmpSuper.getSuperDef();
 		}

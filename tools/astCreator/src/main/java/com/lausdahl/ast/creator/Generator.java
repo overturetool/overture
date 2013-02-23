@@ -253,6 +253,8 @@ public class Generator {
 					}
 				}
 					break;
+				default:
+					break;
 				}
 
 			}
@@ -339,6 +341,8 @@ public class Generator {
                 case SubProduction: {
                     break;
                 } //case SubProduction
+    			default:
+    				break;
                 }// switch
             } // for IClassDefinition c
 

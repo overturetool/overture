@@ -355,7 +355,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 		if (fOutlineViewer != null)
 		{
-
 			inExternalSelectionMode = true;
 			ISelection s = fOutlineViewer.getSelection();
 			if (s instanceof IStructuredSelection)
@@ -373,5 +372,4 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			inExternalSelectionMode = false;
 		}
 	}
-
 }

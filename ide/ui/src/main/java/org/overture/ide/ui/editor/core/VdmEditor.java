@@ -211,7 +211,6 @@ public abstract class VdmEditor extends TextEditor
 
 		} else
 		{
-
 			if (input instanceof FileStoreEditorInput)
 			{
 				MessageDialog d = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Error", null, "Cannot open a vdm file outside the workspace", MessageDialog.ERROR, new String[] { "Ok" }, 0);

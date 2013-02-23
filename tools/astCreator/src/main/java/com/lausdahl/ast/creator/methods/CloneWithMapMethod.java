@@ -232,7 +232,8 @@ public class CloneWithMapMethod extends CloneMethod
 				sb.append("\t\treturn token;");
 
 				break;
-
+			default:
+				break;
 		}
 
 		this.javaDoc = sbDoc.toString();

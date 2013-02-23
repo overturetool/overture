@@ -80,6 +80,9 @@ public class CallSequence extends Vector<PStm>
        					sb.append(tvs.toString());
        	       			sep = "; ";
        					break;
+       					
+       				default:
+       					break;
     			}
      		}
     		else if (stmt instanceof ACallStm)

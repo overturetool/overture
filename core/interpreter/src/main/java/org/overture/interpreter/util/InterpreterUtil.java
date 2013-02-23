@@ -87,6 +87,8 @@ public class InterpreterUtil
 					return val;
 				}
 			}
+			case CML:
+				return null;
 		}
 		return null;
 	}

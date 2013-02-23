@@ -33,14 +33,12 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.omg.PortableInterceptor.INACTIVE;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;

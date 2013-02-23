@@ -22,7 +22,6 @@ public class KindMethod extends Method
         
         if (isAbstractKind)// (c.getType() == ClassType.Production)
           {
-            int a = 0;
             this.isAbstract = true;
             this.name = "kind"
                 + env.getInterfaceForCommonTreeNode(classDefinition).getName()

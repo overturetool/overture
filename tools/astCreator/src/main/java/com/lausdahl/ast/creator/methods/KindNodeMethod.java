@@ -23,7 +23,7 @@ public class KindNodeMethod extends Method
     protected void prepare(Environment env)
       {
         
-        StringBuilder sb = new StringBuilder();
+//        StringBuilder sb = new StringBuilder();
         /*
          * sb.append("\t/**\n"); //
          * sb.append("\t * Returns the {@link NodeEnum"+

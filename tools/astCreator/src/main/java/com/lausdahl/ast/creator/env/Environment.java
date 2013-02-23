@@ -144,18 +144,19 @@ public class Environment extends BaseEnvironment {
 		return this.analysisPackage;
 	}
 
-	private static List<IClassDefinition> findClassOfType(String name,
-			List<IClassDefinition> l) {
-
-		List<IClassDefinition> res = new LinkedList<IClassDefinition>();
-
-		for (IInterfaceDefinition idef : l)
-			if (IClassDefinition.class.isInstance(idef)
-					&& idef.getName().toString().contains(name))
-				res.add(IClassDefinition.class.cast(idef));
-
-		return res;
-	}
+//FIXME I think the method below is unused anywhere -jwc/23Feb2013
+//	private static List<IClassDefinition> findClassOfType(String name,
+//			List<IClassDefinition> l) {
+//
+//		List<IClassDefinition> res = new LinkedList<IClassDefinition>();
+//
+//		for (IInterfaceDefinition idef : l)
+//			if (IClassDefinition.class.isInstance(idef)
+//					&& idef.getName().toString().contains(name))
+//				res.add(IClassDefinition.class.cast(idef));
+//
+//		return res;
+//	}
 
 	/**
 	 * Lookup a path of tag names. E.g. a dot separated list of tags from the
@@ -495,6 +496,8 @@ public class Environment extends BaseEnvironment {
 			case SubProduction:
 			case Token:
 				return true;
+			default:
+				break;
 			}
 		}
 		return false;

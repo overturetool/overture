@@ -26,7 +26,6 @@ package org.overture.interpreter.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.LexNameToken;

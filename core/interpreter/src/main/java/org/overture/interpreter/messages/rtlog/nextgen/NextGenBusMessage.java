@@ -1,7 +1,6 @@
 package org.overture.interpreter.messages.rtlog.nextgen;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class NextGenBusMessage implements Serializable {
 	

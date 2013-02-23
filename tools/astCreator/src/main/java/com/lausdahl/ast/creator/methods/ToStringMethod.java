@@ -152,7 +152,8 @@ public class ToStringMethod extends Method
 						case String:
 							tmp += p.content;
 							break;
-
+						default:
+							break;
 					}
 					if ((getPartType(addon, i, false) == ToStringPartType.String && getPartType(addon, i + 1, true) == ToStringPartType.Field)
 							|| (getPartType(addon, i, false) == ToStringPartType.Field && getPartType(addon, i + 1, true) == ToStringPartType.String)

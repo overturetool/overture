@@ -60,6 +60,8 @@ public class ClassFactory {
 		case Token:
 			preFix = "T";
 			break;
+		default:
+			break;
 		}
 		JavaName name = new JavaName(packageName, preFix,
 				NameUtil.firstLetterUpper(rawName), postFix);
@@ -97,7 +99,6 @@ public class ClassFactory {
 
 		switch (type) {
 		case Alternative:
-
 		case Custom:
 			methods.add(new KindMethod(classDef, false));
 			break;
@@ -111,7 +112,8 @@ public class ClassFactory {
 			break;
 		case Token:
 			break;
-
+		default:
+			break;
 		}
 		return methods;
 	}
@@ -169,7 +171,8 @@ public class ClassFactory {
 				postFix += NameUtil.getAssembledNamePostFix(env,
 						c.getSuperDef());
 				break;
-
+			default:
+				break;
 			}
 		}
 		JavaName name = intf.getName();

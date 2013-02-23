@@ -91,6 +91,8 @@ public class CreateOnParse
 			case Production:
 				ClassFactory.createInterface(entry.getKey(), env);
 				break;
+			default:
+				break;
 			}
 		}
 
@@ -109,6 +111,8 @@ public class CreateOnParse
 					// + entry.getKey().getName());
 					rest.add(entry.getKey());
 				}
+				break;
+			default:
 				break;
 			}
 		}
@@ -475,6 +479,8 @@ public class CreateOnParse
 		case Production:
 		case SubProduction:
 			name += "Base";
+			break;
+		default:
 			break;
 		}
 		// String name = (topName.startsWith("#") ? "S" : "P");

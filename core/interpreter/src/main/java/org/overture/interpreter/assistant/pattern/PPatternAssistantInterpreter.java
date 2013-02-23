@@ -27,15 +27,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AIdentifierPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AIgnorePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class PPatternAssistantInterpreter extends PPatternAssistantTC

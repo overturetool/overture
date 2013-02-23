@@ -54,6 +54,9 @@ public class BusThread extends SchedulablePoolThread
 
 			case SUSPEND:	// Ignore
 				break;
+				
+			default:
+				break;
 		}
 	}
 }
