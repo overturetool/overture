@@ -370,6 +370,7 @@ public class AstFactory {
 		result.setUsed(true);
 		result.setTypeChecked(false);
 		result.setGettingInvDefs(false);
+		result.setHasContructors(false);
 		result.setGettingInheritable(false);
 		result.setSupernames(superclasses);
 		result.setSuperDefs(new ArrayList<SClassDefinition>());
@@ -3052,8 +3053,65 @@ public class AstFactory {
 		return newAModuleModules(null, new Vector<PDefinition>());
 	}
 
+	public static ANarrowExp newANarrowExpression(LexLocation location, LexNameToken name, PExp test){
+		
+		ANarrowExp result = new ANarrowExp();
+		
+		initExpression(result, location);
+		
+		result.setLocation(location);
+		result.setTypeName(name);
+		result.setTest(test);
+		
+		return result;
+	}
+
+	public static ANarrowExp newANarrowExpression(LexLocation location, PType type, PExp test){
+		
+		ANarrowExp result = new ANarrowExp();
+		
+		initExpression(result, location);
+		
+		result.setLocation(location);
+		result.setTypeName(null);
+		result.setBasicType(type);
+		result.setTest(test);
+		
+		return result;
+	}
 	
+//	public static AIsExp newAIsExp(LexLocation location,
+//			LexNameToken name, PExp test) {
+//		AIsExp result = new AIsExp();
+//		initExpression(result, location);
+//		
+//				
+//		result.setBasicType(null);
+//		result.setTypeName(name);
+//		result.setTest(test);
+//		
+//		return result;
+//	}
+//
+//	public static AIsExp newAIsExp(LexLocation location, PType type, PExp test) {
+//		AIsExp result = new AIsExp();
+//		initExpression(result, location);
+//		
+//		
+//		result.setBasicType(type);
+//		result.setTypeName(null);
+//		result.setTest(test);
+//		
+//		return result;
+//	}
 	
+//	public static PExp newAApplyExp(PExp root, List<PExp> args) {
+//		AApplyExp result = new AApplyExp();
+//		result.setLocation(root.getLocation());
+//		result.setRoot(root);
+//		result.setArgs(args);
+//		return result;
+//	}
 	
 	
 }
