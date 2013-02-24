@@ -160,7 +160,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getName()+":"+node.getType().apply(typePrinter,question)+" := "+node.getExpression());
+		sb.append( node.getName()+":"+node.getType().apply(typePrinter,question)+(node.getExpression()!=null?" := "+node.getExpression():""));
 		return sb.toString() + ";";
 	}
 
@@ -169,7 +169,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(typePrinter,question)) + " = " +node.getExpression());//node.toString());
+		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(typePrinter,question)) +(node.getExpression()!=null? " = " +node.getExpression():""));//node.toString());
 		return sb.toString() + ";";
 	}
 
