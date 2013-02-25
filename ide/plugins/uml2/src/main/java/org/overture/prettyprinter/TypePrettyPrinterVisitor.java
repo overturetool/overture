@@ -77,7 +77,7 @@ public class TypePrettyPrinterVisitor extends
 	public String caseAInMapMapType(AInMapMapType node,
 			PrettyPrinterEnv question) throws AnalysisException
 	{
-		return "" + "inmap of ("+node.getFrom().apply(this,question)+") to ("+node.getTo().apply(this,question)+")";
+		return "" + "inmap ("+node.getFrom().apply(this,question)+") to ("+node.getTo().apply(this,question)+")";
 	}
 	
 	@Override

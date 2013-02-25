@@ -283,7 +283,7 @@ public class Uml2Vdm
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
 		console.out.println("\tConverting instanve variable: "+att.getName());
-		PType type = tc.convert(att.getType());
+		PType type = tc.convert(att);
 		PExp defaultExp = null;//NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
@@ -319,7 +319,7 @@ public class Uml2Vdm
 	private void createValue(AClassClassDefinition c, Property att)
 	{
 		console.out.println("\tConverting value: "+att.getName());
-		PType type = tc.convert(att.getType());
+		PType type = tc.convert(att);
 
 		PExp defaultExp = NEW_A_UNDEFINED_EXP .clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())

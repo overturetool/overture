@@ -10,6 +10,7 @@ import java.util.Vector;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
+import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.overture.ast.assistant.pattern.PTypeList;
@@ -32,6 +33,41 @@ public class VdmTypeCreator
 
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
 
+	public PType convert(Property p)
+	{
+		PType type = convert(p.getType());
+		if(p.getUpper()==LiteralUnlimitedNatural.UNLIMITED)
+		{
+			if(p.isOrdered())
+			{
+				if(p.getLower() ==0)
+				{
+					type =  AstFactory.newASeqSeqType(location, type);
+				}else if(p.getLower()==1)
+				{
+					type = AstFactory.newASeq1SeqType(location, type);
+				}
+			}else
+			{
+				type =  AstFactory.newASetType(location, type);
+			}
+		}
+		
+		if(p.getQualifiers().size()==1)
+		{
+			Property qualifier = p.getQualifiers().get(0);
+			PType fromType = convert(qualifier);
+			if(p.isUnique())
+			{
+				type = AstFactory.newAInMapMapType(location, fromType, type);
+			}else
+			{
+				type = AstFactory.newAMapMapType(location, fromType, type);
+			}
+		}
+		return type;
+	}
+	
 	public PType convert(Type type)
 	{
 		try
