@@ -635,6 +635,25 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	return obligations;
     }
+    
+    @Override
+    public ProofObligationList caseANarrowExp(ANarrowExp node, POContextStack question)
+    		throws AnalysisException
+    {
+		ProofObligationList obligations = new ProofObligationList();
+		
+		PType expected = (node.getTypedef() == null ? node.getBasicType() : PDefinitionAssistantTC.getType(node.getTypedef()));
+		question.noteType(node.getTest(), expected);
+
+		if (!TypeComparator.isSubType(node.getTest().getType(), expected))
+		{
+			obligations.add(new SubTypeObligation(node.getTest(), expected, node.getTest().getType(), question));
+		}
+		
+		obligations.addAll(node.getTest().apply(rootVisitor, question));
+		
+		return obligations;
+    }
 
     @Override
     public ProofObligationList caseANewExp(ANewExp node, POContextStack question)

@@ -28,6 +28,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANarrowExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.ASameBaseClassExp;
@@ -131,6 +132,8 @@ public class PExpAssistantTC {
 			return AMkTypeExpAssistantTC.getOldNames((AMkTypeExp) expression);
 		case MU:
 			return AMuExpAssistantTC.getOldNames((AMuExp) expression);
+		case NARROW:
+			return ANarrowExpAssistantTC.getOldNames((ANarrowExp) expression);
 		case NEW:
 			return ANewExpAssistantTC.getOldNames((ANewExp) expression);
 		case POSTOP:

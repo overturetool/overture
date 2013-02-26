@@ -52,6 +52,7 @@ Abstract Syntax Tree
 */    
 exp {-> package='org.overture.ast.expressions'}
     =   {apply} [root]:exp [args]:exp* (argtypes):type* (recursive):definition
+    |	{narrow} [test]:exp [typeName]:LexNameToken (basicType):type (typedef):definition
     |   #Unary
     |   #Binary
     |   {booleanConst} [value]:LexBooleanToken

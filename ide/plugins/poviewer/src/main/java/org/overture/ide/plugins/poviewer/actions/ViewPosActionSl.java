@@ -35,6 +35,7 @@ public class ViewPosActionSl extends ViewPosAction {
 
 	@Override
 	protected ProofObligationList getProofObligations(IVdmModel root) throws Throwable {
+		
 		PogVisitor pogVisitor = new PogVisitor();
 		ProofObligationList obligations = new ProofObligationList();
 		if(!root.isTypeCorrect()){
@@ -42,7 +43,7 @@ public class ViewPosActionSl extends ViewPosAction {
 		}
 		for (Object definition : root.getModuleList()) {
 			if (definition instanceof AModuleModules)
-				if (!((AModuleModules) definition).getName().equals("DEFAULT") && skipElement(((AModuleModules) definition).getName().getLocation().file))
+				if (!((AModuleModules) definition).getName().toString().equals("DEFAULT") && skipElement(((AModuleModules) definition).getName().getLocation().file))
 					continue;
 				else
 				{
