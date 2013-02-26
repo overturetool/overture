@@ -80,6 +80,7 @@ public abstract class VdmEditor extends TextEditor
 		public void selectionChanged(SelectionChangedEvent event)
 		{
 			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
+			// FIXME: this appears to cause the cursor to jump around in eclipse -jwc/22Feb2013
 			VdmEditor.this.selectionChanged();
 		}
 	}
@@ -498,7 +499,7 @@ public abstract class VdmEditor extends TextEditor
 	}
 
 	protected void setSelection(INode reference, boolean moveCursor)
-	{
+	{ 
 		if (getSelectionProvider() == null)
 			return;
 

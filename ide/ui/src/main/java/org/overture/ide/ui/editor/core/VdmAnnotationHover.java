@@ -88,6 +88,7 @@ public class VdmAnnotationHover extends DefaultAnnotationHover
 			IDocument document, int lineNumber)
 	{
 		List<Annotation> result = new ArrayList<Annotation>();
+		@SuppressWarnings("unchecked")
 		Iterator<Annotation> it = model.getAnnotationIterator();
 
 		while (it.hasNext())
