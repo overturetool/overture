@@ -1,0 +1,72 @@
+class S
+end S
+
+class C1 is subclass of S
+
+instance variables
+public a : nat := 1;
+
+end C1
+
+
+class C2 is subclass of S
+
+instance variables
+public b : nat := 2;
+
+end C2
+
+
+class A
+
+types
+
+public
+R1 :: 	x : int
+     	y : int;
+
+public
+R2 :: 	x : int
+     	y : int;
+     	
+public
+R = R1 | R2;
+     	
+ 
+
+operations
+
+public entry: () ==> bool
+entry() ==
+	let a0 = t0(),
+		a1 = t1(123.0),
+		a2 = t2(mk_R1(2, 2))
+	in 
+		return 	a0 = [1, 2] and
+				a1 = 123 and
+				a2 = mk_R1(2, 2);
+
+public
+t0: () ==> seq of nat 
+t0() ==
+	let list : seq of S = [ new C1(), new C2() ] 
+	in
+		return [ let e = list(i)
+				in cases true:
+						(isofclass(C1, e)) -> narrow_(e, C1).a,
+						(isofclass(C2, e)) -> narrow_(e, C2).b
+					end | i in set inds list ];
+			
+functions
+
+public
+t1: real -> nat
+t1(r) ==
+	narrow_(r, nat);
+	
+public
+t2: R -> R1
+t2(x) ==
+	narrow_(x, R1);
+	
+end A
