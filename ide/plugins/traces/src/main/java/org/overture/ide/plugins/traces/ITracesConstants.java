@@ -29,6 +29,9 @@ public interface ITracesConstants
 	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
 	public final String REMOTE_DEBUG_PREFERENCE = "ct_enable_remote_debug";
 
-	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.plugins.ctruntime";
+	/**
+	 * This string gives the plugin id that contains the core ctruntime-x.x.x.jar file.
+	 */
+	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.core";
 	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";
 }
