@@ -26,6 +26,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANarrowExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.ASameBaseClassExp;
@@ -106,6 +107,8 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 				return AMkTypeExpAssistantInterpreter.getValues((AMkTypeExp)exp,ctxt);
 			case MU:
 				return AMuExpAssistantInterpreter.getValues((AMuExp)exp,ctxt);
+			case NARROW:
+				return ANarrowExpAssistantInterpreter.getValues((ANarrowExp) exp, ctxt);
 			case NEW:
 				return ANewExpAssistantInterpreter.getValues((ANewExp)exp,ctxt);
 			case SAMEBASECLASS:
@@ -189,6 +192,8 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 				return AMkTypeExpAssistantInterpreter.findExpression((AMkTypeExp)exp,lineno);
 			case MU:
 				return AMuExpAssistantInterpreter.findExpression((AMuExp)exp,lineno);
+			case NARROW:
+				return ANarrowExpAssistantInterpreter.findExpression((ANarrowExp) exp, lineno);
 			case NEW:
 				return ANewExpAssistantInterpreter.findExpression((ANewExp)exp,lineno);
 			case POSTOP:

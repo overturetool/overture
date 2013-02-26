@@ -33,6 +33,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANarrowExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
@@ -116,7 +117,9 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
@@ -1059,6 +1062,43 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			return VdmRuntimeError.abort(node.getLocation(),e);
 		}
+	}
+	
+	@Override
+	public Value caseANarrowExp(ANarrowExp node, Context ctxt) throws AnalysisException
+	{		
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		
+		Value v = node.getTest().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		
+		try
+		{
+		
+			if(node.getTypeName() != null)
+			{
+				
+				if(PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+				{
+					// NB. we skip the DTC enabled check here
+					v = v.convertValueTo(PDefinitionAssistantTC.getType(node.getTypedef()), ctxt);
+				}
+				else if(v.isType(RecordValue.class))
+				{
+					 v = v.recordValue(ctxt);
+				}
+			}
+			else
+			{
+				// NB. we skip the DTC enabled check here
+				v = v.convertValueTo(node.getBasicType(), ctxt);
+			}			
+		}
+		catch(ValueException ex)
+		{
+			VdmRuntimeError.abort(node.getLocation(), ex);
+		}
+		
+		return v;
 	}
 	
 	@Override

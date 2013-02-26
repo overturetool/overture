@@ -133,10 +133,7 @@ public class AApplyExpAssistantTC {
 		list.addAll( PExpAssistantTC.getOldNames(expression.getRoot()));
 		return list;
 	}
-	
-	//Added added
-	
-	
+		
 	public static PDefinition getRecursiveDefinition(AApplyExp node, TypeCheckInfo question)
 	{
 		LexNameToken fname = null;

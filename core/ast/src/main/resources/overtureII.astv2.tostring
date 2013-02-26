@@ -7,6 +7,7 @@ import org.overture.ast.util.ToStringUtil;
 //  Expressions
 
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
+%exp->narrow = "narrow_(" [test] ", " + $( $ [typeName] $ == null ? $ [basicType] $ : $ [typeName] $)$ + ")"
 %exp->boolean_const =  [value] 
 %exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + "end)" 
 %exp->charLiteral =  "'" + $_value.unicode$ + "'" 

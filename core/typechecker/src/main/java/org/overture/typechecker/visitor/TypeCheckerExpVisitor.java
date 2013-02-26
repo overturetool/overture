@@ -1968,6 +1968,44 @@ public class TypeCheckerExpVisitor extends
 		node.setType(rtype);
 		return rtype;
 	}
+	
+	@Override
+	public PType caseANarrowExp(ANarrowExp node, TypeCheckInfo question) throws AnalysisException
+	{
+
+		node.getTest().setType(node.getTest().apply(rootVisitor, question));
+		
+		PType result = null;
+				
+		if(node.getBasicType() != null)
+		{
+			
+			node.setBasicType(PTypeAssistantTC.typeResolve(node.getBasicType(), null, rootVisitor, question));	
+			result = node.getBasicType();
+		}
+		else
+		{		
+			node.setTypedef(question.env.findType(node.getTypeName(), node.getLocation().module));
+			
+			if(node.getTypedef() == null)
+			{	
+				TypeCheckerErrors.report(3113, "Unknown type name '" + node.getTypeName() + "'", node.getLocation(), node);
+				result = AstFactory.newAUnknownType(node.getLocation());
+			}
+			else
+			{
+				result = PDefinitionAssistantTC.getType(node.getTypedef());
+			}
+			
+		}
+		
+		if(!TypeComparator.compatible(result, node.getTest().getType()))
+		{
+			TypeCheckerErrors.report(3317, "Expression can never match narrow type", node.getLocation(), node);
+		}
+		
+		return result;
+	}
 
 	@Override
 	public PType caseANewExp(ANewExp node, TypeCheckInfo question)

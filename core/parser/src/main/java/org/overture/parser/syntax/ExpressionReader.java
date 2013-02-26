@@ -45,6 +45,7 @@ import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANarrowExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.ARecordModifier;
@@ -670,6 +671,18 @@ public class ExpressionReader extends SyntaxReader
 								exp = readPreExpression(ve);
 								break;
 							}
+    						else if (name.startsWith("narrow_"))
+    						{
+    							if (Settings.release == Release.CLASSIC)
+    							{
+    								throwMessage(2303, "Narrow not available in VDM classic", ve.getName());
+    							}
+    							else
+    							{
+    								exp = readNarrowExpression(ve);
+    							}
+    							break;
+    						}
 						}
 
 						// So we're a function/operation call, a list subsequence or
@@ -1168,6 +1181,31 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.KET, 2133, "Expecting ')' after is_ expression");
 		return exp;
 	}
+	
+	private PExp readNarrowExpression(AVariableExp ve)
+			throws ParserException, LexException
+		{
+			ANarrowExp exp = null;
+
+			PExp test = readExpression();
+			checkFor(VDMToken.COMMA, 2301, "Expecting narrow_(expression, type)");
+			TypeReader tr = getTypeReader();
+			PType type = tr.readType();
+
+			if (type instanceof AUnresolvedType)
+			{
+				AUnresolvedType nt = (AUnresolvedType)type;
+				exp = AstFactory.newANarrowExpression(ve.getLocation(), nt.getName(), test);
+			}
+			else
+			{
+				exp = AstFactory.newANarrowExpression(ve.getLocation(), type, test);
+			}
+
+			checkFor(VDMToken.KET, 2302, "Expecting ')' after narrow_ expression");
+				
+			return exp;
+		}
 
 	private APreExp readPreExpression(AVariableExp ve) throws ParserException,
 			LexException

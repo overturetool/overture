@@ -84,7 +84,7 @@ public class ExpressionTestCase extends InterpreterBaseTestCase
 		TypeCheckResult<PExp> tcResult = TypeCheckerUtil.typeCheckExpression(input);
 		if (!tcResult.parserResult.errors.isEmpty()
 				|| !tcResult.errors.isEmpty())
-		{
+		{		
 			fail("Expression did not pass type check!.");
 		}
 		Value val = InterpreterUtil.interpret(input);
