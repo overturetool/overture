@@ -30,11 +30,9 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
@@ -54,11 +52,11 @@ import org.overture.prettyprinter.PrettyPrinterVisitor;
 public class Uml2Vdm
 {
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
-	private static final AIntLiteralExp NEW_A_INT_ZERRO_LITERAL_EXP = AstFactory.newAIntLiteralExp(new LexIntegerToken(0, location));
 	Model model;
 	private String extension = "vdmpp";
 	private VdmTypeCreator tc = new VdmTypeCreator();
 	private UmlConsole console;
+	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp( location);
 
 	public Uml2Vdm(URI uri)
 	{
@@ -285,8 +283,8 @@ public class Uml2Vdm
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
 		console.out.println("\tConverting instanve variable: "+att.getName());
-		PType type = tc.convert(att.getType());
-		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
+		PType type = tc.convert(att);
+		PExp defaultExp = null;//NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
 			Settings.dialect = Dialect.VDM_PP;
@@ -321,9 +319,9 @@ public class Uml2Vdm
 	private void createValue(AClassClassDefinition c, Property att)
 	{
 		console.out.println("\tConverting value: "+att.getName());
-		PType type = tc.convert(att.getType());
+		PType type = tc.convert(att);
 
-		PExp defaultExp = NEW_A_INT_ZERRO_LITERAL_EXP.clone();
+		PExp defaultExp = NEW_A_UNDEFINED_EXP .clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
 			Settings.dialect = Dialect.VDM_PP;

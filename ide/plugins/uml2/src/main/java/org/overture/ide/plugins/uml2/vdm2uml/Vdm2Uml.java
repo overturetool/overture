@@ -298,12 +298,32 @@ public class Vdm2Uml
 	{
 		console.out.println("\tAdding operation: " + def.getName().name);
 		EList<String> names = new BasicEList<String>();
+		EList<Type> types = new BasicEList<Type>();
+		
 		for (PPattern p : def.getParameterPatterns())
 		{
 			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
-				names.add(ids.get(0).toString());
+				String name = ids.get(0).toString();
+				names.add(name);
+				
+				//now find the type
+				for (PDefinition d : def.getParamDefinitions())
+				{
+					if (d.getName().name.equals("self") || !d.getName().name.equals(name))
+					{
+						continue;
+					}
+					PType type = PDefinitionAssistantTC.getType(d);
+					utc.create(class_, type);
+					types.add(utc.getUmlType(type));
+				}
+				
+				if(names.size()!=types.size())
+				{
+					console.err.println("Missing type for argument \""+name+"\" in "+def.getName());
+				}
 			}
 
 			if (ids.size() > 1)
@@ -313,17 +333,8 @@ public class Vdm2Uml
 			}
 		}
 
-		EList<Type> types = new BasicEList<Type>();
-		for (PDefinition d : def.getParamDefinitions())
-		{
-			if (d.getName().name.equals("self"))
-			{
-				continue;
-			}
-			PType type = PDefinitionAssistantTC.getType(d);
-			utc.create(class_, type);
-			types.add(utc.getUmlType(type));
-		}
+		
+		
 
 		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
 		utc.create(class_, returnType);

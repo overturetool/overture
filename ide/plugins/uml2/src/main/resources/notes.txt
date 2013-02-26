@@ -1,0 +1,11 @@
+Modelio 2.2.1
+
+Export settings
+	Adding Modelio Annotations = unchecked
+	Compatability = EMF UML 3.0.0
+	Extension = .uml
+
+Known issues
+* import of VDM types (UML nested classifiers) are stripped from the definition (the UML nested generalization) used to define them
+* import of variables with the VDM union type of quotes (UML enumeration) is stripped from their default values and instead an incompatible 0 is inserted leading to trouble if the model ever is to be exported again
+* import of variables (UML properties) with default values are stripped their value
