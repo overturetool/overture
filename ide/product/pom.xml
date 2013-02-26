@@ -29,11 +29,19 @@
           </execution>
           <execution>
             <id>archive-products</id>
-              <goals>
-                <goal>archive-products</goal>
-              </goals>
+            <goals>
+              <goal>archive-products</goal>
+            </goals>
           </execution>
         </executions>
+	<configuration>
+	  <products>
+	    <product>
+	      <id>org.overture.ide.platform.product</id>
+	      <archiveFileName>Overture-${project.version}</archiveFileName>
+	    </product>
+	  </products>
+	</configuration>
       </plugin>
     </plugins>
   </build>
