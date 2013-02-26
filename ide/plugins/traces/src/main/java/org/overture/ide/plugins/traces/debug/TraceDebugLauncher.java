@@ -64,7 +64,7 @@ public class TraceDebugLauncher
 		{
 
 			ILaunchConfigurationType configType = getConfigurationType(project.getDialect());
-			wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(project.getName()
+			wc = configType.newInstance(null, getLaunchManager().generateLaunchConfigurationName(project.getName()
 					+ " CT"));
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, project.getName());
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
