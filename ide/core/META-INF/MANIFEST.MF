@@ -79,5 +79,5 @@ Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  ast-2.1.4.jar,
- cglib-2.1.4y.jar,
+ cglib-2.1.4.jar,
  vdmj-2.1.4.jar
