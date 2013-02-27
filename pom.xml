@@ -4,7 +4,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
   <packaging>pom</packaging>
-  <version>2.1.4<!--Replaceable: Main Version--></version>
+  <version>2.1.5<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
   
   <modules>

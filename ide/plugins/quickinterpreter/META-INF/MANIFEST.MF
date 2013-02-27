@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.1.4
+Bundle-Version: 2.1.5
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.plugins.quickinterpreter
@@ -9,17 +9,17 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.quickinterpreter;singleton:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.ui;bundle-version="3.5.0",
- org.overture.ide.vdmpp.core;bundle-version="2.1.4",
- org.overture.ide.vdmrt.core;bundle-version="2.1.4",
- org.overture.ide.vdmsl.core;bundle-version="2.1.4",
+ org.overture.ide.vdmpp.core;bundle-version="2.1.5",
+ org.overture.ide.vdmrt.core;bundle-version="2.1.5",
+ org.overture.ide.vdmsl.core;bundle-version="2.1.5",
  org.eclipse.jface.text;bundle-version="3.5.0",
- org.overture.ide.core;bundle-version="2.1.4"
+ org.overture.ide.core;bundle-version="2.1.5"
 Bundle-Activator: org.overture.ide.plugins.quickinterpreter.Activator
 Bundle-ClassPath: .,
- org.overture.ide.core-2.1.4.jar,
- org.overture.ide.vdmpp.core-2.1.4.jar,
- org.overture.ide.vdmrt.core-2.1.4.jar,
- org.overture.ide.vdmsl.core-2.1.4.jar,
- ast-2.1.4.jar,
- vdmj-2.1.4.jar,
- cglib-2.1.4.jar
+ org.overture.ide.core-2.1.5.jar,
+ org.overture.ide.vdmpp.core-2.1.5.jar,
+ org.overture.ide.vdmrt.core-2.1.5.jar,
+ org.overture.ide.vdmsl.core-2.1.5.jar,
+ ast-2.1.5.jar,
+ vdmj-2.1.5.jar,
+ cglib-2.1.5.jar

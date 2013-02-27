@@ -10,7 +10,8 @@ Make sure you leave the "<!--Replaceable: Main Version-->" portion of
 the string in place, otherwise this method will break and Joey will
 come after you with sharp, pointy objects.
 
-Note: there is still some version number magic in the MANIFEST.MF files
+Note: there is still some version number magic in the MANIFEST.MF and
+build.properties files, so be sure to go through them and replace the version numbers appropriately
 
 ----
 
