@@ -33,7 +33,7 @@ public class AMapPatternMapletAssistantInterpreter extends
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt) throws PatternMatchException
 	{
 		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
-		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getKey(), ctxt);
+		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
 		List<NameValuePairList> results = new Vector<NameValuePairList>();
 
 		for (NameValuePairList f: flist)
