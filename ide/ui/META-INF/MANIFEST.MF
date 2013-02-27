@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 2.1.3
+Bundle-Version: 2.1.4
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.ui
@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.5.1";visibility:=reexport,
  org.eclipse.jface.text;bundle-version="3.5.1";visibility:=reexport,
  org.eclipse.ui.ide;bundle-version="3.5.1";visibility:=reexport,
  org.eclipse.ui.navigator;bundle-version="3.4.1";visibility:=reexport,
- org.overture.ide.core;bundle-version="2.1.2",
+ org.overture.ide.core;bundle-version="2.1.4",
  org.eclipse.ui.views;bundle-version="3.4.1",
  org.eclipse.core.resources,
  org.eclipse.ui.navigator.resources,
@@ -34,6 +34,6 @@ Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.utility,
  org.overture.ide.ui.wizard
 Bundle-ClassPath: .,
- ast-2.1.3.jar,
- vdmj-2.1.3.jar,
- cglib-2.1.3.jar
+ ast-2.1.4.jar,
+ vdmj-2.1.4.jar,
+ cglib-2.1.4.jar
