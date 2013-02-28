@@ -52,7 +52,8 @@ public class ARenamedDefinitionAssistantTC {
 		}
 		else
 		{
-			return  PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
+			// Renamed definitions hide the original name
+			return  null;//PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
 		}
 	}
 

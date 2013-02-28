@@ -57,6 +57,7 @@ import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.Verdict;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
@@ -558,7 +559,7 @@ abstract public class Interpreter
 		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234);
 	}
 
-	public void runtrace(
+	public boolean runtrace(
 		String name, int testNo, boolean debug,
 		float subset, TraceReductionType type, long seed)
 		throws Exception
@@ -624,7 +625,9 @@ abstract public class Interpreter
 		}
 
 		int n = 1;
-
+		boolean failed = false;
+		writer.println("Generated " + tests.size() + " tests");
+		
 		for (CallSequence test: tests)
 		{
 			if (testNo > 0 && n != testNo)
@@ -650,7 +653,12 @@ abstract public class Interpreter
     			tests.filter(result, test, n);
 
     			writer.println("Test " + n + " = " + clean);
-    			writer.println("Result = " + result);
+    			writer.println("Result = " + result);    			
+    			
+    			if (result.lastIndexOf(Verdict.PASSED) == -1)
+    			{
+    				failed = true;	// Not passed => failed.
+    			}
 			}
 
 			n++;
@@ -659,6 +667,8 @@ abstract public class Interpreter
 		traceInit(null);
 		Settings.usingCmdLine = wasCMD;
 		Settings.usingDBGP = wasDBGP;
+		
+		return !failed;
 	}
 
 	abstract public List<Object> runOneTrace(

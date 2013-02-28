@@ -279,6 +279,8 @@ public class PPatternAssistantTC extends PPatternAssistant
 			return ATuplePatternAssistantTC.isSimple((ATuplePattern) p);
 		case UNION:
 			return AUnionPatternAssistantTC.isSimple((AUnionPattern) p);
+		case MAP:
+			return AMapPatternAssistantTC.isSimple((AMapPattern) p);
 		default:
 			/*
 			 * True if the pattern is a simple value that can match only

@@ -36,7 +36,7 @@ import org.overture.interpreter.runtime.ValueException;
 public abstract class NumericValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public double value;
+	public final double value;
 
 	public NumericValue(double value)
 	{

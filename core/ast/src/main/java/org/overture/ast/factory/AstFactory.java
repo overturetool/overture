@@ -3025,6 +3025,8 @@ public class AstFactory {
 	public static AMapletPatternMaplet newAMapletPatternMaplet(PPattern from, PPattern to)
 	{
 		AMapletPatternMaplet result = new AMapletPatternMaplet();
+		
+		result.setResolved(false);
 		result.setFrom(from);
 		result.setTo(to);
 		
