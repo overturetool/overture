@@ -121,5 +121,5 @@ Bundle-ClassPath: .,
  ctruntime-2.2.1.jar,
  umltrans-2.1.1.jar,
  showtrace-2.2.1.jar,
- stdlib-2.1.1.jar,
- cglib-2.1.1.jar
+ stdlib-2.2.1.jar,
+ cglib-2.2.1.jar

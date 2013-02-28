@@ -6,6 +6,7 @@
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>core</artifactId>
@@ -32,24 +33,24 @@
     <!-- <module>vdmj_compatibility_tests</module> -->
   </modules>
 
-  <reporting>
-    <plugins>
-      <plugin>
-	<!-- http://mojo.codehaus.org/cobertura-maven-plugin/usage.html -->
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-checkstyle-plugin</artifactId>
-	<version>2.3</version>
-      </plugin>
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>cobertura-maven-plugin</artifactId>
-	<version>2.5.1</version>
-      </plugin>
-      <plugin>
-	<groupId>org.codehaus.mojo</groupId>
-	<artifactId>findbugs-maven-plugin</artifactId>
-	<version>2.3.3-SNAPSHOT</version>
-      </plugin>
-    </plugins>
-  </reporting>
+  <!-- <reporting> -->
+  <!--   <plugins> -->
+  <!--     <plugin> -->
+  <!-- 	<! - - http://mojo.codehaus.org/cobertura-maven-plugin/usage.html - - > -->
+  <!-- 	<groupId>org.apache.maven.plugins</groupId> -->
+  <!-- 	<artifactId>maven-checkstyle-plugin</artifactId> -->
+  <!-- 	<version>2.3</version> -->
+  <!--     </plugin> -->
+  <!--     <plugin> -->
+  <!-- 	<groupId>org.codehaus.mojo</groupId> -->
+  <!-- 	<artifactId>cobertura-maven-plugin</artifactId> -->
+  <!-- 	<version>2.5.1</version> -->
+  <!--     </plugin> -->
+  <!--     <plugin> -->
+  <!-- 	<groupId>org.codehaus.mojo</groupId> -->
+  <!-- 	<artifactId>findbugs-maven-plugin</artifactId> -->
+  <!-- 	<version>2.3.3-SNAPSHOT</version> -->
+  <!--     </plugin> -->
+  <!--   </plugins> -->
+  <!-- </reporting> -->
 </project>

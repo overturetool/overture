@@ -6,6 +6,7 @@
     <artifactId>core</artifactId>
     <groupId>org.overturetool</groupId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>pom</packaging>

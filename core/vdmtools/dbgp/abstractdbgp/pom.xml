@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>dbgp</artifactId>
     <groupId>org.overturetool.vdmtools</groupId>
-    <version>2.1.1</version>
+    <artifactId>dbgp</artifactId>
+    <version>2.2.1<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.overturetool.vdmtools.dbgp</groupId>
   <artifactId>abstractdbgp</artifactId>
   <name>abstractdbgp</name>
-  <version>2.1.1</version>
 </project>

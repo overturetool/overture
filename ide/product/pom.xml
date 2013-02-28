@@ -6,6 +6,7 @@
     <groupId>org.overture</groupId>
     <artifactId>ide</artifactId>
     <version>2.2.1<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>eclipse-repository</packaging>
@@ -19,7 +20,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
-        <version>0.16.0</version>
         <executions>
           <execution>
             <id>materialize-products</id>
