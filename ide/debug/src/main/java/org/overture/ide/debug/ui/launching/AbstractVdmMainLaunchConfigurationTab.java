@@ -20,7 +20,9 @@ package org.overture.ide.debug.ui.launching;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -65,6 +67,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.util.ClonableFile;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
@@ -102,18 +105,16 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			if (elems.length > 0 && elems[0] instanceof AModuleModules
 					&& ((AModuleModules) elems[0]).getName().name.equals("DEFAULT"))
 			{
-				List<PDefinition> definitions = new Vector<PDefinition>();
-
-				for (Object m : elems)
-				{
-					definitions.addAll(((AModuleModules) m).getDefs());
-				}
-
-//				List<ClonableFile> files = new Vector<ClonableFile>();
-//				files.add(new ClonableFile("mergedFile"));
+				Set<AModuleModules> set = new HashSet<AModuleModules>();
 				
-				AModuleModules module = AstFactoryTC.newAModuleModules(new ClonableFile("mergedFile"),definitions);
-				return new Object[] { module };
+				for (Object aModuleModules : elems) {
+				
+					set.add((AModuleModules) aModuleModules);
+				}
+				
+				CombinedDefaultModule comb = new CombinedDefaultModule(set);
+				
+				return new Object[] { comb };
 
 			}
 			return elems;
