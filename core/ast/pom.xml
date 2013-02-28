@@ -28,10 +28,10 @@
 	  </execution>
 	</executions>
 	<configuration>
-	  <deletePackageOnGenerate>
-	    <param>vdm.generated.node</param>
-	    <param>org.overture.ast</param>
-	  </deletePackageOnGenerate>
+	  <!-- <deletePackageOnGenerate> -->
+	  <!--   <param>vdm.generated.node</param> -->
+	  <!--   <param>org.overture.ast</param> -->
+	  <!-- </deletePackageOnGenerate> -->
 	  <ast>overtureII.astv2</ast>
 	</configuration>
       </plugin>
