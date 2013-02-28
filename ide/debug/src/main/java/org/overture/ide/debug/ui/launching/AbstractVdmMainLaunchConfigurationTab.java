@@ -711,7 +711,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				if(dialog.getFirstResult() instanceof AModuleModules)
 				{
 					AModuleModules m = (AModuleModules) dialog.getFirstResult();
-					defaultModule = m.getName().toString();
+					defaultModule = m.getName().name;
 					fModuleNameText.setText(DisplayNameCreator.getDisplayName(m));
 					return;
 				}
@@ -731,21 +731,21 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 							{
 								foundConstructor = true;
 								module = def;
-								defaultModule = def.getName().toString();
+								defaultModule = def.getName().name;
 								fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
 							}
 						}
 						if (!foundConstructor)
 						{
 							module = method.getClassDefinition();
-							defaultModule = method.getClassDefinition().getName().toString();
+							defaultModule = method.getClassDefinition().getName().name;
 							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition())
 									+ "()");
 						}
 					} else
 					{
 						module = method.getClassDefinition();
-						defaultModule = method.getClassDefinition().getName().toString();
+						defaultModule = method.getClassDefinition().getName().name;
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition()));
 					}
 				} else if (method.getLocation() != null
