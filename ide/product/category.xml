@@ -3,37 +3,37 @@
    <description>
       Overture
    </description>
-   <feature url="features/org.overture.ide.features.core_2.2.1.jar" id="org.overture.ide.features.core" version="2.2.1">
+   <feature url="features/org.overture.ide.features.core_0.0.0.jar" id="org.overture.ide.features.core" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.features.rcp_2.2.1.jar" id="org.overture.ide.features.rcp" version="2.2.1">
+   <feature url="features/org.overture.ide.features.rcp_0.0.0.jar" id="org.overture.ide.features.rcp" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.coverageeditor_2.2.1.jar" id="org.overture.ide.plugins.features.coverageeditor" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.coverageeditor_0.0.0.jar" id="org.overture.ide.plugins.features.coverageeditor" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.csk_2.2.1.jar" id="org.overture.ide.plugins.features.csk" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.csk_0.0.0.jar" id="org.overture.ide.plugins.features.csk" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.ct_2.2.1.jar" id="org.overture.ide.plugins.features.ct" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.ct_0.0.0.jar" id="org.overture.ide.plugins.features.ct" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.developerutils_2.2.1.jar" id="org.overture.ide.plugins.features.developerutils" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.developerutils_0.0.0.jar" id="org.overture.ide.plugins.features.developerutils" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.latex_2.2.1.jar" id="org.overture.ide.plugins.features.latex" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.latex_0.0.0.jar" id="org.overture.ide.plugins.features.latex" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.poviewer_2.2.1.jar" id="org.overture.ide.plugins.features.poviewer" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.poviewer_0.0.0.jar" id="org.overture.ide.plugins.features.poviewer" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.quickinterpreter_2.2.1.jar" id="org.overture.ide.plugins.features.quickinterpreter" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.quickinterpreter_0.0.0.jar" id="org.overture.ide.plugins.features.quickinterpreter" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.realtimelogviewer_2.2.1.jar" id="org.overture.ide.plugins.features.realtimelogviewer" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.realtimelogviewer_0.0.0.jar" id="org.overture.ide.plugins.features.realtimelogviewer" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.uml2_2.2.1.jar" id="org.overture.ide.plugins.features.uml2" version="2.2.1">
+   <feature url="features/org.overture.ide.plugins.features.uml2_0.0.0.jar" id="org.overture.ide.plugins.features.uml2" version="0.0.0">
       <category name="Overture"/>
    </feature>
    <category-def name="Overture" label="Overture">
