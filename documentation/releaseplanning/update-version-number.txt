@@ -10,6 +10,12 @@ Make sure you leave the "<!--Replaceable: Main Version-->" portion of
 the string in place, otherwise this method will break and Joey will
 come after you with sharp, pointy objects.
 
+Also, the Bundle-Version field of the MANIFEST.MFs needs updating
+
+$ find . -name MANIFEST.MF | grep -v target | xargs -n1 emacsclient -n
+
+[I'm not sure this is safe to sed yet]
+
 Note: there is still some version number magic in the
 ide/core/META-INF/MANIFEST.MF and ide/core/build.properties files, so
 be sure to go through them and replace the version numbers
