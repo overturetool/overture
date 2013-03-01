@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.ct"
       label="Combinatorial Testing"
-      version="2.2.1">
+      version="2.2.2">
 
    <description>
       %description

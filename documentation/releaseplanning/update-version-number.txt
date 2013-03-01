@@ -16,6 +16,8 @@ $ find . -name MANIFEST.MF | grep -v target | xargs -n1 emacsclient -n
 
 [I'm not sure this is safe to sed yet]
 
+And the feature.xml files...
+
 Note: there is still some version number magic in the
 ide/core/META-INF/MANIFEST.MF and ide/core/build.properties files, so
 be sure to go through them and replace the version numbers
