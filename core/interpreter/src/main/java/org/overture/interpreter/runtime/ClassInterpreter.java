@@ -24,6 +24,9 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -34,6 +37,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.PStm;
@@ -236,9 +240,21 @@ public class ClassInterpreter extends Interpreter
 		main.start();
 		scheduler.start(main);
 		
-		NextGenRTLogger.getInstance().setLogfile("nextGenLog");
-		NextGenRTLogger.getInstance().toFile();
-		NextGenRTLogger.getInstance().persistToFile();
+		//The dialect must be VDM_RT. The last condition ensures logging is enabled
+		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) {
+			
+			String logDirStr = "generated/logs";
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			Date date = new Date();
+			File logDir = new File(logDirStr);
+			String dateString = dateFormat.format(date);
+			logDir.mkdirs();
+			String logFilename = logDirStr + "/" + dateString;
+			
+			NextGenRTLogger.getInstance().setLogfile(logFilename);
+			NextGenRTLogger.getInstance().toFile();
+			NextGenRTLogger.getInstance().persistToFile();
+		}
 		
 		RuntimeValidator.stop();
 
