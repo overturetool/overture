@@ -15,23 +15,19 @@
 
   <modules>		
     <module>ast</module>
-    <module>interpreter</module>	
     <module>parser</module>
+    <module>typechecker</module>
+    <module>interpreter</module>	
     <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>
-    <module>typechecker</module>
     <module>latex</module>
-    <module>vdmtools</module>
-    <module>showtrace</module>
+    <!-- vdmtools will move away; it's fine but not necessary for astv2 -jwc/4mar2013 -->
+    <!-- <module>vdmtools</module> -->
+    <!-- To be replaced with showtraceNextGen -jwc/4mar2013 -->
+    <!-- <module>showtrace</module> -->
     <module>prettyprinting</module>
-    <!-- disabled modules; status unknown -jwc/01Mar2013 -->
-    <!-- <module>xmljunit</module> -->
-    <!-- <module>umltrans</module> -->
-    <!-- <module>potrans</module> -->
-    <!-- <module>proofsupport</module> -->
-    <!-- <module>vdm2java</module> -->
-    <!-- <module>vdmj_compatibility_tests</module> -->
+    <module>vdmj_compatibility_tests</module>
   </modules>
 
   <!-- <reporting> -->
