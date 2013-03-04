@@ -26,11 +26,11 @@
       startupMessageRect="75,250,300,15"
       startupForegroundColor="FFFFFF" />
    <launcher name="Overture">
-      <linux icon="/icons/overture.xpm"/>
-      <macosx icon="/icons/overture.icns"/>
+      <linux icon="/icons/linux/Overture.xpm"/>
+      <macosx icon="/icons/osx/Overture.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/icons/overture.ico"/>
+         <ico path="/icons/win/Overture.ico"/>
          <bmp/>
       </win>
    </launcher>
