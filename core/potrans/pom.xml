@@ -5,24 +5,24 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.2.1<!--Replaceable: Main Version--></version>
+    <version>2.2.2<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.overturetool.core</groupId>
   <artifactId>potrans</artifactId>
   <name>The Proof Obligation Translator</name>
-  <version>2.1.1</version>
   
   <dependencies>
     <dependency>
       <groupId>org.overturetool.core.vdmtools</groupId>
       <artifactId>cglib</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
-      <version>2.1.1</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
   
@@ -31,7 +31,7 @@
       <plugin>
 	<groupId>org.overturetool.tools</groupId>
 	<artifactId>vdmt</artifactId>
-	<version>2.1.1</version>
+	<version>${project.version}</version>
 	<configuration>
 	  <importPackages>
 	    <param>org.overturetool.ast.itf</param>

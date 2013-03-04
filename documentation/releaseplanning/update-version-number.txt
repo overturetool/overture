@@ -1,0 +1,26 @@
+To update *all* of the version numbers in the pom.xml files all at
+once, use this command at the repository root:
+
+$ find . -name "pom.xml" | xargs -n1 sed -i '' -e 's/2.1.1<!--Replaceable: Main Version-->/2.1.2<!--Replaceable: Main Version-->/'
+
+Replace 2.1.1 with the version that it's currently at, and replace
+2.1.2 with the version you want it to be.
+
+Make sure you leave the "<!--Replaceable: Main Version-->" portion of
+the string in place, otherwise this method will break and Joey will
+come after you with sharp, pointy objects.
+
+Also, the Bundle-Version field of the MANIFEST.MFs needs updating
+
+$ find . -name MANIFEST.MF | grep -v target | xargs -n1 emacsclient -n
+
+[I'm not sure this is safe to sed yet]
+
+And the feature.xml files, ide/product/overture.product, ide/product/category.xml...
+
+Note: there is still some version number magic in the
+ide/core/META-INF/MANIFEST.MF and ide/core/build.properties files, so
+be sure to go through them and replace the version numbers
+appropriately
+
+

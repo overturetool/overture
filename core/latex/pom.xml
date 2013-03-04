@@ -5,12 +5,13 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.2.1<!--Replaceable: Main Version--></version>
+    <version>2.2.2<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.overturetool.core</groupId>
   <artifactId>latex</artifactId>
-  <name>Latex support</name>
+  <name>LaTeX support</name>
 
   <dependencies>
     <dependency>
@@ -28,8 +29,8 @@
   <build>
     <plugins>
       <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-surefire-plugin</artifactId>
-	<version>2.13</version>
 	<configuration>
 	  <testFailureIgnore>true</testFailureIgnore>
 	  <includes>
