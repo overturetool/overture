@@ -22,6 +22,7 @@ import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.TypeCheckedTestSequence;
 import org.overture.interpreter.traces.Verdict;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overturetool.ct.utils.TraceXmlWrapper;
 
 public class TraceInterpreter
@@ -67,7 +68,7 @@ public class TraceInterpreter
 		{
 			for (AModuleModules module : ((ModuleInterpreter) interpreter).modules)
 			{
-				if (module.getName().equals(moduleName))
+				if (module.getName().name.equals(moduleName))
 				{
 					definitions = module.getDefs();
 				}
@@ -78,7 +79,7 @@ public class TraceInterpreter
 			{
 				if (classDefinition.getName().name.equals(moduleName))
 				{
-					definitions = classDefinition.getDefinitions();
+					definitions = PDefinitionAssistantTC.getDefinitions(classDefinition);
 					
 				}				
 			}

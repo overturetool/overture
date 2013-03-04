@@ -100,7 +100,7 @@ public class TraceTestEngine
 				}
 
 				final Process finalP = p;
-				if (preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
+				if (finalP != null && preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
 				{
 					new Thread(new Runnable()
 					{
@@ -147,7 +147,7 @@ public class TraceTestEngine
 								}
 							} catch (Exception e)
 							{
-
+								e.printStackTrace();
 							}
 						}
 					}).start();

@@ -634,7 +634,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	{
 		System.out.println("Connected");
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<init ");
 		sb.append("module=\"" + moduleName + "\" ");
 		sb.append("/>\n");
@@ -652,7 +652,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progress(Integer procentage) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"progress\" ");
 		sb.append("progress=\"" + procentage + "\" ");
@@ -670,7 +670,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	{
 		this.currentTraceName = traceName;
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"tracestart\" ");
 		sb.append("tracename=\"" + traceName + "\" ");
@@ -683,7 +683,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progressCompleted() throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"completed\" ");
 		sb.append("progress=\"" + 100 + "\" ");
