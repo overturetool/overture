@@ -56,21 +56,6 @@
       <artifactId>ctruntime</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>stdlib</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core.vdmtools</groupId>
-      <artifactId>cglib</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>showtrace</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 
   <build>
