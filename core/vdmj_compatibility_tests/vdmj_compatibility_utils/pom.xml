@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>vdmj</artifactId>
-      <version>${project.version}</version>
+      <version>2.1.2</version>	<!-- This is frozen for testing against the Overture 1.2.x/VDMJ version -->
     </dependency>
   </dependencies>
 </project>

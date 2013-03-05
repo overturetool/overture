@@ -26,11 +26,9 @@
     <module>traces</module>
     <module>developerutils</module>
     <module>uml2</module>
-    <module>showtrace</module>
+    <!-- showtraceNextGen plugin to be renamed showtract -jwc/4mar2013 -->
+    <!-- <module>showtrace</module> -->
     <!-- <module>showtraceNextGen</module> -->
-    <!-- disabled modules; status in question -jwc/14Feb2013 -->
-    <!-- <module>umltrans</module> -->
-    <!-- <module>proofsupport</module> -->
     <!-- features last -->
     <module>features</module>
   </modules>

@@ -26,11 +26,11 @@
       startupMessageRect="75,250,300,15"
       startupForegroundColor="FFFFFF" />
    <launcher name="Overture">
-      <linux icon="/icons/overture.xpm"/>
-      <macosx icon="/icons/overture.icns"/>
+      <linux icon="/icons/linux/Overture.xpm"/>
+      <macosx icon="/icons/osx/Overture.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/icons/overture.ico"/>
+         <ico path="/icons/win/Overture.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -79,7 +79,6 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="org.overture.ide.plugins.features.ct"/>
       <feature id="org.overture.ide.plugins.features.developerutils"/>
       <feature id="org.overture.ide.features.core"/>
-      <feature id="org.overture.ide.plugins.features.realtimelogviewer"/>
       <feature id="org.overture.ide.plugins.features.coverageeditor"/>
       <feature id="org.overture.ide.plugins.features.csk"/>
       <feature id="org.eclipse.equinox.p2.core.feature"/>

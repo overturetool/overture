@@ -8,14 +8,18 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ide.plugins.uml2.Activator;
 import org.overture.ide.plugins.uml2.uml2vdm.Uml2Vdm;
-
-//import org.overture.typechecker.ClassTypeChecker;
 
 public class Uml2VdmCommand extends AbstractHandler
 {
@@ -32,19 +36,48 @@ public class Uml2VdmCommand extends AbstractHandler
 			Object firstElement = structuredSelection.getFirstElement();
 			if (firstElement instanceof IFile)
 			{
-				IFile iFile = (IFile) firstElement;
+				final IFile iFile = (IFile) firstElement;
 				java.net.URI absolutePath = iFile.getLocationURI();
-				URI uri = URI.createFileURI(absolutePath.getPath());
-				Uml2Vdm uml2vdm = new Uml2Vdm(uri);
-				uml2vdm.convert(new File(iFile.getProject().getLocation().toFile(),"uml_import"));
-				try
+				final URI uri = URI.createFileURI(absolutePath.getPath());
+				final Uml2Vdm uml2vdm = new Uml2Vdm();
+				final Display display = Display.getCurrent();
+				Job convert = new Job("Importing UML")
 				{
-					iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-				} catch (CoreException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+					@Override
+					protected IStatus run(IProgressMonitor progress)
+					{
+						progress.beginTask("Importing", 100);
+						progress.worked(5);
+						if (!uml2vdm.initialize(uri))
+						{
+							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed importing .uml file. Maybe it doesnt have the EMF UML format");
+						}
+
+						progress.worked(40);
+						display.asyncExec(new Runnable()
+						{
+							public void run()
+							{
+								uml2vdm.convert(new File(iFile.getProject().getLocation().toFile(), "uml_import"));
+							}
+						});
+
+						progress.worked(50);
+						try
+						{
+							iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+						} catch (CoreException e)
+						{
+							// ignore
+						}
+						progress.worked(5);
+						progress.done();
+
+						return Status.OK_STATUS;
+					}
+				};
+				convert.schedule();
 			}
 
 		}

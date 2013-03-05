@@ -29,10 +29,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.overture.ide.plugins.features.realtimelogviewer"
-         version="0.0.0"/>
-
-   <includes
          id="org.overture.ide.plugins.features.coverageeditor"
          version="0.0.0"/>
 
