@@ -10,5 +10,7 @@ public interface IClientMonitor
 	void completed();
 
 	void traceStart(String traceName);
+	
+	void traceError(String message);
 
 }

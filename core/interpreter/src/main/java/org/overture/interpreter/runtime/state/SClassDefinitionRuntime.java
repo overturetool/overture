@@ -7,6 +7,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueListenerList;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
@@ -28,7 +29,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().name, def.getDefinitions());
+		delegate = new Delegate(def.getName().name, PDefinitionAssistantTC.getDefinitions(def));
 	}
 	
 	public boolean hasDelegate()

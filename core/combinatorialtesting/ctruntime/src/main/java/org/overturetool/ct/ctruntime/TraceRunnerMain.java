@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.lang.model.element.NestingKind;
+
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -29,6 +31,7 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
@@ -470,7 +473,14 @@ public class TraceRunnerMain implements IProgressMonitor
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					System.exit(3);
-				} catch (Exception e)
+				} catch(ValueException e)
+				{
+					System.err.println("Initialization: " + e);
+					e.ctxt.printStackTrace(Console.out, true);
+					RTLogger.dump(true);
+					System.exit(3);					
+				}catch (Exception e)
+				
 				{
 					System.err.println("Initialization: " + e);
 					e.printStackTrace();
@@ -488,7 +498,7 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	}
 
-	private void startup() throws IOException
+	private void startup() throws Exception
 	{
 		connect();
 	}
@@ -541,7 +551,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		}
 	}
 
-	protected void connect() throws IOException
+	protected void connect() throws Exception
 	{
 		if (!connected)
 		{
@@ -573,7 +583,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		}
 	}
 
-	private void run() throws IOException
+	private void run() throws Exception
 	{
 		Thread t = new Thread(new Runnable()
 		{
@@ -634,7 +644,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	{
 		System.out.println("Connected");
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<init ");
 		sb.append("module=\"" + moduleName + "\" ");
 		sb.append("/>\n");
@@ -652,7 +662,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progress(Integer procentage) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"progress\" ");
 		sb.append("progress=\"" + procentage + "\" ");
@@ -670,7 +680,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	{
 		this.currentTraceName = traceName;
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"tracestart\" ");
 		sb.append("tracename=\"" + traceName + "\" ");
@@ -683,10 +693,25 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progressCompleted() throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-		interpreter.init(null);
+//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"completed\" ");
 		sb.append("progress=\"" + 100 + "\" ");
+		sb.append("/>\n");
+
+		write(sb);
+
+	}
+	
+	@Override
+	public void progressError(String message) throws IOException {
+		
+		StringBuilder sb = new StringBuilder();
+//		interpreter.init(null);
+		sb.append("<response ");
+		sb.append("status=\"error\" ");
+		sb.append("message=\"" + message + "\" ");
+//		sb.append("progress=\"" + 100 + "\" ");
 		sb.append("/>\n");
 
 		write(sb);
@@ -713,4 +738,5 @@ public class TraceRunnerMain implements IProgressMonitor
 
 		output.flush();
 	}
+
 }

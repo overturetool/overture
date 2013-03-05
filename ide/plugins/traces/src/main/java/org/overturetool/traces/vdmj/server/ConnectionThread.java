@@ -226,7 +226,12 @@ public class ConnectionThread extends Thread
 		{
 			Integer p = Integer.parseInt(progress);
 			monitor.progress(traceName, p);
-		}else if( status.equals("completed"))
+		}else if(status.equals("error"))
+		{
+			String errorMessage = tagnode.getAttr("message");
+			monitor.traceError(errorMessage);
+		}
+		else if( status.equals("completed"))
 		{
 			
 			try

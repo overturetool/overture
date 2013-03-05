@@ -58,9 +58,13 @@ public class Uml2Vdm
 	private UmlConsole console;
 	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp( location);
 
-	public Uml2Vdm(URI uri)
+	public Uml2Vdm()
 	{
-
+		console = new UmlConsole();
+	}
+	
+	public boolean initialize(URI uri)
+	{
 		Resource resource = new ResourceSetImpl().getResource(uri, true);
 		for (EObject c : resource.getContents())
 		{
@@ -70,10 +74,7 @@ public class Uml2Vdm
 			}
 		}
 		
-		console = new UmlConsole();
-		
-		
-
+		return model != null;
 	}
 
 	public void convert(File outputDir)

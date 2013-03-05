@@ -87,6 +87,16 @@ public class TraceTestEngine
 							out.println("Starting trace:" + traceName);
 							monitor.subTask(traceName);
 						}
+
+						@Override
+						public void traceError(String message) {
+							
+							out.println("Error CT runtime");
+							out.println("Message: " + message);
+							monitor.done();
+							display.updateView(texe.project);
+							threadFinished();
+						}
 					});
 					conn.start();
 					// System.out.println("Starting CT runtime with: "
@@ -100,7 +110,7 @@ public class TraceTestEngine
 				}
 
 				final Process finalP = p;
-				if (preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
+				if (finalP != null && preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
 				{
 					new Thread(new Runnable()
 					{
@@ -147,7 +157,7 @@ public class TraceTestEngine
 								}
 							} catch (Exception e)
 							{
-
+								e.printStackTrace();
 							}
 						}
 					}).start();
