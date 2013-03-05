@@ -15,7 +15,9 @@ public class CmlExtendsOvertureTest extends TestCase {
 				"/cmlextendsovertureII/cml/cml.ast");
 		InputStream ovtSource = getClass().getResourceAsStream(
 				"/cmlextendsovertureII/ovt/overtureII.astv2");
-		File outputFolder = new File("../../testdata/generatedCode");
+		File outputFolder = new File(
+				FilePathUtil.getPlatformPath("target/testData/rwlGeneratedCode"));
+//		File outputFolder = new File("../../testdata/generatedCode");
 
 		Assert.assertNotNull("Unable to load CML Source Ast file", cmlSource);
 		Assert.assertNotNull("Unable to load Overture Souce Ast file",

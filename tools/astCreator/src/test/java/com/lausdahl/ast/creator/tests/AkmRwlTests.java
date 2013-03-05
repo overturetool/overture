@@ -40,7 +40,9 @@ public class AkmRwlTests extends TestCase {
 	 */
 
 	public void testCmlAndOvt() throws Exception {
-		File output = new File("../../testdata/generatedCode");
+		File output = new File(
+				FilePathUtil.getPlatformPath("target/testData/akmGeneratedCode"));
+//		File output = new File("../../testdata/generatedCode");
 		InputStream cmlAST = getClass().getResourceAsStream(
 				"/extend2/cml_merge.ast");
 		InputStream ovtAST = getClass().getResourceAsStream(
