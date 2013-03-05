@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.lang.model.element.NestingKind;
-
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -112,7 +110,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		Properties.init(); // Read properties file, if any
 
 		Properties.parser_tabstop = 1;
-
+		
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -408,6 +406,7 @@ public class TraceRunnerMain implements IProgressMonitor
 
 		controller.setWarnings(warnings);
 		controller.setQuiet(quiet);
+		Console.disableStdout();
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{

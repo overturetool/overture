@@ -35,9 +35,12 @@ public class TestEngineDelegate
 		if (useRemoteDebug(preferences))
 		{
 			return null;
-		} else
+		} 
+			
+		//Redirect all streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
+		pb.inheritIO();
 
-			return pb.start();
+		return pb.start();
 	}
 
 	private List<String> initializeLaunch(TraceExecutionSetup texe,
@@ -124,7 +127,7 @@ public class TestEngineDelegate
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
-		if (useDebugInfo(preferences) )//|| ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))
 		{
 			System.out.println("Full Debugger Arguments:\n"
 					+ getArgumentString(commandList));
@@ -151,11 +154,11 @@ public class TestEngineDelegate
 		return preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE);
 	}
 	
-	private boolean useDebugInfo(IPreferenceStore preferences)
-			throws CoreException
-	{
-		return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
-	}
+//	private boolean useDebugInfo(IPreferenceStore preferences)
+//			throws CoreException
+//	{
+//		return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
+//	}
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{

@@ -26,8 +26,9 @@ public interface ITracesConstants
 	
 	//String REMOTE_DEBUG = "remote_debug";
 	public boolean DEBUG = false;
-	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
+//	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
 	public final String REMOTE_DEBUG_PREFERENCE = "ct_enable_remote_debug";
+	public final String REMOTE_DEBUG_FIXED_PORT = "ct_enable_remote_debug_fixed_port";
 
 	/**
 	 * This string gives the plugin id that contains the core ctruntime-x.x.x.jar file.

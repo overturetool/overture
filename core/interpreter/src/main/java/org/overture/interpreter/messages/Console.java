@@ -82,4 +82,43 @@ public class Console
 	{
 		err.redirect(redirect, reader);
 	}
+	
+	public static class DisabledStdOut extends StdoutRedirector
+	{
+
+		public DisabledStdOut(OutputStreamWriter out) {
+			super(out);
+		}
+		
+		@Override
+		public void write(String s, int off, int len)
+		{
+			
+		}
+		
+		@Override
+		public void print(String line)
+		{
+			
+		}
+		
+	}
+	
+	public static synchronized void disableStdout()
+	{
+		try {
+			out = new DisabledStdOut(new OutputStreamWriter(System.out, charset)) ;
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Console encoding exception: " + e);
+		}
+	}
+	
+	public static synchronized void disableStderr()
+	{
+		try {
+			err = new DisabledStdOut(new OutputStreamWriter(System.err, charset)) ;
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Console encoding exception: " + e);
+		}
+	}
 }
