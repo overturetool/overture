@@ -1,7 +1,12 @@
 package org.overture.ide.plugins.uml2.vdm2uml;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -40,37 +45,32 @@ import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class Vdm2Uml
-{
+public class Vdm2Uml {
 	private UmlConsole console = new UmlConsole();
-	UmlTypeCreator utc = new UmlTypeCreator(new UmlTypeCreator.ClassTypeLookup()
-	{
-		public Class lookup(AClassType type)
-		{
-			return classes.get(type.getName().name);
-		}
-	}, console);
+	UmlTypeCreator utc = new UmlTypeCreator(
+			new UmlTypeCreator.ClassTypeLookup() {
+				public Class lookup(AClassType type) {
+					return classes.get(type.getName().name);
+				}
+			}, console);
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
 	private boolean extendedAssociationMapping = false;
 
-	public Vdm2Uml(boolean preferAssociations)
-	{
+	public Vdm2Uml(boolean preferAssociations) {
 		extendedAssociationMapping = preferAssociations;
 	}
 
-	public Model convert(String name, List<SClassDefinition> classes)
-	{
-		try
-		{
+	public Model convert(String name, List<SClassDefinition> classes) {
+		try {
 			console.show();
-		} catch (PartInitException e)
-		{
+		} catch (PartInitException e) {
 		}
 		console.out.println("#\n# Starting translation of project: " + name
 				+ "\n#");
 		// console.out.println("# Into: "+outputDir+"\n#");
-		console.out.println("-------------------------------------------------------------------------");
+		console.out
+				.println("-------------------------------------------------------------------------");
 
 		modelWorkingCopy = UMLFactory.eINSTANCE.createModel();
 		modelWorkingCopy.setName(name);
@@ -79,36 +79,63 @@ public class Vdm2Uml
 
 		List<SClassDefinition> onlyClasses = new Vector<SClassDefinition>();
 		onlyClasses.addAll(classes);
-		for (SClassDefinition sClassDefinition : classes)
-		{
-			if (sClassDefinition instanceof AClassClassDefinition)
-			{
+		for (SClassDefinition sClassDefinition : classes) {
+			if (sClassDefinition instanceof AClassClassDefinition) {
 				continue;
 			}
 			onlyClasses.remove(sClassDefinition);
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console)
+				.buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
 
-	public void save(URI uri) throws IOException
-	{
+	public void save(URI uri) throws IOException {
 		console.out.println("Saving UML model to: " + uri);
-		Resource resource = new ResourceSetImpl().createResource(uri.appendFileExtension(UMLResource.FILE_EXTENSION));
+		Resource resource = new ResourceSetImpl().createResource(uri
+				.appendFileExtension(UMLResource.FILE_EXTENSION));
 		resource.getContents().add(modelWorkingCopy);
 
 		resource.save(null);
+
+		// TODO: fix for modelio not supporting version 4.0.0 of EMF UML
+		try {
+			FileReader fr = new FileReader(uri.toFileString() + ".uml");
+			BufferedReader br = new BufferedReader(fr);
+
+			String line = null;
+			List<String> buffer = new Vector<String>();
+			while ((line = br.readLine()) != null) {
+				line = line.replace(
+						"\"http://www.eclipse.org/uml2/4.0.0/UML\"",
+						"\"http://www.eclipse.org/uml2/3.0.0/UML\"");
+				buffer.add(line);
+			}
+			br.close();
+
+			FileWriter fw = new FileWriter(uri.toFileString() + ".uml");
+			PrintWriter out = new PrintWriter(fw);
+			for (Iterator<String> iterator = buffer.iterator(); iterator
+					.hasNext();) {
+				out.write(iterator.next());
+				if (iterator.hasNext()) {
+					out.println();
+				}
+			}
+			out.close();
+
+		} catch (IOException e) {
+		}
+
 	}
 
-	private void buildUml(List<SClassDefinition> classes)
-	{
+	private void buildUml(List<SClassDefinition> classes) {
 
 		// Build class container
-		for (SClassDefinition sClass : classes)
-		{
+		for (SClassDefinition sClass : classes) {
 			console.out.println("Converting class: " + sClass.getName());
 			String className = sClass.getName().name;
 			Class class_ = buildClass(sClass);
@@ -116,11 +143,9 @@ public class Vdm2Uml
 		}
 
 		// TODO: build inheritance relationship
-		for (SClassDefinition sClass : classes)
-		{
+		for (SClassDefinition sClass : classes) {
 			Class thisClass = this.classes.get(sClass.getName().name);
-			for (LexNameToken superToken : sClass.getSupernames())
-			{
+			for (LexNameToken superToken : sClass.getSupernames()) {
 				console.out.println("Adding generalization between: "
 						+ thisClass.getName() + " -> " + superToken.getName());
 				Class superClass = this.classes.get(superToken.name);
@@ -130,8 +155,7 @@ public class Vdm2Uml
 
 		console.out.println("Converting types");
 		// Create types embedded in VDM classes
-		for (SClassDefinition sClass : classes)
-		{
+		for (SClassDefinition sClass : classes) {
 			String className = sClass.getName().name;
 			Class class_ = this.classes.get(className);
 			addTypes(class_, sClass);
@@ -139,8 +163,7 @@ public class Vdm2Uml
 
 		console.out.println("Converting remaining class definitions");
 		// Build operations, functions, instance variables and values
-		for (SClassDefinition sClass : classes)
-		{
+		for (SClassDefinition sClass : classes) {
 			String className = sClass.getName().name;
 			Class class_ = this.classes.get(className);
 			addAttributesToClass(class_, sClass);
@@ -148,125 +171,118 @@ public class Vdm2Uml
 
 	}
 
-	private void addTypes(Class class_, SClassDefinition sClass)
-	{
+	private void addTypes(Class class_, SClassDefinition sClass) {
 		console.out.println("Converting types for class: "
 				+ sClass.getName().name);
-		for (PDefinition def : sClass.getDefinitions())
-		{
+		for (PDefinition def : sClass.getDefinitions()) {
 
-			switch (def.kindPDefinition())
-			{
-				case TYPE:
-				{
-					PType type = PDefinitionAssistantTC.getType(def);
-					console.out.println("\tConverting type: " + type);
-					utc.create(class_, type);
-					break;
-				}
-				default:
-					break;
+			switch (def.kindPDefinition()) {
+			case TYPE: {
+				PType type = PDefinitionAssistantTC.getType(def);
+				console.out.println("\tConverting type: " + type);
+				utc.create(class_, type);
+				break;
+			}
+			default:
+				break;
 			}
 		}
 
 	}
 
-	private void addAttributesToClass(Class class_, SClassDefinition sClass)
-	{
+	private void addAttributesToClass(Class class_, SClassDefinition sClass) {
 		console.out.println("Converting definitions for class: "
 				+ sClass.getName().name);
-		for (PDefinition def : sClass.getDefinitions())
-		{
+		for (PDefinition def : sClass.getDefinitions()) {
 
-			switch (def.kindPDefinition())
-			{
+			switch (def.kindPDefinition()) {
 
-				case INSTANCEVARIABLE:
-					addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
-					break;
-				case EXPLICITOPERATION:
-					addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
-					break;
-				case EXPLICITFUNCTION:
-					addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
-					break;
-				case VALUE:
-					addValueToClass(class_, (AValueDefinition) def);
-				default:
-					break;
+			case INSTANCEVARIABLE:
+				addInstanceVariableToClass(class_,
+						(AInstanceVariableDefinition) def);
+				break;
+			case EXPLICITOPERATION:
+				addExplicitOperationToClass(class_,
+						(AExplicitOperationDefinition) def);
+				break;
+			case EXPLICITFUNCTION:
+				addExplicitFunctionToClass(class_,
+						(AExplicitFunctionDefinition) def);
+				break;
+			case VALUE:
+				addValueToClass(class_, (AValueDefinition) def);
+			default:
+				break;
 			}
 		}
 
 	}
 
-	private void addValueToClass(Class class_, AValueDefinition def)
-	{
+	private void addValueToClass(Class class_, AValueDefinition def) {
 		String name = getDefName(def);
 		PType defType = PDefinitionAssistantTC.getType(def);
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		//if (defType instanceof AClassType)
+		// if (defType instanceof AClassType)
 		if (PTypeAssistantInterpreter.isClass(defType)
-				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
-		{
-			console.out.println("\tAdding association for value: "
-					+ name);
+				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping)) {
+			console.out.println("\tAdding association for value: " + name);
 			// TODO static
-//			Type referencedClass = Vdm2UmlAssociationUtil.getType(classes, defType);
-//			Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, Vdm2UmlUtil.extractLower(defType), Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
-//			association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_,true);
-		} else
-		{
+			// Type referencedClass = Vdm2UmlAssociationUtil.getType(classes,
+			// defType);
+			// Association association = class_.createAssociation(true,
+			// AggregationKind.NONE_LITERAL, name,
+			// Vdm2UmlUtil.extractLower(defType),
+			// Vdm2UmlUtil.extractUpper(defType), referencedClass, false,
+			// AggregationKind.NONE_LITERAL, "", 1, 1);
+			// association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			Vdm2UmlAssociationUtil
+					.createAssociation(name, defType, def.getAccess(),
+							def.getExpression(), classes, class_, true);
+		} else {
 			console.out.println("\tAdding property for value: " + name);
 			Property s = class_.createOwnedAttribute(name, umlType);
 			// s.setIsStatic(true);
 			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
-			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def
+					.getAccess()));
 			s.setIsReadOnly(true);
 
-			if (def.getExpression() != null)
-			{
+			if (def.getExpression() != null) {
 				s.setDefault(def.getExpression().toString());
 			}
 		}
 
 	}
 
-	private String getDefName(PDefinition def)
-	{
-		switch (def.kindPDefinition())
-		{
-			case VALUE:
-				AValueDefinition valueDef = (AValueDefinition) def;
-				PPattern expression = valueDef.getPattern();
-				if (expression instanceof AIdentifierPattern)
-				{
-					return ((AIdentifierPattern) expression).getName().name;
-				}
-				break;
-			default:
-				return def.getName().name;
+	private String getDefName(PDefinition def) {
+		switch (def.kindPDefinition()) {
+		case VALUE:
+			AValueDefinition valueDef = (AValueDefinition) def;
+			PPattern expression = valueDef.getPattern();
+			if (expression instanceof AIdentifierPattern) {
+				return ((AIdentifierPattern) expression).getName().name;
+			}
+			break;
+		default:
+			return def.getName().name;
 		}
 		return "null";
 	}
 
 	private void addExplicitFunctionToClass(Class class_,
-			AExplicitFunctionDefinition def)
-	{
+			AExplicitFunctionDefinition def) {
 		console.out.println("\tAdding function: " + def.getName().name);
 		EList<String> names = new BasicEList<String>();
-		for (PPattern p : def.getParamPatternList().get(0))
-		{
-			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
-			if (!ids.isEmpty())
-			{
+		for (PPattern p : def.getParamPatternList().get(0)) {
+			List<AIdentifierPattern> ids = PPatternAssistantInterpreter
+					.findIdentifiers(p);
+			if (!ids.isEmpty()) {
 				names.add(ids.get(0).toString());
 			}
 
-			if (ids.size() > 1)
-			{
+			if (ids.size() > 1) {
 				console.err.println("Some argument is in multiple parts: "
 						+ ids);
 			}
@@ -276,8 +292,7 @@ public class Vdm2Uml
 
 		AFunctionType type = def.getType();
 
-		for (PType t : type.getParameters())
-		{
+		for (PType t : type.getParameters()) {
 			utc.create(class_, t);
 			types.add(utc.getUmlType(t));
 		}
@@ -285,71 +300,70 @@ public class Vdm2Uml
 		utc.create(class_, type.getResult());
 		Type returnUmlType = utc.getUmlType(type.getResult());
 
-		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
-		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+		Operation operation = class_.createOwnedOperation(def.getName().name,
+				names, types, returnUmlType);
+		operation.setVisibility(Vdm2UmlUtil
+				.convertAccessSpecifierToVisibility(def.getAccess()));
 
-		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def
+				.getAccess()));
 		operation.setIsQuery(true);
 
 	}
 
 	private void addExplicitOperationToClass(Class class_,
-			AExplicitOperationDefinition def)
-	{
+			AExplicitOperationDefinition def) {
 		console.out.println("\tAdding operation: " + def.getName().name);
 		EList<String> names = new BasicEList<String>();
 		EList<Type> types = new BasicEList<Type>();
-		
-		for (PPattern p : def.getParameterPatterns())
-		{
-			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
-			if (!ids.isEmpty())
-			{
+
+		for (PPattern p : def.getParameterPatterns()) {
+			List<AIdentifierPattern> ids = PPatternAssistantInterpreter
+					.findIdentifiers(p);
+			if (!ids.isEmpty()) {
 				String name = ids.get(0).toString();
 				names.add(name);
-				
-				//now find the type
-				for (PDefinition d : def.getParamDefinitions())
-				{
-					if (d.getName().name.equals("self") || !d.getName().name.equals(name))
-					{
+
+				// now find the type
+				for (PDefinition d : def.getParamDefinitions()) {
+					if (d.getName().name.equals("self")
+							|| !d.getName().name.equals(name)) {
 						continue;
 					}
 					PType type = PDefinitionAssistantTC.getType(d);
 					utc.create(class_, type);
 					types.add(utc.getUmlType(type));
 				}
-				
-				if(names.size()!=types.size())
-				{
-					console.err.println("Missing type for argument \""+name+"\" in "+def.getName());
+
+				if (names.size() != types.size()) {
+					console.err.println("Missing type for argument \"" + name
+							+ "\" in " + def.getName());
 				}
 			}
 
-			if (ids.size() > 1)
-			{
+			if (ids.size() > 1) {
 				console.err.println("Some argument is in multiple parts: "
 						+ ids);
 			}
 		}
 
-		
-		
-
-		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
+		PType returnType = ((AOperationType) PDefinitionAssistantTC
+				.getType(def)).getResult();
 		utc.create(class_, returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
-		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
-		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+		Operation operation = class_.createOwnedOperation(def.getName().name,
+				names, types, returnUmlType);
+		operation.setVisibility(Vdm2UmlUtil
+				.convertAccessSpecifierToVisibility(def.getAccess()));
 
-		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def
+				.getAccess()));
 		operation.setIsQuery(false);
 	}
 
 	private void addInstanceVariableToClass(Class class_,
-			AInstanceVariableDefinition def)
-	{
+			AInstanceVariableDefinition def) {
 
 		String name = def.getName().name;
 		PType defType = PDefinitionAssistantTC.getType(def);
@@ -358,38 +372,38 @@ public class Vdm2Uml
 		Type type = utc.getUmlType(defType);
 
 		if (PTypeAssistantInterpreter.isClass(defType)
-				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
-		{
+				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping)) {
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().name);
 
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_,false);
+			Vdm2UmlAssociationUtil.createAssociation(name, defType,
+					def.getAccess(), def.getExpression(), classes, class_,
+					false);
 
-		} else
-		{
+		} else {
 			console.out.println("\tAdding property for instance variable: "
 					+ def.getName().name);
 			Property attribute = class_.createOwnedAttribute(name, type);
-			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
-			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
+			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def
+					.getAccess()));
+			attribute.setVisibility(Vdm2UmlUtil
+					.convertAccessSpecifierToVisibility(def.getAccess()));
 
-			if (Vdm2UmlUtil.isOptional(defType))
-			{
+			if (Vdm2UmlUtil.isOptional(defType)) {
 				attribute.setLower(0);
 			}
 
-			if (def.getExpression() != null)
-			{
+			if (def.getExpression() != null) {
 				attribute.setDefault(def.getExpression().toString());
 			}
 		}
 
 	}
 
-	private Class buildClass(SClassDefinition sClass)
-	{
+	private Class buildClass(SClassDefinition sClass) {
 		String name = sClass.getName().name;
-		boolean isAbstract = Vdm2UmlUtil.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
+		boolean isAbstract = Vdm2UmlUtil
+				.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
 		Class class_ = modelWorkingCopy.createOwnedClass(name, isAbstract);
 
 		boolean isActive = Vdm2UmlUtil.isClassActive(sClass);
