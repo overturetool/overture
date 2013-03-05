@@ -38,7 +38,8 @@ public class TestEngineDelegate
 		} 
 			
 		//Redirect all streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
-		pb.inheritIO();
+		// This is Java7; we need Java6 compatibility
+		//pb.inheritIO(); 
 
 		return pb.start();
 	}
