@@ -87,6 +87,16 @@ public class TraceTestEngine
 							out.println("Starting trace:" + traceName);
 							monitor.subTask(traceName);
 						}
+
+						@Override
+						public void traceError(String message) {
+							
+							out.println("Error CT runtime");
+							out.println("Message: " + message);
+							monitor.done();
+							display.updateView(texe.project);
+							threadFinished();
+						}
 					});
 					conn.start();
 					// System.out.println("Starting CT runtime with: "

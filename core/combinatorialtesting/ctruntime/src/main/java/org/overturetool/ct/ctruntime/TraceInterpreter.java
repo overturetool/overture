@@ -58,7 +58,7 @@ public class TraceInterpreter
 	}
 
 	public void run(String moduleName, String traceName,
-			Interpreter interpreter, TraceXmlWrapper store) throws IOException
+			Interpreter interpreter, TraceXmlWrapper store) throws Exception
 	{
 		this.interpreter = interpreter;
 
@@ -89,7 +89,7 @@ public class TraceInterpreter
 	}
 
 	private void processTraces(List<PDefinition> definitions, String className,
-			String traceName, TraceXmlWrapper storage) throws IOException
+			String traceName, TraceXmlWrapper storage) throws Exception
 	{
 		try
 		{
@@ -135,15 +135,19 @@ public class TraceInterpreter
 		{
 			// e.printStackTrace();
 			error(e.getMessage());
-			// throw e;
+			throw e;
 		} catch (ValueException e)
 		{
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			error(e.getMessage());
+			throw e;
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			error(e.getMessage());
+			throw e;
 		} finally
 		{
 			if (storage != null)
@@ -213,11 +217,29 @@ public class TraceInterpreter
 				
 				if(tests.isTypeCorrect(test))
 				{
+					try{
 					interpreter.init(null); // Initialize completely between
 					// every
 					// run...
 					result = interpreter.runOneTrace(mtd, test, false);
-	
+					}
+					catch(Exception e)
+					{
+						result = new Vector<Object>();
+						result.add(e.getMessage());
+						result.add(Verdict.FAILED);
+						
+						if (storage != null)
+						{
+							storage.AddResults(new Integer(n).toString(), result);
+							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
+							storage.StopElement();
+						}
+						
+						
+						throw e;
+					}
+					
 					tests.filter(result, test, n);
 				}else
 				{
@@ -236,14 +258,14 @@ public class TraceInterpreter
 					inconclusiveCount++;
 				}
 
-				for (int i = 0; i < result.size(); i++)
-				{
-					if (result.get(i) instanceof Verdict)
-					{
-						result.set(i, Verdict.valueOf(result.get(i).toString()));
-					}
-
-				}
+//				for (int i = 0; i < result.size(); i++)
+//				{
+//					if (result.get(i) instanceof Verdict)
+//					{
+//						result.set(i, Verdict.valueOf(result.get(i).toString()));
+//					}
+//
+//				}
 
 				if (storage != null)
 				{
@@ -365,9 +387,13 @@ public class TraceInterpreter
 		// + filteredBy);
 	}
 
-	protected void error(String message)
+	protected void error(String message) throws IOException
 	{
-		System.err.println(message);
+		System.err.println(message);	
+		if(this.monitor != null)
+		{
+			this.monitor.progressError(message);
+		}
 	}
 
 	protected void typeError(String message)

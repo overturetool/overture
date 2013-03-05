@@ -13,5 +13,8 @@ public interface IProgressMonitor
 	public abstract void progressCompleted()
 	throws IOException;
 	
+	public abstract void progressError(String message)
+	throws IOException;
+	
 
 }
