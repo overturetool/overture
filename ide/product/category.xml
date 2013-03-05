@@ -30,9 +30,6 @@
    <feature url="features/org.overture.ide.plugins.features.quickinterpreter_0.0.0.jar" id="org.overture.ide.plugins.features.quickinterpreter" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.realtimelogviewer_0.0.0.jar" id="org.overture.ide.plugins.features.realtimelogviewer" version="0.0.0">
-      <category name="Overture"/>
-   </feature>
    <feature url="features/org.overture.ide.plugins.features.uml2_0.0.0.jar" id="org.overture.ide.plugins.features.uml2" version="0.0.0">
       <category name="Overture"/>
    </feature>

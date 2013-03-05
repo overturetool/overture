@@ -83,19 +83,13 @@ Export-Package: org.overture.ast.analysis,
  org.overture.typechecker.util,
  org.overture.typechecker.visitor,
  org.overture.util,
- org.overturetool.api,
- org.overturetool.api.io,
  org.overturetool.ct.ctruntime,
  org.overturetool.ct.ctruntime.server.common,
  org.overturetool.ct.ctruntime.server.xml,
  org.overturetool.ct.utils,
  org.overturetool.test.framework,
  org.overturetool.test.framework.results,
- org.overturetool.test.util,
- org.overturetool.traceviewer.ast.imp,
- org.overturetool.traceviewer.ast.itf,
- org.overturetool.traceviewer.parser,
- org.overturetool.traceviewer.visitor
+ org.overturetool.test.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,

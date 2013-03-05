@@ -23,7 +23,6 @@
     <module>latex</module>
     <module>poviewer</module>
     <module>quickinterpreter</module>
-    <module>realtimelogviewer</module>
     <module>uml2</module>
   </modules>
 
