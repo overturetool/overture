@@ -70,6 +70,7 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
@@ -246,12 +247,38 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 	private void makeActions()
 	{
-		refreshAction = new Action("Refresh")
-		{
+		refreshAction = new Action("Refresh") {
 			@Override
-			public void run()
-			{
-				init();
+			public void run() {
+				
+				
+				Job job = new Job("Refresh Projects") {
+
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+
+						refreshAction.setEnabled(false);
+						
+						for (IVdmProject proj : TraceAstUtility.getProjects()) {
+
+							IVdmModel model = proj.getModel();
+							model.refresh(false, null);
+						}
+					
+						refreshAction.setEnabled(true);
+						
+						display.asyncExec(new Runnable() {
+							
+							public void run() {
+
+								init();
+							}
+						});
+						
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();
 			}
 		};
 
