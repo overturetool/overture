@@ -61,6 +61,7 @@ import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.scheduler.Signal;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.util.ClassListInterpreter;
@@ -479,8 +480,11 @@ public class ClassInterpreter extends Interpreter
 
 		// scheduler.reset();
 		CTMainThread main = new CTMainThread(test, ctxt, debug);
-		main.start();
+		main.start();		
 		scheduler.start(main);
+
+		//Ensures all threads are terminated for next trace run
+		BasicSchedulableThread.signalAll(Signal.TERMINATE);
 
 		return main.getList();
 	}

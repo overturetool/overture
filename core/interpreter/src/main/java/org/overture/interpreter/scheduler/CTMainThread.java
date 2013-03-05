@@ -151,6 +151,10 @@ public class CTMainThread extends MainThread
 		}
 		catch (Throwable e)
 		{
+			if(e instanceof ThreadDeath)
+			{
+				throw (ThreadDeath)e;
+			}
 			result.add(e.getMessage());
 			result.add(Verdict.FAILED);
 		}

@@ -14,8 +14,8 @@ IWorkbenchPreferencePage {
 	@Override
 	protected void createFieldEditors()
 	{
-		addField(new BooleanFieldEditor(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE, "Enable debugging info", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(ITracesConstants.REMOTE_DEBUG_PREFERENCE, "Enable remote debug", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(ITracesConstants.REMOTE_DEBUG_FIXED_PORT, "Use fixed port for remote debug", getFieldEditorParent()));
 	}
 	
 	@Override
@@ -28,16 +28,16 @@ IWorkbenchPreferencePage {
 	protected void performDefaults()
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE, false);
 		store.setDefault(ITracesConstants.REMOTE_DEBUG_PREFERENCE, false);
+		store.setDefault(ITracesConstants.REMOTE_DEBUG_FIXED_PORT, false);
 		super.performDefaults();
 	}
 
 	public void init(IWorkbench workbench)
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE, false);
 		store.setDefault(ITracesConstants.REMOTE_DEBUG_PREFERENCE, false);
+		store.setDefault(ITracesConstants.REMOTE_DEBUG_FIXED_PORT, false);
 	}
 
 }

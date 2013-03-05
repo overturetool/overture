@@ -1,9 +1,6 @@
 package org.overture.ide.plugins.traces.internal;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -50,7 +47,7 @@ public class TraceTestEngine
 				try
 				{
 					Integer port = TestEngineDelegate.findFreePort();
-					if (ITracesConstants.DEBUG)
+					if (preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_FIXED_PORT) && preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE))
 					{
 						port = 1213;
 					}
@@ -107,85 +104,6 @@ public class TraceTestEngine
 				{
 					e.printStackTrace();
 					return Status.CANCEL_STATUS;
-				}
-
-				final Process finalP = p;
-				if (finalP != null && preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE))
-				{
-					new Thread(new Runnable()
-					{
-
-						public void run()
-						{
-							try
-							{
-
-								BufferedReader reader = new BufferedReader(new InputStreamReader(finalP.getErrorStream()));
-								while (true)
-								{
-
-									try
-									{
-										String line = reader.readLine();
-										if (line == null)
-											break;
-										System.err.println(line);
-									} catch (IOException e)
-									{
-
-										e.printStackTrace();
-										break;
-									}
-								}
-
-								reader = new BufferedReader(new InputStreamReader(finalP.getInputStream()));
-								while (true)
-								{
-
-									try
-									{
-										String line = reader.readLine();
-										if (line == null)
-											break;
-										System.out.println(line);
-									} catch (IOException e)
-									{
-
-										e.printStackTrace();
-										break;
-									}
-								}
-							} catch (Exception e)
-							{
-								e.printStackTrace();
-							}
-						}
-					}).start();
-
-					// new Thread(new Runnable()
-					// {
-					//
-					// public void run()
-					// {
-					// while (true)
-					// {
-					// try
-					// {
-					// Thread.sleep(1000);
-					// if (finalP.exitValue() != 0)
-					// {
-					// System.err.println("Client exited with errors: "
-					// + finalP.exitValue());
-					// }
-					// threadFinished();
-					// return;
-					// } catch (Exception e)
-					// {
-					// }
-					//
-					// }
-					// }
-					// }).start();
 				}
 
 				while (!monitor.isCanceled() && isRunning)
