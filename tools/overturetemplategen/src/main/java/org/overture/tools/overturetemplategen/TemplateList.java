@@ -17,7 +17,7 @@
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
 package org.overture.tools.overturetemplategen;
-import java.util.Arrays;
+
 import java.util.Collections;
 import java.util.Vector;
 

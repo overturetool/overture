@@ -39,7 +39,7 @@ public class SourceFileWriter
 		copyBaseClasses(outputFolder, env.getTemplateDefaultPackage(), env.getTemplateAnalysisPackage(), env);
 		System.out.println("Writing source files.:");
 		long startTime = System.currentTimeMillis();
-		int i = 80;
+		int i = 0;
 		for (IInterfaceDefinition def : env.getAllDefinitions())
 		{
 			if (def instanceof PredefinedClassDefinition
@@ -50,12 +50,9 @@ public class SourceFileWriter
 			System.out.print(/* def.getSignatureName()+"..." */".");
 			// System.out.println(def.getName());
 			System.out.flush();
-			i--;
-			if (i == 0)
-			{
-				i = 80;
+			i++;
+			if (i%72 == 0)
 				System.out.println();
-			}
 			SourceFileWriter.write(outputFolder, def, env);
 			// SourceFileWriter.write(generatedVdm, def, false);
 		}
