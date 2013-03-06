@@ -16,7 +16,7 @@ public class ClassVdmPpTypeChecker extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Type Check Class TestSuite";
 		String root = "src\\test\\resources\\classesPP";
 		//String root = "src\\test\\resources\\test";
