@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmLineBreakpoint;
 
@@ -40,7 +41,7 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 		IVdmLineBreakpoint {
 
 	protected String getMarkerId() {
-		return VdmMarkerFactory.LINE_BREAKPOINT_MARKER_ID;
+		return IDebugConstants.LINE_BREAKPOINT_MARKER_ID;
 	}
 
 	protected void addLineBreakpointAttributes(Map<String, Object> attributes, IPath path,

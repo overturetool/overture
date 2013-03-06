@@ -89,6 +89,9 @@ public interface IDebugConstants
 	static final String CONSOLE_INTERACTIVE_WELCOME_MESSAGE = "**\n** Welcome to the Overture Interactive Console\n**\n> ";
 	static final String CONSOLE_MESSAGE = "**\n** Overture Console\n**\n";
 	
-	 
+	//from marker factory
+	public static final String LINE_BREAKPOINT_MARKER_ID = "vdm.lineBreakpoint.marker"; //$NON-NLS-1$
+	public static final String METHOD_ENTRY_MARKER_ID = "org.overture.ide.debug.vdmMethodEntryBreakpointMarker"; //$NON-NLS-1$
+	public static final String WATCHPOINT_MARKER_ID = "org.overture.ide.debug.vdmWatchPointMarker"; //$NON-NLS-1$
 	
 }

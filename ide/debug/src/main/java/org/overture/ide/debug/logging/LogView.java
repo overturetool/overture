@@ -44,9 +44,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.overture.ide.debug.core.dbgp.IDbgpRawPacket;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.DbgpRawPacket;
-import org.overture.ide.debug.core.dbgp.internal.packets.DbgpNotifyPacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
-import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlPacketParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -309,7 +307,7 @@ public class LogView extends ViewPart
 
 	public void dbgpPacketReceived(int sessionId, IDbgpRawPacket content)
 	{
-
+		// FIXME: what is this! why is it here and is it used
 		try
 		{
 			Document doc = ((DbgpRawPacket) content).getParsedXml();
@@ -318,7 +316,7 @@ public class LogView extends ViewPart
 
 			if (tag.equals(INIT_TAG))
 			{
-				DbgpResponsePacket responsePacket = new DbgpResponsePacket(element, -1);
+				// DbgpResponsePacket responsePacket = new DbgpResponsePacket(element, -1);
 			} else if (tag.equals(RESPONSE_TAG))
 			{
 				DbgpResponsePacket packet = DbgpXmlPacketParser.parseResponsePacket(element);
@@ -328,10 +326,10 @@ public class LogView extends ViewPart
 
 			} else if (tag.equals(STREAM_TAG))
 			{
-				DbgpStreamPacket streamPacket = DbgpXmlPacketParser.parseStreamPacket(element);
+				// DbgpStreamPacket streamPacket = DbgpXmlPacketParser.parseStreamPacket(element);
 			} else if (tag.equals(NOTIFY_TAG))
 			{
-				DbgpNotifyPacket notifyPacket = DbgpXmlPacketParser.parseNotifyPacket(element);
+				// DbgpNotifyPacket notifyPacket = DbgpXmlPacketParser.parseNotifyPacket(element);
 			}
 
 		} catch (DbgpException e)
