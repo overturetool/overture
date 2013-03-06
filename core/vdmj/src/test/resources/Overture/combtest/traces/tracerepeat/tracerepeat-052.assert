@@ -1,3 +1,4 @@
+Generated 5 tests
 Test 1 = s.Push3(1)
 Result = [(), PASSED]
 Test 2 = s.Push3(1); s.Push3(1)

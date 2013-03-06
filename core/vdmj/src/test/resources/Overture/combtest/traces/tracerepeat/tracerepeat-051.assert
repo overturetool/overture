@@ -1,3 +1,4 @@
+Generated 6 tests
 Test 1 = skip
 Result = [(), PASSED]
 Test 2 = s.Push3(1)

@@ -1,3 +1,4 @@
+Generated 3 tests
 Test 1 = s.Push3(1); s.Pop()
 Result = [(), 1, PASSED]
 Test 2 = s.Push3(5); s.Pop()

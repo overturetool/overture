@@ -1,3 +1,4 @@
+Generated 24 tests
 Test 1 = gp.Win(<Brazil>, <Morocco>); gp.Win(<Brazil>, <Norway>); gp.Win(<Brazil>, <Scotland>); gp.Win(<Morocco>, <Norway>); gp.Win(<Morocco>, <Scotland>); gp.Win(<Norway>, <Scotland>); gp.GroupWinner_cases(<A>)
 Result = [(), (), (), (), (), (), <Brazil>, PASSED]
 Test 2 = gp.Win(<Brazil>, <Morocco>); gp.Win(<Brazil>, <Scotland>); gp.Win(<Brazil>, <Norway>); gp.Win(<Morocco>, <Scotland>); gp.Win(<Morocco>, <Norway>); gp.Win(<Scotland>, <Norway>); gp.GroupWinner_cases(<A>)
