@@ -37,12 +37,11 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 	{
 		super(rootSource, name, content);
 	}
-	
+
 	public InterpreterSlTestCase(File file, String suiteName, File testSuiteRoot)
 	{
-		super(file,suiteName,testSuiteRoot);
+		super(file, suiteName, testSuiteRoot);
 	}
-
 
 	@Override
 	protected void setUp() throws Exception
@@ -64,13 +63,14 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 					|| !tcResult.errors.isEmpty())
 			{
 				return;
-//				fail("Model did not pass type check!."+ tcResult.errors);
+				// fail("Model did not pass type check!."+ tcResult.errors);
 			}
 			String entry = "1+1";
 			if (getEntryFile() == null || !getEntryFile().exists())
 			{
 				entry = createEntryFile();
-				if (entry == null || getEntryFile() == null || !getEntryFile().exists())
+				if (entry == null || getEntryFile() == null
+						|| !getEntryFile().exists())
 				{
 					fail("No entry for model (" + getEntryFile() + ")");
 				}
@@ -80,24 +80,25 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 			}
 			try
 			{
-				Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
+				Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
 				System.out.println(file.getName() + " -> " + val);
 				result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
-			}catch (Exception e) {
+			} catch (Exception e)
+			{
 				result = new Result<Value>(new SeqValue(e.getMessage()), new Vector<IMessage>(), new Vector<IMessage>());
 			}
-			
-			compareResults(result, file.getName()+".result");
+
+			compareResults(result, file.getName() + ".result");
 		}
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected TypeCheckResult typeCheck()
 	{
 		return TypeCheckerUtil.typeCheckSl(file);
 	}
-	
+
 	protected String baseExamplePath()
 	{
 		return "C:\\overture\\overture_gitAST\\documentation\\examples\\VDMSL";
@@ -130,17 +131,24 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
 		if (readme.exists())
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(readme));
-			String text = null;
-			while ((text = reader.readLine()) != null)
+			BufferedReader reader = null;
+			try
 			{
-				text = text.trim();
-				if (text.startsWith("#ENTRY_POINT"))
+				reader = new BufferedReader(new FileReader(readme));
+
+				String text = null;
+				while ((text = reader.readLine()) != null)
 				{
-					return text.substring(text.indexOf('=') + 1).trim();
+					text = text.trim();
+					if (text.startsWith("#ENTRY_POINT"))
+					{
+						return text.substring(text.indexOf('=') + 1).trim();
+					}
 				}
+			} finally
+			{
+				reader.close();
 			}
-			reader.close();
 		}
 		return null;
 	}

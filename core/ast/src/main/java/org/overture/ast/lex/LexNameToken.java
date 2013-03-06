@@ -180,8 +180,10 @@ public class LexNameToken extends LexToken implements Serializable
 			ClassLoader cls = ClassLoader.getSystemClassLoader(); 
 			try
 			{			
+				@SuppressWarnings("rawtypes")
 				Class helpLexNameTokenClass = cls.loadClass("org.overture.typechecker.util.HelpLexNameToken");			
 				Object helpLexNameTokenObject = helpLexNameTokenClass.newInstance();
+				@SuppressWarnings("unchecked")
 				Method isEqualMethod = helpLexNameTokenClass.getMethod("isEqual", LexNameToken.class, Object.class);
 				Object result = isEqualMethod.invoke(helpLexNameTokenObject, this,other);
 				return (Boolean) result;

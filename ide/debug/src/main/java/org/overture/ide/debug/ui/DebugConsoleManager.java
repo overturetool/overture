@@ -340,7 +340,7 @@ public class DebugConsoleManager implements ILaunchesListener2 {
 						.logError(MessageFormat
 								.format(
 										"Extension {0} must specify an instanceof IConsoleColorProvider for class attribute.", //$NON-NLS-1$
-										new String[] { extension
+										new Object[] { extension
 												.getDeclaringExtension()
 												.getUniqueIdentifier() }));
 			} catch (CoreException e) {

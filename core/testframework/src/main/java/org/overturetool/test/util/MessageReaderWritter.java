@@ -91,9 +91,10 @@ public class MessageReaderWritter
 		errors.clear();
 		warnings.clear();
 		result = "";
+		BufferedReader in = null;
 		try
 		{
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			in = new BufferedReader(new FileReader(file));
 			String line;
 			while ((line = in.readLine()) != null)
 			{
@@ -160,6 +161,13 @@ public class MessageReaderWritter
 		} catch (IOException e)
 		{
 			return false;
+		}finally{
+			try
+			{
+				in.close();
+			} catch (IOException e)
+			{
+			}
 		}
 
 		return true;

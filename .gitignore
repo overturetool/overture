@@ -58,6 +58,7 @@ target/
 .classpath
 .settings/
 .project
+bin
 
 # Java files created by ASTgen &c #
 ###################################

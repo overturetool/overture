@@ -9,7 +9,6 @@ import java.util.Vector;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -195,7 +194,7 @@ import org.overture.ast.util.ClonableFile;
 import org.overture.ast.util.ClonableString;
 import org.overture.ast.util.Utils;
 
-
+@SuppressWarnings("deprecation")
 public class AstFactory {
 
 	
@@ -892,6 +891,7 @@ public class AstFactory {
 		return result;
 	}
 
+	
 	public static ARepeatTraceDefinition newARepeatTraceDefinition(
 			LexLocation location, PTraceCoreDefinition core, long from, long to) {
 		return new ARepeatTraceDefinition(location, core, from, to);

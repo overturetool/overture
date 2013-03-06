@@ -27,6 +27,7 @@ public class CombinedDefaultModule extends AModuleModules
 	private static final long serialVersionUID = 1L;
 	final Set<AModuleModules> modules = new HashSet<AModuleModules>();
 
+	@SuppressWarnings("deprecation")
 	public CombinedDefaultModule(Set<AModuleModules> modules)
 	{ 
 		super(new LexIdentifierToken("DEFAULT", false, new LexLocation()), null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false);

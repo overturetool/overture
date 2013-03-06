@@ -49,7 +49,6 @@ import org.overture.pog.obligation.POImpliesContext;
 import org.overture.pog.obligation.POLetDefContext;
 import org.overture.pog.obligation.PONameContext;
 import org.overture.pog.obligation.PONotImpliesContext;
-import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.RecursiveObligation;
 import org.overture.pog.obligation.SeqApplyObligation;

@@ -27,7 +27,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 
 public class POCaseContext extends POContext

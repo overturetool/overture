@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmWatchpoint;
 
@@ -81,7 +82,7 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements
 	}
 
 	protected String getMarkerId() {
-		return VdmMarkerFactory.WATCHPOINT_MARKER_ID;
+		return IDebugConstants.WATCHPOINT_MARKER_ID;
 	}
 
 	public boolean isAccess() throws CoreException {
