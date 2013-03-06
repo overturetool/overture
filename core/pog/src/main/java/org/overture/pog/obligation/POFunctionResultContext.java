@@ -28,7 +28,6 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.types.AFunctionType;
 
