@@ -14,7 +14,6 @@ import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFromModuleImports;
-import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.statements.PStm;
@@ -254,7 +253,12 @@ public class ModuleList extends Vector<AModuleModules>
 		List<List<PImport>> types = new Vector<List<PImport>>();
 		LexNameToken all = new LexNameToken(from.getName(), "all", from.location);
 		List<PImport> impAll = new Vector<PImport>();
-		impAll.add(new AAllImport(all.location, all, all, null));//FIXME: ASTFactory cant handle this one
+		AAllImport iport = AstFactory.newAAllImport(all);
+		iport.setLocation(all.location);
+		iport.setName(all);
+		iport.setRenamed(all);
+		iport.setFrom(null);
+		impAll.add(iport);
 		types.add(impAll);
 		return AstFactory.newAFromModuleImports(from, types);
 	}
