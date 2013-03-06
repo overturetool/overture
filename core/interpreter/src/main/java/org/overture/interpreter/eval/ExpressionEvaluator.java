@@ -119,7 +119,6 @@ import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator

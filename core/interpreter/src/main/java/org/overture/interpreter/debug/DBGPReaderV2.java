@@ -1531,6 +1531,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		} catch (LexException e) {
 			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY,
 					option.value);
+		}finally{
+			ltr.close();
 		}
 
 		if (token.isNot(VDMToken.NAME)) {

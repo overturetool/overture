@@ -677,6 +677,7 @@ public class NextGenRTLogger {
 		}		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void readFromFile(String filename) throws IOException, ClassNotFoundException
 	{
 		FileInputStream fis = new FileInputStream(filename);
