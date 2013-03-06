@@ -300,13 +300,13 @@ public class ImplicitOperationDefinition extends Definition
 
     					if (ctype.classdef != classDefinition)
     					{
-    						type.result.report(3025,
+    						report(3025,
     							"Constructor operation must have return type " + classDefinition.name.name);
     					}
     				}
     				else
     				{
-    					type.result.report(3026,
+    					report(3026,
     						"Constructor operation must have return type " + classDefinition.name.name);
     				}
     			}
