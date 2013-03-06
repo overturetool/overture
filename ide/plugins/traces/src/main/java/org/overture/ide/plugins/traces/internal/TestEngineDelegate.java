@@ -17,6 +17,7 @@ import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.util.Base64;
+import org.overturetool.traces.vdmj.server.common.Utils;
 
 public class TestEngineDelegate
 {
@@ -37,10 +38,13 @@ public class TestEngineDelegate
 			return null;
 		} 
 			
-		//Redirect all streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
-		pb.inheritIO();
-
-		return pb.start();
+		Process process = pb.start();
+		
+		//Redirect streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
+		Utils.inheritOutput(process); //Instead of pb.inheritIO() which is Java7 specific;
+		
+		
+		return process;
 	}
 
 	private List<String> initializeLaunch(TraceExecutionSetup texe,
