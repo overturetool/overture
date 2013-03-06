@@ -182,6 +182,7 @@ public class CSV extends IO implements Serializable
 		
 		if(index<1)
 		{
+			bufRdr.close();
 			throw new IOException("CSV line index before first entry");
 		}
 

@@ -20,12 +20,12 @@ public class PrettyPrinterVisitorDefinitions extends
 
 	
 	
-	private PrettyPrinterVisitor main;
+//	private PrettyPrinterVisitor main;
 
 	public PrettyPrinterVisitorDefinitions(
 			PrettyPrinterVisitor prettyPrinterVisitor)
 	{
-		main = prettyPrinterVisitor;
+//		main = prettyPrinterVisitor;
 	}
 
 	/**

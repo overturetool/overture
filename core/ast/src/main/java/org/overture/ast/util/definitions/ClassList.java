@@ -11,12 +11,7 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.statements.PStm;
-import org.overture.ast.typechecker.NameScope;
 
 
 /**

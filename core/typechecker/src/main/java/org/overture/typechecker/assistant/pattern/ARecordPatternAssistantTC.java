@@ -12,7 +12,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ARecordPattern;
-import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;

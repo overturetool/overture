@@ -57,7 +57,6 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
-import org.overture.typechecker.LexNameTokenAssistent;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -1830,7 +1829,6 @@ public class TypeCheckerExpVisitor extends
 		return node.getType();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public PType caseAMkTypeExp(AMkTypeExp node, TypeCheckInfo question)
 			throws AnalysisException {

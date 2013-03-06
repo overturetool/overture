@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.DebugException;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmMethodEntryBreakpoint;
 
@@ -48,7 +49,7 @@ public class VdmMethodEntryBreakpoint extends VdmLineBreakpoint implements
 			+ ".exitBrId"; //$NON-NLS-1$
 
 	protected String getMarkerId() {
-		return VdmMarkerFactory.METHOD_ENTRY_MARKER_ID;
+		return IDebugConstants.METHOD_ENTRY_MARKER_ID;
 	}
 
 	public VdmMethodEntryBreakpoint() {

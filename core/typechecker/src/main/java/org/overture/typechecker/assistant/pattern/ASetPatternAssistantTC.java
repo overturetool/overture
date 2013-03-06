@@ -9,7 +9,6 @@ import org.overture.ast.assistant.pattern.ASetPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;

@@ -32,16 +32,17 @@ public class InterpreterStringPpTestCase extends InterpreterStringBaseTestCase
 		super(file);
 	}
 
-	public InterpreterStringPpTestCase(File rootSource, String name, String content)
+	public InterpreterStringPpTestCase(File rootSource, String name,
+			String content)
 	{
 		super(rootSource, name, content);
 	}
-	
-	public InterpreterStringPpTestCase(File file, String suiteName, File testSuiteRoot)
-	{
-		super(file,suiteName,testSuiteRoot);
-	}
 
+	public InterpreterStringPpTestCase(File file, String suiteName,
+			File testSuiteRoot)
+	{
+		super(file, suiteName, testSuiteRoot);
+	}
 
 	@Override
 	protected void setUp() throws Exception
@@ -63,13 +64,14 @@ public class InterpreterStringPpTestCase extends InterpreterStringBaseTestCase
 					|| !tcResult.errors.isEmpty())
 			{
 				return;
-//				fail("Model did not pass type check!."+ tcResult.errors);
+				// fail("Model did not pass type check!."+ tcResult.errors);
 			}
 			String entry = "1+1";
 			if (getEntryFile() == null || !getEntryFile().exists())
 			{
 				entry = createEntryFile();
-				if (entry == null || getEntryFile() == null || !getEntryFile().exists())
+				if (entry == null || getEntryFile() == null
+						|| !getEntryFile().exists())
 				{
 					fail("No entry for model (" + getEntryFile() + ")");
 				}
@@ -79,23 +81,24 @@ public class InterpreterStringPpTestCase extends InterpreterStringBaseTestCase
 			}
 			try
 			{
-				Value val = InterpreterUtil.interpret(Settings.dialect,entry, file);
+				Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
 				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
 				System.out.println(file.getName() + " -> " + val);
-			}catch (Exception e) {
+			} catch (Exception e)
+			{
 				result = new Result<String>(e.getMessage(), new Vector<IMessage>(), new Vector<IMessage>());
 			}
-			compareResults(result, file.getName()+".result");
+			compareResults(result, file.getName() + ".result");
 		}
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	protected TypeCheckResult typeCheck()
 	{
 		return TypeCheckerUtil.typeCheckPp(file);
 	}
-	
+
 	protected String baseExamplePath()
 	{
 		return "C:\\overture\\overture_gitAST\\documentation\\examples\\VDMSL";
@@ -128,17 +131,24 @@ public class InterpreterStringPpTestCase extends InterpreterStringBaseTestCase
 		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
 		if (readme.exists())
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(readme));
-			String text = null;
-			while ((text = reader.readLine()) != null)
+			BufferedReader reader = null;
+			try
 			{
-				text = text.trim();
-				if (text.startsWith("#ENTRY_POINT"))
+				reader = new BufferedReader(new FileReader(readme));
+
+				String text = null;
+				while ((text = reader.readLine()) != null)
 				{
-					return text.substring(text.indexOf('=') + 1).trim();
+					text = text.trim();
+					if (text.startsWith("#ENTRY_POINT"))
+					{
+						return text.substring(text.indexOf('=') + 1).trim();
+					}
 				}
+			} finally
+			{
+				reader.close();
 			}
-			reader.close();
 		}
 		return null;
 	}

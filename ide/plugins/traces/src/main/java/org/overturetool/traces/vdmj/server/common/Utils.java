@@ -69,6 +69,12 @@ public class Utils
 		}
 	}
 	
+	/*
+	 * This  method intends to provide some of the functionality provided by 
+	 * ProcessBuilder.inheritIO(), which is Java7 specific.
+	 * This method is inspired by the question at Stackoverflow:
+	 * http://stackoverflow.com/questions/60302/starting-a-process-with-inherited-stdin-stdout-stderr-in-java-6
+	 */
 	public static void inheritOutput(Process process)
 	{
 	    pipe(process.getErrorStream(), System.err);

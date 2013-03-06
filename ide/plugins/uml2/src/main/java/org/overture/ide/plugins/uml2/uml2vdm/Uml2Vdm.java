@@ -144,7 +144,18 @@ public class Uml2Vdm
 				Class innerType = (Class) elem;
 				String innerTypeName = innerType.getName();
 				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(innerType.getVisibility());
-				if (innerType.getGeneralizations().isEmpty())
+				
+				//FIX Modelio 2.2.1
+				if(innerTypeName.equalsIgnoreCase("string")||innerType.getGeneralizations().isEmpty())
+				{
+					String innerTypeTypeName = "Seq<Char>";
+					console.out.println("\tConverting inner type= " + innerTypeName + " : "
+							+ innerTypeTypeName +" Warning the actual type if \""+innerTypeName+"\" is unknown to the translator and thus assuming seq of char, please manually confirm");
+					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
+					innerTypeDef.setType(AstFactory.newASeqSeqType(location, AstFactory.newACharBasicType(location)));
+					innerTypeDef.setAccess(access);
+					c.getDefinitions().add(innerTypeDef);
+				}else if (innerType.getGeneralizations().isEmpty())
 				{
 					boolean createdType = false;
 					for (EObject innerElem : innerType.getOwnedElements())
