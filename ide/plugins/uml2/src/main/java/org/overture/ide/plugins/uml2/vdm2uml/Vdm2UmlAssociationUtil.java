@@ -11,6 +11,7 @@ import org.eclipse.uml2.uml.Type;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.EMapType;
 import org.overture.ast.types.EType;
@@ -33,10 +34,7 @@ public class Vdm2UmlAssociationUtil
 
 	public static boolean validType(PType type)
 	{
-		if (PTypeAssistantInterpreter.isClass(type))
-		{
-			return true;
-		}
+		
 
 		switch (type.kindPType())
 		{
@@ -47,7 +45,7 @@ public class Vdm2UmlAssociationUtil
 			case CLASS:
 				break;
 			case FUNCTION:
-				break;
+				return false;
 			case INVARIANT:
 				return type instanceof ANamedInvariantType;
 				// ANamedInvariantType nInvType = (ANamedInvariantType) type;
@@ -60,13 +58,14 @@ public class Vdm2UmlAssociationUtil
 				return validMapType(mType.getFrom())
 						&& validMapType(mType.getTo());
 			case OPERATION:
-				break;
+				return false;
 			case OPTIONAL:
-				break;
+				AOptionalType optionalType = (AOptionalType) type;
+				return isSimpleType(optionalType.getType());
 			case PARAMETER:
-				break;
+				return false;
 			case PRODUCT:
-				break;
+				return false;
 			case QUOTE:
 				break;
 			case SEQ:
@@ -76,19 +75,20 @@ public class Vdm2UmlAssociationUtil
 				ASetType setType = (ASetType) type;
 				return isSimpleType(setType.getSetof());
 			case UNDEFINED:
-				break;
 			case UNION:
-				break;
 			case UNKNOWN:
-				break;
 			case UNRESOLVED:
-				break;
 			case VOID:
-				break;
 			case VOIDRETURN:
-				break;
+				return false;
 
 		}
+		
+		if (PTypeAssistantInterpreter.isClass(type))
+		{
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -114,6 +114,10 @@ public class Vdm2UmlAssociationUtil
 
 	public static Type getReferenceClass(PType type, Map<String, Class> classes)
 	{
+		if(type instanceof AOptionalType)
+		{
+			type = ((AOptionalType) type).getType();
+		}
 		if (PTypeAssistantInterpreter.isClass(type))
 		{
 			return getType(classes, type);
@@ -142,6 +146,8 @@ public class Vdm2UmlAssociationUtil
 			case OPERATION:
 				break;
 			case OPTIONAL:
+//				AOptionalType optionalType = (AOptionalType) type;
+//				return getType(classes, optionalType.getType());
 				break;
 			case PARAMETER:
 				break;

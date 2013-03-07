@@ -11,7 +11,6 @@ import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.BUSClassDefinition;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;

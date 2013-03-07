@@ -60,17 +60,17 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 			
 		if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX)){
 			vdmPathMac = new DirectoryFieldEditor(ICskConstants.VSLGDE_PATH, "Path to VDM Tools for VDM-SL (vdmgde):", top);
-			vdmPathMac.setPreferencePage(this);
+			vdmPathMac.setPage(this);
 			vdmPathMac.setPreferenceStore(getPreferenceStore());
 			vdmPathMac.load();
 			
 			vppPathMac = new DirectoryFieldEditor(ICskConstants.VPPGDE_PATH, "Path to VDM Tools for VDM-PP (vppgde):", top);
-			vppPathMac.setPreferencePage(this);
+			vppPathMac.setPage(this);
 			vppPathMac.setPreferenceStore(getPreferenceStore());
 			vppPathMac.load();
 			
 			vicePathMac = new DirectoryFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDM Tools for VICE  (vicegde):", top);
-			vicePathMac.setPreferencePage(this);
+			vicePathMac.setPage(this);
 			vicePathMac.setPreferenceStore(getPreferenceStore());
 			vicePathMac.load();
 			Label listLabel = new Label(top, SWT.BOLD);
@@ -79,17 +79,17 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 		else
 		{
 			vdmPath = new FileFieldEditor(ICskConstants.VSLGDE_PATH, "Path to VDM Tools for VDM-SL (vdmgde):", top);
-			vdmPath.setPreferencePage(this);
+			vdmPath.setPage(this);
 			vdmPath.setPreferenceStore(getPreferenceStore());
 			vdmPath.load();
 			
 			vppPath = new FileFieldEditor(ICskConstants.VPPGDE_PATH, "Path to VDM Tools for VDM-PP (vppgde):", top);
-			vppPath.setPreferencePage(this);
+			vppPath.setPage(this);
 			vppPath.setPreferenceStore(getPreferenceStore());
 			vppPath.load();
 			
 			vicePath = new FileFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDM Tools for VICE  (vicegde):", top);
-			vicePath.setPreferencePage(this);
+			vicePath.setPage(this);
 			vicePath.setPreferenceStore(getPreferenceStore());
 			vicePath.load();
 		}

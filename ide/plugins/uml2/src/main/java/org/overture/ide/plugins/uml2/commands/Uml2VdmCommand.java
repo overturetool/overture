@@ -60,17 +60,19 @@ public class Uml2VdmCommand extends AbstractHandler
 							public void run()
 							{
 								uml2vdm.convert(new File(iFile.getProject().getLocation().toFile(), "uml_import"));
+								
+								try
+								{
+									iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+								} catch (CoreException e)
+								{
+									// ignore
+								}
 							}
 						});
 
 						progress.worked(50);
-						try
-						{
-							iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-						} catch (CoreException e)
-						{
-							// ignore
-						}
+						
 						progress.worked(5);
 						progress.done();
 

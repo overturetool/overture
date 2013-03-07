@@ -1,31 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
-package org.overture.ide.plugins.latex.actions;
+package org.overture.ide.plugins.latex.utility;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,17 +13,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.util.BundleUtility;
-import org.osgi.framework.Bundle;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
@@ -53,113 +24,21 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.latex.Activator;
-import org.overture.ide.plugins.latex.ILatexConstants;
-import org.overture.ide.plugins.latex.utility.LatexBuilder;
-import org.overture.ide.plugins.latex.utility.PdfLatex;
-import org.overture.ide.plugins.latex.utility.TreeSelectionLocater;
 import org.overture.ide.ui.VdmUIPlugin;
-import org.overture.ide.ui.internal.util.ConsoleWriter;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overture.ide.vdmpp.core.IVdmPpCoreConstants;
-import org.overture.ide.vdmrt.core.IVdmRtCoreConstants;
-import org.overture.ide.vdmsl.core.IVdmSlCoreConstants;
 import org.overture.interpreter.runtime.LatexSourceFile;
-import org.overture.parser.lex.LexTokenReader;
-import org.overture.parser.syntax.ClassReader;
-import org.overture.parser.syntax.ModuleReader;
 
-@SuppressWarnings("restriction")
-public class LatexCoverageAction implements IObjectActionDelegate
+public class LatexUtils extends LatexUtilsBase
 {
-
 	private Shell shell;
-	private ConsoleWriter console;
 
-	/**
-	 * Constructor for Action1.
-	 */
-	public LatexCoverageAction()
+	public LatexUtils(Shell shell)
 	{
-		super();
-		console = new ConsoleWriter("LATEX");
+		this.shell = shell;
 	}
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart)
-	{
-		shell = targetPart.getSite().getShell();
-	}
-
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
-	public void run(IAction action)
-	{
-
-		try
-		{
-
-			IVdmProject selectedProject = TreeSelectionLocater.getSelectedProject(action);
-			if (selectedProject == null)
-			{
-				console.print("Could not find selected project");
-				return;
-			}
-			IProject project = (IProject) selectedProject.getAdapter(IProject.class);
-
-			if (project != null)
-			{
-				if (project.hasNature(IVdmPpCoreConstants.NATURE))
-					makeLatex(selectedProject, Dialect.VDM_PP);
-				if (project.hasNature(IVdmSlCoreConstants.NATURE))
-					makeLatex(selectedProject, Dialect.VDM_SL);
-				if (project.hasNature(IVdmRtCoreConstants.NATURE))
-					makeLatex(selectedProject, Dialect.VDM_RT);
-			}
-		} catch (Exception ex)
-		{
-			System.err.println(ex.getMessage() + ex.getStackTrace());
-			console.print(ex);
-		}
-
-	}
-
-	public URL getResource(String pluginId, String path)
-	{
-		// if the bundle is not ready then there is no image
-		Bundle bundle = Platform.getBundle(pluginId);
-		if (!BundleUtility.isReady(bundle))
-		{
-			return null;
-		}
-
-		// look for the image (this will check both the plugin and fragment
-		// folders
-		URL fullPathString = BundleUtility.find(bundle, path);
-		if (fullPathString == null)
-		{
-			try
-			{
-				fullPathString = new URL(path);
-			} catch (MalformedURLException e)
-			{
-				return null;
-			}
-		}
-
-		return fullPathString;
-
-	}
-
-	// final static String VDM_MODEL_ENV_BEGIN = "\\begin{vdm_al}";
-	// final static String VDM_MODEL_ENV_END = "\\end{vdm_al}";
-
-	private void makeLatex(final IVdmProject selectedProject,
-	// final String contentTypeId, final String natureId,
+	public void makeLatex(final IVdmProject selectedProject,
 			final Dialect dialect)
 	{
 		final Job expandJob = new Job("Builder coverage tex files.")
@@ -369,101 +248,5 @@ public class LatexCoverageAction implements IObjectActionDelegate
 		expandJob.setPriority(Job.BUILD);
 		expandJob.schedule(0);
 
-	}
-
-	public static String getFileName(File file)
-	{
-		int index = file.getName().lastIndexOf('.');
-		return file.getName().substring(0, index);
-
-	}
-
-	private static List<File> getFileChildern(File file)
-	{
-		List<File> list = new Vector<File>();
-
-		if (file.isFile())
-		{
-			list.add(file);
-			return list;
-		}
-
-		if (file != null && file.listFiles() != null)
-			for (File file2 : file.listFiles())
-			{
-				list.addAll(getFileChildern(file2));
-			}
-
-		return list;
-
-	}
-
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection)
-	{
-	}
-
-	private ClassList parseClasses(final IVdmProject project)
-			throws CoreException
-	{
-		ClassReader reader;
-		ClassList classes = new ClassList();
-		for (IVdmSourceUnit source : project.getSpecFiles())
-		{
-			String charset = source.getFile().getCharset();
-
-			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(), Dialect.VDM_RT, charset);
-			reader = new ClassReader(ltr);
-
-			classes.addAll(reader.readClasses());
-		}
-		return classes;
-	}
-
-	private ModuleList parseModules(final IVdmProject project)
-			throws CoreException
-	{
-		ModuleReader reader;
-		ModuleList modules = new ModuleList();
-		for (IVdmSourceUnit source : project.getSpecFiles())
-		{
-			String charset = source.getFile().getCharset();
-
-			LexTokenReader ltr = new LexTokenReader(source.getSystemFile(), Dialect.VDM_SL, charset);
-			reader = new ModuleReader(ltr);
-
-			modules.addAll(reader.readModules());
-
-		}
-		return modules;
-	}
-
-	public boolean hasGenerateMainDocument(IVdmProject project)
-			throws CoreException
-	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true);
-	}
-
-	public String getDocument(IVdmProject project) throws CoreException
-	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, "");
-	}
-
-	public boolean insertCoverageTable(IVdmProject project)
-			throws CoreException
-	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true);
-	}
-
-	public boolean markCoverage(IVdmProject project) throws CoreException
-	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true);
-	}
-
-	public boolean modelOnly(IVdmProject project) throws CoreException
-	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MODEL_ONLY, true);
 	}
 }

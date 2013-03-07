@@ -49,9 +49,9 @@ public class Vdm2UmlUtil
 
 	public static int extractUpper(PType type)
 	{
-		if (PTypeAssistantTC.isType(type, ASetType.class)
-				|| PTypeAssistantTC.isType(type, SSeqType.class)
-				|| PTypeAssistantTC.isType(type, SMapType.class))
+		if (!isOptional(type) && (type instanceof ASetType
+				|| type instanceof SSeqType
+				|| type instanceof SMapType))
 		{
 			return LiteralUnlimitedNatural.UNLIMITED;
 
@@ -62,10 +62,10 @@ public class Vdm2UmlUtil
 
 	public static int extractLower(PType type)
 	{
-		if (PTypeAssistantTC.isType(type, ASetType.class)
-				|| PTypeAssistantTC.isType(type, ASeqSeqType.class)
-				|| PTypeAssistantTC.isType(type, SMapType.class)
-				|| PTypeAssistantTC.isType(type, AOptionalType.class))
+		if (type instanceof ASetType
+				|| type  instanceof ASeqSeqType
+				|| type instanceof SMapType
+				|| isOptional(type))//PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			return 0;
 		}

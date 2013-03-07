@@ -767,3 +767,389 @@ seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
 seq1 of (nat1)      $[5,8,1,3,6]
 set of (nat1)       ${1,2,3,4}
 set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${y | y in set {1,2,3} & y <> 5}
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}
+nat1                $1+2
+nat1                $1+3.0
+(bool | nat1)       $if true then 5 else false
+bool                $true and false
+bool                $true
+bool                $cases true:  true -> true, others -> false end
+char                $'a'
+bool                $if false then false else true
+bool                $exists1 z  in set {1,2} & true
+bool                $exists z  in set {1,2} & true
+seq1 of (char)      $mk_(4,"Something",<Select>).#2
+bool                $forall x,y in set {1,2} & true
+bool                $if false then true else if false then true else false
+nat1                $123
+nat1                $iota a in set {1,2} & true
+bool                $is_bool(2)
+nat1                $let x in set {1,2} be st x <> 1 in 8
+nat1                $let x = 5 in 8
+bool                $def x = 5 in true
+map (nat1) to (nat1)${1 |-> 2 | x in set {1,2} & false}
+map (nat1) to (nat1)${1 |-> 2, 3 |-> 3}
+token               $mk_token("a")
+bool                $mk_bool(true)
+[?]                 $nil
+real                $1.1
+<bazinga>           $<bazinga>
+seq1 of (char)      $"Foo"
+(nat1 * seq1 of (char) * <Foo>)$mk_(18,"aa",<Foo>)
+seq of (int)        $[i*i | i in set {1,..., 10} & i mod 2 = 0]
+seq1 of (nat1)      $[5,8,1,3,6]
+set of (nat1)       ${y | y in set {1,2,3} & y <> 5}
+set of (nat1)       ${1,2,3,4}
+set of (int)        ${5,...,9}

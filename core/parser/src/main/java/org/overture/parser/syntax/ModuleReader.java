@@ -34,7 +34,6 @@ import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AFromModuleImports;
@@ -208,7 +207,7 @@ public class ModuleReader extends SyntaxReader
 		// FIXME dlmodules not implemented
 		AModuleImports imports = null;
 		AModuleExports exports = null;
-		LexStringToken library = null;
+//		LexStringToken library = null;
 
 		try
 		{
@@ -230,7 +229,7 @@ public class ModuleReader extends SyntaxReader
 			{
 				if (nextToken().is(VDMToken.STRING))
 				{
-					library = (LexStringToken) lastToken();
+					/*library = (LexStringToken)*/ lastToken();
 					nextToken();
 				} else
 				{
@@ -256,7 +255,10 @@ public class ModuleReader extends SyntaxReader
 		List<ClonableFile> files = new Vector<ClonableFile>();
 		files.add(new ClonableFile(name.location.file));
 
-		return new AModuleModules(name, imports, exports, null, files, null, null, false, false,true); // TODO
+		AModuleModules module = AstFactory.newAModuleModules(name, imports, exports, null);
+		module.setFiles(files);
+		module.setIsDLModule(true);
+		return module;
 	}
 
 	private AModuleExports readExports() throws ParserException, LexException

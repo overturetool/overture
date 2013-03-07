@@ -19,6 +19,7 @@ import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.EMapType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
@@ -27,10 +28,14 @@ import org.overture.ast.types.SSeqType;
 public class UmlTypeCreatorBase
 {
 	public final Map<String, Type> types = new HashMap<String, Type>();
-	public final String templateSetName = "Set<T>";
-	public final String templateSeqName = "Seq<T>";
-	public final String templateMapName = "Map<D,R>";
-	public final static String NAME_SEPERATOR = "::";
+	public static final String templateSetName = "Set<T>";
+	public static final String templateSeqName = "Seq<T>";
+	public static final String templateMapName = "Map<D,R>";
+	public static final String templateInMapName = "InMap<D,R>";
+	public static final String VOID_TYPE = "Void";
+	public static final String ANY_TYPE = "Any";
+	public static final String templateOptionalName = "Optional<T>";
+	public static final String NAME_SEPERATOR = "::";
 
 	protected static String getTemplateUnionName(int templateNameCount)
 	{
@@ -96,12 +101,12 @@ public class UmlTypeCreatorBase
 			}
 				break;
 			case MAP:
-				return "Map<" + getName(((SMapType) type).getFrom()) + ","
+				return (((SMapType) type).kindSMapType()==EMapType.INMAP?"In":"")+"Map<" + getName(((SMapType) type).getFrom()) + ","
 						+ getName(((SMapType) type).getTo()) + ">";
 			case OPERATION:
 				return getName(((AOperationType) type).getResult());
 			case OPTIONAL:
-				return getName(((AOptionalType) type).getType());
+				return "Optional<"+getName(((AOptionalType) type).getType())+">";
 			case PARAMETER:
 				break;
 			case PRODUCT:
@@ -148,11 +153,11 @@ public class UmlTypeCreatorBase
 
 			}
 			case UNKNOWN:
-				break;
+				return ANY_TYPE;
 			case UNRESOLVED:
 				break;
 			case VOID:
-				return "void";
+				return VOID_TYPE;
 			case VOIDRETURN:
 				break;
 

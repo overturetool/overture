@@ -40,10 +40,9 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 		this.content = file.getName();
 		this.expectedType = null;
 	}
-		
 
-	public GeneratedTestCase(ParserType type, String name, File file, String content,
-			String expectedType)
+	public GeneratedTestCase(ParserType type, String name, File file,
+			String content, String expectedType)
 	{
 		super("test");
 		this.parserType = type;
@@ -89,18 +88,19 @@ public class GeneratedTestCase extends BasicTypeCheckTestCase
 	private void expressionTc(String expressionString, String expectedTypeString)
 			throws ParserException, LexException
 	{
-if(DEBUG){
-		System.out.flush();
-		System.err.flush();
-}
+		if (DEBUG)
+		{
+			System.out.flush();
+			System.err.flush();
+		}
 		Expression exp = parse(parserType, expressionString);
 		Type expectedType = getResultType(expectedTypeString);
 
 		System.out.println(exp.toString().replace('\n', ' ').replace('\r', ' '));
 
 		Environment env = new FlatCheckedEnvironment(new DefinitionList(), NameScope.NAMESANDSTATE);
-//		TypeCheckVisitor tc = new TypeCheckVisitor();
-		Type type = exp.typeCheck(env, null, null);//exp.apply(tc, new TypeCheckInfo(env));
+		// TypeCheckVisitor tc = new TypeCheckVisitor();
+		Type type = exp.typeCheck(env, null, null);// exp.apply(tc, new TypeCheckInfo(env));
 
 		//
 
@@ -111,9 +111,10 @@ if(DEBUG){
 			StringWriter s = new StringWriter();
 			TypeChecker.printErrors(new PrintWriter(s));// new PrintWriter(System.out));
 			errorMessages = "\n" + s.toString() + "\n";
-if(DEBUG){
-			System.out.println(s.toString());
-}
+			if (DEBUG)
+			{
+				System.out.println(s.toString());
+			}
 		}
 
 		assertEquals(errorMessages, 0, TypeChecker.getErrorCount());
@@ -124,9 +125,10 @@ if(DEBUG){
 			StringWriter s = new StringWriter();
 			TypeChecker.printWarnings(new PrintWriter(s));// new PrintWriter(System.out));
 			// String warningMessages = "\n" + s.toString() + "\n";
-if(DEBUG){
-			System.out.println(s.toString());
-}
+			if (DEBUG)
+			{
+				System.out.println(s.toString());
+			}
 		}
 		//
 
@@ -139,21 +141,28 @@ if(DEBUG){
 
 		if (type != null)
 		{
-if(DEBUG){
-			System.out.println("Type of \""
-					+ exp.toString().replace('\n', ' ').replace('\r', ' ')
-					+ "\" is: " + type);}
+			if (DEBUG)
+			{
+				System.out.println("Type of \""
+						+ exp.toString().replace('\n', ' ').replace('\r', ' ')
+						+ "\" is: " + type);
+			}
 		} else
-		{if(DEBUG){
-			System.err.println("Type of \""
-					+ exp.toString().replace('\n', ' ').replace('\r', ' ')
-					+ "\" is: " + type);}
+		{
+			if (DEBUG)
+			{
+				System.err.println("Type of \""
+						+ exp.toString().replace('\n', ' ').replace('\r', ' ')
+						+ "\" is: " + type);
+			}
 		}
-if(DEBUG){
-		System.out.flush();
-		System.err.flush();}
+		if (DEBUG)
+		{
+			System.out.flush();
+			System.err.flush();
+		}
 
-		if (generateResultOutput )
+		if (generateResultOutput)
 		{
 			writeTestWithResult(type, expressionString);
 		}
@@ -161,10 +170,10 @@ if(DEBUG){
 
 	private void writeTestWithResult(Type type, String test)
 	{
-		File outputFile = new File(file.getAbsolutePath()+ "_generated");
+		File outputFile = new File(file.getAbsolutePath() + "_generated");
 		FileWriter outFile;
 		String typeName = "Error";
-		if(type != null)
+		if (type != null)
 		{
 			typeName = type.toString();
 		}
@@ -172,7 +181,7 @@ if(DEBUG){
 		{
 			outFile = new FileWriter(outputFile, true);
 			PrintWriter out = new PrintWriter(outFile);
-			out.println(pad(typeName,20 )+"$" + test);
+			out.println(pad(typeName, 20) + "$" + test);
 			out.close();
 		} catch (IOException e)
 		{
@@ -180,7 +189,7 @@ if(DEBUG){
 		}
 
 	}
-	
+
 	private static String pad(String text, int length)
 	{
 		while (text.length() < length)
