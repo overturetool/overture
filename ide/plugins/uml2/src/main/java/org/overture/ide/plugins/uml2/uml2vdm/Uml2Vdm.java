@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.Dialect;
@@ -41,6 +42,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.ide.plugins.uml2.Activator;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -56,13 +58,13 @@ public class Uml2Vdm
 	private String extension = "vdmpp";
 	private VdmTypeCreator tc = new VdmTypeCreator();
 	private UmlConsole console;
-	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp( location);
+	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp(location);
 
 	public Uml2Vdm()
 	{
 		console = new UmlConsole();
 	}
-	
+
 	public boolean initialize(URI uri)
 	{
 		Resource resource = new ResourceSetImpl().getResource(uri, true);
@@ -73,7 +75,7 @@ public class Uml2Vdm
 				model = (Model) c;
 			}
 		}
-		
+
 		return model != null;
 	}
 
@@ -87,8 +89,9 @@ public class Uml2Vdm
 			} catch (PartInitException e2)
 			{
 			}
-			console.out.println("#\n# Starting translation of model: "+ model.getName()+"\n#");
-			console.out.println("# Into: "+outputDir+"\n#");
+			console.out.println("#\n# Starting translation of model: "
+					+ model.getName() + "\n#");
+			console.out.println("# Into: " + outputDir + "\n#");
 			console.out.println("-------------------------------------------------------------------------");
 			Map<String, AClassClassDefinition> classes = new HashMap<String, AClassClassDefinition>();
 			for (Element e : model.getOwnedElements())
@@ -100,7 +103,6 @@ public class Uml2Vdm
 					classes.put(class_.getName(), createClass(class_));
 				}
 			}
-			
 
 			console.out.println("Writing source files");
 			for (Entry<String, AClassClassDefinition> c : classes.entrySet())
@@ -111,7 +113,8 @@ public class Uml2Vdm
 		}
 	}
 
-	private void writeClassFile(File outputDir, Entry<String, AClassClassDefinition> c)
+	private void writeClassFile(File outputDir,
+			Entry<String, AClassClassDefinition> c)
 	{
 		try
 		{
@@ -124,11 +127,10 @@ public class Uml2Vdm
 			out.close();
 		} catch (IOException e)
 		{
-			e.printStackTrace();
+			Activator.log("Error in writeclassfile", e);
 		} catch (AnalysisException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Activator.log("Error in writeclassfile", e);
 		}
 	}
 
@@ -137,25 +139,38 @@ public class Uml2Vdm
 		AClassClassDefinition c = AstFactory.newAClassClassDefinition();
 		c.setName(new LexNameToken(class_.getName(), class_.getName(), null));
 
-		for (Element elem : class_.getOwnedElements())
+		elementLoop: for (Element elem : class_.getOwnedElements())
 		{
 			if (elem instanceof Class)
 			{
 				Class innerType = (Class) elem;
 				String innerTypeName = innerType.getName();
 				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(innerType.getVisibility());
-				
-				//FIX Modelio 2.2.1
-				if(innerTypeName.equalsIgnoreCase("string")||innerType.getGeneralizations().isEmpty())
+
+				// FIX Modelio 2.2.1
+				if (innerTypeName.equalsIgnoreCase("string")
+						|| innerType.getGeneralizations().isEmpty())
 				{
+					for (PDefinition def : c.getDefinitions())
+					{
+						if (def.getName().name.equals(innerTypeName))
+						{
+							continue elementLoop;
+						}
+					}
 					String innerTypeTypeName = "Seq<Char>";
-					console.out.println("\tConverting inner type= " + innerTypeName + " : "
-							+ innerTypeTypeName +" Warning the actual type if \""+innerTypeName+"\" is unknown to the translator and thus assuming seq of char, please manually confirm");
+					console.out.println("\tConverting inner type= "
+							+ innerTypeName
+							+ " : "
+							+ innerTypeTypeName
+							+ " Warning the actual type of \""
+							+ innerTypeName
+							+ "\" is undecidable - inserting \"seq of char\" instead");
 					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 					innerTypeDef.setType(AstFactory.newASeqSeqType(location, AstFactory.newACharBasicType(location)));
 					innerTypeDef.setAccess(access);
 					c.getDefinitions().add(innerTypeDef);
-				}else if (innerType.getGeneralizations().isEmpty())
+				} else if (innerType.getGeneralizations().isEmpty())
 				{
 					boolean createdType = false;
 					for (EObject innerElem : innerType.getOwnedElements())
@@ -165,7 +180,8 @@ public class Uml2Vdm
 							Stereotype steriotype = (Stereotype) innerElem;
 							if (steriotype.getName().equals("record"))
 							{
-								console.out.println("\tConverting inner record type= " + innerTypeName);
+								console.out.println("\tConverting inner record type= "
+										+ innerTypeName);
 								ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
 								innerTypeDef.setType(tc.createRecord(innerType));
 								innerTypeDef.setAccess(access);
@@ -183,39 +199,24 @@ public class Uml2Vdm
 				} else
 				{
 					String innerTypeTypeName = innerType.getGeneralizations().get(0).getGeneral().getName();
-					console.out.println("\tConverting inner type= " + innerTypeName + " : "
-							+ innerTypeTypeName);
+					console.out.println("\tConverting inner type= "
+							+ innerTypeName + " : " + innerTypeTypeName);
 					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
-					innerTypeDef.setType(tc.convert(innerTypeTypeName,null));
+					innerTypeDef.setType(tc.convert(innerTypeTypeName, null));
 					innerTypeDef.setAccess(access);
 					c.getDefinitions().add(innerTypeDef);
 				}
-			}else if (elem instanceof Enumeration)
+			} else if (elem instanceof Enumeration)
 			{
-				String innerTypeName =((Enumeration) elem).getName();
-				console.out.println("\tConverting inner enumeration type= " + innerTypeName);
+				String innerTypeName = ((Enumeration) elem).getName();
+				console.out.println("\tConverting inner enumeration type= "
+						+ innerTypeName);
 				ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
-				innerTypeDef.setType(tc.createEnumeration((Enumeration)elem));
+				innerTypeDef.setType(tc.createEnumeration((Enumeration) elem));
 				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(((Enumeration) elem).getVisibility());
 				innerTypeDef.setAccess(access);
 				c.getDefinitions().add(innerTypeDef);
 			}
-//			else if (elem instanceof Association)
-//			{
-//				Association ass = (Association) elem;
-//				if(ass.getOwnedEnds().size()==2)
-//				{
-//					for (Property end : ass.getOwnedEnds())
-//					{
-//						if(!end.getName().isEmpty())
-//						{
-//							console.out.println("\tConverting association property= " + end.getName());
-//						}
-//					}
-//					
-//				}
-//			
-//			}
 		}
 
 		for (Property att : class_.getOwnedAttributes())
@@ -239,13 +240,13 @@ public class Uml2Vdm
 				createOperation(c, op);
 			}
 		}
-		
+
 		return c;
 	}
 
 	private void createFunction(AClassClassDefinition c, Operation op)
 	{
-		console.out.println("\tConverting function: "+op.getName());
+		console.out.println("\tConverting function: " + op.getName());
 		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
 
 		List<List<PPattern>> paramPatternList = new Vector<List<PPattern>>();
@@ -272,7 +273,7 @@ public class Uml2Vdm
 
 	private void createOperation(AClassClassDefinition c, Operation op)
 	{
-		console.out.println("\tConverting operation: "+op.getName());
+		console.out.println("\tConverting operation: " + op.getName());
 		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
 		List<PType> parameterTypes = new Vector<PType>();
 		List<PPattern> parameters = new Vector<PPattern>();
@@ -294,9 +295,9 @@ public class Uml2Vdm
 
 	private void createInstanceVar(AClassClassDefinition c, Property att)
 	{
-		console.out.println("\tConverting instanve variable: "+att.getName());
+		console.out.println("\tConverting instanve variable: " + att.getName());
 		PType type = tc.convert(att);
-		PExp defaultExp = null;//NEW_A_INT_ZERRO_LITERAL_EXP.clone();
+		PExp defaultExp = null;// NEW_A_INT_ZERRO_LITERAL_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
 			Settings.dialect = Dialect.VDM_PP;
@@ -320,7 +321,9 @@ public class Uml2Vdm
 			} else
 			{
 				console.err.println("\tFaild to parse expression for attribute: "
-						+ att.getName() + " in class " + c.getName().name
+						+ att.getName()
+						+ " in class "
+						+ c.getName().name
 						+ " default is: " + att.getDefault());
 			}
 		}
@@ -330,10 +333,10 @@ public class Uml2Vdm
 
 	private void createValue(AClassClassDefinition c, Property att)
 	{
-		console.out.println("\tConverting value: "+att.getName());
+		console.out.println("\tConverting value: " + att.getName());
 		PType type = tc.convert(att);
 
-		PExp defaultExp = NEW_A_UNDEFINED_EXP .clone();
+		PExp defaultExp = NEW_A_UNDEFINED_EXP.clone();
 		if (att.getDefault() != null && !att.getDefault().isEmpty())
 		{
 			Settings.dialect = Dialect.VDM_PP;
@@ -357,7 +360,9 @@ public class Uml2Vdm
 			} else
 			{
 				console.err.println("\tFaild to parse expression for attribute: "
-						+ att.getName() + " in class " + c.getName().name
+						+ att.getName()
+						+ " in class "
+						+ c.getName().name
 						+ " default is: " + att.getDefault());
 			}
 		}

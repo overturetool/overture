@@ -18,11 +18,16 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.LiteralString;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.TemplateParameter;
+import org.eclipse.uml2.uml.TemplateSignature;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -38,6 +43,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -243,7 +249,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)&&!extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: " + name);
@@ -256,7 +262,7 @@ public class Vdm2Uml
 			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			s.setIsReadOnly(true);
-			
+
 			if (Vdm2UmlUtil.isOptional(defType))
 			{
 				s.setLower(0);
@@ -312,6 +318,44 @@ public class Vdm2Uml
 
 		AFunctionType type = def.getType();
 
+		Operation operation = class_.createOwnedOperation(def.getName().name, null, null, null);
+
+		Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
+		TemplateSignature sig = null;
+		for (PType t : type.getParameters())
+		{
+			if (t instanceof AParameterType)
+			{
+				if (sig == null)
+				{
+					sig = operation.createOwnedTemplateSignature(UMLPackage.Literals.TEMPLATE_SIGNATURE);
+				}
+
+				/*
+				 * Modelio doesnt support Classifier template parameters so the lines:
+				 * <br/>TemplateParameter tp =
+				 * sig.createOwnedParameter(UMLPackage.Literals.CLASSIFIER_TEMPLATE_PARAMETER);<br/>Class sss = (Class)
+				 * tp.createOwnedParameteredElement(UMLPackage.Literals.CLASS);<br/>have been replaced with an alternative
+				 * solution that it can import.<br/>The lines:<br/>LiteralString literalStringDefault =(LiteralString)
+				 * tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+				 * literalStringDefault.setName(UmlTypeCreatorBase.getName(t));<br/>are also not needed but makes it look
+				 * better in ModelioThe proper solution is described here:
+				 * http://www.eclipse.org/modeling/mdt/uml2/docs/
+				 * articles/Defining_Generics_with_UML_Templates/article.html
+				 */
+				TemplateParameter tp = sig.createOwnedParameter(UMLPackage.Literals.TEMPLATE_PARAMETER);
+				String pName = UmlTypeCreatorBase.getName(t);
+
+				LiteralString literalStringDefault = (LiteralString) tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+				literalStringDefault.setName(UmlTypeCreatorBase.getName(t));
+
+				Class sss = (Class) class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
+				sss.setName(pName);
+				templateParameters.put(pName, sss);
+			}
+		}
+
+		utc.addTemplateTypes(templateParameters);
 		for (PType t : type.getParameters())
 		{
 			utc.create(class_, t);
@@ -320,13 +364,20 @@ public class Vdm2Uml
 
 		utc.create(class_, type.getResult());
 		Type returnUmlType = utc.getUmlType(type.getResult());
+		utc.removeTemplateTypees();
 
-		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
+		operation.setType(returnUmlType);
+
+		for (int i = 0; i < names.size(); i++)
+		{
+			operation.createOwnedParameter(names.get(i), types.get(i));
+		}
+
+		// Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
 		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 		operation.setIsQuery(true);
-
 	}
 
 	private void addExplicitOperationToClass(Class class_,
@@ -392,7 +443,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)&&!extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "
