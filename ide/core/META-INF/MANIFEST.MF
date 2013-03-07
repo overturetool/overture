@@ -83,10 +83,6 @@ Export-Package: org.overture.ast.analysis,
  org.overture.typechecker.util,
  org.overture.typechecker.visitor,
  org.overture.util,
- org.overturetool.ct.ctruntime,
- org.overturetool.ct.ctruntime.server.common,
- org.overturetool.ct.ctruntime.server.xml,
- org.overturetool.ct.utils,
  org.overturetool.test.framework,
  org.overturetool.test.framework.results,
  org.overturetool.test.util
@@ -98,6 +94,4 @@ Bundle-ClassPath: .,
  typechecker-2.2.2.jar,
  pog-2.2.2.jar,
  interpreter-2.2.2.jar,
- testframework-2.2.2.jar,
- ctutils-2.2.2.jar,
- ctruntime-2.2.2.jar
+ testframework-2.2.2.jar

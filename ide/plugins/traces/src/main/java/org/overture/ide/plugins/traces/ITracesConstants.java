@@ -31,8 +31,9 @@ public interface ITracesConstants
 	public final String REMOTE_DEBUG_FIXED_PORT = "ct_enable_remote_debug_fixed_port";
 
 	/**
-	 * This string gives the plugin id that contains the core ctruntime-x.x.x.jar file.
+	 * This string gives the plugin id that contains the core ctruntime jar file.
 	 */
-	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.core";
+	//FIXME except that this is more complex now, as we need to do a more transitive calculation of the classpath
+	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.plugins.traces";
 	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";
 }
