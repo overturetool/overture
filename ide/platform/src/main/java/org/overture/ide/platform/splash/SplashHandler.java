@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.platform.splash;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
@@ -44,17 +45,18 @@ public class SplashHandler extends BasicSplashHandler
 		foregroundColorInteger & 0xFF));
 
 		final Point buildIdPoint = new Point(350, 200);
-		final String bundleVersion = "v"
-				+ Activator.getDefault().getBundle().getHeaders().get("Bundle-Version");
 
+		final String productVersion = "Version " + Platform.getResourceString(Activator.getDefault().getBundle(), "%productVersion");
+		final String productBuild = Platform.getResourceString(Activator.getDefault().getBundle(), "%productBuild");
+				
 		getContent().addPaintListener(new PaintListener()
 		{
 			public void paintControl(PaintEvent e)
 			{
 				e.gc.setForeground(getForeground());
-				e.gc.drawText(bundleVersion, buildIdPoint.x, buildIdPoint.y, true);
+				e.gc.drawText(productVersion, buildIdPoint.x, buildIdPoint.y, true);
+				e.gc.drawText(productBuild, buildIdPoint.x, buildIdPoint.y+16, true);
 			}
-
 		});
 	}
 
