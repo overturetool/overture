@@ -170,7 +170,10 @@ public class ViewContentProvider implements IStructuredContentProvider,
 				{
 					return true;
 				}
+				
 			}
+			return false;
+			
 		} else if (parent instanceof NotYetReadyTreeNode)
 		{
 			return false;
@@ -391,11 +394,17 @@ public class ViewContentProvider implements IStructuredContentProvider,
 
 		ProjectTreeNode projectTreeNode;
 
-		
 		for (IVdmProject project : TraceAstUtility.getProjects())
 		{
-			projectTreeNode = new ProjectTreeNode(project);
-			invisibleRoot.addChild(projectTreeNode);
+			HasTraceAnalysis analysis = new HasTraceAnalysis();
+			for (INode node : project.getModel().getRootElementList())
+			{
+				if (analysis.hasTrace(node))
+				{
+					projectTreeNode = new ProjectTreeNode(project);
+					invisibleRoot.addChild(projectTreeNode);
+				}	
+			}
 		}
 
 		// ArrayList<TreeParent> projectTree = new ArrayList<TreeParent>();
