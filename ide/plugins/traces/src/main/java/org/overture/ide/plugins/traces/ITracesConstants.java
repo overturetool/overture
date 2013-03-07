@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.plugins.traces;
 
+import org.overture.ide.core.ICoreConstants;
+
 public interface ITracesConstants
 {
 	public final String TRACES_VIEW_ID = "org.overture.ide.plugins.traces.views.TracesView";
@@ -33,7 +35,6 @@ public interface ITracesConstants
 	/**
 	 * This string gives the plugin id that contains the core ctruntime jar file.
 	 */
-	//FIXME except that this is more complex now, as we need to do a more transitive calculation of the classpath
-	public static final String TEST_ENGINE_BUNDLE_ID = "org.overture.ide.plugins.traces";
+	public static final String[] TEST_ENGINE_BUNDLE_IDs ={PLUGIN_ID,ICoreConstants.PLUGIN_ID};
 	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";
 }

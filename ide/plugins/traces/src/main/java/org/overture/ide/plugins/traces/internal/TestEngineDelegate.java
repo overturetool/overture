@@ -191,13 +191,8 @@ public class TestEngineDelegate
 	{
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
-		//FIXME Array of all of the bundles containing jars that we depend on (HACK)
-		String[] requiredBundles = new String[] {
-					ITracesConstants.TEST_ENGINE_BUNDLE_ID,
-					"org.overture.ide.core" //FIXME i.e. this is the HACK: need to generalise
-					};
 		// get the bundled class path of the debugger
-		ClasspathUtils.collectClasspath(requiredBundles, entries);
+		ClasspathUtils.collectClasspath(ITracesConstants.TEST_ENGINE_BUNDLE_IDs, entries);
 		// get the class path for all jars in the project lib folder
 		File lib = new File(project.getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())
