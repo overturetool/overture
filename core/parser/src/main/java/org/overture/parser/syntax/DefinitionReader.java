@@ -1361,7 +1361,7 @@ public class DefinitionReader extends SyntaxReader
 			term.add(readTraceDefinition());
 		}
 
-		return new ATraceDefinitionTerm(term);
+		return AstFactory.newATraceDefinitionTerm(term);
 	}
 
 	private PTraceDefinition readTraceDefinition() throws LexException,
