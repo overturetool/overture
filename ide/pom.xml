@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -7,19 +7,19 @@
     <artifactId>root</artifactId>
     <version>2.2.2<!--Replaceable: Main Version--></version>
   </parent>
-  
+
   <packaging>pom</packaging>
 
   <groupId>org.overture</groupId>
   <artifactId>ide</artifactId>
   <name>Overture IDE Top-level</name>
   <description>Super POM for all IDE (Eclipse) artifacts.</description>
-  
+
   <properties>
     <maven.test.skip>true</maven.test.skip>
     <tycho.version>0.16.0</tycho.version>
   </properties>
-  
+
   <modules>
     <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>core</module>
@@ -41,15 +41,15 @@
   <reporting>
     <plugins>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-javadoc-plugin</artifactId>
-	<version>2.6.1</version>
-	<configuration>
-	  <failOnError>false</failOnError>
-	  <excludePackageNames>*org.eclipse.*</excludePackageNames>
-	  <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-	  <show>public</show>
-	</configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <failOnError>false</failOnError>
+          <excludePackageNames>*org.eclipse.*</excludePackageNames>
+          <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+          <show>public</show>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
@@ -57,45 +57,46 @@
   <build>
     <pluginManagement>
       <plugins>
-	<plugin>
+        <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-maven-plugin</artifactId>
-	  <version>${tycho.version}</version>
-	</plugin>
-	<plugin>
+          <version>${tycho.version}</version>
+        </plugin>
+        <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>target-platform-configuration</artifactId>
           <version>${tycho.version}</version>
-	</plugin>
-	<plugin>
+        </plugin>
+        <plugin>
           <groupId>org.eclipse.tycho</groupId>
           <artifactId>tycho-p2-director-plugin</artifactId>
-	  <version>${tycho.version}</version>
-	</plugin>
-	<plugin>
-	  <groupId>org.eclipse.m2e</groupId>
-	  <artifactId>lifecycle-mapping</artifactId>
-	  <version>1.0.0</version>
-	  <configuration>
-	    <lifecycleMappingMetadata>
-	      <pluginExecutions>
-		<pluginExecution>
-		  <pluginExecutionFilter>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-dependency-plugin</artifactId>
-		    <versionRange>[1.0.0,)</versionRange>
-		    <goals>
-		      <goal>copy-dependencies</goal>
-		    </goals>
-		  </pluginExecutionFilter>
-		  <action>
-		    <ignore />
-		  </action>
-		</pluginExecution>
-	      </pluginExecutions>
-	    </lifecycleMappingMetadata>
-	  </configuration>
-	</plugin>
+          <version>${tycho.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>copy-dependencies</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -105,54 +106,26 @@
         <artifactId>tycho-maven-plugin</artifactId>
         <extensions>true</extensions>
       </plugin>
+
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <configuration>
-          <environments>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>win32</os>
-              <ws>win32</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
-              <arch>x86_64</arch>
-            </environment>
-          </environments>
-        </configuration>
       </plugin>
 
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-javadoc-plugin</artifactId>
-	<executions>
-	  <execution>
-	    <id>attach-javadocs</id>
-	    <goals>
-	      <goal>jar</goal>
-	    </goals>
-	  </execution>
-	</executions>
-	<configuration>
-	  <skip>true</skip>
-	</configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -165,30 +138,46 @@
     </repository>
   </repositories>
 
-  <!-- <profiles> -->
-  <!--   <profile> -->
-  <!--     <id>nocompile</id> -->
-  <!--     <build> -->
-  <!-- 	<plugins> -->
-  <!-- 	  <plugin> -->
-  <!-- 	    <artifactId>maven-compiler-plugin</artifactId> -->
-  <!-- 	    <configuration> -->
-  <!-- 	      <source>1.5</source> -->
-  <!-- 	      <target>1.5</target> -->
-  <!-- 	    </configuration> -->
-  <!-- 	    <executions> -->
-  <!-- 	      <execution> -->
-  <!-- 		<id>default-compile</id> -->
-  <!-- 		<configuration> -->
-  <!-- 		  <excludes> -->
-  <!-- 		    <exclude>**/*.*</exclude> -->
-  <!-- 		  </excludes> -->
-  <!-- 		</configuration> -->
-  <!-- 	      </execution> -->
-  <!-- 	    </executions> -->
-  <!-- 	  </plugin> -->
-  <!-- 	</plugins> -->
-  <!--     </build> -->
-  <!--   </profile> -->
-  <!-- </profiles> -->
+  <profiles>
+    <profile>
+      <id>all-platforms</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.tycho</groupId>
+            <artifactId>target-platform-configuration</artifactId>
+            <configuration>
+              <environments>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>win32</os>
+                  <ws>win32</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86</arch>
+                </environment>
+                <environment>
+                  <os>linux</os>
+                  <ws>gtk</ws>
+                  <arch>x86_64</arch>
+                </environment>
+                <environment>
+                  <os>macosx</os>
+                  <ws>cocoa</ws>
+                  <arch>x86_64</arch>
+                </environment>
+              </environments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

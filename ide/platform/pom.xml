@@ -15,4 +15,43 @@
   <artifactId>org.overture.ide.platform</artifactId>
   <name>org.overture.ide.platform</name>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <targetPath>${project.basedir}</targetPath>
+        <filtering>true</filtering>
+        <includes>
+          <include>plugin.properties</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <!-- https://github.com/ktoso/maven-git-commit-id-plugin -->
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <prefix>git</prefix>
+          <dateFormat>yyyy MMM dd HH:mm z</dateFormat>
+          <verbose>false</verbose>
+          <gitDescribe>
+            <skip>false</skip>
+            <always>false</always>
+            <abbrev>7</abbrev>
+            <dirty>-dirty</dirty>
+            <forceLongFormat>false</forceLongFormat>
+          </gitDescribe>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
