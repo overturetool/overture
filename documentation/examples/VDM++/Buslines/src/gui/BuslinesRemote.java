@@ -1,7 +1,8 @@
 package gui;
 
-import org.overturetool.vdmj.debug.RemoteControl;
-import org.overturetool.vdmj.debug.RemoteInterpreter;
+import org.overture.interpreter.debug.RemoteControl;
+import org.overture.interpreter.debug.RemoteInterpreter;
+
 
 public class BuslinesRemote implements RemoteControl {
 

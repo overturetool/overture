@@ -1,6 +1,6 @@
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.IntegerValue;
-import org.overturetool.vdmj.values.SeqValue;
+
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.SeqValue;
 
 import gui.Graphics;
 
