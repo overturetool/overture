@@ -3081,6 +3081,14 @@ public class AstFactory {
 		
 		return result;
 	}
+
+	public static ATraceDefinitionTerm newATraceDefinitionTerm(
+			List<PTraceDefinition> term)
+	{
+		ATraceDefinitionTerm result = new ATraceDefinitionTerm();
+		result.setList(term);
+		return result;
+	}
 	
 //	public static AIsExp newAIsExp(LexLocation location,
 //			LexNameToken name, PExp test) {

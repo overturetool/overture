@@ -20,7 +20,8 @@ import org.overturetool.vdmj.syntax.ParserException;
 import org.overturetool.vdmj.typechecker.TypeChecker;
 import org.overturetool.vdmj.values.Value;
 
-public class ClassTestCase extends InterpreterBaseTestCase {
+public class ClassTestCase extends InterpreterBaseTestCase
+{
 
 	public static final String tcHeader = "-- TCErrors:";
 
@@ -28,11 +29,13 @@ public class ClassTestCase extends InterpreterBaseTestCase {
 	String content;
 	String expectedType;
 
-	public ClassTestCase() {
+	public ClassTestCase()
+	{
 		super();
 	}
 
-	public ClassTestCase(File file) {
+	public ClassTestCase(File file)
+	{
 		super(file);
 		this.content = file.getName();
 	}
@@ -41,22 +44,23 @@ public class ClassTestCase extends InterpreterBaseTestCase {
 	{
 		super(rootSource, name, content);
 	}
-	
+
 	public ClassTestCase(File file, String suiteName, File testSuiteRoot)
 	{
-		super(file,suiteName,testSuiteRoot);
+		super(file, suiteName, testSuiteRoot);
 	}
 
-	
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() throws Exception
+	{
 		super.setUp();
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 		TypeChecker.clearErrors();
 	}
 
-	public void test() throws ParserException, LexException, IOException {
+	public void test() throws ParserException, LexException, IOException
+	{
 		Result<String> result = null;
 		if (mode == ContentModed.File)
 		{
@@ -64,7 +68,8 @@ public class ClassTestCase extends InterpreterBaseTestCase {
 			if (getEntryFile() == null || !getEntryFile().exists())
 			{
 				entry = createEntryFile();
-				if (entry == null || getEntryFile() == null || !getEntryFile().exists())
+				if (entry == null || getEntryFile() == null
+						|| !getEntryFile().exists())
 				{
 					fail("No entry for model (" + getEntryFile() + ")");
 				}
@@ -75,73 +80,74 @@ public class ClassTestCase extends InterpreterBaseTestCase {
 			Value val;
 			try
 			{
-				val = new OvertureTestHelper().interpret(Settings.dialect,entry, file);
+				val = new OvertureTestHelper().interpret(Settings.dialect, entry, file);
 				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
 				System.out.println(file.getName() + " -> " + val);
-				
+
 			} catch (Exception e)
 			{
 				result = new Result<String>(e.getMessage(), new Vector<IMessage>(), new Vector<IMessage>());
 			}
-			
-			compareResults(result, file.getName()+".result");
+
+			compareResults(result, file.getName() + ".result");
 		}
 	}
 
+	private File getEntryFile()
+	{
+		return getResultFile(file.getName() + ".entry");
+	}
 
-		private File getEntryFile()
+	private List<String> getEntries() throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(getEntryFile()));
+		List<String> data = new Vector<String>();
+		String text = null;
+		while ((text = reader.readLine()) != null)
 		{
-			return getResultFile(file.getName() + ".entry");
+			data.add(text.trim());
 		}
+		reader.close();
 
-		private List<String> getEntries() throws IOException
+		return data;
+	}
+
+	protected String baseExamplePath()
+	{
+		return "C:\\overtureGit\\overture\\core\\vdmj_compatibility_tests\\vdmjinterpreter\\";
+	}
+
+	private String createEntryFile()
+	{
+		try
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(getEntryFile()));
-			List<String> data = new Vector<String>();
-			String text = null;
-			while ((text = reader.readLine()) != null)
+			String tmp = search(new File(baseExamplePath()), file.getName());
+
+			if (tmp != null && !tmp.isEmpty())
 			{
-				data.add(text.trim());
+				createResultFile(file.getName() + ".entry");
+				FileWriter fstream = new FileWriter(getEntryFile());
+				BufferedWriter out = new BufferedWriter(fstream);
+				out.write(tmp);
+				out.close();
+				return tmp;
 			}
-			reader.close();
-
-			return data;
-		}
-
-
-		protected String baseExamplePath()
+		} catch (IOException e)
 		{
-			return "C:\\overtureGit\\overture\\core\\vdmj_compatibility_tests\\vdmjinterpreter\\";
 		}
-		
-		private String createEntryFile()
+		return null;
+
+	}
+
+	protected String search(File file, String name) throws IOException
+	{
+		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
+		if (readme.exists())
 		{
+			BufferedReader reader = null;
 			try
 			{
-				String tmp = search(new File(baseExamplePath()), file.getName());
-
-				if (tmp != null && !tmp.isEmpty())
-				{
-					createResultFile(file.getName() + ".entry");
-					FileWriter fstream = new FileWriter(getEntryFile());
-					BufferedWriter out = new BufferedWriter(fstream);
-					out.write(tmp);
-					out.close();
-					return tmp;
-				}
-			} catch (IOException e)
-			{
-			}
-			return null;
-
-		}
-	
-		protected String search(File file, String name) throws IOException
-		{
-			File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
-			if (readme.exists())
-			{
-				BufferedReader reader = new BufferedReader(new FileReader(readme));
+				reader = new BufferedReader(new FileReader(readme));
 				String text = null;
 				while ((text = reader.readLine()) != null)
 				{
@@ -151,11 +157,12 @@ public class ClassTestCase extends InterpreterBaseTestCase {
 						return text.substring(text.indexOf('=') + 1).trim();
 					}
 				}
+			} finally
+			{
 				reader.close();
 			}
-			return null;
 		}
-
-	
+		return null;
+	}
 
 }

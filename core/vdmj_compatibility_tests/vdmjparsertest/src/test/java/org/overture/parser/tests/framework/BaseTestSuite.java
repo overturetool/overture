@@ -144,4 +144,8 @@ public class BaseTestSuite extends TestSuite
 		pathname ="..\\vdmjparsertest\\"+pathname;
 		return new File(pathname.replace('\\', File.separatorChar).replace('/', File.separatorChar));
 	}
+	
+	public void test()
+	{
+	}
 }

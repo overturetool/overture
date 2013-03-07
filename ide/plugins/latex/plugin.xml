@@ -1,192 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+	<!-- Propertypage to configure latex per project -->
+	<extension
+			point="org.eclipse.ui.propertyPages">
+		<page
+				category="org.overture.ide.ui.property.vdmlanguage"
+				class="org.overture.ide.plugins.latex.properties.WorkbenchPropertyPage1"
+				id="org.overture.ide.plugins.latex.page1"
+				name="Latex">
+			<enabledWhen>
+				<and>
+					<instanceof
+							value="org.eclipse.core.resources.IProject">
+					</instanceof>
+					<adapt
+							type="org.overture.ide.core.resources.IVdmProject">
+
+					</adapt>
+				</and>
+			</enabledWhen>
+		</page>
+	</extension>
+
+	<!-- Filter to hide generated latex files -->
+	<extension
+			point="org.eclipse.ui.navigator.navigatorContent">
+		<commonFilter
+				activeByDefault="true"
+				description="%Filters.latexTempFiles.description"
+				id="org.overture.resources.filters.latex.latexTmpFilesFilter"
+				name="%Filters.latexTempFiles.name">
+			<filterExpression>
+				<and>
+					<adapt
+							type="org.eclipse.core.resources.IResource">
+						<or>
+							<test
+									property="org.eclipse.core.resources.name"
+									value="*.aux">
+							</test>
+							<test
+									property="org.eclipse.core.resources.name"
+									value="*.toc">
+							</test>
+						</or>
+					</adapt>
+				</and>
+			</filterExpression>
+		</commonFilter>
+	</extension>
 
 
- <extension
-         point="org.eclipse.ui.popupMenus">
-      
-      <!-- Print latex -->
-        <!--objectContribution
-            adaptable="true"
-            id="org.overture.ide.latex.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-            <filter
-         name="projectNature"
-         value="org.overture.ide.vdmpp.core.nature">
-      </filter>
-        
- <menu
-               id="org.overture.ide.latex.menuMain"
-               label="Latex"
-               path="additions">
-            <separator
-                  name="groupLatex">
-            </separator>
-         </menu>
-         
-          <action
-                class="org.overture.ide.plugins.latex.actions.LatexAction"
-                enablesFor="1"
-                icon="icons/ctool16/miktex_tsk.png"
-                id="org.overture.ide.latex.actions.LatexActionPp"
-                label="Latex"
-                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
-                tooltip="Latex">
-         </action>
-         
-       
-      </objectContribution-->
-      
-      
-       <!-- Print latex coverage-->
-        <objectContribution
-            adaptable="true"
-            id="org.overture.ide.latex.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-            <filter
-         name="projectNature"
-         value="org.overture.ide.vdmpp.core.nature">
-      </filter>
-        
- <menu
-       icon="icons/ctool16/miktex_tsk.png"
-       id="org.overture.ide.latex.menuMain"
-       label="Latex"
-       path="additions">
-            <separator
-                  name="groupLatex">
-            </separator>
-         </menu>
-         
-          <action
-                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
-                enablesFor="1"
-                id="org.overture.ide.latex.actions.LatexCoverageActionPp"
-                label="PdfLatex"
-                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
-                tooltip="Latex Coverage">
-         </action>
-         
-       
-      </objectContribution>
-      
-       <!-- Print latex coverage-->
-        <objectContribution
-            adaptable="true"
-            id="org.overture.ide.latex.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-            <filter
-         name="projectNature"
-         value="org.overture.ide.vdmrt.core.nature">
-      </filter>
-        
- <menu
-       icon="icons/ctool16/miktex_tsk.png"
-       id="org.overture.ide.latex.menuMain"
-       label="Latex"
-       path="additions">
-            <separator
-                  name="groupLatex">
-            </separator>
-         </menu>
-         
-          <action
-                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
-                enablesFor="1"
-                id="org.overture.ide.latex.actions.LatexCoverageActionRt"
-                label="PdfLatex"
-                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
-                tooltip="Latex Coverage">
-         </action>
-         
-       
-      </objectContribution>
-      
-      
-        <!-- Print latex coverage-->
-        <objectContribution
-            adaptable="true"
-            id="org.overture.ide.latex.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-            <filter
-         name="projectNature"
-         value="org.overture.ide.vdmsl.core.nature">
-      </filter>
-        
- <menu
-       icon="icons/ctool16/miktex_tsk.png"
-       id="org.overture.ide.latex.menuMain"
-       label="Latex"
-       path="additions">
-            <separator
-                  name="groupLatex">
-            </separator>
-         </menu>
-         
-          <action
-                class="org.overture.ide.plugins.latex.actions.LatexCoverageAction"
-                enablesFor="1"
-                id="org.overture.ide.latex.actions.LatexCoverageActionSl"
-                label="PdfLatex"
-                menubarPath="org.overture.ide.latex.menuMain/groupLatex"
-                tooltip="Latex Coverage">
-         </action>
-         
-       
-      </objectContribution>
-      
-      
+
+<!-- The latex build command -->
+	<extension
+			point="org.eclipse.ui.commands">
+		<command
+				defaultHandler="org.overture.ide.plugins.latex.commands.LatexCommand"
+				id="org.overture.ide.plugins.latex.build"
+				name="LaTex Coverage">
+		</command>
+	</extension>
+
+<!-- The latex menu binding -->
+    <extension
+         point="org.eclipse.ui.menus">
+         <menuContribution
+           locationURI="popup:org.overture.ide.ui.VdmExplorer">
+        <menu
+              icon="icons/ctool16/miktex_tsk.png"
+              id="org.overture.ide.plugins.latex"
+              label="Latex">
+           <command
+                 commandId="org.overture.ide.plugins.latex.build"
+                 label="PdfLaTex"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate
+                       ifEmpty="false">
+                     
+                            <adapt type="org.overture.ide.core.resources.IVdmProject">
+                            </adapt>
+                       
+                 </iterate>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
    </extension>
+
+
+<!-- Key bindings -->
  <extension
-       point="org.eclipse.ui.propertyPages">
-    <page
-          category="org.overture.ide.ui.property.vdmlanguage"
-          class="org.overture.ide.plugins.latex.properties.WorkbenchPropertyPage1"
-          id="org.overture.ide.plugins.latex.page1"
-          name="Latex">
-       <enabledWhen>
-              <and>
-                 <instanceof
-                       value="org.eclipse.core.resources.IProject">
-                 </instanceof>
-                   <adapt
-                     type="org.overture.ide.core.resources.IVdmProject">
-                 
-               </adapt>
-              </and>
-           </enabledWhen>
-    </page>
- </extension>
- <extension
-       point="org.eclipse.ui.navigator.navigatorContent">
-    <commonFilter
-          activeByDefault="true"
-          description="%Filters.latexTempFiles.description"
-          id="org.overture.resources.filters.latex.latexTmpFilesFilter"
-          name="%Filters.latexTempFiles.name">
-       <filterExpression>
-          <and>
-             <adapt
-                   type="org.eclipse.core.resources.IResource">
-                <or>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.aux">
-                   </test>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.toc">
-                   </test>
-                </or>
-             </adapt>
-          </and>
-       </filterExpression>
-    </commonFilter>
- </extension>
-
-
-
+          point="org.eclipse.ui.bindings">
+       <key
+             commandId="org.overture.ide.plugins.latex.build"
+             contextId="org.eclipse.ui.contexts.window"
+             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+             sequence="Alt+L">
+       </key>
+       
+      
+    </extension>
 
 
 

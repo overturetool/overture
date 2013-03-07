@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -78,9 +77,9 @@ public class Vdm2UmlCommand extends AbstractHandler
 							e1.printStackTrace();
 						}
 
-						IFile iFile = project.getFile(project.getName());
-						java.net.URI absolutePath = iFile.getLocationURI();
-						URI uri = URI.createFileURI(absolutePath.getPath());
+//						IFile iFile = vdmProject.getModelBuildPath().getOutput().getLocationURI()..getFile(project.getName());
+						java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//iFile.getLocationURI();
+						URI uri = URI.createFileURI(absolutePath.getPath()+"/"+project.getName());
 						try
 						{
 							vdm2uml.save(uri);

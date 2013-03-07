@@ -1,16 +1,8 @@
 package org.overture.interpreter.tests.framework;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import org.overturetool.test.framework.TestResourcesResultTestCase;
-import org.overturetool.vdmj.util.Base64;
-import org.overturetool.vdmj.values.Value;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -119,28 +111,28 @@ public abstract class InterpreterBaseTestCase extends TestResourcesResultTestCas
 		return super.getResultFile(filename );
 	}
 
-	/**
-	 * Read the object from Base64 string.
-	 * 
-	 * @throws Exception
-	 */
-	private static Object fromString(String s) throws Exception
-	{
-
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(s)));
-		Object o = ois.readObject();
-		ois.close();
-		return o;
-	}
-
-	/** Write the object to a Base64 string. */
-	private static String toString(Serializable o) throws IOException
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(o);
-		oos.close();
-
-		return Base64.encode(baos.toByteArray()).toString();
-	}
+//	/**
+//	 * Read the object from Base64 string.
+//	 * 
+//	 * @throws Exception
+//	 */
+//	private static Object fromString(String s) throws Exception
+//	{
+//
+//		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(s)));
+//		Object o = ois.readObject();
+//		ois.close();
+//		return o;
+//	}
+//
+//	/** Write the object to a Base64 string. */
+//	private static String toString(Serializable o) throws IOException
+//	{
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ObjectOutputStream oos = new ObjectOutputStream(baos);
+//		oos.writeObject(o);
+//		oos.close();
+//
+//		return Base64.encode(baos.toByteArray()).toString();
+//	}
 }

@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.ide.plugins.poviewer.actions;
+package org.overture.ide.plugins.poviewer;
 
 import java.io.File;
 
@@ -27,92 +27,79 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.poviewer.Activator;
-import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.visitor.PogVisitor;
 
-public abstract class ViewPosAction implements IObjectActionDelegate
+public class PoGeneratorUtil
 {
 
 	private Shell shell;
-	private IWorkbenchPart targetPart;
+	// private IWorkbenchPart targetPart;
+	private IWorkbenchSite site;
 	private File selectedFile = null;
 	private File libFolder = null;
 
 	/**
 	 * Constructor for Action1.
 	 */
-	public ViewPosAction()
+	public PoGeneratorUtil(Shell shell, IWorkbenchSite site)
 	{
-		super();
-	}
-
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart)
-	{
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
+		this.shell = shell;
+		this.site = site;
 	}
 
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
-	public void run(IAction action)
+	public void generate(IProject selectedProject, IFile file)
 	{
-
-		org.eclipse.swt.widgets.Shell s = new org.eclipse.swt.widgets.Shell();
-
 		try
 		{
-			IProject selectedProject = null;
-			selectedProject = ProjectHelper.getSelectedProject(action, selectedProject);
-			
-			
 			if (selectedProject == null)
 			{
-				ConsoleWriter.ConsolePrint(shell, "Could not find selected project");
 				return;
 			}
 
-			IFile tmpFile = ProjectHelper.getSelectedFile(action);
+			IFile tmpFile = file;
 			if (tmpFile != null)
 			{
-				 selectedFile = tmpFile.getLocation().toFile();
+				selectedFile = tmpFile.getLocation().toFile();
 			}
 
 			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
-			
-			libFolder = new File(selectedProject.getLocation().toFile(),"lib");
-			
+
+			libFolder = new File(selectedProject.getLocation().toFile(), "lib");
+
 			viewPos(project);
 
-		} catch (Exception ex)
+		} catch (Exception e)
 		{
-			System.err.println(ex.getMessage() + ex.getStackTrace());
-			ConsoleWriter.ConsolePrint(s, ex);
+			System.err.println(e.getMessage() + e.getStackTrace());
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error in po generation", e));
 		}
 
 	}
 
 	public boolean skipElement(File file)
 	{
-		return (selectedFile != null && !selectedFile.getName().equals((file.getName()))) || (selectedFile==null && isLibrary(file));
+		return (selectedFile != null && !selectedFile.getName().equals((file.getName())))
+				|| (selectedFile == null && isLibrary(file));
 
 	}
 
@@ -121,7 +108,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 		return file.getAbsolutePath().startsWith(libFolder.getAbsolutePath());
 	}
 
-	protected abstract String getNature();
+	// protected abstract String getNature();
 
 	private void viewPos(final IVdmProject project) throws PartInitException
 	{
@@ -130,7 +117,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 		if (!model.isParseCorrect())
 		{
 			return;
-			//return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID, "Project contains parse errors");
+			// return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID, "Project contains parse errors");
 		}
 
 		if (model == null || !model.isTypeCorrect())
@@ -145,8 +132,6 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 			{
 				monitor.worked(IProgressMonitor.UNKNOWN);
 
-				
-
 				try
 				{
 					if (!model.isParseCorrect() || !model.isTypeCorrect())
@@ -154,14 +139,17 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 						return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID, "Project is not build correctly, build error");
 					}
 
-					final ProofObligationList pos = getProofObligations(model);
+					final ProofObligationList pos = getProofObligations(model, project.getDialect());
 					pos.renumber();
 					showPOs(project, pos);
 
 				} catch (Throwable e)
 				{
 					e.printStackTrace();
-					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's Model state: Parse="+model.isParseCorrect()+" TC="+model.isTypeCorrect() , e);
+					return new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error showing PO's Model state: Parse="
+							+ model.isParseCorrect()
+							+ " TC="
+							+ model.isTypeCorrect(), e);
 				}
 				return new Status(IStatus.OK, "org.overture.ide.plugins.poviewer", "Ok");
 			}
@@ -178,7 +166,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 			// IWorkbenchPage p=
 			// targetPart.getSite().getWorkbenchWindow().o.getSite().getWorkbenchWindow().openPage(PoviewerPluginConstants.ProofObligationPerspectiveId,null);
 			// p.activate(targetPart);
-			PlatformUI.getWorkbench().showPerspective(IPoviewerConstants.ProofObligationPerspectiveId, targetPart.getSite().getWorkbenchWindow());
+			PlatformUI.getWorkbench().showPerspective(IPoviewerConstants.ProofObligationPerspectiveId, site.getWorkbenchWindow());
 		} catch (WorkbenchException e)
 		{
 
@@ -186,19 +174,60 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 		}
 	}
 
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection)
+	protected ProofObligationList getProofObligations(IVdmModel model,
+			Dialect dialect) throws NotAllowedException, Throwable
 	{
+		PogVisitor pogVisitor = new PogVisitor();
+		ProofObligationList obligations = new ProofObligationList();
+
+		if (!model.isTypeCorrect())
+		{
+			return null;
+		}
+
+		if (dialect == Dialect.VDM_SL)
+		{
+
+			for (Object definition : model.getModuleList())
+			{
+				if (definition instanceof AModuleModules)
+					if (!((AModuleModules) definition).getName().toString().equals("DEFAULT")
+							&& skipElement(((AModuleModules) definition).getName().getLocation().file))
+						continue;
+					else
+					{
+						ProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor, new POContextStack());
+						tmp.trivialCheck();
+						obligations.addAll(tmp);
+					}
+			}
+
+		} else
+		{
+			for (Object definition : model.getClassList())
+			{
+				if (definition instanceof SClassDefinition)
+				{
+					if (skipElement(((SClassDefinition) definition).getLocation().file))
+						continue;
+					else
+					{
+						ProofObligationList tmp = pogVisitor.defaultPDefinition((SClassDefinition) definition, new POContextStack());
+						tmp.trivialCheck();
+						obligations.addAll(tmp);
+					}
+				}
+			}
+
+		}
+		final ProofObligationList pos = obligations;
+		return pos;
 	}
 
-	protected abstract ProofObligationList getProofObligations(IVdmModel model)
-			throws NotAllowedException, Throwable;
-
-	private void showPOs(final IVdmProject project, final ProofObligationList pos)
+	private void showPOs(final IVdmProject project,
+			final ProofObligationList pos)
 	{
-		targetPart.getSite().getPage().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable()
+		site.getPage().getWorkbenchWindow().getShell().getDisplay().asyncExec(new Runnable()
 		{
 
 			public void run()
@@ -206,7 +235,7 @@ public abstract class ViewPosAction implements IObjectActionDelegate
 				IViewPart v;
 				try
 				{
-					v = targetPart.getSite().getPage().showView(IPoviewerConstants.PoOverviewTableViewId);
+					v = site.getPage().showView(IPoviewerConstants.PoOverviewTableViewId);
 					if (v instanceof PoOverviewTableView)
 					{
 						((PoOverviewTableView) v).setDataList(project, pos);

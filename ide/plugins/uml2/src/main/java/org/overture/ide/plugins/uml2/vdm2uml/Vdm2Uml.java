@@ -243,7 +243,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if (PTypeAssistantInterpreter.isClass(defType)
+		if ((PTypeAssistantInterpreter.isClass(defType)&&!extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: " + name);
@@ -256,6 +256,11 @@ public class Vdm2Uml
 			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			s.setIsReadOnly(true);
+			
+			if (Vdm2UmlUtil.isOptional(defType))
+			{
+				s.setLower(0);
+			}
 
 			if (def.getExpression() != null)
 			{
@@ -387,7 +392,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if (PTypeAssistantInterpreter.isClass(defType)
+		if ((PTypeAssistantInterpreter.isClass(defType)&&!extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "

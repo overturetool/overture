@@ -36,6 +36,7 @@ import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -91,7 +92,7 @@ public class POForAllContext extends POContext
 		{
 			List<PPattern> pl = new ArrayList<PPattern>();
 			pl.add(tb.getPattern().clone());
-			ATypeMultipleBind mtb = new ATypeMultipleBind(pl.get(0).getLocation().clone(), pl, tb.getType().clone());
+			ATypeMultipleBind mtb =AstFactory.newATypeMultipleBind( pl, tb.getType().clone());
 			bindings.add(mtb);
 		}
 	}
