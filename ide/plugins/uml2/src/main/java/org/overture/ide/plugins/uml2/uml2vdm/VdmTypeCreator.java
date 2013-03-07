@@ -20,64 +20,72 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
+import org.overture.ide.plugins.uml2.vdm2uml.UmlTypeCreatorBase;
 
 public class VdmTypeCreator
 {
 	final Set<String> basicTypes = new HashSet<String>(Arrays.asList(new String[] {
 			"bool", "char", "token", "int", "nat", "nat1", "rat", "real" }));
-	final String UNION_TYPE = "Union";
-	final String MAP_TYPE = "Map";
-	final String SET_TYPE = "Set";
-	final String SEQ_TYPE = "Seq";
-	final String PRODUCT_TYPE = "Product";
+	final String UNION_TYPE = "Union<";
+	final String MAP_TYPE = "Map<";
+	final String SET_TYPE = "Set<";
+	final String SEQ_TYPE = "Seq<";
+	final String PRODUCT_TYPE = "Product<";
+	final String OPTIONAL_TYPE = "Optional<";
+	 final String INMAP_TYPE = "InMap<";
 
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
+	
 
 	public PType convert(Property p)
 	{
 		PType type = convert(p.getType());
-		if(p.getUpper()==LiteralUnlimitedNatural.UNLIMITED)
+		if (p.getUpper() == LiteralUnlimitedNatural.UNLIMITED)
 		{
-			if(p.isOrdered())
+			if (p.isOrdered())
 			{
-				if(p.getLower() ==0)
+				if (p.getLower() == 0)
 				{
-					type =  AstFactory.newASeqSeqType(location, type);
-				}else if(p.getLower()==1)
+					type = AstFactory.newASeqSeqType(location, type);
+				} else if (p.getLower() == 1)
 				{
 					type = AstFactory.newASeq1SeqType(location, type);
 				}
-			}else
+			} else
 			{
-				type =  AstFactory.newASetType(location, type);
+				type = AstFactory.newASetType(location, type);
 			}
+		} else if (p.getLower() == 0 && p.getUpper() == 1)
+		{
+			type = AstFactory.newAOptionalType(location, type);
 		}
-		
-		if(p.getQualifiers().size()==1)
+
+		if (p.getQualifiers().size() == 1)
 		{
 			Property qualifier = p.getQualifiers().get(0);
 			PType fromType = convert(qualifier);
-			if(p.isUnique())
+			if (p.isUnique())
 			{
 				type = AstFactory.newAInMapMapType(location, fromType, type);
-			}else
+			} else
 			{
 				type = AstFactory.newAMapMapType(location, fromType, type);
 			}
 		}
 		return type;
 	}
-	
+
 	public PType convert(Type type)
 	{
 		try
 		{
 			String module = null;
-			if(type.getNamespace()!=null && type.getNamespace() instanceof Class)
+			if (type.getNamespace() != null
+					&& type.getNamespace() instanceof Class)
 			{
 				module = type.getNamespace().getName();
 			}
-			return convert(type.getName(),module);
+			return convert(type.getName(), module);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -85,35 +93,47 @@ public class VdmTypeCreator
 		}
 	}
 
-	public PType convert(String type,String module)
+	public PType convert(String type, String module)
 	{
 
 		if (basicTypes.contains(type.toLowerCase()))
 		{
 			return convertBasicType(type);
+		} else if (type.equals(UmlTypeCreatorBase.VOID_TYPE))
+		{
+			return AstFactory.newAVoidReturnType(location);
+		}else if (type.equals(UmlTypeCreatorBase.ANY_TYPE))
+		{
+			return AstFactory.newAUnknownType(location);
 		} else if (type.startsWith(UNION_TYPE))
 		{
-			return AstFactory.newAUnionType(location, convertGeneric(type.substring(UNION_TYPE.length())));
+			return AstFactory.newAUnionType(location, convertGeneric(type));
 		} else if (type.startsWith(PRODUCT_TYPE))
 		{
-			return AstFactory.newAProductType(location, convertGeneric(type.substring(PRODUCT_TYPE.length())));
+			return AstFactory.newAProductType(location, convertGeneric(type));
 		} else if (type.startsWith(MAP_TYPE))
 		{
-			List<PType> types = convertGeneric(type.substring(MAP_TYPE.length()));
+			List<PType> types = convertGeneric(type);
 			return AstFactory.newAMapMapType(location, types.get(0), types.get(1));
-		} else if (type.startsWith(SET_TYPE))
+		} else if (type.startsWith(INMAP_TYPE))
 		{
-			return AstFactory.newASetType(location, convertGeneric(type.substring(SET_TYPE.length())).get(0));
+			List<PType> types = convertGeneric(type);
+			return AstFactory.newAInMapMapType(location, types.get(0), types.get(1));
+		}else if (type.startsWith(SET_TYPE))
+		{
+			return AstFactory.newASetType(location, convertGeneric(type).get(0));
 		} else if (type.startsWith(SEQ_TYPE))
 		{
-			return AstFactory.newASeqSeqType(location, convertGeneric(type.substring(SEQ_TYPE.length())).get(0));
-		}else if(type.startsWith("<")&& type.endsWith(">"))
+			return AstFactory.newASeqSeqType(location, convertGeneric(type).get(0));
+		} else if (type.startsWith("<") && type.endsWith(">"))
 		{
-			return AstFactory.newAQuoteType(new LexQuoteToken(type.substring(1,type.length()-1), location));
-		}
-		else
+			return AstFactory.newAQuoteType(new LexQuoteToken(type.substring(1, type.length() - 1), location));
+		} else if (type.startsWith(OPTIONAL_TYPE))
 		{
-			//String module = "";
+			return AstFactory.newAOptionalType(location, convertGeneric(type).get(0));
+		} else
+		{
+			// String module = "";
 			String name = "";
 			if (type.contains("::"))
 			{
@@ -169,14 +189,30 @@ public class VdmTypeCreator
 	 */
 	private PTypeList convertGeneric(String name)
 	{
-		String nameNoLessOrGreater = name.substring(1, name.length() - 1);
+		String nameNoLessOrGreater = name.substring(name.indexOf("<") + 1, name.length() - 1);
 
 		String[] typeStrings = nameNoLessOrGreater.split(",");
 
-		PTypeList types = new PTypeList();
-		for (String t : typeStrings)
+		// decide if the split is valid or if the type is a single generic type
+		boolean notSingleGenericType = true;
+		for (String part : typeStrings)
 		{
-			types.add(convert(t,null));
+			if (part.replaceAll("[^<]", "").length() != part.replaceAll("[^>]", "").length())
+			{
+				notSingleGenericType = false;
+			}
+		}
+
+		PTypeList types = new PTypeList();
+		if (notSingleGenericType)
+		{
+			for (String t : typeStrings)
+			{
+				types.add(convert(t, null));
+			}
+		}else
+		{
+			types.add(convert(nameNoLessOrGreater, null));
 		}
 		return types;
 	}
@@ -202,17 +238,17 @@ public class VdmTypeCreator
 		PTypeList types = new PTypeList();
 		for (EnumerationLiteral lit : elem.getOwnedLiterals())
 		{
-			if(lit.getName().startsWith("<") && lit.getName().endsWith(">"))
+			if (lit.getName().startsWith("<") && lit.getName().endsWith(">"))
 			{
-				types.add(convert(lit.getName(),null));
-			}else
+				types.add(convert(lit.getName(), null));
+			} else
 			{
-				System.out.println("Problem with conversion of enumeration: "+ elem.getName() );
+				System.out.println("Problem with conversion of enumeration: "
+						+ elem.getName());
 			}
-			
+
 		}
-		
-		
-		return AstFactory.newAUnionType(location, types );
+
+		return AstFactory.newAUnionType(location, types);
 	}
 }

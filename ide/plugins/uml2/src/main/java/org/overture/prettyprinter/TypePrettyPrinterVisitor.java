@@ -17,6 +17,8 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AVoidReturnType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
@@ -138,4 +140,18 @@ public class TypePrettyPrinterVisitor extends
 		return "unresolved";
 	}
 	
+	
+	@Override
+	public String caseAVoidReturnType(AVoidReturnType node,
+			PrettyPrinterEnv question) throws AnalysisException
+	{
+		return "()";
+	}
+	
+	@Override
+	public String caseAVoidType(AVoidType node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
+		return "()";
+	}
 }

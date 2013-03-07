@@ -16,6 +16,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	protected void createFieldEditors()
 	{
 		addField(new BooleanFieldEditor(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, "Prefer associations during translation", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, "Disable nested artifacts in Deployment Diagrams", getFieldEditorParent()));
 	}
 
 	@Override
@@ -29,6 +30,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, false);
+		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, false);
 		super.performDefaults();
 	}
 
@@ -36,6 +38,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, false);
+		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, false);
 	}
 
 }

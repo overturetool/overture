@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.uml2.uml.Artifact;
 import org.eclipse.uml2.uml.CommunicationPath;
 import org.eclipse.uml2.uml.Model;
@@ -27,17 +28,25 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
+import org.overture.ide.plugins.uml2.Activator;
+import org.overture.ide.plugins.uml2.IUml2Constants;
 import org.overture.ide.plugins.uml2.UmlConsole;
 
 public class UmlDeploymentCreator
 {
 	private Model modelWorkingCopy;
 	private UmlConsole console;
-	
+	private boolean deployArtifactsOutsideNodes = true;
+
 	public UmlDeploymentCreator(Model model, UmlConsole console)
 	{
 		this.modelWorkingCopy = model;
 		this.console = console;
+		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+		if (preferences != null)
+		{
+			this.deployArtifactsOutsideNodes = preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
+		}
 	}
 
 	public void buildDeployment(List<SClassDefinition> classes2)
@@ -80,7 +89,7 @@ public class UmlDeploymentCreator
 				PDefinition def = ((AClassType) ind.getType()).getClassdef();
 				if (def instanceof ACpuClassDefinition)
 				{
-					console.out.println("Adding node: "+ ind.getName().name);
+					console.out.println("Adding node: " + ind.getName().name);
 					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().name, UMLPackage.Literals.NODE);
 					nodes.put(ind.getName().name, n);
 				}
@@ -104,7 +113,7 @@ public class UmlDeploymentCreator
 						{
 							if (nodes.containsKey(m.toString()))
 							{
-								console.out.print(" "+m.toString());
+								console.out.print(" " + m.toString());
 								con.createNavigableOwnedEnd("", nodes.get(m.toString()));
 							}
 						}
@@ -145,15 +154,37 @@ public class UmlDeploymentCreator
 											{
 												deployedName = call.getArgs().get(1).toString();
 											}
-											Artifact artifact = (Artifact) nodes.get(nodeName).createNestedClassifier(deployedName, UMLPackage.Literals.ARTIFACT);
+											Artifact artifact = null;
+											if (deployArtifactsOutsideNodes)
+											{
+												artifact = (Artifact) deploymentPackage.createPackagedElement(deployedName, UMLPackage.Literals.ARTIFACT);
+												// Usage usage = (Usage) artifact.create("use",
+												// UMLPackage.Literals.USAGE);
+												// usage.createUsage(nodes.get(nodeName));
+												// usage.createDependency(artifact);
+												// nodes.get(nodeName).createUsage(artifact);
+												// artifact.createUsage(nodes.get(nodeName));
+												artifact.createOwnedComment().setBody("Deployed to "
+														+ nodeName);
+												nodes.get(nodeName).createOwnedComment().setBody("Deploys "
+														+ artifact.getName());
+												deploymentPackage.createOwnedComment().setBody("Artifact "
+														+ artifact.getName()
+														+ " is deployed onto Node "
+														+ nodeName);
+											} else
+											{
+												artifact = (Artifact) nodes.get(nodeName).createNestedClassifier(deployedName, UMLPackage.Literals.ARTIFACT);
+											}
 											if (call.getArgs().get(0) instanceof AVariableExp
 													&& ((AVariableExp) call.getArgs().get(0)).getType() instanceof AClassType)
 											{
-												
+
 												AVariableExp var = (AVariableExp) call.getArgs().get(0);
 												// Class c = classes.get(((AClassType) var.getType()).getName().name);
 												artifact.setFileName(((AClassType) var.getType()).getName().location.file.getName());
-												console.out.println("Adding artifact: "+ artifact.getName());
+												console.out.println("Adding artifact: "
+														+ artifact.getName());
 											}
 										}
 									}

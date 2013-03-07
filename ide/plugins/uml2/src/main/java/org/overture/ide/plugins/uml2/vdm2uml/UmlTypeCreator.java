@@ -25,6 +25,7 @@ import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.EMapType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
@@ -40,6 +41,7 @@ import org.overture.ide.plugins.uml2.UmlConsole;
  */
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
+
 	public interface ClassTypeLookup
 	{
 		Class lookup(AClassType type);
@@ -52,7 +54,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private Package bindingPackage;
 	private Package combositeTypePackage;
 	private Package basicTypePackage;
-	private UmlConsole console=null;
+	private UmlConsole console = null;
 
 	public UmlTypeCreator(ClassTypeLookup classLookup, UmlConsole console)
 	{
@@ -97,9 +99,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case OPERATION:
 				break;
 			case OPTIONAL:
-				createOptionalType(class_,(AOptionalType) type);			
+				createOptionalType(class_, (AOptionalType) type);
 				return;
-				//break;
+				// break;
 			case PARAMETER:
 				break;
 			case PRODUCT:
@@ -116,12 +118,13 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case UNDEFINED:
 				break;
 			case UNKNOWN:
-				break;
+				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(ANY_TYPE));
+				return;
 			case UNRESOLVED:
 				break;
 			case VOID:
-				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType("void"));
-			return;
+				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(VOID_TYPE));
+				return;
 			case VOIDRETURN:
 
 			default:
@@ -136,9 +139,11 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		if (!types.containsKey(getName(type)))
 		{
-			if(console!=null)
+			if (console != null)
 			{
-				console.err.println("Unable to convert type: "+type +" - Inserting \"Unknown\" type as a replacement and continues");
+				console.err.println("Unable to convert type: "
+						+ type
+						+ " - Inserting \"Unknown\" type as a replacement and continues");
 			}
 			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
 			unknownType.addKeyword(getName(type));
@@ -148,7 +153,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createOptionalType(Class class_, AOptionalType type)
 	{
-		create(class_, type.getType());
+		// create(class_, type.getType());
+		createTemplateType(class_, type, templateOptionalName, new String[] { "T" }, type.getType());
 	}
 
 	private void createSetType(Class class_, ASetType type)
@@ -163,7 +169,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-		createTemplateType(class_, type, templateMapName, new String[] { "D",
+		createTemplateType(class_, type, type.kindSMapType()==EMapType.INMAP?templateInMapName:templateMapName, new String[] { "D",
 				"R" }, type.getFrom(), type.getTo());
 	}
 
@@ -231,7 +237,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			bindingClass = bindingPackage.createOwnedClass(getName(type), false);
 			TemplateBinding binding = bindingClass.createTemplateBinding(templateSetClass.getOwnedTemplateSignature());
 
-			if(innertypes.length== templateSetClass.getOwnedTemplateSignature().getOwnedParameters().size())
+			if (innertypes.length == templateSetClass.getOwnedTemplateSignature().getOwnedParameters().size())
 			{
 				for (int i = 0; i < innertypes.length; i++)
 				{
@@ -244,16 +250,16 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 					substitution.setFormal(templateSetClass.getOwnedTemplateSignature().getOwnedParameters().get(i));
 				}
 			}
-			
-//			for (PType innerType : innertypes)
-//			{
-//				TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
-//				if (getUmlType(innerType) == null)
-//				{
-//					create(class_, innerType);
-//				}
-//				substitution.setActual(getUmlType(innerType));
-//			}
+
+			// for (PType innerType : innertypes)
+			// {
+			// TemplateParameterSubstitution substitution = binding.createParameterSubstitution();
+			// if (getUmlType(innerType) == null)
+			// {
+			// create(class_, innerType);
+			// }
+			// substitution.setActual(getUmlType(innerType));
+			// }
 
 			types.put(getName(type), bindingClass);
 		}
@@ -337,13 +343,12 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	public Classifier getUmlType(PType type)
 	{
-		
-		while(Vdm2UmlUtil.isOptional(type))
-		{
-			type = ((AOptionalType) type).getType();
-		}
-		
-		
+
+		// while(Vdm2UmlUtil.isOptional(type))
+		// {
+		// type = ((AOptionalType) type).getType();
+		// }
+
 		String name = getName(type);
 
 		if (types.containsKey(name))
