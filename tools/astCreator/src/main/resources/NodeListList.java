@@ -29,6 +29,17 @@ import java.util.*;
 public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 	%INode% parent;
 	
+	private boolean CanNullParentOfInnerList(List<? extends E> list, %INode% parent)
+	{
+		for (E e : list)
+		{
+			if(e.parent() != parent)
+				return false;
+		}
+		
+		return true;
+	}
+	
 	protected void setParentOfInnterList(List<? extends E> list, %INode% parent)
 	{
 		for (E e : list)
@@ -77,27 +88,44 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 	
 	public @Override boolean remove(Object o) {
 		if (super.remove(o)) {
-			((%INode%)o).parent(null);
-			return true;
+			
+			if(((%INode%)o).parent()==parent)
+			{
+				((%INode%)o).parent(null);
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	public @Override List<E> removeFirst() {
 		List<E> o = super.removeFirst();
-		setParentOfInnterList(	o,null);
+		
+		if(CanNullParentOfInnerList(o, parent))
+		{
+			setParentOfInnterList(o,null);
+		}
+		
 		return o;
 	}
 	
 	public @Override List<E> removeLast() {
 		List<E> o = super.removeLast();
-		setParentOfInnterList(	o,null);
+		
+		if(CanNullParentOfInnerList(o, parent))
+		{
+			setParentOfInnterList(o,null);
+		}
 		return o;
 	}
 	
 	public @Override void clear() {
 		for (List<? extends E> o : this) {
-			setParentOfInnterList(	o,null);
+			
+			if(CanNullParentOfInnerList(o, parent))
+			{
+				setParentOfInnterList(o,null);
+			}
 		}
 		super.clear();
 	}
@@ -118,7 +146,11 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 	
 	public @Override List<E> remove(int index) {
 		List<E> old = super.remove(index);
-		setParentOfInnterList(old,null);
+		
+		if(CanNullParentOfInnerList(old, parent))
+		{
+			setParentOfInnterList(old,null);
+		}
 		return old;
 	}
 	
@@ -184,7 +216,12 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 	
 		setParent(o);
 		List<E> old = super.set(index, o);
-		setParentOfInnterList(old,null);
+		
+		if(CanNullParentOfInnerList(old, parent))
+		{
+			setParentOfInnterList(old,null);
+		}
+		
 		return old;
 	}
 	
@@ -229,7 +266,11 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 		
 		public void remove() {
 		    iterator.remove();
-		    setParentOfInnterList(  last_returned,null);
+		    
+		    if(CanNullParentOfInnerList(last_returned, parent))
+			{
+		    	setParentOfInnterList(last_returned,null);
+			}
 		}
 		
 		public void set(List<E> o) {
@@ -238,7 +279,12 @@ public class %NodeListList%<E extends %INode%> extends LinkedList<List<E>> {
 			iterator.set(o);
 			if (o != last_returned) {
 				setParent(o);
-				  setParentOfInnterList(  last_returned,null);
+				
+				if(CanNullParentOfInnerList(last_returned, parent))
+				{
+					setParentOfInnterList(last_returned,null);
+				}
+				
 				last_returned = o;
 			}
 		}
