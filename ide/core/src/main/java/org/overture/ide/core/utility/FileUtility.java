@@ -108,7 +108,7 @@ public class FileUtility
 			marker.setAttribute(IMarker.SOURCE_ID, sourceId);// ICoreConstants.PLUGIN_ID);
 			marker.setAttribute(IMarker.LOCATION, "line: " + lineNumber);
 
-			SourceLocationConverter converter = new SourceLocationConverter(getContent(file));
+			SourceLocationConverter converter = new SourceLocationConverter(FileUtility.makeString(getContent(file)));
 			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
 			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
 		} catch (CoreException e)
@@ -405,6 +405,15 @@ public class FileUtility
 		return content;
 	}
 
+	public static String makeString(List<Character> content)
+	{
+		StringBuilder sb = new StringBuilder();
+		for (Character c : content) {
+			sb.append(c);
+		}
+		return sb.toString();
+	}
+	
 	public static char[] getCharContent(List<Character> content)
 	{
 		char[] source = new char[content.size()];
