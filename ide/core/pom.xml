@@ -15,75 +15,104 @@
   <artifactId>org.overture.ide.core</artifactId>
   <name>org.overture.ide.core</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>ast</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>parser</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>typechecker</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>pog</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>interpreter</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>testframework</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-dependency-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>copy-dependencies</id>
+	    <phase>process-sources</phase>
+	    <goals>
+	      <goal>copy</goal>
+	    </goals>
             <configuration>
-              <outputDirectory>${basedir}</outputDirectory>
+              <outputDirectory>${basedir}/jars</outputDirectory>
               <overWriteReleases>true</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
+              <stripVersion>true</stripVersion>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>ast</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>parser</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>typechecker</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>pog</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>interpreter</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.overturetool.core</groupId>
+                  <artifactId>testframework</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
+              </artifactItems>
+	    </configuration>
+	  </execution>
+	</executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}</directory>
-              <includes>
-                <include>*.jar</include>
-              </includes>
-              <followSymlinks>false</followSymlinks>
-            </fileset>
-          </filesets>
-        </configuration>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-clean-plugin</artifactId>
+	<configuration>
+          <failOnError>false</failOnError>
+	  <filesets>
+	    <fileset>
+	      <directory>${basedir}/jars</directory>
+	      <followSymlinks>false</followSymlinks>
+	    </fileset>
+	  </filesets>
+	</configuration>
       </plugin>
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+    	<plugin>
+    	  <groupId>org.eclipse.m2e</groupId>
+    	  <artifactId>lifecycle-mapping</artifactId>
+    	  <version>1.0.0</version>
+    	  <configuration>
+    	    <lifecycleMappingMetadata>
+    	      <pluginExecutions>
+    		<pluginExecution>
+    		  <pluginExecutionFilter>
+    		    <groupId>org.apache.maven.plugins</groupId>
+    		    <artifactId>maven-dependency-plugin</artifactId>
+    		    <versionRange>[1.0.0,)</versionRange>
+    		    <goals>
+    		      <goal>copy</goal>
+    		    </goals>
+    		  </pluginExecutionFilter>
+    		  <action>
+    		    <execute>
+                      <runOnIncremental>false</runOnIncremental>
+                    </execute>
+    		  </action>
+    		</pluginExecution>
+    	      </pluginExecutions>
+    	    </lifecycleMappingMetadata>
+    	  </configuration>
+    	</plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>
