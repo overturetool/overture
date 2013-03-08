@@ -44,7 +44,7 @@ public class SplashHandler extends BasicSplashHandler
 
 		foregroundColorInteger & 0xFF));
 
-		final Point buildIdPoint = new Point(350, 200);
+		final Point buildIdPoint = new Point(76, 200);
 
 		final String productVersion = "Version " + Platform.getResourceString(Activator.getDefault().getBundle(), "%productVersion");
 		final String productBuild = Platform.getResourceString(Activator.getDefault().getBundle(), "%productBuild");
