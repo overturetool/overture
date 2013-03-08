@@ -14,6 +14,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -108,7 +109,7 @@ public class UmlTypeCreatorBase
 			case OPTIONAL:
 				return "Optional<"+getName(((AOptionalType) type).getType())+">";
 			case PARAMETER:
-				break;
+				return ((AParameterType)type).getName().name;
 			case PRODUCT:
 			{
 				String name = "Product<";

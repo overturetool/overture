@@ -192,7 +192,7 @@ public class TestEngineDelegate
 		List<String> commandList = new Vector<String>();
 		List<String> entries = new Vector<String>();
 		// get the bundled class path of the debugger
-		ClasspathUtils.collectClasspath(new String[] { ITracesConstants.TEST_ENGINE_BUNDLE_ID }, entries);
+		ClasspathUtils.collectClasspath(ITracesConstants.TEST_ENGINE_BUNDLE_IDs, entries);
 		// get the class path for all jars in the project lib folder
 		File lib = new File(project.getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())

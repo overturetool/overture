@@ -34,6 +34,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->mu  = "mu(" [record] ", " + $Utils.listToString($[modifiers]$)$ + ")"
 %exp->new = "new " [className] "("+ $Utils.listToString($[args]$)$ + ")"
 %exp->nil = "nil"
+%exp->notYetSpecified = "is not yet specified"
 %exp->postOp = [postexpression]
 %exp->pre = "pre_(" [function] + $Utils.listToString($ [args] $)$ + ")"
 %exp->preOp = [expression]

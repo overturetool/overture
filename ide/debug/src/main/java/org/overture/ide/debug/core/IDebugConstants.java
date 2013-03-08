@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core;
 
+import org.overture.ide.core.ICoreConstants;
+
 
 public interface IDebugConstants
 {
@@ -67,7 +69,7 @@ public interface IDebugConstants
 	public static final String BREAKPOINT_MARKER_ID = "org.eclipse.debug.core.lineBreakpointMarker";
 	
 	//debugger
-	public static final String DEBUG_ENGINE_BUNDLE_ID = "org.overture.ide.core";
+	public static final String[] DEBUG_ENGINE_BUNDLE_IDS = {ICoreConstants.PLUGIN_ID};
 	public static final String DEBUG_ENGINE_CLASS = "org.overture.interpreter.debug.DBGPReaderV2";
 	static final String EXTENSION_POINT_VDM_BREAKPOINT_LISTENERS = "breakpointListeners";
 	

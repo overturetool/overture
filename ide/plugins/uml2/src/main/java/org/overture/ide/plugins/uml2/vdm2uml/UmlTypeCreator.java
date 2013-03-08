@@ -55,6 +55,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private Package combositeTypePackage;
 	private Package basicTypePackage;
 	private UmlConsole console = null;
+	private Map<String, Classifier> templateParameterTypes;
 
 	public UmlTypeCreator(ClassTypeLookup classLookup, UmlConsole console)
 	{
@@ -169,8 +170,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-		createTemplateType(class_, type, type.kindSMapType()==EMapType.INMAP?templateInMapName:templateMapName, new String[] { "D",
-				"R" }, type.getFrom(), type.getTo());
+		createTemplateType(class_, type, type.kindSMapType() == EMapType.INMAP ? templateInMapName
+				: templateMapName, new String[] { "D", "R" }, type.getFrom(), type.getTo());
 	}
 
 	private void createUnionType(Class class_, AUnionType type)
@@ -433,5 +434,22 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			basicTypePackage = this.modelWorkingCopy.createNestedPackage("Basic VDM Types");
 		}
 		return basicTypePackage;
+	}
+
+	public void addTemplateTypes(Map<String, Classifier> templateParameterTypes)
+	{
+		this.templateParameterTypes = templateParameterTypes;
+		this.types.putAll(templateParameterTypes);
+	}
+
+	public void removeTemplateTypees()
+	{
+		if (this.templateParameterTypes != null)
+		{
+			for (String name : this.templateParameterTypes.keySet())
+			{
+				this.types.remove(name);
+			}
+		}
 	}
 }
