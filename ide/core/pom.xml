@@ -56,11 +56,6 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.overturetool.core</groupId>
-                  <artifactId>interpreter</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
                   <artifactId>testframework</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>

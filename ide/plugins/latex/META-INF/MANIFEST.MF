@@ -13,6 +13,7 @@ Require-Bundle: org.overture.ide.vdmpp.core,
  org.overture.ide.vdmrt.core,
  org.overture.ide.vdmsl.core,
  org.overture.ide.core,
+ org.overture.ide.debug,
  org.overture.ide.ui
 Bundle-Activator: org.overture.ide.plugins.latex.Activator
 Bundle-ClassPath: .
