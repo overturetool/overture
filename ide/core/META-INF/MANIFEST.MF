@@ -57,14 +57,10 @@ Export-Package: org.overture.ast.analysis,
  org.overture.typechecker.assistant.type,
  org.overture.typechecker.util,
  org.overture.typechecker.visitor,
- org.overture.util,
- org.overturetool.test.framework,
- org.overturetool.test.framework.results,
- org.overturetool.test.util
+ org.overture.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  jars/ast.jar,
- jars/testframework.jar,
  jars/typechecker.jar,
  jars/parser.jar

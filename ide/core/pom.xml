@@ -49,11 +49,6 @@
                   <artifactId>typechecker</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
-                  <artifactId>testframework</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
               </artifactItems>
 	    </configuration>
 	  </execution>

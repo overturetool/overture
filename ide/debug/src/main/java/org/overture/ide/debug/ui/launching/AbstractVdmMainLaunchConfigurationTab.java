@@ -929,7 +929,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				{
 					fProjectText.setText(name);
 
-					String launchConfigName = DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(name);
+					String launchConfigName = DebugPlugin.getDefault().getLaunchManager().generateLaunchConfigurationName(name);
 					return launchConfigName;
 				}
 			}

@@ -84,7 +84,7 @@ public class VdmPpApplicationLaunchShortcut extends VdmLaunchShortcut
 		{
 			
 			ILaunchConfigurationType configType = getConfigurationType();
-			wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(projectName+" "+AstNameUtil.getName(type)));
+			wc = configType.newInstance(null, getLaunchManager().generateLaunchConfigurationName(projectName+" "+AstNameUtil.getName(type)));
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, projectName);
 			wc.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CREATE_COVERAGE, true);
 
