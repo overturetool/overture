@@ -44,11 +44,6 @@
                   <artifactId>parser</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
-                <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
-                  <artifactId>typechecker</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
               </artifactItems>
 	    </configuration>
 	  </execution>

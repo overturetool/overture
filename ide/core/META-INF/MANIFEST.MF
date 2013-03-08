@@ -48,19 +48,9 @@ Export-Package: org.overture.ast.analysis,
  org.overture.parser.messages,
  org.overture.parser.syntax,
  org.overture.parser.util,
- org.overture.typechecker,
- org.overture.typechecker.assistant.definition,
- org.overture.typechecker.assistant.expression,
- org.overture.typechecker.assistant.module,
- org.overture.typechecker.assistant.pattern,
- org.overture.typechecker.assistant.statement,
- org.overture.typechecker.assistant.type,
- org.overture.typechecker.util,
- org.overture.typechecker.visitor,
  org.overture.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  jars/ast.jar,
- jars/typechecker.jar,
  jars/parser.jar

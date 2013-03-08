@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.debug,
  org.overture.ide.vdmpp.debug,
  org.overture.ide.vdmrt.debug,
- org.overture.ide.vdmsl.debug
+ org.overture.ide.vdmsl.debug,
+ org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.plugins.traces.OvertureTracesPlugin
 Bundle-ClassPath: .,
  jars/ctruntime.jar,

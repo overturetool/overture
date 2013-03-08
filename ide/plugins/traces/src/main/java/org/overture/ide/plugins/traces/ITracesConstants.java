@@ -19,6 +19,8 @@
 package org.overture.ide.plugins.traces;
 
 import org.overture.ide.core.ICoreConstants;
+import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.builders.vdmj.IBuilderVdmjConstants;
 
 public interface ITracesConstants
 {
@@ -35,6 +37,11 @@ public interface ITracesConstants
 	/**
 	 * This string gives the plugin id that contains the core ctruntime jar file.
 	 */
-	public static final String[] TEST_ENGINE_BUNDLE_IDs ={PLUGIN_ID,ICoreConstants.PLUGIN_ID};
+	public static final String[] TEST_ENGINE_BUNDLE_IDs = {
+		PLUGIN_ID,
+		ICoreConstants.PLUGIN_ID,
+		IDebugConstants.PLUGIN_ID,
+		IBuilderVdmjConstants.PLUGIN_ID
+		};
 	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";
 }

@@ -9,6 +9,7 @@ Bundle-SymbolicName: org.overture.ide.plugins.uml2;singleton:=true
 Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.ui,
  org.overture.ide.core,
+ org.overture.ide.builders.vdmj,
  org.overture.ide.debug,
  org.eclipse.uml2.common;bundle-version="1.7.0",
  org.eclipse.uml2.uml;bundle-version="4.0.1"

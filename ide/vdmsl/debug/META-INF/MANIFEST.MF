@@ -11,6 +11,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
  JavaSE-1.7
 Require-Bundle: org.overture.ide.debug,
  org.overture.ide.core,
+ org.overture.ide.builders.vdmj,
  org.overture.ide.vdmsl.core
 Export-Package: org.overture.ide.vdmsl.debug,
  org.overture.ide.vdmsl.debug.ui.launchconfigurations
