@@ -16,4 +16,5 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.core,
  org.overture.ide.ui
 Bundle-Activator: org.overture.ide.plugins.poviewer.Activator
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ jars/pog.jar

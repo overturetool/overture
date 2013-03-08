@@ -51,11 +51,6 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.overturetool.core</groupId>
-                  <artifactId>pog</artifactId>
-                  <version>${project.version}</version>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
                   <artifactId>testframework</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>

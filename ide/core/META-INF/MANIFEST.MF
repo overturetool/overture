@@ -48,10 +48,6 @@ Export-Package: org.overture.ast.analysis,
  org.overture.parser.messages,
  org.overture.parser.syntax,
  org.overture.parser.util,
- org.overture.pog.assistant,
- org.overture.pog.obligation,
- org.overture.pog.util,
- org.overture.pog.visitor,
  org.overture.typechecker,
  org.overture.typechecker.assistant.definition,
  org.overture.typechecker.assistant.expression,
@@ -69,7 +65,6 @@ Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
 Bundle-ClassPath: .,
  jars/ast.jar,
- jars/pog.jar,
  jars/testframework.jar,
  jars/typechecker.jar,
  jars/parser.jar
