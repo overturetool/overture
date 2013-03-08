@@ -35,6 +35,7 @@ import org.overturetool.vdmj.debug.DBGPReader;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.ContextException;
@@ -196,10 +197,12 @@ public class ClassList extends Vector<ClassDefinition>
 
 		ContextException failed = null;
 		int retries = 3;	// Potentially not enough.
+		Set<ContextException> trouble = new HashSet<ContextException>();
 
 		do
 		{
 			failed = null;
+			trouble.clear();
 
     		for (ClassDefinition cdef: this)
     		{
@@ -209,6 +212,8 @@ public class ClassList extends Vector<ClassDefinition>
     			}
     			catch (ContextException e)
     			{
+    				trouble.add(e);
+    				
     				// These two exceptions mean that a member could not be
     				// found, which may be a forward reference, so we retry...
 
@@ -225,9 +230,21 @@ public class ClassList extends Vector<ClassDefinition>
 		}
 		while (--retries > 0 && failed != null);
 
-		if (failed != null)
+		if (!trouble.isEmpty())
 		{
-			throw failed;
+			ContextException toThrow = trouble.iterator().next();
+
+			for (ContextException e: trouble)
+			{
+				Console.err.println(e);
+
+				if (e.number != 4034)	// Not in scope err
+				{
+					toThrow = e;
+				}
+			}
+
+			throw toThrow;
 		}
 
 		return globalContext;
