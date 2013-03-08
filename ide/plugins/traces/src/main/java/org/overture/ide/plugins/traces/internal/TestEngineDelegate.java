@@ -190,9 +190,10 @@ public class TestEngineDelegate
 	private List<String> getClassPath(IProject project) throws CoreException
 	{
 		List<String> commandList = new Vector<String>();
-		List<String> entries = new Vector<String>();
+
 		// get the bundled class path of the debugger
-		ClasspathUtils.collectClasspath(ITracesConstants.TEST_ENGINE_BUNDLE_IDs, entries);
+		List<String> entries = ClasspathUtils.collectJars(ITracesConstants.PLUGIN_ID);
+
 		// get the class path for all jars in the project lib folder
 		File lib = new File(project.getLocation().toFile(), "lib");
 		if (lib.exists() && lib.isDirectory())
@@ -209,17 +210,19 @@ public class TestEngineDelegate
 		if (entries.size() > 0)
 		{
 			commandList.add("-cp");
-			String classPath = " ";
+			StringBuilder classPath = new StringBuilder();
 			for (String cp : entries)
 			{
 				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
 				{
-					classPath += toPlatformPath(cp) + getCpSeperator();
+					classPath.append(toPlatformPath(cp));
+					classPath.append(getCpSeperator());
 				}
 			}
-			classPath = classPath.substring(0, classPath.length() - 1);
-			commandList.add(classPath.trim());
-
+			if (classPath.length()>0)
+				commandList.add(classPath.toString());
+			else
+				commandList.add(" ");
 		}
 		return commandList;
 	}

@@ -38,6 +38,40 @@ import org.overture.ide.core.ICoreConstants;
 
 public class ClasspathUtils {
 
+	public static List<String> collectJars(String bundleId) {
+		List<String> bundleIds = new ArrayList<String>();
+		bundleIds.add(bundleId);
+		
+		final Bundle bundle = Platform.getBundle(bundleId);
+		if (bundle==null) {
+			System.out.println("Bundle " + bundleId + " not found.");
+			return new ArrayList<String>();
+		}
+		
+		try {
+			String requires = (String) bundle.getHeaders().get(Constants.REQUIRE_BUNDLE);
+			ManifestElement[] elements = ManifestElement.parseHeader(Constants.REQUIRE_BUNDLE, requires);
+			
+			for (ManifestElement manifestElement : elements) {
+				String value = manifestElement.getValue();
+				if (value.startsWith("org.overture"))
+					bundleIds.add(value);
+			}
+		} catch (BundleException e) {
+			return new ArrayList<String>();
+		}
+		
+		List<String> preliminary = new ArrayList<String>();
+		collectClasspath(bundleIds.toArray(new String[]{}), preliminary);
+		
+		List<String> filtered = new ArrayList<String>();
+		for (String s : preliminary) {
+			if (s.endsWith(".jar"))
+				filtered.add(s);
+		}
+		return filtered;
+	}
+
 	public static void collectClasspath(String[] bundleIds, List<String> entries) {
 		try {
 			final boolean developmentMode = Platform.inDevelopmentMode();
@@ -59,10 +93,10 @@ public class ClasspathUtils {
 				}
 			}
 		} catch (CoreException e) {
-//			LaunchingPlugin.error(e);
+			//			LaunchingPlugin.error(e);
 		}
 	}
-	
+
 	private static void getPluginClassPath(String bundleId, List<String> entries)
 	{
 		try {
@@ -70,7 +104,7 @@ public class ClasspathUtils {
 			if (bundle == null){
 				throw new BundleException(bundleId + " cannot be retrieved from the Platform");
 			}
-			
+
 			String requires = (String) bundle.getHeaders().get((Constants.BUNDLE_CLASSPATH));
 			if (requires == null) 
 				requires = ".";	
@@ -79,7 +113,7 @@ public class ClasspathUtils {
 				String value = manifestElement.getValue();
 				if (".".equals(value))
 					value = "/";
-				
+
 				URL url = bundle.getEntry(value);
 				if (url != null)
 				{
@@ -100,10 +134,10 @@ public class ClasspathUtils {
 			final String msg = NLS.bind(PLUGIN_LOCATION_ERROR, bundleId);
 			System.out.println(msg);
 		}
-		
+
 	}
 
-	
+
 	private static File getPluginLocation(String bundleId) throws CoreException {
 		try {
 			final Bundle bundle = Platform.getBundle(bundleId);			
@@ -142,36 +176,36 @@ public class ClasspathUtils {
 		}
 		throw new IOException("Unknown protocol"); //$NON-NLS-1$
 	}
-	
-//	public static String[] getClassPath(IJavaProject myJavaProject) throws IOException, URISyntaxException {
-//		final List<String> result = new ArrayList<String>();
-//		// TODO ClasspathUtils.collectClasspath(new String[] { GenericOvertureInstallType.EMBEDDED_VDMJ_BUNDLE_ID, GenericOvertureInstallType.DBGP_FOR_VDMJ_BUNDLE_ID }, result);
-//		ClasspathUtils.collectClasspath
-//				(
-//					new String[]
-//					      {
-//							"org.overture.ide.generated.vdmj" //TODO put in constant file
-//							//VDMToolsInstallType.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
-//							//GenericOvertureInstalltype.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
-//							//GenericOvertureInstalltype.DBGP_FOR_ABSTRACT_BUNDLE_ID
-//					      },
-//					result
-//				);
-//		try {
-//			final String[] classPath = computeBaseClassPath(myJavaProject);
-//			for (int i = 0; i < classPath.length; ++i) {
-//				result.add(classPath[i]);
-//			}
-//		} catch (CoreException e) {
-//		}
-//		return (String[]) result.toArray(new String[result.size()]);
-//	}
-//	
-//	protected static String[] computeBaseClassPath(IJavaProject myJavaProject) throws CoreException {
-//		if (!myJavaProject.exists())
-//			return CharOperation.NO_STRINGS;
-//		return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
-//	}
+
+	//	public static String[] getClassPath(IJavaProject myJavaProject) throws IOException, URISyntaxException {
+	//		final List<String> result = new ArrayList<String>();
+	//		// TODO ClasspathUtils.collectClasspath(new String[] { GenericOvertureInstallType.EMBEDDED_VDMJ_BUNDLE_ID, GenericOvertureInstallType.DBGP_FOR_VDMJ_BUNDLE_ID }, result);
+	//		ClasspathUtils.collectClasspath
+	//				(
+	//					new String[]
+	//					      {
+	//							"org.overture.ide.generated.vdmj" //TODO put in constant file
+	//							//VDMToolsInstallType.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
+	//							//GenericOvertureInstalltype.DBGP_FOR_VDMTOOLS_BUNDLE_ID,
+	//							//GenericOvertureInstalltype.DBGP_FOR_ABSTRACT_BUNDLE_ID
+	//					      },
+	//					result
+	//				);
+	//		try {
+	//			final String[] classPath = computeBaseClassPath(myJavaProject);
+	//			for (int i = 0; i < classPath.length; ++i) {
+	//				result.add(classPath[i]);
+	//			}
+	//		} catch (CoreException e) {
+	//		}
+	//		return (String[]) result.toArray(new String[result.size()]);
+	//	}
+	//	
+	//	protected static String[] computeBaseClassPath(IJavaProject myJavaProject) throws CoreException {
+	//		if (!myJavaProject.exists())
+	//			return CharOperation.NO_STRINGS;
+	//		return JavaRuntime.computeDefaultRuntimeClassPath(myJavaProject);
+	//	}
 
 	private static final String PLUGIN_LOCATION_ERROR = "Error determining classpath from bundle {0}"; //$NON-NLS-1$
 }
