@@ -26,9 +26,6 @@ package org.overture.ide.plugins.showtraceNextGen.view;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
-import jp.co.csk.vdm.toolbox.VDM.UTIL.VDMCompare;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,12 +36,11 @@ import org.overture.ide.core.utility.FileUtility;
 public class TracefileMarker
 {
 	IFile file;
-	static VDMCompare vdmComp = new VDMCompare();
 	private HashSet markers;
 	private Long errors;
 	private Long warnings;
 
-	public TracefileMarker(IFile file) throws CGException
+	public TracefileMarker(IFile file)
 	{
 		this.file = file;
 		markers = new HashSet();
@@ -62,7 +58,7 @@ public class TracefileMarker
 		}
 	}
 
-	public void addError(String var_1_1, Integer var_2_2) throws CGException
+	public void addError(String var_1_1, Integer var_2_2)
 	{
 		try
 		{
@@ -95,7 +91,7 @@ public class TracefileMarker
 		}
 	}
 
-	public void addWarning(String var_1_1, Integer var_2_2) throws CGException
+	public void addWarning(String var_1_1, Integer var_2_2)
 	{
 		try
 		{
@@ -115,17 +111,17 @@ public class TracefileMarker
 		}
 	}
 
-	public Long errorCount() throws CGException
+	public Long errorCount()
 	{
 		return errors;
 	}
 
-	public Long warningCount() throws CGException
+	public Long warningCount()
 	{
 		return warnings;
 	}
 
-	public void dispose() throws CGException
+	public void dispose()
 	{
 		IMarker mark = null;
 		for (Iterator enum_6 = markers.iterator(); enum_6.hasNext();)

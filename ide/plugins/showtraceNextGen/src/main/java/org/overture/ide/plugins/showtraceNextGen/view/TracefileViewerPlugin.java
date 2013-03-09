@@ -59,7 +59,7 @@ public class TracefileViewerPlugin extends AbstractUIPlugin
 
     public static ImageDescriptor getImageDescriptor(String path)
     {
-        return AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.showtrace", path);
+        return AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.showtraceNextGen", path);
     }
 
     private static TracefileViewerPlugin plugin;

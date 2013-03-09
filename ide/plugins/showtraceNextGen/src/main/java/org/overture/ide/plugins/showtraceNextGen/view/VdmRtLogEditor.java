@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -140,15 +139,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				ErrorDialog.openError(getSite().getShell(), "Editor open", "File is empty", Status.CANCEL_STATUS);
 				return;
 			}
-		} catch (CGException cge)
+		} catch (Exception e)
 		{
-			showMessage(cge);
-		}
-		// makeActions();
-		// contributeToActionBars();
-		catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
+			showMessage(e);
 			e.printStackTrace();
 		}
 
@@ -384,7 +377,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		});
 	}
 
-	private void showMessage(final CGException cge)
+	private void showMessage(final Exception cge)
 	{
 		display.asyncExec(new Runnable()
 		{
@@ -414,7 +407,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			{
 				theMarkers.dispose();
 			}
-		} catch (CGException cge)
+		} catch (Exception cge)
 		{
 			cge.printStackTrace(System.out);
 		}
