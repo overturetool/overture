@@ -207,6 +207,11 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			updateOverviewPage();
 		}
 	}
+	
+	void refresh()
+	{
+		updateOverviewPage();
+	}
 
 	/*
 	 * (non-Javadoc)

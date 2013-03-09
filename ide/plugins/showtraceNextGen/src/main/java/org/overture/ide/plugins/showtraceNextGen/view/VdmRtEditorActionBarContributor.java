@@ -38,6 +38,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 	private Action openValidationAction;
 	private Action moveNextHorizontalAction;
 	private Action movePreviousHorizontalAction;
+	private Action refreshAction;
 
 	/**
 	 * Creates a multi-page contributor.
@@ -134,6 +135,20 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		};
 		movePreviousHorizontalAction.setToolTipText("Move time to Previous time");
 		movePreviousHorizontalAction.setEnabled(true);
+		
+		refreshAction = new Action("Refresh")
+		{
+			@Override
+			public void run()
+			{
+				if (editor != null)
+				{
+					editor.refresh();
+				}
+			}
+		};
+		refreshAction.setToolTipText("Refresh view");
+		refreshAction.setEnabled(true);
 	}
 
 	public void contributeToMenu(IMenuManager manager)
@@ -151,6 +166,9 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 
 		menu.add(new Separator());
 		menu.add(openValidationAction);
+		
+		menu.add(new Separator());
+		menu.add(refreshAction);
 
 	}
 
@@ -167,6 +185,9 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 
 		manager.add(new Separator());
 		manager.add(openValidationAction);
+		manager.add(new Separator());
+		
+		manager.add(refreshAction);
 		manager.add(new Separator());
 	}
 
