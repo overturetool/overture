@@ -23,20 +23,26 @@
 
 package org.overture.ide.plugins.showtraceNextGen.view;
 
-import java.util.Iterator;
-import java.util.Vector;
+
+import java.util.List;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
-@SuppressWarnings("rawtypes")
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+
+
 public class SelectTimeDialog extends TitleAreaDialog
 {
 
    
-	public SelectTimeDialog(Shell parentShell, Vector pTimes)
+	public SelectTimeDialog(Shell parentShell, List<Long> pTimes)
     {
         super(parentShell);
         currentTime = 0L;
@@ -46,7 +52,7 @@ public class SelectTimeDialog extends TitleAreaDialog
         theTimes = pTimes;
     }
 
-    public SelectTimeDialog(Shell parentShell, Vector pTimes, long pcurTime)
+    public SelectTimeDialog(Shell parentShell, List<Long> pTimes, long pcurTime)
     {
         super(parentShell);
         currentTime = 0L;
@@ -105,23 +111,23 @@ public class SelectTimeDialog extends TitleAreaDialog
 //                super();
 //            }
         });
-        Iterator iter = theTimes.iterator();
         int cnt = 0;
         int idx = 0;
-        while(iter.hasNext()) 
-        {
-            Long theValue = (Long)iter.next();
-            if(theValue.longValue() == currentTime)
+
+        for(Long t : theTimes) {
+        	theCombo.add(t.toString());
+        	
+            if(t.longValue() == currentTime)
                 idx = cnt;
-            theCombo.add(theValue.toString());
-            cnt++;
         }
+        cnt++;
+        
         theCombo.select(idx);
         return area;
     }
 
     private long currentTime;
-    private Vector theTimes;
+    private List<Long> theTimes;
     private Combo theCombo;
     public long selectedTime;
 

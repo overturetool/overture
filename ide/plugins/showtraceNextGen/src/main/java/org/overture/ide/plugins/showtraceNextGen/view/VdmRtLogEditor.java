@@ -22,6 +22,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
@@ -68,7 +69,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private GenericTabItem theOverview;
 	private HashMap<Long, GenericTabItem> cpuTabs; //CPU Id, Tab
 	private String fileName;
-	private Vector<Long> theTimes;
+	private List<Long> theTimes;
 	private long currentTime;
 
 	private boolean canExportJpg = true;
@@ -294,7 +295,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		else if (t.data != null)
 		{
 			traceRunner = new TraceFileRunner(t.data, conjectureData);
-			theTimes = t.data.getEventTimes();
+			theTimes = t.data.getEventManager().getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
 				public void run()
