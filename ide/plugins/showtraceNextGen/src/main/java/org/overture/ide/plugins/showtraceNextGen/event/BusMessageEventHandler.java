@@ -1,6 +1,5 @@
 package org.overture.ide.plugins.showtraceNextGen.event;
 
-import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceBus;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
@@ -14,8 +13,8 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 
 public class BusMessageEventHandler extends EventHandler {
 
-	public BusMessageEventHandler(TraceData data, ConjectureData conjectures) {
-		super(data, conjectures);
+	public BusMessageEventHandler(TraceData data) {
+		super(data);
 	}
 
 	@Override
