@@ -50,6 +50,7 @@ class OutlineSorter extends ViewerSorter
 			return super.category(element);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2)
 	{
@@ -62,7 +63,7 @@ class OutlineSorter extends ViewerSorter
 
 		if (e1 instanceof INode && e2 instanceof INode)
 		{
-			return collator.compare(AstNameUtil.getName((INode) e1), AstNameUtil.getName(((INode) e2)));
+			return getComparator().compare(AstNameUtil.getName((INode) e1), AstNameUtil.getName(((INode) e2)));
 		} else
 		{
 			return super.compare(viewer, e1, e2);
