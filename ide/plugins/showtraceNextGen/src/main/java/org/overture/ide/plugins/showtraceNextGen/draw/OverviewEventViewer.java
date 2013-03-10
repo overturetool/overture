@@ -290,7 +290,7 @@ public class OverviewEventViewer extends TraceEventViewer {
 		tab.addBackgroundFigure(timeLabel);
 	}
 	
-    private void updateCpu(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+    public void updateCpu(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
     {
     	if(cpu.getX() < tab.getXMax())
     	{
