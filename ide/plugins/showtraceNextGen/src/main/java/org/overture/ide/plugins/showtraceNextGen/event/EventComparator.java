@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.showtraceNextGen.data;
+package org.overture.ide.plugins.showtraceNextGen.event;
 import java.util.Comparator;
 
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;

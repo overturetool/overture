@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.management.RuntimeErrorException;
-import org.overture.ide.plugins.showtraceNextGen.view.UnknownEventTypeException;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 
@@ -362,7 +361,7 @@ public class TraceData
         }
         else 
         {
-        	throw new UnknownEventTypeException("Unknown event type!");
+        	throw new IllegalArgumentException("Unknown event type!");
         }
 		
 		return isForThisCpu;
