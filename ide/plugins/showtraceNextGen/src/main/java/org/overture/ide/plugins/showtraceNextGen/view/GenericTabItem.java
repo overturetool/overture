@@ -249,6 +249,7 @@ public class GenericTabItem
             theCanvas.getViewport().setViewLocation(0, 0);
             theFigure.removeAll();
             theFigure.erase();
+            theFigure.setSize(0, 0);
             xmax = 0;
             ymax = 0;
             return;
