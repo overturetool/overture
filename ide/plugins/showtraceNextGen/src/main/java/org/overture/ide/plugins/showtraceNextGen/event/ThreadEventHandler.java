@@ -1,21 +1,21 @@
 package org.overture.ide.plugins.showtraceNextGen.event;
 
-import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceObject;
 import org.overture.ide.plugins.showtraceNextGen.data.TraceThread;
 import org.overture.ide.plugins.showtraceNextGen.data.UnexpectedEventTypeException;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
-import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
 
 public class ThreadEventHandler extends EventHandler {
 
 
-	public ThreadEventHandler(TraceData data, ConjectureData conjectures) 
+	public ThreadEventHandler(TraceData data) 
 	{
-		super(data, conjectures);
+		super(data);
 	}
 
 	@Override

@@ -20,16 +20,14 @@ public abstract class EventHandler {
 	//TODO: Remove DUMMY type and viewer. Hack to handle timeshifting
 	public enum EventViewType {OVERVIEW, CPU, DUMMY};
 	
-	protected ConjectureData conjectures;
 	protected TraceData data;
 	protected TraceEventViewer eventViewer;
 	protected CpuEventViewer cpuViewer;
 	protected OverviewEventViewer overviewViewer;
 	protected DummyViewer dummyViewer;
 
-	public EventHandler(TraceData data, ConjectureData conjectures)
+	public EventHandler(TraceData data)
 	{
-		this.conjectures = conjectures;
 		this.data = data;
 		this.cpuViewer = new CpuEventViewer();
 		this.overviewViewer = new OverviewEventViewer();
@@ -48,23 +46,7 @@ public abstract class EventHandler {
 		//Set viewer used in handle
 		switch(viewType)
 		{
-			case OVERVIEW: 
-				eventViewer = overviewViewer;
-				
-				//Draw conjectures on the overview
-				Vector<Conjecture> cons = conjectures.getConjecture(event.getTime().getAbsoluteTime());
-				
-				for(Conjecture c : cons)
-				{
-					TraceCPU cpu = data.getCpuFromThreadId(c.getThreadID());
-					switch(c.getType())
-					{
-						case SOURCE: overviewViewer.drawSourceConjecture(tab, cpu, c.getName());
-						case DESTINATION: overviewViewer.drawDestinationConjecture(tab, cpu, c.getName());
-					}
-				}
-
-				break;
+			case OVERVIEW: eventViewer = overviewViewer; break;
 			case CPU: eventViewer = cpuViewer; break;
 			case DUMMY: eventViewer = dummyViewer; break;
 			default: throw new UnexpectedEventTypeException("Got unexpected view type in EventHandler");
