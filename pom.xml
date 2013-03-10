@@ -72,6 +72,8 @@
   </repositories>
 
   <build>
+    <defaultGoal>install</defaultGoal>
+
     <!-- Configuration of plugins for inheriting pom.xml files should
          be in the pluginManagement tag
     -->
