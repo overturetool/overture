@@ -89,6 +89,15 @@ public class TraceFileRunner implements ITraceRunner
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
 		
+		ArrayList<INextGenEvent> nextEvents = data.getEvents(eventTime);
+		
+		if(!nextEvents.isEmpty())
+		{
+			viewer.drawTimeMarker(tab, nextEvents.get(0).getTime().getAbsoluteTime());
+			data.setLastMarkerTime(nextEvents.get(0).getTime().getAbsoluteTime());
+		}
+				
+		
 		if(viewer != null)
 		{
 			//FIXME - MVQ: Dirty hack in order to extend the blue line (Active/Blocked) to the end of canvas.
@@ -105,7 +114,6 @@ public class TraceFileRunner implements ITraceRunner
 					((OverviewEventViewer)viewer).updateCpu(tab, cpu, tThread);
 				}
 			}
-			
 			viewer.drawTimelines(tab);
 		}
 	}
