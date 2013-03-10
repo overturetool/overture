@@ -2,6 +2,7 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 
 public class ThreadSwapEventHandler extends EventHandler {
 
@@ -11,23 +12,23 @@ public class ThreadSwapEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) 
+	protected void handle(INextGenEvent event, GenericTabItem tab) 
 	{
-		NextGenThreadSwapEvent tEvent = (NextGenThreadSwapEvent)event;
-		if(tEvent == null) return false;
+		NextGenThreadSwapEvent tEvent = null;
+		
+		if(event instanceof NextGenThreadSwapEvent)
+			tEvent = (NextGenThreadSwapEvent)event;
+		else
+			throw new IllegalArgumentException("ThreadSwapEventHandler expected event of type: " + NextGenThreadSwapEvent.class.getName());
+		
+		if(tEvent.thread.type == ThreadType.INIT)
+			return; //Ignore INIT threads
 		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
 		TraceThread thread = data.getThread(threadId);
-		TraceObject object = null;
-		
-		if(tEvent.thread.object != null)
-		{
-			Long objectId = new Long(tEvent.thread.object.id);
-			object = data.getObject(objectId);
-		}
-		
+				
 		switch(tEvent.swapType)
 		{
 			case SWAP_IN: 
@@ -47,7 +48,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 				break;
 		}
 				
-		return true;
+		return;
 	}
 	
 

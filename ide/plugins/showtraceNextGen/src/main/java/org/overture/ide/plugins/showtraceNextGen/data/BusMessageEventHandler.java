@@ -11,12 +11,17 @@ public class BusMessageEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 		
-		NextGenBusMessageEvent bEvent = (NextGenBusMessageEvent)event;
-		if(bEvent == null) return false; //Guard
+		NextGenBusMessageEvent bEvent = null;
 		
-		if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
+		if(event instanceof NextGenBusMessageEvent)
+			bEvent = (NextGenBusMessageEvent)event;
+		else
+			throw new IllegalArgumentException("BusMessageEventHandler expected event of type: " + NextGenBusMessageEvent.class.getName()); 
+			
+		if(bEvent.message.callerThread.object == null) 
+			return; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
 		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));
@@ -51,12 +56,12 @@ public class BusMessageEventHandler extends EventHandler {
 	        }
 			break;
 		case REPLY_REQUEST:
-			return false; //Handle by BusMesageReplyEventHandler
+			throw new UnexpectedEventTypeException("Problem in BusMessageEventHandler. REPLY_REQYEST events should be handled in " + BusMessageReplyEventHandler.class.getName());
 		default: 
-			return false;
+			throw new UnexpectedEventTypeException("Problem in BusMessageEventHandler. Unexpected bus message event type.");
 		}
 		
-		return true;
+		return;
 	}
 
 

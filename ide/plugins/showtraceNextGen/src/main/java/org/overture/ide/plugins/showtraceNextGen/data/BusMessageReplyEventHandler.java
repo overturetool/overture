@@ -11,10 +11,15 @@ public class BusMessageReplyEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
+				
+		NextGenBusMessageReplyRequestEvent bEvent = null;
 		
-		NextGenBusMessageReplyRequestEvent bEvent = (NextGenBusMessageReplyRequestEvent)event;
-		if(bEvent == null) return false; //Guard
+		if(event instanceof NextGenBusMessageReplyRequestEvent)
+			bEvent = (NextGenBusMessageReplyRequestEvent)event;
+		else
+			throw new IllegalArgumentException("BusMessageReplyEventHandler expected event of type: " + NextGenBusMessageReplyRequestEvent.class.getName());
+		
 
 		TraceBusMessage msg = data.getMessage(bEvent.replyMessage.id);
 		TraceCPU fromCpu = data.getCPU(msg.getFromCpu());
@@ -24,7 +29,7 @@ public class BusMessageReplyEventHandler extends EventHandler {
 		TraceOperation op = data.getOperation(bEvent.replyMessage.operation.classDef.name + bEvent.replyMessage.operation.name);
 				
 		eventViewer.drawReplyRequest(tab,  fromCpu, object, bus, op);
-		return true;
+		return;
 	}
 
 

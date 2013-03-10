@@ -8,6 +8,7 @@ import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.draw.TraceEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
 
 public abstract class EventHandler {
 	
@@ -30,11 +31,15 @@ public abstract class EventHandler {
 		this.dummyViewer = new DummyViewer();
 	}
 	
-	public boolean handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
+	public void handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
 	{
-		INextGenEvent event = (INextGenEvent)e;
-		if(event == null) return false; //Guard
+		INextGenEvent event = null;
 		
+		if(e instanceof INextGenEvent)
+			event = (INextGenEvent)e;
+		else
+			throw new IllegalArgumentException("EventHandler expected event of type: " + INextGenEvent.class.getName());
+				
 		//Set viewer used in handle
 		switch(viewType)
 		{
@@ -57,7 +62,7 @@ public abstract class EventHandler {
 				break;
 			case CPU: eventViewer = cpuViewer; break;
 			case DUMMY: eventViewer = dummyViewer; break;
-			default: return false;
+			default: throw new UnexpectedEventTypeException("Got unexpected view type in EventHandler");
 		}
 		
 		//Check event time and draw marker if needed
@@ -68,9 +73,9 @@ public abstract class EventHandler {
 		}
 		
 		//Handle the event
-		return handle(event, tab);
+		handle(event, tab);
 	}
 	
-	protected abstract boolean handle(INextGenEvent event, GenericTabItem tab);
+	protected abstract void handle(INextGenEvent event, GenericTabItem tab);
 
 }

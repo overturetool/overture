@@ -11,13 +11,20 @@ public class OperationEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 		
-		NextGenOperationEvent oEvent = (NextGenOperationEvent)event;
-		if(oEvent == null) return false; //Guard
+		NextGenOperationEvent oEvent = null;
 		
-		if(oEvent.object == null) return true; //XXX: Ignore util operations
+		if(event instanceof NextGenOperationEvent)
+			oEvent = (NextGenOperationEvent) event;
+		else
+			throw new IllegalArgumentException("OperationEventHandler expected event of type: " + NextGenOperationEvent.class.getName());
 		
+		 //XXX: Ignore util operations
+		if(oEvent.object == null)
+			return;
+		
+		//Exception will be thrown if it is not possible to look up the elements in data
 		Long cpuId = new Long(oEvent.thread.cpu.id);
 		TraceCPU cpu = data.getCPU(cpuId);
 		
@@ -50,10 +57,11 @@ public class OperationEventHandler extends EventHandler {
 			thread.popCurrentObject();
 			eventViewer.drawOpCompleted(tab,  cpu, thread, destObj, operation);
 			break;
-		default: return false;
+		default: 
+			throw new IllegalArgumentException("Invalid Operation Event");
 		}
 		
-		return true;
+		return;
 	}
 
 

@@ -47,7 +47,6 @@ public class TraceData
 	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
 	
 	private TraceObject mainThreadObject;
-	private TraceObject initThreadObject;
 	
 	private Long currentEventTime;
 	private Long lastMarkerTime;
@@ -65,10 +64,8 @@ public class TraceData
     	operations = new HashMap<String, TraceOperation>();
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
-    	initThreadObject = new TraceObject(0L, "INIT");
 
-    	currentEventTime = null;
-    	lastMarkerTime = null;
+    	reset();
     }
 
     public TraceCPU getCPU(Long pid) throws RuntimeErrorException
@@ -225,11 +222,6 @@ public class TraceData
         return objects.get(pobjid);
     }
 
-    public TraceObject getInitThreadObject()
-    {
-    	return initThreadObject;
-    }
-    
     public TraceObject getMainThreadObject()
     {
     	return mainThreadObject;
@@ -245,6 +237,7 @@ public class TraceData
         operations.clear();
         
         currentEventTime = null;
+        lastMarkerTime = null;
     }
 	
 	public Vector<TraceBus> getConnectedBuses(Long cpuId)
