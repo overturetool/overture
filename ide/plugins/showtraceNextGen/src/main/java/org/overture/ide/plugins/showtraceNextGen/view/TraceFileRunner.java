@@ -12,13 +12,11 @@ import org.overture.interpreter.messages.rtlog.nextgen.*;
 
 public class TraceFileRunner implements ITraceRunner 
 {
-	private ConjectureData conjectures;
 	private TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;
 	
 	public TraceFileRunner(TraceData data, ConjectureData conjectures)
 	{
-		this.conjectures = conjectures;
 		this.data = data;
 		this.eventHandlers = new HashMap<Class<?>, EventHandler>();
 		
@@ -55,6 +53,7 @@ public class TraceFileRunner implements ITraceRunner
 		TraceEventViewer viewer = null;
 	
 		//Draw pre-defined content
+		//TODO: Refactor to make unaware of types including CPU sortings
 		if(viewType == EventViewType.OVERVIEW)
 		{
 			viewer = new OverviewEventViewer();
@@ -70,8 +69,7 @@ public class TraceFileRunner implements ITraceRunner
 		Long eventTime = 0L;
 		EventViewType currentView = viewType;
 		Long lastEventTime = data.getMaxEventTime();
-		boolean canvasOverrun = tab.isCanvasOverrun();
-		while(!canvasOverrun && eventTime <= lastEventTime) 
+		while(!tab.isCanvasOverrun() && eventTime <= lastEventTime) 
 		{
 			//Get all events at the current time
 			ArrayList<INextGenEvent> currentEvents = data.getEvents(eventTime);
@@ -85,15 +83,9 @@ public class TraceFileRunner implements ITraceRunner
 					continue; //Ignore event for other CPU's
 				
 				EventHandler handler = eventHandlers.get(event.getClass());
-				
-				if(handler == null)
-					throw new Exception("No eventhandler registered for event: " + event.getClass());
-
-				if(!handler.handleEvent(event, currentView, tab))
-					throw new Exception("Failed to handle Overview event: " + event.getClass());						
+				handler.handleEvent(event, currentView, tab);					
 			}
-			
-			canvasOverrun = tab.isCanvasOverrun();
+
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
 		

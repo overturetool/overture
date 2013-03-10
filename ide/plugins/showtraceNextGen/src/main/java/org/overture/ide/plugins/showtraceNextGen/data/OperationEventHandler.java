@@ -11,7 +11,7 @@ public class OperationEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 		
 		NextGenOperationEvent oEvent = null;
 		
@@ -22,7 +22,7 @@ public class OperationEventHandler extends EventHandler {
 		
 		 //XXX: Ignore util operations
 		if(oEvent.object == null)
-			return true;
+			return;
 		
 		//Exception will be thrown if it is not possible to look up the elements in data
 		Long cpuId = new Long(oEvent.thread.cpu.id);
@@ -57,10 +57,11 @@ public class OperationEventHandler extends EventHandler {
 			thread.popCurrentObject();
 			eventViewer.drawOpCompleted(tab,  cpu, thread, destObj, operation);
 			break;
-		default: return false;
+		default: 
+			throw new IllegalArgumentException("Invalid Operation Event");
 		}
 		
-		return true;
+		return;
 	}
 
 

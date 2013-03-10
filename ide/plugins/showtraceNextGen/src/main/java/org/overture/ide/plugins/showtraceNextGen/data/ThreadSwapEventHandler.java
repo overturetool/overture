@@ -2,6 +2,7 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 
 public class ThreadSwapEventHandler extends EventHandler {
 
@@ -11,7 +12,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) 
+	protected void handle(INextGenEvent event, GenericTabItem tab) 
 	{
 		NextGenThreadSwapEvent tEvent = null;
 		
@@ -19,6 +20,9 @@ public class ThreadSwapEventHandler extends EventHandler {
 			tEvent = (NextGenThreadSwapEvent)event;
 		else
 			throw new IllegalArgumentException("ThreadSwapEventHandler expected event of type: " + NextGenThreadSwapEvent.class.getName());
+		
+		if(tEvent.thread.type == ThreadType.INIT)
+			return; //Ignore INIT threads
 		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
@@ -44,7 +48,7 @@ public class ThreadSwapEventHandler extends EventHandler {
 				break;
 		}
 				
-		return true;
+		return;
 	}
 	
 

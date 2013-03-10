@@ -325,6 +325,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 			String name = pobj.getName() + " (" + pobj.getId().toString() + ")";
 			NormalLabel nlb = new NormalLabel(name, tab.getCurrentFont());;
 			RectangleLabelFigure nrr = new RectangleLabelFigure(nlb);	
+			
 			Long objectXPos = tab.getXMax() + CPU_X_OFFSET;
 			Long objectYPos = CPU_Y_POS + CPU_HEIGHT + ELEMENT_SIZE;
 			Long objWidth = new Long(name.length())*OBJECT_WIDTH_FACTOR;
@@ -337,8 +338,6 @@ public class CpuEventViewer  extends TraceEventViewer {
 			//Save Object timeline
 			Long lineXPos = objectXPos + new Long(objWidth/2);
 			Long lineYStartPos = objectYPos;
-			//Long lineYEndPos = tab.getVerticalSize();
-			//drawTimeline(tab, lineXPos, lineYStartPos, lineXPos, lineYEndPos);
 			timeLineStart.add(new Point(lineXPos.intValue(), lineYStartPos.intValue()));
 			
 			//Update Object

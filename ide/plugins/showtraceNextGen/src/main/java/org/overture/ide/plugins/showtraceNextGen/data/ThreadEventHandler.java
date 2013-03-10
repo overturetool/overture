@@ -13,7 +13,7 @@ public class ThreadEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) 
+	protected void handle(INextGenEvent event, GenericTabItem tab) 
 	{
 		NextGenThreadEvent tEvent = null;
 		
@@ -21,6 +21,9 @@ public class ThreadEventHandler extends EventHandler {
 			tEvent = (NextGenThreadEvent)event;
 		else
 			throw new IllegalArgumentException("ThreadEventhandler expected event of type: " + NextGenThreadEvent.class.getName());
+		
+		if(tEvent.thread.type == ThreadType.INIT)
+			return; //Ignore INIT threads
 		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
@@ -34,9 +37,7 @@ public class ThreadEventHandler extends EventHandler {
 		case CREATE: 			
 			if(tEvent.thread.object == null)
 			{
-				if(tEvent.thread.type == ThreadType.INIT)
-					object = data.getInitThreadObject();
-				else if(tEvent.thread.type == ThreadType.MAIN)
+				if(tEvent.thread.type == ThreadType.MAIN)
 					object = data.getMainThreadObject();
 				else
 					throw new UnexpectedEventTypeException("Did not expect create event in ThreadEventHandler for other thread types than init and main at this point.");
@@ -57,8 +58,6 @@ public class ThreadEventHandler extends EventHandler {
 				thread.popCurrentObject();
 			break;
 		}
-		
-		return true;
 	}
 	
 

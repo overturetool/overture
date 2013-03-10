@@ -3,7 +3,6 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
 
 public class BusMessageEventHandler extends EventHandler {
 
@@ -12,7 +11,7 @@ public class BusMessageEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 		
 		NextGenBusMessageEvent bEvent = null;
 		
@@ -21,7 +20,8 @@ public class BusMessageEventHandler extends EventHandler {
 		else
 			throw new IllegalArgumentException("BusMessageEventHandler expected event of type: " + NextGenBusMessageEvent.class.getName()); 
 			
-		if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
+		if(bEvent.message.callerThread.object == null) 
+			return; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
 		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));
@@ -61,7 +61,7 @@ public class BusMessageEventHandler extends EventHandler {
 			throw new UnexpectedEventTypeException("Problem in BusMessageEventHandler. Unexpected bus message event type.");
 		}
 		
-		return true;
+		return;
 	}
 
 

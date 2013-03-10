@@ -2,7 +2,6 @@ package org.overture.ide.plugins.showtraceNextGen.data;
 
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
 
 public class BusMessageReplyEventHandler extends EventHandler {
@@ -12,7 +11,7 @@ public class BusMessageReplyEventHandler extends EventHandler {
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 				
 		NextGenBusMessageReplyRequestEvent bEvent = null;
 		
@@ -30,7 +29,7 @@ public class BusMessageReplyEventHandler extends EventHandler {
 		TraceOperation op = data.getOperation(bEvent.replyMessage.operation.classDef.name + bEvent.replyMessage.operation.name);
 				
 		eventViewer.drawReplyRequest(tab,  fromCpu, object, bus, op);
-		return true;
+		return;
 	}
 
 

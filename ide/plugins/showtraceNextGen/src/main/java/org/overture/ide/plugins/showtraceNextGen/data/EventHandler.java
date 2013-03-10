@@ -31,7 +31,7 @@ public abstract class EventHandler {
 		this.dummyViewer = new DummyViewer();
 	}
 	
-	public boolean handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
+	public void handleEvent(Object e, EventViewType viewType, GenericTabItem tab)
 	{
 		INextGenEvent event = null;
 		
@@ -73,9 +73,9 @@ public abstract class EventHandler {
 		}
 		
 		//Handle the event
-		return handle(event, tab);
+		handle(event, tab);
 	}
 	
-	protected abstract boolean handle(INextGenEvent event, GenericTabItem tab);
+	protected abstract void handle(INextGenEvent event, GenericTabItem tab);
 
 }

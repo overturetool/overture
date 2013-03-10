@@ -353,6 +353,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			for(Long cpu : cpuTabs.keySet())
 			{
 				GenericTabItem tab = cpuTabs.get(cpu);
+				tab.disposeFigures();
 				traceRunner.drawCpu(tab, cpu, new Long(currentTime));
 			}
 
