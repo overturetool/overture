@@ -97,8 +97,25 @@ public class TraceFileRunner implements ITraceRunner
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
 		
-		if(viewer != null) 
+		if(viewer != null)
+		{
+			//FIXME - MVQ: Dirty hack in order to extend the blue line (Active/Blocked) to the end of canvas.
+			if(viewType == EventViewType.OVERVIEW)
+			{
+				for(TraceCPU cpu : data.getCPUs())
+				{
+					TraceThread tThread = null;
+					Long threadId = cpu.getCurrentThread();
+					if(threadId != null)
+					{
+						tThread = data.getThread(threadId);
+					}
+					((OverviewEventViewer)viewer).updateCpu(tab, cpu, tThread);
+				}
+			}
+			
 			viewer.drawTimelines(tab);
+		}
 	}
 	
 	public Vector<Long> getCpuIds() 
