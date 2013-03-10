@@ -1,7 +1,12 @@
-package org.overture.ide.plugins.showtraceNextGen.data;
+package org.overture.ide.plugins.showtraceNextGen.event;
 
 import java.util.Vector;
 
+import org.overture.ide.plugins.showtraceNextGen.data.Conjecture;
+import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
+import org.overture.ide.plugins.showtraceNextGen.data.UnexpectedEventTypeException;
 import org.overture.ide.plugins.showtraceNextGen.draw.CpuEventViewer;
 import org.overture.ide.plugins.showtraceNextGen.draw.DummyViewer;
 import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;

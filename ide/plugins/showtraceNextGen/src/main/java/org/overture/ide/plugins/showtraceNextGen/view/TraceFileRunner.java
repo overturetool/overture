@@ -6,11 +6,17 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.overture.ide.plugins.showtraceNextGen.data.*;
-import org.overture.ide.plugins.showtraceNextGen.data.EventHandler.EventViewType;
 import org.overture.ide.plugins.showtraceNextGen.draw.*;
+import org.overture.ide.plugins.showtraceNextGen.event.BusMessageEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.BusMessageReplyEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.EventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.OperationEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.ThreadEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.ThreadSwapEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.EventHandler.EventViewType;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
 
-public class TraceFileRunner implements ITraceRunner 
+public class TraceFileRunner
 {
 	private TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;

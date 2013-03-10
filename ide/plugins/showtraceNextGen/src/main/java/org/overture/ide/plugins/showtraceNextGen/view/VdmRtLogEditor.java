@@ -75,7 +75,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private boolean canMoveHorizontal = true;
 	private boolean canOpenValidation = true;
 
-	private ITraceRunner traceRunner;
+	private TraceFileRunner traceRunner;
 	private TracefileMarker theMarkers;
 	private ConjectureData conjectureData;
 
@@ -293,7 +293,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}		
 		else if (t.data != null)
 		{
-			traceRunner = TraceRunnerFactory.getTraceRunner(t.data, conjectureData);
+			traceRunner = new TraceFileRunner(t.data, conjectureData);
 			theTimes = t.data.getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{

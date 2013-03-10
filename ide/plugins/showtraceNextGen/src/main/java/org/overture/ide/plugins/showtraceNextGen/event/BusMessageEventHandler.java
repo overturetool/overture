@@ -1,5 +1,13 @@
-package org.overture.ide.plugins.showtraceNextGen.data;
+package org.overture.ide.plugins.showtraceNextGen.event;
 
+import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceBus;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceObject;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceOperation;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceThread;
+import org.overture.ide.plugins.showtraceNextGen.data.UnexpectedEventTypeException;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
