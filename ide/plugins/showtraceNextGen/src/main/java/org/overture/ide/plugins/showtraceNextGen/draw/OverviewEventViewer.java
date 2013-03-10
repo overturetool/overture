@@ -117,8 +117,6 @@ public class OverviewEventViewer extends TraceEventViewer {
         drawMarker(tab, x1, y1, x2, y2, ColorConstants.gray);
         drawSwapImage(tab, x1, y1, SWAP_DIRECTION.SOUTH);
         cpu.setX(x2);
-
-        cpu.setCurrentThread(thread.getId());
 	}
 	
 	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)

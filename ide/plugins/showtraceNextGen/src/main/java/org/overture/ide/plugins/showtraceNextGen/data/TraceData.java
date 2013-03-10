@@ -237,16 +237,12 @@ public class TraceData
     
 	public void reset()
     {
-		for(TraceCPU cpu : cpus.values())
-		{
-			cpu.setX(0L);
-			cpu.setY(0L);
-		}
-
+		cpus.clear();
         objects.clear();
         buses.clear();
         threads.clear();
         messages.clear();
+        operations.clear();
         
         currentEventTime = null;
     }
