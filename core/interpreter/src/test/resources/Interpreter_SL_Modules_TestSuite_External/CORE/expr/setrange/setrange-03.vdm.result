@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterSlTestCase">
 <result>
-<output object="Error 4091: Can't get int value of &lt;ERROR&gt; in 'A' (setrange-03.vdm) at line 11:10" resource="setrange-03.vdm" value="Error 4091: Can't get int value of &lt;ERROR&gt; in 'A' (setrange-03.vdm) at line 11:10"/>
+<output object="Error 4089: Can't get real value of &lt;ERROR&gt; in 'A' (setrange-03.vdm) at line 11:10" resource="setrange-03.vdm" value="Error 4089: Can't get real value of &lt;ERROR&gt; in 'A' (setrange-03.vdm) at line 11:10"/>
 </result>
 </testResult>

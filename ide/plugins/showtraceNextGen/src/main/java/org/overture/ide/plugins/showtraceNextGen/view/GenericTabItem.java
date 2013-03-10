@@ -80,20 +80,15 @@ public class GenericTabItem
         	theCanvas.setBackground(ColorConstants.white);
 
         	theCanvas.setScrollBarVisibility(FigureCanvas.ALWAYS);
-        	theCanvas.setSize(theFolder.getSize());
+        	//theCanvas.setSize(theFolder.getSize());
         	//theCanvas.setSize(3000,3000);
 
         	theTabItem = new TabItem(theFolder, 0);
             theTabItem.setText(theName);
             theTabItem.setControl(theCanvas);
             
-            //theFigure.
-            //theFigure.setSize(3000, 3000);
-            
             this.allowedDirection = direction;
-            
-            theFolder.addControlListener(new ResizeListener(theFolder));
-            
+                       
             theFont = new Font(theTabItem.getDisplay(), "MS Gothic", 12, 0);
             return;
             
@@ -174,18 +169,19 @@ public class GenericTabItem
         {
             throw new AssertionError();
         } else
-        {    	
+        {
+        	//Update xmax and ymax
             Rectangle rect = aFigure.getBounds();
             int xfig = rect.x + rect.width - 2;
             xmax = xmax < xfig ? xfig : xmax;
             int yfig = rect.y + rect.height - 2;
             ymax = ymax < yfig ? yfig : ymax;
-                    
-			Point currentFolderSize = theTabItem.getParent().getSize();
-			int currentX = currentFolderSize.x;
-			int currentY = currentFolderSize.y;
-            sizeCanvas(currentX, currentY);
             
+            //Ensure that the canvas is only expanded not shrinked
+            int newX = theFigure.getSize().width > xmax ? theFigure.getSize().width : xmax;
+            int newY = theFigure.getSize().height > ymax ? theFigure.getSize().height : ymax;
+                    
+            theFigure.setSize(newX, newY);
             theFigure.add(aFigure);
         }
     }
@@ -193,7 +189,14 @@ public class GenericTabItem
     public void addBackgroundFigure(IFigure bFigure)
     {
     	//Add figure and dont update xmax and ymax
-       // theFigure.add(bFigure);
+    	//Ensure that the canvas is expanded if the background figure goes beyond
+        Rectangle rect = bFigure.getBounds();
+        int xfig = rect.x + rect.width;
+        int yfig = rect.y + rect.height;
+        int newX = theFigure.getSize().width > xfig ? theFigure.getSize().width : xfig;
+        int newY = theFigure.getSize().height > yfig ? theFigure.getSize().height : yfig;
+
+        theFigure.setSize(newX, newY);
         theFigure.add(bFigure, 0);
     }
 
@@ -246,6 +249,7 @@ public class GenericTabItem
             theCanvas.getViewport().setViewLocation(0, 0);
             theFigure.removeAll();
             theFigure.erase();
+            theFigure.setSize(0, 0);
             xmax = 0;
             ymax = 0;
             return;
@@ -260,64 +264,4 @@ public class GenericTabItem
         if(theFont != null)
             theFont.dispose();
     }
-    
-    private void sizeCanvas(int currentX, int currentY){
-    	theFigure.setSize(xmax, ymax);
-    	/*
-    	if(allowedDirection == AllowedOverrunDirection.Both)
-		{
-    		if(xmax > currentX || ymax > currentY)
-    		{
-    			theFigure.setSize(xmax, ymax);
-    			//theCanvas.setSize(xmax, ymax);
-    		}
-			return; //handleResize()
-		}
-		else if(allowedDirection == AllowedOverrunDirection.Horizontal)
-		{
-				theFigure.setSize(xmax, currentY);
-    			//theCanvas.setSize(xmax, currentY);
-		}
-		else //Allows vertical overrun
-		{
-			theFigure.setSize(currentX, ymax);
-			//theCanvas.setSize(currentX, ymax);
-		}*/
-    	
-    }
-    
-    final class ResizeListener implements org.eclipse.swt.events.ControlListener
-    {
-    	private int lastX;
-    	private int lastY;
-    	
-    	public ResizeListener(TabFolder tabFolder)
-    	{
-    		Point size = tabFolder.getSize();
-    		lastX = size.x;
-    		lastY = size.y;
-    	}
-    	
-		public void controlMoved(ControlEvent e) {
-			//Do nothing
-		}
-
-		public void controlResized(ControlEvent e) {
-			
-			
-			TabFolder folder = (TabFolder) e.getSource();
-			Point currentFolderSize = folder.getSize();
-			
-			int currentX = currentFolderSize.x;
-			int currentY = currentFolderSize.y;
-			
-			sizeCanvas(currentX, currentY);
-			//theCanvas.setSize(3000, 3000);
-							
-			if(currentX > lastX || currentY > lastY)
-				handleResize();
-		}
-    	
-    }
-
 }

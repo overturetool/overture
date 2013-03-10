@@ -5,29 +5,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ide.plugins.showtraceNextGen.data.*;
-import org.overture.ide.plugins.showtraceNextGen.data.EventHandler.EventViewType;
-import org.overture.ide.plugins.showtraceNextGen.draw.*;
-import org.overture.interpreter.messages.rtlog.nextgen.*;
+import org.overture.ide.plugins.showtraceNextGen.data.Conjecture;
+import org.overture.ide.plugins.showtraceNextGen.data.ConjectureData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceThread;
+import org.overture.ide.plugins.showtraceNextGen.draw.ArchitectureViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.CpuEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.OverviewEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.draw.TraceEventViewer;
+import org.overture.ide.plugins.showtraceNextGen.event.BusMessageEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.BusMessageReplyEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.EventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.EventHandler.EventViewType;
+import org.overture.ide.plugins.showtraceNextGen.event.OperationEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.ThreadEventHandler;
+import org.overture.ide.plugins.showtraceNextGen.event.ThreadSwapEventHandler;
+import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageReplyRequestEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent;
 
-public class TraceFileRunner implements ITraceRunner 
+public class TraceFileRunner
 {
-	private ConjectureData conjectures;
 	private TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;
+	private ConjectureData conjectures;
 	
 	public TraceFileRunner(TraceData data, ConjectureData conjectures)
 	{
-		this.conjectures = conjectures;
 		this.data = data;
 		this.eventHandlers = new HashMap<Class<?>, EventHandler>();
+		this.conjectures = conjectures;
 		
 		//Register Events
-		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data, conjectures));
-		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data, conjectures));
-		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data, conjectures));
-		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data, conjectures));
-		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data, conjectures));
+		eventHandlers.put(NextGenThreadEvent.class, new ThreadEventHandler(data));
+		eventHandlers.put(NextGenThreadSwapEvent.class, new ThreadSwapEventHandler(data));
+		eventHandlers.put(NextGenOperationEvent.class, new OperationEventHandler(data));
+		eventHandlers.put(NextGenBusMessageEvent.class, new BusMessageEventHandler(data));
+		eventHandlers.put(NextGenBusMessageReplyRequestEvent.class, new BusMessageReplyEventHandler(data));
 	}
 
 	public void drawArchitecture(GenericTabItem tab) throws Exception 
@@ -55,6 +73,7 @@ public class TraceFileRunner implements ITraceRunner
 		TraceEventViewer viewer = null;
 	
 		//Draw pre-defined content
+		//TODO: Refactor to make unaware of types including CPU sortings
 		if(viewType == EventViewType.OVERVIEW)
 		{
 			viewer = new OverviewEventViewer();
@@ -67,11 +86,11 @@ public class TraceFileRunner implements ITraceRunner
 		}
 			
 		//Draw events as long as there is room and time
+		Long conjectureTime = -1L;
 		Long eventTime = 0L;
 		EventViewType currentView = viewType;
 		Long lastEventTime = data.getMaxEventTime();
-		boolean canvasOverrun = tab.isCanvasOverrun();
-		while(!canvasOverrun && eventTime <= lastEventTime) 
+		while(!tab.isCanvasOverrun() && eventTime <= lastEventTime) 
 		{
 			//Get all events at the current time
 			ArrayList<INextGenEvent> currentEvents = data.getEvents(eventTime);
@@ -79,26 +98,62 @@ public class TraceFileRunner implements ITraceRunner
 			//TODO: Remove DUMMY. Introduced to hack time travels
 			currentView = (data.getCurrentEventTime() < eventStartTime) ? EventViewType.DUMMY : viewType;
 			
-			for(Object event : currentEvents)
+			for(INextGenEvent event : currentEvents)
 			{		
 				if(viewType == EventViewType.CPU && !TraceData.isEventForCpu(event, cpuId)) 
 					continue; //Ignore event for other CPU's
 				
-				EventHandler handler = eventHandlers.get(event.getClass());
+				//Draw conjectures on the overview
+				if(viewType == EventViewType.OVERVIEW && eventTime != conjectureTime)
+				{
+					conjectureTime = eventTime;
+					Vector<Conjecture> cons = conjectures.getConjecture(event.getTime().getAbsoluteTime());
+					
+					for(Conjecture c : cons)
+					{
+						TraceCPU cpu = data.getCpuFromThreadId(c.getThreadID());
+						switch(c.getType())
+						{
+							case SOURCE: ((OverviewEventViewer)viewer).drawSourceConjecture(tab, cpu, c.getName()); break;
+							case DESTINATION: ((OverviewEventViewer)viewer).drawDestinationConjecture(tab, cpu, c.getName()); break;
+						}
+					}
+				}
 				
-				if(handler == null)
-					throw new Exception("No eventhandler registered for event: " + event.getClass());
-
-				if(!handler.handleEvent(event, currentView, tab))
-					throw new Exception("Failed to handle Overview event: " + event.getClass());						
+				EventHandler handler = eventHandlers.get(event.getClass());
+				handler.handleEvent(event, currentView, tab);					
 			}
-			
-			canvasOverrun = tab.isCanvasOverrun();
+
 			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
 		}
 		
-		if(viewer != null) 
+		ArrayList<INextGenEvent> nextEvents = data.getEvents(eventTime);
+		
+		if(!nextEvents.isEmpty())
+		{
+			viewer.drawTimeMarker(tab, nextEvents.get(0).getTime().getAbsoluteTime());
+			data.setLastMarkerTime(nextEvents.get(0).getTime().getAbsoluteTime());
+		}
+				
+		
+		if(viewer != null)
+		{
+			//FIXME - MVQ: Dirty hack in order to extend the blue line (Active/Blocked) to the end of canvas.
+			if(viewType == EventViewType.OVERVIEW)
+			{
+				for(TraceCPU cpu : data.getCPUs())
+				{
+					TraceThread tThread = null;
+					Long threadId = cpu.getCurrentThread();
+					if(threadId != null)
+					{
+						tThread = data.getThread(threadId);
+					}
+					((OverviewEventViewer)viewer).updateCpu(tab, cpu, tThread);
+				}
+			}
 			viewer.drawTimelines(tab);
+		}
 	}
 	
 	public Vector<Long> getCpuIds() 

@@ -1,22 +1,34 @@
-package org.overture.ide.plugins.showtraceNextGen.data;
+package org.overture.ide.plugins.showtraceNextGen.event;
 
+import org.overture.ide.plugins.showtraceNextGen.data.TraceBus;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceCPU;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceData;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceObject;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceOperation;
+import org.overture.ide.plugins.showtraceNextGen.data.TraceThread;
+import org.overture.ide.plugins.showtraceNextGen.data.UnexpectedEventTypeException;
 import org.overture.ide.plugins.showtraceNextGen.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent;
 
 public class BusMessageEventHandler extends EventHandler {
 
-	public BusMessageEventHandler(TraceData data, ConjectureData conjectures) {
-		super(data, conjectures);
+	public BusMessageEventHandler(TraceData data) {
+		super(data);
 	}
 
 	@Override
-	protected boolean handle(INextGenEvent event, GenericTabItem tab) {
+	protected void handle(INextGenEvent event, GenericTabItem tab) {
 		
-		NextGenBusMessageEvent bEvent = (NextGenBusMessageEvent)event;
-		if(bEvent == null) return false; //Guard
+		NextGenBusMessageEvent bEvent = null;
 		
-		if(bEvent.message.callerThread.object == null) return true; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
+		if(event instanceof NextGenBusMessageEvent)
+			bEvent = (NextGenBusMessageEvent)event;
+		else
+			throw new IllegalArgumentException("BusMessageEventHandler expected event of type: " + NextGenBusMessageEvent.class.getName()); 
+			
+		if(bEvent.message.callerThread.object == null) 
+			return; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
 		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));
@@ -51,12 +63,12 @@ public class BusMessageEventHandler extends EventHandler {
 	        }
 			break;
 		case REPLY_REQUEST:
-			return false; //Handle by BusMesageReplyEventHandler
+			throw new UnexpectedEventTypeException("Problem in BusMessageEventHandler. REPLY_REQYEST events should be handled in " + BusMessageReplyEventHandler.class.getName());
 		default: 
-			return false;
+			throw new UnexpectedEventTypeException("Problem in BusMessageEventHandler. Unexpected bus message event type.");
 		}
 		
-		return true;
+		return;
 	}
 
 

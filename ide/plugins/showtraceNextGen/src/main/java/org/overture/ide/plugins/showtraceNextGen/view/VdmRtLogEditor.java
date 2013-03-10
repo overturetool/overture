@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import jp.co.csk.vdm.toolbox.VDM.CGException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -76,7 +75,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	private boolean canMoveHorizontal = true;
 	private boolean canOpenValidation = true;
 
-	private ITraceRunner traceRunner;
+	private TraceFileRunner traceRunner;
 	private TracefileMarker theMarkers;
 	private ConjectureData conjectureData;
 
@@ -140,15 +139,9 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				ErrorDialog.openError(getSite().getShell(), "Editor open", "File is empty", Status.CANCEL_STATUS);
 				return;
 			}
-		} catch (CGException cge)
+		} catch (Exception e)
 		{
-			showMessage(cge);
-		}
-		// makeActions();
-		// contributeToActionBars();
-		catch (CoreException e)
-		{
-			// TODO Auto-generated catch block
+			showMessage(e);
 			e.printStackTrace();
 		}
 
@@ -213,6 +206,11 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			currentTime = theTimes.get(index - 1);
 			updateOverviewPage();
 		}
+	}
+	
+	void refresh()
+	{
+		updateOverviewPage();
 	}
 
 	/*
@@ -295,7 +293,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		}		
 		else if (t.data != null)
 		{
-			traceRunner = TraceRunnerFactory.getTraceRunner(t.data, conjectureData);
+			traceRunner = new TraceFileRunner(t.data, conjectureData);
 			theTimes = t.data.getEventTimes();
 			getSite().getShell().getDisplay().asyncExec(new Runnable()
 			{
@@ -355,6 +353,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			for(Long cpu : cpuTabs.keySet())
 			{
 				GenericTabItem tab = cpuTabs.get(cpu);
+				tab.disposeFigures();
 				traceRunner.drawCpu(tab, cpu, new Long(currentTime));
 			}
 
@@ -384,7 +383,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		});
 	}
 
-	private void showMessage(final CGException cge)
+	private void showMessage(final Exception cge)
 	{
 		display.asyncExec(new Runnable()
 		{
@@ -414,7 +413,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			{
 				theMarkers.dispose();
 			}
-		} catch (CGException cge)
+		} catch (Exception cge)
 		{
 			cge.printStackTrace(System.out);
 		}
