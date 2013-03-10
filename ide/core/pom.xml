@@ -35,12 +35,12 @@
               <stripVersion>true</stripVersion>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
+                  <groupId>org.overture.core</groupId>
                   <artifactId>ast</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
+                  <groupId>org.overture.core</groupId>
                   <artifactId>parser</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>

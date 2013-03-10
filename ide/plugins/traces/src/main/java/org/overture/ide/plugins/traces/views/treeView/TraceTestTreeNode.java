@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.overture.interpreter.traces.Verdict;
-import org.overturetool.ct.utils.TraceTestResult;
+import org.overture.ct.utils.TraceTestResult;
 
 public class TraceTestTreeNode implements IAdaptable, ITreeNode
 {

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 import org.overture.interpreter.values.Value;
 import org.overture.util.Base64;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
+import org.overture.test.framework.TestResourcesResultTestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

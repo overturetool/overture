@@ -8,20 +8,20 @@ import junit.framework.TestCase;
 
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.PType;
-import org.overturetool.vdmj.Release;
-import org.overturetool.vdmj.Settings;
-import org.overturetool.vdmj.lex.Dialect;
-import org.overturetool.vdmj.lex.LexException;
-import org.overturetool.vdmj.lex.LexTokenReader;
-import org.overturetool.vdmj.syntax.BindReader;
-import org.overturetool.vdmj.syntax.ClassReader;
-import org.overturetool.vdmj.syntax.ExpressionReader;
-import org.overturetool.vdmj.syntax.ModuleReader;
-import org.overturetool.vdmj.syntax.ParserException;
-import org.overturetool.vdmj.syntax.PatternReader;
-import org.overturetool.vdmj.syntax.StatementReader;
-import org.overturetool.vdmj.syntax.SyntaxReader;
-import org.overturetool.vdmj.syntax.TypeReader;
+import org.overture.vdmj.Release;
+import org.overture.vdmj.Settings;
+import org.overture.vdmj.lex.Dialect;
+import org.overture.vdmj.lex.LexException;
+import org.overture.vdmj.lex.LexTokenReader;
+import org.overture.vdmj.syntax.BindReader;
+import org.overture.vdmj.syntax.ClassReader;
+import org.overture.vdmj.syntax.ExpressionReader;
+import org.overture.vdmj.syntax.ModuleReader;
+import org.overture.vdmj.syntax.ParserException;
+import org.overture.vdmj.syntax.PatternReader;
+import org.overture.vdmj.syntax.StatementReader;
+import org.overture.vdmj.syntax.SyntaxReader;
+import org.overture.vdmj.syntax.TypeReader;
 
 public abstract class BasicTypeCheckTestCase extends TestCase
 {

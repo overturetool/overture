@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overturetool.test.framework.BaseTestSuite;
+import org.overture.test.framework.BaseTestSuite;
 
 
 public class ExpressionTestSuite extends BaseTestSuite

@@ -141,7 +141,7 @@ public class BasicSchedulableThread implements Serializable
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#suspendOthers()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#suspendOthers()
 	 */
 	public static void suspendOthers(ISchedulableThread thread)
 	{

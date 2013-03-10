@@ -19,7 +19,7 @@
 package org.overture.ide.plugins.traces.views.treeView;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.overturetool.ct.utils.TraceTestResult;
+import org.overture.ct.utils.TraceTestResult;
 
 
 public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable {

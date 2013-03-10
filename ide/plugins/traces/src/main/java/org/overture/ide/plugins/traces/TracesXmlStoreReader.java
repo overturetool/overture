@@ -29,9 +29,9 @@ import java.util.Vector;
 
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.Verdict;
-import org.overturetool.ct.utils.TraceTestResult;
-import org.overturetool.ct.utils.TraceXmlWrapper;
-import org.overturetool.ct.utils.XmlFileWriter;
+import org.overture.ct.utils.TraceTestResult;
+import org.overture.ct.utils.TraceXmlWrapper;
+import org.overture.ct.utils.XmlFileWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;

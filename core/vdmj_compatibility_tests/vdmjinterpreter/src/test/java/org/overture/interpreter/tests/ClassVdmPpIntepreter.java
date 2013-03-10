@@ -8,8 +8,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overture.interpreter.tests.framework.ClassTestCase;
-import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.BaseTestSuite;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ClassVdmPpIntepreter extends BaseTestSuite {

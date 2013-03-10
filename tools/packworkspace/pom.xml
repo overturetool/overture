@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overturetool.tools</groupId>
+    <groupId>org.overture.tools</groupId>
     <artifactId>tools</artifactId>
     <version>2.2.2<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overturetool.tools</groupId>
+  <groupId>org.overture.tools</groupId>
   <artifactId>packworkspace</artifactId>
   <name>Overture Examples Workspace packer</name>
 
@@ -21,7 +21,7 @@
 	<configuration>
 	  <archive>
 	    <manifest>
-	      <mainClass>org.overturetool.tools.packworkspace.Main</mainClass>
+	      <mainClass>org.overture.tools.packworkspace.Main</mainClass>
 	    </manifest>
 	  </archive>
 	</configuration>
@@ -32,7 +32,7 @@
   <dependencies>
     <!-- this is a problem; vdmj is no more in astv2 -jwc/28Feb2013 -->
     <dependency>
-      <groupId>org.overturetool.core</groupId>
+      <groupId>org.overture.core</groupId>
       <artifactId>vdmj</artifactId>
       <version>2.1.2</version>
     </dependency>

@@ -11,7 +11,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceStatusXml;
-import org.overturetool.ct.utils.TraceTestResult;
+import org.overture.ct.utils.TraceTestResult;
 import org.xml.sax.SAXException;
 
 public class StorageManager

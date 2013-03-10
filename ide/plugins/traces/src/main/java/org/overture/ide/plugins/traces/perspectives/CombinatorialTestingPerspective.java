@@ -91,7 +91,7 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory {
 	}
 
 	private void addPerspectiveShortcuts() {		
-	//	factory.addPerspectiveShortcut("org.overturetool.eclipse.ui.OverturePerspective"); //NON-NLS-1
+	//	factory.addPerspectiveShortcut("org.overture.eclipse.ui.OverturePerspective"); //NON-NLS-1
 	}
 
 	private void addNewWizardShortcuts() {

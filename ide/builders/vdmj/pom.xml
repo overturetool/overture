@@ -34,7 +34,7 @@
               <stripVersion>true</stripVersion>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.overturetool.core</groupId>
+                  <groupId>org.overture.core</groupId>
                   <artifactId>typechecker</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>

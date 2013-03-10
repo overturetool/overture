@@ -216,7 +216,7 @@ public class TypeComparator
 	 * match is found; otherwise basic type comparisons are made, involving any subtypes - for example, if they are both
 	 * sets, then the result depends on whether their "set of" subtypes are compatible, by a recursive call. Similarly
 	 * with maps and sequences, function/operation parameter types, and record field types. Lastly, a simple
-	 * {@link org.overturetool.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
+	 * {@link org.overture.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
 	 * 
 	 * @param to
 	 * @param from
@@ -559,7 +559,7 @@ public class TypeComparator
 	 * basic type comparisons are made, involving any subtypes - for example, if they are both sets, then the result
 	 * depends on whether their "set of" subtypes are subtypes, by a recursive call. Similarly with maps and sequences,
 	 * function/operation parameter types, and record field types. Lastly, a simple
-	 * {@link org.overturetool.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
+	 * {@link org.overture.vdmj.types.Type#equals} operation is performed on two basic types to decide the result.
 	 * 
 	 * @param sub
 	 * @param sup

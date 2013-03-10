@@ -7,7 +7,7 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.syntax.SyntaxReader;
-import org.overturetool.test.framework.ResultTestCase;
+import org.overture.test.framework.ResultTestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

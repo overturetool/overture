@@ -156,7 +156,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#equals(java.lang.Object)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object other)
@@ -171,7 +171,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#hashCode()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#hashCode()
 	 */
 	@Override
 	public int hashCode()
@@ -180,7 +180,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#toString()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#toString()
 	 */
 	@Override
 	public String toString()
@@ -189,7 +189,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
     /* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#start()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#start()
 	 */
 
 	public synchronized void start()
@@ -211,7 +211,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#run()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#run()
 	 */
 
 	public void run()
@@ -228,7 +228,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	abstract protected void body();
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#step(org.overturetool.vdmj.runtime.Context, org.overturetool.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#step(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
 	 */
 	public void step(Context ctxt, LexLocation location)
 	{
@@ -254,7 +254,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getRunState()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getRunState()
 	 */
 	public synchronized RunState getRunState()
 	{
@@ -262,7 +262,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#setState(org.overturetool.vdmj.scheduler.RunState)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setState(org.overture.vdmj.scheduler.RunState)
 	 */
 	public synchronized void setState(RunState newstate)
 	{
@@ -277,7 +277,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#waiting(org.overturetool.vdmj.runtime.Context, org.overturetool.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#waiting(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
 	 */
 	public synchronized void waiting(Context ctxt, LexLocation location)
 	{
@@ -286,7 +286,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#locking(org.overturetool.vdmj.runtime.Context, org.overturetool.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#locking(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
 	 */
 	public synchronized void locking(Context ctxt, LexLocation location)
 	{
@@ -295,7 +295,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#alarming(long, Context, LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#alarming(long, Context, LexLocation)
 	 */
 	public synchronized void alarming(long expected)
 	{
@@ -305,7 +305,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#runslice(long)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#runslice(long)
 	 */
 	public synchronized void runslice(long slice)
 	{
@@ -315,7 +315,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#duration(long, org.overturetool.vdmj.runtime.Context, org.overturetool.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#duration(long, org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
 	 */
 	public synchronized void duration(
 		long pause, Context ctxt, LexLocation location)
@@ -391,7 +391,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#suspendOthers()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#suspendOthers()
 	 */
 	public void suspendOthers()
 	{
@@ -427,7 +427,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getObject()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getObject()
 	 */
 	public ObjectValue getObject()
 	{
@@ -435,7 +435,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#setSwapInBy(long)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setSwapInBy(long)
 	 */
 	public synchronized void setSwapInBy(long swapInBy)
 	{
@@ -443,7 +443,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getSwapInBy()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getSwapInBy()
 	 */
 	public synchronized long getSwapInBy()
 	{
@@ -451,7 +451,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#isPeriodic()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isPeriodic()
 	 */
 	public boolean isPeriodic()
 	{
@@ -459,7 +459,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#isActive()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isActive()
 	 */
 	public boolean isActive()
 	{
@@ -467,7 +467,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#isVirtual()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isVirtual()
 	 */
 	public boolean isVirtual()
 	{
@@ -475,7 +475,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#setTimestep(long)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setTimestep(long)
 	 */
 	public synchronized void setTimestep(long step)
 	{
@@ -483,7 +483,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getTimestep()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getTimestep()
 	 */
 	public synchronized long getTimestep()
 	{
@@ -491,7 +491,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getDurationEnd()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getDurationEnd()
 	 */
 	public synchronized long getDurationEnd()
 	{
@@ -499,7 +499,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getAlarmWakeTime()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getAlarmWakeTime()
 	 */
 	public synchronized long getAlarmWakeTime()
 	{
@@ -507,7 +507,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#clearAlarm()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#clearAlarm()
 	 */
 	public void clearAlarm()
 	{
@@ -515,7 +515,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#inOuterTimestep(boolean)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#inOuterTimestep(boolean)
 	 */
 	public synchronized void inOuterTimestep(boolean b)
 	{
@@ -523,7 +523,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#inOuterTimestep()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#inOuterTimestep()
 	 */
 	public synchronized boolean inOuterTimestep()
 	{
@@ -531,7 +531,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#getCPUResource()
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getCPUResource()
 	 */
 	public CPUResource getCPUResource()
 	{

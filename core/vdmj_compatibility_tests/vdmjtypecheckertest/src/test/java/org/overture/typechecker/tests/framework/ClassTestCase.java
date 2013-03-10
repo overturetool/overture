@@ -7,7 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
-import org.overturetool.test.util.XmlResultReaderWritter;
+import org.overture.test.util.XmlResultReaderWritter;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;

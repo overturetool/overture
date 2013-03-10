@@ -2,7 +2,7 @@ package org.overture.interpreter.tests.framework;
 
 import java.io.File;
 
-import org.overturetool.test.framework.TestResourcesResultTestCase;
+import org.overture.test.framework.TestResourcesResultTestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -29,7 +29,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.*;
 
-// Referenced classes of package org.overturetool.tracefile.viewer:
+// Referenced classes of package org.overture.tracefile.viewer:
 //            TracefileViewer
 
 public class ValidationTable

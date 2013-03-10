@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-//import org.overturetool.vdmj.VDMJ;
+//import org.overture.vdmj.VDMJ;
 
 /**
  * A class to read an XML encoded VDM file, such as .docx or ODF

@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 public class VdmRtCorePlugin extends Plugin
 {
 	// The plug-in ID
-	public static final String PLUGIN_ID = IVdmRtCoreConstants.PLUGIN_ID;//"org.overturetool.core";
+	public static final String PLUGIN_ID = IVdmRtCoreConstants.PLUGIN_ID;//"org.overture.core";
 
 	public static final boolean DEBUG = true;
 	

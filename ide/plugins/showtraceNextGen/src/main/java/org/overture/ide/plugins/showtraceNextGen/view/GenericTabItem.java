@@ -35,7 +35,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-// Referenced classes of package org.overturetool.tracefile.viewer:
+// Referenced classes of package org.overture.tracefile.viewer:
 //            TracefileViewerPlugin, tdCPU
 
 public class GenericTabItem
@@ -48,7 +48,7 @@ public class GenericTabItem
     private int xmax;
     private int ymax;
     private Font theFont;
-    static final boolean $assertionsDisabled = false;//!org.overturetool.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
+    static final boolean $assertionsDisabled = false;//!org.overture.tracefile.viewer.GenericTabItem.desiredAssertionStatus();
     private AllowedOverrunDirection allowedDirection;
     
     

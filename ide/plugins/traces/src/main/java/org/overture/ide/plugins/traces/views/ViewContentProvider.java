@@ -43,7 +43,7 @@ import org.overture.ide.plugins.traces.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TraceTreeNode;
 import org.overture.ide.plugins.traces.views.treeView.TreeParent;
-import org.overturetool.ct.utils.TraceHelperNotInitializedException;
+import org.overture.ct.utils.TraceHelperNotInitializedException;
 import org.xml.sax.SAXException;
 
 public class ViewContentProvider implements IStructuredContentProvider,

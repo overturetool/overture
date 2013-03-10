@@ -16,9 +16,9 @@ import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Message;
-import org.overturetool.test.framework.results.Result;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Message;
+import org.overture.test.framework.results.Result;
 
 public class OvertureTestHelper
 {

@@ -36,7 +36,7 @@ mvn vdmt:type
 
 +-------------------------------+
 <pluginGroups>
-  <pluginGroup>org.overturetool.tools</pluginGroup> 
+  <pluginGroup>org.overture.tools</pluginGroup> 
 </pluginGroups>
 +-------------------------------+
 
@@ -46,14 +46,14 @@ mvn vdmt:type
 <build>
   <plugins>
     <plugin>
-      <groupId>org.overturetool.tools</groupId>
+      <groupId>org.overture.tools</groupId>
       <artifactId>vdmt</artifactId>
       <configuration>
       
         <excludePackages>
-          <param>org.overturetool.umltrans.test</param>
-          <param>org.overturetool.umltrans.test.spec</param>
-          <param>org.overturetool.api.vdmunit</param>
+          <param>org.overture.umltrans.test</param>
+          <param>org.overture.umltrans.test.spec</param>
+          <param>org.overture.api.vdmunit</param>
         </excludePackages>
 
         <excludeClasses>
@@ -61,9 +61,9 @@ mvn vdmt:type
         </excludeClasses>
 
         <importPackages>
-          <param>org.overturetool.ast.itf</param>
-          <param>org.overturetool.ast.imp</param>
-          <param>org.overturetool.api.io</param>
+          <param>org.overture.ast.itf</param>
+          <param>org.overture.ast.imp</param>
+          <param>org.overture.api.io</param>
         </importPackages>
         
       </configuration>

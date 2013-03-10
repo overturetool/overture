@@ -43,5 +43,5 @@ public interface ITracesConstants
 		IDebugConstants.PLUGIN_ID,
 		IBuilderVdmjConstants.PLUGIN_ID
 		};
-	public static final String TEST_ENGINE_CLASS = "org.overturetool.ct.ctruntime.TraceRunnerMain";
+	public static final String TEST_ENGINE_CLASS = "org.overture.ct.ctruntime.TraceRunnerMain";
 }

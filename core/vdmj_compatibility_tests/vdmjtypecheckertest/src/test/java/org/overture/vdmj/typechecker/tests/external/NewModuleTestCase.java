@@ -3,7 +3,7 @@ package org.overture.vdmj.typechecker.tests.external;
 import java.io.File;
 
 import org.overture.vdmj.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.TestResourcesResultTestCase;
+import org.overture.test.framework.TestResourcesResultTestCase;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;

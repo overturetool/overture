@@ -68,14 +68,14 @@
          point="org.eclipse.ui.views">
       <category
             name="Overture"
-            id="org.overturetool.tracefile.viewer">
+            id="org.overture.tracefile.viewer">
       </category>
       <view
             name="Tracefile viewer"
             icon="icons/overture.gif"
-            category="org.overturetool.tracefile.viewer"
-            class="org.overturetool.tracefile.viewer.TracefileViewer"
-            id="org.overturetool.tracefile.viewer.TracefileViewer">
+            category="org.overture.tracefile.viewer"
+            class="org.overture.tracefile.viewer.TracefileViewer"
+            id="org.overture.tracefile.viewer.TracefileViewer">
       </view>
    </extension>
    <extension
@@ -86,7 +86,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="org.overturetool.tracefile.viewer.TracefileViewer">
+               id="org.overture.tracefile.viewer.TracefileViewer">
          </view>
       </perspectiveExtension>
    </extension-->

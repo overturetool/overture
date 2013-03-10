@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Message;
-import org.overturetool.test.framework.results.Result;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Message;
+import org.overture.test.framework.results.Result;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.BUSClassDefinition;
 import org.overturetool.vdmj.definitions.CPUClassDefinition;

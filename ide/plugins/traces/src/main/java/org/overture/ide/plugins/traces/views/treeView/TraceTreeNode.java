@@ -28,8 +28,8 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ide.plugins.traces.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.plugins.traces.store.StorageManager;
 import org.overture.ide.plugins.traces.views.TraceAstUtility;
-import org.overturetool.ct.utils.TraceHelperNotInitializedException;
-import org.overturetool.ct.utils.TraceTestResult;
+import org.overture.ct.utils.TraceHelperNotInitializedException;
+import org.overture.ct.utils.TraceTestResult;
 import org.xml.sax.SAXException;
 
 public class TraceTreeNode implements IAdaptable, ITreeNode

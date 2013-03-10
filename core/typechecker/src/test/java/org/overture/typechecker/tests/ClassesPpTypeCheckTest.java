@@ -8,7 +8,7 @@ import junit.framework.TestSuite;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.typechecker.tests.framework.ClassTestCase;
-import org.overturetool.test.framework.BaseTestSuite;
+import org.overture.test.framework.BaseTestSuite;
 
 public class ClassesPpTypeCheckTest extends BaseTestSuite
 {

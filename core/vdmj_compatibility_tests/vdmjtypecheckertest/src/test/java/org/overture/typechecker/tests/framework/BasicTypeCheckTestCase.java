@@ -4,7 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.util.XmlResultReaderWritter.IResultStore;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;

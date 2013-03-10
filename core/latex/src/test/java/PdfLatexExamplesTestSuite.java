@@ -16,7 +16,7 @@
 // * 	
 // * The Overture Tool web-site: http://overturetool.org/
 // *******************************************************************************/
-//package org.overturetool.test.examples.testsuites;
+//package org.overture.test.examples.testsuites;
 //import java.io.IOException;
 //import java.lang.reflect.InvocationTargetException;
 //import java.util.Enumeration;
@@ -24,10 +24,10 @@
 //import junit.framework.Test;
 //import junit.framework.TestSuite;
 //
-//import org.overturetool.test.examples.LatexPpTestCase;
-//import org.overturetool.test.examples.TypeCheckRtTestCase;
-//import org.overturetool.test.examples.TypeCheckSlTestCase;
-//import org.overturetool.test.framework.BaseTestSuite;
+//import org.overture.test.examples.LatexPpTestCase;
+//import org.overture.test.examples.TypeCheckRtTestCase;
+//import org.overture.test.examples.TypeCheckSlTestCase;
+//import org.overture.test.framework.BaseTestSuite;
 //
 ///**
 // * Test in this class is only enabled if the environment variable testLatex=true is defined.

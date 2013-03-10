@@ -13,8 +13,8 @@ import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Result;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Result;
 
 public class ExpressionTestCase extends InterpreterBaseTestCase
 {

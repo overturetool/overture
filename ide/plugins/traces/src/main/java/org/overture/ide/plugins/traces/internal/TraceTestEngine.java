@@ -15,8 +15,8 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.overture.ide.plugins.traces.ITracesConstants;
 import org.overture.ide.plugins.traces.OvertureTracesPlugin;
 import org.overture.ide.plugins.traces.store.StorageManager;
-import org.overturetool.traces.vdmj.server.ConnectionListener;
-import org.overturetool.traces.vdmj.server.IClientMonitor;
+import org.overture.traces.vdmj.server.ConnectionListener;
+import org.overture.traces.vdmj.server.IClientMonitor;
 
 public class TraceTestEngine
 {

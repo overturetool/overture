@@ -57,7 +57,7 @@ public class BuilderPp extends VdmjBuilder {
 
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#typeCheck()
+	 * @see org.overture.vdmj.VDMJ#typeCheck()
 	 */
 
 	@Override

@@ -520,7 +520,7 @@ public class VdmProject {
 
 			BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 			outputStream.write(VDM_TOOLS_PROJECT_OPT.replaceAll("JCG_PACKAGE:",
-					"JCG_PACKAGE:org.overturetool." + projectName));
+					"JCG_PACKAGE:org.overture." + projectName));
 			outputStream.close();
 			log.info("Options file: " + optFile.getAbsolutePath());
 

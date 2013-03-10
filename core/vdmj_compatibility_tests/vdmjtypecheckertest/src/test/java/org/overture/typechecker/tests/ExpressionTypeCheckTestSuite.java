@@ -9,7 +9,7 @@ import junit.framework.TestSuite;
 import org.overture.typechecker.tests.framework.BaseTestSuite;
 import org.overture.typechecker.tests.framework.BasicTypeCheckTestCase.ParserType;
 import org.overture.typechecker.tests.framework.GeneratedTestCase;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExpressionTypeCheckTestSuite extends BaseTestSuite

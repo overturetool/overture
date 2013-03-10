@@ -3,13 +3,13 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Message;
-import org.overturetool.test.framework.results.Result;
 import org.overturetool.vdmj.messages.VDMError;
 import org.overturetool.vdmj.messages.VDMWarning;
 import org.overturetool.vdmj.syntax.SyntaxReader;
 import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Message;
+import org.overture.test.framework.results.Result;
 
 
 public class VdmjCompatibilityUtils {

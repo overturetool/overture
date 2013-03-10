@@ -36,12 +36,12 @@
               <stripVersion>true</stripVersion>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.overturetool.core.combinatorialtesting</groupId>
+                  <groupId>org.overture.core.combinatorialtesting</groupId>
                   <artifactId>ctutils</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.overturetool.core.combinatorialtesting</groupId>
+                  <groupId>org.overture.core.combinatorialtesting</groupId>
                   <artifactId>ctruntime</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
