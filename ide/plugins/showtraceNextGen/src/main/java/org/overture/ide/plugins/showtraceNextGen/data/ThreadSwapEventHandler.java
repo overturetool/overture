@@ -13,21 +13,18 @@ public class ThreadSwapEventHandler extends EventHandler {
 	@Override
 	protected boolean handle(INextGenEvent event, GenericTabItem tab) 
 	{
-		NextGenThreadSwapEvent tEvent = (NextGenThreadSwapEvent)event;
-		if(tEvent == null) return false;
+		NextGenThreadSwapEvent tEvent = null;
+		
+		if(event instanceof NextGenThreadSwapEvent)
+			tEvent = (NextGenThreadSwapEvent)event;
+		else
+			throw new IllegalArgumentException("ThreadSwapEventHandler expected event of type: " + NextGenThreadSwapEvent.class.getName());
 		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
 		TraceThread thread = data.getThread(threadId);
-		TraceObject object = null;
-		
-		if(tEvent.thread.object != null)
-		{
-			Long objectId = new Long(tEvent.thread.object.id);
-			object = data.getObject(objectId);
-		}
-		
+				
 		switch(tEvent.swapType)
 		{
 			case SWAP_IN: 

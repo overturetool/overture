@@ -15,8 +15,12 @@ public class ThreadEventHandler extends EventHandler {
 	@Override
 	protected boolean handle(INextGenEvent event, GenericTabItem tab) 
 	{
-		NextGenThreadEvent tEvent = (NextGenThreadEvent)event;
-		if(tEvent == null) return false; //Guard
+		NextGenThreadEvent tEvent = null;
+		
+		if(event instanceof NextGenThreadEvent)
+			tEvent = (NextGenThreadEvent)event;
+		else
+			throw new IllegalArgumentException("ThreadEventhandler expected event of type: " + NextGenThreadEvent.class.getName());
 		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
@@ -34,7 +38,8 @@ public class ThreadEventHandler extends EventHandler {
 					object = data.getInitThreadObject();
 				else if(tEvent.thread.type == ThreadType.MAIN)
 					object = data.getMainThreadObject();
-				else return false; //TODO: Throw exception?
+				else
+					throw new UnexpectedEventTypeException("Did not expect create event in ThreadEventHandler for other thread types than init and main at this point.");
 			}
 			else
 			{
@@ -45,7 +50,7 @@ public class ThreadEventHandler extends EventHandler {
 			eventViewer.drawThreadCreate(tab, cpu, thread);
 			break;
 		case SWAP: 
-			return false;
+			throw new UnexpectedEventTypeException("Problem in ThreadEventHandler. SWAP events should be handled in " + ThreadSwapEventHandler.class.getName());
 		case KILL: 
 			eventViewer.drawThreadKill(tab, cpu, thread);
 			if(thread.hasCurrentObject())
