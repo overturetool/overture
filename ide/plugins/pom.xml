@@ -23,12 +23,10 @@
     <module>externaleditor</module>
     <module>latex</module>
     <module>poviewer</module>
-    <module>traces</module>
+    <module>combinatorialtesting</module>
     <module>developerutils</module>
     <module>uml2</module>
-    <!-- showtraceNextGen plugin to be renamed showtract -jwc/4mar2013 -->
-    <!-- <module>showtrace</module> -->
-    <!-- <module>showtraceNextGen</module> -->
+    <module>rttraceviewer</module>
     <!-- features last -->
     <module>features</module>
   </modules>

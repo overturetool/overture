@@ -15,7 +15,10 @@
    <feature url="features/org.overture.ide.plugins.features.csk_0.0.0.jar" id="org.overture.ide.plugins.features.csk" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.ct_0.0.0.jar" id="org.overture.ide.plugins.features.ct" version="0.0.0">
+   <feature url="features/org.overture.ide.plugins.features.combinatorialtesting_0.0.0.jar" id="org.overture.ide.plugins.features.combinatorialtesting" version="0.0.0">
+      <category name="Overture"/>
+   </feature>
+   <feature url="features/org.overture.ide.plugins.features.rttraceviewer_0.0.0.jar" id="org.overture.ide.plugins.features.rttraceviewer" version="0.0.0">
       <category name="Overture"/>
    </feature>
    <feature url="features/org.overture.ide.plugins.features.developerutils_0.0.0.jar" id="org.overture.ide.plugins.features.developerutils" version="0.0.0">

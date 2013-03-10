@@ -8,23 +8,12 @@
     <version>2.0.0<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
-  <packaging>pom</packaging>
+
+  <packaging>eclipse-plugin</packaging>
 
   <groupId>org.overture.ide.plugins</groupId>
-  <artifactId>org.overture.ide.plugins.features</artifactId>
-  <name>Overture IDE Eclipse plugin features</name>
-  
-  <modules>
-    <module>coverageeditor</module>
-    <module>csk</module>
-    <module>combinatorialtesting</module>
-    <module>developerutils</module>
-    <module>latex</module>
-    <module>poviewer</module>
-    <module>quickinterpreter</module>
-    <module>uml2</module>
-    <module>rttraceviewer</module>
-  </modules>
+  <artifactId>org.overture.ide.plugins.rttraceviewer</artifactId>
+  <name>RT Trace Viewer Plugin</name>
+  <description>Graphical tool to display execution trace of a VDM RT model. Enables the user to see thread switched and bus traffic.</description>
 
 </project>
