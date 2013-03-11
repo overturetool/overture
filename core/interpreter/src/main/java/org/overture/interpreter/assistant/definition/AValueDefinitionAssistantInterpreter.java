@@ -15,6 +15,7 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class AValueDefinitionAssistantInterpreter extends
 		AValueDefinitionAssistantTC
@@ -28,7 +29,7 @@ public class AValueDefinitionAssistantInterpreter extends
 		try
 		{
 			// UpdatableValues are constantized as they cannot be updated.
-			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext).convertTo(d.getType(), initialContext).getConstant();
+			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext).convertTo(PDefinitionAssistantTC.getType(d), initialContext).getConstant();
 			return PPatternAssistantInterpreter.getNamedValues(d.getPattern(), v, initialContext);
      	}
 	    catch (ValueException e)
