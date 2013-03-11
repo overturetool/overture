@@ -32,7 +32,7 @@
   <dependencies>
     <!-- this is a problem; vdmj is no more in astv2 -jwc/28Feb2013 -->
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>vdmj</artifactId>
       <version>2.1.2</version>
     </dependency>
