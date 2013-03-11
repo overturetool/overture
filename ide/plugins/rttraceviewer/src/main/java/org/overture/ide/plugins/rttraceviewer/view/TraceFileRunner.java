@@ -2,6 +2,7 @@ package org.overture.ide.plugins.rttraceviewer.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -9,16 +10,20 @@ import org.overture.ide.plugins.rttraceviewer.data.Conjecture;
 import org.overture.ide.plugins.rttraceviewer.data.ConjectureData;
 import org.overture.ide.plugins.rttraceviewer.data.TraceCPU;
 import org.overture.ide.plugins.rttraceviewer.data.TraceData;
+import org.overture.ide.plugins.rttraceviewer.data.TraceEventManager;
 import org.overture.ide.plugins.rttraceviewer.data.TraceThread;
 import org.overture.ide.plugins.rttraceviewer.draw.ArchitectureViewer;
 import org.overture.ide.plugins.rttraceviewer.draw.CpuEventViewer;
+import org.overture.ide.plugins.rttraceviewer.draw.DummyViewer;
 import org.overture.ide.plugins.rttraceviewer.draw.OverviewEventViewer;
 import org.overture.ide.plugins.rttraceviewer.draw.TraceEventViewer;
 import org.overture.ide.plugins.rttraceviewer.event.BusMessageEventHandler;
 import org.overture.ide.plugins.rttraceviewer.event.BusMessageReplyEventHandler;
+import org.overture.ide.plugins.rttraceviewer.event.CPUEventFilter;
+import org.overture.ide.plugins.rttraceviewer.event.EventFilter;
 import org.overture.ide.plugins.rttraceviewer.event.EventHandler;
-import org.overture.ide.plugins.rttraceviewer.event.EventHandler.EventViewType;
 import org.overture.ide.plugins.rttraceviewer.event.OperationEventHandler;
+import org.overture.ide.plugins.rttraceviewer.event.OverviewEventFilter;
 import org.overture.ide.plugins.rttraceviewer.event.ThreadEventHandler;
 import org.overture.ide.plugins.rttraceviewer.event.ThreadSwapEventHandler;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
@@ -58,102 +63,84 @@ public class TraceFileRunner
 	public void drawOverview(GenericTabItem tab, Long eventStartTime)
 			throws Exception 
 	{
-		drawView(tab, eventStartTime, EventViewType.OVERVIEW, 0L);
+		data.reset();
+		TraceEventViewer viewer = new OverviewEventViewer();
+		viewer.drawStaticItems(tab, data.getCPUs(), data.getBuses());
+		
+		drawView(tab, eventStartTime, viewer, new OverviewEventFilter());
+		
+		//FIXME - MVQ: Dirty hack in order to extend the blue line (Active/Blocked) to the end of canvas.
+		for(TraceCPU cpu : data.getCPUs())
+		{
+			TraceThread tThread = null;
+			Long threadId = cpu.getCurrentThread();
+			if(threadId != null)
+			{
+				tThread = data.getThread(threadId);
+			}
+			((OverviewEventViewer)viewer).updateCpu(tab, cpu, tThread);
+		}
 	}
 
 	public void drawCpu(GenericTabItem tab, Long cpuId, Long eventStartTime)
 			throws Exception 
 	{
-		drawView(tab, eventStartTime, EventViewType.CPU, cpuId);		
+		data.reset();
+		TraceEventViewer viewer = new CpuEventViewer();
+		viewer.drawStaticItems(tab, null, data.getConnectedBuses(cpuId));
+		
+		drawView(tab, eventStartTime, viewer, new CPUEventFilter(cpuId));		
 	}
 	
-	private void drawView(GenericTabItem tab, Long eventStartTime, EventViewType viewType, Long cpuId) throws Exception
-	{
-		data.reset();
-		TraceEventViewer viewer = null;
-	
-		//Draw pre-defined content
-		//TODO: Refactor to make unaware of types including CPU sortings
-		if(viewType == EventViewType.OVERVIEW)
-		{
-			viewer = new OverviewEventViewer();
-			viewer.drawStaticItems(tab, data.getCPUs(), data.getBuses());
-		}
-		else if(viewType == EventViewType.CPU)
-		{
-			viewer = new CpuEventViewer();
-			viewer.drawStaticItems(tab, null, data.getConnectedBuses(cpuId));
-		}
-			
+	private void drawView(GenericTabItem tab, Long eventStartTime, TraceEventViewer viewer, EventFilter filter) throws Exception
+	{		
 		//Draw events as long as there is room and time
-		Long conjectureTime = -1L;
 		Long eventTime = 0L;
-		EventViewType currentView = viewType;
-		Long lastEventTime = data.getMaxEventTime();
-		while(!tab.isCanvasOverrun() && eventTime <= lastEventTime) 
+		TraceEventManager eventManager = data.getEventManager();
+		TraceEventViewer dummyViewer = new DummyViewer();
+		TraceEventViewer currentView = null;
+		List<INextGenEvent> events = eventManager.getEvents(eventTime);
+		
+		while(!tab.isCanvasOverrun() && eventTime <= eventManager.getLastEventTime()) 
 		{
-			//Get all events at the current time
-			ArrayList<INextGenEvent> currentEvents = data.getEvents(eventTime);
-			
 			//TODO: Remove DUMMY. Introduced to hack time travels
-			currentView = (data.getCurrentEventTime() < eventStartTime) ? EventViewType.DUMMY : viewType;
+			currentView = (eventManager.getCurrentEventTime() < eventStartTime) ? dummyViewer : viewer;
 			
-			for(INextGenEvent event : currentEvents)
-			{		
-				if(viewType == EventViewType.CPU && !TraceData.isEventForCpu(event, cpuId)) 
-					continue; //Ignore event for other CPU's
+			//Draw conjectures on the overview
+			if(viewer instanceof OverviewEventViewer)
+			{
+				Vector<Conjecture> cons = conjectures.getConjecture(eventTime);
 				
-				//Draw conjectures on the overview
-				if(viewType == EventViewType.OVERVIEW && eventTime != conjectureTime)
+				for(Conjecture c : cons)
 				{
-					conjectureTime = eventTime;
-					Vector<Conjecture> cons = conjectures.getConjecture(event.getTime().getAbsoluteTime());
-					
-					for(Conjecture c : cons)
+					TraceCPU cpu = data.getCpuFromThreadId(c.getThreadID());
+					switch(c.getType())
 					{
-						TraceCPU cpu = data.getCpuFromThreadId(c.getThreadID());
-						switch(c.getType())
-						{
-							case SOURCE: ((OverviewEventViewer)viewer).drawSourceConjecture(tab, cpu, c.getName()); break;
-							case DESTINATION: ((OverviewEventViewer)viewer).drawDestinationConjecture(tab, cpu, c.getName()); break;
-						}
+						case SOURCE: ((OverviewEventViewer)viewer).drawSourceConjecture(tab, cpu, c.getName()); break;
+						case DESTINATION: ((OverviewEventViewer)viewer).drawDestinationConjecture(tab, cpu, c.getName()); break;
 					}
 				}
-				
-				EventHandler handler = eventHandlers.get(event.getClass());
-				handler.handleEvent(event, currentView, tab);					
+			}
+			
+			for(INextGenEvent event : events)
+			{	
+				if(filter.apply(event)) { 
+					EventHandler handler = eventHandlers.get(event.getClass());
+					handler.handleEvent(event, currentView, tab);
+				}				
 			}
 
-			eventTime = data.getCurrentEventTime() + 1; //Get next event time - MAA: Consider a more elegant way? Counter in data?
+			events = eventManager.getEvents();
 		}
 		
-		ArrayList<INextGenEvent> nextEvents = data.getEvents(eventTime);
-		
-		if(!nextEvents.isEmpty())
-		{
+		//Draw a final timemarker for the next series of events
+		List<INextGenEvent> nextEvents = eventManager.getEvents();
+		if(!nextEvents.isEmpty()) {
 			viewer.drawTimeMarker(tab, nextEvents.get(0).getTime().getAbsoluteTime());
-			data.setLastMarkerTime(nextEvents.get(0).getTime().getAbsoluteTime());
 		}
 				
-		
-		if(viewer != null)
-		{
-			//FIXME - MVQ: Dirty hack in order to extend the blue line (Active/Blocked) to the end of canvas.
-			if(viewType == EventViewType.OVERVIEW)
-			{
-				for(TraceCPU cpu : data.getCPUs())
-				{
-					TraceThread tThread = null;
-					Long threadId = cpu.getCurrentThread();
-					if(threadId != null)
-					{
-						tThread = data.getThread(threadId);
-					}
-					((OverviewEventViewer)viewer).updateCpu(tab, cpu, tThread);
-				}
-			}
-			viewer.drawTimelines(tab);
-		}
+		//Finally add timelines 
+		viewer.drawTimelines(tab);
 	}
 	
 	public Vector<Long> getCpuIds() 

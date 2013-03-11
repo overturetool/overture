@@ -23,16 +23,13 @@
 
 package org.overture.ide.plugins.rttraceviewer.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.management.RuntimeErrorException;
 import org.overture.interpreter.messages.rtlog.nextgen.*;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 
 
 public class TraceData
@@ -44,16 +41,18 @@ public class TraceData
 	private HashMap<Long, TraceThread> threads;
 	private HashMap<Long, TraceBusMessage> messages;
 	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
+	private TraceEventManager eventManager;
 	
 	private TraceObject mainThreadObject;
-	
-	private Long currentEventTime;
+
 	private Long lastMarkerTime;
 	
     public TraceData(NextGenRTLogger logger)
     {
     	//Pass by reference is needed to avoid problems when switching between two RT models (different NextGenRTLogger instances)
-    	rtLogger = logger;//NextGenRTLogger.getInstance();
+    	rtLogger = logger;
+    	
+    	eventManager = new TraceEventManager(logger);
     	 	
     	cpus = new HashMap<Long, TraceCPU>();
     	objects = new HashMap<Long, TraceObject>();
@@ -67,6 +66,10 @@ public class TraceData
     	reset();
     }
 
+    public TraceEventManager getEventManager() {
+    	return eventManager;
+    }
+    
     public TraceCPU getCPU(Long pid) throws RuntimeErrorException
     {
     	if(!rtLogger.getCpuMap().containsKey((int)(long)pid))
@@ -235,7 +238,8 @@ public class TraceData
         messages.clear();
         operations.clear();
         
-        currentEventTime = null;
+        mainThreadObject.setVisible(false);
+        eventManager.reset();
         lastMarkerTime = null;
     }
 	
@@ -267,17 +271,7 @@ public class TraceData
 		return getCPU(new Long(CpuId));
 	}
 	
-	//Events
-	public Long getMaxEventTime()
-	{
-		return getEvents().lastKey();
-	}
 
-	public Long getCurrentEventTime()
-	{
-		return currentEventTime;
-	}
-	
 	public Long getLastMarkerTime()
 	{
 		return lastMarkerTime;
@@ -287,84 +281,4 @@ public class TraceData
 	{
 		lastMarkerTime = time;
 	}
-	
-	public Vector<Long> getEventTimes()
-	{
-		return new Vector<Long>(getEvents().keySet());
-	}
-	
-	private TreeMap<Long, ArrayList<INextGenEvent>> getEvents()
-	{
-		return (TreeMap<Long, ArrayList<INextGenEvent>>)rtLogger.getEvents();
-	}
-	
-	public ArrayList<INextGenEvent> getEvents(Long fromTime)
-	{
-		ArrayList<INextGenEvent> events = null;
-		
-		Long eventKey = getEvents().ceilingKey(fromTime); //Null if no key equal to or greater than
-	    if(eventKey != null)
-	    {
-	    	events = getEvents().get(eventKey);
-	    	currentEventTime = eventKey;
-	    }
-	    else
-	    {
-	    	return events = new ArrayList<INextGenEvent>();
-	    }
-				
-		return events;
-	}
-	
-	public static boolean isEventForCpu(Object e, Long cpuId)
-	{
-		INextGenEvent event = (INextGenEvent)e;
-		if(event == null) return false; //Guard
-		
-		boolean isForThisCpu = false;
-		
-		if(event instanceof NextGenThreadEvent)
-        {
-			int eventCpu = ((NextGenThreadEvent)event).thread.cpu.id;
-			if(eventCpu == cpuId)
-			{
-				isForThisCpu = true;
-			}
-        }
-        else if(event instanceof NextGenOperationEvent)
-        {
-			isForThisCpu = (((NextGenOperationEvent)event).thread.cpu.id == cpuId.intValue());			
-        }
-        else if(event instanceof NextGenBusMessageReplyRequestEvent)
-        {
-        	int fromCpu = ((NextGenBusMessageReplyRequestEvent)event).replyMessage.fromCpu.id;
-        	isForThisCpu = (fromCpu == cpuId.intValue());
-        }
-        else if(event instanceof NextGenBusMessageEvent)
-        {
-        	NextGenBusMessageEvent busMsg = (NextGenBusMessageEvent)event;
-        	if(busMsg.type != NextGenBusMessageEventType.ACTIVATE)
-        	{
-				int fromCpu = busMsg.message.fromCpu.id;
-				int toCpu =  busMsg.message.toCpu.id;
-				
-				switch(busMsg.type)
-				{
-					case ACTIVATE: 		isForThisCpu = (fromCpu == cpuId); break;
-					case COMPLETED: 	isForThisCpu = (toCpu == cpuId); break;
-					//case REPLY_REQUEST: isForThisCpu = (fromCpu == cpuId); break;
-					case REQUEST: 		isForThisCpu = (fromCpu == cpuId); break;
-					default: 			isForThisCpu = false;
-				}
-
-        	}
-        }
-        else 
-        {
-        	throw new IllegalArgumentException("Unknown event type!");
-        }
-		
-		return isForThisCpu;
-	}
-
 }
