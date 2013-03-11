@@ -28,19 +28,19 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.tools.packworkspace.ProjectPacker;
-import org.overture.vdmj.ExitStatus;
-import org.overture.vdmj.Settings;
-import org.overture.vdmj.VDMJ;
-import org.overture.vdmj.VDMPP;
-import org.overture.vdmj.VDMRT;
-import org.overture.vdmj.VDMSL;
-import org.overture.vdmj.lex.Dialect;
-import org.overture.vdmj.messages.Console;
-import org.overture.vdmj.messages.StderrRedirector;
-import org.overture.vdmj.messages.StdoutRedirector;
-import org.overture.vdmj.pog.ProofObligation;
-import org.overture.vdmj.pog.ProofObligationList;
-import org.overture.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.ExitStatus;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.VDMJ;
+import org.overturetool.vdmj.VDMPP;
+import org.overturetool.vdmj.VDMRT;
+import org.overturetool.vdmj.VDMSL;
+import org.overturetool.vdmj.lex.Dialect;
+import org.overturetool.vdmj.messages.Console;
+import org.overturetool.vdmj.messages.StderrRedirector;
+import org.overturetool.vdmj.messages.StdoutRedirector;
+import org.overturetool.vdmj.pog.ProofObligation;
+import org.overturetool.vdmj.pog.ProofObligationList;
+import org.overturetool.vdmj.runtime.Interpreter;
 
 public class ProjectTester
 {
@@ -419,7 +419,7 @@ public class ProjectTester
 			}
 		}
 		command.add(cp);
-		command.add("org.overture.vdmj.VDMJ");
+		command.add("org.overturetool.vdmj.VDMJ");
 
 		command.add(project.getDialect().getArgstring());
 		// -r <release>: VDM language release

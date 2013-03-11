@@ -33,7 +33,7 @@ import org.overture.tools.packworkspace.rss.RssItem;
 import org.overture.tools.packworkspace.testing.HtmlPage;
 import org.overture.tools.packworkspace.testing.HtmlTable;
 import org.overture.tools.packworkspace.testing.ProjectTester;
-import org.overture.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.Dialect;
 
 public class Controller
 {
