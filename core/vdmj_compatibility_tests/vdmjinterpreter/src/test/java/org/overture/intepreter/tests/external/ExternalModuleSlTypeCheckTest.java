@@ -18,7 +18,7 @@ public class ExternalModuleSlTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter_SL_Modules_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("sltest/cgip");
 		TestSuite test = null;

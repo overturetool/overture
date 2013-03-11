@@ -18,7 +18,7 @@ public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter_RT_Classes_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("rttest/cgip");
 		TestSuite test = null;

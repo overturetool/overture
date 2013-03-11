@@ -18,7 +18,7 @@ public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Type_Check_PP_Classes_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("pptest/tc");
 		TestSuite test = null;
