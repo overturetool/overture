@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.showtraceNextGen.event;
+package org.overture.ide.plugins.rttraceviewer.event;
 
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 

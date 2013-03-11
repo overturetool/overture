@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.showtraceNextGen.data;
+package org.overture.ide.plugins.rttraceviewer.data;
 
 import java.util.ArrayList;
 import java.util.Collection;
