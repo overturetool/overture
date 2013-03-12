@@ -1,0 +1,55 @@
+\usepackage{longtable}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage[pdftex,dvipsnames]{color}
+\definecolor{notovered}{rgb}{1,0,0}  %red
+% definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
+\usepackage{listings}
+
+% use package for VDM language definition
+\usepackage{overturelanguagedef}
+% Define Overture listing for The VDM language
+\lstdefinestyle{overtureLanguageStyle}{basicstyle=\footnotesize\ttfamily,
+			frame=trBL, 
+%			numbers=left, 
+%			gobble=0, 
+			showstringspaces=false, 
+%			linewidth=\textwidth, 
+			captionpos=b,
+			frameround=fttt, 
+			aboveskip=5mm,
+			belowskip=5mm,
+			framexleftmargin=0mm, 
+			framexrightmargin=0mm}
+% Set escape for inserting coverage macros
+\lstset{escapeinside={(*@}{@*)}}
+% Set the default style for lstlistings
+\lstset{style=overtureLanguageStyle}
+
+% Custom macro used to color uncoverage model parts in listings
+\newcommand{\notcovered}[1]{\textcolor{notovered}{#1}}
+
+% Environment definition for VDM blocks
+%  The listing environment vdm_al is reset to the default overture style and default dialect each time one of the overture listing environments are used.
+% All listing environments are defined to take an optional parameter of the type \lstset which is applied as the last on in the environment allowing the user to change the defaults if desired:
+%\begin{vdm_al}[\lstset{numbers=left}]
+
+%Default Overture Listing: language is set the project from which it has been generated from. 
+\lstnewenvironment{vdm_al}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=OVERTURE_LANGUAGE}#1}
+{}
+
+\lstnewenvironment{vdm_sl}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_SL}#1}
+{}
+
+\lstnewenvironment{vdm_pp}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_PP}#1}
+{}
+
+\lstnewenvironment{vdm_rt}[1][]{\lstset{style=overtureLanguageStyle}\lstset{language=VDM_RT}#1}
+{}
+
+% Environment definition for test coverage use by VDM Tools
+\lstnewenvironment{rtinfo}{}
+{}
+
+
+
