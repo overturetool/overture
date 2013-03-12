@@ -35,6 +35,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceDefinition;
@@ -1510,6 +1511,23 @@ public class TypeCheckerDefinitionVisitor extends
 		return node.getType();
 	}
 
+	@Override
+	public PType caseALetDefBindingTraceDefinition(ALetDefBindingTraceDefinition node, TypeCheckInfo question) throws AnalysisException
+	{
+		Environment local = question.env;
+		for (PDefinition d: node.getLocalDefs())
+		{
+			PDefinitionAssistantTC.typeResolve(d, rootVisitor, question);
+			d.apply(rootVisitor, question);
+			local = new FlatCheckedEnvironment(d, local, question.scope);
+		}
+		
+		node.getBody().apply(rootVisitor, new TypeCheckInfo(local, question.scope));
+		local.unusedCheck(question.env);
+	
+		return null;
+	}
+	
 	@Override
 	public PType caseALetBeStBindingTraceDefinition(
 			ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
