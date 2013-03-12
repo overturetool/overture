@@ -275,41 +275,41 @@ public class ImplicitOperationDefinition extends Definition
 		local.setStatic(accessSpecifier);
 		local.setEnclosingDefinition(this);
 
+		if (base.isVDMPP())
+		{
+			if (name.name.equals(classDefinition.name.name))
+			{
+				isConstructor = true;
+				classDefinition.hasConstructors = true;
+
+				if (accessSpecifier.isAsync)
+				{
+					report(3286, "Constructor cannot be 'async'");
+				}
+
+				if (type.result.isClass())
+				{
+					ClassType ctype = type.result.getClassType();
+
+					if (ctype.classdef != classDefinition)
+					{
+						report(3025,
+							"Constructor operation must have return type " + classDefinition.name.name);
+					}
+				}
+				else
+				{
+					report(3026,
+						"Constructor operation must have return type " + classDefinition.name.name);
+				}
+			}
+		}
+
 		if (body != null)
 		{
 			if (classDefinition != null && !accessSpecifier.isStatic)
 			{
 				local.add(getSelfDefinition());
-			}
-
-			if (base.isVDMPP())
-			{
-				if (name.name.equals(classDefinition.name.name))
-    			{
-    				isConstructor = true;
-    				classDefinition.hasConstructors = true;
-
-    				if (accessSpecifier.isAsync)
-    				{
-    					report(3286, "Constructor cannot be 'async'");
-    				}
-
-    				if (type.result.isClass())
-    				{
-    					ClassType ctype = type.result.getClassType();
-
-    					if (ctype.classdef != classDefinition)
-    					{
-    						report(3025,
-    							"Constructor operation must have return type " + classDefinition.name.name);
-    					}
-    				}
-    				else
-    				{
-    					report(3026,
-    						"Constructor operation must have return type " + classDefinition.name.name);
-    				}
-    			}
 			}
 
 			actualResult = body.typeCheck(local, NameScope.NAMESANDSTATE);
