@@ -135,10 +135,23 @@ public class UmlTypeCreatorBase
 				break;
 			case UNION:
 			{
+				
 				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 				{
-					LexNameToken name = ATypeDefinition.class.cast(type.getAncestor(ATypeDefinition.class)).getName();
-					return name.module + NAME_SEPERATOR + name.name;
+					ATypeDefinition typeDef = type.getAncestor(ATypeDefinition.class);
+					if(typeDef!=null)
+					{
+						LexNameToken nameTypeDef = ATypeDefinition.class.cast(typeDef).getName();
+						return nameTypeDef.module + NAME_SEPERATOR + nameTypeDef.name;
+					}else
+				{
+					String name="GeneratedUnion";
+					for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
+					{
+						name += getName(itr.next());
+					}
+					return name;
+				}
 				}
 				String name = "Union<";
 				for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)

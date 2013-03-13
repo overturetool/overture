@@ -17,7 +17,7 @@ public class ModuleVdmSlInterpreter extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter Module TestSuite";
 		String root = "src\\test\\resources\\test\\";
 		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class,"vdm");

@@ -28,9 +28,9 @@ import java.util.Vector;
 import org.overture.tools.packworkspace.ProjectPacker;
 import org.overture.tools.packworkspace.latex.FileUtils;
 import org.overture.tools.packworkspace.testing.ProjectTester.Phase;
-import org.overture.vdmj.runtime.Interpreter;
-import org.overture.vdmj.runtime.LatexSourceFile;
-import org.overture.vdmj.runtime.SourceFile;
+import org.overturetool.vdmj.runtime.Interpreter;
+import org.overturetool.vdmj.runtime.LatexSourceFile;
+import org.overturetool.vdmj.runtime.SourceFile;
 
 public class LatexBuilder
 {

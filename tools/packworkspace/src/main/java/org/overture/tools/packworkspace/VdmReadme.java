@@ -29,8 +29,8 @@ import java.util.Vector;
 
 import org.overture.tools.packworkspace.latex.FileUtils;
 import org.overture.tools.packworkspace.rss.EscapeChars;
-import org.overture.vdmj.Release;
-import org.overture.vdmj.lex.Dialect;
+import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.lex.Dialect;
 
 public class VdmReadme
 {

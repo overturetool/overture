@@ -18,7 +18,7 @@
  *******************************************************************************/
 package org.overture.tools.packworkspace.testing;
 
-import org.overture.vdmj.ExitStatus;
+import org.overturetool.vdmj.ExitStatus;
 
 public class HtmlPage
 {

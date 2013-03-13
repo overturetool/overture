@@ -26,7 +26,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.overture.vdmj.ExitStatus;
+import org.overturetool.vdmj.ExitStatus;
 
 public class TestStatus
 {

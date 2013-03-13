@@ -17,7 +17,7 @@ public class ClassVdmPpIntepreter extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter Class TestSuite";
 		//String root = "src\\test\\resources\\classes";
 		String root = "src\\test\\resources\\test";

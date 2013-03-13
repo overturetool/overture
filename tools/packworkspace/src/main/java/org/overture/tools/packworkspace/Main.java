@@ -26,7 +26,7 @@ import java.util.Vector;
 import org.overture.tools.packworkspace.rss.RssItem;
 import org.overture.tools.packworkspace.testing.LatexBuilder;
 import org.overture.tools.packworkspace.testing.ProjectTester;
-import org.overture.vdmj.lex.Dialect;
+import org.overturetool.vdmj.lex.Dialect;
 
 public class Main
 {
