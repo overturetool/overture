@@ -22,7 +22,7 @@ package org.overture.parser.messages;
 // *
 // ******************************************************************************/
 //
-//package org.overturetool.vdmj.messages;
+//package org.overture.vdmj.messages;
 //
 //import java.io.IOException;
 //import java.io.OutputStreamWriter;

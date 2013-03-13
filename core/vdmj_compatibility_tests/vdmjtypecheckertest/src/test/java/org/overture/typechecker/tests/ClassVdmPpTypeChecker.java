@@ -8,7 +8,7 @@ import junit.framework.TestSuite;
 
 import org.overture.typechecker.tests.framework.BaseTestSuite;
 import org.overture.typechecker.tests.framework.ClassTestCase;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ClassVdmPpTypeChecker extends BaseTestSuite {

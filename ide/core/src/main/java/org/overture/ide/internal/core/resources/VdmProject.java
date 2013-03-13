@@ -204,11 +204,11 @@ public class VdmProject implements IVdmProject
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overturetool.vdmj .Release)
+	 * @see org.overture.ide.utility.IVdmProject#setBuilder(org.overture.vdmj .Release)
 	 */
 	/*
 	 * (non-Javadoc)
-	 * @see org.overture.ide.utility.IVdmProject1#setBuilder(org.overturetool.vdmj .Release)
+	 * @see org.overture.ide.utility.IVdmProject1#setBuilder(org.overture.vdmj .Release)
 	 */
 	public void setBuilder(Release languageVersion) throws CoreException
 	{

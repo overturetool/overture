@@ -60,7 +60,7 @@ public class BuilderSl extends VdmjBuilder
 	
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#typeCheck()
+	 * @see org.overture.vdmj.VDMJ#typeCheck()
 	 */
 
 	@Override

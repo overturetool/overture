@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.BaseTestSuite;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExternalModuleSlTypeCheckTest extends BaseTestSuite
@@ -18,7 +18,7 @@ public class ExternalModuleSlTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter_SL_Modules_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("sltest/cgip");
 		TestSuite test = null;

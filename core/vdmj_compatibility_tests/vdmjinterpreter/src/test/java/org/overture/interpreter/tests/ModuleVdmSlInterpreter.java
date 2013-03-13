@@ -8,8 +8,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overture.interpreter.tests.framework.ModuleTestCase;
-import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.BaseTestSuite;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ModuleVdmSlInterpreter extends BaseTestSuite {
@@ -17,7 +17,7 @@ public class ModuleVdmSlInterpreter extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter Module TestSuite";
 		String root = "src\\test\\resources\\test\\";
 		TestSuite test = createTestCompleteFile(name, root, ModuleTestCase.class,"vdm");

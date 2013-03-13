@@ -71,7 +71,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#parse(java.util.List)
+	 * @see org.overture.vdmj.VDMJ#parse(java.util.List)
 	 */
 
 	@Override
@@ -172,7 +172,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#typeCheck()
+	 * @see org.overture.vdmj.VDMJ#typeCheck()
 	 */
 
 	@Override
@@ -273,7 +273,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overturetool.vdmj.VDMJ#interpret(List, String)
+	 * @see org.overture.vdmj.VDMJ#interpret(List, String)
 	 */
 
 	@Override

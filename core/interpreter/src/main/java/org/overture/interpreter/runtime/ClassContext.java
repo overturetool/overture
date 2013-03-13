@@ -56,7 +56,7 @@ public class ClassContext extends RootContext
 	 * not present search the global context. Note that the context
 	 * chain is not followed.
 	 *
-	 * @see org.overturetool.vdmj.runtime.Context#check(org.overturetool.vdmj.lex.LexNameToken)
+	 * @see org.overture.vdmj.runtime.Context#check(org.overture.vdmj.lex.LexNameToken)
 	 */
 
 	@Override

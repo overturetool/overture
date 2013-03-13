@@ -14,7 +14,7 @@ import org.overture.parser.messages.VDMWarning;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.tests.OvertureTestHelper;
-import org.overturetool.test.framework.results.Result;
+import org.overture.test.framework.results.Result;
 
 public class ClassTestCase extends TypeCheckTestCase
 {

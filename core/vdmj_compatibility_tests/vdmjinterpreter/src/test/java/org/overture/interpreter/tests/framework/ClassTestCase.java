@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.interpreter.tests.OvertureTestHelper;
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Result;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Result;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;

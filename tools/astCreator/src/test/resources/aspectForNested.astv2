@@ -7,7 +7,7 @@ Tokens
  *  plus='+';
  *
  * external
- *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+ *  location = 'java:org.overture.vdmj.lex.LexLocation';
  */
 string = 'java:java.lang.String';
  

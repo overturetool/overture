@@ -8,7 +8,7 @@ import junit.framework.TestSuite;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.pog.tests.framework.ClassPpPoTestCase;
-import org.overturetool.test.framework.BaseTestSuite;
+import org.overture.test.framework.BaseTestSuite;
 
 public class ClassPpPogTestSuite extends BaseTestSuite
 {

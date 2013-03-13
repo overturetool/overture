@@ -28,18 +28,18 @@ Ex:
 <build>
 		<plugins>
 			<plugin>
-				<groupId>org.overturetool.tools</groupId>
+				<groupId>org.overture.tools</groupId>
 				<artifactId>vdmt</artifactId>
 				<configuration>
 					<excludePackages>
-						<param>org.overturetool.traces.test
+						<param>org.overture.traces.test
 						</param>
-						<param>org.overturetool.traces.VDMUnit
+						<param>org.overture.traces.VDMUnit
 						</param>
 					</excludePackages>
 					<importPackages>
-						<param>org.overturetool.ast.itf</param>
-						<param>org.overturetool.ast.imp</param>
+						<param>org.overture.ast.itf</param>
+						<param>org.overture.ast.imp</param>
 					</importPackages>
 				</configuration>
 				<executions>

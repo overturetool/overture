@@ -16,7 +16,7 @@
 // * 	
 // * The Overture Tool web-site: http://overturetool.org/
 // *******************************************************************************/
-//package org.overturetool.test.examples;
+//package org.overture.test.examples;
 //
 //import java.io.File;
 //import java.io.FileNotFoundException;
@@ -25,15 +25,15 @@
 //import java.util.HashSet;
 //import java.util.Set;
 //
-//import org.overturetool.test.framework.results.Result;
-//import org.overturetool.test.util.FileUtils;
-//import org.overturetool.test.util.ProcessConsolePrinter;
-//import org.overturetool.vdmj.Settings;
-//import org.overturetool.vdmj.definitions.ClassList;
-//import org.overturetool.vdmj.lex.Dialect;
-//import org.overturetool.vdmj.runtime.ClassInterpreter;
-//import org.overturetool.vdmj.runtime.LatexSourceFile;
-//import org.overturetool.vdmj.runtime.SourceFile;
+//import org.overture.test.framework.results.Result;
+//import org.overture.test.util.FileUtils;
+//import org.overture.test.util.ProcessConsolePrinter;
+//import org.overture.vdmj.Settings;
+//import org.overture.vdmj.definitions.ClassList;
+//import org.overture.vdmj.lex.Dialect;
+//import org.overture.vdmj.runtime.ClassInterpreter;
+//import org.overture.vdmj.runtime.LatexSourceFile;
+//import org.overture.vdmj.runtime.SourceFile;
 //
 //public class LatexPpTestCase extends TypeCheckPpTestCase
 //{

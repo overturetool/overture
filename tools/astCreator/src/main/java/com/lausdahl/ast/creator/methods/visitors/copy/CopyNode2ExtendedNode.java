@@ -280,7 +280,7 @@ public class CopyNode2ExtendedNode extends Method
 	public Set<String> getRequiredImports(Environment env)
 	{
 		Set<String> imports = new HashSet<String>();
-		// imports.add("org.overturetool.util" + ".Factory");
+		// imports.add("org.overture.util" + ".Factory");
 		imports.add(factory.getName().getCanonicalName());
 		return imports;
 	}

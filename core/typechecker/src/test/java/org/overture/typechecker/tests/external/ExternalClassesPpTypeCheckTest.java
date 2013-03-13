@@ -8,8 +8,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overture.ast.lex.LexLocation;
-import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.BaseTestSuite;
+import org.overture.test.framework.Properties;
 
 public class ExternalClassesPpTypeCheckTest extends BaseTestSuite
 {

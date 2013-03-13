@@ -3,39 +3,39 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overturetool.core</groupId>
+    <groupId>org.overture.core</groupId>
     <artifactId>prettyprinting</artifactId>
-    <version>2.2.2<!--Replaceable: Main Version--></version>
+    <version>2.0.0<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overturetool.core.prettyprinting</groupId>
+  <groupId>org.overture.core.prettyprinting</groupId>
   <artifactId>prettyprintertest</artifactId>
   <name>The VDM Pretty Printer Tests</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.overturetool.core</groupId>
+      <groupId>org.overture.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
     </dependency>	
     <dependency>
-      <groupId>org.overturetool.core</groupId>
+      <groupId>org.overture.core</groupId>
       <artifactId>typechecker</artifactId>
       <version>${project.version}</version>
     </dependency>   
     <dependency>
-      <groupId>org.overturetool.core</groupId>
+      <groupId>org.overture.core</groupId>
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overturetool.core</groupId>
+      <groupId>org.overture.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overturetool.core.prettyprinting</groupId>
+      <groupId>org.overture.core.prettyprinting</groupId>
       <artifactId>prettyprinter</artifactId>
       <version>${project.version}</version>
     </dependency>

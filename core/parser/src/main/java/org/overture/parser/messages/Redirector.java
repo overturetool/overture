@@ -22,13 +22,13 @@ package org.overture.parser.messages;
 // *
 // ******************************************************************************/
 //
-//package org.overturetool.vdmj.messages;
+//package org.overture.vdmj.messages;
 //
 //import java.io.OutputStreamWriter;
 //import java.io.PrintWriter;
 //
-//import org.overturetool.vdmj.debug.DBGPReader;
-//import org.overturetool.vdmj.debug.DBGPRedirect;
+//import org.overture.vdmj.debug.DBGPReader;
+//import org.overture.vdmj.debug.DBGPRedirect;
 //
 //abstract public class Redirector extends PrintWriter
 //{

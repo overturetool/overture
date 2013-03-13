@@ -2,7 +2,7 @@ package org.overture.typechecker.tests.framework;
 
 import java.io.File;
 
-import org.overturetool.test.framework.ResultTestCase;
+import org.overture.test.framework.ResultTestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

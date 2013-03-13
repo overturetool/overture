@@ -10,9 +10,9 @@
 //import org.overture.typecheck.TypeCheckInfo;
 //import org.overture.typecheck.TypeComparator;
 //import org.overture.typecheck.visitors.TypeCheckVisitor;
-//import org.overturetool.vdmj.lex.LexException;
-//import org.overturetool.vdmj.syntax.ParserException;
-//import org.overturetool.vdmj.typechecker.NameScope;
+//import org.overture.vdmj.lex.LexException;
+//import org.overture.vdmj.syntax.ParserException;
+//import org.overture.vdmj.typechecker.NameScope;
 //
 //public class ExpressionTypeCheckTestCase extends BasicTypeCheckTestCase
 //{

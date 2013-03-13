@@ -9,36 +9,36 @@ Tokens
  *  plus='+';
  * 
  * external
- *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+ *  location = 'java:org.overture.vdmj.lex.LexLocation';
  */
-  LexToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexToken';
-  LexNameToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexNameToken';
-  LexIdentifierToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexIdentifierToken';
-  LexBooleanToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexQuoteToken';
-  LexRealToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexRealToken';
-  LexStringToken = 'java:node:org.overturetool.interpreter.vdmj.lex.LexStringToken';
-  //Delegate = 'java:node:org.overturetool.vdmj.util.Delegate';
-  clonableFile ='java:org.overturetool.interpreter.util.ClonableFile';
-  ClassDefinitionSettings = 'java:enum:org.overturetool.vdmj.typechecker.ClassDefinitionSettings';
+  LexToken = 'java:node:org.overture.interpreter.vdmj.lex.LexToken';
+  LexNameToken = 'java:node:org.overture.interpreter.vdmj.lex.LexNameToken';
+  LexIdentifierToken = 'java:node:org.overture.interpreter.vdmj.lex.LexIdentifierToken';
+  LexBooleanToken = 'java:node:org.overture.interpreter.vdmj.lex.LexBooleanToken';
+  LexCharacterToken = 'java:node:org.overture.interpreter.vdmj.lex.LexCharacterToken';
+  LexIntegerToken = 'java:node:org.overture.interpreter.vdmj.lex.LexIntegerToken';
+  LexQuoteToken = 'java:node:org.overture.interpreter.vdmj.lex.LexQuoteToken';
+  LexRealToken = 'java:node:org.overture.interpreter.vdmj.lex.LexRealToken';
+  LexStringToken = 'java:node:org.overture.interpreter.vdmj.lex.LexStringToken';
+  //Delegate = 'java:node:org.overture.vdmj.util.Delegate';
+  clonableFile ='java:org.overture.interpreter.util.ClonableFile';
+  ClassDefinitionSettings = 'java:enum:org.overture.vdmj.typechecker.ClassDefinitionSettings';
   
   
-  Breakpoint ='java:node:org.overturetool.vdmj.runtime.Breakpoint';
-  BreakpointCondition = 'java:enum:org.overturetool.vdmj.runtime.BreakpointCondition';
-  FunctionValue = 'java:org.overturetool.vdmj.values.FunctionValue';
-  State = 'java:org.overturetool.vdmj.values.State';
-  Delegate ='java:org.overturetool.vdmj.util.Delegate';
+  Breakpoint ='java:node:org.overture.vdmj.runtime.Breakpoint';
+  BreakpointCondition = 'java:enum:org.overture.vdmj.runtime.BreakpointCondition';
+  FunctionValue = 'java:org.overture.vdmj.values.FunctionValue';
+  State = 'java:org.overture.vdmj.values.State';
+  Delegate ='java:org.overture.vdmj.util.Delegate';
   
-  location = 'java:org.overturetool.interpreter.vdmj.lex.LexLocation';
+  location = 'java:org.overture.interpreter.vdmj.lex.LexLocation';
   plus = '+';
   java_Boolean = 'java:java.lang.Boolean';
   java_Integer = 'java:java.lang.Integer';
   java_String = 'java:java.lang.String';
   java_Long = 'java:java.lang.Long';
   //java_file = 'java:java.io.File';
-  nameScope = 'java:enum:org.overturetool.vdmj.typechecker.NameScope';
+  nameScope = 'java:enum:org.overture.vdmj.typechecker.NameScope';
    
 
 

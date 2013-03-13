@@ -8,14 +8,14 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.overture.ast.lex.LexLocation;
-import org.overturetool.test.framework.BaseTestSuite;
+import org.overture.test.framework.BaseTestSuite;
 
 public class ExternalModulesSlInterpreterTestSuite extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		org.overturetool.test.framework.Properties.recordTestResults = false;
+		org.overture.test.framework.Properties.recordTestResults = false;
 		String name = "Interpreter_SL_Modules_TestSuite_External";
 		File root = getBasePath("sltest/cgip");
 		TestSuite test = null;

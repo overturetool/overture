@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--Combinatorial Testing Overview-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+     
+      <view
+            name="CT Overview"
+            icon="icons/ctool16/ct_tsk.png"
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.combinatorialtesting.views.TracesTreeView"
+            id="org.overture.ide.plugins.combinatorialtesting.views.TracesView">
+      </view>
+   
+      <view
+           category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.combinatorialtesting.views.TraceTest"
+            icon="icons/ctool16/ct_tsk.png"
+            id="org.overture.ide.plugins.combinatorialtesting.views.TraceTest"
+            name="CT Test Case result">
+      </view>
+   </extension>
+   <extension
+         id="tracesProblem"
+         name="Traces Problem"
+         point="org.eclipse.core.resources.markers">
+      <persistent
+            value="false">
+      </persistent>
+      <attribute
+            name="org.overture.ide.plugins.combinatorialtesting">
+      </attribute>
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.overture.ide.plugins.combinatorialtesting.perspectives.CombinatorialTestingPerspective"
+            id="org.overture.ide.plugins.combinatorialtesting.perspective"
+            name="Combinatorial Testing"
+            icon="icons/ctool16/ct_tsk.png">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.combinatorialtesting.preferences.WorkbenchPreferencePageMain"
+            id="org.overture.ide.plugins.combinatorialtesting.pageMain"
+            name="Combinatorial Testing">
+      </page>
+   </extension>
+
+</plugin>

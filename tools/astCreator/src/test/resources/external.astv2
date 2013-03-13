@@ -7,11 +7,11 @@ Tokens
  *  plus='+';
  *
  * external
- *  location = 'java:org.overturetool.vdmj.lex.LexLocation';
+ *  location = 'java:org.overture.vdmj.lex.LexLocation';
  */
-  lextoken = 'java:org.overturetool.vdmj.lex.LexToken';
-  location = 'java:org.overturetool.vdmj.lex.LexLocation';
-  tok = 'java:enum:org.overturetool.vdmj.lex.KK';
+  lextoken = 'java:org.overture.vdmj.lex.LexToken';
+  location = 'java:org.overture.vdmj.lex.LexLocation';
+  tok = 'java:enum:org.overture.vdmj.lex.KK';
  
 Abstract Syntax Tree
 exp {-> package='org.overture.ast.expressions'}

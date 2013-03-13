@@ -7,8 +7,8 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.overturetool.vdmtools.VDMToolsError;
-import org.overturetool.vdmtools.VDMToolsProject;
+import org.overture.vdmtools.VDMToolsError;
+import org.overture.vdmtools.VDMToolsProject;
 
 public class VdmToolsProxyProject extends VdmProject
 {

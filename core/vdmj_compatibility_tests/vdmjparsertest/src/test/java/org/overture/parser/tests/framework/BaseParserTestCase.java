@@ -7,8 +7,8 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.overture.vdmjUtils.VdmjCompatibilityUtils;
-import org.overturetool.test.util.XmlResultReaderWritter;
-import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.util.XmlResultReaderWritter;
+import org.overture.test.util.XmlResultReaderWritter.IResultStore;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.lex.Dialect;

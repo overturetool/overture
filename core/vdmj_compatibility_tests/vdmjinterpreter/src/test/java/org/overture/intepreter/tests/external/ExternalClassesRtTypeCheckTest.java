@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overturetool.test.framework.BaseTestSuite;
-import org.overturetool.test.framework.Properties;
+import org.overture.test.framework.BaseTestSuite;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
@@ -18,7 +18,7 @@ public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
 			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = true;
+		Properties.recordTestResults = false;
 		String name = "Interpreter_RT_Classes_TestSuite_External";
 		File root = ExternalTestSettings.getBasePath("rttest/cgip");
 		TestSuite test = null;

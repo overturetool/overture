@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.overturetool.test.framework.BaseTestSuite;
+import org.overture.test.framework.BaseTestSuite;
 
 public class ExpressionTypeCheckTestSuite extends BaseTestSuite
 {

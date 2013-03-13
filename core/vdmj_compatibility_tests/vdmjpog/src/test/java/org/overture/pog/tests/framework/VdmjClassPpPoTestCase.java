@@ -9,10 +9,10 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.overturetool.test.framework.results.IMessage;
-import org.overturetool.test.framework.results.Result;
-import org.overturetool.test.util.XmlResultReaderWritter;
-import org.overturetool.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Result;
+import org.overture.test.util.XmlResultReaderWritter;
+import org.overture.test.util.XmlResultReaderWritter.IResultStore;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.ClassList;

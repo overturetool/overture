@@ -30,7 +30,7 @@ public class Activator extends Plugin
 {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = IVdmSlDebugConstants.PLUGIN_ID;//"org.overturetool.core";
+	public static final String PLUGIN_ID = IVdmSlDebugConstants.PLUGIN_ID;//"org.overture.core";
 
 	public static final boolean DEBUG = true;
 	public static final int INTERNAL_ERROR = 120;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.2.2" useFeatures="true" includeLaunchers="true">
+<product name="Overture Tools" uid="org.overture.ide.platform.product" id="org.overture.ide.platform.product" application="org.eclipse.ui.ide.workbench" version="2.0.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/icons/ctool128/overture_misc.png"/>
@@ -71,14 +71,15 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </plugins>
 
    <features>
+      <feature id="org.overture.ide.features.core"/>
       <feature id="org.overture.ide.features.rcp"/>
       <feature id="org.overture.ide.plugins.features.uml2"/>
       <feature id="org.overture.ide.plugins.features.quickinterpreter"/>
       <feature id="org.overture.ide.plugins.features.latex"/>
       <feature id="org.overture.ide.plugins.features.poviewer"/>
-      <feature id="org.overture.ide.plugins.features.ct"/>
+      <feature id="org.overture.ide.plugins.features.combinatorialtesting"/>
+      <feature id="org.overture.ide.plugins.features.rttraceviewer"/>
       <feature id="org.overture.ide.plugins.features.developerutils"/>
-      <feature id="org.overture.ide.features.core"/>
       <feature id="org.overture.ide.plugins.features.coverageeditor"/>
       <feature id="org.overture.ide.plugins.features.csk"/>
       <feature id="org.eclipse.equinox.p2.core.feature"/>

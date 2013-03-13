@@ -4,9 +4,9 @@
 
   <packaging>pom</packaging>
 
-  <groupId>org.overturetool</groupId>
+  <groupId>org.overture</groupId>
   <artifactId>root</artifactId>
-  <version>2.2.2<!--Replaceable: Main Version--></version>
+  <version>2.0.0<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
   
   <modules>
@@ -72,6 +72,8 @@
   </repositories>
 
   <build>
+    <defaultGoal>install</defaultGoal>
+
     <!-- Configuration of plugins for inheriting pom.xml files should
          be in the pluginManagement tag
     -->

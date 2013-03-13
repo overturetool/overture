@@ -64,27 +64,42 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 	
 	public @Override boolean remove(Object o) {
 		if (super.remove(o)) {
-			((%INode%)o).parent(null);
-			return true;
+			
+			if(((%INode%) o).parent()==parent)
+			{
+				((%INode%)o).parent(null);
+				return true;
+			}
 		}
 		return false;
 	}
 	
 	public @Override E removeFirst() {
 		E o = super.removeFirst();
-		o.parent(null);
+		
+		if(o.parent()==parent)
+		{
+			o.parent(null);
+		}
 		return o;
 	}
 	
 	public @Override E removeLast() {
 		E o = super.removeLast();
-		o.parent(null);
+		
+		if(o.parent()==parent)
+		{
+			o.parent(null);
+		}
 		return o;
 	}
 	
 	public @Override void clear() {
 		for (E o : this) {
-			o.parent(null);
+			if(o.parent()==parent)
+			{
+				o.parent(null);
+			}
 		}
 		super.clear();
 	}
@@ -101,7 +116,11 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 	
 	public @Override E remove(int index) {
 		E old = super.remove(index);
-		old.parent(null);
+		
+		if(old.parent()==parent)
+		{
+			old.parent(null);
+		}
 		return old;
 	}
 	
@@ -168,7 +187,11 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 	
 		setParent(o);
 		E old = super.set(index, o);
-		old.parent(null);
+		
+		if(old.parent()==parent)
+		{
+			old.parent(null);
+		}
 		return old;
 	}
 	
@@ -213,7 +236,11 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 		
 		public void remove() {
 		    iterator.remove();
-		    last_returned.parent(null);
+		    
+		    if(last_returned.parent()==parent)
+			{
+		    	last_returned.parent(null);
+			}
 		}
 		
 		public void set(E o) {
@@ -222,7 +249,12 @@ public class %NodeList%<E extends %INode%> extends LinkedList<E> {
 			iterator.set(o);
 			if (o != last_returned) {
 				setParent(o);
-				last_returned.parent(null);
+				
+				if(last_returned.parent()==parent)
+				{
+					last_returned.parent(null);
+				}
+				
 				last_returned = o;
 			}
 		}

@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.2.2">
+      version="2.0.0">
 
    <description>
       %description
@@ -45,7 +45,11 @@
          version="0.0.0"/>
 
    <includes
-         id="org.overture.ide.plugins.features.ct"
+         id="org.overture.ide.plugins.features.combinatorialtesting"
+         version="0.0.0"/>
+
+   <includes
+         id="org.overture.ide.plugins.features.rttraceviewer"
          version="0.0.0"/>
 
    <includes
