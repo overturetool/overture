@@ -17,8 +17,7 @@
 <message column="14" line="338" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="VDMRT.result"/>
 <message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT.result"/>
 <message column="3" line="150" message="Member handleEvent(seq1 of (char)) is not in scope" messageType="error" number="3209" resource="VDMRT.result"/>
-<message column="37" line="354" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="VDMRT.result"/>
-<message column="14" line="338" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="VDMRT.result"/>
+<message column="8" line="354" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="VDMRT.result"/>
 <message column="1" line="772" message="Operation '(a.X)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>
 <message column="9" line="772" message="Operation '(b.X)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>
 <message column="19" line="772" message="Operation '(a.Y)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>
@@ -29,8 +28,6 @@
 <message column="12" line="837" message="Name 'VDMUtil`val2seq_of_char(int)' is not in scope" messageType="error" number="3182" resource="VDMRT.result"/>
 <message column="13" line="1174" message="Class name IO not in scope" messageType="error" number="3133" resource="VDMRT.result"/>
 <message column="6" line="1212" message="Operation Run(TestResult) is not in scope" messageType="error" number="3213" resource="VDMRT.result"/>
-<message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT.result"/>
-<message column="18" line="1200" message="Unable to resolve type name 'Test'" messageType="error" number="3428" resource="VDMRT.result"/>
 <message column="12" line="2073" message="Operation '(v1.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>
 <message column="37" line="2073" message="Operation '(v2.GetPosition)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>
 <message column="11" line="2083" message="Operation '(v.GetDirection)' cannot be called from a function" messageType="error" number="3300" resource="VDMRT.result"/>

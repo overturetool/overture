@@ -755,9 +755,7 @@ public class TypeCheckerDefinitionVisitor extends
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
 														.getName().name, node
-												.getType().getResult()
-												.getLocation(), node.getType()
-												.getResult());
+												.getLocation(), node);
 					}
 					// TODO: THIS COULD BE A HACK to code (ctype.getClassdef()
 					// != node.getClassDefinition())
@@ -769,16 +767,13 @@ public class TypeCheckerDefinitionVisitor extends
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
 														.getName().name, node
-												.getType().getResult()
-												.getLocation(), node.getType()
-												.getResult());
+												.getLocation(), node);
 					}
 				} else {
 					TypeCheckerErrors.report(3026,
 							"Constructor operation must have return type "
 									+ node.getClassDefinition().getName().name,
-							node.getType().getResult().getLocation(), node
-									.getType().getResult());
+							node.getLocation(), node);
 				}
 			}
 		}
