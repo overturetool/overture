@@ -972,18 +972,13 @@ public class TypeCheckerDefinitionVisitor extends
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
-		if (node.getBody() != null) {
-			if (node.getClassDefinition() != null
-					&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess())) {
-				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
-			}
+		if (question.env.isVDMPP()) {
+			if (node.getName().name.equals(node.getClassDefinition().getName().name)) {
+			
+				node.setIsConstructor(true);
+				node.getClassDefinition().setHasContructors(true);
 
-			if (question.env.isVDMPP()) {
-				if (node.getName().name.equals(node.getClassDefinition()
-						.getName().name)) {
-					node.setIsConstructor(true);
-					node.getClassDefinition().setHasContructors(true);
-
+		
 					if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())) {
 						TypeCheckerErrors.report(3286,
 								"Constructor cannot be 'async'",
@@ -999,21 +994,27 @@ public class TypeCheckerDefinitionVisitor extends
 									"Constructor operation must have return type "
 											+ node.getClassDefinition()
 													.getName().name, node
-											.getType().getResult()
-											.getLocation(), node.getType()
-											.getResult());
+											.getLocation(), node);
 						}
 					} else {
 						TypeCheckerErrors
 								.report(3026,
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
-														.getName().name, node
-												.getType().getLocation(), node
-												.getType());
+														.getName().name, node.getLocation(), node);
+						
 					}
-				}
 			}
+		}
+		
+		if(node.getBody() != null)
+		{
+			if(node.getClassDefinition() != null && !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+			{
+				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
+			}
+		
+		
 
 			node.setActualResult(node.getBody().apply(rootVisitor,
 					new TypeCheckInfo(local, NameScope.NAMESANDSTATE)));
