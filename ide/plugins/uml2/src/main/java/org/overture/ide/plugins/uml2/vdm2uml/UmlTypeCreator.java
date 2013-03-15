@@ -306,16 +306,19 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			case NAMED:
 			{
 				PType ptype = ((ANamedInvariantType) type).getType();
-				create(class_, ptype);
 
 				if (!getName(ptype).equals(getName(type)))
 				{
 					String simpleName = getName(type);
 					simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
 					Classifier recordClass = class_.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
-
-					recordClass.createGeneralization(getUmlType(ptype));
 					types.put(getName(type), recordClass);
+					create(class_, ptype);
+					recordClass.createGeneralization(getUmlType(ptype));
+					
+				}else
+				{
+					create(class_, ptype);
 				}
 
 				break;

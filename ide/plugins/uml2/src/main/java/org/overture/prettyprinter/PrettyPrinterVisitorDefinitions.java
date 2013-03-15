@@ -180,10 +180,37 @@ public class PrettyPrinterVisitorDefinitions extends
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		
 		sb.append(node.getAccess().getAccess()+" ");
-		sb.append(node.getName()
-				+ (node.getType() instanceof ARecordInvariantType ? " :: "
-						: " = ") + node.getType().apply(typePrinter, question));
+		sb.append(node.getName());
+		if(node.getType() instanceof ARecordInvariantType)
+		{
+			ARecordInvariantType record = (ARecordInvariantType) node.getType();
+		sb.append(" :: ");	
+		for (Iterator<AFieldField> itr = record.getFields().iterator(); itr.hasNext();)
+		{
+			if(itr.hasNext())
+			{
+				sb.append("\n"+question.getIdent());
+			}
+			sb.append(itr.next().apply(this,question));
+			
+		}
+		}else{
+			sb.append(" = " + node.getType().apply(typePrinter, question));
+		}
+//				+ (node.getType() instanceof ARecordInvariantType ? " :: "
+//						: " = ") + node.getType().apply(typePrinter, question));
 		return sb.toString() + ";";
+	}
+	
+	@Override
+	public String caseAFieldField(AFieldField node, PrettyPrinterEnv question)
+			throws AnalysisException
+	{
+		question.increaseIdent();
+		StringBuilder sb = new StringBuilder(question.getIdent());
+		sb.append(node.getTag()+" : "+node.getType().apply(typePrinter,question));
+		question.decreaseIdent();
+		return sb.toString();
 	}
 
 	@Override
