@@ -49,9 +49,8 @@ public class Vdm2UmlUtil
 
 	public static int extractUpper(PType type)
 	{
-		if (!isOptional(type) && (type instanceof ASetType
-				|| type instanceof SSeqType
-				|| type instanceof SMapType))
+		if (!isOptional(type)
+				&& (type instanceof ASetType || type instanceof SSeqType || type instanceof SMapType))
 		{
 			return LiteralUnlimitedNatural.UNLIMITED;
 
@@ -62,10 +61,8 @@ public class Vdm2UmlUtil
 
 	public static int extractLower(PType type)
 	{
-		if (type instanceof ASetType
-				|| type  instanceof ASeqSeqType
-				|| type instanceof SMapType
-				|| isOptional(type))//PTypeAssistantTC.isType(type, AOptionalType.class))
+		if (type instanceof ASetType || type instanceof ASeqSeqType
+				|| type instanceof SMapType || isOptional(type))// PTypeAssistantTC.isType(type, AOptionalType.class))
 		{
 			return 0;
 		}
@@ -197,12 +194,18 @@ public class Vdm2UmlUtil
 
 	public static boolean isUnionOfQuotes(AUnionType type)
 	{
-		for (PType t : type.getTypes())
+		try
 		{
-			if (!PTypeAssistantTC.isType(t, AQuoteType.class))
+			for (PType t : type.getTypes())
 			{
-				return false;
+				if (!PTypeAssistantTC.isType(t, AQuoteType.class))
+				{
+					return false;
+				}
 			}
+		} catch (Error t)//Hack for stackoverflowError
+		{
+			return false;
 		}
 
 		return true;
@@ -213,7 +216,5 @@ public class Vdm2UmlUtil
 		return (defType instanceof AOptionalType);
 
 	}
-	
-	
 
 }

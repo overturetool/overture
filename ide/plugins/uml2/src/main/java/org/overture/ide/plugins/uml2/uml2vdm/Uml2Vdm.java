@@ -147,30 +147,9 @@ public class Uml2Vdm
 				String innerTypeName = innerType.getName();
 				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(innerType.getVisibility());
 
-				// FIX Modelio 2.2.1
-				if (innerTypeName.equalsIgnoreCase("string")
-						|| innerType.getGeneralizations().isEmpty())
-				{
-					for (PDefinition def : c.getDefinitions())
-					{
-						if (def.getName().name.equals(innerTypeName))
-						{
-							continue elementLoop;
-						}
-					}
-					String innerTypeTypeName = "Seq<Char>";
-					console.out.println("\tConverting inner type= "
-							+ innerTypeName
-							+ " : "
-							+ innerTypeTypeName
-							+ " Warning the actual type of \""
-							+ innerTypeName
-							+ "\" is undecidable - inserting \"seq of char\" instead");
-					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
-					innerTypeDef.setType(AstFactory.newASeqSeqType(location, AstFactory.newACharBasicType(location)));
-					innerTypeDef.setAccess(access);
-					c.getDefinitions().add(innerTypeDef);
-				} else if (innerType.getGeneralizations().isEmpty())
+				
+				if (innerType.getNestedClassifier("record")!=null &&
+						 innerType.getGeneralizations().isEmpty())
 				{
 					boolean createdType = false;
 					for (EObject innerElem : innerType.getOwnedElements())
@@ -191,11 +170,36 @@ public class Uml2Vdm
 							}
 						}
 					}
+
 					if (!createdType)
 					{
 						console.err.println("\tFound type= " + innerTypeName
 								+ " : " + "unknown type");
 					}
+				} else if (innerTypeName.equalsIgnoreCase("string")// FIX Modelio 2.2.1
+						|| innerType.getGeneralizations().isEmpty())
+				{
+
+					for (PDefinition def : c.getDefinitions())
+					{
+						if (def.getName().name.equals(innerTypeName))
+						{
+							continue elementLoop;
+						}
+					}
+					String innerTypeTypeName = "Seq<Char>";
+					console.out.println("\tConverting inner type= "
+							+ innerTypeName
+							+ " : "
+							+ innerTypeTypeName
+							+ " Warning the actual type of \""
+							+ innerTypeName
+							+ "\" is undecidable - inserting \"seq of char\" instead");
+					ATypeDefinition innerTypeDef = AstFactory.newATypeDefinition(new LexNameToken(class_.getName(), innerTypeName, location), null, null, null);
+					innerTypeDef.setType(AstFactory.newASeqSeqType(location, AstFactory.newACharBasicType(location)));
+					innerTypeDef.setAccess(access);
+					c.getDefinitions().add(innerTypeDef);
+
 				} else
 				{
 					String innerTypeTypeName = innerType.getGeneralizations().get(0).getGeneral().getName();
