@@ -37,6 +37,6 @@ public class InMapType extends MapType
 	@Override
 	public String toDisplay()
 	{
-		return "inmap of (" + from + ") to (" + to + ")";
+		return "inmap (" + from + ") to (" + to + ")";
 	}
 }

@@ -28,6 +28,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.types.BracketType;
 import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.FunctionType;
+import org.overturetool.vdmj.types.InMapType;
 import org.overturetool.vdmj.types.MapType;
 import org.overturetool.vdmj.types.NamedType;
 import org.overturetool.vdmj.types.NumericType;
@@ -777,10 +778,26 @@ public class TypeComparator
 				MapType subm = (MapType)sub;
 				MapType supm = (MapType)sup;
 
-				return (subm.empty || supm.empty ||
-					(searchSubType(subm.from, supm.from) == Result.Yes &&
-					 searchSubType(subm.to, supm.to) == Result.Yes)) ?
-							Result.Yes : Result.No;
+				if (subm.empty || supm.empty)
+				{
+					return Result.Yes;
+				}
+
+				if (searchSubType(subm.from, supm.from) == Result.Yes &&
+					searchSubType(subm.to, supm.to) == Result.Yes)
+				{
+					if (!(sub instanceof InMapType) &&
+						 (sup instanceof InMapType))
+					{
+						return Result.No;
+					}
+					
+					return Result.Yes;
+				}
+				else
+				{
+					return Result.No;
+				}
 			}
 			else if (sub instanceof SetType)
 			{
