@@ -24,6 +24,11 @@
 package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.values.MapValue;
+import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
 
 public class InMapType extends MapType
 {
@@ -38,5 +43,24 @@ public class InMapType extends MapType
 	public String toDisplay()
 	{
 		return "inmap (" + from + ") to (" + to + ")";
+	}
+	
+	@Override
+	public ValueList getAllValues(Context ctxt) throws ValueException
+	{
+		ValueList maps = super.getAllValues(ctxt);
+		ValueList result = new ValueList();
+		
+		for (Value map: maps)
+		{
+			MapValue vm = (MapValue)map;
+			
+			if (vm.values.isInjective())
+			{
+				result.add(vm);
+			}
+		}
+		
+		return result;
 	}
 }
