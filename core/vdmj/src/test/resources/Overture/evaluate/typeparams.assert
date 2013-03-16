@@ -1,4 +1,6 @@
 let obj = new A() in
 	obj.size[bool]() = 2 and
 	obj.size[bool * bool]() = 4 and
-	obj.size[[bool]]() = 3
+	obj.size[[bool]]() = 3 and
+	obj.size[map bool to bool]() = 9 and
+	obj.size[inmap bool to bool]() = 7

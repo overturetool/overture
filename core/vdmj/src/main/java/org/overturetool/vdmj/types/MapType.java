@@ -134,7 +134,7 @@ public class MapType extends Type
 	{
 		other = deBracket(other);
 
-		if (other instanceof MapType)
+		if (other.getClass() == getClass())	// inmaps too
 		{
 			MapType mt = (MapType)other;
 			return from.equals(mt.from) && to.equals(mt.to);
