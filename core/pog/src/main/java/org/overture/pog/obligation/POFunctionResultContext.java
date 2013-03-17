@@ -30,6 +30,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 
 public class POFunctionResultContext extends POContext
 {
@@ -43,7 +44,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AExplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
@@ -52,7 +53,7 @@ public class POFunctionResultContext extends POContext
 						AstFactory.newAIdentifierPattern(
 						new LexNameToken(
 					definition.getName().module, "RESULT", definition.getLocation())),
-					definition.getType().getResult().clone());
+					((AFunctionType)definition.getType()).getResult().clone());
 				
 
 	}
@@ -60,7 +61,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AImplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = true;

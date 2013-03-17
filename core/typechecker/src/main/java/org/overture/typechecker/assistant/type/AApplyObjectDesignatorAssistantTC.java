@@ -89,8 +89,9 @@ public class AApplyObjectDesignatorAssistantTC {
 
 			if (!TypeComparator.compatible(pt, at))
 			{
-				TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i,node.getLocation(),node);
-				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
+				
+				TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i +". (Expected: "+pt+" Actual: "+at+")" ,node.getLocation(),node);
+			//	TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
 			}
 		}
 
@@ -125,8 +126,8 @@ public class AApplyObjectDesignatorAssistantTC {
 
 			if (!TypeComparator.compatible(pt, at))
 			{
-				TypeCheckerErrors.concern(unique, 3259, "Inappropriate type for argument " + i,node.getLocation(),node);
-				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
+				TypeCheckerErrors.concern(unique, 3259, "Inappropriate type for argument " + i + ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+//				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
 			}
 		}
 

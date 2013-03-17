@@ -3,6 +3,7 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AOperationType;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -78,7 +79,7 @@ public class TestSuite
 						}
 
 						String vdmTestExpression = "";
-						if (ctor.getType().getParameters().size() == 1)
+						if (((AOperationType)ctor.getType()).getParameters().size() == 1)
 						{
 							vdmTestExpression = "new " + p.name.module + "(\""
 									+ p.name.name + "\")";
@@ -145,7 +146,7 @@ public class TestSuite
 				if (op.isConstructor)
 				{
 					if (searchForDefaultCtor
-							&& op.expldef.getType().getParameters().isEmpty())
+							&& ((AOperationType)op.expldef.getType()).getParameters().isEmpty())
 					{
 						if (op.expldef.getName().equals(instance.type.getName().name))
 						{
@@ -154,8 +155,8 @@ public class TestSuite
 						{
 							defaultSuperCtor = op.expldef;
 						}
-					} else if (op.expldef.getType().getParameters().size() == 1
-							&& PTypeAssistantInterpreter.isType(op.expldef.getType().getParameters().get(0),typeName) != null
+					} else if (((AOperationType)op.expldef.getType()).getParameters().size() == 1
+							&& PTypeAssistantInterpreter.isType(((AOperationType)op.expldef.getType()).getParameters().get(0),typeName) != null
 							&& op.expldef.getName().equals(instance.type.getName().name))
 					{
 						return op.expldef;

@@ -47,8 +47,8 @@ public class AApplyExpAssistantTC {
 
 			if (!TypeComparator.compatible(pt, at))
 			{
-				TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i,node.getLocation(),node);
-				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+				TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i + ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				// TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
 			}
 		}
 
@@ -80,8 +80,8 @@ public class AApplyExpAssistantTC {
 
 			if (!TypeComparator.compatible(pt, at))
 			{
-				TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i,node.getLocation(),node);
-				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+				TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i +". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				//TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
 			}
 		}
 

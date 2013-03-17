@@ -27,6 +27,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -281,8 +282,8 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 
 				if (node.getIsUndefined()
 						|| !TypeComparator.isSubType(node.getActualResult(),
-								node.getType().getResult())) {
-					obligations.add(new SubTypeObligation(node, node.getType()
+								((AOperationType)node.getType()).getResult())) {
+					obligations.add(new SubTypeObligation(node, ((AOperationType)node.getType())
 							.getResult(), node.getActualResult(), question));
 				}
 			}
@@ -332,8 +333,8 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 			}
 
 			if (!node.getIsConstructor()
-					&& !TypeComparator.isSubType(node.getActualResult(), node
-							.getType().getResult())) {
+					&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType)node
+							.getType()).getResult())) {
 				obligations.add(new SubTypeObligation(node, node
 						.getActualResult(), question));
 			}
@@ -387,7 +388,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 
 				if (!node.getIsConstructor()
 						&& !TypeComparator.isSubType(node.getActualResult(),
-								node.getType().getResult())) {
+								((AOperationType)node.getType()).getResult())) {
 					obligations.add(new SubTypeObligation(node, node
 							.getActualResult(), question));
 				}
