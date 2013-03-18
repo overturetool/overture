@@ -25,9 +25,6 @@ public class ThreadSwapEventHandler extends EventHandler {
 		else
 			throw new IllegalArgumentException("ThreadSwapEventHandler expected event of type: " + NextGenThreadSwapEvent.class.getName());
 		
-		if(tEvent.thread.type == ThreadType.INIT)
-			return; //Ignore INIT threads
-		
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);

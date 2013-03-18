@@ -44,6 +44,7 @@ public class TraceData
 	private TraceEventManager eventManager;
 	
 	private TraceObject mainThreadObject;
+	private TraceObject initThreadObject;
 
 	private Long lastMarkerTime;
 	
@@ -62,6 +63,7 @@ public class TraceData
     	operations = new HashMap<String, TraceOperation>();
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
+    	initThreadObject = new TraceObject(0L, "INIT");
 
     	reset();
     }
@@ -229,6 +231,10 @@ public class TraceData
     	return mainThreadObject;
     }
     
+    public TraceObject getInitThreadObject() {
+    	return initThreadObject;
+    }
+    
 	public void reset()
     {
 		cpus.clear();
@@ -239,6 +245,7 @@ public class TraceData
         operations.clear();
         
         mainThreadObject.setVisible(false);
+        initThreadObject.setVisible(false);
         eventManager.reset();
         lastMarkerTime = null;
     }
