@@ -1003,7 +1003,62 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAPeriodicStm(APeriodicStm node, Context ctxt)
 			throws AnalysisException
 	{
-		return null;	// Never reached - see StartStatement.
+		final int PERIODIC = 0;
+		final int JITTER = 1;
+		final int DELAY = 2;
+		final int OFFSET = 3;
+		
+		node.setPeriod(0L);
+		node.setJitter(0L);
+		node.setDelay(0L);
+		node.setOffset(0L);
+		
+		
+		for(int i = 0; i < node.getArgs().size(); i++)
+		{
+			PExp arg = node.getArgs().get(i);
+			long value = -1;
+			
+			try{
+				
+				arg.getLocation().hit();
+				value = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+				
+				if(value < 0)
+				{
+					VdmRuntimeError.abort(node.getLocation(), 4157,  "Expecting +ive integer in periodic argument " + (i+1) + ", was " + value, ctxt);
+				}
+			
+				if(i == PERIODIC)
+					node.setPeriod(value);
+				else if (i == JITTER)
+					node.setJitter(value);
+				else if(i == DELAY)
+					node.setDelay(value);
+				else if(i == OFFSET)
+					node.setOffset(value);
+			}
+			catch(ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + value, ctxt);
+			}
+		}
+		
+		if (node.getPeriod() == 0)
+		{
+			VdmRuntimeError.abort(node.getLocation(), 4158, "Period argument must be non-zero, was " + node.getPeriod(), ctxt);
+		}
+
+		if (node.getArgs().size() == 4)
+		{
+			if (node.getDelay() >= node.getPeriod())
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4159, "Delay argument (" + node.getDelay() + ") must be less than the period (" + node.getPeriod() + ")", ctxt);
+			}
+		}
+		
+		
+		return null;	// Not actually used - see StartStatement
 	}
 	
 	
