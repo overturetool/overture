@@ -101,8 +101,8 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="REMOVE.FOR.PRODUCTION.osgi.instance.area.default" value="@user.home/Documents/Overture/workspace" />
       <property name="org.eclipse.update.reconcile" value="false" />
-      <property name="osgi.instance.area.default" value="@user.home/Documents/Overture/workspace" />
    </configurations>
 
 </product>
