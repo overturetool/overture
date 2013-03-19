@@ -126,8 +126,12 @@ println(arg) ==
 /**
  * Prints any VDM value to the console
  *
- * @param format standard format string used in 
-  *  Java by <code>String.format(format,value)</code>
+ * @param format standard format string used in
+ *  Java by <code>String.format(format, value)</code>,
+ *  though note that only the %s conversion is supported.
+ *  eg. <code>printf("Hello [%2$-5s][%1$5s]\n", [123, {2}])</code>
+ *  would produce <code>Hello [{2}  ][  123]</code> and a newline.
+ *
  * @param arg a sequence of VDM values of any type
  */
 public static printf: seq of char * seq of ? ==> ()
