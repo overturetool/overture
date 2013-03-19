@@ -57,6 +57,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -146,7 +147,7 @@ public class SubTypeObligation extends ProofObligation {
 		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().module, "RESULT",
 				def.getLocation()));
 
-		value = ctxt.getObligation(oneType(false, result, def.getType()
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType)def.getType())
 				.getResult(), actualResult));
 	}
 
@@ -171,7 +172,7 @@ public class SubTypeObligation extends ProofObligation {
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
-		value = ctxt.getObligation(oneType(false, result, def.getType()
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType)def.getType())
 				.getResult(), actualResult));
 	}
 

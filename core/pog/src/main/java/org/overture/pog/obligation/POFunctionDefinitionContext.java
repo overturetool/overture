@@ -48,7 +48,7 @@ public class POFunctionDefinitionContext extends POContext
 		AExplicitFunctionDefinition definition, boolean precond)
 	{
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.paramPatternList = definition.getParamPatternList();
 		this.addPrecond = precond;
 		this.precondition = definition.getPrecondition();
@@ -58,7 +58,7 @@ public class POFunctionDefinitionContext extends POContext
 		AImplicitFunctionDefinition definition, boolean precond)
 	{
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.addPrecond = precond;
 		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();

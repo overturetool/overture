@@ -9,7 +9,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.tools</groupId>
   <artifactId>examplesutil</artifactId>
   <name>Overture Examples Util</name>
 

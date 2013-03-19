@@ -702,7 +702,6 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	}
 	
-	@Override
 	public void progressError(String message) throws IOException {
 		
 		StringBuilder sb = new StringBuilder();
