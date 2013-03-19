@@ -1,5 +1,8 @@
 package org.overture.interpreter.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexLocation;
@@ -7,6 +10,7 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
@@ -83,10 +87,12 @@ public class ClassListInterpreter extends ClassList
 
 		ContextException failed = null;
 		int retries = 3;	// Potentially not enough.
-
+		Set<ContextException> trouble = new HashSet<ContextException>();
+		
 		do
 		{
 			failed = null;
+			trouble.clear();
 
     		for (SClassDefinition cdef: this)
     		{
@@ -96,6 +102,7 @@ public class ClassListInterpreter extends ClassList
     			}
     			catch (ContextException e)
     			{
+    				trouble.add(e);
     				// These two exceptions mean that a member could not be
     				// found, which may be a forward reference, so we retry...
 
@@ -112,9 +119,21 @@ public class ClassListInterpreter extends ClassList
 		}
 		while (--retries > 0 && failed != null);
 
-		if (failed != null)
+		if (!trouble.isEmpty())
 		{
-			throw failed;
+			ContextException toThrow = trouble.iterator().next();
+
+			for (ContextException e: trouble)
+			{
+				Console.err.println(e);
+
+				if (e.number != 4034)	// Not in scope err
+				{
+					toThrow = e;
+				}
+			}
+
+			throw toThrow;
 		}
 
 		return globalContext;
