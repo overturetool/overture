@@ -48,9 +48,6 @@ Export-Package: org.overture.ast.analysis,
  org.overture.parser.messages,
  org.overture.parser.syntax,
  org.overture.parser.util,
- org.overture.pof,
- org.overture.pof.analysis,
- org.overture.pof.analysis.intf,
  org.overture.util
 Bundle-Activator: org.overture.ide.core.VdmCore
 Eclipse-AutoStart: true
