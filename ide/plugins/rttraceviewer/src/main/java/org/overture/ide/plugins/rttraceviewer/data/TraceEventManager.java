@@ -32,10 +32,7 @@ public class TraceEventManager {
 	    if(eventKey != null) {
 	    	eventList = events.get(eventKey);
 	    	currentEventTime = eventKey;
-	    } else {
-	    	eventList = new ArrayList<INextGenEvent>();
-	    }
-				
+	    } 		
 		return eventList;
 	}
 	

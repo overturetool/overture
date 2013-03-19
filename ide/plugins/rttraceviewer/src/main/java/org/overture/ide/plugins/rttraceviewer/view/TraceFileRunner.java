@@ -95,13 +95,12 @@ public class TraceFileRunner
 	private void drawView(GenericTabItem tab, Long eventStartTime, TraceEventViewer viewer, EventFilter filter) throws Exception
 	{		
 		//Draw events as long as there is room and time
-		Long eventTime = 0L;
 		TraceEventManager eventManager = data.getEventManager();
 		TraceEventViewer dummyViewer = new DummyViewer();
 		TraceEventViewer currentView = null;
-		List<INextGenEvent> events = eventManager.getEvents(eventTime);
+		List<INextGenEvent> events = eventManager.getEvents(0L); //First series of events
 		
-		while(!tab.isCanvasOverrun() && eventTime <= eventManager.getLastEventTime()) 
+		while(!tab.isCanvasOverrun() && events != null) 
 		{
 			//TODO: Remove DUMMY. Introduced to hack time travels
 			currentView = (eventManager.getCurrentEventTime() < eventStartTime) ? dummyViewer : viewer;
@@ -109,7 +108,7 @@ public class TraceFileRunner
 			//Draw conjectures on the overview
 			if(viewer instanceof OverviewEventViewer)
 			{
-				Vector<Conjecture> cons = conjectures.getConjecture(eventTime);
+				Vector<Conjecture> cons = conjectures.getConjecture(eventManager.getCurrentEventTime());
 				
 				for(Conjecture c : cons)
 				{
@@ -135,7 +134,7 @@ public class TraceFileRunner
 		
 		//Draw a final timemarker for the next series of events
 		List<INextGenEvent> nextEvents = eventManager.getEvents();
-		if(!nextEvents.isEmpty()) {
+		if(nextEvents != null) {
 			viewer.drawTimeMarker(tab, nextEvents.get(0).getTime().getAbsoluteTime());
 		}
 				
