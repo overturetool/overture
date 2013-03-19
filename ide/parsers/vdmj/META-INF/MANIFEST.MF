@@ -12,3 +12,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
 Require-Bundle: org.overture.ide.core
 Bundle-Activator: org.overture.ide.parsers.vdmj.Activator
 Bundle-ClassPath: .
+Export-Package: org.overture.ide.parsers.vdmj
