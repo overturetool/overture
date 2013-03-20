@@ -35,6 +35,15 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>dummy-for-eclipse-import-inclusion</id>
+      <modules>
+        <module>ide</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <repositories>
     <repository>
       <id>overture.sf.net</id>
