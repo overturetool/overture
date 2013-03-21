@@ -46,6 +46,10 @@ public class Main
 	 */
 	public static void main(String[] args) throws Exception
 	{
+		// Example of input arguments making this tool generate zip bundles at the specified output location
+		// using the projects at the specified input location:
+		// -z -i <dir>\documentation\examples -o <dir>\Output
+		
 		// create the command line parser
 		CommandLineParser parser = new PosixParser();
 
@@ -97,7 +101,7 @@ public class Main
 		web = line.hasOption(genWebOpt.getOpt());
 		zip = line.hasOption(genZipbundleOpt.getOpt());
 
-		runCompleteTest(new File(args[1]));
+		runCompleteTest(input);
 		return ;
 	}
 
