@@ -15,7 +15,9 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.vdmrt.core,
  org.overture.ide.vdmsl.core,
  org.overture.ide.core,
- org.overture.ide.ui
+ org.overture.ide.ui,
+ org.overture.ide.parsers.vdmj,
+ org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.plugins.poviewer.Activator
 Bundle-ClassPath: .,
  jars/pog.jar
