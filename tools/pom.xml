@@ -22,6 +22,7 @@
     <!--module>vdmt</module-->
     <module>overturetemplategen</module>
     <module>examplePackager</module>
+    <module>examplePackagerPlugin</module>
     <!--module>packworkspace</module-->
   </modules>
 </project>
