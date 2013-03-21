@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 import java.io.File;
 import java.util.Arrays;
@@ -25,16 +25,17 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.tools.examplesutil.html.HtmlPage;
-import org.overture.tools.examplesutil.html.HtmlTable;
-import org.overture.tools.examplesutil.util.FileUtils;
-import org.overture.tools.examplesutil.util.FolderZiper;
+import org.overture.tools.examplepackager.html.HtmlPage;
+import org.overture.tools.examplepackager.html.HtmlTable;
+import org.overture.tools.examplepackager.util.FileUtils;
+import org.overture.tools.examplepackager.util.FolderZipper;
 
 public class Controller
 {
 	List<ProjectPacker> projects = new Vector<ProjectPacker>();
 	Dialect dialect;
 	File inputRootFolder;
+	boolean verbose = true;
 	public final File webDir;// = new File("Web");
 
 	public Controller(Dialect dialect, File inputRootFolder, File output)
@@ -42,7 +43,12 @@ public class Controller
 		this.dialect = dialect;
 		this.inputRootFolder = inputRootFolder;
 		this.webDir = new File(output, "Web");
-
+	}
+	
+	public Controller(Dialect dialect, File inputRootFolder, File output, boolean verbose)
+	{	
+		this(dialect, inputRootFolder, output);
+		this.verbose = verbose; 
 	}
 
 	public String getName()
@@ -82,13 +88,14 @@ public class Controller
 			outputFolder.mkdirs();
 		}
 
-		printSubHeading("PACKING: " + inputRootFolder.getName());
+		if (verbose)
+			printSubHeading("PACKING: " + inputRootFolder.getName());
 		for (File exampleFolder : inputRootFolder.listFiles())
 		{
 			if (exampleFolder.getName().equals(".svn"))
 				continue;
 
-			ProjectPacker p = new ProjectPacker(exampleFolder, dialect);
+			ProjectPacker p = new ProjectPacker(exampleFolder, dialect, verbose);
 			if (!dryrun)
 			{
 				p.packTo(outputFolder);
@@ -100,8 +107,9 @@ public class Controller
 			if (zipName.exists())
 				zipName.delete();
 
-			FolderZiper.zipFolder(outputFolder.getName(), zipName.getAbsolutePath());
-			printSubHeading("Folder zipped: ".toUpperCase() + zipName.getName());
+			FolderZipper.zipFolder(outputFolder.getAbsolutePath(), zipName.getAbsolutePath());
+			if (verbose)
+				printSubHeading("Folder zipped: ".toUpperCase() + zipName.getName());
 		}
 
 	}

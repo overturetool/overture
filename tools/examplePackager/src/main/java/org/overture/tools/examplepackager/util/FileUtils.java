@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil.util;
+package org.overture.tools.examplepackager.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

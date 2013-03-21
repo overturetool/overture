@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil.util;
+package org.overture.tools.examplepackager.util;
 
 import java.io.File;
 import java.util.zip.ZipOutputStream;
@@ -29,7 +29,7 @@ import java.util.zip.ZipEntry;
  * 
  * @author pitchoun
  */
-public class FolderZiper
+public class FolderZipper
 {
 
 	/**

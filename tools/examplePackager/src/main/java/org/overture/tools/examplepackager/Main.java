@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class Main
 			{
 				// automatically generate the help statement
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("examplesutil", options);
+				formatter.printHelp("examplepackager", options);
 				return ;
 			}
 
@@ -84,7 +84,7 @@ public class Main
 		{
 			System.err.println("Unexpected exception:" + exp.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("examplesutil", options);
+			formatter.printHelp("examplepackager", options);
 			return ;
 		}
 
@@ -145,6 +145,7 @@ public class Main
 
 		controller = runController(Dialect.VDM_RT, new File(root, "VDMRT"), tmpFolder);
 		controllers.add(controller);
+		
 		if (web)
 		{
 			controller.createWebOverviewPage(controllers, zipFiles);
@@ -156,5 +157,4 @@ public class Main
 		System.exit(0);
 
 	}
-
 }
