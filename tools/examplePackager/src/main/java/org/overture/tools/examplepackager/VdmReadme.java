@@ -365,6 +365,11 @@ public class VdmReadme
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""
 				+ EscapeChars.forXML(module) + "\"/>");
 
+		if(dialect == Dialect.VDM_RT)
+		{
+			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_logging\" value=\"true\"/>");
+		}
+		
 		sb.append("\n</launchConfiguration>");
 
 		FileUtils.writeFile(sb.toString(), launch);

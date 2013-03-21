@@ -27,6 +27,11 @@ public class ANamedTraceDefinitionAssistantInterpreter
 		}
 
 		TestSequence tests = traces.getTests();
+		
+		if (tests.isEmpty())
+		{
+			throw new Exception("Trace expansion generated no tests");
+		}
 
 		if (subset < 1.0)
 		{
