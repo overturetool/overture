@@ -15,17 +15,97 @@
   <artifactId>org.overture.ide.help</artifactId>
   <name>org.overture.ide.help</name>
   
-  <reporting>
+  <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/../../documentation/QuickOverviewVDMPPOperators</directory>
+        <targetPath>${project.basedir}/html</targetPath>
+        <filtering>false</filtering>
+        <includes>
+          <include>QuickOverviewofVDMOperators.pdf</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/../../documentation/UserGuideOvertureIDE</directory>
+        <targetPath>${project.basedir}/html</targetPath>
+        <filtering>false</filtering>
+        <includes>
+          <include>OvertureIDEUserGuide.pdf</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/../../documentation/VDM10LangMan</directory>
+        <targetPath>${project.basedir}/html</targetPath>
+        <filtering>false</filtering>
+        <includes>
+          <include>VDM10_lang_man.pdf</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
+        <groupId>org.overture.tools.maven</groupId>
+        <artifactId>example-packager</artifactId>
+        <version>${project.version}</version>
         <configuration>
-          <skip>true</skip>
-          <failOnError>false</failOnError>
-          <excludePackageNames>*org.eclipse.*</excludePackageNames>
+          <outputDirectory>${project.basedir}/html</outputDirectory>
+          <outputPrefix>Example_package_</outputPrefix>
+          <slExamples>
+            <param>${project.basedir}/../../documentation/examples/VDMSL</param>
+          </slExamples>
+          <ppExamples>
+            <param>${project.basedir}/../../documentation/examples/VDM++</param>
+          </ppExamples>
+          <rtExamples>
+            <param>${project.basedir}/../../documentation/examples/VDMRT</param>
+          </rtExamples>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>package-examples</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
-  </reporting>
+
+    <pluginManagement>
+      <plugins>
+	<!--This plugin's configuration is used to store Eclipse m2e settings 
+	    only. It has no influence on the Maven build itself. -->
+	<plugin>
+	  <groupId>org.eclipse.m2e</groupId>
+	  <artifactId>lifecycle-mapping</artifactId>
+	  <version>1.0.0</version>
+	  <configuration>
+	    <lifecycleMappingMetadata>
+	      <pluginExecutions>
+		<pluginExecution>
+		  <pluginExecutionFilter>
+		    <groupId>org.overture.tools.maven</groupId>
+		    <artifactId>example-packager</artifactId>
+		    <versionRange>[1.0.1,)</versionRange>
+		    <goals>
+		      <goal>package-examples</goal>
+		    </goals>
+		  </pluginExecutionFilter>
+		  <action>
+		    <execute>
+		      <runOnIncremental>false</runOnIncremental>
+		    </execute>
+		  </action>
+		</pluginExecution>
+	      </pluginExecutions>
+	    </lifecycleMappingMetadata>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
 </project>
+
+  
+

@@ -59,18 +59,18 @@ public class ExamplePackagerMojo extends AbstractMojo {
      * placed.  Readonly at the moment as the only place they should
      * be dropped is in the project's usual target directory.
      */
-    @Parameter(defaultValue="${project.build.directory}", readonly=true)
+    @Parameter(defaultValue="${project.build.directory}")
     protected File outputDirectory;
 
     /**
-     * String giving the relative path of the staging directory for
-     * the packager.
+     * Location of the staging directory for the example packager.
      */
-    private static final String tmpdirBaseString = "generated/example-packager";
+    @Parameter(defaultValue="${project.build.directory}/generated-resources/example-packager", readonly=true)
+    protected File tmpdir;
+
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        File tmpdir = new File(outputDirectory, tmpdirBaseString);
         File zipFile;
         Controller controller;
 		
