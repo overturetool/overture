@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -47,6 +46,7 @@ import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem.AllowedOverrunDirection;
 import org.overture.ide.plugins.rttraceviewer.data.Conjecture;

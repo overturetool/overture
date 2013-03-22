@@ -1,9 +1,7 @@
 package org.overture.ide.plugins.rttraceviewer.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;

@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.overture.ide.plugins.rttraceviewer.data.*;
 import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem;
-import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public abstract class TraceEventViewer extends TraceViewer {
 

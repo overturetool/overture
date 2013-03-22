@@ -25,11 +25,8 @@ package org.overture.ide.plugins.rttraceviewer.view;
 
 import java.io.File;
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
