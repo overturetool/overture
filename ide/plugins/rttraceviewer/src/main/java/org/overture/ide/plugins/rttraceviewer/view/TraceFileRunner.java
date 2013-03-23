@@ -132,10 +132,9 @@ public class TraceFileRunner
 			events = eventManager.getEvents();
 		}
 		
-		//Draw a final timemarker for the next series of events
-		List<INextGenEvent> nextEvents = eventManager.getEvents();
-		if(nextEvents != null) {
-			viewer.drawTimeMarker(tab, nextEvents.get(0).getTime().getAbsoluteTime());
+		//Draw a final time marker indicating the time for the next (not drawn) series of events
+		if(events != null) {
+			viewer.drawTimeMarker(tab, events.get(0).getTime().getAbsoluteTime());
 		}
 				
 		//Finally add timelines 
