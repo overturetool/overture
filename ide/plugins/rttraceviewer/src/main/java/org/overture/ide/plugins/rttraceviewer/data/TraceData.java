@@ -39,7 +39,6 @@ public class TraceData
 	private HashMap<Long, TraceObject> objects;
 	private HashMap<Long, TraceBus> buses; 
 	private HashMap<Long, TraceThread> threads;
-	private HashMap<Long, TraceBusMessage> messages;
 	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
 	private TraceEventManager eventManager;
 	
@@ -59,7 +58,6 @@ public class TraceData
     	objects = new HashMap<Long, TraceObject>();
     	buses = new HashMap<Long, TraceBus>();
     	threads = new HashMap<Long, TraceThread>();
-    	messages = new HashMap<Long, TraceBusMessage>();
     	operations = new HashMap<String, TraceOperation>();
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
@@ -167,33 +165,12 @@ public class TraceData
         return threads.get(pthrid);
     }
 
-    public TraceBusMessage getMessage(Long pmsgid) throws RuntimeErrorException
-    {
-        if(!rtLogger.getBusMessage().containsKey(pmsgid))
-            throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getMessage");
-        
-        if(!messages.containsKey(pmsgid))
-        {
-        	NextGenBusMessage message = rtLogger.getBusMessage().get(pmsgid);
-        	
-        	Long id = message.id;
-        	Long busId = new Long(message.bus.id);
-        	Long fromCpu = new Long(message.fromCpu.id);
-        	Long toCpu = new Long(message.toCpu.id);
-        	Long callerThread = new Long(message.callerThread.id);
-        	
-        	messages.put(pmsgid, new TraceBusMessage(id, busId, fromCpu, toCpu, callerThread));
-        }
-        
-        return messages.get(pmsgid);
-    }
-
     public TraceOperation getOperation(String classNameOperationName)
     {
         if(!rtLogger.getOperationMap().containsKey(classNameOperationName))
             throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getOpreation");
         
-        if(!messages.containsKey(classNameOperationName))
+        if(!operations.containsKey(classNameOperationName))
         {
         	NextGenOperation message = rtLogger.getOperationMap().get(classNameOperationName);
         	
@@ -241,7 +218,6 @@ public class TraceData
         objects.clear();
         buses.clear();
         threads.clear();
-        messages.clear();
         operations.clear();
         
         mainThreadObject.setVisible(false);

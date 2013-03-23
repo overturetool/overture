@@ -167,6 +167,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 	//Bus Messages
 	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu,  TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)
 	{
+		updateObject(tab, obj);
 		Long busX = bus.getX();
 		String toolTipLabel = op.getName();
 		Long objX = obj.getX();
@@ -180,7 +181,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 	
 	public void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{
-		
+		updateObject(tab, object);
 		Long busX = bus.getX();
 		String toolTipLabel = " Return from  " + op.getName();
 
@@ -197,6 +198,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 	
 	public void drawMessageRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op)
 	{	
+		updateObject(tab, object);
 		Long busX = bus.getX();
 		String toolTipLabel = " Call " + op.getName();
 
