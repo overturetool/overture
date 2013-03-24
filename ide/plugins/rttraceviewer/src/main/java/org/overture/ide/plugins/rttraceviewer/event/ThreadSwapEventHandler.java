@@ -28,22 +28,29 @@ public class ThreadSwapEventHandler extends EventHandler {
 		Long cpuId = new Long(tEvent.thread.cpu.id);
 		Long threadId = new Long(tEvent.thread.id);
 		TraceCPU cpu = data.getCPU(cpuId);
-		TraceThread thread = data.getThread(threadId);
+		TraceThread swappedThread = data.getThread(threadId);
+		
+		TraceThread currentThread = null;
+		Long currentThreadId = cpu.getCurrentThread();
+		if(currentThreadId != null)
+		{
+			currentThread = data.getThread(currentThreadId);
+		}
 				
 		switch(tEvent.swapType)
 		{
 			case SWAP_IN: 
-				eventViewer.drawThreadSwapIn(tab, cpu, thread); 
+				eventViewer.drawThreadSwapIn(tab, cpu, currentThread, swappedThread); 
 				cpu.setCurrentThread(threadId);
 				cpu.setIdle(false);
 				break;
 			case DELAYED_IN: 
-				eventViewer.drawDelayedThreadSwapIn(tab, cpu, thread); 
+				eventViewer.drawDelayedThreadSwapIn(tab, cpu, currentThread, swappedThread); 
 				cpu.setCurrentThread(threadId);
 				cpu.setIdle(false);
 				break;
 			case SWAP_OUT: 
-				eventViewer.drawThreadSwapOut(tab, cpu, thread); 
+				eventViewer.drawThreadSwapOut(tab, cpu, currentThread, swappedThread); 
 				cpu.setCurrentThread(null);
 				cpu.setIdle(true);
 				break;

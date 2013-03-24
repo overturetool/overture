@@ -17,13 +17,13 @@ public abstract class TraceEventViewer extends TraceViewer {
 	public abstract void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses);
 	
 	//Threads
-	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 	
-	public abstract void drawDelayedThreadSwapIn(GenericTabItem tab,TraceCPU cpu, TraceThread thread);
+	public abstract void drawDelayedThreadSwapIn(GenericTabItem tab,TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 
-	public abstract void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 	
-	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread killedThread);
 
 	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread);
 

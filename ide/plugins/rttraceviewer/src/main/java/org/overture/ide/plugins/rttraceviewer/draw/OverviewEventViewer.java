@@ -77,9 +77,9 @@ public class OverviewEventViewer extends TraceEventViewer {
 		}
 	}
 	
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -91,9 +91,9 @@ public class OverviewEventViewer extends TraceEventViewer {
 		cpu.setX(x2);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -105,9 +105,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 	
-	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -119,9 +119,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 	
-	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread killedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
