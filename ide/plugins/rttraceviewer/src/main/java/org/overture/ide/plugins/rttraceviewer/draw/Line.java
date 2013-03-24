@@ -26,7 +26,7 @@ package org.overture.ide.plugins.rttraceviewer.draw;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.geometry.Point;
 
-public class Line extends Polyline
+public class Line extends Polyline implements TraceFigure
 {
 
     public Line(Long px1, Long py1, Long px2, Long py2)
@@ -65,4 +65,9 @@ public class Line extends Polyline
     {
         setLineStyle(5);
     }
+
+	@Override
+	public void dispose()
+	{
+	}
 }

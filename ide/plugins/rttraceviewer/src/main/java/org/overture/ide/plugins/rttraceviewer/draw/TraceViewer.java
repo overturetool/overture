@@ -93,7 +93,7 @@ public abstract class TraceViewer {
         
         if(image != null && point != null && dim != null)
         {
-            ImageFigure imagefig = new ImageFigure(image);
+            TraceImage imagefig = new TraceImage(image);
             imagefig.setLocation(point);
             imagefig.setSize(dim);
             tab.addFigure(imagefig);

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -409,7 +408,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		try
 		{
-			// deleteTabPages();
+			theOverview.disposeFigures();
 			if (theMarkers != null)
 			{
 				theMarkers.dispose();

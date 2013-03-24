@@ -25,15 +25,14 @@ package org.overture.ide.plugins.rttraceviewer.view;
 
 import java.io.File;
 import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.overture.ide.plugins.rttraceviewer.draw.RotatedLabel;
+import org.overture.ide.plugins.rttraceviewer.draw.TraceFigure;
 
 // Referenced classes of package org.overture.tracefile.viewer:
 //            TracefileViewerPlugin, tdCPU
@@ -95,18 +94,6 @@ public class GenericTabItem
         }
     }
     
-    private IResizeCallback callback = null;
-    public void registerResizeCallback(IResizeCallback callback){
-    	
-    	this.callback = callback;
-    }
-    
-    private void handleResize(){
-    	
-    	if(this.callback != null)
-    		this.callback.handleResize(this);
-    }
-    
     public boolean isCanvasOverrun()
     { 	 
     	
@@ -161,7 +148,7 @@ public class GenericTabItem
     	//return new Long(theCanvas.getSize().y);
     }
 
-    public void addFigure(IFigure aFigure)
+    public void addFigure(TraceFigure aFigure)
     { 	
         if(!$assertionsDisabled && aFigure == null)
             throw new AssertionError();
@@ -186,7 +173,7 @@ public class GenericTabItem
         }
     }
     
-    public void addBackgroundFigure(IFigure bFigure)
+    public void addBackgroundFigure(TraceFigure bFigure)
     {
     	//Add figure and dont update xmax and ymax
     	//Ensure that the canvas is expanded if the background figure goes beyond
@@ -246,6 +233,15 @@ public class GenericTabItem
             throw new AssertionError();
         } else
         {
+    		//Force cleanup of special trace figures
+        	for(Object child : theFigure.getChildren())
+        	{
+        		if(child instanceof TraceFigure)
+        		{
+        			((TraceFigure)child).dispose();
+        		}
+        	}
+        	
             theCanvas.getViewport().setViewLocation(0, 0);
             theFigure.removeAll();
             theFigure.erase();

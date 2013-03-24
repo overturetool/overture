@@ -25,7 +25,7 @@ package org.overture.ide.plugins.rttraceviewer.draw;
 
 import org.eclipse.draw2d.*;
 
-public class RectangleLabelFigure extends RectangleFigure
+public class RectangleLabelFigure extends RectangleFigure implements TraceFigure
 {
 
     public RectangleLabelFigure(Label pLabel)
@@ -70,4 +70,9 @@ public class RectangleLabelFigure extends RectangleFigure
     }
 
     private Label theLabel;
+
+	@Override
+	public void dispose()
+	{
+	}
 }

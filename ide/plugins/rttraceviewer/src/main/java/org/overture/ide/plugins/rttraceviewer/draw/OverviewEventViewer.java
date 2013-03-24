@@ -311,18 +311,18 @@ public class OverviewEventViewer extends TraceEventViewer {
     
 	public void drawSourceConjecture(GenericTabItem tab, TraceCPU cpu, String name)
 	{
-        Ellipse ellipse = new Ellipse();
+		ConjectureMarker marker = new ConjectureMarker();
         NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
 
         Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
         Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() + 12L);
   
-        ellipse.setLocation(p1);
-        ellipse.setSize(16, 16);
-        ellipse.setFill(false);
-        ellipse.setForegroundColor(ColorConstants.red);
+        marker.setLocation(p1);
+        marker.setSize(16, 16);
+        marker.setFill(false);
+        marker.setForegroundColor(ColorConstants.red);
         
-        tab.addBackgroundFigure(ellipse);
+        tab.addBackgroundFigure(marker);
         
         label.setLocation(p2);
         label.setForegroundColor(ColorConstants.red);
@@ -332,18 +332,18 @@ public class OverviewEventViewer extends TraceEventViewer {
     
 	public void drawDestinationConjecture(GenericTabItem tab, TraceCPU cpu, String name)
 	{
-        Ellipse ellipse = new Ellipse();
+        ConjectureMarker marker = new ConjectureMarker();
         NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
 
         Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
         Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() - 40L);
         
-        ellipse.setLocation(p1);
-        ellipse.setSize(16, 16);
-        ellipse.setFill(false);
-        ellipse.setForegroundColor(ColorConstants.red);
+        marker.setLocation(p1);
+        marker.setSize(16, 16);
+        marker.setFill(false);
+        marker.setForegroundColor(ColorConstants.red);
         
-        tab.addBackgroundFigure(ellipse);
+        tab.addBackgroundFigure(marker);
         
         label.setLocation(p2);
         label.setForegroundColor(ColorConstants.red);
