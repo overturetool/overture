@@ -37,6 +37,7 @@ public class TraceData
 	private NextGenRTLogger rtLogger;   
 	private HashMap<Long, TraceCPU> cpus;
 	private HashMap<Long, TraceObject> objects;
+	private HashMap<String, TraceObject> staticObjects; //Static Objects dont have ids, use name instead
 	private HashMap<Long, TraceBus> buses; 
 	private HashMap<Long, TraceThread> threads;
 	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
@@ -56,6 +57,7 @@ public class TraceData
     	 	
     	cpus = new HashMap<Long, TraceCPU>();
     	objects = new HashMap<Long, TraceObject>();
+    	staticObjects = new HashMap<String, TraceObject>();
     	buses = new HashMap<Long, TraceBus>();
     	threads = new HashMap<Long, TraceThread>();
     	operations = new HashMap<String, TraceOperation>();
@@ -64,6 +66,21 @@ public class TraceData
     	initThreadObject = new TraceObject(0L, "INIT");
 
     	reset();
+    }
+    
+	public void reset()
+    {
+		cpus.clear();
+        objects.clear();
+        buses.clear();
+        threads.clear();
+        operations.clear();
+        staticObjects.clear();
+        
+        mainThreadObject.setVisible(false);
+        initThreadObject.setVisible(false);
+        eventManager.reset();
+        lastMarkerTime = null;
     }
 
     public TraceEventManager getEventManager() {
@@ -202,6 +219,15 @@ public class TraceData
         
         return objects.get(pobjid);
     }
+    
+    public TraceObject getStaticObject(String name) 
+    {
+    	if(!staticObjects.containsKey(name)) 
+    	{
+    		staticObjects.put(name, new TraceObject(0L, name));
+    	}
+    	return staticObjects.get(name);
+    }
 
     public TraceObject getMainThreadObject()
     {
@@ -212,19 +238,6 @@ public class TraceData
     	return initThreadObject;
     }
     
-	public void reset()
-    {
-		cpus.clear();
-        objects.clear();
-        buses.clear();
-        threads.clear();
-        operations.clear();
-        
-        mainThreadObject.setVisible(false);
-        initThreadObject.setVisible(false);
-        eventManager.reset();
-        lastMarkerTime = null;
-    }
 	
 	public Vector<TraceBus> getConnectedBuses(Long cpuId)
 	{

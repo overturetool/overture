@@ -27,18 +27,22 @@ public class OperationEventHandler extends EventHandler {
 			throw new IllegalArgumentException("OperationEventHandler expected event of type: " + NextGenOperationEvent.class.getName());
 		
 		//Exception will be thrown if it is not possible to look up the elements in data
-		Long cpuId = new Long(oEvent.thread.cpu.id);
-		TraceCPU cpu = data.getCPU(cpuId);
-		
-		Long threadId = new Long(oEvent.thread.id);
-		TraceThread thread = data.getThread(threadId);
-
-		Long destObjId = new Long(oEvent.object.id);
-		TraceObject destObj = data.getObject(destObjId);
-		
+		TraceCPU cpu = data.getCPU(new Long(oEvent.thread.cpu.id));
+		TraceThread thread = data.getThread(new Long(oEvent.thread.id));
 		String operationid = oEvent.operation.classDef.name + oEvent.operation.name;
 		TraceOperation operation = data.getOperation(operationid);
+		TraceObject destObj;
 		
+		//Check for Static object 
+		if(oEvent.object == null) 
+		{
+			destObj = data.getStaticObject(oEvent.operation.classDef.name);
+		}
+		else
+		{
+			destObj = data.getObject(new Long(oEvent.object.id));
+		}
+	
 		switch(oEvent.type)
 		{
 			
@@ -46,7 +50,7 @@ public class OperationEventHandler extends EventHandler {
 			eventViewer.drawOpRequest(tab, cpu, thread, destObj, operation);
 			
 			//Check for remote synchronous calls and update thread status to blocked
-			if(!oEvent.operation.isAsync && oEvent.object.cpu.id != oEvent.thread.cpu.id)
+			if(!oEvent.operation.isAsync && oEvent.object != null && oEvent.object.cpu.id != oEvent.thread.cpu.id)
 			{
             	thread.setStatus(true);         		
 			}		
