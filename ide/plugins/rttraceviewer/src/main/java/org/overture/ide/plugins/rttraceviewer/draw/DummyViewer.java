@@ -54,7 +54,7 @@ public class DummyViewer extends TraceEventViewer {
 
 	@Override
 	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread newthread) {
 		// TODO Auto-generated method stub
 		
 	}

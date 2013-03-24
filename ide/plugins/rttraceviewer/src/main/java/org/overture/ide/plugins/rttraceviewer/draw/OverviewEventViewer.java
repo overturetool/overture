@@ -132,9 +132,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 
-	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -245,8 +245,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 
 	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)
 	{
-		updateCpu(tab, cpu, thread);
-		
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -262,6 +260,8 @@ public class OverviewEventViewer extends TraceEventViewer {
 		String label = " "+op.getName()+" ";
 		
 		drawVerticalArrow(tab, x2, y1, y2, label, ColorConstants.darkBlue);
+		
+		updateCpu(tab, cpu, thread);
 	}
 
 	@Override

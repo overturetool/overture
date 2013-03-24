@@ -147,9 +147,9 @@ public class CpuEventViewer  extends TraceEventViewer {
 		obj.setY(y2);
 	}
 
-	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread)
 	{
-		TraceObject obj = thread.getCurrentObject();
+		TraceObject obj = newthread.getCurrentObject();
 
 		updateObject(tab, obj);
 
