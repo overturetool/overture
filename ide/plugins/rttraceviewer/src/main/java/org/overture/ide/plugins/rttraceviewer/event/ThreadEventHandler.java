@@ -29,10 +29,18 @@ public class ThreadEventHandler extends EventHandler {
 			throw new IllegalArgumentException("ThreadEventhandler expected event of type: " + NextGenThreadEvent.class.getName());
 
 		Long cpuId = new Long(tEvent.thread.cpu.id);
-		Long threadId = new Long(tEvent.thread.id);
+		Long newThreadId = new Long(tEvent.thread.id);
 		Long objectId = null;
 		TraceCPU cpu = data.getCPU(cpuId);
-		TraceThread thread = data.getThread(threadId);
+		
+		TraceThread currentThread = null;
+		Long currentThreadId = cpu.getCurrentThread();
+		if(currentThreadId != null)
+		{
+			currentThread = data.getThread(currentThreadId);
+		}
+		
+		TraceThread newThread = data.getThread(newThreadId);
 		TraceObject object = null;
 		
 		switch(tEvent.type)
@@ -55,15 +63,15 @@ public class ThreadEventHandler extends EventHandler {
 				objectId = new Long(tEvent.thread.object.id);
 				object = data.getObject(objectId);
 			}
-			thread.pushCurrentObject(object);
-			eventViewer.drawThreadCreate(tab, cpu, thread);
+			newThread.pushCurrentObject(object);
+			eventViewer.drawThreadCreate(tab, cpu, currentThread, newThread);
 			break;
 		case SWAP: 
 			throw new UnexpectedEventTypeException("Problem in ThreadEventHandler. SWAP events should be handled in " + ThreadSwapEventHandler.class.getName());
 		case KILL: 
-			eventViewer.drawThreadKill(tab, cpu, thread);
-			if(thread.hasCurrentObject())
-				thread.popCurrentObject();
+			eventViewer.drawThreadKill(tab, cpu, newThread);
+			if(newThread.hasCurrentObject())
+				newThread.popCurrentObject();
 			break;
 		}
 	}

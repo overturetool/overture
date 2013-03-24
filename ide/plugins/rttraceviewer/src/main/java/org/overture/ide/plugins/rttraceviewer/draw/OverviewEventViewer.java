@@ -132,9 +132,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 
-	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;

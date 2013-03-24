@@ -25,7 +25,7 @@ public abstract class TraceEventViewer extends TraceViewer {
 	
 	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
 
-	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread);
 
 	//Messages
 	public abstract void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op);
