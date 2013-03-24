@@ -7,7 +7,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenOperationEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenBusMessageEvent.NextGenBusMessageEventType;
 
-public class CPUEventFilter implements EventFilter {
+public class CPUEventFilter extends EventFilter {
 
 	private final Long cpuId;
 	public CPUEventFilter(Long cpuId) {
@@ -16,6 +16,10 @@ public class CPUEventFilter implements EventFilter {
 
 	@Override
 	public boolean apply(INextGenEvent event) {
+		//First apply filter of super class
+		if(!super.apply(event))
+			return false;
+		
 		boolean isForThisCpu = false;
 
 		if(event instanceof NextGenThreadEvent) {

@@ -1,12 +1,8 @@
 package org.overture.ide.plugins.rttraceviewer.event;
 
-import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
-public class OverviewEventFilter implements EventFilter {
+public class OverviewEventFilter extends EventFilter {
 	
-	@Override
-	public boolean apply(INextGenEvent type) {
-		return true;
-	}
+//Currently the event filter of the superclass is used
 
 }
