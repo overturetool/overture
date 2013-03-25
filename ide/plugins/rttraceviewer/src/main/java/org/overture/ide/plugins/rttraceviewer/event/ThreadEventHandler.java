@@ -40,7 +40,7 @@ public class ThreadEventHandler extends EventHandler {
 			currentThread = data.getThread(currentThreadId);
 		}
 		
-		TraceThread newThread = data.getThread(newThreadId);
+		TraceThread affectedThread = data.getThread(newThreadId);
 		TraceObject object = null;
 		
 		switch(tEvent.type)
@@ -63,15 +63,15 @@ public class ThreadEventHandler extends EventHandler {
 				objectId = new Long(tEvent.thread.object.id);
 				object = data.getObject(objectId);
 			}
-			newThread.pushCurrentObject(object);
-			eventViewer.drawThreadCreate(tab, cpu, currentThread, newThread);
+			affectedThread.pushCurrentObject(object);
+			eventViewer.drawThreadCreate(tab, cpu, currentThread, affectedThread);
 			break;
 		case SWAP: 
 			throw new UnexpectedEventTypeException("Problem in ThreadEventHandler. SWAP events should be handled in " + ThreadSwapEventHandler.class.getName());
 		case KILL: 
-			eventViewer.drawThreadKill(tab, cpu, newThread);
-			if(newThread.hasCurrentObject())
-				newThread.popCurrentObject();
+			eventViewer.drawThreadKill(tab, cpu, currentThread, affectedThread);
+			if(affectedThread.hasCurrentObject())
+				affectedThread.popCurrentObject();
 			break;
 		}
 	}

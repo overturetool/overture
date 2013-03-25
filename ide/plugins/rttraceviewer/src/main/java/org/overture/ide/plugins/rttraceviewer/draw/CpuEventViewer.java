@@ -93,11 +93,11 @@ public class CpuEventViewer  extends TraceEventViewer {
 	}
 
 	//Threads
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		TraceObject obj = thread.getCurrentObject();
+		TraceObject obj = swappedThread.getCurrentObject();
 		updateObject(tab, obj);
-
+		
 		Long x1 = obj.getX();
 		Long x2 = x1;
 		Long y1 = tab.getYMax();
@@ -109,11 +109,11 @@ public class CpuEventViewer  extends TraceEventViewer {
 		obj.setY(y2);
 	}
 
-	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		TraceObject obj = thread.getCurrentObject();
+		TraceObject obj = swappedThread.getCurrentObject();
 		updateObject(tab, obj);
-
+		
 		Long x1 = obj.getX();
 		Long x2 = x1;
 		Long y1 = tab.getYMax();
@@ -125,16 +125,15 @@ public class CpuEventViewer  extends TraceEventViewer {
 		obj.setY(y2);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
 		//MAA: Assumes from reverse engineering Tracefilevisitor that ThreadSwapIn = DelayedThreadSwapIn
-		drawThreadSwapIn(tab, cpu, thread);
+		drawThreadSwapIn(tab, cpu, currentThread, swappedThread);
 	}
 
-	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread killedThread)
 	{
-		TraceObject obj = thread.getCurrentObject();
-
+		TraceObject obj = killedThread.getCurrentObject();
 		updateObject(tab, obj);
 
 		Long x1 = obj.getX();
@@ -321,7 +320,7 @@ public class CpuEventViewer  extends TraceEventViewer {
 	//Helpers
 	private void updateObject(GenericTabItem tab, TraceObject pobj)
 	{
-		if(!pobj.isVisible())
+		if(pobj != null && !pobj.isVisible())
 		{	
 			//Draw Object
 			String name = pobj.getName() + " (" + pobj.getId().toString() + ")";

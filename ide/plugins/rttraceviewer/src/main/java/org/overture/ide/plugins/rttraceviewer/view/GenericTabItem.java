@@ -24,14 +24,23 @@
 package org.overture.ide.plugins.rttraceviewer.view;
 
 import java.io.File;
-import org.eclipse.draw2d.*;
+
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.overture.ide.plugins.rttraceviewer.draw.RotatedLabel;
 import org.overture.ide.plugins.rttraceviewer.draw.TraceFigure;
 
 // Referenced classes of package org.overture.tracefile.viewer:
