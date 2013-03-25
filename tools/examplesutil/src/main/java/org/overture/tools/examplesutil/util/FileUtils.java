@@ -109,8 +109,8 @@ public class FileUtils
 		try
 		{
 			FileWriter	outputFileReader = new FileWriter(file, append);
-			 outputStream = new BufferedWriter(outputFileReader);
-
+			outputStream = new BufferedWriter(outputFileReader);
+			
 			outputStream.write(data);
 
 			outputStream.flush();

@@ -94,6 +94,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 				}
 			}
 		}
+		settings.writeSettings(outputLocation);
 		newLocation = outputLocation;
 		return outputLocation;
 	}

@@ -173,17 +173,41 @@ public class VdmReadme
 
 		FileUtils.writeFile(getEclipseProject(), projectFile);
 	}
+	
+	public void writeSettings(File outputFolder)
+	{
+		if(getEncoding() == null || getEncoding().isEmpty())
+			return;
+		
+		File settingsFolder = new File(outputFolder, ".settings");
+		settingsFolder.mkdirs();
+		
+		File preferencesFile = new File(settingsFolder, "org.eclipse.core.resources.prefs");
+		
+		FileUtils.writeFile(getEclipsePreferences(), preferencesFile);
+	}
 
 	public String getEclipseProject()
 	{
 		StringBuilder sb = new StringBuilder();
+		
 		String projectNature = getNature();
-
 		String builderArguments = getBuilderArguments();
 
 		sb.append(OvertureProject.EclipseProject.replace(OvertureProject.NATURE_SPACEHOLDER, projectNature).replace(OvertureProject.NAME_PLACEHOLDER, name).replace(OvertureProject.ARGUMENTS_PLACEHOLDER, builderArguments).replace(OvertureProject.TEX_DOCUMENT, getTexDocument().trim()));
 		return sb.toString();
 
+	}
+	
+	public String getEclipsePreferences()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		String encoding = getEncoding();
+		
+		sb.append(OvertureProjectPreferences.OvertureProjectPreferences.replace(OvertureProjectPreferences.ENCODING_PLACEHOLDER, encoding));
+		
+		return sb.toString();
 	}
 
 	private String getNature()
