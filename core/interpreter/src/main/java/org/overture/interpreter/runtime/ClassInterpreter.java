@@ -253,7 +253,7 @@ public class ClassInterpreter extends Interpreter
 			String logFilename = logDirStr + "/" + dateString;
 			
 			NextGenRTLogger.getInstance().setLogfile(logFilename);
-			NextGenRTLogger.getInstance().toFile();
+			//NextGenRTLogger.getInstance().toFile();
 			NextGenRTLogger.getInstance().persistToFile();
 		}
 		
