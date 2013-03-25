@@ -18,16 +18,15 @@
  *******************************************************************************/
 package org.overture.ide.debug.ui.launchconfigurations;
 
-import java.lang.instrument.ClassDefinition;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.operation.IRunnableContext;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
@@ -191,9 +190,9 @@ public class MethodSearchEngine
 				matched.add((INode) iAstNode);
 			}
 
-			if (iAstNode instanceof ClassDefinition)
+			if (iAstNode instanceof AClassClassDefinition)
 			{
-				Object[] elements = ((SClassDefinition) iAstNode).getDefinitions().toArray();
+				Object[] elements = ((AClassClassDefinition) iAstNode).getDefinitions().toArray();
 				matched.addAll(Arrays.asList(searchMainMethods(context, elements, constraints)));
 			}
 			if (iAstNode instanceof AModuleModules)
