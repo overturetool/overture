@@ -393,6 +393,18 @@ public class VdmReadme
 			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_logging\" value=\"true\"/>");
 		}
 		
+		if(vmArguments.size() > 0)
+		{
+			String vmArgsStr = "";
+			
+			for(int i = 0; i < vmArguments.size(); i++)
+				vmArgsStr += " -" + vmArguments.get(i);
+			
+			vmArgsStr = vmArgsStr.trim();
+			
+			sb.append("<stringAttribute key=\"vdm_launch_config_memory_option\" value=\"" + vmArgsStr + "\"/>");
+		}
+		
 		sb.append("\n</launchConfiguration>");
 
 		FileUtils.writeFile(sb.toString(), launch);
