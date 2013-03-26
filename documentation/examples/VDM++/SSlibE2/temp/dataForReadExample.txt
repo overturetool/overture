@@ -1,0 +1,1 @@
+["This is a test string from File.", 1, {1, ..., 10}, { 1 |-> 99} ]

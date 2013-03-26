@@ -1,0 +1,15 @@
+class Number
+ 
+functions 
+
+static public isComputable[@e]: @e -> bool
+isComputable(n) ==
+	is_(n,int) or is_(n,nat) or is_(n,nat1) or is_(n,real) or is_(n,rat);
+
+static public min[@e] :( @e * @e -> bool) -> @e -> @e -> @e
+min(f)(n1)(n2) == if f(n1,n2) then n1 else n2;
+	
+static public max[@e] : ( @e * @e -> bool) -> @e -> @e -> @e
+max(f)(n1)(n2) == if f(n1,n2) then n2 else n1;
+			
+end Number

@@ -1,0 +1,24 @@
+class Object
+/*
+作成者 = 佐原伸
+作成日 = 2000年 8月 23日 
+Responsibility
+	オブジェクト共通の振る舞いを表す。
+
+Abstract
+	すべてのオブジェクトに共通な機能を定義する。
+*/
+	
+functions 
+
+public hashCode : () -> int
+hashCode() == 1;
+
+public equals : Object -> bool
+equals(-) == true;
+
+operations
+public getContent : () ==> [seq of char | int]
+getContent() == return 1374;	--meaningless value. so subclass must set.
+			
+end Object

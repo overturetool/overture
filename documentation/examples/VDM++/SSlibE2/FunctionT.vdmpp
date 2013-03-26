@@ -1,0 +1,85 @@
+class FunctionT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new FunctionT01(), new FunctionT02(),  new FunctionT03()
+	];
+end FunctionT
+----------------------------------------------------------
+
+class FunctionT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	f1 = lambda x : int & x * 2,
+		p1 = lambda x : int & x > 1000,
+		p11 = lambda x : int & x <= 1000,
+		f2 = lambda x : seq of char & x ^ "0",
+		p2 = lambda x : seq of char & len x > 9,
+		p21 = lambda x : seq of char & len x <= 9
+	in
+	return
+		Function`Fwhile[int](p11)(f1)(1) = 1024 and
+		Function`Fwhile[seq of char](p21)(f2)("123456") = "1234560000" and
+		Function`Funtil[int](p1)(f1)(1) = 1024 and
+		Function`Funtil[seq of char](p2)(f2)("123456") = "1234560000"
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "FunctionT01:\tTest Fwhile, Funtil.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end FunctionT01
+----------------------------------------------------------
+
+class FunctionT02 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	f1 = lambda x : int & x * 2,
+		f2 = lambda x : int & x * 3,
+		f3 = lambda x : int & x ** 2,
+		funcSeq1 = [f1, f2, f3],
+		f10 = lambda x : seq of char & x ^ x,
+		f11 = Sequence`take[char](10),
+		f12 = Sequence`drop[char](4),
+		funcSeq2 = [f10, f11, f12]
+	in
+	return
+		Function`Seq[int](funcSeq1)(2) = (2 * 2 * 3) ** 2 and
+		Function`Seq[seq of char](funcSeq2)("12345678") = "567812"
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "FunctionT02:\tTest function apply.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end FunctionT02
+----------------------------------------------------------
+
+class FunctionT03 is subclass of TestCase
+types
+public INT = int;
+public ReadingFunctionType = INT -> INT -> INT;
+--public ReadingFunctionType = int -> int -> int;
+
+functions
+public ReadingFunction: () -> ReadingFunctionType
+ReadingFunction() == 
+	let fn =  "./fread-func.txt"
+	in
+	Function`readFn[ReadingFunctionType](fn);
+
+operations 
+protected test: () ==> bool
+test() == 
+	return 
+		ReadingFunction() (3)(2) = 1 and
+		ReadingFunction() (4)(4) = 0 and
+		ReadingFunction() (4)(-3) = -2 and
+		ReadingFunction() (-4)(3) = 2
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "FunctionT03:\tTest of reading function.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end FunctionT03

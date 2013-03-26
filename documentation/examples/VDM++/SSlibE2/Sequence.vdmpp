@@ -1,0 +1,324 @@
+\subsection{Sequence}
+\subsubsection{Responsibility}
+	I am a Sequence.
+\subsubsection{Abstract}
+	I define functions not in Sequence type operand. 
+\subsubsection{note}
+	By historical reason, there are functional style functions and non functional style functions.
+	Functions which name starts capital letters is functional style. 
+	If there are same name functions, the lower-case letter`s function is the old function.
+
+	Many of functions are from functional programming language libraries.
+
+\begin{vdm_al}	
+class Sequence
+	
+functions 
+
+static public Sum[@T]: seq of @T ->  @T
+Sum(s) == SumAux[@T](s)(0)
+pre
+	is_(s, seq of real);
+
+static SumAux[@T] : seq of @T -> @T -> @T
+SumAux(s)(sum) ==
+	if s = [] then
+		sum
+	else
+		SumAux[@T](tl s)(sum + hd s);
+--measure length_measure;
+
+static length_measure[@T] : seq of @T +> nat
+length_measure(s) == len s;
+
+static public Product[@T]: seq of @T ->  @T
+Product(s) == ProductAux[@T](s)(1)
+pre
+	is_(s, seq of real);
+ 	
+static ProductAux[@T] : seq of @T -> @T -> @T
+ProductAux(s)(p) ==
+	cases s :
+	[h] ^ tail	-> ProductAux[@T](tail)(p * h),
+	[]			-> p
+	end;
+--measure length_measure;
+
+static public GetAverage[@T]: seq of @T ->  [real]
+GetAverage(s) == if s = [] then nil else GetAverageAux[@T](s)(0)(len s);
+
+static GetAverageAux[@T] : seq of @T -> @T -> @T -> real
+GetAverageAux(s)(sum)(numberOfElem) ==
+	cases s :
+	[h] ^ tail	-> GetAverageAux[@T](tail)(sum + h)(numberOfElem),
+	[]			-> sum / numberOfElem
+	end;
+--measure length_measure;
+
+static public isAscendingTotalOrder [@T]:
+	(@T * @T -> bool) -> seq of @T -> bool
+isAscendingTotalOrder (decideOrderFunc)(s) ==
+	forall i,j  in set inds s & i < j  => decideOrderFunc(s(i),s(j)) or s(i) = s(j);
+
+static public isDescendingTotalOrder [@T]:
+	(@T * @T -> bool) -> seq of @T -> bool
+isDescendingTotalOrder (decideOrderFunc)(s) ==
+	forall i,j  in set inds s & i < j  => decideOrderFunc(s(j),s(i)) or s(i) = s(j);
+
+static public isAscendingOrder [@T]: seq of @T -> bool
+isAscendingOrder(s) ==
+	isAscendingTotalOrder [@T](lambda x : @T, y : @T & x < y)(s);
+
+static public isDescendingOrder[@T]: seq of @T -> bool
+isDescendingOrder(s) ==
+	isDescendingTotalOrder [@T](lambda x : @T, y : @T & x < y)(s);
+
+static public sort[@T] : (@T * @T -> bool) -> seq of @T -> seq of @T
+sort(decideOrderFunc)(s) ==
+	cases s:
+		[]	-> [],
+		[h]^tail	-> 
+			sort[@T](decideOrderFunc)([tail(i) | i in set inds tail & decideOrderFunc(tail(i),h)]) ^
+			[h] ^
+			sort[@T](decideOrderFunc)([tail(i) | i in set inds tail & not decideOrderFunc(tail(i),h)])
+	end;
+
+static public ascendingOrderSort[@T] : seq of @T -> seq of @T
+ascendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & x < y)(s);
+
+static public descendingOrderSort[@T] : seq of @T -> seq of @T
+descendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & x > y)(s);
+
+static public isOrdered[@T] : seq of (@T * @T -> bool) -> seq of @T -> seq of @T -> bool
+isOrdered(decideOrderFuncSeq)(s1)(s2) ==
+	cases mk_(s1,s2):
+		mk_([],[])		-> false,
+		mk_([],-)		-> true,
+		mk_(-,[])	-> false,
+		mk_([h1]^tail1,[h2]^tail2)	->
+			if (hd decideOrderFuncSeq)(h1,h2) then
+				true
+			elseif (hd decideOrderFuncSeq)(h2,h1) then
+				false
+			else
+				Sequence`isOrdered[@T](tl decideOrderFuncSeq)(tail1)(tail2)
+	end;
+
+static public Merge[@T] : (@T * @T -> bool) -> seq of @T -> seq of @T -> seq of @T
+Merge(decideOrderFunc)(s1)(s2) == 
+	cases mk_(s1,s2):
+		mk_([], y)						-> y,
+		mk_(x, [])						-> x,
+		mk_([h1]^tail1,[h2]^tail2)		->
+			if decideOrderFunc(h1,h2) then
+				[h1] ^ Sequence`Merge[@T](decideOrderFunc)(tail1)(s2)
+			else
+				[h2] ^ Sequence`Merge[@T](decideOrderFunc)(s1)(tail2)
+	end;
+
+static public InsertAt[@T]: nat1 -> @T -> seq of @T -> seq of @T
+InsertAt(position)(e)(s) ==
+	cases mk_(position, s) :
+	mk_(1, str)				-> [e] ^ str,
+	mk_(-, [])				-> [e],
+	mk_(pos, [h] ^ tail)	-> [h] ^ InsertAt[@T](pos - 1)(e)(tail)
+	end;
+
+static public RemoveAt[@T]: nat1 -> seq of @T -> seq of @T
+RemoveAt(position)(s) ==
+	cases mk_(position, s) :
+	mk_(1, [-] ^ tail)		-> tail,
+	mk_(pos, [h] ^ tail)	-> [h] ^ RemoveAt[@T](pos - 1)(tail),
+	mk_(-, [])				-> []
+	end;
+
+static public RemoveDup[@T] :  seq of @T ->  seq of @T
+RemoveDup(s) == 
+	cases s :
+	[h]^tail		-> [h] ^ RemoveDup[@T](filter[@T](lambda x : @T & x <> h)(tail)) ,
+	[]			-> []
+	end
+measure length_measure;
+	
+static public RemoveMember[@T] :  @T -> seq of @T -> seq of @T
+RemoveMember(e)(s) == 
+	cases s :
+	[h]^tail		-> if e = h then tail else [h] ^ RemoveMember[@T](e)(tail),
+	[]			-> []
+	end;
+	
+static public RemoveMembers[@T] :  seq of @T -> seq of @T -> seq of @T
+RemoveMembers(elemSeq)(s) == 
+	cases elemSeq :
+	[]			-> s,
+	[h]^tail		-> RemoveMembers[@T](tail)(RemoveMember[@T](h)(s))
+	end;
+
+static public UpdateAt[@T]: nat1 -> @T -> seq of @T -> seq of @T
+UpdateAt(position)(e)(s) ==
+	cases mk_(position, s) :
+	mk_(-, [])				-> [],
+	mk_(1, [-] ^ tail)		-> [e] ^ tail,
+	mk_(pos,  [h] ^ tail)	-> [h] ^ UpdateAt[@T](pos - 1)(e)(tail)
+	end;
+
+static public take[@T]: int -> seq of @T -> seq of @T
+take(i)(s) == s(1,...,i);
+
+static public TakeWhile[@T] : (@T -> bool) -> seq of @T ->seq of @T
+TakeWhile(f)(s) ==
+	cases s :
+	[h] ^ tail	-> 
+		if f(h) then
+			[h] ^ TakeWhile[@T](f)(tail)
+		else
+			[],
+	[]	-> []
+	end;
+	
+static public drop[@T]: int -> seq of @T -> seq of @T
+drop(i)(s) == s(i+1,...,len s);
+
+static public DropWhile[@T] : (@T -> bool) -> seq of @T ->seq of @T
+DropWhile(f)(s) ==
+	cases s :
+	[h] ^ tail	-> 
+		if f(h) then
+			DropWhile[@T](f)(tail)
+		else
+			s,
+	[]	-> []
+	end;
+
+static public Span[@T] : (@T -> bool) -> seq of @T -> seq of @T * seq of @T
+Span(f)(s) ==
+	cases s :
+	[h] ^ tail	-> 
+		if f(h) then
+			let	mk_(matchSeq, otherSeq) = Span[@T](f)(tail)
+			in
+			mk_([h] ^ matchSeq, otherSeq)
+		else
+			mk_([], s),
+	[]	-> mk_([], [])
+	end;
+
+static public SubSeq[@T]: nat -> nat -> seq1 of @T -> seq of @T
+SubSeq(startPos)(numOfElem)(s) == s(startPos,...,startPos+numOfElem-1);
+
+static public last[@T]: seq of @T -> @T
+last(s) == s(len s);
+
+static public fmap[@T1,@T2]: (@T1 -> @T2) -> seq of @T1 -> seq of @T2
+fmap(f)(s) == [f(s(i)) | i in set inds s];
+
+public Fmap[@elem]: (@elem -> @elem) -> seq of @elem -> seq of @elem
+Fmap(f)(l) ==
+       if l = []
+       then []
+       else [f(hd l)] ^ (Fmap[@elem](f)(tl l));
+
+static public filter[@T]: (@T -> bool) -> seq of @T -> seq of @T
+filter(f)(s) == [s(i) | i in set inds s & f(s(i))];
+
+static public Foldl[@T1, @T2] : 
+	(@T1 -> @T2 -> @T1) -> @T1 -> seq of @T2 -> @T1
+Foldl(f)(arg)(s) == 
+	cases s :
+	[]			-> arg,
+	[h] ^ tail	-> Foldl[@T1,@T2](f)(f(arg)(h))(tail)
+	end;
+
+static public Foldr[@T1, @T2] : 
+	(@T1 -> @T2 -> @T2) -> @T2 -> seq of @T1 -> @T2
+Foldr(f)(arg)(s) == 
+	cases s :
+	[]			-> arg,
+	[h] ^ tail	-> f(h)(Foldr[@T1,@T2](f)(arg)(tail))
+	end;
+
+static public isMember[@T] : @T -> seq of @T -> bool
+isMember(e)(s) == 
+	cases s :
+	[h]^tail		-> e = h or isMember[@T] (e)(tail),
+	[]			-> false
+	end;
+
+static public isAnyMember[@T]:  seq of @T -> seq of @T -> bool
+isAnyMember(elemSeq)(s) == 
+	cases elemSeq :
+	[h]^tail		->  isMember[@T] (h)(s) or isAnyMember[@T] (tail)(s) ,
+	[]			-> false
+	end;
+
+static public Index[@T]: @T -> seq of @T -> int
+Index(e)(s) == 
+	let	i = 0
+	in	IndexAux[@T](e)(s)(i);
+
+static IndexAux[@T]: @T -> seq of @T -> int -> int
+IndexAux(e)(s)(indx) ==
+	cases s:
+		[]			-> 0,
+		[x]^xs	->
+			if x = e then 
+				indx + 1
+			else
+				IndexAux[@T](e)(xs)(indx+1)
+	end;
+	
+static public IndexAll2[@T] : @T -> seq of @T -> set of int
+IndexAll2(e)(s) == {i | i in set inds s & s(i) = e};
+	
+static public flatten[@T] : seq of seq of @T -> seq of @T
+flatten(s) == conc s;
+
+static public compact[@T] : seq of [@T] -> seq of @T
+compact(s) == [s(i) | i in set inds s & s(i) <> nil];
+
+static public freverse[@T] : seq of @T -> seq of @T
+freverse(s) == [s(len s + 1 -  i) | i in set inds s];
+
+static public Permutations[@T]: seq of @T -> set of seq of @T
+Permutations(s) == 
+cases s:
+	[],[-] -> {s},
+	others -> dunion {{[s(i)]^j | j in set Permutations[@T](RestSeq[@T](s,i))} | i in set inds s}
+end
+measure length_measure;
+
+static public RestSeq[@T]: seq of @T * nat -> seq of @T
+RestSeq(s,i) == [s(j) | j in set (inds s \ {i})];
+
+static public Unzip[@T1, @T2] : seq of (@T1 * @T2) -> seq of @T1 * seq of @T2
+Unzip(s) ==
+	cases s :
+	[]				-> mk_([], []),
+	[mk_(x, y)] ^ tail	->
+		let	mk_(xs, ys) = Unzip[@T1, @T2](tail)
+		in
+		mk_([x] ^ xs, [y] ^ ys)
+	end
+measure lengthUnzip;
+
+static lengthUnzip[@T1, @T2] : seq of (@T1 * @T2) +> nat
+lengthUnzip(s) == len s;
+
+static public Zip[@T1, @T2] : seq of @T1 * seq of @T2 -> seq of (@T1 * @T2)
+Zip(s1, s2) == Zip2[@T1, @T2](s1)(s2);
+\end{vdm_al}
+
+\begin{vdm_al}	
+static public Zip2[@T1, @T2] : seq of @T1 -> seq of @T2 -> seq of (@T1 * @T2)
+Zip2(s1)(s2) == 
+	cases mk_(s1, s2) :
+	mk_([h1] ^ tail1, [h2] ^ tail2)		-> [mk_(h1, h2)] ^ Zip2[@T1, @T2](tail1)(tail2),
+	mk_(-, -)							-> []
+	end;
+
+end Sequence
+\end{vdm_al}
+
+\begin{rtinfo}
+[Sequence]{vdm.tc}[Sequence]
+\end{rtinfo}

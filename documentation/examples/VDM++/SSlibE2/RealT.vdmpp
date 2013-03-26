@@ -1,0 +1,173 @@
+class RealT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests () == 
+	[ 
+	new RealT01(), new RealT02(), new RealT03(), new RealT04(),
+	new RealT05(), new RealT06(), new RealT07(), new RealT08()
+	];
+end RealT
+-----------------------------------------------------
+
+class RealT01 is subclass of TestCase
+values
+	Tolelance = 1E-10;
+operations 
+protected test: () ==> bool
+test() == 
+	let	r = new Real()		in
+	return
+		Real`EQ(r.getInterest(2,10))(0.07177346254161253 )
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT01:\tTest of getInterest";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT01
+-----------------------------------------------------
+
+class RealT02 is subclass of TestCase
+values
+	Tolelance = 1E-10;
+operations 
+protected test: () ==> bool
+test() == 
+	let	r = new Real()		in
+	return
+		Real`EQ(r.root(2))(1.414213562382246 )
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT02:\tTest of root.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT02
+-----------------------------------------------------
+
+class RealT03 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	r = new Real()		in
+	return
+		r.isNDigitsAfterTheDecimalPoint(10.01,2)  and
+		not r.isNDigitsAfterTheDecimalPoint(10.01,3)  and
+		r.isNDigitsAfterTheDecimalPoint(10.012,3)  and
+		r.isNDigitsAfterTheDecimalPoint(10.0,0)  and
+		r.isNDigitsAfterTheDecimalPoint(10.011,2) = false  and
+		r.isNDigitsAfterTheDecimalPoint(10.1,0) = false and
+		r.getNumberOfDigitsAfterTheDecimalPoint(-1.2) = 1 and
+		r.getNumberOfDigitsAfterTheDecimalPoint(1.0) = 0 and
+		r.getNumberOfDigitsAfterTheDecimalPoint(1) = 0 and
+		r.getNumberOfDigitsAfterTheDecimalPoint(1.23) = 2
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT03:\tTest isNDigitsAfterTheDecimalPoint and getNumberOfDigitsAfterTheDecimalPoint.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT03
+-----------------------------------------------------
+
+class RealT04 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	r = new Real()		in
+	return
+		r.numberOfDigit(0) = 1 and
+		r.numberOfDigit(1) = 1 and
+		r.numberOfDigit(9) = 1 and
+		r.numberOfDigit(10) = 2 and
+		r.numberOfDigit(99) = 2 and
+		r.numberOfDigit(100) = 3 and
+		r.numberOfDigit(0.1) = 3 and
+		r.numberOfDigit(9.1) = 3 and
+		r.numberOfDigit(10.1) = 4 and
+		r.numberOfDigit(10.123) = 6
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT04:\tTest numberOfDigit.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT04
+-----------------------------------------------------
+
+class RealT05 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.12345, 4))( 10.1235) and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.12345, 3))( 10.123 ) and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.12345, 2))( 10.12)  and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.125, 2) )( 10.13)  and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.14, 1))(  10.1)  and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.15, 1) )(  10.2)  and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.5, 0))( 11)  and
+		Real`EQ(Real`roundAterDecimalPointByNdigit(10.4, 0) )( 10)  
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT05:\tTest roundAterDecimalPointByNdigit.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT05
+-----------------------------------------------------
+
+class RealT06 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		Real`EQ(10.0123456678)(10.0123456789) = false and
+		Real`EQ(10.01234567891)(10.01234567892) and
+		Real`EQ(10.012345678801)(10.0123456789) and
+		Real`EQE(1E-2)(10.12345)(10.12987)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT06:\tTest EQ (Equal).";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT06
+-----------------------------------------------------
+
+class RealT07 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let f1 = lambda x : real & x ** 2
+	in
+	return
+		Real`EQ(Real`integrate(f1)(10)(1)(2))(2.735) and
+		Real`EQ(Real`integrate(f1)(100)(1)(2))(2.37335) and
+		Real`EQ(Real`integrate(f1)(1000)(1)(2))(2.3373335)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT07:\tTest integrate(x ** 2)";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT07
+-----------------------------------------------------
+
+class RealT08 is subclass of TestCase
+values
+pi = MATH`pi;
+sin = MATH`sin
+
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		Real`EQ(Real`integrate(sin)(2)(0)(pi))(1.5707963278)  and 
+		Real`EQ(Real`integrate(sin)(3)(0)(pi))(1.8137993649)  and 
+		Real`EQ(Real`integrate(sin)(4)(0)(pi))(1.8961188984)  and 
+		Real`EQ(Real`integrate(sin)(5)(0)(pi))(1.9337655984)  and
+		Real`EQ(Real`integrate(sin)(2000)(1)(pi))(1.5403021586) 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "RealT08:\tTest integrate(sin) .";
+protected tearDown: () ==> ()
+tearDown() == return;
+end RealT08
+
+
+
+

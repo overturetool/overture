@@ -1,0 +1,458 @@
+\subsection{FSequence}
+列に関わる関数を提供する。
+列型で定義された機能以外の機能を定義する。
+
+\subsubsection{参照}
+多くの関数は、関数型プログラミング言語Concurrent CleanやStandard MLのライブラリーから移植した。
+
+\begin{vdm_al}
+class FSequence
+--"$Id: Sequence.vpp,v 1.1 2005/10/31 02:09:58 vdmtools Exp $";
+	
+functions 
+
+\end{vdm_al}
+
+Sumは列sの要素の合計を返す。
+\begin{vdm_al}
+static public Sum[@T] : seq of @T ->  @T
+Sum(s) == Foldl[@T, @T](Plus[@T])(0)(s)
+pre
+	is_(s, seq of int) or is_(s, seq of nat) or is_(s, seq of nat1) or
+ 	is_(s, seq of real) or is_(s, seq of rat);
+\end{vdm_al}
+
+Prodは列sの全要素の積を返す。
+\begin{vdm_al}
+static public Prod[@T] : seq of @T ->  @T
+Prod(s) == Foldl[@T, @T](Product[@T])(1)(s)
+pre
+	is_(s, seq of int) or is_(s, seq of nat) or is_(s, seq of nat1) or
+ 	is_(s, seq of real) or is_(s, seq of rat);
+\end{vdm_al}
+
+Plusは加算を行う。 
+\begin{vdm_al}
+static public Plus[@T] : @T -> @T -> @T
+Plus(a)(b) == a + b;
+\end{vdm_al}
+
+Productは積算を行う。
+\begin{vdm_al}
+static public Product[@T] : @T -> @T -> @T
+Product(a)(b) == a * b;
+\end{vdm_al}
+
+Appendは列の追加を行う。
+\begin{vdm_al}
+static public Append[@T] : seq of @T -> @T -> seq of @T
+Append(s)(e) == s ^ [e];
+\end{vdm_al}
+
+Averageは列sの要素の平均を求める。
+\begin{vdm_al}
+static public Average[@T]: seq of @T ->  [real]
+Average(s) == if s = [] then nil else AverageAux[@T](0)(0)(s)
+post
+	if s = [] then
+		RESULT = nil
+	else
+		RESULT = Sum[@T](s) / len s;
+
+static AverageAux[@T] : @T -> @T -> seq of @T -> real
+AverageAux(total)(numOfElem)(s) ==
+	cases s :
+	[x] ^ xs	-> AverageAux[@T](total + x)(numOfElem + 1)(xs),
+	[]		-> total / numOfElem
+	end;
+\end{vdm_al}
+
+IsAscendingInTotalOrderは、関数fで与えられた全順序で、列sの要素が昇順であるか否かを返す。
+\begin{vdm_al}
+static public IsAscendingInTotalOrder[@T] : (@T * @T -> bool) -> seq of @T -> bool
+IsAscendingInTotalOrder(f)(s) ==
+	forall i,j  in set inds s & i < j  => f(s(i),s(j)) or s(i) = s(j);
+\end{vdm_al}
+
+IsDescendingInTotalOrderは、関数fで与えられた全順序で、列sの要素が降順であるか否かを返す。
+\begin{vdm_al}
+static public IsDescendingInTotalOrder[@T] : (@T * @T -> bool) -> seq of @T -> bool
+IsDescendingInTotalOrder(f)(s) ==
+	forall i,j  in set inds s & i < j  => f(s(j),s(i)) or s(i) = s(j);
+\end{vdm_al}
+
+IsAscendingは、演算子<で与えられた全順序で、列sの要素が昇順であるか否かを返す。
+\begin{vdm_al}
+static public IsAscending [@T]: seq of @T -> bool
+IsAscending(s) ==
+	IsAscendingInTotalOrder[@T](lambda x : @T, y : @T & x < y)(s);
+\end{vdm_al}
+
+IsDescendingは、演算子<で与えられた全順序で、列sの要素が降順であるか否かを返す。
+\begin{vdm_al}
+static public IsDescending[@T]: seq of @T -> bool
+IsDescending(s) ==
+	IsDescendingInTotalOrder[@T](lambda x : @T, y : @T & x < y)(s);
+\end{vdm_al}
+
+Sortは、関数fで与えられた順序で、列sの要素を昇順にクイックソートする。
+\begin{vdm_al}
+static public Sort[@T] : (@T * @T -> bool) -> seq of @T -> seq of @T
+Sort(f)(s) ==
+	cases s:
+		[]	-> [],
+		[x]^xs	-> 
+			Sort[@T](f)([xs(i) | i in set inds xs & f(xs(i),x)]) ^
+			[x] ^
+			Sort[@T](f)([xs(i) | i in set inds xs & not f(xs(i),x)])
+	end;
+\end{vdm_al}
+
+AscendingSortは、演算子<で与えられた順序で、列sの要素を昇順にソートする。
+\begin{vdm_al}
+static public AscendingSort[@T] : seq of @T -> seq of @T
+AscendingSort(s) == Sort[@T](lambda x : @T, y : @T & x < y)(s)
+post
+	IsAscending[@T](RESULT);
+\end{vdm_al}
+
+DescendingSortは、演算子>で与えられた順序で、列sの要素を昇順にソートする。
+演算子<から見れば降順。
+\begin{vdm_al}
+static public DescendingSort[@T] : seq of @T -> seq of @T
+DescendingSort(s) == Sort[@T](lambda x : @T, y : @T & x > y)(s)
+post
+	IsDescending[@T](RESULT);
+\end{vdm_al}
+
+IsOrderedは、decideOrderFunc列fsで与えられた順序であればtrue、そうでなければfalseを返す。
+\begin{vdm_al}
+static public IsOrdered[@T] : seq of (@T * @T -> bool) -> seq of @T -> seq of @T -> bool
+IsOrdered(f)(s1)(s2) ==
+	cases mk_(s1,s2):
+		mk_([],[])			-> false,
+		mk_([],-)			-> true,
+		mk_(-,[])			-> false,
+		mk_([x1]^xs1,[x2]^xs2)	->
+			if (hd f)(x1,x2) then
+				true
+			elseif (hd f)(x2,x1) then
+				false
+			else
+				IsOrdered[@T](tl f)(xs1)(xs2)
+	end;
+\end{vdm_al}
+
+Mergeは、関数fで与えられた順序で、列s1,s2の要素をマージする。
+\begin{vdm_al}
+static public Merge[@T] : (@T * @T -> bool) -> seq of @T -> seq of @T -> seq of @T
+Merge(f)(s1)(s2) == 
+	cases mk_(s1,s2):
+		mk_([], y)			-> y,
+		mk_(x, [])			-> x,
+		mk_([x1]^xs1,[x2]^xs2)	->
+			if f(x1,x2) then
+				[x1] ^ FSequence`Merge[@T](f)(xs1)(s2)
+			else
+				[x2] ^ FSequence`Merge[@T](f)(s1)(xs2)
+	end;
+\end{vdm_al}
+
+InsertAtは、列sの指定された位置iに要素eを追加する。
+\begin{vdm_al}
+static public InsertAt[@T]: nat1 -> @T -> seq of @T -> seq of @T
+InsertAt(i)(e)(s) ==
+	cases mk_(i, s) :
+	mk_(1, s1)		-> [e] ^ s1,
+	mk_(-, [])		-> [e],
+	mk_(i1, [x] ^ xs)	-> [x] ^ InsertAt[@T](i1 - 1)(e)(xs)
+	end;
+\end{vdm_al}
+
+RemoveAtは、列sの指定された位置iの要素を削除する。
+\begin{vdm_al}
+static public RemoveAt[@T]: nat1 -> seq of @T -> seq of @T
+RemoveAt(i)(s) ==
+	cases mk_(i, s) :
+	mk_(1, [-] ^ xs)	-> xs,
+	mk_(i1, [x] ^ xs)	-> [x] ^ RemoveAt[@T](i1 - 1)(xs),
+	mk_(-, [])		-> []
+	end;
+\end{vdm_al}
+
+RemoveDupは、列sから重複する要素を削除する。
+\begin{vdm_al}
+static public RemoveDup[@T] :  seq of @T ->  seq of @T
+RemoveDup(s) == 
+	cases s :
+	[x]^xs		-> [x] ^ RemoveDup[@T](Filter[@T](lambda e : @T & e <> x)(xs)) ,
+	[]		-> []
+	end
+post
+	not IsDup[@T](RESULT);
+\end{vdm_al}
+	
+RemoveMemberは、列sから要素eを削除する。
+\begin{vdm_al}
+static public RemoveMember[@T] :  @T -> seq of @T -> seq of @T
+RemoveMember(e)(s) == 
+	cases s :
+	[x]^xs		-> if e = x then xs else [x] ^ RemoveMember[@T](e)(xs),
+	[]		-> []
+	end;
+\end{vdm_al}
+	
+RemoveMembersは、列sから要素列esの全要素を削除する。
+\begin{vdm_al}
+static public RemoveMembers[@T] :  seq of @T -> seq of @T -> seq of @T
+RemoveMembers(es)(s) == 
+	cases es :
+	[]		-> s,
+	[x]^xs		-> RemoveMembers[@T](xs)(RemoveMember[@T](x)(s))
+	end;
+\end{vdm_al}
+
+UpdateAtは、列sの指定された位置iの要素eを指定された新要素で置き換える。
+\begin{vdm_al}
+static public UpdateAt[@T]: nat1 -> @T -> seq of @T -> seq of @T
+UpdateAt(i)(e)(s) ==
+	cases mk_(i, s) :
+	mk_(-, [])		-> [],
+	mk_(1, [-] ^ xs)	-> [e] ^ xs,
+	mk_(i1,  [x] ^ xs)	-> [x] ^ UpdateAt[@T](i1 - 1)(e)(xs)
+	end;
+\end{vdm_al}
+
+Takeは、列sの先頭i個からなる列を返す。
+\begin{vdm_al}
+static public Take[@T] : int -> seq of @T -> seq of @T
+Take(i)(s) == s(1,...,i);
+\end{vdm_al}
+
+TakeWhileは、列sの先頭から、関数fを満たし続ける間の部分列を返す。
+\begin{vdm_al}
+static public TakeWhile[@T] : (@T -> bool) -> seq of @T ->seq of @T
+TakeWhile(f)(s) ==
+	cases s :
+	[x] ^ xs	-> 
+		if f(x) then
+			[x] ^ TakeWhile[@T](f)(xs)
+		else
+			[],
+	[]	-> []
+	end;
+\end{vdm_al}
+
+Dropは、列sの先頭i個を除く列を返す。
+\begin{vdm_al}
+static public Drop[@T]: int -> seq of @T -> seq of @T
+Drop(i)(s) == s(i+1,...,len s);
+\end{vdm_al}
+
+DropWhileは、列sの先頭から、関数fを満たさない間の部分列を返す。
+\begin{vdm_al}
+static public DropWhile[@T] : (@T -> bool) -> seq of @T ->seq of @T
+DropWhile(f)(s) ==
+	cases s :
+	[x] ^ xs	-> 
+		if f(x) then
+			DropWhile[@T](f)(xs)
+		else
+			s,
+	[]	-> []
+	end;
+\end{vdm_al}
+
+Spanは、指定された列sを、先頭から関数fを満たし続ける間の列と、関数を満たさなくなって以降の列の組に分ける。
+\begin{vdm_al}
+static public Span[@T] : (@T -> bool) -> seq of @T -> seq of @T * seq of @T
+Span(f)(s) ==
+	cases s :
+	[x] ^ xs	-> 
+		if f(x) then
+			let	mk_(satisfied, notSatisfied) = Span[@T](f)(xs)
+			in
+			mk_([x] ^ satisfied, notSatisfied)
+		else
+			mk_([], s),
+	[]	-> mk_([], [])
+	end;
+\end{vdm_al}
+
+SubSeqは、列sの開始位置iから要素数分取り出した部分列を返す
+\begin{vdm_al}
+static public SubSeq[@T]: nat -> nat -> seq1 of @T -> seq of @T
+SubSeq(i)(numOfElems)(s) == s(i,...,i + numOfElems - 1);
+\end{vdm_al}
+
+Lastは、列sの最後の要素を返す。
+\begin{vdm_al}
+static public Last[@T]: seq of @T -> @T
+Last(s) == s(len s);
+\end{vdm_al}
+
+Fmapは、関数を列に適用した結果の列を返す。
+\begin{vdm_al}
+static public Fmap[@T1,@T2]: (@T1 -> @T2) -> seq of @T1 -> seq of @T2
+Fmap(f)(s) == [f(s(i)) | i in set inds s];
+\end{vdm_al}
+
+Filterは、指定された関数fによって列sを濾過する。つまり、列のうち関数を満たすものの列を返す。
+\begin{vdm_al}
+static public Filter[@T]: (@T -> bool) -> seq of @T -> seq of @T
+Filter(f)(s) == [s(i) | i in set inds s & f(s(i))];
+\end{vdm_al}
+
+Foldlは、列sに対するたたみ込み演算（関数fを列sの左側から適用)
+\begin{vdm_al}
+static public Foldl[@T1, @T2] : (@T1 -> @T2 -> @T1) -> @T1 -> seq of @T2 -> @T1
+Foldl(f)(args)(s) == 
+	cases s :
+	[]		-> args,
+	[x] ^ xs	-> Foldl[@T1,@T2](f)(f(args)(x))(xs)
+	end;
+\end{vdm_al}
+
+Foldrは、列sに対するたたみ込み演算（関数fを列sの右側から適用）
+\begin{vdm_al}
+static public Foldr[@T1, @T2] : 
+	(@T1 -> @T2 -> @T2) -> @T2 -> seq of @T1 -> @T2
+Foldr(f)(args)(s) == 
+	cases s :
+	[]		-> args,
+	[x] ^ xs	-> f(x)(Foldr[@T1,@T2](f)(args)(xs))
+	end;
+\end{vdm_al}
+
+IsMemberは、要素があるか否かを返す。
+\begin{vdm_al}
+static public IsMember[@T] : @T -> seq of @T -> bool
+IsMember(e)(s) == 
+	cases s :
+	[x]^xs		-> e = x or IsMember[@T] (e)(xs),
+	[]		-> false
+	end;
+\end{vdm_al}
+
+IsAnyMemberは、要素列es中の要素が、列sにあるか否かを返す。
+\begin{vdm_al}
+static public IsAnyMember[@T]:  seq of @T -> seq of @T -> bool
+IsAnyMember(es)(s) == 
+	cases es :
+	[x]^xs		->  IsMember[@T] (x)(s) or IsAnyMember[@T] (xs)(s) ,
+	[]		-> false
+	end;
+\end{vdm_al}
+
+IsDupは、列s中に同じ要素があるか否かを返す。
+\begin{vdm_al}
+static public IsDup[@T] : seq of @T -> bool
+IsDup(s) == not card elems s = len s
+post
+	if s = [] then 
+		RESULT = false
+	else
+		RESULT = not forall i, j in set inds s & s(i) <> s(j) <=> i <> j ;
+\end{vdm_al}
+
+
+Indexは、指定された要素eが列sの何番目にあるかを返す。最初の要素の位置を返す。
+\begin{vdm_al}
+static public Index[@T]: @T -> seq of @T -> int
+Index(e)(s) == 
+	let	i = 0
+	in
+	IndexAux[@T](e)(s)(i);
+
+static public IndexAux[@T] : @T -> seq of @T -> int -> int
+IndexAux(e)(s)(i) ==
+	cases s:
+		[]		-> 0,
+		[x]^xs		->
+			if x = e then 
+				i + 1
+			else
+				IndexAux[@T](e)(xs)(i+1)
+	end;
+\end{vdm_al}
+	
+IndexAllは、指定された要素eが列sの何番目にあるかを持つ自然数集合を返す。
+\begin{vdm_al}
+static public IndexAll[@T] : @T -> seq of @T -> set of nat1
+IndexAll(e)(s) == {i | i in set inds s & s(i) = e};
+\end{vdm_al}
+	
+Flattenは、列sの要素が列の場合、その要素を要素として持つ列を返す。
+\begin{vdm_al}
+static public Flatten[@T] : seq of seq of @T -> seq of @T
+Flatten(s) == conc s;
+\end{vdm_al}
+
+Compactは、列sの要素がnilのものを削除した列を返す
+\begin{vdm_al}
+static public Compact[@T] : seq of [@T] -> seq of @T
+Compact(s) == [s(i) | i in set inds s & s(i) <> nil]
+post
+	forall i in set inds RESULT & RESULT(i) <> nil;
+\end{vdm_al}
+
+Freverseは、列sの逆順の列を得る。reverseが予約語のため、Freverseという関数名にした。
+\begin{vdm_al}
+static public Freverse[@T] : seq of @T -> seq of @T
+Freverse(s) == [s(len s + 1 -  i) | i in set inds s];
+\end{vdm_al}
+
+Permutationsは、列sから順列を得る
+\begin{vdm_al}
+static public Permutations[@T]: seq of @T -> set of seq of @T
+Permutations(s) == 
+cases s:
+	[],[-] -> {s},
+	others -> dunion {{[s(i)]^j | j in set Permutations[@T](RemoveAt[@T](i)(s))} | i in set inds s} 
+end
+post
+	forall x in set RESULT & elems x = elems s;
+\end{vdm_al}
+
+IsPermutationsは、列sが列tの置換になっているか否かを返す。
+\begin{vdm_al}
+static public IsPermutations[@T]: seq of @T -> seq of @T -> bool
+IsPermutations(s)(t) == 
+	RemoveMembers[@T](s)(t) = [] and RemoveMembers[@T](t)(s) = [];
+\end{vdm_al}
+
+Unzipは、組の列を、列の組に変換する
+\begin{vdm_al}
+static public Unzip[@T1, @T2] : seq of (@T1 * @T2) -> seq of @T1 * seq of @T2
+Unzip(s) ==
+	cases s :
+	[]			-> mk_([], []),
+	[mk_(x, y)] ^ xs	->
+		let	mk_(s1, t) = Unzip[@T1, @T2](xs)
+		in
+		mk_([x] ^ s1, [y] ^ t)
+	end;
+\end{vdm_al}
+
+Zipは、列の組を、組の列に変換する
+\begin{vdm_al}
+static public Zip[@T1, @T2] : seq of @T1 * seq of @T2 -> seq of (@T1 * @T2)
+Zip(s1, s2) == Zip2[@T1, @T2](s1)(s2);
+\end{vdm_al}
+
+Zip2は、列の組を、組の列に変換する（より関数型プログラミングに適した形式）
+\begin{vdm_al}
+static public Zip2[@T1, @T2] : seq of @T1 -> seq of @T2 -> seq of (@T1 * @T2)
+Zip2(s1)(s2) == 
+	cases mk_(s1, s2) :
+	mk_([x1] ^ xs1, [x2] ^ xs2)	-> [mk_(x1, x2)] ^ Zip2[@T1, @T2](xs1)(xs2),
+	mk_(-, -)				-> []
+	end;
+
+end FSequence
+\end{vdm_al}
+
+
+\begin{rtinfo}
+[FSequence]{vdm.tc}[FSequence]
+\end{rtinfo}

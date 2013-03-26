@@ -1,0 +1,10 @@
+class UseReal
+
+instance variables
+	r : Real := new Real()	
+
+traces
+
+S1: let n in set {0, 1, 9, 10, 99, 199, 0.1, 9.1, 10.1, 10.123} in r.numberOfDigit(n)
+
+end UseReal
