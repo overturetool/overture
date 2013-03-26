@@ -1,2 +1,0 @@
-"これはテストです。"
---"This is a test in ./temp ."

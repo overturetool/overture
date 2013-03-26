@@ -1,2 +1,0 @@
--- File for getting today
-mk_(2001, 3, 1)
