@@ -9,8 +9,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>examplesutil</artifactId>
-  <name>Overture Examples Util</name>
+  <artifactId>example-packager</artifactId>
+  <name>Overture Examples Packaging Utility</name>
 
   <build>
     <plugins>
@@ -32,7 +32,7 @@
     <dependency>
     	<groupId>org.overture.core</groupId>
     	<artifactId>ast</artifactId>
-    	<version>2.0.0</version>
+    	<version>${project.version}</version>
     </dependency>
     <dependency>
     	<groupId>commons-cli</groupId>

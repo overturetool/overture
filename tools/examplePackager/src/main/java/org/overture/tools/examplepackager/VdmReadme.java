@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,8 +29,8 @@ import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
-import org.overture.tools.examplesutil.html.EscapeChars;
-import org.overture.tools.examplesutil.util.FileUtils;
+import org.overture.tools.examplepackager.html.EscapeChars;
+import org.overture.tools.examplepackager.util.FileUtils;
 
 public class VdmReadme
 {
@@ -224,7 +224,7 @@ public class VdmReadme
 			case VDM_RT:
 				projectNature = OvertureProject.VDMRT_NATURE;
 				break;
-
+			default:
 		}
 		return projectNature;
 	}
@@ -363,6 +363,7 @@ public class VdmReadme
 			case VDM_RT:
 				launchConfigarationId = launchConfigarationId.replace("vdmpp", "vdmrt");
 				break;
+			default:
 		}
 
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");

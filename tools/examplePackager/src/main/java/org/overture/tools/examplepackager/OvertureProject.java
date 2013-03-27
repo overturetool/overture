@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 public interface OvertureProject {
 	public final String NATURE_SPACEHOLDER ="NATURE_ID";

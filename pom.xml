@@ -35,6 +35,15 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>dummy-for-eclipse-import-inclusion</id>
+      <modules>
+        <module>ide</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <repositories>
     <repository>
       <id>overture.sf.net</id>
@@ -161,6 +170,12 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.4</version>
         </plugin>
@@ -169,6 +184,12 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>2.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId> 
+          <artifactId>maven-antrun-plugin</artifactId> 
+          <version>1.7</version> 
         </plugin>
 
         <plugin>

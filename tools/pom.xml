@@ -21,7 +21,8 @@
     <module>astCreatorPlugin</module>
     <!--module>vdmt</module-->
     <module>overturetemplategen</module>
-    <module>examplesutil</module>
+    <module>examplePackager</module>
+    <module>examplePackagerPlugin</module>
     <!--module>packworkspace</module-->
   </modules>
 </project>

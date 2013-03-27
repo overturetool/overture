@@ -5,7 +5,6 @@ import org.overture.ide.plugins.rttraceviewer.data.TraceData;
 import org.overture.ide.plugins.rttraceviewer.data.TraceThread;
 import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenThread.ThreadType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent;
 
 public class ThreadSwapEventHandler extends EventHandler {

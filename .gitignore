@@ -43,7 +43,8 @@ Thumbs.db
 # Be careful not to touch the next exclusion as it targets the OS X
 # icon file "Icon\r" (that's a carriage return, or ^M, at the end).
 # In emacs it should look like "Icon^M^M"
-Icon
+Icon
+
 
 # Backup files #
 ################
@@ -66,3 +67,8 @@ bin
 /core/ast/out.svg
 /testdata
 
+# Documents copied into the help plugin #
+#########################################
+ide/help/html/OvertureIDEUserGuide.pdf
+ide/help/html/QuickOverviewofVDMOperators.pdf
+ide/help/html/VDM10_lang_man.pdf

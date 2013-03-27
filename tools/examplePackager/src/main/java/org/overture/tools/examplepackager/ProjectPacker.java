@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.tools.examplesutil.util.FileUtils;
-import org.overture.tools.examplesutil.util.FolderZiper;
+import org.overture.tools.examplepackager.util.FileUtils;
+import org.overture.tools.examplepackager.util.FolderZipper;
 
 public class ProjectPacker implements Comparable<ProjectPacker>
 {
@@ -39,7 +39,13 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 	VdmReadme settings = null;
 	Dialect dialect = Dialect.VDM_PP;
 	File newLocation;
+	boolean verbose = true;
 
+	public ProjectPacker(File root, Dialect dialect, boolean verbose) {
+		this(root,dialect);
+		this.verbose=verbose;
+	}
+	
 	public ProjectPacker(File root, Dialect dialect) {
 		this.root = root;
 		this.dialect = dialect;
@@ -70,7 +76,8 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 			return null;
 		}
 
-		System.out.println("Writing project: " + settings.getName());
+		if (verbose)
+			System.out.println("Writing project: " + settings.getName());
 
 		outputLocation.mkdirs();
 
@@ -105,7 +112,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		tmp.mkdirs();
 		File destination = packTo(tmp);
 		
-		FolderZiper.zipFolder(destination.getAbsolutePath(), zipFile.getAbsolutePath());
+		FolderZipper.zipFolder(destination.getAbsolutePath(), zipFile.getAbsolutePath());
 		Controller.delete(tmp);
 		
 		

@@ -16,7 +16,7 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.tools.examplesutil.html;
+package org.overture.tools.examplepackager.html;
 
 
 public class HtmlPage

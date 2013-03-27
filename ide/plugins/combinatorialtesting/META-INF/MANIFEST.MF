@@ -3,6 +3,7 @@ Bundle-Vendor: Overture
 Bundle-ActivationPolicy: lazy
 Bundle-Version: 2.0.0
 Eclipse-BuddyPolicy: registered
+Eclipse-BundleShape: dir
 Bundle-Localization: plugin
 Bundle-Name: Combinatorial Testing
 Bundle-ManifestVersion: 2
