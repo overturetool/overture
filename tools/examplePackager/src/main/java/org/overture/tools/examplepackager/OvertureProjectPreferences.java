@@ -1,4 +1,4 @@
-package org.overture.tools.examplesutil;
+package org.overture.tools.examplepackager;
 
 public interface OvertureProjectPreferences
 {
