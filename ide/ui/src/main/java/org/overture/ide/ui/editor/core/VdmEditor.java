@@ -122,7 +122,6 @@ public abstract class VdmEditor extends TextEditor
 	protected void initializeEditor()
 	{
 		super.initializeEditor();
-		//todo move nwxt two lines to constructor
 		fVdmSourceViewer = getVdmSourceViewerConfiguration(getPreferenceStore());
 		setSourceViewerConfiguration(fVdmSourceViewer);
 		setRulerContextMenuId(IVdmUiConstants.RULERBAR_ID);
