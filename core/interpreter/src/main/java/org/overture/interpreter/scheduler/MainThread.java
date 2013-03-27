@@ -138,7 +138,10 @@ public class MainThread extends SchedulablePoolThread
 		{
 			ctxt.threadState.dbgp.invocationError(e);
 			BasicSchedulableThread.signalAll(Signal.TERMINATE);
+		}catch(ThreadDeath e)
+		{
 		}catch (Throwable e)
+		
 		{
 			setException(new Exception("internal error", e));
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
