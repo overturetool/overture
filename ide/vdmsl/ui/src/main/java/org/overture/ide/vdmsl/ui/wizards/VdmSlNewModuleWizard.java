@@ -50,12 +50,12 @@ public class VdmSlNewModuleWizard extends VdmNewFileWizard {
 		return "module " + moduleName + "\n"
 		+ "exports all\n"
 		+ "definitions \n\n"
-		+ "\tstate StateName of\n \n-- TODO Define state here\n"
-		+ "\tend \n\n"
-		+ "\ttypes \n-- TODO Define types here\n"
-		+ "\tvalues \n-- TODO Define values here\n"
-		+ "\tfunctions \n-- TODO Define functions here\n"
-		+ "\toperations \n-- TODO Define operations here\n"
+		+ "state StateName of\n-- TODO Define state here\n"
+		+ "end \n\n"
+		+ "types \n-- TODO Define types here\n"
+		+ "values \n-- TODO Define values here\n"
+		+ "functions \n-- TODO Define functions here\n"
+		+ "operations \n-- TODO Define operations here\n"
 		+ "end " + moduleName;
 	}
 
