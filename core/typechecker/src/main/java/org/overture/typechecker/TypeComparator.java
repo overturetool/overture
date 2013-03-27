@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
@@ -729,9 +730,29 @@ public class TypeComparator
 
 				SMapType subm = (SMapType) sub;
 				SMapType supm = (SMapType) sup;
-
-				return (subm.getEmpty() || supm.getEmpty() || (searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes && searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)) ? Result.Yes
-						: Result.No;
+				
+				if(subm.getEmpty() || supm.getEmpty())
+				{
+					return Result.Yes;
+				}
+				
+				if(searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes &&
+				   searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)
+				{
+					
+					if(!(sub instanceof AInMapMapType) &&
+					    (sup instanceof AInMapMapType))
+					{
+						return Result.No;
+					}
+					
+					return Result.Yes;
+				}
+				else
+				{
+					return Result.No;
+				}
+				
 			} else if (sub instanceof ASetType)
 			{
 				if (!(sup instanceof ASetType))

@@ -1,0 +1,30 @@
+class ProductT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new ProductT01()
+	];
+end ProductT
+----------------------------------------------------------
+
+class ProductT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	lt = String`LT,
+		lt2 = lambda x : int, y : int & x < y
+	in
+	return
+		Product`Curry[seq of char, seq of char, bool](lt)("abc")("abcd") and
+		Product`Curry[seq of char, seq of char, bool](lt)("abcde")("abcd") = false and
+		Product`Curry[int, int, bool](lt2)(3)(4) and
+		Product`Uncurry[seq of char, seq of char, bool](String`LT2)("abc", "abcd") and
+		Product`Uncurry[seq of char, seq of char, bool](String`LT2)("abcde", "abcd") = false and
+		Product`Uncurry[seq of char, seq of char, bool](String`LE2)("3", "4")
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "ProductT01:\t Test of curry function.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end ProductT01

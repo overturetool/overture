@@ -28,9 +28,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-public class RotatedLabel extends Label
+public class RotatedLabel extends Label implements TraceFigure
 {
-
+    final Image theImage;
     public RotatedLabel(String theText, Font theFont)
     {
         Dimension dimStr = FigureUtilities.getStringExtents(theText, theFont);
@@ -38,6 +38,13 @@ public class RotatedLabel extends Label
         setIcon(theImage);
         setSize(dimStr.height, dimStr.width);
     }
+    
+    public void dispose() 
+    {
+    	if(!theImage.isDisposed())
+    	{
+    		theImage.dispose();
+    	}
+    }
 
-    final Image theImage;
 }

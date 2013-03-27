@@ -48,7 +48,7 @@ public class SMapTypeAssistantTC {
 	public static boolean equals(SMapType type, Object other) {
 		other = PTypeAssistantTC.deBracket(other);
 
-		if (other instanceof SMapType)
+		if (other.getClass() == type.getClass())	// inmaps too
 		{
 			SMapType mt = (SMapType)other;
 			return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(), mt.getTo());

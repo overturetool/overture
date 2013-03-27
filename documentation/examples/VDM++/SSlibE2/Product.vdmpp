@@ -1,0 +1,11 @@
+class Product 
+
+functions
+
+static public Curry[@T1, @T2, @T3] : (@T1 * @T2 -> @T3) -> @T1 -> @T2 -> @T3
+Curry(f)(x)(y) == f(x, y);
+
+static public Uncurry[@T1, @T2, @T3] : (@T1 -> @T2 -> @T3) -> @T1 * @T2 -> @T3
+Uncurry(f)(x,y) == f(x)(y);
+
+end Product

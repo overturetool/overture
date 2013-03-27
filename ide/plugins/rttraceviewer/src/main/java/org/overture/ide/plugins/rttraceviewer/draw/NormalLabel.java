@@ -28,7 +28,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Font;
 
-public class NormalLabel extends Label
+public class NormalLabel extends Label implements TraceFigure
 {
 
     public NormalLabel(String theText, Font theFont)
@@ -38,4 +38,11 @@ public class NormalLabel extends Label
         setSize(dimStr.width, dimStr.height);
         setFont(theFont);
     }
+
+	@Override
+	public void dispose()
+	{
+		
+		
+	}
 }

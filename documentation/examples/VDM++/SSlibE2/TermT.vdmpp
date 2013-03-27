@@ -1,0 +1,45 @@
+class TermT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new TermT01()
+	];
+end TermT
+----------------------------------------------------------
+
+class TermT01 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	cal = new JapaneseCalendar(),
+		astartTime = new Time(cal, 2003, 7, 30, 14, 29, 30, 20),
+		aendTime = new Time(cal, 2003, 7, 30, 14, 29, 30, 22),
+		t1        = new Time(cal, 2003, 7, 30, 14, 29, 30, 19),
+		t2        = new Time(cal, 2003, 7, 30, 14, 29, 30, 20),
+		t3        = new Time(cal, 2003, 7, 30, 14, 29, 30, 21),
+		t4        = new Time(cal, 2003, 7, 30, 14, 29, 30, 22),
+		t5        = new Time(cal, 2003, 7, 30, 14, 29, 30, 23),
+		t6        = new Time(cal, 2003, 7, 29, 14, 29, 30, 20),
+		t7        = new Time(cal, 2003, 7, 31, 14, 29, 30, 20),
+		t8        = new Time(cal, 2003, 7, 29, 14, 29, 29, 20),
+		t9        = new Time(cal, 2003, 7, 29, 14, 29, 31, 20),
+		term1 = new Term(astartTime, aendTime)
+	in
+	return
+		not term1.isInThePeriod(t1, term1) and
+		term1.isInThePeriod(t2, term1) and
+		term1.isInThePeriod(t3, term1) and
+		term1.isInThePeriod(t4, term1) and
+		not term1.isInThePeriod(t5, term1) and
+		not term1.isInThePeriod(t6, term1) and
+		not term1.isInThePeriod(t7, term1) and
+		not term1.isInThePeriod(t8, term1) and
+		not term1.isInThePeriod(t9, term1)
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "TermT01:\tTest of term constructor and isInThePeriod()";
+protected tearDown: () ==> ()
+tearDown() == return;
+end TermT01
+----------------------------------------------------------

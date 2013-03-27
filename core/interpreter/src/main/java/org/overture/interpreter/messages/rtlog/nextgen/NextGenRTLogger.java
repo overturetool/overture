@@ -221,7 +221,7 @@ public class NextGenRTLogger {
 		if(logFile != null)
 		{
 			
-			FileOutputStream fos = new FileOutputStream(logFile + ".logbin");
+			FileOutputStream fos = new FileOutputStream(logFile + ".rtbin");
 			ObjectOutputStream out = new ObjectOutputStream(fos);
 			
 			out.writeObject(cpuMap);
@@ -345,7 +345,7 @@ public class NextGenRTLogger {
 	{
 		if(logFile != null)
 		{
-			FileWriter fstream = new FileWriter(logFile + ".newgen.txt");
+			FileWriter fstream = new FileWriter(logFile + ".rttxt");
 	        BufferedWriter out = new BufferedWriter(fstream);
 	        
 	        writeCPUdecls(out);

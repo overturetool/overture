@@ -1,0 +1,101 @@
+class JapaneseCalendar is subclass of Calendar 
+/*
+Responsibility
+	I'm a Japanese Calendar based on JST.
+	Especially, I know Japanese holidays
+*/
+
+values
+public differenceBetweenGMTandJST = 0.375;	-- 0.375 = 9 hours = 9 / 24 day
+public differenceBetweenADandJapaneseCal = 1988;
+
+functions
+
+static private toStringAux: int -> seq of char
+toStringAux(i) == 
+	let	str = Integer`asString	in
+	if i >= 10 then str(i) else " " ^ str(i);
+	
+static public getJapaneseDateStr : Date -> seq of char
+getJapaneseDateStr(ADdate) == 
+	let	asString =Integer`asString,
+		yearOfJapaneseCal = ADdate.Year() - differenceBetweenADandJapaneseCal,
+		m = ADdate.Month(),
+		d = ADdate.day(),
+		yearStr = asString(yearOfJapaneseCal),
+		monthStr = toStringAux(m),
+		dateStr = toStringAux(d)	in
+		yearStr ^ monthStr ^ dateStr
+pre
+	ADdate.Year() >= differenceBetweenADandJapaneseCal;
+
+operations
+
+public setTheSetOfDayOffs: int ==> ()
+setTheSetOfDayOffs(year) ==
+	let	comingOfAgeDay = getNthDayOfTheWeek(year,1,2,<Mon>),
+		marineDay = if year >= 2003 then getNthDayOfTheWeek(year,7, 3,<Mon>) else getDateFrom_yyyy_mm_dd(year,7,20),
+		respect4TheAgedDay = if year >= 2003 then getNthDayOfTheWeek(year,9, 3,<Mon>) else getDateFrom_yyyy_mm_dd(year,9,15),
+		healthSportsDay = getNthDayOfTheWeek(year,10, 2,<Mon>),
+		nationalHolidaySet =  {
+			getDateFrom_yyyy_mm_dd(year,1,1), 
+			comingOfAgeDay,
+			getDateFrom_yyyy_mm_dd(year,2,11),
+			getVernalEquinox(year), 
+			getDateFrom_yyyy_mm_dd(year,4,29),
+			getDateFrom_yyyy_mm_dd(year,5,3),
+			getDateFrom_yyyy_mm_dd(year,5,4), 	--formally this date is not national holiday
+			getDateFrom_yyyy_mm_dd(year,5,5),
+			marineDay,
+			respect4TheAgedDay,
+			getAutumnalEquinox(year),
+			healthSportsDay,
+			getDateFrom_yyyy_mm_dd(year,11,3),
+			getDateFrom_yyyy_mm_dd(year,11,23),
+			getDateFrom_yyyy_mm_dd(year,12,23)
+		},
+		mondayMakeupHolidat = 
+			if year >= 2007 then 
+				{getNotNationalHolidaysInFuture(nationalHolidaySet, d) | d in set nationalHolidaySet & isSunday(d)}
+			else
+				 {d.plus(1) | d in set nationalHolidaySet & isSunday(d)},
+		weekdayBetweenDayOff = 
+			if year >= 2007 then
+				getWeekdayBetweenDayOff(nationalHolidaySet) 
+			else
+				{}
+	in
+	Year2Holidays := Year2Holidays munion { year |-> nationalHolidaySet union mondayMakeupHolidat union weekdayBetweenDayOff}
+pre
+	year >= 2000;
+
+public JapaneseCalendar : () ==> JapaneseCalendar
+JapaneseCalendar() ==
+	(
+	setDifferenceWithGMT(differenceBetweenGMTandJST); 
+	return self
+	);
+
+public getWeekdayBetweenDayOff : set of Date ==> set of Date
+getWeekdayBetweenDayOff(aNationalHolidaySet) == (
+	let 
+		candidatesOfWeekdayBetweenDayOff = 
+			dunion { {d.minus(1), d.plus(1)} | d in set aNationalHolidaySet &
+				d.minus(1).Year() = d.Year() and d.plus(1).Year() = d.Year()},
+		weekdayBetweenHoliday = 
+			{ d | d in set candidatesOfWeekdayBetweenDayOff & 
+				let yesterday : Date = d.minus(1), tomorrow : Date =  d.plus(1) in
+				isInDateSet(yesterday, aNationalHolidaySet) and isInDateSet(tomorrow, aNationalHolidaySet)}
+	in
+	return weekdayBetweenHoliday
+ );
+
+functions
+public getNotNationalHolidaysInFuture :set of Date * Date-> Date
+getNotNationalHolidaysInFuture(aNationalHolidaySet, date) ==
+	cases  isInDateSet(date, aNationalHolidaySet) :
+		(true)	-> getNotNationalHolidaysInFuture(aNationalHolidaySet, date.plus( 1)),
+		others	-> date
+	end;
+
+end JapaneseCalendar

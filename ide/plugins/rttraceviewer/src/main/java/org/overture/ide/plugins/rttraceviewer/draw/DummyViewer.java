@@ -26,35 +26,35 @@ public class DummyViewer extends TraceEventViewer {
 
 	@Override
 	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread swappedThread) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread swappedThread) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread swappedThread) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread killedThread) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu,
-			TraceThread thread) {
+			TraceThread currentThread, TraceThread newthread) {
 		// TODO Auto-generated method stub
 		
 	}

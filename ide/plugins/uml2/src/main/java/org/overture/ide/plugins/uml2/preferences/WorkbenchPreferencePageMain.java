@@ -29,16 +29,16 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	protected void performDefaults()
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, false);
-		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, false);
+		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, true);
+		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, true);
 		super.performDefaults();
 	}
 
 	public void init(IWorkbench workbench)
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, false);
-		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, false);
+		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, true);
+		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, true);
 	}
 
 }

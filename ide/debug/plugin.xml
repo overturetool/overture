@@ -120,24 +120,15 @@
       </consoleFactory>
    </extension>
    
-   <!-- Debug as context menus, by adding this we risk to get two of them, one from eclipse and one we make here -->
-   <extension
-         point="org.eclipse.ui.popupMenus">
-         
-         <viewerContribution
-               id="org.eclipse.debug.ui.viewer.contextualLaunch.debug"
-               targetID="org.overture.ide.ui.VdmExplorer">
-                <action
-                      class="org.overture.ide.debug.ui.actions.VdmDebugContextualLaunchAction"
-                      enablesFor="+"
-                      id="org.overture.ide.debug.ui.contextualLaunch.debug.submenu"
-                      label="%DebugContextMenu.label"
-                      menubarPath="additions"
-                      overrideActionId="org.eclipse.debug.ui.contextualLaunch.debug.submenu"
-                      style="pulldown">
-         </action>
-         </viewerContribution> 
-   </extension>
+   <!-- This ensures that the debug context menu shows correctly. The solution is inspired by the blog
+   found on the following link: http://www.sigasi.com/content/run-menu-item-strangely-disappearing-context-menu
+   -->
+	<extension point="org.eclipse.core.runtime.adapters">
+	  <factory class="org.eclipse.core.runtime.IAdaptable"
+	           adaptableType="org.eclipse.core.resources.IResource">
+	     <adapter type="org.eclipse.debug.ui.actions.ILaunchable"/>
+	  </factory>
+	</extension>
 
    <extension
          point="org.eclipse.ui.views">

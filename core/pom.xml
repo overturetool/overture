@@ -24,10 +24,9 @@
     <module>latex</module>
     <!-- vdmtools will move away; it's fine but not necessary for astv2 -jwc/4mar2013 -->
     <!-- <module>vdmtools</module> -->
-    <!-- To be replaced with showtraceNextGen -jwc/4mar2013 -->
-    <!-- <module>showtrace</module> -->
     <module>prettyprinting</module>
     <module>vdmj_compatibility_tests</module>
+    <module>commandline</module>
   </modules>
 
   <!-- <reporting> -->

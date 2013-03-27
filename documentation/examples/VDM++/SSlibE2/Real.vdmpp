@@ -1,0 +1,128 @@
+class Real
+
+values
+	Tolerance = 1e-8;
+	Variation = 1e-5;	
+
+functions
+
+static public EQ : real -> real -> bool
+EQ(r1)( r2) == abs(r1 - r2) < Tolerance;
+
+static public EQE : real -> real -> real -> bool
+EQE(e)(r1)(r2) == abs(r1 - r2) < e;
+
+static public numberOfDigit : real -> nat
+numberOfDigit(x) ==
+	let	i = floor(x)	in
+	if x = i then
+		aNumberOfIntegerPartDigit(i)
+	else
+		aNumberOfIntegerPartDigit(i) + 1 + getNumberOfDigitsAfterTheDecimalPoint(x);
+
+static public aNumberOfIntegerPartDigit : int -> nat
+aNumberOfIntegerPartDigit(i) == aNumberOfIntegerPartDigitAux(i, 1);
+
+static public aNumberOfIntegerPartDigitAux : int * nat -> nat
+aNumberOfIntegerPartDigitAux(i, numberOfDigit) ==
+	let	q = i div 10 in
+	cases q:
+		0		-> numberOfDigit,
+		others	-> Real`aNumberOfIntegerPartDigitAux(q, numberOfDigit + 1)
+	end
+measure idiv10;
+
+static idiv10 : int * nat +> nat
+idiv10(i, -) == i div 10;
+
+static public isNDigitsAfterTheDecimalPoint : real * nat -> bool
+isNDigitsAfterTheDecimalPoint(x,numberOfDigit) == 
+	getNumberOfDigitsAfterTheDecimalPoint(x) = numberOfDigit;
+
+static public getNumberOfDigitsAfterTheDecimalPoint : real -> nat
+getNumberOfDigitsAfterTheDecimalPoint(x) == getNumberOfDigitsAfterTheDecimalPointAux(x,0);
+
+static getNumberOfDigitsAfterTheDecimalPointAux : real * nat -> nat
+getNumberOfDigitsAfterTheDecimalPointAux(x,numberOfDigit) ==
+	if x = floor(x) then
+		numberOfDigit
+	else
+		getNumberOfDigitsAfterTheDecimalPointAux(x * 10, numberOfDigit + 1);
+
+static public roundAterDecimalPointByNdigit : real * nat -> real
+roundAterDecimalPointByNdigit(r, numberOfDigit) ==
+	let	multiple = 10 ** numberOfDigit
+	in
+	floor(r * multiple  + 0.5) / multiple
+pre
+	r >= 0;
+
+static public Differentiate : (real -> real) ->real -> real
+Differentiate(f)(x) == (f(x+Variation) - f(x)) / Variation ;
+
+--Newton's method to solve the equation
+static public NewtonMethod: (real ->real) -> real -> real
+NewtonMethod(f)(x) ==
+	let	terminationCondition = lambda y : real &  abs(f(y)) < Tolerance,
+		nextApproximation = lambda y : real & y - (f(y) / Differentiate(f)(y))	in
+	new Function().Funtil[real](terminationCondition)(nextApproximation)(x);
+	
+-- Integration by Trapezoidal rule algorithm. This is too bad :-)
+static public integrate : (real -> real)  -> nat1 -> real -> real -> real
+integrate(f)(n)(a)(b) == 
+	let	
+		h = (b - a) / n,
+		s = seqGenerate(n, a, h)
+	in
+	h * (f(a) / 2 + Sequence`Sum[real](Sequence`fmap[real, real](f)(s)) + f(b) / 2);
+
+operations
+static private seqGenerate : nat1 * real * real  ==> seq of real
+seqGenerate(n, a, h) == 
+	(	
+		dcl s : seq of real := [];
+		for i = 1 to n do
+		s := s ^ [a + i * h];
+	return s
+	);
+
+functions
+--get root value for testing Newton Method.
+static public root: real -> real
+root(x) ==
+	let	f = lambda y : real & y ** 2 - x	in
+	NewtonMethod(f)(x);
+
+static public getTotalPrincipal : real * int -> real
+getTotalPrincipal(Interest,year) == (1 + Interest) ** year
+pre
+	Interest >= 0 and year > 0;
+
+static getInterestImplicitSpec_Math_version : real * int -> real
+getInterestImplicitSpec_Math_version(multiple,year) == is not yet specified
+pre
+	multiple > 1.0 and year > 0 
+post
+	multiple > 1.0 and year > 0 and
+	exists1 Interest : real &
+		let totalPrincipalAndInterest = getTotalPrincipal(Interest,year)
+		in multiple = totalPrincipalAndInterest  and RESULT = Interest;
+		
+static getInterestImplicitSpec_Computer_version : real * int -> real
+getInterestImplicitSpec_Computer_version(multiple,years) ==
+	is not yet specified
+pre
+	multiple > 1.0 and years > 0 
+post
+	multiple > 1.0 and years > 0 and
+	exists1 Interest : real & 
+		let	totalPrincipalAndInterest = getTotalPrincipal(Interest,years)
+		in	EQ(multiple)(totalPrincipalAndInterest) and RESULT = Interest;
+
+--getInterest explicit specification
+static public getInterest: real * int -> real
+getInterest(multiple,years) ==
+	let	f = lambda Interest : real & multiple - getTotalPrincipal(Interest,years)	in
+	NewtonMethod(f)(0);
+	
+end Real

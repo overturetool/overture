@@ -1,0 +1,115 @@
+class Integer
+
+functions 
+
+static public asString: int -> seq1 of char 
+asString(i) == 
+	if i < 0 then
+		"-" ^ asStringAux(-i)
+	else
+		asStringAux(i) ;
+		
+static public asStringAux: nat -> seq1 of char 
+asStringAux(n) == 
+	let	r = n mod 10,
+		q = n div 10
+	in
+		cases q:
+			0		-> asChar(r),
+			others	-> asStringAux(q) ^ asChar(r)
+		end
+	measure ndiv10;
+
+static ndiv10 : nat +> nat
+ndiv10(n) == n div 10;
+
+-- Convert integer to COBOL type number string (like ZZZ9.ZZ). 
+static public asStringZ: seq of char -> int -> seq1 of char 
+asStringZ(cobolStrConversionCommand)(i) == 
+	let	minusSymbol = '-'	in
+	if i < 0 then
+		if cobolStrConversionCommand(1) = minusSymbol then
+			[minusSymbol] ^ asStringZAux(String`subStr(cobolStrConversionCommand,2,len cobolStrConversionCommand))(-i, true)
+		else
+			asStringZAux(cobolStrConversionCommand)(-i, true)
+	else
+		if cobolStrConversionCommand(1) = minusSymbol then
+			asStringZAux(String`subStr(cobolStrConversionCommand,2,len cobolStrConversionCommand))(i, true)
+		else
+			asStringZAux(cobolStrConversionCommand)(i, true) ;
+ 		
+ static public asStringZAux: seq of char -> nat * bool -> seq1 of char 
+ asStringZAux(cobolStrConversionCommand)(n, wasZero) == 
+  	let	cobolStrConversionCommandStrLen = len cobolStrConversionCommand,
+  		cobolStrConversionCommandChar = cobolStrConversionCommand(cobolStrConversionCommandStrLen),
+  		cobolStrConversionCommandStr = String`subStr(cobolStrConversionCommand,1,cobolStrConversionCommandStrLen - 1),
+  		r = n mod 10,
+  		q = n div 10,
+  		isZero = r = 0 and wasZero and q <> 0 
+  	in
+  		cases cobolStrConversionCommandStr:
+  			[]		-> asCharZ(cobolStrConversionCommandChar)(r, isZero),
+  			others	-> 
+  				asStringZAux(cobolStrConversionCommandStr)(q, isZero) ^ 
+  				asCharZ(cobolStrConversionCommandChar)(r, isZero)
+ 		end;
+--measure  length;
+
+static length : seq of char -> nat * bool -> nat
+length(cobolStrConversionCommand)(-, -) == len cobolStrConversionCommand;
+
+static public asCharZ : char -> nat * bool ->  seq1 of char | bool
+asCharZ(cobolStrConversionCommandChar)(n, wasZero) ==
+	cases n:
+		0	-> 
+			if cobolStrConversionCommandChar in set {'z', 'Z'} and wasZero then
+				"0"
+			elseif cobolStrConversionCommandChar = '0'  or cobolStrConversionCommandChar = '9' then
+				"0"
+			else
+				" ",	-- Don't deal with all cases of cobolStrConversionCommandChar
+		1	-> "1",
+		2	-> "2",
+		3	-> "3",
+		4	-> "4",
+		5	-> "5",
+		6	-> "6",
+		7	-> "7",
+		8	-> "8",
+		9	-> "9",
+		others	-> false
+	end;
+
+static public asChar : int -> seq1 of char | bool
+asChar(i) ==
+	cases i:
+		0	-> "0",
+		1	-> "1",
+		2	-> "2",
+		3	-> "3",
+		4	-> "4",
+		5	-> "5",
+		6	-> "6",
+		7	-> "7",
+		8	-> "8",
+		9	-> "9",
+		others	-> false
+	end;
+
+static public GCD : nat -> nat -> nat
+GCD(x)(y) == 
+	if y = 0 then x else GCD(y)(x rem y);
+--measure GCDMeasure;
+
+static GCDMeasure : nat -> nat -> nat
+GCDMeasure(x)(-) == x;
+
+static public LCM : nat -> nat -> nat
+LCM(x)(y) ==
+	cases mk_(x, y) :
+	mk_(-, 0)	-> 0,
+	mk_(0, -)	-> 0,
+	mk_(z, w)	-> (z / GCD(z)(w)) * w
+	end;
+			
+end Integer

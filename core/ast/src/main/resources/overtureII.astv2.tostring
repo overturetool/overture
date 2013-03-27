@@ -106,7 +106,7 @@ import org.overture.ast.util.ToStringUtil;
 %type->#invariant->named = [name]
 %type->#invariant->record = [name]
 //map
-%type->#Map->inMap="inmap of (" [from]  ") to ("  [to] ")"
+%type->#Map->inMap="inmap (" [from]  ") to ("  [to] ")"
 %type->#Map->map="map (" [from]  ") to ("  [to] ")"
 %type->operation = "(" + $($[parameters]$.isEmpty() ? "()" : Utils.listToString($[parameters]$, " * ")) + " ==> "$ + [result] + ")"
 %type->optional = "[" [type] "]"

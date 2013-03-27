@@ -103,24 +103,21 @@ public class SelectTimeDialog extends TitleAreaDialog
                 }
             }
 
-//            final SelectTimeDialog this$0;
-//
-//            
-//            {
-//                this$0 = SelectTimeDialog.this;
-//                super();
-//            }
         });
         int cnt = 0;
         int idx = 0;
 
-        for(Long t : theTimes) {
+        for(Long t : theTimes) 
+        {
         	theCombo.add(t.toString());
         	
             if(t.longValue() == currentTime)
+            {
                 idx = cnt;
+            }
+            
+            cnt++;
         }
-        cnt++;
         
         theCombo.select(idx);
         return area;

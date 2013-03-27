@@ -27,39 +27,48 @@ public class BusMessageEventHandler extends EventHandler {
 		else
 			throw new IllegalArgumentException("BusMessageEventHandler expected event of type: " + NextGenBusMessageEvent.class.getName()); 
 			
-		if(bEvent.message.callerThread.object == null) 
-			return; //TODO: MAA: There is no caller thread.object for MAIN and INIT Thread and utils! Causes exception
-		
 		TraceCPU fromCpu = data.getCPU(new Long(bEvent.message.fromCpu.id));
 		TraceCPU toCpu = data.getCPU(new Long(bEvent.message.toCpu.id));
 		TraceBus bus = data.getBUS(new Long(bEvent.message.bus.id));
 		TraceObject fromObject = data.getObject(new Long(bEvent.message.object.id));
 		TraceOperation op = data.getOperation(bEvent.message.operation.classDef.name + bEvent.message.operation.name);
 		
+		TraceThread currentThread = null;
+		Long currentThreadId = toCpu.getCurrentThread();
+		if(currentThreadId != null)
+		{
+			currentThread = data.getThread(currentThreadId);
+		}
+		
 		//TODO: MVQ: Review if all objects are required in all draw methods
 		switch(bEvent.type)
 		{
 		case REQUEST: 
-			TraceObject toObject = data.getObject(new Long(bEvent.message.callerThread.object.id));
-			eventViewer.drawMessageRequest(tab, fromCpu, toObject, bus, op);
+			//Determine from object by thread. Object may be null on some threads (INIT, MAIN etc)
+			if(bEvent.message.callerThread.object != null) {
+				fromObject = data.getObject(new Long(bEvent.message.callerThread.object.id));
+			} else {
+				TraceThread fromThread = data.getThread(bEvent.message.callerThread.id);
+				fromObject = fromThread.getCurrentObject();				
+			}
+			eventViewer.drawMessageRequest(tab, fromCpu, fromObject, bus, op);
 			break;
 		case ACTIVATE:
 			eventViewer.drawMessageActivated(tab, fromCpu, fromObject, bus, op);
 			break;
 		case COMPLETED:	
-			TraceThread callerthread = data.getThread(bEvent.message.callerThread.id);
 	        if(bEvent.message.receiverThread != null)
 	        {
 	        	TraceThread receiverThread = data.getThread(bEvent.message.receiverThread.id);
 	        	fromObject = receiverThread.getCurrentObject();
-	        	eventViewer.drawMessageCompleted(tab, toCpu, callerthread, bus, op, fromObject);
+	        	eventViewer.drawMessageCompleted(tab, toCpu, currentThread, bus, op, fromObject);
 	        	
 	        	//If this is a reply to an earlier request then unblock the thread which did the request
 	        	receiverThread.setStatus(false);
 	        }
 	        else
 	        {
-	        	eventViewer.drawMessageCompleted(tab, toCpu, callerthread, bus, op, fromObject);
+	        	eventViewer.drawMessageCompleted(tab, toCpu, currentThread, bus, op, fromObject);
 	        }
 			break;
 		case REPLY_REQUEST:

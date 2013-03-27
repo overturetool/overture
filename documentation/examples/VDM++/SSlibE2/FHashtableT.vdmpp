@@ -1,0 +1,158 @@
+\subsection{FHashtableT} 
+Test FHashtable
+
+\begin{vdm_al}
+class FHashtableT
+
+functions
+static public run : () +> bool
+run() == 
+let	testcases = [ t1(), t2(), t3(), t4(), t5(), t6() ]
+in
+FTestDriver`run(testcases);
+\end{vdm_al}
+
+\subsubsection{Test Contains, PutAll}
+\begin{vdm_al}
+static t1 : () -> FTestDriver`TestCase
+t1() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT01:\t Test Contains, PutAll",
+	let	aHashCode = lambda x : int & x mod 13,
+		p1 = FHashtable`PutAll[int, seq of char]({ |-> })(aHashCode)(
+				{1 |-> "Sahara", 2 |-> "Sato", 14 |-> "Sakoh"}
+			),
+		c1 = FHashtable`Contains[int, seq of char](p1)
+	in
+	c1("Sahara") and
+	c1("Sato") and
+	c1("Sakoh") and
+	c1("") = false)
+	;
+\end{vdm_al}
+
+\subsubsection{Test Clear, Remove, ContainsKey}
+\begin{vdm_al}
+static t2 : () -> FTestDriver`TestCase
+t2() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT02:\t Test Clear, Remove, ContainsKey",
+	let	aHashCode = lambda x : seq of char & if x = "" then "" else FSequence`Take[char](1)(x),
+		h2 = FHashtable`PutAll[seq of char, int]({ |-> })(aHashCode)(
+				{"a" |-> 1, "b" |-> 2, "c" |-> 3}
+			),
+		h3 = FHashtable`Clear[int, seq of char](),
+		deletedh2 = FHashtable`Remove[seq of char, int](h2)(aHashCode)("b"),
+		c1 = FHashtable`Contains[seq of char, int](deletedh2),
+		ck1 = FHashtable`ContainsKey[seq of char, int](deletedh2)
+	in
+	h3 = {|->} and
+	FHashtable`Get[seq of char, int](deletedh2)(aHashCode)("b") = nil and
+	c1(2) = false and
+	c1(1) and
+	c1(3) and
+	ck1("b") = false and 
+	ck1("a") and
+	ck1("c"))
+	;
+\end{vdm_al}
+
+\subsubsection{Test Put, Get}
+\begin{vdm_al}
+static t3 : () -> FTestDriver`TestCase
+t3() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT03:\t Test Put, Get",
+	let	aHashCode = lambda x : int & x mod 13,
+		put = FHashtable`Put[int, seq of char],
+		p1 = put({ |-> })(aHashCode)(1)("Sahara"),
+		p2 = put(p1)(aHashCode)(2)("Bush"),
+		p3 = put(p2)(aHashCode)(2)("Sato"),
+		p4 = put(p3)(aHashCode)(14)("Sakoh"),
+		get = FHashtable`Get[int, seq of char](p4),
+		g = FHashtable`Get[int, seq of char](p4)(aHashCode)
+	in
+	get(aHashCode)(1) = "Sahara" and
+	get(aHashCode)(2) = "Sato" and
+	get(aHashCode)(14) = "Sakoh" and
+	get(aHashCode)(99) = nil and
+	FSequence`Fmap[int, seq of char](g)([1, 14]) = ["Sahara", "Sakoh"] and
+	FSequence`Fmap[int, seq of char](g)([1, 2]) = ["Sahara", "Sato"] 
+	)
+	;
+\end{vdm_al}
+
+\subsubsection{Test KeySet, ValueSet}
+\begin{vdm_al}
+static t4 : () -> FTestDriver`TestCase
+t4() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT04:\t Test KeySet, ValueSet",
+	let	aHashCode = lambda x : int & x mod 13,
+		put = FHashtable`Put[int, seq of char],
+		p1 = put({ |-> })(aHashCode)(1)("Sahara"),
+		p2 = put(p1)(aHashCode)(2)("Bush"),
+		p3 = put(p2)(aHashCode)(2)("Sato"),
+		p4 = put(p3)(aHashCode)(14)("Sakoh"),
+		k = FHashtable`KeySet[int, seq of char],
+		v = FHashtable`ValueSet[int, seq of char]
+	in
+	k(p1) = {1} and
+	v(p1) = {"Sahara"} and
+	k(p2) = {1, 2} and
+	v(p2) = {"Sahara", "Bush"} and
+	k(p4) = {1,2,14} and
+	v(p4) = {"Sahara", "Sato", "Sakoh"})
+	;
+\end{vdm_al}
+
+\subsubsection{Test when hashCode is duplicate}
+\begin{vdm_al}
+static t5 : () -> FTestDriver`TestCase
+t5() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT05:\t Test hashCode is duplicate",
+	let	aHashCode1 = lambda x : int & x mod 13,
+		h1 = FHashtable`PutAll[int, seq of char]({ |-> })(aHashCode1)(
+				{1 |-> "SaharaShin", 2 |-> "SatoKei", 14 |-> "SakohHiroshi", 27 |-> "NishikawaNoriko"}
+			),
+		h2 = FHashtable`Remove[int, seq of char](h1)(aHashCode1)(14)
+	in
+	FHashtable`KeySet[int, seq of char](h2) = {1, 2, 27} and
+	FHashtable`ValueSet[int, seq of char](h2) = {"SaharaShin",  "SatoKei", "NishikawaNoriko"})
+	;
+\end{vdm_al}
+
+\subsubsection{Test Size}
+\begin{vdm_al}
+static t6 : () -> FTestDriver`TestCase
+t6() ==
+	
+	mk_FTestDriver`TestCase(
+	"FHashtableT06:\t Test Size",
+	let	aHashCode1 = lambda x : int & x mod 13,
+		remove = FHashtable`Remove[int, seq of char],
+		h1 = FHashtable`PutAll[int, seq of char]({ |-> })(aHashCode1)(
+				{1 |-> "SaharaShin", 2 |-> "SatoKei", 14 |-> "SakohHiroshi"}
+			),
+		h2 = remove(h1)(aHashCode1)(1),
+		h3 = remove(h2)(aHashCode1)(2),
+		h4 = remove(h3)(aHashCode1)(14),
+		isempty = FHashtable`IsEmpty[int, seq of char],
+		size = FHashtable`Size[int, seq of char]
+	in
+	isempty(h4) and
+	size(h4) = 0 and
+	isempty(h3)  = false and
+	size(h3) = 1 and
+	size(h2) = 2 and
+	size(h1) = 3)
+	;
+
+end FHashtableT
+\end{vdm_al}

@@ -1,0 +1,17 @@
+class Map 
+
+functions
+static public Get[@T1, @T2] : map @T1 to @T2 -> @T1 -> [@T2]
+Get(aMap)(aKey) ==
+	if aKey in set dom aMap then
+		aMap(aKey)
+	else
+		nil;
+
+static public Contains[@T1, @T2] : map @T1 to @T2 -> @T2 -> bool
+Contains(aMap)(aValue) == aValue in set rng aMap;
+
+static public ContainsKey[@T1, @T2] : map @T1 to @T2 -> @T1 -> bool
+ContainsKey(aMap)(aKey) == aKey in set dom aMap;
+	
+end Map

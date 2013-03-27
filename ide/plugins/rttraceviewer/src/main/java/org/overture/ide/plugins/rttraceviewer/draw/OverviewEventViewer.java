@@ -77,9 +77,9 @@ public class OverviewEventViewer extends TraceEventViewer {
 		}
 	}
 	
-	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -91,9 +91,9 @@ public class OverviewEventViewer extends TraceEventViewer {
 		cpu.setX(x2);
 	}
 
-	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawDelayedThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -105,9 +105,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 	
-	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -119,9 +119,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 	
-	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread killedThread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -132,9 +132,9 @@ public class OverviewEventViewer extends TraceEventViewer {
         cpu.setX(x2);
 	}
 
-	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread)
+	public void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread)
 	{
-		updateCpu(tab, cpu, thread);
+		updateCpu(tab, cpu, currentThread);
 		
 		Long x1 = tab.getXMax();// < cpu.getX() ? cpu.getX() : tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -245,8 +245,6 @@ public class OverviewEventViewer extends TraceEventViewer {
 
 	public void drawMessageCompleted(GenericTabItem tab, TraceCPU cpu, TraceThread thread, TraceBus bus, TraceOperation op, TraceObject obj)
 	{
-		updateCpu(tab, cpu, thread);
-		
 		//Draw marker on bus
 		Long x1 = tab.getXMax();
 		Long x2 = x1 + ELEMENT_SIZE;
@@ -262,6 +260,8 @@ public class OverviewEventViewer extends TraceEventViewer {
 		String label = " "+op.getName()+" ";
 		
 		drawVerticalArrow(tab, x2, y1, y2, label, ColorConstants.darkBlue);
+		
+		updateCpu(tab, cpu, thread);
 	}
 
 	@Override
@@ -311,18 +311,18 @@ public class OverviewEventViewer extends TraceEventViewer {
     
 	public void drawSourceConjecture(GenericTabItem tab, TraceCPU cpu, String name)
 	{
-        Ellipse ellipse = new Ellipse();
+		ConjectureMarker marker = new ConjectureMarker();
         NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
 
         Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
         Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() + 12L);
   
-        ellipse.setLocation(p1);
-        ellipse.setSize(16, 16);
-        ellipse.setFill(false);
-        ellipse.setForegroundColor(ColorConstants.red);
+        marker.setLocation(p1);
+        marker.setSize(16, 16);
+        marker.setFill(false);
+        marker.setForegroundColor(ColorConstants.red);
         
-        tab.addBackgroundFigure(ellipse);
+        tab.addBackgroundFigure(marker);
         
         label.setLocation(p2);
         label.setForegroundColor(ColorConstants.red);
@@ -332,18 +332,18 @@ public class OverviewEventViewer extends TraceEventViewer {
     
 	public void drawDestinationConjecture(GenericTabItem tab, TraceCPU cpu, String name)
 	{
-        Ellipse ellipse = new Ellipse();
+        ConjectureMarker marker = new ConjectureMarker();
         NormalLabel label = new NormalLabel(name, tab.getCurrentFont());
 
         Point p1 = new Point(tab.getXMax() + 1L, cpu.getY() - 8L);
         Point p2 = new Point(tab.getXMax() + 2L, cpu.getY() - 40L);
         
-        ellipse.setLocation(p1);
-        ellipse.setSize(16, 16);
-        ellipse.setFill(false);
-        ellipse.setForegroundColor(ColorConstants.red);
+        marker.setLocation(p1);
+        marker.setSize(16, 16);
+        marker.setFill(false);
+        marker.setForegroundColor(ColorConstants.red);
         
-        tab.addBackgroundFigure(ellipse);
+        tab.addBackgroundFigure(marker);
         
         label.setLocation(p2);
         label.setForegroundColor(ColorConstants.red);

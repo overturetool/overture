@@ -21,6 +21,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
@@ -36,7 +37,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 			AExplicitOperationDefinition node) {
 		
 		Set<PDefinition> defs = new HashSet<PDefinition>();
-		Iterator<PType> titer = node.getType().getParameters().iterator();
+		Iterator<PType> titer = ((AOperationType)node.getType()).getParameters().iterator();
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
@@ -100,7 +101,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getType().getParameters());
+			d.getName().setTypeQualifier( ((AOperationType)d.getType()).getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityStm)
 			{
@@ -152,7 +153,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 		List<PPattern> plist = new Vector<PPattern>();
 		plist.addAll((List<PPattern>)d.getParameterPatterns().clone());
 
-		if (!(d.getType().getResult() instanceof AVoidType))
+		if (!( ((AOperationType)d.getType()).getResult() instanceof AVoidType))
 		{
     		LexNameToken result =
     			new LexNameToken(d.getName().module, "RESULT", d.getLocation());
@@ -182,7 +183,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						null, 
-						AOperationTypeAssistantTC.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), 
+						AOperationTypeAssistantTC.getPostType((AOperationType)d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), 
 						parameters, 
 						postop, null, null, false, null);
 				
@@ -232,7 +233,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()),
 						NameScope.GLOBAL,
 						null, 
-						AOperationTypeAssistantTC.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
+						AOperationTypeAssistantTC.getPreType((AOperationType)d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 						parameters, 
 						preop, null, null, false, null);
 //				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 

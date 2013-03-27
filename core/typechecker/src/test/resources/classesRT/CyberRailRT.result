@@ -13,29 +13,14 @@
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="CyberRailRT.result"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3427" resource="CyberRailRT.result"/>
 <message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="24" line="790" message="Class name IO not in scope" messageType="error" number="3133" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="20" line="1071" message="Class name IO not in scope" messageType="error" number="3133" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="4" line="277" message="Member Environment(seq of (char)) is not in scope" messageType="error" number="3209" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <message column="19" line="986" message="Class name IO not in scope" messageType="error" number="3133" resource="CyberRailRT.result"/>
 <message column="13" line="986" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="29" line="1083" message="Constructor operation must have return type RailwayGrid" messageType="error" number="3026" resource="CyberRailRT.result"/>
+<message column="8" line="1083" message="Constructor operation must have return type RailwayGrid" messageType="error" number="3026" resource="CyberRailRT.result"/>
 <message column="5" line="1114" message="Operation writef(Grid) is not in scope" messageType="error" number="3213" resource="CyberRailRT.result"/>
 <message column="29" line="1083" message="Unknown type: (unresolved RailwayGrid`RailwayGrid)" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="14" line="1071" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
-<message column="18" line="790" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="CyberRailRT.result"/>
 <result/>
 </testResult>

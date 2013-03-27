@@ -27,15 +27,20 @@ public class ThreadEventHandler extends EventHandler {
 			tEvent = (NextGenThreadEvent)event;
 		else
 			throw new IllegalArgumentException("ThreadEventhandler expected event of type: " + NextGenThreadEvent.class.getName());
-		
-		if(tEvent.thread.type == ThreadType.INIT)
-			return; //Ignore INIT threads
-		
+
 		Long cpuId = new Long(tEvent.thread.cpu.id);
-		Long threadId = new Long(tEvent.thread.id);
+		Long newThreadId = new Long(tEvent.thread.id);
 		Long objectId = null;
 		TraceCPU cpu = data.getCPU(cpuId);
-		TraceThread thread = data.getThread(threadId);
+		
+		TraceThread currentThread = null;
+		Long currentThreadId = cpu.getCurrentThread();
+		if(currentThreadId != null)
+		{
+			currentThread = data.getThread(currentThreadId);
+		}
+		
+		TraceThread affectedThread = data.getThread(newThreadId);
 		TraceObject object = null;
 		
 		switch(tEvent.type)
@@ -43,25 +48,30 @@ public class ThreadEventHandler extends EventHandler {
 		case CREATE: 			
 			if(tEvent.thread.object == null)
 			{
-				if(tEvent.thread.type == ThreadType.MAIN)
+				if(tEvent.thread.type == ThreadType.MAIN) {
 					object = data.getMainThreadObject();
-				else
+				}
+				else if(tEvent.thread.type == ThreadType.INIT) {
+					object = data.getInitThreadObject();
+				}
+				else {
 					throw new UnexpectedEventTypeException("Did not expect create event in ThreadEventHandler for other thread types than init and main at this point.");
+				}
 			}
 			else
 			{
 				objectId = new Long(tEvent.thread.object.id);
 				object = data.getObject(objectId);
 			}
-			thread.pushCurrentObject(object);
-			eventViewer.drawThreadCreate(tab, cpu, thread);
+			affectedThread.pushCurrentObject(object);
+			eventViewer.drawThreadCreate(tab, cpu, currentThread, affectedThread);
 			break;
 		case SWAP: 
 			throw new UnexpectedEventTypeException("Problem in ThreadEventHandler. SWAP events should be handled in " + ThreadSwapEventHandler.class.getName());
 		case KILL: 
-			eventViewer.drawThreadKill(tab, cpu, thread);
-			if(thread.hasCurrentObject())
-				thread.popCurrentObject();
+			eventViewer.drawThreadKill(tab, cpu, currentThread, affectedThread);
+			if(affectedThread.hasCurrentObject())
+				affectedThread.popCurrentObject();
 			break;
 		}
 	}

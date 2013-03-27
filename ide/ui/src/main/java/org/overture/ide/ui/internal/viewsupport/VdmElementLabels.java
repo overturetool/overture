@@ -228,10 +228,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
+		if (((AOperationType)element.getType()).getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+			result.append(" : " + getSimpleTypeString( ((AOperationType)element.getType()).getResult()),
 					StyledString.DECORATIONS_STYLER);
 		}
 
@@ -261,10 +261,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
+		if ( ((AFunctionType)element.getType()).getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+			result.append(" : " + getSimpleTypeString(((AFunctionType)element.getType()).getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -416,10 +416,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
+		if (((AFunctionType)element.getType()).getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+			result.append(" : " + getSimpleTypeString(((AFunctionType)element.getType()).getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -470,10 +470,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
+		if (((AOperationType)element.getType()).getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+			result.append(" : " + getSimpleTypeString(((AOperationType)element.getType()).getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}

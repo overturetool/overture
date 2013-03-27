@@ -1,0 +1,79 @@
+class SetT is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests () == 
+	[
+		new SetT01(),
+		new SetT02(),
+		new SetT03(),
+		new SetT04()
+	];
+end SetT
+----------------------------------------
+class SetT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		Set`hasSameElems[int](Set`asSequence[int]({1,2,3,4}),{1,2,3,4}) and
+		(elems Set`asSequence[int]({1,2,3,3,4}) = {1,2,3,4})
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SetT01:\t Compare sequences and convert to sequence.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SetT01
+----------------------------------------
+
+class SetT02 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		Set`Combinations[int](2)({1,2,3}) = { { 1,2 }, { 1,3 }, { 2,3 } } and
+		Set`Combinations[int](2)({1,2,3,4}) = { { 1,2 },  { 1,3 },  { 1,4 },  { 2,3 },  { 2,4 },  { 3,4 } } and
+		Set`fmap[set of int, set of set of int](Set`Combinations[int](2))({{1,2,3}, {1,2,3,4}}) =
+			{{ { 1,2 }, { 1,3 }, { 2,3 } }, { { 1,2 },  { 1,3 },  { 1,4 },  { 2,3 },  { 2,4 },  { 3,4 } } } and
+		Set`Combinations[int](3)({1,2,3,4}) = { { 1,2,3 },  { 1,2,4 },  { 1,3,4 },  { 2,3,4 } } and
+		Set`Combinations[seq of char](2)({"Sahara", "Sato", "Sakoh", "Yatsu", "Nishikawa" }) = 
+			{ { "Sahara",    "Sato" },  { "Sahara",    "Nishikawa" },  { "Sahara",    "Yatsu" },  { "Sahara",    "Sakoh" },  { "Sato",    "Nishikawa" }, 
+			{ "Sato",    "Yatsu" },  { "Sato",    "Sakoh" },  { "Nishikawa",    "Yatsu" },  { "Nishikawa",    "Sakoh" },  { "Yatsu",    "Sakoh" } }
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SetT02:\t Get combination.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SetT02
+-------------------------------------------------------------
+
+class SetT03 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Set`fmap[int, int](lambda x:int & x mod 3)({1,2,3,4,5})  = {0, 1, 2} and
+		Set`fmap[seq of char, seq of char]
+			(Sequence`take[char](2))({"Shin Sahara", "Hiroshi Sakoh"}) = {"Sh", "Hi"}
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SetT03:\t Test fmap.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SetT03
+-------------------------------------------------------------
+
+class SetT04 is subclass of TestCase
+operations 
+public  test: () ==> bool
+test() == 
+	return
+		Set`Sum[int]({1,...,10}) = 55 and
+		Set`Sum[int]({1, 2, 3, 4, 5, 6, 7, 8,  9, 10}) = 55 and
+		abs(Set`Sum[real]({0.1, 0.2, 0.3}) - 0.6) <= 1E-5 and
+		Set`Sum[nat]({1, 2, 3, 3}) = 6
+;
+protected setUp: () ==> ()
+setUp() == TestName := "SetT04:\tTest sum of set elements.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end SetT04

@@ -73,7 +73,7 @@ public class ToggleComment extends AbstractHandler{
 		
 		
 		
-		this.configure((ISourceViewer) fOperationTarget,editor.getVdmSourceViewerConfiguration());
+		this.configure((ISourceViewer) fOperationTarget,editor.getNewSourceViewerConfiguration());
 		
 		
 		

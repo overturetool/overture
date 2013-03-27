@@ -45,14 +45,14 @@ public class VdmRtLaunchConfigurationDelegate extends
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
-		File logDir = new File(new File(getOutputFolder(project, configuration), "logs"), configuration.getName());
+		File logDir = new File(getOutputFolder(project, configuration), "logs");
 		String dateString = dateFormat.format(date);
 		
 		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_LOGGING, false))
 		{
 			// log
 			logDir.mkdirs();
-			String logFilename = dateString + ".logrt";
+			String logFilename = dateString + ".rt";
 //			System.out.println(logFilename);
 			File f = new File(logDir, logFilename);
 			if (!f.exists())

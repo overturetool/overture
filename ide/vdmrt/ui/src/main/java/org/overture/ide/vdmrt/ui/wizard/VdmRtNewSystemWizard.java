@@ -47,24 +47,25 @@ public class VdmRtNewSystemWizard extends VdmNewFileWizard {
 	protected String getFileTemplate(String fileName)
 	{
 		String className = fileName;
-		return "system " + className + "\n" + "\tinstance variables\n\n"+
-		"-- Architecture definition\n\n"+
+		return "system " + className + "\n" + "instance variables\n"+
+		"-- Architecture definition\n"+
 		"/*\nComputing units:\n\tPriority: <FP> - Fixed priority\n\t          <PP> - Priority?\n\n"+
-		"Speed is giving in Hz - Cycles per second\n*/\n\n"+
+		"Speed is giving in Hz - Cycles per second\n*/\n"+
 		"  cpu1 : CPU := new CPU(<FP>, 22E6);\n"+
-		"  cpu2 : CPU := new CPU(<FP>, 22E6);\n\n"+
+		"  cpu2 : CPU := new CPU(<FP>, 22E6);\n"+
 		"/*\nCommunication bus:\n \tModes: <CSMACD> - ?\n*/\n"+
-		"  bus : BUS := new BUS(<CSMACD>, 72E3,{ /* Deployable objects */});\n\n\n"+
-		"-- TODO Define deployable objects as static instance variables\n\n"+
-		"\toperations\n\n"+
+		"  bus : BUS := new BUS(<CSMACD>, 72E3,{ /* Deployable objects */});\n"+
+		"-- TODO Define deployable objects as static instance variables\n"+
+		"operations\n\n"+
 		"public "+className+" : () ==> "+className+"\n"+
 		className+" () == \n("+
-		"-- TODO Deploy deployable object to cpu's\n\n/*\n"+
-		"cpu1.deploy(deployableObject1,\"Object 1\");\n"+
-		"cpu1.setPriority( TODO: Static operation , 100);\n\n"+
-		"cpu2.deploy(deployableObject2,\"Object 2\");\n"+
-		"cpu2.setPriority( TODO: Static operation , 100);\n\n*/\n"+
-		"-- CPU's are started implicit\n);\n\n"+
+		"-- TODO Deploy deployable object to cpu's\n/*\n"+
+		"  cpu1.deploy(deployableObject1,\"Object 1\");\n"+
+		"  cpu1.setPriority( TODO: Static operation , 100);\n\n"+
+		"  cpu2.deploy(deployableObject2,\"Object 2\");\n"+
+		"  cpu2.setPriority( TODO: Static operation , 100);\n*/\n"+
+		"-- CPU's are started implicit\n" +
+		"  skip;\n" + ");\n"+
 		"end "+ className;
 	}
 

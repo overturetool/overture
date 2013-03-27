@@ -21,6 +21,8 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
@@ -249,12 +251,12 @@ public class PrettyPrinterVisitorDefinitions extends
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		String type = ": ";
 
-		if (d.getType().getParameters().isEmpty())
+		if (((AOperationType) d.getType()).getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = ((AOperationType) d.getType()).getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -265,7 +267,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " ==> " + d.getType().getResult().apply(typePrinter,question);
+		type += " ==> " + ((AOperationType) d.getType()).getResult().apply(typePrinter,question);
 
 		String tmp = d.getAccess()
 				+ " "
@@ -307,12 +309,12 @@ public class PrettyPrinterVisitorDefinitions extends
 			accessStr = "";
 
 		String type = ": ";
-		if (d.getType().getParameters().isEmpty())
+		if (((AFunctionType) d.getType()).getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = ((AFunctionType) d.getType()).getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -323,8 +325,8 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
-				+ d.getType().getResult().apply(typePrinter,question);
+		type += " " + (((AFunctionType) d.getType()).getPartial() ? "-" : "+") + "> "
+				+ ((AFunctionType) d.getType()).getResult().apply(typePrinter,question);
 
 		String tmp = question.getIdent()
 				+ accessStr

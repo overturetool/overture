@@ -1031,55 +1031,23 @@ public class TypeCheckerStmVisitor extends
 	}
 
 	@Override
-	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question) {
+	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question) 
+		throws AnalysisException {
 		int nargs = (Settings.dialect == Dialect.VDM_RT) ? 4 : 1;
-		Long[] values = new Long[4];
 		List<PExp> args = node.getArgs();
 
 		if (args.size() != nargs) {
 			TypeCheckerErrors.report(3287, "Periodic thread must have " + nargs
 					+ " argument(s)", node.getLocation(), node);
 		} else {
-			int i = 0;
-
-			for (PExp arg : args) {
-				arg.getLocation().hit();
-				values[i] = -1L;
-
-				if (arg instanceof AIntLiteralExp) {
-					AIntLiteralExp e = (AIntLiteralExp) arg;
-					values[i] = e.getValue().value;
-				} else if (arg instanceof ARealLiteralExp) {
-					ARealLiteralExp r = (ARealLiteralExp) arg;
-					values[i] = Math.round(r.getValue().value);
-				}
-
-				if (values[i] < 0) {
-					TypeCheckerErrors
-							.report(2027,
-									"Expecting +ive literal number in periodic statement",
-									arg.getLocation(), arg);
-				}
-
-				i++;
-			}
-
-			node.setPeriod(values[0]);
-			node.setJitter(values[1]);
-			node.setDelay(values[2]);
-			node.setOffset(values[3]);
-
-			if (values[0] == 0) {
-				TypeCheckerErrors.report(3288,
-						"Period argument must be non-zero", args.get(0)
-								.getLocation(), args.get(0));
-			}
-
-			if (args.size() == 4) {
-				if (values[2] >= values[0]) {
-					TypeCheckerErrors.report(3289,
-							"Delay argument must be less than the period", args
-									.get(2).getLocation(), args.get(2));
+			
+			for (PExp arg : args)
+			{
+				PType type = arg.apply(rootVisitor, question);
+				
+				if(!PTypeAssistantTC.isNumeric(type))
+				{
+					TypeCheckerErrors.report(3316, "Expecting number in periodic argument", arg.getLocation(), arg);
 				}
 			}
 		}

@@ -26,7 +26,7 @@ public abstract class EventHandler {
 			eventViewer.drawTimeMarker(tab, event.getTime().getAbsoluteTime());
 			data.setLastMarkerTime(event.getTime().getAbsoluteTime());
 		}
-		
+
 		//Handle the event
 		handle(event, tab);
 	}

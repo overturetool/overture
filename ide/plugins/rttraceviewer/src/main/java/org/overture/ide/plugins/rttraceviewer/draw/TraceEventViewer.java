@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.overture.ide.plugins.rttraceviewer.data.*;
 import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem;
-import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 
 public abstract class TraceEventViewer extends TraceViewer {
 
@@ -17,15 +16,15 @@ public abstract class TraceEventViewer extends TraceViewer {
 	public abstract void drawStaticItems(GenericTabItem tab, Vector<TraceCPU> cpus, Vector<TraceBus> buses);
 	
 	//Threads
-	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadSwapOut(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 	
-	public abstract void drawDelayedThreadSwapIn(GenericTabItem tab,TraceCPU cpu, TraceThread thread);
+	public abstract void drawDelayedThreadSwapIn(GenericTabItem tab,TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 
-	public abstract void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadSwapIn(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread swappedThread);
 	
-	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadKill(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread killedThread);
 
-	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread thread);
+	public abstract void drawThreadCreate(GenericTabItem tab, TraceCPU cpu, TraceThread currentThread, TraceThread newthread);
 
 	//Messages
 	public abstract void drawReplyRequest(GenericTabItem tab, TraceCPU cpu, TraceObject object, TraceBus bus, TraceOperation op);

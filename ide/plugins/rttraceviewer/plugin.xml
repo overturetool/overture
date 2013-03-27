@@ -32,7 +32,7 @@
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.text"
-            file-extensions="logbin"
+            file-extensions="rtbin"
             id="org.overture.ide.plugins.rttraceviewer.content-type"
             name="VDM-RT Log Content type"
             priority="high">

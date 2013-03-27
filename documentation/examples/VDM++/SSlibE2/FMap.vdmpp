@@ -1,0 +1,37 @@
+\subsection{FHashtable}
+写像に関わる関数を定義する。
+
+\begin{vdm_al}
+--"$Id"
+class FMap
+
+functions
+\end{vdm_al}
+
+Getは、写像にaKeyがあれば、対応する値域の値を返し、無ければnilを返す。
+\begin{vdm_al}
+static public Get[@T1, @T2] : map @T1 to @T2 -> @T1 -> [@T2]
+Get(aMap)(aKey) ==
+	if aKey in set dom aMap then
+		aMap(aKey)
+	else
+		nil;
+\end{vdm_al}
+
+Containsは、aValueが写像aMapの値域に含まれているか否かを返す。
+\begin{vdm_al}
+static public Contains[@T1, @T2] : map @T1 to @T2 -> @T2 -> bool
+Contains(aMap)(aValue) == aValue in set rng aMap;
+\end{vdm_al}
+
+ContainsKeyは、aKeyが写像aMapの定義域に含まれているか否かを返す。
+\begin{vdm_al}
+static public ContainsKey[@T1, @T2] : map @T1 to @T2 -> @T1 -> bool
+ContainsKey(aMap)(aKey) == aKey in set dom aMap;
+	
+end FMap
+\end{vdm_al}
+
+\begin{rtinfo}
+[FMap]{vdm.tc}[FMap]
+\end{rtinfo}

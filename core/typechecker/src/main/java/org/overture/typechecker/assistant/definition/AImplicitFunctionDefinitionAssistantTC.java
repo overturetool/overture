@@ -202,7 +202,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						(List<LexNameToken>)d.getTypeParams().clone(), 
-						AFunctionTypeAssistantTC.getPostType(d.getType()), 
+						AFunctionTypeAssistantTC.getPostType((AFunctionType)d.getType()), 
 						parameters, d.getPostcondition(), null, null, false, null);
 				 
 //				new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), 
@@ -226,7 +226,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()), 
 						NameScope.GLOBAL,
 						(List<LexNameToken>) d.getTypeParams().clone(),
-						AFunctionTypeAssistantTC.getPreType(d.getType()),
+						AFunctionTypeAssistantTC.getPreType((AFunctionType)d.getType()),
 						getParamPatternList(d),
 						d.getPrecondition(), null, null, false,null);
 				

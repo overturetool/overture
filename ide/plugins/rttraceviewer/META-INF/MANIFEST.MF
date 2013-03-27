@@ -4,18 +4,25 @@ Bundle-ActivationPolicy: lazy
 Bundle-Version: 2.0.0
 Eclipse-BuddyPolicy: registered
 Bundle-Localization: plugin
-Bundle-Name: Showtrace
+Bundle-Name: org.overture.ide.plugins.rttraceviewer
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.rttraceviewer;singleton:=true
 Require-Bundle: org.eclipse.draw2d,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.jface,
  org.overture.ide.core,
  org.overture.ide.ui,
  org.overture.ide.builders.vdmj,
  org.overture.ide.debug,
+ org.overture.ide.vdmpp.core,
+ org.overture.ide.vdmpp.debug,
+ org.overture.ide.vdmpp.ui,
  org.overture.ide.vdmrt.core,
- org.overture.ide.vdmrt.debug
+ org.overture.ide.vdmrt.debug,
+ org.overture.ide.vdmrt.ui
 Bundle-Activator: org.overture.ide.plugins.rttraceviewer.view.TracefileViewerPlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
+ JavaSE-1.7
 Bundle-ClassPath: .

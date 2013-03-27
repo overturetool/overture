@@ -510,7 +510,7 @@ public class TypeCheckerExpVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, rootVisitor, question);
-		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
+		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
 
 	}

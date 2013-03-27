@@ -37,13 +37,14 @@ public class TraceData
 	private NextGenRTLogger rtLogger;   
 	private HashMap<Long, TraceCPU> cpus;
 	private HashMap<Long, TraceObject> objects;
+	private HashMap<String, TraceObject> staticObjects; //Static Objects dont have ids, use name instead
 	private HashMap<Long, TraceBus> buses; 
 	private HashMap<Long, TraceThread> threads;
-	private HashMap<Long, TraceBusMessage> messages;
 	private HashMap<String, TraceOperation> operations; //Key = Class+Operation
 	private TraceEventManager eventManager;
 	
 	private TraceObject mainThreadObject;
+	private TraceObject initThreadObject;
 
 	private Long lastMarkerTime;
 	
@@ -56,14 +57,30 @@ public class TraceData
     	 	
     	cpus = new HashMap<Long, TraceCPU>();
     	objects = new HashMap<Long, TraceObject>();
+    	staticObjects = new HashMap<String, TraceObject>();
     	buses = new HashMap<Long, TraceBus>();
     	threads = new HashMap<Long, TraceThread>();
-    	messages = new HashMap<Long, TraceBusMessage>();
     	operations = new HashMap<String, TraceOperation>();
     	
     	mainThreadObject = new TraceObject(0L,"MAIN");
+    	initThreadObject = new TraceObject(0L, "INIT");
 
     	reset();
+    }
+    
+	public void reset()
+    {
+		cpus.clear();
+        objects.clear();
+        buses.clear();
+        threads.clear();
+        operations.clear();
+        staticObjects.clear();
+        
+        mainThreadObject.setVisible(false);
+        initThreadObject.setVisible(false);
+        eventManager.reset();
+        lastMarkerTime = null;
     }
 
     public TraceEventManager getEventManager() {
@@ -165,33 +182,12 @@ public class TraceData
         return threads.get(pthrid);
     }
 
-    public TraceBusMessage getMessage(Long pmsgid) throws RuntimeErrorException
-    {
-        if(!rtLogger.getBusMessage().containsKey(pmsgid))
-            throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getMessage");
-        
-        if(!messages.containsKey(pmsgid))
-        {
-        	NextGenBusMessage message = rtLogger.getBusMessage().get(pmsgid);
-        	
-        	Long id = message.id;
-        	Long busId = new Long(message.bus.id);
-        	Long fromCpu = new Long(message.fromCpu.id);
-        	Long toCpu = new Long(message.toCpu.id);
-        	Long callerThread = new Long(message.callerThread.id);
-        	
-        	messages.put(pmsgid, new TraceBusMessage(id, busId, fromCpu, toCpu, callerThread));
-        }
-        
-        return messages.get(pmsgid);
-    }
-
     public TraceOperation getOperation(String classNameOperationName)
     {
         if(!rtLogger.getOperationMap().containsKey(classNameOperationName))
             throw new RuntimeErrorException(null, "Run-Time Error:Precondition failure in getOpreation");
         
-        if(!messages.containsKey(classNameOperationName))
+        if(!operations.containsKey(classNameOperationName))
         {
         	NextGenOperation message = rtLogger.getOperationMap().get(classNameOperationName);
         	
@@ -223,25 +219,25 @@ public class TraceData
         
         return objects.get(pobjid);
     }
+    
+    public TraceObject getStaticObject(String name) 
+    {
+    	if(!staticObjects.containsKey(name)) 
+    	{
+    		staticObjects.put(name, new TraceObject(0L, name));
+    	}
+    	return staticObjects.get(name);
+    }
 
     public TraceObject getMainThreadObject()
     {
     	return mainThreadObject;
     }
     
-	public void reset()
-    {
-		cpus.clear();
-        objects.clear();
-        buses.clear();
-        threads.clear();
-        messages.clear();
-        operations.clear();
-        
-        mainThreadObject.setVisible(false);
-        eventManager.reset();
-        lastMarkerTime = null;
+    public TraceObject getInitThreadObject() {
+    	return initThreadObject;
     }
+    
 	
 	public Vector<TraceBus> getConnectedBuses(Long cpuId)
 	{

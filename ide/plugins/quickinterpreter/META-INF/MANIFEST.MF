@@ -15,6 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.overture.ide.vdmrt.core,
  org.overture.ide.vdmsl.core,
  org.overture.ide.core,
- org.overture.ide.debug
+ org.overture.ide.debug,
+ org.overture.ide.builders.vdmj,
+ org.overture.ide.parsers.vdmj
 Bundle-Activator: org.overture.ide.plugins.quickinterpreter.Activator
 Bundle-ClassPath: .

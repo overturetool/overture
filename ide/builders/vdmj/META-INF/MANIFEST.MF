@@ -20,7 +20,8 @@ Export-Package: org.overture.ide.builders.vdmj,
  org.overture.typechecker.assistant.statement,
  org.overture.typechecker.assistant.type,
  org.overture.typechecker.util,
- org.overture.typechecker.visitor
+ org.overture.typechecker.visitor,
+ org.overture.ast.factory
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,
  jars/typechecker.jar
