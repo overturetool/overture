@@ -10,21 +10,21 @@ import com.lausdahl.ast.creator.Main;
 
 public class AkmRwlTests extends TestCase {
 
-//	private String src = "Packages\n" + "base org.overture.ast.node;\n"
-//			+ "analysis org.overture.ast.analysis;\n" + "Tokens\n" + "\n"
-//			+ "Abstract Syntax Tree\n"
-//			+ "exp {-> package='org.overture.ast.expressions'}\n"
-//			+ "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
-//			+ "    ;\n" + "binop {-> package='org.overture.ast.expressions'}\n"
-//			+ "      = {and}" + "      " + "      | {or} \n" + "      ;\n"
-//			+ "Aspect Declaration\n";
-//
-//	private String src2 = "Packages\n" + "base eu.compassresearch.ast.node;\n"
-//			+ "analysis eu.compassresearch.ast.analysis;\n" + "Tokens\n" + "\n"
-//			+ "Abstract Syntax Tree\n"
-//			+ "cml {-> package='eu.compassresearch.ast.expressions'}\n"
-//			+ "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
-//			+ "    ;\n" + "Aspect Declaration\n";
+	//	private String src = "Packages\n" + "base org.overture.ast.node;\n"
+	//			+ "analysis org.overture.ast.analysis;\n" + "Tokens\n" + "\n"
+	//			+ "Abstract Syntax Tree\n"
+	//			+ "exp {-> package='org.overture.ast.expressions'}\n"
+	//			+ "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
+	//			+ "    ;\n" + "binop {-> package='org.overture.ast.expressions'}\n"
+	//			+ "      = {and}" + "      " + "      | {or} \n" + "      ;\n"
+	//			+ "Aspect Declaration\n";
+	//
+	//	private String src2 = "Packages\n" + "base eu.compassresearch.ast.node;\n"
+	//			+ "analysis eu.compassresearch.ast.analysis;\n" + "Tokens\n" + "\n"
+	//			+ "Abstract Syntax Tree\n"
+	//			+ "cml {-> package='eu.compassresearch.ast.expressions'}\n"
+	//			+ "    =   {binary} [left]:exp [op]:binop [right]:exp\n"
+	//			+ "    ;\n" + "Aspect Declaration\n";
 
 	/*
 	 * public void testBasic() throws Exception { System.out.println(new
@@ -42,23 +42,19 @@ public class AkmRwlTests extends TestCase {
 	public void testCmlAndOvt() throws Exception {
 		File output = new File(
 				FilePathUtil.getPlatformPath("target/testData/akmGeneratedCode"));
-//		File output = new File("../../testdata/generatedCode");
-		InputStream cmlAST = getClass().getResourceAsStream(
-				"/extend2/cml_merge.ast");
-		InputStream ovtAST = getClass().getResourceAsStream(
-				"/extend2/ovt_merge.ast");
-		InputStream ovt = getClass().getResourceAsStream("/overtureII.astv2");
-		InputStream cml = getClass().getResourceAsStream("/ucml.ast");
+		InputStream ovt = getClass().getResourceAsStream("/cml.ast");
+		InputStream cml = getClass().getResourceAsStream("/overtureII.astv2");
 		InputStream ovtToString = getClass().getResourceAsStream(
 				"/overtureII.astv2.tostring");
 		InputStream cmlToString = getClass().getResourceAsStream(
 				"/cml.ast.tostring");
-		Assert.assertNotNull("Ast file 1 cannot be found", cmlAST);
-		Assert.assertNotNull("Ast file 2 cannot be found", ovtAST);
-		Main.create(ovtToString, cmlToString, ovt, cml, output, "Cml", false);
+
+		Main.create(ovtToString, cmlToString, ovt, cml, output, "Cml", false, true);
 
 		// Main.create(ovt, output, true, false);
 	}
+
+
 
 	volatile boolean b;
 }

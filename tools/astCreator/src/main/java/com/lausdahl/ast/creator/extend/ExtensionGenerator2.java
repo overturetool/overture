@@ -1005,6 +1005,9 @@ public class ExtensionGenerator2 {
 		// extNewDef.supers.add(iAnalysis);
 		extNewDef.setExtJavaDoc(COMPASS_JAVA_DOC_STRING);
 
+		extNewDef.setIsExtTree(true);
+		extNewDef.setIsBaseTree(false);
+		
 		// Add methods for the analysis and apply functions for the classes
 		for (IClassDefinition cdef : result.getClasses()) {
 			Environment env = null;

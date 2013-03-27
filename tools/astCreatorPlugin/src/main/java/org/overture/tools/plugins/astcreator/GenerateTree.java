@@ -168,7 +168,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		try
 		{
-			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm());
+			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extensionTreeOnly);
 			setCrc(baseAstFile);
 			setCrc(baseAstToStringAstFile);
 			setCrc(extendedAstFile);

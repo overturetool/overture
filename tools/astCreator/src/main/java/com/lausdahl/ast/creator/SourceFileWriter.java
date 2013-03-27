@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
+import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;
@@ -27,6 +28,12 @@ public class SourceFileWriter
 	public static void write(File outputFolder, Environment env,
 			boolean generateVdm)
 	{
+		write(outputFolder,env,generateVdm,false);
+	}
+
+	public static void write(File outputFolder, Environment env,
+			boolean generateVdm, boolean extOnly)
+	{
 		if (generateVdm)
 		{
 			File generatedVdm = new File(new File(new File(outputFolder, "vdm"), "generated"), "node");
@@ -35,8 +42,8 @@ public class SourceFileWriter
 		outputFolder.mkdirs();
 
 		System.out.println("Copying base classes to destination...");
-		
-		copyBaseClasses(outputFolder, env.getTemplateDefaultPackage(), env.getTemplateAnalysisPackage(), env);
+		if (!extOnly)
+			copyBaseClasses(outputFolder, env.getTemplateDefaultPackage(), env.getTemplateAnalysisPackage(), env);
 		System.out.println("Writing source files.:");
 		long startTime = System.currentTimeMillis();
 		int i = 0;
@@ -47,6 +54,10 @@ public class SourceFileWriter
 			{
 				continue;
 			}
+
+			if (def.isBaseTree() && extOnly && !def.isExtTree())
+			{System.out.println("Omitting base def: "+def.getAstPackage() + " "+def.getName());continue;}
+
 			System.out.print(/* def.getSignatureName()+"..." */".");
 			// System.out.println(def.getName());
 			System.out.flush();

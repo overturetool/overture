@@ -47,4 +47,8 @@ public interface IClassDefinition extends IInterfaceDefinition {
 	public void addInterface(IInterfaceDefinition intf);
 
 	public String getAstPackage();
+	
+	public void setIsBaseTree(boolean b);
+	
+	public boolean isBaseTree();
 }

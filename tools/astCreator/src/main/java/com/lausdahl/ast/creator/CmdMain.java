@@ -71,7 +71,7 @@ public class CmdMain {
 			Main.create(ast1ToStringFileStream, ast2ToStringFileStream,
 					new FileInputStream(ast1File),
 					new FileInputStream(ast2File), output, extName,
-					GENERATE_VDM);
+					GENERATE_VDM, false);
 
 		}
 
