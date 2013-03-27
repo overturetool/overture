@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.vdmrt.ui.editor.core;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.editor.core.VdmSourceViewerConfiguration;
 
@@ -28,9 +29,8 @@ public class VdmRtEditor extends VdmEditor {
 	}
 
 	@Override
-	public VdmSourceViewerConfiguration getVdmSourceViewerConfiguration() {
-		// TODO Auto-generated method stub
-		return new VdmRtSourceViewerConfiguration();
+	protected VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore fPreferenceStore) {
+		return new VdmRtSourceViewerConfiguration(fPreferenceStore);
 	}
 
 }

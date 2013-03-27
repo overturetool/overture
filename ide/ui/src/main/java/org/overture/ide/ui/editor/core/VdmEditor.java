@@ -32,6 +32,7 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -121,13 +122,14 @@ public abstract class VdmEditor extends TextEditor
 	protected void initializeEditor()
 	{
 		super.initializeEditor();
-		fVdmSourceViewer = getVdmSourceViewerConfiguration();
+		//todo move nwxt two lines to constructor
+		fVdmSourceViewer = getVdmSourceViewerConfiguration(getPreferenceStore());
 		setSourceViewerConfiguration(fVdmSourceViewer);
 		setRulerContextMenuId(IVdmUiConstants.RULERBAR_ID);
 
 	}
 
-	public abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration();
+	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore fPreferenceStore);
 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
 	{
@@ -804,6 +806,11 @@ public abstract class VdmEditor extends TextEditor
 		}
 
 		// fEditorSelectionChangedListener
+	}
+
+	public SourceViewerConfiguration getNewSourceViewerConfiguration()
+	{
+		return getVdmSourceViewerConfiguration(getPreferenceStore());
 	}
 
 	// @Override

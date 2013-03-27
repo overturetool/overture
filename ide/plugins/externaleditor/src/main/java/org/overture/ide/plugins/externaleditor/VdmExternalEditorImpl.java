@@ -21,6 +21,7 @@ package org.overture.ide.plugins.externaleditor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.overture.ide.core.resources.IVdmProject;
@@ -33,9 +34,9 @@ import org.overture.ide.vdmsl.ui.editor.core.VdmSlSourceViewerConfiguration;
 public class VdmExternalEditorImpl extends VdmExternalEditor
 {
 	@Override
-	public VdmSourceViewerConfiguration getVdmSourceViewerConfiguration()
+	public VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore preferenceStore)
 	{
-		return new VdmSlSourceViewerConfiguration();
+		return new VdmSlSourceViewerConfiguration(preferenceStore);
 	}
 	
 	@Override
@@ -54,13 +55,13 @@ public class VdmExternalEditorImpl extends VdmExternalEditor
 			switch (project.getDialect())
 			{
 				case VDM_PP:
-					config = new VdmPpSourceViewerConfiguration();
+					config = new VdmPpSourceViewerConfiguration(getPreferenceStore());
 					break;
 				case VDM_RT:
-					config = new VdmRtSourceViewerConfiguration();
+					config = new VdmRtSourceViewerConfiguration(getPreferenceStore());
 					break;
 				case VDM_SL:
-					config = new VdmSlSourceViewerConfiguration();
+					config = new VdmSlSourceViewerConfiguration(getPreferenceStore());
 					break;
 				case CML:
 					break;

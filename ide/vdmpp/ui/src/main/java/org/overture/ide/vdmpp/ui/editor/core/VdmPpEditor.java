@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.vdmpp.ui.editor.core;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.editor.core.VdmSourceViewerConfiguration;
 
@@ -28,8 +29,8 @@ public class VdmPpEditor extends VdmEditor {
 	}
 
 	@Override
-	public VdmSourceViewerConfiguration getVdmSourceViewerConfiguration() {
-		return new VdmPpSourceViewerConfiguration();
+	protected VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore fPreferenceStore) {
+		return new VdmPpSourceViewerConfiguration(fPreferenceStore);
 	}
 
 }

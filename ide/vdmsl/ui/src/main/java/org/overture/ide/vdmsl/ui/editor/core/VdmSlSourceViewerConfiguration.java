@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.vdmsl.ui.editor.core;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.rules.ITokenScanner;
@@ -32,6 +33,11 @@ import org.overture.ide.vdmsl.ui.editor.syntax.VdmSlCodeScanner;
 public class VdmSlSourceViewerConfiguration extends
 		VdmSourceViewerConfiguration {
 
+
+	public VdmSlSourceViewerConfiguration(IPreferenceStore preferenceStore)
+	{
+		super(preferenceStore);
+	}
 
 	@Override
 	protected ITokenScanner getVdmCodeScanner() {

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.ui.editor.core;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -34,7 +35,7 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
@@ -45,13 +46,29 @@ import org.overture.ide.ui.editor.syntax.VdmSingleLineCommentScanner;
 import org.overture.ide.ui.editor.syntax.VdmStringScanner;
 
 public abstract class VdmSourceViewerConfiguration extends
-		SourceViewerConfiguration
+		TextSourceViewerConfiguration
 {
 	private ITokenScanner vdmCodeScanner = null;
 	PresentationReconciler reconciler = null;
 	private String[] commentingPrefix = new String[] { "--" };
 	private ITokenScanner vdmSingleLineCommentScanner;
 	private ITokenScanner vdmMultiLineCommentScanner;
+	
+	public VdmSourceViewerConfiguration()
+	{
+		super();
+	}
+	
+	/**
+	 * Creates a text source viewer configuration and
+	 * initializes it with the given preference store.
+	 *
+	 * @param preferenceStore	the preference store used to initialize this configuration
+	 */
+	public VdmSourceViewerConfiguration(IPreferenceStore preferenceStore) {
+		super(preferenceStore);
+	}
+	
 	private ITokenScanner vdmStringScanner;
 
 	// private Object fScanner;
