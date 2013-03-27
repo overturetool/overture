@@ -47,10 +47,10 @@ public class VdmPpNewClassWizard extends VdmNewFileWizard {
 	protected String getFileTemplate(String fileName)
 	{
 		String className = fileName;
-		return "class " + className + "\n" + "\ttypes\n-- TODO Define types here\n"
-				+ "\tvalues\n-- TODO Define values here\n" + "\tinstance variables\n-- TODO Define instance variables here\n"
-				+ "\toperations\n-- TODO Define operations here\n" + "\tfunctions\n-- TODO Define functiones here\n" 
-				+ "\ttraces\n-- TODO Define Combinatorial Test Traces here\n" + "end "
+		return "class " + className + "\n" + "types\n-- TODO Define types here\n"
+				+ "values\n-- TODO Define values here\n" + "instance variables\n-- TODO Define instance variables here\n"
+				+ "operations\n-- TODO Define operations here\n" + "functions\n-- TODO Define functiones here\n" 
+				+ "traces\n-- TODO Define Combinatorial Test Traces here\n" + "end "
 				+ className;
 	}
 }
