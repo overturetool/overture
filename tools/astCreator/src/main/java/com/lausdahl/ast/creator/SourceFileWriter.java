@@ -54,8 +54,10 @@ public class SourceFileWriter
 				continue;
 			}
 
-			if (def.isBaseTree() && extOnly && !def.isExtTree())
-			{System.out.println("Omitting base def: "+def.getAstPackage() + " "+def.getName());continue;}
+			if (extOnly && def.isBaseTree() && !def.isExtTree()) {
+				System.out.println("Omitting base def: "+def.getAstPackage() + " "+def.getName());
+				continue;
+			}
 
 			System.out.print(/* def.getSignatureName()+"..." */".");
 			// System.out.println(def.getName());

@@ -269,6 +269,7 @@ public class ExtensionGenerator2 {
 			IClassDefinition extensionProductionBase = ClassFactory.create(
 					cmlPackage, newName.getRawName(), baseProductionBase,
 					base.classToType.get(baseProductionBase), result);
+			extensionProductionBase.setIsExtTree(true);
 			extensionProductionBase.getName().setTag(
 					baseProductionBase.getName().getTag());
 			extensionProductionBase.addInterface(extProduction);
