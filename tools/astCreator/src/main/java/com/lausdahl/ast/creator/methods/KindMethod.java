@@ -25,6 +25,7 @@ public class KindMethod extends Method
 			this.name = "kind"
 					+ env.getInterfaceForCommonTreeNode(classDefinition).getName()
 					.getName();
+			this.returnType = EnumUtil.getEnumTypeName(classDefinition, env);
 		} else
 		{
 			IClassDefinition superClass = classDefinition.getSuperDef();

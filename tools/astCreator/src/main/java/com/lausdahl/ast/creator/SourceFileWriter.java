@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
-import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.definitions.IInterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.InterfaceDefinition;
 import com.lausdahl.ast.creator.definitions.PredefinedClassDefinition;

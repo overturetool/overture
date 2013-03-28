@@ -3,7 +3,6 @@ package com.lausdahl.ast.creator.tests;
 import java.io.File;
 import java.io.InputStream;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import com.lausdahl.ast.creator.Main;

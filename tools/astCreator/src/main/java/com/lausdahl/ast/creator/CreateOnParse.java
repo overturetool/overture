@@ -11,9 +11,7 @@ import java.util.Set;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.RewriteEmptyStreamException;
 
 import com.lausdahl.ast.creator.definitions.ExternalJavaClassDefinition;
 import com.lausdahl.ast.creator.definitions.Field;
@@ -50,10 +48,7 @@ public class CreateOnParse
 			result = parser.root();
 		} catch (Exception e)
 		{
-			RewriteEmptyStreamException ee;
-			
-			e.printStackTrace();
-			
+			e.printStackTrace();			
 			throw new AstCreatorException("Exception in AST parser", e, true);
 		}
 

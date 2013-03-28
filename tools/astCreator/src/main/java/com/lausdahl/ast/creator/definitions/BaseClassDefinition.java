@@ -27,14 +27,11 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 		super(name, astPackage);
 		isBaseTree = false;
 	}
-	public BaseClassDefinition(JavaName name, String astPackage, boolean isBasedTree) {
+	public BaseClassDefinition(JavaName name, String astPackage, boolean isBaseTree) {
 		super(name, astPackage);
-		this.isBaseTree = isBasedTree;
+		this.isBaseTree = isBaseTree;
 	}
 
-	
-	
-	
 	public boolean hasSuper() {
 		return this.superDef != null;
 	}
