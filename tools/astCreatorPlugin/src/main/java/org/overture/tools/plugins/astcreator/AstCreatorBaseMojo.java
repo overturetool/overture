@@ -20,7 +20,7 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	 * @parameter
 	 * @optional
 	 */
-	protected boolean extensionTreeOnly = false;
+	protected boolean extendedTreeOnly = false;
 	
 	/**
 	 * The prefix of the generated classes.

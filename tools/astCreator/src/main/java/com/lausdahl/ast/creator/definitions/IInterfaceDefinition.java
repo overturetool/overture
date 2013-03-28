@@ -61,7 +61,7 @@ public interface IInterfaceDefinition {
 
 	public String getGenericsString();
 
-	public static final String copurightHeader = "/*******************************************************************************\n"
+	public static final String copyrightHeader = "/*******************************************************************************\n"
 			+ "* Copyright (c) 2009, 2011 Overture Team and others.\n"
 			+ "*\n"
 			+ "* Overture is free software: you can redistribute it and/or modify\n"

@@ -77,7 +77,7 @@ public class SourceFileWriter
 			String analysisPackageName, Environment env)
 	{
 		Map<String, String> replace = new Hashtable<String, String>();
-		replace.put("//COPYRIGHT", IInterfaceDefinition.copurightHeader);
+		replace.put("//COPYRIGHT", IInterfaceDefinition.copyrightHeader);
 
 		replace.put("%INode%", env.iNode.getName().getName());
 		replace.put("%Node%", env.node.getName().getName());

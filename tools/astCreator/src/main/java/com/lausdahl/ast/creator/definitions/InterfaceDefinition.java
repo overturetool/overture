@@ -153,7 +153,7 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 
 	public String getJavaSourceCode(StringBuilder sb, Environment env) {
 
-		sb.append(IInterfaceDefinition.copurightHeader + "\n");
+		sb.append(IInterfaceDefinition.copyrightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
 		if (getName().getPackageName() != null) {

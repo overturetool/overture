@@ -16,7 +16,7 @@ import com.lausdahl.ast.creator.methods.Method;
 public class BaseClassDefinition extends InterfaceDefinition implements
 		IClassDefinition {
 	
-	private boolean isBaseTree;
+	private boolean isBaseTree = false;
 	
 	protected final List<Field> fields = new Vector<Field>();
 	protected final List<ToStringAddOn> toStringAddOn = new Vector<ToStringAddOn>();
@@ -25,8 +25,8 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 
 	public BaseClassDefinition(JavaName name, String astPackage) {
 		super(name, astPackage);
-		isBaseTree = false;
 	}
+
 	public BaseClassDefinition(JavaName name, String astPackage, boolean isBaseTree) {
 		super(name, astPackage);
 		this.isBaseTree = isBaseTree;
@@ -80,7 +80,7 @@ public class BaseClassDefinition extends InterfaceDefinition implements
 	}
 
 	public String getJavaSourceCode(StringBuilder sb, Environment env) {
-		sb.append(IInterfaceDefinition.copurightHeader + "\n");
+		sb.append(IInterfaceDefinition.copyrightHeader + "\n");
 		sb.append(IClassDefinition.classHeader + "\n");
 
 		if (getName().getPackageName() != null) {
