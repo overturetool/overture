@@ -135,7 +135,7 @@ public class Main {
 				System.out.println("Generator starting with input: " + input1);
 				Main.create(null, null, new FileInputStream(input1),
 						new FileInputStream(input2), generated, "Interpreter",
-						GENERATE_VDM);
+						GENERATE_VDM,false);
 				System.out.println("Done.");
 			}
 				break;
@@ -204,8 +204,8 @@ public class Main {
 			IllegalAccessException, AstCreatorException {
 		Generator generator = new Generator();
 		Environment env = generator.generate(toStringFile, inputFile, "Base",
-				true);
-		generator.runPostGeneration(env);
+				true,true);
+		generator.runPostGeneration(env,false);
 
 		if (write) {
 			SourceFileWriter.write(outputBase, env, generateVdm);
@@ -235,32 +235,36 @@ public class Main {
 	 */
 	public static void create(InputStream ast1ToString,
 			InputStream ast2ToString, InputStream ast1, InputStream ast2,
-			File generated, String extendName, boolean generateVdm)
+			File generated, String extendName, boolean generateVdm, boolean extOnly)
 			throws Exception {
 		System.out.println("Generating base and extension tree, standby ... ");
+		System.out.println("Extension tree only: "+extOnly);
 
 		// Instantiate a generator to build environments
 		Generator generator = new Generator();
 
 		// Create the base AST environment
-		Environment base = generator.generate(ast1ToString, ast1, "Base", true);
+		Environment base = generator.generate(ast1ToString, ast1, "Base", true,true);
 		// generator.runPostGeneration(base);
 
 		// Create the extended tree with loose ends so do not test for integrity
 		Environment envExtOnly = generator.generate(ast2ToString, ast2,
-				extendName, false);
+				extendName, false,false);	
+		for(IInterfaceDefinition idef : envExtOnly.getAllDefinitions()) {
+			idef.setIsExtTree(true);
+		}
 
 		// Run extension generator the modify envExtBase and enrich it with the
 		// new extension nodes.
 		ExtensionGenerator2 extGen = new ExtensionGenerator2(base);
 		Environment envResolvedExt = extGen.extend(envExtOnly);
-		generator.runPostGeneration(envResolvedExt);
+		generator.runPostGeneration(envResolvedExt,true);
 		extGen.runPostGeneration(envExtOnly, envResolvedExt);
 
 		System.out.println("Writing sources to the file system, standby ... ");
 		System.out.println("Destination: " + generated.getAbsolutePath());
 		// write sources for the two trees
-		SourceFileWriter.write(generated, envResolvedExt, generateVdm);
+		SourceFileWriter.write(generated, envResolvedExt, generateVdm, extOnly);
 		// createCopyAdaptor(env1, env2, extendName, generated);
 		System.out.println("Created AST with extensions.");
 	}

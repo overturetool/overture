@@ -24,7 +24,7 @@ public class CmlExtendsOvertureTest extends TestCase {
 				ovtSource);
 
 		Main.create(null, null, ovtSource, cmlSource, outputFolder, "CML",
-				false);
+				false, true);
 	}
 
 }

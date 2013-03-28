@@ -11,6 +11,8 @@ import com.lausdahl.ast.creator.java.definitions.JavaName;
 import com.lausdahl.ast.creator.methods.Method;
 
 public class InterfaceDefinition implements IInterfaceDefinition {
+	private boolean isBase;
+	private boolean isExt;
 	public List<Method> methods = new Vector<Method>();
 	public Set<IInterfaceDefinition> imports = new HashSet<IInterfaceDefinition>();
 	List<String> genericArguments = new Vector<String>();
@@ -350,6 +352,26 @@ public class InterfaceDefinition implements IInterfaceDefinition {
 
 	public String getAstPackage() {
 		return astPackage;
+	}
+
+	@Override
+	public void setIsBaseTree(boolean b) {
+		this.isBase = b;		
+	}
+
+	@Override
+	public boolean isBaseTree() {
+		return this.isBase;
+	}
+
+	@Override
+	public void setIsExtTree(boolean b) {
+		this.isExt = b;
+	}
+
+	@Override
+	public boolean isExtTree() {
+		return this.isExt;
 	}
 
 }

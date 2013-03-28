@@ -14,6 +14,14 @@ import org.apache.maven.plugin.MojoFailureException;
  * @requiresDependencyResolution compile
  */
 public abstract class AstCreatorBaseMojo extends AbstractMojo {
+	
+	/** The prefix of the generated classes.
+	 * 
+	 * @parameter
+	 * @optional
+	 */
+	protected boolean extensionTreeOnly = false;
+	
 	/**
 	 * The prefix of the generated classes.
 	 * 

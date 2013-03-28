@@ -17,7 +17,7 @@ public class SimpleTest extends TestCase {
 		System.out.println(new File(".").getAbsolutePath());
 		File output = new File(
 				FilePathUtil.getPlatformPath("target/testData/simple"));
-		String inputFile = TESTDATA_BASE + "/simple.astv2";
+		String inputFile = TESTDATA_BASE + "/extonly1.ast";
 		Main.create(
 				null,
 				new FileInputStream(new File(new File(".").getParentFile(),

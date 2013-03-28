@@ -123,4 +123,25 @@ public class GenericArgumentedIInterfceDefinition implements
 		return astPackage;
 	}
 
+	@Override
+	public void setIsBaseTree(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isBaseTree() {
+		return false;
+	}
+
+	@Override
+	public void setIsExtTree(boolean b) {
+		
+	}
+
+	@Override
+	public boolean isExtTree() {
+		return false;
+	}
+
 }

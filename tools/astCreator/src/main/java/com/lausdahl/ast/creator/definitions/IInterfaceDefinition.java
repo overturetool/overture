@@ -80,4 +80,13 @@ public interface IInterfaceDefinition {
 			+ "* The Overture Tool web-site: http://overturetool.org/\n"
 			+ "*******************************************************************************/\n";
 
+	public void setIsBaseTree(boolean b);
+	
+	public boolean isBaseTree();
+
+	public void setIsExtTree(boolean b);
+	
+	public boolean isExtTree();
+
+
 }
