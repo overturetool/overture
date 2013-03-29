@@ -99,7 +99,7 @@ public class Generator {
 	public void runPostGeneration(Environment env, boolean isBaseTree)
 			throws InstantiationException, IllegalAccessException {
 		System.out.println("Generating enumerations...");
-		createNodeEnum(env,isBaseTree);
+		createNodeEnum(env);
 		createProductionEnums(env,isBaseTree);
 
 		// System.out.println("Generating interfaces for nodes");
@@ -216,17 +216,15 @@ public class Generator {
 		return processedClasses;
 	}
 
-	private static void createNodeEnum(Environment env, boolean isBaseTree) {
+	private static void createNodeEnum(Environment env) {
 		EnumDefinition eDef = new EnumDefinition(new JavaName(
 				env.getTemplateDefaultPackage(), "NodeEnum"),
 				env.getAstPackage());
-		eDef.setIsBaseTree(isBaseTree);
 		env.addClass(eDef);
 		eDef.elements.add("TOKEN");
 		eDef.elements.add("ExternalDefined");
 		for (IClassDefinition d : env.getClasses()) {
 			if (env.isTreeNode(d)) {
-
 				if (env.classToType.get(d) == ClassType.Production) {
 					eDef.elements.add(EnumUtil.getEnumElementName(d));
 				}
