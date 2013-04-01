@@ -21,8 +21,8 @@ package org.overture.ide.ui.outline;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.EAccess;
 import org.overture.ast.definitions.PDefinition;
 
 public class MemberFilter extends ViewerFilter {
@@ -123,7 +123,7 @@ public class MemberFilter extends ViewerFilter {
 	}
 	private boolean isNonPublic(Object element) {
 		if(element instanceof PDefinition){
-			return ! (((PDefinition)element).getAccess().getAccess().kindPAccess()==EAccess.PUBLIC);
+			return ! APublicAccess.kindPAccess.equals(((PDefinition)element).getAccess().getAccess().kindPAccess());
 		}
 		return false;
 	}

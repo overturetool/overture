@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.EAccess;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -35,11 +35,17 @@ public class ExecutableFilter extends ViewerFilter {
 		return element instanceof SClassDefinition
 				|| element instanceof AModuleModules
 				|| (parentElement instanceof SClassDefinition
-						&& (element instanceof AExplicitOperationDefinition
-								|| element instanceof AExplicitFunctionDefinition || element instanceof AInheritedDefinition) && (element instanceof PDefinition && ((PDefinition) element)
-						.getAccess().getAccess().kindPAccess() == EAccess.PUBLIC))
-
-				|| (parentElement instanceof AModuleModules && (element instanceof AExplicitFunctionDefinition || element instanceof AExplicitOperationDefinition));
+					&& (element instanceof AExplicitOperationDefinition
+						|| element instanceof AExplicitFunctionDefinition
+						|| element instanceof AInheritedDefinition
+						)
+					&& (element instanceof PDefinition
+						&& APublicAccess.kindPAccess.equals(((PDefinition)element).getAccess().getAccess().kindPAccess())
+						)
+					)
+				|| (parentElement instanceof AModuleModules
+					&& (element instanceof AExplicitFunctionDefinition
+						|| element instanceof AExplicitOperationDefinition));
 
 	}
 

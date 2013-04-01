@@ -20,6 +20,9 @@ package org.overture.ide.ui.outline;
 
 
 import org.eclipse.swt.graphics.Image;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -38,13 +41,13 @@ public class DisplayImageCreator
 			PDefinition def = (PDefinition) element;
 			switch (def.getAccess().getAccess().kindPAccess())
 			{
-			case PRIVATE:
+			case APrivateAccess.kindPAccess:
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PRIVATE);
 
-			case PROTECTED:
+			case AProtectedAccess.kindPAccess:
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PROTECTED);
 
-			case PUBLIC:
+			case APublicAccess.kindPAccess:
 			default:
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PUBLIC);
 			}
@@ -55,13 +58,13 @@ public class DisplayImageCreator
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);//VDM-SL
 			switch (def.getAccess().getAccess().kindPAccess())
 			{
-			case PRIVATE:
+			case APrivateAccess.kindPAccess:
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PRIVATE);
 
-			case PROTECTED:
+			case AProtectedAccess.kindPAccess:
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PROTECTED);
 
-			case PUBLIC:
+			case APublicAccess.kindPAccess:
 			default:
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);
 			}
