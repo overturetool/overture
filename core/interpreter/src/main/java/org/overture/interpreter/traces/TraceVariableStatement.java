@@ -32,7 +32,6 @@ import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.node.INode;
-import org.overture.ast.statements.EStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.PStmBase;
 import org.overture.ast.typechecker.NameScope;
@@ -112,7 +111,7 @@ public class TraceVariableStatement extends PStmBase
 	}
 
 	@Override
-	public EStm kindPStm()
+	public String kindPStm()
 	{
 		// TODO Auto-generated method stub
 		return null;

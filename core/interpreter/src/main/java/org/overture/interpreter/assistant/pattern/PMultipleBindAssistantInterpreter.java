@@ -17,9 +17,9 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	{
 		switch (mb.kindPMultipleBind())
 		{
-			case SET:
+			case ASetMultipleBind.kindPMultipleBind:
 				return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb,ctxt);
-			case TYPE:
+			case ATypeMultipleBind.kindPMultipleBind:
 				return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind)mb,ctxt);
 			default:
 				break;
@@ -32,9 +32,9 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	{
 		switch (mb.kindPMultipleBind())
 		{
-			case SET:
+			case ASetMultipleBind.kindPMultipleBind:
 				return ASetMultipleBindAssistantInterpreter.getValues((ASetMultipleBind)mb,ctxt);
-			case TYPE:
+			case ATypeMultipleBind.kindPMultipleBind:
 				return ATypeMultipleBindAssistantInterpreter.getValues((ATypeMultipleBind)mb, ctxt);
 			default:
 				return new ValueList();

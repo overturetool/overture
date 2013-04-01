@@ -14,6 +14,10 @@ import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
+import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -90,13 +94,13 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		switch (node.kindSClassDefinition())
 		{
-			case BUS:
+			case ABusClassDefinition.kindSClassDefinition:
 				return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition)node,ctorDefinition,argvals,ctxt);
-			case CLASS:
+			case AClassClassDefinition.kindSClassDefinition:
 				return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition)node,ctorDefinition ,argvals,ctxt);
-			case CPU:
+			case ACpuClassDefinition.kindSClassDefinition:
 				return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition)node, ctorDefinition, argvals, ctxt);
-			case SYSTEM:
+			case ASystemClassDefinition.kindSClassDefinition:
 				VdmRuntimeError.abort(node.getLocation(),4135, "Cannot instantiate system class " + node.getName(), ctxt);
 		}
 		
@@ -393,13 +397,13 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 				switch (d.getAccess().getAccess().kindPAccess())
 				{
-					case PRIVATE:
-					case PROTECTED:
+					case APrivateAccess.kindPAccess:
+					case AProtectedAccess.kindPAccess:
 					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 						initCtxt.putAllNew(nvl);
 						break;
 
-					case PUBLIC:
+					case APublicAccess.kindPAccess:
 						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 						initCtxt.putAllNew(nvl);
 						break;
@@ -412,13 +416,13 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 				switch (d.getAccess().getAccess().kindPAccess())
 				{
-					case PRIVATE:
-					case PROTECTED:
+					case APrivateAccess.kindPAccess:
+					case AProtectedAccess.kindPAccess:
 						VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 						initCtxt.putAllNew(nvl);
 						break;
 
-					case PUBLIC:
+					case APublicAccess.kindPAccess:
 						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 						initCtxt.putAllNew(nvl);
 						break;
@@ -469,13 +473,13 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 				switch (d.getAccess().getAccess().kindPAccess())
 				{
-					case PRIVATE:
-					case PROTECTED:
+					case APrivateAccess.kindPAccess:
+					case AProtectedAccess.kindPAccess:
 						VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 						initCtxt.putList(nvl);
 						break;
 
-					case PUBLIC:
+					case APublicAccess.kindPAccess:
 						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 						initCtxt.putList(nvl);
 						break;

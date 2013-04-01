@@ -13,7 +13,7 @@ public class SBasicTypeAssistantInterpreter
 	{
 		switch (type.kindSBasicType())
 		{
-			case BOOLEAN:
+			case ABooleanBasicType.kindSBasicType:
 				return ABooleanBasicTypeAssistantInterpreter.getAllValues((ABooleanBasicType)type,ctxt);
 			default:
 				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);

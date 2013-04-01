@@ -43,35 +43,35 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch (d.kindPDefinition())
 		{
-			case ASSIGNMENT:
+			case AAssignmentDefinition.kindPDefinition:
 				return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) d, initialContext);
-			case EQUALS:
+			case AEqualsDefinition.kindPDefinition:
 				return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition)d,initialContext);
-			case EXPLICITFUNCTION:
+			case AExplicitFunctionDefinition.kindPDefinition:
 				return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition)d,initialContext);
-			case EXPLICITOPERATION:
+			case AExplicitOperationDefinition.kindPDefinition:
 				return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition)d,initialContext);
-			case IMPLICITFUNCTION:
+			case AImplicitFunctionDefinition.kindPDefinition:
 				return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition)d,initialContext);
-			case IMPLICITOPERATION:
+			case AImplicitOperationDefinition.kindPDefinition:
 				return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition)d,initialContext);
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition)d,initialContext);
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition)d, initialContext);
-			case INSTANCEVARIABLE:
+			case AInstanceVariableDefinition.kindPDefinition:
 					return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition)d,initialContext);
-			case LOCAL:
+			case ALocalDefinition.kindPDefinition:
 				return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition)d,initialContext);
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition)d,initialContext);
-			case THREAD:
+			case AThreadDefinition.kindPDefinition:
 				return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition)d,initialContext);
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 				return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition)d,initialContext);
-			case UNTYPED:
+			case AUntypedDefinition.kindPDefinition:
 				return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition)d,initialContext);
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition)d,initialContext);
 			default:
 				return new NameValuePairList();		// Overridden
@@ -101,13 +101,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch (d.kindPDefinition())
 		{
-			case ASSIGNMENT:
+			case AAssignmentDefinition.kindPDefinition:
 				return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition)d,ctxt);
-			case EQUALS:
+			case AEqualsDefinition.kindPDefinition:
 				return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition)d, ctxt);
-			case INSTANCEVARIABLE:
+			case AInstanceVariableDefinition.kindPDefinition:
 				return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition)d,ctxt);
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition)d,ctxt);
 			default:
 				return new ValueList();
@@ -119,31 +119,31 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch (d.kindPDefinition())
 		{
-			case ASSIGNMENT:
+			case AAssignmentDefinition.kindPDefinition:
 				return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition)d,lineno);
-			case CLASS:
+			case SClassDefinition.kindPDefinition:
 				return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition)d,lineno);
-			case EQUALS:
+			case AEqualsDefinition.kindPDefinition:
 				return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition)d,lineno);
-			case EXPLICITFUNCTION:
+			case AExplicitFunctionDefinition.kindPDefinition:
 				return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition)d,lineno);
-			case EXPLICITOPERATION:
+			case AExplicitOperationDefinition.kindPDefinition:
 				return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition)d,lineno);
-			case IMPLICITFUNCTION:
+			case AImplicitFunctionDefinition.kindPDefinition:
 				return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition)d,lineno);
-			case IMPLICITOPERATION:
+			case AImplicitOperationDefinition.kindPDefinition:
 				return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition)d,lineno);
-			case INSTANCEVARIABLE:
+			case AInstanceVariableDefinition.kindPDefinition:
 				return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition)d,lineno);
-			case PERSYNC:
+			case APerSyncDefinition.kindPDefinition:
 				return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition)d,lineno);
-			case STATE:
+			case AStateDefinition.kindPDefinition:
 				return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition)d,lineno);
-			case THREAD:
+			case AThreadDefinition.kindPDefinition:
 				return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition)d,lineno);
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 				return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition)d,lineno);
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition)d,lineno);
 			default:
 				return null;
@@ -154,15 +154,15 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch (def.kindPDefinition())
 		{		
-			case CLASS:
+			case SClassDefinition.kindPDefinition:
 				return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition)def);
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition)def);
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition)def);
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition)def);			
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 				return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition)def);
 			default:
 				return false;
@@ -173,13 +173,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch(idef.kindPDefinition())
 		{
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				return isRuntime(((AImportedDefinition)idef).getDef());
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				return isRuntime(((AInheritedDefinition)idef).getSuperdef());
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				return isRuntime(((ARenamedDefinition)idef).getDef());
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 				return false;
 			default:
 				return true;
@@ -191,13 +191,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch(d.kindPDefinition())
 		{
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				return isValueDefinition(((AImportedDefinition)d).getDef());
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				return isValueDefinition(((AInheritedDefinition)d).getSuperdef());
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				return isValueDefinition(((ARenamedDefinition)d).getDef());
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				return true;
 			default:
 				return false;
@@ -209,13 +209,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch(d.kindPDefinition())
 		{
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				return isInstanceVariable(((AImportedDefinition)d).getDef());
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				return isInstanceVariable(((AInheritedDefinition)d).getSuperdef());
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				return isInstanceVariable(((ARenamedDefinition)d).getDef());
-			case INSTANCEVARIABLE:
+			case AInstanceVariableDefinition.kindPDefinition:
 				return true;
 			default:
 				return false;
@@ -243,13 +243,13 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		switch (d.kindPDefinition())
 		{			
-			case CLASS:
+			case SClassDefinition.kindPDefinition:
 				return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition)d, lineno);
-			case EXPLICITOPERATION:
+			case AExplicitOperationDefinition.kindPDefinition:
 				return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition)d,lineno);
-			case IMPLICITOPERATION:
+			case AImplicitOperationDefinition.kindPDefinition:
 				return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition)d,lineno);			
-			case THREAD:
+			case AThreadDefinition.kindPDefinition:
 				return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition)d,lineno);
 			default:
 				return null;

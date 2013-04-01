@@ -15,9 +15,9 @@ public class SMapExpAssistantInterpreter extends SMapExpAssistantTC
 	{
 		switch (exp.kindSMapExp())
 		{
-			case MAPCOMP:
+			case AMapCompMapExp.kindSMapExp:
 				return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp)exp,ctxt);
-			case MAPENUM:
+			case AMapEnumMapExp.kindSMapExp:
 				return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp)exp,ctxt);
 			default:
 				return new ValueList();
@@ -28,9 +28,9 @@ public class SMapExpAssistantInterpreter extends SMapExpAssistantTC
 	{
 		switch (exp.kindSMapExp())
 		{
-			case MAPCOMP:
+			case AMapCompMapExp.kindSMapExp:
 				return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp)exp,lineno);
-			case MAPENUM:
+			case AMapEnumMapExp.kindSMapExp:
 				return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp)exp,lineno);
 			default:
 				return null;

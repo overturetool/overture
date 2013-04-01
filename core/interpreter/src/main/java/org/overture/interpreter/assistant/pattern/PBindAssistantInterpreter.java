@@ -16,9 +16,9 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	{
 		switch (bind.kindPBind())
 		{
-			case SET:
+			case ASetBind.kindPBind:
 				return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-			case TYPE:
+			case ATypeBind.kindPBind:
 				return ATypeBindAssistantInterpreter.getBindValues((ATypeBind)bind,ctxt);
 			default:
 				assert false : "Should not happen";
@@ -30,9 +30,9 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	{
 		switch (bind.kindPBind())
 		{
-			case SET:
+			case ASetBind.kindPBind:
 				return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-			case TYPE:
+			case ATypeBind.kindPBind:
 				return ATypeBindAssistantInterpreter.getValues((ATypeBind)bind,ctxt);
 			default:
 				return new ValueList();

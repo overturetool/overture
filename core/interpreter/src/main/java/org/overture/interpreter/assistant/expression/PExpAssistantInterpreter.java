@@ -59,73 +59,73 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		switch (exp.kindPExp())
 		{
-			case APPLY:
+			case AApplyExp.kindPExp:
 				return AApplyExpAssistantInterpreter.getValues((AApplyExp)exp,ctxt);
-			case BINARY:
+			case SBinaryExp.kindPExp:
 				return SBinaryExpAssistantInterpreter.getValues((SBinaryExp)exp,ctxt);
-			case CASES:
+			case ACasesExp.kindPExp:
 				return ACasesExpAssistantInterpreter.getValues((ACasesExp)exp,ctxt);
-			case DEF:
+			case ADefExp.kindPExp:
 				return ADefExpAssistantInterpreter.getValues((ADefExp)exp,ctxt);
-			case ELSEIF:
+			case AElseIfExp.kindPExp:
 				return AElseIfExpAssistantInterpreter.getValues((AElseIfExp)exp,ctxt);
-			case EXISTS:
+			case AExistsExp.kindPExp:
 				return AExistsExpAssistantInterpreter.getValues((AExistsExp)exp,ctxt);
-			case EXISTS1:
+			case AExists1Exp.kindPExp:
 				return AExists1ExpAssistantInterpreter.getValues((AExists1Exp)exp,ctxt);
-			case FIELD:
+			case AFieldExp.kindPExp:
 				return AFieldExpAssistantInterpreter.getValues((AFieldExp)exp,ctxt);
-			case FIELDNUMBER:
+			case AFieldNumberExp.kindPExp:
 				return AFieldNumberExpAssistantInterpreter.getValues((AFieldNumberExp)exp,ctxt);
-			case FORALL:
+			case AForAllExp.kindPExp:
 				return AForAllExpAssistantInterpreter.getValues((AForAllExp)exp,ctxt);
-			case FUNCINSTATIATION:
+			case AFuncInstatiationExp.kindPExp:
 				return AFuncInstatiationExpAssistantInterpreter.getValues((AFuncInstatiationExp)exp,ctxt);
-			case IF:
+			case AIfExp.kindPExp:
 				return AIfExpAssistantInterpreter.getValues((AIfExp)exp,ctxt);
-			case IOTA:
+			case AIotaExp.kindPExp:
 				return AIotaExpAssistantInterpreter.getValues((AIotaExp) exp,ctxt);
-			case IS:
+			case AIsExp.kindPExp:
 				return AIsExpAssistantInterpreter.getValues((AIsExp)exp,ctxt);
-			case ISOFBASECLASS:
+			case AIsOfBaseClassExp.kindPExp:
 				return AIsOfBaseClassExpAssistantInterpreter.getValues((AIsOfBaseClassExp)exp,ctxt);
-			case ISOFCLASS:
+			case AIsOfClassExp.kindPExp:
 				return AIsOfClassExpAssistantInterpreter.getValues((AIsOfClassExp)exp,ctxt);
-			case LAMBDA:
+			case ALambdaExp.kindPExp:
 				return ALambdaExpAssistantInterpreter.getValues((ALambdaExp)exp,ctxt);
-			case LETBEST:
+			case ALetBeStExp.kindPExp:
 				return ALetBeStExpAssistantInterpreter.getValues((ALetBeStExp)exp,ctxt);
-			case LETDEF:
+			case ALetDefExp.kindPExp:
 				return ALetDefExpAssistantInterpreter.getValues((ALetDefExp)exp,ctxt);
-			case MAP:
+			case SMapExp.kindPExp:
 				return SMapExpAssistantInterpreter.getValues((SMapExp)exp,ctxt);
-			case MAPLET:
+			case AMapletExp.kindPExp:
 				return AMapletExpAssistantInterpreter.getValues((AMapletExp)exp,ctxt);
-			case MKBASIC:
+			case AMkBasicExp.kindPExp:
 				return AMkBasicExpAssistantInterpreter.getValues((AMkBasicExp)exp,ctxt);
-			case MKTYPE:
+			case AMkTypeExp.kindPExp:
 				return AMkTypeExpAssistantInterpreter.getValues((AMkTypeExp)exp,ctxt);
-			case MU:
+			case AMuExp.kindPExp:
 				return AMuExpAssistantInterpreter.getValues((AMuExp)exp,ctxt);
-			case NARROW:
+			case ANarrowExp.kindPExp:
 				return ANarrowExpAssistantInterpreter.getValues((ANarrowExp) exp, ctxt);
-			case NEW:
+			case ANewExp.kindPExp:
 				return ANewExpAssistantInterpreter.getValues((ANewExp)exp,ctxt);
-			case SAMEBASECLASS:
+			case ASameBaseClassExp.kindPExp:
 				return ASameBaseClassExpAssistantInterpreter.getValues((ASameBaseClassExp)exp,ctxt);
-			case SAMECLASS:
+			case ASameClassExp.kindPExp:
 				return ASameClassExpAssistantInterpreter.getValues((ASameBaseClassExp)exp,ctxt);
-			case SEQ:
+			case SSeqExp.kindPExp:
 				return SSeqExpAssistantInterpreter.getValues((SSeqExp)exp,ctxt);
-			case SET:
+			case SSetExp.kindPExp:
 				return SSetExpAssistantInterpreter.getValues((SSetExp)exp,ctxt);
-			case SUBSEQ:
+			case ASubseqExp.kindPExp:
 				return ASubseqExpAssistantInterpreter.getValues((ASubseqExp)exp,ctxt);
-			case TUPLE:
+			case ATupleExp.kindPExp:
 				return ATupleExpAssistantInterpreter.getValues((ATupleExp)exp,ctxt);
-			case UNARY:
+			case SUnaryExp.kindPExp:
 				return SUnaryExpAssistantInterpreter.getValues((SUnaryExp)exp,ctxt);
-			case VARIABLE:
+			case AVariableExp.kindPExp:
 				return AVariableExpAssistantInterpreter.getVariable((AVariableExp)exp,ctxt);
 			default:
 				return new ValueList();  // Default, for expressions with no variables
@@ -144,73 +144,73 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		switch (exp.kindPExp())
 		{
-			case APPLY:
+			case AApplyExp.kindPExp:
 				return AApplyExpAssistantInterpreter.findExpression((AApplyExp)exp,lineno);
-			case BINARY:
+			case SBinaryExp.kindPExp:
 				return SBinaryExpAssistantInterpreter.findExpression((SBinaryExp)exp,lineno);
-			case CASES:
+			case ACasesExp.kindPExp:
 				return ACasesExpAssistantInterpreter.findExpression((ACasesExp)exp,lineno);
-			case DEF:
+			case ADefExp.kindPExp:
 				return ADefExpAssistantInterpreter.findExpression((ADefExp)exp,lineno);
-			case ELSEIF:
+			case AElseIfExp.kindPExp:
 				return AElseIfExpAssistantInterpreter.findExpression((AElseIfExp)exp,lineno);
-			case EXISTS:
+			case AExistsExp.kindPExp:
 				return AExistsExpAssistantInterpreter.findExpression((AExistsExp)exp,lineno);
-			case EXISTS1:
+			case AExists1Exp.kindPExp:
 				return AExists1ExpAssistantInterpreter.findExpression((AExists1Exp)exp,lineno);
-			case FIELD:
+			case AFieldExp.kindPExp:
 				return AFieldExpAssistantInterpreter.findExpression((AFieldExp)exp,lineno);
-			case FIELDNUMBER:
+			case AFieldNumberExp.kindPExp:
 				return AFieldNumberExpAssistantInterpreter.findExpression((AFieldNumberExp)exp,lineno);
-			case FORALL:
+			case AForAllExp.kindPExp:
 				return AForAllExpAssistantInterpreter.findExpression((AForAllExp)exp,lineno);
-			case FUNCINSTATIATION:
+			case AFuncInstatiationExp.kindPExp:
 				return AFuncInstatiationExpAssistantInterpreter.findExpression((AFuncInstatiationExp)exp,lineno);
-			case IF:
+			case AIfExp.kindPExp:
 				return AIfExpAssistantInterpreter.findExpression((AIfExp)exp,lineno);
-			case IOTA:
+			case AIotaExp.kindPExp:
 				return AIotaExpAssistantInterpreter.findExpression((AIotaExp)exp,lineno);
-			case IS:
+			case AIsExp.kindPExp:
 				return AIsExpAssistantInterpreter.findExpression((AIsExp)exp,lineno);
-			case ISOFBASECLASS:
+			case AIsOfBaseClassExp.kindPExp:
 				return AIsOfBaseClassExpAssistantInterpreter.findExpression((AIsOfBaseClassExp)exp,lineno);
-			case ISOFCLASS:
+			case AIsOfClassExp.kindPExp:
 				return AIsOfClassExpAssistantInterpreter.findExpression((AIsOfClassExp)exp,lineno);
-			case LAMBDA:
+			case ALambdaExp.kindPExp:
 				return ALambdaExpAssistantInterpreter.findExpression((ALambdaExp)exp,lineno);
-			case LETBEST:
+			case ALetBeStExp.kindPExp:
 				return ALetBeStExpAssistantInterpreter.findExpression((ALetBeStExp)exp,lineno);
-			case LETDEF:
+			case ALetDefExp.kindPExp:
 				return ALetDefExpAssistantInterpreter.findExpression((ALetDefExp)exp,lineno);
-			case MAP:
+			case SMapExp.kindPExp:
 				return SMapExpAssistantInterpreter.findExpression((SMapExp)exp,lineno);
-			case MAPLET:
+			case AMapletExp.kindPExp:
 				return AMapletExpAssistantInterpreter.findExpression((AMapletExp)exp, lineno);
-			case MKBASIC:
+			case AMkBasicExp.kindPExp:
 				return AMkBasicExpAssistantInterpreter.findExpression((AMkBasicExp)exp,lineno);
-			case MKTYPE:
+			case AMkTypeExp.kindPExp:
 				return AMkTypeExpAssistantInterpreter.findExpression((AMkTypeExp)exp,lineno);
-			case MU:
+			case AMuExp.kindPExp:
 				return AMuExpAssistantInterpreter.findExpression((AMuExp)exp,lineno);
-			case NARROW:
+			case ANarrowExp.kindPExp:
 				return ANarrowExpAssistantInterpreter.findExpression((ANarrowExp) exp, lineno);
-			case NEW:
+			case ANewExp.kindPExp:
 				return ANewExpAssistantInterpreter.findExpression((ANewExp)exp,lineno);
-			case POSTOP:
+			case APostOpExp.kindPExp:
 				return APostOpExpAssistantInterpreter.findExpression((APostOpExp)exp,lineno);
-			case SAMEBASECLASS:
+			case ASameBaseClassExp.kindPExp:
 				return ASameBaseClassExpAssistantInterpreter.findExpression((ASameBaseClassExp)exp,lineno);
-			case SAMECLASS:
+			case ASameClassExp.kindPExp:
 				return ASameClassExpAssistantInterpreter.findExpression((ASameClassExp)exp,lineno);
-			case SEQ:
+			case SSeqExp.kindPExp:
 				return SSeqExpAssistantInterpreter.findExpression((SSeqExp)exp,lineno);
-			case SET:
+			case SSetExp.kindPExp:
 				return SSetExpAssistantInterpreter.findExpression((SSetExp)exp,lineno);
-			case SUBSEQ:
+			case ASubseqExp.kindPExp:
 				return ASubseqExpAssistantInterpreter.findExpression((ASubseqExp)exp,lineno);
-			case TUPLE:
+			case ATupleExp.kindPExp:
 				return ATupleExpAssistantInterpreter.findExpression((ATupleExp)exp,lineno);
-			case UNARY:
+			case SUnaryExp.kindPExp:
 				return SUnaryExpAssistantInterpreter.findExpression((SUnaryExp)exp,lineno);
 			default:
 				return findExpressionBaseCase(exp, lineno);
@@ -226,15 +226,15 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		switch (exp.kindPExp())
 		{
-			case APPLY:
+			case AApplyExp.kindPExp:
 				return AApplyExpAssistantInterpreter.getSubExpressions((AApplyExp)exp);
-			case BINARY:
+			case SBinaryExp.kindPExp:
 				return SBinaryExpAssistantInterpreter.getSubExpressions((SBinaryExp)exp);
-			case CASES:
+			case ACasesExp.kindPExp:
 				return ACasesExpAssistantInterpreter.getSubExpressions((ACasesExp)exp);
-			case ELSEIF:
+			case AElseIfExp.kindPExp:
 				return AElseIfExpAssistantInterpreter.getSubExpressions((AElseIfExp)exp);			
-			case IF:
+			case AIfExp.kindPExp:
 				return AIfExpAssistantInterpreter.getSubExpressions((AIfExp)exp);
 			default:
 				List<PExp> subs = new Vector<PExp>();
