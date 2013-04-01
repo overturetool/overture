@@ -6,13 +6,20 @@ import java.util.Vector;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
+import org.overture.ast.definitions.AMutexSyncDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -169,8 +176,7 @@ public class ToStringUtil
 	{
 		switch (d.kindPDefinition())
 		{
-
-			case CLASS:
+			case SClassDefinition.kindPDefinition:
 				if (d instanceof SClassDefinition)
 				{
 					return getVariableNames(((SClassDefinition) d).getDefinitions());
@@ -178,7 +184,7 @@ public class ToStringUtil
 				assert false : "Error in class getVariableNames";
 				break;
 
-			case EQUALS:
+			case AEqualsDefinition.kindPDefinition:
 				if (d instanceof AEqualsDefinition)
 				{
 					return ((AEqualsDefinition) d).getDefs() == null ? new LexNameList()
@@ -187,19 +193,19 @@ public class ToStringUtil
 				assert false : "Error in equals getVariableNames";
 				break;
 
-			case EXTERNAL:
+			case AExternalDefinition.kindPDefinition:
 				// return state.getVariableNames();
 				// TODO
 				return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
 
-			case IMPORTED:
+			case AImportedDefinition.kindPDefinition:
 				if (d instanceof AImportedDefinition)
 				{
 					return getVariableNames(((AImportedDefinition) d).getDef());
 				}
 				assert false : "Error in imported getVariableNames";
 				break;
-			case INHERITED:
+			case AInheritedDefinition.kindPDefinition:
 				if (d instanceof AInheritedDefinition)
 				{
 					LexNameList names = new LexNameList();
@@ -215,18 +221,18 @@ public class ToStringUtil
 				assert false : "Error in inherited getVariableNames";
 				break;
 
-			case MULTIBINDLIST:
+			case AMultiBindListDefinition.kindPDefinition:
 				if (d instanceof AMultiBindListDefinition)
 				{
 					return ((AMultiBindListDefinition) d).getDefs() == null ? new LexNameList()
 							: getVariableNames(((AMultiBindListDefinition) d).getDefs());
 				}
 				break;
-			case MUTEXSYNC:
-			case NAMEDTRACE:
-			case PERSYNC:
+			case AMutexSyncDefinition.kindPDefinition:
+			case ANamedTraceDefinition.kindPDefinition:
+			case APerSyncDefinition.kindPDefinition:
 				return new LexNameList();
-			case RENAMED:
+			case ARenamedDefinition.kindPDefinition:
 				if (d instanceof ARenamedDefinition)
 				{
 					LexNameList both = new LexNameList(d.getName());
@@ -235,11 +241,11 @@ public class ToStringUtil
 				}
 				assert false : "Error in renamed getVariableNames";
 
-			case STATE:
+			case AStateDefinition.kindPDefinition:
 				// return statedefs.getVariableNames();
 				// TODO
 				return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-			case THREAD:
+			case AThreadDefinition.kindPDefinition:
 				if (d instanceof AThreadDefinition)
 				{
 					if (((AThreadDefinition) d).getOperationDef() != null)// Differnt from VDMJ
@@ -252,13 +258,13 @@ public class ToStringUtil
 				}
 				assert false : "Error in thread getVariableNames";
 				break;
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 				return new LexNameList(d.getName());
-			case UNTYPED:
+			case AUntypedDefinition.kindPDefinition:
 				assert false : "Can't get variables of untyped definition?";
 				return null;
 
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				if (d instanceof AValueDefinition)
 				{
 					// return ((AValueDefinition) d).getPattern()
