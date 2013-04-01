@@ -7,10 +7,10 @@ import org.eclipse.uml2.uml.VisibilityKind;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.EDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.statements.EStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
@@ -121,7 +121,7 @@ public class Vdm2UmlUtil
 
 		for (PDefinition def : sClass.getDefinitions())
 		{
-			if (def.kindPDefinition() == EDefinition.THREAD)
+			if (AThreadDefinition.kindPDefinition.equals(def.kindPDefinition()))
 				return true;
 		}
 		return false;
@@ -147,10 +147,8 @@ public class Vdm2UmlUtil
 		{
 			if (pDefinition instanceof AExplicitOperationDefinition)
 			{
-				if (((AExplicitOperationDefinition) pDefinition).getBody().kindPStm() == EStm.SUBCLASSRESPONSIBILITY)
-				{
-					return true;
-				}
+				return ASubclassResponsibilityStm.kindPStm
+						.equals(((AExplicitOperationDefinition)pDefinition).getBody().kindPStm());
 			} else if (pDefinition instanceof AImplicitOperationDefinition)
 			{
 				PStm body = ((AImplicitOperationDefinition) pDefinition).getBody();
@@ -160,10 +158,7 @@ public class Vdm2UmlUtil
 					return true;
 				} else
 				{
-					if (body.kindPStm() == EStm.SUBCLASSRESPONSIBILITY)
-					{
-						return true;
-					}
+					return ASubclassResponsibilityStm.kindPStm.equals(body.kindPStm());
 				}
 			}
 		}

@@ -16,16 +16,33 @@ import org.eclipse.uml2.uml.TemplateBinding;
 import org.eclipse.uml2.uml.TemplateParameter;
 import org.eclipse.uml2.uml.TemplateParameterSubstitution;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
+import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARationalNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.EMapType;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidReturnType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
@@ -79,54 +96,54 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		switch (type.kindPType())
 		{
-			case UNION:
+			case AUnionType.kindPType:
 				createNewUmlUnionType(class_, (AUnionType) type);
 				return;
-			case INVARIANT:
+			case SInvariantType.kindPType:
 				createNewUmlInvariantType(class_, (SInvariantType) type);
 				return;
-			case BASIC:
+			case SBasicType.kindPType:
 				convertBasicType(class_, (SBasicType) type);
 				return;
-			case BRACKET:
+			case ABracketType.kindPType:
 				break;
-			case CLASS:
+			case AClassType.kindPType:
 				break;
-			case FUNCTION:
+			case AFunctionType.kindPType:
 				break;
-			case MAP:
+			case SMapType.kindPType:
 				createMapType(class_, (SMapType) type);
 				return;
-			case OPERATION:
+			case AOperationType.kindPType:
 				break;
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				createOptionalType(class_, (AOptionalType) type);
 				return;
 				// break;
-			case PARAMETER:
+			case AParameterType.kindPType:
 				break;
-			case PRODUCT:
+			case AProductType.kindPType:
 				createProductType(class_, (AProductType) type);
 				return;
-			case QUOTE:
+			case AQuoteType.kindPType:
 				break;
-			case SEQ:
+			case SSeqType.kindPType:
 				createSeqType(class_, (SSeqType) type);
 				return;
-			case SET:
+			case ASetType.kindPType:
 				createSetType(class_, (ASetType) type);
 				return;
-			case UNDEFINED:
+			case AUndefinedType.kindPType:
 				break;
-			case UNKNOWN:
+			case AUnknownType.kindPType:
 				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(ANY_TYPE));
 				return;
-			case UNRESOLVED:
+			case AUnresolvedType.kindPType:
 				break;
-			case VOID:
+			case AVoidType.kindPType:
 				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(VOID_TYPE));
 				return;
-			case VOIDRETURN:
+			case AVoidReturnType.kindPType:
 
 			default:
 				break;
@@ -170,8 +187,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-		createTemplateType(class_, type, type.kindSMapType() == EMapType.INMAP ? templateInMapName
-				: templateMapName, new String[] { "D", "R" }, type.getFrom(), type.getTo());
+		createTemplateType(class_, type,
+				AInMapMapType.kindSMapType.equals(type.kindSMapType()) ? templateInMapName : templateMapName,
+				new String[] { "D", "R" }, type.getFrom(), type.getTo());
 	}
 
 	private void createUnionType(Class class_, AUnionType type)
@@ -303,7 +321,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	{
 		switch (type.kindSInvariantType())
 		{
-			case NAMED:
+			case ANamedInvariantType.kindSInvariantType:
 			{
 				PType ptype = ((ANamedInvariantType) type).getType();
 
@@ -324,7 +342,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				break;
 			}
 
-			case RECORD:
+			case ARecordInvariantType.kindSInvariantType:
 			{
 				String simpleName = getName(type);
 				simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
@@ -375,16 +393,16 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		String typeName = null;
 		switch (type.kindSBasicType())
 		{
-			case BOOLEAN:
+			case ABooleanBasicType.kindSBasicType:
 				typeName = "bool";
 				break;
-			case CHAR:
+			case ACharBasicType.kindSBasicType:
 				typeName = "char";
 				break;
-			case NUMERIC:
+			case SNumericBasicType.kindSBasicType:
 				convertNumericType((SNumericBasicType) type);
 				return;
-			case TOKEN:
+			case ATokenBasicType.kindSBasicType:
 				typeName = "token";
 				break;
 			default:
@@ -404,19 +422,19 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		String typeName = null;
 		switch (type.kindSNumericBasicType())
 		{
-			case INT:
+			case AIntNumericBasicType.kindSNumericBasicType:
 				typeName = "int";
 				break;
-			case NAT:
+			case ANatNumericBasicType.kindSNumericBasicType:
 				typeName = "nat";
 				break;
-			case NATONE:
+			case ANatOneNumericBasicType.kindSNumericBasicType:
 				typeName = "nat1";
 				break;
-			case RATIONAL:
+			case ARationalNumericBasicType.kindSNumericBasicType:
 				typeName = "rat";
 				break;
-			case REAL:
+			case ARealNumericBasicType.kindSNumericBasicType:
 				typeName = "real";
 				break;
 			default:

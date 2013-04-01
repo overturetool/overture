@@ -13,7 +13,6 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
@@ -47,15 +46,15 @@ public class PrettyPrinterVisitorDefinitions extends
 		sb.append("\n");
 
 		// print types
-		printDefsToStringBuffer(sb, node, question, EDefinition.TYPE);
+		printDefsToStringBuffer(sb, node, question, ATypeDefinition.kindPDefinition);
 
-		printDefsToStringBuffer(sb, node, question, EDefinition.VALUE);
+		printDefsToStringBuffer(sb, node, question, AValueDefinition.kindPDefinition);
 
-		printDefsToStringBuffer(sb, node, question, EDefinition.INSTANCEVARIABLE);
+		printDefsToStringBuffer(sb, node, question, AInstanceVariableDefinition.kindPDefinition);
 
-		printDefsToStringBuffer(sb, node, question, EDefinition.EXPLICITOPERATION);
+		printDefsToStringBuffer(sb, node, question, AExplicitOperationDefinition.kindPDefinition);
 
-		printDefsToStringBuffer(sb, node, question, EDefinition.EXPLICITFUNCTION);
+		printDefsToStringBuffer(sb, node, question, AExplicitFunctionDefinition.kindPDefinition);
 
 		sb.append("end " + node.getName());
 		return sb.toString();
@@ -63,7 +62,7 @@ public class PrettyPrinterVisitorDefinitions extends
 
 	private void printDefsToStringBuffer(StringBuffer sb,
 			AClassClassDefinition node, PrettyPrinterEnv question,
-			EDefinition kind) throws AnalysisException
+			String kind) throws AnalysisException
 	{
 		List<PDefinition> defs = getDefinitions(node.getDefinitions(), kind);
 
@@ -74,7 +73,7 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		switch (kind)
 		{
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 			{
 				sb.append("types\n");
 				question.increaseIdent();
@@ -86,7 +85,7 @@ public class PrettyPrinterVisitorDefinitions extends
 				question.decreaseIdent();
 			}
 				break;
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 			{
 				sb.append("values\n");
 				question.increaseIdent();
@@ -98,7 +97,7 @@ public class PrettyPrinterVisitorDefinitions extends
 				question.decreaseIdent();
 			}
 				break;
-			case INSTANCEVARIABLE:
+			case AInstanceVariableDefinition.kindPDefinition:
 			{
 				sb.append("instance variables\n");
 				question.increaseIdent();
@@ -110,7 +109,7 @@ public class PrettyPrinterVisitorDefinitions extends
 				question.decreaseIdent();
 			}
 				break;
-			case EXPLICITOPERATION:
+			case AExplicitOperationDefinition.kindPDefinition:
 			{
 				sb.append("operations\n");
 				question.increaseIdent();
@@ -122,7 +121,7 @@ public class PrettyPrinterVisitorDefinitions extends
 				question.decreaseIdent();
 			}
 				break;
-			case EXPLICITFUNCTION:
+			case AExplicitFunctionDefinition.kindPDefinition:
 			{
 				sb.append("functions\n");
 				question.increaseIdent();
@@ -141,7 +140,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	}
 
 	private List<PDefinition> getDefinitions(
-			LinkedList<PDefinition> definitions, EDefinition kind)
+			LinkedList<PDefinition> definitions, String kind)
 	{
 		List<PDefinition> result = new Vector<PDefinition>();
 

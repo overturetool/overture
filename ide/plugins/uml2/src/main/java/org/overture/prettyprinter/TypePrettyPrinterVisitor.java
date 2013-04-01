@@ -120,10 +120,10 @@ public class TypePrettyPrinterVisitor extends
 		LexNameToken name = null;
 		switch(node.kindSInvariantType())
 		{
-			case NAMED:
+			case ANamedInvariantType.kindSInvariantType:
 				name = ((ANamedInvariantType)node).getName();
 				break;
-			case RECORD:
+			case ARecordInvariantType.kindSInvariantType:
 				name = ((ARecordInvariantType)node).getName();
 				break;
 			
