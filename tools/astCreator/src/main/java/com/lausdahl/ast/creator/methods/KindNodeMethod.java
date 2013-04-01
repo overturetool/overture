@@ -37,9 +37,8 @@ public class KindNodeMethod extends Method
          */
         name = "kindNode";
         annotation = "@Override";
-        returnType = EnumUtil.getEnumTypeName(env.node, env);
-        body = "\t\treturn " + EnumUtil.getEnumTypeName(env.node, env) + "."
-            + EnumUtil.getEnumElementName(classDefinition) + ";";
+        returnType = "String";
+        body = "\t\treturn kindNode;";
         
         // @Override public NodeEnum kindNode() {
         // return NodeEnum._BINOP;

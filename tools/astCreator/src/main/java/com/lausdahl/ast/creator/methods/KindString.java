@@ -2,15 +2,14 @@ package com.lausdahl.ast.creator.methods;
 
 import com.lausdahl.ast.creator.definitions.IClassDefinition;
 import com.lausdahl.ast.creator.env.Environment;
-import com.lausdahl.ast.creator.utils.EnumUtil;
+import com.lausdahl.ast.creator.utils.NameUtil;
 
-public class KindMethod extends Method
+public class KindString extends Method
 {
 
 	boolean isAbstractKind = false;
 
-	public KindMethod(IClassDefinition c, boolean isAbstractKind
-			)
+	public KindString(IClassDefinition c, boolean isAbstractKind)
 	{
 		super(c);
 		this.isAbstractKind = isAbstractKind;
@@ -21,16 +20,16 @@ public class KindMethod extends Method
 	{
 		if (isAbstractKind)// (c.getType() == ClassType.Production)
 		{
+			this.skip = true;
 			this.isAbstract = true;
-			this.name = "kind"
-					+ env.getInterfaceForCommonTreeNode(classDefinition).getName()
-					.getName();
-			this.returnType = "String";
+			this.name = "skipme";
+			this.returnType = "";
 		} else
 		{
 			IClassDefinition superClass = classDefinition.getSuperDef();
 			if (env.isTreeNode(superClass))
 			{
+				this.isAbstract = true; // ensure no body
 				this.name = "kind"
 						+ env
 						.getInterfaceForCommonTreeNode(
@@ -38,20 +37,22 @@ public class KindMethod extends Method
 
 				// this.arguments.add(new Argument(f.getType(), "value"));
 				this.returnType = "String";
-				this.annotation = "@Override";
-
-				this.body = "\t\treturn " + this.name + ";";
+				this.body = "\""
+						+ NameUtil.getClassName(
+								classDefinition.getName().getRawName().startsWith("#")
+								? classDefinition.getName().getRawName().substring(1)
+								: classDefinition.getName().getRawName())
+						+ "\"";
 			}
 		}
-			javaDoc = "\t/**@Deprecated We wish to get rid of all enum.\n";
-			javaDoc += "\t * Returns the {@link " + this.returnType
-					+ "} corresponding to the\n";
-			javaDoc += "\t * type of this {@link " + this.returnType + "} node.\n";
-			javaDoc += "\t * @return the {@link " + this.returnType
-					+ "} for this node\n";
-			javaDoc += "\t */";
 	}
 
+	@Override
+	public String getSignature(Environment env) {
+		internalPrepare(env);
+		return "\tpublic static final " + returnType.trim() + " " + name + " = " + body;
+	}
+	
 	@Override
 	protected void prepareVdm(Environment env)
 	{

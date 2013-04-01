@@ -118,7 +118,7 @@ public class BaseEnvironment
           {
             if (def.getName().equals(cl.getName()))
               {
-                String msg = "Trying to add a dublicate for class: "
+                String msg = "Trying to add a duplicate for class: "
                     + def.getName().getCanonicalName();
                 System.err.println(msg);
                 throw new Error(msg);

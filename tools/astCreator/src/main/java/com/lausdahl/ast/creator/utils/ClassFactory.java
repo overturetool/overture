@@ -21,6 +21,8 @@ import com.lausdahl.ast.creator.methods.EqualsMethod;
 import com.lausdahl.ast.creator.methods.GetChildrenMethod;
 import com.lausdahl.ast.creator.methods.KindMethod;
 import com.lausdahl.ast.creator.methods.KindNodeMethod;
+import com.lausdahl.ast.creator.methods.KindNodeString;
+import com.lausdahl.ast.creator.methods.KindString;
 import com.lausdahl.ast.creator.methods.Method;
 import com.lausdahl.ast.creator.methods.RemoveChildMethod;
 import com.lausdahl.ast.creator.methods.ToStringMethod;
@@ -101,13 +103,16 @@ public class ClassFactory {
 		case Alternative:
 		case Custom:
 			methods.add(new KindMethod(classDef, false));
+			methods.add(new KindString(classDef, false));
 			break;
 		case Production:
 			methods.add(new KindNodeMethod(classDef));
+			methods.add(new KindNodeString(classDef));
 			methods.add(new KindMethod(classDef, true));
 			break;
 		case SubProduction:
 			methods.add(new KindMethod(classDef, false));
+			methods.add(new KindString(classDef, false));
 			methods.add(new KindMethod(classDef, true));
 			break;
 		case Token:

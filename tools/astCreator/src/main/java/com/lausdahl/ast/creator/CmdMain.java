@@ -80,8 +80,8 @@ public class CmdMain {
 	private static void help() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("Generates a AST from a grammar file.\n");
-		buf.append("generator [grammer file] [output path]\n\n");
-		buf.append("grammer file: The file path to the grammar file to be generated.\n");
+		buf.append("generator [grammar file] [output path]\n\n");
+		buf.append("grammar file: The file path to the grammar file to be generated.\n");
 		buf.append("output path: The output path to the folder where the ");
 		buf.append("              generated sources should be placed\n");
 		// buf.append("tostring grammar file: Optional argument for a toString grammar file.\n");

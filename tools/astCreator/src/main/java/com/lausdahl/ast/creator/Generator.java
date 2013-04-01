@@ -54,13 +54,13 @@ import com.lausdahl.ast.creator.utils.EnumUtil;
 
 public class Generator {
 
-	private boolean isBase = false;
+//	private boolean isBase = false;
 	
 	public Environment generate(InputStream toStringFile,
 			InputStream inputFile, String envName, boolean doTypeHierarchyCheck, boolean isBase)
 			throws IOException, AstCreatorException {
 		Environment env = null;
-		this.isBase = isBase;
+//		this.isBase = isBase;
 		try {
 			env = new CreateOnParse().parse(inputFile, envName);
 			for(IInterfaceDefinition def : env.getAllDefinitions()) 

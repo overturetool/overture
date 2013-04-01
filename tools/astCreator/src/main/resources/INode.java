@@ -21,7 +21,7 @@ public interface %INode%
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	public abstract %NodeEnum% kindNode();
+	public abstract String kindNode();
 
 	/**
 	 * Returns the parent node of this node.

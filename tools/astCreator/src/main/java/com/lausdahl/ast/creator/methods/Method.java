@@ -86,7 +86,7 @@ public abstract class Method {
 		this.classDefinition = c;
 	}
 
-	private void internalPrepare(Environment env) {
+	protected void internalPrepare(Environment env) {
 		// if (isStructureFinal)
 		// {
 		// return;
