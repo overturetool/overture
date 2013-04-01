@@ -8,7 +8,7 @@ public class SUnaryExpAssistantTC {
 
 	public static LexNameList getOldNames(SUnaryExp expression) {
 		switch (expression.kindSUnaryExp()) {		
-		case ELEMENTS:
+		case AElementsUnaryExp.kindSUnaryExp:
 			return AElementsUnaryExpAssistantTC.getOldNames((AElementsUnaryExp) expression);
 		default:
 			return PExpAssistantTC.getOldNames(expression.getExp());

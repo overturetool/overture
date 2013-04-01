@@ -9,9 +9,9 @@ public class SSeqExpAssistantTC {
 
 	public static LexNameList getOldNames(SSeqExp expression) {
 		switch (expression.kindSSeqExp()) {
-		case SEQCOMP:
+		case ASeqCompSeqExp.kindSSeqExp:
 			return ASeqCompSeqExpAssistantTC.getOldNames((ASeqCompSeqExp) expression);
-		case SEQENUM:
+		case ASeqEnumSeqExp.kindSSeqExp:
 			return ASeqEnumSeqExpAssistantTC.getOldNames((ASeqEnumSeqExp) expression);
 		default:
 			assert false : "Should not happen";

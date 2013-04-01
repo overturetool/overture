@@ -314,7 +314,7 @@ public class SClassDefinitionAssistantTC {
 		
 		switch (d.kindSClassDefinition())
 		{
-			case SYSTEM:
+			case ASystemClassDefinition.kindSClassDefinition:
 				ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition)d,publicClasses);
 				break;
 

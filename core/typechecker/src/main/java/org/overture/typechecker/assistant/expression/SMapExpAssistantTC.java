@@ -9,9 +9,9 @@ public class SMapExpAssistantTC {
 
 	public static LexNameList getOldNames(SMapExp expression) {
 		switch (expression.kindSMapExp()) {		
-		case MAPCOMP:
+		case AMapCompMapExp.kindSMapExp:
 			return AMapCompMapExpAssistantTC.getOldNames((AMapCompMapExp) expression);
-		case MAPENUM:
+		case AMapEnumMapExp.kindSMapExp:
 			return AMapEnumMapExpAssistantTC.getOldNames((AMapEnumMapExp) expression);
 		default:
 			assert false : "Should not happen";

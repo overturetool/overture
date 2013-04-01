@@ -1,7 +1,9 @@
 package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.EAccess;
+import org.overture.ast.definitions.APrivateAccess;
+import org.overture.ast.definitions.AProtectedAccess;
+import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -14,20 +16,20 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAccess().kindPAccess() == EAccess.PUBLIC;
+			return APublicAccess.kindPAccess.equals(a.getAccess().kindPAccess());
 		}		
 		return false;
 	}
 	
 	public static boolean isPrivate(AAccessSpecifierAccessSpecifier access) {
-		return access.getAccess().kindPAccess() == EAccess.PRIVATE;
+		return APrivateAccess.kindPAccess.equals(access.getAccess().kindPAccess());
 	}
 	
 	public static boolean isProtected(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return a.getAccess().kindPAccess() == EAccess.PROTECTED;
+			return AProtectedAccess.kindPAccess.equals(a.getAccess().kindPAccess());
 		}		
 		return false;
 	}
@@ -56,11 +58,11 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 
 	private static boolean narrowerThan(PAccess access, PAccess other) {
 		switch (access.kindPAccess()) {
-		case PRIVATE:
-			return other.kindPAccess() != EAccess.PRIVATE;
-		case PROTECTED:
-			return other.kindPAccess() == EAccess.PUBLIC;
-		case PUBLIC:
+		case APrivateAccess.kindPAccess:
+			return ! APrivateAccess.kindPAccess.equals(other.kindPAccess());
+		case AProtectedAccess.kindPAccess:
+			return APublicAccess.kindPAccess.equals(other.kindPAccess());
+		case APublicAccess.kindPAccess:
 			return false;		
 		}
 		assert false : "PAccessSpecifierAssistent : narrowerThan PAccess switch is not comprehensive";

@@ -37,10 +37,10 @@ public class PMultipleBindAssistantTC {
 
 	public static PType getPossibleType(PMultipleBind mb) {
 		switch (mb.kindPMultipleBind()) {
-		case SET:
+		case ASetMultipleBind.kindPMultipleBind:
 			return ASetMultipleBindAssistantTC
 					.getPossibleType((ASetMultipleBind) mb);
-		case TYPE:
+		case ATypeMultipleBind.kindPMultipleBind:
 			return ATypeMultipleBindAssistantTC
 					.getPossibleType((ATypeMultipleBind) mb);
 		default:
@@ -53,9 +53,9 @@ public class PMultipleBindAssistantTC {
 	public static LexNameList getOldNames(
 			PMultipleBind mb) {
 		switch (mb.kindPMultipleBind()) {
-		case SET:
+		case ASetMultipleBind.kindPMultipleBind:
 			return ASetMultipleBindAssistantTC.getOldNames((ASetMultipleBind) mb);
-		case TYPE:
+		case ATypeMultipleBind.kindPMultipleBind:
 			return ATypeMultipleBindAssistantTC.getOldNames((ATypeMultipleBind) mb);
 		default:
 			assert false : "Should not happen";
