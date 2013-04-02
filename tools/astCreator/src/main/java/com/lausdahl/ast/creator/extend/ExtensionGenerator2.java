@@ -284,14 +284,15 @@ public class ExtensionGenerator2 {
 				@Override
 				public String getJavaSourceCode(Environment env) {
 					StringBuilder result = new StringBuilder();
-					String returnType = "E"
-							+ baseProduction.getName().getRawName();
 
-					result.append("public " + returnType + " kind"
-							+ baseProduction.getName().getPrefix()
-							+ baseProduction.getName().getRawName() + "()");
+					returnType = "String";
+					name = "kind" + baseProduction.getName().getPrefix() + baseProduction.getName().getRawName();
+
+					result.append("public " + returnType + " " + name + "()");
 					//result.append("{ throw new RuntimeException(\"Using the kind method is deprecated.\"); }");
-					result.append("{ return "+ returnType +"." +extentionName + baseProduction.getName().getRawName().toUpperCase() +"; }");
+					String nodeNameString = "\"" + extentionName + baseProduction.getName().getRawName() + "\"";
+					result.append("{ return " + name +"; }\n");
+					result.append("public static final " + returnType + " " + name + " = " + nodeNameString +";\n");
 					return result.toString();
 				}
 
@@ -302,8 +303,6 @@ public class ExtensionGenerator2 {
 				Method kindMethod = new LocalKindMethod(baseProductionBase,
 						false);
 				extensionProductionBase.addMethod(kindMethod);
-				kindMethod.returnType = "E"
-						+ baseProduction.getName().getRawName();
 			}
 			// Add mapping from the extensionProductionBase production to the
 			// extProduction
