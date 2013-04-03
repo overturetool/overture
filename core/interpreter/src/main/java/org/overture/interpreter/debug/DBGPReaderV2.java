@@ -508,6 +508,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 			case STOP:
 				processStop(c);
+				carryOn = false;
 				break;
 
 			case BREAKPOINT_GET:
