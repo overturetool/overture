@@ -144,6 +144,10 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		{
 			showMessage(e);
 			e.printStackTrace();
+		} catch(OutOfMemoryError m)
+		{
+			showMessage("The trace file can not be visualized because the Java Virtual Machine ran out of heap space. Try to allow Overture more heap space using Virtual Machine custom arguments (e.g. -Xms40m -Xmx512m).");
+			return;
 		}
 
 		try
