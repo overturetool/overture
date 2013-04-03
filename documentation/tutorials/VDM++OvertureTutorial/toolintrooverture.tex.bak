@@ -395,7 +395,7 @@ Figure~\ref{fig:OutlineView}) displays an outline of the file selected
 in the editor. It shows all declared classes, their instance variables,
 values, types, functions, operations and traces.
 Figure~\ref{fig:OverturePerspective} shows the outline view on the
-right hand side. Clicking on an operation or a function will move the
+right hand side. Clicking on an operation or function will move the
 cursor in the editor to the definition of that operation/function. At
 the top of the outline view there is a button to (optionally) order
 the elements of the outline view alphabetically.
@@ -561,6 +561,13 @@ The three classes from the Alarm system will be converted to VDM++ format
 %	\end{center}
 %\end{figure}
 
+The transformation from UML to VDM is not entirely automated in the
+current release. For
+example, any custom types are transformed to VDM++ definitions using
+machine-generated identifiers since custom types are not named in
+UML. As a result, you have to expect to make minor modifications to
+the generated VDM files.
+
 %When making corrections to the model, you can
 %use the Overture IDE templates. When you hit the key combination
 %\textit{CTRL+space} after entering the initial characters of the
@@ -632,7 +639,7 @@ of the complete model.
 Add an instance variable to one of the other classes at the VDM++
 level. Save it and it will automatically be syntax and type checked at
 the VDM++ level. Then export the model to XMI in order to see your
-changes in a new project in Modelio.
+changes in Modelio.
 \end{myexercise}
 
 
@@ -778,7 +785,7 @@ delete them, or set their properties.
 %In figure
 %\ref{fig:DebuggingVDM} the Breakpoints view is hidden behind the
 %Variables view in the upper right hand corner in a tabbed notebook.
-Conditional breakpoints are also supported. These are a powerful tool for
+Conditional breakpoints are supported. These are a powerful tool for
 the developer since they allow a condition to be specified which has
 to be true in order for the debugger to stop at the given
 breakpoint. The condition can either be a boolean expression using
@@ -850,8 +857,7 @@ on the project and select \texttt{Clean}). If we simply take the
 \verb|plant.vdmpp| are called by the
 \texttt{Run} function. Remember that whenever test coverage
 information is desired the \texttt{Generate Latex Coverage} option
-must be selected as shown in Figure~\ref{fig:debugConfiguration}\footnote{Note that using this feature
-required pdflatex to be installed.}.
+must be selected as shown in Figure~\ref{fig:debugConfiguration}.
 Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
 on the \texttt{AlarmPP} project and select the \emph{Latex} $
@@ -902,7 +908,10 @@ plant.vdmpp & 89.0\% & 5 \\
 \noindent where the \texttt{ExpertIsOnDuty} and \texttt{ExpertToPage}
 operations are fully covered by just one call (due to the fact that
 its body is simply one line) whereas the \texttt{PlantInv} operation
-is called twice.
+is called twice\footnote{Note that the coverage from the combinatorial
+  testing feature described in Section~\ref{sec:CT} is not taken into
+  account in the current version of the Overture IDE, but this will be
+  enabled in a later release.}.
 
 \newpage
 
@@ -967,11 +976,10 @@ combinations of operation calls that you would like to have carried
 out, so it is necessary to write a kind of regular expression called a
 \emph{trace}. VDM++ has been extended such that traces can be written
 directly as a part of a VDM++ model. In our case, inside the \texttt{Test1}
-class one can write:
-%\footnote{Such \emph{traces} can actually also be
-%  represented as UML sequence diagrams and then automatically
-%  translated into the corresponding VDM++ textual form, but since this
-%is still at a prototyping stage it is not explained further here.}:
+class one can write\footnote{Such \emph{traces} can actually also be
+  represented as UML sequence diagrams and then automatically
+  translated into the corresponding VDM++ textual form, but since this
+is still at a prototyping stage it is not explained further here.}:
 
 \begin{lstlisting}
 traces

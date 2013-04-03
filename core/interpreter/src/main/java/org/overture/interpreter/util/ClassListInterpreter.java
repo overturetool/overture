@@ -4,10 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -170,5 +174,22 @@ public class ClassListInterpreter extends ClassList
 		}
 
 		return count;
+	}
+	
+	public PDefinition findName(LexNameToken name, NameScope scope)
+	{
+		SClassDefinition d = map.get(name.module);
+
+		if (d != null)
+		{
+			PDefinition def =PDefinitionAssistantInterpreter.findName(d,name, scope);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
+		return null;
 	}
 }

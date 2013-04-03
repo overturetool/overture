@@ -152,7 +152,7 @@ public class ClassInterpreter extends Interpreter
 		return classes.getSourceFiles();
 	}
 
-	public ClassList getClasses()
+	public ClassListInterpreter getClasses()
 	{
 		return classes;
 	}

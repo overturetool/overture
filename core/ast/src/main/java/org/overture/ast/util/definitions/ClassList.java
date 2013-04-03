@@ -22,7 +22,7 @@ public class ClassList extends Vector<SClassDefinition>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Map<String, SClassDefinition> map =
+	protected static Map<String, SClassDefinition> map =
 					new HashMap<String, SClassDefinition>();
 
 	public ClassList()
