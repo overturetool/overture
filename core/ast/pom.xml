@@ -13,12 +13,16 @@
   <artifactId>ast</artifactId>
   <name>The Overture Abstract Syntax Tree </name>
 
+  <properties>
+    <astcreator.version>1.2.0</astcreator.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
 	<groupId>org.overture.tools.maven</groupId>
 	<artifactId>ast-creator</artifactId>
-	<version>1.2.0</version>
+	<version>${astcreator.version}</version>
 	<executions>
 	  <execution>
 	    <id>java</id>
@@ -70,9 +74,9 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		    <groupId>org.overture.tools</groupId>
-		    <artifactId>astcreatorplugin</artifactId>
-		    <versionRange>[1.0.1,)</versionRange>
+		    <groupId>org.overture.tools.maven</groupId>
+		    <artifactId>ast-creator</artifactId>
+		    <versionRange>${astcreator.version}</versionRange>
 		    <goals>
 		      <goal>generate</goal>
 		    </goals>
