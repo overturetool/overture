@@ -36,7 +36,6 @@
     <module>platform</module>
     <module>features</module>
     <module>product</module>
-    <!-- <module>build</module> -->
   </modules>
 
   <reporting>

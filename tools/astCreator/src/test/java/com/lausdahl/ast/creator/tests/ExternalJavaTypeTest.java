@@ -1,11 +1,11 @@
-package com.lausdahl.ast.creator.tests;
+package org.overture.tools.astcreator.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import junit.framework.TestCase;
 
-import com.lausdahl.ast.creator.Main;
+import org.overture.tools.astcreator.Main;
 
 public class ExternalJavaTypeTest extends TestCase {
 	private static final String TESTDATA_BASE = "src\\test\\resources\\";
