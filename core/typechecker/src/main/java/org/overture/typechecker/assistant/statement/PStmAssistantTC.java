@@ -26,41 +26,41 @@ public class PStmAssistantTC {
 	public static PTypeSet exitCheck(PStm statement) {
 		
 		switch (statement.kindPStm()) {		
-		case ALWAYS:
+		case AAlwaysStm.kindPStm:
 			return AAlwaysStmAssistantTC.exitCheck((AAlwaysStm)statement);
-		case ASSIGNMENT:
+		case AAssignmentStm.kindPStm:
 			return AAssignmentStmAssistantTC.exitCheck((AAssignmentStm)statement);		
-		case CALL:
+		case ACallStm.kindPStm:
 			return ACallStmAssistantTC.exitCheck((ACallStm)statement);
-		case CALLOBJECT:
+		case ACallObjectStm.kindPStm:
 			return ACallObjectStatementAssistantTC.exitCheck((ACallObjectStm)statement);
-		case CASES:
+		case ACasesStm.kindPStm:
 			return ACasesStmAssistantTC.exitCheck((ACasesStm)statement);
-		case ELSEIF:
+		case AElseIfStm.kindPStm:
 			return AElseIfStmAssistantTC.exitCheck((AElseIfStm)statement);		
-		case EXIT:
+		case AExitStm.kindPStm:
 			return AExitStmAssistantTC.exitCheck((AExitStm)statement);
-		case FORALL:
+		case AForAllStm.kindPStm:
 			return AForAllStmAssistantTC.exitCheck((AForAllStm)statement);
-		case FORINDEX:
+		case AForIndexStm.kindPStm:
 			return AForIndexStmAssistantTC.exitCheck((AForIndexStm)statement);
-		case FORPATTERNBIND:
+		case AForPatternBindStm.kindPStm:
 			return AForPatternBindStmAssitantTC.exitCheck((AForPatternBindStm)statement);
-		case IF:
+		case AIfStm.kindPStm:
 			return AIfStmAssistantTC.exitCheck((AIfStm)statement);
-		case LETBEST:
+		case ALetBeStStm.kindPStm:
 			return ALetBeStStmAssistantTC.exitCheck((ALetBeStStm)statement);
-		case LETDEF:
+		case SLetDefStm.kindPStm:
 			return SLetDefStmAssistantTC.exitCheck((SLetDefStm)statement);		
-		case RETURN:
+		case AReturnStm.kindPStm:
 			return AReturnStmAssistantTC.exitCheck((AReturnStm)statement);
-		case SIMPLEBLOCK:
+		case SSimpleBlockStm.kindPStm:
 			return SSimpleBlockStmAssistantTC.exitCheck((SSimpleBlockStm)statement);
-		case TIXE:
+		case ATixeStm.kindPStm:
 			return ATixeStmAssistantTC.exitCheck((ATixeStm)statement);
-		case TRAP:
+		case ATrapStm.kindPStm:
 			return ATrapStmAssistantTC.exitCheck((ATrapStm)statement);
-		case WHILE:
+		case AWhileStm.kindPStm:
 			return AWhileStmAssistantTC.exitCheck((AWhileStm)statement);
 		default:
 			return exitCheckBaseCase(statement);

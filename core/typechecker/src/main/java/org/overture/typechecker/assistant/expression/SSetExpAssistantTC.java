@@ -9,9 +9,9 @@ public class SSetExpAssistantTC {
 
 	public static LexNameList getOldNames(SSetExp expression) {
 		switch (expression.kindSSetExp()) {
-		case SETCOMP:
+		case ASetCompSetExp.kindSSetExp:
 			return ASetCompSetExpAssistantTC.getOldNames((ASetCompSetExp) expression);
-		case SETENUM:
+		case ASetEnumSetExp.kindSSetExp:
 			return ASetEnumSetExpAssistantTC.getOldNames((ASetEnumSetExp) expression);
 		default:
 			return new LexNameList();

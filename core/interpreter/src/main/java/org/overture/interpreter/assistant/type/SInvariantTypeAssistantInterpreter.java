@@ -37,9 +37,9 @@ public class SInvariantTypeAssistantInterpreter
 	{
 		switch (type.kindSInvariantType())
 		{
-			case NAMED:
+			case ANamedInvariantType.kindSInvariantType:
 				return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type,ctxt);
-			case RECORD:
+			case ARecordInvariantType.kindSInvariantType:
 				return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType)type,ctxt);
 			default:
 				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);

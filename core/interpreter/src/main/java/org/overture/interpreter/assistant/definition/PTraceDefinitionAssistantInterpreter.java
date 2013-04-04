@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.definitions.traces.AInstanceTraceDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
@@ -16,14 +17,14 @@ public class PTraceDefinitionAssistantInterpreter extends
 	{
 		switch (term.kindPTraceDefinition())
 		{
-			case INSTANCE:
+			case AInstanceTraceDefinition.kindPTraceDefinition:
 				assert false : "this one is not in Nicks tree";
 				return null;
-			case LETBESTBINDING:
+			case ALetBeStBindingTraceDefinition.kindPTraceDefinition:
 				return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition)term,ctxt);
-			case LETDEFBINDING:
+			case ALetDefBindingTraceDefinition.kindPTraceDefinition:
 				return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition)term,ctxt);
-			case REPEAT:
+			case ARepeatTraceDefinition.kindPTraceDefinition:
 				return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term,ctxt);
 			default:
 				break;

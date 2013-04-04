@@ -25,18 +25,17 @@
     <!-- Put all child Eclipse Plugin projects(modules) here -->
     <module>core</module>
     <module>ui</module>
+    <module>parsers</module>
+    <module>builders</module>
     <module>debug</module>
     <module>vdmsl</module>
     <module>vdmpp</module>
     <module>vdmrt</module>
     <module>help</module>
-    <module>parsers</module>
-    <module>builders</module>
     <module>plugins</module>
     <module>platform</module>
     <module>features</module>
     <module>product</module>
-    <!-- <module>build</module> -->
   </modules>
 
   <reporting>

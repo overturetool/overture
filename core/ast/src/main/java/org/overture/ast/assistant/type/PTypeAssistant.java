@@ -16,7 +16,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
-import org.overture.ast.types.EBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
@@ -30,30 +29,24 @@ public class PTypeAssistant {
 	{
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC)
-				{
-					return true;
-				} else
-				{
-					return false;
-				}
-			case BRACKET:
+				return SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType());
+			case ABracketType.kindPType:
 				return ABracketTypeAssistant.isNumeric((ABracketType) type);
-			case INVARIANT:
+			case ANamedInvariantType.kindPType:
 				if (type instanceof ANamedInvariantType)
 				{
 					return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
 				}
 				break;
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return AParameterTypeAssistant.isNumeric((AParameterType) type);
-			case UNION:
+			case AUnionType.kindPType:
 				return AUnionTypeAssistant.isNumeric((AUnionType) type);
-			case UNKNOWN:
+			case AUnknownType.kindPType:
 				return AUnknownTypeAssistant.isNumeric((AUnknownType) type);
 			default:
 				break;
@@ -65,9 +58,10 @@ public class PTypeAssistant {
 	{
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				SBasicType bType = (SBasicType) type;
-				if (bType.kindSBasicType() == EBasicType.NUMERIC)
+				//FIXME doesn't the outer if imply the inner? -jwc/1Apr2013 
+				if (SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType()))
 				{
 					if (type instanceof SNumericBasicType)
 					{
@@ -75,21 +69,21 @@ public class PTypeAssistant {
 					}
 				}
 				break;
-			case BRACKET:
+			case ABracketType.kindPType:
 				return ABracketTypeAssistant.getNumeric((ABracketType) type);
-			case INVARIANT:
+			case ANamedInvariantType.kindPType:
 				if (type instanceof ANamedInvariantType)
 				{
 					return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);
 				}
 				break;
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return AParameterTypeAssistant.getNumeric((AParameterType) type);
-			case UNION:
+			case AUnionType.kindPType:
 				return AUnionTypeAssistant.getNumeric((AUnionType) type);
-			case UNKNOWN:
+			case AUnknownType.kindPType:
 				return AUnknownTypeAssistant.getNumeric((AUnknownType) type);
 			default:
 				break;
@@ -102,60 +96,58 @@ public class PTypeAssistant {
 	{
 		switch (type.kindPType())
 		{
-			case BRACKET:
+			case ABracketType.kindPType:
 				return hashCode(((ABracketType)type).getType());
-			case CLASS:
+			case AClassType.kindPType:
 				return ((AClassType)type).getName().hashCode();
-			case FUNCTION:
-			{
+			case AFunctionType.kindPType:
 				AFunctionType ftype = (AFunctionType) type;
 				return hashCode(ftype.getParameters()) + hashCode(ftype.getResult());
-			}
-			case INVARIANT:
+			case SInvariantType.kindPType:
 			{
 				SInvariantType stype = (SInvariantType) type;
 				switch (stype.kindSInvariantType())
 				{
-					case NAMED:
+					case ANamedInvariantType.kindSInvariantType:
 						return ((ANamedInvariantType)type).getName().hashCode();
-					case RECORD:
+					case ARecordInvariantType.kindSInvariantType:
 						return ((ARecordInvariantType)type).getName().hashCode();
 				}
 			}
-			case MAP:
+			case SMapType.kindPType:
 			{
 				SMapType mtype = (SMapType) type;
 				return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
 			}
-			case OPERATION:
+			case AOperationType.kindPType:
 			{
 				AOperationType otype = (AOperationType) type;
 				return hashCode(otype.getParameters()) + hashCode(otype.getResult());
 			}
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				return hashCode(((AOptionalType)type).getType());
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return ((AParameterType)type).getName().hashCode();
-			case PRODUCT:
+			case AProductType.kindPType:
 				return hashCode(((AProductType)type).getTypes());
-			case QUOTE:
+			case AQuoteType.kindPType:
 				return ((AQuoteType)type).getValue().hashCode();
-			case SEQ:
+			case SSeqType.kindPType:
 			{
 				SSeqType stype = (SSeqType) type;
 				return  stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
 			}
-			case SET:
+			case ASetType.kindPType:
 			{
 				ASetType stype = (ASetType) type;
 				return  stype.getEmpty() ? 0 : hashCode(stype.getSetof());
 			}
-			case UNION:
+			case AUnionType.kindPType:
 			{
 				AUnionType utype = (AUnionType) type;
 				return hashCode(utype.getTypes());
 			}
-			case UNRESOLVED:
+			case AUnresolvedType.kindPType:
 				return ((AUnresolvedType)type).getName().hashCode();
 			default:
 				return type.getClass().hashCode();

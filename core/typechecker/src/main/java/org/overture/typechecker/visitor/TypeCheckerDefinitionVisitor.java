@@ -64,7 +64,6 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
-import org.overture.ast.types.EType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
@@ -440,7 +439,7 @@ public class TypeCheckerDefinitionVisitor extends
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {
-					if (mtype.getResult().kindPType() == EType.PRODUCT) {
+					if (AProductType.kindPType.equals(mtype.getResult().kindPType())) {
 						AProductType pt = PTypeAssistantTC.getProduct(mtype
 								.getResult());
 

@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator.tests;
+package org.overture.tools.astcreator.tests;
 
 import java.io.File;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.InputStream;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import com.lausdahl.ast.creator.Main;
+import org.overture.tools.astcreator.Main;
 
 public class CmlExtendsOvertureTest extends TestCase {
 
@@ -24,7 +24,7 @@ public class CmlExtendsOvertureTest extends TestCase {
 				ovtSource);
 
 		Main.create(null, null, ovtSource, cmlSource, outputFolder, "CML",
-				false);
+				false, true);
 	}
 
 }

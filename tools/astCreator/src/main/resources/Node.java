@@ -26,12 +26,13 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	
 	public @Override abstract Object clone();
 	public abstract %INode% clone(Map<%INode%,%INode%> oldToNewMap);
+	
 	/**
 	 * Returns the {@link NodeEnum} corresponding to the
 	 * type of this {@link Node} node.
 	 * @return the {@link NodeEnum} for this node
 	 */
-	public abstract %NodeEnum% kindNode();
+	public abstract String kindNode();
 	
 	/**
 	 * Returns the parent node of this node.

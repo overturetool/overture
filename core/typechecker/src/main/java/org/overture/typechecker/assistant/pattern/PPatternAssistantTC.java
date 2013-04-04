@@ -60,33 +60,33 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		switch (rp.kindPPattern())
 		{
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) rp,ptype,scope);
-			case BOOLEAN:
-			case CHARACTER:
-			case EXPRESSION:
-			case IGNORE:
-			case INTEGER:
-			case NIL:
-			case QUOTE:
-			case REAL:
-			case STRING:
+			case ABooleanPattern.kindPPattern:
+			case ACharacterPattern.kindPPattern:
+			case AExpressionPattern.kindPPattern:
+			case AIgnorePattern.kindPPattern:
+			case AIntegerPattern.kindPPattern:
+			case ANilPattern.kindPPattern:
+			case AQuotePattern.kindPPattern:
+			case ARealPattern.kindPPattern:
+			case AStringPattern.kindPPattern:
 				return new Vector<PDefinition>();
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantTC.getAllDefinitions((AConcatenationPattern) rp, ptype, scope);
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantTC.getAllDefinitions((ARecordPattern) rp, ptype, scope);
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantTC.getAllDefinitions((ASeqPattern) rp, ptype, scope);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantTC.getAllDefinitions((ASetPattern) rp, ptype, scope);
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantTC.getAllDefinitions((ATuplePattern) rp, ptype, scope);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantTC.getAllDefinitions((AUnionPattern) rp, ptype, scope);
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern)rp,ptype,scope);
-			case MAP:
+			case AMapPattern.kindPPattern:
 				return AMapPatternAssistantTC.getAllDefinitions((AMapPattern)rp,ptype,scope);
 			default:
 				assert false : "PPatternAssistant.getDefinitions - should not hit this case";
@@ -101,31 +101,31 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		switch (pattern.kindPPattern())
 		{
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				AConcatenationPatternAssistantTC.typeResolve((AConcatenationPattern) pattern, rootVisitor, question);
 				break;
-			case EXPRESSION:
+			case AExpressionPattern.kindPPattern:
 				AExpressionPatternAssistantTC.typeResolve((AExpressionPattern) pattern, rootVisitor, question);
 				break;
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				ARecordPatternAssistantTC.typeResolve((ARecordPattern) pattern, rootVisitor, question);
 				break;
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				ASeqPatternAssistantTC.typeResolve((ASeqPattern) pattern, rootVisitor, question);
 				break;
-			case SET:
+			case ASetPattern.kindPPattern:
 				ASetPatternAssistantTC.typeResolve((ASetPattern) pattern, rootVisitor, question);
 				break;
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				ATuplePatternAssistantTC.typeResolve((ATuplePattern) pattern, rootVisitor, question);
 				break;
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				AUnionPatternAssistantTC.typeResolve((AUnionPattern) pattern, rootVisitor, question);
 				break;
-			case MAP:
+			case AMapPattern.kindPPattern:
 				AMapPatternAssistantTC.typeResolve((AMapPattern)pattern,rootVisitor, question);
 				break;
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern,rootVisitor, question);
 				break;
 			default:
@@ -138,28 +138,28 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		switch (pattern.kindPPattern())
 		{
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				AConcatenationPatternAssistantTC.unResolve((AConcatenationPattern) pattern);
 				break;
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				ARecordPatternAssistantTC.unResolve((ARecordPattern) pattern);
 				break;
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				ASeqPatternAssistantTC.unResolve((ASeqPattern) pattern);
 				break;
-			case SET:
+			case ASetPattern.kindPPattern:
 				ASetPatternAssistantTC.unResolve((ASetPattern) pattern);
 				break;
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				ATuplePatternAssistantTC.unResolve((ATuplePattern) pattern);
 				break;
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				AUnionPatternAssistantTC.unResolve((AUnionPattern) pattern);
 				break;
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				AMapUnionPatternAssistantTC.unResolve((AMapUnionPattern) pattern);
 				break;
-			case MAP:
+			case AMapPattern.kindPPattern:
 				AMapPatternAssistantTC.unResolve((AMapPattern) pattern);
 			default:
 				pattern.setResolved(false);
@@ -171,37 +171,37 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		switch (pattern.kindPPattern())
 		{
-			case BOOLEAN:
+			case ABooleanPattern.kindPPattern:
 				return ABooleanPatternAssistantTC.getPossibleType((ABooleanPattern) pattern);				
-			case CHARACTER:
+			case ACharacterPattern.kindPPattern:
 				return ACharacterPatternAssistantTC.getPossibleType((ACharacterPattern) pattern);	
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantTC.getPossibleType((AConcatenationPattern) pattern);			
-			case EXPRESSION:
+			case AExpressionPattern.kindPPattern:
 				return AExpressionPatternAssistantTC.getPossibleTypes((AExpressionPattern) pattern);
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantTC.getPossibleTypes((AIdentifierPattern) pattern);
-			case IGNORE:
+			case AIgnorePattern.kindPPattern:
 				return AIgnorePatternAssistantTC.getPossibleTypes((AIgnorePattern) pattern);
-			case INTEGER:
+			case AIntegerPattern.kindPPattern:
 				return AIntegerPatternAssistantTC.getPossibleTypes((AIntegerPattern) pattern);
-			case NIL:
+			case ANilPattern.kindPPattern:
 				return ANilPatternAssistantTC.getPossibleTypes((ANilPattern) pattern);
-			case QUOTE:
+			case AQuotePattern.kindPPattern:
 				return AQuotePatternAssistantTC.getPossibleTypes((AQuotePattern) pattern);
-			case REAL:
+			case ARealPattern.kindPPattern:
 				return ARealPatternAssistantTC.getPossibleTypes((ARealPattern) pattern);
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantTC.getPossibleTypes((ARecordPattern) pattern);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantTC.getPossibleTypes((ASetPattern) pattern);			
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantTC.getPossibleTypes((ASeqPattern) pattern);
-			case STRING:
+			case AStringPattern.kindPPattern:
 				return AStringPatternAssistantTC.getPossibleTypes((AStringPattern) pattern);			
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantTC.getPossibleTypes((ATuplePattern) pattern);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantTC.getPossibleTypes((AUnionPattern) pattern);
 			default:
 				assert false : "Should not happen";
@@ -218,37 +218,37 @@ public class PPatternAssistantTC extends PPatternAssistant
 	
 	public static PExp getMatchingExpression(PPattern p) {
 		switch (p.kindPPattern()) {
-		case BOOLEAN:
+		case ABooleanPattern.kindPPattern:
 			return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) p);
-		case CHARACTER:
+		case ACharacterPattern.kindPPattern:
 			return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern)p);
-		case CONCATENATION:
+		case AConcatenationPattern.kindPPattern:
 			return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern)p);
-		case EXPRESSION:
+		case AExpressionPattern.kindPPattern:
 			return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) p);
-		case IDENTIFIER:
+		case AIdentifierPattern.kindPPattern:
 			return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) p);
-		case IGNORE:
+		case AIgnorePattern.kindPPattern:
 			return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) p);
-		case INTEGER:
+		case AIntegerPattern.kindPPattern:
 			return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) p);
-		case NIL:
+		case ANilPattern.kindPPattern:
 			return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) p);
-		case QUOTE:
+		case AQuotePattern.kindPPattern:
 			return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) p);
-		case REAL:
+		case ARealPattern.kindPPattern:
 			return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) p);
-		case RECORD:
+		case ARecordPattern.kindPPattern:
 			return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) p);
-		case SEQ:
+		case ASeqPattern.kindPPattern:
 			return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) p);
-		case SET:
+		case ASetPattern.kindPPattern:
 			return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) p);
-		case STRING:
+		case AStringPattern.kindPPattern:
 			return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) p);
-		case TUPLE:
+		case ATuplePattern.kindPPattern:
 			return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) p);
-		case UNION:
+		case AUnionPattern.kindPPattern:
 			return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) p);
 		default:
 			assert false : "Should not happen";
@@ -260,25 +260,25 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		
 		switch (p.kindPPattern()) {
-		case CONCATENATION:
+		case AConcatenationPattern.kindPPattern:
 			return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) p);
-		case IDENTIFIER:
+		case AIdentifierPattern.kindPPattern:
 			return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) p);
-		case IGNORE:
+		case AIgnorePattern.kindPPattern:
 			return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) p);
-		case MAPUNION:
+		case AMapUnionPattern.kindPPattern:
 			return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) p);
-		case RECORD:
+		case ARecordPattern.kindPPattern:
 			return ARecordPatternAssistantTC.isSimple((ARecordPattern) p);
-		case SEQ:
+		case ASeqPattern.kindPPattern:
 			return ASeqPatternAssistantTC.isSimple((ASeqPattern) p);
-		case SET:
+		case ASetPattern.kindPPattern:
 			return ASetPatternAssistantTC.isSimple((ASetPattern) p);
-		case TUPLE:
+		case ATuplePattern.kindPPattern:
 			return ATuplePatternAssistantTC.isSimple((ATuplePattern) p);
-		case UNION:
+		case AUnionPattern.kindPPattern:
 			return AUnionPatternAssistantTC.isSimple((AUnionPattern) p);
-		case MAP:
+		case AMapPattern.kindPPattern:
 			return AMapPatternAssistantTC.isSimple((AMapPattern) p);
 		default:
 			/*

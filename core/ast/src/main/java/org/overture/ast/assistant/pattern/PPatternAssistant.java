@@ -38,19 +38,19 @@ public class PPatternAssistant {
 	 */
 	public static LexNameList getAllVariableNames(PPattern pattern) {
 		switch (pattern.kindPPattern()) {
-		case CONCATENATION:
+		case AConcatenationPattern.kindPPattern:
 			return AConcatenationPatternAssistant.getAllVariableNames((AConcatenationPattern)pattern);
-		case IDENTIFIER:
+		case AIdentifierPattern.kindPPattern:
 			return AIdentifierPatternAssistant.getAllVariableNames((AIdentifierPattern)pattern);
-		case RECORD:
+		case ARecordPattern.kindPPattern:
 			return ARecordPatternAssistant.getAllVariableNames((ARecordPattern)pattern);
-		case SEQ:
+		case ASeqPattern.kindPPattern:
 			return ASeqPatternAssistant.getAllVariableNames((ASeqPattern)pattern);
-		case SET:
+		case ASetPattern.kindPPattern:
 			return ASetPatternAssistant.getAllVariableNames((ASetPattern)pattern);
-		case TUPLE:
+		case ATuplePattern.kindPPattern:
 			return ATuplePatternAssistant.getAllVariableNames((ATuplePattern)pattern);
-		case UNION:
+		case AUnionPattern.kindPPattern:
 			return AUnionPatternAssistant.getAllVariableNames((AUnionPattern)pattern);
 		default:
 			return getAllVariableNamesBaseCase(pattern);

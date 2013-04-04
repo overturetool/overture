@@ -68,23 +68,23 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	{
 		switch (pattern.kindPPattern())
 		{
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern)pattern);
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern)pattern);
-			case MAP:
+			case AMapPattern.kindPPattern:
 				return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern)pattern);
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern)pattern);
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
 			default:
 				return new Vector<AIdentifierPattern>();		// Most have none
@@ -98,41 +98,41 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		//Abstract method, needs to be implemented by all subclasses
 		switch (p.kindPPattern())
 		{
-			case BOOLEAN:
+			case ABooleanPattern.kindPPattern:
 				return ABooleanPatternAssistantInterpreter.getAllNamedValues((ABooleanPattern)p,expval,ctxt);
-			case CHARACTER:
+			case ACharacterPattern.kindPPattern:
 				return ACharacterPatternAssistantInterpreter.getAllNamedValues((ACharacterPattern)p,expval,ctxt);
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantInterpreter.getAllNamedValues((AConcatenationPattern)p,expval,ctxt);
-			case EXPRESSION:
+			case AExpressionPattern.kindPPattern:
 				return AExpressionPatternAssistantInterpreter.getAllNamedValues((AExpressionPattern)p,expval,ctxt);
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantInterpreter.getAllNamedValues((AIdentifierPattern)p,expval,ctxt);
-			case IGNORE:
+			case AIgnorePattern.kindPPattern:
 				return AIgnorePatternAssistantInterpreter.getAllNamedValues((AIgnorePattern)p,expval,ctxt);
-			case INTEGER:
+			case AIntegerPattern.kindPPattern:
 				return AIntegerPatternAssistantInterpreter.getAllNamedValues((AIntegerPattern)p,expval,ctxt);
-			case MAP:
+			case AMapPattern.kindPPattern:
 				return AMapPatternAssistantInterpreter.getAllNamedValues((AMapPattern)p,expval,ctxt);
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				return AMapUnionPatternAssistantInterpreter.getAllNamedValues((AMapUnionPattern) p, expval,ctxt);
-			case NIL:
+			case ANilPattern.kindPPattern:
 				return ANilPatternAssistantInterpreter.getAllNamedValues((ANilPattern)p,expval,ctxt);
-			case QUOTE:
+			case AQuotePattern.kindPPattern:
 				return AQuotePatternAssistantInterpreter.getAllNamedValues((AQuotePattern)p,expval,ctxt);
-			case REAL:
+			case ARealPattern.kindPPattern:
 				return ARealPatternAssistantInterpreter.getAllNamedValues((ARealPattern)p,expval,ctxt);
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantInterpreter.getAllNamedValues((ARecordPattern)p,expval,ctxt);
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantInterpreter.getAllNamedValues((ASeqPattern)p,expval,ctxt);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantInterpreter.getAllNamedValues((ASetPattern)p,expval,ctxt);
-			case STRING:
+			case AStringPattern.kindPPattern:
 				return AStringPatternAssistantInterpreter.getAllNamedValues((AStringPattern)p,expval,ctxt);
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantInterpreter.getAllNamedValues((ATuplePattern)p,expval,ctxt);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantInterpreter.getAllNamedValues((AUnionPattern)p,expval,ctxt);
 			default:
 				assert false : "Should not happen!";
@@ -148,23 +148,23 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	{
 		switch (pattern.kindPPattern())
 		{
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
-			case IGNORE:
+			case AIgnorePattern.kindPPattern:
 				return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
-			case MAP:
+			case AMapPattern.kindPPattern:
 				return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern)pattern);
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
-			case STRING:
+			case AStringPattern.kindPPattern:
 				return AStringPatternAssistantInterpreter.getLength((AStringPattern)pattern);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
 			default:
 				return 1;	// Most only identify one member
@@ -179,25 +179,25 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	{
 		switch (pattern.kindPPattern())
 		{
-			case CONCATENATION:
+			case AConcatenationPattern.kindPPattern:
 				return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern)pattern);
-			case IDENTIFIER:
+			case AIdentifierPattern.kindPPattern:
 				return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern)pattern);
-			case IGNORE:
+			case AIgnorePattern.kindPPattern:
 				return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern)pattern);
-			case MAP:
+			case AMapPattern.kindPPattern:
 				return AMapPatternAssistantInterpreter.isConstrained((AMapPattern)pattern);
-			case MAPUNION:
+			case AMapUnionPattern.kindPPattern:
 				return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern)pattern);
-			case RECORD:
+			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
-			case SEQ:
+			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
-			case SET:
+			case ASetPattern.kindPPattern:
 				return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
-			case TUPLE:
+			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
-			case UNION:
+			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern)pattern);
 			default:
 				return true;

@@ -30,7 +30,6 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.expressions.EExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.PExpBase;
 import org.overture.ast.node.INode;
@@ -65,7 +64,7 @@ public class BreakpointExpression extends PExpBase
 	}
 
 	@Override
-	public EExp kindPExp()
+	public String kindPExp()
 	{
 		return null;
 	}

@@ -13,9 +13,9 @@ public class PBindAssistantTC {
 	public static List<PMultipleBind> getMultipleBindList(PBind bind) {
 		
 		switch (bind.kindPBind()) {
-		case SET:
+		case ASetBind.kindPBind:
 			return ASetBindAssistantTC.getMultipleBindList((ASetBind)bind);
-		case TYPE:
+		case ATypeBind.kindPBind:
 			return ATypeBindAssistantTC.getMultipleBindList((ATypeBind)bind);
 		
 		}
@@ -26,9 +26,9 @@ public class PBindAssistantTC {
 	public static LexNameList getOldNames(PBind bind)
 	{
 		switch (bind.kindPBind()) {
-		case SET:
+		case ASetBind.kindPBind:
 			return ASetBindAssistantTC.getOldNames((ASetBind)bind);
-		case TYPE:
+		case ATypeBind.kindPBind:
 			return ATypeBindAssistantTC.getOldNames((ATypeBind)bind);
 		default:
 			assert false : "Should not happen";

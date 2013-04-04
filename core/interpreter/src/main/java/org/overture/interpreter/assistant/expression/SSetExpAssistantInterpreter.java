@@ -16,9 +16,9 @@ public class SSetExpAssistantInterpreter extends SSetExpAssistantTC
 	{
 		switch (exp.kindSSetExp())
 		{
-			case SETCOMP:
+			case ASetCompSetExp.kindSSetExp:
 				return ASetCompSetExpAssistantInterpreter.getValues((ASetCompSetExp)exp,ctxt);
-			case SETENUM:
+			case ASetEnumSetExp.kindSSetExp:
 				return ASetEnumSetExpAssistantInterpreter.getValues((ASetEnumSetExp)exp,ctxt);
 			default:
 				return new ValueList();
@@ -29,11 +29,11 @@ public class SSetExpAssistantInterpreter extends SSetExpAssistantTC
 	{
 		switch (exp.kindSSetExp())
 		{
-			case SETCOMP:
+			case ASetCompSetExp.kindSSetExp:
 				return ASetCompSetExpAssistantInterpreter.findExpression((ASetCompSetExp)exp,lineno);
-			case SETENUM:
+			case ASetEnumSetExp.kindSSetExp:
 				return ASetEnumSetExpAssistantInterpreter.findExpression((ASetEnumSetExp)exp,lineno);
-			case SETRANGE:
+			case ASetRangeSetExp.kindSSetExp:
 				return ASetRangeSetExpAssistantInterpreter.findExpression((ASetRangeSetExp)exp,lineno);
 			default:
 				return null;

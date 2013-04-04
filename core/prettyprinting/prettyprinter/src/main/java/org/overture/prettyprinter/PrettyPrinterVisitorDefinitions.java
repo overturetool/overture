@@ -44,9 +44,9 @@ public class PrettyPrinterVisitorDefinitions extends
 		
 		
 		//print types
-		printDefsToStringBuffer(sb,node,question,EDefinition.TYPE);
+		printDefsToStringBuffer(sb,node,question,ATypeDefinition.kindPDefinition);
 		
-		printDefsToStringBuffer(sb,node,question,EDefinition.VALUE);
+		printDefsToStringBuffer(sb,node,question,AValueDefinition.kindPDefinition);
 		
 		
 		
@@ -58,7 +58,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	
 	
 	private void printDefsToStringBuffer(StringBuffer sb,
-			AClassClassDefinition node, PrettyPrinterEnv question, EDefinition kind) throws AnalysisException
+			AClassClassDefinition node, PrettyPrinterEnv question, String kind) throws AnalysisException
 	{
 		List<PDefinition> defs = getDefinitions(node.getDefinitions(), kind);
 		
@@ -69,7 +69,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		
 		switch (kind)
 		{		
-			case TYPE:
+			case ATypeDefinition.kindPDefinition:
 			{
 				sb.append("types\n");
 				question.increaseIdent();
@@ -81,7 +81,7 @@ public class PrettyPrinterVisitorDefinitions extends
 				question.decreaseIdent();
 			}
 			break;
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 			{
 				sb.append("values\n");
 				question.increaseIdent();
@@ -101,7 +101,7 @@ public class PrettyPrinterVisitorDefinitions extends
 
 
 
-	private List<PDefinition> getDefinitions(LinkedList<PDefinition> definitions, EDefinition kind)	
+	private List<PDefinition> getDefinitions(LinkedList<PDefinition> definitions, String kind)	
 	{
 		List<PDefinition> result = new Vector<PDefinition>();
 		

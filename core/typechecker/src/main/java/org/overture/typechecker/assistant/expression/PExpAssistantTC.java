@@ -49,12 +49,12 @@ public class PExpAssistantTC {
 	public static String getPreName(PExp root) {
 		String result = null;
 		switch (root.kindPExp()) {
-		case FUNCINSTATIATION: {
+		case AFuncInstatiationExp.kindPExp: {
 			AFuncInstatiationExp func = AFuncInstatiationExp.class.cast(root);
 			result = getPreName(func.getFunction());
 		}
 			break;
-		case VARIABLE: {
+		case AVariableExp.kindPExp: {
 			AVariableExp var = AVariableExp.class.cast(root);
 
 			PDefinition def = var.getVardef();
@@ -86,73 +86,73 @@ public class PExpAssistantTC {
 	public static LexNameList getOldNames(PExp expression) {
 		
 		switch (expression.kindPExp()) {					
-		case APPLY:
+		case AApplyExp.kindPExp:
 			return AApplyExpAssistantTC.getOldNames((AApplyExp) expression);
-		case BINARY:
+		case SBinaryExp.kindPExp:
 			return SBinaryExpAssistantTC.getOldNames((SBinaryExp) expression);
-		case CASES:
+		case ACasesExp.kindPExp:
 			return ACasesExpAssistantTC.getOldNames((ACasesExp) expression);		
-		case ELSEIF:
+		case AElseIfExp.kindPExp:
 			return AElseIfExpAssistantTC.getOldNames((AElseIfExp) expression);
-		case EXISTS:
+		case AExistsExp.kindPExp:
 			return AExistsExpAssistantTC.getOldNameS((AExistsExp) expression);
-		case EXISTS1:
+		case AExists1Exp.kindPExp:
 			return AExists1ExpAssistantTC.getOldNames((AExists1Exp) expression);
-		case FIELD:
+		case AFieldExp.kindPExp:
 			return AFieldExpAssistantTC.getOldNames((AFieldExp) expression);
-		case FIELDNUMBER:
+		case AFieldNumberExp.kindPExp:
 			return AFieldNumberExpAssistantTC.getOldNames((AFieldNumberExp) expression);
-		case FORALL:
+		case AForAllExp.kindPExp:
 			return AForAllExpAssistantTC.getOldNames((AForAllExp) expression);
-		case FUNCINSTATIATION:
+		case AFuncInstatiationExp.kindPExp:
 			return AFuncInstatiationExpAssistantTC.getOldNames((AFuncInstatiationExp) expression);
-		case IF:
+		case AIfExp.kindPExp:
 			return AIfExpAssistantTC.getOldNames((AIfExp) expression);
-		case IOTA:
+		case AIotaExp.kindPExp:
 			return AIotaExpAssistantTC.getOldNames((AIotaExp) expression);
-		case IS:
+		case AIsExp.kindPExp:
 			return AIsExpAssistantTC.getOldNames((AIsExp) expression);
-		case ISOFBASECLASS:
+		case AIsOfBaseClassExp.kindPExp:
 			return AIsOfBaseClassExpAssistantTC.getOldNames((AIsOfBaseClassExp) expression);
-		case ISOFCLASS:
+		case AIsOfClassExp.kindPExp:
 			return AIsOfClassExpAssistantTC.getOldNames((AIsOfClassExp) expression);
-		case LAMBDA:
+		case ALambdaExp.kindPExp:
 			return ALambdaExpAssistantTC.getOldNames((ALambdaExp) expression);
-		case LETBEST:
+		case ALetBeStExp.kindPExp:
 			return ALetBeStExpAssistantTC.getOldNames((ALetBeStExp) expression);
-		case LETDEF:
+		case ALetDefExp.kindPExp:
 			return ALetDefExpAssistantTC.getOldNames((ALetDefExp) expression);
-		case MAP:
+		case SMapExp.kindPExp:
 			return SMapExpAssistantTC.getOldNames((SMapExp) expression);
-		case MAPLET:
+		case AMapletExp.kindPExp:
 			return AMapletExpAssistantTC.getOldNames((AMapletExp) expression);
-		case MKBASIC:
+		case AMkBasicExp.kindPExp:
 			return AMkBasicExpAssistantTC.getOldNames((AMkBasicExp) expression);
-		case MKTYPE:
+		case AMkTypeExp.kindPExp:
 			return AMkTypeExpAssistantTC.getOldNames((AMkTypeExp) expression);
-		case MU:
+		case AMuExp.kindPExp:
 			return AMuExpAssistantTC.getOldNames((AMuExp) expression);
-		case NARROW:
+		case ANarrowExp.kindPExp:
 			return ANarrowExpAssistantTC.getOldNames((ANarrowExp) expression);
-		case NEW:
+		case ANewExp.kindPExp:
 			return ANewExpAssistantTC.getOldNames((ANewExp) expression);
-		case POSTOP:
+		case APostOpExp.kindPExp:
 			return APostOpExpAssistantTC.getOldNames((APostOpExp) expression);		
-		case SAMEBASECLASS:
+		case ASameBaseClassExp.kindPExp:
 			return ASameBaseClassExpAssistantTC.getOldNames((ASameBaseClassExp) expression);
-		case SAMECLASS:
+		case ASameClassExp.kindPExp:
 			return ASameClassExpAssistantTC.getOldNames((ASameClassExp) expression);
-		case SEQ:
+		case SSeqExp.kindPExp:
 			return SSeqExpAssistantTC.getOldNames((SSeqExp) expression);
-		case SET:
+		case SSetExp.kindPExp:
 			return SSetExpAssistantTC.getOldNames((SSetExp) expression);
-		case SUBSEQ:
+		case ASubseqExp.kindPExp:
 			return ASubseqExpAssistantTC.getOldNames((ASubseqExp) expression);
-		case TUPLE:
+		case ATupleExp.kindPExp:
 			return ATupleExpAssistantTC.getOldNames((ATupleExp) expression);
-		case UNARY:
+		case SUnaryExp.kindPExp:
 			return SUnaryExpAssistantTC.getOldNames((SUnaryExp)expression);
-		case VARIABLE:
+		case AVariableExp.kindPExp:
 			return AVariableExpAssistantTC.getOldNames((AVariableExp) expression);
 		default:
 			return new LexNameList();

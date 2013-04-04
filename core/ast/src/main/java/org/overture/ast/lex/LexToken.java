@@ -22,10 +22,6 @@
  ******************************************************************************/
 package org.overture.ast.lex;
 
-
-
-
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +33,6 @@ import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.Node;
-import org.overture.ast.node.NodeEnum;
 
 
 /**
@@ -132,9 +127,10 @@ import org.overture.ast.node.NodeEnum;
 	}
 
 	@Override
-	public NodeEnum kindNode() {
-		return NodeEnum.ExternalDefined;
+	public String kindNode() {
+		return kindNode;
 	}
+	public static final String kindNode = "ExternalDefined";
 
 	@Override
 	public void removeChild(INode child) {

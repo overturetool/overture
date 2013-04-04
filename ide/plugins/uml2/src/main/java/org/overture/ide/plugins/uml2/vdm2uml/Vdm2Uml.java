@@ -34,6 +34,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -200,7 +201,7 @@ public class Vdm2Uml
 
 			switch (def.kindPDefinition())
 			{
-				case TYPE:
+				case ATypeDefinition.kindPDefinition:
 				{
 					PType type = PDefinitionAssistantTC.getType(def);
 					console.out.println("\tConverting type: " + type);
@@ -224,16 +225,16 @@ public class Vdm2Uml
 			switch (def.kindPDefinition())
 			{
 
-				case INSTANCEVARIABLE:
+				case AInstanceVariableDefinition.kindPDefinition:
 					addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
 					break;
-				case EXPLICITOPERATION:
+				case AExplicitOperationDefinition.kindPDefinition:
 					addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
 					break;
-				case EXPLICITFUNCTION:
+				case AExplicitFunctionDefinition.kindPDefinition:
 					addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
 					break;
-				case VALUE:
+				case AValueDefinition.kindPDefinition:
 					addValueToClass(class_, (AValueDefinition) def);
 				default:
 					break;
@@ -280,7 +281,7 @@ public class Vdm2Uml
 	{
 		switch (def.kindPDefinition())
 		{
-			case VALUE:
+			case AValueDefinition.kindPDefinition:
 				AValueDefinition valueDef = (AValueDefinition) def;
 				PPattern expression = valueDef.getPattern();
 				if (expression instanceof AIdentifierPattern)

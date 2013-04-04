@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator.tests;
+package org.overture.tools.astcreator.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import com.lausdahl.ast.creator.AstCreatorException;
-import com.lausdahl.ast.creator.Main;
+import org.overture.tools.astcreator.AstCreatorException;
+import org.overture.tools.astcreator.Main;
 
 public class DestecsTestTypeTest extends TestCase {
 	private static final String TESTDATA_BASE = "src\\test\\resources\\";

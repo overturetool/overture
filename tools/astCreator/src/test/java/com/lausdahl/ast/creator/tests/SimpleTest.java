@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator.tests;
+package org.overture.tools.astcreator.tests;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import com.lausdahl.ast.creator.AstCreatorException;
-import com.lausdahl.ast.creator.Main;
+import org.overture.tools.astcreator.AstCreatorException;
+import org.overture.tools.astcreator.Main;
 
 public class SimpleTest extends TestCase {
 	private static final String TESTDATA_BASE = "src\\test\\resources\\";
@@ -17,7 +17,7 @@ public class SimpleTest extends TestCase {
 		System.out.println(new File(".").getAbsolutePath());
 		File output = new File(
 				FilePathUtil.getPlatformPath("target/testData/simple"));
-		String inputFile = TESTDATA_BASE + "/simple.astv2";
+		String inputFile = TESTDATA_BASE + "/extonly1.ast";
 		Main.create(
 				null,
 				new FileInputStream(new File(new File(".").getParentFile(),

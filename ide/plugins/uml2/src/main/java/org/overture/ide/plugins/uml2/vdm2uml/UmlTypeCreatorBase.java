@@ -11,6 +11,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
@@ -19,9 +20,14 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.EMapType;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidReturnType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -77,23 +83,23 @@ public class UmlTypeCreatorBase
 	{
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				return type.toString();
-			case BRACKET:
+			case ABracketType.kindPType:
 				return getName(((ABracketType) type).getType());
-			case CLASS:
+			case AClassType.kindPType:
 				return ((AClassType) type).getName().name;
-			case FUNCTION:
+			case AFunctionType.kindPType:
 				return getName(((AFunctionType) type).getResult());
-			case INVARIANT:
+			case SInvariantType.kindPType:
 			{
 				switch (((SInvariantType) type).kindSInvariantType())
 				{
-					case NAMED:
+					case ANamedInvariantType.kindSInvariantType:
 						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
 								+ NAME_SEPERATOR
 								+ ((ANamedInvariantType) type).getName().name;
-					case RECORD:
+					case ARecordInvariantType.kindSInvariantType:
 						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
 								+ NAME_SEPERATOR
 								+ ((ARecordInvariantType) type).getName().name;
@@ -101,16 +107,17 @@ public class UmlTypeCreatorBase
 				}
 			}
 				break;
-			case MAP:
-				return (((SMapType) type).kindSMapType()==EMapType.INMAP?"In":"")+"Map<" + getName(((SMapType) type).getFrom()) + ","
+			case SMapType.kindPType:
+				return (AInMapMapType.kindSMapType.equals(((SMapType)type).kindSMapType())?"In":"")
+						+ "Map<" + getName(((SMapType) type).getFrom()) + ","
 						+ getName(((SMapType) type).getTo()) + ">";
-			case OPERATION:
+			case AOperationType.kindPType:
 				return getName(((AOperationType) type).getResult());
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				return "Optional<"+getName(((AOptionalType) type).getType())+">";
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return ((AParameterType)type).getName().name;
-			case PRODUCT:
+			case AProductType.kindPType:
 			{
 				String name = "Product<";
 				for (Iterator<PType> itr = ((AProductType) type).getTypes().iterator(); itr.hasNext();)
@@ -125,15 +132,15 @@ public class UmlTypeCreatorBase
 				return name + ">";
 
 			}
-			case QUOTE:
+			case AQuoteType.kindPType:
 				return ((AQuoteType) type).getValue().value;
-			case SEQ:
+			case SSeqType.kindPType:
 				return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
-			case SET:
+			case ASetType.kindPType:
 				return "Set<" + getName(((ASetType) type).getSetof()) + ">";
-			case UNDEFINED:
+			case AUndefinedType.kindPType:
 				break;
-			case UNION:
+			case AUnionType.kindPType:
 			{
 				
 				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
@@ -166,13 +173,13 @@ public class UmlTypeCreatorBase
 				return name + ">";
 
 			}
-			case UNKNOWN:
+			case AUnknownType.kindPType:
 				return ANY_TYPE;
-			case UNRESOLVED:
+			case AUnresolvedType.kindPType:
 				break;
-			case VOID:
+			case AVoidType.kindPType:
 				return VOID_TYPE;
-			case VOIDRETURN:
+			case AVoidReturnType.kindPType:
 				break;
 
 		}

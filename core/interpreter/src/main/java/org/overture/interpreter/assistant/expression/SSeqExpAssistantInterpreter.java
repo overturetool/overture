@@ -15,9 +15,9 @@ public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 	{
 		switch (exp.kindSSeqExp())
 		{
-			case SEQCOMP:
+			case ASeqCompSeqExp.kindSSeqExp:
 				return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp)exp,ctxt);
-			case SEQENUM:
+			case ASeqEnumSeqExp.kindSSeqExp:
 				return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp)exp,ctxt);
 			default:
 				return new ValueList();
@@ -28,9 +28,9 @@ public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 	{
 		switch (exp.kindSSeqExp())
 		{
-			case SEQCOMP:
+			case ASeqCompSeqExp.kindSSeqExp:
 				return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp)exp,lineno);
-			case SEQENUM:
+			case ASeqEnumSeqExp.kindSSeqExp:
 				return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp)exp,lineno);
 			default:
 				return null;

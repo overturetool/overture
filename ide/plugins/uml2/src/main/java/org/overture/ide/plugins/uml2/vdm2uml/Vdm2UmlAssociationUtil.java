@@ -10,12 +10,26 @@ import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.EMapType;
-import org.overture.ast.types.EType;
+import org.overture.ast.types.AUndefinedType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.AVoidReturnType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SBasicType;
+import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
@@ -38,48 +52,48 @@ public class Vdm2UmlAssociationUtil
 
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				return false;
-			case BRACKET:
+			case ABracketType.kindPType:
 				break;
-			case CLASS:
+			case AClassType.kindPType:
 				break;
-			case FUNCTION:
+			case AFunctionType.kindPType:
 				return false;
-			case INVARIANT:
+			case SInvariantType.kindPType:
 				return type instanceof ANamedInvariantType;
 				// ANamedInvariantType nInvType = (ANamedInvariantType) type;
 				// return
 				// break;
-			case MAP:
+			case SMapType.kindPType:
 				SMapType mType = (SMapType) type;
 				// return isSimpleType(mType.getFrom())
 				// && isSimpleType(mType.getTo());
 				return validMapType(mType.getFrom())
 						&& validMapType(mType.getTo());
-			case OPERATION:
+			case AOperationType.kindPType:
 				return false;
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				AOptionalType optionalType = (AOptionalType) type;
 				return isSimpleType(optionalType.getType());
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return false;
-			case PRODUCT:
+			case AProductType.kindPType:
 				return false;
-			case QUOTE:
+			case AQuoteType.kindPType:
 				break;
-			case SEQ:
+			case SSeqType.kindPType:
 				SSeqType seqType = (SSeqType) type;
 				return isSimpleType(seqType.getSeqof());
-			case SET:
+			case ASetType.kindPType:
 				ASetType setType = (ASetType) type;
 				return isSimpleType(setType.getSetof());
-			case UNDEFINED:
-			case UNION:
-			case UNKNOWN:
-			case UNRESOLVED:
-			case VOID:
-			case VOIDRETURN:
+			case AUndefinedType.kindPType:
+			case AUnionType.kindPType:
+			case AUnknownType.kindPType:
+			case AUnresolvedType.kindPType:
+			case AVoidType.kindPType:
+			case AVoidReturnType.kindPType:
 				return false;
 
 		}
@@ -101,10 +115,10 @@ public class Vdm2UmlAssociationUtil
 
 		switch (type.kindPType())
 		{
-			case SEQ:
+			case SSeqType.kindPType:
 				SSeqType seqType = (SSeqType) type;
 				return isSimpleType(seqType.getSeqof());
-			case SET:
+			case ASetType.kindPType:
 				ASetType setType = (ASetType) type;
 				return isSimpleType(setType.getSetof());
 			default:
@@ -125,53 +139,53 @@ public class Vdm2UmlAssociationUtil
 
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				break;
-			case BRACKET:
+			case ABracketType.kindPType:
 				break;
-			case CLASS:
+			case AClassType.kindPType:
 				break;
-			case FUNCTION:
+			case AFunctionType.kindPType:
 				break;
-			case INVARIANT:
+			case SInvariantType.kindPType:
 				if (type instanceof ANamedInvariantType)
 				{
 					ANamedInvariantType nInvType = (ANamedInvariantType) type;
 					return getType(classes, nInvType);
 				}
 				break;
-			case MAP:
+			case SMapType.kindPType:
 				SMapType mType = (SMapType) type;
 				return getTypeForMap(classes, mType.getTo());
-			case OPERATION:
+			case AOperationType.kindPType:
 				break;
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 //				AOptionalType optionalType = (AOptionalType) type;
 //				return getType(classes, optionalType.getType());
 				break;
-			case PARAMETER:
+			case AParameterType.kindPType:
 				break;
-			case PRODUCT:
+			case AProductType.kindPType:
 				break;
-			case QUOTE:
+			case AQuoteType.kindPType:
 				break;
-			case SEQ:
+			case SSeqType.kindPType:
 				SSeqType seqType = (SSeqType) type;
 				return getType(classes, seqType.getSeqof());
-			case SET:
+			case ASetType.kindPType:
 				ASetType setType = (ASetType) type;
 				return getType(classes, setType.getSetof());
-			case UNDEFINED:
+			case AUndefinedType.kindPType:
 				break;
-			case UNION:
+			case AUnionType.kindPType:
 				break;
-			case UNKNOWN:
+			case AUnknownType.kindPType:
 				break;
-			case UNRESOLVED:
+			case AUnresolvedType.kindPType:
 				break;
-			case VOID:
+			case AVoidType.kindPType:
 				break;
-			case VOIDRETURN:
+			case AVoidReturnType.kindPType:
 				break;
 
 		}
@@ -216,10 +230,10 @@ public class Vdm2UmlAssociationUtil
 	
 	static Type getTypeForMap(Map<String, Class> classes, PType type)
 	{
-		if(type.kindPType()==EType.SEQ)
+		if(SSeqType.kindPType.equals(type.kindPType()))
 		{
 			type = ((SSeqType)type).getSeqof();
-		}else if (type.kindPType()==EType.SET)
+		}else if (ASetType.kindPType.equals(type.kindPType()))
 		{
 			type =((ASetType)type).getSetof();
 		}
@@ -247,11 +261,12 @@ public class Vdm2UmlAssociationUtil
 		prop.setIsStatic(access.getStatic() != null);
 		
 		//set ordered
-		prop.setIsOrdered(defType.kindPType()==EType.SEQ);
-		prop.setIsUnique(defType.kindPType()!=EType.SEQ &&defType.kindPType()!=EType.MAP);
+		prop.setIsOrdered(SSeqType.kindPType.equals(defType.kindPType()));
+		prop.setIsUnique( ! (SSeqType.kindPType.equals(defType.kindPType())
+							|| SMapType.kindPType.equals(defType.kindPType())));
 		
 		//set qualifier if map
-		if (defType.kindPType()==EType.MAP)
+		if (SMapType.kindPType.equals(defType.kindPType()))
 		{
 			SMapType mType = (SMapType) defType;
 			PType fromType = mType.getFrom();
@@ -260,17 +275,19 @@ public class Vdm2UmlAssociationUtil
 			qualifier.setLower(Vdm2UmlUtil.extractLower(fromType));
 			qualifier.setUpper(Vdm2UmlUtil.extractUpper(fromType));
 			//set ordered
-			qualifier.setIsOrdered(fromType.kindPType()==EType.SEQ);
-			qualifier.setIsUnique(fromType.kindPType()!=EType.SEQ &&fromType.kindPType()!=EType.MAP);
+			qualifier.setIsOrdered(SSeqType.kindPType.equals(fromType.kindPType()));
+			qualifier.setIsUnique( ! (SSeqType.kindPType.equals(fromType.kindPType())
+									 || SMapType.kindPType.equals(fromType.kindPType())));
 			
 			prop.setLower(Vdm2UmlUtil.extractLower(toType));
 			prop.setUpper(Vdm2UmlUtil.extractUpper(toType));
 			//set ordered
-			prop.setIsOrdered(toType.kindPType()==EType.SEQ);
-			prop.setIsUnique(toType.kindPType()!=EType.SEQ &&toType.kindPType()!=EType.MAP);
+			prop.setIsOrdered(SSeqType.kindPType.equals(toType.kindPType()));
+			prop.setIsUnique( ! (SSeqType.kindPType.equals(toType.kindPType())
+								|| SMapType.kindPType.equals(toType.kindPType())));
 			
 			//Map unique
-			prop.setIsUnique(mType.kindSMapType()==EMapType.INMAP);
+			prop.setIsUnique(AInMapMapType.kindSMapType.equals(mType.kindSMapType()));
 			Property targetProp = association.getMemberEnd("", null);
 			targetProp.setIsUnique(true);
 			
@@ -281,9 +298,9 @@ public class Vdm2UmlAssociationUtil
 	// {
 	// switch (defType.kindPType())
 	// {
-	// case CLASS:
+	// case AClassType.kindPType:
 	// return classes.get(((AClassType) defType).getName().name);
-	// case OPTIONAL:
+	// case AOptionalType.kindPType:
 	// return getClassName(((AOptionalType) defType).getType(),classes);
 	// default:
 	// break;

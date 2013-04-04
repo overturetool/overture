@@ -8,8 +8,14 @@ Bundle-Localization: plugin
 Bundle-Name: org.overture.ide.plugins.poviewer
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.poviewer;singleton:=true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6,
- JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.overture.pog.assistant,
+ org.overture.pog.obligation,
+ org.overture.pog.util,
+ org.overture.pog.visitor,
+ org.overture.ide.plugins.poviewer,
+ org.overture.ide.plugins.poviewer.commands,
+ org.overture.ide.plugins.poviewer.view
 Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.vdmpp.core,
  org.overture.ide.vdmrt.core,

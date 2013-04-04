@@ -14,11 +14,11 @@ public class PTraceCoreDefinitionAssistantInterpreter
 	{
 		switch (core.kindPTraceCoreDefinition())
 		{
-			case APPLYEXPRESSION:
+			case AApplyExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
 				return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition)core,ctxt);
-			case BRACKETEDEXPRESSION:
+			case ABracketedExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
 				return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition)core,ctxt);
-			case CONCURRENTEXPRESSION:
+			case AConcurrentExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
 				return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition)core,ctxt);
 			default:
 				assert false : "Should not happen";

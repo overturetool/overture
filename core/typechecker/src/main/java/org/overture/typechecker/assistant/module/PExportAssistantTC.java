@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.modules.AAllExport;
 import org.overture.ast.modules.AFunctionExport;
 import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.modules.ATypeExport;
@@ -33,9 +34,9 @@ public class PExportAssistantTC
 	{
 		switch(exp.kindPExport())
 		{
-			case ALL:
+			case AAllExport.kindPExport:
 				return actualDefs;		// The lot!
-			case FUNCTION:
+			case AFunctionExport.kindPExport:
 			{
 				List<PDefinition> list = new Vector<PDefinition>();
 
@@ -65,7 +66,7 @@ public class PExportAssistantTC
 				return list;
 			}
 				
-			case OPERATION:
+			case AOperationExport.kindPExport:
 				{
 					List<PDefinition> list = new Vector<PDefinition>();
 
@@ -94,7 +95,7 @@ public class PExportAssistantTC
 
 					return list;
 				}
-			case TYPE:
+			case ATypeExport.kindPExport:
 				{	
 					LexNameToken name = ((ATypeExport)exp).getName();
 					List<PDefinition> list = new Vector<PDefinition>();
@@ -147,7 +148,7 @@ public class PExportAssistantTC
 
 					return list;
 				}
-			case VALUE:
+			case AValueExport.kindPExport:
 			{
 				List<PDefinition> list = new Vector<PDefinition>();
 
@@ -195,9 +196,9 @@ public class PExportAssistantTC
 	{
 		switch(exp.kindPExport())
 		{
-			case ALL:
+			case AAllExport.kindPExport:
 				return new LinkedList<PDefinition>();	// Nothing <shrug>
-			case FUNCTION:
+			case AFunctionExport.kindPExport:
 			{
 				List<PDefinition> list = new Vector<PDefinition>();
 				//AAccessSpecifierAccessSpecifier
@@ -213,7 +214,7 @@ public class PExportAssistantTC
 				return list;
 			}
 				
-			case OPERATION:
+			case AOperationExport.kindPExport:
 				{
 					List<PDefinition> list = new Vector<PDefinition>();
 
@@ -228,11 +229,11 @@ public class PExportAssistantTC
 
 					return list;
 				}
-			case TYPE:
+			case ATypeExport.kindPExport:
 				{	
 					return new LinkedList<PDefinition>();
 				}
-			case VALUE:
+			case AValueExport.kindPExport:
 			{
 				List<PDefinition> list = new Vector<PDefinition>();
 				

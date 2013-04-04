@@ -32,49 +32,49 @@ public class PStmAssistantInterpreter
 	{
 		switch (stm.kindPStm())
 		{
-			case ALWAYS:
+			case AAlwaysStm.kindPStm:
 				return AAlwaysStmAssistantInterpreter.findExpression((AAlwaysStm)stm,lineno);
-			case ASSIGNMENT:
+			case AAssignmentStm.kindPStm:
 				return AAssignmentStmAssistantInterpreter.findExpression((AAssignmentStm)stm,lineno);
-			case ATOMIC:
+			case AAtomicStm.kindPStm:
 				return AAtomicStmAssistantInterpreter.findExpression((AAtomicStm)stm,lineno);
-			case CALL:
+			case ACallStm.kindPStm:
 				return ACallStmAssistantInterpreter.findExpression((ACallStm)stm,lineno);
-			case CALLOBJECT:
+			case ACallObjectStm.kindPStm:
 				return ACallObjectStatementAssistantInterpreter.findExpression((ACallObjectStm)stm,lineno);
-			case CASES:
+			case ACasesStm.kindPStm:
 				return ACasesStmAssistantInterpreter.findExpression((ACasesStm)stm,lineno);
-			case CYCLES:
+			case ACyclesStm.kindPStm:
 				return ACyclesStmAssistantInterpreter.findExpression((ACyclesStm)stm,lineno);
-			case DURATION:
+			case ADurationStm.kindPStm:
 				return ADurationStmAssistantInterpreter.findExpression((ADurationStm)stm,lineno);
-			case ELSEIF:
+			case AElseIfStm.kindPStm:
 				return AElseIfStmAssistantInterpreter.findExpression((AElseIfStm)stm, lineno);
-			case EXIT:
+			case AExitStm.kindPStm:
 				return AExitStmAssistantInterpreter.findExpression((AExitStm)stm,lineno);
-			case FORALL:
+			case AForAllStm.kindPStm:
 				return AForAllStmAssistantInterpreter.findExpression((AForAllStm)stm,lineno);
-			case FORINDEX:
+			case AForIndexStm.kindPStm:
 				return AForIndexStmAssistantInterpreter.findExpression((AForIndexStm)stm,lineno);
-			case FORPATTERNBIND:
+			case AForPatternBindStm.kindPStm:
 				return AForPatternBindStmAssitantInterpreter.findExpression((AForPatternBindStm)stm,lineno);
-			case IF:
+			case AIfStm.kindPStm:
 				return AIfStmAssistantInterpreter.findExpression((AIfStm)stm,lineno);
-			case LETBEST:
+			case ALetBeStStm.kindPStm:
 				return ALetBeStStmAssistantInterpreter.findExpression((ALetBeStStm)stm,lineno);
-			case LETDEF:
+			case SLetDefStm.kindPStm:
 				return SLetDefStmAssistantInterpreter.findExpression((SLetDefStm)stm,lineno);
-			case RETURN:
+			case AReturnStm.kindPStm:
 				return AReturnStmAssistantInterpreter.findExpression((AReturnStm)stm,lineno);
-			case SIMPLEBLOCK:
+			case SSimpleBlockStm.kindPStm:
 				return SSimpleBlockStmAssistantInterpreter.findExpression((SSimpleBlockStm)stm,lineno);
-			case START:
+			case AStartStm.kindPStm:
 				return AStartStmAssistantInterpreter.findExpression((AStartStm)stm,lineno);
-			case TIXE:
+			case ATixeStm.kindPStm:
 				return ATixeStmAssistantInterpreter.findExpression((ATixeStm)stm,lineno);
-			case TRAP:
+			case ATrapStm.kindPStm:
 				return ATrapStmAssistantInterpreter.findExpression((ATrapStm)stm,lineno);
-			case WHILE:
+			case AWhileStm.kindPStm:
 				return AWhileStmAssistantInterpreter.findExpression((AWhileStm)stm,lineno);
 			default:
 				return null;
@@ -94,37 +94,37 @@ public class PStmAssistantInterpreter
 	{
 		switch (stm.kindPStm())
 		{
-			case ALWAYS:
+			case AAlwaysStm.kindPStm:
 				return AAlwaysStmAssistantInterpreter.findStatement((AAlwaysStm)stm,lineno);
-			case ATOMIC:
+			case AAtomicStm.kindPStm:
 				return AAtomicStmAssistantInterpreter.findStatement((AAtomicStm)stm,lineno);
-			case CASES:
+			case ACasesStm.kindPStm:
 				return ACasesStmAssistantInterpreter.findStatement((ACasesStm)stm,lineno);
-			case CYCLES:
+			case ACyclesStm.kindPStm:
 				return ACyclesStmAssistantInterpreter.findStatement((ACyclesStm)stm,lineno);
-			case DURATION:
+			case ADurationStm.kindPStm:
 				return ADurationStmAssistantInterpreter.findStatement((ADurationStm)stm,lineno);
-			case ELSEIF:
+			case AElseIfStm.kindPStm:
 				return AElseIfStmAssistantInterpreter.findStatement((AElseIfStm)stm,lineno);
-			case FORALL:
+			case AForAllStm.kindPStm:
 				return AForAllStmAssistantInterpreter.findStatement((AForAllStm)stm,lineno);
-			case FORINDEX:
+			case AForIndexStm.kindPStm:
 				return AForIndexStmAssistantInterpreter.findStatement((AForIndexStm)stm,lineno);
-			case FORPATTERNBIND:
+			case AForPatternBindStm.kindPStm:
 				return AForPatternBindStmAssitantInterpreter.findStatement((AForPatternBindStm)stm,lineno);
-			case IF:
+			case AIfStm.kindPStm:
 				return AIfStmAssistantInterpreter.findStatement((AIfStm)stm,lineno);
-			case LETBEST:
+			case ALetBeStStm.kindPStm:
 				return ALetBeStStmAssistantInterpreter.findStatement((ALetBeStStm)stm,lineno);
-			case LETDEF:
+			case SLetDefStm.kindPStm:
 				return SLetDefStmAssistantInterpreter.findStatement((SLetDefStm)stm,lineno);
-			case SIMPLEBLOCK:
+			case SSimpleBlockStm.kindPStm:
 				return SSimpleBlockStmAssistantInterpreter.findStatement((SSimpleBlockStm)stm,lineno);
-			case TIXE:
+			case ATixeStm.kindPStm:
 				return ATixeStmAssistantInterpreter.findStatement((ATixeStm)stm,lineno);
-			case TRAP:
+			case ATrapStm.kindPStm:
 				return ATrapStmAssistantInterpreter.findStatement((ATrapStm)stm,lineno);
-			case WHILE:
+			case AWhileStm.kindPStm:
 				return AWhileStmAssistantInterpreter.findStatement((AWhileStm)stm,lineno);
 			default:
 				return findStatementBaseCase(stm, lineno);

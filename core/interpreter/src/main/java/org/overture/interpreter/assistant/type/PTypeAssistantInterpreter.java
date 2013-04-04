@@ -15,8 +15,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.type.AInMapMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AMapMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PTypeAssistantInterpreter extends PTypeAssistantTC
@@ -26,29 +24,29 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 	{
 		switch (type.kindPType())
 		{
-			case BASIC:
+			case SBasicType.kindPType:
 				return SBasicTypeAssistantInterpreter.getAllValues((SBasicType) type,ctxt);
-			case INVARIANT:
+			case SInvariantType.kindPType:
 				return SInvariantTypeAssistantInterpreter.getAllValues((SInvariantType)type,ctxt);
-			case MAP:
+			case SMapType.kindPType:
 				switch (((SMapType) type).kindSMapType())
 				{
-					case INMAP:
+					case AInMapMapType.kindSMapType:
 						return AInMapMapTypeAssistantInterpreter.getAllValues((AInMapMapType) type, ctxt);
-					case MAP:
+					case AMapMapType.kindSMapType:
 						return SMapTypeAssistantInterpreter.getAllValues((AMapMapType) type, ctxt);
 				}
-			case OPTIONAL:
+			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantInterpreter.getAllValues((AOptionalType)type,ctxt);
-			case PRODUCT:
+			case AProductType.kindPType:
 				return AProductTypeAssistantInterpreter.getAllValues((AProductType)type,ctxt);
-			case QUOTE:
+			case AQuoteType.kindPType:
 				return AQuoteTypeAssistantInterpreter.getAllValues((AQuoteType)type,ctxt);
-			case SET:
+			case ASetType.kindPType:
 				return ASetTypeAssistantInterpreter.getAllValues((ASetType)type,ctxt);
-			case UNION:
+			case AUnionType.kindPType:
 				return AUnionTypeAssistantInterpreter.getAllValues((AUnionType)type,ctxt);
-			case PARAMETER:
+			case AParameterType.kindPType:
 				return AParameterTypeAssistantInterpreter.getAllValues((AParameterType) type, ctxt);
 			default:
 				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);

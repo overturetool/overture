@@ -15,11 +15,11 @@ public class PImportAssistantTC {
 	public static List<PDefinition> getDefinitions(PImport imp,
 			AModuleModules from) {
 		switch (imp.kindPImport()) {
-		case ALL:
+		case AAllImport.kindPImport:
 			return AAllImportAssistantTC.getDefinitions((AAllImport)imp,from);		
-		case TYPE:
+		case ATypeImport.kindPImport:
 			return ATypeImportAssistantTC.getDefinitions((ATypeImport)imp,from);
-		case VALUE:
+		case SValueImport.kindPImport:
 			return SValueImportAssistantTC.getDefinitions((SValueImport)imp,from);
 		default:
 			assert false : "PImport.getDefinitions should never hit this case";

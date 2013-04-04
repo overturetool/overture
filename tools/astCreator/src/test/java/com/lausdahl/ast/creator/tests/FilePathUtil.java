@@ -1,4 +1,4 @@
-package com.lausdahl.ast.creator.tests;
+package org.overture.tools.astcreator.tests;
 
 import java.io.File;
 

@@ -1,5 +1,10 @@
 package org.overture.ast.assistant.type;
 
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.ARationalNumericBasicType;
+import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.SNumericBasicType;
 
 public class SNumericBasicTypeAssistant {
@@ -7,15 +12,15 @@ public class SNumericBasicTypeAssistant {
 	public static int getWeight(SNumericBasicType subn) {
 		switch(subn.kindSNumericBasicType())
 		{
-			case INT:
+			case AIntNumericBasicType.kindSNumericBasicType:
 				return 2;
-			case NAT:
+			case ANatNumericBasicType.kindSNumericBasicType:
 				return 1;
-			case NATONE:
+			case ANatOneNumericBasicType.kindSNumericBasicType:
 				return 0;
-			case RATIONAL:
+			case ARationalNumericBasicType.kindSNumericBasicType:
 				return 3;
-			case REAL:
+			case ARealNumericBasicType.kindSNumericBasicType:
 				return 4;
 		}			
 		return -1;
