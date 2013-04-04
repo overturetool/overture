@@ -104,20 +104,16 @@ test coverage feature described in Section~\ref{sec:testcov} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
 \begin{quote}
-\url{http://miktex.org/2.8/}
+\url{http://miktex.org/2.9/}
 \end{quote}
 
 \subsection*{Note for users of \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$}
 Overture provides a new open source VDM tool set, but it can
 also work with
 \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$. \vdmtools, originally developed IFAD A/S, is now
-maintained and developed by CSK Systems~(see
-\url{http://www.vdmtools.jp/en/}). In the future Overture will be able
-to accesses
-\vdmtools\ functionality via a remote API, but the integration will to
-some extent be limited by the API capabilities. However, the additional
-features of the Overture IDE make it worth considering as a front end
-to the \vdmtools\ functionality.
+maintained and developed by SCSK~(see
+\url{http://www.vdmtools.jp/en/}). From Overture it is also possible
+automatically to transfer a project over to \vdmtools.
 
 \section{Using the Overture Perspective}\label{sec:vdmsupport}
 
@@ -277,7 +273,7 @@ supports several types of template: cases, quantifications, functions
 (explicit/implicit), operations (explicit/implicit) and many
 more\footnote{It is possible to see and enhance the complete list of
   these by selecting \emph{Window} $\rightarrow$ \emph{Preferences}
-  $\rightarrow$ \emph{Overture}.}. 
+  $\rightarrow$ \emph{VDM}  $\rightarrow$ \emph{Templates}.}. 
 Additional templates can easily be added in the future. The use
 of templates makes it much easier for users lacking deep familiarity
 with VDM syntax to nevertheless construct models.
@@ -390,7 +386,7 @@ dialog have 3 different launch modes:
   decides before debugging which operation/function to call.
 \item[Remote Console:] This is an anvanced option that enables remote
   control of the interpreter and this is described in the Overture
-  user manual~\cite{Larsen&10d}.
+  user manual~\cite{Larsen&13a}.
 \item[Console:] This will simply start up a console where the user
   interactive can debug different operations/functions defined in the
   selected project\footnote{For VDMTools users this will be a familiar
@@ -607,7 +603,7 @@ on the \texttt{AlarmSL} project and select the \emph{Latex} $
 been gathered in any expressions that have been debugged since the
 last change to a file have been saved or the project have been cleaned
 will be turned into a pdf file. The \texttt{AlarmSL.pdf} file is
-placed in the \texttt{generated/latex/specification} directory as shown in
+placed in the \texttt{generated/latex} directory as shown in
 Figure~\ref{fig:testcov} and it includes the
 VDM definitions from all the files included in the project including
 coverage information. Note that whenever the model is adjusted or it

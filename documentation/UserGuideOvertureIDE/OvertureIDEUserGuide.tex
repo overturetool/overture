@@ -713,7 +713,8 @@ manage VDM templates, but that is described in Section~\ref{sec:templates}.
 \end{figure}
 
 In the same fashion it is possible to set preferences for the way VDM++ and VDM-RT models are mapped to UML. 
-This can be seen in Figure~\ref{fig:UMLpreferences}.
+This can be seen in Figure~\ref{fig:UMLpreferences}. More information about 
+these preferences can be found in Chapter~\ref{sec:vdmuml}.
 
 \begin{figure}[!hbt]
 \begin{center}
@@ -1199,9 +1200,8 @@ and the corresponding UML model.
 %Overture this feature is somewhat unstable.}.
 Essentially, VDM and UML can be considered
 as different views of the same model. A UML model is typically used
-to give a graphical overview of the model using class diagrams, and
-sequence diagrams can be used to indicate the test scenarios
-that a user would like to perform. The VDM model is typically used
+to give a graphical overview of the model using class diagrams.
+The VDM model is typically used
 to define the implementation and constraints for each class and
 is therefore used for detailed semantic analysis.
 
@@ -1223,8 +1223,27 @@ Importing and exporting a UML model is
 an option in the Overture \emph{Explorer} view, where right-clicking
 a VDM++ or VDM-RT project gives a submenu for
 \emph{UML Transformation}\index{UML transformation}. From here
-it is possible to \emph{Import XMI}\index{import XMI} or to
-\emph{Export XMI}\index{Export XMI}.
+it is possible to 
+\emph{Convert to UML}\index{Convert to UML}. If the mouse is placed over
+a \texttt{.uml} file it is also possible to right-click and choose
+the submenu for
+\emph{UML Transformation}\index{UML transformation} and then select
+\emph{Convert to VDM}\index{Convert to VDM}. 
+
+The mapping rules between VDM++/VDM-RT and UML models is further explained 
+in Appendix~\ref{chap:umlrules}. Note that the mapping depends on the settings
+selected in the \emph{Preferences} menu (see Figure~\ref{fig:UMLpreferences} 
+above). The general explanation of these options are:
+
+\begin{description}
+\item[Prefer associations during translation:] In case this option is chosen 
+(ticked) references to instances of other classes will be modelled as
+associations between the classes in a class diagram. Otherwise these will be 
+modelled as attributes.
+\item[Disable nested artifacts in Deployment Diagrams:] In case this option
+is chosen (ticked) nested artifacts in a deployment diagram are disabled; 
+otherwise it is enabled.
+\end{description}
 
 \chapter{Moving from VDM++ to VDM-RT}\label{sec:ToVDMRT}
 
@@ -2299,7 +2318,7 @@ Most of these errors should \emph{never} be seen, so if they appear
 please report the occurrence via the Overture bug reporting utility
 (\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}).
 
-\input{../../core/vdmj/documentation/MESSAGES_Internal}
+\input{MESSAGES_Internal}
 
 \newpage
 \chapter{Lexical Errors}\label{app:lexerr}
@@ -2309,7 +2328,7 @@ characters into tokens that can be used in the further
 processing. This is called a lexical analysis and errors in this area
 can be as follows:
 
-\input{../../core/vdmj/documentation/MESSAGES_Lexical}
+\input{MESSAGES_Lexical}
 
 \newpage
 \chapter{Syntax Errors}\label{app:synerr}
@@ -2318,7 +2337,7 @@ If the syntax of the file you have provided does not meet the
 syntax rules for the VDM dialect you wish to use, syntax errors will be
 reported. These can be as follows:
 
-\input{../../core/vdmj/documentation/MESSAGES_Syntax}
+\input{MESSAGES_Syntax}
 
 \newpage
 \chapter{Type Errors and Warnings}\label{app:typeerr}
@@ -2327,11 +2346,11 @@ If the syntax rules are satisfied, it is still possible to get
 errors from the type checker. The errors can be as
 follows:
 
-\input{../../core/vdmj/documentation/MESSAGES_TypeChecking}
+\input{MESSAGES_TypeChecking}
 
 Warnings from the type checker include:
 
-\input{../../core/vdmj/documentation/MESSAGES_Warnings}
+\input{MESSAGES_Warnings}
 
 \newpage
 \chapter{Run-Time Errors}\label{app:runtimeerr}
@@ -2340,7 +2359,7 @@ When using the interpreter/debugger it is possible to get run-time
 errors, even if there are no type checking errors. The possible errors
 are as follows:
 
-\input{../../core/vdmj/documentation/MESSAGES_Runtime}
+\input{MESSAGES_Runtime}
 
 \newpage
 \chapter{Categories of Proof Obligations}\label{app:POcategories}
@@ -2426,9 +2445,12 @@ circumstances under which each category can be expected.
 \end{description}
 
 \newpage
-\chapter{Index}\label{sec:index}
+\chapter{Mapping Rules between VDM++/VDM-RT and UML Models} \label{chap:umlrules}
+
+
+%\chapter{Index}
 \printindex
-\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
+\addcontentsline{toc}{section}{\protect\numberline{}{Index}}\label{sec:index}
 
 
 
