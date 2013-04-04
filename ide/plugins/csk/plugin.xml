@@ -8,7 +8,7 @@
             category="org.overture.ide.ui.vdm"
             class="org.overture.ide.plugins.csk.internal.WorkbenchPreferencePageCsk"
             id="org.overture.ide.plugins.csk.page1"
-            name="SCSK/VDMTools">
+            name="SCSK/VDM Tools">
       </page>
    </extension>
    <extension
@@ -26,7 +26,20 @@
                      checkEnabled="false">
                       <iterate
                             ifEmpty="false">
-                     	<adapt type="org.overture.ide.core.resources.IVdmProject"></adapt>
+                     	<adapt
+                            type="org.overture.ide.core.resources.IVdmProject">
+                         
+                         <or>
+                         	<test
+	                               property="org.overture.ide.core.resources.dialect"
+	                               value="VDM_SL">
+	                        </test>
+	                        <test
+	                               property="org.overture.ide.core.resources.dialect"
+	                               value="VDM_PP">
+	                        </test>
+                         </or>
+                      </adapt>
                      </iterate>
                </visibleWhen>
             </command>
