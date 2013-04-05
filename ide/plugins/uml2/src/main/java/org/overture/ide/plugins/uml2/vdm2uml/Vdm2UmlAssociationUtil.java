@@ -130,21 +130,21 @@ public class Vdm2UmlAssociationUtil
 	{
 		switch (type.kindPType())
 		{
-			case SEQ:
+			case SSeqType.kindPType:
 				SSeqType seqType = (SSeqType) type;
-				if(seqType.getSeqof().kindPType()==EType.BASIC)
+				if(seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
 				{
 					return true;
 				}
 				break;
-			case SET:
+			case ASetType.kindPType:
 				ASetType setType = (ASetType) type;
-				if(setType.getSetof().kindPType()==EType.BASIC)
+				if(setType.getSetof().kindPType().equals(SBasicType.kindPType))
 				{
 					return true;
 				}
 				break;
-			case BASIC:
+			case SBasicType.kindPType:
 				return true;
 			
 		}
@@ -323,7 +323,7 @@ public class Vdm2UmlAssociationUtil
 	private static Type getQualifierReferenceClass(Class class_, PType type, Map<String, Class> classes, UmlTypeCreator utc)
 	{
 		PType qualifierType =unfoldSetSeqTypes(type);
-		if(qualifierType.kindPType()==EType.BASIC)
+		if(qualifierType.kindPType().equals(SBasicType.kindPType))
 		{
 			utc.create(class_, qualifierType);
 			return utc.getUmlType(qualifierType);
@@ -335,9 +335,9 @@ public class Vdm2UmlAssociationUtil
 	{
 		switch(type.kindPType())
 		{
-			case SEQ:
+			case SSeqType.kindPType:
 				return ((SSeqType)type).getSeqof();
-			case SET:
+			case ASetType.kindPType:
 				return ((ASetType)type).getSetof();
 		}
 		return type;
