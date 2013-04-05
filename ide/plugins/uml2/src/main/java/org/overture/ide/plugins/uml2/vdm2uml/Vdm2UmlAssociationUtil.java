@@ -69,7 +69,7 @@ public class Vdm2UmlAssociationUtil
 				SMapType mType = (SMapType) type;
 				// return isSimpleType(mType.getFrom())
 				// && isSimpleType(mType.getTo());
-				return validMapType(mType.getFrom())
+				return validMapFromType(mType.getFrom())
 						&& validMapType(mType.getTo());
 			case AOperationType.kindPType:
 				return false;
@@ -125,6 +125,31 @@ public class Vdm2UmlAssociationUtil
 				return false;
 		}
 	}
+	
+	private static boolean validMapFromType(PType type)
+	{
+		switch (type.kindPType())
+		{
+			case SEQ:
+				SSeqType seqType = (SSeqType) type;
+				if(seqType.getSeqof().kindPType()==EType.BASIC)
+				{
+					return true;
+				}
+				break;
+			case SET:
+				ASetType setType = (ASetType) type;
+				if(setType.getSetof().kindPType()==EType.BASIC)
+				{
+					return true;
+				}
+				break;
+			case BASIC:
+				return true;
+			
+		}
+		return validMapType(type);
+	}
 
 	public static Type getReferenceClass(PType type, Map<String, Class> classes)
 	{
@@ -140,7 +165,7 @@ public class Vdm2UmlAssociationUtil
 		switch (type.kindPType())
 		{
 			case SBasicType.kindPType:
-				break;
+				return getType(classes, type);
 			case ABracketType.kindPType:
 				break;
 			case AClassType.kindPType:
@@ -240,7 +265,7 @@ public class Vdm2UmlAssociationUtil
 		return getType(classes, UmlTypeCreatorBase.getName(type));
 	}
 
-	public static void createAssociation(String name, PType defType,AAccessSpecifierAccessSpecifier access,PExp defaultExp ,Map<String, Class> classes, Type class_, boolean readOnly)
+	public static void createAssociation(String name, PType defType,AAccessSpecifierAccessSpecifier access,PExp defaultExp ,Map<String, Class> classes, Class class_, boolean readOnly, UmlTypeCreator utc)
 	{
 		Type referencedClass = Vdm2UmlAssociationUtil.getReferenceClass(defType, classes);
 
@@ -271,7 +296,8 @@ public class Vdm2UmlAssociationUtil
 			SMapType mType = (SMapType) defType;
 			PType fromType = mType.getFrom();
 			PType toType = mType.getTo();
-			Property qualifier = prop.createQualifier(null, Vdm2UmlAssociationUtil.getReferenceClass(fromType, classes));
+			
+			Property qualifier = prop.createQualifier(null, Vdm2UmlAssociationUtil.getQualifierReferenceClass(class_,fromType, classes,utc));
 			qualifier.setLower(Vdm2UmlUtil.extractLower(fromType));
 			qualifier.setUpper(Vdm2UmlUtil.extractUpper(fromType));
 			//set ordered
@@ -292,6 +318,29 @@ public class Vdm2UmlAssociationUtil
 			targetProp.setIsUnique(true);
 			
 		}
+	}
+	
+	private static Type getQualifierReferenceClass(Class class_, PType type, Map<String, Class> classes, UmlTypeCreator utc)
+	{
+		PType qualifierType =unfoldSetSeqTypes(type);
+		if(qualifierType.kindPType()==EType.BASIC)
+		{
+			utc.create(class_, qualifierType);
+			return utc.getUmlType(qualifierType);
+		}
+		return getReferenceClass(qualifierType, classes);
+	}
+	
+	private static PType unfoldSetSeqTypes(PType type)
+	{
+		switch(type.kindPType())
+		{
+			case SEQ:
+				return ((SSeqType)type).getSeqof();
+			case SET:
+				return ((ASetType)type).getSetof();
+		}
+		return type;
 	}
 
 	// public static Class getClassName(PType defType,Map<String, Class> classes)
