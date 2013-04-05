@@ -37,6 +37,7 @@ public class UmlTypeCreatorBase
 	public static final String ANY_TYPE = "Any";
 	public static final String templateOptionalName = "Optional<T>";
 	public static final String NAME_SEPERATOR = "::";
+	public	 static final String UNKNOWN_TYPE = "_Unknown_";
 
 	protected static String getTemplateUnionName(int templateNameCount)
 	{
@@ -176,6 +177,6 @@ public class UmlTypeCreatorBase
 				break;
 
 		}
-		return "unknown";
+		return UNKNOWN_TYPE;
 	}
 }

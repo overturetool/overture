@@ -45,10 +45,38 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	public interface ClassTypeLookup
 	{
 		Class lookup(AClassType type);
+
+		Class lookup(String className);
+	}
+	
+	private class TypeMap extends HashMap<String,Classifier>
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String toString()
+		{
+			StringBuilder sb = new StringBuilder();
+			for (java.util.Map.Entry<String, Classifier> entry : this.entrySet())
+			{
+				sb.append(entry.getKey()+": "+entry.getValue().getName()+"\n");
+			}
+			return sb.toString();
+		}
+		
+//		@Override
+//		public Classifier put(String key, Classifier value)
+//		{
+//			// TODO Auto-generated method stub
+//			return super.put(key, value);
+//		}
 	}
 
 	private Model modelWorkingCopy = null;
-	private final Map<String, Classifier> types = new HashMap<String, Classifier>();
+	private final Map<String, Classifier> types = new TypeMap();
 
 	private final ClassTypeLookup classLookup;
 	private Package bindingPackage;
@@ -146,7 +174,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 						+ type
 						+ " - Inserting \"Unknown\" type as a replacement and continues");
 			}
-			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType("Unknown");
+			Classifier unknownType = modelWorkingCopy.createOwnedPrimitiveType(UNKNOWN_TYPE);
 			unknownType.addKeyword(getName(type));
 			types.put(getName(type), unknownType);
 		}
@@ -272,9 +300,11 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		if (Vdm2UmlUtil.isUnionOfQuotes(type))
 		{
 
-			String simpleName = getName(type);
-			simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
-			Enumeration enumeration = (Enumeration) class_.createNestedClassifier(simpleName, UMLPackage.Literals.ENUMERATION);
+			String qualifiedName = getName(type);
+			String simpleName = qualifiedName.substring(qualifiedName.lastIndexOf(':') + 1);
+			String className = qualifiedName.substring(0,qualifiedName.indexOf(':'));
+			Class owningClass = classLookup.lookup(className);
+			Enumeration enumeration = (Enumeration) owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.ENUMERATION);
 
 			// Enumeration enumeration = modelWorkingCopy.createOwnedEnumeration(getName(type));
 			for (PType t : type.getTypes())

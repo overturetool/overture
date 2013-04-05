@@ -67,19 +67,21 @@ public class Vdm2UmlCommand extends AbstractHandler
 					{
 						IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
 						boolean preferAssociations = preferences.getBoolean(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE);
-						Vdm2Uml vdm2uml = new Vdm2Uml(preferAssociations);
+						boolean deployArtifactsOutsideNodes = preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
+						Vdm2Uml vdm2uml = new Vdm2Uml(preferAssociations, deployArtifactsOutsideNodes);
 						try
 						{
 							vdm2uml.convert(project.getName(), model.getClassList());
 						} catch (NotAllowedException e1)
 						{
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							Activator.log("Faild converting VDM to UML", e1);
 						}
 
-//						IFile iFile = vdmProject.getModelBuildPath().getOutput().getLocationURI()..getFile(project.getName());
-						java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//iFile.getLocationURI();
-						URI uri = URI.createFileURI(absolutePath.getPath()+"/"+project.getName());
+						// IFile iFile =
+						// vdmProject.getModelBuildPath().getOutput().getLocationURI()..getFile(project.getName());
+						java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();// iFile.getLocationURI();
+						URI uri = URI.createFileURI(absolutePath.getPath()
+								+ "/" + project.getName());
 						try
 						{
 							vdm2uml.save(uri);
