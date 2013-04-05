@@ -839,7 +839,7 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 				coverageDir.mkdirs();
 
-				dbgpSession.getOvertureCommands().writeCoverage(coverageDir);
+				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
 
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
