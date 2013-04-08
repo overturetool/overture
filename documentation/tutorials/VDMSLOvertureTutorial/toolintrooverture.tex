@@ -37,7 +37,7 @@ information can be obtained from
 
 \section{Introduction}
 
-Models in VDM are formal in the sense that they have a very precisely
+Models in VDM are formal in the sense that they have a precisely
 described semantics, making it possible to analyse models in order to
 confirm or refute claims about them. Such an analysis often reveals
 gaps in the developer's and the client's understanding of the system,
@@ -366,11 +366,13 @@ correct expert is paged as a result of a given alarm.
 
 \subsection{The Debug configuration}\label{sec:debugconfig}
 
-Before the debugging can be initiated in Overture\footnote{In the
-  current version of Overture we advise to use the \texttt{clean}
-  feature that can be activated by right clicking the project and
-  selecting \texttt{Clean}. This will make sure that proper type
-  checking is conduction prior to debugging.}, a debug
+Before the debugging can be initiated in Overture%
+%\footnote{In the
+%  current version of Overture we advise to use the \texttt{clean}
+%  feature that can be activated by right clicking the project and
+%  selecting \texttt{Clean}. This will make sure that proper type
+%  checking is conduction prior to debugging.}
+, a debug
 configuration must be created by right-clicking the project and
 choosing \emph{Debug As} $ \rightarrow $ \emph{Debug
 configuration}.
@@ -405,9 +407,9 @@ change it to call something else by chosing a different function from
 the Browse dialog.
 Figure~\ref{fig:debugConfiguration} shows the \texttt{AlarmSL} debug
 configuration for the alarm model. Note the three different debug
-options here. Two of these are used for internal development purposes
-by the Overture development team but the one called \texttt{Generate
-  Latex Coverage} is important for you to check in case you would like
+options here. Two of these are not explained further here
+but the one called \texttt{Generate
+ Coverage} is important for you to check in case you would like
 to collect test coverage information as explained below in
 Section~\ref{sec:testcov}. The class and operation/function
 name can be chosen from a Browse dialog; if the operation or function
@@ -594,7 +596,7 @@ on the project and select \texttt{Clean}). If we simply take the
 \texttt{AlarmSL} debug launch configuration the
 \verb|ExpertIsOnDuty| function in \verb|alarm.vdmsl| is called by the
 \texttt{Run} function. Remember that whenever test coverage
-information is desired the \texttt{Generate Latex Coverage} option
+information is desired the \texttt{Generate Coverage} option
 must be selected as shown in Figure~\ref{fig:debugConfiguration}. 
 Once the debugger has completed and the result
 is written out in the \texttt{console} it is possible to right click
