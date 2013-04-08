@@ -1557,6 +1557,16 @@ public class DBGPReader
 	
 	protected void handleExit()
 	{
+		try{
+			
+			if(socket != null)
+				socket.close();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
 		System.exit(0);
 	}
 		
