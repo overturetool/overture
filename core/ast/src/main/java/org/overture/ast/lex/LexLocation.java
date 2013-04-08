@@ -112,6 +112,24 @@ public class LexLocation implements Serializable , ExternalNode
 			allLocations.add(this);
 		}
 	}
+	
+	public LexLocation(String filePath, String module,
+			int startLine, int startPos, int endLine, int endPos, int startOffset, int endOffset)
+		{
+			this.file = new File(filePath);
+			this.module = module;
+			this.startLine = startLine;
+			this.startPos = startPos;
+			this.endLine = endLine;
+			this.endPos = endPos;
+			this.startOffset = startOffset;
+			this.endOffset = endOffset;
+			synchronized (allLocations)
+			{
+				allLocations.add(this);
+			}
+		}
+
 
 	/**
 	 * Create a default location.
