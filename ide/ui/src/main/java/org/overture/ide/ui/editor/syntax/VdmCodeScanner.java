@@ -81,7 +81,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 			rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
 		}
 		
-		WordRule wordRuleWithSpaces = new WordRule(new VdmMultipleWordDetector(), Token.UNDEFINED);
+		WordRule wordRuleWithSpaces = new MultipleWordsWordRule(new VdmMultipleWordDetector(), Token.UNDEFINED, false);
 		for (int i = 0; i < fgKeywords.getMultipleKeywords().length; i++)
 		{
 			wordRuleWithSpaces.addWord(fgKeywords.getMultipleKeywords()[i], keyword);
