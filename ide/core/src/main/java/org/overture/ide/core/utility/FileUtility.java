@@ -19,6 +19,7 @@
 package org.overture.ide.core.utility;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -227,7 +228,7 @@ public class FileUtility
 	public static void addMarker(IFile file, String message, int startLine,
 			int startPos, int endLine, int endPos, int severity, String sourceId)
 	{//FIXME
-		addMarker(file, message, new LexLocation(null, "", startLine, startPos, endLine, endPos,-1, -1), severity, sourceId);
+		addMarker(file, message, new LexLocation((File)null, "", startLine, startPos, endLine, endPos,-1, -1), severity, sourceId);
 	}
 
 	public static void deleteMarker(IFile file, String type, String sourceId)
