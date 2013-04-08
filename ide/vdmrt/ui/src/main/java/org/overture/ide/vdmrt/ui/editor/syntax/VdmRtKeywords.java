@@ -157,7 +157,7 @@ public class  VdmRtKeywords implements IVdmKeywords {
 
 		public String[] getUnderscorePrefixKeywords()
 		{
-			return new String[]{"is","mk"};
+			return new String[]{"is","mk", "narrow"};
 		}
 
 		public String[] getUnderscorePrefixReservedWords()
