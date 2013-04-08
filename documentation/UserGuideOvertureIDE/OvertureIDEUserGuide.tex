@@ -235,7 +235,7 @@ that a valid implementation will have key properties, especially those
 of safety or security. VDM has a strong record of industrial
 application, in many cases by practitioners who were not specialists in
 the underlying formalism or logic
-\cite{Larsen&95b,Clement&99,Kurita&09}. Experience with the method
+\cite{Larsen&96b,Clement&99,Kurita&09}. Experience with the method
 suggests that the effort expended on formal modelling and analysis can
 be recovered in reduced rework costs arising from design errors.
 
@@ -252,8 +252,8 @@ postconditions that characterize their behavior, or explicitly by
 means of specific algorithms. An extension of VDM-SL, called VDM++,
 supports object-oriented structuring of models and permits direct
 modelling of concurrency \cite{Fitzgerald&05}. An additional extension
-to VDM++, called VDM Real Time (VDM-RT \footnote{Formerly called VDM In a
-Constrained Environment (VICE))}), includes support for discrete
+to VDM++, called VDM Real Time (VDM-RT\footnote{Formerly called VDM In a
+Constrained Environment (VICE).}), includes support for discrete
 time models \cite{Mukherjee&00,Verhoef&06b}. All
 three VDM dialects are supported by Overture.
 
@@ -301,7 +301,8 @@ a command-line interface. Appendix~\ref{app:templates} provides a list
 of all the standard templates built into Overture.
 Appendixes~\ref{app:internalerrors}
 to~\ref{app:POcategories} give complete lists of possible errors,
-warnings and proof obligation categories.
+warnings and proof obligation categories. Appendix~\ref{chap:umlrules} provides
+an overview of the VDM++/VDM-RT to UML mapping rules.
 Finally, Appendix~\ref{sec:index} is an index of significant terms used in the
 user manual.
 
@@ -322,7 +323,7 @@ a special version of Eclipse with the Overture functionality already pre-install
 Simply extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool. Note that in order to be able
 to execute Overture you need to have Java Runtime Environment (minimum
-version 1.5) installed on your computer.
+version~1.7) installed on your computer.
 When you start Overture for the first time, it will request a workspace
 location. We recommend that you choose the default location proposed
 by Overture and tick the box for ``Use this as the default and do
@@ -582,7 +583,7 @@ Follow these steps to create a new Overture project:
 	\item Choose whether you would like the contents of the new
           project to be in your workspace or outside
           (browse to the appropriate directory); and
-    \item Click	the Finish button (see Figure~\ref{fig:CreateProjectWizard}).
+    \item Click	the \texttt{Finish} button (see Figure~\ref{fig:CreateProjectWizard}).
 \end{enumerate}
 
 \begin{figure}[!htb]
@@ -603,7 +604,7 @@ Switching to the VDM perspective will change the layout of the user
 interface to focus on VDM development. To change perspective, go to the menu
 \emph{Window} $\rightarrow$ \emph{Open perspective} $\rightarrow$
 \emph{Other...} and choose the VDM perspective.
-From the this perspective you can create files
+From this perspective you can create files
 using one of the following methods:
 
 \begin{enumerate}
@@ -808,14 +809,14 @@ standard Overture templates is available in Appendix~\ref{app:templates}.
 
 \chapter{Interpretation and Debugging in Overture}\label{sec:debug}
 
-This section describes how to run and debug a model using the Overture IDE.
+This chapter describes how to run and debug a model using the Overture IDE.
 
 \section{Run and Debug Launch Configurations}\label{sec:launchmodes}
 
 To execute or debug a VDM model, you must first create a launch
 configuration\index{debug configuration}. To do this, go to the main Run menu
 and select \emph{Run} $\rightarrow $ \emph{Run Configurations}. Select the type of
-project you want to launch, click the New icon to
+project you want to launch, click the \texttt{New} icon to
 create a new launch specification of that type and give it a name. The
 launch dialog requires you to identify the VDM project name,
 the class/module name and the initial operation/function to call in that
@@ -826,7 +827,7 @@ the Browse button and it will let you select a project from
 those available in the workspace. Clicking the Search button will search the chosen
 project for classes and modules to select a public operation or function from.
 If the chosen operation or function has parameters, the types and names of those
-parameters will be copied into the Operation box - these \emph{must} be replaced with
+parameters will be copied into the Operation box -- these \emph{must} be replaced with
 valid argument values\footnote{You will see type checking errors at the top of the
 dialog if you do not do this, such as "Error 3063: Too few arguments in ..."}.
 
@@ -841,7 +842,7 @@ single entry point at launch time\footnote{Those familiar with
   specific VDM model and then having a prompt where different
   expressions can be evaluated making use of the definitions from the model.}.
 The commands that can be used in the ``Console'' view correspond to
-the commands you can give in OVERTURE when it has been started in
+the commands you can give at command-line when it has been started in
 interpreter mode (see Section~\ref{sec:commandlineinterpreter}).
 
 Your new launch configuration can be started immediately by clicking the \emph{Run}
@@ -899,11 +900,12 @@ that can be performed are:
 \item[Measure checks:] This is an option for the interpreter (default
   on) to continuously check recursive functions, for which a
   measure function has been defined. It is possible to switch off this
-  check here.
+  check here\footnote{Note that this feature may not work correctly with the 
+presence of mutually recursive function definitions.}.
 \end{description}
 
 In the launch
-configuration the ``Debug'' pane shown in
+configuration the ``Debugger'' pane shown in
 Figure~\ref{fig:userguide:launchconfigSpecialoptions} can also be
 useful in rare cases where one have particular deep recursion for
 example. this is an advanced setting where one can decide the
@@ -936,7 +938,7 @@ line. When the debugger reaches the location of a breakpoint and stops, you can
 inspect the values of different identifiers and step through the VDM model
 line by line.\index{perspective!debug}
 
-The Debug Perspective is illustrated in Figure~\ref{fig:userguide:DebuggingVDM}
+The Debug Perspective is illustrated in Figure~\ref{fig:userguide:DebuggingVDM}.
 
 \begin{figure}[htp]
 \begin{center}
@@ -1153,8 +1155,8 @@ correct.\index{filter proved}
 \chapter{Combinatorial Testing}\label{sec:testing}
 
 In order to better automate the testing process, a notion of
-test \emph{traces} has been introduced into VDM++\footnote{Note that this is
-only available for VDM-SL models if the VDM-10 language version has been selected}.
+test \emph{traces} has been introduced into VDM++ (and subsequently VDM-SL and VDM-RT)\footnote{Note that this is
+only available for VDM-SL and VDM-RT models if the VDM-10 language version has been selected.}.
 Traces are effectively regular expressions that can be expanded to a collection of test
 cases. Each test case comprises a sequence of operation
 calls. If a user defines a trace it is possible to make use of a
@@ -1168,7 +1170,7 @@ problems and re-run the trace to check they are fixed.
 
 The syntax for trace definitions is defined in the VDM-10 Language
 Manual.\index{traces}
-If you have created a \texttt{traces} entry for a module or class it
+If you have created a {\textbf\texttt{traces}} entry for a module or class it
 can be executed via the \emph{Combinatorial Testing}
 perspective\index{combinatorial testing}. See
 Figure~\ref{fig:tracesalarm}.\index{perspective!combinatorial testing}
@@ -1375,7 +1377,7 @@ to call functionality provided by jar files from a VDM model. This functionality
 corresponds to DL modules/classes in VDMTools\cite{DLMan}.
 
 External jar libraries are linked to VDM via
-\texttt{is not yet specified} statements and expressions. Operations
+{\textbf\texttt{is not yet specified}} statements and expressions. Operations
 or functions of modules or classes can be delegated to an external
 jar, calling out to a Java class. The Java delegate, if present, has
 the same name as the VDM
@@ -1801,7 +1803,7 @@ specification, assuming the specification has no type checking errors.
 \lstset{style=tool,language=}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl flat.vdmsl}!
 %Parsed 1 module in 0.202 secs. No syntax errors
 %Warning 5012: Recursive function has no measure in (flat.vdmsl) at
 %line 3:1
@@ -1809,12 +1811,12 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -q -w flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -q -w flat.vdmsl}!
 %<quiet>
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -w -e "fac(10)" flat.vdmsl}!
 %Parsed 1 module in 0.28 secs. No syntax errors
 %Type checked 1 module in 0.031 secs. No type errors,
 %suppressed 1 warning
@@ -1824,7 +1826,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -e "fac(10)" -q -w flat.vdmsl}!
 %3628800
 %\end{lstlisting}
 
@@ -1843,7 +1845,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -p -w flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -p -w flat.vdmsl}!
 %Parsed 1 module in 0.218 secs. No syntax errors
 %Type checked 1 module in 0.015 secs. No type errors,
 %suppressed 1 warning
@@ -1857,7 +1859,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -w -e "fac(0)" -w flat.vdmsl}!
 %Parsed 1 module in 0.203 secs. No syntax errors
 %Type checked 1 module in 0.015 secs. No type errors,
 %suppressed 1 warning
@@ -1875,7 +1877,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -w -pre -e "fac(0)"
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -w -pre -e "fac(0)"
 %-w flat.vdmsl}!
 %Parsed 1 module in 0.218 secs. No syntax errors
 %Type checked 1 module in 0.016 secs. No type errors,
@@ -1886,7 +1888,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -w -o flat.lib flat.vdmsl}!
 %Parsed 1 module in 0.203 secs. No syntax errors
 %Type checked 1 module in 0.016 secs. No type errors,
 %suppressed 1 warning
@@ -1894,7 +1896,7 @@ specification, assuming the specification has no type checking errors.
 %\end{lstlisting}
 
 %\begin{lstlisting}
-%$ !\textbf{java -jar overture-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}!
+%$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl flat.lib -e "fac(10)"}!
 %Loaded 1 module from flat.lib in 0.187 secs
 %Initialized 1 module in 0.0 secs.
 %3628800
@@ -1933,7 +1935,7 @@ VDM-SL specification from a single file called \texttt{shmem.vdmsl},
 the following options would be used:
 
 \begin{lstlisting}
-$ !\textbf{java -jar overture-2.0.0.jar -vdmsl -i shmem.vdmsl}!
+$ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -i shmem.vdmsl}!
 Parsed 1 module in 0.266 secs. No syntax errors
 Type checked in 0.047 secs. No type errors
 Interpreter started
