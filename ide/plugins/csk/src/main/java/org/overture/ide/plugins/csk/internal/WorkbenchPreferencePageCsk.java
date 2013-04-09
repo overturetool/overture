@@ -39,11 +39,11 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 {
 	FileFieldEditor vdmPath = null;
 	FileFieldEditor vppPath = null;
-	FileFieldEditor vicePath = null;
+	//FileFieldEditor vicePath = null;
 	
 	DirectoryFieldEditor vdmPathMac = null;
 	DirectoryFieldEditor vppPathMac = null;
-	DirectoryFieldEditor vicePathMac = null;
+	//DirectoryFieldEditor vicePathMac = null;
 	
 	
 	@Override
@@ -130,13 +130,13 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 		if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX)){
 			vdmPathMac.loadDefault();
 			vppPathMac.loadDefault();
-			vicePathMac.loadDefault();
+			//vicePathMac.loadDefault();
 		}
 		else
 		{
 			vdmPath.loadDefault();
 			vppPath.loadDefault();
-			vicePath.loadDefault();
+			//vicePath.loadDefault();
 		}
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(ICskConstants.VPPGDE_PATH, ICskConstants.DEFAULT_VPPGDE_PATH);
@@ -149,13 +149,13 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 		if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX)){
 			vdmPathMac.store();
 			vppPathMac.store();
-			vicePathMac.store();
+			//vicePathMac.store();
 		}
 		else
 		{
 			vdmPath.store();
 			vppPath.store();
-			vicePath.store();
+			//vicePath.store();
 		}
 		return super.performOk();
 	}
