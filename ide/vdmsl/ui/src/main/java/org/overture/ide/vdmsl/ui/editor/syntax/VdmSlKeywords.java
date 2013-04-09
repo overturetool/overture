@@ -33,13 +33,18 @@ public class VdmSlKeywords implements IVdmKeywords {
 			"measure", "merge", "mod", "module", "mu", "munion", "nat", "nat1",
 			"nil", "not", "of", "operations", "or", "others", "post", "power",
 			"pre", "psubset", "rat", "rd", "real", "rem", "renamed", "return",
-			"reverse", "rng", "seq", "seq1", "set", "skip"/*, "specified"*/, "st",
+			"reverse", "rng", "seq", "seq1", "set", "skip", "specified", "st",
 			"state", "struct", "subset", "then", "tixe", "tl", "to", "token",
 			"trap", "traces", "true", "types", "undefined", "union", "uselib",
 			"values", "while", "with", "wr", "yet", "RESULT" };
 
-	public static final String[] multipleKeywords = { "is not yet specified",
-			"for all", "in set", "be st", "not in set" };
+	/*
+	 * It does not make sense to distinguish between keywords like this since
+	 * words like 'specified' are already reserved. This means that:
+	 * specified is not a valid identifier
+	 */
+//	public static final String[] multipleKeywords = { "is not yet specified",
+//			"for all", "in set", "be st", "not in set" };
 
 	public static final String[] binaryoperators = { "comp", "and", "or",
 			"in set", "not in set", "union", "inter", "munion", "subset",
@@ -68,9 +73,9 @@ public class VdmSlKeywords implements IVdmKeywords {
 		return binaryoperators;
 	}
 
-	public String[] getMultipleKeywords() {
-		return multipleKeywords;
-	}
+//	public String[] getMultipleKeywords() {
+//		return multipleKeywords;
+//	}
 
 	public String[] getReservedwords() {
 		return reservedwords;

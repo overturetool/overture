@@ -81,12 +81,12 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 			rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
 		}
 		
-		WordRule wordRuleWithSpaces = new MultipleWordsWordRule(new VdmMultipleWordDetector(), Token.UNDEFINED, false);
-		for (int i = 0; i < fgKeywords.getMultipleKeywords().length; i++)
-		{
-			wordRuleWithSpaces.addWord(fgKeywords.getMultipleKeywords()[i], keyword);
-		}
-		rules.add(wordRuleWithSpaces);
+//		WordRule wordRuleWithSpaces = new MultipleWordsWordRule(new VdmMultipleWordDetector(), Token.UNDEFINED, false);
+//		for (int i = 0; i < fgKeywords.getMultipleKeywords().length; i++)
+//		{
+//			wordRuleWithSpaces.addWord(fgKeywords.getMultipleKeywords()[i], keyword);
+//		}
+//		rules.add(wordRuleWithSpaces);
 
 		// Add word rule for keywords.
 		WordRule wordRule = new WordRule(new VdmWordDetector(), other);//Not sure why Token.UNDEFINED doesn't work but it makes S'end' colored.

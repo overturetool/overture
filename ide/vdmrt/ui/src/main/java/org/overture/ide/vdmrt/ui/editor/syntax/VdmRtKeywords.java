@@ -25,7 +25,7 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	public static final String[] reservedwords = {
 	      "#act", "#active", "#fin", "#req", "#waiting",
 	      "abs", "all", "always", "and", "async", "atomic",
-	      /*"be",*/ "bool", "by", "card", "cases", "char",
+	      "be", "bool", "by", "card", "cases", "char",
 	      "class", "comp", "compose", "conc",
 	      "cycles",
 	      "dcl", "def", "dinter", "div", "do", "dom", "dunion",
@@ -40,9 +40,9 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	      "new", "nil", "not", "of", "operations", "or", "others",
 	      "per", "periodic", "post", "power", "pre", "private",
 	      "protected", "psubset", "public", "rat", "rd", "real",
-	      "rem", /*"responsibility",*/ "return", "reverse", "rng",
+	      "rem", "responsibility", "return", "reverse", "rng",
 	      "samebaseclass", "sameclass", "self", "seq", "seq1",
-	      "set", "skip", /*"specified", "st",*/ "static","start", "startlist",
+	      "set", "skip", "specified", "st", "static","start", "startlist",
 	      "subclass", "subset", "sync",
 	      "system",
 	      "then", "thread", "threadid",
@@ -52,12 +52,17 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	      "while", "with", "wr", "yet", "RESULT",
 		  };
 	  
-	  public static final String[] multipleKeywords = {
-		  "is not yet specified", "for all", 
-		  "in set", "be st", "not in set",
-		  "is subclass of", "instance variables",
-		  "is subclass responsibility"
-	  };
+	  /*
+	   * It does not make sense to distinguish between keywords like this since
+	   * words like 'specified' are already reserved. This means that:
+	   * private specified : nat := 0; is not valid
+	   */
+//	  public static final String[] multipleKeywords = {
+//		  "is not yet specified", "for all", 
+//		  "in set", "be st", "not in set",
+//		  "is subclass of", "instance variables",
+//		  "is subclass responsibility"
+//	  };
 	  
 	  public static String[] historyCounters = {
 		  "#act", "#fin", "#active", "#req", "#waiting"
@@ -100,10 +105,10 @@ public class  VdmRtKeywords implements IVdmKeywords {
 			return binaryoperators;
 		}
 
-		public String[] getMultipleKeywords()
-		{
-			return multipleKeywords;
-		}
+//		public String[] getMultipleKeywords()
+//		{
+//			return multipleKeywords;
+//		}
 
 		public String[] getReservedwords()
 		{
