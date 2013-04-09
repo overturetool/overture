@@ -77,11 +77,11 @@ debugging using Overture. Section~\ref{sec:testcov}  describes how
 line coverage from using the debugger can be covered and displayed.
 Section~\ref{sec:CT} shows how parts of the test process can be
 automated using Overture's combinatorial testing feature.
-Finally, Section~\ref{sec:PO} demonstrates how it is possible to automatically
+Section~\ref{sec:PO} demonstrates how it is possible to automatically
 generate the additional checks (called \emph{proof obligations}) needed
 in order to ensure that a model is
-consistent.  %Finally, Section~\ref{sec:cmdline} illustrates how parts
-%of Overture's functionality can be accessed from a command line.
+consistent.  Finally, Section~\ref{sec:cmdline} illustrates how parts
+of Overture's functionality can be accessed from a command line.
 
 %including support for test coverage analysis which is not currently
 %available from the Eclipse GUI.
@@ -1013,7 +1013,7 @@ choose the \textsf{Full
 Now Overture expands and executes all 48 test cases one after
 another. The results of these executions are illustrated with green
 check marks and red crosses, meaning that the tests passed or failed
-respectively. See Figure~\ref{fig:stracesalarm}. Note that in the
+respectively (see Figure~\ref{fig:stracesalarm}). Note that in the
 Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with
 the corresponding results from its four operation calls.
@@ -1075,8 +1075,7 @@ to the \texttt{PlantInv} function. Recall that the first part of the
 function's definition is as follows:
 
 \begin{lstlisting}
-PlantInv: set of Alarm * map Period to set of Expert ->
-          bool
+PlantInv: set of Alarm * map Period to set of Expert -> bool
 PlantInv(as,sch) ==
   (forall p in set dom sch & sch(p) <> {}) and ...
 \end{lstlisting}

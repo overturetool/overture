@@ -8,7 +8,8 @@
 This is an introduction to the Overture Integrated Development
 Environment (IDE) and its facilities for supporting modelling and
 analysis in VDM-RT the VDM extended language for modelling real-time
-systems, formerly known as VICE~(VDM in Constrained Environments). It
+systems, formerly known as VICE~(VDM in Constrained Environments). 
+Since there is not yet a book on VDM-RT it
 may be used as a substitute for Chapter 3 of ``Validated Designs for
 Object-oriented Systems''\footnote{John Fitzgerald, Peter Gorm Larsen,
   Paul Mukherjee, Nico Plat and Marcel Verhoef. \emph{Validated
@@ -42,7 +43,7 @@ In this chapter, an in-car radio navigation system which supports the Traffic Me
 
 The system is composed of three main clusters of functionality; 
 \begin{itemize}
-\item The man-machine interface (MMI) takes care of user interaction such as handling key press input and graphical display output. 
+\item The Man-Machine Interface (MMI) takes care of user interaction such as handling key press input and graphical display output. 
 \item The navigation is responsible for destination entry, route planning and turn-by-turn guidance. 
 \item The radio is responsible for basic tuner and volume control as well as handling traffic information from the TMC.
 \end{itemize}
@@ -303,7 +304,7 @@ intended to write.
 \section{Mapping Between UML and  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
 \label{sec:typecheck}
 
-In order to map the UML class diagram created in Enterprise Architect
+In order to map the UML class diagram created in Modelio
 to VDM, a new project must be created in the Overture IDE to receive
 it. This is done by right-clicking in the \emph{VDM Explorer} view,
 and creating a new VDM-RT project and for example naming it
@@ -335,19 +336,20 @@ exported from EA called \texttt{carradnavuml.xmi} and open this.
 %	\end{center}
 %\end{figure}
 
-The transformation from UML to VDM is not entirely automated right now. For
-example, any custom types are transformed to VDM++ definitions using
-machine-generated identifiers since custom types are not named in
-UML. As a result, you have to expect to make minor modifications to
-the generated VDM files. 
+%% The transformation from UML to VDM is not entirely automated right now. For
+%% example, any custom types are transformed to VDM++ definitions using
+%% machine-generated identifiers since custom types are not named in
+%% UML. As a result, you have to expect to make minor modifications to
+%% the generated VDM files. 
 
 %\subsection{Mapping VDM to UML}
 
 It is possible to automatically transform all the classes from the car
 radio navigation project to UML. To do this, simply right
 click the project root and choose \emph{UML Transformation} $
-\rightarrow $ \emph{Export XMI}. The XMI file can subsequently be
-imported in EA, enabling the user to get an overview
+\rightarrow $ \emph{Export XMI} (i EMF UML3.0.0 format som \texttt{.uml} 
+format). The UML/XMI file can subsequently be
+imported in Modelio, enabling the user to get an overview
 of the complete model.
 
 \section{Debugging}\label{sec:debugging}
@@ -388,7 +390,7 @@ RunScenario1 () ==
 end World
 \end{lstlisting}
 
-\subsection{The Debug configuration}\label{sec:debugconfig}
+\subsection{The Debug Configuration}\label{sec:debugconfig}
 
 Before you start to debug a model in Overture, you need to set up a
 \emph{debug configuration}. Right click the project and choose
@@ -558,9 +560,9 @@ cause the majority of the VDM-RT model to be executed, but for
 demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). Let us evaluate the
 \texttt{RunScenario1} and \texttt{RunScenario2} operations where the
-\texttt{Generate test coverage} option is selected. 
+\texttt{Generate coverage} option is selected. 
 Remember that whenever test coverage
-information is desired the \texttt{Generate Latex Coverage} option
+information is desired the \texttt{Generate Coverage} option
 must be selected as shown in Figure~\ref{fig:userguide:debugConfiguration}. 
  Once the debugger
 has completed and the result is written out in the \texttt{console} it
@@ -653,7 +655,7 @@ choose the \textsf{Full
 Now Overture expands
 and executes all 18 test cases one after each other. The results of these
 executions are illustrated with green check marks and red crosses, meaning that
-the tests passed or failed respectively. See Figure~\ref{fig:tracesradnav}. Note
+the tests passed or failed respectively (see Figure~\ref{fig:tracesradnav}). Note
 that in the Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with the
 corresponding results from its four operation calls.
@@ -877,7 +879,7 @@ against expected results.
 
 To run the command line interpreter interactively, the \verb|-i| command line
 option must be given. Instead of terminating after the type check, this will
-cause VDMJ to enter its interactive mode, and give the interactive \verb|>|
+cause Overture to enter its interactive mode, and give the interactive \verb|>|
 prompt:
 
 \begin{lstlisting}
@@ -937,7 +939,7 @@ between runs with the \verb|init| command to avoid this.
 The \verb|help| command is context sensitive, and will list the extra debugging
 commands available at a breakpoint, such as \verb|continue|, \verb|step|,
 \verb|stack|, \verb|list| and so on. The full set of commands is described in the
-VDMJ User Guide\footnote{Supplied with the Overture documentation.}.
+Overture User Guide\footnote{Supplied with the Overture documentation.}.
 
 \lstset{style=mystyle}
 
