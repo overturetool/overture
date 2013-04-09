@@ -831,23 +831,22 @@ pressing the \emph{Filter proved} button at the top of the \emph{Proof
 
 \section{A Command-Line Interface}\label{sec:cmdline}
 
-The graphical user interface presented so far has been designed for a
-human interacting with Overture. In addition, a simple command-line
-interface allows automatic batch execution of tests and provides a
-full set of interactive execution and debugging commands which can be
-useful when examining batch tests. The command-line also provides
-access to tool facilities that have not yet been included in the
-Overture GUI.
+So far only the graphical user interface of Overture has been
+presented but the core of Overture also
+provides a simple command line interface.  This is useful for the
+automatic batch execution of tests, though the command line also
+provides a full set of interactive execution and debugging commands
+which can be useful when examining batch tests. 
 
-The engine underpinning Overture, called VDMJ, is written in Java, and
-so to run it from the command line, the VDMJ jar file \footnote{See
-  the Overture documentation at
+Overture is written in Java, and so to run it from the command line, the
+Overture jar file\footnote{See the Overture documentation at
   \texttt{sourceforge.net/projects/overture} for the location of the
-  jar file.}  should be executed with a Java JRE (version 5 or later):
+  jar file or use the script or windows bat file incorporating this.}  
+should be executed with a Java JRE (version 7 or later):
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar
+java -jar Overture-2.0.0.jar
 \end{lstlisting}
 
 \noindent If the jar file is executed with no further options like
@@ -859,7 +858,7 @@ VDM-SL model files to load, or the name of a directory from which to
 load all VDM-SL model files:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmsl AlarmSL
+java -jar Overture-2.0.0.jar -vdmsl AlarmSL
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the
@@ -867,8 +866,8 @@ VDM-SL model files in the \texttt{AlarmSL} directory, producing any errors and
 warning messages on the console, before terminating:
 
 \begin{lstlisting}
-Parsed 1 module in 0.391 secs. No syntax errors
-Type checked 1 module in 0.063 secs. No type errors
+Parsed 1 module in 0.11 secs. No syntax errors
+Type checked 1 module in 0.093 secs. No type errors
 \end{lstlisting}
 
 \noindent In the case of our alarm example, there are no syntax or
@@ -886,7 +885,7 @@ the \verb|-q| option useful, as this suppresses the informational
 messages about the parsing and type checking:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmsl -q -e 
+java -jar Overture-2.0.0.jar -vdmsl -q -e 
      "ExpertIsOnDuty(e1, pl)" AlarmSL
 \end{lstlisting}
 
@@ -904,13 +903,13 @@ for comparison against expected results.
 
 To run the command line interpreter interactively, the \verb|-i|
 command line option must be given. Instead of terminating after the
-type check, this will cause VDMJ to enter its interactive mode, and
+type check, this will cause Overture to enter its interactive mode, and
 give the interactive \verb|>| prompt:
 
 \begin{lstlisting}
-Parsed 1 module in 0.391 secs. No syntax errors
-Type checked 1 module in 0.047 secs. No type errors
-Initialized 1 module in 0.063 secs. 
+Parsed 1 module in 0.14 secs. No syntax errors
+Type checked 1 module in 0.11 secs. No type errors
+Initialized 1 module in 0.094 secs. 
 Interpreter started
 >
 \end{lstlisting}
@@ -963,7 +962,7 @@ we print out the value of the \verb|sch| variable. The \verb|help|
 command is context sensitive, and will list the extra debugging
 commands available at a breakpoint, such as \verb|continue|,
 \verb|step|, \verb|stack|, \verb|list| and so on. The full set of
-commands is described in the VDMJ User Guide\footnote{Supplied with
+commands is described in the Overture User Guide\footnote{Supplied with
 the Overture documentation.}.
 
 %\begin{lstlisting}

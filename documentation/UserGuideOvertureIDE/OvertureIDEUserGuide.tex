@@ -1936,8 +1936,11 @@ the following options would be used:
 
 \begin{lstlisting}
 $ !\textbf{java -jar Overture-2.0.0.jar -vdmsl -i shmem.vdmsl}!
-Parsed 1 module in 0.266 secs. No syntax errors
-Type checked in 0.047 secs. No type errors
+Parsed 1 module in 0.14 secs. No syntax errors
+Warning 5000: Definition 'i' not used in 'M' (shmem.vdmsl) 
+  at line 129:7
+Type checked in 0.078 secs. No type errors
+Initialized 1 module in 0.046 secs.
 Interpreter started
 \end{lstlisting}
 
@@ -2079,19 +2082,54 @@ permitted for some, shown in square brackets):
   interpreter.\index{quit}\index{command!quit}
 \end{description}
 
-%\begin{lstlisting}
-%> !\textbf{modules}!
-%M (default)
-%\end{lstlisting}
+\begin{lstlisting}
+> !\textbf{modules}!
+M (default)
+\end{lstlisting}
 
-%\begin{lstlisting}
-%> !\textbf{state}!
-%M`Q4 = [mk_M(<FREE>, 0, 9999)]
-%M`rseed = 87654321
-%M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
-%                               [mk_M(<FREE>, 0, 9999)])
-%M`Q3 = [mk_M(<FREE>, 0, 9999)]
-%\end{lstlisting}
+\begin{lstlisting}
+> !\textbf{state}!
+Q4 = [mk_M(<FREE>, 0, 9999)]
+rseed = 87654321
+Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
+                             [mk_M(<FREE>, 0, 9999)])
+Q3 = [mk_M(<FREE>, 0, 9999)]
+\end{lstlisting}
+
+\begin{lstlisting}
+> !\textbf{print rand(100)}!
+= 71
+Executed in 0.063 secs.
+\end{lstlisting}
+
+\begin{lstlisting}
+> !\textbf{print rand(100)}!
+= 44
+Executed in 0.0 secs.
+\end{lstlisting}
+
+\begin{lstlisting}
+> !\textbf{state}!
+Q4 = [mk_M(<FREE>, 0, 9999)]
+rseed = 566044643
+Memory = mk_Memory(566044643, [mk_M(<FREE>, 0, 9999)],
+                              [mk_M(<FREE>, 0, 9999)])
+Q3 = [mk_M(<FREE>, 0, 9999)]
+\end{lstlisting}
+
+\begin{lstlisting}
+> !\textbf{init}!
+Global context initialized
+\end{lstlisting}
+
+\begin{lstlisting}
+> !\textbf{state}!
+Q4 = [mk_M(<FREE>, 0, 9999)]
+rseed = 87654321
+Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
+                             [mk_M(<FREE>, 0, 9999)])
+Q3 = [mk_M(<FREE>, 0, 9999)]
+\end{lstlisting}
 
 %\begin{lstlisting}
 %> !\textbf{print rand(100)}!
@@ -2105,64 +2143,29 @@ permitted for some, shown in square brackets):
 %Executed in 0.0 secs.
 %\end{lstlisting}
 
-%\begin{lstlisting}
-%> !\textbf{state}!
-%M`Q4 = [mk_M(<FREE>, 0, 9999)]
-%M`rseed = 566044643
-%M`Memory = mk_Memory(566044643, [mk_M(<FREE>, 0, 9999)],
-%                                [mk_M(<FREE>, 0, 9999)])
-%M`Q3 = [mk_M(<FREE>, 0, 9999)]
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%> !\textbf{init}!
-%Global context initialized
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%> !\textbf{state}!
-%M`Q4 = [mk_M(<FREE>, 0, 9999)]
-%M`rseed = 87654321
-%M`Memory = mk_Memory(87654321, [mk_M(<FREE>, 0, 9999)],
-%                               [mk_M(<FREE>, 0, 9999)])
-%M`Q3 = [mk_M(<FREE>, 0, 9999)]
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%> !\textbf{print rand(100)}!
-%= 71
-%Executed in 0.0 secs.
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%> !\textbf{print rand(100)}!
-%= 44
-%Executed in 0.0 secs.
-%\end{lstlisting}
-
-%\begin{lstlisting}
-%> !\textbf{env}!
-%M`fragments = (M`Quadrant -> nat)
-%M`combine = (M`Quadrant -> M`Quadrant)
-%M`tryBest = (nat ==> nat)
-%M`seed = (nat1 ==> ())
-%M`reset = (() ==> ())
-%M`bestfit = (nat1 * M`Quadrant -> nat1)
-%M`add = (nat1 * nat1 * M`Quadrant -> M`Quadrant)
-%M`firstFit = (nat1 ==> bool)
-%M`rand = (nat1 ==> nat1)
-%M`tryFirst = (nat ==> nat)
-%M`main = (nat1 * nat1 ==> seq of (<SAME> | <BEST> | <FIRST>))
-%M`MAXMEM = 10000
-%M`delete = (M`M * M`Quadrant -> M`Quadrant)
-%M`inv_M = (M`M +> bool)
-%M`CHUNK = 100
-%M`bestFit = (nat1 ==> bool)
-%M`least = (nat1 * nat1 -> nat1)
-%M`fits = (nat1 * M`Quadrant -> nat1)
-%M`init_Memory = (M`Memory +> bool)
-%M`pre_add = (nat1 * nat1 * M`Quadrant +> bool)
-%\end{lstlisting}
+\begin{lstlisting}
+> !\textbf{env}!
+fragments = (M`Quadrant -> nat)
+combine = (M`Quadrant -> M`Quadrant)
+tryBest = (nat ==> nat)
+seed = (nat1 ==> ())
+reset = (() ==> ())
+bestfit = (nat1 * M`Quadrant -> nat1)
+add = (nat1 * nat1 * M`Quadrant -> M`Quadrant)
+firstFit = (nat1 ==> bool)
+rand = (nat1 ==> nat1)
+tryFirst = (nat ==> nat)
+main = (nat1 * nat1 ==> seq of (<SAME> | <BEST> | <FIRST>))
+MAXMEM = 10000
+delete = (M`M * M`Quadrant -> M`Quadrant)
+inv_M = (M`M +> bool)
+CHUNK = 100
+bestFit = (nat1 ==> bool)
+least = (nat1 * nat1 -> nat1)
+fits = (nat1 * M`Quadrant -> nat1)
+init_Memory = (M`Memory +> bool)
+pre_add = (nat1 * nat1 * M`Quadrant +> bool)
+\end{lstlisting}
 
 %\begin{lstlisting}
 %> !\textbf{pog}!
@@ -2182,10 +2185,10 @@ permitted for some, shown in square brackets):
 %RESULT >= 0
 %\end{lstlisting}
 
-%This example shows a VDM-SL specification called \texttt{shmem.vdmsl} being
-%loaded. The help command lists the interpreter commands
-%available. Note that several of them regard the setting of
-%breakpoints, which is covered in the next section.
+This example shows a VDM-SL specification called \texttt{shmem.vdmsl} being
+loaded. The help command lists the interpreter commands
+available. Note that several of them regard the setting of
+breakpoints, which is covered in the next section.
 
 %The modules command lists the names of the modules loaded from the
 %specification. In this example there is only one, called ``M''. One of
@@ -2194,21 +2197,21 @@ permitted for some, shown in square brackets):
 %print M`xyz). The default module can be changed with the default
 %command.
 
-%The state command lists the content of the default module's
-%state. This can be changed by operations, as can be seen by the two
-%calls to rand which change the rseed value in the state (a
-%pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
-%the state to its original value, illustrated by the fact that two
-%subsequent calls to rand return the same results as the first two did.
+The state command lists the content of the default module's
+state. This can be changed by operations, as can be seen by the two
+calls to rand which change the rseed value in the state (a
+pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
+the state to its original value, illustrated by the fact that two
+subsequent calls to rand return the same results as the first two did.
 
-%The {\ttfamily{\bf print}}\index{print} command can be used to
-%evaluate any expression.  The {\ttfamily{\bf env}}\index{env} command
-%lists all the values in the global environment of the default
-%module. This shows the functions, operations and constant values
-%defined in the module. Note that it includes invariant, initialization
-%and pre/postcondition functions.  The {\ttfamily{\bf pog}} command (proof obligation
-%generator) generates a list of proof obligations for the
-%specification.
+The {\ttfamily{\bf print}}\index{print} command can be used to
+evaluate any expression.  The {\ttfamily{\bf env}}\index{env} command
+lists all the values in the global environment of the default
+module. This shows the functions, operations and constant values
+defined in the module. Note that it includes invariant, initialization
+and pre/postcondition functions.  The {\ttfamily{\bf pog}} command (proof obligation
+generator) generates a list of proof obligations for the
+specification.
 
 %The assert command\index{assert} (illustrated below) can take a list of assertions
 %from a file, and execute each of them in turn, raising an error for

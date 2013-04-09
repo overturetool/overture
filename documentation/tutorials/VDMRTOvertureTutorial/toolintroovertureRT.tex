@@ -808,23 +808,22 @@ likely to be some that have to be checked manually.
 
 \section{A Command-Line Interface}\label{sec:cmdline}
 
-So far only the graphical user interface of the Overture IDE has been
-presented but the engine underlying Overture, called VDMJ, also
+So far only the graphical user interface of Overture has been
+presented but the core of Overture also
 provides a simple command line interface.  This is useful for the
 automatic batch execution of tests, though the command line also
 provides a full set of interactive execution and debugging commands
-which can be useful when examining batch tests. The command line also
-provides access to tool facilities that have not yet been included in
-the Overture IDE.
+which can be useful when examining batch tests. 
 
-VDMJ is written in Java, and so to run it from the command line, the
-VDMJ jar file \footnote{See the Overture documentation at
+Overture is written in Java, and so to run it from the command line, the
+Overture jar file\footnote{See the Overture documentation at
   \texttt{sourceforge.net/projects/overture} for the location of the
-  jar file.}  should be executed with a Java JRE (version 5 or later):
+  jar file or use the script or windows bat file incorporating this.}  
+should be executed with a Java JRE (version 7 or later):
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar
+java -jar Overture-2.0.0.jar
 \end{lstlisting}
 
 \noindent If the jar file is executed with no further options like this, it will
@@ -835,7 +834,7 @@ specify the names of the VDM-RT model files to load, or the name of a directory
 in which all the files reside:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmrt CarNaviRadio
+java -jar Overture-2.0.0.jar -vdmrt CarNaviRadio
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the VDM-RT model
@@ -843,8 +842,8 @@ files in the directory called \verb|CarNaviRadio|, producing any errors and warn
 messages on the console, before terminating:
 
 \begin{lstlisting}
-Parsed 9 classes in 0.61 secs. No syntax errors
-Type checked 11 classes in 0.093 secs. No type errors
+Parsed 10 classes in 0.187 secs. No syntax errors
+Type checked 12 classes in 0.094 secs. No type errors
 \end{lstlisting}
 
 \noindent In the case of our example, there are no syntax or type checking
@@ -860,7 +859,7 @@ option useful, as this suppresses the informational messages about the parsing
 and type checking:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmrt -w -q -e 
+java -jar Overture-2.0.0.jar -vdmrt -w -q -e 
     "new World().RunScenario1()" CarNaviRadio
 \end{lstlisting}
 
@@ -868,8 +867,8 @@ java -jar vdmj-2.0.2.jar -vdmrt -w -q -e
 parsing and checking messages are suppressed, as are the warnings:
 
 \begin{lstlisting}
-{"TransmitTMC" |-> mk_(3904, 12574, 6836.25),
- "VolumeKnob" |-> mk_(3935, 16268, 8106.416666666667)}
+{"TransmitTMC" |-> mk_(118187598, 118187598, 118187598), 
+ "VolumeKnob" |-> mk_(36490730, 140915746, 6.2612283777777776E7)}
 \end{lstlisting}
 
 Clearly a batch of test evaluations could be performed automatically by running
@@ -882,9 +881,9 @@ cause VDMJ to enter its interactive mode, and give the interactive \verb|>|
 prompt:
 
 \begin{lstlisting}
-Parsed 9 classes in 0.61 secs. No syntax errors
-Type checked 11 classes in 0.093 secs. No type errors
-Initialized 11 classes in 0.079 secs. 
+Parsed 10 classes in 0.172 secs. No syntax errors
+Type checked 12 classes in 0.14 secs. No type errors
+Initialized 12 classes in 0.109 secs.
 Interpreter started
 >
 \end{lstlisting}
@@ -901,9 +900,9 @@ session with a breakpoint at the start of the same operation:
 \begin{lstlisting}
 > create world := new World()
 > p world.RunScenario2()
-= {"InsertAddress" |-> mk_(3993, 16132, 7759.2727272727),
-   "TransmitTMC" |-> mk_(3871, 12128, 6980.714285714285)}
-Executed in 1.094 secs.
+= {"InsertAddress" |-> mk_(71646789, 71646789, 71646789), 
+   "TransmitTMC" |-> mk_(118187598, 118187598, 118187598)}
+Executed in 0.655 secs.
 
 > break World`addEnvironmentTask
 Created break [1] in 'World' (CarNaviRadio\World.vdmrt) 
@@ -926,8 +925,7 @@ at line 12:28
 Stopped in 'World' (CarNaviRadio\World.vdmrt) 
 at line 12:28
 12:      ( envTasks := envTasks munion { pnm |-> penv };
-[MainThread-164]> continue
-> \end{lstlisting}
+\end{lstlisting}
 
 \noindent Notice that the \verb|print| command is available at the breakpoint
 to examine the runtime state of the system. In the example, we show the value
