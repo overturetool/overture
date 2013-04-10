@@ -100,12 +100,13 @@ public class VdmPartitionScanner extends RuleBasedPartitionScanner implements IV
 		IToken string = new Token(STRING); 
 //		IToken latex = new Token(LATEX);
 		
-		List<IPredicateRule> rules= new ArrayList<IPredicateRule>(); 
+		List<IPredicateRule> rules= new ArrayList<IPredicateRule>();
 		// Add rule for single line comments. 
 		rules.add(new EndOfLineRule("--", singlelinecomment)); 
 		// Add rule for strings and character constants. 
-		rules.add(new SingleLineRule("\"", "\"", string, '\\')); 
-		rules.add(new SingleLineRule("'", "'", string, '\\')); 
+		rules.add(new SingleLineRule("\"", "\"", string, '\\'));
+		//rules.add(new SingleLineRule("'", "'", string, '\\'));
+		rules.add(new VdmCharRule());
 		// Add rules for multi-line comments and javadoc. 
 		rules.add(new MultiLineRule("/*", "*/", multilinecomment)); 
 		
