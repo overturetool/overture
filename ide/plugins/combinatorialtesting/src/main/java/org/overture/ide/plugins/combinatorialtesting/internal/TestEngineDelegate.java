@@ -115,7 +115,7 @@ public class TestEngineDelegate
 		if(texe.customReduction)
 		{
 			commandList.add("-traceReduction");
-			commandList.add("{"+texe.subset+","+texe.reductionType+","+texe.seed+"}");
+			commandList.add("{"+texe.subset+","+texe.reductionType.name()+","+texe.seed+"}");
 		}
 		// commandList.addAll(getExtendedCommands(vdmProject, configuration));
 

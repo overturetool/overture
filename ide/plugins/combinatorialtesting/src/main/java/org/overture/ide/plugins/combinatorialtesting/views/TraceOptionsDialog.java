@@ -82,7 +82,7 @@ public class TraceOptionsDialog extends Composite
 				isCanceled = false;
 				subset= Float.parseFloat(comboSubset.getText().replace('%', ' ').trim())/100;
 				seed= Long.parseLong(textSeed.getText());
-				reductionType= TraceReductionType.valueOf(comboReductionType.getText());
+				reductionType= TraceReductionType.findValue(comboReductionType.getText());
 				getShell().close();
 			}
 		});
@@ -103,7 +103,7 @@ public class TraceOptionsDialog extends Composite
 		{
 			if(r != TraceReductionType.NONE) //Removed NONE at Nicks request
 			{
-				reductions[i] = r.toString();
+				reductions[i] = r.getDisplayName();
 				i++;
 			}
 			
