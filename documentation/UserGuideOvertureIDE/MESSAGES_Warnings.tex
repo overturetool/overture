@@ -1,0 +1,48 @@
+% VDMJ Error and Warning Messages
+% ===============================
+%
+% Messages and warnings are numbered in the following blocks:
+%
+% 0000-0999	Internal errors
+% 1000-1999	Lexical errors
+% 2000-2999	Syntax errors
+% 3000-3999	Type checking errors
+% 4000-4999	Runtime errors
+% 5000-5999	Warnings
+%
+% Several messages appear to be duplicates, but internally they are raised from
+% different places in the code, and so the exact error number may be used to
+% distinguish the cases. Some errors are followed by additional detail, such
+% as the expected and actual values.
+
+\begin{description}
+\item[5000:] \texttt{"Definition <name> not used"}
+\item[5001:] \texttt{"Instance variable is not initialized:\ <name>"}
+\item[5002:] \texttt{"Mutex of overloaded operation"} This warning is
+  provided if one defined a mutex for an operation that is defined
+  using overloading. The users needs to be aware that all of the
+  overloaded operations will now by synchronisation controlled by this
+  constraint. 
+\item[5003:] \texttt{"Permission guard of overloaded operation"}
+\item[5004:] \texttt{"History expression of overloaded operation"}
+\item[5005:] \texttt{"Should access member <member> from a static context"}
+\item[5006:] \texttt{"Statement will not be reached"}
+\item[5007:] \texttt{"Duplicate definition:\ <name>"}
+\item[5008:] \texttt{"<name/location> hides <name/location>"}
+\item[5009:] \texttt{"Empty set used in bind"}
+\item[5010:] \texttt{"State init expression cannot be executed"}
+%\item[5011:] \texttt{-}
+\item[5012:] \texttt{"Recursive function has no measure"} Whenever a
+  recursive function is defined the user have the possibility defining
+  a measure (i.e.\ a function that takes the same parameters as the
+  recursive function and returns a natural number that should decrease
+  at every recursive call). If such measures are included the proof
+  obligation generator can provide proof obligations that will ensure
+  termination of the recursion.
+%\item[5013:] \texttt{-}
+\item[5014:] \texttt{"Uninitialized BUS ignored"}  This warning appears
+  if one has defined a \texttt{BUS} that is not used.
+\item[5015:] \texttt{"LaTeX source should start with \%comment,
+  \char'134 document, \char'134 section or \char'134 subsection"  }
+\item[5016:] \texttt{"Some statements will not be reached"}
+\end{description}
