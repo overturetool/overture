@@ -323,7 +323,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 					}
 				}
 
-				if (d.isCanceled)
+				if (d.isCanceled || d.getTraceReductionType() == null)
 				{
 					return;
 				}
