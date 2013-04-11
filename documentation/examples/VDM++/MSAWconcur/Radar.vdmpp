@@ -100,8 +100,6 @@ while true do
   (detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
    UpdatePriorityList();
    World`timerRef.WaitRelative(TimeStamp`stepLength);
-   World`timerRef.NotifyAll();
-   World`timerRef.Awake();
   )
  )
 
