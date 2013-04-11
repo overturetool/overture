@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.plugins.combinatorialtesting.views;
 
+import java.io.File;
 import java.util.concurrent.CancellationException;
 
 import org.eclipse.core.resources.IFile;
@@ -34,6 +35,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -45,6 +47,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -66,6 +69,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -245,6 +249,15 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		manager.add(actionSetInconclusiveFilter);
 	}
 
+    private final Image getImage(String path)
+    {
+        ImageDescriptor theDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.combinatorialtesting", path);
+        Image theImage = null;
+        if(theDescriptor != null)
+            theImage = theDescriptor.createImage();
+        return theImage;
+    }
+	
 	private void makeActions()
 	{
 		refreshAction = new Action("Refresh") {
@@ -303,6 +316,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				Shell dialog = new Shell(display, SWT.DIALOG_TRIM);
 				dialog.setText("Select filtering options");
 				dialog.setSize(200, 200);
+				
+				Image ctIcon = getImage(new StringBuilder("icons").append(File.separator).append("ctool16").append(File.separator).append("ct_tsk.png").toString());
+				dialog.setImage(ctIcon);
 
 				final TraceOptionsDialog d = new TraceOptionsDialog(dialog, SWT.DIALOG_TRIM);
 				d.pack();
