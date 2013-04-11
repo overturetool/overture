@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.overture.interpreter.traces.TraceReductionType;
 
@@ -39,7 +40,8 @@ public class TraceOptionsDialog extends Composite
 	private Label label2 = null;
 	private Label label3 = null;
 	private Text textSeed = null;
-	private Combo comboSubset = null;
+	//private Combo comboSubset = null;
+	private Spinner spinner = null;
 
 	public TraceOptionsDialog(Composite parent, int style) {
 		super(parent, style);
@@ -64,7 +66,8 @@ public class TraceOptionsDialog extends Composite
 		label3.setText("Limit sub set to:");
 //		comboSubset = new Text(this, SWT.BORDER);
 //		comboSubset.setText("1.00000000000");
-		createComboSubset();
+//		createComboSubset();
+		createSubsetSpinner();
 		buttonCancel = new Button(this, SWT.NONE);
 		buttonCancel.setText("Cancel");
 		buttonCancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -80,9 +83,9 @@ public class TraceOptionsDialog extends Composite
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e)
 			{
 				isCanceled = false;
-				subset= Float.parseFloat(comboSubset.getText().replace('%', ' ').trim())/100;
+				subset= spinner.getSelection() / 100.0F;//Float.parseFloat(comboSubset.getText().replace('%', ' ').trim())/100;
 				seed= Long.parseLong(textSeed.getText());
-				reductionType= TraceReductionType.valueOf(comboReductionType.getText());
+				reductionType= TraceReductionType.findValue(comboReductionType.getText());
 				getShell().close();
 			}
 		});
@@ -103,7 +106,7 @@ public class TraceOptionsDialog extends Composite
 		{
 			if(r != TraceReductionType.NONE) //Removed NONE at Nicks request
 			{
-				reductions[i] = r.toString();
+				reductions[i] = r.getDisplayName();
 				i++;
 			}
 			
@@ -115,26 +118,34 @@ public class TraceOptionsDialog extends Composite
 		comboReductionType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 	
-	private void createComboSubset()
+	private void createSubsetSpinner()
 	{
-
-		comboSubset = new Combo(this, SWT.READ_ONLY);
-
-		final Integer division = 1;
-		final Integer total = 100;
-		
-		String[] reductions = new String[total/division];
-
-for (int i = 0; i < total/division; i++)
-{
-	reductions[i] = new Long(division*(i+1)).toString()+" %";
-}
-
-		comboSubset.setItems(reductions);
-		if (reductions.length > 0)
-			comboSubset.select(reductions.length-1);
-		comboSubset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		spinner = new Spinner(this, SWT.None);
+		spinner.setMinimum(1);
+		spinner.setMaximum(100);
+		spinner.setSelection(100);
 	}
+	
+//	private void createComboSubset()
+//	{
+//
+//		comboSubset = new Combo(this, SWT.READ_ONLY);
+//
+//		final Integer division = 1;
+//		final Integer total = 100;
+//		
+//		String[] reductions = new String[total/division];
+//
+//		for (int i = 0; i < total/division; i++)
+//		{
+//			reductions[i] = new Long(division*(i+1)).toString()+" %";
+//		}
+//
+//		comboSubset.setItems(reductions);
+//		if (reductions.length > 0)
+//			comboSubset.select(reductions.length-1);
+//		comboSubset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//	}
 
 	private float subset = 1;
 	private long seed = 999;
