@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.plugins.combinatorialtesting.views;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -28,6 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.interpreter.traces.TraceReductionType;
 
 public class TraceOptionsDialog extends Composite
@@ -61,7 +65,9 @@ public class TraceOptionsDialog extends Composite
 		label2 = new Label(this, SWT.NONE);
 		label2.setText("Seed:");
 		textSeed = new Text(this, SWT.BORDER);
-		textSeed.setText(new Long(seed).toString());
+		//textSeed.setText(new Long(seed).toString());
+		textSeed.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		textSeed.setText(readSeedPref() + "");
 		label3 = new Label(this, SWT.NONE);
 		label3.setText("Limit sub set to:");
 //		comboSubset = new Text(this, SWT.BORDER);
@@ -90,7 +96,7 @@ public class TraceOptionsDialog extends Composite
 			}
 		});
 	}
-
+	
 	/**
 	 * This method initializes comboReductionType
 	 * 
@@ -112,10 +118,45 @@ public class TraceOptionsDialog extends Composite
 			
 		}
 
+		
+		String reductionStr = readTraceReductionPrefStr();
 		comboReductionType.setItems(reductions);
 		if (reductions.length > 0)
+		{
 			comboReductionType.select(0);
+			
+			for(i = 0; i < reductions.length; i++)
+			{
+				if(reductions[i].equals(reductionStr))
+				{
+					comboReductionType.select(i);
+					break;
+				}
+			}
+		}
 		comboReductionType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	}
+	
+	private IPreferenceStore getPreferenceStore()
+	{
+		return  new ScopedPreferenceStore(InstanceScope.INSTANCE, ITracesConstants.PLUGIN_ID);
+	}
+	
+	private String readTraceReductionPrefStr()
+	{
+		int ordinal = getPreferenceStore().getInt(ITracesConstants.TRACE_REDUCTION_TYPE);
+		
+		return TraceReductionType.values()[ordinal].getDisplayName();
+	}
+	
+	private int readSeedPref()
+	{
+		return getPreferenceStore().getInt(ITracesConstants.TRACE_SEED);
+	}
+	
+	private int readSubsetPref()
+	{
+		return getPreferenceStore().getInt(ITracesConstants.TRACE_SUBSET_LIMITATION);
 	}
 	
 	private void createSubsetSpinner()
@@ -123,7 +164,7 @@ public class TraceOptionsDialog extends Composite
 		spinner = new Spinner(this, SWT.None);
 		spinner.setMinimum(1);
 		spinner.setMaximum(100);
-		spinner.setSelection(100);
+		spinner.setSelection(readSubsetPref());
 	}
 	
 //	private void createComboSubset()
@@ -147,8 +188,8 @@ public class TraceOptionsDialog extends Composite
 //		comboSubset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 //	}
 
-	private float subset = 1;
-	private long seed = 999;
+	private float subset = -1;
+	private long seed = -1;
 	private TraceReductionType reductionType;
 	public float getSubset()
 	{

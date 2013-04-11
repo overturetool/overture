@@ -21,6 +21,7 @@ package org.overture.ide.plugins.combinatorialtesting;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -124,6 +125,24 @@ public class OvertureTracesPlugin extends AbstractUIPlugin {
 	}
 	public static void log(String message,Exception exception) {
 		getDefault().getLog().log(new Status(IStatus.ERROR,ITracesConstants.PLUGIN_ID,message,exception));
+	}
+	
+	/** 
+	 * Initializes a preference store with default preference values 
+	 * for this plug-in.
+	 */
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		initializeDefaultMainPreferences(store);
+	}
+	
+	
+	public static void initializeDefaultMainPreferences(IPreferenceStore store) {
+		store.setDefault(ITracesConstants.REMOTE_DEBUG_PREFERENCE, false);
+		store.setDefault(ITracesConstants.REMOTE_DEBUG_FIXED_PORT, false);
+		store.setDefault(ITracesConstants.TRACE_REDUCTION_TYPE, ITracesConstants.TRACE_REDUCTION_DEFAULT_TYPE);
+		store.setDefault(ITracesConstants.TRACE_SEED, ITracesConstants.TRACE_FILTERING_DEFAULT_SEED);
+		store.setDefault(ITracesConstants.TRACE_SUBSET_LIMITATION, ITracesConstants.TRACE_SUBSET_LIMITATION_DEFAULT);
 	}
 
 }
