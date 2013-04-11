@@ -52,7 +52,7 @@ IWorkbenchPreferencePage {
 		addField(createTraceReductionTypeCombo());
 		
 		IntegerFieldEditor traceFilteringSeed = new IntegerFieldEditor(ITracesConstants.TRACE_SEED, "Trace filtering seed", getFieldEditorParent());
-		traceFilteringSeed.setValidRange(-1, Integer.MAX_VALUE);
+		traceFilteringSeed.setValidRange(Integer.MIN_VALUE, Integer.MAX_VALUE);
 		addField(traceFilteringSeed);
 		
 		IntegerFieldEditor subsetLimitation = new IntegerFieldEditor(ITracesConstants.TRACE_SUBSET_LIMITATION, "Subset limitation", getFieldEditorParent());

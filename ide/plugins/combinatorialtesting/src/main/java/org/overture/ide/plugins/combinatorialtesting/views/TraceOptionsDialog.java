@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.interpreter.traces.TraceReductionType;
@@ -43,9 +42,10 @@ public class TraceOptionsDialog extends Composite
 	private Label label1 = null;
 	private Label label2 = null;
 	private Label label3 = null;
-	private Text textSeed = null;
+	//private Text textSeed = null;
 	//private Combo comboSubset = null;
-	private Spinner spinner = null;
+	private Spinner subsetSpinner = null;
+	private Spinner seedSpinner = null;
 
 	public TraceOptionsDialog(Composite parent, int style) {
 		super(parent, style);
@@ -64,10 +64,11 @@ public class TraceOptionsDialog extends Composite
 		setSize(new Point(421, 224));
 		label2 = new Label(this, SWT.NONE);
 		label2.setText("Seed:");
-		textSeed = new Text(this, SWT.BORDER);
+		//textSeed = new Text(this, SWT.BORDER);
 		//textSeed.setText(new Long(seed).toString());
-		textSeed.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		textSeed.setText(readSeedPref() + "");
+		//textSeed.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		//textSeed.setText(readSeedPref() + "");
+		createSeedSpinner();
 		label3 = new Label(this, SWT.NONE);
 		label3.setText("Limit sub set to:");
 //		comboSubset = new Text(this, SWT.BORDER);
@@ -89,8 +90,8 @@ public class TraceOptionsDialog extends Composite
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e)
 			{
 				isCanceled = false;
-				subset= spinner.getSelection() / 100.0F;//Float.parseFloat(comboSubset.getText().replace('%', ' ').trim())/100;
-				seed= Long.parseLong(textSeed.getText());
+				subset= subsetSpinner.getSelection() / 100.0F;//Float.parseFloat(comboSubset.getText().replace('%', ' ').trim())/100;
+				seed= seedSpinner.getSelection();
 				reductionType= TraceReductionType.findValue(comboReductionType.getText());
 				getShell().close();
 			}
@@ -159,12 +160,22 @@ public class TraceOptionsDialog extends Composite
 		return getPreferenceStore().getInt(ITracesConstants.TRACE_SUBSET_LIMITATION);
 	}
 	
+	private void createSeedSpinner()
+	{
+		seedSpinner = new Spinner(this, SWT.None);
+		seedSpinner.setMinimum(Integer.MIN_VALUE);
+		seedSpinner.setMaximum(Integer.MAX_VALUE);
+		seedSpinner.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		seedSpinner.setSelection(readSeedPref());
+	}
+	
 	private void createSubsetSpinner()
 	{
-		spinner = new Spinner(this, SWT.None);
-		spinner.setMinimum(1);
-		spinner.setMaximum(100);
-		spinner.setSelection(readSubsetPref());
+		subsetSpinner = new Spinner(this, SWT.None);
+		subsetSpinner.setMinimum(1);
+		subsetSpinner.setMaximum(100);
+		subsetSpinner.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		subsetSpinner.setSelection(readSubsetPref());
 	}
 	
 //	private void createComboSubset()
