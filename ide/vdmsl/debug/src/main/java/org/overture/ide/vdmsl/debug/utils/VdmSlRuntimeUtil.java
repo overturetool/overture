@@ -42,7 +42,7 @@ public class VdmSlRuntimeUtil
 		{
 			for (AModuleModules m : modules)
 			{
-				if (m.getName().name.equals(defaultModuleName))
+				if (m.getName().getName().equals(defaultModuleName))
 				{
 					defaultModule = m;
 				}
@@ -58,7 +58,7 @@ public class VdmSlRuntimeUtil
 		Environment env = new ModuleEnvironment(defaultModule);
 		PExp expr;
 
-		expr = parseExpression(expression, defaultModule.getName().name, defaultModule.getName().name);
+		expr = parseExpression(expression, defaultModule.getName().getName(), defaultModule.getName().getName());
 
 		try
 		{

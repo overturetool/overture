@@ -138,13 +138,13 @@ public class VdmjTracesHelper
 		{
 			if (traceDef != null)
 			{
-				TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), traceDef.getName().name, getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+				TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), traceDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
 				traceSetups.add(texe);
 			} else
 			{
 				for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(container))
 				{
-					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), tDef.getName().name, getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), tDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
 					traceSetups.add(texe);
 				}
 			}
@@ -154,13 +154,13 @@ public class VdmjTracesHelper
 			{
 				if (traceDef != null)
 				{
-					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), traceDef.getName().name, getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), traceDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
 					traceSetups.add(texe);
 				} else
 				{
 					for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(c))
 					{
-						TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), tDef.getName().name, getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+						TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), tDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
 						traceSetups.add(texe);
 					}
 				}

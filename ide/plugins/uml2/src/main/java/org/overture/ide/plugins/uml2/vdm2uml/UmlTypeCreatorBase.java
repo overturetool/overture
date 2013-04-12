@@ -7,6 +7,7 @@ import java.util.Map;
 import org.eclipse.uml2.uml.Type;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -88,7 +89,7 @@ public class UmlTypeCreatorBase
 			case ABracketType.kindPType:
 				return getName(((ABracketType) type).getType());
 			case AClassType.kindPType:
-				return ((AClassType) type).getName().name;
+				return ((AClassType) type).getName().getName();
 			case AFunctionType.kindPType:
 				return getName(((AFunctionType) type).getResult());
 			case SInvariantType.kindPType:
@@ -96,13 +97,13 @@ public class UmlTypeCreatorBase
 				switch (((SInvariantType) type).kindSInvariantType())
 				{
 					case ANamedInvariantType.kindSInvariantType:
-						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
+						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 								+ NAME_SEPERATOR
-								+ ((ANamedInvariantType) type).getName().name;
+								+ ((ANamedInvariantType) type).getName().getName();
 					case ARecordInvariantType.kindSInvariantType:
-						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().name
+						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 								+ NAME_SEPERATOR
-								+ ((ARecordInvariantType) type).getName().name;
+								+ ((ARecordInvariantType) type).getName().getName();
 						
 				}
 			}
@@ -116,7 +117,7 @@ public class UmlTypeCreatorBase
 			case AOptionalType.kindPType:
 				return "Optional<"+getName(((AOptionalType) type).getType())+">";
 			case AParameterType.kindPType:
-				return ((AParameterType)type).getName().name;
+				return ((AParameterType)type).getName().getName();
 			case AProductType.kindPType:
 			{
 				String name = "Product<";
@@ -148,8 +149,8 @@ public class UmlTypeCreatorBase
 					ATypeDefinition typeDef = type.getAncestor(ATypeDefinition.class);
 					if(typeDef!=null)
 					{
-						LexNameToken nameTypeDef = ATypeDefinition.class.cast(typeDef).getName();
-						return nameTypeDef.module + NAME_SEPERATOR + nameTypeDef.name;
+						ILexNameToken nameTypeDef = ATypeDefinition.class.cast(typeDef).getName();
+						return nameTypeDef.getModule() + NAME_SEPERATOR + nameTypeDef.getName();
 					}else
 				{
 					String name="GeneratedUnion";

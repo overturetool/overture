@@ -89,9 +89,9 @@ public class UmlDeploymentCreator
 				PDefinition def = ((AClassType) ind.getType()).getClassdef();
 				if (def instanceof ACpuClassDefinition)
 				{
-					console.out.println("Adding node: " + ind.getName().name);
-					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().name, UMLPackage.Literals.NODE);
-					nodes.put(ind.getName().name, n);
+					console.out.println("Adding node: " + ind.getName().getName());
+					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().getName(), UMLPackage.Literals.NODE);
+					nodes.put(ind.getName().getName(), n);
 				}
 			}
 
@@ -101,7 +101,7 @@ public class UmlDeploymentCreator
 				if (def instanceof ABusClassDefinition)
 				{
 					console.out.print("Adding comminication path between: ");
-					CommunicationPath con = (CommunicationPath) deploymentPackage.createPackagedElement(ind.getName().module, UMLPackage.Literals.COMMUNICATION_PATH);
+					CommunicationPath con = (CommunicationPath) deploymentPackage.createPackagedElement(ind.getName().getModule(), UMLPackage.Literals.COMMUNICATION_PATH);
 
 					ANewExp e = (ANewExp) ind.getExpression();
 
@@ -146,7 +146,7 @@ public class UmlDeploymentCreator
 									if (call.getFieldname().toString().equals("deploy")
 											&& call.getDesignator() instanceof AIdentifierObjectDesignator)
 									{
-										String nodeName = ((AIdentifierObjectDesignator) call.getDesignator()).getName().name;
+										String nodeName = ((AIdentifierObjectDesignator) call.getDesignator()).getName().getName();
 										if (nodes.containsKey(nodeName))
 										{
 											String deployedName = call.getArgs().get(0).toString();
@@ -182,7 +182,7 @@ public class UmlDeploymentCreator
 
 												AVariableExp var = (AVariableExp) call.getArgs().get(0);
 												// Class c = classes.get(((AClassType) var.getType()).getName().name);
-												artifact.setFileName(((AClassType) var.getType()).getName().location.file.getName());
+												artifact.setFileName(((AClassType) var.getType()).getName().getLocation().file.getName());
 												console.out.println("Adding artifact: "
 														+ artifact.getName());
 											}

@@ -108,10 +108,10 @@ public class TraceAstUtility
 	{
 		if(node instanceof SClassDefinition)
 		{
-			return ((SClassDefinition)node).getName().name;
+			return ((SClassDefinition)node).getName().getName();
 		}else if(node instanceof AModuleModules)
 		{
-			return ((AModuleModules)node).getName().name;
+			return ((AModuleModules)node).getName().getName();
 		}
 		return null;
 	}

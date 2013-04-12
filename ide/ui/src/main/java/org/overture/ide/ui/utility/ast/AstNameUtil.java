@@ -14,10 +14,10 @@ public class AstNameUtil
 	{
 		if(node instanceof PDefinition)
 		{
-			return ((PDefinition) node).getName().name;
+			return ((PDefinition) node).getName().getName();
 		}else if(node instanceof AModuleModules)
 		{
-			return ((AModuleModules) node).getName()==null?null:((AModuleModules) node).getName().name;
+			return ((AModuleModules) node).getName()==null?null:((AModuleModules) node).getName().getName();
 		}else if(node instanceof PStm)
 		{
 			return ((PStm) node).getLocation().module;
@@ -29,7 +29,7 @@ public class AstNameUtil
 			return ((PType) node).getLocation().module;
 		}else if(node instanceof AFieldField)
 		{
-			return ((AFieldField) node).getTagname().name;
+			return ((AFieldField) node).getTagname().getName();
 		}
 
 		return "Unresolved Name";
