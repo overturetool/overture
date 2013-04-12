@@ -77,11 +77,11 @@ debugging using Overture. Section~\ref{sec:testcov}  describes how
 line coverage from using the debugger can be covered and displayed.
 Section~\ref{sec:CT} shows how parts of the test process can be
 automated using Overture's combinatorial testing feature.
-Finally, Section~\ref{sec:PO} demonstrates how it is possible to automatically
+Section~\ref{sec:PO} demonstrates how it is possible to automatically
 generate the additional checks (called \emph{proof obligations}) needed
 in order to ensure that a model is
-consistent.  %Finally, Section~\ref{sec:cmdline} illustrates how parts
-%of Overture's functionality can be accessed from a command line.
+consistent.  Finally, Section~\ref{sec:cmdline} illustrates how parts
+of Overture's functionality can be accessed from a command line.
 
 %including support for test coverage analysis which is not currently
 %available from the Eclipse GUI.
@@ -134,7 +134,7 @@ The best way to run Overture is to download a special version of
   company called Softeam. Just like Overture this tool is built on top of the Eclipse platform. The product can be
   obtained from
 \begin{quote}
-\texttt{http://www.modelio.org/}.
+\texttt{http://www.modelio.org/}
 \end{quote}
 
 %% \item[\textbf{Enterprise Architect:}] This is a commercial tool from a
@@ -175,7 +175,7 @@ test coverage feature described in Section~\ref{sec:testcov} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
 \begin{quote}
-\url{http://miktex.org/2.8/}
+\url{http://miktex.org/2.9/}
 \end{quote}
 
 
@@ -183,7 +183,7 @@ necessary to have the text processing system called \LaTeX\ and its
 Overture provides a new open source VDM tool set, but it can
 also be used with
 \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$. \vdmtools, originally developed by IFAD A/S, is now
-maintained and developed by CSK Systems~(see
+maintained and developed by SCSK~(see
 \url{http://www.vdmtools.jp/en/}). From Overture it is also possible
 automatically to transfer a project over to \vdmtools.
 
@@ -200,7 +200,7 @@ automatically to transfer a project over to \vdmtools.
 This section describes the tool support available if you wish to start
 model construction using UML class diagrams.
 The \texttt{AlarmInitUML.uml} file can be found on the book's web
-site\footnote{\url{http://www.vdmbook.com/twiki/bin/view/Main/BookExamples/AlarmInitUML.uml}.}.
+site\footnote{\url{http://www.vdmbook.com/twiki/bin/viewfile/Main/BookExamples?rev=1;filename=AlarmInitUML.uml}.}.
 This UML class diagram model is identical to the initial class
 diagram from the previous chapter
 except that the \vdmstyle{Plant} class has been updated with the three
@@ -470,7 +470,7 @@ supports several types of template: cases, quantifications, functions
 (explicit/implicit), operations (explicit/implicit) and many
 more\footnote{It is possible to see and enhance the complete list of
   these by selecting \emph{Window} $\rightarrow$ \emph{Preferences}
-  $\rightarrow$ \emph{Overture}.}.
+  $\rightarrow$ \emph{VDM}  $\rightarrow$ \emph{Templates}.}.
 Additional templates can easily be added in the future. The use
 of templates makes it much easier for users lacking deep familiarity
 with VDM syntax to nevertheless construct models.
@@ -608,7 +608,7 @@ a number of VDM++ model files with a number of
 deliberate errors.  The errors are common ones such a
 semicolons separating definitions that has been forgotten.
 
-\begin{myhardexercise}\label{ex:type-errors}
+\begin{myexercise}\label{ex:type-errors}
 Correct all the errors discovered by the syntax and type checker from
 Overture and save the corrected files. Continue this process until no errors appear.
 \textbf{Hint:} Consult the model presented in
@@ -617,7 +617,7 @@ Appendix~\ref{app:alarm}
 to see how values (note using ``\vdmstyle{=}'' rather than
 ``\vdmstyle{:=}''), types and constructors should be defined and how
 access modifiers should be used.
-\end{myhardexercise}
+\end{myexercise}
 
 %\subsection{Mapping VDM to UML}
 
@@ -849,7 +849,7 @@ on the project and select \texttt{Clean}). If we simply take the
 \verb|ExpertIsOnDuty| and \verb|ExpertToPage| operations in
 \verb|plant.vdmpp| are called by the
 \texttt{Run} function. Remember that whenever test coverage
-information is desired the \texttt{Generate Latex Coverage} option
+information is desired the \texttt{Generate Coverage} option
 must be selected as shown in Figure~\ref{fig:debugConfiguration}\footnote{Note that using this feature
 required pdflatex to be installed.}.
 Once the debugger has completed and the result
@@ -903,6 +903,14 @@ plant.vdmpp & 89.0\% & 5 \\
 operations are fully covered by just one call (due to the fact that
 its body is simply one line) whereas the \texttt{PlantInv} operation
 is called twice.
+
+\begin{myhardexercise}\label{ex:addingfunctionality}
+Before reading on try to add two new operations to the \texttt{Plant}
+class called \texttt{AddExpertToSchedule} and
+\texttt{RemoveExpertFromSchedule} respectively for adding and removing
+an expert to/from the schedule for a paticular period. Please remmebr
+to include pre-conditions when necessary.
+\end{myhardexercise}
 
 \newpage
 
@@ -1005,7 +1013,7 @@ choose the \textsf{Full
 Now Overture expands and executes all 48 test cases one after
 another. The results of these executions are illustrated with green
 check marks and red crosses, meaning that the tests passed or failed
-respectively. See Figure~\ref{fig:stracesalarm}. Note that in the
+respectively (see Figure~\ref{fig:stracesalarm}). Note that in the
 Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with
 the corresponding results from its four operation calls.
@@ -1067,8 +1075,7 @@ to the \texttt{PlantInv} function. Recall that the first part of the
 function's definition is as follows:
 
 \begin{lstlisting}
-PlantInv: set of Alarm * map Period to set of Expert ->
-          bool
+PlantInv: set of Alarm * map Period to set of Expert -> bool
 PlantInv(as,sch) ==
   (forall p in set dom sch & sch(p) <> {}) and ...
 \end{lstlisting}
@@ -1132,134 +1139,132 @@ using simple pattern matching because this is only guranteed because
 of the invariant over the instance variables for the \texttt{Plant}
 class that has been defined.
 
-%\section{A Command-Line Interface}\label{sec:cmdline}
-%
-%So far only the graphical user interface of Overture has been
-%presented but the engine underlying Overture, called VDMJ, also
-%provides a simple command line interface.  This is useful for the
-%automatic batch execution of tests, though the command line also
-%provides a full set of interactive execution and debugging commands
-%which can be useful when examining batch tests. The command line also
-%provides access to tool facilities that have not yet been included in
-%the Overture IDE.
-%
-%VDMJ is written in Java, and so to run it from the command line, the
-%VDMJ jar file\footnote{See the Overture documentation at
-%  \texttt{sourceforge.net/projects/overture} for the location of the
-%  jar file.}  should be executed with a Java JRE (version 5 or later):
-%
-%\lstset{style=tool,language=}
-%\begin{lstlisting}
-%java -jar vdmj-2.0.2.jar
-%\end{lstlisting}
-%
-%\noindent If the jar file is executed with no further options like this, it will
-%print a list of available options and exit. The most important option is the VDM
-%dialect that the tool should use. In the case of our alarm example, we want to
-%use VDM++ for which the option is \verb|-vdmpp|. After this, we can simply
-%specify the names of the VDM model files to load, or the name of a
-%directory from which all VDM model files will be loaded:
-%
-%\begin{lstlisting}
-%java -jar vdmj-2.0.2.jar -vdmpp AlarmPP
-%\end{lstlisting}
-%
-%\noindent That will perform a syntax and type check of all the
-%VDM model files in the \verb|AlarmPP| directory, producing any
-%errors and warning messages on the console, before terminating:
-%
-%\begin{lstlisting}
-%Parsed 4 classes in 0.561 secs. No syntax errors
-%Type checked 4 classes in 0.031 secs. No type errors
-%\end{lstlisting}
-%
-%\noindent In the case of our alarm example, there are no syntax or
-%type checking errors. Any warnings can be suppressed using the
-%\verb|-w| option.
-%
-%If a VDM model has no type checking errors, it can either be given
-%an expression to evaluate as an option on the command line, or the
-%user can enter an interactive mode to evaluate expressions and debug
-%their execution.
-%
-%To evaluate an expression from the command line, the \verb|-e| option
-%is used, followed by a VDM expression to evaluate. You may also find
-%the \verb|-q| option useful, as this suppresses the informational
-%messages about the parsing and type checking:
-%
-%\begin{lstlisting}
-%java -jar vdmj-2.0.2.jar -vdmpp -q -e "new Test1().Run()"
-%AlarmPP
-%\end{lstlisting}
-%
-%\noindent This produces a single line of output for the evaluation, since the
-%parsing and checking messages are suppressed:
-%
-%\begin{lstlisting}
-%mk_({mk_token("Monday day")},
-%	Expert{#3, quali:={<Mech>, <Bio>}})
-%\end{lstlisting}
-%
-%Clearly a batch of test evaluations could be performed automatically by running
-%a series of similar commands and saving the output results for comparison
-%against expected results.
-%
-%To run the command line interpreter interactively, the \verb|-i| command line
-%option must be given. Instead of terminating after the type check, this will
-%cause VDMJ to enter its interactive mode, and give the interactive \verb|>|
-%prompt:
-%
-%\begin{lstlisting}
-%Parsed 4 classes in 0.468 secs. No syntax errors
-%Type checked 4 classes in 0.031 secs. No type errors
-%Initialized 4 classes in 0.031 secs.
-%Interpreter started
-%>
-%\end{lstlisting}
-%
-%\noindent From this prompt, various interactive commands can be given to
-%evaluate expressions, debug their evaluation, or examine the VDM model environment.
-%The \verb|help| command lists the commands available. The \verb|quit| command
-%leaves the interpreter.
-%
-%For example, the following session illustrates the creation of a test object,
-%followed by an evaluation (using a \texttt{print} command)
-%of its \verb|Run| operation, and a debug
-%session with a breakpoint at the start of the same operation:
-%
-%\begin{lstlisting}
-%> create test := new Test1()
-%> print test.Run()
-%= mk_({mk_token("Monday day")},
-%      Expert{#3, quali:={<Mech>, <Bio>}})
-%Executed in 0.172 secs.
-%
-%> break Test1`Run
-%Created break [1] in 'Test1' (test1.vdmpp) at line 26:3
-%26:    let periods = plant.ExpertIsOnDuty(ex1),
-%
-%> print test.Run()
-%Stopped break [1] in 'Test1' (test1.vdmpp) at line 26:3
-%26:    let periods = plant.ExpertIsOnDuty(ex1),
-%[MainThread-10]> print plant.NumberOfExperts(
-%                     mk_token("Wednesday"))
-%Runtime: Error 4071: Precondition failure:
-%         pre_NumberOfExperts in
-%         'Test1' (console) at line 1:1
-%[MainThread-10]> continue
-%= mk_({mk_token("Monday day")}
-%      Expert{#3, quali:={<Mech>, <Bio>}})
-%Executed in 34.858 secs.
-%\end{lstlisting}
-%
-%\noindent Notice that the \verb|print| command is available at the breakpoint
-%to examine the runtime state of the system. In the example, we attempt to evaluate an
-%operation which fails its precondition (because the system is not yet
-%initialized). The \verb|help| command is context sensitive, and will list the
-%extra debugging commands available at a breakpoint, such as \verb|continue|,
-%\verb|step|, \verb|stack|, \verb|list| and so on. The full set of commands is
-%described in the VDMJ User Guide\footnote{Supplied with the Overture
-%documentation.}.
+\section{A Command-Line Interface}\label{sec:cmdline}
+
+So far only the graphical user interface of Overture has been
+presented but the core of Overture also
+provides a simple command line interface.  This is useful for the
+automatic batch execution of tests, though the command line also
+provides a full set of interactive execution and debugging commands
+which can be useful when examining batch tests. 
+
+Overture is written in Java, and so to run it from the command line, the
+Overture jar file\footnote{See the Overture documentation at
+  \texttt{sourceforge.net/projects/overture} for the location of the
+  jar file or use the script or windows bat file incorporating this.}  
+should be executed with a Java JRE (version 7 or later):
+
+\lstset{style=tool,language=}
+\begin{lstlisting}
+java -jar Overture-2.0.0.jar
+\end{lstlisting}
+
+\noindent If the jar file is executed with no further options like this, it will
+print a list of available options and exit. The most important option is the VDM
+dialect that the tool should use. In the case of our alarm example, we want to
+use VDM++ for which the option is \verb|-vdmpp|. After this, we can simply
+specify the names of the VDM model files to load, or the name of a
+directory from which all VDM model files will be loaded:
+
+\begin{lstlisting}
+java -jar Overture-2.0.0.jar -vdmpp AlarmPP
+\end{lstlisting}
+
+\noindent That will perform a syntax and type check of all the
+VDM model files in the \verb|AlarmPP| directory, producing any
+errors and warning messages on the console, before terminating:
+
+\begin{lstlisting}
+Parsed 4 classes in 0.109 secs. No syntax errors
+Type checked 4 classes in 0.093 secs. No type errors
+\end{lstlisting}
+
+\noindent In the case of our alarm example, there are no syntax or
+type checking errors. Any warnings can be suppressed using the
+\verb|-w| option.
+
+If a VDM model has no type checking errors, it can either be given
+an expression to evaluate as an option on the command line, or the
+user can enter an interactive mode to evaluate expressions and debug
+their execution.
+
+To evaluate an expression from the command line, the \verb|-e| option
+is used, followed by a VDM expression to evaluate. You may also find
+the \verb|-q| option useful, as this suppresses the informational
+messages about the parsing and type checking:
+
+\begin{lstlisting}
+java -jar Overture-2.0.0.jar -vdmpp -q -e "new Test1().Run()"
+AlarmPP
+\end{lstlisting}
+
+\noindent This produces a single line of output for the evaluation, since the
+parsing and checking messages are suppressed:
+
+\begin{lstlisting}
+mk_({mk_token("Monday day")},
+	Expert{#3, quali:={<Mech>, <Bio>}})
+\end{lstlisting}
+
+Clearly a batch of test evaluations could be performed automatically by running
+a series of similar commands and saving the output results for comparison
+against expected results.
+
+To run the command line interpreter interactively, the \verb|-i| command line
+option must be given. Instead of terminating after the type check, this will
+cause VDMJ to enter its interactive mode, and give the interactive \verb|>|
+prompt:
+
+\begin{lstlisting}
+Type checked 4 classes in 0.078 secs. No type errors
+Initialized 4 classes in 0.063 secs.
+Interpreter started
+>
+\end{lstlisting}
+
+\noindent From this prompt, various interactive commands can be given to
+evaluate expressions, debug their evaluation, or examine the VDM model environment.
+The \verb|help| command lists the commands available. The \verb|quit| command
+leaves the interpreter.
+
+For example, the following session illustrates the creation of a test object,
+followed by an evaluation (using a \texttt{print} command)
+of its \verb|Run| operation, and a debug
+session with a breakpoint at the start of the same operation:
+
+\begin{lstlisting}
+> create test := new Test1()
+> print test.Run()
+= mk_({mk_token("Monday day")},
+      Expert{#3, quali:={<Mech>, <Bio>}})
+Executed in 0.15 secs.
+
+> break Test1`Run
+Created break [1] in 'Test1' (test1.vdmpp) at line 26:3
+26:    let periods = plant.ExpertIsOnDuty(ex1),
+
+> print test.Run()
+Stopped break [1] in 'Test1' (test1.vdmpp) at line 26:3
+26:    let periods = plant.ExpertIsOnDuty(ex1),
+[MainThread-10]> print plant.NumberOfExperts(
+                     mk_token("Wednesday"))
+Runtime: Error 4071: Precondition failure:
+         pre_NumberOfExperts in
+         'Test1' (console) at line 1:1
+[MainThread-10]> continue
+= mk_({mk_token("Monday day")}
+      Expert{#3, quali:={<Mech>, <Bio>}})
+Executed in 72.651 secs.
+\end{lstlisting}
+
+\noindent Notice that the \verb|print| command is available at the breakpoint
+to examine the runtime state of the system. In the example, we attempt to evaluate an
+operation which fails its precondition (because the system is not yet
+initialized). The \verb|help| command is context sensitive, and will list the
+extra debugging commands available at a breakpoint, such as \verb|continue|,
+\verb|step|, \verb|stack|, \verb|list| and so on. The full set of commands is
+described in the Overture User Guide\footnote{Supplied with the Overture
+documentation.}.
 
 \lstset{style=mystyle,language=VDM++}
 
@@ -1277,12 +1282,12 @@ support for VDM++:
 \item executing and debugging VDM++ models;
 \item collecting and displaying test coverage information on VDM++
   models;
-%\item a command-line interface;
+\item a command-line interface;
 %\item pretty printing VDM++ models with test coverage information;
 \item combinatorial testing enabling automation of parts of the
   testing process;
 \item proof obligation generation and
-%\item a command-line interface.
+\item a command-line interface.
 %\item the existence of the application programming interface;
 %\sindex{VDMTools@\vdmtools\ API}
 %\item the existence of code generators; and

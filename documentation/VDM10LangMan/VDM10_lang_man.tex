@@ -222,7 +222,8 @@
         Kenneth Lausdahl\\
         Nick Battle\\
         John Fitzgerald\\
-        Sune Wolff}
+        Sune Wolff\\
+        Shin Sahara}
 
 \date{February 2011}
 \reportno{TR-001}     
@@ -238,6 +239,7 @@ Month   & Year & Version & Version of Overture.exe \\ \hline
 April   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
 February& 2011 & 2       & 1.0.0 \\ \hline
+July    & 2012 & 3       & 1.2.2 \\ \hline
 \end{tabular}
 
 %\addtocounter{page}{2}
@@ -2186,7 +2188,7 @@ define a polymorphic version of this function:
 so \texttt{filter[\keyw{real}](\keyw{lambda} x:\keyw{real} \&
   \keyw{floor} x = x, [2.3,0.7,-2.1,3])} $\equiv$  \texttt{[3]}.
 
-
+\vspace{1ex}
 Functions may also return functions as results. An example of this is
 the function \texttt{fmap}:
 \begin{lstlisting}
@@ -2198,6 +2200,23 @@ the function \texttt{fmap}:
 \end{lstlisting}
 So \texttt{fmap[\keyw{nat}](\keyw{lambda} x:\keyw{nat} \& x * x)([1,2,3,4,5])} $\equiv$ 
 \texttt{[ 1,4,9,16,25 ]}.
+
+\vspace{1ex}
+\noindent Since the \texttt{fmap} function is recursive, it ought to have a \keyw{measure}
+function defined. In the case of curried functions, the measure function's parameters
+are the same as a de-curried version of the recursive function's parameters. For
+the \texttt{fmap} example, this would be:
+\begin{lstlisting}
+  m[@elem]: (@elem -> @elem) * seq of @elem -> nat
+  m(-, l) == len l;
+\end{lstlisting}
+Note that the measure function is also polymorphic, and must have the same type
+parameters as the function it measures. The proof obligation will also be polymorphic:
+\begin{lstlisting}
+(forall f:(@elem -> @elem), l:seq of (@elem) &
+  (not (l = []) =>
+    m[@elem](f, l) > m[@elem](f, (tl l))))
+\end{lstlisting}
 
 \chapter{Expressions}\label{chap:expr}
 
@@ -3495,6 +3514,105 @@ In this example the {\bf\ttfamily threadid} expression is used in two places:
   \end{lstlisting}
 \end{description}
 
+
+\section{Narrow Expressions}
+
+\begin{description}
+\item[Syntax:]
+  \Rule{expression}{
+    \ldots \dsep
+    \Ruleref{narrow expression} \dsep
+    \ldots
+    }
+
+  \Rule{narrow expression}{
+    \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+    }
+    
+    \item[Semantics:] The {\it narrow expression} convert the given {\tt expression} value into given {\tt type}.
+Downcasting in class inheritance, and narrowing Union type are permit.
+However, conversions between unrelated types become type errors.
+    
+    \item[Examples:] In following examples, there is no difference in the results of running the Test() and Test'(), 
+    But, there is a type error (DEF) in Test().
+
+      \begin{lstlisting}
+class S
+end S
+
+class C1 is subclass of S
+
+instance variables
+public a : nat := 1;
+
+end C1
+
+class C2 is subclass of S
+
+instance variables
+public b : nat := 2;
+
+end C2
+
+class A
+
+operations
+public
+Test: () ==>  seq of nat
+Test() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> e.a,
+                (isofclass(C2, e)) -> e.b
+               end | i in set inds list ];
+
+public
+Test': () ==>  seq of nat
+Test'() ==
+ let list : seq of S = [ new C1(), new C2() ]
+ in
+   return [ let e = list(i)
+            in cases true:
+                (isofclass(C1, e)) -> narrow_(e, C1).a,
+                (isofclass(C2, e)) -> narrow_(e, C2).b
+               end | i in set inds list ];
+end A
+      \end{lstlisting}
+      
+      \begin{lstlisting}
+class A
+
+types
+public C1 :: a : nat;
+public C2 :: b : nat;
+public S = C1 | C2;
+
+operations
+public
+Test: () ==> nat
+Test() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = s
+   in
+     return c.a;
+
+public
+Test': () ==> nat
+Test'() ==
+ let s : S = mk_C1(1)
+ in
+   let c : C1 = narrow_(s, C1)
+   in
+     return c.a;
+end A
+      \end{lstlisting}
+
+\end{description}
+
+
 \section{Is Expressions}
 
 \begin{description}
@@ -4056,6 +4174,8 @@ an access modifier allowing access to it outside the defining class.
     \Ruleref{set union pattern} \dsep
     \Ruleref{seq enum pattern} \dsep
     \Ruleref{seq conc pattern} \dsep
+    \Ruleref{map enumeration pattern} \dsep
+    \Ruleref{map muinon pattern} \dsep
     \Ruleref{tuple pattern} \dsep
     \Ruleref{record pattern}
     }
@@ -4083,6 +4203,22 @@ an access modifier allowing access to it outside the defining class.
   \Rule{seq conc pattern}{
     \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
     }
+
+  \Rule{map enumeration pattern}{
+    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
+    }
+
+  \Rule{maplet pattern list}{
+     \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}
+    }
+
+  \Rule{maplet pattern}{
+    \Ruleref{pattern}, \Lit{|->}, \Ruleref{pattern}
+  }
+
+   \Rule{map muinon pattern}{
+    \Ruleref{pattern}, \Lit{\keyw{munion}}, \Ruleref{pattern}
+  }
 
   \Rule{tuple pattern}{
     \Lop{mk\_(}, \Ruleref{pattern}, \Lit{,}, \Ruleref{pattern list}, \Lit{)}
@@ -4136,6 +4272,15 @@ an access modifier allowing access to it outside the defining class.
     can be concatenated to form the original sequence value. In the
     VDM interpreters the two subsequences will always be chosen so that they
     are non-empty.
+
+  \item A {\it map enumeration pattern} fits only map values. 
+
+  \item A {\it maplet pattern list} are matched to distinct elements of a map; 
+   all elements must be matched.
+
+  \item A {\it map munion pattern} fits only map values. 
+   The two patterns are matched to a partition of two sub maps of a map.
+   In the VDM interpreters the two sub maps will always be chosen such that they are non-empty and disjoint.
 
   \item A {\it tuple pattern} fits only tuples with the same number of
     elements. Each of the patterns are matched against the corresponding
@@ -4238,6 +4383,34 @@ used to decompose \texttt{l} into an arbitrary pivot element and two
 subsequences. The pivot is used to partition the list into those
 values less than the pivot and those values greater, and these two
 partitions are recursively sorted.
+
+
+Maplet pattern match patterns to elements of a maplet.
+\begin{lstlisting}
+let {a |-> b} = {1 |-> 2} in mk_(a,b) = mk_(1,2)
+\end{lstlisting}
+
+Maplet pattern list match patterns to elements of each maplet in a map.
+\begin{lstlisting}
+let {1 |-> a,a |-> b,b |-> c} = {1 |-> 4,2 |-> 3,4 |-> 2} in
+c = 3
+\end{lstlisting}
+
+Map munion pattern can be used to decompose a map for recursive function calls.
+Following \texttt{map2seq} function converts a map to a seq of maplet.
+\begin{lstlisting}
+public map2seq[@T1, @T2] : 
+    map @T1 to @T2 -> seq of (map @T1 to @T2)
+map2seq(m) ==
+  cases m:
+    ({|->})	-> [],
+    {- |-> -}	-> [m],
+    m1 munion m2 -> 
+        map2seq[@T1, @T2] (m1) ^  map2seq[@T1, @T2] (m2)
+ end;
+\end{lstlisting}
+Here, in the third cases clause a map munion pattern is used to decompose \texttt{m} 
+into two maps.
 
 Tuple patterns can be used to bind tuple components to
 identifiers. For instance since the function \texttt{promoted} defined
@@ -8042,9 +8215,21 @@ each other.
 \chapter{Threads (VDM++ and VDM-RT)}\label{ch:thread}
 
 Objects instantiated from a class with a {\em thread} part are called
-{\em active} objects.  The scope of the instance variables and 
+{\em active} objects.  The scope of the instance variables and
 operations of the current class is considered to extend to the thread
-specification.
+specification. Note that from a tool perspective the thread for the
+expression a user would like to evaluate in relation to a VDM model is
+called a debug thread. This thread has a special role in the sense
+that when it is finished the entire execution is completed (and thus
+all other threads ready to be scheduled in or running will be thrown
+away and aborted). If a session where a series of expressions are
+being evaluated this is not true (in this case the other threads will
+be continued when the next expression is executed,
+see~\cite{Larsen&10d} for more details about ``sessions'').
+Thus if one would like to ensure a specific number
+of such other threads to be completed before stopping the execution
+one needs to block the debug thread using a synchonisation as
+explained in Chapter~\ref{ch:sync}.
 
 \begin{description}
 \item[Syntax:]  \Ruledef{thread definitions}{ \Lop{thread},
@@ -8068,6 +8253,15 @@ of describing the activities in a thread.
   \Ruledef{periodic thread definition}{
     \Ruleref{periodic obligation}
   }
+
+For VDM++ where time is not explicit it looks like:
+  
+\Ruledef{periodic obligation}{
+  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+}
+
+For VDM-RT where time is explicit it looks like:
+
   \Ruledef{periodic obligation}{
     \Lop{periodic},\Lit{(}, \Ruleref{numeral},
     \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
@@ -10038,7 +10232,15 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
 
 \Ruledef{periodic thread definition}{
     \Ruleref{periodic obligation} }
+
+For VDM++ where time is not explicit it looks like:
   
+\Ruledef{periodic obligation}{
+  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+}
+
+For VDM-RT where time is explicit it looks like:
+
 \Ruledef{periodic obligation}{
   \Lop{periodic},\Lit{(}, \Ruleref{numeral},
   \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
@@ -10659,6 +10861,13 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
   \Lop{lambda}, \Ruleref{type bind list}, \Lit{\&}, \Ruleref{expression}
   }
 
+\subsection{The narrow Expression}
+
+\Ruledef{narrow expression}{
+  \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
+  }
+
+
 \subsection{The New Expression (VDM++ and VDM-RT)}
 
   \Ruledef{new expression}{
@@ -11099,6 +11308,8 @@ In VDM++ and VDM-RT a call statement looks like:
   \Ruleref{set union pattern} \dsep
   \Ruleref{seq enum pattern} \dsep
   \Ruleref{seq conc pattern} \dsep
+  \Ruleref{map enumeration pattern} \dsep
+  \Ruleref{map muinon pattern} \dsep
   \Ruleref{tuple pattern} \dsep
   \Ruleref{record pattern}
   }
@@ -11126,6 +11337,22 @@ In VDM++ and VDM-RT a call statement looks like:
 
 \Ruledef{seq conc pattern}{
   \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
+  }
+
+\Ruledef{map enumeration pattern}{
+    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
+    }
+
+\Ruledef{maplet pattern list}{
+     \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}
+    }
+
+\Ruledef{maplet pattern}{
+    \Ruleref{pattern}, \Lit{|->}, \Ruleref{pattern}
+  }
+
+\Ruledef{map muinon pattern}{
+    \Ruleref{pattern}, \Lit{\keyw{munion}}, \Ruleref{pattern}
   }
 
 \Ruledef{tuple pattern}{

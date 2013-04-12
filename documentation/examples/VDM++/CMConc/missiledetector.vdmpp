@@ -76,7 +76,10 @@ thread
 -- events. getThread is automatically blocked if there
 -- are no threats available
 while true do
+(
   processSensor();
+  --World`timerRef.WaitRelative(World`timerRef.stepLength);
+);
 
 end MissileDetector
 \end{vdm_al}
