@@ -21,6 +21,8 @@ package org.overture.ide.plugins.combinatorialtesting.views;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,6 +42,7 @@ public class TraceOptionsDialog extends Composite
 	public  boolean isCanceled = false;
 	private Button buttonCancel = null;
 	private Button buttonOk = null;
+	private Button restorePreferences = null;
 	private Combo comboReductionType = null;
 	private Label label1 = null;
 	private Label label2 = null;
@@ -63,24 +66,25 @@ public class TraceOptionsDialog extends Composite
 
 		this.setLayout(gridLayout);
 		label1 = new Label(this, SWT.NONE);
-		label1.setText("Trace Reduction Type:");
+		label1.setText("Trace reduction type:");
 		createComboReductionType();
 		setSize(new Point(421, 224));
 		label2 = new Label(this, SWT.NONE);
-		label2.setText("Seed:");
+		label2.setText("Trace filtering seed:");
 		//textSeed = new Text(this, SWT.BORDER);
 		//textSeed.setText(new Long(seed).toString());
 		//textSeed.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		//textSeed.setText(readSeedPref() + "");
 		createSeedSpinner();
 		label3 = new Label(this, SWT.NONE);
-		label3.setText("Limit sub set to:");
+		label3.setText("Subset limitation (%):");
 //		comboSubset = new Text(this, SWT.BORDER);
 //		comboSubset.setText("1.00000000000");
 //		createComboSubset();
 		createSubsetSpinner();
 		buttonCancel = new Button(this, SWT.NONE);
 		buttonCancel.setText("Cancel");
+		buttonCancel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		buttonCancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e)
 			{
@@ -90,6 +94,7 @@ public class TraceOptionsDialog extends Composite
 		});
 		buttonOk = new Button(this, SWT.NONE);
 		buttonOk.setText("Ok");
+		buttonOk.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		buttonOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e)
 			{
@@ -116,6 +121,36 @@ public class TraceOptionsDialog extends Composite
 				displayState = new TraceOptionsDisplayState(subset, seed, reductionType);
 			}
 		});
+		
+		restorePreferences = new Button(this, SWT.NONE);
+		restorePreferences.setText("Restore preferences");
+		restorePreferences.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		restorePreferences.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e)
+			{
+				selectComboReductionItem(readTraceReductionPrefStr());
+				seedSpinner.setSelection(readSeedPref());
+				subsetSpinner.setSelection(readSubsetPref());
+			}
+		});
+	}
+	
+	private void selectComboReductionItem(String toSelect)
+	{
+		String[] reductions = comboReductionType.getItems();
+		if (reductions.length > 0)
+		{
+			comboReductionType.select(0);
+			
+			for(int i = 0; i < reductions.length; i++)
+			{
+				if(reductions[i].equals(toSelect))
+				{
+					comboReductionType.select(i);
+					break;
+				}
+			}
+		}
 	}
 	
 	/**
@@ -138,23 +173,10 @@ public class TraceOptionsDialog extends Composite
 			}
 			
 		}
-
-		
-		String reductionStr = readTraceReductionPrefStr();
+	
 		comboReductionType.setItems(reductions);
-		if (reductions.length > 0)
-		{
-			comboReductionType.select(0);
-			
-			for(i = 0; i < reductions.length; i++)
-			{
-				if(reductions[i].equals(reductionStr))
-				{
-					comboReductionType.select(i);
-					break;
-				}
-			}
-		}
+		String reductionStr = readTraceReductionPrefStr();
+		selectComboReductionItem(reductionStr);
 		comboReductionType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 	

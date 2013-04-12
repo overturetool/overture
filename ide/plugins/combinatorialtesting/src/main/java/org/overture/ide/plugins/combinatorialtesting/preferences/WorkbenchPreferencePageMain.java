@@ -38,7 +38,7 @@ IWorkbenchPreferencePage {
 			contents[i] = new String[]{current.getDisplayName(), "" + current.ordinal()};
 		}
 		
-		final ComboFieldEditor traceReductionType = new ComboFieldEditor(ITracesConstants.TRACE_REDUCTION_TYPE , "Reduction type" , contents, getFieldEditorParent());
+		final ComboFieldEditor traceReductionType = new ComboFieldEditor(ITracesConstants.TRACE_REDUCTION_TYPE , "Trace reduction type" , contents, getFieldEditorParent());
 
 		return traceReductionType;
 	}
@@ -55,7 +55,7 @@ IWorkbenchPreferencePage {
 		traceFilteringSeed.setValidRange(Integer.MIN_VALUE, Integer.MAX_VALUE);
 		addField(traceFilteringSeed);
 		
-		IntegerFieldEditor subsetLimitation = new IntegerFieldEditor(ITracesConstants.TRACE_SUBSET_LIMITATION, "Subset limitation", getFieldEditorParent());
+		IntegerFieldEditor subsetLimitation = new IntegerFieldEditor(ITracesConstants.TRACE_SUBSET_LIMITATION, "Subset limitation (%)", getFieldEditorParent());
 		subsetLimitation.setValidRange(1, 100);
 		addField(subsetLimitation);
 	}
