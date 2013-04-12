@@ -68,7 +68,7 @@ public class TraceInterpreter
 		{
 			for (AModuleModules module : ((ModuleInterpreter) interpreter).modules)
 			{
-				if (module.getName().name.equals(moduleName))
+				if (module.getName().getName().equals(moduleName))
 				{
 					definitions = module.getDefs();
 				}
@@ -77,7 +77,7 @@ public class TraceInterpreter
 		{
 			for (SClassDefinition classDefinition : ((ClassInterpreter) interpreter).getClasses())
 			{
-				if (classDefinition.getName().name.equals(moduleName))
+				if (classDefinition.getName().getName().equals(moduleName))
 				{
 					definitions = PDefinitionAssistantTC.getDefinitions(classDefinition);
 					
@@ -119,7 +119,7 @@ public class TraceInterpreter
 				if (definition instanceof ANamedTraceDefinition)
 				{
 					if (traceName == null
-							|| ((ANamedTraceDefinition) definition).getName().name.equals(traceName))
+							|| ((ANamedTraceDefinition) definition).getName().getName().equals(traceName))
 					{
 						interpreter.init(null);
 						Context ctxt = interpreter.getInitialTraceContext((ANamedTraceDefinition) definition, false);
@@ -178,10 +178,10 @@ public class TraceInterpreter
 			throw new Exception("Failed to get tests");
 		}
 
-		processingTrace(className, mtd.getName().name, tests.size());
+		processingTrace(className, mtd.getName().getName(), tests.size());
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.getName().name, mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;
@@ -192,7 +192,7 @@ public class TraceInterpreter
 
 		for (CallSequence test : tests.getTests())
 		{
-			processingTest(className, mtd.getName().name, n, tests.size());
+			processingTest(className, mtd.getName().getName(), n, tests.size());
 			// Bodge until we figure out how to not have explicit op
 			// names.
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
@@ -292,7 +292,7 @@ public class TraceInterpreter
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.getName().name, tests.getTests().size(), faildCount, inconclusiveCount, skippedCount);
+		processingTraceFinished(className, mtd.getName().getName(), tests.getTests().size(), faildCount, inconclusiveCount, skippedCount);
 	}
 
 	protected void processingTraceFinished(String className, String name,
