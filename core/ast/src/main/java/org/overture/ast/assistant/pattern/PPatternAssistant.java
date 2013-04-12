@@ -3,8 +3,8 @@ package org.overture.ast.assistant.pattern;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -23,7 +23,7 @@ public class PPatternAssistant {
 	}
 	
 	private static LexNameList getVariableNamesBaseCase(PPattern pattern) {
-		Set<LexNameToken> set = new HashSet<LexNameToken>();
+		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
 		set.addAll(getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);

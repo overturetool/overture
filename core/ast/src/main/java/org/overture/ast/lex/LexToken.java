@@ -31,6 +31,7 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.Node;
 
@@ -39,7 +40,7 @@ import org.overture.ast.node.Node;
  * The parent class for all lexical token types.
  */
 
- public  class LexToken extends Node implements Serializable
+ public  class LexToken extends Node implements ILexToken, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +50,18 @@ import org.overture.ast.node.Node;
 	public final VDMToken type;
 
 	
+	
+	
+	
+
+	@Override
+	public VDMToken getType()
+	{
+		return type;
+	}
+
+
+
 	public LexLocation getLocation(){
 	    return location;
 	}
@@ -113,22 +126,22 @@ import org.overture.ast.node.Node;
 
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexToken(this);
+		analysis.caseILexToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexToken(this);
+		return caller.caseILexToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexToken(this, question);
+		caller.caseILexToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexToken(this, question);
+		return caller.caseILexToken(this, question);
 	}
 
 	@Override

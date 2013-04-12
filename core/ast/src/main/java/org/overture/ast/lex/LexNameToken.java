@@ -12,11 +12,12 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.PTypeAssistant;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
-public class LexNameToken extends LexToken implements Serializable
+public class LexNameToken extends LexToken implements ILexNameToken, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +29,39 @@ public class LexNameToken extends LexToken implements Serializable
 	public List<PType> typeQualifier = null;
 
 	private int hashcode = 0;
+
+	
+	
+
+
+
+	@Override
+	public boolean getExplicit()
+	{
+		return explicit;
+	}
+
+
+
+
+
+
+
+	@Override
+	public boolean getOld()
+	{
+		return old;
+	}
+
+
+
+
+	@Override
+	public List<PType> typeQualifier()
+	{
+		return typeQualifier;
+	}
+
 
 	public LexNameToken(String module, String name, LexLocation location,
 			boolean old, boolean explicit)
@@ -135,7 +169,7 @@ public class LexNameToken extends LexToken implements Serializable
 		}
 	}
 
-	public static LexNameToken getThreadName(LexLocation loc)
+	public LexNameToken getThreadName(LexLocation loc)
 	{
 		return new LexNameToken(loc.module, "thread", loc);
 	}
@@ -205,10 +239,10 @@ public class LexNameToken extends LexToken implements Serializable
 		return matches(lother);
 	}
 
-	public boolean matches(LexNameToken other)
+	public boolean matches(ILexNameToken other)
 	{
-		return module.equals(other.module) && name.equals(other.name)
-				&& old == other.old;
+		return module.equals(other.getModule()) && name.equals(other.getName())
+				&& old == other.getOld();
 	}
 
 	@Override
@@ -238,7 +272,8 @@ public class LexNameToken extends LexToken implements Serializable
 		return c;
 	}
 
-	public int compareTo(LexNameToken o)
+
+	public int compareTo(ILexNameToken o)
 	{
 		return toString().compareTo(o.toString());
 	}
@@ -272,25 +307,25 @@ public class LexNameToken extends LexToken implements Serializable
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException
 	{
-		analysis.caseLexNameToken(this);
+		analysis.caseILexNameToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException
 	{
-		return caller.caseLexNameToken(this);
+		return caller.caseILexNameToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
 	{
-		caller.caseLexNameToken(this, question);
+		caller.caseILexNameToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException
 	{
-		return caller.caseLexNameToken(this, question);
+		return caller.caseILexNameToken(this, question);
 	}
 	
 	/**
