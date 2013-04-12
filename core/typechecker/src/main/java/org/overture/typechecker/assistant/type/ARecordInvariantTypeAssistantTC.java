@@ -77,7 +77,7 @@ public class ARecordInvariantTypeAssistantTC {
 		else
 		{
 			// Local typenames aren't qualified with the local module name
-			return (exptype.getName().name.equals(typename)) ? exptype : null;
+			return (exptype.getName().getName().equals(typename)) ? exptype : null;
 		}
 	}
 

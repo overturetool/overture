@@ -94,7 +94,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (m1 != m2 && m1.getName().equals(m2.getName()))
 				{
-					TypeChecker.report(3429, "Module " + m1.getName() + " duplicates " + m2.getName(), m1.getName().location);
+					TypeChecker.report(3429, "Module " + m1.getName() + " duplicates " + m2.getName(), m1.getName().getLocation());
 				}
 			}
 			
@@ -106,7 +106,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (hasFlat && Settings.release == Release.CLASSIC)
 				{
-					TypeChecker.report(3308, "Cannot mix modules and flat specifications", m1.getName().location);
+					TypeChecker.report(3308, "Cannot mix modules and flat specifications", m1.getName().getLocation());
 				}
 			}
 

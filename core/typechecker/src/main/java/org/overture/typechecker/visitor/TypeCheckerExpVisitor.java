@@ -21,6 +21,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexRealToken;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -1096,13 +1097,13 @@ public class TypeCheckerExpVisitor extends
 		if (PTypeAssistantTC.isRecord(root)) {
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(root);
 			AFieldField cf = ARecordInvariantTypeAssistantTC.findField(rec,
-					node.getField().name);
+					node.getField().getName());
 
 			if (cf != null) {
 				results.add(cf.getType());
 			} else {
 				TypeCheckerErrors.concern(unique, 3090,
-						"Unknown field " + node.getField().name + " in record "
+						"Unknown field " + node.getField().getName() + " in record "
 								+ rec.getName(), node.getField().getLocation(),
 						node.getField());
 			}
@@ -1112,7 +1113,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (question.env.isVDMPP() && PTypeAssistantTC.isClass(root)) {
 			AClassType cls = PTypeAssistantTC.getClassType(root);
-			LexNameToken memberName = node.getMemberName();
+			ILexNameToken memberName = node.getMemberName();
 
 			if (memberName == null) {
 				memberName = AClassTypeAssistantTC.getMemberName(cls,
@@ -1135,7 +1136,7 @@ public class TypeCheckerExpVisitor extends
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 
-			if (fdef == null && memberName.typeQualifier == null) {
+			if (fdef == null && memberName.getTypeQualifier() == null) {
 				// We might be selecting a bare function or operation, without
 				// applying it (ie. no qualifiers). In this case, if there is
 				// precisely one possibility, we choose it.
@@ -1155,7 +1156,7 @@ public class TypeCheckerExpVisitor extends
 
 			if (fdef == null) {
 				TypeCheckerErrors.concern(unique, 3091, "Unknown member "
-						+ memberName + " of class " + cls.getName().name, node
+						+ memberName + " of class " + cls.getName().getName(), node
 						.getField().getLocation(), node.getField());
 
 				if (unique) {
@@ -1175,10 +1176,10 @@ public class TypeCheckerExpVisitor extends
 
 				results.add(PDefinitionAssistantTC.getType(fdef));
 				// At runtime, type qualifiers must match exactly
-				memberName.setTypeQualifier(fdef.getName().typeQualifier);
+				memberName.setTypeQualifier(fdef.getName().getTypeQualifier());
 			} else {
 				TypeCheckerErrors.concern(unique, 3092, "Inaccessible member "
-						+ memberName + " of class " + cls.getName().name, node
+						+ memberName + " of class " + cls.getName().getName(), node
 						.getField().getLocation(), node.getField());
 			}
 
@@ -1187,7 +1188,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (results.isEmpty()) {
 			if (!recOrClass) {
-				TypeCheckerErrors.report(3093, "Field '" + node.getField().name
+				TypeCheckerErrors.report(3093, "Field '" + node.getField().getName()
 						+ "' applied to non-aggregate type", node.getObject()
 						.getLocation(), node.getObject());
 			}
@@ -1293,7 +1294,7 @@ public class TypeCheckerExpVisitor extends
 				for (PDefinition def : t.getDefinitions()) // Possibly a union
 															// of several
 				{
-					List<LexNameToken> typeParams = null;
+					List<ILexNameToken> typeParams = null;
 					def = PDefinitionAssistantTC.deref(def);
 
 					if (def instanceof AExplicitFunctionDefinition) {
@@ -1383,7 +1384,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAHistoryExp(AHistoryExp node, TypeCheckInfo question) {
 		SClassDefinition classdef = question.env.findClassDefinition();
 
-		for (LexNameToken opname : node.getOpnames()) {
+		for (ILexNameToken opname : node.getOpnames()) {
 			int found = 0;
 
 			for (PDefinition def : classdef.getDefinitions()) {
@@ -1393,23 +1394,23 @@ public class TypeCheckerExpVisitor extends
 					if (!PDefinitionAssistantTC.isCallableOperation(def)) {
 						TypeCheckerErrors.report(3105, opname
 								+ " is not an explicit operation",
-								opname.location, opname);
+								opname.getLocation(), opname);
 					}
 				}
 			}
 
 			if (found == 0) {
 				TypeCheckerErrors.report(3106, opname + " is not in scope",
-						opname.location, opname);
+						opname.getLocation(), opname);
 			} else if (found > 1) {
 				TypeCheckerErrors.warning(5004,
 						"History expression of overloaded operation",
-						opname.location, opname);
+						opname.getLocation(), opname);
 			}
 
-			if (opname.name.equals(classdef.getName().name)) {
+			if (opname.getName().equals(classdef.getName().getName())) {
 				TypeCheckerErrors.report(3107,
-						"Cannot use history of a constructor", opname.location,
+						"Cannot use history of a constructor", opname.getLocation(),
 						opname);
 			}
 		}
@@ -1511,7 +1512,7 @@ public class TypeCheckerExpVisitor extends
 					rootVisitor, question);
 		}
 
-		LexNameToken typename = node.getTypeName();
+		ILexNameToken typename = node.getTypeName();
 
 		if (typename != null) {
 			PDefinition typeFound = question.env.findType(typename,
@@ -1536,7 +1537,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (question.env.findType(node.getBaseClass(), null) == null) {
 			TypeCheckerErrors.report(3114,
-					"Undefined base class type: " + node.getBaseClass().name,
+					"Undefined base class type: " + node.getBaseClass().getName(),
 					node.getLocation(), node);
 		}
 
@@ -1556,12 +1557,12 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAIsOfClassExp(AIsOfClassExp node, TypeCheckInfo question)
 			throws AnalysisException {
 
-		LexNameToken classname = node.getClassName();
+		ILexNameToken classname = node.getClassName();
 		PDefinition cls = question.env.findType(classname, null);
 
 		if (cls == null || !(cls instanceof SClassDefinition)) {
 			TypeCheckerErrors.report(3115, "Undefined class type: "
-					+ classname.name, node.getLocation(), node);
+					+ classname.getName(), node.getLocation(), node);
 		} else {
 			node.setClassType((AClassType) cls.getType());
 		}
@@ -1874,7 +1875,7 @@ public class TypeCheckerExpVisitor extends
 			return rec;
 		}
 
-		if (node.getTypeName().explicit) {
+		if (node.getTypeName().getExplicit()) {
 			// If the type name is explicit, the Type ought to have an explicit
 			// name. This only really affects trace expansion.
 
@@ -1942,7 +1943,7 @@ public class TypeCheckerExpVisitor extends
 				PType mtype = rm.getValue().apply(rootVisitor, question);
 				modTypes.add(mtype);
 				AFieldField f = ARecordInvariantTypeAssistantTC.findField(
-						node.getRecordType(), rm.getTag().name);
+						node.getRecordType(), rm.getTag().getName());
 
 				if (f != null) {
 					if (!TypeComparator.compatible(f.getType(), mtype)) {
@@ -2401,8 +2402,8 @@ public class TypeCheckerExpVisitor extends
 
 				if (PTypeAssistantTC.isRecord(rhs)) {
 					ARecordInvariantType rt = PTypeAssistantTC.getRecord(rhs);
-					canBeExecuted = rt.getName().name.equals(node.getState()
-							.getName().name);
+					canBeExecuted = rt.getName().getName().equals(node.getState()
+							.getName().getName());
 				}
 			}
 		} else {
@@ -2516,7 +2517,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAVariableExp(AVariableExp node, TypeCheckInfo question) {
 
 		Environment env = question.env;
-		LexNameToken name = node.getName();
+		ILexNameToken name = node.getName();
 
 		if (env.isVDMPP()) {
 
@@ -2530,7 +2531,7 @@ public class TypeCheckerExpVisitor extends
 							true)) {
 						TypeCheckerErrors.report(3180, "Inaccessible member "
 								+ name + " of class "
-								+ vardef.getClassDefinition().getName().name,
+								+ vardef.getClassDefinition().getName().getName(),
 								node.getLocation(), node);
 						node.setType(AstFactory.newAUnknownType(node
 								.getLocation()));
@@ -2572,7 +2573,7 @@ public class TypeCheckerExpVisitor extends
 						if (vardef != null) {
 							TypeCheckerErrors.report(3269,
 									"Ambiguous function/operation name: "
-											+ name.name, node.getLocation(),
+											+ name.getName(), node.getLocation(),
 									node);
 							env.listAlternatives(name);
 							break;

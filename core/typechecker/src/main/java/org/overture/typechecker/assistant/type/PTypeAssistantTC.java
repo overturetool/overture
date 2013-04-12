@@ -6,7 +6,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ABracketType;
@@ -82,7 +82,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static PType polymorph(PType type, LexNameToken pname,
+	public static PType polymorph(PType type, ILexNameToken pname,
 			PType actualType)
 	{
 		switch (type.kindPType())

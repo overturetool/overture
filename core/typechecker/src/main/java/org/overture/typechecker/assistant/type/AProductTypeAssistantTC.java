@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
@@ -82,7 +82,7 @@ public class AProductTypeAssistantTC {
 		return true;
 	}
 
-	public static PType polymorph(AProductType type, LexNameToken pname,
+	public static PType polymorph(AProductType type, ILexNameToken pname,
 			PType actualType) {
 		List<PType> polytypes = new Vector<PType>();
 

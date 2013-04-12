@@ -13,8 +13,8 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
@@ -34,7 +34,7 @@ public class PDefinitionListAssistantTC {
 	}
 	
 	public static PDefinition findName(List<PDefinition> definitions,
-			LexNameToken name, NameScope scope) {
+			ILexNameToken name, NameScope scope) {
 		for (PDefinition d : definitions) {
 			PDefinition def = PDefinitionAssistantTC.findName(d, name, scope);
 
@@ -66,7 +66,7 @@ public class PDefinitionListAssistantTC {
 	}
 	
 	public static Set<PDefinition> findMatches(List<PDefinition> definitions,
-			LexNameToken name) {
+			ILexNameToken name) {
 
 		Set<PDefinition> set = new HashSet<PDefinition>();
 
@@ -134,7 +134,7 @@ public class PDefinitionListAssistantTC {
 	}
 
 	public static PDefinition findType(LinkedList<PDefinition> actualDefs,
-			LexNameToken name, String fromModule)
+			ILexNameToken name, String fromModule)
 	{
 		for (PDefinition d: actualDefs)
 		{

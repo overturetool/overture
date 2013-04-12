@@ -5,14 +5,14 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 
 public class AImportedDefinitionAssistantTC {
 
 	public static PDefinition findType(AImportedDefinition d,
-			LexNameToken sought, String fromModule) {
+			ILexNameToken sought, String fromModule) {
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 		
@@ -33,7 +33,7 @@ public class AImportedDefinitionAssistantTC {
 	}
 
 	public static PDefinition findName(AImportedDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		PDefinition def =  PDefinitionAssistantTC.findName(d.getDef(), sought, scope);
 

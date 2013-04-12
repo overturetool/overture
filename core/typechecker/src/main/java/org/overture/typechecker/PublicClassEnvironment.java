@@ -31,7 +31,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -81,9 +81,9 @@ public class PublicClassEnvironment extends Environment
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
-
+ 
 	@Override
-	public PDefinition findName(LexNameToken name, NameScope scope)
+	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findName(classes,name, scope);
 
@@ -96,7 +96,7 @@ public class PublicClassEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findType(LexNameToken name, String fromModule)
+	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findType(classes,name);
 
@@ -109,7 +109,7 @@ public class PublicClassEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(LexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
 		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes,name);
 

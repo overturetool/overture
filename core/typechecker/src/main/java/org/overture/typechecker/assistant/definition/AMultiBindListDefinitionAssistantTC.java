@@ -7,8 +7,8 @@ import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -16,7 +16,7 @@ import org.overture.ast.types.PType;
 public class AMultiBindListDefinitionAssistantTC {
 
 	public static PDefinition findName(AMultiBindListDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		if (d.getDefs() != null)
 		{

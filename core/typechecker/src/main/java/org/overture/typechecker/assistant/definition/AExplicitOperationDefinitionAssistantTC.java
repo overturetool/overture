@@ -16,6 +16,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
@@ -48,7 +49,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 	}
 
 	public static PDefinition findName(AExplicitOperationDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
@@ -156,7 +157,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 		if (!( ((AOperationType)d.getType()).getResult() instanceof AVoidType))
 		{
     		LexNameToken result =
-    			new LexNameToken(d.getName().module, "RESULT", d.getLocation());
+    			new LexNameToken(d.getName().getModule(), "RESULT", d.getLocation());
     		plist.add(AstFactory.newAIdentifierPattern(result));
 		}
 		
