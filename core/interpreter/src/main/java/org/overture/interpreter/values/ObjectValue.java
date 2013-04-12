@@ -34,8 +34,8 @@ import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -186,10 +186,10 @@ public class ObjectValue extends Value
 		periodicCount--;
 	}
 
-	public synchronized Value get(LexNameToken field, boolean explicit)
+	public synchronized Value get(ILexNameToken field, boolean explicit)
 	{
-		LexNameToken localname =
-			explicit ? field : field.getModifiedName(type.getName().name);
+		ILexNameToken localname =
+			explicit ? field : field.getModifiedName(type.getName().getName());
 
 		// This is another case where we have to iterate with equals()
 		// rather than using the map's hash, because the hash doesn't
@@ -201,7 +201,7 @@ public class ObjectValue extends Value
 
 		if (rv == null)
 		{
-    		for (LexNameToken var: members.keySet())
+    		for (ILexNameToken var: members.keySet())
     		{
     			if (HelpLexNameToken.isEqual( var,localname))
     			{
@@ -229,7 +229,7 @@ public class ObjectValue extends Value
 		return null;
 	}
 
-	public ValueList getOverloads(LexNameToken field)
+	public ValueList getOverloads(ILexNameToken field)
 	{
 		ValueList list = new ValueList();
 
@@ -237,7 +237,7 @@ public class ObjectValue extends Value
 		// rather than using the map's hash, because the hash includes the
 		// overloaded type qualifiers...
 
-		for (LexNameToken var: members.keySet())
+		for (ILexNameToken var: members.keySet())
 		{
 			if (var.matches(field))		// Ignore type qualifiers
 			{
@@ -307,7 +307,7 @@ public class ObjectValue extends Value
 		sb.append(type.toString());
 		sb.append("{#" + objectReference);
 
-		for (LexNameToken name: members.keySet())
+		for (ILexNameToken name: members.keySet())
 		{
 			Value ov = members.get(name);
 			Value v = ov.deref();
@@ -316,7 +316,7 @@ public class ObjectValue extends Value
 				!(v instanceof OperationValue))
 			{
 				sb.append(", ");
-				sb.append(name.name);
+				sb.append(name.getName());
 
 				if (ov instanceof UpdatableValue)
 				{
@@ -418,7 +418,7 @@ public class ObjectValue extends Value
    					new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
    		}
 
-		for (LexNameToken name: members.keySet())
+		for (ILexNameToken name: members.keySet())
 		{
 			Value mv = members.get(name);
 
@@ -473,10 +473,10 @@ public class ObjectValue extends Value
 		ValueMap values = new ValueMap();
 		ObjectContext ctxt = new ObjectContext(type.getLocation(), "Old Object Creation", null, this);
 
-		for (LexNameToken name: oldnames)
+		for (ILexNameToken name: oldnames)
 		{
 			Value mv = ctxt.check(name.getNewName()).deref();
-			SeqValue sname = new SeqValue(name.name);
+			SeqValue sname = new SeqValue(name.getName());
 
 			if (mv instanceof ObjectValue)
 			{

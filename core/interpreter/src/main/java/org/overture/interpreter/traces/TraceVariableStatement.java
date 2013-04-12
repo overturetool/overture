@@ -51,14 +51,14 @@ public class TraceVariableStatement extends PStmBase
 	@SuppressWarnings("deprecation")
 	public TraceVariableStatement(TraceVariable var)
 	{
-		super(var.name.location);
+		super(var.name.getLocation());
 		this.var = var;
 	}
 
 	public void typeCheck(Environment env, NameScope scope)
 	{
 		FlatEnvironment flat = (FlatEnvironment)env;
-		flat.add(AstFactoryTC.newALocalDefinition(var.name.location, var.name, scope, var.type));
+		flat.add(AstFactoryTC.newALocalDefinition(var.name.getLocation(), var.name, scope, var.type));
 		//return var.type;
 	}
 	

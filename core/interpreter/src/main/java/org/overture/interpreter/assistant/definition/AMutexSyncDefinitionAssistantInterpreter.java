@@ -3,10 +3,10 @@ package org.overture.interpreter.assistant.definition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
@@ -16,7 +16,7 @@ public class AMutexSyncDefinitionAssistantInterpreter extends
 {
 
 	public static PExp getExpression(AMutexSyncDefinition sync,
-			LexNameToken excluding)
+			ILexNameToken excluding)
 	{
 		LexNameList list = null;
 

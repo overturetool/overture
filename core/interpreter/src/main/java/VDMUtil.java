@@ -88,7 +88,7 @@ public class VDMUtil
 		if (a instanceof ObjectValue)
 		{
 			ObjectValue obj = (ObjectValue)a;
-			return new SeqValue(obj.type.getName().name);
+			return new SeqValue(obj.type.getName().getName());
 		}
 		else
 		{

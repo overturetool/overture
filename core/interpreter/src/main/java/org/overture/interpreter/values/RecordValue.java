@@ -151,8 +151,8 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(type,nvp.name.name);
-			this.fieldmap.add(nvp.name.name, nvp.value, !f.getEqualityAbstraction());
+			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(type,nvp.name.getName());
+			this.fieldmap.add(nvp.name.getName(), nvp.value, !f.getEqualityAbstraction());
 		}
 	}
 

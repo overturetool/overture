@@ -3,7 +3,7 @@ package org.overture.interpreter.assistant.pattern;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -47,7 +47,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 
 		for (int i=0; i<count; i++)
 		{
-			LexNameToken iname = ids.get(i).getName();
+			ILexNameToken iname = ids.get(i).getName();
 
 			for (int j=i+1; j<count; j++)
 			{

@@ -25,8 +25,8 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.values.Value;
 
 
@@ -83,7 +83,7 @@ public class StateContext extends RootContext
 	 */
 
 	@Override
-	public Value check(LexNameToken name)
+	public Value check(ILexNameToken name)
 	{
 		Value v = get(name);
 

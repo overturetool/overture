@@ -123,7 +123,7 @@ public class PeriodicThread extends SchedulablePoolThread
 			// VDM++ does not use the ALARM wakeup method of  VDM-RT, so
 			// we make a busy wait until the time is expected.
 
-			waitUntil(expected, ctxt, operation.name.location);
+			waitUntil(expected, ctxt, operation.name.getLocation());
 		}
 
 		if (Settings.usingDBGP)
@@ -161,19 +161,19 @@ public class PeriodicThread extends SchedulablePoolThread
     			if (Properties.rt_max_periodic_overlaps > 0 &&
     				overlaps >= Properties.rt_max_periodic_overlaps)
     			{
-    				throw new ContextException(68, "Periodic threads overlapping", operation.name.location, ctxt);
+    				throw new ContextException(68, "Periodic threads overlapping", operation.name.getLocation(), ctxt);
     			}
 
         		operation.localEval(
-        			operation.name.location, new ValueList(), ctxt, true);
+        			operation.name.getLocation(), new ValueList(), ctxt, true);
 
         		ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
         		object.decPeriodicCount();
     		}
     		catch (ValueException e)
     		{
-    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
-    			throw new ContextException(e, operation.name.location);
+    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
+    			throw new ContextException(e, operation.name.getLocation());
     		}
 		}
 		catch (ContextException e)
@@ -204,13 +204,13 @@ public class PeriodicThread extends SchedulablePoolThread
 			if (Properties.rt_max_periodic_overlaps > 0 &&
 				overlaps >= Properties.rt_max_periodic_overlaps)
 			{
-				throw new ContextException(68, "Periodic threads overlapping", operation.name.location, ctxt);
+				throw new ContextException(68, "Periodic threads overlapping", operation.name.getLocation(), ctxt);
 			}
 
     		ctxt.setThreadState(null, object.getCPU());
 
     		operation.localEval(
-    			operation.name.location, new ValueList(), ctxt, true);
+    			operation.name.getLocation(), new ValueList(), ctxt, true);
 
     		object.decPeriodicCount();
 		}
@@ -218,13 +218,13 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
 		}
 		catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
 		}
 		catch (Exception e)
 		{

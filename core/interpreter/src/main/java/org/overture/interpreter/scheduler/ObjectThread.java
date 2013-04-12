@@ -61,7 +61,7 @@ public class ObjectThread extends SchedulablePoolThread
 		this.title =
 			"Thread " + getId() +
 			", self #" + object.objectReference +
-			", class " + object.type.getName().name;
+			", class " + object.type.getName().getName();
 
 		this.ctxt = new ObjectContext(location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
@@ -105,7 +105,7 @@ public class ObjectThread extends SchedulablePoolThread
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
 		}
 		catch (ContextException e)
 		{

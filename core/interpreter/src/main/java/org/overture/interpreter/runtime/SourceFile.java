@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.VDMJ;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.BacktrackInputReader;
@@ -209,7 +209,7 @@ public class SourceFile
 		LexNameList spans = LexLocation.getSpanNames(filename);
 		Collections.sort(spans);
 
-		for (LexNameToken name: spans)
+		for (ILexNameToken name: spans)
 		{
 			long calls = LexLocation.getSpanCalls(name);
 			total += calls;

@@ -31,7 +31,7 @@ public class APostOpExpAssistant
 
 	public static ObjectValue findObject(APostOpExp node, String classname, ObjectValue object)
 	{
-		if (object.type.getName().name.equals(classname))
+		if (object.type.getName().getName().equals(classname))
 		{
 			return object;
 		}

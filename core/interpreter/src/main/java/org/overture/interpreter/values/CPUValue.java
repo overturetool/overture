@@ -28,7 +28,7 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactoryTC;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.scheduler.CPUResource;
@@ -86,7 +86,7 @@ public class CPUValue extends ObjectValue
 
 		for (ObjectValue obj: deployed)
 		{
-			for (LexNameToken m: obj.members.keySet())
+			for (ILexNameToken m: obj.members.keySet())
 			{
 				// Set priority for all overloads of opname
 

@@ -38,8 +38,8 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
@@ -126,7 +126,7 @@ public class Delegate implements Serializable
 
 			for (PDefinition d: definitions)
 			{
-				if (d.getName().name.equals(mname))
+				if (d.getName().getName().equals(mname))
 				{
     	 			if (PDefinitionAssistantTC.isOperation(d))
     	 			{
@@ -231,7 +231,7 @@ public class Delegate implements Serializable
 		Object[] avals = new Object[anames.size()];
 		int a = 0;
 
-		for (LexNameToken arg: anames)
+		for (ILexNameToken arg: anames)
 		{
 			avals[a++] = ctxt.get(arg);
 		}

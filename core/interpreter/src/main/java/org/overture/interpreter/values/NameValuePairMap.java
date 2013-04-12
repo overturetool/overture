@@ -26,7 +26,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
@@ -68,11 +68,11 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 		}
 	}
 
-	public ValueList getOverloads(LexNameToken sought)
+	public ValueList getOverloads(ILexNameToken sought)
 	{
 		ValueList list = new ValueList();
 
-		for (Entry<LexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry: this.entrySet())
 		{
 			if (entry.getKey().matches(sought))		// All overloaded names
 			{
@@ -87,7 +87,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		NameValuePairList list = new NameValuePairList();
 
-		for (Entry<LexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry: this.entrySet())
 		{
 			list.add(new NameValuePair(entry.getKey(), entry.getValue()));
 		}
@@ -100,7 +100,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		NameValuePairMap copy = new NameValuePairMap();
 
-		for (Entry<LexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry: this.entrySet())
 		{
 			copy.put(entry.getKey(), (Value)entry.getValue().clone());
 		}
@@ -115,7 +115,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 
 		if (rv == null)
 		{
-    		for (LexNameToken var: keySet())
+    		for (ILexNameToken var: keySet())
     		{
     			if (HelpLexNameToken.isEqual(var, name))
     			{

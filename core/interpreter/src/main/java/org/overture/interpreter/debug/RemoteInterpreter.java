@@ -162,7 +162,7 @@ public class RemoteInterpreter
 		{
 			for (AModuleModules m: ((ModuleInterpreter)interpreter).getModules())
 			{
-				names.add(m.getName().name);
+				names.add(m.getName().getName());
 			}
 		}
 
@@ -177,7 +177,7 @@ public class RemoteInterpreter
 		{
 			for (SClassDefinition def: ((ClassInterpreter)interpreter).getClasses())
 			{
-				names.add(def.getName().name);
+				names.add(def.getName().getName());
 			}
 		}
 		else

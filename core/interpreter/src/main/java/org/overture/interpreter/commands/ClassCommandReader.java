@@ -82,13 +82,13 @@ public class ClassCommandReader extends CommandReader
 
 		for (SClassDefinition c: classes)
 		{
-			if (c.getName().name.equals(def))
+			if (c.getName().getName().equals(def))
 			{
-				println(c.getName().name + " (default)");
+				println(c.getName().getName() + " (default)");
 			}
 			else
 			{
-				println(c.getName().name);
+				println(c.getName().getName());
 			}
 		}
 
