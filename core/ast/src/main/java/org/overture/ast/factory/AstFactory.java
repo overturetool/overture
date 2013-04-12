@@ -49,6 +49,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -2777,7 +2778,7 @@ public class AstFactory {
 	}
 
 	public static AExternalDefinition newAExternalDefinition(PDefinition state,
-			LexToken mode) {
+			ILexToken mode) {
 		AExternalDefinition result = new AExternalDefinition();
 		initDefinition(result, Pass.DEFS, state.getLocation(), state.getName(), NameScope.STATE);
 		

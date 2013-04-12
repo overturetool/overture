@@ -12,6 +12,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.PTypeAssistant;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.PType;
@@ -78,7 +79,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		this(module, name, location, false, false);
 	}
 
-	public LexNameToken(String module, LexIdentifierToken id)
+	public LexNameToken(String module, ILexIdentifierToken id)
 	{
 		super(id.getLocation(), VDMToken.NAME);
 		this.module = module;

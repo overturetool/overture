@@ -4,7 +4,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 
-public interface ILexToken extends INode
+public interface ILexToken extends INode, Comparable<INode>
 {
 
 
