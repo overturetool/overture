@@ -27,7 +27,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
@@ -46,10 +48,12 @@ public class TraceOptionsDialog extends Composite
 	//private Combo comboSubset = null;
 	private Spinner subsetSpinner = null;
 	private Spinner seedSpinner = null;
-
+	private static TraceOptionsDisplayState displayState = null;
+	
 	public TraceOptionsDialog(Composite parent, int style) {
 		super(parent, style);
 		initialize();
+		loadDisplayState();
 	}
 
 	private void initialize()
@@ -94,6 +98,22 @@ public class TraceOptionsDialog extends Composite
 				seed= seedSpinner.getSelection();
 				reductionType= TraceReductionType.findValue(comboReductionType.getText());
 				getShell().close();
+			}
+		});
+		
+		this.addListener(SWT.Dispose, new Listener()
+		{
+			
+			@Override
+			public void handleEvent(Event event)
+			{
+				
+				//Note that the 'GUI types' are used, i.e. the spinner uses int etc.
+				int subset= subsetSpinner.getSelection();
+				int seed= seedSpinner.getSelection();
+				String reductionType= comboReductionType.getText();
+				
+				displayState = new TraceOptionsDisplayState(subset, seed, reductionType);
 			}
 		});
 	}
@@ -216,5 +236,28 @@ public class TraceOptionsDialog extends Composite
 	{
 		return reductionType;
 	}
-
+	
+	private void loadDisplayState()
+	{
+		//The previously typed data have higher priority than what is contained in the preference store
+		if(displayState != null)
+		{
+			subsetSpinner.setSelection(displayState.getSubset());
+			seedSpinner.setSelection(displayState.getSeed());
+			
+			String previousReductionType = displayState.getReductionType();
+			final int ITEM_COUNT = comboReductionType.getItemCount();
+			for(int i = 0; i < ITEM_COUNT; i++)
+			{
+				String currentItem = comboReductionType.getItem(i);
+				
+				if(currentItem.equals(previousReductionType))
+				{
+					comboReductionType.select(i);
+					break;
+				}
+				
+			}
+		}
+	}
 } // @jve:decl-index=0:visual-constraint="10,10"
