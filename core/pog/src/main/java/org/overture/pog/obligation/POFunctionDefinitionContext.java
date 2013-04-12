@@ -29,7 +29,7 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
@@ -38,7 +38,7 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 
 public class POFunctionDefinitionContext extends POContext
 {
-	public final LexNameToken name;
+	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final List<List<PPattern>> paramPatternList;
 	public final boolean addPrecond;
