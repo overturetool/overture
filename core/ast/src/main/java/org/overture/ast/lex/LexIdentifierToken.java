@@ -9,6 +9,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 
 public class LexIdentifierToken extends LexToken implements ILexIdentifierToken
 {
@@ -31,7 +32,7 @@ public class LexIdentifierToken extends LexToken implements ILexIdentifierToken
 		this.old = old;
 	}
 
-	public LexNameToken getClassName()
+	public ILexNameToken getClassName()
 	{
 		// We don't know the class name of the name of a class until we've
 		// read the name. So create a new location with the right module.

@@ -3,7 +3,6 @@ package org.overture.ast.intf.lex;
 import java.util.List;
 
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.PType;
 
 public interface ILexNameToken extends ILexToken
@@ -17,7 +16,7 @@ public interface ILexNameToken extends ILexToken
 
 	boolean getExplicit();
 
-	LexNameToken clone();
+	ILexNameToken clone();
 
 	ILexNameToken getExplicit(boolean ex);
 

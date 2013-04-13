@@ -290,7 +290,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	}
 
 	@Override
-	public LexNameToken clone()
+	public ILexNameToken clone()
 	{
 		return copy();
 	}
