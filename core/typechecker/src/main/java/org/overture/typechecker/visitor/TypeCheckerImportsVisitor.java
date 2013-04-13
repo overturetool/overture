@@ -7,7 +7,6 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
@@ -116,7 +115,7 @@ public class TypeCheckerImportsVisitor extends
 			List<PDefinition> defs = new Vector<PDefinition>();
 
 			for (ILexNameToken pname : node.getTypeParams()) {
-				LexNameToken pnameClone = pname.clone();
+				ILexNameToken pnameClone = pname.clone();
 				PDefinition p = AstFactory.newALocalDefinition(pname.getLocation(),
 						pnameClone, NameScope.NAMES,
 						AstFactory.newAParameterType(pnameClone));

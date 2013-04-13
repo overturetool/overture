@@ -30,6 +30,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexNameList;
@@ -110,7 +111,7 @@ public class ClassReader extends SyntaxReader
 			setCurrentModule("");
 			nextToken();
 			LexIdentifierToken classId = readIdToken("Expecting class ID");
-			LexNameToken className = classId.getClassName();
+			ILexNameToken className = classId.getClassName();
 			setCurrentModule(classId.getName());
 
 			if (lastToken().is(VDMToken.IS))
@@ -162,7 +163,7 @@ public class ClassReader extends SyntaxReader
 			setCurrentModule("");
 			nextToken();
 			LexIdentifierToken classId = readIdToken("Expecting class ID");
-			LexNameToken className = classId.getClassName();
+			ILexNameToken className = classId.getClassName();
 			setCurrentModule(classId.getName());
 
 			if (lastToken().is(VDMToken.IS))

@@ -5,7 +5,7 @@ import java.util.List;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
 
-public interface ILexNameToken extends ILexToken
+public interface ILexNameToken extends ILexIdentifierToken
 {
 
 	int compareTo(ILexNameToken o);
