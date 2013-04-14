@@ -1277,7 +1277,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static PExp newAFieldExp(PExp object, LexIdentifierToken field) {
+	public static PExp newAFieldExp(PExp object, ILexIdentifierToken field) {
 		AFieldExp result = new AFieldExp();
 		result.setLocation(object.getLocation());
 		result.setObject(object);
