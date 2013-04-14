@@ -83,16 +83,12 @@ mutex(handleRadarWarningEvent,handleFOWarningEvent);
 
 thread
  (
-  start(new ClockTick(threadid));
   while World`timerRef.GetTime() < simtime do
    (updateFOs();
               
     if updating
-    then (World`timerRef.WaitRelative(0);
+    then (World`timerRef.WaitRelative(1);
           updating := false);
-          
-    World`timerRef.NotifyAndIncTime();
-    World`timerRef.Awake();
    );
   busy := false; 
   )

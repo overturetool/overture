@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.uml2.uml.Artifact;
 import org.eclipse.uml2.uml.CommunicationPath;
 import org.eclipse.uml2.uml.Model;
@@ -28,8 +27,6 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
-import org.overture.ide.plugins.uml2.Activator;
-import org.overture.ide.plugins.uml2.IUml2Constants;
 import org.overture.ide.plugins.uml2.UmlConsole;
 
 public class UmlDeploymentCreator
@@ -38,15 +35,15 @@ public class UmlDeploymentCreator
 	private UmlConsole console;
 	private boolean deployArtifactsOutsideNodes = true;
 
-	public UmlDeploymentCreator(Model model, UmlConsole console)
+	public UmlDeploymentCreator(Model model, UmlConsole console,boolean deployArtifactsOutsideNodes)
 	{
 		this.modelWorkingCopy = model;
 		this.console = console;
-		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
-		if (preferences != null)
-		{
-			this.deployArtifactsOutsideNodes = preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
-		}
+//		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+//		if (preferences != null)
+//		{
+//			this.deployArtifactsOutsideNodes = preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
+//		}
 	}
 
 	public void buildDeployment(List<SClassDefinition> classes2)

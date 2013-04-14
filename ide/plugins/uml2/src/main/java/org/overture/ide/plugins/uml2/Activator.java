@@ -2,6 +2,7 @@ package org.overture.ide.plugins.uml2;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -61,5 +62,15 @@ public class Activator extends AbstractUIPlugin
 	public static void log(String message, Exception exception)
 	{
 		getDefault().getLog().log(new Status(IStatus.ERROR, IUml2Constants.PLUGIN_ID, message, exception));
+	}
+	
+	/** 
+	 * Initializes a preference store with default preference values 
+	 * for this plug-in.
+	 */
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, true);
+		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, true);
 	}
 }

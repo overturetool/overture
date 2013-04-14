@@ -27,12 +27,19 @@ public interface ITracesConstants
 	public final String TRACES_VIEW_ID = "org.overture.ide.plugins.combinatorialtesting.views.TracesView";
 	public final String TRACES_TEST_ID = "org.overture.ide.plugins.combinatorialtesting.views.TraceTest";
 	public final String PLUGIN_ID = "org.overture.ide.plugins.combinatorialtesting";
+	public final int TRACE_FILTERING_DEFAULT_SEED = 999;
+	public final String TRACE_REDUCTION_DEFAULT_TYPE = "Random";
+	public final int TRACE_SUBSET_LIMITATION_DEFAULT = 100;
 	
 	//String REMOTE_DEBUG = "remote_debug";
 	public boolean DEBUG = false;
 //	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
 	public final String REMOTE_DEBUG_PREFERENCE = "ct_enable_remote_debug";
 	public final String REMOTE_DEBUG_FIXED_PORT = "ct_enable_remote_debug_fixed_port";
+	public final String TRACE_SEED = "ct_trace_filter_seed";
+	public final String TRACE_REDUCTION_TYPE = "ct_trace_reduction_type";
+	public final String TRACE_SUBSET_LIMITATION = "ct_subset_limitation";
+	
 
 	/**
 	 * This string gives the plugin id that contains the core ctruntime jar file.

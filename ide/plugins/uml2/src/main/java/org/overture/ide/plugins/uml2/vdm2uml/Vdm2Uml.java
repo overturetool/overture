@@ -60,16 +60,29 @@ public class Vdm2Uml
 	{
 		public Class lookup(AClassType type)
 		{
-			return classes.get(type.getName().getName());
+			return lookup(type.getName().getName());
+		}
+
+		@Override
+		public Class lookup(String className)
+		{
+			return classes.get(className);
 		}
 	}, console);
 	private Model modelWorkingCopy = null;
 	private Map<String, Class> classes = new HashMap<String, Class>();
 	private boolean extendedAssociationMapping = false;
+	private boolean deployArtifactsOutsideNodes = false;
 
-	public Vdm2Uml(boolean preferAssociations)
+	public Vdm2Uml(boolean preferAssociations,boolean deployArtifactsOutsideNodes)
 	{
 		extendedAssociationMapping = preferAssociations;
+		this.deployArtifactsOutsideNodes = deployArtifactsOutsideNodes;
+	}
+	
+	public  Model getModel()
+	{
+		return this.modelWorkingCopy;
 	}
 
 	public Model convert(String name, List<SClassDefinition> classes)
@@ -102,7 +115,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console,deployArtifactsOutsideNodes).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
@@ -256,7 +269,7 @@ public class Vdm2Uml
 		{
 			console.out.println("\tAdding association for value: " + name);
 
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, true);
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, true,utc);
 		} else
 		{
 			console.out.println("\tAdding property for value: " + name);
@@ -451,7 +464,7 @@ public class Vdm2Uml
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().getName());
 
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, false);
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, false,utc);
 
 		} else
 		{

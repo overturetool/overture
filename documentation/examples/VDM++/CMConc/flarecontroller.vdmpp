@@ -89,6 +89,7 @@ thread
  -- now enter the event handling loop
  while true do
    processThreat();
+   --World`timerRef.WaitRelative(World`timerRef.stepLength);
 )
 
 end FlareController

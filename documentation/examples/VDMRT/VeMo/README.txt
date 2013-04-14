@@ -10,7 +10,7 @@ Master’s thesis, Aarhus University (December 2010).
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Claus Ballegaard Nielsen
-#LIB=IO, MATH, VDMUtil
+#LIB=IO
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

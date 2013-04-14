@@ -133,6 +133,8 @@ public class DBGPReader
 	protected boolean errorState = false;
 
 	protected static final int SOURCE_LINES = 5;
+	
+	protected static List<DBGPReader> connectecReaders = new Vector<DBGPReader>();
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args)
@@ -597,6 +599,7 @@ public class DBGPReader
 			}
 
 			connected = true;
+			addThisReader();
 			init();
 			run();			// New threads wait for a "run -i"
 		}
@@ -1078,6 +1081,7 @@ public class DBGPReader
 
     			case STOP:
     				processStop(c);
+    				carryOn = false;
     				break;
 
     			case BREAKPOINT_GET:
@@ -1560,8 +1564,56 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-		TransactionValue.commitAll();
+		
+		if(isLastConnectedReader())
+		{
+			handleExit();
+		}
+		else
+		{			
+			removeThisReader();
+		}
 	}
+	
+	protected void handleExit()
+	{
+		try{
+			
+			if(socket != null)
+				socket.close();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
+		System.exit(0);
+	}
+		
+	private boolean isLastConnectedReader()
+	{
+		synchronized (connectecReaders)
+		{			
+			return connectecReaders.size()== 1;
+		}
+	}
+	
+	private void addThisReader()
+	{
+		synchronized (connectecReaders)
+		{
+			connectecReaders.add(this);
+		}
+	}
+	
+	private void removeThisReader()
+	{
+		synchronized (connectecReaders)
+		{
+			connectecReaders.remove(this);
+		}
+	}
+	
 
 	protected void breakpointGet(DBGPCommand c) throws DBGPException, IOException
 	{

@@ -541,6 +541,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 			case STOP:
 				processStop(c);
+				carryOn = false;
 				break;
 
 			case BREAKPOINT_GET:
@@ -1647,7 +1648,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			case COVERAGE:
 				processCoverage(c);
 				break;
-			case WRITE_COVERAGE:
+			case WRITE_COMPLETE_COVERAGE:
 				processWriteCoverage(c);
 				break;
 			case POG:
@@ -1787,9 +1788,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	private void processWriteCoverage(DBGPCommand c) throws DBGPException,
 			IOException, URISyntaxException {
-		if (status == DBGPStatus.BREAK) {
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
-		}
+//		if (status == DBGPStatus.BREAK) {
+//			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+//		}
 
 		File file = new File(new URI(c.data));
 
@@ -1800,7 +1801,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			writeCoverage(interpreter, file);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Coverage written to: " + file.toURI().toASCIIString());
-			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COVERAGE,
+			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COMPLETE_COVERAGE,
 					null, sb);
 		}
 	}
