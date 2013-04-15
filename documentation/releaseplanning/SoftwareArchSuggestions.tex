@@ -1,0 +1,115 @@
+\documentclass{overturerep}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{times}
+\usepackage{listings}
+%\usepackage{color}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{longtable} % ,multirow}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\newtheorem{sug}[subsection]{Suggestion}
+
+\title{Suggestions for Software Architecture in the Overture tool suite}
+\author{Rasmus Lauritsen \and Luis D. M. D. Couto}
+\reportno{SG-04-2013\footnote{SG is for suggestion}}
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  The success of Overture has provided the community with a dependable
+  tool. To bring state of the art formal methods to this community
+  Overture becomes a platform for a variety of formal methods tools.
+  Therefore, its software architecture needs constantly to support
+  extensibility and maintainability.
+\end{abstract}
+
+\chapter{Introduction}
+
+\section{Code Style}
+A strong asset with maintainable code is normalisation such that
+developers are familiar with the code-style being used. The first
+suggestion is thus to adopt a code-style for Overture that at least
+makes it follow the lines stipulated in
+\url{http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html}.
+
+\begin{sug}
+  Adopt a code-style for Overture, using those adopted by Google is an
+  option.
+  \url{http://code.google.com/p/java-coding-standards/wiki/CodeOrganisation}
+\end{sug}
+
+It is important that the code-style is advocated by all community
+members and developers. It should not only be document but also be
+explicitly visible in the code.
+
+\begin{sug}
+  Advocate code-style and make it visible in the source. Consider
+  periodic reviews of core components.
+\end{sug}
+
+A central part of good code-style is documentation. All core components
+in Overture should be well documented in the source-code such that a
+coherent understanding of the code is obtainable from the source files
+alone.
+
+\begin{sug}
+Thorough documentation of the code in the source files should be available.
+\end{sug}
+
+However, knowing how classes-work by them self is typically not enough
+to understand a software project as complex as Overture.  Thus a
+description of the intended interplay between classes and which tasks
+they perform is needed. A well scoped package typically has a public
+factory class or similar point of access.
+
+\begin{sug}
+  Describe the intended interplay between \emph{public}
+  classes/interfaces and intended use of a coherent package in its
+  public entry point classes.
+\end{sug}
+
+\section{Packages}
+The package structure for Overture is used for internal modularisation
+which is conflicting with the scoping mechanisms in Java. Packages
+were never intended to be used that way. The proper way to have
+internal modularisation is through source folders.
+
+\begin{sug}
+  Reduce Overture to a few packages with high cohesion. The
+  modularisation reflected in existing packages is good but should be
+  realised through source folders.
+\end{sug}
+
+With a few well defined packages it becomes feasible to use
+package-scoping to create a narrow well scoped interface exposed by
+the Overture code base.
+
+\begin{sug}
+  Reduce scoping on classes to package scope where possible. 
+\end{sug}
+
+An additional benefit with this is that the Eclipse OSGi framework
+will have small and well defined manifest files; only a few packages
+needs to be listed in these. New developments would seldom introduce
+new packages and thus this also result in infrequent manifest file
+updates. In turn this might reduce the number of mysterious OSGi
+errors following such updates.
+
+\begin{sug}
+  Include small examples of component usage for each package.
+\end{sug}
+
+Showing a small example of how the public classes and interfaces from
+a package is intended to be used speeds up future development
+significantly. The task of modifying an example to do something is
+typically much easier and gives more confidence in the code than
+taking a bunch of public classes and putting them together only from
+documentation. At least the gives the confidence to a new developer
+that the original ideas are maintained.
+
+\end{document}
