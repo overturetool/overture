@@ -1505,9 +1505,9 @@ end remote_lib_sensor
 \begin{lstlisting}[language=JAVA,label=remoteSensorJava,caption=Remote sensor Java class,captionpos=b]
 package remote.lib;
 
-import org.overturetool.interpreter.runtime.ValueException;
-import org.overturetool.interpreter.values.IntegerValue;
-import org.overturetool.intepreter.values.Value;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.Value;
 
 public class sensor
 {
@@ -1541,8 +1541,8 @@ controller are the internal Values used in Overture. Documentation about these
 can be found in the Overture Design Specification\cite{Battle10}.
 
 \begin{lstlisting}[language=JAVA,label=remoteControllerJava,caption=Remote Controller Java class,captionpos=b]
-import org.overturetool.interpreter.debug.RemoteControl;
-import org.overturetool.interpreter.debug.RemoteInterpreter;
+import org.overture.interpreter.debug.RemoteControl;
+import org.overture.interpreter.debug.RemoteInterpreter;
 
 public class RemoteController implements RemoteControl
 {
@@ -1638,9 +1638,9 @@ It should be noted that the names of the package and class can be directly relat
 package gui;
 
 import java.io.Serializable;
-import org.overturetool.interpreter.runtime.ValueException;
-import org.overturetool.interpreter.values.Value;
-import org.overturetool.interpreter.values.VoidValue;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.VoidValue;
 
 public class Graphics implements Serializable {
 
