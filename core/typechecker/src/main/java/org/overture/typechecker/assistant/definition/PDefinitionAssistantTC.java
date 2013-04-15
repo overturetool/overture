@@ -31,8 +31,8 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -98,7 +98,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 	}
 
 	public static PDefinition findType(List<PDefinition> definitions,
-			LexNameToken name, String fromModule) {
+			ILexNameToken name, String fromModule) {
 
 		for (PDefinition d : definitions) {
 			PDefinition def = findType(d, name, fromModule);
@@ -112,7 +112,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static PDefinition findType(PDefinition d, LexNameToken sought,
+	public static PDefinition findType(PDefinition d, ILexNameToken sought,
 			String fromModule) {
 		switch (d.kindPDefinition()) {
 
@@ -139,7 +139,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		}
 	}
 
-	public static PDefinition findName(PDefinition d, LexNameToken sought,
+	public static PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope) {
 		switch (d.kindPDefinition()) {
 		// case AAssignmentDefinition.kindPDefinition:
@@ -207,7 +207,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 	}
 
 	public static PDefinition findNameBaseCase(PDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		if (HelpLexNameToken.isEqual(d.getName(), sought)) {
 			if ((d.getNameScope() == NameScope.STATE && !scope
 					.matches(NameScope.STATE))

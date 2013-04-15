@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
@@ -80,7 +80,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 			
 			for (ConjectureDefinition conj : conjectures) {
 				
-				conj.process(operationValue.name.name,operationValue.classdef.getName().name,type, SystemClock.getWallTime(),ct.getId(),operationValue.getSelf().objectReference);
+				conj.process(operationValue.name.getName(),operationValue.classdef.getName().getName(),type, SystemClock.getWallTime(),ct.getId(),operationValue.getSelf().objectReference);
 			}
 		}	
 		
@@ -89,7 +89,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	public void bindSystemVariables(ASystemClassDefinition systemDefinition) {
 	 
 		
-		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.getName().name,variables);
+		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.getName().getName(),variables);
 		Context ctxt = SClassDefinitionAssistantInterpreter.getStatics(systemDefinition);
 		
 		
@@ -112,8 +112,8 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 			rest.add(strings[i]);
 		}
 		
-		for (LexNameToken name : ctxt.keySet()) {
-			if(name.name.equals(rest.get(0)))
+		for (ILexNameToken name : ctxt.keySet()) {
+			if(name.getName().equals(rest.get(0)))
 			{		
 				Value v = ctxt.get(name);
 				if(rest.size() > 1)
@@ -137,8 +137,8 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 			ObjectValue ov = value.objectValue(ctxt);			
 			NameValuePairMap nvpm = ov.members;
 			
-			for (LexNameToken name : nvpm.keySet()) {
-				if(name.name.equals(rest.get(0)))
+			for (ILexNameToken name : nvpm.keySet()) {
+				if(name.getName().equals(rest.get(0)))
 				{
 					Value v = nvpm.get(name);
 					
@@ -185,7 +185,7 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		{
 			
 			for (ConjectureDefinition conj : conjectures) {
-				conj.process(op.name.name,op.classdef.getName().name,MessageType.Request, SystemClock.getWallTime(),t.getId(),t.getObject().objectReference);
+				conj.process(op.name.getName(),op.classdef.getName().getName(),MessageType.Request, SystemClock.getWallTime(),t.getId(),t.getObject().objectReference);
 			}
 		}
 		

@@ -38,13 +38,13 @@ public class StorageManager
 
 	private void initialize() throws IOException
 	{
-		File classTraceXmlFile = new File(getCtOutputFolder(project), traceDef.getName().module
-				+ "-" + traceDef.getName().name + ".xml");
+		File classTraceXmlFile = new File(getCtOutputFolder(project), traceDef.getName().getModule()
+				+ "-" + traceDef.getName().getName() + ".xml");
 		if (classTraceXmlFile.exists())
 		{
 			try
 			{
-				reader = new TracesXmlStoreReader(classTraceXmlFile, traceDef.getName().module);
+				reader = new TracesXmlStoreReader(classTraceXmlFile, traceDef.getName().getModule());
 			} catch (SAXException e)
 			{
 				// e.printStackTrace();
@@ -81,7 +81,7 @@ public class StorageManager
 			SAXException
 
 	{
-		List<TraceTestResult> testStatus = reader.getTraceTestResults(traceDef.getName().name, 1, reader.getTraceTestCount(traceDef.getName().name));
+		List<TraceTestResult> testStatus = reader.getTraceTestResults(traceDef.getName().getName(), 1, reader.getTraceTestCount(traceDef.getName().getName()));
 		return testStatus;
 	}
 
@@ -91,7 +91,7 @@ public class StorageManager
 		{
 			return 0;
 		}
-		return reader.getTraceTestCount(traceDef.getName().name);
+		return reader.getTraceTestCount(traceDef.getName().getName());
 	}
 
 	public TraceInfo getTraceInfo()
@@ -100,14 +100,14 @@ public class StorageManager
 		{
 			return null;
 		}
-		return reader.getTraceInfo(traceDef.getName().name);
+		return reader.getTraceInfo(traceDef.getName().getName());
 	}
 
 	public List<TraceTestResult> getTraceTests(Integer startNumber,
 			Integer stopNumber) throws IOException, SAXException
 	{
 
-		List<TraceTestResult> list = reader.getTraceTestResults(traceDef.getName().name, startNumber, stopNumber);
+		List<TraceTestResult> list = reader.getTraceTestResults(traceDef.getName().getName(), startNumber, stopNumber);
 
 		return list;
 	}

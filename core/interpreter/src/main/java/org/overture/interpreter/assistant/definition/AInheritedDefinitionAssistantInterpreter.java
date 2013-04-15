@@ -25,7 +25,7 @@ public class AInheritedDefinitionAssistantInterpreter
 		for (NameValuePair nv: PDefinitionAssistantInterpreter.getNamedValues(d.getSuperdef(), initialContext))
 		{
 			renamed.add(new NameValuePair(
-				nv.name.getModifiedName(d.getName().module), nv.value));
+				nv.name.getModifiedName(d.getName().getModule()), nv.value));
 		}
 
 		return renamed;

@@ -7,7 +7,7 @@ import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
@@ -135,7 +135,7 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 		return false;
 	}
 
-	public static PType polymorph(AParameterType type, LexNameToken pname,
+	public static PType polymorph(AParameterType type, ILexNameToken pname,
 			PType actualType) {
 		return (type.getName().equals(pname)) ? actualType : type;
 	}

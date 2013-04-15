@@ -21,6 +21,7 @@ Export-Package: org.overture.ast.analysis,
  org.overture.ast.definitions.traces,
  org.overture.ast.expressions,
  org.overture.ast.factory,
+ org.overture.ast.intf.lex;
  org.overture.ast.lex,
  org.overture.ast.messages,
  org.overture.ast.modules,

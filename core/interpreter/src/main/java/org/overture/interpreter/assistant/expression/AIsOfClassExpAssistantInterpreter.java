@@ -25,7 +25,7 @@ public class AIsOfClassExpAssistantInterpreter extends AIsOfClassExpAssistantTC
 
 	public static boolean isOfClass(ObjectValue obj, String name)
 	{
-		if (obj.type.getName().name.equals(name))
+		if (obj.type.getName().getName().equals(name))
 		{
 			return true;
 		}

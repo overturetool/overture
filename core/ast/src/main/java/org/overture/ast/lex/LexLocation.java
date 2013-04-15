@@ -37,6 +37,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.ExternalNode;
 import org.overture.ast.node.INode;
 
@@ -112,6 +113,24 @@ public class LexLocation implements Serializable , ExternalNode
 			allLocations.add(this);
 		}
 	}
+	
+	public LexLocation(String filePath, String module,
+			int startLine, int startPos, int endLine, int endPos, int startOffset, int endOffset)
+		{
+			this.file = new File(filePath);
+			this.module = module;
+			this.startLine = startLine;
+			this.startPos = startPos;
+			this.endLine = endLine;
+			this.endPos = endPos;
+			this.startOffset = startOffset;
+			this.endOffset = endOffset;
+			synchronized (allLocations)
+			{
+				allLocations.add(this);
+			}
+		}
+
 
 	/**
 	 * Create a default location.
@@ -284,7 +303,7 @@ public class LexLocation implements Serializable , ExternalNode
 		return list;
 	}
 
-	public static float getSpanPercent(LexNameToken name)
+	public static float getSpanPercent(ILexNameToken name)
 	{
 		int hits = 0;
 		int misses = 0;
@@ -317,7 +336,7 @@ public class LexLocation implements Serializable , ExternalNode
 		return sum == 0 ? 0 : (float)(1000 * hits/sum)/10;		// NN.N%
 	}
 
-	public static long getSpanCalls(LexNameToken name)
+	public static long getSpanCalls(ILexNameToken name)
 	{
 		// The assumption is that the first executable location in
 		// the span for the name is hit as many time as the span is called.

@@ -42,10 +42,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
@@ -54,7 +54,13 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.*;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
@@ -69,10 +75,24 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
-import org.overture.interpreter.runtime.*;
+import org.overture.interpreter.runtime.Breakpoint;
+import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.LatexSourceFile;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
-import org.overture.interpreter.util.*;
-import org.overture.interpreter.values.*;
+import org.overture.interpreter.util.ExitStatus;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.NameValuePairMap;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.interpreter.values.Value;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
@@ -824,7 +844,7 @@ public class DBGPReader
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (Entry<LexNameToken, Value> e: vars.entrySet())
+		for (Entry<ILexNameToken, Value> e: vars.entrySet())
 		{
 			sb.append(propertyResponse(e.getKey(), e.getValue(), context));
 		}
@@ -832,12 +852,12 @@ public class DBGPReader
 		return sb;
 	}
 
-	protected StringBuilder propertyResponse(LexNameToken name, Value value, DBGPContextType context)
+	protected StringBuilder propertyResponse(ILexNameToken name, Value value, DBGPContextType context)
 		throws UnsupportedEncodingException
 	{
 		return propertyResponse(
-			name.name, name.getExplicit(true).toString(),
-			name.module, value.toString());
+			name.getName(), name.getExplicit(true).toString(),
+			name.getModule(), value.toString());
 	}
 
 	protected StringBuilder propertyResponse(
@@ -1983,7 +2003,7 @@ public class DBGPReader
 					ObjectContext octxt = (ObjectContext)breakContext;
 					int line = breakpoint.location.startLine;
 					String opname = breakContext.guardOp == null ?
-						"" : breakContext.guardOp.name.name;
+						"" : breakContext.guardOp.name.getName();
 
 					for (PDefinition d: octxt.self.type.getClassdef().getDefinitions())
 					{
@@ -1991,7 +2011,7 @@ public class DBGPReader
 						{
 							APerSyncDefinition pdef = (APerSyncDefinition)d;
 
-							if (pdef.getOpname().name.equals(opname) ||
+							if (pdef.getOpname().getName().equals(opname) ||
 								pdef.getLocation().startLine == line ||
 								PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
 							{
@@ -2005,7 +2025,7 @@ public class DBGPReader
 										{
 											Value v= hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
 											LexNameToken name =
-	            							new LexNameToken(octxt.self.type.getName().module,
+	            							new LexNameToken(octxt.self.type.getName().getModule(),
 	            								hexp.toString(),hexp.getLocation());
 	            						vars.put(name, v);
 										} catch (Throwable e)
@@ -2021,11 +2041,11 @@ public class DBGPReader
 						{
 							AMutexSyncDefinition mdef = (AMutexSyncDefinition)d;
 
-            				for (LexNameToken mop: mdef.getOperations())
+            				for (ILexNameToken mop: mdef.getOperations())
             				{
-            					if (mop.name.equals(opname))
+            					if (mop.getName().equals(opname))
             					{
-                    				for (LexNameToken op: mdef.getOperations())
+                    				for (ILexNameToken op: mdef.getOperations())
                     				{
                     					LexNameList ops = new LexNameList(op);//TODO: this needs to be checked when testing
                     					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(new LexLocation(), VDMToken.ACTIVE) , ops);
@@ -2034,7 +2054,7 @@ public class DBGPReader
 										{
 											Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
 											LexNameToken name =
-                							new LexNameToken(octxt.self.type.getName().module,
+                							new LexNameToken(octxt.self.type.getName().getModule(),
                 								hexp.toString(), mdef.getLocation());
                 						vars.put(name, v);
 										} catch (Throwable e)
@@ -2580,13 +2600,13 @@ public class DBGPReader
 
 		for (SClassDefinition cls: classes)
 		{
-			if (cls.getName().name.equals(def))
+			if (cls.getName().getName().equals(def))
 			{
-				pw.println(cls.getName().name + " (default)");
+				pw.println(cls.getName().getName() + " (default)");
 			}
 			else
 			{
-				pw.println(cls.getName().name);
+				pw.println(cls.getName().getName());
 			}
 		}
 
@@ -2610,13 +2630,13 @@ public class DBGPReader
 
 		for (AModuleModules m: modules)
 		{
-			if (m.getName().name.equals(def))
+			if (m.getName().getName().equals(def))
 			{
-				pw.println(m.getName().name + " (default)");
+				pw.println(m.getName().getName() + " (default)");
 			}
 			else
 			{
-				pw.println(m.getName().name);
+				pw.println(m.getName().getName());
 			}
 		}
 

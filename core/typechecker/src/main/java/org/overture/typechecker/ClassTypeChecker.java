@@ -71,7 +71,7 @@ public class ClassTypeChecker extends TypeChecker
 			{
 				if (c1 != c2 && c1.getName().equals(c2.getName()))
 				{
-					TypeChecker.report(3426, "Class " + c1.getName() + " duplicates " + c2.getName(), c1.getName().location);
+					TypeChecker.report(3426, "Class " + c1.getName() + " duplicates " + c2.getName(), c1.getName().getLocation());
 				}
 			}
 

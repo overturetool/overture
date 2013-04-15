@@ -64,7 +64,7 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 			
 			if(slModule != null)
 			{
-				nodeModule = slModule.getName().name;
+				nodeModule = slModule.getName().getName();
 			}
 		}
 		

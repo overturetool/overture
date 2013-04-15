@@ -3,7 +3,7 @@ package org.overture.typechecker.assistant.type;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
@@ -67,7 +67,7 @@ public class ASetTypeAssistantTC {
 		return PTypeAssistantTC.narrowerThan(type.getSetof(),accessSpecifier);
 	}
 
-	public static PType polymorph(ASetType type, LexNameToken pname,
+	public static PType polymorph(ASetType type, ILexNameToken pname,
 			PType actualType) {
 		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), pname, actualType));
 	}

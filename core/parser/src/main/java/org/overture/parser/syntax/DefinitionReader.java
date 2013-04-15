@@ -45,6 +45,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
@@ -611,7 +612,7 @@ public class DefinitionReader extends SyntaxReader
 
 	private PDefinition readExplicitFunctionDefinition(
 			LexIdentifierToken funcName, NameScope scope,
-			List<LexNameToken> typeParams) throws ParserException, LexException
+			List<ILexNameToken> typeParams) throws ParserException, LexException
 	{
 		// Explicit function definition, like "f: int->bool f(x) == true"
 
@@ -686,7 +687,7 @@ public class DefinitionReader extends SyntaxReader
 
 	private PDefinition readImplicitFunctionDefinition(
 			LexIdentifierToken funcName, NameScope scope,
-			List<LexNameToken> typeParams) throws ParserException, LexException
+			List<ILexNameToken> typeParams) throws ParserException, LexException
 	{
 		// Implicit, like g(x: int) y: bool pre exp post exp
 

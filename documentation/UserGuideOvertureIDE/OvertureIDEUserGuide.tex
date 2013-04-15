@@ -179,7 +179,7 @@
 Aarhus University, Department of Engineering\\
 Finlandsgade 22, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
-Fujitsu Services\\
+Fujitsu UK\\
 Lovelace Road, Bracknell, \\
 Berkshire. RG12 8SN, UK}
 
@@ -209,7 +209,7 @@ This document is the user manual for the Overture Integrated Development
 Environment (IDE) for
 VDM. It serves as a reference for anybody wishing to make use of
 the tool with one of the VDM dialects (VDM-SL, VDM++ or VDM-RT).
-Overture tool support is build on top of the Eclipse platform. The
+Overture tool support is built on top of the Eclipse platform. The
 objective of the Overture initiative is to create and support an open source
 platform that can be used for both experimentation with new VDM dialects,
 as well as new features for analysing VDM
@@ -233,7 +233,8 @@ VDM helps to identify areas of incompleteness or ambiguity in
 informal system specifications, and provides some level of confidence
 that a valid implementation will have key properties, especially those
 of safety or security. VDM has a strong record of industrial
-application, in many cases by practitioners who were not specialists in
+application, in many cases has been used
+by practitioners who were not specialists in
 the underlying formalism or logic
 \cite{Larsen&96b,Clement&99,Kurita&09}. Experience with the method
 suggests that the effort expended on formal modelling and analysis can
@@ -251,7 +252,7 @@ data types. Operations can be defined implicitly by preconditions and
 postconditions that characterize their behavior, or explicitly by
 means of specific algorithms. An extension of VDM-SL, called VDM++,
 supports object-oriented structuring of models and permits direct
-modelling of concurrency \cite{Fitzgerald&05}. An additional extension
+modelling of concurrency \cite{Fitzgerald&05}. A further extension
 to VDM++, called VDM Real Time (VDM-RT\footnote{Formerly called VDM In a
 Constrained Environment (VICE).}), includes support for discrete
 time models \cite{Mukherjee&00,Verhoef&06b}. All
@@ -264,7 +265,7 @@ properties. Analyses may be performed by inspection, static analysis,
 testing or mathematical proof. To assist in this process, Overture
 offers tool support for building models in collaboration with other
 modelling tools, to execute and test models and to carry out different
-forms of static analysis \cite{Larsen&10a}. It can be seen as an open
+forms of static analysis \cite{Larsen&13b}. It can be seen as an open
 source version of the closed (but now freely available) tool called VDMTools
 \cite{Elmstrom&94,Larsen01,Fitzgerald&08a} although features to
 generate executable code in high-level programming languages are
@@ -309,14 +310,33 @@ user manual.
 
 \chapter{Getting Hold of the Software}\label{sec:install}
 
-Overture is an open source VDM tool, developed by a community of volunteers,
-and built on top of the Eclipse platform. The project
-is hosted on SourceForge.  The best way to obtain Overture is to download
-a special version of Eclipse with the Overture functionality already pre-installed. If you go to:
+\begin{description}
+\item[\textbf{Overture:}] This
+ is an open source tool, developed by volunteers and built on
+the Eclipse platform. The project is managed on
+SourceForge\footnote{\url{https://sourceforge.net/projects/overture/}}.
+The best way to run Overture is to download a special version of
+Eclipse with the Overture functionality already pre-installed. If you
+go to:
   \begin{quote}
-  \url{http://sourceforge.net/projects/overture}
+  \texttt{http://sourceforge.net/projects/overture/files/}
   \end{quote}
-  \noindent you can use the \textit{Download Now} button to
+  \noindent you will find pre-installed versions of Overture for
+  Windows, Linux and Mac\footnote{It is planned to develop an update
+    facility, allowing updates to be applied directly from within the
+    Overture tools without requiring a reinstallation. However, this
+    can be a risky process because of the dependencies on non-Overture
+    components and so is not yet supported.}.
+
+\item[\textbf{Modelio:}] This is a tool that is both available in a commercial version as well as in an open source setting from a
+  company called Softeam. Just like Overture this tool is built on top of the Eclipse platform. The product can be
+  obtained from
+\begin{quote}
+\texttt{http://www.modelio.org/}.
+\end{quote}
+\end{description}
+
+For Overture you can use the \textit{Download Now} button to
   automatically download pre-installed versions of Overture for your
   operating system.  Supported systems are: Windows, Linux and
   Mac.
@@ -353,6 +373,14 @@ and can be downloaded from SourceForge under the
 \end{quote}
 Such existing projects can be imported into Overture as described in
 section~\ref{subsec:importproj}.
+
+Finally, in order to make use of the
+test coverage feature described in Section~\ref{sec:testcov} it is
+necessary to have the text processing system called \LaTeX\ and its
+\texttt{pdflatex} feature. This can for example be obtained from:
+\begin{quote}
+\url{http://miktex.org/2.9/}
+\end{quote}
 
 \chapter{Using the VDM Perspective}\label{sec:vdmsupport}
 
@@ -728,7 +756,9 @@ been set, it is possible to right click on a project in the VDM
 Explorer view and select \emph{VDM Tools} $\rightarrow$
 \emph{Open project in VDMTools}. Then a project file for VDMTools
 will automatically be generated with all the files from the Overture project
-and VDMTools will be opened. The \emph{Preferences} dialog also
+and VDMTools will be opened. 
+
+The \emph{Preferences} dialog also
 allows you to switch off continuous syntax checking while editing and
 to set the path to \emph{pdflatex} if this is not automatically
 visible from the Overture application. It is also possible to set a few
@@ -872,7 +902,7 @@ in the \emph{Common} tab on the dialog. This is standard Eclipse behaviour.
 \end{figure}
 
 Whenever a launch configuration is started up it is also possible to
-decide upon which additional run-time checks to carry out. Per default
+decide upon which additional run-time checks to carry out. By default
 all possible run-time checks are swiched on but if desired (some of)
 these can be swiched off using the ``Runtime'' pane (see
 Figure~\ref{fig:userguide:launchconfigRToptions}). Note that for
@@ -907,11 +937,11 @@ presence of mutually recursive function definitions.}.
 In the launch
 configuration the ``Debugger'' pane shown in
 Figure~\ref{fig:userguide:launchconfigSpecialoptions} can also be
-useful in rare cases where one have particular deep recursion for
-example. this is an advanced setting where one can decide the
+useful in rare cases where one has particular deep recursion for
+example. This is an advanced setting where one can decide the
 arguments given to the Java virtual machine for allocation of maximum
 amounts of space per thread in a VDM model. However, this option is
-rarely used.
+rarely needed.
 
 \begin{figure}[htp]
 \begin{center}
@@ -1269,11 +1299,11 @@ selected in the \emph{Preferences} menu (see Figure~\ref{fig:UMLpreferences}
 above). The general explanation of these options are:
 
 \begin{description}
-\item[Prefer associations during translation:] In case this option is chosen 
+\item[Prefer associations during translation:] If this option is chosen 
 (ticked) references to instances of other classes will be modelled as
 associations between the classes in a class diagram. Otherwise these will be 
 modelled as attributes.
-\item[Disable nested artifacts in Deployment Diagrams:] In case this option
+\item[Disable nested artifacts in Deployment Diagrams:] If this option
 is chosen (ticked) nested artifacts in a deployment diagram are disabled; 
 otherwise it is enabled.
 \end{description}
@@ -1289,7 +1319,8 @@ project. This is done by right-clicking on the VDM++ project to be
 converted in the Explorer view, followed by
 the \emph{Clone as VDM-RT} option\index{create real time
   project}. A new VDM-RT project is then automatically
-created. It will have the
+created and it will initially be given the same name as the one generated from 
+with postfix with ``\texttt{\_VDM\_RT}''. It will have the
 same name as the original VDM++ project, but with \texttt{VDM\_RT} appended.
 Inside the project, all the \texttt{.vdmpp} files will have been converted
 to a \texttt{.vdmrt} extension. The original VDM++ project is not
@@ -2258,7 +2289,7 @@ breakpoints, which is covered in the next section.
 %print M`xyz). The default module can be changed with the default
 %command.
 
-The state command lists the content of the default module's
+The {\textbf{\ttfamily state}} command lists the content of the default module's
 state. This can be changed by operations, as can be seen by the two
 calls to rand which change the rseed value in the state (a
 pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
@@ -2702,7 +2733,8 @@ The name and type of a VDM parameter are mapped to the property \texttt{name}, \
 \end{formationRule}
 
 
-\chapter{Index}\label{sec:index}
+\addcontentsline{toc}{chapter}{Index}
+\label{sec:index}
 \printindex
 \addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 

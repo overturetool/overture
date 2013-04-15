@@ -11,6 +11,7 @@ import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
@@ -537,9 +538,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			// class types, making the field types the union of the original
 			// fields' types...
 
-			Map<LexNameToken, PTypeSet> common = new HashMap<LexNameToken, PTypeSet>();
-			Map<LexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
-			LexNameToken classname = null;
+			Map<ILexNameToken, PTypeSet> common = new HashMap<ILexNameToken, PTypeSet>();
+			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
+			ILexNameToken classname = null;
 
 			for (PType t : type.getTypes())
 			{
@@ -555,12 +556,12 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 					for (PDefinition f : SClassDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
-						LexNameToken synthname = f.getName().getModifiedName(classname.name);
+						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());
 						PTypeSet current = null;
 
-						for (LexNameToken n : common.keySet())
+						for (ILexNameToken n : common.keySet())
 						{
-							if (n.name.equals(synthname.name))
+							if (n.getName().equals(synthname.getName()))
 							{
 								current = common.get(n);
 								break;
@@ -599,10 +600,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			// member of the union, even though it has all the distinct
 			// fields of the set of classes within the union.
 
-			for (LexNameToken synthname : common.keySet())
+			for (ILexNameToken synthname : common.keySet())
 			{
 				PDefinition def = 
-						AstFactory.newALocalDefinition(synthname.location, synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
+						AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
@@ -670,7 +671,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return false;
 	}
 
-	public static PType polymorph(AUnionType type, LexNameToken pname,
+	public static PType polymorph(AUnionType type, ILexNameToken pname,
 			PType actualType) {
 		
 		PTypeSet polytypes = new PTypeSet();

@@ -33,7 +33,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -62,7 +62,7 @@ public class PrivateClassEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName(LexNameToken sought, NameScope scope)
+	public PDefinition findName(ILexNameToken sought, NameScope scope)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findName(classdef,sought, scope);
 
@@ -75,7 +75,7 @@ public class PrivateClassEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findType(LexNameToken name, String fromModule)
+	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findType(classdef,name, null);
 
@@ -88,7 +88,7 @@ public class PrivateClassEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(LexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
 		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classdef,name);
 

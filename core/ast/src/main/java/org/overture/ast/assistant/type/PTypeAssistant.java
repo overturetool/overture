@@ -34,7 +34,7 @@ public class PTypeAssistant {
 				return SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType());
 			case ABracketType.kindPType:
 				return ABracketTypeAssistant.isNumeric((ABracketType) type);
-			case ANamedInvariantType.kindPType:
+			case SInvariantType.kindPType:
 				if (type instanceof ANamedInvariantType)
 				{
 					return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
@@ -71,7 +71,7 @@ public class PTypeAssistant {
 				break;
 			case ABracketType.kindPType:
 				return ABracketTypeAssistant.getNumeric((ABracketType) type);
-			case ANamedInvariantType.kindPType:
+			case SInvariantType.kindPType:
 				if (type instanceof ANamedInvariantType)
 				{
 					return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);

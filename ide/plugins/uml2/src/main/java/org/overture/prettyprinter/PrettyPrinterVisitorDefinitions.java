@@ -40,7 +40,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuffer sb = new StringBuffer();
-		question.setClassName(node.getName().name);
+		question.setClassName(node.getName().getName());
 
 		sb.append("class " + node.getName());
 		sb.append("\n");
@@ -329,11 +329,11 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		String tmp = question.getIdent()
 				+ accessStr
-				+ d.getName().name
+				+ d.getName().getName()
 				+ type
 				+ "\n"
 				+ question.getIdent()
-				+ d.getName().name
+				+ d.getName().getName()
 				+ params
 				+ " ==\n"
 				+ question.increaseIdent()

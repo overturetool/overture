@@ -9,7 +9,7 @@ import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.PType;
@@ -65,14 +65,13 @@ public class ASystemClassDefinitionAssistantInterpreter
 						cpudefs.add(d);
 						instance = (ACpuClassDefinition) ct.getClassdef();
 
-						RTLogger.log(new RTDeclareCPUMessage(cpuNumber++, !(ivd.getExpType() instanceof AUndefinedType), systemClass.getName().name, d.getName().name));
+						RTLogger.log(new RTDeclareCPUMessage(cpuNumber++, !(ivd.getExpType() instanceof AUndefinedType), systemClass.getName().getName(), d.getName().getName()));
 					}
 				}
 			}
 
-			
 			// Run the constructor to do any deploys etc.
-			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<LexNameToken, ObjectValue>());
+			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>());
 
 			// Bind system instances to runtime validator
 			RuntimeValidator.bindSystemVariables(systemClass);
@@ -93,7 +92,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 					args.add(new QuoteValue("FCFS")); // Default policy
 					args.add(new RealValue(0)); // Default speed
 
-					cpu = (CPUValue) ACpuClassDefinitionAssistantInterpreter.newInstance(instance,null, args, initialContext);
+					cpu = (CPUValue) ACpuClassDefinitionAssistantInterpreter.newInstance(instance, null, args, initialContext);
 					v.set(systemClass.getLocation(), cpu, initialContext);
 				} else
 				{
@@ -103,7 +102,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 				// Set the name and scheduler for the CPU resource, and
 				// associate the resource with the scheduler.
 
-				cpu.setup(scheduler, d.getName().name);
+				cpu.setup(scheduler, d.getName().getName());
 				cpus.add(cpu);
 			}
 
@@ -133,7 +132,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 							// Set the name and scheduler for the BUS resource, and
 							// associate the resource with the scheduler.
 
-							bus.setup(scheduler, d.getName().name);
+							bus.setup(scheduler, d.getName().getName());
 						}
 					}
 				}
@@ -147,10 +146,10 @@ public class ASystemClassDefinitionAssistantInterpreter
 		} catch (ContextException e)
 		{
 			throw e;
-			//FIXME:this exception should be thrown
-//		} catch (ValueException e)
-//		{
-//			throw new ContextException(e, systemClass.getLocation());
+			// FIXME:this exception should be thrown
+			// } catch (ValueException e)
+			// {
+			// throw new ContextException(e, systemClass.getLocation());
 		} catch (Exception e)
 		{
 			throw new ContextException(4135, "Cannot instantiate a system class", systemClass.getLocation(), initialContext);

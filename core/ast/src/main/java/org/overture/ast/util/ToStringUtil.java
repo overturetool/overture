@@ -23,6 +23,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
@@ -55,12 +56,12 @@ public class ToStringUtil
 			accessStr = "";
 
 		return accessStr
-				+ d.getName().name
+				+ d.getName().getName()
 				+ (d.getTypeParams().isEmpty() ? ": " : "["
 						+ getTypeListString(d.getTypeParams()) + "]: ")
 				+ d.getType()
 				+ "\n\t"
-				+ d.getName().name
+				+ d.getName().getName()
 				+ params
 				+ " ==\n"
 				+ d.getBody()
@@ -74,7 +75,7 @@ public class ToStringUtil
 	{
 		return d.getAccess()
 				+ " "
-				+ d.getName().name
+				+ d.getName().getName()
 				+ (d.getTypeParams().isEmpty() ? "" : "["
 						+ getTypeListString(d.getTypeParams()) + "]")
 				+ Utils.listToString("(", getString(d.getParamPatterns()), ", ", ")")
@@ -102,7 +103,7 @@ public class ToStringUtil
 		return Utils.listToString(patterns);
 	}
 
-	private static String getTypeListString(List<LexNameToken> typeParams)
+	private static String getTypeListString(List<ILexNameToken> typeParams)
 	{
 		return "(" + Utils.listToString(typeParams) + ")";
 	}
@@ -211,9 +212,9 @@ public class ToStringUtil
 					LexNameList names = new LexNameList();
 					// checkSuperDefinition();//TODO
 					AInheritedDefinition t = (AInheritedDefinition) d;
-					for (LexNameToken vn : getVariableNames(t.getSuperdef()))
+					for (ILexNameToken vn : getVariableNames(t.getSuperdef()))
 					{
-						names.add(vn.getModifiedName(t.getName().module));
+						names.add(vn.getModifiedName(t.getName().getModule()));
 					}
 
 					return names;

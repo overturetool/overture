@@ -8,8 +8,8 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -17,7 +17,7 @@ import org.overture.typechecker.TypeCheckInfo;
 public class ARenamedDefinitionAssistantTC {
 
 	public static PDefinition findType(ARenamedDefinition d,
-			LexNameToken sought, String fromModule) {
+			ILexNameToken sought, String fromModule) {
 		
 		// We can only find an import if it is being sought from the module that
 		// imports it.
@@ -41,7 +41,7 @@ public class ARenamedDefinitionAssistantTC {
 	}
 
 	public static PDefinition findName(ARenamedDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(d, sought, scope);
 

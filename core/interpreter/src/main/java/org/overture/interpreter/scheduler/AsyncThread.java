@@ -105,14 +105,14 @@ public class AsyncThread extends SchedulablePoolThread
     				ctxt.threadState.setBreaks(new LexLocation(), null, null);
     			}
 
-        		Value rv = operation.localEval(operation.name.location, args, ctxt, false);
+        		Value rv = operation.localEval(operation.name.getLocation(), args, ctxt, false);
        			response = new MessageResponse(rv, request);
        			
        			ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
     		}
     		catch (ValueException e)
     		{
-    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.location));
+    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
     			
     			response = new MessageResponse(e, request);
     		}
@@ -153,7 +153,7 @@ public class AsyncThread extends SchedulablePoolThread
 			}
 
     		Value result = operation.localEval(
-    			operation.name.location, args, ctxt, false);
+    			operation.name.getLocation(), args, ctxt, false);
 
 			if (request.replyTo != null)
 			{
@@ -164,13 +164,13 @@ public class AsyncThread extends SchedulablePoolThread
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
 		}
 		catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
-			DebuggerReader.stopped(e.ctxt, operation.name.location);
+			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
 		}
 		catch (Exception e)
 		{

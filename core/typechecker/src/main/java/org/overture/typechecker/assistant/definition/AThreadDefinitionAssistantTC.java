@@ -7,8 +7,8 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
@@ -17,7 +17,7 @@ import org.overture.typechecker.Environment;
 public class AThreadDefinitionAssistantTC {
 
 	public static PDefinition findName(AThreadDefinition definition,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		return PDefinitionAssistantTC.findName(definition.getOperationDef(),sought, scope);
 	}

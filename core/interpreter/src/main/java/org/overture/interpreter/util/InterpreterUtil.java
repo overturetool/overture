@@ -52,7 +52,7 @@ public class InterpreterUtil
 					list.addAll(result.result);
 					Interpreter interpreter = getInterpreter(list);
 					interpreter.init(null);
-					interpreter.setDefaultName(list.get(0).getName().name);
+					interpreter.setDefaultName(list.get(0).getName().getName());
 					Value val = interpreter.execute(entry, null);
 					return val;
 				}
@@ -67,7 +67,7 @@ public class InterpreterUtil
 					list.addAll(result.result);
 					Interpreter interpreter = getInterpreter(list);
 					interpreter.init(null);
-					interpreter.setDefaultName(list.get(0).getName().name);
+					interpreter.setDefaultName(list.get(0).getName().getName());
 					Value val = interpreter.execute(entry, null);
 					return val;
 				}
@@ -82,7 +82,7 @@ public class InterpreterUtil
 					list.addAll(result.result);
 					Interpreter interpreter = getInterpreter(list);
 					interpreter.init(null);
-					interpreter.setDefaultName(list.get(0).getName().name);
+					interpreter.setDefaultName(list.get(0).getName().getName());
 					Value val = interpreter.execute(entry, null);
 					return val;
 				}

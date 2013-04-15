@@ -60,13 +60,13 @@ public class ModuleCommandReader extends CommandReader
 
 		for (AModuleModules m: modules)
 		{
-			if (m.getName().name.equals(def))
+			if (m.getName().getName().equals(def))
 			{
-				println(m.getName().name + " (default)");
+				println(m.getName().getName() + " (default)");
 			}
 			else
 			{
-				println(m.getName().name);
+				println(m.getName().getName());
 			}
 		}
 

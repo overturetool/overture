@@ -10,9 +10,9 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
@@ -29,7 +29,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ATypeDefinitionAssistantTC {
 
-	public static PDefinition findType(ATypeDefinition d, LexNameToken sought,
+	public static PDefinition findType(ATypeDefinition d, ILexNameToken sought,
 			String fromModule) {
 		
 		PType type = d.getType();
@@ -52,8 +52,8 @@ public class ATypeDefinitionAssistantTC {
 		return PDefinitionAssistantTC.findNameBaseCase(d,sought, NameScope.TYPENAME);
 	}
 
-	public static PDefinition findName(ATypeDefinition d, LexNameToken sought,
-			NameScope scope) {
+	public static PDefinition findName(ATypeDefinition d, ILexNameToken sought,
+			NameScope scope) { 
 
 		PDefinition invdef = d.getInvdef();
 		

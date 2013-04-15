@@ -8,9 +8,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 
-public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
+public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 {
 	
 	/**
@@ -19,7 +20,7 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 	private static final long serialVersionUID = -1122692848887584905L;
 
 
-	static class LexNameTokenEntry<V> implements Map.Entry<LexNameToken, V>
+	static class LexNameTokenEntry<V> implements Map.Entry<ILexNameToken, V>
 	{
 
 		Map.Entry<LexNameTokenWrapper, V> wrapped;
@@ -29,7 +30,7 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 			this.wrapped = wrapped;
 		}
 		
-		public LexNameToken getKey()
+		public ILexNameToken getKey()
 		{
 			return wrapped.getKey().token;
 		}
@@ -59,9 +60,9 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 		 * 
 		 */
 		private static final long serialVersionUID = -5420007432629328108L;
-		public LexNameToken token;
+		public ILexNameToken token;
 
-		public LexNameTokenWrapper(LexNameToken token)
+		public LexNameTokenWrapper(ILexNameToken token)
 		{
 			this.token = token;
 		}
@@ -92,7 +93,7 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 	
 	private final HashMap<LexNameTokenWrapper,V> map = new HashMap<LexNameTokenWrapper, V>();
 	
-	public V put(LexNameToken key, V value) 
+	public V put(ILexNameToken key, V value) 
 	{
 		return map.put(new LexNameTokenWrapper(key), value);		
 	};
@@ -106,9 +107,9 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 		return map.get(key);
 	}
 	
-	public Set<Entry<LexNameToken, V>> entrySet()
+	public Set<Entry<ILexNameToken, V>> entrySet()
 	{
-		Set<Entry<LexNameToken, V>> result = new HashSet<Entry<LexNameToken,V>>();
+		Set<Entry<ILexNameToken, V>> result = new HashSet<Entry<ILexNameToken,V>>();
 		
 		for (Entry<LexNameTokenWrapper, V> lexNameTokenEntry : map.entrySet())
 		{
@@ -154,9 +155,9 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 		return null;
 	}
 
-	public void putAll(Map<? extends LexNameToken, ? extends V> m)
+	public void putAll(Map<? extends ILexNameToken, ? extends V> m)
 	{
-		for (Entry<? extends LexNameToken, ? extends V> item : m.entrySet())
+		for (Entry<? extends ILexNameToken, ? extends V> item : m.entrySet())
 		{
 			put(item.getKey(), item.getValue());
 		}
@@ -168,9 +169,9 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 		this.map.clear();
 	}
 
-	public Set<LexNameToken> keySet()
+	public Set<ILexNameToken> keySet()
 	{
-		Set<LexNameToken> result = new HashSet<LexNameToken>();
+		Set<ILexNameToken> result = new HashSet<ILexNameToken>();
 		
 		for (LexNameTokenWrapper item : this.map.keySet())
 		{
@@ -190,7 +191,7 @@ public class LexNameTokenMap<V> implements Map<LexNameToken, V>, Serializable
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-		for (Iterator<Entry<LexNameToken, V>> iterator = entrySet().iterator(); iterator.hasNext();)
+		for (Iterator<Entry<ILexNameToken, V>> iterator = entrySet().iterator(); iterator.hasNext();)
 		{
 			sb.append( iterator.next());
 			if(iterator.hasNext())

@@ -6,8 +6,8 @@ import java.util.Vector;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
@@ -16,7 +16,7 @@ import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 public class AEqualsDefinitionAssistantTC {
 
 	public static PDefinition findName(AEqualsDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		List<PDefinition> defs = d.getDefs();
 		

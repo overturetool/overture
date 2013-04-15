@@ -65,7 +65,7 @@ public class VdmPpRuntimeUtil
 		Environment env = new PublicClassEnvironment(classes);
 		PExp expr;
 
-		expr = parseExpression(expression, defaultModule.getName().name, defaultModule.getName().name,dialect);
+		expr = parseExpression(expression, defaultModule.getName().getName(), defaultModule.getName().getName(),dialect);
 
 		try
 		{

@@ -4,7 +4,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -163,7 +163,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static PType polymorph(AOptionalType type, LexNameToken pname,
+	public static PType polymorph(AOptionalType type, ILexNameToken pname,
 			PType actualType) {		
 		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(),pname, actualType));
 	}

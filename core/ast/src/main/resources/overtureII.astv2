@@ -11,9 +11,9 @@ Tokens
  * external
  *  location = 'java:org.overture.ast.lex.LexLocation';
  */
-  LexToken = 'java:node:org.overture.ast.lex.LexToken';
-  LexNameToken = 'java:node:org.overture.ast.lex.LexNameToken';
-  LexIdentifierToken = 'java:node:org.overture.ast.lex.LexIdentifierToken';
+  LexToken = 'java:node:org.overture.ast.intf.lex.ILexToken';
+  LexNameToken = 'java:node:org.overture.ast.intf.lex.ILexNameToken';
+  LexIdentifierToken = 'java:node:org.overture.ast.intf.lex.ILexIdentifierToken';
   LexBooleanToken = 'java:node:org.overture.ast.lex.LexBooleanToken';
   LexCharacterToken = 'java:node:org.overture.ast.lex.LexCharacterToken';
   LexIntegerToken = 'java:node:org.overture.ast.lex.LexIntegerToken';

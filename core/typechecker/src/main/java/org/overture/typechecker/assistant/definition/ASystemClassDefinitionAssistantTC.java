@@ -73,7 +73,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AExplicitOperationDefinition edef = (AExplicitOperationDefinition)d;
 
-				if (!edef.getName().name.equals(def.getName().name) ||
+				if (!edef.getName().getName().equals(def.getName().getName()) ||
 					!edef.getParameterPatterns().isEmpty())
 				{
 					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
@@ -83,7 +83,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AImplicitOperationDefinition idef = (AImplicitOperationDefinition)d;
 
-				if (!d.getName().name.equals(def.getName().name))
+				if (!d.getName().getName().equals(def.getName().getName()))
 				{
 					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
 				}

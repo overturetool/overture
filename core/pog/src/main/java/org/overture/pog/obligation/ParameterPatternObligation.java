@@ -157,7 +157,7 @@ public class ParameterPatternObligation extends ProofObligation
 		if (predef != null)
 		{
 			foralls.append("  ");
-			foralls.append(predef.getName().name);
+			foralls.append(predef.getName().getName());
 			foralls.append("(");
 			foralls.append(argnames);
 			foralls.append(")");

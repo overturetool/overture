@@ -38,6 +38,7 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
@@ -59,7 +60,7 @@ public class Vdm2Uml
 	{
 		public Class lookup(AClassType type)
 		{
-			return lookup(type.getName().name);
+			return lookup(type.getName().getName());
 		}
 
 		@Override
@@ -167,7 +168,7 @@ public class Vdm2Uml
 		for (SClassDefinition sClass : classes)
 		{
 			console.out.println("Converting class: " + sClass.getName());
-			String className = sClass.getName().name;
+			String className = sClass.getName().getName();
 			Class class_ = buildClass(sClass);
 			this.classes.put(className, class_);
 		}
@@ -175,12 +176,12 @@ public class Vdm2Uml
 		// build inheritance relationship
 		for (SClassDefinition sClass : classes)
 		{
-			Class thisClass = this.classes.get(sClass.getName().name);
-			for (LexNameToken superToken : sClass.getSupernames())
+			Class thisClass = this.classes.get(sClass.getName().getName());
+			for (ILexNameToken superToken : sClass.getSupernames())
 			{
 				console.out.println("Adding generalization between: "
 						+ thisClass.getName() + " -> " + superToken.getName());
-				Class superClass = this.classes.get(superToken.name);
+				Class superClass = this.classes.get(superToken.getName());
 				thisClass.createGeneralization(superClass);
 			}
 		}
@@ -189,7 +190,7 @@ public class Vdm2Uml
 		// Create types embedded in VDM classes
 		for (SClassDefinition sClass : classes)
 		{
-			String className = sClass.getName().name;
+			String className = sClass.getName().getName();
 			Class class_ = this.classes.get(className);
 			addTypes(class_, sClass);
 		}
@@ -198,7 +199,7 @@ public class Vdm2Uml
 		// Build operations, functions, instance variables and values
 		for (SClassDefinition sClass : classes)
 		{
-			String className = sClass.getName().name;
+			String className = sClass.getName().getName();
 			Class class_ = this.classes.get(className);
 			addAttributesToClass(class_, sClass);
 		}
@@ -208,7 +209,7 @@ public class Vdm2Uml
 	private void addTypes(Class class_, SClassDefinition sClass)
 	{
 		console.out.println("Converting types for class: "
-				+ sClass.getName().name);
+				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
 
@@ -231,7 +232,7 @@ public class Vdm2Uml
 	private void addAttributesToClass(Class class_, SClassDefinition sClass)
 	{
 		console.out.println("Converting definitions for class: "
-				+ sClass.getName().name);
+				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
 
@@ -299,11 +300,11 @@ public class Vdm2Uml
 				PPattern expression = valueDef.getPattern();
 				if (expression instanceof AIdentifierPattern)
 				{
-					return ((AIdentifierPattern) expression).getName().name;
+					return ((AIdentifierPattern) expression).getName().getName();
 				}
 				break;
 			default:
-				return def.getName().name;
+				return def.getName().getName();
 		}
 		return "null";
 	}
@@ -311,7 +312,7 @@ public class Vdm2Uml
 	private void addExplicitFunctionToClass(Class class_,
 			AExplicitFunctionDefinition def)
 	{
-		console.out.println("\tAdding function: " + def.getName().name);
+		console.out.println("\tAdding function: " + def.getName().getName());
 		EList<String> names = new BasicEList<String>();
 		for (PPattern p : def.getParamPatternList().get(0))
 		{
@@ -332,7 +333,7 @@ public class Vdm2Uml
 
 		AFunctionType type = (AFunctionType) def.getType();
 
-		Operation operation = class_.createOwnedOperation(def.getName().name, null, null, null);
+		Operation operation = class_.createOwnedOperation(def.getName().getName(), null, null, null);
 
 		Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
 		TemplateSignature sig = null;
@@ -397,7 +398,7 @@ public class Vdm2Uml
 	private void addExplicitOperationToClass(Class class_,
 			AExplicitOperationDefinition def)
 	{
-		console.out.println("\tAdding operation: " + def.getName().name);
+		console.out.println("\tAdding operation: " + def.getName().getName());
 		EList<String> names = new BasicEList<String>();
 		EList<Type> types = new BasicEList<Type>();
 
@@ -412,8 +413,8 @@ public class Vdm2Uml
 				// now find the type
 				for (PDefinition d : def.getParamDefinitions())
 				{
-					if (d.getName().name.equals("self")
-							|| !d.getName().name.equals(name))
+					if (d.getName().getName().equals("self")
+							|| !d.getName().getName().equals(name))
 					{
 						continue;
 					}
@@ -440,7 +441,7 @@ public class Vdm2Uml
 		utc.create(class_, returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
-		Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
+		Operation operation = class_.createOwnedOperation(def.getName().getName(), names, types, returnUmlType);
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
 		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
@@ -451,7 +452,7 @@ public class Vdm2Uml
 			AInstanceVariableDefinition def)
 	{
 
-		String name = def.getName().name;
+		String name = def.getName().getName();
 		PType defType = PDefinitionAssistantTC.getType(def);
 
 		utc.create(class_, defType);
@@ -461,14 +462,14 @@ public class Vdm2Uml
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "
-					+ def.getName().name);
+					+ def.getName().getName());
 
 			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, false,utc);
 
 		} else
 		{
 			console.out.println("\tAdding property for instance variable: "
-					+ def.getName().name);
+					+ def.getName().getName());
 			Property attribute = class_.createOwnedAttribute(name, type);
 			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
 			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
@@ -488,7 +489,7 @@ public class Vdm2Uml
 
 	private Class buildClass(SClassDefinition sClass)
 	{
-		String name = sClass.getName().name;
+		String name = sClass.getName().getName();
 		boolean isAbstract = Vdm2UmlUtil.hasSubclassResponsabilityDefinition(sClass.getDefinitions());
 		Class class_ = modelWorkingCopy.createOwnedClass(name, isAbstract);
 

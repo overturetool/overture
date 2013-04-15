@@ -6,14 +6,13 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.definitions.SClassDefinitionBase;
 
 public class PDefinitionAssistant {
 
 	public static void setClassDefinition(PDefinition pDefinition,
 			SClassDefinition def) {
 		switch (pDefinition.kindPDefinition()) {
-		case SClassDefinitionBase.kindPDefinition:
+		case SClassDefinition.kindPDefinition:
 			for (PDefinition d : def.getDefinitions())
 			{
 				setClassDefinition(d,def);

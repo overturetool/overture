@@ -14,8 +14,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -36,7 +36,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		Iterator<PType> ti = actualTypes.iterator();
 		AFunctionType ftype = (AFunctionType)impdef.getType();
 
-		for (LexNameToken pname: impdef.getTypeParams())
+		for (ILexNameToken pname: impdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			//AFunctionTypeAssistent.
@@ -51,10 +51,10 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		
 		List<PDefinition> defs = new ArrayList<PDefinition>();
 
-		for (LexNameToken pname: node.getTypeParams())
+		for (ILexNameToken pname: node.getTypeParams())
 		{
 			PDefinition p = 
-					AstFactory.newALocalDefinition(pname.location, pname.clone(), NameScope.NAMES, AstFactory.newAParameterType(pname.clone()));
+					AstFactory.newALocalDefinition(pname.getLocation(), pname.clone(), NameScope.NAMES, AstFactory.newAParameterType(pname.clone()));
 //					new ALocalDefinition(
 //				pname.location, NameScope.NAMES,false,null, null, new AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
@@ -66,7 +66,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 	}
 
 	public static PDefinition findName(AImplicitFunctionDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
@@ -201,7 +201,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 				AstFactory.newAExplicitFunctionDefinition(
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
-						(List<LexNameToken>)d.getTypeParams().clone(), 
+						(List<ILexNameToken>)d.getTypeParams().clone(), 
 						AFunctionTypeAssistantTC.getPostType((AFunctionType)d.getType()), 
 						parameters, d.getPostcondition(), null, null, false, null);
 				 
@@ -225,7 +225,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 				AstFactory.newAExplicitFunctionDefinition(
 						d.getName().getPreName(d.getPrecondition().getLocation()), 
 						NameScope.GLOBAL,
-						(List<LexNameToken>) d.getTypeParams().clone(),
+						(List<ILexNameToken>) d.getTypeParams().clone(),
 						AFunctionTypeAssistantTC.getPreType((AFunctionType)d.getType()),
 						getParamPatternList(d),
 						d.getPrecondition(), null, null, false,null);

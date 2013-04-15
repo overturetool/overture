@@ -291,7 +291,7 @@ public class VdmElementLabels {
 				result.append(" : " , StyledString.DECORATIONS_STYLER);
 			}
 			
-			result.append(type.getRenamed().name, StyledString.DECORATIONS_STYLER);
+			result.append(type.getRenamed().getName(), StyledString.DECORATIONS_STYLER);
 		} else if (element instanceof SValueImport) {
 			SValueImport value = (SValueImport) element;
 			result.append(value.getName().getSimpleName());

@@ -47,6 +47,9 @@ import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.*;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -222,7 +225,7 @@ public class AstFactory {
 	}
 		
 	private static void initDefinition(PDefinition result,
-			Pass values, LexLocation location, LexNameToken name, NameScope scope) {
+			Pass values, LexLocation location, ILexNameToken name, NameScope scope) {
 		result.setPass(values);
 		result.setLocation(location);
 		result.setName(name);
@@ -353,7 +356,7 @@ public class AstFactory {
 	}
 
 	public static AClassClassDefinition newAClassClassDefinition(
-			LexNameToken className, LexNameList superclasses,
+			ILexNameToken className, LexNameList superclasses,
 			List<PDefinition> members) {
 		 
 		AClassClassDefinition result = new AClassClassDefinition();
@@ -363,8 +366,8 @@ public class AstFactory {
 		return result;
 	}
 
-	protected static void initClassDefinition(SClassDefinition result, LexNameToken className, LexNameList superclasses, List<PDefinition> members) {
-		initDefinition(result, Pass.DEFS, className.location, className, NameScope.CLASSNAME);
+	protected static void initClassDefinition(SClassDefinition result, ILexNameToken className, LexNameList superclasses, List<PDefinition> members) {
+		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
 		result.setUsed(true);
 		result.setTypeChecked(false);
@@ -390,7 +393,7 @@ public class AstFactory {
 	}
 
 	public static ASystemClassDefinition newASystemClassDefinition(
-			LexNameToken className, List<PDefinition> members) {
+			ILexNameToken className, List<PDefinition> members) {
 		ASystemClassDefinition result = new ASystemClassDefinition();
 		initClassDefinition(result, className, new LexNameList(), members);
 		
@@ -398,10 +401,10 @@ public class AstFactory {
 	}
 
 	public static ANamedInvariantType newANamedInvariantType(
-			LexNameToken typeName, PType type) {
+			ILexNameToken typeName, PType type) {
 
 		ANamedInvariantType result = new ANamedInvariantType();
-		initType(result, typeName.location);
+		initType(result, typeName.getLocation());
 		initInvariantType(result);
 		
 		result.setName(typeName);
@@ -413,11 +416,11 @@ public class AstFactory {
 	
 
 	public static ARecordInvariantType newARecordInvariantType(
-			LexNameToken name, List<AFieldField> fields) {
+			ILexNameToken name, List<AFieldField> fields) {
 		
 		ARecordInvariantType result = new ARecordInvariantType();
 		
-		initType(result,name.location);
+		initType(result,name.getLocation());
 		initInvariantType(result);
 		
 		result.setName(name);
@@ -426,11 +429,11 @@ public class AstFactory {
 		return result;
 	}
 
-	public static ATypeDefinition newATypeDefinition(LexNameToken name,
+	public static ATypeDefinition newATypeDefinition(ILexNameToken name,
 			SInvariantType type, PPattern invPattern, PExp invExpression) {
 		
 		ATypeDefinition result = new ATypeDefinition();
-		initDefinition(result, Pass.TYPES, name.location, name, NameScope.TYPENAME);
+		initDefinition(result, Pass.TYPES, name.getLocation(), name, NameScope.TYPENAME);
 		
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
@@ -440,15 +443,15 @@ public class AstFactory {
 		
 	}
 
-	public static AExplicitFunctionDefinition newAExplicitFunctionDefinition(LexNameToken name,
-			NameScope scope, List<LexNameToken> typeParams, AFunctionType type,
+	public static AExplicitFunctionDefinition newAExplicitFunctionDefinition(ILexNameToken name,
+			NameScope scope, List<ILexNameToken> typeParams, AFunctionType type,
 			List<List<PPattern>> parameters, PExp body, PExp precondition,
-			PExp postcondition, boolean typeInvariant, LexNameToken measure) {
+			PExp postcondition, boolean typeInvariant, ILexNameToken measure) {
 		
 		AExplicitFunctionDefinition result = new AExplicitFunctionDefinition();
 		
 		//Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, scope);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, scope);
 
 		
 		//AExplicitFunctionDefinition initialization
@@ -473,17 +476,17 @@ public class AstFactory {
 	}
 
 	public static AImplicitFunctionDefinition newAImplicitFunctionDefinition(
-			LexNameToken name, NameScope scope,
-			List<LexNameToken> typeParams,
+			ILexNameToken name, NameScope scope,
+			List<ILexNameToken> typeParams,
 			List<APatternListTypePair> parameterPatterns,
 			APatternTypePair resultPattern, PExp body, PExp precondition,
-			PExp postcondition, LexNameToken measure) {
+			PExp postcondition, ILexNameToken measure) {
 		
 		AImplicitFunctionDefinition result = new AImplicitFunctionDefinition();
 
 		
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, scope);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, scope);
 		
 		//AImplicitFunctionDefinition initialization
 		result.setTypeParams(typeParams);
@@ -558,7 +561,7 @@ public class AstFactory {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (LexNameToken var : PPatternAssistant.getVariableNames(p))
+		for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
 		{
 			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}
@@ -569,7 +572,7 @@ public class AstFactory {
 	}
 
 	public static PDefinition newAUntypedDefinition(LexLocation location,
-			LexNameToken name, NameScope scope) {
+			ILexNameToken name, NameScope scope) {
 
 		AUntypedDefinition result = new AUntypedDefinition();
 		// Definition initialization
@@ -578,13 +581,13 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AStateDefinition newAStateDefinition(LexNameToken name,
+	public static AStateDefinition newAStateDefinition(ILexNameToken name,
 			List<AFieldField> fields, PPattern invPattern,
 			PExp invExpression, PPattern initPattern, PExp initExpression) {
 		
 		AStateDefinition result = new AStateDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.TYPES, name.location, name, NameScope.STATE);
+		initDefinition(result, Pass.TYPES, name.getLocation(), name, NameScope.STATE);
 		
 		//AStateDefinition init
 		result.setFields(fields);
@@ -599,8 +602,8 @@ public class AstFactory {
 		
 		for (AFieldField f : fields)
 		{
-			stateDefs.add(AstFactory.newALocalDefinition(f.getTagname().location, f.getTagname(), NameScope.STATE, f.getType()));
-			ALocalDefinition ld = AstFactory.newALocalDefinition(f.getTagname().location,
+			stateDefs.add(AstFactory.newALocalDefinition(f.getTagname().getLocation(), f.getTagname(), NameScope.STATE, f.getType()));
+			ALocalDefinition ld = AstFactory.newALocalDefinition(f.getTagname().getLocation(),
 					f.getTagname().getOldName(), NameScope.OLDSTATE, f.getType()); 
 
 			ld.setUsed(true);  // Else we moan about unused ~x names
@@ -624,11 +627,11 @@ public class AstFactory {
 	}
 
 	public static ALocalDefinition newALocalDefinition(LexLocation location,
-			LexNameToken name, NameScope scope, PType type) {
+			ILexNameToken name, NameScope scope, PType type) {
 		
 		ALocalDefinition result = new ALocalDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, scope);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, scope);
 		
 		result.setType(type);
 		result.setValueDefinition(false);
@@ -637,13 +640,13 @@ public class AstFactory {
 	}
 
 	public static AExplicitOperationDefinition newAExplicitOperationDefinition(
-			LexNameToken name, AOperationType type,
+			ILexNameToken name, AOperationType type,
 			List<PPattern> parameters, PExp precondition, PExp postcondition,
 			PStm body) {
 		
 		AExplicitOperationDefinition result = new AExplicitOperationDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, NameScope.GLOBAL);
 		
 		result.setType(type);
 		result.setParameterPatterns(parameters);
@@ -656,13 +659,13 @@ public class AstFactory {
 	}
 
 	public static AImplicitOperationDefinition newAImplicitOperationDefinition(
-			LexNameToken name,
+			ILexNameToken name,
 			List<APatternListTypePair> parameterPatterns,
 			APatternTypePair resultPattern, PStm body, ASpecificationStm spec) {
 		
 		AImplicitOperationDefinition result = new AImplicitOperationDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, NameScope.GLOBAL);
 		
 		result.setParameterPatterns(parameterPatterns);
 		result.setResult(resultPattern);
@@ -680,7 +683,7 @@ public class AstFactory {
 			ptypes.addAll(getTypeList(ptp));
 		}
 		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes,
-				(result.getResult() == null ? AstFactory.newAVoidType(name.location) : result.getResult().getType())); 
+				(result.getResult() == null ? AstFactory.newAVoidType(name.getLocation()) : result.getResult().getType())); 
 		result.setType(operationType);
 		
 		return result;
@@ -725,7 +728,7 @@ public class AstFactory {
 		AExternalClause result = new AExternalClause();
 		result.setMode(mode);
 		result.setIdentifiers(names);
-		result.setType((type == null) ? AstFactory.newAUnknownType(names.get(0).location) : type);
+		result.setType((type == null) ? AstFactory.newAUnknownType(names.get(0).getLocation()) : type);
 		
 		return result;
 	}
@@ -780,10 +783,10 @@ public class AstFactory {
 	}
 
 	public static AClassInvariantDefinition newAClassInvariantDefinition(
-			LexNameToken name, PExp expression) {
+			ILexNameToken name, PExp expression) {
 		AClassInvariantDefinition result = new AClassInvariantDefinition();
 		// Definition initialization
-		initDefinition(result, Pass.DEFS, name.location, name, NameScope.GLOBAL);
+		initDefinition(result, Pass.DEFS, name.getLocation(), name, NameScope.GLOBAL);
 		
 		result.setExpression(expression);
 		
@@ -791,11 +794,11 @@ public class AstFactory {
 	}
 
 	public static AInstanceVariableDefinition newAInstanceVariableDefinition(
-			LexNameToken name, PType type, PExp expression) {
+			ILexNameToken name, PType type, PExp expression) {
 		AInstanceVariableDefinition result = new AInstanceVariableDefinition();
 		
 		// Definition initialization
-		initDefinition(result, Pass.VALUES, name.location, name, NameScope.STATE);
+		initDefinition(result, Pass.VALUES, name.getLocation(), name, NameScope.STATE);
 
 		result.setType(type);
 		result.setExpression(expression);
@@ -816,25 +819,26 @@ public class AstFactory {
 		initDefinition(result, Pass.DEFS, statement.getLocation(), null, NameScope.GLOBAL);
 
 		result.setStatement(statement);
-		result.setOperationName(LexNameToken.getThreadName(statement.getLocation()));
+		// used to be a static method on LexNameToken - removed when we went to interface		
+		result.setOperationName(new LexNameToken(statement.getLocation().module, "thread", statement.getLocation()));
 		result.setAccess(PAccessSpecifierAssistant.getProtected());
 		
 		return result;
 	}
 	
-	public static AThreadDefinition newAThreadDefinition(LexNameToken opname,
+	public static AThreadDefinition newAThreadDefinition(ILexNameToken opname,
 			List<PExp> args) {
 		
 		APeriodicStm periodicStatement = AstFactory.newAPeriodicStm(opname,args);
 		return newAThreadDefinition(periodicStatement);
 	}
 
-	private static APeriodicStm newAPeriodicStm(LexNameToken opname,
+	private static APeriodicStm newAPeriodicStm(ILexNameToken opname,
 			List<PExp> args) {
 		APeriodicStm result = new APeriodicStm();
 
 		//Statement initialization
-		initStatement(result, opname.location);
+		initStatement(result, opname.getLocation());
 
 		result.setOpname(opname);
 		result.setArgs(args);
@@ -843,7 +847,7 @@ public class AstFactory {
 	}
 
 	public static APerSyncDefinition newAPerSyncDefinition(LexLocation location,
-			LexNameToken opname, PExp guard) {
+			ILexNameToken opname, PExp guard) {
 		APerSyncDefinition result = new APerSyncDefinition();
 		// Definition initialization
 		initDefinition(result, Pass.DEFS, location, opname.getPerName(location), NameScope.GLOBAL);
@@ -932,11 +936,11 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AIdentifierPattern newAIdentifierPattern(LexNameToken token) {
+	public static AIdentifierPattern newAIdentifierPattern(ILexNameToken token) {
 		AIdentifierPattern result = new AIdentifierPattern();
-		initPattern(result,token.location);
+		initPattern(result,token.getLocation());
 				
-		result.setLocation(token.location);
+		result.setLocation(token.getLocation());
 		result.setName(token);
 		result.setConstrained(false);
 		
@@ -1263,17 +1267,17 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AFieldExp newAFieldExp(PExp object, LexNameToken field) {
+	public static AFieldExp newAFieldExp(PExp object, ILexNameToken field) {
 		AFieldExp result = new AFieldExp();
 		result.setLocation(object.getLocation());
 		result.setObject(object);
-		result.setField(new LexIdentifierToken(field.name, field.old, field.location));
+		result.setField(new LexIdentifierToken(field.getName(), field.getOld(), field.getLocation()));
 		result.setMemberName(field);
 		result.getField().getLocation().executable(true);
 		return result;
 	}
 
-	public static PExp newAFieldExp(PExp object, LexIdentifierToken field) {
+	public static PExp newAFieldExp(PExp object, ILexIdentifierToken field) {
 		AFieldExp result = new AFieldExp();
 		result.setLocation(object.getLocation());
 		result.setObject(object);
@@ -1320,9 +1324,9 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AVariableExp newAVariableExp(LexNameToken name) {
+	public static AVariableExp newAVariableExp(ILexNameToken name) {
 		AVariableExp result = new AVariableExp();
-		initExpression(result, name.location);
+		initExpression(result, name.getLocation());
 		result.setName(name);
 		result.setOriginal(name.getName());
 		return result;
@@ -1485,7 +1489,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AMkTypeExp newAMkTypeExp(LexNameToken typename, List<PExp> args) {
+	public static AMkTypeExp newAMkTypeExp(ILexNameToken typename, List<PExp> args) {
 		AMkTypeExp result = new AMkTypeExp();
 		initExpression(result, typename.getLocation());
 		result.setTypeName(typename);
@@ -1494,7 +1498,7 @@ public class AstFactory {
 	}
 
 	public static AIsExp newAIsExp(LexLocation location,
-			LexNameToken name, PExp test) {
+			ILexNameToken name, PExp test) {
 		AIsExp result = new AIsExp();
 		initExpression(result, location);
 		
@@ -1772,7 +1776,7 @@ public class AstFactory {
 	}
 
 	public static AIsOfBaseClassExp newAIsOfBaseClassExp(LexLocation start,
-			LexNameToken classname, PExp pExp) {
+			ILexNameToken classname, PExp pExp) {
 		AIsOfBaseClassExp result = new AIsOfBaseClassExp();
 		initExpression(result, start);
 		
@@ -1782,7 +1786,7 @@ public class AstFactory {
 	}
 
 	public static AIsOfClassExp newAIsOfClassExp(LexLocation start,
-			LexNameToken classname, PExp pExp) {
+			ILexNameToken classname, PExp pExp) {
 		AIsOfClassExp result = new AIsOfClassExp();
 		initExpression(result, start);
 
@@ -1822,16 +1826,16 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AAllImport newAAllImport(LexNameToken name) {
+	public static AAllImport newAAllImport(ILexNameToken name) {
 		AAllImport result = new AAllImport();
-		result.setLocation(name.location);
+		result.setLocation(name.getLocation());
 		result.setName(name);
 		result.setRenamed(null);
 		return result;
 	}
 
 	public static AFromModuleImports newAFromModuleImports(
-			LexIdentifierToken name, List<List<PImport>> signatures) {
+			ILexIdentifierToken name, List<List<PImport>> signatures) {
 		return new AFromModuleImports(name, signatures);
 	}
 
@@ -1916,16 +1920,16 @@ public class AstFactory {
 		return result;
 	}
 
-	public static ATypeExport newATypeExport(LexNameToken name, boolean struct) {
+	public static ATypeExport newATypeExport(ILexNameToken name, boolean struct) {
 		ATypeExport result = new ATypeExport();
-		result.setLocation(name.location);
+		result.setLocation(name.getLocation());
 		result.setName(name);
 		result.setStruct(struct);
 		return result;
 	}
 
 	public static AValueExport newAValueExport(LexLocation location,
-			List<LexNameToken> nameList, PType type) {
+			List<ILexNameToken> nameList, PType type) {
 		AValueExport result = new AValueExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
@@ -1934,7 +1938,7 @@ public class AstFactory {
 	}
 
 	public static AFunctionExport newAFunctionExport(LexLocation location,
-			List<LexNameToken> nameList, PType type) {
+			List<ILexNameToken> nameList, PType type) {
 		AFunctionExport result = new AFunctionExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
@@ -1943,7 +1947,7 @@ public class AstFactory {
 	}
 
 	public static AOperationExport newAOperationExport(LexLocation location,
-			List<LexNameToken> nameList, PType type) {
+			List<ILexNameToken> nameList, PType type) {
 		AOperationExport result = new AOperationExport();
 		result.setLocation(location);
 		result.setNameList(nameList);
@@ -1951,25 +1955,25 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AModuleImports newAModuleImports(LexIdentifierToken name,
+	public static AModuleImports newAModuleImports(ILexIdentifierToken name,
 			List<AFromModuleImports> imports) {
 		return new AModuleImports(name, imports);
 	}
 
 	public static ATypeImport newATypeImport(ATypeDefinition def,
-			LexNameToken renamed) {
+			ILexNameToken renamed) {
 		ATypeImport result = new ATypeImport();
-		result.setLocation(def.getName().location);
+		result.setLocation(def.getName().getLocation());
 		result.setName(def.getName());
 		result.setRenamed(renamed);
 		result.setDef(def);
 		return result;
 	}
 
-	public static ATypeImport newATypeImport(LexNameToken defname,
-			LexNameToken renamed) {
+	public static ATypeImport newATypeImport(ILexNameToken defname,
+			ILexNameToken renamed) {
 		ATypeImport result = new ATypeImport();
-		result.setLocation(defname.location);
+		result.setLocation(defname.getLocation());
 		result.setName(defname);
 		result.setRenamed(renamed);
 		result.setDef(null);
@@ -1987,10 +1991,10 @@ public class AstFactory {
 	}
 
 	public static AFunctionValueImport newAFunctionValueImport(
-			LexNameToken defname, PType type, LexNameList typeParams,
-			LexNameToken renamed) {
+			ILexNameToken defname, PType type, LexNameList typeParams,
+			ILexNameToken renamed) {
 		AFunctionValueImport result = new AFunctionValueImport();
-		result.setLocation(defname.location);
+		result.setLocation(defname.getLocation());
 		result.setName(defname);
 		result.setRenamed(renamed);
 		result.setImportType(type);
@@ -2000,9 +2004,9 @@ public class AstFactory {
 	}
 
 	public static AOperationValueImport newAOperationValueImport(
-			LexNameToken defname, PType type, LexNameToken renamed) {
+			ILexNameToken defname, PType type, ILexNameToken renamed) {
 		AOperationValueImport result = new AOperationValueImport();
-		result.setLocation(defname.location);
+		result.setLocation(defname.getLocation());
 		result.setName(defname);
 		result.setRenamed(renamed);
 		result.setImportType(type);
@@ -2103,19 +2107,19 @@ public class AstFactory {
 		return result;
 	}
 
-	public static ARecordPattern newARecordPattern(LexNameToken typename,
+	public static ARecordPattern newARecordPattern(ILexNameToken typename,
 			List<PPattern> list) {
 		ARecordPattern result = new ARecordPattern();
-		initPattern(result, typename.location);
+		initPattern(result, typename.getLocation());
 		result.setPlist(list);
 		result.setTypename(typename);
 		result.setType(AstFactory.getAUnresolvedType(typename));
 		return result;
 	}
 
-	private static AUnresolvedType getAUnresolvedType(LexNameToken typename) {
+	private static AUnresolvedType getAUnresolvedType(ILexNameToken typename) {
 		AUnresolvedType result = new AUnresolvedType();
-		initType(result, typename.location);
+		initType(result, typename.getLocation());
 		
 		result.setName(typename);
 		return result;
@@ -2212,9 +2216,9 @@ public class AstFactory {
 		return result;
 	}
 
-	public static ACallStm newACallStm(LexNameToken name, List<PExp> args) {
+	public static ACallStm newACallStm(ILexNameToken name, List<PExp> args) {
 		ACallStm result = new ACallStm();
-		initStatement(result, name.location);
+		initStatement(result, name.getLocation());
 
 		result.setName(name);
 		result.setArgs(args);
@@ -2223,7 +2227,7 @@ public class AstFactory {
 	}
 
 	public static ACallObjectStm newACallObjectStm(PObjectDesignator designator,
-			LexNameToken classname, List<PExp> args) {
+			ILexNameToken classname, List<PExp> args) {
 		ACallObjectStm result = new ACallObjectStm();
 		initStatement(result, designator.getLocation());
 		
@@ -2231,7 +2235,7 @@ public class AstFactory {
 		result.setClassname(classname);
 		result.setFieldname(null);
 		result.setArgs(args);
-		result.setExplicit(classname.explicit);
+		result.setExplicit(classname.getExplicit());
 		
 		return result;
 	}
@@ -2262,7 +2266,7 @@ public class AstFactory {
 	}
 
 	public static PObjectDesignator newAFieldObjectDesignator(
-			PObjectDesignator object, LexNameToken classname) {
+			PObjectDesignator object, ILexNameToken classname) {
 		AFieldObjectDesignator result = new AFieldObjectDesignator();
 		result.setLocation(object.getLocation());
 		result.setObject(object);
@@ -2293,9 +2297,9 @@ public class AstFactory {
 	}
 
 	public static AIdentifierObjectDesignator newAIdentifierObjectDesignator(
-			LexNameToken name) {
+			ILexNameToken name) {
 		AIdentifierObjectDesignator result = new AIdentifierObjectDesignator();
-		result.setLocation(name.location);
+		result.setLocation(name.getLocation());
 		result.setName(name);
 		result.setExpression(AstFactory.newAVariableExp(name.getExplicit(true)));
 		return result;
@@ -2343,7 +2347,7 @@ public class AstFactory {
 	}
 
 	public static AForIndexStm newAForIndexStm(LexLocation token,
-			LexNameToken var, PExp from, PExp to, PExp by, PStm body) {
+			ILexNameToken var, PExp from, PExp to, PExp by, PStm body) {
 		
 		AForIndexStm result = new AForIndexStm();
 		initStatement(result, token);
@@ -2426,9 +2430,9 @@ public class AstFactory {
 	}
 
 	public static AAssignmentDefinition newAAssignmentDefinition(
-			LexNameToken name, PType type, PExp exp) {
+			ILexNameToken name, PType type, PExp exp) {
 		AAssignmentDefinition result = new AAssignmentDefinition();
-		initDefinition(result,Pass.VALUES,name.location,name,NameScope.STATE);
+		initDefinition(result,Pass.VALUES,name.getLocation(),name,NameScope.STATE);
 		
 		result.setType(type);
 		result.setExpression(exp);
@@ -2540,7 +2544,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AFieldField newAFieldField(LexNameToken tagname, String tag,
+	public static AFieldField newAFieldField(ILexNameToken tagname, String tag,
 			PType type, boolean equalityAbstraction) {
 		AFieldField result = new AFieldField();
 		
@@ -2638,19 +2642,19 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AUnresolvedType newAUnresolvedType(LexNameToken typename) {
+	public static AUnresolvedType newAUnresolvedType(ILexNameToken typename) {
 		AUnresolvedType result = new AUnresolvedType();
-		initType(result, typename.location);
+		initType(result, typename.getLocation());
 		
 		result.setName(typename);
 		
 		return result;
 	}
 
-	public static AParameterType newAParameterType(LexNameToken name) {
+	public static AParameterType newAParameterType(ILexNameToken name) {
 		AParameterType result = new AParameterType();
 		
-		initType(result, name.location);
+		initType(result, name.getLocation());
 		result.setName(name);
 		return result;
 	}
@@ -2664,20 +2668,20 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AClassInvariantStm newAClassInvariantStm(LexNameToken name,
+	public static AClassInvariantStm newAClassInvariantStm(ILexNameToken name,
 			List<PDefinition> invdefs) {
 		AClassInvariantStm result = new AClassInvariantStm();
-		initStatement(result, name.location);
+		initStatement(result, name.getLocation());
 		
 		result.setName(name);
 		result.setInvDefs(invdefs);
-		name.location.executable(false);
+		name.getLocation().executable(false);
 		
 		return result;
 	}
 
 	public static AInheritedDefinition newAInheritedDefinition(
-			LexNameToken localname, PDefinition d) {
+			ILexNameToken localname, PDefinition d) {
 		AInheritedDefinition result = new AInheritedDefinition();
 		initDefinition(result, d.getPass(), d.getLocation(), localname, d.getNameScope());
 		
@@ -2699,10 +2703,10 @@ public class AstFactory {
 		return result;
 	}
 
-	public static ARenamedDefinition newARenamedDefinition(LexNameToken name,
+	public static ARenamedDefinition newARenamedDefinition(ILexNameToken name,
 			PDefinition def) {
 		ARenamedDefinition result = new ARenamedDefinition();
-		initDefinition(result, def.getPass() , name.location, name, def.getNameScope());
+		initDefinition(result, def.getPass() , name.getLocation(), name, def.getNameScope());
 		result.setDef(def);
 		
 		return result;
@@ -2774,7 +2778,7 @@ public class AstFactory {
 	}
 
 	public static AExternalDefinition newAExternalDefinition(PDefinition state,
-			LexToken mode) {
+			ILexToken mode) {
 		AExternalDefinition result = new AExternalDefinition();
 		initDefinition(result, Pass.DEFS, state.getLocation(), state.getName(), NameScope.STATE);
 		
@@ -2945,9 +2949,9 @@ public class AstFactory {
 	}
 
 	public static AIdentifierStateDesignator newAIdentifierStateDesignator(
-			LexNameToken name) {
+			ILexNameToken name) {
 		AIdentifierStateDesignator result = new AIdentifierStateDesignator();
-		initStateDesignator(result, name.location);
+		initStateDesignator(result, name.getLocation());
 		result.setName(name);
 		return result;
 	}
@@ -2972,7 +2976,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static APostOpExp newAPostOpExp(LexNameToken opname,
+	public static APostOpExp newAPostOpExp(ILexNameToken opname,
 			PExp preexpression, PExp postexpression, List<AErrorCase> errors,
 			AStateDefinition state) {
 		APostOpExp result = new APostOpExp();
@@ -2987,7 +2991,7 @@ public class AstFactory {
 		return result;
 	}
 
-	public static APreOpExp newAPreOpExp(LexNameToken opname, PExp expression,
+	public static APreOpExp newAPreOpExp(ILexNameToken opname, PExp expression,
 			List<AErrorCase> errors, AStateDefinition state) {
 		APreOpExp result = new APreOpExp();
 		initExpression(result, expression);
@@ -3055,7 +3059,7 @@ public class AstFactory {
 		return newAModuleModules(null, new Vector<PDefinition>());
 	}
 
-	public static ANarrowExp newANarrowExpression(LexLocation location, LexNameToken name, PExp test){
+	public static ANarrowExp newANarrowExpression(LexLocation location, ILexNameToken name, PExp test){
 		
 		ANarrowExp result = new ANarrowExp();
 		
