@@ -275,6 +275,7 @@ public class Vdm2UmlAssociationUtil
 		association.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(access));
 
 		Property prop = association.getMemberEnd(name, null);
+		prop.setVisibility(association.getVisibility());
 		prop.setIsReadOnly(readOnly);
 
 		//set default
