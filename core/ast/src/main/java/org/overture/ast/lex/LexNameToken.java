@@ -43,6 +43,9 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	}
 
 
+	public String getName(){
+		return name;
+	}
 
 
 
