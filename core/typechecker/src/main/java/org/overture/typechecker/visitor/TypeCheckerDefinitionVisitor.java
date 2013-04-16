@@ -434,7 +434,7 @@ public class TypeCheckerDefinitionVisitor extends
 							"Measure parameters different to function", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
-					TypeChecker.detail2(node.getMeasure().getName(),
+					TypeChecker.detail2(node.getMeasure().getFullName(),
 							mtype.getParameters(), "Expected",
 							AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
 				}

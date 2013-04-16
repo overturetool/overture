@@ -65,7 +65,7 @@ public class ModuleEnvironment extends Environment
 
 		for (PDefinition d: module.getDefs())
 		{
-			sb.append(d.getName().getName());
+			sb.append(d.getName().getFullName());
 			sb.append("\n");
 		}
 

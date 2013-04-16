@@ -304,7 +304,7 @@ public class VdmElementLabels {
 		}
 
 		if (element.getRenamed()!= null) {
-			result.append(" (renamed as: " + element.getRenamed().getName() + ")",
+			result.append(" (renamed as: " + element.getRenamed().getFullName() + ")",
 					StyledString.DECORATIONS_STYLER);
 		}
 		return result;
@@ -442,7 +442,7 @@ public class VdmElementLabels {
 
 		}
 		else 
-			result.append(element.getName().getName());
+			result.append(element.getName().getFullName());
 		return result;
 	}
 

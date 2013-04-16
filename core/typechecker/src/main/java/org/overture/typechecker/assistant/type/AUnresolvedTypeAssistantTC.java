@@ -110,7 +110,7 @@ public class AUnresolvedTypeAssistantTC {
 	}
 
 	public static PType isType(AUnresolvedType exptype, String typename) {
-		return exptype.getName().getName().equals(typename) ? exptype : null;
+		return exptype.getName().getFullName().equals(typename) ? exptype : null;
 	}
 
 	public static boolean equals(AUnresolvedType type, Object other) {

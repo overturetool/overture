@@ -132,9 +132,9 @@ public class TypePrettyPrinterVisitor extends
 		{
 			if(name.getModule()!=null && !name.getModule().equals(question.getClassName()))
 			{
-				return name.getModule()+"`"+name.getName();
+				return name.getModule()+"`"+name.getFullName();
 			}
-			return name.getName();
+			return name.getFullName();
 		}
 		
 		return "unresolved";

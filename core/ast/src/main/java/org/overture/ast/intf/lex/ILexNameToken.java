@@ -8,6 +8,8 @@ import org.overture.ast.types.PType;
 public interface ILexNameToken extends ILexIdentifierToken
 {
 
+	String getFullName();
+	
 	int compareTo(ILexNameToken o);
 
 	ILexNameToken copy();

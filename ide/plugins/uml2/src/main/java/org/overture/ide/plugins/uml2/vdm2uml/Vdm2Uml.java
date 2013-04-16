@@ -180,7 +180,7 @@ public class Vdm2Uml
 			for (ILexNameToken superToken : sClass.getSupernames())
 			{
 				console.out.println("Adding generalization between: "
-						+ thisClass.getName() + " -> " + superToken.getName());
+						+ thisClass.getName() + " -> " + superToken.getFullName());
 				Class superClass = this.classes.get(superToken.getName());
 				thisClass.createGeneralization(superClass);
 			}

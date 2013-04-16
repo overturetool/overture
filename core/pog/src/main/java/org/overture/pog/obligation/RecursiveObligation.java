@@ -47,7 +47,7 @@ public class RecursiveObligation extends ProofObligation
 		super(apply.getLocation(), POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(def.getMeasure().getName());
+		sb.append(def.getMeasure().getFullName());
 			
 		if (def.getTypeParams() != null && !def.getTypeParams().isEmpty())
 		{

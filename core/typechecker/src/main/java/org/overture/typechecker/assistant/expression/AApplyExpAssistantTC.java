@@ -196,12 +196,12 @@ public class AApplyExpAssistantTC {
 		}
 		else if (root instanceof AVariableExp)
 		{
-			start = measure.getName() + "(";
+			start = measure.getFullName() + "(";
 		}
 		else if (root instanceof AFuncInstatiationExp)
 		{
 			AFuncInstatiationExp fie = (AFuncInstatiationExp)root;
-			start = measure.getName() + "[" + Utils.listToString(fie.getActualTypes()) + "](";
+			start = measure.getFullName() + "[" + Utils.listToString(fie.getActualTypes()) + "](";
 		}
 		else
 		{
