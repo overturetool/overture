@@ -415,6 +415,7 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 			IVdmThread[] threads = getThreads();
 			if (threads.length > 0) {
 				waitingForThreads = false;
+				handleCustomPreTerminationCommands();
 			}
 			for (int i = 0; i < threads.length; ++i) {
 				threads[i].sendTerminationRequest();
@@ -521,6 +522,16 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	public void handleCustomTerminationCommands() {
 		synchronized (threads) {
 			if (threads.size() == 1) {
+				target.handleCustomTerminationCommands(threads.get(0)
+						.getDbgpSession());
+			}
+		}
+
+	}
+	
+	public void handleCustomPreTerminationCommands() {
+		synchronized (threads) {
+			if (!threads.isEmpty()) {
 				target.handleCustomTerminationCommands(threads.get(0)
 						.getDbgpSession());
 			}

@@ -10,6 +10,8 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.modules.AAllImport;
@@ -248,13 +250,13 @@ public class ModuleList extends Vector<AModuleModules>
 	}
 
 	// This function is from the module reader
-	public static AFromModuleImports importAll(LexIdentifierToken from)
+	public static AFromModuleImports importAll(ILexIdentifierToken from)
 	{
 		List<List<PImport>> types = new Vector<List<PImport>>();
-		LexNameToken all = new LexNameToken(from.getName(), "all", from.location);
+		ILexNameToken all = new LexNameToken(from.getName(), "all", from.getLocation());
 		List<PImport> impAll = new Vector<PImport>();
 		AAllImport iport = AstFactory.newAAllImport(all);
-		iport.setLocation(all.location);
+		iport.setLocation(all.getLocation());
 		iport.setName(all);
 		iport.setRenamed(all);
 		iport.setFrom(null);

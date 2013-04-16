@@ -39,10 +39,10 @@ public class ViewLabelProvider extends LabelProvider
 	{
 		if (obj instanceof SClassDefinition)
 		{
-			return ((SClassDefinition) obj).getName().name;
+			return ((SClassDefinition) obj).getName().getName();
 		} else if (obj instanceof AModuleModules)
 		{
-			return ((AModuleModules) obj).getName().name;
+			return ((AModuleModules) obj).getName().getName();
 		}
 		return obj.toString();
 	}

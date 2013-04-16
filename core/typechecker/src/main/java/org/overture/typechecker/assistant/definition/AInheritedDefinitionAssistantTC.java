@@ -6,8 +6,8 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -15,7 +15,7 @@ import org.overture.typechecker.util.HelpLexNameToken;
 public class AInheritedDefinitionAssistantTC {
 
 	public static PDefinition findType(AInheritedDefinition d,
-			LexNameToken sought, String fromModule) {
+			ILexNameToken sought, String fromModule) {
 		
 		if (d.getSuperdef() instanceof ATypeDefinition && sought.equals(d.getName()))
 		{
@@ -26,12 +26,12 @@ public class AInheritedDefinitionAssistantTC {
 	}
 
 	public static PDefinition findName(AInheritedDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		// The problem is, when the InheritedDefinition is created, we
 		// don't know its fully qualified name.
 
-		LexNameToken name = d.getName();
-		name.setTypeQualifier(d.getSuperdef().getName().typeQualifier);
+		ILexNameToken name = d.getName();
+		name.setTypeQualifier(d.getSuperdef().getName().getTypeQualifier());
 
 		if (HelpLexNameToken.isEqual(name, sought))
 		{
@@ -59,9 +59,9 @@ public class AInheritedDefinitionAssistantTC {
 		LexNameList names = new LexNameList();
 		checkSuperDefinition(d);
 
-		for (LexNameToken vn: PDefinitionAssistantTC.getVariableNames(d.getSuperdef()))
+		for (ILexNameToken vn: PDefinitionAssistantTC.getVariableNames(d.getSuperdef()))
 		{
-			names.add(vn.getModifiedName(d.getName().module));
+			names.add(vn.getModifiedName(d.getName().getModule()));
 		}
 
 		return names;

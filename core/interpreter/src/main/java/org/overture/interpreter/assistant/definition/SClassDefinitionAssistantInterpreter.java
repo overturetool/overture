@@ -21,6 +21,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
@@ -29,10 +30,10 @@ import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
@@ -50,10 +51,10 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssistantTC
 {
 
-	public static Value getStatic(SClassDefinition classdef, LexNameToken sought)
+	public static Value getStatic(SClassDefinition classdef, ILexNameToken sought)
 	{
-		LexNameToken local = (sought.explicit) ? sought
-				: sought.getModifiedName(classdef.getName().name);
+		ILexNameToken local = (sought.getExplicit()) ? sought
+				: sought.getModifiedName(classdef.getName().getName());
 
 		
 		
@@ -108,7 +109,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	}
 
 	protected static ObjectValue makeNewInstance(SClassDefinition node,PDefinition ctorDefinition , ValueList argvals,
-			Context ctxt, Map<LexNameToken, ObjectValue> done) throws ValueException
+			Context ctxt, Map<ILexNameToken, ObjectValue> done) throws ValueException
 	{
 		setStaticDefinitions(node,ctxt.getGlobal());		// When static member := new X()
 		setStaticValues(node,ctxt.getGlobal());	// When static member := new X()
@@ -142,7 +143,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 			if (idef instanceof AInheritedDefinition)
 			{
 				AInheritedDefinition i = (AInheritedDefinition)idef;
-				i.getName().setTypeQualifier(i.getSuperdef().getName().typeQualifier);
+				i.getName().setTypeQualifier(i.getSuperdef().getName().getTypeQualifier());
 			}
 
 			if (PDefinitionAssistantInterpreter.isRuntime(idef))	// eg. TypeDefinitions aren't
@@ -155,7 +156,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 					if (v != null)
 					{
-						LexNameToken localname = idef.getName().getModifiedName(node.getName().name);
+						ILexNameToken localname = idef.getName().getModifiedName(node.getName().getName());
 
 						// In a cascade of classes all overriding a name, we may
 						// have already created the local name for the nearest
@@ -172,7 +173,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 				if (v == null)
 				{
-					VdmRuntimeError.abort(node.getLocation(),6, "Constructor for " + node.getName().name +
+					VdmRuntimeError.abort(node.getLocation(),6, "Constructor for " + node.getName().getName() +
 											" can't find " + idef.getName(), ctxt);
 				}
 			}
@@ -268,17 +269,17 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
      		OperationValue ov = ctor.operationValue(ctxt);
 
     		ObjectContext ctorCtxt = new ObjectContext(
-    				node.getLocation(), node.getName().name + " constructor", ctxt, object);
+    				node.getLocation(), node.getName().getName() + " constructor", ctxt, object);
 
-       		ov.eval(ov.name.location, argvals, ctorCtxt);
+       		ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
 		}
 
 		if (VdmRuntime.getNodeState(node).hasPermissions)
 		{
     		ObjectContext self = new ObjectContext(
-    				node.getLocation(), node.getName().name + " guards", ctxt, object);
+    				node.getLocation(), node.getName().getName() + " guards", ctxt, object);
 
-    		for (Entry<LexNameToken, Value> entry: members.entrySet())
+    		for (Entry<ILexNameToken, Value> entry: members.entrySet())
 			{
 				Value v = entry.getValue();
 
@@ -322,7 +323,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
     		{
     			AMutexSyncDefinition sync = (AMutexSyncDefinition)d;
     			
-    			for (LexNameToken opname: new LexNameList(sync.getOperations()))
+    			for (ILexNameToken opname: new LexNameList(sync.getOperations()))
     			{
     				PExp exp =AMutexSyncDefinitionAssistantInterpreter.getExpression( sync.clone(),opname);
     				ValueList overloads = members.getOverloads(opname);
@@ -368,9 +369,9 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 				LexNameList names =PDefinitionAssistantInterpreter.getVariableNames( d);
 				nvl = new NameValuePairList();
 
-				for (LexNameToken vname: names)
+				for (ILexNameToken vname: names)
 				{
-					LexNameToken iname = vname.getModifiedName(id.getSuperdef().getName().module);
+					ILexNameToken iname = vname.getModifiedName(id.getSuperdef().getName().getModule());
 					Value v = initCtxt.check(iname);
 
 					if (v != null)		// TypeDefinition names aren't values
@@ -545,7 +546,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		for (SClassDefinition c: classes)
 		{
-			if (c.getName().location.file.equals(file))
+			if (c.getName().getLocation().file.equals(file))
 			{
     			PStm stmt = findStatement(c, lineno);
 
@@ -569,7 +570,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		for (SClassDefinition c: classes)
 		{
-			if (c.getName().location.file.equals(file))
+			if (c.getName().getLocation().file.equals(file))
 			{
     			PExp exp = findExpression(c, lineno);
 
@@ -586,7 +587,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	public static String getName(SClassDefinition classdef) {
 		if (classdef.getName() != null)
 		{
-			return classdef.getName().name;
+			return classdef.getName().getName();
 		}
 
 		return null;

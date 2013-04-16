@@ -14,13 +14,15 @@ class World
 
 instance variables
 
-static public env : Environment := new Environment();
+static public env : Environment := new Environment("scenario.txt");
+static public timerRef : Timer := new Timer();
   
 operations
 
 public Run: () ==> ()
-	Run() ==
-		is not yet specified;
-
+Run() ==
+ (-- start environment creating input
+  env.Run();
+ );
 
 end World

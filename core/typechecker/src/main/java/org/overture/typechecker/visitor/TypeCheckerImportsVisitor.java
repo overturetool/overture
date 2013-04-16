@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AAllImport;
 import org.overture.ast.modules.AFunctionValueImport;
 import org.overture.ast.modules.AModuleModules;
@@ -47,7 +47,7 @@ public class TypeCheckerImportsVisitor extends
 	public PType caseATypeImport(ATypeImport node, TypeCheckInfo question) {
 		if (node.getDef() != null && node.getFrom() != null) {
 			PDefinition def = node.getDef();
-			LexNameToken name = node.getName();
+			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
 			def.setType((SInvariantType) PTypeAssistantTC.typeResolve(
 					PDefinitionAssistantTC.getType(def), null, rootVisitor,
@@ -77,7 +77,7 @@ public class TypeCheckerImportsVisitor extends
 	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question) {
 		PType type = node.getImportType();
 		AModuleModules from = node.getFrom();
-		LexNameToken name = node.getName();
+		ILexNameToken name = node.getName();
 
 		if (type != null && from != null) {
 			type = PTypeAssistantTC.typeResolve(type, null, rootVisitor,
@@ -114,9 +114,9 @@ public class TypeCheckerImportsVisitor extends
 		} else {
 			List<PDefinition> defs = new Vector<PDefinition>();
 
-			for (LexNameToken pname : node.getTypeParams()) {
-				LexNameToken pnameClone = pname.clone();
-				PDefinition p = AstFactory.newALocalDefinition(pname.location,
+			for (ILexNameToken pname : node.getTypeParams()) {
+				ILexNameToken pnameClone = pname.clone();
+				PDefinition p = AstFactory.newALocalDefinition(pname.getLocation(),
 						pnameClone, NameScope.NAMES,
 						AstFactory.newAParameterType(pnameClone));
 

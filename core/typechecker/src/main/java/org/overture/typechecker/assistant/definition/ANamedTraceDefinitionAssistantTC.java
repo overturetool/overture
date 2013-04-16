@@ -5,14 +5,14 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 
 public class ANamedTraceDefinitionAssistantTC {
 
 	public static PDefinition findName(ANamedTraceDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{

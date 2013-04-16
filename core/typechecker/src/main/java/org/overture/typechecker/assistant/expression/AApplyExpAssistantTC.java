@@ -7,8 +7,8 @@ import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -137,7 +137,7 @@ public class AApplyExpAssistantTC {
 		
 	public static PDefinition getRecursiveDefinition(AApplyExp node, TypeCheckInfo question)
 	{
-		LexNameToken fname = null;
+		ILexNameToken fname = null;
 		PExp root = node.getRoot();
 		
 		
@@ -175,7 +175,7 @@ public class AApplyExpAssistantTC {
 		}
 	}
 	
-	public static String getMeasureApply(AApplyExp node, LexNameToken measure)
+	public static String getMeasureApply(AApplyExp node, ILexNameToken measure)
 	{
 		return getMeasureApply(node, measure, true);
 	}
@@ -184,7 +184,7 @@ public class AApplyExpAssistantTC {
 	 * Create a measure application string from this apply, turning the root function
 	 * name into the measure name passed, and collapsing curried argument sets into one. 
 	 */
-	public static String getMeasureApply(AApplyExp node, LexNameToken measure, boolean close)
+	public static String getMeasureApply(AApplyExp node, ILexNameToken measure, boolean close)
 	{
 		String start = null;
 		PExp root = node.getRoot();

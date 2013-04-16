@@ -221,7 +221,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getField().location.hit();
+		node.getField().getLocation().hit();
 
 		// The check above increments the hit counter for the call, but so
 		// do the evaluations of the designator below, so we correct the
@@ -236,7 +236,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			if (v == null)
 			{
-    			VdmRuntimeError.abort(node.getField().getLocation(),4035, "Object has no field: " + node.getField().name, ctxt);
+    			VdmRuntimeError.abort(node.getField().getLocation(),4035, "Object has no field: " + node.getField().getName(), ctxt);
 			}
 
 			v = v.deref();
@@ -1097,7 +1097,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			else if (result instanceof RecordValue)
 			{
     			RecordValue rec = result.recordValue(ctxt);
-    			result = rec.fieldmap.get(node.getField().name);
+    			result = rec.fieldmap.get(node.getField().getName());
 
     			if (result == null)
     			{
@@ -1138,7 +1138,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			else if (val instanceof RecordValue)
 			{
 				RecordValue rec = val.recordValue(ctxt);
-				Value result = rec.fieldmap.get(node.getFieldName().name);
+				Value result = rec.fieldmap.get(node.getFieldName().getName());
 
 				if (result == null)
 				{

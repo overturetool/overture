@@ -40,9 +40,9 @@ public class DisplayNameCreator {
 		{
 			StringBuilder sb = new StringBuilder();
 			if (element instanceof SClassDefinition)
-				return ((SClassDefinition) element).getName().name;
+				return ((SClassDefinition) element).getName().getName();
 			else if (element instanceof AModuleModules)
-				return ((AModuleModules) element).getName().name;
+				return ((AModuleModules) element).getName().getName();
 			else if (element instanceof PDefinition)
 			{
 				//sb.append(((Definition) element).name.name);
@@ -51,7 +51,7 @@ public class DisplayNameCreator {
 					
 					AExplicitOperationDefinition def = (AExplicitOperationDefinition) element;
 					
-					sb.append(def.getName().name);
+					sb.append(def.getName().getName());
 					if (def.getType() instanceof AOperationType) {
 						AOperationType type = (AOperationType) def.getType();
 						if (type.getParameters().size() == 0) {

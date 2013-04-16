@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -23,7 +23,7 @@ public class AClassClassDefinitionAssistantInterpreter
 		}
 
 		return SClassDefinitionAssistantInterpreter.makeNewInstance(node,
-			ctorDefinition, argvals, ctxt, new HashMap<LexNameToken, ObjectValue>());
+			ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>());
 	}
 
 }

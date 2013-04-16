@@ -19,9 +19,9 @@ public class AModuleImportsAssistantTC {
 
 		for (AFromModuleImports ifm: imports.getImports())
 		{
-			if (ifm.getName().name.equals(imports.getName()))
+			if (ifm.getName().getName().equals(imports.getName()))
 			{
-				TypeCheckerErrors.report(3195, "Cannot import from self", ifm.getName().location, ifm);
+				TypeCheckerErrors.report(3195, "Cannot import from self", ifm.getName().getLocation(), ifm);
 				continue;
 			}
 
@@ -29,7 +29,7 @@ public class AModuleImportsAssistantTC {
 
 			if (from == null)
 			{
-				TypeCheckerErrors.report(3196, "No such module as " + ifm.getName(), ifm.getName().location,ifm);
+				TypeCheckerErrors.report(3196, "No such module as " + ifm.getName(), ifm.getName().getLocation(),ifm);
 			}
 			else
 			{

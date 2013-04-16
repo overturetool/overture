@@ -7,7 +7,7 @@ public enum DBGPXCmdOvertureCommandType
 	CURRENT_LINE("currentline"),
 	SOURCE("source"),
 	COVERAGE("coverage"),
-	WRITE_COVERAGE("writecoverage"),
+	WRITE_COMPLETE_COVERAGE("write_complete_coverage"),
 	LATEX("latex"),
 	POG("pog"),
 	STACK("stack"),

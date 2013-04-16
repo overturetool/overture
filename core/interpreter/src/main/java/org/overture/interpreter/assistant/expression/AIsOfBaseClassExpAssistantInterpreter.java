@@ -26,7 +26,7 @@ public class AIsOfBaseClassExpAssistantInterpreter extends
 
 	public static boolean search(AIsOfBaseClassExp node, ObjectValue from)
 	{
-		if (from.type.getName().name.equals(node.getBaseClass().name) &&
+		if (from.type.getName().getName().equals(node.getBaseClass().getName()) &&
 				from.superobjects.isEmpty())
 			{
 				return true;

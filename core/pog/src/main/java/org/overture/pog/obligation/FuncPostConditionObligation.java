@@ -68,7 +68,7 @@ public class FuncPostConditionObligation extends ProofObligation
 			// We have to say "f(a)" because we have no expression yet
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(func.getName().name);
+			sb.append(func.getName().getName());
 			sb.append("(");
 			sb.append(params);
 			sb.append(")");
@@ -104,7 +104,7 @@ public class FuncPostConditionObligation extends ProofObligation
 			// We have to say "f(a)" because we have no expression yet
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(func.getName().name);
+			sb.append(func.getName().getName());
 			sb.append("(");
 			sb.append(params);
 			sb.append(")");
@@ -125,13 +125,13 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		if (predef != null)
 		{
-			sb.append(predef.getName().name);
+			sb.append(predef.getName().getName());
 			sb.append("(");
 			sb.append(params);
 			sb.append(") => ");
 		}
 
-		sb.append(postdef.getName().name);
+		sb.append(postdef.getName().getName());
 		sb.append("(");
 		sb.append(params);
 		sb.append(", ");

@@ -1,5 +1,7 @@
 package org.overture.ide.plugins.uml2;
 
+import java.io.PrintWriter;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -15,50 +17,66 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 public class UmlConsole
 {
-	public final MessageConsoleStream out;
-	public final MessageConsoleStream err;
+	public final PrintWriter out;
+	public final PrintWriter err;
+	boolean hasConsole = false;
 
-	public UmlConsole() 
+	public UmlConsole()
 	{
 		MessageConsole myConsole = findConsole(IUml2Constants.concoleName);
-		 out = myConsole.newMessageStream();
-		 err = myConsole.newMessageStream();
+		if (myConsole != null)
+		{
+			out = new PrintWriter(myConsole.newMessageStream(), true);
+			MessageConsoleStream errConsole = myConsole.newMessageStream();
 
-		err.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-//		out.println(message);
+			errConsole.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+			err = new PrintWriter(errConsole, true);
+			hasConsole = true;
+		} else
+		{
+			out = new PrintWriter(System.out, true);
+			err = new PrintWriter(System.err, true);
+		}
+		// out.println(message);
 
-		
 	}
-	
+
 	public void show() throws PartInitException
 	{
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null)
+		if (hasConsole)
 		{
-			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-			if (activePage != null)
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (activeWorkbenchWindow != null)
 			{
-				activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_VISIBLE);
+				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				if (activePage != null)
+				{
+					activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_VISIBLE);
+				}
 			}
 		}
 	}
-	
+
 	private MessageConsole findConsole(String name)
 	{
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
-		IConsoleManager conMan = plugin.getConsoleManager();
-		IConsole[] existing = conMan.getConsoles();
-		for (int i = 0; i < existing.length; i++)
+		if (plugin != null)
 		{
-			if (name.equals(existing[i].getName()))
+			IConsoleManager conMan = plugin.getConsoleManager();
+			IConsole[] existing = conMan.getConsoles();
+			for (int i = 0; i < existing.length; i++)
 			{
-				return (MessageConsole) existing[i];
+				if (name.equals(existing[i].getName()))
+				{
+					return (MessageConsole) existing[i];
+				}
 			}
+			// no console found, so create a new one
+			MessageConsole myConsole = new MessageConsole(name, null);
+			conMan.addConsoles(new IConsole[] { myConsole });
+			return myConsole;
 		}
-		// no console found, so create a new one
-		MessageConsole myConsole = new MessageConsole(name, null);
-		conMan.addConsoles(new IConsole[] { myConsole });
-		return myConsole;
+		return null;
 	}
 
 }

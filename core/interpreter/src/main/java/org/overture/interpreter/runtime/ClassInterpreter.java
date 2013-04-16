@@ -107,7 +107,7 @@ public class ClassInterpreter extends Interpreter
 		}
 		else
 		{
-			setDefaultName(classes.get(0).getName().name);
+			setDefaultName(classes.get(0).getName().getName());
 		}
 	}
 
@@ -123,7 +123,7 @@ public class ClassInterpreter extends Interpreter
 		{
     		for (SClassDefinition c: classes)
     		{
-    			if (c.getName().name.equals(cname))
+    			if (c.getName().getName().equals(cname))
     			{
     				defaultClass = c;
     				return;
@@ -137,13 +137,13 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public String getDefaultName()
 	{
-		return defaultClass.getName().name;
+		return defaultClass.getName().getName();
 	}
 
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultClass.getName().location.file;
+		return defaultClass.getName().getLocation().file;
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class ClassInterpreter extends Interpreter
 	private Value execute(PExp expr, DBGPReader dbgp) throws Exception
 	{
 		Context mainContext = new StateContext(
-			defaultClass.getName().location, "global static scope");
+			defaultClass.getName().getLocation(), "global static scope");
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
@@ -406,7 +406,7 @@ public class ClassInterpreter extends Interpreter
 		Value v = execute(exp, null);
 
 		LexLocation location = defaultClass.getLocation();
-		LexNameToken n = new LexNameToken(defaultClass.getName().name, var, location);
+		LexNameToken n = new LexNameToken(defaultClass.getName().getName(), var, location);
 
 		createdValues.put(n, v);
 		createdDefinitions.add(AstFactory.newALocalDefinition(location, n, NameScope.LOCAL, type));
@@ -451,7 +451,7 @@ public class ClassInterpreter extends Interpreter
 
 
 		Context ctxt = new ObjectContext(
-				classdef.getName().location, classdef.getName().name + "()",
+				classdef.getName().getLocation(), classdef.getName().getName() + "()",
 				initialContext, object);
 
 		ctxt.put(classdef.getName().getSelfName(), object);

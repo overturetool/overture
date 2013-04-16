@@ -182,7 +182,7 @@ public class Uml2Vdm
 
 					for (PDefinition def : c.getDefinitions())
 					{
-						if (def.getName().name.equals(innerTypeName))
+						if (def.getName().getName().equals(innerTypeName))
 						{
 							continue elementLoop;
 						}
@@ -251,7 +251,7 @@ public class Uml2Vdm
 	private void createFunction(AClassClassDefinition c, Operation op)
 	{
 		console.out.println("\tConverting function: " + op.getName());
-		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
+		LexNameToken name = new LexNameToken(c.getName().getName(), op.getName(), null);
 
 		List<List<PPattern>> paramPatternList = new Vector<List<PPattern>>();
 		List<PPattern> paramPatterns = new Vector<PPattern>();
@@ -265,7 +265,7 @@ public class Uml2Vdm
 				continue;// this is the return type
 			}
 			parameterTypes.add(tc.convert(p.getType()));
-			paramPatterns.add(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, p.getName(), location)));
+			paramPatterns.add(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().getName(), p.getName(), location)));
 		}
 
 		AFunctionType type = AstFactory.newAFunctionType(null, true, parameterTypes, tc.convert(op.getType()));
@@ -278,7 +278,7 @@ public class Uml2Vdm
 	private void createOperation(AClassClassDefinition c, Operation op)
 	{
 		console.out.println("\tConverting operation: " + op.getName());
-		LexNameToken name = new LexNameToken(c.getName().name, op.getName(), null);
+		LexNameToken name = new LexNameToken(c.getName().getName(), op.getName(), null);
 		List<PType> parameterTypes = new Vector<PType>();
 		List<PPattern> parameters = new Vector<PPattern>();
 		for (Parameter p : op.getOwnedParameters())
@@ -288,7 +288,7 @@ public class Uml2Vdm
 				continue;// this is the return type
 			}
 			parameterTypes.add(tc.convert(p.getType()));
-			parameters.add(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, p.getName(), location)));
+			parameters.add(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().getName(), p.getName(), location)));
 		}
 		AOperationType type = AstFactory.newAOperationType(null, parameterTypes, tc.convert(op.getType()));
 
@@ -327,11 +327,11 @@ public class Uml2Vdm
 				console.err.println("\tFaild to parse expression for attribute: "
 						+ att.getName()
 						+ " in class "
-						+ c.getName().name
+						+ c.getName().getName()
 						+ " default is: " + att.getDefault());
 			}
 		}
-		AInstanceVariableDefinition inst = AstFactory.newAInstanceVariableDefinition(new LexNameToken(c.getName().name, att.getName(), location), type, defaultExp);
+		AInstanceVariableDefinition inst = AstFactory.newAInstanceVariableDefinition(new LexNameToken(c.getName().getName(), att.getName(), location), type, defaultExp);
 		c.getDefinitions().add(inst);
 	}
 
@@ -366,12 +366,12 @@ public class Uml2Vdm
 				console.err.println("\tFaild to parse expression for attribute: "
 						+ att.getName()
 						+ " in class "
-						+ c.getName().name
+						+ c.getName().getName()
 						+ " default is: " + att.getDefault());
 			}
 		}
 
-		AValueDefinition inst = AstFactory.newAValueDefinition(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().name, att.getName(), location)), null, type, defaultExp);
+		AValueDefinition inst = AstFactory.newAValueDefinition(AstFactory.newAIdentifierPattern(new LexNameToken(c.getName().getName(), att.getName(), location)), null, type, defaultExp);
 		c.getDefinitions().add(inst);
 	}
 }

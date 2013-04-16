@@ -25,8 +25,8 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 
@@ -76,7 +76,7 @@ public class ObjectContext extends RootContext
 		Context result =
 			new ObjectContext(location, title, freeVariables, below, self.deepCopy());
 
-		for (LexNameToken var: keySet())
+		for (ILexNameToken var: keySet())
 		{
 			Value v = get(var);
 			result.put(var, v.deepCopy());
@@ -94,7 +94,7 @@ public class ObjectContext extends RootContext
 	 */
 
 	@Override
-	public Value check(LexNameToken name)
+	public Value check(ILexNameToken name)
 	{
 		// A RootContext stops the name search from continuing down the
 		// context chain. It first checks any local context, then it
@@ -117,7 +117,7 @@ public class ObjectContext extends RootContext
 			}
 		}
 
-		v = self.get(name, name.explicit);
+		v = self.get(name, name.getExplicit());
 
 		if (v != null)
 		{

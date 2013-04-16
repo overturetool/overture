@@ -28,7 +28,7 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.util.Utils;
@@ -53,7 +53,7 @@ public class RecursiveObligation extends ProofObligation
 		{
 			sb.append("[");
 			
-			for (LexNameToken type: def.getTypeParams())
+			for (ILexNameToken type: def.getTypeParams())
 			{
 				sb.append("@");
 				sb.append(type);

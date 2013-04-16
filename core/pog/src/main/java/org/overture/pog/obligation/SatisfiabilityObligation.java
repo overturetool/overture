@@ -52,7 +52,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (func.getPredef() != null)
 		{
-			sb.append(func.getPredef().getName().name);
+			sb.append(func.getPredef().getName().getName());
 			sb.append("(");
 			separator = "";
 			appendParamPatterns(sb, func.getParamPatterns());
@@ -63,7 +63,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		sb.append("exists ");
 		sb.append(func.getResult());
 		sb.append(" & ");
-		sb.append(func.getPostdef().getName().name);
+		sb.append(func.getPostdef().getName().getName());
 		sb.append("(");
 		separator = "";
 		appendParamPatterns(sb, func.getParamPatterns());
@@ -82,7 +82,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (op.getPredef() != null)
 		{
-			sb.append(op.getPredef().getName().name);
+			sb.append(op.getPredef().getName().getName());
 			sb.append("(");
 			separator = "";
 			appendParamPatterns(sb, op.getParameterPatterns());
@@ -100,7 +100,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			sb.append(" & ");
 		}
 
-		sb.append(op.getPostdef().getName().name);
+		sb.append(op.getPostdef().getName().getName());
 		sb.append("(");
 		separator = "";
 		appendParamPatterns(sb, op.getParameterPatterns());
@@ -154,7 +154,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			{
 				AStateDefinition def = (AStateDefinition) state;
 				sb.append(":");
-				sb.append(def.getName().name);
+				sb.append(def.getName().getName());
 			}
 		} else
 		{
@@ -172,7 +172,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			{
 				SClassDefinition def = (SClassDefinition) state;
 				sb.append(":");
-				sb.append(def.getName().name);
+				sb.append(def.getName().getName());
 			}
 		}
 

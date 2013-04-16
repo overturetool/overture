@@ -17,7 +17,7 @@ public class AModuleModulesRuntime implements IRuntimeState
 	
 	public AModuleModulesRuntime(AModuleModules node)
 	{
-		delegate = new Delegate(node.getName().name, node.getDefs());
+		delegate = new Delegate(node.getName().getName(), node.getDefs());
 	}
 
 	public boolean hasDelegate()

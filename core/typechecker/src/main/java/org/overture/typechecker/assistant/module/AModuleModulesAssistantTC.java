@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typechecker.ModuleEnvironment;
 
@@ -54,7 +54,7 @@ public class AModuleModulesAssistantTC
 	}
 
 	public static AModuleModules findModule(List<AModuleModules> allModules,
-			LexIdentifierToken sought) {
+			ILexIdentifierToken sought) {
 		
 		for (AModuleModules m: allModules)
 		{

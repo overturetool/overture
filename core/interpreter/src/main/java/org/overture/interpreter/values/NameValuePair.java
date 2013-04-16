@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 
 
 /**
@@ -35,10 +35,10 @@ import org.overture.ast.lex.LexNameToken;
 public class NameValuePair implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	public final LexNameToken name;
+	public final ILexNameToken name;
 	public final Value value;
 
-	public NameValuePair(LexNameToken name, Value value)
+	public NameValuePair(ILexNameToken name, Value value)
 	{
 		this.name = name;
 		this.value = value;

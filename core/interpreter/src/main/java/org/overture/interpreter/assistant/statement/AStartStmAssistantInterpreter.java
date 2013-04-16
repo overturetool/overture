@@ -23,7 +23,7 @@ public class AStartStmAssistantInterpreter
 		if (op.body instanceof APeriodicStm)
 		{
     		RootContext global = ClassInterpreter.getInstance().initialContext;
-    		Context pctxt = new ObjectContext(op.name.location, "async", global, target);
+    		Context pctxt = new ObjectContext(op.name.getLocation(), "async", global, target);
     		APeriodicStm ps = (APeriodicStm)op.body;
     		
     		// We disable the swapping and time (RT) as periodic evaluation should be "free".

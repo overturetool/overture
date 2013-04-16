@@ -28,7 +28,7 @@ public class ModuleListAssistantInterpreter
 		else
 		{
 			initialContext =
-				new StateContext(modules.get(0).getName().location, "global environment");
+				new StateContext(modules.get(0).getName().getLocation(), "global environment");
 		}
 
 		initialContext.setThreadState(dbgp, null);

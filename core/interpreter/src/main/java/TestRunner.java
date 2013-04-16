@@ -27,7 +27,7 @@ public class TestRunner
 				{
 					continue;
 				}
-				tests.add(def.getName().name);
+				tests.add(def.getName().getName());
 			}
 		}
 

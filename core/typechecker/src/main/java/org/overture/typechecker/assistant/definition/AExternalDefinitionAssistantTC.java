@@ -5,17 +5,17 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 
 public class AExternalDefinitionAssistantTC {
 
 	public static PDefinition findName(AExternalDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
-		if (sought.old)
+		if (sought.getOld())
 		{
 			return (sought.equals(d.getOldname())) ? d : null;
 		}

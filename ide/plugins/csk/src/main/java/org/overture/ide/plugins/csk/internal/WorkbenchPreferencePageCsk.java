@@ -39,11 +39,11 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 {
 	FileFieldEditor vdmPath = null;
 	FileFieldEditor vppPath = null;
-	FileFieldEditor vicePath = null;
+	//FileFieldEditor vicePath = null;
 	
 	DirectoryFieldEditor vdmPathMac = null;
 	DirectoryFieldEditor vppPathMac = null;
-	DirectoryFieldEditor vicePathMac = null;
+	//DirectoryFieldEditor vicePathMac = null;
 	
 	
 	@Override
@@ -69,10 +69,11 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 			vppPathMac.setPreferenceStore(getPreferenceStore());
 			vppPathMac.load();
 			
-			vicePathMac = new DirectoryFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDM Tools for VICE  (vicegde):", top);
-			vicePathMac.setPage(this);
-			vicePathMac.setPreferenceStore(getPreferenceStore());
-			vicePathMac.load();
+//			vicePathMac = new DirectoryFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDMTools for VICE  (vicegde):", top);
+//			vicePathMac.setPage(this);
+//			vicePathMac.setPreferenceStore(getPreferenceStore());
+//			vicePathMac.load();
+			
 			Label listLabel = new Label(top, SWT.BOLD);
 			listLabel.setText("NOTE: select the \"bin\" folder just above \"vxxgde\"");
 		}
@@ -88,10 +89,10 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 			vppPath.setPreferenceStore(getPreferenceStore());
 			vppPath.load();
 			
-			vicePath = new FileFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDM Tools for VICE  (vicegde):", top);
-			vicePath.setPage(this);
-			vicePath.setPreferenceStore(getPreferenceStore());
-			vicePath.load();
+//			vicePath = new FileFieldEditor(ICskConstants.VRTGDE_PATH, "Path to VDMTools for VICE  (vicegde):", top);
+//			vicePath.setPage(this);
+//			vicePath.setPreferenceStore(getPreferenceStore());
+//			vicePath.load();
 		}
 		
 		return top;
@@ -129,13 +130,13 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 		if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX)){
 			vdmPathMac.loadDefault();
 			vppPathMac.loadDefault();
-			vicePathMac.loadDefault();
+			//vicePathMac.loadDefault();
 		}
 		else
 		{
 			vdmPath.loadDefault();
 			vppPath.loadDefault();
-			vicePath.loadDefault();
+			//vicePath.loadDefault();
 		}
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(ICskConstants.VPPGDE_PATH, ICskConstants.DEFAULT_VPPGDE_PATH);
@@ -148,13 +149,13 @@ public class WorkbenchPreferencePageCsk extends PreferencePage
 		if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX)){
 			vdmPathMac.store();
 			vppPathMac.store();
-			vicePathMac.store();
+			//vicePathMac.store();
 		}
 		else
 		{
 			vdmPath.store();
 			vppPath.store();
-			vicePath.store();
+			//vicePath.store();
 		}
 		return super.performOk();
 	}

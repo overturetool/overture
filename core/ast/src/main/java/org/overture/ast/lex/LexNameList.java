@@ -26,25 +26,26 @@ package org.overture.ast.lex;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.util.Utils;
 
 
 
 @SuppressWarnings("serial")
-public class LexNameList extends Vector<LexNameToken>
+public class LexNameList extends Vector<ILexNameToken>
 {
 	public LexNameList()
 	{
 		super();
 	}
 
-	public LexNameList(LexNameToken name)
+	public LexNameList(ILexNameToken name)
 	{
 		super();
 		add(name);
 	}
 	
-	public LexNameList(Collection<? extends LexNameToken> c)
+	public LexNameList(Collection<? extends ILexNameToken> c)
 	{
 		super();
 		addAll(c);
@@ -62,7 +63,7 @@ public class LexNameList extends Vector<LexNameToken>
 
 		for (int i=0; i<len; i++)
 		{
-			LexNameToken name = get(i);
+			ILexNameToken name = get(i);
 
 			for (int j=i+1; j<len; j++)
 			{
