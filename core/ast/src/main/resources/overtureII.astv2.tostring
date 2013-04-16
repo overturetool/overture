@@ -14,7 +14,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
 %exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
-%exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getName())$ + ")"
+%exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getFullName())$ + ")"
 %exp->fieldNumber = "(" + [tuple] + "." + [field] + ")"
 %exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
 %exp->funcInstatiation = "(" [function] ")[" + $Utils.listToString($[actualTypes]$)$ + "]"
@@ -147,14 +147,14 @@ import org.overture.ast.util.ToStringUtil;
 //  Definitions
 %definition->assignment = [name] ":"  [type] " := " [expression]
 %definition->instanceVariable = [name] ":"  [type] " := " [expression]
-%definition->#class->bus = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
-                "end "  [name]$.getName()$ + "\n"
-%definition->#class->cpu = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
-                "end "  [name]$.getName()$ + "\n"
-%definition->#class->system = "system " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
-                "end "  [name]$.getName()$ + "\n"
-%definition->#class->class = "class " [name]$.getName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
-                "end "  [name]$.getName()$ + "\n"
+%definition->#class->bus = "class " [name]$.getFullName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getFullName()$ + "\n"
+%definition->#class->cpu = "class " [name]$.getFullName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getFullName()$ + "\n"
+%definition->#class->system = "system " [name]$.getFullName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getFullName()$ + "\n"
+%definition->#class->class = "class " [name]$.getFullName()+ ($[supernames]$.isEmpty() ? "" : " is subclass of " +$ [supernames]$) + "\n" + ToStringUtil.getDefinitionListString($[definitions]$)$ +
+                "end "  [name]$.getFullName()$ + "\n"
 %definition->classInvariant = "inv" [expression]
 %definition->equals = ""+ $($[pattern]$ != null ? $[pattern]$ : $[typebind]$ != null ? $[typebind]$ : $[setbind]$)$ + " = " + [test]
 %definition->explicitFunction = ""+$ToStringUtil.getExplicitFunctionString(this)$ 
@@ -164,7 +164,7 @@ import org.overture.ast.util.ToStringUtil;
 %definition->implicitOperation = ""+$ToStringUtil.getImplicitOperationString(this)$
 %definition->imported = [def]
 %definition->inherited = [superdef] 
-%definition->local = [name]$.getName()$+ " = " [type] 
+%definition->local = [name]$.getFullName()$+ " = " [type] 
 %definition->multiBindList = "def " + $Utils.listToString($[bindings]$)$
 %definition->mutexSync = "mutex(" + $($[operations]$.isEmpty() ? "all)" :
                 Utils.listToString("", $[operations]$, ", ", ")"))$
@@ -175,7 +175,7 @@ import org.overture.ast.util.ToStringUtil;
             ($[invPattern]$ == null ? "" : "\n\tinv " + $[invPattern]$ + " == " + $[invExpression]$) +
             ($[initPattern]$ == null ? "" : "\n\tinit " + $[initPattern]$ + " == " + $[initExpression]$)$
 %definition->thread = "thread " [statement]
-%definition->type = [name]$.getName() + " = " + $[type]$/*.toDetailedString()*/ +
+%definition->type = [name]$.getFullName() + " = " + $[type]$/*.toDetailedString()*/ +
                 ($[invPattern]$ == null ? "" :
                     "\n\tinv " + $[invPattern]$ + " == " + $[invExpression]$)$
 %definition->untyped = "Unknown type definition " [name] 
@@ -191,7 +191,7 @@ import org.overture.ast.util.ToStringUtil;
 %stm->atomic = "atomic (" + $Utils.listToString($[assignments]$)$ + ")"
 %stm->callObject = [designator]  "." +
             $($[classname]$ != null ? $[classname]$ : $[fieldname]$) + "(" + Utils.listToString($[args]$)$ + ")"
-%stm->call = [name]$.getName() + "(" + Utils.listToString($[args]$)$ + ")"
+%stm->call = [name]$.getFullName() + "(" + Utils.listToString($[args]$)$ + ")"
 %stm->cases = ""+$ToStringUtil.getCasesString(this)$
 %stm->classInvariant = "instance invariant " [name]
 %stm->cycles = "cycles (" [cycles] ") " [statement]

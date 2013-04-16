@@ -72,7 +72,7 @@ public class ARecordInvariantTypeAssistantTC {
 
 		if (typename.indexOf('`') > 0)
 		{
-			return (exptype.getName().getName().equals(typename)) ? exptype : null;
+			return (exptype.getName().getFullName().equals(typename)) ? exptype : null;
 		}
 		else
 		{

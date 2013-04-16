@@ -74,7 +74,7 @@ public class ARecordPatternAssistantTC {
 		}
 
 		ARecordInvariantType pattype = PTypeAssistantTC.getRecord(type);
-		PType using = PTypeAssistantTC.isType(exptype, pattype.getName().getName());
+		PType using = PTypeAssistantTC.isType(exptype, pattype.getName().getFullName());
 
 		if (using == null || !(using instanceof ARecordInvariantType))
 		{

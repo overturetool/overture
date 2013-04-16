@@ -35,7 +35,7 @@ public class ASystemClassDefinitionAssistantTC
 				{
 					AUnresolvedType ut = (AUnresolvedType) ivType;
 
-					if (ut.getName().getName().equals("BUS"))
+					if (ut.getName().getFullName().equals("BUS"))
 					{
 						TypeCheckerErrors.warning(5014, "Uninitialized BUS ignored",d.getLocation(),d);
 					}
@@ -44,7 +44,7 @@ public class ASystemClassDefinitionAssistantTC
 				{
 					AUnresolvedType ut = (AUnresolvedType)ivType;
 
-					if (ut.getName().getName().equals("CPU"))
+					if (ut.getName().getFullName().equals("CPU"))
 					{
 						ANewExp newExp = (ANewExp) iv.getExpression();
 						PExp exp = newExp.getArgs().get(1);

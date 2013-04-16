@@ -90,7 +90,7 @@ public class CPUValue extends ObjectValue
 			{
 				// Set priority for all overloads of opname
 
-				if (m.getExplicit(true).getName().equals(opname))
+				if (m.getExplicit(true).getFullName().equals(opname))
 				{
 					OperationValue op = (OperationValue)obj.members.get(m);
 					op.setPriority(priority);

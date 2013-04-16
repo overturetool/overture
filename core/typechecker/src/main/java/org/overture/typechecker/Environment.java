@@ -113,12 +113,12 @@ abstract public class Environment
 					if (def.getLocation().file.equals(n1.getLocation().file))
 					{
 						message = def.getName() + " " + def.getLocation().toShortString() +
-							" hidden by " +	n1.getName();
+							" hidden by " +	n1.getFullName();
 					}
 					else
 					{
 						message = def.getName() + " " + def.getLocation() +
-							" hidden by " + n1.getName();
+							" hidden by " + n1.getFullName();
 					}
 
 					TypeChecker.warning(5008, message, n1.getLocation());

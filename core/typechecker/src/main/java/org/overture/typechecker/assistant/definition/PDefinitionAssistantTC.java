@@ -214,7 +214,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 					|| (d.getNameScope() == NameScope.OLDSTATE && !scope
 							.matches(NameScope.OLDSTATE))) {
 
-				TypeChecker.report(3302, "State variable '" + sought.getName()
+				TypeChecker.report(3302, "State variable '" + sought.getFullName()
 						+ "' cannot be accessed from this context",
 						sought.getLocation());
 			}

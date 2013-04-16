@@ -364,7 +364,7 @@ public class TypeCheckerStmVisitor extends
 				node.getArgs().add(
 						0,
 						AstFactory.newAStringLiteralExp(new LexStringToken(a1
-								.getName().getExplicit(true).getName(), a1
+								.getName().getExplicit(true).getFullName(), a1
 								.getLocation())));
 
 				if (a1.getName().module.equals(a1.getName().name)) // it's a

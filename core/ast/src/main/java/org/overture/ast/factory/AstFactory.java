@@ -1324,7 +1324,7 @@ public class AstFactory {
 		AVariableExp result = new AVariableExp();
 		initExpression(result, name.location);
 		result.setName(name);
-		result.setOriginal(name.getName());
+		result.setOriginal(name.getFullName());
 		return result;
 	}
 

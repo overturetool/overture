@@ -166,7 +166,7 @@ public class Vdm2Uml
 			for (LexNameToken superToken : sClass.getSupernames())
 			{
 				console.out.println("Adding generalization between: "
-						+ thisClass.getName() + " -> " + superToken.getName());
+						+ thisClass.getName() + " -> " + superToken.getFullName());
 				Class superClass = this.classes.get(superToken.name);
 				thisClass.createGeneralization(superClass);
 			}

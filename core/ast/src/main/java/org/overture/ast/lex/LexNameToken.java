@@ -68,7 +68,7 @@ public class LexNameToken extends LexToken implements Serializable
 		return new LexNameToken(module, new LexIdentifierToken(name, true, location));
 	}
 
-	public String getName()
+	public String getFullName()
 	{
 		// Flat specifications have blank module names
 		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
@@ -226,7 +226,7 @@ public class LexNameToken extends LexToken implements Serializable
 	@Override
 	public String toString()
 	{
-		return getName()
+		return getFullName()
 				+ (typeQualifier == null ? "" : "("
 						+ Utils.listToString(typeQualifier) + ")");
 	}
