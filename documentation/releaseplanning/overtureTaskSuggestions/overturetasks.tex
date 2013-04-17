@@ -157,4 +157,8 @@ Optimizations:
 \item Cleanup ``update CPU'' hack in TraceFileRunner.
 \end{itemize}
 
+\subsection*{Traces }
+
+If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``nconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
+
 \end{document}
