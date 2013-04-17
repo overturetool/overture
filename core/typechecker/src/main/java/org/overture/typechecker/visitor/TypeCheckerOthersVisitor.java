@@ -82,8 +82,8 @@ public class TypeCheckerOthersVisitor extends
 		if (node.getBind() != null) {
 			if (node.getBind() instanceof ATypeBind) {
 				ATypeBind typebind = (ATypeBind) node.getBind();
-				typebind.apply(rootVisitor, question);
-
+				typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+				
 				if (!TypeComparator.compatible(typebind.getType(), type)) {
 					TypeCheckerErrors.report(3198,
 							"Type bind not compatible with expression", node
