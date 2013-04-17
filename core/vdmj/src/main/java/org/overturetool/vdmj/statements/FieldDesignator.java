@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -93,13 +94,19 @@ public class FieldDesignator extends StateDesignator
 
 			if (fdef == null)
 			{
-				concern(unique, 3260, "Unknown class field name, '" + field + "'");
+				field.concern(unique, 3260, "Unknown class field name, '" + field + "'");
 				result.add(new UnknownType(location));
 			}
-			else
-			{
+			else if (ClassDefinition.isAccessible(env, fdef, false))
+   			{
 				result.add(fdef.getType());
 			}
+			else
+   			{
+   				field.concern(unique,
+   					3092, "Inaccessible member " + field.name + " of class " + cname);
+   				result.add(new UnknownType(location));
+   			}
 		}
 
 		if (result.isEmpty())
