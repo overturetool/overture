@@ -160,27 +160,6 @@ public class StatementReader extends SyntaxReader
 				nextToken();
 				break;
 
-			case IS:
-				switch (nextToken().type)
-				{
-					case NOT:
-						nextToken();
-						checkFor(VDMToken.YET, 2187, "Expecting 'is not yet specified");
-						checkFor(VDMToken.SPECIFIED, 2188, "Expecting 'is not yet specified");
-						stmt = AstFactory.newANotYetSpecifiedStm(location);
-						break;
-
-					case SUBCLASS:
-						nextToken();
-						checkFor(VDMToken.RESPONSIBILITY, 2189, "Expecting 'is subclass responsibility'");
-						stmt = AstFactory.newASubclassResponsibilityStm(location);
-						break;
-
-					default:
-						throwMessage(2062, "Expected 'is not specified' or 'is subclass responsibility'");
-				}
-				break;
-
 			case START:
 				stmt = readStartStatement(location);
 				break;
