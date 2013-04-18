@@ -51,6 +51,8 @@ import org.overturetool.vdmj.definitions.ValueDefinition;
 import org.overturetool.vdmj.expressions.EqualsExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
+import org.overturetool.vdmj.expressions.NotYetSpecifiedExpression;
+import org.overturetool.vdmj.expressions.SubclassResponsibilityExpression;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexException;
 import org.overturetool.vdmj.lex.LexIdentifierToken;
@@ -73,8 +75,10 @@ import org.overturetool.vdmj.statements.CallObjectStatement;
 import org.overturetool.vdmj.statements.CallStatement;
 import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.statements.ExternalClause;
+import org.overturetool.vdmj.statements.NotYetSpecifiedStatement;
 import org.overturetool.vdmj.statements.SpecificationStatement;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
 import org.overturetool.vdmj.traces.TraceApplyExpression;
 import org.overturetool.vdmj.traces.TraceConcurrentExpression;
 import org.overturetool.vdmj.traces.TraceLetDefBinding;
@@ -678,7 +682,7 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(Token.EQUALSEQUALS, 2092, "Expecting '==' after parameters");
 		ExpressionReader expr = getExpressionReader();
-		Expression body = expr.readExpression();
+		Expression body = readFunctionBody();
 		Expression precondition = null;
 		Expression postcondition = null;
 		LexNameToken measure = null;
@@ -776,7 +780,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(Token.EQUALSEQUALS))		// extended implicit function
 		{
 			nextToken();
-			body = expr.readExpression();
+			body = readFunctionBody();
 		}
 
 		if (lastToken().is(Token.PRE))
@@ -966,7 +970,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		checkFor(Token.EQUALSEQUALS, 2102, "Expecting '==' after parameters");
-		Statement body = getStatementReader().readStatement();
+		Statement body = readOperationBody();
 		Expression precondition = null;
 		Expression postcondition = null;
 
@@ -1055,7 +1059,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(Token.EQUALSEQUALS))		// extended implicit operation
 		{
 			nextToken();
-			body = getStatementReader().readStatement();
+			body = readOperationBody();
 		}
 
 		SpecificationStatement spec = readSpecification(funcName.location, body == null);
@@ -1617,6 +1621,82 @@ public class DefinitionReader extends SyntaxReader
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);
 				return null;
+		}
+	}
+	
+	private Expression readFunctionBody() throws LexException, ParserException
+	{
+		LexToken token = lastToken();
+
+		if (token.is(Token.IS))
+		{
+			switch (nextToken().type)
+			{
+				case NOT:
+					nextToken();
+					checkFor(Token.YET, 2125, "Expecting 'is not yet specified'");
+					checkFor(Token.SPECIFIED, 2126, "Expecting 'is not yet specified'");
+					return new NotYetSpecifiedExpression(token.location);
+	
+				case SUBCLASS:
+					nextToken();
+					checkFor(Token.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
+					return new SubclassResponsibilityExpression(token.location);
+
+				default:
+					if (dialect == Dialect.VDM_PP)
+					{
+						throwMessage(2033, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
+					}
+					else
+					{
+						throwMessage(2033, "Expecting 'is not yet specified'", token);
+					}
+					return null;
+			}
+		}
+		else
+		{
+			ExpressionReader expr = getExpressionReader();
+			return expr.readExpression();
+		}
+	}
+	
+	private Statement readOperationBody() throws LexException, ParserException
+	{
+		LexToken token = lastToken();
+
+		if (token.is(Token.IS))
+		{
+			switch (nextToken().type)
+			{
+				case NOT:
+					nextToken();
+					checkFor(Token.YET, 2187, "Expecting 'is not yet specified");
+					checkFor(Token.SPECIFIED, 2188, "Expecting 'is not yet specified");
+					return new NotYetSpecifiedStatement(token.location);
+
+				case SUBCLASS:
+					nextToken();
+					checkFor(Token.RESPONSIBILITY, 2189, "Expecting 'is subclass responsibility'");
+					return new SubclassResponsibilityStatement(token.location);
+
+				default:
+					if (dialect == Dialect.VDM_PP)
+					{
+						throwMessage(2062, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
+					}
+					else
+					{
+						throwMessage(2062, "Expecting 'is not yet specified'", token);
+					}
+					return null;
+			}
+		}
+		else
+		{
+			StatementReader stmt = getStatementReader();
+			return stmt.readStatement();
 		}
 	}
 }

@@ -69,7 +69,6 @@ import org.overturetool.vdmj.statements.LetBeStStatement;
 import org.overturetool.vdmj.statements.LetDefStatement;
 import org.overturetool.vdmj.statements.MapSeqDesignator;
 import org.overturetool.vdmj.statements.NonDeterministicStatement;
-import org.overturetool.vdmj.statements.NotYetSpecifiedStatement;
 import org.overturetool.vdmj.statements.ObjectApplyDesignator;
 import org.overturetool.vdmj.statements.ObjectDesignator;
 import org.overturetool.vdmj.statements.ObjectFieldDesignator;
@@ -82,7 +81,6 @@ import org.overturetool.vdmj.statements.SpecificationStatement;
 import org.overturetool.vdmj.statements.StartStatement;
 import org.overturetool.vdmj.statements.StateDesignator;
 import org.overturetool.vdmj.statements.Statement;
-import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
 import org.overturetool.vdmj.statements.TixeStatement;
 import org.overturetool.vdmj.statements.TixeStmtAlternative;
 import org.overturetool.vdmj.statements.TrapStatement;
@@ -186,27 +184,6 @@ public class StatementReader extends SyntaxReader
 			case SKIP:
 				stmt = new SkipStatement(location);
 				nextToken();
-				break;
-
-			case IS:
-				switch (nextToken().type)
-				{
-					case NOT:
-						nextToken();
-						checkFor(Token.YET, 2187, "Expecting 'is not yet specified");
-						checkFor(Token.SPECIFIED, 2188, "Expecting 'is not yet specified");
-						stmt = new NotYetSpecifiedStatement(location);
-						break;
-
-					case SUBCLASS:
-						nextToken();
-						checkFor(Token.RESPONSIBILITY, 2189, "Expecting 'is subclass responsibility'");
-						stmt = new SubclassResponsibilityStatement(location);
-						break;
-
-					default:
-						throwMessage(2062, "Expected 'is not specified' or 'is subclass responsibility'");
-				}
 				break;
 
 			case START:

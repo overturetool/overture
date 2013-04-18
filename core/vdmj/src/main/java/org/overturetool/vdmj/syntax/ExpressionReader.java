@@ -47,7 +47,6 @@ import org.overturetool.vdmj.lex.LexToken;
 import org.overturetool.vdmj.lex.LexTokenReader;
 import org.overturetool.vdmj.lex.Token;
 import org.overturetool.vdmj.patterns.Bind;
-import org.overturetool.vdmj.patterns.MapUnionPattern;
 import org.overturetool.vdmj.patterns.MultipleBind;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
@@ -920,24 +919,6 @@ public class ExpressionReader extends SyntaxReader
 			case SELF:
 				nextToken();
 				return new SelfExpression(token.location);
-
-			case IS:
-				switch (nextToken().type)
-				{
-					case NOT:
-						nextToken();
-						checkFor(Token.YET, 2125, "Expecting 'is not yet specified'");
-						checkFor(Token.SPECIFIED, 2126, "Expecting 'is not yet specified'");
-						return new NotYetSpecifiedExpression(token.location);
-
-					case SUBCLASS:
-						nextToken();
-						checkFor(Token.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
-						return new SubclassResponsibilityExpression(token.location);
-				}
-
-				throwMessage(2033, "Expected 'is not specified' or 'is subclass responsibility'");
-				return null;
 
 			case ISOFBASECLASS:
 				nextToken();
