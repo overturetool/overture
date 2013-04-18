@@ -161,10 +161,19 @@ public class TypeCheckerOthersVisitor extends
 			if (fdef == null) {
 				TypeCheckerErrors.concern(unique, 3260,
 						"Unknown class field name, '" + field + "'",
-						node.getLocation(), node);
+						field.getLocation(), field);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
-			} else {
+				
+			} else if(SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false)) {
+			
 				result.add(fdef.getType());
+				
+			}else {
+				
+				TypeCheckerErrors.concern(unique, 3092,
+						"Inaccessible member " + field.getName() + " of class " + cname,
+						field.getLocation(), field);
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 		}
 
