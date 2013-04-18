@@ -5,6 +5,7 @@
 \usepackage{listings}
 \usepackage{times}
 \usepackage{color}
+\usepackage[bookmarks]{hyperref}
 \include{customlangdef}
 
 
@@ -32,15 +33,22 @@
 
 \begin{document}
 
-\today
+\title{Overture Task Suggestions}
 
-Authors: Peter J\o rgensen
+\date{\today}
+
+\author{
+Peter J\o rgensen
+\and Luis Diogo Couto
+}
+
+\maketitle
 
 \section*{Overture task suggestions}
 
 The following sub-sections suggest development tasks for the Overture platform.
 
-\subsection*{Quick interpreter improvements}
+\subsection*{Quick interpreter improvements (PJ)}
 
 Currently the error messages given by the Quick Interpreter are not very informative. For example evaluating the expression \texttt{1 + true} yields \textit{``Fatal error''}, wheres the error message would be \textit{``Right hand of + is not numeric. Actual: bool''} when using the VDM editor. It would be useful for the Quick Interpreter to show useful error messages like this. In addition, the Quick Interpreter could be extended to include for instance:
 
@@ -53,7 +61,7 @@ Currently the error messages given by the Quick Interpreter are not very informa
 \end{itemize}
 
 
-\subsection*{Template improvements}
+\subsection*{Template improvements (PJ)}
 
 Currently it is possible to use templates for operations, functions cases expressions etc. in the VDM editor by for instance writing \textit{``ope''} followed by the \texttt{Ctrl+space} command. If the user chooses the explicit operation template the following is generated:
 
@@ -69,7 +77,7 @@ public op1 : () ==> ()
 op1 () == skip;
 \end{lstlisting}
 
-\subsection*{AST structure validation and bug fixing}
+\subsection*{AST structure validation and bug fixing (PJ)}
 
 The AST provides support for things like finding the nearest ancestor of a node which is a sub class of a given type. For example, it is possible to find the class definition of a given type in the following way:
 
@@ -79,7 +87,7 @@ type.getAncestor(SClassDefinition.class)
 
 Only few Overture plugins use this kind of functionality and there is no proper testing of it. Therefore, it would be a good place to look for bugs. This task suggests writing code that validates the structure of the AST. For example, one could write a visitor checking if the parent of each node has been properly set, i.e. not \texttt{null}. Similarly, other visitors can be made to check if certain properties hold for the AST.
 
-\subsection*{Coverage coloring}
+\subsection*{Coverage coloring (PJ)}
 
 Generated coverage is useful for getting an overview of which parts of a model that have been executed. However, it is possible to find situations where the coverage coloring could be improved. Take for example the generated coverage in figure~\ref{figure:Coverage}.
 
@@ -93,7 +101,7 @@ It seems strange that only the first ``('' of the block statement is colored. It
 
 \newpage
 
-\subsection*{Improving robustness of the type checker}
+\subsection*{Improving robustness of the type checker (PJ)}
 
 Consider the model below with recursive types.
 
@@ -116,7 +124,7 @@ PTypeAssistantTC.isType(C, AQuoteType.class)
 
 Currently this causes the \texttt{isType} method to call itself recursively until it fails due to a stack overflow error. This task suggests improving the \texttt{isType} method to provide robustness for invocations like this.
 
-\subsection*{Improving the Overture debugging features}
+\subsection*{Improving the Overture debugging features (PJ)}
 
 This task suggests improving debugging in Overture by for instance making it possible to:
 
@@ -132,7 +140,7 @@ This task suggests improving debugging in Overture by for instance making it pos
 
 The documentation example model of the POP3 protocol would serve as a good starting point for this task.
 
-\subsection*{RT Trace Viewer improvements}
+\subsection*{RT Trace Viewer improvements (PJ)}
 
 When executing a VDM-RT model, a series of events are logged and timestamped by a component of the Overture tool, called the RT Logger. During execution, these events are triggered by various actions such as function calls, object creations and thread activations. These events are logged to a text file and a binary file with .rt and .rtbin extensions, respectively. The text file can be inspected by the user using a text editor, while the RT Trace Viewer plugin enables graphical visualization of the binary trace file. This can be used for analyzing timing requirements.
 
@@ -161,4 +169,81 @@ Optimizations:
 
 If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``nconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
 
+
+\subsection*{Migration to Interfaces (LDC)}
+    \label{ssec:interfacemig}
+
+    \subsubsection{The Problem:}
+
+    At the moment, various elements used to construct the AST are defined as
+    classe. For example: \textsf{LexLocation}. When we extend Overture, this can cause
+    quite a few problems. The COMPASS extensions have slightly different
+    requirements for these elements so we have to redefine them. But because we
+    depend on Overture, the original versions are also available to us. This
+    leads to multiple versions of the same class. Worse, we get the packages
+    split across multiple bundles (the original versions in the
+    overture.ide.core bundle and the changed versions in
+    compassresearch.ide.cml.core bundle). In general, OSGi does not cope very
+    well with this situaton. In fact, this was the cause of a very problematic
+    \textsf{java.lang.VerifyError} bug in the COMPASS extension.
+
+
+
+
+    \subsubsection{Proposed Solution:}
+    
+    The elements used to build the AST should be set up as interfaces. Overture
+    implements its own version of these interfaces and the extensions can either 
+    reuse the Overture classes directly or implement their own versions as needed.
+
+    Ultimately, we should have all the classes in the preamble of the AST definition
+    file set up as interfaces.
+
+    The first step towards this new set up is to define and create interfaces and
+    convert the existing Overture classes over. LDC has begun this work when fixing
+    the verify bug. At the moment, only 3 classes have been converted:
+    \textsf{LexIdentifierToken}, \textsf{LexNameToken} and \textsf{LexToken}. For 
+    the most part, the conversion work isn't very difficult. Just time consuming, 
+    since there are a lot of small errors that need fixing.
+    
+    
+
+
+    \subsection*{OSGi Refactoring (LDC)}
+    \label{ssec:osgi} 
+
+    \subsubsection{The Problem:}
+    Currently, the Overture (and also COMPASS) OSGi setup is mostly based on the 
+    \textsf{Require-Bundle} style. This means that each bundle imports the whole 
+    bundle for everything it needs. Use of require bundle is generally discouraged
+    \cite{osgi2013}. The recommended best practice is to use the 
+    \textsf{Require-Package} and \textsf{Export-Package} constructs. Migratation
+    to this style is possible but would be greatly hindered by the current Overture
+    package structure. Currently, java packages are being used to help separate
+    concerns of the various modules (for example, the AST has over 20 packages).
+
+    \subsubsection{Proposed Solution:}
+    The number of packages in Overture needs to be drastically reduced. Each
+    module should have no more than 2 or 3 packages (including an api package
+    that will expose module functionality). For separation, source folders
+    should be used instead of packages. The entire codebase needs to be
+    refactored according to this new style. Afterwards, the manifest files can
+    be changed to use the package constructs. This work is not particularly
+    complex but will be rather time consuming since there are many packages
+    that need to be refactored. Also, these kind of changes have a high
+    potential for conflicts so special care must be taken with that aspect of
+    the task.
+
+
+
+
+    \begin{thebibliography}{9}
+
+\bibitem{osgi2013}
+  OSGi Community Wiki,
+  \emph{Require-Bundle}.
+  \url{http://wiki.osgi.org/wiki/Require-Bundle},
+  \emph{Retrieved April 2013}
+
+\end{thebibliography}
 \end{document}
