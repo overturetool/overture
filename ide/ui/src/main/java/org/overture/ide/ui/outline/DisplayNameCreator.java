@@ -53,7 +53,7 @@ public class DisplayNameCreator {
 					
 					sb.append(def.getName().getName());
 					if (def.getType() instanceof AOperationType) {
-						AOperationType type = (AOperationType) def.getType();
+						AOperationType type = def.getType();
 						if (type.getParameters().size() == 0) {
 							sb.append("() ");
 						} else {

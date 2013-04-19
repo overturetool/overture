@@ -51,7 +51,7 @@ public class POOperationDefinitionContext extends POContext
 		boolean precond, PDefinition stateDefinition)
 	{
 		this.name = definition.getName();
-		this.deftype = (AOperationType)definition.getType();
+		this.deftype = definition.getType();
 		this.addPrecond = precond;
 		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();

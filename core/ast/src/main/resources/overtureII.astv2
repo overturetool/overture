@@ -329,7 +329,7 @@ definition {-> package='org.overture.ast.definitions'}
                  (expType):type (defType):type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
-                            (type):type 
+                            (type):type.function 
                             (body):exp 
                             [precondition]:exp 
                             [postcondition]:exp
@@ -371,7 +371,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (measureLexical):java_Integer
                              
                             (actualResult):type
-                            (type):type
+                            (type):type.function
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                            
     |   {explicitOperation} [parameterPatterns]:pattern* 
@@ -379,7 +379,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [precondition]:exp 
                             [postcondition]:exp 
                             
-                            (type):type
+                            (type):type.operation
                             
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
@@ -397,7 +397,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [errors]:case.error*
                             
-                            (type):type
+                            (type):type.operation
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
                             (state):definition.state

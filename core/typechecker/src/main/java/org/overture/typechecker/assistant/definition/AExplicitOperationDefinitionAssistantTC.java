@@ -38,7 +38,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 			AExplicitOperationDefinition node) {
 		
 		Set<PDefinition> defs = new HashSet<PDefinition>();
-		Iterator<PType> titer = ((AOperationType)node.getType()).getParameters().iterator();
+		Iterator<PType> titer = node.getType().getParameters().iterator();
 
 		for (PPattern p:  node.getParameterPatterns())
 		{
@@ -102,7 +102,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier( ((AOperationType)d.getType()).getParameters());
+			d.getName().setTypeQualifier( d.getType().getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityStm)
 			{
@@ -154,7 +154,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 		List<PPattern> plist = new Vector<PPattern>();
 		plist.addAll((List<PPattern>)d.getParameterPatterns().clone());
 
-		if (!( ((AOperationType)d.getType()).getResult() instanceof AVoidType))
+		if (!( d.getType().getResult() instanceof AVoidType))
 		{
     		LexNameToken result =
     			new LexNameToken(d.getName().getModule(), "RESULT", d.getLocation());
@@ -184,7 +184,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						null, 
-						AOperationTypeAssistantTC.getPostType((AOperationType)d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), 
+						AOperationTypeAssistantTC.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), 
 						parameters, 
 						postop, null, null, false, null);
 				
@@ -234,7 +234,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()),
 						NameScope.GLOBAL,
 						null, 
-						AOperationTypeAssistantTC.getPreType((AOperationType)d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
+						AOperationTypeAssistantTC.getPreType(d.getType(),d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 						parameters, 
 						preop, null, null, false, null);
 //				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 

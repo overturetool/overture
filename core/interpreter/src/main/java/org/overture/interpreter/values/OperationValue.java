@@ -119,7 +119,7 @@ public class OperationValue extends Value
 		this.expldef = def;
 		this.impldef = null;
 		this.name = def.getName();
-		this.type = (AOperationType)def.getType();
+		this.type = def.getType();
 		this.paramPatterns = def.getParameterPatterns();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -145,7 +145,7 @@ public class OperationValue extends Value
 		this.impldef = def;
 		this.expldef = null;
 		this.name = def.getName();
-		this.type = (AOperationType)def.getType();
+		this.type = def.getType();
 		this.paramPatterns = new Vector<PPattern>();
 
 		for (APatternListTypePair ptp : def.getParameterPatterns())

@@ -211,7 +211,7 @@ public class VdmElementLabels {
 		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
-			AOperationType type = (AOperationType) element.getType();
+			AOperationType type = element.getType();
 			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
@@ -228,10 +228,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (((AOperationType)element.getType()).getResult() instanceof AVoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString( ((AOperationType)element.getType()).getResult()),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 		}
 
@@ -453,7 +453,7 @@ public class VdmElementLabels {
 		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
-			AOperationType type = (AOperationType) element.getType();
+			AOperationType type = element.getType();
 			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
@@ -470,10 +470,10 @@ public class VdmElementLabels {
 			}
 		}
 
-		if (((AOperationType)element.getType()).getResult() instanceof AVoidType) {
+		if (element.getType().getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(((AOperationType)element.getType()).getResult()),
+			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
