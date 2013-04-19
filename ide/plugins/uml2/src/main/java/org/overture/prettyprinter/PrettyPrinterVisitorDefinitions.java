@@ -308,12 +308,12 @@ public class PrettyPrinterVisitorDefinitions extends
 			accessStr = "";
 
 		String type = ": ";
-		if (((AFunctionType) d.getType()).getParameters().isEmpty())
+		if (d.getType().getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = ((AFunctionType) d.getType()).getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -324,8 +324,8 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " " + (((AFunctionType) d.getType()).getPartial() ? "-" : "+") + "> "
-				+ ((AFunctionType) d.getType()).getResult().apply(typePrinter,question);
+		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
+				+ d.getType().getResult().apply(typePrinter,question);
 
 		String tmp = question.getIdent()
 				+ accessStr

@@ -34,7 +34,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 	public static AFunctionType getType(AImplicitFunctionDefinition impdef, List<PType> actualTypes)
 	{		
 		Iterator<PType> ti = actualTypes.iterator();
-		AFunctionType ftype = (AFunctionType)impdef.getType();
+		AFunctionType ftype = impdef.getType();
 
 		for (ILexNameToken pname: impdef.getTypeParams())
 		{
@@ -202,7 +202,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						(List<ILexNameToken>)d.getTypeParams().clone(), 
-						AFunctionTypeAssistantTC.getPostType((AFunctionType)d.getType()), 
+						AFunctionTypeAssistantTC.getPostType(d.getType()), 
 						parameters, d.getPostcondition(), null, null, false, null);
 				 
 //				new AExplicitFunctionDefinition(d.getPostcondition().getLocation(), 
@@ -226,7 +226,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()), 
 						NameScope.GLOBAL,
 						(List<ILexNameToken>) d.getTypeParams().clone(),
-						AFunctionTypeAssistantTC.getPreType((AFunctionType)d.getType()),
+						AFunctionTypeAssistantTC.getPreType(d.getType()),
 						getParamPatternList(d),
 						d.getPrecondition(), null, null, false,null);
 				

@@ -278,10 +278,10 @@ public class TypeCheckerDefinitionVisitor extends
 
 		PType expectedResult = AExplicitFunctionDefinitionAssistantTC
 				.checkParams(node, node.getParamPatternList().listIterator(),
-						(AFunctionType) node.getType());
+						node.getType());
 		node.setExpectedResult(expectedResult);
 		List<List<PDefinition>> paramDefinitionList = AExplicitFunctionDefinitionAssistantTC
-				.getParamDefinitions(node, (AFunctionType) node.getType(),
+				.getParamDefinitions(node, node.getType(),
 						node.getParamPatternList(), node.getLocation());
 
 		Collections.reverse(paramDefinitionList);
@@ -427,7 +427,7 @@ public class TypeCheckerDefinitionVisitor extends
 					TypeChecker.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
 				}
 
-				AFunctionType mtype = (AFunctionType) efd.getType();
+				AFunctionType mtype = efd.getType();
 
 				if (!TypeComparator.compatible(mtype.getParameters(), AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node))) {
 					TypeCheckerErrors.report(3303,
@@ -602,7 +602,7 @@ public class TypeCheckerDefinitionVisitor extends
 		} else if (node.getMeasure() != null) {
 			if (question.env.isVDMPP())
 				node.getMeasure().setTypeQualifier(
-						((AFunctionType)node.getType()).getParameters());
+						node.getType().getParameters());
 			node.setMeasureDef(question.env.findName(node.getMeasure(),
 					question.scope));
 
@@ -646,15 +646,15 @@ public class TypeCheckerDefinitionVisitor extends
 				AFunctionType mtype = (AFunctionType) node.getMeasureDef()
 						.getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), ((AFunctionType)node
-						.getType()).getParameters())) {
+				if (!TypeComparator.compatible(mtype.getParameters(), node
+						.getType().getParameters())) {
 					TypeCheckerErrors.report(3303,
 							"Measure parameters different to function", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
 					TypeCheckerErrors.detail2(node.getMeasure().getName(), mtype
-							.getParameters(), node.getName().getName(), ((AFunctionType)node
-							.getType()).getParameters());
+							.getParameters(), node.getName().getName(), node
+							.getType().getParameters());
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {

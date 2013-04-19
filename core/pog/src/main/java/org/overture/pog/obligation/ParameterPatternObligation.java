@@ -57,7 +57,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), ((AFunctionType)def.getType()).getParameters(), ((AFunctionType)def.getType()).getResult()));
+			generate(def.getParamPatternList(), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -66,7 +66,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType)def.getType()).getParameters(), ((AFunctionType)def.getType()).getResult()));
+			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
