@@ -926,25 +926,7 @@ public class ExpressionReader extends SyntaxReader
 			case SELF:
 				nextToken();
 				return AstFactory.newASelfExp(token.location);
-
-			case IS:
-				switch (nextToken().type)
-				{
-					case NOT:
-						nextToken();
-						checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
-						checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
-						return AstFactory.newANotYetSpecifiedExp(token.location);
-
-					case SUBCLASS:
-						nextToken();
-						checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
-						return AstFactory.newASubclassResponsibilityExp(token.location);
-				}
-
-				throwMessage(2033, "Expected 'is not specified' or 'is subclass responsibility'");
-				return null;
-
+				
 			case ISOFBASECLASS:
 				nextToken();
 				return readIsOfBaseExpression(token.location);

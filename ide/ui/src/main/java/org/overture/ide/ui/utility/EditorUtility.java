@@ -55,8 +55,8 @@ public class EditorUtility
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 
 //		SourceLocationConverter converter = new SourceLocationConverter(FileUtility.getContent(file));
-		marker.setAttribute(IMarker.CHAR_START,location.startOffset);//converter.getStartPos( location));
-		marker.setAttribute(IMarker.CHAR_END,location.endOffset);//converter.getEndPos(location));
+		marker.setAttribute(IMarker.CHAR_START,location.startOffset - 1);//converter.getStartPos( location));
+		marker.setAttribute(IMarker.CHAR_END,location.endOffset - 1);//converter.getEndPos(location));
 		IDE.gotoMarker(editor, marker);
 
 		marker.delete();

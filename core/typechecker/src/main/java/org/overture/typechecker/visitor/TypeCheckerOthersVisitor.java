@@ -82,8 +82,8 @@ public class TypeCheckerOthersVisitor extends
 		if (node.getBind() != null) {
 			if (node.getBind() instanceof ATypeBind) {
 				ATypeBind typebind = (ATypeBind) node.getBind();
-				typebind.apply(rootVisitor, question);
-
+				typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+				
 				if (!TypeComparator.compatible(typebind.getType(), type)) {
 					TypeCheckerErrors.report(3198,
 							"Type bind not compatible with expression", node
@@ -161,10 +161,19 @@ public class TypeCheckerOthersVisitor extends
 			if (fdef == null) {
 				TypeCheckerErrors.concern(unique, 3260,
 						"Unknown class field name, '" + field + "'",
-						node.getLocation(), node);
+						field.getLocation(), field);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
-			} else {
+				
+			} else if(SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false)) {
+			
 				result.add(fdef.getType());
+				
+			}else {
+				
+				TypeCheckerErrors.concern(unique, 3092,
+						"Inaccessible member " + field.getName() + " of class " + cname,
+						field.getLocation(), field);
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 		}
 

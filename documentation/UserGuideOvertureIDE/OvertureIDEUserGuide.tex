@@ -1330,17 +1330,20 @@ a {\textbf\texttt{system}} class with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses and proceed with the real time
 model development.
 
-\chapter{Analysing and Displaying Logs from VDM-RT Executions}\label{sec:showlog}
+\chapter{Analysing Logs from VDM-RT Executions}\label{sec:showlog}
 
-Whenever a VDM-RT model is executed, a logfile is created in
-a \texttt{generated/logs/<launch>} subfolder with a \texttt{.logrt} extension. The
-file name for the logfile indicates the time at which the model was executed,
-so it is possible to distinguish multiple runs. Logfiles can be
+Whenever a VDM-RT model is executed a binary logfile with \texttt{.rtbin} extension
+is created in the \texttt{generated/logs} subfolder. In order to distinguish between multiple runs,
+the name of the logfile indicates the time at which the model was executed. Logfiles can be
 viewed with the built-in \emph{RealTime Log Viewer},\index{RealTime Log viewer}
-by double-clicking the .logrt file in the Explorer view. The log viewer enables
+by double-clicking the .rtbin file in the Explorer view. In addition, Overture provides
+a textual version of the log file with \texttt{.rt} extension,
+which can be inspected using any text editor.
+
+The RealTime Log Viewer enables
 you to explore the simulated system execution in various ways. In
 Figure~\ref{fig:userguide:ArchitecturalOverview} the architectural
-overview of the system is shown, describing the CPU and BUS topology of
+overview of a system is shown, describing the CPU and BUS topology of
 the model.\index{architecture overview}
 
 \begin{figure}[htp]
@@ -1351,7 +1354,7 @@ the model.\index{architecture overview}
 \end{center}
 \end{figure}
 
-The log viewer also enables you to get an overview of
+The RealTime Log Viewer also enables you to get an overview of
 the model execution\index{model execution overview} at a system level --
 see Figure~\ref{fig:userguide:ExecutionOverview}.
 This view shows how the different CPUs\index{CPU} communicate via the
@@ -1359,7 +1362,7 @@ BUSes\index{BUS} of the system.
 
 \begin{figure}[htp]
 \begin{center}
-  \includegraphics[width=4in]{figures/ExecutionOverview}
+  \includegraphics[width=6in]{figures/ExecutionOverview}
   \caption{Execution overview}
   \label{fig:userguide:ExecutionOverview}
 \end{center}
@@ -1367,23 +1370,81 @@ BUSes\index{BUS} of the system.
 
 Since the complete execution of a model cannot generally be shown in a normal
 sized window, you have the option of jumping to a certain time index
-using the \emph{Go to time} button.\index{Go to time} It is
-also possible to export all the generated views to JPEG format files
-using the \emph{Export Image} button.\index{export image button} All
-the generated images will be placed in the same folder as the \texttt{.logrt}
-file.
+using the $
+ \begin{array}{l}
+\includegraphics{screenDumps/moveToIcon}
+\end{array}
+$ button or moving to the next time index using the $
+\begin{array}{l}
+\includegraphics{screenDumps/MoveNextIcon}
+\end{array}
+$ button .\index{Go to time} Also, Overture enables you to move to the previous
+time index using the $
+\begin{array}{l}
+\includegraphics{screenDumps/MovePreviousIcon}
+\end{array}
+$ button. Finally, it is
+also possible to export all the generated views to JPEG formatted files
+using the $
+\begin{array}{l}
+\includegraphics{screenDumps/exportImagesIcon}
+\end{array}
+$ button.\index{export image button} All
+the generated images will be placed in the logfile directory, where each image holds a name
+indicating the time of execution and the specific view (Execution overview, CPU1, CPU2 etc.).
 
-The log viewer can
-also give an overview of all executions on a single CPU. This view
-gives a detailed description of all operations and functions invoked
-on the one CPU as well as the scheduling of concurrent processes. See
+The RealTime Log Viewer also provides an overview of all executions on a single CPU.
+Each CPU shows a detailed description of all operations and functions invoked
+on the particular CPU as well as the scheduling of concurrent processes --- see
 Figure~\ref{fig:userguide:ExecutionCPU}.\index{single CPU overview}
 
 \begin{figure}[htp]
 \begin{center}
-  \includegraphics[width=4in]{figures/ExecutionCPU}
-  \caption{Execution on single CPU}
+  \includegraphics[width=5in]{figures/ExecutionCPU}
+  \caption{Execution on a single CPU}
   \label{fig:userguide:ExecutionCPU}
+\end{center}
+\end{figure}
+
+\subsection*{Analyzing timing properties at the system level}
+
+The work of\cite{Fitzgerald&07b} presents an extension to VDM-RT, enabling the validation of system-level timing properties. \textit{Validation conjectures} are descriptions of temporal relations between system level events, which can be evaluated over the execution trace. Later this work has been extended in\cite{Ribeiro&11} to include run-time validation. Predefined standard forms of validation conjectures have been defined, directly supporting the validation of a deadline or separation between two events, called the \textit{trigger} and the \textit{response}. The trigger event could be the press of a button, and the corresponding response may be the update of a display. From the standard forms, more specific validation conjectures can be constructed.
+
+In Overture it is possible to specify validation conjectures as comments in the \textbf{\texttt{system}} class. Listing~\ref{validationConjecture} provides an example of a validation conjecture requiring the separation of 500 ms between two subsequent screen updates.
+
+\begin{lstlisting}[language=VDM++,label=validationConjecture,caption=Validation conjecture example,captionpos=b,escapechar=@]
+@\textbf{system}@ Distribution
+
+... // Class content omitted
+
+/* timing invariants
+separate(#fin(MMI`UpdateScreen), #fin(MMI`UpdateScreen), 500 ms);
+*/
+
+end Distribution
+\end{lstlisting}
+
+In Overture validation conjectures are evaluated over the execution trace at run-time and in case violations occur they will be written to a \textit{violations file} with \texttt{.txt} extension. The violations file is located in the log file directory and named by the time of execution. When this file is loaded using the $
+\begin{array}{l}
+\includegraphics{screenDumps/openViolationsFileIcon}
+\end{array}
+$ button, Overture will list the violations as shown in figure~\ref{fig:userguide:listedConjecturesViolated}. In particular, this figure shows two violations of the validation conjecture in listing~\ref{validationConjecture}.
+
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=6.5in]{screenDumps/listedConjecturesViolated}
+  \caption{Violations of validation conjectures will be listed in a table}
+  \label{fig:userguide:listedConjecturesViolated}
+\end{center}
+\end{figure}
+
+In addition, the RealTime Log viewer will show the violations graphically by marking the trigger and corresponding response in the model execution overview. Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations from figure~\ref{fig:userguide:listedConjecturesViolated}, where the response and trigger of the first and second violation, respectively, occur at the same point in time. This explains why only tree markers, i.e. the circles, are visible in the figure.
+
+\begin{figure}[htp]
+\begin{center}
+  \includegraphics[width=5in]{screenDumps/markedConjecturesViolated}
+  \caption{Violations of validation conjectures shown in the model execution overview}
+  \label{fig:userguide:markedConjecturesViolated}
 \end{center}
 \end{figure}
 
@@ -1444,9 +1505,9 @@ end remote_lib_sensor
 \begin{lstlisting}[language=JAVA,label=remoteSensorJava,caption=Remote sensor Java class,captionpos=b]
 package remote.lib;
 
-import org.overturetool.interpreter.runtime.ValueException;
-import org.overturetool.interpreter.values.IntegerValue;
-import org.overturetool.intepreter.values.Value;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.Value;
 
 public class sensor
 {
@@ -1480,8 +1541,8 @@ controller are the internal Values used in Overture. Documentation about these
 can be found in the Overture Design Specification\cite{Battle10}.
 
 \begin{lstlisting}[language=JAVA,label=remoteControllerJava,caption=Remote Controller Java class,captionpos=b]
-import org.overturetool.interpreter.debug.RemoteControl;
-import org.overturetool.interpreter.debug.RemoteInterpreter;
+import org.overture.interpreter.debug.RemoteControl;
+import org.overture.interpreter.debug.RemoteInterpreter;
 
 public class RemoteController implements RemoteControl
 {
@@ -1577,9 +1638,9 @@ It should be noted that the names of the package and class can be directly relat
 package gui;
 
 import java.io.Serializable;
-import org.overturetool.interpreter.runtime.ValueException;
-import org.overturetool.interpreter.values.Value;
-import org.overturetool.interpreter.values.VoidValue;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.VoidValue;
 
 public class Graphics implements Serializable {
 

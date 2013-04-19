@@ -46,6 +46,7 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
@@ -656,7 +657,7 @@ public class DefinitionReader extends SyntaxReader
 
 		checkFor(VDMToken.EQUALSEQUALS, 2092, "Expecting '==' after parameters");
 		ExpressionReader expr = getExpressionReader();
-		PExp body = expr.readExpression();
+		PExp body = readFunctionBody();
 		PExp precondition = null;
 		PExp postcondition = null;
 		LexNameToken measure = null;
@@ -752,7 +753,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(VDMToken.EQUALSEQUALS)) // extended implicit function
 		{
 			nextToken();
-			body = expr.readExpression();
+			body = readFunctionBody();
 		}
 
 		if (lastToken().is(VDMToken.PRE))
@@ -938,7 +939,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		checkFor(VDMToken.EQUALSEQUALS, 2102, "Expecting '==' after parameters");
-		PStm body = getStatementReader().readStatement();
+		PStm body = readOperationBody();
 		PExp precondition = null;
 		PExp postcondition = null;
 
@@ -1023,7 +1024,7 @@ public class DefinitionReader extends SyntaxReader
 		if (lastToken().is(VDMToken.EQUALSEQUALS)) // extended implicit operation
 		{
 			nextToken();
-			body = getStatementReader().readStatement();
+			body = readOperationBody();
 		}
 
 		ASpecificationStm spec = readSpecification(funcName.location, body == null);
@@ -1575,6 +1576,82 @@ public class DefinitionReader extends SyntaxReader
 			default:
 				throwMessage(2267, "Expecting 'obj.op(args)' or 'op(args)'", token);
 				return null;
+		}
+	}
+	
+	private PExp readFunctionBody() throws LexException, ParserException
+	{
+		ILexToken token = lastToken();
+
+		if (token.is(VDMToken.IS))
+		{
+			switch (nextToken().type)
+			{
+				case NOT:
+					nextToken();
+					checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
+					checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
+					return AstFactory.newANotYetSpecifiedExp(token.getLocation());
+					
+				case SUBCLASS:
+					nextToken();
+					checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
+					return AstFactory.newASubclassResponsibilityExp(token.getLocation());
+					
+				default:
+					if (dialect == Dialect.VDM_PP)
+					{
+						throwMessage(2033, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
+					}
+					else
+					{
+						throwMessage(2033, "Expecting 'is not yet specified'", token);
+					}
+					return null;
+			}
+		}
+		else
+		{
+			ExpressionReader expr = getExpressionReader();
+			return expr.readExpression();
+		}
+	}
+	
+	private PStm readOperationBody() throws LexException, ParserException
+	{
+		ILexToken token = lastToken();
+
+		if (token.is(VDMToken.IS))
+		{
+			switch (nextToken().type)
+			{
+				case NOT:
+					nextToken();
+					checkFor(VDMToken.YET, 2187, "Expecting 'is not yet specified");
+					checkFor(VDMToken.SPECIFIED, 2188, "Expecting 'is not yet specified");
+					return AstFactory.newANotYetSpecifiedStm(token.getLocation());
+
+				case SUBCLASS:
+					nextToken();
+					checkFor(VDMToken.RESPONSIBILITY, 2189, "Expecting 'is subclass responsibility'");
+					return AstFactory.newASubclassResponsibilityStm(token.getLocation());
+
+				default:
+					if (dialect == Dialect.VDM_PP)
+					{
+						throwMessage(2062, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
+					}
+					else
+					{
+						throwMessage(2062, "Expecting 'is not yet specified'", token);
+					}
+					return null;
+			}
+		}
+		else
+		{
+			StatementReader stmt = getStatementReader();
+			return stmt.readStatement();
 		}
 	}
 }

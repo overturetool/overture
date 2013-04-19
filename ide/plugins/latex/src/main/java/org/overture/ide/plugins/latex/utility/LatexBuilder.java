@@ -48,14 +48,14 @@ public class LatexBuilder
 	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
-		String overturesty = readFile("latex/overture.sty");
-
-		String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
-		
-		overturesty = overturesty.replaceAll("OVERTURE_LANGUAGE", dialect.toString());
-
-		writeFile(outputFolder, "overture.sty", overturesty);
-		writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
+//		String overturesty = readFile("latex/overture.sty");
+//
+//		String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
+//		
+//		overturesty = overturesty.replaceAll("OVERTURE_LANGUAGE", dialect.toString());
+//
+//		writeFile(outputFolder, "overture.sty", overturesty);
+//		writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
 
 	}
 
