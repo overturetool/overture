@@ -165,11 +165,6 @@ Optimizations:
 \item Cleanup ``update CPU'' hack in TraceFileRunner.
 \end{itemize}
 
-\subsection*{Traces (PJ)}
-
-If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``nconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
-
-
 \subsection*{Migration to Interfaces (LDC)}
     \label{ssec:interfacemig}
 
@@ -247,6 +242,20 @@ The current version of Overture lags a feature where users can report bugs. Such
 \item The VDM project(s) of interest
 \item etc.
 \end{itemize}
+
+\section*{Recently fixed changes}
+
+This section lists the most recently fixed tasks suggestions.
+
+\subsection*{Traces (PJ)}
+
+If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``inconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
+
+\paragraph{Date:}
+21/4-2013.
+
+\paragraph{Solution:}
+Commit \texttt{271b0ff8785c3d37926238f17a630bdd15138aab} provides a fix for this.
 
 \begin{thebibliography}{9}
 
