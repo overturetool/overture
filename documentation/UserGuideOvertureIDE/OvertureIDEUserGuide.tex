@@ -375,7 +375,7 @@ Such existing projects can be imported into Overture as described in
 section~\ref{subsec:importproj}.
 
 Finally, in order to make use of the
-test coverage feature described in Section~\ref{sec:testcov} it is
+test coverage feature described in Section~\ref{sec:testcoverage} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
 \begin{quote}
@@ -610,7 +610,9 @@ Follow these steps to create a new Overture project:
          \item Type in a project name;
 	\item Choose whether you would like the contents of the new
           project to be in your workspace or outside
-          (browse to the appropriate directory); and
+          (browse to the appropriate directory); 
+\item The next step enables references to other projects (but this is not used at the moment);
+\item The next step enables inclusion of VDM libraries and
     \item Click	the \texttt{Finish} button (see Figure~\ref{fig:CreateProjectWizard}).
 \end{enumerate}
 
@@ -824,7 +826,7 @@ It is possible to adjust or add to the templates defined in
 Overture. This can be done in the general VDM preferences under
 \emph{Window} $\rightarrow$ \emph{Preferences} $\rightarrow$ \emph{VDM}
 $\rightarrow$ \emph{Templates}. Figure~\ref{fig:Templatepreferences} shows
-how the template for ``cases'' expressions is defined in Overture. Note
+where to adjust templates in Overture. Note
 that new templates can be added and the existing ones can be
 edited or removed. A full list of the
 standard Overture templates is available in Appendix~\ref{app:templates}.
@@ -913,7 +915,7 @@ that can be performed are:
 \begin{description}
 \item[Dynamic type checks:] This is an option for the interpreter (default on)
   to continuously type check  values during interpretation of a VDM model.
-  It is possible to switch off the check here.
+  It is possible to switch off the check here\footnote{However a consequence of doing that can be that you may get internal Java errors (null pointer or class cast exceptions typically) rather than nice clean VDM type errors about mismatched types.}.
 \item[Invariant checks:] This is an option for the interpreter (default on)
   to continuously check both state and type invariants.
   It is possible to switch off
@@ -937,7 +939,7 @@ presence of mutually recursive function definitions.}.
 In the launch
 configuration the ``Debugger'' pane shown in
 Figure~\ref{fig:userguide:launchconfigSpecialoptions} can also be
-useful in rare cases where one has particular deep recursion for
+useful in rare cases where one has particularly deep recursion for
 example. This is an advanced setting where one can decide the
 arguments given to the Java virtual machine for allocation of maximum
 amounts of space per thread in a VDM model. However, this option is
@@ -1260,13 +1262,16 @@ variables in scope.
 VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
 and the corresponding UML model.
 %\footnote{In the current version of
-%Overture this feature is somewhat unstable.}.
-Essentially, VDM and UML can be considered
-as different views of the same model. A UML model is typically used
-to give a graphical overview of the model using class diagrams.
-The VDM model is typically used
-to define the implementation and constraints for each class and
-is therefore used for detailed semantic analysis.
+%Overture this feature is somewhat unstable.}.  Essentially, VDM and
+UML can be considered as different views of the same model. A UML
+model is typically used to give a graphical overview of the model
+using class diagrams.  The VDM model is typically used to define the
+implementation and constraints for each class and is therefore used
+for detailed semantic analysis. Note that state charts, activity
+diagrams, sequence diagrams, objects charts, package charts are not
+used in the UML mapping. It is essentially only the information used
+statically inside classes and their usage in class diagrams that is
+used.
 
 To convert a UML class diagram model to a VDM++ model, you first need to export the UML
 model from Modelio to the Eclipse XMI\index{XMI} format, called UML using the EMF UML3.0.0 format
@@ -1293,7 +1298,7 @@ the submenu for
 \emph{UML Transformation}\index{UML transformation} and then select
 \emph{Convert to VDM}\index{Convert to VDM}. 
 
-The mapping rules between VDM++/VDM-RT and UML models is further explained 
+The mapping rules between VDM++/VDM-RT and UML models are further explained 
 in Appendix~\ref{chap:umlrules}. Note that the mapping depends on the settings
 selected in the \emph{Preferences} menu (see Figure~\ref{fig:UMLpreferences} 
 above). The general explanation of these options are:
@@ -1450,7 +1455,17 @@ In addition, the RealTime Log viewer will show the violations graphically by mar
 
 \chapter{Expanding VDM Models Scope and Functionality by Linking Java and VDM} \label{sec:linkToJava}
 
-In some cases the impact and value of VDM models can be immensely improved by expanding them with functionality which is not delivered directly by VDM. Examples of such functionality could be; (a) to associate the model with existing legacy systems, for which no model or specification exists, (b) to add a graphical representation of the model, or (c) to enable network communication, for instance in a client-server setup.  In order to achieve this functionality Overture enables the possibility of linking a VDM model directly with the underlying Java-based OVERTURE interpreter, and reversely linking a Java implementation with a VDM model.
+In some cases the impact and value of VDM models can be immensely
+improved by expanding them with functionality which is not delivered
+directly by VDM. Examples of such functionality could be; (a) to
+associate the model with existing legacy systems, for which no model
+or specification exists, (b) to add a graphical representation of the
+model, or (c) to enable network communication, for instance in a
+client-server setup.  In order to achieve this functionality Overture
+enables the possibility of linking a VDM model directly with the
+underlying Java-based Overture interpreter. In addition it is possible
+to link a
+Java implementation with a VDM model.
 
 Overture supplies two different techniques for linking between VDM and Java; (1) the functionality which allow VDM to interact with an ``External Java Library'' is described in Section~\ref{sec:javalibs} and (2) the method used to allow a Java implementation to ``Remote Control'' a VDM model is explained in Section~\ref{sec:remote}. An example of how these methods can be used to create a GUI for a model is supplied in Section~\ref{sec:gui}.
 
@@ -1521,7 +1536,7 @@ public class sensor
 \newpage
 \section{Enabling Remote Control of the Overture Interpreter}\label{sec:remote}\label{sec:Remote}
 
-In some situations, it may be valuable to be able to establish a
+In some situations, it may be valuable to establish a
 front end (for example a GUI or a test harness) for calling a VDM model.
 This feature corresponds roughly to the CORBA based API from VDMTools\cite{APIMan}.
 
@@ -1564,7 +1579,7 @@ public class RemoteController implements RemoteControl
 This example describes how the linking functionality can be used to create a graphical representation of a VDM model.
 
 \subsection{The Modelled System}
-A GUI has been developed in Java Swing which will be used to both control and present the system which is described in the VDM model. In this example both the ``External Java Library'' technique as well as the ``Remote Controller'' techniques is utilized. This is done to enable the VDM model to display data directly to the Java GUI, and to allow the VDM model to be controlled from the Java GUI.
+A GUI has been developed in Java Swing which will be used to both control and present the system which is described in the VDM model. In this example both the ``External Java Library'' technique as well as the ``Remote Controller'' technique is utilized. This is done to enable the VDM model to display data directly to the Java GUI, and to allow the VDM model to be controlled from the Java GUI.
 
 The example is based on a VDM++ model of the smokers concurrency problem~\cite{Patil71}. Consider a scenario where three chain smokers and an agent, who does not smoke, are sitting at a table, infinitely going through the following lifecycle:
 \begin{enumerate}
@@ -1670,7 +1685,7 @@ public class Graphics implements Serializable {
 
 In order to use the VDM Types the Java implementation must have the Overture java library in its build path. The library can be found in Overture installation directory:
 
- \textless  Overturedir\textgreater\textbackslash Plugins \textbackslash org.overture.ide.generated.vdmj:\_x.x\textbackslash lib,
+ \textless  Overturedir\textgreater\textbackslash Plugins\textbackslash org.overture.ide.generated.vdmj:\_x.x\textbackslash lib,
 
 \noindent which can then be added to the Java build path, as shown in Figure~\ref{fig:gui:VDMJBuildPath}.
 
@@ -2292,16 +2307,16 @@ breakpoints, which is covered in the next section.
 The {\textbf{\ttfamily state}} command lists the content of the default module's
 state. This can be changed by operations, as can be seen by the two
 calls to rand which change the rseed value in the state (a
-pseudo-random number generator). The {\ttfamily{\bf init}} command will re-initialize
+pseudo-random number generator). The {\textbf\ttfamily init} command will re-initialize
 the state to its original value, illustrated by the fact that two
 subsequent calls to rand return the same results as the first two did.
 
-The {\ttfamily{\bf print}}\index{print} command can be used to
-evaluate any expression.  The {\ttfamily{\bf env}}\index{env} command
+The {\textbf\ttfamily print}\index{print} command can be used to
+evaluate any expression.  The {\textbf\ttfamily env}\index{env} command
 lists all the values in the global environment of the default
 module. This shows the functions, operations and constant values
 defined in the module. Note that it includes invariant, initialization
-and pre/postcondition functions.  The {\ttfamily{\bf pog}} command (proof obligation
+and pre/postcondition functions.  The {\textbf\ttfamily pog} command (proof obligation
 generator) generates a list of proof obligations for the
 specification.
 
