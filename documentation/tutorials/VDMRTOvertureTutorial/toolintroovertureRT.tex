@@ -314,7 +314,7 @@ project) is not directly available in the right-click menu, please choose
 \emph{Other} and browse to the VDM-RT project. By right-clicking the new 
 project root in the \emph{VDM Explorer}, \emph{UML Transformation} can 
 be chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
-exported from EA called \texttt{carradnavuml.xmi} and open this.
+exported from Modelio called \texttt{carradnavuml.uml} and open this.
 
 %The three classes from the Alarm system will be converted to VDM++ format
 %(\texttt{.vdmpp}), one file per class.
@@ -351,6 +351,12 @@ click the project root and choose \emph{UML Transformation} $
 format). The UML/XMI file can subsequently be
 imported in Modelio, enabling the user to get an overview
 of the complete model.
+
+Note that state charts, activity
+diagrams, sequence diagrams, objects charts, package charts are not
+used in the UML mapping. It is essentially only the information used
+statically inside classes and their usage in class diagrams that is
+used.
 
 \section{Debugging}\label{sec:debugging}
 
