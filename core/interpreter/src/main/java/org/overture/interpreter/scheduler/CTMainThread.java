@@ -117,7 +117,7 @@ public class CTMainThread extends MainThread
     			{
     				case 4055:	// precondition fails for functions
     					
-    					if (e.ctxt.outer.outer == ctxt)
+    					if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
     					{
     						result.add(Verdict.INCONCLUSIVE);
     					}
