@@ -2758,15 +2758,15 @@ As described in Chapter~\ref{sec:linkToJava} integration between Overture and Ja
 
 In both cases, internal VDM values have to be handled by Java -– either because they are passed as arguments to a Java library and returned as results to VDM, or because they are returned from a VDM model evalution to a controlling Java program.
 
-This appendix describes the internal class hierarchy used by Overture to represent internal VDM model values, and describes how a Java program can convert these to native Java values (int, long, String etc.) as well as creating internal values for returning to the VDM model (e.g.\ as the return value of library methods).
+This appendix describes the internal class hierarchy used by Overture to represent internal VDM model values, and describes how a Java program can convert these to native Java values (\kw{int}, \kw{long}, \kw{String} etc.) as well as creating internal values for returning to the VDM model (e.g.\ as the return value of library methods).
 
 \section{The Value Class Hierarchy}
 
-All internal VDM values in Overture are held by instances of the \texttt{Value} class -– fully qualified name, \url{org.overturetool.vdmj.values.Value}. The Value class itself is abstract, but subclasses can be instantiated to represent any VDM value, such as a ``{\textbf\ttfamily seq of char}'' or a ``{\textbf\ttfamily nat1}'” or a value of an arbitrarily complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
+All internal VDM values in Overture are held by instances of the \texttt{Value} class -– fully qualified name, \url{org.overturetool.vdmj.values.Value}. The Value class itself is abstract, but subclasses can be instantiated to represent any VDM value, such as a ``\kw{seq of char}'' or a ``\kw{nat1}'” or a value of an arbitrarily complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
 
 \begin{figure}[h]
 \begin{center}
-  \includegraphics[width=3.5in]{screenDumps/ValueHierarchy}
+  \includegraphics[width=2.5in]{screenDumps/ValueHierarchy}
   \caption[labelInTOC]{Java Value Hierarchy}
   \label{fig:gui:JavaVDMhierarchy}
 \end{center}
@@ -2809,7 +2809,7 @@ public long nat1Value(Context ctxt) throws ValueException
 public String quoteValue(Context ctxt) throws ValueException
 \end{lstlisting}
 
-Note that all of these conversion functions takes a Context parameter and can throw a ValueException. The context parameter is used internally by Overture and represents the call stack during the evaluation of an expression. This parameter can be set to null when using these methods in Java code outside Overture. The \texttt{ValueExceptions} are thrown if the VDM value cannot be converted into the Java type requested. For example, calling \texttt{booleanValue} on a \texttt{RealValue} object will raise a \texttt{ValueException} with the message text \texttt{"Cannot get bool value of real"}.
+Note that all of these conversion functions takes a Context parameter and can throw a \texttt{ValueException}. The context parameter is used internally by Overture and represents the call stack during the evaluation of an expression. This parameter can be set to null when using these methods in Java code outside Overture. The \texttt{ValueExceptions} are thrown if the VDM value cannot be converted into the Java type requested. For example, calling \texttt{booleanValue} on a \texttt{RealValue} object will raise a \texttt{ValueException} with the message text \texttt{"Cannot get bool value of real"}.
 
 \section{Sets, Sequences and Maps}
 
@@ -2821,7 +2821,7 @@ public class ValueList extends Vector<Value>
 public class ValueMap extends LinkedHashMap<Value, Value>
 \end{lstlisting}
 
-Note that the ValueSet class is actually based on a Java Vector, not a Java Set type, though the class does have set semantics (no duplicates). This is an implementation detail and allows Overture to permute set orderings in certain circumstances.
+Note that the ValueSet class is actually based on a Java \texttt{Vector}, not a Java \texttt{Set} type, though the class does have set semantics (no duplicates). This is an implementation detail and allows Overture to permute set orderings in certain circumstances.
 
 These three classes have obvious constructors, and allow Values (or Value pairs) to be added to the collection subsequently, using standard Java collection methods:
 
@@ -2855,9 +2855,9 @@ public MapValue()
 public MapValue(ValueMap values)
 \end{lstlisting}
 
-Note that there is a special constructor for SeqValue that takes a Java string. This creates a VDM ``{\textbf\ttfamily seq of char}'', but without the need to create a \texttt{ValueList} with \texttt{CharacterValue}s.
+Note that there is a special constructor for SeqValue that takes a Java string. This creates a VDM ``\kw{seq of char}'', but without the need to create a \texttt{ValueList} with \texttt{CharacterValue}s.
 
-If the \texttt{ValueList} (or other) collection passed to these constructors contains a mixture of VDM types -– i.e.\ a mixture of VDM Value subclasses, such as a BooleanValue and a NaturalOneValue -– then the type of the constructed VDM value is the union of the various types passed, in this example ``{\textbf\ttfamily seq of (bool | nat1)}''. If this VDM type is not compatible with the use of the value in the rest of the VDM model, runtime type exceptions may occur when the value is processed by the model.
+If the \texttt{ValueList} (or other) collection passed to these constructors contains a mixture of VDM types -– i.e.\ a mixture of VDM \texttt{Value} subclasses, such as a \texttt{BooleanValue} and a \texttt{NaturalOneValue} -– then the type of the constructed VDM value is the union of the various types passed, in this example ``\kw{seq of (bool} \texttt{$\mid$} \kw{nat1)}''. If this VDM type is not compatible with the use of the value in the rest of the VDM model, runtime type exceptions may occur when the value is processed by the model.
 
 Lastly, as before, to get the primitive Java values of a VDM collection, the following methods are provided:
 
@@ -2868,7 +2868,7 @@ public ValueSet setValue(Context ctxt) throws ValueException
 public ValueMap mapValue(Context ctxt) throws ValueException
 \end{lstlisting}
 
-Note that, as with the \texttt{SeqValue} constructor, there is a special method to return a Java String from a ``{\textbf\ttfamily seq of char}'' \texttt{SeqValue}, rather than a \texttt{ValueList} of \texttt{CharacterValue}s. As before, if the \texttt{Value} being used is not a sequence or set or map, then these methods will throw a \texttt{ValueException}.
+Note that, as with the \texttt{SeqValue} constructor, there is a special method to return a Java String from a ``\kw{seq of char}'' \texttt{SeqValue}, rather than a \texttt{ValueList} of \texttt{CharacterValue}s. As before, if the \texttt{Value} being used is not a sequence or set or map, then these methods will throw a \texttt{ValueException}.
 
 \section{Other Types}
 
@@ -2878,7 +2878,7 @@ The sections above describe enough to create or deconstruct simple VDM values in
 
 Overture has an internal \texttt{FunctionValue} class, and this is used to hold the values of functions (e.g.\ the value of a ``{\textbf\ttfamily lambda}'' expression or the value of a function defined within a module). But as far as Java is concerned, these values are opaque -– there is no equivalent Java construct, and the only way to evaluate a VDM function is to let Overture perform that evaluation. Similarly, Java cannot construct a \texttt{FunctionValue}.
 
-The only operation that Java can reasonably perform with a \texttt{FunctionValue} is to create a composite function (eg. “f1 comp f2” in VDM) or a function iteration (e.g.\ ``\texttt{f ** 3}'' in VDM) using existing \texttt{FunctionValue}s. To do this, there are two subclasses of \texttt{FunctionValue}, called \texttt{CompFunctionValue} and \texttt{IterFunctionValue}, the constructors for which are as follows:
+The only operation that Java can reasonably perform with a \texttt{FunctionValue} is to create a composite function (eg. ``\texttt{f1 comp f2}'' in VDM) or a function iteration (e.g.\ ``\texttt{f ** 3}'' in VDM) using existing \texttt{FunctionValue}s. To do this, there are two subclasses of \texttt{FunctionValue}, called \texttt{CompFunctionValue} and \texttt{IterFunctionValue}, the constructors for which are as follows:
 
 \begin{lstlisting}[language=JAVA]
 public CompFunctionValue(FunctionValue f1, FunctionValue f2)
@@ -2895,7 +2895,7 @@ public FunctionValue functionValue(Context ctxt)
 
 \section{Object Values}
 
-When VDM++ and VDM-RT create new objects using the ``{\textbf\ttfamily new}'' operator, the resulting values are held as \texttt{ObjectValue}s in Overture. These are complex types that involve function and operation definitions for the object as well as any type, value, sync, thread or traces sections defined. Therefore, like \texttt{FunctionValue}s, \texttt{ObjectValue}s are really opaque to Java and cannot be used directly.
+When VDM++ and VDM-RT create new objects using the ``\kw{new}'' operator, the resulting values are held as \texttt{ObjectValue}s in Overture. These are complex types that involve function and operation definitions for the object as well as any type, value, sync, thread or traces sections defined. Therefore, like \texttt{FunctionValue}s, \texttt{ObjectValue}s are really opaque to Java and cannot be used directly.
 
 Like \texttt{FunctionValue}s, \texttt{ObjectValue}s have a method to convert a Value into an \texttt{ObjectValue}. But this only performs a cast:
 
@@ -2911,7 +2911,7 @@ A VDM record is just a collection of typed field values. A \texttt{RecordValue} 
 public RecordValue recordValue(Context ctxt)
 \end{lstlisting}
 
-To get individual field Values from a \texttt{RecordValue}, two more Java helper types have to be introduced, called FieldMap and FieldValue. A FieldValue has the following constructor, and represents on field in a record:
+To get individual field Values from a \texttt{RecordValue}, two more Java helper types have to be introduced, called \texttt{FieldMap} and \texttt{FieldValue}. A \texttt{FieldValue} has the following constructor, and represents on field in a record:
 
 \begin{lstlisting}[language=JAVA]
 public FieldValue(String name, Value value, boolean comparable)
