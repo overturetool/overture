@@ -2754,7 +2754,7 @@ The name and type of a VDM parameter are mapped to the property \texttt{name}, \
 \newpage
 \chapter{Using VDM Values in Java}\label{cha:VDMvalues}
 
-As described in Chapter~\ref{sec:linkToJava} integration between Overture and Java code can be established. Either by writing native libraries in Java that can be called from VDM, or by giving a Java program overall control of a VDM model by making calls to that model as a user interacts with a GUI.
+As described in Chapter~\ref{sec:linkToJava} integration between Overture and Java code can be established, either by writing native libraries in Java that can be called from VDM, or by giving a Java program overall control of a VDM model by making calls to that model as a user interacts with a GUI.
 
 In both cases, internal VDM values have to be handled by Java -– either because they are passed as arguments to a Java library, and returned as results to VDM, or because they are returned from a VDM model evalution to a controlling Java program.
 
@@ -2763,14 +2763,6 @@ This appendix describes the internal class hierarchy used by Overture to represe
 \section{The Value Class Hierarchy}
 
 All internal VDM values in Overture are held by instances of the \texttt{Value} class with the fully qualified name, \url{org.overture.interpreter.values.Value}. The \texttt{Value} class itself is abstract, but subclasses can be instantiated to represent any VDM value, such as a ``\kw{seq of char}'', ``\kw{nat1}'” or a value of an arbitrarily complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
-
-\begin{figure}[h]
-\begin{center}
-  \includegraphics[width=2.5in]{screenDumps/ValueHierarchy}
-  \caption[labelInTOC]{Java Value Hierarchy}
-  \label{fig:gui:JavaVDMhierarchy}
-\end{center}
-\end{figure}
 
 Generally, the name of the \texttt{Value} subclass for a VDM type is on the form \texttt{<\textit{name}>Value}, for example \texttt{BooleanValue} or \texttt{SeqValue}.
  
@@ -2793,6 +2785,14 @@ public NilValue()
 \end{lstlisting}
 
 The constructors that throw exceptions are the ones for which some Java value does not match the VDM type concerned. For example, a \texttt{RealValue} or \texttt{RationalValue} cannot take the Java values \texttt{Double.NaN} or \texttt{Double.POSITIVE\_INFINITY} as a constructor argument. Similarly, \texttt{NaturalValue} and \texttt{NaturalOneValue} cannot take a negative long as an argument.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[width=2.5in]{screenDumps/ValueHierarchy}
+  \caption[labelInTOC]{Java Value Hierarchy}
+  \label{fig:gui:JavaVDMhierarchy}
+\end{center}
+\end{figure}
 
 Note that a \texttt{QuoteValue} is constructed with a string. This is simply the string value that would appear between angle brackets in VDM, for example \texttt{<FAIL>} would be constructed with the Java string \texttt{"FAIL"}.
 
