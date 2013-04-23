@@ -53,6 +53,7 @@ public class VdmReadme
 	private final String TEX_AUTHOR = "AUTHOR";
 	private final String ENCODING = "ENCODING";
 	private final String VM_ARGUMENTS = "VM_ARGUMENTS";
+	private final String REALTIME_TIME_INV_CHECKS = "REALTIME_TIME_INV_CHECKS";
 
 	private Release languageVersion = Release.DEFAULT;
 	private Boolean invChecks = true;
@@ -71,6 +72,7 @@ public class VdmReadme
 	private Dialect dialect = Dialect.VDM_PP;
 	private boolean settingsParsed = false;
 	private String content = "";
+	private Boolean realTimeInvChecks = false;
 
 	public VdmReadme(File file, String name, Dialect dialect,
 			boolean autoInitialize)
@@ -146,6 +148,8 @@ public class VdmReadme
 				setLibs(fixSemiSplit(data[1]));
 			else if (data[0].equals(VM_ARGUMENTS))
 				setVmArguments(fixSemiSplit(data[1]));
+			else if(data[0].equals(REALTIME_TIME_INV_CHECKS))
+				setRealTimeInvChecks(new Boolean(data[1]));
 		}
 	}
 
@@ -392,6 +396,7 @@ public class VdmReadme
 		if(dialect == Dialect.VDM_RT)
 		{
 			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_logging\" value=\"true\"/>");
+			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_time_inv_checks\" value=\""  + getRealTimeInvChecks() + "\"/>");
 		}
 		
 		if(vmArguments.size() > 0)
@@ -636,6 +641,16 @@ public class VdmReadme
 				this.vmArguments.add(arg.trim());
 		}
 
+	}
+	
+	public void setRealTimeInvChecks(Boolean realTimeInvChecks)
+	{
+		this.realTimeInvChecks = realTimeInvChecks;
+	}
+
+	public Boolean getRealTimeInvChecks()
+	{
+		return realTimeInvChecks;
 	}
 
 	public List<String> getVmArguments()

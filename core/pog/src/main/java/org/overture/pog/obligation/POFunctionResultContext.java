@@ -44,7 +44,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AExplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
@@ -53,7 +53,7 @@ public class POFunctionResultContext extends POContext
 						AstFactory.newAIdentifierPattern(
 						new LexNameToken(
 					definition.getName().getModule(), "RESULT", definition.getLocation())),
-					((AFunctionType)definition.getType()).getResult().clone());
+					definition.getType().getResult().clone());
 				
 
 	}
@@ -61,7 +61,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AImplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = true;

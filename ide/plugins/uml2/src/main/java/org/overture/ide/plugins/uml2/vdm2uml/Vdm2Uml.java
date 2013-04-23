@@ -331,7 +331,7 @@ public class Vdm2Uml
 
 		EList<Type> types = new BasicEList<Type>();
 
-		AFunctionType type = (AFunctionType) def.getType();
+		AFunctionType type = def.getType();
 
 		Operation operation = class_.createOwnedOperation(def.getName().getName(), null, null, null);
 

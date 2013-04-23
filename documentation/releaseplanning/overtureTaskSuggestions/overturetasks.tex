@@ -239,11 +239,24 @@ been parsed.  \item Refactor TraceFileRunner to move event-parsing (sorting of
 CPUs etc.) out.  \item Refactor eventhandler base to move conjecture handling
 out.  \item Cleanup ``update CPU'' hack in TraceFileRunner.  \end{itemize}
 
+\section{Bug reporting (PJ)}
+
+The current version of Overture lags a feature where users can report bugs. Such a feature could be available through a \emph{Help} $ \rightarrow$ \emph{Report bug} menu item. This menu item could simply open a browser and display a web page, where the user could report the bug. Below are some suggestions for information to add to the bug report:
+
+\begin{itemize}
+\item A user description of the bug
+\item Date
+\item The Overture version
+\item Log file(s)
+\item Screen shot(s)
+\item The VDM project(s) of interest
+\item etc.
+\end{itemize}
 
 
-\subsection*{Traces (PJ)}
 
-If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``nconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
+
+
 
 \chapter{Architecture}
 
@@ -325,6 +338,20 @@ create a narrow well scoped interface exposed by the Overture code base.
     refactored. Also, these kind of changes have a high potential for conflicts
     so special care must be taken with that aspect of the task.
 
+
+
+
+\chapter{Recently Fixed}
+
+\section{Traces (PJ)}
+
+If you execute traces in the Combinatorial Testing perspective and the test invokes an operation with a failing precondition the verdict is \textit{``inconclusive''}. This is how it should be. What seems strange, is that if you invoke a function with a failing precondition the verdict is \textit{``failed''}. This task suggests changing this so that functions with failing preconditions are considered inconclusive as well.
+
+\paragraph{Date:}
+21/4-2013.
+
+\paragraph{Solution:}
+Commit \texttt{271b0ff8785c3d37926238f17a630bdd15138aab} provides a fix for this.
 
 
 

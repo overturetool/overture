@@ -155,7 +155,7 @@ public class AFunctionTypeAssistantTC {
 			polyparams.add(PTypeAssistantTC.polymorph(ptype,pname, actualType));
 		}
 
-		PType polyresult = PTypeAssistantTC.polymorph(((AFunctionType)type).getResult(),pname, actualType);
+		PType polyresult = PTypeAssistantTC.polymorph(type.getResult(),pname, actualType);
 		AFunctionType ftype =
 				AstFactory.newAFunctionType(type.getLocation(), false, polyparams, polyresult);
 		ftype.setDefinitions(type.getDefinitions());

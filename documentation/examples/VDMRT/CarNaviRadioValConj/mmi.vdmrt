@@ -1,0 +1,26 @@
+class MMI
+
+operations
+  async 
+  public HandleKeyPress: nat ==> ()
+  HandleKeyPress (pn) ==
+    ( cycles (1E5) skip;
+      --duration (1E5) skip;
+      cases (pn):
+        1 -> RadNavSys`radio.AdjustVolumeUp(),
+        2 -> RadNavSys`radio.AdjustVolumeDown(),
+        3 -> RadNavSys`navigation.DatabaseLookup()
+      end ); 
+
+  async 
+  public UpdateScreen: nat ==> ()
+  UpdateScreen (pn) ==
+    ( cycles (5E5) skip;
+      --duration (5E5) skip;
+      cases (pn):
+        1 -> IO`println("Screen Update: Volume Knob"),
+        2 -> IO`println("Screen Update: InsertAddress"), --World`envTasks("InsertAddress").HandleEvent(pno),
+        3 -> IO`println("Screen Update: TransmitTMC") -- World`envTasks("TransmitTMC").HandleEvent(pno)
+      end )
+
+end MMI

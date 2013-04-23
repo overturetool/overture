@@ -38,7 +38,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 
 	public static List<PType> getMeasureParams(AExplicitFunctionDefinition node)
 	{		
-		AFunctionType functionType = (AFunctionType)node.getType();
+		AFunctionType functionType = node.getType();
 		
 		List<PType> params = new LinkedList<PType>();
 		params.addAll(functionType.getParameters());
@@ -176,7 +176,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 	public static AFunctionType getType(AExplicitFunctionDefinition efd, List<PType> actualTypes)
 	{
 		Iterator<PType> ti = actualTypes.iterator();
-		AFunctionType ftype = (AFunctionType)efd.getType();
+		AFunctionType ftype = efd.getType();
 				
 		if (efd.getTypeParams() != null)
 		{
@@ -348,7 +348,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						(List<ILexNameToken>)d.getTypeParams().clone(), 
-						AFunctionTypeAssistantTC.getCurriedPostType((AFunctionType)d.getType(),d.getIsCurried()),
+						AFunctionTypeAssistantTC.getCurriedPostType(d.getType(),d.getIsCurried()),
 						parameters, 
 						d.getPostcondition(), 
 						null, null, false, null);
@@ -373,7 +373,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()),
 						NameScope.GLOBAL, 
 						(List<ILexNameToken>) d.getTypeParams().clone(),
-						AFunctionTypeAssistantTC.getCurriedPreType((AFunctionType) d.getType(),d.getIsCurried()), 
+						AFunctionTypeAssistantTC.getCurriedPreType(d.getType(),d.getIsCurried()), 
 						(LinkedList<List<PPattern>>) d.getParamPatternList().clone(), 
 						d.getPrecondition(), null, null, false, null);
 //				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
