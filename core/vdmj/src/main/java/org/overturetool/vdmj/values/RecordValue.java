@@ -60,23 +60,8 @@ public class RecordValue extends Value
 			Field f = fi.next();
 			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
 		}
-
-		if (invariant != null && Settings.invchecks)
-		{
-			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
-			// through an invariant check, so we set the atomic flag around the
-			// conversion. This also stops VDM-RT from performing "time step"
-			// calculations.
-
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
-			{
-				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
-			}
-		}
+		
+		checkInvariant(ctxt);
 	}
 
 	// mu_ expressions
@@ -107,27 +92,7 @@ public class RecordValue extends Value
 			fieldmap.add(f.tag, v.convertTo(f.type, ctxt), !f.equalityAbstration);
 		}
 
-		if (invariant != null &&
-			!invariant.eval(invariant.location, this, ctxt).boolValue(ctxt))
-		{
-			abort(4082, "Type invariant violated by mk_ arguments", ctxt);
-		}
-		if (invariant != null && Settings.invchecks)
-		{
-			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
-			// through an invariant check, so we set the atomic flag around the
-			// conversion. This also stops VDM-RT from performing "time step"
-			// calculations.
-
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
-			{
-				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
-			}
-		}
+		checkInvariant(ctxt);
 	}
 
 	// Only called by clone()
@@ -152,6 +117,26 @@ public class RecordValue extends Value
 		}
 	}
 
+	public void checkInvariant(Context ctxt) throws ValueException
+	{
+		if (invariant != null && Settings.invchecks)
+		{
+			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+			// through an invariant check, so we set the atomic flag around the
+			// conversion. This also stops VDM-RT from performing "time step"
+			// calculations.
+	
+			ctxt.threadState.setAtomic(true);
+			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
+			ctxt.threadState.setAtomic(false);
+	
+			if (!inv)
+			{
+				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+			}
+		}
+	}
+
 	@Override
 	public RecordValue recordValue(Context ctxt)
 	{
@@ -161,6 +146,24 @@ public class RecordValue extends Value
 	@Override
 	public Value getUpdatable(ValueListenerList listeners)
 	{
+		InvariantValueListener invl = null;
+
+		if (invariant != null)
+		{
+			// Add an invariant listener to a new list for children of this value
+			// We update the object in the listener once we've created it (below)
+
+			invl = new InvariantValueListener();
+			ValueListenerList list = new ValueListenerList(invl);
+
+			if (listeners != null)
+			{
+				list.addAll(listeners);
+			}
+
+			listeners = list;
+		}
+
 		FieldMap nm = new FieldMap();
 
 		for (FieldValue fv: fieldmap)
@@ -169,7 +172,15 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+		
+		if (invl != null)
+		{
+			// Update the listener with the address of the updatable copy
+			invl.setValue(uval);
+		}
+
+		return uval;
 	}
 
 	@Override
