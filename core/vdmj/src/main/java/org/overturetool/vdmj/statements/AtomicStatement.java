@@ -23,7 +23,9 @@
 
 package org.overturetool.vdmj.statements;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
@@ -31,6 +33,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
@@ -46,6 +49,7 @@ import org.overturetool.vdmj.values.VoidValue;
 public class AtomicStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
+	private static final Set<Thread> atomicThreads = new HashSet<Thread>();
 
 	public final List<AssignmentStatement> assignments;
 	private StateDefinition statedef = null;
@@ -133,12 +137,33 @@ public class AtomicStatement extends Statement
 				listener.doInvariantChecks = false;
 			}
 		}
+		
+		addAtomicThread();
 
 		for (AssignmentStatement stmt: assignments)
 		{
 			stmt.eval(ctxt);
 		}
+		
+		removeAtomicThread();
 
+		// Now run through the assignments again after the atomic lock is lifted to
+		// check that all the type invariants still hold afterwards. Note that we pass
+		// a clone of the value to "set" to force it to check.
+		
+		for (AssignmentStatement stmt: assignments)
+		{
+			try
+			{
+				Value newval = stmt.target.eval(ctxt);
+				newval.set(stmt.location, (Value)newval.clone(), ctxt);
+			}
+			catch (ValueException e)
+			{
+				abort(e);
+			}
+		}
+		
 		if (state != null)
 		{
 			state.doInvariantChecks = true;
@@ -164,5 +189,26 @@ public class AtomicStatement extends Statement
 		}
 
 		return obligations;
+	}
+	
+	/*
+	 * State invariants are switched on/off in the exec method directly, but
+	 * type invariants may be affected in arbitrary places, so these methods
+	 * record the (per thread) fact that we are inside an atomic statement.
+	 */
+	
+	private synchronized void addAtomicThread()
+	{
+		atomicThreads.add(Thread.currentThread());
+	}
+	
+	private synchronized void removeAtomicThread()
+	{
+		atomicThreads.remove(Thread.currentThread());
+	}
+	
+	public synchronized static boolean insideAtomic()
+	{
+		return atomicThreads.contains(Thread.currentThread());
 	}
 }
