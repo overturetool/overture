@@ -1433,11 +1433,24 @@ separate(#fin(MMI`UpdateScreen), #fin(MMI`UpdateScreen), 500 ms);
 end Distribution
 \end{lstlisting}
 
+The concrete syntax for the timing invariants in VDM-RT is defined as:
+\begin{lstlisting}
+property(trigger,ending,interval);
+\end{lstlisting}
+
+The different kinds properties that can be used are called:
+
+\begin{description}
+\item[\texttt{deadlineMet}:] A deadline by definition is a time by which something must be finished. In real-time embedded systems there is typically deadlines that must be respected from when an event happens to its response. In our terminology, it means that the ending event must happen within a certain timeframe from the trigger event.
+\item[\texttt{seperate}:] The separation properties are used to describe a minimum separation between events if the second event occur at all.
+%\item[\texttt{seperateReq}:] The separation required properties are used to describe a minimum separation between events like for \texttt{seperate} but here the second event must occur.
+\end{description}
+
 In Overture validation conjectures are evaluated over the execution trace at run-time and in case violations occur they will be written to a \textit{violations file} with \texttt{.txt} extension. The violations file is located in the log file directory and named by the time of execution. When this file is loaded using the $
 \begin{array}{l}
 \includegraphics{screenDumps/openViolationsFileIcon}
 \end{array}
-$ button, Overture will list the violations as shown in figure~\ref{fig:userguide:listedConjecturesViolated}. In particular, this figure shows two violations of the validation conjecture in listing~\ref{validationConjecture}.
+$ button, Overture will list the violations as shown in Figure~\ref{fig:userguide:listedConjecturesViolated}. In particular, this figure shows two violations of the validation conjecture in listing~\ref{validationConjecture}.
 
 \begin{figure}[htp]
 \begin{center}
@@ -1447,7 +1460,7 @@ $ button, Overture will list the violations as shown in figure~\ref{fig:userguid
 \end{center}
 \end{figure}
 
-In addition, the RealTime Log viewer will show the violations graphically by marking the trigger and corresponding response in the model execution overview. Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations from figure~\ref{fig:userguide:listedConjecturesViolated}, where the response and trigger of the first and second violation, respectively, occur at the same point in time. This explains why only tree markers, i.e. the circles, are visible in the figure.
+In addition, the RealTime Log viewer will show the violations graphically by marking the trigger and corresponding response in the model execution overview. Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations from Figure~\ref{fig:userguide:listedConjecturesViolated}, where the response and trigger of the first and second violation, respectively, occur at the same point in time. This explains why only tree markers, i.e. the circles, are visible in the figure.
 
 \begin{figure}[htp]
 \begin{center}
