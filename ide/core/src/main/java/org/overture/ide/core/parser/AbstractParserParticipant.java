@@ -99,7 +99,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			} else
 			{
 				LexLocation.getAllLocations().clear();
-				result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
+				result = startParse(file, data, file.getFile().getCharset());
 				setFileMarkers(file.getFile(), result, null);
 				if (result != null && result.getAst() != null)
 				{
