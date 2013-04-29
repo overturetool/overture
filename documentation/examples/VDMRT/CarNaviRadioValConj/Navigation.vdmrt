@@ -1,0 +1,18 @@
+class Navigation
+
+operations
+  async 
+  public DatabaseLookup: () ==> ()
+  DatabaseLookup () ==
+    ( cycles (5E6) skip;
+      --duration (5E6) skip;
+      RadNavSys`mmi.UpdateScreen(2) );
+
+  async 
+  public DecodeTMC: () ==> ()
+  DecodeTMC () ==
+    ( cycles (5E5) skip;
+      --duration (5E6) skip;
+      RadNavSys`mmi.UpdateScreen(3) )
+
+end Navigation

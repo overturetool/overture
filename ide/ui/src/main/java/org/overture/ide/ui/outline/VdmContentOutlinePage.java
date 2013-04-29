@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.ListenerList;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -44,6 +46,7 @@ import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
+
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -162,6 +165,16 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	{
 		this.vdmEditor = vdmEditor;
 	}
+	
+	
+	IContentProvider contentProvider = new VdmOutlineTreeContentProvider();
+	ILabelProvider labelProvider= new DecorationgVdmLabelProvider(new VdmUILabelProvider());
+	public void configure(IContentProvider contentProvider,
+			ILabelProvider labelProvider)
+	{
+		this.contentProvider = contentProvider;
+		this.labelProvider=labelProvider;
+	}
 
 	@Override
 	public void createControl(Composite parent)
@@ -169,10 +182,10 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 		fOutlineViewer = new VdmOutlineViewer(this, parent);
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
-		fOutlineViewer.setContentProvider(new VdmOutlineTreeContentProvider());
+		fOutlineViewer.setContentProvider(contentProvider);
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
-		uiLabelProvider = new VdmUILabelProvider();
-		fOutlineViewer.setLabelProvider(new DecorationgVdmLabelProvider(uiLabelProvider));
+//		uiLabelProvider = new VdmUILabelProvider();
+		fOutlineViewer.setLabelProvider(labelProvider);
 		fOutlineViewer.addSelectionChangedListener(this);
 
 		Object[] listeners = fSelectionChangedListeners.getListeners();
@@ -372,4 +385,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			inExternalSelectionMode = false;
 		}
 	}
+
+
 }
