@@ -35,6 +35,7 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -160,6 +161,7 @@ public abstract class VdmEditor extends TextEditor
 
 			public void selectionChanged(SelectionChangedEvent event)
 			{
+				
 				ISelection s = event.getSelection();
 				if (s instanceof IStructuredSelection)
 				{
@@ -677,7 +679,7 @@ public abstract class VdmEditor extends TextEditor
 		if (fOutlinePage != null && element != null
 				&& !(checkIfOutlinePageActive))
 		{// && isJavaOutlinePageActive()
-			fOutlinePage.select(element);
+			fOutlinePage.selectNode(element);
 		}
 	}
 

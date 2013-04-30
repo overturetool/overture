@@ -39,14 +39,11 @@ import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
-import org.overture.ide.core.IVdmElementDelta;
 import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
-
 
 @SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
@@ -76,72 +73,22 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 						if (fOutlineViewer != null
 								&& !fOutlineViewer.getControl().isDisposed())
 						{
+
+							fOutlineViewer.setInternalSelectionMode();
 							fOutlineViewer.refresh(true);
 							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
+							fOutlineViewer.setExternalSelectionMode();
 						}
 					}
 				});
 			}
 		}
 
-		private boolean isPossibleStructuralChange(IVdmElementDelta cuDelta)
-		{
-			if (cuDelta.getKind() != IVdmElementDelta.CHANGED)
-			{
-				return true; // add or remove
-			}
-			// int flags= cuDelta.getFlags();
-			// if ((flags & IVdmElementDelta.F_CHILDREN) != 0) {
-			// return true;
-			// }
-			// return (flags & (IJavaElementDelta.F_CONTENT | IJavaElementDelta.F_FINE_GRAINED)) ==
-			// IJavaElementDelta.F_CONTENT;
-			return true;
-		}
-
-		protected IVdmElementDelta findElement(IVdmSourceUnit unit,
-				IVdmElementDelta delta)
-		{
-
-			if (delta == null || unit == null)
-				return null;
-
-			if (delta.getElement() instanceof IVdmSourceUnit)
-			{
-				IVdmSourceUnit element = (IVdmSourceUnit) delta.getElement();
-
-				if (unit.equals(element))
-				{
-					if (isPossibleStructuralChange(delta))
-					{
-						return delta;
-					}
-					return null;
-				}
-			}
-
-			// if (element.getElementType() > IVdmElement.CLASS_FILE)
-			// return null;
-			//
-			// IJavaElementDelta[] children= delta.getAffectedChildren();
-			// if (children == null || children.length == 0)
-			// return null;
-			//
-			// for (int i= 0; i < children.length; i++) {
-			// IJavaElementDelta d= findElement(unit, children[i]);
-			// if (d != null)
-			// return d;
-			// }
-
-			return null;
-		}
 	}
 
 	/**
-	 * Constant indicating that all levels of the tree should be expanded or collapsed.
-	 * 
-//	 * @see #expandToLevel(int)
-//	 * @see #collapseToLevel(Object, int)
+	 * Constant indicating that all levels of the tree should be expanded or collapsed. // * @see #expandToLevel(int) //
+	 * * @see #collapseToLevel(Object, int)
 	 */
 	public static final int ALL_LEVELS = -1;
 
@@ -165,15 +112,15 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	{
 		this.vdmEditor = vdmEditor;
 	}
-	
-	
+
 	IContentProvider contentProvider = new VdmOutlineTreeContentProvider();
-	ILabelProvider labelProvider= new DecorationgVdmLabelProvider(new VdmUILabelProvider());
+	ILabelProvider labelProvider = new DecorationgVdmLabelProvider(new VdmUILabelProvider());
+
 	public void configure(IContentProvider contentProvider,
 			ILabelProvider labelProvider)
 	{
 		this.contentProvider = contentProvider;
-		this.labelProvider=labelProvider;
+		this.labelProvider = labelProvider;
 	}
 
 	@Override
@@ -184,7 +131,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		fOutlineViewer.setContentProvider(contentProvider);
 		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
-//		uiLabelProvider = new VdmUILabelProvider();
+		// uiLabelProvider = new VdmUILabelProvider();
 		fOutlineViewer.setLabelProvider(labelProvider);
 		fOutlineViewer.addSelectionChangedListener(this);
 
@@ -211,8 +158,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
 		toolBarManager.add(new LexicalSortingAction(fOutlineViewer));
 
-		
-		
 		fMemberFilterActionGroup = new MemberFilterActionGroup(fOutlineViewer, IVdmUiConstants.OUTLINE_ID); //$NON-NLS-1$
 		fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
 
@@ -363,7 +308,7 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		VdmCore.addElementChangedListener(fListener);
 	}
 
-	public void select(INode reference)
+	public void selectNode(INode reference)
 	{
 
 		if (fOutlineViewer != null)
@@ -385,6 +330,5 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			inExternalSelectionMode = false;
 		}
 	}
-
 
 }
