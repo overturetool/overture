@@ -23,11 +23,9 @@
 
 package org.overturetool.vdmj.statements;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Vector;
 
-import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -39,20 +37,18 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
-import org.overturetool.vdmj.values.ClassInvariantListener;
-import org.overturetool.vdmj.values.ObjectValue;
-import org.overturetool.vdmj.values.State;
+import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
+import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueListenerList;
 import org.overturetool.vdmj.values.VoidValue;
 
 
 public class AtomicStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
-	private static final Set<Thread> atomicThreads = new HashSet<Thread>();
 
 	public final List<AssignmentStatement> assignments;
-	private StateDefinition statedef = null;
 
 	public AtomicStatement(LexLocation location, List<AssignmentStatement> assignments)
 	{
@@ -75,8 +71,6 @@ public class AtomicStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		statedef = env.findStateDefinition();
-
 		for (AssignmentStatement stmt: assignments)
 		{
 			stmt.typeCheck(env, scope);
@@ -118,45 +112,22 @@ public class AtomicStatement extends Statement
 	public Value eval(Context ctxt)
 	{
 		breakpoint.check(location, ctxt);
-
-		State state = null;
-		ClassInvariantListener listener = null;
-
-		if (statedef != null)
-		{
-			state = statedef.getState();
-			state.doInvariantChecks = false;
-		}
-		else
-		{
-			ObjectValue self = ctxt.getSelf();
-
-			if (self != null && self.invlistener != null)
-			{
-				listener = self.invlistener;
-				listener.doInvariantChecks = false;
-			}
-		}
 		
-		addAtomicThread();
-
-		for (AssignmentStatement stmt: assignments)
-		{
-			stmt.eval(ctxt);
-		}
+		int size = assignments.size();
+		ValueList targets = new ValueList(size);
+		ValueList values = new ValueList(size);
 		
-		removeAtomicThread();
-
-		// Now run through the assignments again after the atomic lock is lifted to
-		// check that all the type invariants still hold afterwards. Note that we pass
-		// a clone of the value to "set" to force it to check.
+		// Rather than execute the assignment statements directly, we calculate the
+		// Updateable values that would be affected, and the new values to put in them.
+		// Note that this does not provoke any invariant checks (other than those that
+		// may be present in the RHS expression of each assignment).
 		
 		for (AssignmentStatement stmt: assignments)
 		{
 			try
 			{
-				Value newval = stmt.target.eval(ctxt);
-				newval.set(stmt.location, (Value)newval.clone(), ctxt);
+				targets.add(stmt.target.eval(ctxt));
+				values.add(stmt.exp.eval(ctxt).convertTo(stmt.targetType, ctxt));
 			}
 			catch (ValueException e)
 			{
@@ -164,17 +135,36 @@ public class AtomicStatement extends Statement
 			}
 		}
 		
-		if (state != null)
+		// We make the assignments atomically by turning off thread swaps and time
+		// then temporarily removing the listener lists from each Updateable target.
+		// Then, when all assignments have been made, we check the invariants by
+		// passing the updated values to each listener list, as the assignment would have.
+		// Finally, we re-enable the thread swapping and time stepping, before returning
+		// a void value.
+		
+		ctxt.threadState.setAtomic(true);
+		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+
+		for (int i = 0; i < size; i++)
 		{
-			state.doInvariantChecks = true;
-			state.changedValue(location, null, ctxt);
+			UpdatableValue target = (UpdatableValue) targets.get(i);
+			listenerLists.add(target.listeners);
+			target.listeners = null;
+			target.set(location, values.get(i), ctxt);	// No invariant listeners
+			target.listeners = listenerLists.get(i);
 		}
-		else if (listener != null)
+		
+		for (int i = 0; i < size; i++)
 		{
-			listener.doInvariantChecks = true;
-			listener.changedValue(location, null, ctxt);
+			ValueListenerList listeners = listenerLists.get(i);
+			
+			if (listeners != null)
+			{
+				listeners.changedValue(location, values.get(i), ctxt);
+			}
 		}
 
+		ctxt.threadState.setAtomic(false);
 		return new VoidValue();
 	}
 
@@ -189,26 +179,5 @@ public class AtomicStatement extends Statement
 		}
 
 		return obligations;
-	}
-	
-	/*
-	 * State invariants are switched on/off in the exec method directly, but
-	 * type invariants may be affected in arbitrary places, so these methods
-	 * record the (per thread) fact that we are inside an atomic statement.
-	 */
-	
-	private synchronized void addAtomicThread()
-	{
-		atomicThreads.add(Thread.currentThread());
-	}
-	
-	private synchronized void removeAtomicThread()
-	{
-		atomicThreads.remove(Thread.currentThread());
-	}
-	
-	public synchronized static boolean insideAtomic()
-	{
-		return atomicThreads.contains(Thread.currentThread());
 	}
 }

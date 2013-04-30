@@ -30,7 +30,6 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.statements.AtomicStatement;
 
 public class InvariantValueListener implements ValueListener, Serializable
 {
@@ -61,8 +60,7 @@ public class InvariantValueListener implements ValueListener, Serializable
 		// is true for these simplest levels. Note that we also check for whether
 		// we are inside an atomic block.
 		
-		if (root != null && root.value != value && Settings.invchecks
-			&& !AtomicStatement.insideAtomic())
+		if (root != null && root.value != value && Settings.invchecks)
 		{
     		try
     		{
