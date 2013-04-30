@@ -72,6 +72,13 @@
               type="org.eclipse.core.resources.IProject">
         </adapter>
      </factory>
+     <factory
+           adaptableType="org.eclipse.core.resources.IFile"
+           class="org.overture.ide.core.resources.AdapterFactory1">
+        <adapter
+              type="org.overture.ide.core.resources.IVdmSourceUnit">
+        </adapter>
+     </factory>
   </extension>
 
 

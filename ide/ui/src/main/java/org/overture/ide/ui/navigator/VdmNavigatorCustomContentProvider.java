@@ -22,12 +22,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.internal.util.Util;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.overture.ast.node.INode;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 /**
  * Please notice that the events send to this class is based on the navigatorContent:
@@ -44,7 +50,7 @@ public class VdmNavigatorCustomContentProvider
 		org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionContentProvider
 {
 	private Viewer viewer;
-
+	private static final Object[] NO_CHILDREN = new Object[0];
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
@@ -200,5 +206,35 @@ public class VdmNavigatorCustomContentProvider
 			((Runnable) runnableIterator.next()).run();
 		}
 
+	}
+	
+	@Override
+	protected IWorkbenchAdapter getAdapter(Object element)
+	{
+		if (element instanceof IFile)
+		{
+			IVdmSourceUnit source = (IVdmSourceUnit) Util.getAdapter(((IFile) element), IVdmSourceUnit.class);
+			IWorkbenchAdapter adapter = getAdapter(source);
+			return adapter;
+		}
+		return super.getAdapter(element);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
+	 */
+	public Object[] getChildren(Object element)
+	{
+		if (element instanceof IResource || element instanceof INode)
+		{
+			IWorkbenchAdapter adapter = getAdapter(element);
+			if (adapter != null)
+			{
+				return adapter.getChildren(element);
+			}
+			return NO_CHILDREN;
+		}
+		return NO_CHILDREN;
 	}
 }
