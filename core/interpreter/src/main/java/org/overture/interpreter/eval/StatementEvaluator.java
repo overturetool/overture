@@ -57,6 +57,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
@@ -196,12 +197,33 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				listener.doInvariantChecks = false;
 			}
 		}
+		
+		AAtomicStmAssistantInterpreter.addAtomicThread();
 
 		for (AAssignmentStm stmt: node.getAssignments())
 		{
 			stmt.apply(VdmRuntime.getStatementEvaluator(),ctxt);
 		}
+		
+		AAtomicStmAssistantInterpreter.removeAtomicThread();
 
+		// Now run through the assignments again after the atomic lock is lifted to
+		// check that all the type invariants still hold afterwards. Note that we pass
+		// a clone of the value to "set" to force it to check.
+		
+		for (AAssignmentStm stmt: node.getAssignments())
+		{
+			try
+			{
+				Value newval = stmt.getTarget().apply(VdmRuntime.getStatementEvaluator(), ctxt);
+				newval.set(stmt.getLocation(), (Value)newval.clone(), ctxt);
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), e);
+			}
+		}
+		
 		if (state != null)
 		{
 			state.doInvariantChecks = true;

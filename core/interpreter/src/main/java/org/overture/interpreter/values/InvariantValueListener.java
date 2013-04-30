@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
@@ -58,20 +59,22 @@ public class InvariantValueListener implements ValueListener, Serializable
 		// an inv function) in a structure, but the simplest level is actually
 		// covered by the convertTo call in the arguments to "set". So to avoid
 		// another unnecessary inv check, we also test whether root = value, which
-		// is true for these simplest levels.
+		// is true for these simplest levels. Note that we also check for whether
+		// we are inside an atomic block.
 		
-		if (root != null && root.value != value && Settings.invchecks)
+		if (root != null && root.value != value && Settings.invchecks
+				&& !AAtomicStmAssistantInterpreter.insideAtomic())
 		{
     		try
     		{
     			if (root.value instanceof InvariantValue)
     			{
-    				InvariantValue ival = (InvariantValue) root.value;	// Safe
+    				InvariantValue ival = (InvariantValue) root.value;
     				ival.checkInvariant(ctxt);
     			}
     			else if (root.value instanceof RecordValue)
     			{
-    				RecordValue rval = (RecordValue) root.value;	// Safe
+    				RecordValue rval = (RecordValue) root.value;
     				rval.checkInvariant(ctxt);
     			}
     		}
