@@ -197,4 +197,8 @@ abstract public class Environment
 			p = p.outer;
 		}
 	}
+	
+	public String toString() {
+		return ""+getDefinitions();
+	}
 }
