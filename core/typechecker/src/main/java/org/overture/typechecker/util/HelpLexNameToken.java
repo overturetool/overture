@@ -1,7 +1,6 @@
 package org.overture.typechecker.util;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.TypeComparator;
 
 public class HelpLexNameToken {
