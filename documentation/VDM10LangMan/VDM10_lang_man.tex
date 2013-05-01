@@ -3530,12 +3530,15 @@ In this example the {\bf\ttfamily threadid} expression is used in two places:
     \Lop{narrow\_},  \Lit{(}, \Ruleref{expression},  \Lit{,}, \Ruleref{type}, \Lit{)} 
     }
     
-    \item[Semantics:] The {\it narrow expression} convert the given {\tt expression} value into given {\tt type}.
-Downcasting in class inheritance, and narrowing Union type are permit.
-However, conversions between unrelated types become type errors.
+    \item[Semantics:] The {\it narrow expression} converts the given {\tt expression} value into the given {\tt type},
+returning a value of that type.
+It is legal to downcast a class to one of its subclasses, and it is legal to narrow an expression of a union type
+to one of its subtypes. However, a conversions between two completely unrelated types is a type error. Note that a
+narrow expression does not guarantee that its argument will be of the correct type at runtime, but using narrow gives
+extra type information to the specification.
     
-    \item[Examples:] In following examples, there is no difference in the results of running the Test() and Test'(), 
-    But, there is a type error (DEF) in Test().
+    \item[Examples:] In following examples, the Test() and Test'() operations should give the same results, 
+    but there is a type error in Test() which is resolved in Test' using a narrow expression.
 
       \begin{lstlisting}
 class S
