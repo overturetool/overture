@@ -33,6 +33,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.overture.ast.node.INode;
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.IElementChangedListener;
+import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 
 /**
@@ -51,6 +56,52 @@ public class VdmNavigatorCustomContentProvider
 {
 	private Viewer viewer;
 	private static final Object[] NO_CHILDREN = new Object[0];
+
+	private IElementChangedListener vdmlistner = new IElementChangedListener()
+	{
+
+		@Override
+		public void elementChanged(ElementChangedEvent event)
+		{
+			System.out.println("I changed: " + event);
+			if (event.getDelta().getKind() == IVdmElementDelta.CHANGED)
+			{
+				IVdmElement source = event.getDelta().getElement();
+				if (source instanceof IVdmSourceUnit)
+				{
+					System.out.println("This source unit changed: "
+							+ ((IVdmSourceUnit) source).getFile());
+					if (viewer != null && viewer.getControl() != null
+							&& viewer.getControl().getDisplay() != null)
+						viewer.getControl().getDisplay().asyncExec(new Runnable()
+						{
+							/*
+							 * (non-Javadoc)
+							 * @see java.lang.Runnable#run()
+							 */
+							public void run()
+							{
+								viewer.refresh();
+							}
+						});
+				}
+			}
+
+		}
+	};
+
+	public VdmNavigatorCustomContentProvider()
+	{
+		VdmCore.addElementChangedListener(vdmlistner);
+	}
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		VdmCore.removeElementChangedListener(vdmlistner);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
@@ -207,7 +258,7 @@ public class VdmNavigatorCustomContentProvider
 		}
 
 	}
-	
+
 	@Override
 	protected IWorkbenchAdapter getAdapter(Object element)
 	{
@@ -219,7 +270,7 @@ public class VdmNavigatorCustomContentProvider
 		}
 		return super.getAdapter(element);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
