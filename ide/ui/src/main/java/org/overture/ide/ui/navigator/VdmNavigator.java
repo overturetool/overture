@@ -18,18 +18,61 @@
  *******************************************************************************/
 package org.overture.ide.ui.navigator;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.navigator.ICommonActionConstants;
+import org.overture.ast.node.INode;
+import org.overture.ide.ui.VdmUIPlugin;
+import org.overture.ide.ui.editor.core.VdmEditor;
 
-public class VdmNavigator extends CommonNavigator {
+public class VdmNavigator extends CommonNavigator
+{
 
-	public VdmNavigator() {
+	public VdmNavigator()
+	{
 		super();
-		super.setLinkingEnabled(true);			
+		super.setLinkingEnabled(true);
 	}
-	
-	
-	
-	
 
-	
+	@Override
+	protected void handleDoubleClick(DoubleClickEvent anEvent)
+	{
+		super.handleDoubleClick(anEvent);
+		IAction openHandler = getViewSite().getActionBars().getGlobalActionHandler(ICommonActionConstants.OPEN);
+
+		if (openHandler == null)
+		{
+			IStructuredSelection selection = (IStructuredSelection) anEvent.getSelection();
+			Object element = selection.getFirstElement();
+
+			if (element instanceof INode)
+			{
+				IFile file = (IFile) Platform.getAdapterManager().getAdapter(element, IFile.class);
+				if (file != null)
+				{
+					try
+					{
+						IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
+
+						if (editor instanceof VdmEditor)
+						{
+							((VdmEditor) editor).selectAndReveal((INode) element);
+						}
+					} catch (PartInitException e)
+					{
+						VdmUIPlugin.log("Failed to sync inode in navigator doubleclick with editor", e);
+					}
+				}
+			}
+		}
+	}
+
 }

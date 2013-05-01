@@ -1,4 +1,4 @@
-package org.overture.ide.ui;
+package org.overture.ide.ui.adapters;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
@@ -12,7 +12,7 @@ import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 
-public class AdapterFactory2 implements IAdapterFactory
+public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 {
 	public static class VdmSourcenitWorkbenchAdapter implements
 			IWorkbenchAdapter

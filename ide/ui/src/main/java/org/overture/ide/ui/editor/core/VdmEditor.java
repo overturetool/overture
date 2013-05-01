@@ -62,8 +62,12 @@ import org.overture.ide.ui.utility.ast.AstLocationSearcher;
 
 public abstract class VdmEditor extends TextEditor
 {
-	final boolean TRACE_GET_ELEMENT_AT = false;
-	ISourceViewer viewer;
+	public static interface ILocationSearcher
+	{
+		public INode search(List<INode> nodes, int offSet);
+
+		public int[] getNodeOffset(INode node);
+	}
 
 	/**
 	 * Updates the Java outline page selection and this editor's range indicator.
@@ -92,17 +96,32 @@ public abstract class VdmEditor extends TextEditor
 	 * @since 3.0
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
-
 	VdmContentOutlinePage fOutlinePage = null;
-	// protected SourceReferenceManager sourceReferenceManager = null;
-
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
+	final boolean TRACE_GET_ELEMENT_AT = false;
+	ISourceViewer viewer;
+	ILocationSearcher locationSearcher = null;
 
 	public VdmEditor()
 	{
 
 		super();
 		setDocumentProvider(new VdmDocumentProvider());
+		this.locationSearcher = new ILocationSearcher()
+		{
+			
+			@Override
+			public INode search(List<INode> nodes, int offSet)
+			{
+				return AstLocationSearcher.search(nodes, offSet);
+			}
+			
+			@Override
+			public int[] getNodeOffset(INode node)
+			{
+				return AstLocationSearcher.getNodeOffset(node);
+			}
+		};
 
 	}
 
@@ -128,7 +147,8 @@ public abstract class VdmEditor extends TextEditor
 
 	}
 
-	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore fPreferenceStore);
+	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(
+			IPreferenceStore fPreferenceStore);
 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
 	{
@@ -171,14 +191,23 @@ public abstract class VdmEditor extends TextEditor
 						if (elements.get(0) instanceof INode)
 						{
 							INode node = (INode) elements.get(0);
-							int[] offsetLength = AstLocationSearcher.getNodeOffset(node);
-							selectAndReveal(offsetLength[0], offsetLength[1]);
+							selectAndReveal(node);
 						}
 					}
 				}
 			}
 		});
 		return page;
+	}
+	
+	/**
+	 * Selects a node existing within the ast presented by the editor
+	 * @param node
+	 */
+	public void selectAndReveal(INode node)
+	{
+		int[] offsetLength = this.locationSearcher.getNodeOffset(node);
+		selectAndReveal(offsetLength[0], offsetLength[1]);
 	}
 
 	/*
@@ -265,7 +294,7 @@ public abstract class VdmEditor extends TextEditor
 		// doSetInput(getEditorInput());
 		// } catch (CoreException e)
 		// {
-		// 
+		//
 		// e.printStackTrace();
 		// }
 		// fEditorSelectionChangedListener= new
@@ -368,7 +397,7 @@ public abstract class VdmEditor extends TextEditor
 
 		super.doSetInput(input);
 
-		//TODO can we comment this: IVdmElement inputElement = getInputVdmElement();
+		// TODO can we comment this: IVdmElement inputElement = getInputVdmElement();
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
 		{
@@ -500,7 +529,7 @@ public abstract class VdmEditor extends TextEditor
 	}
 
 	protected void setSelection(INode reference, boolean moveCursor)
-	{ 
+	{
 		if (getSelectionProvider() == null)
 			return;
 
@@ -766,7 +795,7 @@ public abstract class VdmEditor extends TextEditor
 			nodes = ((IVdmSourceUnit) element).getParseList();
 
 			long startTime = System.currentTimeMillis();
-			node = AstLocationSearcher.search(nodes, offset);
+			node = this.locationSearcher.search(nodes, offset);
 			if (TRACE_GET_ELEMENT_AT)
 			{
 				System.out.println("Search Time for offset " + offset + " in "
@@ -781,7 +810,7 @@ public abstract class VdmEditor extends TextEditor
 			}
 
 		}
-		
+
 		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
 		// the tree until one is found.
 		INode def = null;
@@ -839,7 +868,7 @@ public abstract class VdmEditor extends TextEditor
 	//
 	// @Override
 	// public Enumeration<String> getKeys() {
-	// 
+	//
 	// return null;
 	// }
 	// };

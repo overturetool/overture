@@ -4,35 +4,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.overture.ide.internal.core.resources.VdmProject;
+import org.overture.ide.core.VdmCore;
 
-public class AdapterFactory1 implements IAdapterFactory
+public class AdapterFactoryVdmSourceUnit implements IAdapterFactory
 {
 
 	public Object getAdapter(Object adaptableObject,
 			@SuppressWarnings("rawtypes") Class adapterType)
 	{
-		if (adapterType == IVdmProject.class)
-		{
-			if (adaptableObject instanceof IProject)
-			{
-				IProject project = (IProject) adaptableObject;
-				if (VdmProject.isVdmProject(project))
-				{
-					return VdmProject.createProject(project);
-				}
-			}
-		}
-
-		if (adapterType == IProject.class)
-		{
-			if (adaptableObject instanceof VdmProject)
-			{
-				VdmProject project = (VdmProject) adaptableObject;
-				return project.project;
-			}
-		}
-
 		if (adapterType == IVdmSourceUnit.class)
 		{
 			if (adaptableObject instanceof IFile)
@@ -53,8 +32,7 @@ public class AdapterFactory1 implements IAdapterFactory
 						}
 					} catch (CoreException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						VdmCore.log("Failed to adapt ifile to ivdmsourceunit", e);
 					}
 				}
 			}
@@ -66,8 +44,7 @@ public class AdapterFactory1 implements IAdapterFactory
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList()
 	{
-		return new Class[] { IVdmProject.class, IProject.class,
-				IFile.class };
+		return new Class[] { IFile.class };
 	}
 
 }
