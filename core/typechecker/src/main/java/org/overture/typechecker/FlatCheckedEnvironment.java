@@ -40,9 +40,9 @@ public class FlatCheckedEnvironment extends FlatEnvironment
 	private boolean isStatic = false;
 
 	public FlatCheckedEnvironment(
-		List<PDefinition> definitions, NameScope scope)
+		List<PDefinition> definitions, NameScope scope, EnvironmentSearchStrategy ess)
 	{
-		super(definitions);
+		super(definitions,ess);
 		dupHideCheck(definitions, scope);
 	}
 
@@ -57,7 +57,7 @@ public class FlatCheckedEnvironment extends FlatEnvironment
 	public FlatCheckedEnvironment(
 		PDefinition one, Environment env, NameScope scope)
 	{
-		super(one, env);
+		super(one,env);
 		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}

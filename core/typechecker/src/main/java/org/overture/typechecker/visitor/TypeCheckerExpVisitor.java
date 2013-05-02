@@ -1061,7 +1061,7 @@ public class TypeCheckerExpVisitor extends
 		PDefinition def = AstFactory.newAMultiBindListDefinition(
 				node.getLocation(), node.getBindList());
 		def.apply(rootVisitor, question);
-
+		def.setNameScope(NameScope.LOCAL);
 		Environment local = new FlatCheckedEnvironment(def, question.env,
 				question.scope);
 		question = new TypeCheckInfo(local, question.scope);

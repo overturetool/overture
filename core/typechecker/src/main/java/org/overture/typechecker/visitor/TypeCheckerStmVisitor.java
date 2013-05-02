@@ -320,7 +320,7 @@ public class TypeCheckerStmVisitor extends
 		} else {
 			// Only public fields externally visible
 			classenv = new PublicClassEnvironment(classdef);
-		}
+		} 
 
 		if (node.getClassname() == null) {
 			node.setField(new LexNameToken(ctype.getName().getName(), node

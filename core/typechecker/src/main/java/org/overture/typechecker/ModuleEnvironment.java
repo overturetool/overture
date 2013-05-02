@@ -29,6 +29,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
@@ -53,7 +54,7 @@ public class ModuleEnvironment extends Environment
 	
 	public ModuleEnvironment(AModuleModules module)
 	{
-		super(null);
+		super(null,null);
 		this.module = module;
 		dupHideCheck(module.getDefs(), NameScope.NAMESANDSTATE);
 	}
@@ -163,5 +164,10 @@ public class ModuleEnvironment extends Environment
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		return null;
 	}
 }

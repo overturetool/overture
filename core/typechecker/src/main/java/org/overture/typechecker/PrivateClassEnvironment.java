@@ -33,6 +33,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -50,14 +51,20 @@ public class PrivateClassEnvironment extends Environment
 	}
 	private final SClassDefinition classdef;
 
-	public PrivateClassEnvironment(SClassDefinition classdef)
+	public PrivateClassEnvironment(SClassDefinition classdef) {
+		super(null,null);
+		this.classdef = classdef;
+	}
+	
+	public PrivateClassEnvironment(SClassDefinition classdef, EnvironmentSearchStrategy ess)
 	{
-		this(classdef, null);
+		super(null,ess);
+		this.classdef = classdef;
 	}
 
 	public PrivateClassEnvironment(SClassDefinition classdef, Environment env)
 	{
-		super(env);
+		super(env,env.searchStrategy);
 		this.classdef = classdef;
 	}
 
@@ -70,6 +77,9 @@ public class PrivateClassEnvironment extends Environment
 		{
 			return def;
 		}
+		
+		def = searchStrategy != null ? searchStrategy.findName(sought, scope, classdef, outer, classdef.getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findName(sought, scope);
 	}
@@ -83,6 +93,9 @@ public class PrivateClassEnvironment extends Environment
 		{
 			return def;
 		}
+		
+		def = searchStrategy != null ? searchStrategy.findType(name, fromModule, classdef, outer, getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findType(name, null);
 	}
@@ -136,5 +149,12 @@ public class PrivateClassEnvironment extends Environment
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		if (super.searchStrategy != null)
+			return searchStrategy.find(name, classdef, outer, classdef.getDefinitions());
+		return null;
 	}
 }
