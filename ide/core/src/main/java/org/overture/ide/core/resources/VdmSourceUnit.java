@@ -71,15 +71,10 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			List<LexLocation> allLocation,
 			Map<LexLocation, INode> locationToAstNodeMap, boolean parseErrors)
 	{
+		boolean added = this.parseList.isEmpty();
 		this.parseList.clear();
-		
-			this.allLocation.clear();
-		
-		
-		
-			this.locationToAstNodeMap.clear();
-		
-		
+		this.allLocation.clear();
+		this.locationToAstNodeMap.clear();
 		this.parseErrors = parseErrors;
 		if (!parseErrors)
 		{
@@ -88,20 +83,29 @@ public class VdmSourceUnit implements IVdmSourceUnit
 			{
 				this.allLocation.addAll(allLocation);
 			}
-			
+
 			synchronized (locationToAstNodeMap)
 			{
 				this.locationToAstNodeMap.putAll(locationToAstNodeMap);
 			}
-			
+
 		}
 
+		if(added)
+		{
+			fireAddedEvent();
+		}
 		fireChangedEvent();
 	}
 
 	protected void fireChangedEvent()
 	{
 		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_RECONCILE));
+	}
+	
+	protected void fireAddedEvent()
+	{
+		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.ADDED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
 
 	public synchronized List<INode> getParseList()
@@ -156,7 +160,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	 */
 	public/* synchronized */Map<LexLocation, INode> getLocationToAstNodeMap()
 	{
-		//return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
+		// return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
 		return locationToAstNodeMap;
 	}
 

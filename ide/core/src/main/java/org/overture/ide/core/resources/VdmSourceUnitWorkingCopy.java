@@ -18,6 +18,11 @@
  *******************************************************************************/
 package org.overture.ide.core.resources;
 
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmElementDelta;
+
 
 public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 		IVdmSourceUnit
@@ -38,12 +43,13 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 	public void commit()
 	{
 		this.sourceUnit.reconcile(this.parseList, this.allLocation, this.locationToAstNodeMap, this.parseErrors);
+		fireChangedEvent();
 	}
 	
 	@Override
 	protected void fireChangedEvent()
 	{
-		//do not fire from working copy
+		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this.sourceUnit, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_BUILD));
 	}
 	
 	@Override

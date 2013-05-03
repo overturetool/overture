@@ -20,12 +20,22 @@ import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
 
+/**
+ * The runtime class must be re-initialized before an execution.
+ * @author pvj
+ *
+ */
 public class VdmRuntime
 {
 	private static IQuestionAnswer<Context, Value> expressionRuntime;
 	private static IQuestionAnswer<Context, Value> statementRuntime;
 	
 	final private static Map<INode,IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
+	
+	static
+	{
+		initialize();
+	}
 	
 	public static void initialize()
 	{
@@ -34,12 +44,12 @@ public class VdmRuntime
 		runtimeState.clear();
 	}
 	
-	public static void initialize(IQuestionAnswer<Context, Value> expressionRuntime)
-	{
-		VdmRuntime.expressionRuntime = expressionRuntime; 
-		statementRuntime = expressionRuntime; 
-		runtimeState.clear();
-	}
+//	public static void initialize(IQuestionAnswer<Context, Value> expressionRuntime)
+//	{
+//		VdmRuntime.expressionRuntime = expressionRuntime; 
+//		VdmRuntime.statementRuntime = expressionRuntime; 
+//		VdmRuntime.runtimeState.clear();
+//	}
 	
 	public static IQuestionAnswer<Context, Value> getExpressionEvaluator()
 	{
