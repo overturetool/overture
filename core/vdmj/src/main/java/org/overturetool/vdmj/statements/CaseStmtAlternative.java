@@ -37,6 +37,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
+import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
 import org.overturetool.vdmj.values.Value;
@@ -74,7 +75,12 @@ public class CaseStmtAlternative implements Serializable
 			{
 				// Only expression patterns need type checking...
 				ExpressionPattern ep = (ExpressionPattern)pattern;
-				ep.exp.typeCheck(base, null, scope);
+				Type ptype = ep.exp.typeCheck(base, null, scope);
+				
+				if (!TypeComparator.compatible(ptype, ctype))
+				{
+					pattern.report(3311, "Pattern cannot match");
+				}
 			}
 
 			try
