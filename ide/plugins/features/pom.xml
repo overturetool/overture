@@ -25,6 +25,7 @@
     <module>quickinterpreter</module>
     <module>uml2</module>
     <module>rttraceviewer</module>
+	<module>codegen</module>
   </modules>
 
 </project>
