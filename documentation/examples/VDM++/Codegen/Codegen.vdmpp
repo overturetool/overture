@@ -17,7 +17,7 @@ class Codegen
 	public Generate : GiraffeClassDefinition ==> seq of char
 	Generate(classDef) ==
 		let methods : set of GiraffeMethodDefinition = classDef.getMethods(),
-			mlist : seq of GiraffeMethodDefinition = VDMUtil`set2seq(methods),
+			mlist : seq of GiraffeMethodDefinition = VDMUtil`set2seq[GiraffeMethodDefinition](methods),
 			genMethods : seq of char = conc [Generate(mlist(i)) | i in set inds mlist]
 		in
 			return conc [classDef.getName().getName(), " { ", genMethods];--, " } "];
@@ -44,7 +44,7 @@ class Codegen
 				cases t.name:
 					"INT"	-> return "int",
 					"DOUBLE"-> return "double",
-					"BOOL"	-> return "boolean"
+					"BOOL"	-> return "boolean",
 					others -> error
 				end;
 	
@@ -55,7 +55,7 @@ class Codegen
 				let s : GiraffeVariableDeclStatement = stm
 				in	return conc [Generate(s.getType()), " ", Generate(s.getName()), " = ", GenerateExpression(s.getValue())],
 			(isofclass(GiraffeReturnStatement, stm)) ->	let	s : GiraffeReturnStatement = stm
-														in	return conc ["return ", GenerateExpression(s.getValue())]
+														in	return conc ["return ", GenerateExpression(s.getValue())],
 			others -> error
 		end;
 	
@@ -73,7 +73,7 @@ class Codegen
 				in return GenerateBinaryExpression(e),
 			(isofclass(GiraffeIfExpression, exp)) ->
 				let e : GiraffeIfExpression = exp
-				in return " ( (" ^ GenerateExpression(e.getTest()) ^ ") ? (" ^ GenerateExpression(e.getThn()) ^ ") : (" ^ GenerateExpression(e.getEls()) ^ ") ) "
+				in return " ( (" ^ GenerateExpression(e.getTest()) ^ ") ? (" ^ GenerateExpression(e.getThn()) ^ ") : (" ^ GenerateExpression(e.getEls()) ^ ") ) ",
 				others -> error
 		end;
 	
@@ -85,7 +85,7 @@ class Codegen
 		in
 			cases op.name:
 				("EQUALS") -> return " ( " ^ GenerateExpression(lhs) ^ " == " ^ GenerateExpression(rhs) ^ " ) ",
-				("PLUS") -> return " ( " ^ GenerateExpression(lhs) ^ " + " ^ GenerateExpression(rhs) ^ " ) "
+				("PLUS") -> return " ( " ^ GenerateExpression(lhs) ^ " + " ^ GenerateExpression(rhs) ^ " ) ",
 				others -> error
 			end;
 			
