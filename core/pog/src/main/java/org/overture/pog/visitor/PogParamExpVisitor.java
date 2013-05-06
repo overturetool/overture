@@ -1348,7 +1348,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	PType ltype = left.getType();
 	PType rtype = right.getType();
 
-	if (left.getLocation().startLine == 2792)
+	if (left.getLocation().getStartLine() == 2792)
 	    System.out.println("fd");
 
 	if (PTypeAssistantTC.isUnion(ltype)) {

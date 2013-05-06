@@ -23,7 +23,7 @@
 
 package org.overture.typechecker;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 /**
  * A type checking exception.
@@ -32,9 +32,9 @@ import org.overture.ast.lex.LexLocation;
 @SuppressWarnings("serial")
 public class TypeCheckException extends RuntimeException
 {
-	public final LexLocation location;
+	public final ILexLocation location;
 
-	public TypeCheckException(String msg, LexLocation location)
+	public TypeCheckException(String msg, ILexLocation location)
 	{
 		super(msg);
 		this.location = location;

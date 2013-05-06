@@ -11,8 +11,8 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -133,7 +133,7 @@ public class AStateDefinitionAssistantTC {
 	}
 
 	private static AExplicitFunctionDefinition getInitDefinition(AStateDefinition d) {
-		LexLocation loc = d.getInitPattern().getLocation();
+		ILexLocation loc = d.getInitPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInitPattern().clone());
 
@@ -159,7 +159,7 @@ public class AStateDefinitionAssistantTC {
 	private static AExplicitFunctionDefinition getInvDefinition(
 			AStateDefinition d) {
 		
-		LexLocation loc = d.getInvPattern().getLocation();
+		ILexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
 

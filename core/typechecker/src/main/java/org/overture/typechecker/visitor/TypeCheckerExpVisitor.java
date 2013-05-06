@@ -1516,7 +1516,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (typename != null) {
 			PDefinition typeFound = question.env.findType(typename,
-					node.getLocation().module);
+					node.getLocation().getModule());
 			if (typeFound == null) {
 				TypeCheckerErrors.report(3113, "Unknown type name '" + typename
 						+ "'", node.getLocation(), node);
@@ -1835,7 +1835,7 @@ public class TypeCheckerExpVisitor extends
 			throws AnalysisException {
 
 		PDefinition typeDef = question.env.findType(node.getTypeName(),
-				node.getLocation().module);
+				node.getLocation().getModule());
 
 		if (typeDef == null) {
 			TypeCheckerErrors.report(3126,
@@ -1984,7 +1984,7 @@ public class TypeCheckerExpVisitor extends
 		}
 		else
 		{		
-			node.setTypedef(question.env.findType(node.getTypeName(), node.getLocation().module));
+			node.setTypedef(question.env.findType(node.getTypeName(), node.getLocation().getModule()));
 			
 			if(node.getTypedef() == null)
 			{	

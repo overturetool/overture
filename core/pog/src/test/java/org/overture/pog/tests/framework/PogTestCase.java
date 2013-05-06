@@ -57,8 +57,8 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 			message.setAttribute("resource", file.getName());
 			message.setAttribute("number", new Integer(po.number).toString());
 			message.setAttribute("message", po.toString());
-			message.setAttribute("column", po.location.startPos + "");
-			message.setAttribute("line", po.location.startLine + "");
+			message.setAttribute("column", po.location.getStartPos() + "");
+			message.setAttribute("line", po.location.getStartLine() + "");
 			try
 			{
 				message.setAttribute("object", toString(po));
@@ -150,7 +150,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 
 		for (VDMMessage msg : messages)
 		{
-			testMessages.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			testMessages.add(new Message(msg.location.getFile().getName(), msg.number, msg.location.getStartLine(), msg.location.getStartPos(), msg.message));
 		}
 
 		return testMessages;

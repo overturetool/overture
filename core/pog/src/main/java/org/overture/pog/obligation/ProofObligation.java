@@ -25,7 +25,7 @@ package org.overture.pog.obligation;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 abstract public class ProofObligation implements Comparable<ProofObligation>,Serializable
 {
@@ -33,7 +33,7 @@ abstract public class ProofObligation implements Comparable<ProofObligation>,Ser
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public final LexLocation location;
+	public final ILexLocation location;
 	public final POType kind;
 	public final String name;
 
@@ -44,7 +44,7 @@ abstract public class ProofObligation implements Comparable<ProofObligation>,Ser
 
 	private int var = 1;
 
-	public ProofObligation(LexLocation location, POType kind,
+	public ProofObligation(ILexLocation location, POType kind,
 			POContextStack ctxt)
 	{
 		this.location = location;

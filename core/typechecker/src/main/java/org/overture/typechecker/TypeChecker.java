@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMMessage;
@@ -52,7 +52,7 @@ abstract public class TypeChecker
 
 	abstract public void typeCheck();
 
-	public static void report(int number, String problem, LexLocation location)
+	public static void report(int number, String problem, ILexLocation location)
 	{
 		VDMError error = new VDMError(number, problem, location);
 		//System.out.println(error.toString());
@@ -66,7 +66,7 @@ abstract public class TypeChecker
 		}
 	}
 
-	public static void warning(int number, String problem, LexLocation location)
+	public static void warning(int number, String problem, ILexLocation location)
 	{
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);

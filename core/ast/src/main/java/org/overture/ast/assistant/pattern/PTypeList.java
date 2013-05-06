@@ -3,7 +3,7 @@ package org.overture.ast.assistant.pattern;
 import java.util.Vector;
 
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
@@ -27,7 +27,7 @@ public class PTypeList extends Vector<PType> {
 		return super.add(t);
 	}
 	
-	public PType getType(LexLocation location)
+	public PType getType(ILexLocation location)
 	{
 		PType result = null;
 

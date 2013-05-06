@@ -254,7 +254,7 @@ public class ModuleReader extends SyntaxReader
 
 		// return new DLModule(name, imports, exports, library);
 		List<ClonableFile> files = new Vector<ClonableFile>();
-		files.add(new ClonableFile(name.location.file));
+		files.add(new ClonableFile(name.location.getFile()));
 
 		AModuleModules module = AstFactory.newAModuleModules(name, imports, exports, null);
 		module.setFiles(files);

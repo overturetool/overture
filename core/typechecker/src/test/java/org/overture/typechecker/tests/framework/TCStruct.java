@@ -21,8 +21,8 @@ public class TCStruct {
 
 	public boolean is(VDMError error) {
 		if (error.number == number
-				&& error.location.startLine == line
-				&& error.location.startPos == column) {
+				&& error.location.getStartLine() == line
+				&& error.location.getStartPos() == column) {
 			return true;
 		} else {
 			return false;
@@ -32,8 +32,8 @@ public class TCStruct {
 	
 	public boolean is(VDMWarning error) {
 		if (error.number == number
-				&& error.location.startLine == line
-				&& error.location.startPos == column) {
+				&& error.location.getStartLine() == line
+				&& error.location.getStartPos() == column) {
 			return true;
 		} else {
 			return false;

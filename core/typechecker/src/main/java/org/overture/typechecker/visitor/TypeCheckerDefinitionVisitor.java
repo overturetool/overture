@@ -61,7 +61,6 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
@@ -1455,7 +1454,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (base.isVDMPP() && type instanceof ANamedInvariantType) {
 			ANamedInvariantType named = (ANamedInvariantType) type;
 			PDefinition typedef = base.findType(named.getName(),
-					node.getLocation().module);
+					node.getLocation().getModule());
 
 			if (typedef == null) {
 				TypeCheckerErrors.report(2048, "Cannot find symbol "
