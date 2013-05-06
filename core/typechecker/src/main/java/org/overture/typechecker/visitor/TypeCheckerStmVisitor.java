@@ -576,24 +576,24 @@ public class TypeCheckerStmVisitor extends
 		if (node.getCycles() instanceof AIntLiteralExp) {
 			AIntLiteralExp i = (AIntLiteralExp) node.getCycles();
 
-			if (i.getValue().value < 0) {
+			if (i.getValue().getValue() < 0) {
 				TypeCheckerErrors.report(3282,
 						"Argument to cycles must be integer >= 0", node
 								.getCycles().getLocation(), node.getCycles());
 			}
 
-			node.setValue(i.getValue().value);
+			node.setValue(i.getValue().getValue());
 		} else if (node.getCycles() instanceof ARealLiteralExp) {
 			ARealLiteralExp i = (ARealLiteralExp) node.getCycles();
 
-			if (i.getValue().value < 0
-					|| Math.floor(i.getValue().value) != i.getValue().value) {
+			if (i.getValue().getValue() < 0
+					|| Math.floor(i.getValue().getValue()) != i.getValue().getValue()) {
 				TypeCheckerErrors.report(3282,
 						"Argument to cycles must be integer >= 0", node
 								.getCycles().getLocation(), node.getCycles());
 			}
 
-			node.setValue((long) i.getValue().value);
+			node.setValue((long) i.getValue().getValue());
 		} else {
 			TypeCheckerErrors.report(3282,
 					"Argument to cycles must be integer >= 0", node.getCycles()
@@ -654,26 +654,26 @@ public class TypeCheckerStmVisitor extends
 		if (node.getDuration() instanceof AIntLiteralExp) {
 			AIntLiteralExp i = (AIntLiteralExp) node.getDuration();
 
-			if (i.getValue().value < 0) {
+			if (i.getValue().getValue() < 0) {
 				TypeCheckerErrors.report(3281,
 						"Arguments to duration must be integer >= 0", node
 								.getDuration().getLocation(), node
 								.getDuration());
 			}
 
-			durationValue = i.getValue().value;
+			durationValue = i.getValue().getValue();
 		} else if (node.getDuration() instanceof ARealLiteralExp) {
 			ARealLiteralExp i = (ARealLiteralExp) node.getDuration();
 
-			if (i.getValue().value < 0
-					|| Math.floor(i.getValue().value) != i.getValue().value) {
+			if (i.getValue().getValue() < 0
+					|| Math.floor(i.getValue().getValue()) != i.getValue().getValue()) {
 				TypeCheckerErrors.report(3282,
 						"Argument to duration must be integer >= 0", node
 								.getDuration().getLocation(), node
 								.getDuration());
 			}
 
-			durationValue = (long) i.getValue().value;
+			durationValue = (long) i.getValue().getValue();
 		} else {
 			TypeCheckerErrors.report(3281,
 					"Arguments to duration must be integer >= 0", node

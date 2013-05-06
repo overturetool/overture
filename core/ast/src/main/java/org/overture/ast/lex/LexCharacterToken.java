@@ -31,8 +31,9 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexCharacterToken;
 
-public class LexCharacterToken extends LexToken {
+public class LexCharacterToken extends LexToken implements ILexCharacterToken{
 	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
@@ -49,6 +50,14 @@ public class LexCharacterToken extends LexToken {
 						+ " decimal" : "[" + unicode + "]");
 	}
 
+	
+	
+	@Override
+	public char getValue()
+	{
+		return unicode;
+	}
+
 	@Override
 	public Object clone() {
 		return new LexCharacterToken(unicode, location);
@@ -57,22 +66,22 @@ public class LexCharacterToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexCharacterToken(this); 
+		analysis.caseILexCharacterToken(this); 
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexCharacterToken(this);
+		return caller.caseILexCharacterToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexCharacterToken(this, question);
+		caller.caseILexCharacterToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexCharacterToken(this, question);
+		return caller.caseILexCharacterToken(this, question);
 	}
 	
 	/**

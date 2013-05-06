@@ -23,7 +23,7 @@ public class ABooleanPatternAssistantInterpreter extends
 
 		try
 		{
-			if (expval.boolValue(ctxt) != p.getValue().value)
+			if (expval.boolValue(ctxt) != p.getValue().getValue())
 			{
 				VdmRuntimeError.patternFail(4106, "Boolean pattern match failed",p.getLocation());
 			}

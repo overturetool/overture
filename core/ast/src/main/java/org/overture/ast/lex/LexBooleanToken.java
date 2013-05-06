@@ -31,10 +31,21 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexBooleanToken;
 
-public class LexBooleanToken extends LexToken {
+public class LexBooleanToken extends LexToken implements ILexBooleanToken {
 	private static final long serialVersionUID = 1L;
-	public final boolean value;
+	public boolean value;
+
+	
+	
+	@Override
+	public boolean getValue()
+	{
+		return value;
+	}
+
+
 
 	public LexBooleanToken(VDMToken value, LexLocation location) {
 		super(location, value);
@@ -58,22 +69,22 @@ public class LexBooleanToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-	 	analysis.caseLexBooleanToken(this);
+	 	analysis.caseILexBooleanToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexBooleanToken(this);
+		return caller.caseILexBooleanToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexBooleanToken(this, question);
+		caller.caseILexBooleanToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexBooleanToken(this, question);
+		return caller.caseILexBooleanToken(this, question);
 	}
 	
 	/**

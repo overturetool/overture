@@ -49,6 +49,8 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexQuoteToken;
+import org.overture.ast.intf.lex.ILexStringToken;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
@@ -1291,7 +1293,7 @@ public class AstFactory {
 		result.setLocation(tuple.getLocation());
 		result.setTuple(tuple);
 		result.setField(field);
-		result.getField().location.executable(true);
+		result.getField().getLocation().executable(true);
 		
 		return result;
 	}
@@ -1332,9 +1334,9 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AStringLiteralExp newAStringLiteralExp(LexStringToken value) {
+	public static AStringLiteralExp newAStringLiteralExp(ILexStringToken value) {
 		AStringLiteralExp result = new AStringLiteralExp();
-		initExpression(result, value.location);
+		initExpression(result, value.getLocation());
 		result.setValue(value);
 		return result;
 	}
@@ -1346,9 +1348,9 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AQuoteLiteralExp newAQuoteLiteralExp(LexQuoteToken value) {
+	public static AQuoteLiteralExp newAQuoteLiteralExp(ILexQuoteToken value) {
 		AQuoteLiteralExp result = new AQuoteLiteralExp();
-		initExpression(result, value.location);
+		initExpression(result, value.getLocation());
 		result.setValue(value);
 		return result;
 	}
@@ -2612,9 +2614,9 @@ public class AstFactory {
 		return result;
 	}
 
-	public static AQuoteType newAQuoteType(LexQuoteToken token) {
+	public static AQuoteType newAQuoteType(ILexQuoteToken token) {
 		AQuoteType result = new AQuoteType();
-		initType(result, token.location);
+		initType(result, token.getLocation());
 
 		result.setValue(token);
 		

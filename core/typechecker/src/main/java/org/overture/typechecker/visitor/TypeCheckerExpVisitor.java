@@ -22,8 +22,8 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexRealToken;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.lex.LexRealToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -1221,12 +1221,12 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		AProductType product = PTypeAssistantTC.getProduct(type);
-		long fn = node.getField().value;
+		long fn = node.getField().getValue();
 
 		if (fn > product.getTypes().size() || fn < 1) {
 			TypeCheckerErrors.report(3095,
 					"Field number does not match tuple size",
-					node.getField().location, node.getField());
+					node.getField().getLocation(), node.getField());
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
@@ -1448,9 +1448,9 @@ public class TypeCheckerExpVisitor extends
 
 	@Override
 	public PType caseAIntLiteralExp(AIntLiteralExp node, TypeCheckInfo question) {
-		if (node.getValue().value < 0) {
+		if (node.getValue().getValue() < 0) {
 			node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
-		} else if (node.getValue().value == 0) {
+		} else if (node.getValue().getValue() == 0) {
 			node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		} else {
 			node.setType(AstFactory.newANatOneNumericBasicType(node
@@ -2134,14 +2134,14 @@ public class TypeCheckerExpVisitor extends
 	public PType caseARealLiteralExp(ARealLiteralExp node,
 			TypeCheckInfo question) {
 
-		LexRealToken value = node.getValue();
+		ILexRealToken value = node.getValue();
 
-		if (Math.round(value.value) == value.value) {
-			if (value.value < 0) {
+		if (Math.round(value.getValue()) == value.getValue()) {
+			if (value.getValue() < 0) {
 				node.setType(AstFactory.newAIntNumericBasicType(node
 						.getLocation()));
 				return node.getType();
-			} else if (value.value == 0) {
+			} else if (value.getValue() == 0) {
 				node.setType(AstFactory.newANatNumericBasicType(node
 						.getLocation()));
 				return node.getType();
@@ -2427,7 +2427,7 @@ public class TypeCheckerExpVisitor extends
 	public PType caseAStringLiteralExp(AStringLiteralExp node,
 			TypeCheckInfo question) {
 
-		if (node.getValue().value.isEmpty()) {
+		if (node.getValue().getValue().isEmpty()) {
 			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(),
 					AstFactory.newACharBasicType(node.getLocation()));
 			node.setType(tt);

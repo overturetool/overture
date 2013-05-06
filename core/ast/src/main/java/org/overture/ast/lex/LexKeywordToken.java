@@ -23,8 +23,10 @@
 
 package org.overture.ast.lex;
 
+import org.overture.ast.intf.lex.ILexKeywordToken;
 
-public class LexKeywordToken extends LexToken {
+
+public class LexKeywordToken extends LexToken implements ILexKeywordToken  {
 	private static final long serialVersionUID = 1L;
 
 	public LexKeywordToken(VDMToken type, LexLocation location) {

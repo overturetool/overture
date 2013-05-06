@@ -12,7 +12,7 @@ public class AQuoteTypeAssistantInterpreter extends AQuoteTypeAssistantTC
 	public static ValueList getAllValues(AQuoteType type, Context ctxt)
 	{
 		ValueList v = new ValueList();
-		v.add(new QuoteValue(type.getValue().value));
+		v.add(new QuoteValue(type.getValue().getValue()));
 		return v;
 	}
 

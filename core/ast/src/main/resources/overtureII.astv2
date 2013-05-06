@@ -14,12 +14,12 @@ Tokens
   LexToken = 'java:node:org.overture.ast.intf.lex.ILexToken';
   LexNameToken = 'java:node:org.overture.ast.intf.lex.ILexNameToken';
   LexIdentifierToken = 'java:node:org.overture.ast.intf.lex.ILexIdentifierToken';
-  LexBooleanToken = 'java:node:org.overture.ast.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:org.overture.ast.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:org.overture.ast.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:org.overture.ast.lex.LexQuoteToken';
-  LexRealToken = 'java:node:org.overture.ast.lex.LexRealToken';
-  LexStringToken = 'java:node:org.overture.ast.lex.LexStringToken';
+  LexBooleanToken = 'java:node:org.overture.ast.intf.lex.ILexBooleanToken';
+  LexCharacterToken = 'java:node:org.overture.ast.intf.lex.ILexCharacterToken';
+  LexIntegerToken = 'java:node:org.overture.ast.intf.lex.ILexIntegerToken';
+  LexQuoteToken = 'java:node:org.overture.ast.intf.lex.ILexQuoteToken';
+  LexRealToken = 'java:node:org.overture.ast.intf.lex.ILexRealToken';
+  LexStringToken = 'java:node:org.overture.ast.intf.lex.ILexStringToken';
   location = 'java:org.overture.ast.lex.LexLocation';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';

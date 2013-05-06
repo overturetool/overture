@@ -419,12 +419,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getField().location.hit();
+		node.getField().getLocation().hit();
 
 		try
 		{
 			ValueList fields = node.getTuple().apply(VdmRuntime.getExpressionEvaluator(), ctxt).tupleValue(ctxt);
-			Value r = fields.get((int) node.getField().value - 1);
+			Value r = fields.get((int) node.getField().getValue() - 1);
 
 			if (r == null)
 			{

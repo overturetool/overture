@@ -31,8 +31,9 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexIntegerToken;
 
-public class LexIntegerToken extends LexToken
+public class LexIntegerToken extends LexToken implements ILexIntegerToken
 {
 	private static final long serialVersionUID = 1L;
 	public final long value;
@@ -49,6 +50,14 @@ public class LexIntegerToken extends LexToken
 		this.value = Long.parseLong(value);
 	}
 
+	
+	
+	@Override
+	public long getValue()
+	{
+		return value;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -62,22 +71,22 @@ public class LexIntegerToken extends LexToken
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexIntegerToken(this);
+		analysis.caseILexIntegerToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexIntegerToken(this);
+		return caller.caseILexIntegerToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexIntegerToken(this, question);
+		caller.caseILexIntegerToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexIntegerToken(this, question);
+		return caller.caseILexIntegerToken(this, question);
 	}
 	
 	/**

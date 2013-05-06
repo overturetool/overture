@@ -350,7 +350,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    for (PType t : utype.getTypes()) {
 		if (t instanceof AProductType) {
 		    AProductType aprodType = (AProductType) t;
-		    if (aprodType.getTypes().size() < node.getField().value) {
+		    if (aprodType.getTypes().size() < node.getField().getValue()) {
 			obligations.add(new TupleSelectObligation(node,
 				aprodType, question));
 		    }

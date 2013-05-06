@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.pattern;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexStringToken;
 import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.types.ASeqSeqType;
@@ -15,8 +16,8 @@ public class AStringPatternAssistantTC {
 	}
 
 	public static PExp getMatchingExpression(AStringPattern sp) {
-		LexStringToken v = sp.getValue();
-		return AstFactory.newAStringLiteralExp( (LexStringToken) v.clone());
+		ILexStringToken v = sp.getValue();
+		return AstFactory.newAStringLiteralExp( (ILexStringToken) v.clone());
 	}
 
 }

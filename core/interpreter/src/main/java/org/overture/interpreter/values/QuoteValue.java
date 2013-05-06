@@ -87,7 +87,7 @@ public class QuoteValue extends Value
 		{
 			AQuoteType qto = (AQuoteType)to;
 
-			if (!qto.getValue().value.equals(value))
+			if (!qto.getValue().getValue().equals(value))
 			{
 				abort(4074, "Cannot convert " + this + " to " + to, ctxt);
 			}
