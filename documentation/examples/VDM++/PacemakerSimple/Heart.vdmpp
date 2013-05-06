@@ -29,6 +29,7 @@ IdealHeart() ==
          | i in set {1,...,100}];
      
 public FaultyHeart() tr : Trace
+ext rd aperiod : nat
 post len tr = 100 and
      Periodic(tr,<A>,aperiod) and 
      not Periodic(tr,<V>,aperiod); 
