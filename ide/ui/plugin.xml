@@ -512,5 +512,21 @@ Handlers
      </handler>
 
   </extension>
-  
+  <extension
+        point="org.eclipse.core.runtime.adapters">
+     <factory
+           adaptableType="org.overture.ide.core.resources.IVdmSourceUnit"
+           class="org.overture.ide.ui.adapters.AdapterFactoryWorkbenchAdapter">
+        <adapter
+              type="org.eclipse.ui.model.IWorkbenchAdapter">
+        </adapter>
+     </factory>
+     <factory
+           adaptableType="org.overture.ast.node.INode"
+           class="org.overture.ide.ui.adapters.AdapterFactoryWorkbenchAdapter">
+        <adapter
+              type="org.eclipse.ui.model.IWorkbenchAdapter">
+        </adapter>
+     </factory>
+  </extension>  
 </plugin>

@@ -175,10 +175,9 @@ public class ClassInterpreter extends Interpreter
 	public void init(DBGPReader dbgp)
 	{
 		BasicSchedulableThread.terminateAll();
-
-		//TODO: Must be removed
-		RuntimeValidator.init(this);
 		VdmRuntime.initialize();
+		
+		RuntimeValidator.init(this);
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 
