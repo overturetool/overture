@@ -55,12 +55,12 @@ public abstract class VdmjBuilder extends AbstractVdmBuilder
 
 	private void addErrorMarker(VDMError error)
 	{
-		addErrorMarker(error.location.file, error.toProblemString(), error.location, IBuilderVdmjConstants.PLUGIN_ID);
+		addErrorMarker(error.location.getFile(), error.toProblemString(), error.location, IBuilderVdmjConstants.PLUGIN_ID);
 	}
 
 	private void addWarningMarker(IVdmProject project, VDMWarning error)
 	{
-		addWarningMarker(error.location.file, error.toProblemString(), error.location, IBuilderVdmjConstants.PLUGIN_ID);
+		addWarningMarker(error.location.getFile(), error.toProblemString(), error.location, IBuilderVdmjConstants.PLUGIN_ID);
 	}
 
 	/**

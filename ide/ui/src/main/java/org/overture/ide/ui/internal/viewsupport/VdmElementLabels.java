@@ -382,11 +382,11 @@ public class VdmElementLabels {
 	private static StyledString getLocalDefinitionLabel(ALocalDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.getName().getSimpleName());
-		if (element.getType().getLocation().module.toLowerCase().equals("default")) {
+		if (element.getType().getLocation().getModule().toLowerCase().equals("default")) {
 			result.append(" : " + getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + element.getType().getLocation().module + "`"
+			result.append(" : " + element.getType().getLocation().getModule() + "`"
 					+ getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		}

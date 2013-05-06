@@ -124,8 +124,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				columnText =new Integer(data.number).toString();// count.toString();
 				break;
 			case 1:
-				if (!data.location.module.equals("DEFAULT"))
-					columnText = data.location.module + "`" + data.name;
+				if (!data.location.getModule().equals("DEFAULT"))
+					columnText = data.location.getModule() + "`" + data.name;
 				else
 					columnText = data.name;
 				break;
@@ -279,7 +279,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 			private void gotoDefinition(ProofObligation po)
 			{
-				IFile file = project.findIFile(po.location.file);
+				IFile file = project.findIFile(po.location.getFile());
 				if(IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
 				{
 					EditorUtility.gotoLocation(IPoviewerConstants.ExternalEditorId,file, po.location, po.name);

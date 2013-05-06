@@ -23,10 +23,9 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IStatus;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.core.IVdmModel;
-
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.utility.FileUtility;
 
@@ -46,13 +45,13 @@ public abstract class AbstractVdmBuilder
 	
 	
 
-	protected void addWarningMarker(File file, String message, LexLocation location,
+	protected void addWarningMarker(File file, String message, ILexLocation location,
 			String sourceId)
 	{
 		FileUtility.addMarker(project.findIFile( file),message,location,IMarker.SEVERITY_WARNING,sourceId);
 	}
 	
-	protected void addErrorMarker(File file, String message, LexLocation location,
+	protected void addErrorMarker(File file, String message, ILexLocation location,
 			String sourceId)
 	{
 		FileUtility.addMarker(project.findIFile(file), message, location, IMarker.SEVERITY_ERROR,sourceId);
