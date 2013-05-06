@@ -26,15 +26,15 @@ package org.overture.interpreter.values;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 
 
 public class State implements ValueListener
@@ -131,7 +131,7 @@ public class State implements ValueListener
 		return context;
 	}
 
-	public void changedValue(LexLocation location, Value changed, Context ctxt)
+	public void changedValue(ILexLocation location, Value changed, Context ctxt)
 	{
 		if (doInvariantChecks && VdmRuntime.getNodeState( definition).invfunc != null && Settings.invchecks)
 		{

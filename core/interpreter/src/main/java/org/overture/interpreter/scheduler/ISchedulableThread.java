@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 
@@ -40,21 +40,21 @@ public interface ISchedulableThread
 
 	public abstract void run();
 
-	public abstract void step(Context ctxt, LexLocation location);
+	public abstract void step(Context ctxt, ILexLocation location);
 
 	public abstract RunState getRunState();
 
 	public abstract void setState(RunState newstate);
 
-	public abstract void waiting(Context ctxt, LexLocation location);
+	public abstract void waiting(Context ctxt, ILexLocation location);
 
-	public abstract void locking(Context ctxt, LexLocation location);
+	public abstract void locking(Context ctxt, ILexLocation location);
 
 	public abstract void alarming(long expected);
 
 	public abstract void runslice(long slice);
 
-	public abstract void duration(long pause, Context ctxt, LexLocation location);
+	public abstract void duration(long pause, Context ctxt, ILexLocation location);
 
 	public abstract void suspendOthers();
 

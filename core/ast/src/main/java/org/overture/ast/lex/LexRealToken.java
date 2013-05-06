@@ -31,18 +31,19 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexRealToken;
 
 public class LexRealToken extends LexToken implements ILexRealToken {
 	private static final long serialVersionUID = 1L;
 	public final double value;
 
-	public LexRealToken(String real, LexLocation location) {
+	public LexRealToken(String real, ILexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		value = Double.parseDouble(real);
 	}
 
-	public LexRealToken(double value, LexLocation location) {
+	public LexRealToken(double value, ILexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		this.value = value;
 	}

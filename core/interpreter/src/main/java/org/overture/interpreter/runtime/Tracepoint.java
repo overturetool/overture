@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.parser.lex.LexException;
@@ -38,14 +38,14 @@ public class Tracepoint extends Breakpoint
 {
 	private static final long serialVersionUID = 1L;
 
-	public Tracepoint(LexLocation location, int number, String trace)
+	public Tracepoint(ILexLocation location, int number, String trace)
 		throws ParserException, LexException
 	{
 		super(location, number, trace);
 	}
 
 	@Override
-	public void check(LexLocation execl, Context ctxt)
+	public void check(ILexLocation execl, Context ctxt)
 	{
 		location.hit();
 		hits++;

@@ -45,6 +45,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
@@ -1034,7 +1035,7 @@ public class DefinitionReader extends SyntaxReader
 		return def;
 	}
 
-	public ASpecificationStm readSpecification(LexLocation location,
+	public ASpecificationStm readSpecification(ILexLocation location,
 			boolean postMandatory) throws ParserException, LexException
 	{
 		List<AExternalClause> externals = null;
@@ -1152,7 +1153,7 @@ public class DefinitionReader extends SyntaxReader
 		// and the "=" is unpicked from the left and right of the equals
 		// expression in the third case.
 
-		LexLocation location = lastToken().location;
+		ILexLocation location = lastToken().location;
 		ParserException equalsDefError = null;
 
 		try
@@ -1304,7 +1305,7 @@ public class DefinitionReader extends SyntaxReader
 	private PDefinition readNamedTraceDefinition() throws ParserException,
 			LexException
 	{
-		LexLocation start = lastToken().location;
+		ILexLocation start = lastToken().location;
 		List<String> names = readTraceIdentifierList();
 		checkFor(VDMToken.COLON, 2264, "Expecting ':' after trace name(s)");
 		List<ATraceDefinitionTerm> traces = readTraceDefinitionList();

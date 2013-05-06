@@ -28,10 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
@@ -571,7 +571,7 @@ public abstract class SyntaxReader
 	 * Report a warning. Unlike errors, this does no token recovery.
 	 */
 
-	protected void warning(int no, String msg, LexLocation location)
+	protected void warning(int no, String msg, ILexLocation location)
 	{
 		VDMWarning vdmwarning = new VDMWarning(no, msg, location);
 		warnings.add(vdmwarning);

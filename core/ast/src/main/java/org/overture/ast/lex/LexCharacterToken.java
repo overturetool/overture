@@ -32,12 +32,13 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexCharacterToken;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class LexCharacterToken extends LexToken implements ILexCharacterToken{
 	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
-	public LexCharacterToken(char value, LexLocation location) {
+	public LexCharacterToken(char value, ILexLocation location) {
 		super(location, VDMToken.CHARACTER);
 		this.unicode = value;
 	}

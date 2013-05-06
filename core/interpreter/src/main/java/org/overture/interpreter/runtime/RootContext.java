@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.values.ObjectValue;
 
 
@@ -39,7 +39,7 @@ public abstract class RootContext extends Context
 	protected final Context freeVariables;
 
 	public RootContext(
-		LexLocation location, String title, Context freeVariables, Context outer)
+		ILexLocation location, String title, Context freeVariables, Context outer)
 	{
 		super(location, title, outer);
 		this.freeVariables = freeVariables;

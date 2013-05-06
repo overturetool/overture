@@ -32,6 +32,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexBooleanToken;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class LexBooleanToken extends LexToken implements ILexBooleanToken {
 	private static final long serialVersionUID = 1L;
@@ -47,12 +48,12 @@ public class LexBooleanToken extends LexToken implements ILexBooleanToken {
 
 
 
-	public LexBooleanToken(VDMToken value, LexLocation location) {
+	public LexBooleanToken(VDMToken value, ILexLocation location) {
 		super(location, value);
 		this.value = (value == VDMToken.TRUE);
 	}
 
-	public LexBooleanToken(boolean value, LexLocation location) {
+	public LexBooleanToken(boolean value, ILexLocation location) {
 		super(location, value ? VDMToken.TRUE : VDMToken.FALSE);
 		this.value = value;
 	}

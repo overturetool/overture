@@ -136,7 +136,7 @@ public class ModuleReader extends SyntaxReader
 	private AModuleModules readFlatModule() throws ParserException,
 			LexException
 	{
-		File file = lastToken().location.file;
+		File file = lastToken().location.getFile();
 		setCurrentModule("DEFAULT");
 		List<PDefinition> definitions = getDefinitionReader().readDefinitions();
 

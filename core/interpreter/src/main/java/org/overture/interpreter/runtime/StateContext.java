@@ -25,8 +25,8 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.values.Value;
 
 
@@ -49,14 +49,14 @@ public class StateContext extends RootContext
 	 * @param sctxt Any state context.
 	 */
 
-	public StateContext(LexLocation location, String title,
+	public StateContext(ILexLocation location, String title,
 		Context freeVariables, Context outer, Context sctxt)
 	{
 		super(location, title, freeVariables, outer);
 		this.stateCtxt = sctxt;
 	}
 
-	public StateContext(LexLocation location, String title,
+	public StateContext(ILexLocation location, String title,
 		Context outer, Context sctxt)
 	{
 		this(location, title, null, outer, sctxt);
@@ -68,7 +68,7 @@ public class StateContext extends RootContext
 	 * @param title The name of the location.
 	 */
 
-	public StateContext(LexLocation location, String title)
+	public StateContext(ILexLocation location, String title)
 	{
 		super(location, title, null, null);
 		this.stateCtxt = null;

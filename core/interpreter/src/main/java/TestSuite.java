@@ -3,7 +3,6 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.types.AOperationType;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -70,7 +69,7 @@ public class TestSuite
 					{
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
-								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().module) && ctor.getParamDefinitions().isEmpty())
+								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule()) && ctor.getParamDefinitions().isEmpty())
 								|| !(PAccessSpecifierAssistantTC.isPublic(ctor.getAccess())))
 						{
 							throw new Exception("Class "

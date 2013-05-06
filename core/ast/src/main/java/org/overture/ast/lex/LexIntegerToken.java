@@ -32,19 +32,20 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexIntegerToken;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class LexIntegerToken extends LexToken implements ILexIntegerToken
 {
 	private static final long serialVersionUID = 1L;
 	public final long value;
 
-	public LexIntegerToken(long value, LexLocation location)
+	public LexIntegerToken(long value, ILexLocation location)
 	{
 		super(location, VDMToken.NUMBER);
 		this.value = value;
 	}
 
-	public LexIntegerToken(String value, LexLocation location)
+	public LexIntegerToken(String value, ILexLocation location)
 	{
 		super(location, VDMToken.NUMBER);
 		this.value = Long.parseLong(value);

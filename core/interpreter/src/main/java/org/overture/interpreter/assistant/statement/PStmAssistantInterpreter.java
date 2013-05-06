@@ -133,6 +133,6 @@ public class PStmAssistantInterpreter
 	
 	public static PStm findStatementBaseCase(PStm stm, int lineno)
 	{
-		return (stm.getLocation().startLine == lineno) ? stm : null;
+		return (stm.getLocation().getStartLine() == lineno) ? stm : null;
 	}
 }

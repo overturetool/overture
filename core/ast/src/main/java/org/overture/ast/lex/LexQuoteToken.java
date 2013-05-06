@@ -31,13 +31,14 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexQuoteToken;
 
 public class LexQuoteToken extends LexToken implements ILexQuoteToken{
 	private static final long serialVersionUID = 1L;
 	public final String value;
 
-	public LexQuoteToken(String value, LexLocation location) {
+	public LexQuoteToken(String value, ILexLocation location) {
 		super(location, VDMToken.QUOTE);
 		this.value = value;
 	}

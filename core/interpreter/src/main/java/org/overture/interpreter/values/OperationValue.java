@@ -36,10 +36,10 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -198,7 +198,7 @@ public class OperationValue extends Value
 		{
 			// Create "old and new" expression
 
-			LexLocation where = isMutex ? guard.getLocation() : add.getLocation();
+			ILexLocation where = isMutex ? guard.getLocation() : add.getLocation();
 
 			guard = AstFactory.newAAndBooleanBinaryExp(guard.clone(),
 				new LexKeywordToken(VDMToken.AND, where), add.clone());
@@ -219,7 +219,7 @@ public class OperationValue extends Value
 		}
 	}
 
-	public Value eval(LexLocation from, ValueList argValues, Context ctxt)
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 		throws ValueException
 	{
 		// Note args cannot be Updateable, so we convert them here. This means
@@ -244,7 +244,7 @@ public class OperationValue extends Value
 	}
 
 	public Value localEval(
-		LexLocation from, ValueList argValues, Context ctxt, boolean logreq)
+		ILexLocation from, ValueList argValues, Context ctxt, boolean logreq)
 		throws ValueException
 	{
 		if (body == null)
@@ -429,7 +429,7 @@ public class OperationValue extends Value
 		return rv;
 	}
 
-	private RootContext newContext(LexLocation from, String title, Context ctxt)
+	private RootContext newContext(ILexLocation from, String title, Context ctxt)
 	{
 		RootContext argContext;
 

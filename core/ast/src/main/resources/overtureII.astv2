@@ -20,7 +20,7 @@ Tokens
   LexQuoteToken = 'java:node:org.overture.ast.intf.lex.ILexQuoteToken';
   LexRealToken = 'java:node:org.overture.ast.intf.lex.ILexRealToken';
   LexStringToken = 'java:node:org.overture.ast.intf.lex.ILexStringToken';
-  location = 'java:org.overture.ast.lex.LexLocation';
+  location = 'java:org.overture.ast.intf.lex.ILexLocation';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';
   clonableString ='java:org.overture.ast.util.ClonableString';
