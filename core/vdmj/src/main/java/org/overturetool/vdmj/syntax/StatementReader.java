@@ -926,24 +926,22 @@ public class StatementReader extends SyntaxReader
 		Statement others = null;
 		cases.addAll(readCaseAlternatives());
 
-		while (ignore(Token.COMMA))
+		while (lastToken().is(Token.COMMA))
 		{
-			if (lastToken().is(Token.OTHERS))
+			if (nextToken().is(Token.OTHERS))
 			{
+				nextToken();
+				checkFor(Token.ARROW, 2237, "Expecting '->' after others");
+				others = readStatement();
 				break;
 			}
-
-			cases.addAll(readCaseAlternatives());
+			else
+			{
+				cases.addAll(readCaseAlternatives());
+			}
 		}
 
-		if (lastToken().is(Token.OTHERS))
-		{
-			nextToken();
-			checkFor(Token.ARROW, 2237, "Expecting '->' after others");
-			others = readStatement();
-		}
-
-		checkFor(Token.END, 2238, "Expecting 'end' after cases");
+		checkFor(Token.END, 2238, "Expecting ', case alternative' or 'end' after cases");
 		return new CasesStatement(token, exp, cases, others);
 	}
 
