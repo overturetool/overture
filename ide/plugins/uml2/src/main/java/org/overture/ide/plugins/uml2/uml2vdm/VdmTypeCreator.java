@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
@@ -20,6 +21,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.PType;
+import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.ide.plugins.uml2.vdm2uml.UmlTypeCreatorBase;
 
 public class VdmTypeCreator
@@ -35,7 +37,11 @@ public class VdmTypeCreator
 	 final String INMAP_TYPE = "InMap<";
 
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
-	
+	private UmlConsole console;
+	public VdmTypeCreator(UmlConsole console)
+	{
+		this.console = console;
+	}
 
 	public PType convert(Property p)
 	{
@@ -79,12 +85,38 @@ public class VdmTypeCreator
 	{
 		try
 		{
+			if(type == null)
+			{
+				console.err.println("Found no type. Inserting an \"?\" type as a replacement");
+				return convert(UmlTypeCreatorBase.ANY_TYPE, null);
+			}
 			String module = null;
 			if (type.getNamespace() != null
 					&& type.getNamespace() instanceof Class)
 			{
 				module = type.getNamespace().getName();
 			}
+			
+			if(type.getName()==null && type instanceof MinimalEObjectImpl)
+			{
+				java.lang.reflect.Field f=	MinimalEObjectImpl.class.getDeclaredField("eStorage");
+				f.setAccessible(true);
+				String storageUri =""+ f.get(type);
+				System.out.println(storageUri);
+				int index = storageUri.lastIndexOf("#");
+				if(index==-1)
+				{
+					console.err.println("Could not decode \""+storageUri+"\" inseting an \"?\" type as a replacement");
+					return convert(UmlTypeCreatorBase.ANY_TYPE, null);
+				}
+				String typeName = storageUri.substring(index+1);
+				return convert(remapUmlTypes(typeName), module);
+			}else if (type.getName()==null)
+			{
+				console.err.println("Type has no name. Inserting an \"?\" type as a replacement");
+				return convert(UmlTypeCreatorBase.ANY_TYPE, null);
+			}
+			
 			return convert(type.getName(), module);
 		} catch (Exception e)
 		{
@@ -93,6 +125,30 @@ public class VdmTypeCreator
 		}
 	}
 
+
+	private String remapUmlTypes(String name)
+	{
+		if(name.equalsIgnoreCase("Integer"))
+		{
+			return "int";
+		}else if(name.equalsIgnoreCase("Boolean")|| name.equalsIgnoreCase("float")||name.equalsIgnoreCase("long"))
+		{
+			return "bool";
+		}else if(name.equalsIgnoreCase("short") ||name.equalsIgnoreCase("byte"))
+		{
+			return "nat";
+		}else if(name.equalsIgnoreCase("String"))
+		{
+			return "Seq<Char>";
+		}else if(name.equalsIgnoreCase("Double"))
+		{
+			return "real";
+		}
+		
+		console.err.println("Could not match UML type \""+name+"\" with a VDM type. Inserting an \"?\" type as a replacement");
+		return UmlTypeCreatorBase.ANY_TYPE;
+	}
+	
 	public PType convert(String type, String module)
 	{
 

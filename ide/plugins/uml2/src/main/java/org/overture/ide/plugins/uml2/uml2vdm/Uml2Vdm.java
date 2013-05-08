@@ -56,14 +56,16 @@ public class Uml2Vdm
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
 	Model model;
 	private String extension = "vdmpp";
-	private VdmTypeCreator tc = new VdmTypeCreator();
+	private VdmTypeCreator tc = null;
 	private UmlConsole console;
 	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp(location);
 
+	
 	public Uml2Vdm()
-	{
-		console = new UmlConsole();
-	}
+		{
+			console = new UmlConsole();
+			tc = new VdmTypeCreator(console);
+		}
 
 	public boolean initialize(URI uri)
 	{
