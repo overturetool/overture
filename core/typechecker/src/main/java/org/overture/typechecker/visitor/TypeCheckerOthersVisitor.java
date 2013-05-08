@@ -8,7 +8,8 @@ import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.Node;
 import org.overture.ast.patterns.ADefPatternBind;
@@ -81,8 +82,8 @@ public class TypeCheckerOthersVisitor extends
 		if (node.getBind() != null) {
 			if (node.getBind() instanceof ATypeBind) {
 				ATypeBind typebind = (ATypeBind) node.getBind();
-				typebind.apply(rootVisitor, question);
-
+				typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+				
 				if (!TypeComparator.compatible(typebind.getType(), type)) {
 					TypeCheckerErrors.report(3198,
 							"Type bind not compatible with expression", node
@@ -130,18 +131,18 @@ public class TypeCheckerOthersVisitor extends
 		PType type = node.getObject().apply(rootVisitor, question);
 		PTypeSet result = new PTypeSet();
 		boolean unique = !PTypeAssistantTC.isUnion(type);
-		LexIdentifierToken field = node.getField();
+		ILexIdentifierToken field = node.getField();
 
 		if (PTypeAssistantTC.isRecord(type)) {
 
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
 			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec,
-					field.name);
+					field.getName());
 
 			if (rf == null) {
 				TypeCheckerErrors.concern(unique, 3246, "Unknown field name, '"
 						+ field + "'", node.getLocation(), field);
-				result.add(AstFactory.newAUnknownType(field.location));
+				result.add(AstFactory.newAUnknownType(field.getLocation()));
 			} else {
 				result.add(rf.getType());
 			}
@@ -149,9 +150,9 @@ public class TypeCheckerOthersVisitor extends
 
 		if (PTypeAssistantTC.isClass(type)) {
 			AClassType ctype = PTypeAssistantTC.getClassType(type);
-			String cname = ctype.getName().name;
+			String cname = ctype.getName().getName();
 
-			node.setObjectfield(new LexNameToken(cname, field.name, node
+			node.setObjectfield(new LexNameToken(cname, field.getName(), node
 					.getObject().getLocation()));
 			PDefinition fdef = SClassDefinitionAssistantTC
 					.findName(ctype.getClassdef(), node.getObjectfield(),
@@ -160,10 +161,19 @@ public class TypeCheckerOthersVisitor extends
 			if (fdef == null) {
 				TypeCheckerErrors.concern(unique, 3260,
 						"Unknown class field name, '" + field + "'",
-						node.getLocation(), node);
+						field.getLocation(), field);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
-			} else {
+				
+			} else if(SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false)) {
+			
 				result.add(fdef.getType());
+				
+			}else {
+				
+				TypeCheckerErrors.concern(unique, 3092,
+						"Inaccessible member " + field.getName() + " of class " + cname,
+						field.getLocation(), field);
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			}
 		}
 
@@ -173,7 +183,7 @@ public class TypeCheckerOthersVisitor extends
 					node.getLocation(), node);
 			TypeCheckerErrors.detail2("Expression", node.getObject(), "Type",
 					type);
-			node.setType(AstFactory.newAUnknownType(field.location));
+			node.setType(AstFactory.newAUnknownType(field.getLocation()));
 			return node.getType();
 		}
 
@@ -189,9 +199,9 @@ public class TypeCheckerOthersVisitor extends
 		if (env.isVDMPP()) {
 			// We generate an explicit name because accessing a variable
 			// by name in VDM++ does not "inherit" values from a superclass.
-
-			LexNameToken name = node.getName();
-			LexNameToken exname = name.getExplicit(true);
+ 
+			ILexNameToken name = node.getName();
+			ILexNameToken exname = name.getExplicit(true);
 			PDefinition def = env.findName(exname, NameScope.STATE);
 
 			if (def == null) {
@@ -209,7 +219,7 @@ public class TypeCheckerOthersVisitor extends
 				if (!SClassDefinitionAssistantTC.isAccessible(env, def, true)) {
 					TypeCheckerErrors.report(3180, "Inaccessible member '"
 							+ name + "' of class "
-							+ def.getClassDefinition().getName().name,
+							+ def.getClassDefinition().getName().getName(),
 							name.getLocation(), name);
 					node.setType(AstFactory.newAUnknownType(name.getLocation()));
 					return node.getType();
@@ -226,7 +236,7 @@ public class TypeCheckerOthersVisitor extends
 			node.setType(PDefinitionAssistantTC.getType(def));
 			return node.getType();
 		} else {
-			LexNameToken name = node.getName();
+			ILexNameToken name = node.getName();
 			PDefinition def = env.findName(name, NameScope.STATE);
 
 			if (def == null) {
@@ -311,8 +321,8 @@ public class TypeCheckerOthersVisitor extends
 
 		if (def == null) {
 			TypeCheckerErrors.report(3263, "Cannot reference 'self' from here",
-					node.getSelf().location, node.getSelf());
-			return AstFactory.newAUnknownType(node.getSelf().location);
+					node.getSelf().getLocation(), node.getSelf());
+			return AstFactory.newAUnknownType(node.getSelf().getLocation());
 		}
 
 		return PDefinitionAssistantTC.getType(def);
@@ -408,13 +418,13 @@ public class TypeCheckerOthersVisitor extends
 			AClassType ctype = PTypeAssistantTC.getClassType(type);
 
 			if (node.getClassName() == null) {
-				node.setField(new LexNameToken(ctype.getName().name, node
-						.getFieldName().name, node.getFieldName().location));
+				node.setField(new LexNameToken(ctype.getName().getName(), node
+						.getFieldName().getName(), node.getFieldName().getLocation()));
 			} else {
 				node.setField(node.getClassName());
 			}
 
-			LexNameToken field = node.getField();
+			ILexNameToken field = node.getField();
 			field.setTypeQualifier(question.qualifiers);
 			PDefinition fdef = PDefinitionAssistantTC.findName(
 					ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
@@ -430,7 +440,7 @@ public class TypeCheckerOthersVisitor extends
 		}
 
 		if (PTypeAssistantTC.isRecord(type)) {
-			String sname = (node.getFieldName() != null) ? node.getFieldName().name
+			String sname = (node.getFieldName() != null) ? node.getFieldName().getName()
 					: node.getClassName().toString();
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
 			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec,

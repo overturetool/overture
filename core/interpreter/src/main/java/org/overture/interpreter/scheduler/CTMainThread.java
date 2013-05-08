@@ -116,6 +116,17 @@ public class CTMainThread extends MainThread
     			switch (e.number)
     			{
     				case 4055:	// precondition fails for functions
+    					
+    					if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
+    					{
+    						result.add(Verdict.INCONCLUSIVE);
+    					}
+    					else
+    					{
+    						result.add(Verdict.FAILED);
+    					}
+    					break;
+    					
     				case 4071:	// precondition fails for operations
 
     					if (e.ctxt.outer == ctxt)

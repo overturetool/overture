@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
@@ -506,11 +507,11 @@ public abstract class SyntaxReader
 	 * @throws ParserException
 	 */
 
-	protected void throwMessage(int number, String message, LexToken token)
+	protected void throwMessage(int number, String message, ILexToken token)
 		throws ParserException
 	{
 		throw new ParserException(
-			number, message, token.location, reader.getTokensRead());
+			number, message, token.getLocation(), reader.getTokensRead());
 	}
 
 	/**

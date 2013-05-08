@@ -1,0 +1,33 @@
+class Radio
+
+values 
+  public MAX : nat = 10;
+
+instance variables
+  public volume : nat := 0;
+
+operations
+
+  async public AdjustVolumeUp : () ==> ()
+  AdjustVolumeUp () ==
+	( cycles (1E6) skip;
+    if volume < MAX
+    then ( volume := volume + 1;		   
+           RadNavSys`mmi.UpdateScreen(1))
+    );
+
+  async public AdjustVolumeDown : () ==> ()
+  AdjustVolumeDown () ==
+    ( cycles (1E6) skip;
+    if volume > 0
+    then ( volume := volume - 1;       
+           RadNavSys`mmi.UpdateScreen(1))
+    );
+
+  async public HandleTMC: () ==> ()
+  HandleTMC () ==
+    ( cycles (1E6) skip;
+      RadNavSys`navigation.DecodeTMC() 
+    );
+
+end Radio

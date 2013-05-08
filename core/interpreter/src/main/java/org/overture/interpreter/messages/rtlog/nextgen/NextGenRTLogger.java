@@ -425,7 +425,7 @@ public class NextGenRTLogger {
 		
 		if(operation.getSelf() != null)
 		{
-			return operation.getSelf().type.getName().name;
+			return operation.getSelf().type.getName().getName();
 		}
 		else
 		{
@@ -548,7 +548,7 @@ public class NextGenRTLogger {
 
 	private void deployObject(ObjectValue object, CPUResource cpuResource) 
 	{		
-		NextGenObject o = new NextGenObject(object.objectReference, getClassDefinition(object.type.getName().name) ,cpuMap.get(cpuResource.getNumber()));		
+		NextGenObject o = new NextGenObject(object.objectReference, getClassDefinition(object.type.getName().getName()) ,cpuMap.get(cpuResource.getNumber()));		
 		objectMap.put(object.objectReference, o);		
 	}
 
@@ -609,7 +609,7 @@ public class NextGenRTLogger {
 		}
 		else
 		{
-			classDef = getClassDefinition(obj.type.getName().name);
+			classDef = getClassDefinition(obj.type.getName().getName());
 			id = obj.objectReference;
 			cpu = this.cpuMap.get(obj.getCPU().getNumber());
 			return new NextGenObject(id, classDef, cpu);

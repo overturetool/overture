@@ -35,7 +35,7 @@ public class ASystemClassDefinitionAssistantTC
 				{
 					AUnresolvedType ut = (AUnresolvedType) ivType;
 
-					if (ut.getName().getName().equals("BUS"))
+					if (ut.getName().getFullName().equals("BUS"))
 					{
 						TypeCheckerErrors.warning(5014, "Uninitialized BUS ignored",d.getLocation(),d);
 					}
@@ -44,7 +44,7 @@ public class ASystemClassDefinitionAssistantTC
 				{
 					AUnresolvedType ut = (AUnresolvedType)ivType;
 
-					if (ut.getName().getName().equals("CPU"))
+					if (ut.getName().getFullName().equals("CPU"))
 					{
 						ANewExp newExp = (ANewExp) iv.getExpression();
 						PExp exp = newExp.getArgs().get(1);
@@ -73,7 +73,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AExplicitOperationDefinition edef = (AExplicitOperationDefinition)d;
 
-				if (!edef.getName().name.equals(def.getName().name) ||
+				if (!edef.getName().getName().equals(def.getName().getName()) ||
 					!edef.getParameterPatterns().isEmpty())
 				{
 					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
@@ -83,7 +83,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AImplicitOperationDefinition idef = (AImplicitOperationDefinition)d;
 
-				if (!d.getName().name.equals(def.getName().name))
+				if (!d.getName().getName().equals(def.getName().getName()))
 				{
 					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
 				}

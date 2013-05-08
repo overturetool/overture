@@ -31,7 +31,7 @@ public class ATypeImportAssistantTC {
 			}
 			else
 			{
-				expdef = AstFactory.newAImportedDefinition(imp.getName().location,expdef);
+				expdef = AstFactory.newAImportedDefinition(imp.getName().getLocation(),expdef);
 			}
 
 			list.add(expdef);

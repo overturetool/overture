@@ -89,7 +89,7 @@ public class CallSequence extends Vector<PStm>
     		{
     			ACallStm cs = (ACallStm)stmt;
        			sb.append(sep);
-       			sb.append(cs.getName().name);
+       			sb.append(cs.getName().getName());
        			sep = "; ";
      		}
     		else if (stmt instanceof ACallObjectStm)

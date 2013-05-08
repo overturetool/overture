@@ -21,7 +21,7 @@ package org.overture.ide.ui.editor.syntax;
 public interface IVdmKeywords {
 	  
 	public String[] getReservedwords() ;	  
-	public String[] getMultipleKeywords();
+	//public String[] getMultipleKeywords();
 	public String[] getBinaryoperators();
 	public String[] getBinarySymbolOperators();
 	public String[] getBasictypes();

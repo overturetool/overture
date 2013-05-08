@@ -43,6 +43,7 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.NodeList;
@@ -277,10 +278,10 @@ public class TypeCheckerDefinitionVisitor extends
 
 		PType expectedResult = AExplicitFunctionDefinitionAssistantTC
 				.checkParams(node, node.getParamPatternList().listIterator(),
-						(AFunctionType) node.getType());
+						node.getType());
 		node.setExpectedResult(expectedResult);
 		List<List<PDefinition>> paramDefinitionList = AExplicitFunctionDefinitionAssistantTC
-				.getParamDefinitions(node, (AFunctionType) node.getType(),
+				.getParamDefinitions(node, node.getType(),
 						node.getParamPatternList(), node.getLocation());
 
 		Collections.reverse(paramDefinitionList);
@@ -426,14 +427,14 @@ public class TypeCheckerDefinitionVisitor extends
 					TypeChecker.detail2("Actual", efd.getTypeParams(), "Expected", node.getTypeParams());
 				}
 
-				AFunctionType mtype = (AFunctionType) efd.getType();
+				AFunctionType mtype = efd.getType();
 
 				if (!TypeComparator.compatible(mtype.getParameters(), AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node))) {
 					TypeCheckerErrors.report(3303,
 							"Measure parameters different to function", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
-					TypeChecker.detail2(node.getMeasure().getName(),
+					TypeChecker.detail2(node.getMeasure().getFullName(),
 							mtype.getParameters(), "Expected",
 							AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
 				}
@@ -601,7 +602,7 @@ public class TypeCheckerDefinitionVisitor extends
 		} else if (node.getMeasure() != null) {
 			if (question.env.isVDMPP())
 				node.getMeasure().setTypeQualifier(
-						((AFunctionType)node.getType()).getParameters());
+						node.getType().getParameters());
 			node.setMeasureDef(question.env.findName(node.getMeasure(),
 					question.scope));
 
@@ -645,15 +646,15 @@ public class TypeCheckerDefinitionVisitor extends
 				AFunctionType mtype = (AFunctionType) node.getMeasureDef()
 						.getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), ((AFunctionType)node
-						.getType()).getParameters())) {
+				if (!TypeComparator.compatible(mtype.getParameters(), node
+						.getType().getParameters())) {
 					TypeCheckerErrors.report(3303,
 							"Measure parameters different to function", node
 									.getMeasure().getLocation(), node
 									.getMeasure());
-					TypeCheckerErrors.detail2(node.getMeasure().name, mtype
-							.getParameters(), node.getName().name, ((AFunctionType)node
-							.getType()).getParameters());
+					TypeCheckerErrors.detail2(node.getMeasure().getName(), mtype
+							.getParameters(), node.getName().getName(), node
+							.getType().getParameters());
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {
@@ -699,7 +700,7 @@ public class TypeCheckerDefinitionVisitor extends
 			AExplicitOperationDefinition node, TypeCheckInfo question)
 			throws AnalysisException {
 
-		List<PType> ptypes = ((AOperationType)node.getType()).getParameters();
+		List<PType> ptypes = node.getType().getParameters();
 
 		if (node.getParameterPatterns().size() > ptypes.size()) {
 			TypeCheckerErrors.report(3023, "Too many parameter patterns",
@@ -732,8 +733,8 @@ public class TypeCheckerDefinitionVisitor extends
 				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
 			}
 
-			if (node.getName().name
-					.equals(node.getClassDefinition().getName().name)) {
+			if (node.getName().getName()
+					.equals(node.getClassDefinition().getName().getName())) {
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
 
@@ -743,9 +744,9 @@ public class TypeCheckerDefinitionVisitor extends
 							node.getLocation(), node);
 				}
 
-				if (PTypeAssistantTC.isClass( ((AOperationType)node.getType()).getResult())) {
-					AClassType ctype = PTypeAssistantTC.getClassType(((AOperationType)node
-							.getType()).getResult());
+				if (PTypeAssistantTC.isClass(node.getType().getResult())) {
+					AClassType ctype = PTypeAssistantTC.getClassType(node
+							.getType().getResult());
 
 					if (ctype.getClassdef() != node.getClassDefinition()) {
 						// FIXME: This is a TEST, it should be tried to see if
@@ -754,7 +755,7 @@ public class TypeCheckerDefinitionVisitor extends
 								.report(3025,
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
-														.getName().name, node
+														.getName().getName(), node
 												.getLocation(), node);
 					}
 					// TODO: THIS COULD BE A HACK to code (ctype.getClassdef()
@@ -766,13 +767,13 @@ public class TypeCheckerDefinitionVisitor extends
 								.report(3025,
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
-														.getName().name, node
+														.getName().getName(), node
 												.getLocation(), node);
 					}
 				} else {
 					TypeCheckerErrors.report(3026,
 							"Constructor operation must have return type "
-									+ node.getClassDefinition().getName().name,
+									+ node.getClassDefinition().getName().getName(),
 							node.getLocation(), node);
 				}
 			}
@@ -801,11 +802,11 @@ public class TypeCheckerDefinitionVisitor extends
 		}
 
 		if (node.getPostdef() != null) {
-			LexNameToken result = new LexNameToken(node.getName().module,
+			LexNameToken result = new LexNameToken(node.getName().getModule(),
 					"RESULT", node.getLocation());
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
 			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp,
-					((AOperationType)node.getType()).getResult(), NameScope.NAMESANDANYSTATE);
+					node.getType().getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
 			PType b = node
@@ -827,8 +828,8 @@ public class TypeCheckerDefinitionVisitor extends
 		PType actualResult = node.getBody().apply(rootVisitor,
 				new TypeCheckInfo(local, NameScope.NAMESANDSTATE));
 		node.setActualResult(actualResult);
-		boolean compatible = TypeComparator.compatible(((AOperationType)node.getType()
-				).getResult(), node.getActualResult());
+		boolean compatible = TypeComparator.compatible(node.getType()
+				.getResult(), node.getActualResult());
 
 		if ((node.getIsConstructor()
 				&& !PTypeAssistantTC.isType(node.getActualResult(),
@@ -837,27 +838,27 @@ public class TypeCheckerDefinitionVisitor extends
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type",
 					node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(),
-					"Expected", ((AOperationType)node.getType()).getResult());
+					"Expected", node.getType().getResult());
 		} else if (!node.getIsConstructor()
 				&& !PTypeAssistantTC.isUnknown(actualResult)) {
-			if (PTypeAssistantTC.isVoid(((AOperationType)node.getType()).getResult())
+			if (PTypeAssistantTC.isVoid(node.getType().getResult())
 					&& !PTypeAssistantTC.isVoid(actualResult)) {
 				TypeCheckerErrors.report(3312,
 						"Void operation returns non-void value",
 						node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected",
-						((AOperationType)node.getType()).getResult());
-			} else if (!PTypeAssistantTC.isVoid(((AOperationType)node.getType()).getResult())
+						node.getType().getResult());
+			} else if (!PTypeAssistantTC.isVoid(node.getType().getResult())
 					&& PTypeAssistantTC.hasVoid(actualResult)) {
 				TypeCheckerErrors.report(3313, "Operation returns void value",
 						node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected",
-						((AOperationType)node.getType()).getResult());
+						node.getType().getResult());
 			}
 		}
 
 		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
-				&& !PTypeAssistantTC.isType(((AOperationType)node.getType()).getResult(),
+				&& !PTypeAssistantTC.isType(node.getType().getResult(),
 						AVoidType.class)) {
 			TypeCheckerErrors.report(3293,
 					"Asynchronous operation " + node.getName()
@@ -905,7 +906,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getResult() != null) {
 			defs.addAll(PPatternAssistantTC.getDefinitions(node.getResult()
-					.getPattern(), ((AOperationType)node.getType()).getResult(), NameScope.LOCAL));
+					.getPattern(), node.getType().getResult(), NameScope.LOCAL));
 		}
 
 		// Now we build local definitions for each of the externals, so
@@ -917,7 +918,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		if (node.getExternals().size() != 0) {
 			for (AExternalClause clause : node.getExternals()) {
-				for (LexNameToken exname : clause.getIdentifiers()) {
+				for (ILexNameToken exname : clause.getIdentifiers()) {
 					PDefinition sdef = question.env.findName(exname,
 							NameScope.STATE);
 					AExternalClauseAssistantTC.typeResolve(clause, rootVisitor,
@@ -945,11 +946,11 @@ public class TypeCheckerDefinitionVisitor extends
 							// effectively
 							// initialize the instance variable concerned.
 
-							if ((clause.getMode().type == VDMToken.WRITE)
+							if ((clause.getMode().getType() == VDMToken.WRITE)
 									&& sdef instanceof AInstanceVariableDefinition
-									&& node.getName().name
+									&& node.getName().getName()
 											.equals(node.getClassDefinition()
-													.getName().name)) {
+													.getName().getName())) {
 								AInstanceVariableDefinition iv = (AInstanceVariableDefinition) sdef;
 								iv.setInitialized(true);
 							}
@@ -973,7 +974,7 @@ public class TypeCheckerDefinitionVisitor extends
 		local.setEnclosingDefinition(node);
 
 		if (question.env.isVDMPP()) {
-			if (node.getName().name.equals(node.getClassDefinition().getName().name)) {
+			if (node.getName().getName().equals(node.getClassDefinition().getName().getName())) {
 			
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
@@ -985,15 +986,15 @@ public class TypeCheckerDefinitionVisitor extends
 								node.getLocation(), node);
 					}
 
-					if (PTypeAssistantTC.isClass(((AOperationType)node.getType()).getResult())) {
-						AClassType ctype = PTypeAssistantTC.getClassType(((AOperationType)node
-								.getType()).getResult());
+					if (PTypeAssistantTC.isClass(node.getType().getResult())) {
+						AClassType ctype = PTypeAssistantTC.getClassType(node
+								.getType().getResult());
 
 						if (ctype.getClassdef() != node.getClassDefinition()) {
 							TypeCheckerErrors.report(3025,
 									"Constructor operation must have return type "
 											+ node.getClassDefinition()
-													.getName().name, node
+													.getName().getName(), node
 											.getLocation(), node);
 						}
 					} else {
@@ -1001,7 +1002,7 @@ public class TypeCheckerDefinitionVisitor extends
 								.report(3026,
 										"Constructor operation must have return type "
 												+ node.getClassDefinition()
-														.getName().name, node.getLocation(), node);
+														.getName().getName(), node.getLocation(), node);
 						
 					}
 			}
@@ -1019,7 +1020,7 @@ public class TypeCheckerDefinitionVisitor extends
 			node.setActualResult(node.getBody().apply(rootVisitor,
 					new TypeCheckInfo(local, NameScope.NAMESANDSTATE)));
 
-			boolean compatible = TypeComparator.compatible(((AOperationType)node.getType())
+			boolean compatible = TypeComparator.compatible(node.getType()
 					.getResult(), node.getActualResult());
 
 			if ((node.getIsConstructor()
@@ -1030,29 +1031,29 @@ public class TypeCheckerDefinitionVisitor extends
 						"Operation returns unexpected type",
 						node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(),
-						"Expected", ((AOperationType)node.getType()).getResult());
+						"Expected", node.getType().getResult());
 			} else if (!node.getIsConstructor()
 					&& !PTypeAssistantTC.isUnknown(node.getActualResult())) {
-				if (PTypeAssistantTC.isVoid(((AOperationType)node.getType()).getResult())
+				if (PTypeAssistantTC.isVoid(node.getType().getResult())
 						&& !PTypeAssistantTC.isVoid(node.getActualResult())) {
 					TypeCheckerErrors.report(3312,
 							"Void operation returns non-void value",
 							node.getLocation(), node);
 					TypeCheckerErrors.detail2("Actual", node.getActualResult(),
-							"Expected", ((AOperationType)node.getType()).getResult());
-				} else if (!PTypeAssistantTC.isVoid(((AOperationType)node.getType()).getResult())
+							"Expected", node.getType().getResult());
+				} else if (!PTypeAssistantTC.isVoid(node.getType().getResult())
 						&& PTypeAssistantTC.hasVoid(node.getActualResult())) {
 					TypeCheckerErrors.report(3313,
 							"Operation returns void value", node.getLocation(),
 							node);
 					TypeCheckerErrors.detail2("Actual", node.getActualResult(),
-							"Expected", ((AOperationType)node.getType()).getResult());
+							"Expected", node.getType().getResult());
 				}
 			}
 		}
 
 		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
-				&& !PTypeAssistantTC.isType(((AOperationType)node.getType()).getResult(),
+				&& !PTypeAssistantTC.isType(node.getType().getResult(),
 						AVoidType.class)) {
 			TypeCheckerErrors.report(3293,
 					"Asynchronous operation " + node.getName()
@@ -1214,13 +1215,13 @@ public class TypeCheckerDefinitionVisitor extends
 			for (PDefinition def : SClassDefinitionAssistantTC
 					.getLocalDefinitions(node.getClassDefinition())) {
 				if (PDefinitionAssistantTC.isCallableOperation(def)
-						&& !def.getName().name.equals(classdef.getName().name)) {
+						&& !def.getName().getName().equals(classdef.getName().getName())) {
 					node.getOperations().add(def.getName());
 				}
 			}
 		}
 
-		for (LexNameToken opname : node.getOperations()) {
+		for (ILexNameToken opname : node.getOperations()) {
 			int found = 0;
 
 			for (PDefinition def : classdef.getDefinitions()) {
@@ -1230,30 +1231,30 @@ public class TypeCheckerDefinitionVisitor extends
 					if (!PDefinitionAssistantTC.isCallableOperation(def)) {
 						TypeCheckerErrors.report(3038, opname
 								+ " is not an explicit operation",
-								opname.location, opname);
+								opname.getLocation(), opname);
 					}
 				}
 			}
 
 			if (found == 0) {
 				TypeCheckerErrors.report(3039, opname + " is not in scope",
-						opname.location, opname);
+						opname.getLocation(), opname);
 			} else if (found > 1) {
 				TypeCheckerErrors.warning(5002,
-						"Mutex of overloaded operation", opname.location,
+						"Mutex of overloaded operation", opname.getLocation(),
 						opname);
 			}
 
-			if (opname.name.equals(classdef.getName().name)) {
+			if (opname.getName().equals(classdef.getName().getName())) {
 				TypeCheckerErrors.report(3040,
-						"Cannot put mutex on a constructor", opname.location,
+						"Cannot put mutex on a constructor", opname.getLocation(),
 						opname);
 			}
 
-			for (LexNameToken other : node.getOperations()) {
+			for (ILexNameToken other : node.getOperations()) {
 				if (opname != other && HelpLexNameToken.isEqual(opname, other)) {
 					TypeCheckerErrors.report(3041, "Duplicate mutex name",
-							opname.location, opname);
+							opname.getLocation(), opname);
 				}
 			}
 
@@ -1297,7 +1298,7 @@ public class TypeCheckerDefinitionVisitor extends
 				if (!PDefinitionAssistantTC.isCallableOperation(def)) {
 					TypeCheckerErrors.report(3042, node.getOpname()
 							+ " is not an explicit operation",
-							node.getOpname().location, node.getOpname());
+							node.getOpname().getLocation(), node.getOpname());
 				}
 			}
 
@@ -1310,26 +1311,26 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 		}
 
-		LexNameToken opname = node.getOpname();
+		ILexNameToken opname = node.getOpname();
 
 		if (opfound == 0) {
 			TypeCheckerErrors.report(3043, opname + " is not in scope",
-					opname.location, opname);
+					opname.getLocation(), opname);
 		} else if (opfound > 1) {
 			TypeCheckerErrors.warning(5003,
 					"Permission guard of overloaded operation",
-					opname.location, opname);
+					opname.getLocation(), opname);
 		}
 
 		if (perfound != 1) {
 			TypeCheckerErrors.report(3044,
 					"Duplicate permission guard found for " + opname,
-					opname.location, opname);
+					opname.getLocation(), opname);
 		}
 
-		if (opname.name.equals(classdef.getName().name)) {
+		if (opname.getName().equals(classdef.getName().getName())) {
 			TypeCheckerErrors.report(3045, "Cannot put guard on a constructor",
-					opname.location, opname);
+					opname.getLocation(), opname);
 		}
 
 		Environment local = new FlatEnvironment(node, base);

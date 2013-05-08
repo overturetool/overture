@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AMapMapType;
@@ -117,7 +117,7 @@ public class TypePrettyPrinterVisitor extends
 	public String defaultSInvariantType(SInvariantType node,
 			PrettyPrinterEnv question) throws AnalysisException
 	{
-		LexNameToken name = null;
+		ILexNameToken name = null;
 		switch(node.kindSInvariantType())
 		{
 			case ANamedInvariantType.kindSInvariantType:
@@ -132,9 +132,9 @@ public class TypePrettyPrinterVisitor extends
 		{
 			if(name.getModule()!=null && !name.getModule().equals(question.getClassName()))
 			{
-				return name.module+"`"+name.getName();
+				return name.getModule()+"`"+name.getFullName();
 			}
-			return name.getName();
+			return name.getFullName();
 		}
 		
 		return "unresolved";

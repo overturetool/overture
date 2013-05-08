@@ -8,7 +8,8 @@
 This is an introduction to the Overture Integrated Development
 Environment (IDE) and its facilities for supporting modelling and
 analysis in VDM-RT the VDM extended language for modelling real-time
-systems, formerly known as VICE~(VDM in Constrained Environments). It
+systems, formerly known as VICE~(VDM in Constrained Environments). 
+Since there is not yet a book on VDM-RT it
 may be used as a substitute for Chapter 3 of ``Validated Designs for
 Object-oriented Systems''\footnote{John Fitzgerald, Peter Gorm Larsen,
   Paul Mukherjee, Nico Plat and Marcel Verhoef. \emph{Validated
@@ -42,7 +43,7 @@ In this chapter, an in-car radio navigation system which supports the Traffic Me
 
 The system is composed of three main clusters of functionality; 
 \begin{itemize}
-\item The man-machine interface (MMI) takes care of user interaction such as handling key press input and graphical display output. 
+\item The Man-Machine Interface (MMI) takes care of user interaction such as handling key press input and graphical display output. 
 \item The navigation is responsible for destination entry, route planning and turn-by-turn guidance. 
 \item The radio is responsible for basic tuner and volume control as well as handling traffic information from the TMC.
 \end{itemize}
@@ -96,11 +97,14 @@ a command line.
 
 \section{Obtaining the Overture Tools}\label{sec:install}
 
-In order to run the examples and exercises presented in the book, you
-will need to download the Overture tools from the Internet.
-%In order to run the software on your own computer you need to follow
-%these instructions:
-Overture is an open source tool, developed by volunteers and built on
+In order to run the examples and exercises presented in the book, it
+is necessary to install two separate tools -- Overture and Modelio.
+% or
+%Enterprise
+%Architect, the latter being license-controlled.
+\begin{description}
+\item[\textbf{Overture:}] This
+ is an open source tool, developed by volunteers and built on
 the Eclipse platform. The project is managed on
 SourceForge\footnote{\url{https://sourceforge.net/projects/overture/}}.
 The best way to run Overture is to download a special version of
@@ -115,6 +119,14 @@ go to:
     Overture tools without requiring a reinstallation. However, this
     can be a risky process because of the dependencies on non-Overture
     components and so is not yet supported.}.
+
+\item[\textbf{Modelio:}] This is a tool that is both available in a commercial version as well as in an open source setting from a
+  company called Softeam. Just like Overture this tool is built on top of the Eclipse platform. The product can be
+  obtained from
+\begin{quote}
+\texttt{http://www.modelio.org/}.
+\end{quote}
+\end{description}
 
 A library of sample VDM-RT models, including all those needed
 for the exercises in the book, is available and can be downloaded from
@@ -134,7 +146,7 @@ test coverage feature described in Section~\ref{sec:testcov} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
 \begin{quote}
-\url{http://miktex.org/2.8/}
+\url{http://miktex.org/2.9/}
 \end{quote}
 
 \paragraph{Note for \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$ users.} 
@@ -142,12 +154,9 @@ Overture provides a new open source VDM tool set, but it can also work
 in conjunction with the
 \vdmtools$^{\mbox{\small\textbf{{\textregistered}}}}$
 tool set originally developed by IFAD A/S and now maintained and
-developed by CSK Systems~(see
-\texttt{http://www.vdmtools.jp/en/}). Overture accesses VDMTools
-functionality via a remote API, and the integration is to some extent
-limited by the API capabilities. However, the additional features
-provided by the Overture GUI make it worth considering as a front end
-to the VDMTools functionality.
+developed by SCSK~(see
+\url{http://www.vdmtools.jp/en/}). From Overture it is also possible
+automatically to transfer a project over to \vdmtools.
  
 \section{Using the Overture Perspective}\label{sec:vdmsupport}
 
@@ -259,7 +268,8 @@ including cases statements, classes, quantified expressions, functions
 (explicit/implicit), operations (explicit/implicit) and many
 more\footnote{It is possible to see and enhance the complete list of
   these by selecting \emph{Window} $\rightarrow$ \emph{Preferences}
-  $\rightarrow$ \emph{Overture}.}. Further templates can easily be added in the future. The use of
+  $\rightarrow$ \emph{VDM}  $\rightarrow$ \emph{Templates}.}. 
+Further templates can easily be added in the future. The use of
 templates makes it more concenient to write VDM models without
 detailed prior knowledge of the language syntax.
 
@@ -294,7 +304,7 @@ intended to write.
 \section{Mapping Between UML and  VDM}\label{sec:fromUMLtoVDM}\label{sec:syntaxcheck}
 \label{sec:typecheck}
 
-In order to map the UML class diagram created in Enterprise Architect
+In order to map the UML class diagram created in Modelio
 to VDM, a new project must be created in the Overture IDE to receive
 it. This is done by right-clicking in the \emph{VDM Explorer} view,
 and creating a new VDM-RT project and for example naming it
@@ -304,7 +314,7 @@ project) is not directly available in the right-click menu, please choose
 \emph{Other} and browse to the VDM-RT project. By right-clicking the new 
 project root in the \emph{VDM Explorer}, \emph{UML Transformation} can 
 be chosen, followed by \emph{Import XMI}. Now browse to the XMI/XML file
-exported from EA called \texttt{carradnavuml.xmi} and open this.
+exported from Modelio called \texttt{carradnavuml.uml} and open this.
 
 %The three classes from the Alarm system will be converted to VDM++ format
 %(\texttt{.vdmpp}), one file per class.
@@ -326,20 +336,27 @@ exported from EA called \texttt{carradnavuml.xmi} and open this.
 %	\end{center}
 %\end{figure}
 
-The transformation from UML to VDM is not entirely automated right now. For
-example, any custom types are transformed to VDM++ definitions using
-machine-generated identifiers since custom types are not named in
-UML. As a result, you have to expect to make minor modifications to
-the generated VDM files. 
+%% The transformation from UML to VDM is not entirely automated right now. For
+%% example, any custom types are transformed to VDM++ definitions using
+%% machine-generated identifiers since custom types are not named in
+%% UML. As a result, you have to expect to make minor modifications to
+%% the generated VDM files. 
 
 %\subsection{Mapping VDM to UML}
 
 It is possible to automatically transform all the classes from the car
 radio navigation project to UML. To do this, simply right
 click the project root and choose \emph{UML Transformation} $
-\rightarrow $ \emph{Export XMI}. The XMI file can subsequently be
-imported in EA, enabling the user to get an overview
+\rightarrow $ \emph{Export XMI} (i EMF UML3.0.0 format som \texttt{.uml} 
+format). The UML/XMI file can subsequently be
+imported in Modelio, enabling the user to get an overview
 of the complete model.
+
+Note that state charts, activity
+diagrams, sequence diagrams, objects charts, package charts are not
+used in the UML mapping. It is essentially only the information used
+statically inside classes and their usage in class diagrams that is
+used.
 
 \section{Debugging}\label{sec:debugging}
 
@@ -379,7 +396,7 @@ RunScenario1 () ==
 end World
 \end{lstlisting}
 
-\subsection{The Debug configuration}\label{sec:debugconfig}
+\subsection{The Debug Configuration}\label{sec:debugconfig}
 
 Before you start to debug a model in Overture, you need to set up a
 \emph{debug configuration}. Right click the project and choose
@@ -549,9 +566,9 @@ cause the majority of the VDM-RT model to be executed, but for
 demonstration purposes let us start by cleaning the model (right click
 on the project and select \texttt{Clean}). Let us evaluate the
 \texttt{RunScenario1} and \texttt{RunScenario2} operations where the
-\texttt{Generate test coverage} option is selected. 
+\texttt{Generate coverage} option is selected. 
 Remember that whenever test coverage
-information is desired the \texttt{Generate Latex Coverage} option
+information is desired the \texttt{Generate Coverage} option
 must be selected as shown in Figure~\ref{fig:userguide:debugConfiguration}. 
  Once the debugger
 has completed and the result is written out in the \texttt{console} it
@@ -644,7 +661,7 @@ choose the \textsf{Full
 Now Overture expands
 and executes all 18 test cases one after each other. The results of these
 executions are illustrated with green check marks and red crosses, meaning that
-the tests passed or failed respectively. See Figure~\ref{fig:tracesradnav}. Note
+the tests passed or failed respectively (see Figure~\ref{fig:tracesradnav}). Note
 that in the Combinatorial Testing perspective, the view in the lower region is
 able to show the individual steps of a selected test case, along with the
 corresponding results from its four operation calls.
@@ -799,23 +816,22 @@ likely to be some that have to be checked manually.
 
 \section{A Command-Line Interface}\label{sec:cmdline}
 
-So far only the graphical user interface of the Overture IDE has been
-presented but the engine underlying Overture, called VDMJ, also
+So far only the graphical user interface of Overture has been
+presented but the core of Overture also
 provides a simple command line interface.  This is useful for the
 automatic batch execution of tests, though the command line also
 provides a full set of interactive execution and debugging commands
-which can be useful when examining batch tests. The command line also
-provides access to tool facilities that have not yet been included in
-the Overture IDE.
+which can be useful when examining batch tests. 
 
-VDMJ is written in Java, and so to run it from the command line, the
-VDMJ jar file \footnote{See the Overture documentation at
+Overture is written in Java, and so to run it from the command line, the
+Overture jar file\footnote{See the Overture documentation at
   \texttt{sourceforge.net/projects/overture} for the location of the
-  jar file.}  should be executed with a Java JRE (version 5 or later):
+  jar file or use the script or windows bat file incorporating this.}  
+should be executed with a Java JRE (version 7 or later):
 
 \lstset{style=tool,language=}
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar
+java -jar Overture-2.0.0.jar
 \end{lstlisting}
 
 \noindent If the jar file is executed with no further options like this, it will
@@ -826,7 +842,7 @@ specify the names of the VDM-RT model files to load, or the name of a directory
 in which all the files reside:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmrt CarNaviRadio
+java -jar Overture-2.0.0.jar -vdmrt CarNaviRadio
 \end{lstlisting}
 
 \noindent That will perform a syntax and type check of all the VDM-RT model
@@ -834,8 +850,8 @@ files in the directory called \verb|CarNaviRadio|, producing any errors and warn
 messages on the console, before terminating:
 
 \begin{lstlisting}
-Parsed 9 classes in 0.61 secs. No syntax errors
-Type checked 11 classes in 0.093 secs. No type errors
+Parsed 10 classes in 0.187 secs. No syntax errors
+Type checked 12 classes in 0.094 secs. No type errors
 \end{lstlisting}
 
 \noindent In the case of our example, there are no syntax or type checking
@@ -851,7 +867,7 @@ option useful, as this suppresses the informational messages about the parsing
 and type checking:
 
 \begin{lstlisting}
-java -jar vdmj-2.0.2.jar -vdmrt -w -q -e 
+java -jar Overture-2.0.0.jar -vdmrt -w -q -e 
     "new World().RunScenario1()" CarNaviRadio
 \end{lstlisting}
 
@@ -859,8 +875,8 @@ java -jar vdmj-2.0.2.jar -vdmrt -w -q -e
 parsing and checking messages are suppressed, as are the warnings:
 
 \begin{lstlisting}
-{"TransmitTMC" |-> mk_(3904, 12574, 6836.25),
- "VolumeKnob" |-> mk_(3935, 16268, 8106.416666666667)}
+{"TransmitTMC" |-> mk_(118187598, 118187598, 118187598), 
+ "VolumeKnob" |-> mk_(36490730, 140915746, 6.2612283777777776E7)}
 \end{lstlisting}
 
 Clearly a batch of test evaluations could be performed automatically by running
@@ -869,13 +885,13 @@ against expected results.
 
 To run the command line interpreter interactively, the \verb|-i| command line
 option must be given. Instead of terminating after the type check, this will
-cause VDMJ to enter its interactive mode, and give the interactive \verb|>|
+cause Overture to enter its interactive mode, and give the interactive \verb|>|
 prompt:
 
 \begin{lstlisting}
-Parsed 9 classes in 0.61 secs. No syntax errors
-Type checked 11 classes in 0.093 secs. No type errors
-Initialized 11 classes in 0.079 secs. 
+Parsed 10 classes in 0.172 secs. No syntax errors
+Type checked 12 classes in 0.14 secs. No type errors
+Initialized 12 classes in 0.109 secs.
 Interpreter started
 >
 \end{lstlisting}
@@ -892,9 +908,9 @@ session with a breakpoint at the start of the same operation:
 \begin{lstlisting}
 > create world := new World()
 > p world.RunScenario2()
-= {"InsertAddress" |-> mk_(3993, 16132, 7759.2727272727),
-   "TransmitTMC" |-> mk_(3871, 12128, 6980.714285714285)}
-Executed in 1.094 secs.
+= {"InsertAddress" |-> mk_(71646789, 71646789, 71646789), 
+   "TransmitTMC" |-> mk_(118187598, 118187598, 118187598)}
+Executed in 0.655 secs.
 
 > break World`addEnvironmentTask
 Created break [1] in 'World' (CarNaviRadio\World.vdmrt) 
@@ -917,8 +933,7 @@ at line 12:28
 Stopped in 'World' (CarNaviRadio\World.vdmrt) 
 at line 12:28
 12:      ( envTasks := envTasks munion { pnm |-> penv };
-[MainThread-164]> continue
-> \end{lstlisting}
+\end{lstlisting}
 
 \noindent Notice that the \verb|print| command is available at the breakpoint
 to examine the runtime state of the system. In the example, we show the value
@@ -930,7 +945,7 @@ between runs with the \verb|init| command to avoid this.
 The \verb|help| command is context sensitive, and will list the extra debugging
 commands available at a breakpoint, such as \verb|continue|, \verb|step|,
 \verb|stack|, \verb|list| and so on. The full set of commands is described in the
-VDMJ User Guide\footnote{Supplied with the Overture documentation.}.
+Overture User Guide\footnote{Supplied with the Overture documentation.}.
 
 \lstset{style=mystyle}
 

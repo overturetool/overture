@@ -87,7 +87,7 @@ public class ModuleInterpreter extends Interpreter
 		}
 		else
 		{
-			setDefaultName(modules.get(0).getName().name);
+			setDefaultName(modules.get(0).getName().getName());
 		}
 	}
 
@@ -109,7 +109,7 @@ public class ModuleInterpreter extends Interpreter
 		{
 			for (AModuleModules m: modules)
 			{
-				if (m.getName().name.equals(mname))
+				if (m.getName().getName().equals(mname))
 				{
 					defaultModule = m;
 					return;
@@ -127,7 +127,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public String getDefaultName()
 	{
-		return defaultModule.getName().name;
+		return defaultModule.getName().getName();
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultModule.getName().location.file;
+		return defaultModule.getName().getLocation().file;
 	}
 
 	@Override
@@ -173,6 +173,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		VdmRuntime.initialize();
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
@@ -212,7 +213,7 @@ public class ModuleInterpreter extends Interpreter
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		Context mainContext = new StateContext(defaultModule.getName().location,
+		Context mainContext = new StateContext(defaultModule.getName().getLocation(),
 				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);

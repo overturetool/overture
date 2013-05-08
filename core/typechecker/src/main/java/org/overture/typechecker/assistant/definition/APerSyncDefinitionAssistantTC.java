@@ -5,14 +5,14 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 
 public class APerSyncDefinitionAssistantTC {
 
 	public static PDefinition findName(APerSyncDefinition d,
-			LexNameToken sought, NameScope scope) {
+			ILexNameToken sought, NameScope scope) {
 		
 		return null;
 	}

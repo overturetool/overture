@@ -20,18 +20,18 @@ public class TestCase
 		ObjectValue instance = (ObjectValue) obj;
 		for (NameValuePair p : instance.members.asList())
 		{
-			if (p.name.name.equals(methodName))
+			if (p.name.getName().equals(methodName))
 			{
 				if (p.value instanceof OperationValue)
 				{
 					OperationValue opVal = (OperationValue) p.value;
-					Context mainContext = new StateContext(p.name.location, "reflection scope");
+					Context mainContext = new StateContext(p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					// mainContext.putAll(ClassInterpreter.getInstance().);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
 					try{
-					opVal.eval(p.name.location, new ValueList(), mainContext);
+					opVal.eval(p.name.getLocation(), new ValueList(), mainContext);
 					}catch(Exception e)
 					{
 						if(e instanceof ExitException)

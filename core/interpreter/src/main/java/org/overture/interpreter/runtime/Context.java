@@ -24,8 +24,9 @@
 package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
+
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -137,7 +138,7 @@ public class Context extends LexNameTokenMap<Value>
 		Context result = new Context(location, title, below);
 		result.threadState = threadState;
 		
-		for (LexNameToken var: keySet())
+		for (ILexNameToken var: keySet())
 		{
 			Value v = get(var);
 			result.put(var, v.deepCopy());
@@ -193,7 +194,7 @@ public class Context extends LexNameTokenMap<Value>
 
 		if (rv == null)
 		{
-    		for (LexNameToken var: keySet())
+    		for (ILexNameToken var: keySet())
     		{
     			if (HelpLexNameToken.isEqual(var, name))
     			{
@@ -234,7 +235,7 @@ public class Context extends LexNameTokenMap<Value>
 	 * @return The value of the name, or null.
 	 */
 
-	public Value check(LexNameToken name)
+	public Value check(ILexNameToken name)
 	{
 		Value v = get(name);
 
@@ -253,7 +254,7 @@ public class Context extends LexNameTokenMap<Value>
 	 * Locate the Context in a chain that contains a name, if any.
 	 */
 
-	public Context locate(LexNameToken name)
+	public Context locate(ILexNameToken name)
 	{
 		Value v = get(name);
 
@@ -282,7 +283,7 @@ public class Context extends LexNameTokenMap<Value>
 	 * @return The value of the name.
 	 */
 
-	public Value lookup(LexNameToken name)
+	public Value lookup(ILexNameToken name)
 	{
 		Value v = check(name);
 
@@ -304,7 +305,7 @@ public class Context extends LexNameTokenMap<Value>
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (LexNameToken name: what.keySet())
+		for (ILexNameToken name: what.keySet())
 		{
 			sb.append(indent + name + " = " +
 				what.get(name).toShortString(100) + "\n");

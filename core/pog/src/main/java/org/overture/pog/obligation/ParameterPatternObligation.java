@@ -57,7 +57,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), ((AFunctionType)def.getType()).getParameters(), ((AFunctionType)def.getType()).getResult()));
+			generate(def.getParamPatternList(), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -66,7 +66,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType)def.getType()).getParameters(), ((AFunctionType)def.getType()).getResult()));
+			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -75,7 +75,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType)def.getType()).getParameters(), ((AOperationType)def.getType()).getResult()));
+			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	public ParameterPatternObligation(
@@ -84,7 +84,7 @@ public class ParameterPatternObligation extends ProofObligation
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
 		value = ctxt.getObligation(
-			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType)def.getType()).getParameters(), ((AOperationType)def.getType()).getResult()));
+			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), def.getType().getParameters(), def.getType().getResult()));
 	}
 
 	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)
@@ -157,7 +157,7 @@ public class ParameterPatternObligation extends ProofObligation
 		if (predef != null)
 		{
 			foralls.append("  ");
-			foralls.append(predef.getName().name);
+			foralls.append(predef.getName().getName());
 			foralls.append("(");
 			foralls.append(argnames);
 			foralls.append(")");

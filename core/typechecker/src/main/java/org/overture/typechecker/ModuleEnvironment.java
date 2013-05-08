@@ -29,7 +29,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -65,7 +65,7 @@ public class ModuleEnvironment extends Environment
 
 		for (PDefinition d: module.getDefs())
 		{
-			sb.append(d.getName().getName());
+			sb.append(d.getName().getFullName());
 			sb.append("\n");
 		}
 
@@ -73,7 +73,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName(LexNameToken name, NameScope scope)
+	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
 		PDefinition def = PDefinitionListAssistantTC.findName(module.getDefs(),name, scope);
 
@@ -93,7 +93,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findType(LexNameToken name, String fromModule)
+	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
 		PDefinition def = PDefinitionAssistantTC.findType(module.getDefs(), name,module.getName().getName());
 
@@ -113,7 +113,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(LexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
 		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(module.getDefs(),name);
 		defs.addAll(PDefinitionListAssistantTC.findMatches(module.getImportdefs(),name));

@@ -26,7 +26,7 @@ public interface IDbgpOvertureCommands {
 
 	public void getCoverage(File file) throws DbgpException;
 
-	public void writeCoverage(File file) throws DbgpException;
+	public void writeCompleteCoverage(File file) throws DbgpException;
 
 	public void writeLog(String file) throws DbgpException;
 

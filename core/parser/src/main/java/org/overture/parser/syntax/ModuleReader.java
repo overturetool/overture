@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
@@ -362,7 +363,7 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<LexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList();
 		checkFor(VDMToken.COLON, 2175, "Expecting ':' after export name");
 		PType type = getTypeReader().readType();
 		ignore(VDMToken.SEMICOLON);
@@ -388,7 +389,7 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<LexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList();
 		checkFor(VDMToken.COLON, 2176, "Expecting ':' after export name");
 		LexToken tloc = lastToken();
 		PType type = getTypeReader().readType();
@@ -421,17 +422,17 @@ public class ModuleReader extends SyntaxReader
 			LexException
 	{
 		LexToken token = lastToken();
-		List<LexNameToken> nameList = readIdList();
+		List<ILexNameToken> nameList = readIdList();
 		checkFor(VDMToken.COLON, 2177, "Expecting ':' after export name");
 		PType type = getTypeReader().readOperationType();
 		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newAOperationExport(token.location, nameList, type);
 	}
 
-	private List<LexNameToken> readIdList() throws ParserException,
+	private List<ILexNameToken> readIdList() throws ParserException,
 			LexException
 	{
-		List<LexNameToken> list = new Vector<LexNameToken>();
+		List<ILexNameToken> list = new Vector<ILexNameToken>();
 		list.add(readNameToken("Expecting name list"));
 		ignoreTypeParams();
 

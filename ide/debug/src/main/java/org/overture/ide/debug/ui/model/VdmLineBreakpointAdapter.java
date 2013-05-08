@@ -33,10 +33,12 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmLineBreakpoint;
 import org.overture.ide.debug.utils.ExecutableAnalysis;
 import org.overture.ide.ui.editor.core.VdmEditor;
@@ -50,13 +52,12 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 		ITextEditor textEditor = getEditor(part);
 		IResource resource = (IResource) textEditor.getEditorInput().getAdapter(IResource.class);
 		ITextSelection textSelection = (ITextSelection) selection;
-		int lineNumber = textSelection.getStartLine();
-
+		int lineNumber = textSelection.getStartLine() + 1;
+		
 		boolean executable = false;
 
 		if (textEditor != null)
 		{
-
 			if (textEditor instanceof VdmEditor)
 			{
 				VdmEditor vEditor = (VdmEditor) textEditor;
@@ -66,34 +67,12 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 					IVdmSourceUnit sourceUnti = (IVdmSourceUnit) element;
 					for (INode node : sourceUnti.getParseList())
 					{
-						executable = ExecutableAnalysis.isExecutable(node, lineNumber);
-//						if (node instanceof SClassDefinition)
-//						{
-//							SClassDefinition c = (SClassDefinition) node;
-//							if (c.findExpression(lineNumber + 1) != null)
-//							{
-//								executable = true;
-//								break;
-//							}
-//							if (c.findStatement(lineNumber + 1) != null)
-//							{
-//								executable = true;
-//								break;
-//							}
-//						} else if (node instanceof AModuleModules)
-//						{
-//							AModuleModules m = (AModuleModules) node;
-//							if (m.findExpression(sourceUnti.getSystemFile(), lineNumber + 1) != null)
-//							{
-//								executable = true;
-//								break;
-//							}
-//							if (m.findStatement(sourceUnti.getSystemFile(), lineNumber + 1) != null)
-//							{
-//								executable = true;
-//								break;
-//							}
-//						}
+						executable = ExecutableAnalysis.isExecutable(node, lineNumber, true);
+
+						if (executable)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -104,7 +83,7 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 				IBreakpoint breakpoint = breakpoints[i];
 				if (resource.equals(breakpoint.getMarker().getResource()))
 				{
-					if (((ILineBreakpoint) breakpoint).getLineNumber() == (lineNumber + 1))
+					if (((ILineBreakpoint) breakpoint).getLineNumber() == lineNumber)
 					{
 						breakpoint.delete();
 						return;
@@ -122,21 +101,23 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 			IRegion line;
 			try
 			{
-				line = document.getLineInformation(lineNumber);
+				line = document.getLineInformation(textSelection.getStartLine());
 				int start = line.getOffset();
 				int end = start + line.getLength();
 				String debugModelId = IDebugConstants.ID_VDM_DEBUG_MODEL;// getDebugModelId(textEditor,
 				// resource);
 				if (debugModelId == null)
+				{
 					return;
+				}
 				IPath location = resource.getFullPath();
 
-				VdmLineBreakpoint lineBreakpoint = new VdmLineBreakpoint(IDebugConstants.ID_VDM_DEBUG_MODEL, resource, location, lineNumber + 1, start, end, false);
+				VdmLineBreakpoint lineBreakpoint = new VdmLineBreakpoint(IDebugConstants.ID_VDM_DEBUG_MODEL, resource, location, lineNumber, start, end, false);
 
 				StringBuilder message = new StringBuilder();
 				message.append("Line breakpoint:");
 				message.append(location.lastSegment());
-				message.append("[line:" + (lineNumber + 1) + "]");
+				message.append("[line:" + (lineNumber) + "]");
 
 				lineBreakpoint.setMessage(message.toString());
 
@@ -144,8 +125,7 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 
 			} catch (BadLocationException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				VdmDebugPlugin.log(e);
 			}
 
 		}
@@ -178,19 +158,19 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 			if (resource != null && resource instanceof IFile)
 			{
 				return editorPart;
-//				IFile file = (IFile) resource;
-//				try
-//				{
-//					String contentTypeId = file.getContentDescription().getContentType().getId();
-//					if (SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
-//					{
-//						return editorPart;
-//					}
-//				} catch (CoreException e)
-//				{
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+				// IFile file = (IFile) resource;
+				// try
+				// {
+				// String contentTypeId = file.getContentDescription().getContentType().getId();
+				// if (SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
+				// {
+				// return editorPart;
+				// }
+				// } catch (CoreException e)
+				// {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
+				// }
 			}
 		}
 		return null;
@@ -206,24 +186,24 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 	{
 	}
 
-//	private static IWorkspaceRoot getWorkspaceRoot()
-//	{
-//		return ResourcesPlugin.getWorkspace().getRoot();
-//	}
+	// private static IWorkspaceRoot getWorkspaceRoot()
+	// {
+	// return ResourcesPlugin.getWorkspace().getRoot();
+	// }
 
-//	private static IResource getBreakpointResource(ITextEditor textEditor)
-//	{
-//		return getBreakpointResource(textEditor.getEditorInput());
-//	}
+	// private static IResource getBreakpointResource(ITextEditor textEditor)
+	// {
+	// return getBreakpointResource(textEditor.getEditorInput());
+	// }
 
-//	private static IResource getBreakpointResource(
-//			final IEditorInput editorInput)
-//	{
-//		IResource resource = (IResource) editorInput.getAdapter(IResource.class);
-//		if (resource == null)
-//			resource = getWorkspaceRoot();
-//		return resource;
-//	}
+	// private static IResource getBreakpointResource(
+	// final IEditorInput editorInput)
+	// {
+	// IResource resource = (IResource) editorInput.getAdapter(IResource.class);
+	// if (resource == null)
+	// resource = getWorkspaceRoot();
+	// return resource;
+	// }
 
 	/*
 	 * (non-Javadoc)

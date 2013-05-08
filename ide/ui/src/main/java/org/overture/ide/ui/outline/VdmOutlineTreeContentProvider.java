@@ -246,8 +246,8 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 
 					if (def instanceof AExplicitFunctionDefinition)
 					{
-						if (def.getName().name.startsWith("pre_")
-								|| def.getName().name.startsWith("post_"))
+						if (def.getName().getName().startsWith("pre_")
+								|| def.getName().getName().startsWith("post_"))
 						{
 							fInput.remove(i);
 							i--;

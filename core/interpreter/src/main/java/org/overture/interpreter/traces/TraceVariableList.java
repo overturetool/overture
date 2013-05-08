@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.Value;
@@ -48,11 +48,11 @@ public class TraceVariableList extends Vector<TraceVariable>
 	{
 		Environment local = new FlatEnvironment(localDefs);
 
-		for (LexNameToken key: ctxt.keySet())
+		for (ILexNameToken key: ctxt.keySet())
 		{
 			Value value = ctxt.get(key);
 			PDefinition d = local.findName(key, NameScope.NAMES);
-			add(new TraceVariable(key.location, key, value, d.getType()));
+			add(new TraceVariable(key.getLocation(), key, value, d.getType()));
 		}
 	}
 

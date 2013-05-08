@@ -59,10 +59,10 @@ public class DotHandler extends AbstractHandler implements IHandler
 					String name = "out";
 					if (node instanceof SClassDefinition)
 					{
-						name = ((SClassDefinition) node).getName().name;
+						name = ((SClassDefinition) node).getName().getName();
 					} else if (node instanceof AModuleModules)
 					{
-						name = ((AModuleModules) node).getName().name;
+						name = ((AModuleModules) node).getName().getName();
 					}
 					name += ".svg";
 					File generated = p.getModelBuildPath().getOutput().getLocation().toFile();

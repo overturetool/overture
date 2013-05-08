@@ -40,7 +40,7 @@ public class InvariantObligation extends ProofObligation
 		super(arg.getLocation(), POType.INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(inv.getInvDef().getName().name);
+		sb.append(inv.getInvDef().getName().getName());
 		sb.append("(");
 		sb.append(arg);
 		sb.append(")");

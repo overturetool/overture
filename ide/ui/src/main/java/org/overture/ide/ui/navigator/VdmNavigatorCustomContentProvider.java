@@ -18,16 +18,19 @@
  *******************************************************************************/
 package org.overture.ide.ui.navigator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.internal.util.Util;
+import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.overture.ast.node.INode;
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.ElementChangedEvent.DeltaType;
+import org.overture.ide.core.IElementChangedListener;
+import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 /**
  * Please notice that the events send to this class is based on the navigatorContent:
@@ -44,6 +47,68 @@ public class VdmNavigatorCustomContentProvider
 		org.eclipse.ui.internal.navigator.resources.workbench.ResourceExtensionContentProvider
 {
 	private Viewer viewer;
+	private static final Object[] NO_CHILDREN = new Object[0];
+
+	private IElementChangedListener vdmlistner = new IElementChangedListener()
+	{
+
+		@Override
+		public void elementChanged(ElementChangedEvent event)
+		{
+
+			if (event.getType() == DeltaType.POST_BUILD) // happens when the project is build
+			{
+				if (event.getDelta().getKind() == IVdmElementDelta.CHANGED)
+				{
+					IVdmElement source = event.getDelta().getElement();
+					if (source instanceof IVdmSourceUnit)
+					{
+						refreshView();
+					}
+				}
+			} else if (event.getType() == DeltaType.POST_RECONCILE) // happens when a source unit is parsed for the
+																	// first time
+			{
+				if (event.getDelta().getKind() == IVdmElementDelta.ADDED)
+				{
+					IVdmElement source = event.getDelta().getElement();
+					if (source instanceof IVdmSourceUnit)
+					{
+						refreshView();
+					}
+				}
+			}
+		}
+
+		private void refreshView()
+		{
+			if (viewer != null && viewer.getControl() != null
+					&& viewer.getControl().getDisplay() != null)
+				viewer.getControl().getDisplay().asyncExec(new Runnable()
+				{
+					/*
+					 * (non-Javadoc)
+					 * @see java.lang.Runnable#run()
+					 */
+					public void run()
+					{
+						viewer.refresh();
+					}
+				});
+		}
+	};
+
+	public VdmNavigatorCustomContentProvider()
+	{
+		VdmCore.addElementChangedListener(vdmlistner);
+	}
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		VdmCore.removeElementChangedListener(vdmlistner);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -56,149 +121,33 @@ public class VdmNavigatorCustomContentProvider
 		this.viewer = viewer;
 	}
 
-	/**
-	 * Process the resource delta.
-	 * 
-	 * @param delta
-	 */
 	@Override
-	protected void processDelta(IResourceDelta delta)
+	protected IWorkbenchAdapter getAdapter(Object element)
 	{
-		super.processDelta(delta);
-		Control ctrl = viewer.getControl();
-		if (ctrl == null || ctrl.isDisposed())
+		if (element instanceof IFile)
 		{
-			return;
+			IVdmSourceUnit source = (IVdmSourceUnit) Util.getAdapter(((IFile) element), IVdmSourceUnit.class);
+			IWorkbenchAdapter adapter = getAdapter(source);
+			return adapter;
 		}
-
-		final Collection<Runnable> runnables = new ArrayList<Runnable>();
-		processDelta(delta, runnables);
-
-		if (runnables.isEmpty())
-		{
-			return;
-		}
-		// Are we in the UIThread? If so spin it until we are done
-		if (ctrl.getDisplay().getThread() == Thread.currentThread())
-		{
-			runUpdates(runnables);
-		} else
-		{
-			ctrl.getDisplay().asyncExec(new Runnable()
-			{
-				/*
-				 * (non-Javadoc)
-				 * @see java.lang.Runnable#run()
-				 */
-				public void run()
-				{
-					// Abort if this happens after disposes
-					Control ctrl = viewer.getControl();
-					if (ctrl == null || ctrl.isDisposed())
-					{
-						return;
-					}
-
-					runUpdates(runnables);
-				}
-			});
-		}
-
+		return super.getAdapter(element);
 	}
 
-	/**
-	 * Process a resource delta. Add any runnables
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
 	 */
-	private void processDelta(IResourceDelta delta,
-			Collection<Runnable> runnables)
+	public Object[] getChildren(Object element)
 	{
-		// he widget may have been destroyed
-		// by the time this is run. Check for this and do nothing if so.
-		Control ctrl = viewer.getControl();
-		if (ctrl == null || ctrl.isDisposed())
+		if (element instanceof IResource || element instanceof INode)
 		{
-			return;
-		}
-
-		// Get the affected resource
-		final IResource resource = delta.getResource();
-
-		// If any children have changed type, just do a full refresh of this
-		// parent,
-		// since a simple update on such children won't work,
-		// and trying to map the change to a remove and add is too dicey.
-		// The case is: folder A renamed to existing file B, answering yes to
-		// overwrite B.
-		IResourceDelta[] affectedChildren = delta.getAffectedChildren(IResourceDelta.CHANGED);
-
-		for (int i = 0; i < affectedChildren.length; i++)
-		{
-			if ((affectedChildren[i].getFlags() & IResourceDelta.TYPE) != 0)
+			IWorkbenchAdapter adapter = getAdapter(element);
+			if (adapter != null)
 			{
-				// This is handled in the super class don't do it again.
-				return;
+				return adapter.getChildren(element);
 			}
+			return NO_CHILDREN;
 		}
-
-		// Check the flags for changes the Navigator cares about.
-		// See ResourceLabelProvider for the aspects it cares about.
-		// Notice we do care about F_CONTENT or F_MARKERS currently here
-		// but this is not the case in the ResourceExtensionContentProvider.
-		int changeFlags = delta.getFlags();
-
-		if ((changeFlags & IResourceDelta.MARKERS) != 0)
-		{// && (changeFlags& IResourceDelta.CONTENT) != 0) {
-			runnables.add(getRefreshRunnable(resource));
-			// also refresh all parents
-			IResource parent = resource;
-			while ((parent = parent.getParent()) != null)
-			{
-				runnables.add(getRefreshRunnable(parent));
-				if (parent instanceof IProject)
-				{
-					break;
-				}
-			}
-
-			return;
-		}
-
-		// Handle changed children .
-		for (int i = 0; i < affectedChildren.length; i++)
-		{
-			processDelta(affectedChildren[i], runnables);
-		}
-	}
-
-	/**
-	 * Return a runnable for refreshing a resource.
-	 * 
-	 * @param resource
-	 * @return Runnable
-	 */
-	private Runnable getRefreshRunnable(final IResource resource)
-	{
-		return new Runnable()
-		{
-			public void run()
-			{
-				((StructuredViewer) viewer).update(resource, null);
-			}
-		};
-	}
-
-	/**
-	 * Run all of the runnables that are the widget updates
-	 * 
-	 * @param runnables
-	 */
-	private void runUpdates(Collection<Runnable> runnables)
-	{
-		Iterator<Runnable> runnableIterator = runnables.iterator();
-		while (runnableIterator.hasNext())
-		{
-			((Runnable) runnableIterator.next()).run();
-		}
-
+		return NO_CHILDREN;
 	}
 }

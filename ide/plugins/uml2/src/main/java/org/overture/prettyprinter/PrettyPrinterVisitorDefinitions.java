@@ -40,7 +40,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuffer sb = new StringBuffer();
-		question.setClassName(node.getName().name);
+		question.setClassName(node.getName().getName());
 
 		sb.append("class " + node.getName());
 		sb.append("\n");
@@ -250,12 +250,12 @@ public class PrettyPrinterVisitorDefinitions extends
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		String type = ": ";
 
-		if (((AOperationType) d.getType()).getParameters().isEmpty())
+		if (d.getType().getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = ((AOperationType) d.getType()).getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -266,7 +266,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " ==> " + ((AOperationType) d.getType()).getResult().apply(typePrinter,question);
+		type += " ==> " + d.getType().getResult().apply(typePrinter,question);
 
 		String tmp = d.getAccess()
 				+ " "
@@ -308,12 +308,12 @@ public class PrettyPrinterVisitorDefinitions extends
 			accessStr = "";
 
 		String type = ": ";
-		if (((AFunctionType) d.getType()).getParameters().isEmpty())
+		if (d.getType().getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = ((AFunctionType) d.getType()).getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -324,16 +324,16 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " " + (((AFunctionType) d.getType()).getPartial() ? "-" : "+") + "> "
-				+ ((AFunctionType) d.getType()).getResult().apply(typePrinter,question);
+		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
+				+ d.getType().getResult().apply(typePrinter,question);
 
 		String tmp = question.getIdent()
 				+ accessStr
-				+ d.getName().name
+				+ d.getName().getName()
 				+ type
 				+ "\n"
 				+ question.getIdent()
-				+ d.getName().name
+				+ d.getName().getName()
 				+ params
 				+ " ==\n"
 				+ question.increaseIdent()

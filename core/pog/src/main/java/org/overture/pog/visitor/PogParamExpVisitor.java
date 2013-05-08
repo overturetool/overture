@@ -12,7 +12,7 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
@@ -600,11 +600,11 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     }
 
     private static AFieldField findField(ARecordInvariantType ty,
-	    LexIdentifierToken id) {
+	    ILexIdentifierToken id) {
 
 	List<AFieldField> fields = ty.getFields();
 	for (AFieldField f : fields)
-	    if (f.getTag().equals(id.name))
+	    if (f.getTag().equals(id.getName()))
 		return f;
 
 	return null;

@@ -29,9 +29,9 @@ public class TestSuite
 		{
 			if (p.value instanceof OperationValue)
 			{
-				if (p.name.name.toLowerCase().startsWith("test"))
+				if (p.name.getName().toLowerCase().startsWith("test"))
 				{
-					tests.add(p.name.name);
+					tests.add(p.name.getName());
 				}
 			}
 		}
@@ -57,11 +57,11 @@ public class TestSuite
 			{
 				OperationValue opVal = (OperationValue) p.value;
 				if (!opVal.isConstructor
-						&& p.name.name.toLowerCase().startsWith("test"))
+						&& p.name.getName().toLowerCase().startsWith("test"))
 				{
-					tests.add(p.name.name);
+					tests.add(p.name.getName());
 
-					Context mainContext = new StateContext(p.name.location, "reflection scope");
+					Context mainContext = new StateContext(p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
@@ -70,19 +70,19 @@ public class TestSuite
 					{
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
-								|| (!ctor.getName().module.equals(instance.type.getName().location.module) && ctor.getParamDefinitions().isEmpty())
+								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().module) && ctor.getParamDefinitions().isEmpty())
 								|| !(PAccessSpecifierAssistantTC.isPublic(ctor.getAccess())))
 						{
 							throw new Exception("Class "
-									+ p.name.module
+									+ p.name.getModule()
 									+ " has no public constructor TestCase(String name) or TestCase()");
 						}
 
 						String vdmTestExpression = "";
-						if (((AOperationType)ctor.getType()).getParameters().size() == 1)
+						if (ctor.getType().getParameters().size() == 1)
 						{
-							vdmTestExpression = "new " + p.name.module + "(\""
-									+ p.name.name + "\")";
+							vdmTestExpression = "new " + p.name.getModule() + "(\""
+									+ p.name.getName() + "\")";
 							vals.add(ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext));
 						} else
 						{
@@ -90,7 +90,7 @@ public class TestSuite
 							// check that we have setName and that it is accesiable
 							for (PDefinition def : SClassDefinitionAssistantInterpreter.getDefinitions(instance.type.getClassdef()))
 							{
-								if (def.getName().name.equals("setName"))
+								if (def.getName().getName().equals("setName"))
 								{
 									foundSetName = true;
 								}
@@ -98,14 +98,14 @@ public class TestSuite
 							if (!foundSetName)
 							{
 								throw new Exception("Cannot instantiate test case: "
-										+ instance.type.getName().name);
+										+ instance.type.getName().getName());
 							}
 
-							vdmTestExpression = "new " + p.name.module + "()";
+							vdmTestExpression = "new " + p.name.getModule() + "()";
 							Value testClassInstance = ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext);
 							ObjectValue tmp = (ObjectValue) testClassInstance;
 							ObjectContext octxt = new ObjectContext(mainContext.location, "TestClassContext", mainContext, tmp);
-							vdmTestExpression = "setName(\"" + p.name.name
+							vdmTestExpression = "setName(\"" + p.name.getName()
 									+ "\")";
 
 							ClassInterpreter.getInstance().evaluate(vdmTestExpression, octxt);
@@ -146,18 +146,18 @@ public class TestSuite
 				if (op.isConstructor)
 				{
 					if (searchForDefaultCtor
-							&& ((AOperationType)op.expldef.getType()).getParameters().isEmpty())
+							&& op.expldef.getType().getParameters().isEmpty())
 					{
-						if (op.expldef.getName().equals(instance.type.getName().name))
+						if (op.expldef.getName().equals(instance.type.getName().getName()))
 						{
 							return op.expldef;
 						} else
 						{
 							defaultSuperCtor = op.expldef;
 						}
-					} else if (((AOperationType)op.expldef.getType()).getParameters().size() == 1
-							&& PTypeAssistantInterpreter.isType(((AOperationType)op.expldef.getType()).getParameters().get(0),typeName) != null
-							&& op.expldef.getName().equals(instance.type.getName().name))
+					} else if (op.expldef.getType().getParameters().size() == 1
+							&& PTypeAssistantInterpreter.isType(op.expldef.getType().getParameters().get(0),typeName) != null
+							&& op.expldef.getName().equals(instance.type.getName().getName()))
 					{
 						return op.expldef;
 					}

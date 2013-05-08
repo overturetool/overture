@@ -6,7 +6,7 @@ public static
   env : [Environment] := nil;
 
 public static 
-  timerRef : TimeStamp := new TimeStamp();    
+  timerRef : TimeStamp := new TimeStamp(2);    
 
   
    

@@ -10,7 +10,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -74,7 +74,7 @@ public class ARecordPatternAssistantTC {
 		}
 
 		ARecordInvariantType pattype = PTypeAssistantTC.getRecord(type);
-		PType using = PTypeAssistantTC.isType(exptype, pattype.getName().getName());
+		PType using = PTypeAssistantTC.isType(exptype, pattype.getName().getFullName());
 
 		if (using == null || !(using instanceof ARecordInvariantType))
 		{
@@ -115,7 +115,7 @@ public class ARecordPatternAssistantTC {
 			list.add(PPatternAssistantTC.getMatchingExpression(p));
 		}
 		
-		LexNameToken tpName = ptrn.getTypename();
+		ILexNameToken tpName = ptrn.getTypename();
 		return AstFactory.newAMkTypeExp(tpName.clone(), list);
 	}
 	

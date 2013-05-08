@@ -69,13 +69,13 @@ public class PExpAssistantTC {
 				AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class
 						.cast(def);
 				PDefinition predef = ex.getPredef();
-				result = predef == null ? "" : predef.getName().name;
+				result = predef == null ? "" : predef.getName().getName();
 
 			} else if (def instanceof AImplicitFunctionDefinition) {
 				AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class
 						.cast(def);
 				PDefinition predef = im.getPredef();
-				result = predef == null ? "" : predef.getName().name;
+				result = predef == null ? "" : predef.getName().getName();
 			}
 			break;
 		}

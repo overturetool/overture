@@ -101,7 +101,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		{
 			Object[] elems = super.getElements(inputElement);
 			if (elems.length > 0 && elems[0] instanceof AModuleModules
-					&& ((AModuleModules) elems[0]).getName().name.equals("DEFAULT"))
+					&& ((AModuleModules) elems[0]).getName().getName().equals("DEFAULT"))
 			{
 				Set<AModuleModules> set = new HashSet<AModuleModules>();
 				
@@ -710,7 +710,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 				if(dialog.getFirstResult() instanceof AModuleModules)
 				{
 					AModuleModules m = (AModuleModules) dialog.getFirstResult();
-					defaultModule = m.getName().name;
+					defaultModule = m.getName().getName();
 					fModuleNameText.setText(DisplayNameCreator.getDisplayName(m));
 					return;
 				}
@@ -730,21 +730,21 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 							{
 								foundConstructor = true;
 								module = def;
-								defaultModule = def.getName().name;
+								defaultModule = def.getName().getName();
 								fModuleNameText.setText(DisplayNameCreator.getDisplayName(def));
 							}
 						}
 						if (!foundConstructor)
 						{
 							module = method.getClassDefinition();
-							defaultModule = method.getClassDefinition().getName().name;
+							defaultModule = method.getClassDefinition().getName().getName();
 							fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition())
 									+ "()");
 						}
 					} else
 					{
 						module = method.getClassDefinition();
-						defaultModule = method.getClassDefinition().getName().name;
+						defaultModule = method.getClassDefinition().getName().getName();
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition()));
 					}
 				} else if (method.getLocation() != null

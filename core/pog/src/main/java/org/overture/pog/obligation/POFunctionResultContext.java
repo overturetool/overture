@@ -27,14 +27,14 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AOperationType;
 
 public class POFunctionResultContext extends POContext
 {
-	public final LexNameToken name;
+	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final PExp precondition;
 	public final PExp body;
@@ -44,7 +44,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AExplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
@@ -52,8 +52,8 @@ public class POFunctionResultContext extends POContext
 				AstFactory.newAPatternTypePair(
 						AstFactory.newAIdentifierPattern(
 						new LexNameToken(
-					definition.getName().module, "RESULT", definition.getLocation())),
-					((AFunctionType)definition.getType()).getResult().clone());
+					definition.getName().getModule(), "RESULT", definition.getLocation())),
+					definition.getType().getResult().clone());
 				
 
 	}
@@ -61,7 +61,7 @@ public class POFunctionResultContext extends POContext
 	public POFunctionResultContext(AImplicitFunctionDefinition definition)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = true;

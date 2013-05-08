@@ -48,9 +48,9 @@ public class DbgpOvertureCommands extends DbgpBaseCommands implements
 
 	}
 	
-	public void writeCoverage(File file) throws DbgpException {
+	public void writeCompleteCoverage(File file) throws DbgpException {
 		DbgpRequest request = createRequest(OVERTURE_COMMAND);
-		request.addOption("-c", "writecoverage"); //$NON-NLS-1$
+		request.addOption("-c", "write_complete_coverage"); //$NON-NLS-1$
 		request.setData(file.toURI().toString());
 		
 		send(request);

@@ -144,10 +144,10 @@ public class SubTypeObligation extends ProofObligation {
 			PType actualResult, POContextStack ctxt) {
 		super(def.getLocation(), POType.SUB_TYPE, ctxt);
 
-		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().module, "RESULT",
+		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT",
 				def.getLocation()));
 
-		value = ctxt.getObligation(oneType(false, result, ((AOperationType)def.getType())
+		value = ctxt.getObligation(oneType(false, result, def.getType()
 				.getResult(), actualResult));
 	}
 
@@ -172,7 +172,7 @@ public class SubTypeObligation extends ProofObligation {
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
-		value = ctxt.getObligation(oneType(false, result, ((AOperationType)def.getType())
+		value = ctxt.getObligation(oneType(false, result, def.getType()
 				.getResult(), actualResult));
 	}
 
@@ -221,7 +221,7 @@ public class SubTypeObligation extends ProofObligation {
 			prefix = "";
 
 			if (et.getInvDef() != null) {
-				sb.append(et.getInvDef().getName().name);
+				sb.append(et.getInvDef().getName().getName());
 				sb.append("(");
 
 				// This needs to be put back if/when we change the inv_R

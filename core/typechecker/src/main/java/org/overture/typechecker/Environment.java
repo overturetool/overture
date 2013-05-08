@@ -26,12 +26,11 @@ package org.overture.typechecker;
 import java.util.List;
 import java.util.Set;
 
-
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -83,11 +82,11 @@ abstract public class Environment
 	{
 		LexNameList allnames = PDefinitionListAssistantTC.getVariableNames(list);
 
-		for (LexNameToken n1: allnames)
+		for (ILexNameToken n1: allnames)
 		{
 			LexNameList done = new LexNameList();
 
-			for (LexNameToken n2: allnames)
+			for (ILexNameToken n2: allnames)
 			{
 				if (n1 != n2 && n1.equals(n2) && !done.contains(n1))
 				{
@@ -113,12 +112,12 @@ abstract public class Environment
 					if (def.getLocation().file.equals(n1.getLocation().file))
 					{
 						message = def.getName() + " " + def.getLocation().toShortString() +
-							" hidden by " +	n1.getName();
+							" hidden by " +	n1.getFullName();
 					}
 					else
 					{
 						message = def.getName() + " " + def.getLocation() +
-							" hidden by " + n1.getName();
+							" hidden by " + n1.getFullName();
 					}
 
 					TypeChecker.warning(5008, message, n1.getLocation());
@@ -143,10 +142,10 @@ abstract public class Environment
 	}
 
 	/** Find a name in the environment of the given scope. */
-	abstract public PDefinition findName(LexNameToken name, NameScope scope);
+	abstract public PDefinition findName(ILexNameToken name, NameScope scope);
 
 	/** Find a type in the environment. */
-	abstract public PDefinition findType(LexNameToken name, String fromModule);
+	abstract public PDefinition findType(ILexNameToken name, String fromModule);
 
 	/** Find the state defined in the environment, if any. */
 	abstract public AStateDefinition findStateDefinition();
@@ -167,7 +166,7 @@ abstract public class Environment
 	abstract public boolean isSystem();
 
 	/** Find functions and operations of the given basic name. */
-	abstract public Set<PDefinition> findMatches(LexNameToken name);
+	abstract public Set<PDefinition> findMatches(ILexNameToken name);
 
 	/** Mark all definitions, at this level, used. */
 	public void markUsed()
@@ -176,7 +175,7 @@ abstract public class Environment
 	}
 
 	/** Add details to a TC error with alternative fn/op name possibilities. */
-	public void listAlternatives(LexNameToken name)
+	public void listAlternatives(ILexNameToken name)
 	{
 		for (PDefinition possible: findMatches(name))
 		{

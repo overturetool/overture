@@ -469,7 +469,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			abort("Could not launch debug process", e);
 		}
 
-		return DebugPlugin.newProcess(launch, process, "VDMJ debugger");
+		return DebugPlugin.newProcess(launch, process, "Overture debugger");
 	}
 
 	private String getDefaultBase64(ILaunchConfiguration configuration,

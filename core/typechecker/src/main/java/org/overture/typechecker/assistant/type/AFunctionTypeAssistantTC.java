@@ -9,7 +9,7 @@ import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
@@ -145,7 +145,7 @@ public class AFunctionTypeAssistantTC {
 		return  PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
 	}
 
-	public static PType polymorph(AFunctionType type, LexNameToken pname,
+	public static PType polymorph(AFunctionType type, ILexNameToken pname,
 			PType actualType) {
 		
 		List<PType> polyparams = new Vector<PType>();
@@ -155,7 +155,7 @@ public class AFunctionTypeAssistantTC {
 			polyparams.add(PTypeAssistantTC.polymorph(ptype,pname, actualType));
 		}
 
-		PType polyresult = PTypeAssistantTC.polymorph(((AFunctionType)type).getResult(),pname, actualType);
+		PType polyresult = PTypeAssistantTC.polymorph(type.getResult(),pname, actualType);
 		AFunctionType ftype =
 				AstFactory.newAFunctionType(type.getLocation(), false, polyparams, polyresult);
 		ftype.setDefinitions(type.getDefinitions());

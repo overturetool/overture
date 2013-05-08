@@ -25,5 +25,28 @@ package org.overture.interpreter.traces;
 
 public enum TraceReductionType
 {
-	NONE, RANDOM, SHAPES_NOVARS, SHAPES_VARNAMES, SHAPES_VARVALUES
+	NONE("None"), RANDOM("Random"), SHAPES_NOVARS("No variables"), SHAPES_VARNAMES("Variable names"), SHAPES_VARVALUES("Variable values");
+	
+	private String displayName;
+	
+	private TraceReductionType(String displayName)
+	{
+		this.displayName = displayName;
+	}
+	
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+	
+	public static TraceReductionType findValue(String displayName)
+	{
+		for (TraceReductionType t : values())
+		{
+			if(t.displayName.equals(displayName))
+				return t;
+		}
+		
+		return null;
+	}
 }

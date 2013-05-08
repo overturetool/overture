@@ -6,7 +6,7 @@ import org.overture.ast.lex.LexNameList;
 public class AVariableExpAssistantTC {
 
 	public static LexNameList getOldNames(AVariableExp expression) {
-		if (expression.getName().old)
+		if (expression.getName().getOld())
 		{
 			return new LexNameList(expression.getName());
 		}

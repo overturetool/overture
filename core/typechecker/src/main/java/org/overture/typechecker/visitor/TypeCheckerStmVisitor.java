@@ -17,6 +17,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexStringToken;
@@ -322,14 +323,14 @@ public class TypeCheckerStmVisitor extends
 		}
 
 		if (node.getClassname() == null) {
-			node.setField(new LexNameToken(ctype.getName().name, node
+			node.setField(new LexNameToken(ctype.getName().getName(), node
 					.getFieldname().getName(), node.getFieldname()
 					.getLocation()));
 		} else {
 			node.setField(node.getClassname());
 		}
 
-		node.getField().location.executable(true);
+		node.getField().getLocation().executable(true);
 		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(
 				node.getArgs(), rootVisitor, question);
 		node.getField().setTypeQualifier(atypes);
@@ -338,8 +339,8 @@ public class TypeCheckerStmVisitor extends
 		// Special code for the deploy method of CPU
 
 		if (Settings.dialect == Dialect.VDM_RT
-				&& node.getField().module.equals("CPU")
-				&& node.getField().name.equals("deploy")) {
+				&& node.getField().getModule().equals("CPU")
+				&& node.getField().getName().equals("deploy")) {
 
 			if (!PTypeAssistantTC.isType(atypes.get(0), AClassType.class)) {
 				TypeCheckerErrors.report(3280,
@@ -350,8 +351,8 @@ public class TypeCheckerStmVisitor extends
 			node.setType(AstFactory.newAVoidType(node.getLocation()));
 			return node.getType();
 		} else if (Settings.dialect == Dialect.VDM_RT
-				&& node.getField().module.equals("CPU")
-				&& node.getField().name.equals("setPriority")) {
+				&& node.getField().getModule().equals("CPU")
+				&& node.getField().getName().equals("setPriority")) {
 			if (!(atypes.get(0) instanceof AOperationType)) {
 				TypeCheckerErrors.report(3290,
 						"Argument to setPriority must be an operation", node
@@ -364,10 +365,10 @@ public class TypeCheckerStmVisitor extends
 				node.getArgs().add(
 						0,
 						AstFactory.newAStringLiteralExp(new LexStringToken(a1
-								.getName().getExplicit(true).getName(), a1
+								.getName().getExplicit(true).getFullName(), a1
 								.getLocation())));
 
-				if (a1.getName().module.equals(a1.getName().name)) // it's a
+				if (a1.getName().getModule().equals(a1.getName().getName())) // it's a
 																	// constructor
 				{
 					TypeCheckerErrors.report(3291,
@@ -918,13 +919,13 @@ public class TypeCheckerStmVisitor extends
 
 		if (node.getExternals() != null) {
 			for (AExternalClause clause : node.getExternals()) {
-				for (LexNameToken name : clause.getIdentifiers()) {
+				for (ILexNameToken name : clause.getIdentifiers()) {
 					if (question.env.findName(name, NameScope.STATE) == null) {
 						TypeCheckerErrors.report(3274,
 								"External variable is not in scope: " + name,
 								name.getLocation(), name);
 					} else {
-						defs.add(AstFactory.newALocalDefinition(name.location,
+						defs.add(AstFactory.newALocalDefinition(name.getLocation(),
 								name, NameScope.STATE, clause.getType()));
 					}
 				}
@@ -1052,7 +1053,7 @@ public class TypeCheckerStmVisitor extends
 			}
 		}
 
-		LexNameToken opname = node.getOpname();
+		ILexNameToken opname = node.getOpname();
 
 		opname.setTypeQualifier(new LinkedList<PType>());
 		opname.getLocation().hit();

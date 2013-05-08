@@ -50,7 +50,12 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.*;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Release;
@@ -63,13 +68,41 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overture.interpreter.messages.Console;
-import org.overture.interpreter.messages.rtlog.*;
-import org.overture.interpreter.runtime.*;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.runtime.RuntimeValidator;
+import org.overture.interpreter.runtime.SourceFile;
+import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.interpreter.util.*;
-import org.overture.interpreter.values.*;
+import org.overture.interpreter.util.ExitStatus;
+import org.overture.interpreter.values.BooleanValue;
+import org.overture.interpreter.values.CPUValue;
+import org.overture.interpreter.values.CharacterValue;
+import org.overture.interpreter.values.FieldValue;
+import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairMap;
+import org.overture.interpreter.values.NilValue;
+import org.overture.interpreter.values.NumericValue;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.RecordValue;
+import org.overture.interpreter.values.ReferenceValue;
+import org.overture.interpreter.values.SeqValue;
+import org.overture.interpreter.values.SetValue;
+import org.overture.interpreter.values.TokenValue;
+import org.overture.interpreter.values.TransactionValue;
+import org.overture.interpreter.values.TupleValue;
+import org.overture.interpreter.values.UpdatableValue;
+import org.overture.interpreter.values.Value;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
@@ -508,6 +541,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 			case STOP:
 				processStop(c);
+				carryOn = false;
 				break;
 
 			case BREAKPOINT_GET:
@@ -770,8 +804,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 
-		for (Entry<LexNameToken, Value> e : vars.entrySet()) {
-			if (!e.getKey().name.equals("self")) { // This test makes the self not appear
+		for (Entry<ILexNameToken, Value> e : vars.entrySet()) {
+			if (!e.getKey().getName().equals("self")) { // This test makes the self not appear
 
 				if (isDebugVisible(e.getValue())) {
 					sb.append(propertyResponse(e.getKey(), e.getValue(), context));
@@ -783,12 +817,12 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 	}
 
 	@Override
-	protected StringBuilder propertyResponse(LexNameToken name, Value value, DBGPContextType context)
+	protected StringBuilder propertyResponse(ILexNameToken name, Value value, DBGPContextType context)
 			throws UnsupportedEncodingException {
-		String nameString = (context==DBGPContextType.GLOBAL ? name.module + "`" + name.name :
-			name.old ? name.name + "~" : name.name);
+		String nameString = (context==DBGPContextType.GLOBAL ? name.getModule() + "`" + name.getName() :
+			name.getOld() ? name.getName() + "~" : name.getName());
 		return propertyResponse(nameString, name.getExplicit(true).toString(),
-				name.module, value);
+				name.getModule(), value);
 	}
 
 	private StringBuilder propertyResponse(String name, String fullname,
@@ -1002,11 +1036,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		} else if (value instanceof ObjectValue) {
 			ObjectValue oVal = (ObjectValue) value;
 			currentDepth++;
-			for (LexNameToken key : oVal.members.keySet()) {
+			for (ILexNameToken key : oVal.members.keySet()) {
 				Value val = oVal.members.get(key);
 				if (isDebugVisible(val)) {
-					s.append(propertyResponse(key.name, key.getExplicit(true)
-							.toString(), key.module, val, depth, currentDepth));
+					s.append(propertyResponse(key.getName(), key.getExplicit(true)
+							.toString(), key.getModule(), val, depth, currentDepth));
 				}
 			}
 		} else if (value instanceof UpdatableValue) {
@@ -1367,7 +1401,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				ObjectContext octxt = (ObjectContext)breakContext;
 				int line = breakpoint.location.startLine;
 				String opname = breakContext.guardOp == null ?
-					"" : breakContext.guardOp.name.name;
+					"" : breakContext.guardOp.name.getName();
 
 				for (PDefinition d: octxt.self.type.getClassdef().getDefinitions())
 				{
@@ -1375,7 +1409,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					{
 						APerSyncDefinition pdef = (APerSyncDefinition)d;
 						
-						if (pdef.getOpname().name.equals(opname) ||
+						if (pdef.getOpname().getName().equals(opname) ||
 							pdef.getLocation().startLine == line ||
 							PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
 						{
@@ -1389,7 +1423,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 									{
 										Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
 										LexNameToken name =
-            							new LexNameToken(octxt.self.type.getName().module,
+            							new LexNameToken(octxt.self.type.getName().getModule(),
             								hexp.toString(),hexp.getLocation());
             						vars.put(name, v);
 									} catch (Throwable e)
@@ -1407,11 +1441,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 					{
 						AMutexSyncDefinition mdef = (AMutexSyncDefinition)d;
 						
-        				for (LexNameToken mop: mdef.getOperations())
+        				for (ILexNameToken mop: mdef.getOperations())
         				{
-        					if (mop.name.equals(opname))
+        					if (mop.getName().equals(opname))
         					{
-                				for (LexNameToken op: mdef.getOperations())
+                				for (ILexNameToken op: mdef.getOperations())
                 				{
                 					LexNameList ops = new LexNameList(op);
                 					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(null, VDMToken.ACTIVE), ops);
@@ -1420,7 +1454,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 									{
 										Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
 										LexNameToken name =
-            							new LexNameToken(octxt.self.type.getName().module,
+            							new LexNameToken(octxt.self.type.getName().getModule(),
             								hexp.toString(), mdef.getLocation());
             						vars.put(name, v);
 									} catch (Throwable e)
@@ -1445,7 +1479,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				// Filter Values based in isDebugVisible instead of
 				// vars.putAll(octxt.self.members)
 				ObjectContext octxt = (ObjectContext) root;
-				for (LexNameToken key : octxt.self.members.keySet()) {
+				for (ILexNameToken key : octxt.self.members.keySet()) {
 					Value v = octxt.self.members.get(key);
 					if (isDebugVisible(v)) {
 						vars.put(key, v);
@@ -1614,7 +1648,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			case COVERAGE:
 				processCoverage(c);
 				break;
-			case WRITE_COVERAGE:
+			case WRITE_COMPLETE_COVERAGE:
 				processWriteCoverage(c);
 				break;
 			case POG:
@@ -1665,10 +1699,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		PrintWriter pw = new PrintWriter(out);
 
 		for (SClassDefinition cls : classes) {
-			if (cls.getName().name.equals(def)) {
-				pw.println(cls.getName().name + " (default)");
+			if (cls.getName().getName().equals(def)) {
+				pw.println(cls.getName().getName() + " (default)");
 			} else {
-				pw.println(cls.getName().name);
+				pw.println(cls.getName().getName());
 			}
 		}
 
@@ -1689,10 +1723,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 		PrintWriter pw = new PrintWriter(out);
 
 		for (AModuleModules m : modules) {
-			if (m.getName().name.equals(def)) {
-				pw.println(m.getName().name + " (default)");
+			if (m.getName().getName().equals(def)) {
+				pw.println(m.getName().getName() + " (default)");
 			} else {
-				pw.println(m.getName().name);
+				pw.println(m.getName().getName());
 			}
 		}
 
@@ -1754,9 +1788,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 	private void processWriteCoverage(DBGPCommand c) throws DBGPException,
 			IOException, URISyntaxException {
-		if (status == DBGPStatus.BREAK) {
-			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
-		}
+//		if (status == DBGPStatus.BREAK) {
+//			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+//		}
 
 		File file = new File(new URI(c.data));
 
@@ -1767,7 +1801,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			writeCoverage(interpreter, file);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Coverage written to: " + file.toURI().toASCIIString());
-			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COVERAGE,
+			xcmdOvertureResponse(DBGPXCmdOvertureCommandType.WRITE_COMPLETE_COVERAGE,
 					null, sb);
 		}
 	}

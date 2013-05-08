@@ -128,7 +128,7 @@ public class VdmElementImageProvider {
 			return VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_OBJS_CLASS);
 		} else if (element instanceof AModuleModules) {
-			activeModule.put(((AModuleModules)element).getName().name, ((AModuleModules)element));
+			activeModule.put(((AModuleModules)element).getName().getName(), ((AModuleModules)element));
 			return VdmPluginImages
 					.getDescriptor(VdmPluginImages.IMG_OBJS_MODULE);
 		} else if (element instanceof ATypeDefinition) {
@@ -181,7 +181,7 @@ public class VdmElementImageProvider {
 				if (activeModule != null){
 					AUntypedDefinition untypedDef = (AUntypedDefinition) element;
 					
-					definitions = activeModule.get(untypedDef.getName().module).getDefs();
+					definitions = activeModule.get(untypedDef.getName().getModule()).getDefs();
 				}
 			}
 			if (definitions != null) {
@@ -661,8 +661,8 @@ public class VdmElementImageProvider {
 		if (element.getAccess().getStatic()!=null) {
 			flags |= VdmElementImageDescriptor.STATIC;
 		}
-		if(element.getName().name != null){
-			String s = element.getName().name;
+		if(element.getName().getName() != null){
+			String s = element.getName().getName();
 			if(s.equals("thread")){
 				flags |= VdmElementImageDescriptor.RUNNABLE;
 			}

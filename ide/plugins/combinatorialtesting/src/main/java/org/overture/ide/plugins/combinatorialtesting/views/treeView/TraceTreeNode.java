@@ -57,7 +57,7 @@ public class TraceTreeNode implements IAdaptable, ITreeNode
 		Integer totalTests = traceStore.getTraceTestCount( );
 		this.setTestTotal(totalTests);
 
-		this.setSkippedCount(traceStore.getSkippedCount( traceDef.getName().name));
+		this.setSkippedCount(traceStore.getSkippedCount( traceDef.getName().getName()));
 
 		if (totalTests > 0)
 		{
@@ -93,7 +93,7 @@ public class TraceTreeNode implements IAdaptable, ITreeNode
 	public String getName()
 	{
 
-		return traceDefinition.getName().name;
+		return traceDefinition.getName().getName();
 
 	}
 

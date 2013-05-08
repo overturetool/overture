@@ -29,7 +29,7 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
@@ -38,7 +38,7 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 
 public class POFunctionDefinitionContext extends POContext
 {
-	public final LexNameToken name;
+	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final List<List<PPattern>> paramPatternList;
 	public final boolean addPrecond;
@@ -48,7 +48,7 @@ public class POFunctionDefinitionContext extends POContext
 		AExplicitFunctionDefinition definition, boolean precond)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.paramPatternList = definition.getParamPatternList();
 		this.addPrecond = precond;
 		this.precondition = definition.getPrecondition();
@@ -58,7 +58,7 @@ public class POFunctionDefinitionContext extends POContext
 		AImplicitFunctionDefinition definition, boolean precond)
 	{
 		this.name = definition.getName();
-		this.deftype = (AFunctionType) definition.getType();
+		this.deftype = definition.getType();
 		this.addPrecond = precond;
 		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();

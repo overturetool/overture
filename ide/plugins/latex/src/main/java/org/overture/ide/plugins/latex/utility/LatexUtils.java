@@ -22,6 +22,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.latex.Activator;
@@ -227,6 +228,7 @@ public class LatexUtils extends LatexUtilsBase
 				IProject project = (IProject) selectedProject.getAdapter(IProject.class);
 				Assert.isNotNull(project, "Project could not be adapted");
 				IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+				Settings.dialect = vdmProject.getDialect();
 				if (markCoverage(vdmProject))
 				{
 					f.printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));

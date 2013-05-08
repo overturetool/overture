@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.Vector;
 
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.util.Utils;
 
 
@@ -43,7 +43,7 @@ public class NameValuePairList extends Vector<NameValuePair>
 		add(nv);
 	}
 
-	public boolean add(LexNameToken name, Value value)
+	public boolean add(ILexNameToken name, Value value)
 	{
 		return super.add(new NameValuePair(name, value));
 	}

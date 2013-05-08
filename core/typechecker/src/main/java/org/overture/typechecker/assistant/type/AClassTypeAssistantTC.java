@@ -5,7 +5,8 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
@@ -20,12 +21,12 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 public class AClassTypeAssistantTC {
 
 	public static LexNameToken getMemberName(AClassType cls,
-			LexIdentifierToken id) {
+			ILexIdentifierToken id) {
 		// Note: not explicit
-		return new LexNameToken(cls.getName().name, id.name, id.location, false, false);
+		return new LexNameToken(cls.getName().getName(), id.getName(), id.getLocation(), false, false);
 	}
 
-	public static PDefinition findName(AClassType cls, LexNameToken tag, NameScope scope) {
+	public static PDefinition findName(AClassType cls, ILexNameToken tag, NameScope scope) {
 		return  SClassDefinitionAssistantTC.findName(cls.getClassdef(),tag, scope);
 	}
 
@@ -92,7 +93,7 @@ public class AClassTypeAssistantTC {
 	}
 
 	public static String toDisplay(AClassType exptype) {
-		return exptype.getClassdef().getName().name;
+		return exptype.getClassdef().getName().getName();
 	}
 
 	public static boolean equals(AClassType type, Object other) {

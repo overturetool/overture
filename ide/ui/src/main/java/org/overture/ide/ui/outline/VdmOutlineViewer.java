@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 
-
 public class VdmOutlineViewer extends TreeViewer
 {
 	/**
@@ -32,14 +31,13 @@ public class VdmOutlineViewer extends TreeViewer
 	 */
 	private final VdmContentOutlinePage vdmContentOutlinePage;
 
-	public VdmOutlineViewer(VdmContentOutlinePage vdmContentOutlinePage, Composite parent)
+	public VdmOutlineViewer(VdmContentOutlinePage vdmContentOutlinePage,
+			Composite parent)
 	{
 		super(parent);
 		this.vdmContentOutlinePage = vdmContentOutlinePage;
 		setAutoExpandLevel(2);
 		setUseHashlookup(true);
-
-		//setSorter(new OutlineSorter());
 	}
 
 	@Override
@@ -68,6 +66,16 @@ public class VdmOutlineViewer extends TreeViewer
 			t.dispose();
 		}
 
+	}
+
+	protected void setInternalSelectionMode()
+	{
+		this.vdmContentOutlinePage.inExternalSelectionMode = false;
+	}
+
+	protected void setExternalSelectionMode()
+	{
+		this.vdmContentOutlinePage.inExternalSelectionMode = true;
 	}
 
 }

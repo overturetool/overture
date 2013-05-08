@@ -57,6 +57,7 @@ import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
@@ -635,7 +636,7 @@ public class ExpressionReader extends SyntaxReader
 						if (exp instanceof AVariableExp)
 						{
 							AVariableExp ve = (AVariableExp) exp;
-							String name = ve.getName().name;
+							String name = ve.getName().getName();
 
 							if (name.startsWith("mk_"))
 							{
@@ -652,7 +653,7 @@ public class ExpressionReader extends SyntaxReader
 						if (exp instanceof AVariableExp)
 						{
 							AVariableExp ve = (AVariableExp) exp;
-							String name = ve.getName().name;
+							String name = ve.getName().getName();
 
 							if (name.equals("mu"))
 							{
@@ -925,25 +926,7 @@ public class ExpressionReader extends SyntaxReader
 			case SELF:
 				nextToken();
 				return AstFactory.newASelfExp(token.location);
-
-			case IS:
-				switch (nextToken().type)
-				{
-					case NOT:
-						nextToken();
-						checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
-						checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
-						return AstFactory.newANotYetSpecifiedExp(token.location);
-
-					case SUBCLASS:
-						nextToken();
-						checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
-						return AstFactory.newASubclassResponsibilityExp(token.location);
-				}
-
-				throwMessage(2033, "Expected 'is not specified' or 'is subclass responsibility'");
-				return null;
-
+				
 			case ISOFBASECLASS:
 				nextToken();
 				return readIsOfBaseExpression(token.location);
@@ -1018,7 +1001,7 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.KET, 2131, "Expecting ')' after mk_ tuple");
 		PExp exp = null;
 
-		if (ve.getName().name.equals("mk_"))
+		if (ve.getName().getName().equals("mk_"))
 		{
 			if (args.size() < 2)
 			{
@@ -1086,19 +1069,19 @@ public class ExpressionReader extends SyntaxReader
 		return exp;
 	}
 
-	private LexNameToken getMkTypeName(LexNameToken mktoken)
+	private LexNameToken getMkTypeName(ILexNameToken mktoken)
 			throws ParserException, LexException
 	{
-		String typename = mktoken.name.substring(3); // mk_... or is_...
+		String typename = mktoken.getName().substring(3); // mk_... or is_...
 		String[] parts = typename.split("`");
 
 		switch (parts.length)
 		{
 			case 1:
-				return new LexNameToken(getCurrentModule(), parts[0], mktoken.location);
+				return new LexNameToken(getCurrentModule(), parts[0], mktoken.getLocation());
 
 			case 2:
-				return new LexNameToken(parts[0], parts[1], mktoken.location, false, true);
+				return new LexNameToken(parts[0], parts[1], mktoken.getLocation(), false, true);
 
 			default:
 				throwMessage(2037, "Malformed mk_<type> name " + typename);
@@ -1110,7 +1093,7 @@ public class ExpressionReader extends SyntaxReader
 	private AIsExp readIsExpression(AVariableExp ve) throws ParserException,
 			LexException
 	{
-		String name = ve.getName().name;
+		String name = ve.getName().getName();
 		AIsExp exp = null;
 
 		if (name.equals("is_"))
@@ -1650,9 +1633,9 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2042, "Expecting (<class>,<exp>) arguments for 'isofbase'");
 		}
 
-		LexNameToken classname = ((AVariableExp) args.get(0)).getName();
+		ILexNameToken classname = ((AVariableExp) args.get(0)).getName();
 
-		if (classname.old)
+		if (classname.getOld())
 		{
 			throwMessage(2295, "Can't use old name here", classname);
 		}
@@ -1677,9 +1660,9 @@ public class ExpressionReader extends SyntaxReader
 			throwMessage(2044, "Expecting (<class>,<exp>) arguments for 'isofclass'");
 		}
 
-		LexNameToken classname = ((AVariableExp) args.get(0)).getName();
+		ILexNameToken classname = ((AVariableExp) args.get(0)).getName();
 
-		if (classname.old)
+		if (classname.getOld())
 		{
 			throwMessage(2295, "Can't use old name here", classname);
 		}

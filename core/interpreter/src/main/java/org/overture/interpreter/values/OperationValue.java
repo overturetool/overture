@@ -36,11 +36,11 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
@@ -86,7 +86,7 @@ public class OperationValue extends Value
 	private static final long serialVersionUID = 1L;
 	public final AExplicitOperationDefinition expldef;
 	public final AImplicitOperationDefinition impldef;
-	public final LexNameToken name;
+	public final ILexNameToken name;
 	public final AOperationType type;
 	public final List<PPattern> paramPatterns;
 	public final PStm body;
@@ -95,7 +95,7 @@ public class OperationValue extends Value
 	public final AStateDefinition state;
 	public final SClassDefinition classdef;
 
-	private LexNameToken stateName = null;
+	private ILexNameToken stateName = null;
 	private Context stateContext = null;
 	private ObjectValue self = null;
 
@@ -119,7 +119,7 @@ public class OperationValue extends Value
 		this.expldef = def;
 		this.impldef = null;
 		this.name = def.getName();
-		this.type = (AOperationType)def.getType();
+		this.type = def.getType();
 		this.paramPatterns = def.getParameterPatterns();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -132,10 +132,10 @@ public class OperationValue extends Value
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
 			!(classdef instanceof ASystemClassDefinition) &&
-			!classdef.getName().name.equals("CPU") &&
-			!classdef.getName().name.equals("BUS") &&
-			!name.name.equals("thread") &&
-			!name.name.startsWith("inv_");
+			!classdef.getName().getName().equals("CPU") &&
+			!classdef.getName().getName().equals("BUS") &&
+			!name.getName().equals("thread") &&
+			!name.getName().startsWith("inv_");
 	}
 
 	public OperationValue(AImplicitOperationDefinition def,
@@ -145,7 +145,7 @@ public class OperationValue extends Value
 		this.impldef = def;
 		this.expldef = null;
 		this.name = def.getName();
-		this.type = (AOperationType)def.getType();
+		this.type = def.getType();
 		this.paramPatterns = new Vector<PPattern>();
 
 		for (APatternListTypePair ptp : def.getParameterPatterns())
@@ -164,9 +164,9 @@ public class OperationValue extends Value
 			Settings.dialect == Dialect.VDM_RT &&
 			classdef != null &&
 			!(classdef instanceof ASystemClassDefinition) &&
-			!classdef.getName().name.equals("CPU") &&
-			!classdef.getName().name.equals("BUS") &&
-			!name.name.equals("thread");
+			!classdef.getName().getName().equals("CPU") &&
+			!classdef.getName().getName().equals("BUS") &&
+			!name.getName().equals("thread");
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class OperationValue extends Value
 
 		if (argValues.size() != paramPatterns.size())
 		{
-			abort(4068, "Wrong number of arguments passed to " + name.name, ctxt);
+			abort(4068, "Wrong number of arguments passed to " + name.getName(), ctxt);
 		}
 
 		ListIterator<Value> valIter = argValues.listIterator();
@@ -553,7 +553,7 @@ public class OperationValue extends Value
         			bus, from, to, self, this, argValues, result, stepping);
 
         		bus.transmit(request);
-        		MessageResponse reply = result.get(ctxt, name.location);
+        		MessageResponse reply = result.get(ctxt, name.getLocation());
         		return reply.getValue();	// Can throw a returned exception
     		}
 		}
@@ -738,6 +738,6 @@ public class OperationValue extends Value
 
 	public String toTitle()
 	{
-		return name.name + Utils.listToString("(", paramPatterns, ", ", ")");
+		return name.getName() + Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }

@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.interpreter.values.UpdatableValue;
@@ -42,7 +42,7 @@ public class SharedStateListner
 		 * This method checks if a name needs a continuous time step before it is evaluated.
 		 * Example is: a := b where b must be updated before it is evaluated.
 		 */
-		boolean reuiresCheck(LexNameToken name);
+		boolean requiresCheck(ILexNameToken name);
 
 		/**
 		 * This method checks if a change made in an assignment statement must be synchronized with the continuous time simulator.
@@ -57,7 +57,7 @@ public class SharedStateListner
 
 	public static void beforeVariableReadDuration(AVariableExp var)
 	{
-		if (checker != null && checker.reuiresCheck(var.getName()))
+		if (checker != null && checker.requiresCheck(var.getName()))
 		{
 			synchronized (values)
 			{

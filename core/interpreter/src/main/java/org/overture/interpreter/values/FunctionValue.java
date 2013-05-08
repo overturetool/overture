@@ -39,6 +39,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -54,10 +55,10 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
@@ -83,7 +84,7 @@ public class FunctionValue extends Value
 	private final boolean checkInvariants;
 
 	// Measure function value, if any
-	private LexNameToken measureName = null;
+	private ILexNameToken measureName = null;
 	private FunctionValue measure = null;
 	private Map<Long, Stack<Value>> measureValues = null;
 	private Set<Long> measuringThreads = null;
@@ -100,7 +101,7 @@ public class FunctionValue extends Value
 			List<List<PPattern>> paramPatternList, PExp body,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables, boolean checkInvariants, ValueList curriedArgs,
-		LexNameToken measureName, Map<Long, Stack<Value>> measureValues)
+		ILexNameToken measureName, Map<Long, Stack<Value>> measureValues)
 	{
 		this.location = location;
 		this.name = name;
@@ -143,9 +144,9 @@ public class FunctionValue extends Value
 		Context freeVariables)
 	{
 		this.location = def.getLocation();
-		this.name = def.getName().name;
+		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = (AFunctionType)def.getType();
+		this.type = def.getType();
 		this.paramPatternList = def.getParamPatternList();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -166,9 +167,9 @@ public class FunctionValue extends Value
 		Context freeVariables)
 	{
 		this.location = def.getLocation();
-		this.name = def.getName().name;
+		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = (AFunctionType)def.getType();
+		this.type = def.getType();
 
 		this.paramPatternList = new Vector<List<PPattern>>();
 		PatternListTC plist = new PatternListTC();
@@ -204,7 +205,7 @@ public class FunctionValue extends Value
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.getTypeParams())
+		for (ILexNameToken pname: fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
@@ -221,7 +222,7 @@ public class FunctionValue extends Value
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (LexNameToken pname: fdef.getTypeParams())
+		for (ILexNameToken pname: fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
