@@ -250,12 +250,14 @@ public class PrettyPrinterVisitorDefinitions extends
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		String type = ": ";
 
-		if (d.getType().getParameters().isEmpty())
+		AOperationType optype = (AOperationType) d.getType();
+		
+		if (optype.getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = optype.getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -266,7 +268,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " ==> " + d.getType().getResult().apply(typePrinter,question);
+		type += " ==> " + optype.getResult().apply(typePrinter,question);
 
 		String tmp = d.getAccess()
 				+ " "
@@ -295,6 +297,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			AExplicitFunctionDefinition d, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
+		AFunctionType functype = (AFunctionType) d.getType();
 
 		StringBuilder params = new StringBuilder();
 
@@ -308,12 +311,12 @@ public class PrettyPrinterVisitorDefinitions extends
 			accessStr = "";
 
 		String type = ": ";
-		if (d.getType().getParameters().isEmpty())
+		if (functype.getParameters().isEmpty())
 		{
 			type += "() ";
 		} else
 		{
-			for (Iterator<PType> iterator = d.getType().getParameters().iterator(); iterator.hasNext();)
+			for (Iterator<PType> iterator = functype.getParameters().iterator(); iterator.hasNext();)
 			{
 				type += iterator.next().apply(typePrinter,question);
 				if (iterator.hasNext())
@@ -324,8 +327,8 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " " + (d.getType().getPartial() ? "-" : "+") + "> "
-				+ d.getType().getResult().apply(typePrinter,question);
+		type += " " + (functype.getPartial() ? "-" : "+") + "> "
+				+ functype.getResult().apply(typePrinter,question);
 
 		String tmp = question.getIdent()
 				+ accessStr

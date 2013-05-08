@@ -54,7 +54,7 @@ public class DisplayNameCreator
 					sb.append(def.getName().getName());
 					if (def.getType() instanceof AOperationType)
 					{
-						AOperationType type = def.getType();
+              AOperationType type = (AOperationType)def.getType();
 						if (type.getParameters().size() == 0)
 						{
 							sb.append("() ");
@@ -78,8 +78,10 @@ public class DisplayNameCreator
 				{
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) element;
 
-					sb.append(def.getName());
-					sb.append(getFunctionTypeString(def.getType()));
+          if (def.getType() instanceof AFunctionType) {
+            sb.append(def.getName());
+            sb.append(getFunctionTypeString( (AFunctionType)  def.getType()));
+          }
 
 				}
 			}

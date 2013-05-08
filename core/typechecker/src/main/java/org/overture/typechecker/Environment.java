@@ -29,6 +29,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
@@ -43,6 +44,9 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 abstract public class Environment
 {
+	/** The extended search strategy */
+	protected final EnvironmentSearchStrategy searchStrategy;
+	
 	/** The environment chain. */
 	protected final Environment outer;
 
@@ -54,9 +58,10 @@ abstract public class Environment
 	 * @param outer
 	 */
 
-	public Environment(Environment outer)
+	public Environment(Environment outer, EnvironmentSearchStrategy searchStrategy)
 	{
 		this.outer = outer;
+		this.searchStrategy = searchStrategy;
 	}
 	
 	/**
@@ -103,6 +108,10 @@ abstract public class Environment
 
 				PDefinition def = outer.findName(n1, NameScope.NAMESANDSTATE);
 
+				// TODO: RWL: This is not sound, however the behaviour below is not sound 
+				// in case def.getNameScope is null.
+				if (def != null && def.getNameScope() == null) def.setNameScope(NameScope.GLOBAL);
+				
 				if (def != null && def.getLocation() != n1.getLocation() &&
 					def.getNameScope().matches(scope))
 				{
@@ -146,7 +155,7 @@ abstract public class Environment
 
 	/** Find a type in the environment. */
 	abstract public PDefinition findType(ILexNameToken name, String fromModule);
-
+	
 	/** Find the state defined in the environment, if any. */
 	abstract public AStateDefinition findStateDefinition();
 
@@ -197,4 +206,18 @@ abstract public class Environment
 			p = p.outer;
 		}
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for(PDefinition d : getDefinitions()) {
+			sb.append("\n---\n");
+			sb.append(d.toString());
+		}
+		
+		return sb.toString();
+	}
+	
+	/** Find a definition in the environment no matter its type and scope */
+	public abstract PDefinition find(ILexIdentifierToken name);
+
 }

@@ -168,7 +168,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new PublicClassEnvironment(classes);
+		return new PublicClassEnvironment(classes,null);
 	}
 
 	@Override
@@ -296,7 +296,7 @@ public class ClassInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		PublicClassEnvironment globals = new PublicClassEnvironment(classes);
+		PublicClassEnvironment globals = new PublicClassEnvironment(classes,null);
 		Environment env = new PrivateClassEnvironment(defaultClass, globals);
 
 		try

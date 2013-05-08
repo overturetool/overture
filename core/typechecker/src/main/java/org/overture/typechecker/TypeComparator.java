@@ -229,12 +229,12 @@ public class TypeComparator
 	{
 		if (to instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + to, to.getLocation());
+			throw new TypeCheckException("Unknown type: " + to, to.getLocation(),to);
 		}
 
 		if (from instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + from, from.getLocation());
+			throw new TypeCheckException("Unknown type: " + from, from.getLocation(),from);
 		}
 
 		if (PTypeAssistantTC.equals(to, from))
@@ -571,12 +571,12 @@ public class TypeComparator
 	{
 		if (sub instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + sub, sub.getLocation());
+			throw new TypeCheckException("Unknown type: " + sub, sub.getLocation(),sub);
 		}
 
 		if (sup instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + sup, sup.getLocation());
+			throw new TypeCheckException("Unknown type: " + sup, sup.getLocation(),sup);
 		}
 
 		if (sub instanceof AUnknownType || sup instanceof AUnknownType)

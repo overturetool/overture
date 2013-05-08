@@ -146,7 +146,7 @@ public class FunctionValue extends Value
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = def.getType();
+		this.type = (AFunctionType) def.getType();
 		this.paramPatternList = def.getParamPatternList();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -169,7 +169,7 @@ public class FunctionValue extends Value
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = def.getType();
+		this.type = (AFunctionType) def.getType();
 
 		this.paramPatternList = new Vector<List<PPattern>>();
 		PatternListTC plist = new PatternListTC();

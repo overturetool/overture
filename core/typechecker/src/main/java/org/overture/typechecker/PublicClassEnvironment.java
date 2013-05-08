@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
@@ -44,7 +45,9 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 
 public class PublicClassEnvironment extends Environment
 {
-	
+
+	private final List<SClassDefinition> classes;
+
 	public List<PDefinition> getDefinitions()
 	{
 		List<PDefinition> res = new LinkedList<PDefinition>();
@@ -54,34 +57,39 @@ public class PublicClassEnvironment extends Environment
 		}
 		return res;
 	}
-	private final List<SClassDefinition> classes;
 
-	public PublicClassEnvironment(List<SClassDefinition> classes)
+
+	public PublicClassEnvironment(SClassDefinition classes)
 	{
-		super(null);
+		this(classes,null,null);
+	}
+
+	public PublicClassEnvironment(List<SClassDefinition> classes, EnvironmentSearchStrategy ess)
+	{
+		super(null,ess);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(List<SClassDefinition> classes, Environment env)
+	public PublicClassEnvironment(List<SClassDefinition> classes, Environment env, EnvironmentSearchStrategy ess)
 	{
-		super(env);
+		super(env,ess);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(SClassDefinition one)
+	public PublicClassEnvironment(SClassDefinition one, EnvironmentSearchStrategy ess)
 	{
-		super(null);
+		super(null,ess);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
 
-	public PublicClassEnvironment(SClassDefinition one, Environment env)
+	public PublicClassEnvironment(SClassDefinition one, Environment env, EnvironmentSearchStrategy ess)
 	{
-		super(env);
+		super(env,ess);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
- 
+
 	@Override
 	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
@@ -91,6 +99,9 @@ public class PublicClassEnvironment extends Environment
 		{
 			return def;
 		}
+
+		def = searchStrategy != null ? searchStrategy.findName(name, scope, null, outer, getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findName(name, scope);
 	}
@@ -104,6 +115,9 @@ public class PublicClassEnvironment extends Environment
 		{
 			return def;
 		}
+
+		def = searchStrategy != null ? searchStrategy.findType(name, fromModule, null, outer, getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findType(name, null);
 	}
@@ -155,5 +169,12 @@ public class PublicClassEnvironment extends Environment
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		if (searchStrategy != null)
+			return searchStrategy.find(name, null, outer, getDefinitions());
+		return null;
 	}
 }
