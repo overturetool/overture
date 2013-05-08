@@ -24,6 +24,7 @@
 package org.overture.typechecker;
 
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.node.INode;
 
 /**
  * A type checking exception.
@@ -33,10 +34,12 @@ import org.overture.ast.lex.LexLocation;
 public class TypeCheckException extends RuntimeException
 {
 	public final LexLocation location;
+	public final INode node;
 
-	public TypeCheckException(String msg, LexLocation location)
+	public TypeCheckException(String msg, LexLocation location, INode node)
 	{
 		super(msg);
 		this.location = location;
+		this.node = node;
 	}
 }

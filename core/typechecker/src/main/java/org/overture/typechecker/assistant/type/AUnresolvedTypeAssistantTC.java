@@ -48,7 +48,7 @@ public class AUnresolvedTypeAssistantTC {
 		if (def == null)
 		{
 			throw new TypeCheckException(
-				"Unable to resolve type name '" + type.getName() + "'", type.getLocation());
+				"Unable to resolve type name '" + type.getName() + "'", type.getLocation(),type);
 		}
 
 		if (def instanceof AImportedDefinition)

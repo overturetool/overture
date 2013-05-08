@@ -62,7 +62,7 @@ public class VdmPpRuntimeUtil
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		TypeChecker.clearErrors();
-		Environment env = new PublicClassEnvironment(classes);
+		Environment env = new PublicClassEnvironment(classes,null);
 		PExp expr;
 
 		expr = parseExpression(expression, defaultModule.getName().getName(), defaultModule.getName().getName(),dialect);

@@ -371,7 +371,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getFuncType();
+		return (AFunctionType) type.getFuncType();
 	}
 
 	public static boolean isOperation(AUnionType type)
@@ -436,7 +436,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getOpType();
+		return (AOperationType) type.getOpType();
 	}
 
 	public static boolean isSeq(AUnionType type)
