@@ -60,7 +60,7 @@ public class InSetExpression extends BinaryExpression
 		{
 			SetType stype = rtype.getSet();
 			
-			if (!TypeComparator.isSubType(ltype, stype.setof))
+			if (!TypeComparator.compatible(stype.setof, ltype))
 			{
 				report(3319, "'in set' expression is always false");
 				detail2("Element", ltype, "Set", stype);

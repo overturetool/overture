@@ -60,7 +60,7 @@ public class NotInSetExpression extends BinaryExpression
 		{
 			SetType stype = rtype.getSet();
 			
-			if (!TypeComparator.isSubType(ltype, stype.setof))
+			if (!TypeComparator.compatible(stype.setof, ltype))
 			{
 				report(3320, "'not in set' expression is always true");
 				detail2("Element", ltype, "Set", stype);
