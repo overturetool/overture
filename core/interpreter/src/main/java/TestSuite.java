@@ -70,7 +70,7 @@ public class TestSuite
 					{
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
-								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().module) && ctor.getParamDefinitions().isEmpty())
+								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule()) && ctor.getParamDefinitions().isEmpty())
 								|| !(PAccessSpecifierAssistantTC.isPublic(ctor.getAccess())))
 						{
 							throw new Exception("Class "

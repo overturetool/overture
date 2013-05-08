@@ -26,8 +26,7 @@ package org.overture.parser.messages;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.parser.messages.VDMMessage;
+import org.overture.ast.intf.lex.ILexLocation;
 
 /**
  * The root of all reported messages.
@@ -37,7 +36,7 @@ public class VDMMessage
 {
 	public final int number;
 	public final String message;
-	public final LexLocation location;
+	public final ILexLocation location;
 
 	protected List<String> details = new Vector<String>();
 
@@ -48,7 +47,7 @@ public class VDMMessage
 		this.location = null;
 	}
 
-	public VDMMessage(int number, String message, LexLocation location)
+	public VDMMessage(int number, String message, ILexLocation location)
 	{
 		this.number = number;
 		this.message = message;

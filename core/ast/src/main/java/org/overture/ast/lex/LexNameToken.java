@@ -13,6 +13,7 @@ import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.PType;
@@ -67,7 +68,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	}
 
 
-	public LexNameToken(String module, String name, LexLocation location,
+	public LexNameToken(String module, String name, ILexLocation location,
 			boolean old, boolean explicit)
 	{
 		super(location, VDMToken.NAME);
@@ -77,7 +78,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		this.explicit = explicit;
 	}
 
-	public LexNameToken(String module, String name, LexLocation location)
+	public LexNameToken(String module, String name, ILexLocation location)
 	{
 		this(module, name, location, false, false);
 	}
@@ -124,22 +125,22 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		return name;
 	}
 
-	public LexNameToken getPreName(LexLocation l)
+	public LexNameToken getPreName(ILexLocation l)
 	{
 		return new LexNameToken(module, "pre_" + name, l);
 	}
 
-	public LexNameToken getPostName(LexLocation l)
+	public LexNameToken getPostName(ILexLocation l)
 	{
 		return new LexNameToken(module, "post_" + name, l);
 	}
 
-	public LexNameToken getInvName(LexLocation l)
+	public LexNameToken getInvName(ILexLocation l)
 	{
 		return new LexNameToken(module, "inv_" + name, l);
 	}
 
-	public LexNameToken getInitName(LexLocation l)
+	public LexNameToken getInitName(ILexLocation l)
 	{
 		return new LexNameToken(module, "init_" + name, l);
 	}
@@ -173,12 +174,12 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		}
 	}
 
-	public LexNameToken getThreadName(LexLocation loc)
+	public LexNameToken getThreadName(ILexLocation loc)
 	{
-		return new LexNameToken(loc.module, "thread", loc);
+		return new LexNameToken(loc.getModule(), "thread", loc);
 	}
 
-	public LexNameToken getPerName(LexLocation loc)
+	public LexNameToken getPerName(ILexLocation loc)
 	{
 		return new LexNameToken(module, "per_" + name, loc);
 	}
@@ -282,7 +283,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		return toString().compareTo(o.toString());
 	}
 
-	public LexLocation getLocation()
+	public ILexLocation getLocation()
 	{
 		return location;
 	}

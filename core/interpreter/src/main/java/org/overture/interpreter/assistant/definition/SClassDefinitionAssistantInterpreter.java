@@ -546,7 +546,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		for (SClassDefinition c: classes)
 		{
-			if (c.getName().getLocation().file.equals(file))
+			if (c.getName().getLocation().getFile().equals(file))
 			{
     			PStm stmt = findStatement(c, lineno);
 
@@ -570,7 +570,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 	{
 		for (SClassDefinition c: classes)
 		{
-			if (c.getName().getLocation().file.equals(file))
+			if (c.getName().getLocation().getFile().equals(file))
 			{
     			PExp exp = findExpression(c, lineno);
 

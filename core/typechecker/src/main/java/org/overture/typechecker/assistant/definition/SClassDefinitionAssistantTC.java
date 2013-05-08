@@ -17,8 +17,8 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
@@ -378,7 +378,7 @@ public class SClassDefinitionAssistantTC
 		}
 
 		// Location of last local invariant
-		LexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
+		ILexLocation invloc = invdefs.get(invdefs.size() - 1).getLocation();
 
 		AOperationType type = AstFactory.newAOperationType(invloc, new Vector<PType>(), AstFactory.newABooleanBasicType(invloc));
 

@@ -23,9 +23,7 @@
 
 package org.overture.parser.messages;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.parser.messages.LocatedException;
-import org.overture.parser.messages.VDMMessage;
+import org.overture.ast.intf.lex.ILexLocation;
 
 /**
  * A VDM error message.
@@ -33,7 +31,7 @@ import org.overture.parser.messages.VDMMessage;
 
 public class VDMError extends VDMMessage
 {
-	public VDMError(int number, String message, LexLocation location)
+	public VDMError(int number, String message, ILexLocation location)
 	{
 		super(number, message, location);
 	}

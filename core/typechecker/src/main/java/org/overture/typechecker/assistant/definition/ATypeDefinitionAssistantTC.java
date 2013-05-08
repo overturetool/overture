@@ -10,8 +10,8 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -129,7 +129,7 @@ public class ATypeDefinitionAssistantTC {
 	private static AExplicitFunctionDefinition getInvDefinition(
 			ATypeDefinition d) {
 		
-		LexLocation loc = d.getInvPattern().getLocation();
+		ILexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
 

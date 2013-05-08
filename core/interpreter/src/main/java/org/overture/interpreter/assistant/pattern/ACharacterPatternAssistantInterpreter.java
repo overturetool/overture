@@ -23,7 +23,7 @@ public class ACharacterPatternAssistantInterpreter extends
 
 		try
 		{
-			if (expval.charValue(ctxt) != p.getValue().unicode)
+			if (expval.charValue(ctxt) != p.getValue().getValue())
 			{
 				VdmRuntimeError.patternFail(4107, "Character pattern match failed",p.getLocation());
 			}

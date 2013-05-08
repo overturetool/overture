@@ -24,11 +24,11 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexIdentifierToken getIdentifier();
 
-	ILexNameToken getInitName(LexLocation l);
+	ILexNameToken getInitName(ILexLocation l);
 
-	ILexNameToken getInvName(LexLocation l);
+	ILexNameToken getInvName(ILexLocation l);
 
-	LexLocation getLocation();
+	ILexLocation getLocation();
 
 	ILexNameToken getModifiedName(String classname);
 
@@ -42,11 +42,11 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexNameToken getOldName();
 
-	ILexNameToken getPerName(LexLocation loc);
+	ILexNameToken getPerName(ILexLocation loc);
 
-	ILexNameToken getPostName(LexLocation l);
+	ILexNameToken getPostName(ILexLocation l);
 
-	ILexNameToken getPreName(LexLocation l);
+	ILexNameToken getPreName(ILexLocation l);
 
 	ILexNameToken getSelfName();
 
@@ -54,7 +54,7 @@ public interface ILexNameToken extends ILexIdentifierToken
 
 	ILexNameToken getThreadName();
 
-	ILexNameToken getThreadName(LexLocation loc);
+	ILexNameToken getThreadName(ILexLocation loc);
 
 	List<PType> getTypeQualifier();
 

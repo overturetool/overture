@@ -31,7 +31,6 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-
 public class AExplicitOperationDefinitionAssistantTC {
 
 	public static List<? extends PDefinition> getParamDefinitions(

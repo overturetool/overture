@@ -249,7 +249,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		// do the evaluations of the designator below, so we correct the
 		// hit count here...
 
-		node.getLocation().hits--;
+		node.getLocation().setHits(node.getLocation().getHits()-1);
+		//node.getLocation().hits--;
 
 		try
 		{
@@ -756,7 +757,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		Context evalContext = new Context(node.getLocation(), "let statement", ctxt);
 
-		LexNameToken sname = new LexNameToken(node.getLocation().module, "self", node.getLocation());
+		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
 		ObjectValue self = (ObjectValue)ctxt.check(sname);
 
 		for (PDefinition d: node.getLocalDefs())

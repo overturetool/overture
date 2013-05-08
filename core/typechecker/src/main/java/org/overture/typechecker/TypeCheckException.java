@@ -23,7 +23,7 @@
 
 package org.overture.typechecker;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 
 /**
@@ -33,10 +33,10 @@ import org.overture.ast.node.INode;
 @SuppressWarnings("serial")
 public class TypeCheckException extends RuntimeException
 {
-	public final LexLocation location;
+	public final ILexLocation location;
 	public final INode node;
 
-	public TypeCheckException(String msg, LexLocation location, INode node)
+	public TypeCheckException(String msg, ILexLocation location, INode node)
 	{
 		super(msg);
 		this.location = location;

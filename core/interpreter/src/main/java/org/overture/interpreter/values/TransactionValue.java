@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -52,7 +52,7 @@ public class TransactionValue extends UpdatableValue
 	private Value newvalue = null;		// The pending value before a commit
 	private long newthreadid = -1;		// The thread that made the change
 	
-	private LexLocation lastSetLocation = null; //The location that made the change
+	private ILexLocation lastSetLocation = null; //The location that made the change
 
 	protected TransactionValue(Value value, ValueListenerList listeners)
 	{
@@ -92,7 +92,7 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public void set(LexLocation location, Value newval, Context ctxt)
+	public void set(ILexLocation location, Value newval, Context ctxt)
 	{
 		long current = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 

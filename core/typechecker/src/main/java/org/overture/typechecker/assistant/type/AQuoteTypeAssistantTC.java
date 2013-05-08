@@ -14,7 +14,7 @@ public class AQuoteTypeAssistantTC {
 		if (other instanceof AQuoteType)
 		{
 			AQuoteType qother = (AQuoteType)other;
-			return type.getValue().value.equals(qother.getValue().value);
+			return type.getValue().getValue().equals(qother.getValue().getValue());
 		}
 
 		return false;

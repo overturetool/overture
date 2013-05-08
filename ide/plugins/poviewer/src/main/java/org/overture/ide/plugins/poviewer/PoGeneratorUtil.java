@@ -192,7 +192,7 @@ public class PoGeneratorUtil
 			{
 				if (definition instanceof AModuleModules)
 					if (!((AModuleModules) definition).getName().toString().equals("DEFAULT")
-							&& skipElement(((AModuleModules) definition).getName().getLocation().file))
+							&& skipElement(((AModuleModules) definition).getName().getLocation().getFile()))
 						continue;
 					else
 					{
@@ -208,7 +208,7 @@ public class PoGeneratorUtil
 			{
 				if (definition instanceof SClassDefinition)
 				{
-					if (skipElement(((SClassDefinition) definition).getLocation().file))
+					if (skipElement(((SClassDefinition) definition).getLocation().getFile()))
 						continue;
 					else
 					{

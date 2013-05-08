@@ -683,7 +683,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 		IVdmProject vdmProject = TraceAstUtility.getProject(tn.getTraceDefinition());
 
-		IFile file = vdmProject.findIFile(tn.getTraceDefinition().getLocation().file);
+		IFile file = vdmProject.findIFile(tn.getTraceDefinition().getLocation().getFile());
 
 		EditorUtility.gotoLocation(file, tn.getTraceDefinition().getLocation(), tn.getName());
 	}

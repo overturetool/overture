@@ -31,8 +31,8 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
@@ -228,9 +228,9 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	abstract protected void body();
 
 	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#step(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#step(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
 	 */
-	public void step(Context ctxt, LexLocation location)
+	public void step(Context ctxt, ILexLocation location)
 	{
 		if (Settings.dialect == Dialect.VDM_RT)
 		{
@@ -270,32 +270,32 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		notifyAll();
 	}
 
-	protected synchronized void reschedule(Context ctxt, LexLocation location)
+	protected synchronized void reschedule(Context ctxt, ILexLocation location)
 	{
 		// Yield control but remain runnable - called by thread
 		waitUntilState(RunState.RUNNABLE, RunState.RUNNING, ctxt, location);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#waiting(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#waiting(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
 	 */
-	public synchronized void waiting(Context ctxt, LexLocation location)
+	public synchronized void waiting(Context ctxt, ILexLocation location)
 	{
 		// Enter a waiting state - called by thread
 		waitUntilState(RunState.WAITING, RunState.RUNNING, ctxt, location);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#locking(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#locking(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
 	 */
-	public synchronized void locking(Context ctxt, LexLocation location)
+	public synchronized void locking(Context ctxt, ILexLocation location)
 	{
 		// Enter a locking state - called by thread
 		waitUntilState(RunState.LOCKING, RunState.RUNNING, ctxt, location);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#alarming(long, Context, LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#alarming(long, Context, ILexLocation)
 	 */
 	public synchronized void alarming(long expected)
 	{
@@ -315,10 +315,10 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#duration(long, org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.LexLocation)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#duration(long, org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
 	 */
 	public synchronized void duration(
-		long pause, Context ctxt, LexLocation location)
+		long pause, Context ctxt, ILexLocation location)
 	{
 		// Wait until pause has passed - called by thread
 
@@ -345,7 +345,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	private synchronized void waitWhileState(
-		RunState newstate, RunState until, Context ctxt, LexLocation location)
+		RunState newstate, RunState until, Context ctxt, ILexLocation location)
 	{
 		setState(newstate);
 
@@ -356,7 +356,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	private synchronized void waitUntilState(
-		RunState newstate, RunState until, Context ctxt, LexLocation location)
+		RunState newstate, RunState until, Context ctxt, ILexLocation location)
 	{
 		setState(newstate);
 
@@ -366,7 +366,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		}
 	}
 
-	private synchronized void sleep(Context ctxt, LexLocation location)
+	private synchronized void sleep(Context ctxt, ILexLocation location)
 	{
 		while (true)
 		{
@@ -385,7 +385,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		}
 	}
 
-	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	protected void handleSignal(Signal sig, Context ctxt, ILexLocation location)
 	{
 		BasicSchedulableThread.handleSignal(sig, ctxt, location);
 	}

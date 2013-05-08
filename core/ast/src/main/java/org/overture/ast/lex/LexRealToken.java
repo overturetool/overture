@@ -31,19 +31,29 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexRealToken;
 
-public class LexRealToken extends LexToken {
+public class LexRealToken extends LexToken implements ILexRealToken {
 	private static final long serialVersionUID = 1L;
 	public final double value;
 
-	public LexRealToken(String real, LexLocation location) {
+	public LexRealToken(String real, ILexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		value = Double.parseDouble(real);
 	}
 
-	public LexRealToken(double value, LexLocation location) {
+	public LexRealToken(double value, ILexLocation location) {
 		super(location, VDMToken.REALNUMBER);
 		this.value = value;
+	}
+
+	
+	
+	@Override
+	public double getValue()
+	{
+		return value;
 	}
 
 	@Override
@@ -58,22 +68,22 @@ public class LexRealToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexRealToken(this); 
+		analysis.caseILexRealToken(this); 
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexRealToken(this);
+		return caller.caseILexRealToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexRealToken(this, question);
+		caller.caseILexRealToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexRealToken(this, question);
+		return caller.caseILexRealToken(this, question);
 	}
 	
 	/**

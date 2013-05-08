@@ -118,7 +118,7 @@ abstract public class Environment
 					// Reduce clutter for names in the same module/class
 					String message = null;
 
-					if (def.getLocation().file.equals(n1.getLocation().file))
+					if (def.getLocation().getFile().equals(n1.getLocation().getFile()))
 					{
 						message = def.getName() + " " + def.getLocation().toShortString() +
 							" hidden by " +	n1.getFullName();

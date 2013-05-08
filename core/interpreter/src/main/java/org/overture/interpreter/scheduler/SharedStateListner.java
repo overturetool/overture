@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.interpreter.values.UpdatableValue;
@@ -51,7 +51,7 @@ public class SharedStateListner
 		boolean reuiresCheck(PStateDesignator target);
 	}
 
-	private static final Set<LexLocation> values = new HashSet<LexLocation>();
+	private static final Set<ILexLocation> values = new HashSet<ILexLocation>();
 	private static Boolean autoIncrementTime = true;
 	private static IdentityChecker checker = null;
 
@@ -79,7 +79,7 @@ public class SharedStateListner
 	}
 
 	public static void variableChanged(UpdatableValue updatableValue,
-			LexLocation location)
+			ILexLocation location)
 	{
 		synchronized (values)
 		{

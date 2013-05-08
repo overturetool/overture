@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexCharacterToken;
@@ -77,7 +78,7 @@ public class LexTokenReader extends BacktrackInputReader
 	private boolean quotedQuote = false;
 
 	/** Added to fix location on the traces **/
-	private LexLocation location = null;
+	private ILexLocation location = null;
 
 	/**
 	 * An inner class to hold all the position details that need to be saved and
@@ -238,10 +239,10 @@ public class LexTokenReader extends BacktrackInputReader
 	/**
 	 * Added to fix the location on traces
 	 */
-	public LexTokenReader(String content, Dialect dialect, LexLocation location)
+	public LexTokenReader(String content, Dialect dialect, ILexLocation location)
 	{
 		super(content);
-		this.file = location.file;
+		this.file = location.getFile();
 		this.dialect = dialect;
 		this.location = location;
 		init();
@@ -1050,7 +1051,7 @@ public class LexTokenReader extends BacktrackInputReader
 	 * @return A new LexLocation.
 	 */
 
-	private LexLocation location(int tokline, int tokpos,int startOffset, int endOffset)
+	private ILexLocation location(int tokline, int tokpos,int startOffset, int endOffset)
 	{
 		//Fix for location on traces
 		if (this.location != null)

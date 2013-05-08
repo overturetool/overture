@@ -25,8 +25,8 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -47,7 +47,7 @@ import org.overture.typechecker.util.LexNameTokenMap;
 public class Context extends LexNameTokenMap<Value>
 {
 	/** The location of the context. */
-	public final LexLocation location;
+	public final ILexLocation location;
 	/** The name of the location. */
 	public final String title;
 	/** A link to a lower level context, if present. */
@@ -70,7 +70,7 @@ public class Context extends LexNameTokenMap<Value>
 	 * @param outer
 	 */
 
-	public Context(LexLocation location, String title, Context outer)
+	public Context(ILexLocation location, String title, Context outer)
 	{
 		this.location = location;
 		this.outer = outer;

@@ -23,15 +23,14 @@
 
 package org.overture.parser.messages;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.parser.messages.NumberedException;
+import org.overture.ast.intf.lex.ILexLocation;
 
 @SuppressWarnings("serial")
 abstract public class LocatedException extends NumberedException
 {
-	public final LexLocation location;
+	public final ILexLocation location;
 
-	public LocatedException(int number, String msg, LexLocation location)
+	public LocatedException(int number, String msg, ILexLocation location)
 	{
 		super(number, msg);
 		this.location = location;
