@@ -670,6 +670,8 @@ as the expected and actual values.
 3316, "Expecting number in periodic argument"
 3317, "Expression can never match narrow type"
 3318, "Measure's type parameters must match function's"
+3319, "'in set' expression is always false"
+3320, "'not in set' expression is always true"
 
 
 4000, "Cannot instantiate abstract class <class>"

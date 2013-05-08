@@ -28,7 +28,9 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.BooleanType;
+import org.overturetool.vdmj.types.SetType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.values.BooleanValue;
@@ -53,6 +55,16 @@ public class NotInSetExpression extends BinaryExpression
 		{
 			report(3138, "Argument of 'not in set' is not a set");
 			detail("Actual", rtype);
+		}
+		else
+		{
+			SetType stype = rtype.getSet();
+			
+			if (!TypeComparator.isSubType(ltype, stype.setof))
+			{
+				report(3320, "'not in set' expression is always true");
+				detail2("Element", ltype, "Set", stype);
+			}
 		}
 
 		return new BooleanType(location);
