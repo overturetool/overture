@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -53,7 +53,7 @@ public class InvariantValueListener implements ValueListener, Serializable
 		this.root = value;		// Always an updatable InvariantValue
 	}
 
-	public void changedValue(LexLocation location, Value value, Context ctxt)
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
 	{
 		// InvariantValueListeners are created at every Value point (with
 		// an inv function) in a structure, but the simplest level is actually

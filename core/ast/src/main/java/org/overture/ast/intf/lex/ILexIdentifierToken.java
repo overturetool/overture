@@ -20,7 +20,7 @@ public interface ILexIdentifierToken extends ILexToken
 	public String getName();
 
 	
-	public LexLocation getLocation();
+	public ILexLocation getLocation();
 
 
 	

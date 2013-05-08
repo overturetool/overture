@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.runtime.Context;
@@ -104,7 +104,7 @@ public class BasicSchedulableThread implements Serializable
 		return null;
 	}
 
-	public static void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	public static void handleSignal(Signal sig, Context ctxt, ILexLocation location)
 	{
 		switch (sig)
 		{

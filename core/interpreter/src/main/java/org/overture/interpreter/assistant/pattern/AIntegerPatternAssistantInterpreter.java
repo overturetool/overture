@@ -23,7 +23,7 @@ public class AIntegerPatternAssistantInterpreter extends
 
 		try
 		{
-			if (expval.intValue(ctxt) != p.getValue().value)
+			if (expval.intValue(ctxt) != p.getValue().getValue())
 			{
 				VdmRuntimeError.patternFail(4111, "Integer pattern match failed",p.getLocation());
 			}

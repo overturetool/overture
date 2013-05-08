@@ -24,7 +24,7 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class NonZeroObligation extends ProofObligation
 {
@@ -34,7 +34,7 @@ public class NonZeroObligation extends ProofObligation
 	private static final long serialVersionUID = 5773921447005368923L;
 
 	public NonZeroObligation(
-		LexLocation location, PExp exp, POContextStack ctxt)
+		ILexLocation location, PExp exp, POContextStack ctxt)
 	{
 		super(location, POType.NON_ZERO, ctxt);
 		value = ctxt.getObligation(exp + " <> 0");

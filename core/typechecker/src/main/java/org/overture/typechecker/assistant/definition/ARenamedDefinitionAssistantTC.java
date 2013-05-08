@@ -22,7 +22,7 @@ public class ARenamedDefinitionAssistantTC {
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 
-		if (fromModule != null && !d.getLocation().module.equals(fromModule))
+		if (fromModule != null && !d.getLocation().getModule().equals(fromModule))
 		{
 			return null;	// Someone else's import
 		}

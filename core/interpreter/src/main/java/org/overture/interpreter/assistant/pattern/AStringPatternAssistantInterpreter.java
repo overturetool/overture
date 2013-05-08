@@ -23,7 +23,7 @@ public class AStringPatternAssistantInterpreter extends
 
 		try
 		{
-			if (!expval.stringValue(ctxt).equals(p.getValue().value))
+			if (!expval.stringValue(ctxt).equals(p.getValue().getValue()))
 			{
 				VdmRuntimeError.patternFail(4122, "String pattern match failed",p.getLocation());
 			}
@@ -39,7 +39,7 @@ public class AStringPatternAssistantInterpreter extends
 
 	public static int getLength(AStringPattern pattern)
 	{
-		return pattern.getValue().value.length();
+		return pattern.getValue().getValue().length();
 	}
 
 }

@@ -54,9 +54,11 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexLocationUtils;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
@@ -91,7 +93,6 @@ import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePairMap;
-import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
@@ -811,8 +812,8 @@ public class DBGPReader
 		sb.append("<breakpoint id=\"" + bp.number + "\"");
 		sb.append(" type=\"line\"");
 		sb.append(" state=\"" + (bp.isEnabled() ? "enabled" : "disabled") + "\"");
-		sb.append(" filename=\"" + bp.location.file.toURI() + "\"");
-		sb.append(" lineno=\"" + bp.location.startLine + "\"");
+		sb.append(" filename=\"" + bp.location.getFile().toURI() + "\"");
+		sb.append(" lineno=\"" + bp.location.getStartLine() + "\"");
 		sb.append(">");
 
 		if (bp.trace != null)
@@ -825,15 +826,15 @@ public class DBGPReader
 		return sb;
 	}
 
-	protected StringBuilder stackResponse(LexLocation location, int level)
+	protected StringBuilder stackResponse(ILexLocation location, int level)
 	{
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<stack level=\"" + level + "\"");
 		sb.append(" type=\"file\"");
-		sb.append(" filename=\"" + location.file.toURI() + "\"");
-		sb.append(" lineno=\"" + location.startLine + "\"");
-		sb.append(" cmdbegin=\"" + location.startLine + ":" + location.startPos + "\"");
+		sb.append(" filename=\"" + location.getFile().toURI() + "\"");
+		sb.append(" lineno=\"" + location.getStartLine() + "\"");
+		sb.append(" cmdbegin=\"" + location.getStartLine() + ":" + location.getStartPos() + "\"");
 		sb.append("/>");
 
 		return sb;
@@ -909,7 +910,7 @@ public class DBGPReader
 		while (line != null && process(line));
 	}
 
-	public void stopped(Context ctxt, LexLocation location)
+	public void stopped(Context ctxt, ILexLocation location)
 	{
 		stopped(ctxt, new Breakpoint(location));
 	}
@@ -1464,7 +1465,7 @@ public class DBGPReader
 		try
 		{
 			String exp = c.data;	// Already base64 decoded by the parser
-			interpreter.setDefaultName(breakpoint.location.module);
+			interpreter.setDefaultName(breakpoint.location.getModule());
 			theAnswer = interpreter.evaluate(exp, breakContext);
 			StringBuilder property = propertyResponse(
 				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
@@ -2001,7 +2002,7 @@ public class DBGPReader
 				if (breakContext instanceof ObjectContext)
 				{
 					ObjectContext octxt = (ObjectContext)breakContext;
-					int line = breakpoint.location.startLine;
+					int line = breakpoint.location.getStartLine();
 					String opname = breakContext.guardOp == null ?
 						"" : breakContext.guardOp.name.getName();
 
@@ -2012,7 +2013,7 @@ public class DBGPReader
 							APerSyncDefinition pdef = (APerSyncDefinition)d;
 
 							if (pdef.getOpname().getName().equals(opname) ||
-								pdef.getLocation().startLine == line ||
+								pdef.getLocation().getStartLine() == line ||
 								PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
 							{
 	            				for (PExp sub: PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))
@@ -2418,7 +2419,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		LexLocation.clearLocations();
+		LexLocationUtils.clearLocations();
 		interpreter.init(this);
 		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 		cdataResponse("Global context and test coverage initialized");
@@ -2778,7 +2779,7 @@ public class DBGPReader
 		PrintWriter pw = new PrintWriter(out);
 		pw.println(breakpoint.stoppedAtString());
 		pw.println(interpreter.getSourceLine(
-			breakpoint.location.file, breakpoint.location.startLine, ":  "));
+			breakpoint.location.getFile(), breakpoint.location.getStartLine(), ":  "));
 		pw.close();
 		cdataResponse(out.toString());
 	}
@@ -2791,8 +2792,8 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		File file = breakpoint.location.file;
-		int current = breakpoint.location.startLine;
+		File file = breakpoint.location.getFile();
+		int current = breakpoint.location.getStartLine();
 
 		int start = current - SOURCE_LINES;
 		if (start < 1) start = 1;

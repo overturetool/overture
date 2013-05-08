@@ -23,8 +23,7 @@
 
 package org.overture.parser.messages;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.parser.messages.VDMMessage;
+import org.overture.ast.intf.lex.ILexLocation;
 
 /**
  * A VDM warning message.
@@ -32,7 +31,7 @@ import org.overture.parser.messages.VDMMessage;
 
 public class VDMWarning extends VDMMessage
 {
-	public VDMWarning(int number, String message, LexLocation location)
+	public VDMWarning(int number, String message, ILexLocation location)
 	{
 		super(number, message, location);
 	}

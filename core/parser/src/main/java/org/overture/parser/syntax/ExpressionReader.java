@@ -57,6 +57,7 @@ import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexBooleanToken;
@@ -64,7 +65,6 @@ import org.overture.ast.lex.LexCharacterToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexQuoteToken;
@@ -504,7 +504,7 @@ public class ExpressionReader extends SyntaxReader
 	{
 		PExp exp = null;
 		LexToken token = lastToken();
-		LexLocation location = token.location;
+		ILexLocation location = token.location;
 
 		// Unary operators, so recursion OK for left grouping
 		switch (token.type)
@@ -959,7 +959,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	private PExp readTimeExpression(LexLocation location) throws LexException
+	private PExp readTimeExpression(ILexLocation location) throws LexException
 	{
 		nextToken();
 		return AstFactory.newATimeExp(location);
@@ -1206,7 +1206,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAPreExp(ve.getLocation(), function, args);
 	}
 
-	private PExp readSetOrMapExpression(LexLocation start)
+	private PExp readSetOrMapExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		LexToken token = lastToken();
@@ -1236,7 +1236,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	private SSetExp readSetExpression(LexLocation start, PExp first)
+	private SSetExp readSetExpression(ILexLocation start, PExp first)
 			throws ParserException, LexException
 	{
 		SSetExp result = null;
@@ -1290,7 +1290,7 @@ public class ExpressionReader extends SyntaxReader
 		return result;
 	}
 
-	private SMapExp readMapExpression(LexLocation start, AMapletExp first)
+	private SMapExp readMapExpression(ILexLocation start, AMapletExp first)
 			throws ParserException, LexException
 	{
 		SMapExp result = null;
@@ -1338,7 +1338,7 @@ public class ExpressionReader extends SyntaxReader
 		return result;
 	}
 
-	private SSeqExp readSeqExpression(LexLocation start)
+	private SSeqExp readSeqExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		if (lastToken().is(VDMToken.SEQ_CLOSE))
@@ -1382,7 +1382,7 @@ public class ExpressionReader extends SyntaxReader
 		return result;
 	}
 
-	private AIfExp readIfExpression(LexLocation start) throws ParserException,
+	private AIfExp readIfExpression(ILexLocation start) throws ParserException,
 			LexException
 	{
 		PExp exp = readExpression();
@@ -1410,7 +1410,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAIfExp(start, exp, thenExp, elseList, elseExp);
 	}
 
-	private AElseIfExp readElseIfExpression(LexLocation start)
+	private AElseIfExp readElseIfExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		PExp exp = readExpression();
@@ -1419,7 +1419,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAElseIfExp(start, exp, thenExp);
 	}
 
-	private ACasesExp readCasesExpression(LexLocation start)
+	private ACasesExp readCasesExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		PExp exp = readExpression();
@@ -1466,7 +1466,7 @@ public class ExpressionReader extends SyntaxReader
 		return alts;
 	}
 
-	private PExp readLetExpression(LexLocation start) throws ParserException,
+	private PExp readLetExpression(ILexLocation start) throws ParserException,
 			LexException
 	{
 		ParserException letDefError = null;
@@ -1498,7 +1498,7 @@ public class ExpressionReader extends SyntaxReader
 		}
 	}
 
-	private ALetDefExp readLetDefExpression(LexLocation start)
+	private ALetDefExp readLetDefExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
@@ -1518,7 +1518,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newALetDefExp(start, localDefs, readConnectiveExpression());
 	}
 
-	private ALetBeStExp readLetBeStExpression(LexLocation start)
+	private ALetBeStExp readLetBeStExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		PMultipleBind bind = getBindReader().readMultipleBind();
@@ -1537,7 +1537,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newALetBeStExp(start, bind, stexp, readConnectiveExpression());
 	}
 
-	private AForAllExp readForAllExpression(LexLocation start)
+	private AForAllExp readForAllExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
@@ -1545,7 +1545,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAForAllExp(start, bindList, readExpression());
 	}
 
-	private AExistsExp readExistsExpression(LexLocation start)
+	private AExistsExp readExistsExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		List<PMultipleBind> bindList = getBindReader().readBindList();
@@ -1553,7 +1553,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAExistsExp(start, bindList, readExpression());
 	}
 
-	private AExists1Exp readExists1Expression(LexLocation start)
+	private AExists1Exp readExists1Expression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
@@ -1561,7 +1561,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAExists1Exp(start, bind, readExpression());
 	}
 
-	private AIotaExp readIotaExpression(LexLocation start)
+	private AIotaExp readIotaExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		PBind bind = getBindReader().readBind();
@@ -1569,7 +1569,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAIotaExp(start, bind, readExpression());
 	}
 
-	private ALambdaExp readLambdaExpression(LexLocation start)
+	private ALambdaExp readLambdaExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		List<ATypeBind> bindList = getBindReader().readTypeBindList();
@@ -1577,7 +1577,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newALambdaExp(start, bindList, readExpression());
 	}
 
-	private ADefExp readDefExpression(LexLocation start)
+	private ADefExp readDefExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		DefinitionReader dr = getDefinitionReader();
@@ -1593,7 +1593,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newADefExp(start, equalsDefs, readExpression());
 	}
 
-	private ANewExp readNewExpression(LexLocation start)
+	private ANewExp readNewExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		LexIdentifierToken name = readIdToken("Expecting class name after 'new'");
@@ -1616,7 +1616,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newANewExp(start, name, args);
 	}
 
-	private AIsOfBaseClassExp readIsOfBaseExpression(LexLocation start)
+	private AIsOfBaseClassExp readIsOfBaseExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		checkFor(VDMToken.BRA, 2160, "Expecting '(' after 'isofbase'");
@@ -1643,7 +1643,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAIsOfBaseClassExp(start, classname, args.get(1));
 	}
 
-	private AIsOfClassExp readIsOfClassExpression(LexLocation start)
+	private AIsOfClassExp readIsOfClassExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		checkFor(VDMToken.BRA, 2162, "Expecting '(' after 'isofclass'");
@@ -1670,7 +1670,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newAIsOfClassExp(start, classname, args.get(1));
 	}
 
-	private ASameBaseClassExp readSameBaseExpression(LexLocation start)
+	private ASameBaseClassExp readSameBaseExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		checkFor(VDMToken.BRA, 2164, "Expecting '(' after 'samebaseclass'");
@@ -1685,7 +1685,7 @@ public class ExpressionReader extends SyntaxReader
 		return AstFactory.newASameBaseClassExp(start, args);
 	}
 
-	private ASameClassExp readSameClassExpression(LexLocation start)
+	private ASameClassExp readSameClassExpression(ILexLocation start)
 			throws ParserException, LexException
 	{
 		checkFor(VDMToken.BRA, 2166, "Expecting '(' after 'sameclass'");
@@ -1710,7 +1710,7 @@ public class ExpressionReader extends SyntaxReader
 		return e;
 	}
 
-	private PExp readHistoryExpression(LexLocation location)
+	private PExp readHistoryExpression(ILexLocation location)
 			throws ParserException, LexException
 	{
 		if (!inPerExpression)

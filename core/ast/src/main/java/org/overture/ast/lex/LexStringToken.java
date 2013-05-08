@@ -31,15 +31,27 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexStringToken;
 
-public class LexStringToken extends LexToken {
+public class LexStringToken extends LexToken implements ILexStringToken {
 	private static final long serialVersionUID = 1L;
 	public final String value;
 
-	public LexStringToken(String value, LexLocation location) {
+	public LexStringToken(String value, ILexLocation location) {
 		super(location, VDMToken.STRING);
 		this.value = value;
 	}
+
+	
+	
+	@Override
+	public String getValue()
+	{
+		return value;
+	}
+
+
 
 	@Override
 	public String toString() {
@@ -53,22 +65,22 @@ public class LexStringToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexStringToken(this);
+		analysis.caseILexStringToken(this);
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexStringToken(this); 
+		return caller.caseILexStringToken(this); 
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexStringToken(this, question);
+		caller.caseILexStringToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexStringToken(this, question);
+		return caller.caseILexStringToken(this, question);
 	}
 	
 	/**

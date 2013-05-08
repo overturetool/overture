@@ -67,7 +67,7 @@ public class OvertureTestHelper
 
 		for (VDMMessage msg : messages)
 		{
-			testMessages.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			testMessages.add(new Message(msg.location.getFile().getName(), msg.number, msg.location.getStartLine(), msg.location.getStartPos(), msg.message));
 		}
 
 		return testMessages;

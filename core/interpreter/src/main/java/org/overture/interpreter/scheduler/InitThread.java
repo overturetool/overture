@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.util.NotSupportedError;
@@ -46,7 +46,7 @@ public class InitThread implements ISchedulableThread
 		this.thread = t;
 	}
 
-	public void duration(long pause, Context ctxt, LexLocation location)
+	public void duration(long pause, Context ctxt, ILexLocation location)
 	{
 		throw new NotSupportedError();
 	}
@@ -126,7 +126,7 @@ public class InitThread implements ISchedulableThread
 		throw new NotSupportedError();
 	}
 
-	public void locking(Context ctxt, LexLocation location)
+	public void locking(Context ctxt, ILexLocation location)
 	{
 		throw new NotSupportedError();
 	}
@@ -171,7 +171,7 @@ public class InitThread implements ISchedulableThread
 		throw new NotSupportedError();
 	}
 
-	public void step(Context ctxt, LexLocation location)
+	public void step(Context ctxt, ILexLocation location)
 	{
 		throw new NotSupportedError();
 	}
@@ -181,7 +181,7 @@ public class InitThread implements ISchedulableThread
 		throw new NotSupportedError();
 	}
 
-	public void waiting(Context ctxt, LexLocation location)
+	public void waiting(Context ctxt, ILexLocation location)
 	{
 		throw new NotSupportedError();
 	}

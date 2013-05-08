@@ -1,16 +1,16 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
 
@@ -18,7 +18,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 {
 
 	public static Value eval( ATixeStmtAlternative node,
-			LexLocation location, Value exval, Context ctxt) throws AnalysisException
+			ILexLocation location, Value exval, Context ctxt) throws AnalysisException
 	{
 		Context evalContext = null;
 

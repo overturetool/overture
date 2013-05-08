@@ -1455,7 +1455,7 @@ public class TypeCheckerDefinitionVisitor extends
 		if (base.isVDMPP() && type instanceof ANamedInvariantType) {
 			ANamedInvariantType named = (ANamedInvariantType) type;
 			PDefinition typedef = base.findType(named.getName(),
-					node.getLocation().module);
+					node.getLocation().getModule());
 
 			if (typedef == null) {
 				TypeCheckerErrors.report(2048, "Cannot find symbol "

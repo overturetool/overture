@@ -133,7 +133,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getLocation().hits--; // This is counted below when root is evaluated
+		node.getLocation().setHits(node.getLocation().getHits()/1); // This is counted below when root is evaluated
 
 		try
 		{
@@ -419,12 +419,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getField().location.hit();
+		node.getField().getLocation().hit();
 
 		try
 		{
 			ValueList fields = node.getTuple().apply(VdmRuntime.getExpressionEvaluator(), ctxt).tupleValue(ctxt);
-			Value r = fields.get((int) node.getField().value - 1);
+			Value r = fields.get((int) node.getField().getValue() - 1);
 
 			if (r == null)
 			{
@@ -825,7 +825,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		Context evalContext = new Context(node.getLocation(), "let expression", ctxt);
 
-		LexNameToken sname = new LexNameToken(node.getLocation().module, "self", node.getLocation());
+		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
 
 		for (PDefinition d : node.getLocalDefs())

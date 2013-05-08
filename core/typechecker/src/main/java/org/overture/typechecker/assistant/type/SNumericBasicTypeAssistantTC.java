@@ -5,7 +5,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -35,7 +35,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant {
 		
 	}
 
-	public static PType typeOf(long value, LexLocation location) {
+	public static PType typeOf(long value, ILexLocation location) {
 		if (value > 0)
 		{
 			return AstFactory.newANatOneNumericBasicType(location);

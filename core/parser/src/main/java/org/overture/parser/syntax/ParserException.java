@@ -23,7 +23,7 @@
 
 package org.overture.parser.syntax;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.parser.messages.LocatedException;
 
 /**
@@ -35,7 +35,7 @@ public class ParserException extends LocatedException
 {
 	private int depth;
 
-	public ParserException(int number, String message, LexLocation location, int depth)
+	public ParserException(int number, String message, ILexLocation location, int depth)
 	{
 		super(number, message, location);
 		this.depth = depth;

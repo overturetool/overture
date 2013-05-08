@@ -329,7 +329,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			{
 				if (t instanceof AQuoteType)
 				{
-					String value = "<" + ((AQuoteType) t).getValue().value
+					String value = "<" + ((AQuoteType) t).getValue().getValue()
 							+ ">";
 					enumeration.createOwnedLiteral(value);
 

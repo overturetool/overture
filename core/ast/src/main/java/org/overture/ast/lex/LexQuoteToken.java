@@ -31,15 +31,27 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexQuoteToken;
 
-public class LexQuoteToken extends LexToken {
+public class LexQuoteToken extends LexToken implements ILexQuoteToken{
 	private static final long serialVersionUID = 1L;
 	public final String value;
 
-	public LexQuoteToken(String value, LexLocation location) {
+	public LexQuoteToken(String value, ILexLocation location) {
 		super(location, VDMToken.QUOTE);
 		this.value = value;
 	}
+
+	
+	
+	@Override
+	public String getValue()
+	{
+		return value;
+	}
+
+
 
 	@Override
 	public String toString() {
@@ -53,22 +65,22 @@ public class LexQuoteToken extends LexToken {
 	
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseLexQuoteToken(this); 
+		analysis.caseILexQuoteToken(this); 
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseLexQuoteToken(this);
+		return caller.caseILexQuoteToken(this);
 	}
 
 	@Override
 	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
-		caller.caseLexQuoteToken(this, question);
+		caller.caseILexQuoteToken(this, question);
 	}
 
 	@Override
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
-		return caller.caseLexQuoteToken(this, question);
+		return caller.caseILexQuoteToken(this, question);
 	}
 	/**
 	 * Creates a map of all field names and their value
