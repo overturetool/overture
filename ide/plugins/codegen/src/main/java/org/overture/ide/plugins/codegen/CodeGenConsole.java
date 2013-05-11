@@ -21,7 +21,17 @@ public class CodeGenConsole
 	public final PrintWriter err;
 	boolean hasConsole = false;
 
-	public CodeGenConsole()
+	private static CodeGenConsole Instance;
+	
+	public static CodeGenConsole GetInstance()
+	{
+		if(Instance == null)
+			Instance = new CodeGenConsole();
+		
+		return Instance;
+	}
+	
+	private CodeGenConsole()
 	{
 		MessageConsole codeGenConsole = findConsole(ICodeGenConstants.CONSOLE_NAME);
 		if (codeGenConsole != null)

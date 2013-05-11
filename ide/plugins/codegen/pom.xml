@@ -15,8 +15,17 @@
   <artifactId>org.overture.ide.plugins.codegen</artifactId>
   <name>Code Generator</name>
 
+<!--
+<dependencies>
+<dependency>
+	<groupId>velocity</groupId>
+	<artifactId>velocity-dep</artifactId>
+	<version>1.4</version>
+</dependency>
+</dependencies>
+-->            
 
- <build>
+ <build> 
     <plugins>
       <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
@@ -30,6 +39,38 @@
 	  </includes>
 	</configuration>
       </plugin>
+	  
+	<!--   
+	<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+					<groupId>velocity</groupId>
+					<artifactId>velocity-dep</artifactId>
+					<version>1.4</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+					<outputDirectory>${basedir}/jars</outputDirectory>
+					<destFileName>velocity.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/wars</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	  -->
     </plugins>
   </build>
 </project>
