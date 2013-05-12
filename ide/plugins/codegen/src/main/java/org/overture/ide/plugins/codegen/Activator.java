@@ -1,5 +1,7 @@
 package org.overture.ide.plugins.codegen;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -51,6 +53,17 @@ public class Activator extends AbstractUIPlugin
 	{
 		return plugin;
 	}
+	
+	public static void log(Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, ICodeGenConstants.PLUGIN_ID, "Code Generator", exception));
+	}
+
+	public static void log(String message, Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, ICodeGenConstants.PLUGIN_ID, message, exception));
+	}
+
 	
 	/** 
 	 * Initializes a preference store with default preference values 

@@ -6,20 +6,23 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.velocity.Template;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.TemplateInitException;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ast.lex.Dialect;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
 
@@ -40,6 +43,34 @@ public class Vdm2CppUtil
 	public static String getPropertiesPath(String relativePath)
 	{
 		return getAbsolutePath(relativePath);
+	}
+	
+	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
+	{
+		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_RT;
+	}
+	
+	public static IVdmProject getVdmProject(ExecutionEvent event)
+	{
+		ISelection selection = HandlerUtil.getCurrentSelection(event);
+
+		if (!(selection instanceof IStructuredSelection))
+		{
+			return null;
+		}
+
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		Object firstElement = structuredSelection.getFirstElement();
+
+		if (!(firstElement instanceof IProject))
+		{
+			return null;
+		}
+
+		IProject project = ((IProject) firstElement);
+		IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+
+		return vdmProject;
 	}
 	
 	public static Template getTemplate(String relativePath){
