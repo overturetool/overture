@@ -35,6 +35,7 @@ public abstract class InvariantType extends Type
 	private static final long serialVersionUID = 1L;
 	public ExplicitFunctionDefinition invdef = null;
 	public boolean opaque = false;
+	protected boolean inNarrower = false;
 
 	public InvariantType(LexLocation location)
 	{

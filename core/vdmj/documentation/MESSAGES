@@ -672,6 +672,7 @@ as the expected and actual values.
 3318, "Measure's type parameters must match function's"
 3319, "'in set' expression is always false"
 3320, "'not in set' expression is always true"
+3321, "Type component visibility less than type's definition"
 
 
 4000, "Cannot instantiate abstract class <class>"

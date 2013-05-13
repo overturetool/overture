@@ -24,6 +24,8 @@
 package org.overturetool.vdmj.types;
 
 import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.definitions.AccessSpecifier;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
@@ -298,6 +300,33 @@ public class NamedType extends InvariantType
 		}
 
 		Settings.invchecks = checks;
+		return result;
+	}
+	
+	@Override
+	public boolean narrowerThan(AccessSpecifier accessSpecifier)
+	{
+		if (inNarrower)
+		{
+			return false;
+		}
+
+		inNarrower = true;
+		boolean result = false;
+		
+		if (type.definitions == null)
+		{
+			result = super.narrowerThan(accessSpecifier);
+		}
+		else
+		{
+			for (Definition d: type.definitions)
+			{
+				result = result || d.accessSpecifier.narrowerThan(accessSpecifier);
+			}
+		}
+		
+		inNarrower = false;
 		return result;
 	}
 }

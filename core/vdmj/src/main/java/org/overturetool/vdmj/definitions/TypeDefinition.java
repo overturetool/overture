@@ -73,6 +73,8 @@ public class TypeDefinition extends Definition
 		this.type = type;
 		this.invPattern = invPattern;
 		this.invExpression = invExpression;
+		
+		type.definitions = new DefinitionList(this);
 	}
 
 	@Override
@@ -130,6 +132,11 @@ public class TypeDefinition extends Definition
 		if (invdef != null)
 		{
 			invdef.typeCheck(base, NameScope.NAMES);
+		}
+
+		if (type.narrowerThan(accessSpecifier))
+		{
+			report(3321, "Type component visibility less than type's definition");
 		}
 	}
 
