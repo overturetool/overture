@@ -10,7 +10,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.vdm2cpp.Vdm2Cpp;
 import org.overture.ide.plugins.codegen.vdm2cpp.Vdm2CppUtil;
-import org.overture.ide.plugins.codegen.visitor.CodeGenContext;
+import org.overture.ide.plugins.codegen.visitor.CodeGenContextMap;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.interpreter.messages.Console;
 
@@ -38,7 +38,7 @@ public class Vdm2CppCommand extends AbstractHandler
 
 		final Vdm2Cpp vdm2cpp = new Vdm2Cpp();
 
-		CodeGenContext codeGenContext = null;
+		CodeGenContextMap codeGenContext = null;
 		
 		try
 		{

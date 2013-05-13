@@ -8,14 +8,13 @@ import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.eclipse.ui.PartInitException;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
-import org.overture.ide.plugins.codegen.visitor.CodeGenContext;
+import org.overture.ide.plugins.codegen.visitor.CodeGenContextMap;
 import org.overture.ide.plugins.codegen.visitor.CodeGenVisitor;
 
 public class Vdm2Cpp
@@ -35,7 +34,7 @@ public class Vdm2Cpp
 		Velocity.init(s);
 	}
 
-	public CodeGenContext generateCode(IVdmModel model) throws AnalysisException
+	public CodeGenContextMap generateCode(IVdmModel model) throws AnalysisException
 	{
 		try
 		{
@@ -51,7 +50,7 @@ public class Vdm2Cpp
 			return null;
 		
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
-		CodeGenContext codeGenContext = new CodeGenContext();
+		CodeGenContextMap codeGenContext = new CodeGenContextMap();
 		
 		for (IVdmSourceUnit source : sources)
 		{
@@ -66,10 +65,12 @@ public class Vdm2Cpp
 			}
 		}
 		
+		codeGenContext.commit();
+		
 		return codeGenContext;
 	}
 	
-	public void save(IVdmProject vdmProject, CodeGenContext codeGenContext)
+	public void save(IVdmProject vdmProject, CodeGenContextMap codeGenContext)
 	{
 
 //		TODO: This method currently just prints the results. The code below constructs a file representing the output folder
@@ -86,12 +87,12 @@ public class Vdm2Cpp
 //		{
 //			e.printStackTrace();
 //		}		
-		Set<AClassClassDefinition> set = codeGenContext.getKeys();
+		Set<String> set = codeGenContext.getContextKeys();
 		
 		Template template = Vdm2CppUtil.getTemplate("resources"
 				+ File.separatorChar + "class.vm");
 		
-		for (AClassClassDefinition classDef : set)
+		for (String classDef : set)
 		{
 			if (template == null)
 			{
@@ -99,7 +100,7 @@ public class Vdm2Cpp
 				return;
 			}
 			
-			template.merge(codeGenContext.getContext(classDef), console.out);
+			template.merge(codeGenContext.getContext(classDef).getVelocityContext(), console.out);
 			console.out.flush();
 			console.out.println();
 		}

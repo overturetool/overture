@@ -1,4 +1,10 @@
-class $ClassName
+$CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 {
+#foreach($valueDef in $VALUE_DEFS)
+	$valueDef.getAccessSpecifier() static final $valueDef.getType() $valueDef.getPattern() = $valueDef.getExp();
+#end
 
+	$METHOD_ACCESS_SPECIFIER $METHOD_RETURN_TYPE $METHOD_NAME()
+	{
+	}	
 }

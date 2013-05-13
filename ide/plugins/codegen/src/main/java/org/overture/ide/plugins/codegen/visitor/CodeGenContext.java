@@ -1,38 +1,32 @@
 package org.overture.ide.plugins.codegen.visitor;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.apache.velocity.VelocityContext;
-import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ide.plugins.codegen.naming.VarNames;
+import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenContext
 {
-	private HashMap<AClassClassDefinition, VelocityContext> contexts;
+	private VelocityContext context;
 
 	public CodeGenContext()
 	{
-		contexts = new HashMap<AClassClassDefinition, VelocityContext>();
+		context = new VelocityContext();
 	}
 
-	public void addClass(AClassClassDefinition key)
+	public void put(VarNames key, String value)
 	{
-		contexts.put(key, new VelocityContext());
+		context.put(key.toString(), value);
 	}
 	
-	public VelocityContext getContext(AClassClassDefinition key)
+	public void put(VarNames key, ArrayList<ValueDefinitionCG> valueDefs)
 	{
-		return contexts.get(key);
+		context.put(key.toString(), valueDefs);
 	}
 	
-	public Set<AClassClassDefinition> getKeys()
+	public VelocityContext getVelocityContext()
 	{
-		return contexts.keySet();
+		return context;
 	}
-	
-	public void putInContext(AClassClassDefinition key, String keyStr, Object value)
-	{
-		contexts.get(key).put(keyStr, value);
-	}
-
 }
