@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -10,11 +10,11 @@
   </parent>
 
   <packaging>eclipse-repository</packaging>
-  
+
   <groupId>org.overture.ide</groupId>
   <artifactId>org.overture.ide.product</artifactId>
   <name>Overture IDE Standalone Product</name>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -34,14 +34,15 @@
             </goals>
           </execution>
         </executions>
-	<configuration>
-	  <products>
-	    <product>
-	      <id>org.overture.ide.platform.product</id>
-	      <archiveFileName>Overture-${project.version}</archiveFileName>
-	    </product>
-	  </products>
-	</configuration>
+        <configuration>
+          <products>
+            <product>
+              <id>org.overture.ide.platform.product</id>
+              <archiveFileName>Overture-${project.version}</archiveFileName>
+              <rootFolder>Overture</rootFolder>
+            </product>
+          </products>
+        </configuration>
       </plugin>
     </plugins>
   </build>
