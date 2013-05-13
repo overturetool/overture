@@ -71,7 +71,7 @@ evaluateRule(rule) ==
        cases (rule.cond).EvaluateBind(req,env):
              true   -> return(rule.effect),
              false  -> return(<NotApplicable>),
-            <Indet> -> return(<Indeterminate>)
+            <Indet> -> return(<Indeterminate>),
             others -> error
        end
            else return <NotApplicable> 

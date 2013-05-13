@@ -4,9 +4,9 @@ types
 
 inline  = FOId * int * int * Altitude * Time;
   
-FOOut = FOId * Coordinates * Altitude * FOWarning * 
+protected FOOut = FOId * Coordinates * Altitude * FOWarning * 
         MinimumSafetyAltitude * Time;
-RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
+protected RadarOut = Coordinates * nat1 * RadarWarning * nat *  Time;
   
   
 protected outline = FOOut | RadarOut; 
