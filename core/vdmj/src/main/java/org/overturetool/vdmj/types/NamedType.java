@@ -316,7 +316,7 @@ public class NamedType extends InvariantType
 		
 		if (type.definitions == null)
 		{
-			result = super.narrowerThan(accessSpecifier);
+			result = type.narrowerThan(accessSpecifier) || super.narrowerThan(accessSpecifier);
 		}
 		else
 		{
