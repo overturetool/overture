@@ -3,7 +3,7 @@ package org.overture.ide.plugins.codegen.visitor;
 import java.util.ArrayList;
 
 import org.apache.velocity.VelocityContext;
-import org.overture.ide.plugins.codegen.naming.VarNames;
+import org.overture.ide.plugins.codegen.naming.TemplateParameters;
 import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenContext
@@ -15,14 +15,14 @@ public class CodeGenContext
 		context = new VelocityContext();
 	}
 
-	public void put(VarNames key, String value)
+	public void put(TemplateParameters param, String value)
 	{
-		context.put(key.toString(), value);
+		context.put(param.toString(), value);
 	}
 	
-	public void put(VarNames key, ArrayList<ValueDefinitionCG> valueDefs)
+	public void put(TemplateParameters param, ArrayList<ValueDefinitionCG> valueDefs)
 	{
-		context.put(key.toString(), valueDefs);
+		context.put(param.toString(), valueDefs);
 	}
 	
 	public VelocityContext getVelocityContext()

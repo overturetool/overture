@@ -1,6 +1,6 @@
 package org.overture.ide.plugins.codegen.naming;
 
-public enum VarNames
+public enum TemplateParameters
 {
 	//Class definitions
 	CLASS_ACCESS_SPECIFIER,
@@ -15,7 +15,6 @@ public enum VarNames
 	VALUE_ACCESS_SPECIFIER,
 	VALUE_TYPE,
 	VALUE_PATTERN,
-	
-	VALUE_DEFS
+	VALUE_DEFS ////The list with value definitions
 	
 }

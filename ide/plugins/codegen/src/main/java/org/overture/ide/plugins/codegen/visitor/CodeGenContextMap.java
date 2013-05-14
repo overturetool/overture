@@ -3,60 +3,59 @@ package org.overture.ide.plugins.codegen.visitor;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.velocity.VelocityContext;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ide.plugins.codegen.naming.VarNames;
 import org.overture.ide.plugins.codegen.nodes.ClassCG;
 
 public class CodeGenContextMap
 {
-	//Suggestion: Make it remember the last context it was accessing since
-	//it is likely to be accessed several times subsequently
-	
-	private HashMap<String, CodeGenContext> contexts;
-	private HashMap<String, ClassCG> classes;
+	private HashMap<String, AnalysisCG> analyses;
 	
 	public CodeGenContextMap()
 	{
-		contexts = new HashMap<String, CodeGenContext>();
-		classes = new HashMap<String, ClassCG>();
+		analyses = new HashMap<String, AnalysisCG>();
 	}
 
-	public void addClass(ClassCG newClass)
+	public void registerCodeGenClass(ClassCG cgClass)
 	{
-		String className = newClass.getClassName();
+		String className = cgClass.getClassName();
+		CodeGenContext codeGenContex = new CodeGenContext();
 		
-		contexts.put(className, new CodeGenContext());
-		classes.put(className, newClass);
-	}
-	
-	public ClassCG getClass(String key)
-	{
-		return classes.get(key);
+		AnalysisCG analysis = new AnalysisCG(codeGenContex, cgClass);
+		
+		analyses.put(className, analysis);
 	}
 	
 	public Set<String> getClassKeys()
 	{
-		return contexts.keySet();
+		return analyses.keySet();
 	}
 	
 	public Set<String> getContextKeys()
 	{
-		return contexts.keySet();
-	} 
-	
-	public CodeGenContext getContext(String key)
-	{
-		return contexts.get(key);
+		return analyses.keySet();
 	}
 	
+	public ClassCG getCodeGenClass(String className)
+	{
+		return analyses.get(className).getCodeGenClass();
+	}
+	
+	public CodeGenContext getContext(String className)
+	{
+		return analyses.get(className).getCodeGenContext();
+	}
+		
 	public void commit()
 	{
-		Set<String> keys = getClassKeys();
+		Set<String> classNames = getClassKeys();
 		
-		for (String key : keys)
+		for (String name : classNames)
 		{
-			getClass(key).commit(getContext(key));
+			AnalysisCG analysis = analyses.get(name);
+			
+			ClassCG codeGenClass = analysis.getCodeGenClass();
+			CodeGenContext codeGenContext = analysis.getCodeGenContext();
+			
+			codeGenClass.commit(codeGenContext);
 		}
 	}
 }

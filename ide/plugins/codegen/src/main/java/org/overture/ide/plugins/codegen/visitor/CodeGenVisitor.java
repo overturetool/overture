@@ -8,7 +8,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ide.plugins.codegen.naming.VarNames;
+import org.overture.ide.plugins.codegen.naming.TemplateParameters;
 import org.overture.ide.plugins.codegen.nodes.ClassCG;
 import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
 
@@ -28,7 +28,7 @@ public class CodeGenVisitor extends
 
 		ClassCG classCg = new ClassCG(className, accessSpecifier);
 		
-		question.addClass(classCg);
+		question.registerCodeGenClass(classCg);
 		
 		LinkedList<PDefinition> definitions = node.getDefinitions();
 
@@ -48,7 +48,7 @@ public class CodeGenVisitor extends
 		String exp = assistant.formatExpression(node.getExpression());
 
 		String className = node.getClassDefinition().getName().getName();
-		question.getClass(className).addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
+		question.getCodeGenClass(className).addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
 
 		return null;
 	}
@@ -65,9 +65,9 @@ public class CodeGenVisitor extends
 		String className = node.getClassDefinition().getName().getName();
 		CodeGenContext context = question.getContext(className);
 
-		context.put(VarNames.METHOD_ACCESS_SPECIFIER, accessSpecifier);
-		context.put(VarNames.METHOD_RETURN_TYPE, returnType);
-		context.put(VarNames.METHOD_NAME, operationName);
+		context.put(TemplateParameters.METHOD_ACCESS_SPECIFIER, accessSpecifier);
+		context.put(TemplateParameters.METHOD_RETURN_TYPE, returnType);
+		context.put(TemplateParameters.METHOD_NAME, operationName);
 
 		return null;
 	}

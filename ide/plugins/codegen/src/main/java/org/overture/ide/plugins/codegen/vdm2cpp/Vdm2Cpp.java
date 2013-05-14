@@ -50,7 +50,7 @@ public class Vdm2Cpp
 			return null;
 		
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
-		CodeGenContextMap codeGenContext = new CodeGenContextMap();
+		CodeGenContextMap codeGenContextMap = new CodeGenContextMap();
 		
 		for (IVdmSourceUnit source : sources)
 		{
@@ -61,13 +61,14 @@ public class Vdm2Cpp
 			
 			for (INode node : parseList)
 			{
-				node.apply(codeGenVisitor, codeGenContext);
+				node.apply(codeGenVisitor, codeGenContextMap);
 			}
 		}
 		
-		codeGenContext.commit();
+		//Now register the analysis at the apache velocity engine
+		codeGenContextMap.commit();
 		
-		return codeGenContext;
+		return codeGenContextMap;
 	}
 	
 	public void save(IVdmProject vdmProject, CodeGenContextMap codeGenContext)

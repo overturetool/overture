@@ -2,7 +2,7 @@ package org.overture.ide.plugins.codegen.nodes;
 
 import java.util.ArrayList;
 
-import org.overture.ide.plugins.codegen.naming.VarNames;
+import org.overture.ide.plugins.codegen.naming.TemplateParameters;
 import org.overture.ide.plugins.codegen.visitor.CodeGenContext;
 
 public class ClassCG implements ICommitable
@@ -36,9 +36,9 @@ public class ClassCG implements ICommitable
 	@Override
 	public void commit(CodeGenContext context)
 	{
-		context.put(VarNames.CLASS_NAME, className);
-		context.put(VarNames.CLASS_ACCESS_SPECIFIER, accessSpecifier);
-		context.put(VarNames.VALUE_DEFS, valueDefinitions);
+		context.put(TemplateParameters.CLASS_NAME, className);
+		context.put(TemplateParameters.CLASS_ACCESS_SPECIFIER, accessSpecifier);
+		context.put(TemplateParameters.VALUE_DEFS, valueDefinitions);
 	}
 	
 }
