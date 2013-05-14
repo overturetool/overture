@@ -10,6 +10,7 @@ public enum TemplateParameters
 	METHOD_ACCESS_SPECIFIER,
 	METHOD_RETURN_TYPE,
 	METHOD_NAME,
+	METHOD_DEFS,
 	
 	//Value definition
 	VALUE_ACCESS_SPECIFIER,

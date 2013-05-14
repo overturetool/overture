@@ -13,4 +13,6 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.debug
 Bundle-Activator: org.overture.ide.plugins.codegen.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: ., jars/velocity-1.7-dep.jar
+Bundle-ClassPath: .,
+ jars/velocity.jar,
+ jars/codegen.jar

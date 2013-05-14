@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.velocity.VelocityContext;
 import org.overture.ide.plugins.codegen.naming.TemplateParameters;
+import org.overture.ide.plugins.codegen.nodes.TemplateCollectionElement;
 import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenContext
@@ -20,7 +21,7 @@ public class CodeGenContext
 		context.put(param.toString(), value);
 	}
 	
-	public void put(TemplateParameters param, ArrayList<ValueDefinitionCG> valueDefs)
+	public <T extends TemplateCollectionElement> void put(TemplateParameters param, ArrayList<T> valueDefs)
 	{
 		context.put(param.toString(), valueDefs);
 	}

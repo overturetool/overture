@@ -12,6 +12,7 @@ public class ClassCG implements ICommitable
 	private String accessSpecifier;
 	
 	private ArrayList<ValueDefinitionCG> valueDefinitions;
+	private ArrayList<MethodDeinitionCG> methodDefinitions;
 	
 	public ClassCG(String className, String accessSpecifier)
 	{
@@ -20,7 +21,8 @@ public class ClassCG implements ICommitable
 		this.className = className;
 		this.accessSpecifier = accessSpecifier;
 		
-		this.valueDefinitions = new ArrayList<>();
+		this.valueDefinitions = new ArrayList<ValueDefinitionCG>();
+		this.methodDefinitions = new ArrayList<MethodDeinitionCG>();
 	}
 		
 	public String getClassName()
@@ -32,13 +34,21 @@ public class ClassCG implements ICommitable
 	{
 		this.valueDefinitions.add(valueDef);
 	}
+	
+	public void addMethod(MethodDeinitionCG methodDef)
+	{
+		this.methodDefinitions.add(methodDef);
+	}
 
 	@Override
 	public void commit(CodeGenContext context)
 	{
 		context.put(TemplateParameters.CLASS_NAME, className);
 		context.put(TemplateParameters.CLASS_ACCESS_SPECIFIER, accessSpecifier);
+		
 		context.put(TemplateParameters.VALUE_DEFS, valueDefinitions);
+		
+		context.put(TemplateParameters.METHOD_DEFS, methodDefinitions);
 	}
 	
 }

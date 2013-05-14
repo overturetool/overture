@@ -8,8 +8,8 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ide.plugins.codegen.naming.TemplateParameters;
 import org.overture.ide.plugins.codegen.nodes.ClassCG;
+import org.overture.ide.plugins.codegen.nodes.MethodDeinitionCG;
 import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenVisitor extends
@@ -48,7 +48,8 @@ public class CodeGenVisitor extends
 		String exp = assistant.formatExpression(node.getExpression());
 
 		String className = node.getClassDefinition().getName().getName();
-		question.getCodeGenClass(className).addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
+		ClassCG codeGenClass = question.getCodeGenClass(className); 
+		codeGenClass.addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
 
 		return null;
 	}
@@ -63,12 +64,9 @@ public class CodeGenVisitor extends
 		String returnType = assistant.formatType(node.getActualResult());
 
 		String className = node.getClassDefinition().getName().getName();
-		CodeGenContext context = question.getContext(className);
-
-		context.put(TemplateParameters.METHOD_ACCESS_SPECIFIER, accessSpecifier);
-		context.put(TemplateParameters.METHOD_RETURN_TYPE, returnType);
-		context.put(TemplateParameters.METHOD_NAME, operationName);
-
+		ClassCG codeGenClass = question.getCodeGenClass(className);
+		codeGenClass.addMethod(new MethodDeinitionCG(accessSpecifier, returnType, operationName));
+		
 		return null;
 	}
 

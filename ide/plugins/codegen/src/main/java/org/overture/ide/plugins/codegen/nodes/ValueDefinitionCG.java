@@ -1,7 +1,7 @@
 package org.overture.ide.plugins.codegen.nodes;
 
 
-public class ValueDefinitionCG 
+public class ValueDefinitionCG implements TemplateCollectionElement
 {	
 	private String accessSpecifier;
 	private String type;

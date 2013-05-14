@@ -4,7 +4,10 @@ $CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 	$valueDef.getAccessSpecifier() static final $valueDef.getType() $valueDef.getPattern() = $valueDef.getExp();
 #end
 
-	$METHOD_ACCESS_SPECIFIER $METHOD_RETURN_TYPE $METHOD_NAME()
+#foreach($methodDef in $METHOD_DEFS)
+	$methodDef.getAccessSpecifier() $methodDef.getReturnType() $methodDef.getMethodName()
 	{
-	}	
+	}
+Hej
+#end
 }
