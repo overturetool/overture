@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -51,6 +52,9 @@ public class LexLocation implements Serializable
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
 	
+	/** A unique map of LexLocation objects, for rapid searching. */
+	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
+
 	/** A collection of all LexLocation objects to the AstNodes. */
 	private static Map<LexLocation,IAstNode> locationToAstNode = new Hashtable<LexLocation,IAstNode>();
 
@@ -90,9 +94,11 @@ public class LexLocation implements Serializable
 		this.startPos = startPos;
 		this.endLine = endLine;
 		this.endPos = endPos;
+		
 		synchronized (allLocations)
 		{
 			allLocations.add(this);
+			uniqueLocations.put(this, this);
 		}
 	}
 
@@ -134,6 +140,24 @@ public class LexLocation implements Serializable
 		}
 	}
 
+	/**
+	 * Method to resolve existing locations during de-serialise - as used
+	 * during deep copy. This is to avoid problems with coverage.
+	 */
+	private Object readResolve() throws ObjectStreamException
+	{
+		LexLocation existing = uniqueLocations.get(this);
+		
+		if (existing == null)
+		{
+			return this;
+		}
+		else
+		{
+			return existing;
+		}
+	}
+	
 	@Override
 	public boolean equals(Object other)
 	{
@@ -194,6 +218,11 @@ public class LexLocation implements Serializable
 			allLocations = new Vector<LexLocation>();
 		}
 		
+		synchronized (uniqueLocations)
+		{
+			uniqueLocations = new HashMap<LexLocation, LexLocation>();
+		}
+		
 		synchronized (locationToAstNode)
 		{
 			locationToAstNode = new Hashtable<LexLocation, IAstNode>();
@@ -212,8 +241,6 @@ public class LexLocation implements Serializable
 		// the vector.
 		synchronized (allLocations)
 		{
-	
-
 			ListIterator<LexLocation> it =
 				allLocations.listIterator(allLocations.size());
 
@@ -230,6 +257,7 @@ public class LexLocation implements Serializable
 				else
 				{
 					it.remove();
+					uniqueLocations.remove(l);
 				}
 			}
 		}
