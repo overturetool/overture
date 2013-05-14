@@ -1,9 +1,9 @@
-package org.overture.ide.plugins.codegen.visitor;
+package org.overture.codegen.visitor;
 
 import java.util.HashMap;
 import java.util.Set;
 
-import org.overture.ide.plugins.codegen.nodes.ClassCG;
+import org.overture.codegen.nodes.ClassCG;
 
 public class CodeGenContextMap
 {

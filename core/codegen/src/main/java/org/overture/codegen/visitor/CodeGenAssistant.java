@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.visitor;
+package org.overture.codegen.visitor;
 
 import java.util.HashMap;
 

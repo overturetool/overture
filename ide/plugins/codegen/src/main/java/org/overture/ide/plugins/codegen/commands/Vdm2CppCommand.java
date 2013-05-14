@@ -1,16 +1,21 @@
 package org.overture.ide.plugins.codegen.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.node.INode;
+import org.overture.codegen.vdm2cpp.Vdm2Cpp;
+import org.overture.codegen.visitor.CodeGenContextMap;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
-import org.overture.ide.plugins.codegen.vdm2cpp.Vdm2Cpp;
-import org.overture.ide.plugins.codegen.vdm2cpp.Vdm2CppUtil;
-import org.overture.ide.plugins.codegen.visitor.CodeGenContextMap;
+import org.overture.ide.plugins.codegen.vdm2cpp.PluginVdm2CppUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.interpreter.messages.Console;
 
@@ -19,7 +24,7 @@ public class Vdm2CppCommand extends AbstractHandler
 
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		IVdmProject vdmProject = Vdm2CppUtil.getVdmProject(event);
+		IVdmProject vdmProject = PluginVdm2CppUtil.getVdmProject(event);
 
 		if (vdmProject == null)
 			return null;
@@ -33,16 +38,25 @@ public class Vdm2CppCommand extends AbstractHandler
 			VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);
 
 		if (!model.isTypeCorrect()
-				|| !Vdm2CppUtil.isSupportedVdmDialect(vdmProject))
+				|| !PluginVdm2CppUtil.isSupportedVdmDialect(vdmProject))
 			return null;
 
 		final Vdm2Cpp vdm2cpp = new Vdm2Cpp();
 
-		CodeGenContextMap codeGenContext = null;
+		CodeGenContextMap codeGenContextMap = null;
 		
 		try
 		{
-			codeGenContext = vdm2cpp.generateCode(model);
+			List<List<INode>> parseLists = new ArrayList<List<INode>>();
+			
+			List<IVdmSourceUnit> sources = model.getSourceUnits();
+			
+			for (IVdmSourceUnit source : sources)
+			{
+				parseLists.add(source.getParseList());
+			}
+			
+			codeGenContextMap = vdm2cpp.generateCode(parseLists);
 
 		} catch (AnalysisException ex)
 		{
@@ -54,13 +68,13 @@ public class Vdm2CppCommand extends AbstractHandler
 			return null;
 		}
 
-		if(codeGenContext == null)
+		if(codeGenContextMap == null)
 		{
 			Console.out.println("There is no source to generate from.");
 			return null;
 		}
 		
-		vdm2cpp.save(vdmProject, codeGenContext);
+		vdm2cpp.save(codeGenContextMap);
 
 		return null;
 	}

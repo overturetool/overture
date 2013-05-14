@@ -1,6 +1,6 @@
-package org.overture.ide.plugins.codegen.visitor;
+package org.overture.codegen.visitor;
 
-import org.overture.ide.plugins.codegen.nodes.ClassCG;
+import org.overture.codegen.nodes.ClassCG;
 
 public class AnalysisCG
 {

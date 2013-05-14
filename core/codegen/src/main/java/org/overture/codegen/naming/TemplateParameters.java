@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.naming;
+package org.overture.codegen.naming;
 
 public enum TemplateParameters
 {

@@ -1,11 +1,11 @@
-package org.overture.ide.plugins.codegen.visitor;
+package org.overture.codegen.visitor;
 
 import java.util.ArrayList;
 
 import org.apache.velocity.VelocityContext;
-import org.overture.ide.plugins.codegen.naming.TemplateParameters;
-import org.overture.ide.plugins.codegen.nodes.TemplateCollectionElement;
-import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
+import org.overture.codegen.naming.TemplateParameters;
+import org.overture.codegen.nodes.TemplateCollectionElement;
+import org.overture.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenContext
 {

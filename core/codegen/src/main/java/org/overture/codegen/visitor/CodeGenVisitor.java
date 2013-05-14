@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.visitor;
+package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
 
@@ -8,9 +8,9 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ide.plugins.codegen.nodes.ClassCG;
-import org.overture.ide.plugins.codegen.nodes.MethodDeinitionCG;
-import org.overture.ide.plugins.codegen.nodes.ValueDefinitionCG;
+import org.overture.codegen.nodes.ClassCG;
+import org.overture.codegen.nodes.MethodDeinitionCG;
+import org.overture.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenVisitor extends
 		QuestionAnswerAdaptor<CodeGenContextMap, String>

@@ -8,6 +8,5 @@ $CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 	$methodDef.getAccessSpecifier() $methodDef.getReturnType() $methodDef.getMethodName()
 	{
 	}
-Hej
 #end
 }

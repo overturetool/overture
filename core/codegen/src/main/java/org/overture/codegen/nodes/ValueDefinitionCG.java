@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.nodes;
+package org.overture.codegen.nodes;
 
 
 public class ValueDefinitionCG implements TemplateCollectionElement

@@ -1,9 +1,9 @@
-package org.overture.ide.plugins.codegen.nodes;
+package org.overture.codegen.nodes;
 
 import java.util.ArrayList;
 
-import org.overture.ide.plugins.codegen.naming.TemplateParameters;
-import org.overture.ide.plugins.codegen.visitor.CodeGenContext;
+import org.overture.codegen.naming.TemplateParameters;
+import org.overture.codegen.visitor.CodeGenContext;
 
 public class ClassCG implements ICommitable
 {
