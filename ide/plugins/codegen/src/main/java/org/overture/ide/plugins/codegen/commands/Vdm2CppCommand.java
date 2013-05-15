@@ -1,6 +1,5 @@
 package org.overture.ide.plugins.codegen.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -8,7 +7,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.node.INode;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.vdm2cpp.Vdm2Cpp;
 import org.overture.codegen.visitor.CodeGenContextMap;
 import org.overture.ide.core.IVdmModel;
@@ -46,17 +45,11 @@ public class Vdm2CppCommand extends AbstractHandler
 		CodeGenContextMap codeGenContextMap = null;
 		
 		try
-		{
-			List<List<INode>> parseLists = new ArrayList<List<INode>>();
-			
+		{			
 			List<IVdmSourceUnit> sources = model.getSourceUnits();
-			
-			for (IVdmSourceUnit source : sources)
-			{
-				parseLists.add(source.getParseList());
-			}
-			
-			codeGenContextMap = vdm2cpp.generateCode(parseLists);
+			List<SClassDefinition> mergedParseLists = PluginVdm2CppUtil.mergeParseLists(sources);
+						
+			codeGenContextMap = vdm2cpp.generateCode(mergedParseLists);
 
 		} catch (AnalysisException ex)
 		{

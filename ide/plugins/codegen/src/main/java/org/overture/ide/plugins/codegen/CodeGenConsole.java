@@ -14,23 +14,25 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.overture.codegen.vdm2cpp.ILogger;
 
-public class CodeGenConsole
+public class CodeGenConsole implements ILogger
 {
-	public final PrintWriter out;
-	public final PrintWriter err;
-	boolean hasConsole = false;
+	private final PrintWriter out;
+	private final PrintWriter err;
+	
+	private boolean hasConsole = false;
 
 	private static CodeGenConsole Instance;
-	
+
 	public static CodeGenConsole GetInstance()
 	{
-		if(Instance == null)
+		if (Instance == null)
 			Instance = new CodeGenConsole();
-		
+
 		return Instance;
 	}
-	
+
 	private CodeGenConsole()
 	{
 		MessageConsole codeGenConsole = findConsole(ICodeGenConstants.CONSOLE_NAME);
@@ -49,22 +51,6 @@ public class CodeGenConsole
 		}
 	}
 
-	public void show() throws PartInitException
-	{
-		if (hasConsole)
-		{
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (activeWorkbenchWindow != null)
-			{
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if (activePage != null)
-				{
-					activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_ACTIVATE);
-				}
-			}
-		}
-	}
-
 	private MessageConsole findConsole(String name)
 	{
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
@@ -79,7 +65,7 @@ public class CodeGenConsole
 					return (MessageConsole) existingConsoles[i];
 				}
 			}
-			//No console found, so create a new one
+			// No console found, so create a new one
 			MessageConsole myConsole = new MessageConsole(name, null);
 			consoleManager.addConsoles(new IConsole[] { myConsole });
 			return myConsole;
@@ -87,4 +73,50 @@ public class CodeGenConsole
 		return null;
 	}
 
+	@Override
+	public void print(String msg)
+	{
+		out.print(msg);
+	}
+
+	@Override
+	public void println(String msg)
+	{
+		out.println(msg);
+	}
+	
+	@Override
+	public void printErrorln(String msg)
+	{
+		err.println(msg);	
+	}
+
+	@Override
+	public void printErrpr(String msg)
+	{
+		err.print(msg);
+	}
+
+	public void show()
+	{
+		if (hasConsole)
+		{
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if (activeWorkbenchWindow != null)
+			{
+				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				if (activePage != null)
+				{
+					try
+					{
+						activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_ACTIVATE);
+					} catch (PartInitException e)
+					{
+						Activator.log("Failed showing active page view", e);
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 }

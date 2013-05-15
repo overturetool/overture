@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.apache.velocity.VelocityContext;
 import org.overture.codegen.naming.TemplateParameters;
 import org.overture.codegen.nodes.TemplateCollectionElement;
-import org.overture.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenContext
 {

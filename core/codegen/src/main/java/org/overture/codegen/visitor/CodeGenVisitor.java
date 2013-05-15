@@ -8,6 +8,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.nodes.ClassCG;
 import org.overture.codegen.nodes.MethodDeinitionCG;
 import org.overture.codegen.nodes.ValueDefinitionCG;
@@ -17,7 +18,14 @@ public class CodeGenVisitor extends
 {
 	private static final long serialVersionUID = -7105226072509250353L;
 
+	
+	private ILogger log;
 	private CodeGenAssistant assistant = CodeGenAssistant.GetInstance();
+
+	public CodeGenVisitor(ILogger log)
+	{
+		this.log = log;
+	}
 
 	@Override
 	public String caseAClassClassDefinition(AClassClassDefinition node,

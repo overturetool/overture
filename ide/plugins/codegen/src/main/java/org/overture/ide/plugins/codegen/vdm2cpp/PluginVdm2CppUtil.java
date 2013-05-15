@@ -1,12 +1,18 @@
 package org.overture.ide.plugins.codegen.vdm2cpp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 public class PluginVdm2CppUtil
 {	
@@ -42,6 +48,24 @@ public class PluginVdm2CppUtil
 		IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 
 		return vdmProject;
+	}
+	
+	public static List<SClassDefinition> mergeParseLists(List<IVdmSourceUnit> sources)
+	{
+		List<SClassDefinition> mergedParseLists = new ArrayList<SClassDefinition>();
+		
+		for (IVdmSourceUnit source : sources)
+		{
+			List<INode> parseList = source.getParseList();
+			
+			for (INode node : parseList)
+			{
+				if(node instanceof SClassDefinition)
+					mergedParseLists.add(SClassDefinition.class.cast(node));
+				
+			}
+		}
+		return mergedParseLists;
 	}
 
 //	private static CodeGenConsole console;

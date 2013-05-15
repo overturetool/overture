@@ -5,59 +5,55 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.velocity.Template;
+import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
+import org.overture.codegen.logging.DefaultLogger;
+import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.visitor.CodeGenContextMap;
 import org.overture.codegen.visitor.CodeGenVisitor;
 
-
 public class Vdm2Cpp
 {
-	// private CodeGenConsole console;
-
+	private ILogger log;
+	
 	public Vdm2Cpp()
 	{
-		// console = CodeGenConsole.GetInstance();
-		initVelocity();
+		init(null);
 	}
+	
+	public Vdm2Cpp(ILogger log)
+	{
+		init(log);
+	}
+	
+	private void init(ILogger log)
+	{
+		initVelocity();
+		
+		if(log == null)
+			this.log = new DefaultLogger();
+		else
+			this.log = log;	
+	}
+
 
 	private void initVelocity()
 	{
-		// String s = Vdm2CppUtil.getPropertiesPath("resources"
-		// + File.separatorChar + "velocity.properties");
-		// Velocity.init(s);
+		String propertyPath = Vdm2CppUtil.getVelocityPropertiesPath("velocity.properties");
+		Velocity.init(propertyPath);
 	}
 
-	public CodeGenContextMap generateCode(List<List<INode>> parseLists)
-			throws AnalysisException
+	public CodeGenContextMap generateCode(
+			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
-		// try
-		// {
-		// console.show();
-		// } catch (PartInitException e)
-		// {
-		// Activator.log(e);
-		// }
-		//
-		// List<IVdmSourceUnit> sources = model.getSourceUnits();
-		//
-		// if(sources.size() == 0)
-		// return null;
-
-		CodeGenVisitor codeGenVisitor = new CodeGenVisitor();
+		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
 		CodeGenContextMap codeGenContextMap = new CodeGenContextMap();
 
-		for (List<INode> list : parseLists)
+		for (INode node : mergedParseLists)
 		{
-			// List<INode> parseList = source.getParseList();
-
-			if (list.isEmpty())
-				continue;
-
-			for (INode node : list)
-			{
-				node.apply(codeGenVisitor, codeGenContextMap);
-			}
+			node.apply(codeGenVisitor, codeGenContextMap);
 		}
 
 		// Now register the analysis at the apache velocity engine
@@ -66,44 +62,41 @@ public class Vdm2Cpp
 		return codeGenContextMap;
 	}
 
-	public void save(CodeGenContextMap codeGenContext)
+	public void save(CodeGenContextMap contextMap)
 	{
 
-//		TODO: This method currently just prints the results. The code below constructs a file representing the output folder
-//		java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();// iFile.getLocationURI();
-//		URL url;
-//		try
-//		{
-//			url = FileLocator.toFileURL(absolutePath.toURL());
-//			File file = new File(url.toURI());			
-//		} catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		} catch (URISyntaxException e)
-//		{
-//			e.printStackTrace();
-//		}
-		
+		// java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//
+		// iFile.getLocationURI();
+		// URL url;
+		// try
+		// {
+		// url = FileLocator.toFileURL(absolutePath.toURL());
+		// File file = new File(url.toURI());
+		// } catch (IOException e)
+		// {
+		// e.printStackTrace();
+		// } catch (URISyntaxException e)
+		// {
+		// e.printStackTrace();
+		// }
 
-        
-		
+		// ********** COMMENT BELOW BACK IN:
 
-// ********** COMMENT BELOW BACK IN:
-		
-		Set<String> set = codeGenContext.getContextKeys();
-		
+		Set<String> set = contextMap.getContextKeys();
+
 		Template template = Vdm2CppUtil.getTemplate("class.vm");
-		
+
 		if (template == null)
 		{
 			return;
 		}
 		PrintWriter out = new PrintWriter(System.out);
 		for (String classDef : set)
-		{			
-			template.merge(codeGenContext.getContext(classDef).getVelocityContext(), out);
+		{
+			template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
 			out.flush();
 			out.println();
 		}
 	}
+	
 }
