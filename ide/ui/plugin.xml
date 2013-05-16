@@ -296,6 +296,7 @@
       </commonFilter>-->
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"         
             type="new"
             wizardId="org.overture.ide.vdmpp.ui.addLibraryWizard">
          <enablement>
