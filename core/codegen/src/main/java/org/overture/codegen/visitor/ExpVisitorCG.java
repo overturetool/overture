@@ -5,9 +5,12 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.AUnaryMinusUnaryExp;
+import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -38,6 +41,22 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 		String right = expAssistant.formatExp(node, node.getRight(), question);
 			
 		return left + " " + operator + " " + right;
+	}
+	
+	//Unary
+	
+	@Override
+	public String caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
+			CodeGenContextMap question) throws AnalysisException
+	{
+		return "+" + node.getExp().apply(this, question);
+	}
+	
+	@Override
+	public String caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+			CodeGenContextMap question) throws AnalysisException
+	{
+		return "-" + node.getExp().apply(this, question);
 	}
 
 	//Numeric binary
@@ -102,13 +121,22 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 	public String caseARealLiteralExp(ARealLiteralExp node,
 			CodeGenContextMap question) throws AnalysisException
 	{
-		return "new Double(" + node.getValue().toString() + ")";
+		return node.getValue().toString();
+		
+		//Same as the two below:
+		//return node.getValue().toString() + "d";
+		//return "new Double(" + node.getValue().toString() + ")";
+		//Example: float f = 1.1; "Can't convert double to float
 	}
 
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node,
 			CodeGenContextMap question) throws AnalysisException
 	{
-		return "new Integer(" + node.getValue().toString() + ")";
+		return node.getValue().toString();
+		
+		//Same as: 
+		//return "new Integer(" + node.getValue().toString() + ")";
+		//Example: byte b = 1234; "Can't convert int to byte"
 	}
 }

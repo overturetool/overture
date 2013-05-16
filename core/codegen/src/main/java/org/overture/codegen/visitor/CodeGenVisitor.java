@@ -4,7 +4,10 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.node.IToken;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.codegen.logging.ILogger;
 
@@ -16,7 +19,8 @@ public class CodeGenVisitor extends
 	private DefVisitorCG defVisitor;
 	private TypeVisitorCG typeVisitor;
 	private ExpVisitorCG expVisitor;
-	
+	private StmVisitorCG stmVisitor;
+	private PatternVisitorCG patternVisitor;
 	
 	private ILogger log;
 	
@@ -27,6 +31,8 @@ public class CodeGenVisitor extends
 		defVisitor = new DefVisitorCG(this);
 		typeVisitor = new TypeVisitorCG(this);
 		expVisitor = new ExpVisitorCG(this);
+		stmVisitor = new StmVisitorCG(this);
+		patternVisitor = new PatternVisitorCG(this);
 	}
 	
 	@Override
@@ -57,6 +63,21 @@ public class CodeGenVisitor extends
 		return node.apply(expVisitor, question);
 	}
 	
+	@Override
+	public String caseILexNameToken(ILexNameToken node,
+			CodeGenContextMap question) throws AnalysisException
+	{
+		return node.getName();
+	}
+	
+	@Override
+	public String caseAAccessSpecifierAccessSpecifier(
+			AAccessSpecifierAccessSpecifier node, CodeGenContextMap question)
+			throws AnalysisException
+	{
+		return node.getAccess().toString();
+	}
+	
 	public TypeVisitorCG getTypeVisitor()
 	{
 		return typeVisitor;
@@ -70,6 +91,16 @@ public class CodeGenVisitor extends
 	public ExpVisitorCG getExpVisitor()
 	{
 		return expVisitor;
+	}
+	
+	public StmVisitorCG getStmVisitor()
+	{
+		return stmVisitor;
+	}
+	
+	public PatternVisitorCG getPatternVisitor()
+	{
+		return patternVisitor;
 	}
 	
 	

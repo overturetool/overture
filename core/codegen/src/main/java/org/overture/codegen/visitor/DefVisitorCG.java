@@ -8,6 +8,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.nodes.ClassCG;
 import org.overture.codegen.nodes.MethodDeinitionCG;
 import org.overture.codegen.nodes.ValueDefinitionCG;
@@ -27,8 +28,8 @@ public class DefVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 	public String caseAClassClassDefinition(AClassClassDefinition node,
 			CodeGenContextMap question) throws AnalysisException
 	{
-		String className = node.getName().getName();
-		String accessSpecifier = node.getAccess().getAccess().toString();
+		String className = node.getName().apply(rootVisitor, question);
+		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
 
 		ClassCG classCg = new ClassCG(className, accessSpecifier);
 		
@@ -47,13 +48,15 @@ public class DefVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 			AExplicitOperationDefinition node, CodeGenContextMap question)
 			throws AnalysisException
 	{	
-		String accessSpecifier = node.getAccess().getAccess().toString();
-		String operationName = node.getName().getName();
+		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
+		String operationName = node.getName().apply(rootVisitor, question);
 		String returnType = node.getActualResult().apply(rootVisitor.getTypeVisitor(), question);
 
-		String className = node.getClassDefinition().getName().getName();
+		String className = node.getClassDefinition().getName().apply(rootVisitor, question);
 		ClassCG codeGenClass = question.getCodeGenClass(className);
 		codeGenClass.addMethod(new MethodDeinitionCG(accessSpecifier, returnType, operationName));
+		
+		node.getBody().apply(rootVisitor.getStmVisitor(), question);
 		
 		return null;
 	}
@@ -62,14 +65,14 @@ public class DefVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 	public String caseAValueDefinition(AValueDefinition node,
 			CodeGenContextMap question) throws AnalysisException
 	{
-		String accessSpecifier = node.getAccess().getAccess().toString();
+		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
 		String type = node.getType().apply(rootVisitor.getTypeVisitor(), question);
 		
-		String pattern = node.getPattern().toString();
+		String pattern = node.getPattern().apply(rootVisitor.getPatternVisitor(), question);
 		String exp = node.getExpression().apply(rootVisitor.getExpVisitor(), question);
 		//CodeGenAssistant.formatExpression(node.getExpression());
 
-		String className = node.getClassDefinition().getName().getName();
+		String className = node.getClassDefinition().getName().apply(rootVisitor, question);
 		ClassCG codeGenClass = question.getCodeGenClass(className); 
 		codeGenClass.addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
 

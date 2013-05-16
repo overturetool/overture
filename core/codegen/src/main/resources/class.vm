@@ -5,8 +5,11 @@ $CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 #end
 
 #foreach($methodDef in $METHOD_DEFS)
-	$methodDef.getAccessSpecifier() $methodDef.getReturnType() $methodDef.getMethodName()
+	$methodDef.getAccessSpecifier() $methodDef.getReturnType() $methodDef.getMethodName()()
 	{
+#foreach($statement in $methodDef.getStatements())
+		$statement.generate()
+#end
 	}
 #end
 }

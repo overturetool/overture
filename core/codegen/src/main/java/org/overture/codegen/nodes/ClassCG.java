@@ -39,6 +39,17 @@ public class ClassCG implements ICommitable
 	{
 		this.methodDefinitions.add(methodDef);
 	}
+	
+	public MethodDeinitionCG getMethodDefinition(String methodName)
+	{
+		for (MethodDeinitionCG methodDef : methodDefinitions)
+		{
+			if(methodDef.getMethodName().equals(methodName))
+				return methodDef;
+		}
+		
+		return null;
+	}
 
 	@Override
 	public void commit(CodeGenContext context)
@@ -47,7 +58,6 @@ public class ClassCG implements ICommitable
 		context.put(TemplateParameters.CLASS_ACCESS_SPECIFIER, accessSpecifier);
 		
 		context.put(TemplateParameters.VALUE_DEFS, valueDefinitions);
-		
 		context.put(TemplateParameters.METHOD_DEFS, methodDefinitions);
 	}
 	

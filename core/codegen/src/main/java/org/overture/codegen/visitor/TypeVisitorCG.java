@@ -4,12 +4,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AVoidType;
 
 public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, String>
 {
@@ -77,5 +79,13 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Stri
 	{
 		return Vdm2JavaBasicTypeMappings.REAL.toString();
 	}
+	
+	@Override
+	public String caseAVoidType(AVoidType node, CodeGenContextMap question)
+			throws AnalysisException
+	{
+		return "void";
+	}
+	
 	
 }
