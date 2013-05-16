@@ -223,7 +223,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 				Class helpLexNameTokenClass = cls.loadClass("org.overture.typechecker.util.HelpLexNameToken");			
 				Object helpLexNameTokenObject = helpLexNameTokenClass.newInstance();
 				@SuppressWarnings("unchecked")
-				Method isEqualMethod = helpLexNameTokenClass.getMethod("isEqual", LexNameToken.class, Object.class);
+				Method isEqualMethod = helpLexNameTokenClass.getMethod("isEqual", ILexNameToken.class, Object.class);
 				Object result = isEqualMethod.invoke(helpLexNameTokenObject, this,other);
 				return (Boolean) result;
 			} catch (Exception e)
@@ -231,6 +231,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 				e.printStackTrace();
 			}
 			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
+			
 			// if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
 			// {
 			// return false;
