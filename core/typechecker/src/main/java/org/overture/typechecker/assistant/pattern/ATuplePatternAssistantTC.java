@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.assistant.pattern.ATuplePatternAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -21,7 +20,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ATuplePatternAssistantTC extends ATuplePatternAssistant{
+public class ATuplePatternAssistantTC {
 
 	public static void typeResolve(ATuplePattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
