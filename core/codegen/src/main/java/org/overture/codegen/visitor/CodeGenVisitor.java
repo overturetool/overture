@@ -1,81 +1,80 @@
 package org.overture.codegen.visitor;
 
-import java.util.LinkedList;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
+import org.overture.ast.types.PType;
 import org.overture.codegen.logging.ILogger;
-import org.overture.codegen.nodes.ClassCG;
-import org.overture.codegen.nodes.MethodDeinitionCG;
-import org.overture.codegen.nodes.ValueDefinitionCG;
 
 public class CodeGenVisitor extends
 		QuestionAnswerAdaptor<CodeGenContextMap, String>
 {
 	private static final long serialVersionUID = -7105226072509250353L;
-
+	
+	private DefVisitorCG defVisitor;
+	private TypeVisitorCG typeVisitor;
+	private ExpVisitorCG expVisitor;
+	
 	
 	private ILogger log;
-	private CodeGenAssistant assistant = CodeGenAssistant.GetInstance();
-
+	
 	public CodeGenVisitor(ILogger log)
 	{
 		this.log = log;
-	}
-
-	@Override
-	public String caseAClassClassDefinition(AClassClassDefinition node,
-			CodeGenContextMap question) throws AnalysisException
-	{
-		String className = node.getName().getName();
-		String accessSpecifier = node.getAccess().getAccess().toString();
-
-		ClassCG classCg = new ClassCG(className, accessSpecifier);
 		
-		question.registerCodeGenClass(classCg);
-		
-		LinkedList<PDefinition> definitions = node.getDefinitions();
-
-		for (PDefinition def : definitions)
-			def.apply(this, question);
-		
-		return null;
+		defVisitor = new DefVisitorCG(this);
+		typeVisitor = new TypeVisitorCG(this);
+		expVisitor = new ExpVisitorCG(this);
 	}
-
+	
 	@Override
-	public String caseAValueDefinition(AValueDefinition node,
-			CodeGenContextMap question) throws AnalysisException
-	{
-		String accessSpecifier = node.getAccess().getAccess().toString();
-		String type = assistant.formatType(node.getType());
-		String pattern = node.getPattern().toString();
-		String exp = assistant.formatExpression(node.getExpression());
-
-		String className = node.getClassDefinition().getName().getName();
-		ClassCG codeGenClass = question.getCodeGenClass(className); 
-		codeGenClass.addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
-
-		return null;
-	}
-
-	@Override
-	public String caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, CodeGenContextMap question)
+	public String defaultINode(INode node, CodeGenContextMap question)
 			throws AnalysisException
 	{
-		String accessSpecifier = node.getAccess().getAccess().toString();
-		String operationName = node.getName().getName();
-		String returnType = assistant.formatType(node.getActualResult());
-
-		String className = node.getClassDefinition().getName().getName();
-		ClassCG codeGenClass = question.getCodeGenClass(className);
-		codeGenClass.addMethod(new MethodDeinitionCG(accessSpecifier, returnType, operationName));
-		
-		return null;
+		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
 	}
-
+	
+	@Override
+	public String defaultPDefinition(PDefinition node,
+			CodeGenContextMap question) throws AnalysisException
+	{
+		return node.apply(defVisitor, question);
+	}
+	
+	@Override
+	public String defaultPType(PType node, CodeGenContextMap question)
+			throws AnalysisException
+	{
+		return node.apply(typeVisitor, question);
+	}
+	
+	@Override
+	public String defaultPExp(PExp node, CodeGenContextMap question)
+			throws AnalysisException
+	{
+		return node.apply(expVisitor, question);
+	}
+	
+	public TypeVisitorCG getTypeVisitor()
+	{
+		return typeVisitor;
+	}
+	
+	public DefVisitorCG getDefVisitor()
+	{
+		return defVisitor;
+	}
+	
+	public ExpVisitorCG getExpVisitor()
+	{
+		return expVisitor;
+	}
+	
+	
+	public ILogger getLog()
+	{
+		return log;
+	}				
 }
