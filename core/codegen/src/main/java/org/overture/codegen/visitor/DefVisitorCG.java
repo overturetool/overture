@@ -11,7 +11,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.nodes.ClassCG;
 import org.overture.codegen.nodes.MethodDeinitionCG;
-import org.overture.codegen.nodes.ValueDefinitionCG;
+import org.overture.codegen.nodes.FieldCG;
 
 public class DefVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, String>
 {
@@ -74,7 +74,7 @@ public class DefVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 
 		String className = node.getClassDefinition().getName().apply(rootVisitor, question);
 		ClassCG codeGenClass = question.getCodeGenClass(className); 
-		codeGenClass.addValueDefinition(new ValueDefinitionCG(accessSpecifier, type, pattern, exp));
+		codeGenClass.addValueDefinition(new FieldCG(accessSpecifier, type, pattern, exp));
 
 		return null;
 	}

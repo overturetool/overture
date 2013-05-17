@@ -11,8 +11,10 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
+import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.nodes.ClassCG;
 import org.overture.codegen.nodes.DeclarationStmCG;
 import org.overture.codegen.nodes.MethodDeinitionCG;
@@ -23,24 +25,21 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 	private static final long serialVersionUID = 5210069834877599547L;
 	
 	private CodeGenVisitor rootVisitor;
-
+	private StmAssistantCG stmAssistant;
+	
 	public StmVisitorCG(CodeGenVisitor rootVisitor)
 	{
 		super();
 		this.rootVisitor = rootVisitor;
+		this.stmAssistant = new StmAssistantCG(rootVisitor);
 	}
 	
 	@Override
 	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
 			CodeGenContextMap question) throws AnalysisException
 	{
-
-		String className = node.getAncestor(SClassDefinition.class).getName().apply(rootVisitor, question);		
-		String methodName = node.getAncestor(AExplicitOperationDefinition.class).getName().apply(rootVisitor, question);
+		MethodDeinitionCG methodDef = stmAssistant.getMethodDefinition(node, question);
 		
-		ClassCG codeGenClass = question.getCodeGenClass(className);
-		MethodDeinitionCG methodDef = codeGenClass.getMethodDefinition(methodName);
-
 		LinkedList<PDefinition> assignmentDefs = node.getAssignmentDefs();
 		
 		for (PDefinition def : assignmentDefs)
@@ -52,7 +51,7 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 			
 			methodDef.addStatement(new DeclarationStmCG(type, name, exp));
 		}
-		
+	
 		LinkedList<PStm> statements = node.getStatements();
 		
 		for (PStm stm : statements)
@@ -61,22 +60,5 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenContextMap, Strin
 		}
 		
 		return null;
-	}
-	
-	@Override
-	public String caseAReturnStm(AReturnStm node, CodeGenContextMap question)
-			throws AnalysisException
-	{
-		String className = node.getAncestor(SClassDefinition.class).getName().apply(rootVisitor, question);		
-		String methodName = node.getAncestor(AExplicitOperationDefinition.class).getName().apply(rootVisitor, question);
-		
-		ClassCG codeGenClass = question.getCodeGenClass(className);
-		MethodDeinitionCG methodDef = codeGenClass.getMethodDefinition(methodName);
- 
-		String exp = node.getExpression().apply(rootVisitor.getExpVisitor(), question);
-		methodDef.addStatement(new ReturnStatementCG(exp));
-		
-		return "return " + node.getExpression().apply(rootVisitor.getExpVisitor(), question);
-	}
-	
+	}		
 }

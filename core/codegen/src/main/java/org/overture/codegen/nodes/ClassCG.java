@@ -11,7 +11,7 @@ public class ClassCG implements ICommitable
 	private String className;
 	private String accessSpecifier;
 	
-	private ArrayList<ValueDefinitionCG> valueDefinitions;
+	private ArrayList<FieldCG> valueDefinitions;
 	private ArrayList<MethodDeinitionCG> methodDefinitions;
 	
 	public ClassCG(String className, String accessSpecifier)
@@ -21,7 +21,7 @@ public class ClassCG implements ICommitable
 		this.className = className;
 		this.accessSpecifier = accessSpecifier;
 		
-		this.valueDefinitions = new ArrayList<ValueDefinitionCG>();
+		this.valueDefinitions = new ArrayList<FieldCG>();
 		this.methodDefinitions = new ArrayList<MethodDeinitionCG>();
 	}
 		
@@ -30,7 +30,7 @@ public class ClassCG implements ICommitable
 		return className;
 	}
 
-	public void addValueDefinition(ValueDefinitionCG valueDef)
+	public void addValueDefinition(FieldCG valueDef)
 	{
 		this.valueDefinitions.add(valueDef);
 	}

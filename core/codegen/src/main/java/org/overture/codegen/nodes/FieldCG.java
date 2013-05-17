@@ -1,14 +1,17 @@
 package org.overture.codegen.nodes;
 
 
-public class ValueDefinitionCG implements TemplateCollectionElement
+public class FieldCG implements TemplateCollectionElement
 {	
 	private String accessSpecifier;
 	private String type;
+	//static
+	//final
+	//osv
 	private String pattern;
 	private String exp; 
 	
-	public ValueDefinitionCG(String accessSpecifier, String type, String pattern, String exp)
+	public FieldCG(String accessSpecifier, String type, String pattern, String exp)
 	{
 		this.accessSpecifier = accessSpecifier;
 		this.type = type;

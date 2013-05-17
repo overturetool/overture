@@ -10,6 +10,9 @@ $CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 #foreach($statement in $methodDef.getStatements())
 		$statement.generate()
 #end
+###foreach($statement in $methodDef.getStatements())
+##		$statement;
+###end
 	}
 #end
 }
