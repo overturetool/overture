@@ -13,29 +13,6 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 
 public class Vdm2CppUtil
 {
-	public static Template getTemplate(String relativePath)
-	{
-		Template template = null;
-
-		try
-		{
-			StringBuffer buffer = readFromFile(relativePath);
-			RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
-			StringReader reader = new StringReader(buffer.toString());
-			SimpleNode node = runtimeServices.parse(reader, "Template name");
-
-			template = new Template();
-			template.setRuntimeServices(runtimeServices);
-			template.setData(node);
-			template.initDocument();
-
-		} catch (Exception e)
-		{
-		}
-
-		return template;
-	}
-
 	public static String getVelocityPropertiesPath(String relativePath)
 	{
 		String path = null;
@@ -56,21 +33,5 @@ public class Vdm2CppUtil
 		}
 
 		return path;
-	}
-
-	private static StringBuffer readFromFile(String relativepath)
-			throws IOException
-	{
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream(relativepath);
-		StringBuffer data = new StringBuffer();
-		int c = 0;
-		while ((c = input.read()) != -1)
-		{
-			data.append((char) c);
-		}
-		input.close();
-
-		return data;
 	}
 }

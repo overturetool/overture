@@ -1,0 +1,56 @@
+//TODO1: maybe generate classes with the Comparable interface 
+Packages
+base org.overture.codegen.cgast;
+analysis org.overture.codegen.cgast.analysis;
+  
+Tokens
+/* This section declared tokens as internal types or external classes
+ * internal definitions:
+ *  plus='+';
+ *  
+ * external
+ *  location = 'java:org.overture.ast.lex.LexLocation';
+ */
+
+  
+  //Java
+  java_Boolean = 'java:java.lang.Boolean';
+  java_Integer = 'java:java.lang.Integer';
+  java_String = 'java:java.lang.String';
+  java_Long = 'java:java.lang.Long';
+     
+Abstract Syntax Tree
+/* This section declares the AST by giving root nodes and their possible sub classes
+ *
+ * exp {-> package='org.overture.ast.expressions'}
+ *      = {subclass1} [field_name]:field_type_must_either_be_root_or_token ...
+ *      ;
+ *
+ */
+
+/*
+    Expressions
+*/    
+CG {-> package='org.overture.codegen.cgast'}
+    =   {class}
+      	[access]:java_String 
+    	[name]:java_String
+    	[fields]:field*
+    	
+    |	{field} 
+    	[access]:java_String
+    	[static]:java_Boolean
+    	[final]:java_Boolean
+    	[type]:java_String
+    	[name]:java_String
+    	[initial]:java_String
+    	
+    |	{op}
+    ;
+    
+exp {-> package='org.overture.codegen.cgast.expressions'}
+    = {literal} [value]:java_String
+    ;
+     
+Aspect Declaration
+/* This section allows fields of root types to be declared e.g. exp*/

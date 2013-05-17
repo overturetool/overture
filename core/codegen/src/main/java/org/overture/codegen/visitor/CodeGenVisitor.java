@@ -1,18 +1,12 @@
 package org.overture.codegen.visitor;
 
+import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.node.INode;
-import org.overture.ast.node.IToken;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.PType;
 import org.overture.codegen.logging.ILogger;
+import org.overture.codegen.newstuff.CodeGenTree;
 
-public class CodeGenVisitor extends
-		QuestionAnswerAdaptor<CodeGenContextMap, String>
+public class CodeGenVisitor extends AnalysisAdaptor
 {
 	private static final long serialVersionUID = -7105226072509250353L;
 	
@@ -21,6 +15,8 @@ public class CodeGenVisitor extends
 	private ExpVisitorCG expVisitor;
 	private StmVisitorCG stmVisitor;
 	private PatternVisitorCG patternVisitor;
+	
+	private CodeGenTree tree;
 	
 	private ILogger log;
 	
@@ -33,49 +29,8 @@ public class CodeGenVisitor extends
 		expVisitor = new ExpVisitorCG(this);
 		stmVisitor = new StmVisitorCG(this);
 		patternVisitor = new PatternVisitorCG(this);
-	}
-	
-	@Override
-	public String defaultINode(INode node, CodeGenContextMap question)
-			throws AnalysisException
-	{
-		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-	}
-	
-	@Override
-	public String defaultPDefinition(PDefinition node,
-			CodeGenContextMap question) throws AnalysisException
-	{
-		return node.apply(defVisitor, question);
-	}
-	
-	@Override
-	public String defaultPType(PType node, CodeGenContextMap question)
-			throws AnalysisException
-	{
-		return node.apply(typeVisitor, question);
-	}
-	
-	@Override
-	public String defaultPExp(PExp node, CodeGenContextMap question)
-			throws AnalysisException
-	{
-		return node.apply(expVisitor, question);
-	}
-	
-	@Override
-	public String caseILexNameToken(ILexNameToken node,
-			CodeGenContextMap question) throws AnalysisException
-	{
-		return node.getName();
-	}
-	
-	@Override
-	public String caseAAccessSpecifierAccessSpecifier(
-			AAccessSpecifierAccessSpecifier node, CodeGenContextMap question)
-			throws AnalysisException
-	{
-		return node.getAccess().toString();
+		
+		this.tree = new CodeGenTree();
 	}
 	
 	public TypeVisitorCG getTypeVisitor()
@@ -107,5 +62,53 @@ public class CodeGenVisitor extends
 	public ILogger getLog()
 	{
 		return log;
-	}				
+	}
+	
+	public CodeGenTree getTree()
+	{
+		return tree;
+	}
+		
+//	@Override
+//	public String defaultINode(INode node, CodeGenContextMap question)
+//			throws AnalysisException
+//	{
+//		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
+//	}
+//	
+//	
+	@Override
+	public void defaultPDefinition(PDefinition node) throws AnalysisException
+	{
+		node.apply(defVisitor);
+	}
+//	
+//	@Override
+//	public String defaultPType(PType node, CodeGenContextMap question)
+//			throws AnalysisException
+//	{
+//		return node.apply(typeVisitor, question);
+//	}
+//	
+//	@Override
+//	public String defaultPExp(PExp node, CodeGenContextMap question)
+//			throws AnalysisException
+//	{
+//		return node.apply(expVisitor, question);
+//	}
+//	
+//	@Override
+//	public String caseILexNameToken(ILexNameToken node,
+//			CodeGenContextMap question) throws AnalysisException
+//	{
+//		return node.getName();
+//	}
+//	
+//	@Override
+//	public String caseAAccessSpecifierAccessSpecifier(
+//			AAccessSpecifierAccessSpecifier node, CodeGenContextMap question)
+//			throws AnalysisException
+//	{
+//		return node.getAccess().toString();
+//	}			
 }

@@ -1,17 +1,16 @@
 package org.overture.codegen.vdm2cpp;
 
-import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
+import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
-import org.overture.codegen.visitor.CodeGenContextMap;
+import org.overture.codegen.mergevisitor.MergeVisitor;
 import org.overture.codegen.visitor.CodeGenVisitor;
 
 public class Vdm2Cpp
@@ -45,26 +44,46 @@ public class Vdm2Cpp
 		Velocity.init(propertyPath);
 	}
 
-	public CodeGenContextMap generateCode(
+	public void generateCode(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
-		CodeGenContextMap codeGenContextMap = new CodeGenContextMap();
+		
+		
+		//ContextManager manager = new ContextManager();
+		//CodeGenContextMap codeGenContextMap = new CodeGenContextMap();
 
 		for (INode node : mergedParseLists)
 		{
-			node.apply(codeGenVisitor, codeGenContextMap);
+			node.apply(codeGenVisitor);
 		}
 
 		// Now register the analysis at the apache velocity engine
-		codeGenContextMap.commit();
+		//codeGenContextMap.commit();
 
-		return codeGenContextMap;
+		AClassCG[] classes = codeGenVisitor.getTree().getClasses();
+		
+		MergeVisitor mergeVisitor = new MergeVisitor("_java");
+		
+		for (AClassCG classCg : classes)
+		{
+			try
+			{
+				StringWriter writer = new StringWriter();
+				classCg.apply(mergeVisitor, writer);//, manager);		
+				System.out.println(writer.toString());
+				
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
 	}
 
-	public void save(CodeGenContextMap contextMap)
-	{
-
+//	public void save(CodeGenContextMap contextMap)
+//	{
+//
 		// java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//
 		// iFile.getLocationURI();
 		// URL url;
@@ -82,21 +101,21 @@ public class Vdm2Cpp
 
 		// ********** COMMENT BELOW BACK IN:
 
-		Set<String> set = contextMap.getContextKeys();
-
-		Template template = Vdm2CppUtil.getTemplate("class.vm");
-
-		if (template == null)
-		{
-			return;
-		}
-		PrintWriter out = new PrintWriter(System.out);
-		for (String classDef : set)
-		{
-			template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
-			out.flush();
-			out.println();
-		}
-	}
+//		Set<String> set = contextMap.getContextKeys();
+//
+//		Template template = Vdm2CppUtil.getTemplate("class.vm");
+//
+//		if (template == null)
+//		{
+//			return;
+//		}
+//		PrintWriter out = new PrintWriter(System.out);
+//		for (String classDef : set)
+//		{
+//			template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
+//			out.flush();
+//			out.println();
+//		}
+//	}
 	
 }

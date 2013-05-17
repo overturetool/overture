@@ -51,8 +51,8 @@ public class CodeGenMain
 			Vdm2Cpp vdm2cpp = new Vdm2Cpp();
 			try
 			{
-				CodeGenContextMap contextMap = vdm2cpp.generateCode(typeCheckResult.result);
-				vdm2cpp.save(contextMap);
+				vdm2cpp.generateCode(typeCheckResult.result);
+				//vdm2cpp.save(contextMap);
 			} catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block

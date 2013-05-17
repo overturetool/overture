@@ -14,7 +14,7 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.overture.codegen.vdm2cpp.ILogger;
+import org.overture.codegen.logging.ILogger;
 
 public class CodeGenConsole implements ILogger
 {

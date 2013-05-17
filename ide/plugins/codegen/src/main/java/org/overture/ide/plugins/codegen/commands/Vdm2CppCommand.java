@@ -49,7 +49,7 @@ public class Vdm2CppCommand extends AbstractHandler
 			List<IVdmSourceUnit> sources = model.getSourceUnits();
 			List<SClassDefinition> mergedParseLists = PluginVdm2CppUtil.mergeParseLists(sources);
 						
-			codeGenContextMap = vdm2cpp.generateCode(mergedParseLists);
+			vdm2cpp.generateCode(mergedParseLists);
 
 		} catch (AnalysisException ex)
 		{
@@ -67,7 +67,7 @@ public class Vdm2CppCommand extends AbstractHandler
 			return null;
 		}
 		
-		vdm2cpp.save(codeGenContextMap);
+		//vdm2cpp.save(codeGenContextMap);
 
 		return null;
 	}

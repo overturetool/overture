@@ -54,11 +54,12 @@ public class ClassCG implements ICommitable
 	@Override
 	public void commit(CodeGenContext context)
 	{
-		context.put(TemplateParameters.CLASS_NAME, className);
-		context.put(TemplateParameters.CLASS_ACCESS_SPECIFIER, accessSpecifier);
-		
-		context.put(TemplateParameters.VALUE_DEFS, valueDefinitions);
-		context.put(TemplateParameters.METHOD_DEFS, methodDefinitions);
+		//TODO: REMOVE
+//		context.put(TemplateParameters.CLASS_NAME, className);
+//		context.put(TemplateParameters.CLASS_ACCESS, accessSpecifier);
+//		
+//		context.put(TemplateParameters.VALUE_DEFS, valueDefinitions);
+//		context.put(TemplateParameters.METHOD_DEFS, methodDefinitions);
 	}
 	
 }

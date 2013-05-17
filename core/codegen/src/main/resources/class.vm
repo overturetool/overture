@@ -11,7 +11,7 @@ $CLASS_ACCESS_SPECIFIER class $CLASS_NAME
 		$statement.generate()
 #end
 ###foreach($statement in $methodDef.getStatements())
-##		$statement;
+##		CgUtil.generate($statement);
 ###end
 	}
 #end

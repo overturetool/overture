@@ -16,7 +16,7 @@ public class IfStatementCG implements IStatementCG
 		sb.append("if (").append(exp).append(") ").append("then ").append(ITextConstants.NEW_LINE);
 		sb.append("{").append(ITextConstants.NEW_LINE);
 
-		sb.append(ITextConstants.TAB);
+		sb.append(ITextConstants.INDENT);
 		sb.append(elseStm.generate());
 
 		sb.append("}").append(ITextConstants.NEW_LINE);

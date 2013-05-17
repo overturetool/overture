@@ -1,10 +1,10 @@
 package org.overture.codegen.visitor;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.velocity.VelocityContext;
+import org.overture.codegen.cgast.AFieldCG;
 import org.overture.codegen.naming.TemplateParameters;
-import org.overture.codegen.nodes.TemplateCollectionElement;
 
 public class CodeGenContext
 {
@@ -20,10 +20,20 @@ public class CodeGenContext
 		context.put(param.toString(), value);
 	}
 	
-	public <T extends TemplateCollectionElement> void put(TemplateParameters param, ArrayList<T> valueDefs)
+	public void put(TemplateParameters param, boolean value)
 	{
-		context.put(param.toString(), valueDefs);
+		context.put(param.toString(), value);
 	}
+	
+	public void put(TemplateParameters param, LinkedList<AFieldCG> fields)
+	{
+		context.put(param.toString(), fields);
+	}
+	
+//	public <T extends TemplateCollectionElement> void put(TemplateParameters param, ArrayList<T> valueDefs)
+//	{
+//		context.put(param.toString(), valueDefs);
+//	}
 	
 	public VelocityContext getVelocityContext()
 	{
