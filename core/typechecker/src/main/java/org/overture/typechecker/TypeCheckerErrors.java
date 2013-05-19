@@ -1,15 +1,15 @@
 package org.overture.typechecker;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class TypeCheckerErrors {
 
-	public static void report(int number, String msg, LexLocation location, Object node) {
+	public static void report(int number, String msg, ILexLocation location, Object node) {
 		TypeChecker.report(number, msg, location);
 	}
 
 	public static  void concern(boolean serious, int number, String msg,
-			LexLocation location, Object node) {
+			ILexLocation location, Object node) {
 
 		if (serious) {
 			TypeChecker.report(number, msg, location);
@@ -43,7 +43,7 @@ public class TypeCheckerErrors {
 		TypeChecker.detail2(tag1, obj1, tag2, obj2);
 	}
 
-	public static void warning(int number, String msg, LexLocation loc, Object node)
+	public static void warning(int number, String msg, ILexLocation loc, Object node)
 	{
 		TypeChecker.warning(number, msg, loc);
 	}

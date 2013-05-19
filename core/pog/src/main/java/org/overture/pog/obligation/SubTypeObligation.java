@@ -147,7 +147,7 @@ public class SubTypeObligation extends ProofObligation {
 		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT",
 				def.getLocation()));
 
-		value = ctxt.getObligation(oneType(false, result, def.getType()
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType())
 				.getResult(), actualResult));
 	}
 
@@ -172,7 +172,7 @@ public class SubTypeObligation extends ProofObligation {
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
-		value = ctxt.getObligation(oneType(false, result, def.getType()
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType())
 				.getResult(), actualResult));
 	}
 

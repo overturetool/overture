@@ -23,20 +23,20 @@
 
 package org.overture.interpreter.traces;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.values.Value;
 
 
 public class TraceVariable
 {
-	public final LexLocation location;
+	public final ILexLocation location;
 	public final ILexNameToken name;
 	public final Value value;
 	public final PType type;
 
-	public TraceVariable(LexLocation location, ILexNameToken name, Value value, PType type)
+	public TraceVariable(ILexLocation location, ILexNameToken name, Value value, PType type)
 	{
 		this.location = location;
 		this.name = name;

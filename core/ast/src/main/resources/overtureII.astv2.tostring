@@ -10,7 +10,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->narrow = "narrow_(" [test] ", " + $( $ [typeName] $ == null ? $ [basicType] $ : $ [typeName] $)$ + ")"
 %exp->boolean_const =  [value] 
 %exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + "end)" 
-%exp->charLiteral =  "'" + $_value.unicode$ + "'" 
+%exp->charLiteral =  "'" + $_value.getValue()$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
 %exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"

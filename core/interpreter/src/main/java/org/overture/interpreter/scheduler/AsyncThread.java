@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
@@ -75,7 +76,7 @@ public class AsyncThread extends SchedulablePoolThread
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
-		LexLocation from = self.type.getClassdef().getLocation();
+		ILexLocation from = self.type.getClassdef().getLocation();
 		Context ctxt = new ObjectContext(from, "async", global, self);
 
 		if (Settings.usingDBGP)

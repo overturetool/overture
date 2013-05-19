@@ -37,8 +37,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
@@ -143,7 +143,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultClass.getName().getLocation().file;
+		return defaultClass.getName().getLocation().getFile();
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new PublicClassEnvironment(classes);
+		return new PublicClassEnvironment(classes,null);
 	}
 
 	@Override
@@ -296,7 +296,7 @@ public class ClassInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		PublicClassEnvironment globals = new PublicClassEnvironment(classes);
+		PublicClassEnvironment globals = new PublicClassEnvironment(classes,null);
 		Environment env = new PrivateClassEnvironment(defaultClass, globals);
 
 		try
@@ -404,7 +404,7 @@ public class ClassInterpreter extends Interpreter
 		PType type = typeCheck(expr, created);
 		Value v = execute(exp, null);
 
-		LexLocation location = defaultClass.getLocation();
+		ILexLocation location = defaultClass.getLocation();
 		LexNameToken n = new LexNameToken(defaultClass.getName().getName(), var, location);
 
 		createdValues.put(n, v);

@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
@@ -81,7 +81,7 @@ public class DebuggerReader extends CommandReader
 
        		try
 			{
-				interpreter.setDefaultName(breakpoint.location.module);
+				interpreter.setDefaultName(breakpoint.location.getModule());
 			}
 			catch (Exception e)
 			{
@@ -233,8 +233,8 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doSource(String line)
 	{
-		File file = breakpoint.location.file;
-		int current = breakpoint.location.startLine;
+		File file = breakpoint.location.getFile();
+		int current = breakpoint.location.getStartLine();
 
 		int start = current - SOURCE_LINES;
 		if (start < 1) start = 1;
@@ -343,7 +343,7 @@ public class DebuggerReader extends CommandReader
 		return true;
 	}
 
-	public static void stopped(Context ctxt, LexLocation location)
+	public static void stopped(Context ctxt, ILexLocation location)
 	{
 		if (Settings.usingCmdLine)
 		{

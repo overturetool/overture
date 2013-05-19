@@ -272,11 +272,11 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	{
 		if (node instanceof AExplicitFunctionDefinition)
 		{
-			return ((AExplicitFunctionDefinition) node).getLocation().module;
+			return ((AExplicitFunctionDefinition) node).getLocation().getModule();
 		}
 		if (node instanceof AExplicitOperationDefinition)
 		{
-			return ((AExplicitOperationDefinition) node).getLocation().module;
+			return ((AExplicitOperationDefinition) node).getLocation().getModule();
 		}
 
 		return "";
@@ -287,7 +287,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		String name = "";
 		if (node instanceof AExplicitFunctionDefinition)
 		{
-			name = ((AExplicitFunctionDefinition) node).getLocation().module;
+			name = ((AExplicitFunctionDefinition) node).getLocation().getModule();
 			if (!PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) node).getAccess()))
 			{
 				name += "()";
@@ -296,7 +296,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		}
 		if (node instanceof AExplicitOperationDefinition)
 		{
-			name = ((AExplicitOperationDefinition) node).getLocation().module;
+			name = ((AExplicitOperationDefinition) node).getLocation().getModule();
 			if (!PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) node).getAccess()))
 			{
 				name += "()";

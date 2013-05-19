@@ -1297,7 +1297,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 
 		try {
 			String exp = c.data; // Already base64 decoded by the parser
-			interpreter.setDefaultName(breakpoint.location.module);
+			interpreter.setDefaultName(breakpoint.location.getModule());
 			theAnswer = interpreter.evaluate(exp, breakContext);
 			StringBuilder property = propertyResponse(exp, exp,
 					interpreter.getDefaultName(), theAnswer);
@@ -1399,7 +1399,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			if (breakContext instanceof ObjectContext)
 			{
 				ObjectContext octxt = (ObjectContext)breakContext;
-				int line = breakpoint.location.startLine;
+				int line = breakpoint.location.getStartLine();
 				String opname = breakContext.guardOp == null ?
 					"" : breakContext.guardOp.name.getName();
 
@@ -1410,7 +1410,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 						APerSyncDefinition pdef = (APerSyncDefinition)d;
 						
 						if (pdef.getOpname().getName().equals(opname) ||
-							pdef.getLocation().startLine == line ||
+							pdef.getLocation().getStartLine() == line ||
 							PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
 						{
             				for (PExp sub: PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))

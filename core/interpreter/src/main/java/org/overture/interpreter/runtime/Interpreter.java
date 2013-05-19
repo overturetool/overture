@@ -31,16 +31,16 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.modules.AModuleModules;
@@ -243,9 +243,9 @@ abstract public class Interpreter
 	 * Get a line of a source file.
 	 */
 
-	public String getSourceLine(LexLocation src)
+	public String getSourceLine(ILexLocation src)
 	{
-		return getSourceLine(src.file, src.startLine);
+		return getSourceLine(src.getFile(), src.getStartLine());
 	}
 
 	/**
@@ -437,7 +437,7 @@ abstract public class Interpreter
 
 		if (old != null)
 		{
-			PStm stmt = findStatement(old.location.file, old.location.startLine);
+			PStm stmt = findStatement(old.location.getFile(), old.location.getStartLine());
 
 			if (stmt != null)
 			{
@@ -445,7 +445,7 @@ abstract public class Interpreter
 			}
 			else
 			{
-				PExp exp = findExpression(old.location.file, old.location.startLine);
+				PExp exp = findExpression(old.location.getFile(), old.location.getStartLine());
 				assert (exp != null) : "Cannot locate old breakpoint?";
 				BreakpointManager.setBreakpoint(exp, new Breakpoint(exp.getLocation()));
 			}

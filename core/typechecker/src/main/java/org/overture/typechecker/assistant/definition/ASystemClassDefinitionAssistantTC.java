@@ -52,11 +52,11 @@ public class ASystemClassDefinitionAssistantTC
 						if (exp instanceof AIntLiteralExp)
 						{
 							AIntLiteralExp frequencyExp = (AIntLiteralExp) newExp.getArgs().get(1);
-							speed = frequencyExp.getValue().value;
+							speed = frequencyExp.getValue().getValue();
 						}else if (exp instanceof ARealLiteralExp)
 						{
 							ARealLiteralExp frequencyExp = (ARealLiteralExp) newExp.getArgs().get(1);
-							speed = frequencyExp.getValue().value;
+							speed = frequencyExp.getValue().getValue();
 						}
 
 						if (speed == 0)

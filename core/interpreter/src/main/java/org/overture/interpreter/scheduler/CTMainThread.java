@@ -26,7 +26,7 @@ package org.overture.interpreter.scheduler;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
@@ -172,7 +172,7 @@ public class CTMainThread extends MainThread
 	}
 
 	@Override
-	protected void handleSignal(Signal sig, Context lctxt, LexLocation location)
+	protected void handleSignal(Signal sig, Context lctxt, ILexLocation location)
 	{
 		if (sig == Signal.DEADLOCKED)
 		{

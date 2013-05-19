@@ -43,12 +43,12 @@ public class AUnresolvedTypeAssistantTC {
 
 	private static PType dereference(AUnresolvedType type, Environment env, ATypeDefinition root)
 	{
-		PDefinition def = env.findType(type.getName(), type.getLocation().module);
+		PDefinition def = env.findType(type.getName(), type.getLocation().getModule());
 
 		if (def == null)
 		{
 			throw new TypeCheckException(
-				"Unable to resolve type name '" + type.getName() + "'", type.getLocation());
+				"Unable to resolve type name '" + type.getName() + "'", type.getLocation(),type);
 		}
 
 		if (def instanceof AImportedDefinition)

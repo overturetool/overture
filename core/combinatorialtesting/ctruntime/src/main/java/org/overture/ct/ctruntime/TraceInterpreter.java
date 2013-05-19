@@ -181,7 +181,7 @@ public class TraceInterpreter
 		processingTrace(className, mtd.getName().getName(), tests.size());
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().file.getName(), mtd.getLocation().startLine, mtd.getLocation().startPos, tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;

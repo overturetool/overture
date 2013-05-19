@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.runtime.validation;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.Value;
@@ -43,7 +43,7 @@ public class ValueObserver implements ValueListener {
 		this.expr = expr;
 	}
 	
-	public void changedValue(LexLocation location, Value value, Context ctxt) {
+	public void changedValue(ILexLocation location, Value value, Context ctxt) {
 		//System.out.println("Value " + printValueName() + " has changed to " + value.toString());
 		this.expr.valueChanged(this);
 	}

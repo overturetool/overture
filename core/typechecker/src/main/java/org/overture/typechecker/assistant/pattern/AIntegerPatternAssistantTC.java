@@ -10,7 +10,7 @@ import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 public class AIntegerPatternAssistantTC {
 
 	public static PType getPossibleTypes(AIntegerPattern pattern) {
-		return SNumericBasicTypeAssistantTC.typeOf(pattern.getValue().value, pattern.getLocation());
+		return SNumericBasicTypeAssistantTC.typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
 
 	public static PExp getMatchingExpression(AIntegerPattern intptrn) {

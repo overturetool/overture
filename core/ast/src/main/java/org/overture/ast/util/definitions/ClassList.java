@@ -73,7 +73,7 @@ public class ClassList extends Vector<SClassDefinition>
 			if (!(def instanceof ACpuClassDefinition ||
 				  def instanceof ABusClassDefinition))
 			{
-				files.add(def.getLocation().file);
+				files.add(def.getLocation().getFile());
 			}
 		}
 

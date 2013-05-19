@@ -28,7 +28,7 @@ import java.util.Formattable;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
@@ -253,7 +253,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 * @throws ValueException
 	 */
 
-	public void set(LexLocation location, Value newval, Context ctxt) throws ValueException
+	public void set(ILexLocation location, Value newval, Context ctxt) throws ValueException
 	{
 		abort(4088, "Set not permitted for " + kind(), ctxt);
 	}

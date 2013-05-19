@@ -95,7 +95,7 @@ public class ClassTypeChecker extends TypeChecker
 			return;
 		}
 
-		Environment allClasses = new PublicClassEnvironment(classes);
+		Environment allClasses = new PublicClassEnvironment(classes,null);
 
 		for (SClassDefinition c: classes)
 		{

@@ -1,6 +1,6 @@
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.messages.LocatedException;
 
@@ -8,12 +8,12 @@ import org.overture.parser.messages.LocatedException;
 public class VdmRuntimeError
 {
 
-	public static Value abort(LexLocation location, int number, String msg, Context ctxt)
+	public static Value abort(ILexLocation location, int number, String msg, Context ctxt)
 	{
 		throw new ContextException(number, msg, location, ctxt);
 	}
 
-	public static Value abort(LexLocation location, ValueException ve)
+	public static Value abort(ILexLocation location, ValueException ve)
 	{
 		throw new ContextException(ve, location);
 	}
@@ -37,7 +37,7 @@ public class VdmRuntimeError
 	 * Throw a PatternMatchException with the given message.
 	 * @throws PatternMatchException
 	 */
-	public static void patternFail( int number, String msg,LexLocation location) throws PatternMatchException
+	public static void patternFail( int number, String msg,ILexLocation location) throws PatternMatchException
 	{
 		throw new PatternMatchException(number, msg, location);
 	}
@@ -47,7 +47,7 @@ public class VdmRuntimeError
 	 * @throws PatternMatchException
 	 */
 
-	public static Value patternFail(ValueException ve,LexLocation location) throws PatternMatchException
+	public static Value patternFail(ValueException ve,ILexLocation location) throws PatternMatchException
 	{
 		throw new PatternMatchException(ve.number, ve.getMessage(), location);
 	}

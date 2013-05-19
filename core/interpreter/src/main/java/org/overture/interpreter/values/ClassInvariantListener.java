@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -43,7 +43,7 @@ public class ClassInvariantListener implements ValueListener, Serializable
 		this.invopvalue = invopvalue;
 	}
 
-	public void changedValue(LexLocation location, Value value, Context ctxt)
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
 	{
 		if (doInvariantChecks && Settings.invchecks)
 		{

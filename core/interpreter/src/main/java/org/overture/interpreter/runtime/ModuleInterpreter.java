@@ -137,7 +137,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultModule.getName().getLocation().file;
+		return defaultModule.getName().getLocation().getFile();
 	}
 
 	@Override

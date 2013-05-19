@@ -68,7 +68,7 @@ UpdatePriorityList() ==
     ( 
       for all fobj in set notDetect do
         let
-            id: seq of char = VDMUtil`val2seq_of_char(fobj.getId())
+            id: seq of char = VDMUtil`val2seq_of_char[FOId](fobj.getId())
         in
             radarDisplay.RemFlyingObject(id);
       for all fobj in set newlyDet do

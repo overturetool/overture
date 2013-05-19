@@ -11,8 +11,8 @@ import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
@@ -128,7 +128,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	public static ASetType getSet(AUnionType type)
 	{
 
-		LexLocation location = type.getLocation();
+		ILexLocation location = type.getLocation();
 
 		if (!type.getSetDone())
 		{
@@ -154,7 +154,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static SMapType getMap(AUnionType type)
 	{
-		LexLocation location = type.getLocation();
+		ILexLocation location = type.getLocation();
 
 		if (!type.getMapDone())
 		{
@@ -371,7 +371,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getFuncType();
+		return (AFunctionType) type.getFuncType();
 	}
 
 	public static boolean isOperation(AUnionType type)
@@ -436,7 +436,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getOpType();
+		return (AOperationType) type.getOpType();
 	}
 
 	public static boolean isSeq(AUnionType type)

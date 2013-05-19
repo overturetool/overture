@@ -30,6 +30,7 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -49,22 +50,26 @@ public class FlatEnvironment extends Environment
 	public List<PDefinition> getDefinitions() {
 		return definitions;
 	}
-	
-	public FlatEnvironment(List<PDefinition> definitions)
+
+	public FlatEnvironment(List<PDefinition> definitions, EnvironmentSearchStrategy strategy)
 	{
-		super(null);
+		super(null,strategy);
 		this.definitions = definitions;
+	}
+
+	public FlatEnvironment(List<PDefinition> definitions) {
+		this(definitions,(EnvironmentSearchStrategy)null);
 	}
 
 	public FlatEnvironment(List<PDefinition> definitions, Environment env)
 	{
-		super(env);
+		super(env,env.searchStrategy);
 		this.definitions = definitions;
 	}
 
 	public FlatEnvironment(PDefinition one, Environment env)
 	{
-		super(env);
+		super(env,env.searchStrategy);
 		this.definitions = new ArrayList<PDefinition>();
 		this.definitions.add(one);
 	}
@@ -77,7 +82,10 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionListAssistantTC.findName(definitions,name, scope);
+		PDefinition def = searchStrategy != null ? searchStrategy.findName(name, scope, getEnclosingDefinition(), outer, getDefinitions()) : null;
+		if (def != null) return def;
+
+		def = PDefinitionListAssistantTC.findName(definitions,name, scope);
 
 		if (def != null)
 		{
@@ -102,7 +110,10 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistantTC.findType(definitions,name, fromModule);
+		PDefinition def = searchStrategy != null ? searchStrategy.findType(name, fromModule, getEnclosingDefinition(), outer, getDefinitions()) : null;
+		if (def != null) return def;
+
+		def = PDefinitionAssistantTC.findType(definitions,name, fromModule);
 
 		if (def != null)
 		{
@@ -122,7 +133,7 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-   		return (outer == null) ? null : outer.findStateDefinition();
+		return (outer == null) ? null : outer.findStateDefinition();
 	}
 
 	@Override
@@ -169,13 +180,21 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-    public void markUsed()
-    {
+	public void markUsed()
+	{
 		PDefinitionListAssistantTC.markUsed(definitions);
-    }
+	}
 
 	public void setLimitStateScope(boolean limitStateScope)
 	{
 		this.limitStateScope = limitStateScope;
 	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		if (super.searchStrategy != null)
+			return searchStrategy.find(name, getEnclosingDefinition(), outer, definitions);
+		return null;
+	}
+
 }

@@ -8,7 +8,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -35,7 +35,7 @@ public class PPatternListAssistantTC {
 	}
 
 	public static PType getPossibleType(LinkedList<PPattern> plist,
-			LexLocation location) {
+			ILexLocation location) {
 		
 		switch (plist.size())
 		{

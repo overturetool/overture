@@ -211,7 +211,7 @@ public class VdmElementLabels {
 		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
-			AOperationType type = element.getType();
+        AOperationType type = (AOperationType)element.getType();
 			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
@@ -226,14 +226,16 @@ public class VdmElementLabels {
 				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
+
+      if (type.getResult() instanceof AVoidType) {
+        result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		  } else {
+			  result.append(" : " + getSimpleTypeString(type.getResult()),
+				 	StyledString.DECORATIONS_STYLER);
+		  }
+
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
-			result.append(" : ()", StyledString.DECORATIONS_STYLER);
-		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
-					StyledString.DECORATIONS_STYLER);
-		}
 
 		return result;
 	}
@@ -244,7 +246,7 @@ public class VdmElementLabels {
 		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AFunctionType) {
-			AFunctionType type = element.getType();
+        AFunctionType type = (AFunctionType)element.getType();
 			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
@@ -259,15 +261,15 @@ public class VdmElementLabels {
 				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
-		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
-			result.append(" : ()", StyledString.DECORATIONS_STYLER);
-		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+  		if (type.getResult() instanceof AVoidType) {
+			  result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		  } else {
+		  	result.append(" : " + getSimpleTypeString(type.getResult()),
 					StyledString.DECORATIONS_STYLER);
-
+		  }
 		}
+
 
 		return result;
 	}
@@ -382,11 +384,11 @@ public class VdmElementLabels {
 	private static StyledString getLocalDefinitionLabel(ALocalDefinition element) {
 		StyledString result = new StyledString();
 		result.append(element.getName().getSimpleName());
-		if (element.getType().getLocation().module.toLowerCase().equals("default")) {
+		if (element.getType().getLocation().getModule().toLowerCase().equals("default")) {
 			result.append(" : " + getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + element.getType().getLocation().module + "`"
+			result.append(" : " + element.getType().getLocation().getModule() + "`"
 					+ getSimpleTypeString(element.getType()),
 					StyledString.DECORATIONS_STYLER);
 		}
@@ -398,7 +400,7 @@ public class VdmElementLabels {
 		StyledString result = new StyledString();
 		result.append(element.getName().getSimpleName());
 
-		AFunctionType type = element.getType();
+		AFunctionType type = (AFunctionType)element.getType();
 		if (type.getParameters().size() == 0)
 		{
 			result.append("() ");
@@ -417,10 +419,10 @@ public class VdmElementLabels {
 			result.append(getSimpleTypeString(definition) + ")");
 		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
+ 		if (type.getResult() instanceof AVoidType) {
 			result.append(" : ()", StyledString.DECORATIONS_STYLER);
 		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+			result.append(" : " + getSimpleTypeString(type.getResult()),
 					StyledString.DECORATIONS_STYLER);
 
 		}
@@ -454,7 +456,7 @@ public class VdmElementLabels {
 		result.append(element.getName().getSimpleName());
 
 		if (element.getType() instanceof AOperationType) {
-			AOperationType type = element.getType();
+        AOperationType type = (AOperationType)element.getType();
 			if (type.getParameters().size() == 0) {
 				result.append("() ");
 			} else {
@@ -469,15 +471,15 @@ public class VdmElementLabels {
 				PType definition = (PType) type.getParameters().get(i);
 				result.append(getSimpleTypeString(definition) + ")");
 			}
-		}
 
-		if (element.getType().getResult() instanceof AVoidType) {
-			result.append(" : ()", StyledString.DECORATIONS_STYLER);
-		} else {
-			result.append(" : " + getSimpleTypeString(element.getType().getResult()),
+  		if (type.getResult() instanceof AVoidType) {
+	  		result.append(" : ()", StyledString.DECORATIONS_STYLER);
+		  } else {
+			  result.append(" : " + getSimpleTypeString(type.getResult()),
 					StyledString.DECORATIONS_STYLER);
-
+  		}
 		}
+
 
 		return result;
 	}

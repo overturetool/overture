@@ -78,7 +78,7 @@ public GetTime : () ==> nat
 GetTime() ==
   return currentTime;
 
-Awake: () ==> ()
+public Awake: () ==> ()
 Awake() == skip;
 
 public ThreadDone : () ==> ()

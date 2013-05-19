@@ -22,7 +22,7 @@ public class ARealPatternAssistantInterpreter extends ARealPatternAssistantTC
 
 		try
 		{
-			if (expval.realValue(ctxt) != p.getValue().value)
+			if (expval.realValue(ctxt) != p.getValue().getValue())
 			{
 				VdmRuntimeError.patternFail(4113, "Real pattern match failed",p.getLocation());
 			}

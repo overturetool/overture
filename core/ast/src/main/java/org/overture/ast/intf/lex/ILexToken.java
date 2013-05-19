@@ -9,7 +9,7 @@ public interface ILexToken extends INode, Comparable<INode>
 
 
 
-	LexLocation getLocation();
+	ILexLocation getLocation();
 
 	VDMToken getType();
 

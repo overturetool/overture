@@ -37,6 +37,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.ExternalNode;
 import org.overture.ast.node.INode;
@@ -47,7 +48,7 @@ import org.overture.ast.node.INode;
  * A class to hold the location of a token.
  */
 
-public class LexLocation implements Serializable , ExternalNode
+public class LexLocation implements Serializable , ExternalNode, ILexLocation
 {
 	@Override
 	public LexLocation clone()
@@ -92,6 +93,9 @@ public class LexLocation implements Serializable , ExternalNode
 	/** The number of times the location has been executed. */
 	public long hits = 0;
 
+	
+
+
 	/**
 	 * Create a location with the given fields.
 	 * @param endOffset 
@@ -132,6 +136,8 @@ public class LexLocation implements Serializable , ExternalNode
 		}
 
 
+	
+	
 	/**
 	 * Create a default location.
 	 */
@@ -139,6 +145,74 @@ public class LexLocation implements Serializable , ExternalNode
 	public LexLocation()
 	{
 		this(new File("?"), "?", 0, 0, 0, 0, 0, 0);
+	}
+
+
+
+	@Override
+	public boolean getExecutable()
+	{
+		return executable;
+	}
+
+	@Override
+	public long getHits()
+	{
+		return hits;
+	}
+
+	@Override
+	public void setHits(long hits)
+	{
+		this.hits=hits;
+	}
+
+	@Override
+	public File getFile()
+	{
+		return file;
+	}
+
+	@Override
+	public String getModule()
+	{
+		return module;
+	}
+
+	@Override
+	public int getStartLine()
+	{
+		return startLine;
+	}
+
+	@Override
+	public int getStartPos()
+	{
+		return startPos;
+	}
+
+	@Override
+	public int getEndLine()
+	{
+		return endLine;
+	}
+
+	@Override
+	public int getEndPos()
+	{
+		return endPos;
+	}
+
+	@Override
+	public int getStartOffset()
+	{
+		return startOffset;
+	}
+
+	@Override
+	public int getEndOffset()
+	{
+		return endOffset;
 	}
 
 	@Override
@@ -192,14 +266,14 @@ public class LexLocation implements Serializable , ExternalNode
 		return file.hashCode() + module.hashCode() + startLine + startPos;
 	}
 
-	public boolean within(LexLocation span)
+	public boolean within(ILexLocation span)
 	{
 		return
-			(startLine > span.startLine ||
-				(startLine == span.startLine && startPos >= span.startPos)) &&
-			(startLine <= span.endLine ||
-				(startLine == span.endLine && startPos < span.endPos)) &&
-			file.equals(span.file);
+			(startLine > span.getStartLine() ||
+				(startLine == span.getStartLine() && startPos >= span.getStartPos())) &&
+			(startLine <= span.getEndLine() ||
+				(startLine == span.getEndLine() && startPos < span.getEndPos())) &&
+			file.equals(span.getFile());
 	}
 
 	public void executable(boolean exe)
@@ -274,14 +348,14 @@ public class LexLocation implements Serializable , ExternalNode
 	public static void addSpan(LexNameToken name, LexToken upto)
 	{
 		LexLocation span = new LexLocation(
-			name.location.file,
-			name.location.module,
-			name.location.startLine,
-			name.location.startPos,
-			upto.location.endLine,
-			upto.location.endPos,
-			upto.location.startOffset,
-			upto.location.endOffset);
+			name.location.getFile(),
+			name.location.getModule(),
+			name.location.getStartLine(),
+			name.location.getStartPos(),
+			upto.location.getEndLine(),
+			upto.location.getEndPos(),
+			upto.location.getStartOffset(),
+			upto.location.getEndOffset());
 
 		nameSpans.put(name, span);
 	}

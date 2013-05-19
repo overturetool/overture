@@ -135,7 +135,7 @@ public class UmlTypeCreatorBase
 
 			}
 			case AQuoteType.kindPType:
-				return ((AQuoteType) type).getValue().value;
+				return ((AQuoteType) type).getValue().getValue();
 			case SSeqType.kindPType:
 				return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
 			case ASetType.kindPType:

@@ -22,7 +22,7 @@ public class AQuotePatternAssistantInterpreter extends AQuotePatternAssistantTC
 
 		try
 		{
-			if (!expval.quoteValue(ctxt).equals(p.getValue().value))
+			if (!expval.quoteValue(ctxt).equals(p.getValue().getValue()))
 			{
 				VdmRuntimeError.patternFail(4112, "Quote pattern match failed",p.getLocation());
 			}

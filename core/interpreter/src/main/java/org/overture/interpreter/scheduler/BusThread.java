@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
 
@@ -45,7 +45,7 @@ public class BusThread extends SchedulablePoolThread
 	}
 
 	@Override
-	protected void handleSignal(Signal sig, Context ctxt, LexLocation location)
+	protected void handleSignal(Signal sig, Context ctxt, ILexLocation location)
 	{
 		switch (sig)
 		{

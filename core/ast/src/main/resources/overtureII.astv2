@@ -14,13 +14,13 @@ Tokens
   LexToken = 'java:node:org.overture.ast.intf.lex.ILexToken';
   LexNameToken = 'java:node:org.overture.ast.intf.lex.ILexNameToken';
   LexIdentifierToken = 'java:node:org.overture.ast.intf.lex.ILexIdentifierToken';
-  LexBooleanToken = 'java:node:org.overture.ast.lex.LexBooleanToken';
-  LexCharacterToken = 'java:node:org.overture.ast.lex.LexCharacterToken';
-  LexIntegerToken = 'java:node:org.overture.ast.lex.LexIntegerToken';
-  LexQuoteToken = 'java:node:org.overture.ast.lex.LexQuoteToken';
-  LexRealToken = 'java:node:org.overture.ast.lex.LexRealToken';
-  LexStringToken = 'java:node:org.overture.ast.lex.LexStringToken';
-  location = 'java:org.overture.ast.lex.LexLocation';
+  LexBooleanToken = 'java:node:org.overture.ast.intf.lex.ILexBooleanToken';
+  LexCharacterToken = 'java:node:org.overture.ast.intf.lex.ILexCharacterToken';
+  LexIntegerToken = 'java:node:org.overture.ast.intf.lex.ILexIntegerToken';
+  LexQuoteToken = 'java:node:org.overture.ast.intf.lex.ILexQuoteToken';
+  LexRealToken = 'java:node:org.overture.ast.intf.lex.ILexRealToken';
+  LexStringToken = 'java:node:org.overture.ast.intf.lex.ILexStringToken';
+  location = 'java:org.overture.ast.intf.lex.ILexLocation';
   
   clonableFile ='java:org.overture.ast.util.ClonableFile';
   clonableString ='java:org.overture.ast.util.ClonableString';
@@ -72,7 +72,7 @@ exp {-> package='org.overture.ast.expressions'}
     |   {is} [typeName]:LexNameToken (basicType):type [test]:exp [typedef]:definition
     |   {isOfBaseClass} [baseClass]:LexNameToken [exp]:exp
     |   {isOfClass} [className]:LexNameToken (classType):type.class [exp]:exp
-    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* (functionType):type.function     
+    |   {lambda} [bindList]:bind.type* [expression]:exp [paramPatterns]:pattern* [paramDefinitions]:definition* (functionType):type     
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [value]:exp [def]:definition.multiBindList
     |   {letDef} [localDefs]:definition* [expression]:exp
     |   {def} [localDefs]:definition* [expression]:exp
@@ -220,8 +220,8 @@ type {-> package='org.overture.ast.types'}
         (setDone):java_Boolean (setType):type.set 
         (mapDone):java_Boolean (mapType):type.#Map
         (prodCard):java_Integer (prodType):type.product
-        (funcDone):java_Boolean (funcType):type.function
-        (opDone):java_Boolean (opType):type.operation
+        (funcDone):java_Boolean (funcType):type
+        (opDone):java_Boolean (opType):type
         (numDone):java_Boolean (numType):type.#basic.#numeric
         (recDone):java_Boolean (recType):type.#invariant.record
         (classDone):java_Boolean (classType):type.class
@@ -329,7 +329,7 @@ definition {-> package='org.overture.ast.definitions'}
                  (expType):type (defType):type [defs]:definition*
     |   {explicitFunction}  [typeParams]:LexNameToken* 
                             [paramPatternList]:pattern**
-                            (type):type.function 
+                            (type):type
                             (body):exp 
                             [precondition]:exp 
                             [postcondition]:exp
@@ -371,7 +371,7 @@ definition {-> package='org.overture.ast.definitions'}
                             (measureLexical):java_Integer
                              
                             (actualResult):type
-                            (type):type.function
+                            (type):type
                             //[poluFuncs]:???Map<TypeList, FunctionValue>
                            
     |   {explicitOperation} [parameterPatterns]:pattern* 
@@ -379,7 +379,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [precondition]:exp 
                             [postcondition]:exp 
                             
-                            (type):type.operation
+                            (type):type
                             
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
@@ -397,7 +397,7 @@ definition {-> package='org.overture.ast.definitions'}
                             [postcondition]:exp
                             [errors]:case.error*
                             
-                            (type):type.operation
+                            (type):type
                             (predef):definition.explicitFunction
                             (postdef):definition.explicitFunction
                             (state):definition.state

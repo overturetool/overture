@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.interpreter.runtime.Context;
 
@@ -44,7 +44,7 @@ public class Lock implements Serializable
 		waiters.clear();
 	}
 
-	public void lock(Context ctxt, LexLocation location)
+	public void lock(Context ctxt, ILexLocation location)
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
@@ -66,7 +66,7 @@ public class Lock implements Serializable
 		lockedBy = th;
 	}
 
-	public void block(Context ctxt, LexLocation location)
+	public void block(Context ctxt, ILexLocation location)
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 

@@ -44,7 +44,7 @@ public class SSimpleBlockStmAssistantInterpreter
 
 	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
 	{
-		if (stm.getLocation().startLine == lineno) return stm;
+		if (stm.getLocation().getStartLine() == lineno) return stm;
 		PStm found = null;
 
 		for (PStm stmt: stm.getStatements())
