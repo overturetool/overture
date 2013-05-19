@@ -1,0 +1,11 @@
+#set( $final = "")
+#if ($FIELD_FINAL)
+	#set( $final = "final")
+#end
+##
+#set( $static = "")
+#if ($FIELD_STATIC)
+	#set( $static = "static")
+#end
+##
+$FIELD_ACCESS static final $FIELD_TYPE $FIELD_NAME = $FIELD_INITIAL;

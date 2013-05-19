@@ -3,7 +3,7 @@ package org.overture.codegen.visitor;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.codegen.logging.ILogger;
+import org.overture.codegen.logging.ILogger; 
 import org.overture.codegen.newstuff.CodeGenTree;
 
 public class CodeGenVisitor extends AnalysisAdaptor

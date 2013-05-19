@@ -7,6 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -65,29 +66,15 @@ public class DefVisitorCG extends AnalysisAdaptor
 		field.setFinal(isFinal);
 		field.setType(type);
 		field.setInitial(exp);
-
+		
 		String className = node.getClassDefinition().getName().getName();
 		AClassCG classCg = rootVisitor.getTree().getClass(className);
 		classCg.getFields().add(field);
 	}
-		
-//		String className = node.getName().apply(rootVisitor, question);
-//		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
-//
-//		ClassCG classCg = new ClassCG(className, accessSpecifier);
-//		
-//		question.registerCodeGenClass(classCg);
-//		
-//		LinkedList<PDefinition> definitions = node.getDefinitions();
-//
-//		for (PDefinition def : definitions)
-//			def.apply(rootVisitor.getDefVisitor(), question);
-//		
-//		return null;
 	
 //	@Override
-//	public INode caseAExplicitOperationDefinition(
-//			AExplicitOperationDefinition node, CodeGenContextMap question)
+//	public void caseAExplicitOperationDefinition(
+//			AExplicitOperationDefinition node)
 //			throws AnalysisException
 //	{	
 //		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
@@ -98,9 +85,7 @@ public class DefVisitorCG extends AnalysisAdaptor
 //		ClassCG codeGenClass = question.getCodeGenClass(className);
 //		codeGenClass.addMethod(new MethodDeinitionCG(accessSpecifier, returnType, operationName));
 //		
-//		node.getBody().apply(rootVisitor.getStmVisitor(), question);
-//		
-//		return null;
+//		node.getBody().apply(rootVisitor.getStmVisitor(), question);		
 //	}
 		
 }
