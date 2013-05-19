@@ -62,8 +62,7 @@ public class InvariantValueListener implements ValueListener, Serializable
 		// is true for these simplest levels. Note that we also check for whether
 		// we are inside an atomic block.
 		
-		if (root != null && root.value != value && Settings.invchecks
-				&& !AAtomicStmAssistantInterpreter.insideAtomic())
+		if (root != null && root.value != value && Settings.invchecks)
 		{
     		try
     		{

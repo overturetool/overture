@@ -173,8 +173,6 @@ public class TypeCheckerStmVisitor extends
 	public PType caseAAtomicStm(AAtomicStm node, TypeCheckInfo question)
 			throws AnalysisException {
 
-		node.setStatedef(question.env.findStateDefinition());
-
 		for (AAssignmentStm stmt : node.getAssignments()) {
 			stmt.apply(rootVisitor, question);
 		}
