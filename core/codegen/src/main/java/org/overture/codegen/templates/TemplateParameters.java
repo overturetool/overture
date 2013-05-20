@@ -36,6 +36,7 @@ public enum TemplateParameters
 	
 	
 	BIN_EXP_LEFT_OPERAND,
-	BIN_EXP_RIGHT_OPERAND;
+	BIN_EXP_RIGHT_OPERAND,
 	
+	BASIC_TYPE
 }

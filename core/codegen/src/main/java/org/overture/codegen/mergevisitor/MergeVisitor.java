@@ -8,13 +8,17 @@ import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.cgast.AFieldCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
-import org.overture.codegen.cgast.expressions.AIntLiteralCGExp;
-import org.overture.codegen.cgast.expressions.AMinusCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.AMinusCGUnaryExp;
-import org.overture.codegen.cgast.expressions.AMulCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.APlusCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.APlusCGUnaryExp;
-import org.overture.codegen.cgast.expressions.ARealLiteralCGExp;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AMinusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMulNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.constants.ITextConstants;
 import org.overture.codegen.templates.TemplateManager;
 import org.overture.codegen.templates.TemplateParameters;
@@ -71,21 +75,22 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		String access = node.getAccess();
 		boolean isStatic = node.getStatic();
 		boolean isFinal = node.getFinal();
-		String type = node.getType();
 		String name = node.getName();
 		
 		StringWriter expWriter = new StringWriter();
 		node.getInitial().apply(this, expWriter);
-		String initial = expWriter.toString();
+		
+		StringWriter typeWriter = new StringWriter();
+		node.getType().apply(this, typeWriter);
 		
 		CodeGenContext context = new CodeGenContext();
 		
 		context.put(TemplateParameters.FIELD_ACCESS, access);
 		context.put(TemplateParameters.FIELD_STATIC, isStatic);
 		context.put(TemplateParameters.FIELD_FINAL, isFinal);
-		context.put(TemplateParameters.FIELD_TYPE, type);
+		context.put(TemplateParameters.FIELD_TYPE, typeWriter.toString());
 		context.put(TemplateParameters.FIELD_NAME, name);
-		context.put(TemplateParameters.FIELD_INITIAL, initial);
+		context.put(TemplateParameters.FIELD_INITIAL, expWriter.toString());
 		
 		Template classTemplate = templates.getTemplate(node.getClass());
 		
@@ -95,52 +100,83 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	}
 	
 	@Override
-	public void caseAMulCGNumericBinaryExp(AMulCGNumericBinaryExp node,
+	public void caseAMulNumericBinaryExpCG(AMulNumericBinaryExpCG node,
 			StringWriter question) throws AnalysisException
 	{
 		mergeAssistant.handleBinaryExp(node, question);
 	}
 	
 	@Override
-	public void caseAPlusCGNumericBinaryExp(APlusCGNumericBinaryExp node,
+	public void caseAPlusNumericBinaryExpCG(APlusNumericBinaryExpCG node,
 			StringWriter question) throws AnalysisException
 	{
 		mergeAssistant.handleBinaryExp(node, question);
 	}
 	
 	@Override
-	public void caseAMinusCGNumericBinaryExp(AMinusCGNumericBinaryExp node,
+	public void caseAMinusNumericBinaryExpCG(AMinusNumericBinaryExpCG node,
 			StringWriter question) throws AnalysisException
 	{
 		mergeAssistant.handleBinaryExp(node, question);
 	}
 	
 	@Override
-	public void caseAPlusCGUnaryExp(APlusCGUnaryExp node, StringWriter question)
+	public void caseAPlusUnaryExpCG(APlusUnaryExpCG node, StringWriter question)
 			throws AnalysisException
 	{
 		mergeAssistant.handleUnaryExp(node, question);
 	}
 	
 	@Override
-	public void caseAMinusCGUnaryExp(AMinusCGUnaryExp node,
+	public void caseAMinusUnaryExpCG(AMinusUnaryExpCG node,
 			StringWriter question) throws AnalysisException
 	{
 		mergeAssistant.handleUnaryExp(node, question);
 	}
 	
 	@Override
-	public void caseAIntLiteralCGExp(AIntLiteralCGExp node,
+	public void caseAIntLiteralExpCG(AIntLiteralExpCG node,
 			StringWriter question) throws AnalysisException
 	{
-		question.append(node.getValue());
+		question.append(node.getValue());//FIXME: Formatting of literal expressions
 	}
 	
 	@Override
-	public void caseARealLiteralCGExp(ARealLiteralCGExp node,
+	public void caseARealLiteralExpCG(ARealLiteralExpCG node,
 			StringWriter question) throws AnalysisException
 	{
-		question.append(node.getValue());
+		question.append(node.getValue());//FIXME: Formatting of literal expressions
+	}
+	
+	@Override
+	public void caseACharLiteralExpCG(ACharLiteralExpCG node,
+			StringWriter question) throws AnalysisException
+	{
+		final char QUOTE = '\'';
+		question.append(QUOTE + node.getValue() + QUOTE);//FIXME: Formatting of literal expressions
+	}
+	
+	//Basic numeric types
+	
+	@Override
+	public void caseAIntNumericBasicTypeCG(AIntNumericBasicTypeCG node,
+			StringWriter question) throws AnalysisException
+	{		
+		mergeAssistant.handleBasicType(node, question);
+	}
+	
+	@Override
+	public void caseARealNumericBasicTypeCG(ARealNumericBasicTypeCG node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleBasicType(node, question);
+	}
+	
+	@Override
+	public void caseACharBasicTypeCG(ACharBasicTypeCG node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleBasicType(node, question);
 	}
 	
 }

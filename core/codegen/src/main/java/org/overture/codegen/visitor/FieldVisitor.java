@@ -4,7 +4,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.codegen.cgast.AFieldCG;
-import org.overture.codegen.cgast.expressions.PExp;
+import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 
 public class FieldVisitor extends QuestionAnswerAdaptor<CodeGenInfo, AFieldCG>
 {
@@ -17,8 +18,8 @@ public class FieldVisitor extends QuestionAnswerAdaptor<CodeGenInfo, AFieldCG>
 		String name = node.getPattern().toString();
 		boolean isStatic = true;
 		boolean isFinal = true;
-		String type = "theType";//node.getType().apply(rootVisitor.getTypeVisitor(), null);
-		PExp exp = node.getExpression().apply(question.getExpVisitor(), question);
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		
 		AFieldCG field = new AFieldCG();//new AFieldCG(access_, name_, static_, final_, type_, initial_)
 		field.setAccess(access);

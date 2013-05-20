@@ -41,16 +41,17 @@ CG {-> package='org.overture.codegen.cgast'}
     	[access]:java_String
     	[static]:java_Boolean
     	[final]:java_Boolean
-    	[type]:java_String
+    	[type]:typeCG
     	[name]:java_String
-    	[initial]:exp
+    	[initial]:expCG
     ;
     
-exp {-> package='org.overture.codegen.cgast.expressions'}
+expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
     |	#Binary
-    |	{intLiteralCG}	[value]:java_String
-    |	{realLiteralCG}	[value]:java_String
+    |	{intLiteral}	[value]:java_String
+    |	{realLiteral}	[value]:java_String
+    |	{charLiteral} [value]:java_String
     ;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
@@ -58,22 +59,36 @@ exp {-> package='org.overture.codegen.cgast.expressions'}
     ;   
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
-    =   {plusCG} 
-    |   {minusCG}
-    |	{mulCG}       
+    =   {plus} 
+    |   {minus}
+    |	{mul}       
     ;   
  
 #Unary {-> package='org.overture.codegen.cgast.expressions'}
-    =   {plusCG} 
-    |   {minusCG}       
+    =   {plus} 
+    |   {minus}       
+    ;
+
+typeCG {-> package='org.overture.codegen.cgast.types'}
+    =   #basic
+    ;
+    
+#basic {-> package='org.overture.codegen.cgast.types'}
+    =   #numeric
+    |	{char} 
+    ;
+
+#numeric {-> package='org.overture.codegen.cgast.types'}
+    =   {int}
+    |   {real} 
     ;
      
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
 
-%exp->#Unary =  [exp]:exp
+%expCG->#Unary =  [exp]:expCG
     ;
     
-%exp->#Binary = [left]:exp [right]:exp
+%expCG->#Binary = [left]:expCG [right]:expCG
 	;
 

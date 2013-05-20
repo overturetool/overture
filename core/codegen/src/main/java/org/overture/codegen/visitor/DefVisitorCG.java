@@ -13,11 +13,8 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 {
 	private static final long serialVersionUID = 81602965450922571L;
 	
-	private CodeGenVisitor rootVisitor;
-	
-	public DefVisitorCG(CodeGenVisitor rootVisitor)
+	public DefVisitorCG()
 	{
-		this.rootVisitor = rootVisitor;
 	}
 	
 	@Override
@@ -30,7 +27,7 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 		classCg.setName(name);
 		classCg.setAccess(access);
 		
-		rootVisitor.registerClass(classCg);
+		question.getRootVisitor().registerClass(classCg);
 		
 		LinkedList<PDefinition> defs = node.getDefinitions();
 	

@@ -2,6 +2,7 @@ package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -9,18 +10,18 @@ import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
-import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralCGExp;
-import org.overture.codegen.cgast.expressions.AMinusCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.AMinusCGUnaryExp;
-import org.overture.codegen.cgast.expressions.AMulCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.APlusCGNumericBinaryExp;
-import org.overture.codegen.cgast.expressions.APlusCGUnaryExp;
-import org.overture.codegen.cgast.expressions.ARealLiteralCGExp;
-import org.overture.codegen.cgast.expressions.PExp;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AMinusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMulNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.operators.OperatorLookup;
 
-public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
+public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 {
 	private static final long serialVersionUID = -7481045116217669686L;
 	
@@ -48,10 +49,10 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
 	//Numeric binary expressions
 	
 	@Override
-	public PExp caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
+	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		AMulCGNumericBinaryExp mulExp = new AMulCGNumericBinaryExp();
+		AMulNumericBinaryExpCG mulExp = new AMulNumericBinaryExpCG();
 		
 		mulExp.setLeft(node.getLeft().apply(this, question));
 		mulExp.setRight(node.getRight().apply(this, question));
@@ -60,10 +61,10 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
 	}
 	
 	@Override
-	public PExp caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
+	public PExpCG caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		APlusCGNumericBinaryExp plusExp = new APlusCGNumericBinaryExp();
+		APlusNumericBinaryExpCG plusExp = new APlusNumericBinaryExpCG();
 			
 		plusExp.setLeft(node.getLeft().apply(this, question));
 		plusExp.setRight(node.getRight().apply(this, question));
@@ -72,11 +73,11 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
 	}
 	
 	@Override
-	public PExp caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
+	public PExpCG caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
 		
-		AMinusCGNumericBinaryExp minusExp = new AMinusCGNumericBinaryExp();
+		AMinusNumericBinaryExpCG minusExp = new AMinusNumericBinaryExpCG();
 		
 		minusExp.setLeft(node.getLeft().apply(this, question));
 		minusExp.setRight(node.getRight().apply(this, question));
@@ -87,21 +88,19 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
 	//Unary
 	
 	@Override
-	public PExp caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, CodeGenInfo question) throws AnalysisException
+	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, CodeGenInfo question) throws AnalysisException
 	{
-		APlusCGUnaryExp unaryPlus = new APlusCGUnaryExp();
-		
+		APlusUnaryExpCG unaryPlus = new APlusUnaryExpCG();
 		unaryPlus.setExp(node.getExp().apply(this, question));
 		
 		return unaryPlus;
 	}
 
 	@Override
-	public PExp caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+	public PExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		AMinusCGUnaryExp unaryMinus = new AMinusCGUnaryExp();
-		
+		AMinusUnaryExpCG unaryMinus = new AMinusUnaryExpCG();
 		unaryMinus.setExp(node.getExp().apply(this, question));
 		
 		return unaryMinus;
@@ -167,23 +166,33 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExp>
 //	//Literal EXP:
 	
 	@Override
-	public PExp caseARealLiteralExp(ARealLiteralExp node,
+	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
 		
-		ARealLiteralCGExp realLiteral = new ARealLiteralCGExp();
+		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
 		realLiteral.setValue(node.getValue().toString());
 		
 		return realLiteral;
 	}
 	
 	@Override
-	public PExp caseAIntLiteralExp(AIntLiteralExp node,
+	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		AIntLiteralCGExp intLiteral = new AIntLiteralCGExp();
+		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
 		intLiteral.setValue(node.getValue().toString());
 		
 		return intLiteral;
+	}
+	
+	@Override
+	public PExpCG caseACharLiteralExp(ACharLiteralExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
+		charLiteral.setValue(node.getValue().getValue() + "");
+		
+		return charLiteral;
 	}
 }

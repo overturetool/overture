@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
+import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.logging.ILogger;
 
@@ -28,8 +30,8 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	{
 		this.log = log;
 		
-		defVisitor = new DefVisitorCG(this);
-		typeVisitor = new TypeVisitorCG(this);
+		defVisitor = new DefVisitorCG();
+		typeVisitor = new TypeVisitorCG();
 		expVisitor = new ExpVisitorCG();
 		
 		classes = new ArrayList<>();
@@ -67,26 +69,19 @@ public class CodeGenVisitor extends AnalysisAdaptor
 		classes.add(classCg);
 	}
 		
-//	@Override
-//	public String defaultINode(INode node, CodeGenContextMap question)
-//			throws AnalysisException
-//	{
-//		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-//	}
-//	
-//	
 	@Override
 	public void defaultPDefinition(PDefinition node) throws AnalysisException
 	{
 		node.apply(defVisitor, codeGenInfo);
 	}
-//	
-//	@Override
-//	public String defaultPType(PType node, CodeGenContextMap question)
-//			throws AnalysisException
-//	{
-//		return node.apply(typeVisitor, question);
-//	}
+	
+	@Override
+	public void defaultPType(PType node)
+			throws AnalysisException
+	{
+		node.apply(typeVisitor, codeGenInfo);
+	}
+	
 //	
 //	@Override
 //	public void defaultPExp(PExp node)
