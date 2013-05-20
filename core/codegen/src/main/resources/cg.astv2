@@ -43,14 +43,37 @@ CG {-> package='org.overture.codegen.cgast'}
     	[final]:java_Boolean
     	[type]:java_String
     	[name]:java_String
-    	[initial]:java_String
-    	
-    |	{op}
+    	[initial]:exp
     ;
     
 exp {-> package='org.overture.codegen.cgast.expressions'}
-    = {literal} [value]:java_String
+    =	#Unary
+    |	#Binary
+    |	{intLiteralCG}	[value]:java_String
+    |	{realLiteralCG}	[value]:java_String
+    ;
+    
+#Binary {-> package='org.overture.codegen.cgast.expressions'}
+    =   #Numeric 
+    ;   
+ 
+#Numeric {-> package='org.overture.codegen.cgast.expressions'}
+    =   {plusCG} 
+    |   {minusCG}
+    |	{mulCG}       
+    ;   
+ 
+#Unary {-> package='org.overture.codegen.cgast.expressions'}
+    =   {plusCG} 
+    |   {minusCG}       
     ;
      
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
+
+%exp->#Unary =  [exp]:exp
+    ;
+    
+%exp->#Binary = [left]:exp [right]:exp
+	;
+

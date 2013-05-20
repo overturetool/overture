@@ -6,12 +6,18 @@ import java.util.LinkedList;
 import org.apache.velocity.Template;
 import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.cgast.AFieldCG;
-import org.overture.codegen.cgast.analysis.AnalysisAdaptor;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.cgast.expressions.AIntLiteralCGExp;
+import org.overture.codegen.cgast.expressions.AMinusCGNumericBinaryExp;
+import org.overture.codegen.cgast.expressions.AMinusCGUnaryExp;
+import org.overture.codegen.cgast.expressions.AMulCGNumericBinaryExp;
+import org.overture.codegen.cgast.expressions.APlusCGNumericBinaryExp;
+import org.overture.codegen.cgast.expressions.APlusCGUnaryExp;
+import org.overture.codegen.cgast.expressions.ARealLiteralCGExp;
 import org.overture.codegen.constants.ITextConstants;
-import org.overture.codegen.naming.TemplateParameters;
-import org.overture.codegen.newstuff.ContextManager;
+import org.overture.codegen.templates.TemplateManager;
+import org.overture.codegen.templates.TemplateParameters;
 import org.overture.codegen.visitor.CodeGenContext;
 
 
@@ -22,13 +28,21 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	
 	private TemplateManager templates;
 		
-	public MergeVisitor(String templateFileSuffix)
+	private MergeAssistant mergeAssistant;
+	
+	public MergeVisitor()
 	{
-		this.templates = new TemplateManager(templateFileSuffix);
+		this.templates = new TemplateManager();
+		this.mergeAssistant = new MergeAssistant(this);
+	}
+	
+	public TemplateManager getTemplateManager()
+	{
+		return templates;
 	}
 		
 	@Override
-	public void caseAClassCG(AClassCG node, StringWriter writer)
+	public void caseAClassCG(AClassCG node, StringWriter question)
 			throws AnalysisException
 	{
 		CodeGenContext context = new CodeGenContext();
@@ -47,11 +61,11 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		context.put(TemplateParameters.FIELDS, generatedField.toString());
 		
 		Template classTemplate = templates.getTemplate(node.getClass());
-		classTemplate.merge(context.getVelocityContext(), writer);
+		classTemplate.merge(context.getVelocityContext(), question);
 	}
 	
 	@Override
-	public void caseAFieldCG(AFieldCG node, StringWriter writer)
+	public void caseAFieldCG(AFieldCG node, StringWriter question)
 			throws AnalysisException
 	{
 		String access = node.getAccess();
@@ -59,7 +73,10 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		boolean isFinal = node.getFinal();
 		String type = node.getType();
 		String name = node.getName();
-		String initial = node.getInitial();
+		
+		StringWriter expWriter = new StringWriter();
+		node.getInitial().apply(this, expWriter);
+		String initial = expWriter.toString();
 		
 		CodeGenContext context = new CodeGenContext();
 		
@@ -72,8 +89,58 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		
 		Template classTemplate = templates.getTemplate(node.getClass());
 		
-		writer.append(ITextConstants.INDENT);
-		classTemplate.merge(context.getVelocityContext(), writer);
-		writer.append(ITextConstants.NEW_LINE);
+		question.append(ITextConstants.INDENT);
+		classTemplate.merge(context.getVelocityContext(), question);
+		question.append(ITextConstants.NEW_LINE);
 	}
+	
+	@Override
+	public void caseAMulCGNumericBinaryExp(AMulCGNumericBinaryExp node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleBinaryExp(node, question);
+	}
+	
+	@Override
+	public void caseAPlusCGNumericBinaryExp(APlusCGNumericBinaryExp node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleBinaryExp(node, question);
+	}
+	
+	@Override
+	public void caseAMinusCGNumericBinaryExp(AMinusCGNumericBinaryExp node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleBinaryExp(node, question);
+	}
+	
+	@Override
+	public void caseAPlusCGUnaryExp(APlusCGUnaryExp node, StringWriter question)
+			throws AnalysisException
+	{
+		mergeAssistant.handleUnaryExp(node, question);
+	}
+	
+	@Override
+	public void caseAMinusCGUnaryExp(AMinusCGUnaryExp node,
+			StringWriter question) throws AnalysisException
+	{
+		mergeAssistant.handleUnaryExp(node, question);
+	}
+	
+	@Override
+	public void caseAIntLiteralCGExp(AIntLiteralCGExp node,
+			StringWriter question) throws AnalysisException
+	{
+		question.append(node.getValue());
+	}
+	
+	@Override
+	public void caseARealLiteralCGExp(ARealLiteralCGExp node,
+			StringWriter question) throws AnalysisException
+	{
+		question.append(node.getValue());
+	}
+	
 }

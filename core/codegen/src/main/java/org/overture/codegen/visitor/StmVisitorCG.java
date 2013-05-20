@@ -1,43 +1,19 @@
 package org.overture.codegen.visitor;
 
-import java.io.PrintWriter;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.apache.velocity.Template;
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.statements.ABlockSimpleBlockStm;
-import org.overture.ast.statements.AIfStm;
-import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.PStm;
-import org.overture.codegen.assistant.StmAssistantCG;
-import org.overture.codegen.naming.TemplateParameters;
-import org.overture.codegen.nodes.ClassCG;
-import org.overture.codegen.nodes.DeclarationStmCG;
-import org.overture.codegen.nodes.MethodDeinitionCG;
-import org.overture.codegen.nodes.ReturnStatementCG;
-import org.overture.codegen.vdm2cpp.Vdm2CppUtil;
-
-public class StmVisitorCG extends
-		QuestionAnswerAdaptor<CodeGenContextMap, String>
+public class StmVisitorCG// extends QuestionAnswerAdaptor<CodeGenContextMap, String>
 {
-	private static final long serialVersionUID = 5210069834877599547L;
-
-	private CodeGenVisitor rootVisitor;
-	private StmAssistantCG stmAssistant;
-
-	public StmVisitorCG(CodeGenVisitor rootVisitor)
-	{
-		super();
-		this.rootVisitor = rootVisitor;
-		this.stmAssistant = new StmAssistantCG(rootVisitor);
-	}
+//	private static final long serialVersionUID = 5210069834877599547L;
+//
+//	private CodeGenVisitor rootVisitor;
+//	private StmAssistantCG stmAssistant;
+//
+//	public StmVisitorCG(CodeGenVisitor rootVisitor)
+//	{
+//		super();
+//		this.rootVisitor = rootVisitor;
+//		this.stmAssistant = new StmAssistantCG(rootVisitor);
+//	}
 //
 //	@Override
 //	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,

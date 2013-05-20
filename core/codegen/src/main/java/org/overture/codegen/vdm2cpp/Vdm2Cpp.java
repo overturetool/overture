@@ -1,6 +1,7 @@
 package org.overture.codegen.vdm2cpp;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.velocity.app.Velocity;
@@ -61,9 +62,9 @@ public class Vdm2Cpp
 		// Now register the analysis at the apache velocity engine
 		//codeGenContextMap.commit();
 
-		AClassCG[] classes = codeGenVisitor.getTree().getClasses();
+		ArrayList<AClassCG> classes = codeGenVisitor.getClasses();
 		
-		MergeVisitor mergeVisitor = new MergeVisitor("_java");
+		MergeVisitor mergeVisitor = new MergeVisitor();
 		
 		for (AClassCG classCg : classes)
 		{

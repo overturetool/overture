@@ -1,24 +1,28 @@
 package org.overture.codegen.visitor;
 
+import java.util.ArrayList;
+
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.codegen.logging.ILogger; 
-import org.overture.codegen.newstuff.CodeGenTree;
+import org.overture.codegen.cgast.AClassCG;
+import org.overture.codegen.logging.ILogger;
 
 public class CodeGenVisitor extends AnalysisAdaptor
 {
 	private static final long serialVersionUID = -7105226072509250353L;
 	
+	private ILogger log;
+	
 	private DefVisitorCG defVisitor;
 	private TypeVisitorCG typeVisitor;
 	private ExpVisitorCG expVisitor;
-	private StmVisitorCG stmVisitor;
-	private PatternVisitorCG patternVisitor;
 	
-	private CodeGenTree tree;
 	
-	private ILogger log;
+	private ArrayList<AClassCG> classes;
+	//private CodeGenTree tree;
+	
+	private CodeGenInfo codeGenInfo;
 	
 	public CodeGenVisitor(ILogger log)
 	{
@@ -26,11 +30,11 @@ public class CodeGenVisitor extends AnalysisAdaptor
 		
 		defVisitor = new DefVisitorCG(this);
 		typeVisitor = new TypeVisitorCG(this);
-		expVisitor = new ExpVisitorCG(this);
-		stmVisitor = new StmVisitorCG(this);
-		patternVisitor = new PatternVisitorCG(this);
+		expVisitor = new ExpVisitorCG();
 		
-		this.tree = new CodeGenTree();
+		classes = new ArrayList<>();
+		
+		this.codeGenInfo = new CodeGenInfo(this);
 	}
 	
 	public TypeVisitorCG getTypeVisitor()
@@ -47,26 +51,20 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	{
 		return expVisitor;
 	}
-	
-	public StmVisitorCG getStmVisitor()
-	{
-		return stmVisitor;
-	}
-	
-	public PatternVisitorCG getPatternVisitor()
-	{
-		return patternVisitor;
-	}
-	
-	
+		
 	public ILogger getLog()
 	{
 		return log;
 	}
 	
-	public CodeGenTree getTree()
+	public ArrayList<AClassCG> getClasses()
 	{
-		return tree;
+		return classes;
+	}
+	
+	public void registerClass(AClassCG classCg)
+	{
+		classes.add(classCg);
 	}
 		
 //	@Override
@@ -80,7 +78,7 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	@Override
 	public void defaultPDefinition(PDefinition node) throws AnalysisException
 	{
-		node.apply(defVisitor);
+		node.apply(defVisitor, codeGenInfo);
 	}
 //	
 //	@Override
@@ -91,10 +89,10 @@ public class CodeGenVisitor extends AnalysisAdaptor
 //	}
 //	
 //	@Override
-//	public String defaultPExp(PExp node, CodeGenContextMap question)
+//	public void defaultPExp(PExp node)
 //			throws AnalysisException
 //	{
-//		return node.apply(expVisitor, question);
+//		node.apply(codeGenInfo.get)
 //	}
 //	
 //	@Override

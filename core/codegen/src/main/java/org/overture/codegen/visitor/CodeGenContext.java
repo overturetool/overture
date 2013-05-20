@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import org.apache.velocity.VelocityContext;
 import org.overture.codegen.cgast.AFieldCG;
-import org.overture.codegen.naming.TemplateParameters;
+import org.overture.codegen.templates.TemplateParameters;
 
 public class CodeGenContext
 {

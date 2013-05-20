@@ -1,4 +1,4 @@
-package org.overture.codegen.naming;
+package org.overture.codegen.templates;
 
 public enum TemplateParameters
 {
@@ -28,8 +28,14 @@ public enum TemplateParameters
 	VALUE_DEFS, ////The list with value definitions
 	
 	
+	UNARY_EXP_VALUE,
+	
 	IF_STM_TEST,
 	IF_STM_THEN_STM,
-	IF_STM_ELSE_STM
+	IF_STM_ELSE_STM,
+	
+	
+	BIN_EXP_LEFT_OPERAND,
+	BIN_EXP_RIGHT_OPERAND;
 	
 }
