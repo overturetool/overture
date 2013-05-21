@@ -37,6 +37,13 @@ public enum TemplateParameters
 	
 	BIN_EXP_LEFT_OPERAND,
 	BIN_EXP_RIGHT_OPERAND,
+	//Used in template that wrappes expressions (2+3)*5
+	BIN_EXP_WRAPPED,
+	
+	//Used to set a flag indicating whether both arguments in a/b are integers
+	//In Java 1/2 equals 0 whereas in VDM it must be 0.5
+	DIVIDE_BOTH_OPERANDS_INTS,
+	
 	
 	BASIC_TYPE
 }

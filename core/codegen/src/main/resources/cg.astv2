@@ -59,9 +59,17 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     ;   
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
-    =   {plus} 
-    |   {minus}
-    |	{mul}       
+    =	{div}
+    |	{divide}
+    |	{greaterEqual}
+    |	{greater}
+    |	{lessEqual}
+    |	{less}
+    |	{mod}   
+    |	{plus} 
+    |   {subtract}
+    |	{rem}
+    |	{times}       
     ;   
  
 #Unary {-> package='org.overture.codegen.cgast.expressions'}
@@ -85,6 +93,11 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
      
 Aspect Declaration
 /* This section allows fields of root types to be declared e.g. exp*/
+
+//1) No check for clash wrt nameing of fields
+//2) Only graphs
+%expCG = (type):typeCG [vdmLocation]:java_String
+    ;
 
 %expCG->#Unary =  [exp]:expCG
     ;

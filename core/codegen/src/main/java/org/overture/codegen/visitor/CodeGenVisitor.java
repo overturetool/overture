@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.logging.ILogger;

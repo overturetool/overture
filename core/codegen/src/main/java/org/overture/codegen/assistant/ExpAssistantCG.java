@@ -11,6 +11,9 @@ public class ExpAssistantCG
 //		this.expVisitor = expVisitor;
 //		this.opLookup = opLookup;
 //	}
+	
+	
+//Moved to merge assistant 
 //
 //	public String formatExp(SNumericBinaryExp parent, PExp child, CodeGenContextMap question) throws AnalysisException
 //	{
@@ -21,6 +24,9 @@ public class ExpAssistantCG
 //		return wrap ? "(" + unwrapped + ")" : unwrapped; 
 //	}
 //	
+	
+//Moved to merge assistant	
+//	
 //	public boolean isIntegerType(PExp exp)
 //	{	
 //		PType type = exp.getType();
@@ -30,7 +36,9 @@ public class ExpAssistantCG
 //				|| type instanceof AIntNumericBasicType) 
 //				&& !(exp instanceof ARealLiteralExp); //Expressions like 1.0 are considered real literal expressions of type NatOneNumericBasicType
 //	}
-//		
+	
+	
+//Moved to mergeassistant:	
 //	public boolean childExpHasLowerPrecedence(SNumericBinaryExp parent, PExp child)
 //	{				
 //		if(!(child instanceof SBinaryExp))

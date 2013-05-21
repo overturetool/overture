@@ -1,4 +1,4 @@
-package org.overture.codegen.operators;
+package org.overture.codegen.lookup;
 
 public class OperatorInfo
 {

@@ -3,6 +3,7 @@ package org.overture.codegen.visitor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ACharLiteralExp;
+import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -10,16 +11,19 @@ import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AMinusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AMulNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.operators.OperatorLookup;
+import org.overture.codegen.lookup.OperatorLookup;
+import org.overture.codegen.lookup.TypeLookup;
 
 public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 {
@@ -27,12 +31,24 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	
 	private OperatorLookup opLookup;
 	
+	private TypeLookup typeLookup;
+	
 	//private ExpAssistantCG expAssistant;
 	
 	public ExpVisitorCG()
 	{
 		this.opLookup = OperatorLookup.GetInstance();
+		this.typeLookup = new TypeLookup();
 		//expAssistant = new ExpAssistantCG(this, opLookup);
+	}
+	
+	@Override
+	public PExpCG defaultPExp(PExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		System.out.println("Got in default case!");
+		
+		return null;
 	}
 	
 //	@Override
@@ -52,8 +68,9 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		AMulNumericBinaryExpCG mulExp = new AMulNumericBinaryExpCG();
+		ATimesNumericBinaryExpCG mulExp = new ATimesNumericBinaryExpCG();
 		
+		mulExp.setType(typeLookup.getType(node.getType()));
 		mulExp.setLeft(node.getLeft().apply(this, question));
 		mulExp.setRight(node.getRight().apply(this, question));
 		
@@ -66,6 +83,7 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		APlusNumericBinaryExpCG plusExp = new APlusNumericBinaryExpCG();
 			
+		plusExp.setType(typeLookup.getType(node.getType()));
 		plusExp.setLeft(node.getLeft().apply(this, question));
 		plusExp.setRight(node.getRight().apply(this, question));
 		
@@ -77,12 +95,27 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 			CodeGenInfo question) throws AnalysisException
 	{
 		
-		AMinusNumericBinaryExpCG minusExp = new AMinusNumericBinaryExpCG();
+		ASubtractNumericBinaryExpCG minusExp = new ASubtractNumericBinaryExpCG();
 		
+		minusExp.setType(typeLookup.getType(node.getType()));
 		minusExp.setLeft(node.getLeft().apply(this, question));
 		minusExp.setRight(node.getRight().apply(this, question));
 		
 		return minusExp;
+	}
+	
+	
+	@Override
+	public PExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		ADivideNumericBinaryExpCG divideExp = new ADivideNumericBinaryExpCG();
+		
+		divideExp.setType(typeLookup.getType(node.getType()));
+		divideExp.setLeft(node.getLeft().apply(this, question));
+		divideExp.setRight(node.getRight().apply(this, question));
+		
+		return divideExp;
 	}
 	
 	//Unary
@@ -91,6 +124,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, CodeGenInfo question) throws AnalysisException
 	{
 		APlusUnaryExpCG unaryPlus = new APlusUnaryExpCG();
+		
+		unaryPlus.setType(typeLookup.getType(node.getType()));
 		unaryPlus.setExp(node.getExp().apply(this, question));
 		
 		return unaryPlus;
@@ -101,6 +136,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 			CodeGenInfo question) throws AnalysisException
 	{
 		AMinusUnaryExpCG unaryMinus = new AMinusUnaryExpCG();
+		
+		unaryMinus.setType(typeLookup.getType(node.getType()));
 		unaryMinus.setExp(node.getExp().apply(this, question));
 		
 		return unaryMinus;
@@ -120,25 +157,7 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 //			CodeGenContextMap question) throws AnalysisException
 //	{
 //		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-//	}
-//	
-//	@Override
-//	public String caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		PExp leftNode = node.getLeft();
-//		PExp rightNode = node.getRight();
-//		
-//		if(expAssistant.isIntegerType(leftNode) && expAssistant.isIntegerType(rightNode))
-//		{
-//			//We wrap it as a double because expressions like 1/2 equals 0 in Java whereas 1/2 = 0.5 in VDM	
-//			String left = "new Double(" + expAssistant.formatExp(node, node.getLeft(), question) + ")";
-//			String operator = opLookup.find(node.getClass()).getMapping();
-//			String right = expAssistant.formatExp(node, node.getRight(), question);
-//				
-//			return left + " " + operator + " " + right;
-//		}
-//		
+//	}		
 //		return super.caseADivideNumericBinaryExp(node, question);
 //	}
 //	
@@ -171,6 +190,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		
 		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
+		
+		realLiteral.setType(typeLookup.getType(node.getType()));
 		realLiteral.setValue(node.getValue().toString());
 		
 		return realLiteral;
@@ -181,6 +202,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 			CodeGenInfo question) throws AnalysisException
 	{
 		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
+		
+		intLiteral.setType(typeLookup.getType(node.getType()));
 		intLiteral.setValue(node.getValue().toString());
 		
 		return intLiteral;
@@ -191,6 +214,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 			throws AnalysisException
 	{
 		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
+		
+		charLiteral.setType(typeLookup.getType(node.getType()));
 		charLiteral.setValue(node.getValue().getValue() + "");
 		
 		return charLiteral;

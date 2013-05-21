@@ -30,11 +30,6 @@ public class CodeGenContext
 		context.put(param.toString(), fields);
 	}
 	
-//	public <T extends TemplateCollectionElement> void put(TemplateParameters param, ArrayList<T> valueDefs)
-//	{
-//		context.put(param.toString(), valueDefs);
-//	}
-	
 	public VelocityContext getVelocityContext()
 	{
 		return context;

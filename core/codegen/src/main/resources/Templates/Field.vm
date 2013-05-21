@@ -8,4 +8,4 @@
 	#set( $static = "static")
 #end
 ##
-$FIELD_ACCESS static final $FIELD_TYPE $FIELD_NAME = $FIELD_INITIAL;
+$FIELD_ACCESS $static $final $FIELD_TYPE $FIELD_NAME = $FIELD_INITIAL;
