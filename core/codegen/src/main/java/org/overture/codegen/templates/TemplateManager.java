@@ -13,7 +13,9 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.cgast.AFieldCG;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
@@ -45,16 +47,11 @@ public class TemplateManager
 	private static final String BASIC_TYPE_PATH = TYPE_PATH + "BasicType"
 			+ ITextConstants.SEPARATOR_CHAR;
 
-	private static final String EXPS_UTILS_PATH = EXPS_PATH + "Utils"
-			+ ITextConstants.SEPARATOR_CHAR;
-
 	private HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
-	private HashMap<UtilityTemplatesId, String> utilTemplateFileNames;
 
 	public TemplateManager()
 	{
 		initNodeTemplateFileNames();
-		initUtilTemplateFileNames();
 	}
 
 	private void initNodeTemplateFileNames()
@@ -69,6 +66,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, UNARY_EXPS_PATH
 				+ "Minus");
 
+		nodeTemplateFileNames.put(ACastUnaryExpCG.class, UNARY_EXPS_PATH
+				+ "Cast");
+
+		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, UNARY_EXPS_PATH
+				+ "Isolation");
+		
 		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, NUMERIC_BINARY_EXPS_PATH
 				+ "Mul");
 		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, NUMERIC_BINARY_EXPS_PATH
@@ -88,30 +91,6 @@ public class TemplateManager
 				+ "Integer");
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, BASIC_TYPE_PATH
 				+ "Real");
-	}
-
-	private void initUtilTemplateFileNames()
-	{
-		utilTemplateFileNames = new HashMap<UtilityTemplatesId, String>();
-		utilTemplateFileNames.put(UtilityTemplatesId.EXPS_UTIL, EXPS_UTILS_PATH
-				+ "Utils");
-	}
-
-	public Template getTemplate(UtilityTemplatesId id)
-	{
-
-		try
-		{
-			String fileName = utilTemplateFileNames.get(id)
-					+ TEMPLATE_FILE_EXTENSION;
-			StringBuffer buffer = readFromFile(fileName);
-			return constructTemplate(buffer);
-
-		} catch (IOException e)
-		{
-			return null;
-		}
-
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass)

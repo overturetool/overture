@@ -12,6 +12,9 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.codegen.assistant.ExpAssistantCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -22,6 +25,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
 
@@ -33,13 +37,13 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	
 	private TypeLookup typeLookup;
 	
-	//private ExpAssistantCG expAssistant;
+	private ExpAssistantCG expAssistant;
 	
 	public ExpVisitorCG()
 	{
 		this.opLookup = OperatorLookup.GetInstance();
 		this.typeLookup = new TypeLookup();
-		//expAssistant = new ExpAssistantCG(this, opLookup);
+		expAssistant = new ExpAssistantCG(this);
 	}
 	
 	@Override
@@ -68,40 +72,21 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		ATimesNumericBinaryExpCG mulExp = new ATimesNumericBinaryExpCG();
-		
-		mulExp.setType(typeLookup.getType(node.getType()));
-		mulExp.setLeft(node.getLeft().apply(this, question));
-		mulExp.setRight(node.getRight().apply(this, question));
-		
-		return mulExp;
+		return expAssistant.handleBinaryExp(node, new ATimesNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		APlusNumericBinaryExpCG plusExp = new APlusNumericBinaryExpCG();
-			
-		plusExp.setType(typeLookup.getType(node.getType()));
-		plusExp.setLeft(node.getLeft().apply(this, question));
-		plusExp.setRight(node.getRight().apply(this, question));
-		
-		return plusExp;
+		return expAssistant.handleBinaryExp(node, new APlusNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		
-		ASubtractNumericBinaryExpCG minusExp = new ASubtractNumericBinaryExpCG();
-		
-		minusExp.setType(typeLookup.getType(node.getType()));
-		minusExp.setLeft(node.getLeft().apply(this, question));
-		minusExp.setRight(node.getRight().apply(this, question));
-		
-		return minusExp;
+		return expAssistant.handleBinaryExp(node, new ASubtractNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	
@@ -112,8 +97,23 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 		ADivideNumericBinaryExpCG divideExp = new ADivideNumericBinaryExpCG();
 		
 		divideExp.setType(typeLookup.getType(node.getType()));
-		divideExp.setLeft(node.getLeft().apply(this, question));
-		divideExp.setRight(node.getRight().apply(this, question));
+		
+		PExp leftExp = node.getLeft();
+		PExp rightExp = node.getRight();
+		
+		PExpCG leftExpCG = leftExp.apply(this, question);
+		PExpCG rightExpCG = rightExp.apply(this, question);
+		
+		if(expAssistant.isIntegerType(leftExp) && expAssistant.isIntegerType(rightExp))
+		{
+			ACastUnaryExpCG castExpr = new ACastUnaryExpCG();
+			castExpr.setType(new ARealNumericBasicTypeCG());
+			castExpr.setExp(leftExpCG);
+			leftExpCG = castExpr;
+		}
+		
+		divideExp.setLeft(leftExpCG);
+		divideExp.setRight(rightExpCG);
 		
 		return divideExp;
 	}

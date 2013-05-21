@@ -8,9 +8,11 @@ import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.cgast.AFieldCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
@@ -107,22 +109,36 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	}
 	
 	@Override
-	public void caseADivideNumericBinaryExpCG(ADivideNumericBinaryExpCG node,
+	public void caseAIsolationUnaryExpCG(AIsolationUnaryExpCG node,
 			StringWriter question) throws AnalysisException
 	{
-		final PExpCG leftNode = node.getLeft();
-		final PExpCG rightNode = node.getRight();
-
-		mergeAssistant.handleBinaryExp(node, question, new IContextManipulator()
-		{
-			@Override
-			public void manipulate(CodeGenContext context)
-			{
-				boolean bothOperandsAreInts = mergeAssistant.isIntegerType(leftNode) && mergeAssistant.isIntegerType(rightNode);
-				context.put(TemplateParameters.DIVIDE_BOTH_OPERANDS_INTS, bothOperandsAreInts);
-			}
-		});
+		CodeGenContext context = new CodeGenContext();
+		
+		StringWriter expWriter = new StringWriter();
+		node.getExp().apply(this, expWriter);
+		context.put(TemplateParameters.UNARY_EXP_VALUE, expWriter.toString());
+		
+		Template isolationTemplate = templates.getTemplate(node.getClass());
+		isolationTemplate.merge(context.getVelocityContext(), question);
 	}
+	
+//	@Override
+//	public void caseADivideNumericBinaryExpCG(ADivideNumericBinaryExpCG node,
+//			StringWriter question) throws AnalysisException
+//	{
+//		final PExpCG leftNode = node.getLeft();
+//		final PExpCG rightNode = node.getRight();
+//
+//		mergeAssistant.handleBinaryExp(node, question, new IContextManipulator()
+//		{
+//			@Override
+//			public void manipulate(CodeGenContext context)
+//			{
+//				boolean bothOperandsAreInts = mergeAssistant.isIntegerType(leftNode) && mergeAssistant.isIntegerType(rightNode);
+//				context.put(TemplateParameters.DIVIDE_BOTH_OPERANDS_INTS, bothOperandsAreInts);
+//			}
+//		});
+//	}
 
 	// OLD BACKUP OF THE ABOVE:
 	// @Override
@@ -146,6 +162,24 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	// }
 	// Unary
 
+	@Override
+	public void caseACastUnaryExpCG(ACastUnaryExpCG node, StringWriter question)
+			throws AnalysisException
+	{
+		CodeGenContext context = new CodeGenContext();
+
+		StringWriter typeWriter = new StringWriter();
+		node.getType().apply(this, typeWriter);
+		context.put(TemplateParameters.CAST_EXP_TYPE, typeWriter.toString());
+		
+		StringWriter expWriter = new StringWriter();
+		node.getExp().apply(this, expWriter);
+		context.put(TemplateParameters.UNARY_EXP_VALUE, expWriter.toString());
+
+		Template classTemplate = templates.getTemplate(node.getClass());
+		classTemplate.merge(context.getVelocityContext(), question);
+	}
+	
 	@Override
 	public void caseAPlusUnaryExpCG(APlusUnaryExpCG node, StringWriter question)
 			throws AnalysisException

@@ -45,5 +45,7 @@ public enum TemplateParameters
 	DIVIDE_BOTH_OPERANDS_INTS,
 	
 	
-	BASIC_TYPE
+	BASIC_TYPE,
+	
+	CAST_EXP_TYPE
 }
