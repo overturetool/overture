@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="21" line="46" message="s at 32:7 hidden by s" messageType="warning" number="5008" resource="casesexpr-51.vdm.result"/>
 <message column="21" line="46" message="Definition 's' not used" messageType="warning" number="5000" resource="casesexpr-51.vdm.result"/>
 <message column="16" line="46" message="Sequence pattern is matched against nat1" messageType="error" number="3203" resource="casesexpr-51.vdm.result"/>

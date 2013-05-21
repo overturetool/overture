@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="8" line="15" message="Statement will not be reached" messageType="warning" number="5006" resource="if-14.vdm.result"/>
 <message column="8" line="16" message="Statement will not be reached" messageType="warning" number="5006" resource="if-14.vdm.result"/>
 <message column="12" line="13" message="Definition 'c' not used" messageType="warning" number="5000" resource="if-14.vdm.result"/>

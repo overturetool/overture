@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewClassTestCase">
 <message column="1" line="31" message="Overriding a superclass member of a different kind: op1(int)" messageType="error" number="3005" resource="opsigiden04.vpp.result"/>
 <message column="1" line="34" message="Overriding a superclass member of a different kind: op2(int, int)" messageType="error" number="3005" resource="opsigiden04.vpp.result"/>
 <message column="1" line="38" message="Overriding definition reduces visibility" messageType="error" number="3006" resource="opsigiden04.vpp.result"/>
