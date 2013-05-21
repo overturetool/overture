@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassRtTestCase">
 <message column="17" line="1137" message="dest at 1082:9 hidden by dest" messageType="warning" number="5008" resource="RobotRT.result"/>
 <message column="10" line="41" message="Instance variable 'currentRobotPosition' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>
 <message column="1" line="488" message="Instance variable 'obs' is not initialized" messageType="warning" number="5001" resource="RobotRT.result"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="11" line="9" message="Instance variable 'ID' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
 <message column="11" line="10" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
 <message column="11" line="11" message="Instance variable 'Corr' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
@@ -8,4 +8,5 @@
 <message column="11" line="518" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
 <message column="11" line="519" message="Instance variable 'Value' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
 <message column="11" line="520" message="Instance variable 'Env' is not initialized" messageType="warning" number="5001" resource="HomeAutomationConcPP.result"/>
+<result/>
 </testResult>

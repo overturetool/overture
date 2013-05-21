@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
-<message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<testResult type="org.overture.typechecker.tests.external.NewClassTestCase">
 <message column="7" line="8" message="Definition 'l1' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
+<message column="12" line="8" message="Definition 'l2' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
 <message column="7" line="9" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
 <message column="12" line="4" message="Definition 'dummy' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
 <message column="7" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="casesstmt.vpp.result"/>
@@ -34,6 +34,7 @@
 <message column="29" line="27" message="Name 'CasesStmtTest`a' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
 <message column="33" line="27" message="Name 'CasesStmtTest`b' is not in scope" messageType="error" number="3182" resource="casesstmt.vpp.result"/>
 <message column="3" line="24" message="Void operation returns non-void value" messageType="error" number="3312" resource="casesstmt.vpp.result"/>
+<message column="10" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
 <message column="10" line="33" message="Right hand of - is not numeric" messageType="error" number="3140" resource="casesstmt.vpp.result"/>
 <message column="5" line="40" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt.vpp.result"/>
 <message column="3" line="37" message="Operation returns unexpected type" messageType="error" number="3027" resource="casesstmt.vpp.result"/>

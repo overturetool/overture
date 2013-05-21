@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="18" line="10" message="Definition 't' not used" messageType="warning" number="5000" resource="treePP.result"/>
 <message column="29" line="28" message="Empty set used in bind" messageType="warning" number="3264" resource="treePP.result"/>
 <message column="29" line="29" message="Empty set used in bind" messageType="warning" number="3264" resource="treePP.result"/>
@@ -14,4 +14,5 @@
 <message column="13" line="144" message="Operation 'isEmpty' cannot be called from a function" messageType="error" number="3300" resource="treePP.result"/>
 <message column="5" line="172" message="Operation returns void value" messageType="error" number="3313" resource="treePP.result"/>
 <message column="12" line="181" message="Operation returns void value" messageType="error" number="3313" resource="treePP.result"/>
+<result/>
 </testResult>

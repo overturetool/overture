@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="5" line="57" message="Definition 'ADDES' not used" messageType="warning" number="5000" resource="NDBSL.result"/>
 <message column="5" line="62" message="Definition 'DELES' not used" messageType="warning" number="5000" resource="NDBSL.result"/>
 <message column="5" line="71" message="Definition 'ADDENT' not used" messageType="warning" number="5000" resource="NDBSL.result"/>

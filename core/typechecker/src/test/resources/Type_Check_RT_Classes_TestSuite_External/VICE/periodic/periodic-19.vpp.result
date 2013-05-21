@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassRtTestCase">
-<message column="13" line="23" message="Period argument must be non-zero" messageType="error" number="3288" resource="periodic-19.vpp.result"/>
-<message column="17" line="23" message="Delay argument must be less than the period" messageType="error" number="3289" resource="periodic-19.vpp.result"/>
+<testResult type="org.overture.typechecker.tests.external.NewClassRtTestCase">
 <result/>
 </testResult>
