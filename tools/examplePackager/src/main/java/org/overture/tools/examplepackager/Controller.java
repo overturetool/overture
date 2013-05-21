@@ -92,7 +92,8 @@ public class Controller
 			printSubHeading("PACKING: " + inputRootFolder.getName());
 		for (File exampleFolder : inputRootFolder.listFiles())
 		{
-			if (exampleFolder.getName().equals(".svn"))
+			if (!exampleFolder.isDirectory()
+					|| exampleFolder.getName().equals(".svn"))
 				continue;
 
 			ProjectPacker p = new ProjectPacker(exampleFolder, dialect, verbose);
