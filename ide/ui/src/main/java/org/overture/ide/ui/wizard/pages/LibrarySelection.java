@@ -54,7 +54,7 @@ public class LibrarySelection extends Composite
 		checkBoxMath.setText("Math");
 		checkBoxMath.setToolTipText("Offers a basic Math interface");
 		checkBoxUtil = new Button(this, SWT.CHECK);
-		checkBoxUtil.setText("Util");
+		checkBoxUtil.setText("VDM-Util");
 		checkBoxUtil.setToolTipText("?");
 		checkBoxCsvIo = new Button(this, SWT.CHECK);
 		checkBoxCsvIo.setText("CSV");

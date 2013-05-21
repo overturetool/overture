@@ -26,7 +26,7 @@ public class TraceTestEngine
 			final MessageConsoleStream out, final ITracesDisplay display)
 	{
 
-		Job job = new Job("Combinatorial Testing RuntimeT: " + texe.container)
+		Job job = new Job("Combinatorial Testing Runtime: " + texe.container)
 		{
 
 			@Override
@@ -57,22 +57,18 @@ public class TraceTestEngine
 						public void initialize(String module)
 						{
 							// System.out.println("CT init recieved");
-							out.println("Initialized: " + module);
+							out.println(texe.project.getName()+":"+module+" Initialized");
 							monitor.subTask(module);
 						}
 
 						public void progress(String traceName, Integer progress)
 						{
-							// System.out.println("CT progress " + traceName + " "
-							// + progress);
-							out.println("Worked(" + traceName + "): "
-									+ progress);
-							// monitor.worked(progress);
+							out.println(texe.project.getName()+":"+traceName+" Worked "	+ progress+"%");
 						}
 
 						public void completed()
 						{
-							out.println("Completed CT runtime");
+							out.println(texe.project.getName()+" Completed execution");
 
 							monitor.done();
 							display.updateView(texe.project);

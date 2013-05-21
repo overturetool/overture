@@ -1429,24 +1429,22 @@ public class ExpressionReader extends SyntaxReader
 		PExp others = null;
 		cases.addAll(readCaseAlternatives(exp));
 
-		while (ignore(VDMToken.COMMA))
+		while (lastToken().is(VDMToken.COMMA))
 		{
-			if (lastToken().is(VDMToken.OTHERS))
+			if (nextToken().is(VDMToken.OTHERS))
 			{
+				nextToken();
+				checkFor(VDMToken.ARROW, 2147, "Expecting '->' after others");
+				others = readExpression();
 				break;
 			}
-
-			cases.addAll(readCaseAlternatives(exp));
+			else
+			{
+				cases.addAll(readCaseAlternatives(exp));
+			}
 		}
 
-		if (lastToken().is(VDMToken.OTHERS))
-		{
-			nextToken();
-			checkFor(VDMToken.ARROW, 2147, "Expecting '->' after others");
-			others = readExpression();
-		}
-
-		checkFor(VDMToken.END, 2148, "Expecting 'end' after cases");
+		checkFor(VDMToken.END, 2148, "Expecting ', case alternative' or 'end' after cases");
 		return AstFactory.newACasesExp(start, exp, cases, others);
 	}
 

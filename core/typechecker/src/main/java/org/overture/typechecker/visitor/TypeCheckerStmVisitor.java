@@ -173,8 +173,6 @@ public class TypeCheckerStmVisitor extends
 	public PType caseAAtomicStm(AAtomicStm node, TypeCheckInfo question)
 			throws AnalysisException {
 
-		node.setStatedef(question.env.findStateDefinition());
-
 		for (AAssignmentStm stmt : node.getAssignments()) {
 			stmt.apply(rootVisitor, question);
 		}
@@ -509,7 +507,13 @@ public class TypeCheckerStmVisitor extends
 			if (node.getPattern() instanceof AExpressionPattern) {
 				// Only expression patterns need type checking...
 				AExpressionPattern ep = (AExpressionPattern) node.getPattern();
-				ep.getExp().apply(rootVisitor, question);
+				PType ptype = ep.getExp().apply(rootVisitor, question);
+				
+				if (!TypeComparator.compatible(ptype, node.getCtype()))
+				{
+					TypeCheckerErrors.report(3311, "Pattern cannot match", node
+							.getPattern().getLocation(), node.getPattern());
+				}
 			}
 
 			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor,

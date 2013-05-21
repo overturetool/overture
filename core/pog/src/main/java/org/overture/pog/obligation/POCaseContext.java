@@ -68,7 +68,7 @@ public class POCaseContext extends POContext
     		sb.append(exp);
 
     		sb.append(" =>\nlet ");
-    		sb.append(matching);
+    		sb.append(pattern);
     		sb.append(" = ");
     		sb.append(exp);
     		sb.append(" in");
