@@ -49,21 +49,13 @@ public class Vdm2Cpp
 			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
-		
-		
-		//ContextManager manager = new ContextManager();
-		//CodeGenContextMap codeGenContextMap = new CodeGenContextMap();
 
 		for (INode node : mergedParseLists)
 		{
 			node.apply(codeGenVisitor);
 		}
 
-		// Now register the analysis at the apache velocity engine
-		//codeGenContextMap.commit();
-
 		ArrayList<AClassCG> classes = codeGenVisitor.getClasses();
-		
 		MergeVisitor mergeVisitor = new MergeVisitor();
 		
 		for (AClassCG classCg : classes)
@@ -71,12 +63,11 @@ public class Vdm2Cpp
 			try
 			{
 				StringWriter writer = new StringWriter();
-				classCg.apply(mergeVisitor, writer);//, manager);		
+				classCg.apply(mergeVisitor, writer);		
 				System.out.println(writer.toString());
 				
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}

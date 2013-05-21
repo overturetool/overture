@@ -18,10 +18,8 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	private DefVisitorCG defVisitor;
 	private TypeVisitorCG typeVisitor;
 	private ExpVisitorCG expVisitor;
-	
-	
+		
 	private ArrayList<AClassCG> classes;
-	//private CodeGenTree tree;
 	
 	private CodeGenInfo codeGenInfo;
 	
@@ -29,11 +27,11 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	{
 		this.log = log;
 		
-		defVisitor = new DefVisitorCG();
-		typeVisitor = new TypeVisitorCG();
-		expVisitor = new ExpVisitorCG();
+		this.defVisitor = new DefVisitorCG();
+		this.typeVisitor = new TypeVisitorCG();
+		this.expVisitor = new ExpVisitorCG();
 		
-		classes = new ArrayList<>();
+		this.classes = new ArrayList<>();
 		
 		this.codeGenInfo = new CodeGenInfo(this);
 	}
@@ -79,28 +77,5 @@ public class CodeGenVisitor extends AnalysisAdaptor
 			throws AnalysisException
 	{
 		node.apply(typeVisitor, codeGenInfo);
-	}
-	
-//	
-//	@Override
-//	public void defaultPExp(PExp node)
-//			throws AnalysisException
-//	{
-//		node.apply(codeGenInfo.get)
-//	}
-//	
-//	@Override
-//	public String caseILexNameToken(ILexNameToken node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		return node.getName();
-//	}
-//	
-//	@Override
-//	public String caseAAccessSpecifierAccessSpecifier(
-//			AAccessSpecifierAccessSpecifier node, CodeGenContextMap question)
-//			throws AnalysisException
-//	{
-//		return node.getAccess().toString();
-//	}			
+	}	
 }

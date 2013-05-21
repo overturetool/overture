@@ -51,10 +51,8 @@ public class CodeGenMain
 			try
 			{
 				vdm2cpp.generateCode(typeCheckResult.result);
-				//vdm2cpp.save(contextMap);
 			} catch (AnalysisException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

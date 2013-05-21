@@ -12,7 +12,6 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -26,14 +25,11 @@ import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
 
 public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 {
 	private static final long serialVersionUID = -7481045116217669686L;
-	
-	private OperatorLookup opLookup;
 	
 	private TypeLookup typeLookup;
 	
@@ -41,33 +37,10 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	
 	public ExpVisitorCG()
 	{
-		this.opLookup = OperatorLookup.GetInstance();
 		this.typeLookup = new TypeLookup();
-		expAssistant = new ExpAssistantCG(this);
+		this.expAssistant = new ExpAssistantCG(this);
 	}
-	
-	@Override
-	public PExpCG defaultPExp(PExp node, CodeGenInfo question)
-			throws AnalysisException
-	{
-		System.out.println("Got in default case!");
 		
-		return null;
-	}
-	
-//	@Override
-//	public String defaultSNumericBinaryExp(SNumericBinaryExp node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		String left = expAssistant.formatExp(node, node.getLeft(), question);
-//		String operator = opLookup.find(node.getClass()).getMapping();
-//		String right = expAssistant.formatExp(node, node.getRight(), question);
-//			
-//		return left + " " + operator + " " + right;
-//	}
-	
-	//Numeric binary expressions
-	
 	@Override
 	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
@@ -188,7 +161,8 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		
+		//TODO: Optimize similar literal expressions
+		//Put the similar code in an assistant
 		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
 		
 		realLiteral.setType(typeLookup.getType(node.getType()));

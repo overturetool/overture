@@ -4,7 +4,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -25,7 +24,7 @@ public class ExpAssistantCG
 	
 	public ExpAssistantCG(ExpVisitorCG expVisitor)
 	{
-		this.opLookup = OperatorLookup.GetInstance();
+		this.opLookup = new OperatorLookup();
 	}
 	
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, CodeGenInfo question, TypeLookup typeLookup) throws AnalysisException
@@ -37,8 +36,6 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-//Moved to merge assistant 
-
 	public PExpCG formatExp(SBinaryExp parent, PExp child, CodeGenInfo question) throws AnalysisException
 	{
 		
@@ -57,7 +54,6 @@ public class ExpAssistantCG
 		return exp;
 	}
 	
-	
 	public boolean isIntegerType(PExp exp)
 	{	
 		PType type = exp.getType();
@@ -65,11 +61,12 @@ public class ExpAssistantCG
 		return (type instanceof ANatOneNumericBasicType 
 				|| type instanceof ANatNumericBasicType
 				|| type instanceof AIntNumericBasicType) 
-				&& !(exp instanceof ARealLiteralExp); //Expressions like 1.0 are considered real literal expressions of type NatOneNumericBasicType
+				&& !(exp instanceof ARealLiteralExp);
+		//Expressions like 1.0 are considered real literal expressions
+		//of type NatOneNumericBasicType
 	}
 	
 	
-//TODO: move out of assistant
 	public boolean childExpHasLowerPrecedence(SBinaryExp parent, PExp child)
 	{				
 		if(!(child instanceof SBinaryExp))

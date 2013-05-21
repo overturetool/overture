@@ -10,13 +10,11 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -122,44 +120,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		isolationTemplate.merge(context.getVelocityContext(), question);
 	}
 	
-//	@Override
-//	public void caseADivideNumericBinaryExpCG(ADivideNumericBinaryExpCG node,
-//			StringWriter question) throws AnalysisException
-//	{
-//		final PExpCG leftNode = node.getLeft();
-//		final PExpCG rightNode = node.getRight();
-//
-//		mergeAssistant.handleBinaryExp(node, question, new IContextManipulator()
-//		{
-//			@Override
-//			public void manipulate(CodeGenContext context)
-//			{
-//				boolean bothOperandsAreInts = mergeAssistant.isIntegerType(leftNode) && mergeAssistant.isIntegerType(rightNode);
-//				context.put(TemplateParameters.DIVIDE_BOTH_OPERANDS_INTS, bothOperandsAreInts);
-//			}
-//		});
-//	}
-
-	// OLD BACKUP OF THE ABOVE:
-	// @Override
-	// public String caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-	// CodeGenContextMap question) throws AnalysisException
-	// {
-	// PExp leftNode = node.getLeft();
-	// PExp rightNode = node.getRight();
-	//
-	// if(expAssistant.isIntegerType(leftNode) && expAssistant.isIntegerType(rightNode))
-	// {
-	// //We wrap it as a double because expressions like 1/2 equals 0 in Java whereas 1/2 = 0.5 in VDM
-	// String left = "new Double(" + expAssistant.formatExp(node, node.getLeft(), question) + ")";
-	// String operator = opLookup.find(node.getClass()).getMapping();
-	// String right = expAssistant.formatExp(node, node.getRight(), question);
-	//
-	// return left + " " + operator + " " + right;
-	// }
-	//
-	// return super.caseADivideNumericBinaryExp(node, question);
-	// }
 	// Unary
 
 	@Override

@@ -42,11 +42,6 @@ public class TypeLookup
 	
 	public PTypeCG getType(PType type)
 	{
-		PTypeCG result = typeMap.get(type.getClass());
-		
-		if(result == null)
-			System.out.println();
-		
-		return result;
+		return typeMap.get(type.getClass());
 	}
 }

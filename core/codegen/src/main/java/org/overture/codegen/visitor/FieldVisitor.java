@@ -21,7 +21,7 @@ public class FieldVisitor extends QuestionAnswerAdaptor<CodeGenInfo, AFieldCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		
-		AFieldCG field = new AFieldCG();//new AFieldCG(access_, name_, static_, final_, type_, initial_)
+		AFieldCG field = new AFieldCG();
 		field.setAccess(access);
 		field.setName(name);
 		field.setStatic(isStatic);

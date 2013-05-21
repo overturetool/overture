@@ -14,25 +14,9 @@ import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.codegen.cgast.expressions.ADivNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AModNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 
 public class OperatorLookup
 {
-	//TODO: Get rid of static??
-	private static OperatorLookup instance;
-	
-	
 	//Arithmetic
 	private static final int PLUS = 1;
 	private static final int SUB = 1;
@@ -48,15 +32,7 @@ public class OperatorLookup
 	private static final int GREATER = 1;
 	private static final int LESS_EQUAL = 1;
 	private static final int LESS = 1;
-	
-	public static OperatorLookup GetInstance()
-	{
-		if(instance == null)
-			instance = new OperatorLookup();
 		
-		return instance;
-	}
-	
 	private HashMap<Class<? extends SBinaryExp>,OperatorInfo> lookup;
 
 	public OperatorInfo find(Class<? extends SBinaryExp> key)
@@ -64,7 +40,7 @@ public class OperatorLookup
 		return lookup.get(key);
 	}
 	
-	private OperatorLookup()
+	public OperatorLookup()
 	{
 		lookup = new HashMap<Class<? extends SBinaryExp>, OperatorInfo>();
 

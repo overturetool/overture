@@ -1,15 +1,7 @@
 package org.overture.codegen.vdm2cpp;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URL;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.runtime.RuntimeServices;
-import org.apache.velocity.runtime.RuntimeSingleton;
-import org.apache.velocity.runtime.parser.node.SimpleNode;
 
 public class Vdm2CppUtil
 {

@@ -104,12 +104,10 @@ public class TemplateManager
 		{
 			return null;
 		}
-
 	}
 
 	private Template constructTemplate(StringBuffer buffer)
 	{
-
 		Template template = new Template();
 		RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
 		StringReader reader = new StringReader(buffer.toString());
