@@ -18,13 +18,12 @@
  *******************************************************************************/
 package org.overture.ast.assistant;
 
-import org.overture.ast.analysis.AnalysisException;
 
 /**
  * @author Joey Coleman <jwc@iha.dk>
  *
  */
-public abstract class InvocationAssistantException extends AnalysisException {
+public class InvocationAssistantNotFoundException extends InvocationAssistantException {
 
 	/**
 	 * 
@@ -34,14 +33,14 @@ public abstract class InvocationAssistantException extends AnalysisException {
 	/**
 	 * 
 	 */
-	public InvocationAssistantException() {
+	public InvocationAssistantNotFoundException() {
 		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param message
 	 */
-	public InvocationAssistantException(String message) {
+	public InvocationAssistantNotFoundException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
@@ -50,7 +49,7 @@ public abstract class InvocationAssistantException extends AnalysisException {
 	 * @param message
 	 * @param cause
 	 */
-	public InvocationAssistantException(String message, Throwable cause) {
+	public InvocationAssistantNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
@@ -58,7 +57,7 @@ public abstract class InvocationAssistantException extends AnalysisException {
 	/**
 	 * @param cause
 	 */
-	public InvocationAssistantException(Throwable cause) {
+	public InvocationAssistantNotFoundException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.assistant.InvocationAssistantException;
+import org.overture.ast.assistant.InvocationAssistantNotFoundException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -103,7 +104,7 @@ public class PPatternAssistant {
 		try {
 			return (LexNameList) invokePreciseMethod(new PPatternAssistant(),
 					"getAllVariableNames", pattern);
-		} catch (InvocationAssistantException iae) {
+		} catch (InvocationAssistantNotFoundException ianfe) {
 			/*
 			 * Default case is to return a new LexNameList, which corresponds to
 			 * a InvocationAssistantException with no embedded cause. However,
@@ -111,8 +112,6 @@ public class PPatternAssistant {
 			 * something more complex than not being able to find a specific
 			 * method, so we just re-throw that.
 			 */
-			if (iae.getCause() != null)
-				throw iae;
 			return new LexNameList();
 		}
 	}

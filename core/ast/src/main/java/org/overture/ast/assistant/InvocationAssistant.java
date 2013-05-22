@@ -95,12 +95,13 @@ public final class InvocationAssistant {
 	 *            type of the first parameter must be an exact match of the
 	 *            first parameter of the desired method.
 	 * @return The return value must be cast from Object to the correct return type.
-	 * @throws InvocationAssistantException 
+	 * @throws InvocationAssistantExternalException 
+	 * @throws InvocationAssistantNotFoundException 
 	 */
 	public static final Object invokePreciseMethod(Object target, String name,
-			Object... parameters) throws InvocationAssistantException {
+			Object... parameters) throws InvocationAssistantExternalException, InvocationAssistantNotFoundException {
 		if (parameters.length == 0)
-			throw new InvocationAssistantException(
+			throw new InvocationAssistantNotFoundException(
 					"invokePreciseMethod must be called with at least one parameter to give to the invoked method; i.e. the number of thy parameters must be at least three.");
 		Method method = null;
 		Class<?> pClass = parameters[0].getClass();
@@ -139,14 +140,14 @@ public final class InvocationAssistant {
 						+ " did not find method with " + parameters.length
 						+ " parameters and first parameter of type "
 						+ pClass.getName();
-				throw new InvocationAssistantException(errorString);
+				throw new InvocationAssistantNotFoundException(errorString);
 			}
 		} catch (IllegalAccessException e) {
-			throw new InvocationAssistantException(
+			throw new InvocationAssistantExternalException(
 					"IllegalAccessException on attempt to invoke "
 							+ method.getName(), e);
 		} catch (InvocationTargetException e) {
-			throw new InvocationAssistantException(e);
+			throw new InvocationAssistantExternalException(e);
 		}
 	}
 }
