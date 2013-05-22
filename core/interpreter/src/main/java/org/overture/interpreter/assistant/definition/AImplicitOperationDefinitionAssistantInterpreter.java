@@ -10,9 +10,10 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.OperationValue;
+import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
-public class AImplicitOperationDefinitionAssistantInterpreter
+public class AImplicitOperationDefinitionAssistantInterpreter extends AImplicitOperationDefinitionAssistantTC
 {
 
 	public static NameValuePairList getNamedValues(

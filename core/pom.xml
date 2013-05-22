@@ -27,6 +27,7 @@
     <module>prettyprinting</module>
     <module>vdmj_compatibility_tests</module>
     <module>commandline</module>
+	<module>guibuilder</module>
   </modules>
 
   <build>
