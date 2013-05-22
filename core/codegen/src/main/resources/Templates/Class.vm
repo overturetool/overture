@@ -1,4 +1,6 @@
-$CLASS_ACCESS class $CLASS_NAME
+$node.getAccess() class $node.getName()
 {
-$FIELDS
+#foreach( $field in $node.getFields() )
+    $CG.format($field)
+#end
 }

@@ -1,10 +1,8 @@
 package org.overture.codegen.visitor;
 
-import java.util.LinkedList;
-
 import org.apache.velocity.VelocityContext;
-import org.overture.codegen.cgast.AFieldCG;
-import org.overture.codegen.templates.TemplateParameters;
+import org.overture.codegen.cgast.INode;
+import org.overture.codegen.merging.CG;
 
 public class CodeGenContext
 {
@@ -14,20 +12,15 @@ public class CodeGenContext
 	{
 		context = new VelocityContext();
 	}
-
-	public void put(TemplateParameters param, String value)
+	
+	public void put(String name, Class<CG> formatter)
 	{
-		context.put(param.toString(), value);
+		context.put(name, formatter);
 	}
 	
-	public void put(TemplateParameters param, boolean value)
+	public void put(String name, INode node)
 	{
-		context.put(param.toString(), value);
-	}
-	
-	public void put(TemplateParameters param, LinkedList<AFieldCG> fields)
-	{
-		context.put(param.toString(), fields);
+		context.put(name, node);
 	}
 	
 	public VelocityContext getVelocityContext()

@@ -1,11 +1,11 @@
 #set( $final = "")
-#if ($FIELD_FINAL)
+#if ($node.getFinal())
 	#set( $final = "final")
 #end
 ##
 #set( $static = "")
-#if ($FIELD_STATIC)
+#if ($node.getStatic())
 	#set( $static = "static")
 #end
 ##
-$FIELD_ACCESS $static $final $FIELD_TYPE $FIELD_NAME = $FIELD_INITIAL;
+$node.getAccess() $static $final $CG.format($node.getType()) $node.getName() = $CG.format($node.getInitial());

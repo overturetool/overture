@@ -75,7 +75,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 #Unary {-> package='org.overture.codegen.cgast.expressions'}
     =   {plus} 
     |   {minus}
-    |	{cast} [castType]:typeCG
+    |	{cast}
     |	{isolation}       
     ;
 

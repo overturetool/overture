@@ -1,1 +1,1 @@
-(($CAST_EXP_TYPE) $UNARY_EXP_VALUE)
+(($CG.format($node.getType())) $CG.format($node.getExp()))

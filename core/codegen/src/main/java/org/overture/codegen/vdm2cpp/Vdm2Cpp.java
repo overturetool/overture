@@ -11,7 +11,7 @@ import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.AClassCG;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
-import org.overture.codegen.mergevisitor.MergeVisitor;
+import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.visitor.CodeGenVisitor;
 
 public class Vdm2Cpp
