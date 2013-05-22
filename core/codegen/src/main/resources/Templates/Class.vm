@@ -1,6 +1,11 @@
 $node.getAccess() class $node.getName()
 {
 #foreach( $field in $node.getFields() )
-    $CG.format($field)
+$CG.format($field)
 #end
+
+#foreach( $method in $node.getMethods() )
+$CG.format($method)
+#end
+
 }

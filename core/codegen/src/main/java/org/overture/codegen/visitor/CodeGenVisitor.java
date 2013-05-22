@@ -6,7 +6,7 @@ import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.AClassCG;
+import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.logging.ILogger;
 
 public class CodeGenVisitor extends AnalysisAdaptor
@@ -19,7 +19,7 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	private TypeVisitorCG typeVisitor;
 	private ExpVisitorCG expVisitor;
 		
-	private ArrayList<AClassCG> classes;
+	private ArrayList<AClassTypeDeclCG> classes;
 	
 	private CodeGenInfo codeGenInfo;
 	
@@ -56,12 +56,12 @@ public class CodeGenVisitor extends AnalysisAdaptor
 		return log;
 	}
 	
-	public ArrayList<AClassCG> getClasses()
+	public ArrayList<AClassTypeDeclCG> getClasses()
 	{
 		return classes;
 	}
 	
-	public void registerClass(AClassCG classCg)
+	public void registerClass(AClassTypeDeclCG classCg)
 	{
 		classes.add(classCg);
 	}

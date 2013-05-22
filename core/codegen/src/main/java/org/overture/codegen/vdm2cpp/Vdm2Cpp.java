@@ -8,7 +8,7 @@ import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.AClassCG;
+import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -55,10 +55,10 @@ public class Vdm2Cpp
 			node.apply(codeGenVisitor);
 		}
 
-		ArrayList<AClassCG> classes = codeGenVisitor.getClasses();
+		ArrayList<AClassTypeDeclCG> classes = codeGenVisitor.getClasses();
 		MergeVisitor mergeVisitor = new MergeVisitor();
 		
-		for (AClassCG classCg : classes)
+		for (AClassTypeDeclCG classCg : classes)
 		{
 			try
 			{

@@ -1,13 +1,16 @@
 package org.overture.codegen.visitor;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.codegen.cgast.AClassCG;
-import org.overture.codegen.cgast.AFieldCG;
+import org.overture.codegen.cgast.AClassTypeDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.PDeclCG;
 
 public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 {
@@ -23,22 +26,30 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
 		
-		AClassCG classCg = new AClassCG();
+		AClassTypeDeclCG classCg = new AClassTypeDeclCG();
 		classCg.setName(name);
 		classCg.setAccess(access);
 		
 		question.getRootVisitor().registerClass(classCg);
 		
 		LinkedList<PDefinition> defs = node.getDefinitions();
-	
 		
-		LinkedList<AFieldCG> fields = classCg.getFields();
+		LinkedList<AFieldDeclCG> fields = classCg.getFields();
+		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
+		
 		for (PDefinition def : defs)
 		{
-			AFieldCG field = def.apply(question.getFieldVisitor(), question); 
+			PDeclCG decl = def.apply(question.getDeclVisitor(), question);
+		
+			if(decl == null)
+				continue;//Unspported stuff returns null by default
 			
-			if(field != null)
-				fields.add(field);
+			if(decl instanceof AFieldDeclCG)
+				fields.add((AFieldDeclCG) decl);
+			else if(decl instanceof AMethodDeclCG)
+				methods.add((AMethodDeclCG) decl);
+			else
+				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());//TODO:Remove
 		}
 	}
 	
@@ -66,22 +77,6 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 //		String className = node.getClassDefinition().getName().getName();
 //		AClassCG classCg = rootVisitor.getTree().getClass(className);
 //		classCg.getFields().add(field);
-//	}
-	
-//	@Override
-//	public void caseAExplicitOperationDefinition(
-//			AExplicitOperationDefinition node)
-//			throws AnalysisException
-//	{	
-//		String accessSpecifier = node.getAccess().apply(rootVisitor, question);
-//		String operationName = node.getName().apply(rootVisitor, question);
-//		String returnType = node.getActualResult().apply(rootVisitor.getTypeVisitor(), question);
-//
-//		String className = node.getClassDefinition().getName().apply(rootVisitor, question);
-//		ClassCG codeGenClass = question.getCodeGenClass(className);
-//		codeGenClass.addMethod(new MethodDeinitionCG(accessSpecifier, returnType, operationName));
-//		
-//		node.getBody().apply(rootVisitor.getStmVisitor(), question);		
 //	}
 		
 }

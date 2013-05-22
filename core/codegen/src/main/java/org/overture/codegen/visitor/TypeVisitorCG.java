@@ -7,9 +7,11 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.AVoidType;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
@@ -18,6 +20,13 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 
 	public TypeVisitorCG()
 	{
+	}
+	
+	@Override
+	public PTypeCG caseAVoidType(AVoidType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return new AVoidTypeCG();
 	}
 
 	@Override

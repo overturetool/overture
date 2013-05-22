@@ -31,21 +31,36 @@ Abstract Syntax Tree
 /*
     Expressions
 */    
-CG {-> package='org.overture.codegen.cgast'}
+typeDeclCG {-> package='org.overture.codegen.cgast'}
     =   {class}
       	[access]:java_String 
     	[name]:java_String
     	[fields]:field*
-    	
-    |	{field} 
+    	[methods]:declCG.method*
+    ;
+
+declCG {-> package='org.overture.codegen.cgast.declarations'}
+	=	{method} 
+		[access]:java_String
+		[static]:java_Boolean
+		//[abstract]:java_Boolean
+		[return_type]:typeCG
+		[name]:java_String
+		[formalParams]:localDeclCG.formalParam*
+		//[throws]:type*
+	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
     	[final]:java_Boolean
     	[type]:typeCG
     	[name]:java_String
     	[initial]:expCG
-    ;
+	;
     
+localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
+           = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
+           ;
+
 expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
     |	#Binary
@@ -81,6 +96,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 
 typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
+    |	{void}
     ;
     
 #basic {-> package='org.overture.codegen.cgast.types'}
