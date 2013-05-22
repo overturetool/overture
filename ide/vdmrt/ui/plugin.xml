@@ -195,9 +195,12 @@
      </actionSetPartAssociation>
   </extension>
   
+  
   <!-- command conver vdmpp to vdmrt
   http://xpomul.bloggles.info/2008/08/12/advanced-features-in-eclipse-popup-menus-take-2-the-new-api/
   -->
+  
+  <!-- FIXME VDM RT clone still showing up on Compass side! -->
   <extension
         point="org.eclipse.ui.commands">
      <command
