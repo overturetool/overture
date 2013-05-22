@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="3" line="78" message="Definition 'ReturnCard' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
 <message column="3" line="84" message="Definition 'GetBalance' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>
 <message column="3" line="89" message="Definition 'MakeWithdrawal' not used" messageType="warning" number="5000" resource="cashdispenserSL.result"/>

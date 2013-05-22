@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -48,7 +49,13 @@ public class AValueDefinitionAssistantTC {
 	}
 
 	public static LexNameList getVariableNames(AValueDefinition d) {
-		return PPatternAssistantTC.getVariableNames(d.getPattern());
+		try {
+			return PPatternAssistantTC.getVariableNames(d.getPattern());
+		} catch (InvocationAssistantException e) {
+			// TODO Auto-generated catch block; needs to be smarter
+			e.printStackTrace();
+			return new LexNameList();
+		}
 	}
 
 	public static void typeResolve(AValueDefinition d,

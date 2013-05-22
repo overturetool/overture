@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="21" line="180" message="radars at 61:1 hidden by radars" messageType="warning" number="5008" resource="MSAWconcurPP.result"/>
 <message column="21" line="185" message="radars at 61:1 hidden by radars" messageType="warning" number="5008" resource="MSAWconcurPP.result"/>
 <message column="5" line="20" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWconcurPP.result"/>
@@ -40,4 +40,5 @@
 <message column="4" line="1005" message="Name 'World`timerRef' is not in scope" messageType="error" number="3182" resource="MSAWconcurPP.result"/>
 <message column="4" line="1005" message="Member Awake() is not in scope" messageType="error" number="3209" resource="MSAWconcurPP.result"/>
 <message column="1" line="997" message="Thread statement/operation must not return a value" messageType="error" number="3049" resource="MSAWconcurPP.result"/>
+<result/>
 </testResult>

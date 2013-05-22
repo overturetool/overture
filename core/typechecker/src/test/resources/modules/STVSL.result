@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="1" line="106" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL.result"/>
 <message column="1" line="150" message="Recursive function has no measure" messageType="warning" number="5012" resource="STVSL.result"/>
 <message column="27" line="235" message="total_value at 348:1 hidden by total_value" messageType="warning" number="5008" resource="STVSL.result"/>

@@ -1,8 +1,11 @@
 package org.overture.ast.assistant.pattern;
 
+import static org.overture.ast.assistant.InvocationAssistant.invokePreciseMethod;
+
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -16,52 +19,116 @@ import org.overture.ast.patterns.PPattern;
 
 public class PPatternAssistant {
 
-	
-	public static LexNameList getVariableNames(PPattern pattern) {
-		
+	public static LexNameList getAllVariableNames(AConcatenationPattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
+
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(AIdentifierPattern pattern) {
+		LexNameList list = new LexNameList();
+		list.add(pattern.getName());
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(ARecordPattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		for (PPattern p : pattern.getPlist()) {
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
+		}
+
+		return list;
+
+	}
+
+	public static LexNameList getAllVariableNames(ASeqPattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		for (PPattern p : pattern.getPlist()) {
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
+		}
+
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(ASetPattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		for (PPattern p : pattern.getPlist()) {
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
+		}
+
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(ATuplePattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		for (PPattern p : pattern.getPlist()) {
+			list.addAll(PPatternAssistant.getAllVariableNames(p));
+		}
+
+		return list;
+	}
+
+	public static LexNameList getAllVariableNames(AUnionPattern pattern)
+			throws InvocationAssistantException {
+		LexNameList list = new LexNameList();
+
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
+		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
+
+		return list;
+	}
+
+	/**
+	 * This method should only be called by subclasses of PPattern. For other
+	 * classes call {@link PPatternAssistant#getVariableNames(PPattern)}.
+	 * 
+	 * @param pattern
+	 * @return
+	 * @throws InvocationAssistantException
+	 */
+	public static LexNameList getAllVariableNames(PPattern pattern)
+			throws InvocationAssistantException {
+		try {
+			return (LexNameList) invokePreciseMethod(new PPatternAssistant(),
+					"getAllVariableNames", pattern);
+		} catch (InvocationAssistantException iae) {
+			/*
+			 * Default case is to return a new LexNameList, which corresponds to
+			 * a InvocationAssistantException with no embedded cause. However,
+			 * if there is an embedded cause in the exception, then it's
+			 * something more complex than not being able to find a specific
+			 * method, so we just re-throw that.
+			 */
+			if (iae.getCause() != null)
+				throw iae;
+			return new LexNameList();
+		}
+	}
+
+	public static LexNameList getVariableNames(PPattern pattern)
+			throws InvocationAssistantException {
 		return getVariableNamesBaseCase(pattern);
 	}
-	
-	private static LexNameList getVariableNamesBaseCase(PPattern pattern) {
+
+	private static LexNameList getVariableNamesBaseCase(PPattern pattern)
+			throws InvocationAssistantException {
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
 		set.addAll(getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);
 		return list;
 	}
-
-	/**
-	 * This method should only be called by subclasses of PPattern. For other classes
-	 * call {@link PPatternAssistant#getVariableNames(PPattern)}.
-	 * @param pattern
-	 * @return
-	 */
-	public static LexNameList getAllVariableNames(PPattern pattern) {
-		switch (pattern.kindPPattern()) {
-		case AConcatenationPattern.kindPPattern:
-			return AConcatenationPatternAssistant.getAllVariableNames((AConcatenationPattern)pattern);
-		case AIdentifierPattern.kindPPattern:
-			return AIdentifierPatternAssistant.getAllVariableNames((AIdentifierPattern)pattern);
-		case ARecordPattern.kindPPattern:
-			return ARecordPatternAssistant.getAllVariableNames((ARecordPattern)pattern);
-		case ASeqPattern.kindPPattern:
-			return ASeqPatternAssistant.getAllVariableNames((ASeqPattern)pattern);
-		case ASetPattern.kindPPattern:
-			return ASetPatternAssistant.getAllVariableNames((ASetPattern)pattern);
-		case ATuplePattern.kindPPattern:
-			return ATuplePatternAssistant.getAllVariableNames((ATuplePattern)pattern);
-		case AUnionPattern.kindPPattern:
-			return AUnionPatternAssistant.getAllVariableNames((AUnionPattern)pattern);
-		default:
-			return getAllVariableNamesBaseCase(pattern);
-		}
-	}
-	
-	private static LexNameList getAllVariableNamesBaseCase(PPattern pattern)
-	{
-		return new LexNameList();	
-	}
-
-	
 
 }

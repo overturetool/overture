@@ -1,6 +1,5 @@
 package org.overture.ast.intf.lex;
 
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 

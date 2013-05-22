@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="16" line="12" message="a at 10:9 hidden by a" messageType="warning" number="5008" resource="if-15.vdm.result"/>
 <message column="27" line="13" message="Incompatible types in assignment" messageType="error" number="3239" resource="if-15.vdm.result"/>
 <message column="3" line="8" message="Operation returns unexpected type" messageType="error" number="3027" resource="if-15.vdm.result"/>

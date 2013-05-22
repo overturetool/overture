@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassRtTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewClassRtTestCase">
 <message column="10" line="66" message="Definition 'i' not used" messageType="warning" number="5000" resource="sysinherit-02.vpp.result"/>
 <message column="3" line="33" message="Instance variable 'cpu' is not initialized" messageType="warning" number="5001" resource="sysinherit-02.vpp.result"/>
 <message column="3" line="46" message="Instance variable 'bus' is not initialized" messageType="warning" number="5001" resource="sysinherit-02.vpp.result"/>

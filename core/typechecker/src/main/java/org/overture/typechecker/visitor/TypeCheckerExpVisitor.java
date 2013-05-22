@@ -79,6 +79,7 @@ import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
+import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
@@ -381,12 +382,23 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseAInSetBinaryExp(AInSetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException {
-		node.getLeft().apply(rootVisitor, question);
-		node.getRight().apply(rootVisitor, question);
+		PType ltype = node.getLeft().apply(rootVisitor, question);
+		PType rtype = node.getRight().apply(rootVisitor, question);
 
 		if (!PTypeAssistantTC.isSet(node.getRight().getType())) {
 			TypeCheckerErrors.report(3110, "Argument of 'in set' is not a set",
 					node.getLocation(), node);
+			TypeCheckerErrors.detail("Actual", rtype);
+		}
+		else
+		{
+			ASetType stype = PTypeAssistantTC.getSet(rtype);
+			
+			if (!TypeComparator.compatible(stype.getSetof(), ltype))
+			{
+				TypeCheckerErrors.report(3319, "'in set' expression is always false", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Element", ltype, "Set", stype);
+			}
 		}
 
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
@@ -454,8 +466,8 @@ public class TypeCheckerExpVisitor extends
 	@Override
 	public PType caseANotInSetBinaryExp(ANotInSetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException {
-		node.getLeft().apply(rootVisitor, question);
-		node.getRight().apply(rootVisitor, question);
+		PType ltype = node.getLeft().apply(rootVisitor, question);
+		PType rtype = node.getRight().apply(rootVisitor, question);
 
 		if (!PTypeAssistantTC.isSet(node.getRight().getType())) {
 			TypeCheckerErrors.report(3138,
@@ -463,9 +475,18 @@ public class TypeCheckerExpVisitor extends
 					node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 		}
-
+		else
+		{
+			ASetType stype = PTypeAssistantTC.getSet(rtype);
+			
+			if (!TypeComparator.compatible(stype.getSetof(), ltype))
+			{
+				TypeCheckerErrors.report(3320, "'not in set' expression is always true", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Element", ltype, "Set", stype);
+			}
+		}
+		
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
-
 		return node.getType();
 	}
 

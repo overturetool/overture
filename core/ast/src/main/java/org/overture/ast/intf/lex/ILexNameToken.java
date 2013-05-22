@@ -2,7 +2,6 @@ package org.overture.ast.intf.lex;
 
 import java.util.List;
 
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
 
 public interface ILexNameToken extends ILexIdentifierToken

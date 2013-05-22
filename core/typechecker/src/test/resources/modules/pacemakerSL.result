@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
 <message column="1" line="487" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>
 <message column="1" line="485" message="Duplicate definition: MED" messageType="warning" number="5007" resource="pacemakerSL.result"/>

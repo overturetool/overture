@@ -1,6 +1,8 @@
 package org.overture.interpreter.eval;
 
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -178,45 +180,22 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		State state = null;
-		ClassInvariantListener listener = null;
-
-		if (node.getStatedef() != null)
-		{
-			state =VdmRuntime.getNodeState( node.getStatedef()).moduleState;
-			state.doInvariantChecks = false;
-		}
-		else
-		{
-			ObjectValue self = ctxt.getSelf();
-
-			if (self != null && self.invlistener != null)
-			{
-				listener = self.invlistener;
-				listener.doInvariantChecks = false;
-			}
-		}
 		
-		AAtomicStmAssistantInterpreter.addAtomicThread();
-
-		for (AAssignmentStm stmt: node.getAssignments())
-		{
-			stmt.apply(VdmRuntime.getStatementEvaluator(),ctxt);
-		}
+		int size = node.getAssignments().size();
+		ValueList targets = new ValueList(size);
+		ValueList values = new ValueList(size);
 		
-		AAtomicStmAssistantInterpreter.removeAtomicThread();
-
-		// Now run through the assignments again after the atomic lock is lifted to
-		// check that all the type invariants still hold afterwards. Note that we pass
-		// a clone of the value to "set" to force it to check.
+		// Rather than execute the assignment statements directly, we calculate the
+		// Updateable values that would be affected, and the new values to put in them.
+		// Note that this does not provoke any invariant checks (other than those that
+		// may be present in the RHS expression of each assignment).
 		
 		for (AAssignmentStm stmt: node.getAssignments())
 		{
 			try
 			{
-				Value newval = stmt.getTarget().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-				newval.set(stmt.getLocation(), (Value)newval.clone(), ctxt);
+				targets.add(stmt.getTarget().apply(VdmRuntime.getStatementEvaluator(), ctxt));				
+				values.add(stmt.getExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).convertTo(stmt.getTargetType(), ctxt));
 			}
 			catch (ValueException e)
 			{
@@ -224,16 +203,36 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			}
 		}
 		
-		if (state != null)
+		// We make the assignments atomically by turning off thread swaps and time
+		// then temporarily removing the listener lists from each Updateable target.
+		// Then, when all assignments have been made, we check the invariants by
+		// passing the updated values to each listener list, as the assignment would have.
+		// Finally, we re-enable the thread swapping and time stepping, before returning
+		// a void value.
+		
+		ctxt.threadState.setAtomic(true);
+		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+
+		for (int i = 0; i < size; i++)
 		{
-			state.doInvariantChecks = true;
-			state.changedValue(node.getLocation(), null, ctxt);
+			UpdatableValue target = (UpdatableValue) targets.get(i);
+			listenerLists.add(target.listeners);
+			target.listeners = null;
+			target.set(node.getLocation(), values.get(i), ctxt);	// No invariant listeners
+			target.listeners = listenerLists.get(i);
 		}
-		else if (listener != null)
+		
+		for (int i = 0; i < size; i++)
 		{
-			listener.doInvariantChecks = true;
-			listener.changedValue(node.getLocation(), null, ctxt);
+			ValueListenerList listeners = listenerLists.get(i);
+			
+			if (listeners != null)
+			{
+				listeners.changedValue(node.getLocation(), values.get(i), ctxt);
+			}
 		}
+
+		ctxt.threadState.setAtomic(false);
 
 		return new VoidValue();
 	}

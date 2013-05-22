@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="7" line="82" message="State init expression cannot be executed" messageType="warning" number="5010" resource="graphedSL.result"/>
 <message column="13" line="682" message="Operation 'move_compound_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL.result"/>
 <message column="13" line="685" message="Operation 'move_simple_object' cannot be called from a function" messageType="error" number="3300" resource="graphedSL.result"/>
