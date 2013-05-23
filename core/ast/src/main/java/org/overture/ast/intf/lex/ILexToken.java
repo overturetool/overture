@@ -31,7 +31,7 @@ public interface ILexToken extends INode, Comparable<INode>
 	public boolean isNot(VDMToken ttype);
 
 
-
+	ILexToken clone();
 
 
 

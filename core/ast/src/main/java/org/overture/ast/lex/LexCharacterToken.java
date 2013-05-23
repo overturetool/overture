@@ -60,7 +60,7 @@ public class LexCharacterToken extends LexToken implements ILexCharacterToken{
 	}
 
 	@Override
-	public Object clone() {
+	public ILexCharacterToken clone() {
 		return new LexCharacterToken(unicode, location);
 	}
 	

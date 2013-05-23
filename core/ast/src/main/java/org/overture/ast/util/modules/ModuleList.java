@@ -154,7 +154,7 @@ public class ModuleList extends Vector<AModuleModules>
 				{
 					if (!m.getIsFlat())
 					{
-						imports.add(importAll(m.getName()));
+						imports.add(importAll(m.getName().clone()));
 					}
 				}
 
@@ -166,7 +166,7 @@ public class ModuleList extends Vector<AModuleModules>
 					// def = new AModuleModules(def.getName(), new AModuleImports(def.getName(), imports), null,
 					// def.getDefs(), def.getFiles(), null, null, false, false, false);
 					
-					def.setImports(AstFactory.newAModuleImports(def.getName(), imports));
+					def.setImports(AstFactory.newAModuleImports(def.getName().clone(), imports));
 				}
 			}
 

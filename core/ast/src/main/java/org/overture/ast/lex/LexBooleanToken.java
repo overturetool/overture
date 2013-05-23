@@ -64,7 +64,7 @@ public class LexBooleanToken extends LexToken implements ILexBooleanToken {
 	}
 
 	@Override
-	public Object clone() {
+	public ILexBooleanToken clone() {
 		return new LexBooleanToken(value, location);
 	}
 	
