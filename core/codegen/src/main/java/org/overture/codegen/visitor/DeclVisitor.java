@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
@@ -29,6 +30,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		boolean isStatic = false;
 		String operationName = node.getName().getName();
 		PTypeCG returnType = node.getActualResult().apply(question.getTypeVisitor(), question);
+		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
 		
 		
 		AMethodDeclCG method = new AMethodDeclCG();
@@ -37,6 +39,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		method.setStatic(isStatic);
 		method.setReturnType(returnType);
 		method.setName(operationName);
+		method.setBody(body);
 		
 		
 		LinkedList<PDefinition> paramDefs = node.getParamDefinitions();

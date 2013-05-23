@@ -1,3 +1,4 @@
 	$node.getAccess() static $CG.format($node.getReturnType()) $node.getName()($CG.format($node.getFormalParams()))
 	{
+		$CG.format($node.getBody())
 	}

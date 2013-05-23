@@ -4,7 +4,11 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
+import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
@@ -16,7 +20,11 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
@@ -62,6 +70,37 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 		return expAssistant.handleBinaryExp(node, new ASubtractNumericBinaryExpCG(), question, typeLookup);
 	}
 	
+	@Override
+	public PExpCG caseAGreaterEqualNumericBinaryExp(
+			AGreaterEqualNumericBinaryExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node, new AGreaterEqualNumericBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return expAssistant.handleBinaryExp(node, new AGreaterNumericBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseALessEqualNumericBinaryExp(
+			ALessEqualNumericBinaryExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node, new ALessEqualNumericBinaryExpCG(), question, typeLookup);
+	}
+	
+	
+	@Override
+	public PExpCG caseALessNumericBinaryExp(ALessNumericBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node, new ALessNumericBinaryExpCG(), question, typeLookup);
+	}
 	
 	@Override
 	public PExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,

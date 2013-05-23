@@ -2,12 +2,14 @@ package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.AVoidType;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -63,7 +65,13 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 	{
 		return new ACharBasicTypeCG();
 	}
-
+	
+	@Override
+	public PTypeCG caseABooleanBasicType(ABooleanBasicType node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		return new ABoolBasicTypeCG();
+	}
 	// @Override
 	// public String caseABooleanBasicType(ABooleanBasicType node,
 	// ContextManager question) throws AnalysisException

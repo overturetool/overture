@@ -1,6 +1,5 @@
 package org.overture.codegen.visitor;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;

@@ -10,6 +10,7 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.overture.ast.statements.ASkipStm;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -18,14 +19,21 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.statements.AIfThenStmCG;
+import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -45,23 +53,34 @@ public class TemplateManager
 	{
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
-		nodeTemplateFileNames.put(AClassTypeDeclCG.class, IText.ROOT + "Class");
 		nodeTemplateFileNames.put(AFieldDeclCG.class, IText.ROOT + "Field");
-		
-		//Declarations
 
-		nodeTemplateFileNames.put(AMethodDeclCG.class, IText.DECL_PATH + "Method");
-		
-		//Local declarations
-		
-		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, IText.LOCAL_DECLS_PATH + "FormalParam");
-		
-		//Type declarations
-		
+		// Declarations
+
+		nodeTemplateFileNames.put(AClassTypeDeclCG.class, IText.TYPE_DECLS_PATH
+				+ "Class");
+
+		// Type declarations
+		nodeTemplateFileNames.put(AMethodDeclCG.class, IText.DECL_PATH
+				+ "Method");
+
+		// Local declarations
+
+		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, IText.LOCAL_DECLS_PATH
+				+ "FormalParam");
+
+		// Type declarations
+
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
+
+		//Statements
 		
-		//Unary expressions
+		nodeTemplateFileNames.put(AIfThenStmCG.class, IText.STM_PATH + "IfThen");
 		
+		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
+		
+		// Unary expressions
+
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, IText.UNARY_EXPS_PATH
 				+ "Plus");
 		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, IText.UNARY_EXPS_PATH
@@ -73,8 +92,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, IText.UNARY_EXPS_PATH
 				+ "Isolation");
 
-		//Numeric binary expressions
-		
+		// Numeric binary expressions
+
 		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "Mul");
 		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
@@ -84,9 +103,21 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "Divide");
+
+		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+				+ "GreaterEqual");
+
+		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+				+ "Greater");
 		
-		//Literal expressions
+		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+				+ "LessEqual");
 		
+		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+				+ "Less");
+		
+		// Literal expressions
+
 		nodeTemplateFileNames.put(AIntLiteralExpCG.class, IText.EXPS_PATH
 				+ "IntLiteral");
 		nodeTemplateFileNames.put(ARealLiteralExpCG.class, IText.EXPS_PATH
@@ -103,6 +134,9 @@ public class TemplateManager
 				+ "Integer");
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Real");
+		
+		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Bool");
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass)
@@ -145,7 +179,8 @@ public class TemplateManager
 
 	private String getTemplateFileRelativePath(Class<? extends INode> nodeClass)
 	{
-		return nodeTemplateFileNames.get(nodeClass) + IText.TEMPLATE_FILE_EXTENSION;
+		return nodeTemplateFileNames.get(nodeClass)
+				+ IText.TEMPLATE_FILE_EXTENSION;
 	}
 
 	private StringBuffer readFromFile(String relativepath) throws IOException

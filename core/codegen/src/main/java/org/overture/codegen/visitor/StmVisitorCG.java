@@ -1,19 +1,73 @@
 package org.overture.codegen.visitor;
 
+import java.util.LinkedList;
 
-public class StmVisitorCG// extends QuestionAnswerAdaptor<CodeGenContextMap, String>
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ASkipStm;
+import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.AIfThenElseStmCG;
+import org.overture.codegen.cgast.statements.AIfThenStmCG;
+import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.PTypeCG;
+
+
+public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
 {
-//	private static final long serialVersionUID = 5210069834877599547L;
-//
-//	private CodeGenVisitor rootVisitor;
-//	private StmAssistantCG stmAssistant;
-//
-//	public StmVisitorCG(CodeGenVisitor rootVisitor)
+	
+	private static final long serialVersionUID = -602593891699169007L;
+
+	public StmVisitorCG()
+	{
+	}
+	
+//	@Override
+//	public PStmCG caseAIfStm(AIfStm node, CodeGenInfo question)
+//			throws AnalysisException
 //	{
-//		super();
-//		this.rootVisitor = rootVisitor;
-//		this.stmAssistant = new StmAssistantCG(rootVisitor);
+//		if(node.getElseIf().size() == 0 && node.getElseStm() == null)
+//		{
+//			//handle if then
+//			//return if then
+//		}
+//		
+//		PExpCG condition = node.getIfExp().apply(question.getExpVisitor(), question);
+//		PStmCG thenBody = node.getThenStm().apply(question.getStatementVisitor(), question);
+//		
+//		AIfThenElseStmCG stm = new AIfThenElseStmCG();
+//		
+//		stm.setCondition(condition);
+//		stm.setThenBody(thenBody);
+//		
+//		LinkedList<AElseIfStm> elseIfs = node.getElseIf();
+//		
+//		//Assume that are some:
+//		AIfThenElseStmCG i = stm;
+//		for (AElseIfStm eStm : elseIfs)
+//		{
+//			PExpCG exp = eStm.getElseIf().apply(question.getExpVisitor(), question);
+//			PStmCG a = eStm.getThenStm().apply(question.getStatementVisitor(), question);
+//			
+//			i.setCondition(exp);
+//			i.setThenBody(a);
+//			
+//			
+//		}
+//		
+//		return thenStm;
 //	}
+	
+	@Override
+	public PStmCG caseASkipStm(ASkipStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return new ASkipStmCG();
+	}
+	
 //
 //	@Override
 //	public String caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,

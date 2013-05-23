@@ -12,9 +12,11 @@ public class IText
 	
 	public static final String DECL_PATH = ROOT + "Declarations" + SEPARATOR_CHAR;
 	
-	public static final String TYPE_DECLS_PATH = "TypeDeclarations" + SEPARATOR_CHAR;
+	public static final String TYPE_DECLS_PATH = ROOT + "TypeDeclarations" + SEPARATOR_CHAR;
 	
 	public static final String LOCAL_DECLS_PATH = "LocalDecls" + SEPARATOR_CHAR;
+	
+	public static final String STM_PATH = ROOT + "Statements" + SEPARATOR_CHAR;
 	
 	public static final String EXPS_PATH = ROOT + "Expressions" + SEPARATOR_CHAR;
 	

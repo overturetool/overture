@@ -48,6 +48,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 		[name]:java_String
 		[formalParams]:localDeclCG.formalParam*
 		//[throws]:type*
+		[body]:stmCG
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
@@ -59,6 +60,12 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
            = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
+           ;
+
+stmCG {-> package='org.overture.codegen.cgast.statements'}
+           = {if_then} [condition]:expCG [body]:stmCG
+           | {if_then_else} [condition]:expCG [thenBody]:stmCG [elseBody]:stmCG
+           | {skip}
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}
@@ -101,7 +108,8 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     
 #basic {-> package='org.overture.codegen.cgast.types'}
     =   #numeric
-    |	{char} 
+    |	{char}
+    |	{bool}
     ;
 
 #numeric {-> package='org.overture.codegen.cgast.types'}
