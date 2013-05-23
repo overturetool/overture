@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Platform;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
@@ -53,8 +54,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	public IFile getFile()
