@@ -1,5 +1,6 @@
 $node.getAccess() class $node.getName()
 {
+
 #foreach( $field in $node.getFields() )
 $CG.format($field)
 #end

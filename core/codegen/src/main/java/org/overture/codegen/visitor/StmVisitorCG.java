@@ -25,41 +25,53 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
 	{
 	}
 	
-//	@Override
-//	public PStmCG caseAIfStm(AIfStm node, CodeGenInfo question)
-//			throws AnalysisException
-//	{
-//		if(node.getElseIf().size() == 0 && node.getElseStm() == null)
-//		{
-//			//handle if then
-//			//return if then
-//		}
-//		
-//		PExpCG condition = node.getIfExp().apply(question.getExpVisitor(), question);
-//		PStmCG thenBody = node.getThenStm().apply(question.getStatementVisitor(), question);
-//		
-//		AIfThenElseStmCG stm = new AIfThenElseStmCG();
-//		
-//		stm.setCondition(condition);
-//		stm.setThenBody(thenBody);
-//		
-//		LinkedList<AElseIfStm> elseIfs = node.getElseIf();
-//		
-//		//Assume that are some:
-//		AIfThenElseStmCG i = stm;
-//		for (AElseIfStm eStm : elseIfs)
-//		{
-//			PExpCG exp = eStm.getElseIf().apply(question.getExpVisitor(), question);
-//			PStmCG a = eStm.getThenStm().apply(question.getStatementVisitor(), question);
-//			
-//			i.setCondition(exp);
-//			i.setThenBody(a);
-//			
-//			
-//		}
-//		
-//		return thenStm;
-//	}
+	@Override
+	public PStmCG caseAIfStm(AIfStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		if(node.getElseIf().size() == 0 && node.getElseStm() == null)
+		{
+			//handle if then
+			//return if then
+		}
+		
+		PExpCG condition = node.getIfExp().apply(question.getExpVisitor(), question);
+		PStmCG thenBody = node.getThenStm().apply(question.getStatementVisitor(), question);
+		
+		AIfThenElseStmCG stm = new AIfThenElseStmCG();
+		
+		stm.setCondition(condition);
+		stm.setThenBody(thenBody);
+		
+		LinkedList<AElseIfStm> elseIfs = node.getElseIf();
+		
+		//Assume there are some:
+		
+		AIfThenElseStmCG tailStm = stm;
+		
+		for (AElseIfStm eStm : elseIfs)
+		{
+			AIfThenElseStmCG currentElseIf = new AIfThenElseStmCG();
+			
+			
+			PExpCG elseIfCondition = eStm.getElseIf().apply(question.getExpVisitor(), question);
+			PStmCG elseIfBody = eStm.getThenStm().apply(question.getStatementVisitor(), question);
+			
+			currentElseIf.setCondition(elseIfCondition);
+			currentElseIf.setThenBody(elseIfBody);
+			
+			tailStm.setElseBody(currentElseIf);
+			tailStm = currentElseIf;
+		}
+		
+		if(node.getElseStm() != null)
+		{
+			PStmCG elseStm = node.getElseStm().apply(question.getStatementVisitor(), question);
+			stm.setElseBody(elseStm);
+		}
+		
+		return stm;
+	}
 	
 	@Override
 	public PStmCG caseASkipStm(ASkipStm node, CodeGenInfo question)

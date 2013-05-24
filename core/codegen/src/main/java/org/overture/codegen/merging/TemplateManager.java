@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.statements.AIfThenElseStmCG;
 import org.overture.codegen.cgast.statements.AIfThenStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -76,6 +77,8 @@ public class TemplateManager
 		//Statements
 		
 		nodeTemplateFileNames.put(AIfThenStmCG.class, IText.STM_PATH + "IfThen");
+		
+		nodeTemplateFileNames.put(AIfThenElseStmCG.class, IText.STM_PATH + "IfThenElse");
 		
 		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
 		

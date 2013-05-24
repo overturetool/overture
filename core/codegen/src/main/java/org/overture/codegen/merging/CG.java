@@ -6,6 +6,9 @@ import java.util.List;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.statements.AIfThenElseStmCG;
+import org.overture.codegen.cgast.statements.AIfThenStmCG;
+import org.overture.codegen.cgast.statements.PStmCG;
 
 public class CG
 {
@@ -34,5 +37,25 @@ public class CG
 			writer.append(", " + CG.format(param.getType()) + " " + param.getName());
 		}
 		return writer.toString();
+	}
+	
+	public static String constructBody(AIfThenElseStmCG stm) throws AnalysisException
+	{
+		PStmCG elseBody = stm.getElseBody();
+			
+		if(elseBody == null)
+			return "{\r\n}";
+		
+		String bodyFormatted = CG.format(elseBody);
+		
+		if(ommitCurlyBrackets(elseBody))
+			return bodyFormatted;
+		else
+			return "{" + bodyFormatted + "}";
+	}
+	
+	private static boolean ommitCurlyBrackets(INode node)
+	{
+		return node instanceof AIfThenStmCG || node instanceof AIfThenElseStmCG;
 	}
 }
