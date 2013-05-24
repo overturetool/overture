@@ -42,6 +42,17 @@
         <module>ide</module>
       </modules>
     </profile>
+    <profile>
+      <id>COMPASS-Repo</id>
+      <distributionManagement> 
+        <repository>
+          <id>build.overture.org</id>
+          <name>Overture Repo for COMPASS on the buildserver</name>
+          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-compass-m2repo</url>
+        </repository>
+        <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
+      </distributionManagement> 
+    </profile>
   </profiles>
 
   <repositories>
@@ -245,7 +256,7 @@
   <distributionManagement> 
     <repository>
       <id>build.overture.org</id>
-      <name>Overture Repo af SF.Net</name>
+      <name>Overture Repo on the buildserver</name>
       <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-m2repo</url>
     </repository>
     <downloadUrl>http://build.overturetool.org/builds/overture-m2repo/</downloadUrl>
