@@ -1,5 +1,0 @@
-if ($CG.format($node.getCondition()))
-{
-	$CG.format($node.getThenBody())
-}
-else $CG.constructBody($node)

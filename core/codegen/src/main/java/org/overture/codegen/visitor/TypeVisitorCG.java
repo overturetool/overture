@@ -72,35 +72,4 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 	{
 		return new ABoolBasicTypeCG();
 	}
-	// @Override
-	// public String caseABooleanBasicType(ABooleanBasicType node,
-	// ContextManager question) throws AnalysisException
-	// {
-	// return Vdm2JavaBasicTypeMappings.BOOL.toString();
-	// }
-	//
-
-	//
-	// @Override
-	// public String caseATokenBasicType(ATokenBasicType node,
-	// ContextManager question) throws AnalysisException
-	// {
-	// throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-	// }
-	//
-	//
-	// @Override
-	// public String caseARationalNumericBasicType(ARationalNumericBasicType node,
-	// ContextManager question) throws AnalysisException
-	// {
-	// throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-	// }
-	//
-	// @Override
-	// public String caseAVoidType(AVoidType node, ContextManager question)
-	// throws AnalysisException
-	// {
-	// return "void";
-	// }
-
 }

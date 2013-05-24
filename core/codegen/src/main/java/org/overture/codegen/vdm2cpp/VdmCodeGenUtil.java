@@ -3,7 +3,7 @@ package org.overture.codegen.vdm2cpp;
 import java.io.File;
 import java.net.URL;
 
-public class Vdm2CppUtil
+public class VdmCodeGenUtil
 {
 	public static String getVelocityPropertiesPath(String relativePath)
 	{

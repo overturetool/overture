@@ -24,16 +24,16 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.visitor.CodeGenVisitor;
 
-public class Vdm2Cpp
+public class VdmCodeGen
 {
 	private ILogger log;
 	
-	public Vdm2Cpp()
+	public VdmCodeGen()
 	{
 		init(null);
 	}
 	
-	public Vdm2Cpp(ILogger log)
+	public VdmCodeGen(ILogger log)
 	{
 		init(log);
 	}
@@ -51,7 +51,7 @@ public class Vdm2Cpp
 
 	private void initVelocity()
 	{
-		String propertyPath = Vdm2CppUtil.getVelocityPropertiesPath("velocity.properties");
+		String propertyPath = VdmCodeGenUtil.getVelocityPropertiesPath("velocity.properties");
 		Velocity.init(propertyPath);
 	}
 
@@ -113,7 +113,7 @@ public class Vdm2Cpp
 			} 
 		}
 	}
-
+	
 //	public void save(CodeGenContextMap contextMap)
 //	{
 //

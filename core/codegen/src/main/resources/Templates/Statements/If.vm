@@ -1,0 +1,19 @@
+if ( $CG.format($node.getIfExp()) )
+{
+
+	$CG.format($node.getThenStm())
+}
+#foreach( $stm in $node.getElseIf() )
+else if ( $CG.format($stm.getElseIf()) )
+{
+
+	$CG.format($stm.getThenStm())
+}
+#end
+#if ( !$CG.isNull($node.getElseStm()) )
+else
+{
+
+	$CG.format($node.getElseStm())
+}
+#end

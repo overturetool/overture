@@ -10,7 +10,6 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
-import org.overture.ast.statements.ASkipStm;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -31,8 +30,7 @@ import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
-import org.overture.codegen.cgast.statements.AIfThenElseStmCG;
-import org.overture.codegen.cgast.statements.AIfThenStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -74,14 +72,12 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
 
-		//Statements
-		
-		nodeTemplateFileNames.put(AIfThenStmCG.class, IText.STM_PATH + "IfThen");
-		
-		nodeTemplateFileNames.put(AIfThenElseStmCG.class, IText.STM_PATH + "IfThenElse");
-		
+		// Statements
+		nodeTemplateFileNames.put(AIfStmCG.class, IText.STM_PATH + "If");
+		//nodeTemplateFileNames.put(AElseIfStmCG.class, IText.STM_PATH + "ElseIf");
+
 		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
-		
+
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, IText.UNARY_EXPS_PATH
@@ -112,13 +108,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "Greater");
-		
+
 		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "LessEqual");
-		
+
 		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "Less");
-		
+
 		// Literal expressions
 
 		nodeTemplateFileNames.put(AIntLiteralExpCG.class, IText.EXPS_PATH
@@ -137,7 +133,7 @@ public class TemplateManager
 				+ "Integer");
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Real");
-		
+
 		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Bool");
 	}

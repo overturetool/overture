@@ -1,4 +1,0 @@
-if ($CG.format($node.getCondition()))
-{
-	$CG.format($node.getBody())
-}

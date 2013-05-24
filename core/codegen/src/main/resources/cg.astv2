@@ -63,9 +63,9 @@ localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
            ;
 
 stmCG {-> package='org.overture.codegen.cgast.statements'}
-           = {if_then} [condition]:expCG [body]:stmCG
-           | {if_then_else} [condition]:expCG [thenBody]:stmCG [elseBody]:stmCG
-           | {skip}
+           =	{if} [ifExp]:expCG [thenStm]:stmCG [elseIf]:stmCG.elseIf* [elseStm]:stmCG
+           | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
+           | 	{skip}
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

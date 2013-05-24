@@ -47,7 +47,7 @@ public class CodeGenMain
 				continue;
 			}
 				
-			Vdm2Cpp vdm2cpp = new Vdm2Cpp();
+			VdmCodeGen vdm2cpp = new VdmCodeGen();
 			try
 			{
 				vdm2cpp.generateCode(typeCheckResult.result);
