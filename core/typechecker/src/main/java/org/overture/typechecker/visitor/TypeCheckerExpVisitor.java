@@ -1507,6 +1507,7 @@ public class TypeCheckerExpVisitor extends
 			}
 		} else {
 			ATypeBind tb = (ATypeBind) bind;
+			ATypeBindAssistantTC.typeResolve(tb, rootVisitor, question);
 			rt = tb.getType();
 		}
 

@@ -65,8 +65,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 		Class lookup(String className);
 	}
-	
-	private class TypeMap extends HashMap<String,Classifier>
+
+	private class TypeMap extends HashMap<String, Classifier>
 	{
 		/**
 		 * 
@@ -79,17 +79,18 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			StringBuilder sb = new StringBuilder();
 			for (java.util.Map.Entry<String, Classifier> entry : this.entrySet())
 			{
-				sb.append(entry.getKey()+": "+entry.getValue().getName()+"\n");
+				sb.append(entry.getKey() + ": " + entry.getValue().getName()
+						+ "\n");
 			}
 			return sb.toString();
 		}
-		
-//		@Override
-//		public Classifier put(String key, Classifier value)
-//		{
-//			// TODO Auto-generated method stub
-//			return super.put(key, value);
-//		}
+
+		// @Override
+		// public Classifier put(String key, Classifier value)
+		// {
+		// // TODO Auto-generated method stub
+		// return super.put(key, value);
+		// }
 	}
 
 	private Model modelWorkingCopy = null;
@@ -215,9 +216,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-		createTemplateType(class_, type,
-				AInMapMapType.kindSMapType.equals(type.kindSMapType()) ? templateInMapName : templateMapName,
-				new String[] { "D", "R" }, type.getFrom(), type.getTo());
+		createTemplateType(class_, type, AInMapMapType.kindSMapType.equals(type.kindSMapType()) ? templateInMapName
+				: templateMapName, new String[] { "D", "R" }, type.getFrom(), type.getTo());
 	}
 
 	private void createUnionType(Class class_, AUnionType type)
@@ -320,7 +320,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 			String qualifiedName = getName(type);
 			String simpleName = qualifiedName.substring(qualifiedName.lastIndexOf(':') + 1);
-			String className = qualifiedName.substring(0,qualifiedName.indexOf(':'));
+			String className = qualifiedName.substring(0, qualifiedName.indexOf(':'));
 			Class owningClass = classLookup.lookup(className);
 			Enumeration enumeration = (Enumeration) owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.ENUMERATION);
 
@@ -359,12 +359,20 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				{
 					String simpleName = getName(type);
 					simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
-					Classifier recordClass = class_.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+
+					Class owningClass = class_;
+
+					if (!class_.getName().equals(type.getLocation().getModule()))
+					{
+						owningClass = classLookup.lookup(type.getLocation().getModule());
+					}
+					Classifier recordClass = owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+
 					types.put(getName(type), recordClass);
 					create(class_, ptype);
 					recordClass.createGeneralization(getUmlType(ptype));
-					
-				}else
+
+				} else
 				{
 					create(class_, ptype);
 				}
@@ -376,7 +384,16 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			{
 				String simpleName = getName(type);
 				simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
-				Class recordClass = (Class) class_.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+
+				Class owningClass = class_;
+
+				if (!class_.getName().equals(type.getLocation().getModule()))
+				{
+					owningClass = classLookup.lookup(type.getLocation().getModule());
+				}
+
+				Class recordClass = (Class) owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+
 				for (AFieldField field : ((ARecordInvariantType) type).getFields())
 				{
 					create(class_, field.getType());

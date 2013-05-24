@@ -9,7 +9,7 @@ public interface ILexIdentifierToken extends ILexToken
 	public boolean getOld();
 
 	
-	
+	ILexIdentifierToken clone();
 
 
 

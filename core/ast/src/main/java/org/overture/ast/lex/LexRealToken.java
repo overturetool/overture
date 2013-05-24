@@ -62,7 +62,7 @@ public class LexRealToken extends LexToken implements ILexRealToken {
 	}
 
 	@Override
-	public Object clone() {
+	public ILexRealToken clone() {
 		return new LexRealToken(value, location);
 	}
 	

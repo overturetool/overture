@@ -59,7 +59,7 @@ public class LexStringToken extends LexToken implements ILexStringToken {
 	}
 
 	@Override
-	public Object clone() {
+	public ILexStringToken clone() {
 		return new LexStringToken(value, location);
 	}
 	

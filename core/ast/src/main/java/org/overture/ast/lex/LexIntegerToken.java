@@ -66,7 +66,7 @@ public class LexIntegerToken extends LexToken implements ILexIntegerToken
 	}
 	
 	@Override
-	public Object clone() {
+	public ILexIntegerToken clone() {
 		return new LexIntegerToken(value, location);
 	}
 	
