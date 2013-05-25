@@ -47,6 +47,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 		[return_type]:typeCG
 		[name]:java_String
 		[formalParams]:localDeclCG.formalParam*
+		[isConstructor]:java_Boolean //Is it appropriate to call it method then?
 		//[throws]:type*
 		[body]:stmCG
 	|	{field} 
@@ -56,6 +57,12 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[type]:typeCG
     	[name]:java_String
     	[initial]:expCG
+//    |	{constructor}
+//    	[access]:java_String
+//		[name]:java_String
+//		[formals]:localDeclCG*
+		//[throws]:type*
+//		[body]:stmCG
 	;
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
@@ -66,13 +73,16 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            =	{if} [ifExp]:expCG [thenStm]:stmCG [elseIf]:stmCG.elseIf* [elseStm]:stmCG
            | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
            | 	{skip}
+           |	{return} [exp]:expCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
     |	#Binary
-    |	{intLiteral}	[value]:java_String
-    |	{realLiteral}	[value]:java_String
+	|	{new} [className]:java_String [args]:expCG*
+	|   {variable} [original]:java_String 
+    |	{intLiteral} [value]:java_String
+    |	{realLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
     ;
     
@@ -104,6 +114,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{void}
+    |	{class} [name]:java_String
     ;
     
 #basic {-> package='org.overture.codegen.cgast.types'}

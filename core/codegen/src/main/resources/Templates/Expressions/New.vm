@@ -1,0 +1,1 @@
+new $node.getClassName()($CG.formatArgs($node.getArgs()))

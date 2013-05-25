@@ -19,7 +19,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 {
 	private static final long serialVersionUID = -7968170190668212627L;
-
+	
 	@Override
 	public PDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, CodeGenInfo question)
@@ -31,7 +31,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		String operationName = node.getName().getName();
 		PTypeCG returnType = node.getActualResult().apply(question.getTypeVisitor(), question);
 		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
-		
+		boolean isConstructor = node.getIsConstructor();
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		
@@ -40,6 +40,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		method.setReturnType(returnType);
 		method.setName(operationName);
 		method.setBody(body);
+		method.setIsConstructor(isConstructor);
 		
 		
 		LinkedList<PDefinition> paramDefs = node.getParamDefinitions();

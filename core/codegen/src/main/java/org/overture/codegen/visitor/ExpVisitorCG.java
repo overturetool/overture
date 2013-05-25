@@ -1,5 +1,7 @@
 package org.overture.codegen.visitor;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -9,12 +11,14 @@ import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -26,11 +30,13 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
@@ -47,6 +53,38 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseAVariableExp(AVariableExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		String original = node.getOriginal();
+		
+		AVariableExpCG varExp = new AVariableExpCG();
+		varExp.setOriginal(original);
+		
+		return varExp;
+	}
+	
+	@Override
+	public PExpCG caseANewExp(ANewExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		String className = node.getClassdef().getName().getName();
+		
+		LinkedList<PExp> nodeArgs = node.getArgs();
+		
+		ANewExpCG newExp = new ANewExpCG();
+		newExp.setClassName(className);
+		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
+		
+		for (PExp arg : nodeArgs)
+		{
+			newExpArgs.add(arg.apply(question.getExpVisitor(), question));
+		}
+		
+		return newExp;
 	}
 		
 	@Override

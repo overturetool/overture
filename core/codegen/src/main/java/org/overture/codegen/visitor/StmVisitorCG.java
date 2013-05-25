@@ -6,10 +6,12 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 
@@ -24,10 +26,22 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
+	public PStmCG caseAReturnStm(AReturnStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		
+		AReturnStmCG returnStm = new AReturnStmCG();
+		returnStm.setExp(exp);
+		
+		return returnStm;
+	}
+	
+	@Override
 	public PStmCG caseAElseIfStm(AElseIfStm node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		//Dont visit it but create it directly if needed in the ifStm in order to avoid casting
+		//Don't visit it but create it directly if needed in the ifStm in order to avoid casting
 		return null;
 	}
 	

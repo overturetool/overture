@@ -25,15 +25,19 @@ import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -52,32 +56,45 @@ public class TemplateManager
 	{
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
-		nodeTemplateFileNames.put(AFieldDeclCG.class, IText.ROOT + "Field");
-
-		// Declarations
-
+				
+		// Type declarations
 		nodeTemplateFileNames.put(AClassTypeDeclCG.class, IText.TYPE_DECLS_PATH
 				+ "Class");
 
-		// Type declarations
+		// Declarations
+		
+		nodeTemplateFileNames.put(AFieldDeclCG.class, IText.DECL_PATH + "Field");
+		
 		nodeTemplateFileNames.put(AMethodDeclCG.class, IText.DECL_PATH
 				+ "Method");
 
+		//nodeTemplateFileNames.put(AConstructorDeclCG.class, IText.DECL_PATH + "Constructor");
+		
 		// Local declarations
 
+		//TODO: Template not currently used
 		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, IText.LOCAL_DECLS_PATH
 				+ "FormalParam");
 
-		// Type declarations
-
+		// Type
+		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");
+		
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
 
 		// Statements
 		nodeTemplateFileNames.put(AIfStmCG.class, IText.STM_PATH + "If");
-		//nodeTemplateFileNames.put(AElseIfStmCG.class, IText.STM_PATH + "ElseIf");
 
+		nodeTemplateFileNames.put(AReturnStmCG.class, IText.STM_PATH + "Return");
+		
 		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
 
+		
+		// Expressions
+		
+		nodeTemplateFileNames.put(ANewExpCG.class, IText.EXPS_PATH + "New");
+		
+		nodeTemplateFileNames.put(AVariableExpCG.class, IText.EXPS_PATH + "Variable");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, IText.UNARY_EXPS_PATH

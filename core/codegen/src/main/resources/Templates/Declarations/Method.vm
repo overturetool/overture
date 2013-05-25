@@ -1,4 +1,14 @@
-$node.getAccess() static $CG.format($node.getReturnType()) $node.getName()($CG.format($node.getFormalParams()))
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+##
+#set( $returnType = "")
+#if (!$node.getIsConstructor())
+	#set( $returnType = $CG.format($node.getReturnType()))
+#end
+##
+$node.getAccess() $static $returnType $node.getName()($CG.format($node.getFormalParams()))
 {
 
 	$CG.format($node.getBody())

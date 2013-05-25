@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.expressions.PExpCG;
 
 public class CG
 {
@@ -33,6 +34,25 @@ public class CG
 			AFormalParamLocalDeclCG param = params.get(i);
 			writer.append(", " + CG.format(param.getType()) + " " + param.getName());
 		}
+		return writer.toString();
+	}
+	
+	public static String formatArgs(List<PExpCG> exps) throws AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+		
+		if(exps.size() <= 0)
+			return "";
+		
+		PExpCG firstExp = exps.get(0);
+		writer.append(CG.format(firstExp));
+		
+		for(int i = 1; i < exps.size(); i++)
+		{
+			PExpCG exp = exps.get(i);
+			writer.append(", " + CG.format(exp));
+		}
+		
 		return writer.toString();
 	}
 	
