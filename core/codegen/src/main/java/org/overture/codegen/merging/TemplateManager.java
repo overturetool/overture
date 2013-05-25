@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -33,6 +34,7 @@ import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -67,6 +69,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AMethodDeclCG.class, IText.DECL_PATH
 				+ "Method");
+		
+		nodeTemplateFileNames.put(ALocalVarDeclCG.class, IText.DECL_PATH + "LocalVar");
 
 		//nodeTemplateFileNames.put(AConstructorDeclCG.class, IText.DECL_PATH + "Constructor");
 		
@@ -88,6 +92,7 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
 
+		nodeTemplateFileNames.put(ALetDefStmCG.class, IText.STM_PATH + "LetDef");
 		
 		// Expressions
 		

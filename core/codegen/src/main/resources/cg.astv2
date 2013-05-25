@@ -57,6 +57,10 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[type]:typeCG
     	[name]:java_String
     	[initial]:expCG
+    |	{localVar}
+    	[type]:typeCG
+    	[name]:java_String
+    	[exp]:expCG
 //    |	{constructor}
 //    	[access]:java_String
 //		[name]:java_String
@@ -74,6 +78,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
            | 	{skip}
            |	{return} [exp]:expCG
+           |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

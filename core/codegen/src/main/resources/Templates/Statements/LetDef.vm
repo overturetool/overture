@@ -1,0 +1,6 @@
+
+#foreach( $varDecl in $node.getLocalDefs() )
+$CG.format($varDecl)
+#end
+
+$CG.format($node.getStm())
