@@ -1,0 +1,2 @@
+##Example: t.getX(1, 1)
+$CG.format($node.getRoot())($CG.formatArgs($node.getArgs()))

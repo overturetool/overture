@@ -16,9 +16,11 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -95,6 +97,10 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ALetDefStmCG.class, IText.STM_PATH + "LetDef");
 		
 		// Expressions
+		
+		nodeTemplateFileNames.put(AApplyExpCG.class, IText.EXPS_PATH + "Apply");
+		
+		nodeTemplateFileNames.put(AFieldExpCG.class, IText.EXPS_PATH + "Field");
 		
 		nodeTemplateFileNames.put(ANewExpCG.class, IText.EXPS_PATH + "New");
 		

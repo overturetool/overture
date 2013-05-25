@@ -4,8 +4,10 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
@@ -21,9 +23,11 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.assistant.ExpAssistantCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -53,6 +57,41 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseAFieldExp(AFieldExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PExpCG object = node.getObject().apply(question.getExpVisitor(), question);
+		String memberName = node.getMemberName().getName();
+		
+		AFieldExpCG fieldExp = new AFieldExpCG();
+		fieldExp.setObject(object);
+		fieldExp.setMemberName(memberName);
+		
+		return fieldExp;
+	}
+	
+	@Override
+	public PExpCG caseAApplyExp(AApplyExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		
+		PExpCG root = node.getRoot().apply(question.getExpVisitor(), question);
+		
+		AApplyExpCG applyExp = new AApplyExpCG();		
+		applyExp.setRoot(root);
+		
+		LinkedList<PExp> applyArgs = node.getArgs();
+		
+		for (int i = 0; i < applyArgs.size(); i++)
+		{
+			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
+			applyExp.getArgs().add(arg);
+		}
+		
+		return applyExp;
 	}
 	
 	@Override

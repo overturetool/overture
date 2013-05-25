@@ -40,7 +40,7 @@ typeDeclCG {-> package='org.overture.codegen.cgast'}
     ;
 
 declCG {-> package='org.overture.codegen.cgast.declarations'}
-	=	{method} 
+	=	{method}
 		[access]:java_String
 		[static]:java_Boolean
 		//[abstract]:java_Boolean
@@ -84,6 +84,8 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
 expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
     |	#Binary
+    |	{field} [object]:expCG [memberName]: java_String//[memberName]:LexNameToken [field]:LexIdentifierToken
+    |	{apply} [root]:expCG [args]:expCG*// (argtypes):type* (recursive):definition
 	|	{new} [className]:java_String [args]:expCG*
 	|   {variable} [original]:java_String 
     |	{intLiteral} [value]:java_String
