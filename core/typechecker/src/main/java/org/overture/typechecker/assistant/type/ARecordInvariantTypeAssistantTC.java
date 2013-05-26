@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -102,4 +103,28 @@ public class ARecordInvariantTypeAssistantTC {
 		return type;
 	}
 
+	public static boolean narrowerThan(ARecordInvariantType type,
+			AAccessSpecifierAccessSpecifier accessSpecifier) {		
+		
+		if (type.getInNarrower())
+		{
+			return false;
+		}
+		else
+		{
+			type.setInNarrower(true);
+		}
+		
+		for (AFieldField field : type.getFields())
+		{
+			if (PTypeAssistantTC.narrowerThan(field.getType(), accessSpecifier))
+			{
+				type.setInNarrower(false);
+				return true;
+			}
+		}
+		
+		type.setInNarrower(false);
+		return false;
+	}
 }

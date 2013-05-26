@@ -1413,6 +1413,16 @@ public class TypeCheckerDefinitionVisitor extends
 			question.scope = NameScope.NAMES;
 			node.getInvdef().apply(rootVisitor, question);
 		}
+		
+		PType type = PDefinitionAssistantTC.getType(node);
+		node.setType(type);
+		
+		if(PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
+		{
+			TypeCheckerErrors.report(3321,
+					"Type component visibility less than type's definition", node.getLocation(), node);
+		}
+		
 		return node.getType();
 
 	}
