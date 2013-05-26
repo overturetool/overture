@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
+<message column="9" line="88" message="Type component visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP.result"/>
+<message column="9" line="163" message="Type component visibility less than type's definition" messageType="error" number="3321" resource="SAFERProofPP.result"/>
 <result/>
 </testResult>
