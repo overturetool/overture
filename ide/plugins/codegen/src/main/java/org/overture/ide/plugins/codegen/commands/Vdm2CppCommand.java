@@ -8,8 +8,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.codegen.vdm2cpp.Vdm2Cpp;
-import org.overture.codegen.visitor.CodeGenContextMap;
+import org.overture.codegen.vdm2cpp.VdmCodeGen;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -40,10 +39,8 @@ public class Vdm2CppCommand extends AbstractHandler
 				|| !PluginVdm2CppUtil.isSupportedVdmDialect(vdmProject))
 			return null;
 
-		final Vdm2Cpp vdm2cpp = new Vdm2Cpp();
+		final VdmCodeGen vdm2cpp = new VdmCodeGen();
 
-		CodeGenContextMap codeGenContextMap = null;
-		
 		try
 		{			
 			List<IVdmSourceUnit> sources = model.getSourceUnits();
@@ -58,12 +55,6 @@ public class Vdm2CppCommand extends AbstractHandler
 		} catch (Exception ex)
 		{
 			Activator.log("Failed generating code", ex);
-			return null;
-		}
-
-		if(codeGenContextMap == null)
-		{
-			Console.out.println("There is no source to generate from.");
 			return null;
 		}
 		
