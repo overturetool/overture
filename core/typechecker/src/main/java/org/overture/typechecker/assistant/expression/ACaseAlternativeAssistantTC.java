@@ -10,8 +10,10 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -30,11 +32,22 @@ public class ACaseAlternativeAssistantTC {
 			{
 				// Only expression patterns need type checking...
 				AExpressionPattern ep = (AExpressionPattern)c.getPattern();
-				ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
+				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
+				
+				if (!TypeComparator.compatible(ptype, expType))
+				{
+					TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
+				}
 			}
 
-			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.env));
-			c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
+			try{
+				PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.env));
+				c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
+			} catch (TypeCheckException e)
+			{
+				c.getDefs().clear();
+				throw e;
+			}
 		}
 
 		PDefinitionListAssistantTC.typeCheck(c.getDefs(),rootVisitor,new TypeCheckInfo(question.env, question.scope));

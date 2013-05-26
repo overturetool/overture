@@ -879,24 +879,22 @@ public class StatementReader extends SyntaxReader
 		PStm others = null;
 		cases.addAll(readCaseAlternatives());
 
-		while (ignore(VDMToken.COMMA))
+		while (lastToken().is(VDMToken.COMMA))
 		{
-			if (lastToken().is(VDMToken.OTHERS))
+			if (nextToken().is(VDMToken.OTHERS))
 			{
+				nextToken();
+				checkFor(VDMToken.ARROW, 2237, "Expecting '->' after others");
+				others = readStatement();
 				break;
 			}
-
-			cases.addAll(readCaseAlternatives());
+			else
+			{
+				cases.addAll(readCaseAlternatives());
+			}
 		}
 
-		if (lastToken().is(VDMToken.OTHERS))
-		{
-			nextToken();
-			checkFor(VDMToken.ARROW, 2237, "Expecting '->' after others");
-			others = readStatement();
-		}
-
-		checkFor(VDMToken.END, 2238, "Expecting 'end' after cases");
+		checkFor(VDMToken.END, 2238, "Expecting ', case alternative' or 'end' after cases");
 		return AstFactory.newACasesStm(token, exp, cases, others);
 	}
 

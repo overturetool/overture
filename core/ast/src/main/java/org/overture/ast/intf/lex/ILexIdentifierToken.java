@@ -1,7 +1,5 @@
 package org.overture.ast.intf.lex;
 
-import org.overture.ast.lex.LexLocation;
-
 public interface ILexIdentifierToken extends ILexToken
 {
 
@@ -11,7 +9,7 @@ public interface ILexIdentifierToken extends ILexToken
 	public boolean getOld();
 
 	
-	
+	ILexIdentifierToken clone();
 
 
 

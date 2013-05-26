@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="13" line="44" message="Instance variable 'atm' is not initialized" messageType="warning" number="5001" resource="ProductLinePP.result"/>
 <message column="13" line="78" message="Instance variable 'aap' is not initialized" messageType="warning" number="5001" resource="ProductLinePP.result"/>
 <message column="13" line="79" message="Instance variable 'boiling_point' is not initialized" messageType="warning" number="5001" resource="ProductLinePP.result"/>
@@ -23,4 +23,5 @@
 <message column="34" line="124" message="Operation '(aap.GetAtm)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP.result"/>
 <message column="8" line="297" message="Operation '(liquid_level_sensor.IsOn)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP.result"/>
 <message column="8" line="298" message="Operation '(liquid_level_sensor.IsOn)' cannot be called from a function" messageType="error" number="3300" resource="ProductLinePP.result"/>
+<result/>
 </testResult>

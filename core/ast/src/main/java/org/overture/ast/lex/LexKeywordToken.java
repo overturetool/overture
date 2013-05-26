@@ -35,7 +35,7 @@ public class LexKeywordToken extends LexToken implements ILexKeywordToken  {
 	}
 
 	@Override
-	public Object clone() {
+	public ILexKeywordToken clone() {
 		return new LexKeywordToken(type, location);
 	}
 	

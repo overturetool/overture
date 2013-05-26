@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="27" line="24" message="Definition 'c' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="13" line="32" message="Definition 'init_i' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>
 <message column="13" line="28" message="Definition 'post_h' not used" messageType="warning" number="5000" resource="letexpr-23.vdm.result"/>

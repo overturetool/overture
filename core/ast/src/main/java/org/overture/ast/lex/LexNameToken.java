@@ -207,12 +207,12 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	@Override
 	public boolean equals(Object other)
 	{
-		if (!(other instanceof LexNameToken))
+		if (!(other instanceof ILexNameToken))
 		{
 			return false;
 		}
 
-		LexNameToken lother = (LexNameToken) other;
+		ILexNameToken lother = (ILexNameToken) other;
 
 		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{

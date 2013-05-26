@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -564,9 +565,14 @@ public class AstFactory {
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
-		{
-			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
+		try {
+			for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
+			{
+				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
+			}
+		} catch (InvocationAssistantException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		result.setDefs(defs);

@@ -70,12 +70,14 @@
          point="org.eclipse.ui.navigator.navigatorContent">
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             type="new"
             wizardId="org.overture.ide.vdmsl.ui.projectWizard">
          <enablement></enablement>
       </commonWizard>
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             type="new"
             wizardId="org.overture.ide.vdmsl.ui.fileWizard">
          <enablement>
@@ -98,6 +100,7 @@
       </commonWizard>
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             type="new"
             wizardId="org.overture.ide.vdmsl.ui.moduleWizard">
          <enablement>

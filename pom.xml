@@ -8,7 +8,7 @@
   <artifactId>root</artifactId>
   <version>2.0.0<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
-  
+
   <modules>
     <module>core</module>
     <module>tools</module>
@@ -41,6 +41,35 @@
       <modules>
         <module>ide</module>
       </modules>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>overture.iha.dk</id>
+          <name>Overture Project Build Repository at AU/IHA</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+          <url>http://build.overturetool.org/builds/overture-m2repo/</url>
+          <layout>default</layout>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>COMPASS-Repo</id>
+      <distributionManagement>
+        <repository>
+          <id>build.overture.org</id>
+          <name>Overture Repo for COMPASS on the buildserver</name>
+          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-compass-m2repo</url>
+        </repository>
+        <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
+      </distributionManagement>
     </profile>
   </profiles>
 
@@ -61,7 +90,7 @@
       <url>http://overture.sourceforge.net/maven/repo</url>
       <layout>default</layout>
     </repository>
-    
+
     <repository>
       <id>IHA</id>
       <name>Build server Snapshots</name>
@@ -116,8 +145,8 @@
             <attach>true</attach>
           </configuration>
         </plugin>
-        
-        <!-- Enable JavaDoc but dont fail on error. This must be disabled for 
+
+        <!-- Enable JavaDoc but dont fail on error. This must be disabled for
              the Eclipse project in the IDE -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -135,7 +164,7 @@
             <failOnError>false</failOnError>
           </configuration>
         </plugin>
-      
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
@@ -187,9 +216,9 @@
         </plugin>
 
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId> 
-          <artifactId>maven-antrun-plugin</artifactId> 
-          <version>1.7</version> 
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.7</version>
         </plugin>
 
         <plugin>
@@ -234,18 +263,18 @@
     </pluginManagement>
 
     <extensions>
-      <extension> 
-        <groupId>org.apache.maven.wagon</groupId> 
-        <artifactId>wagon-ssh</artifactId> 
-        <version>2.4</version> 
-      </extension> 
-    </extensions> 
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>2.4</version>
+      </extension>
+    </extensions>
   </build>
 
-  <distributionManagement> 
+  <distributionManagement>
     <repository>
       <id>build.overture.org</id>
-      <name>Overture Repo af SF.Net</name>
+      <name>Overture Repo on the buildserver</name>
       <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-m2repo</url>
     </repository>
     <downloadUrl>http://build.overturetool.org/builds/overture-m2repo/</downloadUrl>
@@ -264,7 +293,7 @@
     <!--   <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
     <!-- </site>  -->
     <!-- <downloadUrl>http://overture.sourceforge.net/maven/repo/</downloadUrl> -->
-  </distributionManagement> 
+  </distributionManagement>
 
   <scm>
     <connection>scm:git:git://git.code.sf.net/p/overture/code</connection>

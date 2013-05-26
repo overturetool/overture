@@ -78,6 +78,7 @@
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <commonWizard
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             menuGroupId="org.overture.ide.ui.vdm"
             type="new"
             wizardId="org.overture.ide.vdmrt.ui.projectWizard">
@@ -107,6 +108,7 @@
       </commonWizard>
       <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             type="new"
             wizardId="org.overture.ide.vdmrt.ui.classWizard">
          <enablement>
@@ -129,6 +131,7 @@
       </commonWizard>
        <commonWizard
             menuGroupId="org.overture.ide.ui.vdm"
+            associatedExtensionId="org.overture.ide.ui.vdmNavigatorContent"
             type="new"
             wizardId="org.overture.ide.vdmrt.ui.systemWizard">
          <enablement>
@@ -192,9 +195,12 @@
      </actionSetPartAssociation>
   </extension>
   
+  
   <!-- command conver vdmpp to vdmrt
   http://xpomul.bloggles.info/2008/08/12/advanced-features-in-eclipse-popup-menus-take-2-the-new-api/
   -->
+  
+  <!-- FIXME VDM RT clone still showing up on Compass side! -->
   <extension
         point="org.eclipse.ui.commands">
      <command

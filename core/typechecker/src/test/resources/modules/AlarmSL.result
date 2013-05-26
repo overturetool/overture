@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="25" line="7" message="alarms at 106:3 hidden by alarms" messageType="warning" number="5008" resource="AlarmSL.result"/>
 <message column="11" line="14" message="exs at 94:3 hidden by exs" messageType="warning" number="5008" resource="AlarmSL.result"/>
 <message column="19" line="50" message="exs at 94:3 hidden by exs" messageType="warning" number="5008" resource="AlarmSL.result"/>

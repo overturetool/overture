@@ -188,7 +188,10 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		{
 			if (file.getName().equals(".svn")
 					|| file.getName().equals(".project")
-					|| file.getName().equals(".classpath"))
+					|| file.getName().equals(".classpath")
+					|| file.getName().equals(".DS_Store")
+					|| file.getName().endsWith(".result")
+					)
 				continue;
 			if (file.isFile())
 			{
