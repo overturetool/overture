@@ -51,7 +51,7 @@ import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.ProofObligationList;
 import org.overture.typechecker.ClassTypeChecker;
 import org.overture.typechecker.TypeChecker;
 

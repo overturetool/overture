@@ -11,7 +11,7 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.ProofObligationList;
 
 public class ModuleListAssistantInterpreter
 {	

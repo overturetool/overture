@@ -75,7 +75,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ExpressionReader;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.ProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;

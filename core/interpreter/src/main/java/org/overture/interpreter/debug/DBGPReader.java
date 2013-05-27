@@ -98,8 +98,8 @@ import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ParserException;
-import org.overture.pog.obligation.ProofObligation;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.ProofObligation;
+import org.overture.pog.ProofObligationList;
 import org.overture.util.Base64;
 
 

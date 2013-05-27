@@ -9,7 +9,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
-import org.overture.pog.util.PogUtil;
+import org.overture.pog.PogUtil;
 import org.overture.test.framework.results.Result;
 
 public class ClassPpPoTestCase extends PogToStringTestCase
