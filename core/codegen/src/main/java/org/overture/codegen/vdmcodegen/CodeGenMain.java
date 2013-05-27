@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp;
+package org.overture.codegen.vdmcodegen;
 
 import java.io.File;
 import java.util.List;

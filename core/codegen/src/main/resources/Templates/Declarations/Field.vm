@@ -8,4 +8,4 @@
 	#set( $static = "static")
 #end
 ##
-$node.getAccess() $static $final $CG.format($node.getType()) $node.getName() = $CG.format($node.getInitial());
+$node.getAccess() $static $final $CG.format($node.getType()) $node.getName() $CG.formatInitialExp($node.getInitial());

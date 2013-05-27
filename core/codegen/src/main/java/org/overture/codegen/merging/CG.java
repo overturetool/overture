@@ -56,9 +56,22 @@ public class CG
 		return writer.toString();
 	}
 	
+	//TODO: Remove is not used
 	public static boolean isNull(INode node)
 	{
 		return node == null;
+	}
+	
+	public static String formatInitialExp(PExpCG exp) throws AnalysisException
+	{
+		//private int a = 2; (when exp != null)
+		//private int a; (when exp == null)
+		
+		if(exp == null)
+			return "";
+		else
+			return " = " + CG.format(exp).toString();
+		
 	}
 	
 //	public static void makeImage(File dotPath, INode node, String type,
