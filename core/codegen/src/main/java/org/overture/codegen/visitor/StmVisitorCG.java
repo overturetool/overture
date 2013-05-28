@@ -6,19 +6,25 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.statements.PStm;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
@@ -32,7 +38,36 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
 	{
 	}
 	
+	@Override
+	public PStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		
+		ABlockStmCG blockStm = new ABlockStmCG();
+		
+		LinkedList<PStm> stms = node.getStatements();
+		
+		for (PStm pStm : stms)
+		{
+			blockStm.getStatements().add(pStm.apply(question.getStatementVisitor(), question));
+		}
+		
+		return blockStm;
+	}
 	
+	@Override
+	public PStmCG caseAAssignmentStm(AAssignmentStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PStateDesignatorCG target = node.getTarget().apply(question.getStateDesignatorVisitor(), question);
+		PExpCG exp = node.getExp().apply(question.getExpVisitor(), question);
+		
+		AAssignmentStmCG assignment = new AAssignmentStmCG();
+		assignment.setTarget(target);
+		assignment.setExp(exp);
+		
+		return assignment;
+	}
 	
 	@Override
 	public PStmCG caseADefLetDefStm(ADefLetDefStm node, CodeGenInfo question)

@@ -81,7 +81,7 @@ public class CG
 		
 		StringWriter generatedBody = new StringWriter();
 		
-		generatedBody.append("{\r\n");//TODO: USE PROPER CONSTANT
+		generatedBody.append("{\r\n\r\n");//TODO: USE PROPER CONSTANT
 		generatedBody.append(CG.format(body));
 		generatedBody.append("\r\n}");//TODO: USE PROPER CONSTANT
 		

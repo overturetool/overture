@@ -30,4 +30,6 @@ public class IText
 	
 	public static final String BASIC_TYPE_PATH = TYPE_PATH + "BasicType" + SEPARATOR_CHAR;
 	
+	public static final String STATE_DESIGNATOR_PATH = ROOT + "StateDesignator" + SEPARATOR_CHAR; 
+	
 }

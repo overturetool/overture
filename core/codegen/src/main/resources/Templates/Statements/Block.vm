@@ -1,0 +1,3 @@
+#foreach( $stm in $node.getStatements() )
+$CG.format($stm)
+#end

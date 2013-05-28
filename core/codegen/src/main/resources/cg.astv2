@@ -69,6 +69,14 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 		//[throws]:type*
 //		[body]:stmCG
 	;
+	
+stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
+	= {identifier} [name]:java_String //TODO: not supported
+	| {field} [object]:stateDesignatorCG [field]:java_String
+	;
+//    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
+//   |   {identifier} [name]:LexNameToken
+//    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
            = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
@@ -81,6 +89,8 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{return} [exp]:expCG
            |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG
            |	{abstractBody}
+           |	{assignment} [target]:stateDesignatorCG [exp]:expCG
+           |	{block}	[statements]:stmCG*
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

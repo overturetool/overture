@@ -35,6 +35,10 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -95,6 +99,10 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
 
 		nodeTemplateFileNames.put(ALetDefStmCG.class, IText.STM_PATH + "LetDef");
+		
+		nodeTemplateFileNames.put(AAssignmentStmCG.class, IText.STM_PATH + "Assignment");
+		
+		nodeTemplateFileNames.put(ABlockStmCG.class, IText.STM_PATH + "Block");
 		
 		// Expressions
 		
@@ -164,6 +172,10 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Bool");
+		
+		//State designators
+		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Field");
+		nodeTemplateFileNames.put(AIdentifierStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Identifier");
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass)
