@@ -8,6 +8,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.AVoidType;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -24,6 +25,13 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 
 	public TypeVisitorCG()
 	{
+	}
+	
+	@Override
+	public PTypeCG caseAOperationType(AOperationType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return node.getResult().apply(question.getTypeVisitor(), question);
 	}
 	
 	@Override

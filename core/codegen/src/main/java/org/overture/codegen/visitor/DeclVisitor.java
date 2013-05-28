@@ -10,7 +10,6 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
 import org.overture.codegen.assistant.DeclAssistant;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
@@ -38,9 +37,10 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = false;
 		String operationName = node.getName().getName();
-		PTypeCG returnType = node.getActualResult().apply(question.getTypeVisitor(), question);
+		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
 		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
 		boolean isConstructor = node.getIsConstructor();
+		boolean isAbstract = body == null;
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		
@@ -50,6 +50,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		method.setName(operationName);
 		method.setBody(body);
 		method.setIsConstructor(isConstructor);
+		method.setAbstract(isAbstract);
 		
 		
 		LinkedList<PDefinition> paramDefs = node.getParamDefinitions();

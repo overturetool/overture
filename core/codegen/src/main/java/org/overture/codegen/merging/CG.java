@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.PStmCG;
 
 public class CG
 {
@@ -56,7 +57,6 @@ public class CG
 		return writer.toString();
 	}
 	
-	//TODO: Remove is not used
 	public static boolean isNull(INode node)
 	{
 		return node == null;
@@ -72,6 +72,20 @@ public class CG
 		else
 			return " = " + CG.format(exp).toString();
 		
+	}
+	
+	public static String formatOperationBody(PStmCG body) throws AnalysisException
+	{
+		if(body == null)
+			return ";";
+		
+		StringWriter generatedBody = new StringWriter();
+		
+		generatedBody.append("{\r\n");//TODO: USE PROPER CONSTANT
+		generatedBody.append(CG.format(body));
+		generatedBody.append("\r\n}");//TODO: USE PROPER CONSTANT
+		
+		return generatedBody.toString();
 	}
 	
 //	public static void makeImage(File dotPath, INode node, String type,

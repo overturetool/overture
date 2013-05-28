@@ -7,9 +7,9 @@
 #if (!$node.getIsConstructor())
 	#set( $returnType = $CG.format($node.getReturnType()))
 #end
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
 ##
-$node.getAccess() $static $returnType $node.getName()($CG.format($node.getFormalParams()))
-{
-
-	$CG.format($node.getBody())
-}
+$node.getAccess() $abstract $static $returnType $node.getName()($CG.format($node.getFormalParams()))$CG.formatOperationBody($node.getBody())

@@ -1,4 +1,9 @@
-$node.getAccess() class $node.getName()
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+##
+$abstract $node.getAccess() class $node.getName()
 {
 
 #foreach( $field in $node.getFields() )

@@ -16,6 +16,7 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
@@ -57,6 +58,14 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseASubclassResponsibilityExp(
+			ASubclassResponsibilityExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return null;//Indicates an abstract body
 	}
 	
 	@Override

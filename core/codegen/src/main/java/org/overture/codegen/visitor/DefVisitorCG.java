@@ -24,10 +24,13 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
+		boolean isAbstract = node.getIsAbstract();
+		
 		
 		AClassTypeDeclCG classCg = new AClassTypeDeclCG();
 		classCg.setName(name);
 		classCg.setAccess(access);
+		classCg.setAbstract(isAbstract);
 		
 		question.getRootVisitor().registerClass(classCg);
 		
@@ -48,7 +51,8 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 			else if(decl instanceof AMethodDeclCG)
 				methods.add((AMethodDeclCG) decl);
 			else
-				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());//TODO:Remove
+				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
+			//TODO:Remove prints
 		}
 	}
 	

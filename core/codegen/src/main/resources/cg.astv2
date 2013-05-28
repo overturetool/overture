@@ -33,7 +33,8 @@ Abstract Syntax Tree
 */    
 typeDeclCG {-> package='org.overture.codegen.cgast'}
     =   {class}
-      	[access]:java_String 
+      	[access]:java_String
+      	[abstract]:java_Boolean 
     	[name]:java_String
     	[fields]:field*
     	[methods]:declCG.method*
@@ -43,7 +44,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method}
 		[access]:java_String
 		[static]:java_Boolean
-		//[abstract]:java_Boolean
+		[abstract]:java_Boolean
 		[return_type]:typeCG
 		[name]:java_String
 		[formalParams]:localDeclCG.formalParam*
@@ -79,6 +80,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            | 	{skip}
            |	{return} [exp]:expCG
            |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG
+           |	{abstractBody}
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

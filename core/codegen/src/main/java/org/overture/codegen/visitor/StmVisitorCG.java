@@ -11,6 +11,7 @@ import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
@@ -129,6 +130,14 @@ public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
 			throws AnalysisException
 	{
 		return new ASkipStmCG();
+	}
+	
+	@Override
+	public PStmCG caseASubclassResponsibilityStm(
+			ASubclassResponsibilityStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return null;//Indicates an abstract body
 	}
 	
 }
