@@ -40,6 +40,7 @@ import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeCheckException;
 import org.overturetool.vdmj.types.BooleanType;
+import org.overturetool.vdmj.types.Field;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.InvariantType;
 import org.overturetool.vdmj.types.NamedType;
@@ -134,9 +135,31 @@ public class TypeDefinition extends Definition
 			invdef.typeCheck(base, NameScope.NAMES);
 		}
 
-		if (type.narrowerThan(accessSpecifier))
+		// We have to do the "top level" here, rather than delegating to the types
+		// because the definition pointer from these top level types just refers
+		// to the definition we are checking, which is never "narrower" than itself.
+		// See the narrowerThan method in NamedType and RecordType.
+		
+		if (type instanceof NamedType)
 		{
-			report(3321, "Type component visibility less than type's definition");
+			NamedType ntype = (NamedType)type;
+			
+			if (ntype.type.narrowerThan(accessSpecifier))
+			{
+				report(3321, "Type component visibility less than type's definition");
+			}
+		}
+		else if (type instanceof RecordType)
+		{
+			RecordType rtype = (RecordType)type;
+			
+			for (Field field: rtype.fields)
+			{
+				if (field.type.narrowerThan(accessSpecifier))
+				{
+					field.tagname.report(3321, "Field type visibility less than type's definition");
+				}
+			}
 		}
 	}
 

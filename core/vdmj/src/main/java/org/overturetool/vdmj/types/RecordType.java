@@ -26,6 +26,7 @@ package org.overturetool.vdmj.types;
 import java.util.List;
 
 import org.overturetool.vdmj.definitions.AccessSpecifier;
+import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -230,16 +231,32 @@ public class RecordType extends InvariantType
 			inNarrower = true;
 		}
 		
-		for (Field field: fields)
+		boolean result = false;
+		
+		if (definitions != null)
 		{
-			if (field.type.narrowerThan(accessSpecifier))
+			for (Definition d: definitions)
 			{
-				inNarrower = false;
-				return true;
+				if (d.accessSpecifier.narrowerThan(accessSpecifier))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		else
+		{
+			for (Field field: fields)
+			{
+				if (field.type.narrowerThan(accessSpecifier))
+				{
+					result = true;
+					break;
+				}
 			}
 		}
 		
 		inNarrower = false;
-		return false;
+		return result;
 	}
 }

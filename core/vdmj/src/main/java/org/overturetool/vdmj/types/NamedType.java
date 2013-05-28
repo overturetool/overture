@@ -314,7 +314,18 @@ public class NamedType extends InvariantType
 		inNarrower = true;
 		boolean result = false;
 		
-		if (type.definitions == null)
+		if (definitions != null)
+		{
+			for (Definition d: definitions)
+			{
+				if (d.accessSpecifier.narrowerThan(accessSpecifier))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		else if (type.definitions == null)
 		{
 			result = type.narrowerThan(accessSpecifier) || super.narrowerThan(accessSpecifier);
 		}
@@ -322,7 +333,11 @@ public class NamedType extends InvariantType
 		{
 			for (Definition d: type.definitions)
 			{
-				result = result || d.accessSpecifier.narrowerThan(accessSpecifier);
+				if (d.accessSpecifier.narrowerThan(accessSpecifier))
+				{
+					result = true;
+					break;
+				}
 			}
 		}
 		
