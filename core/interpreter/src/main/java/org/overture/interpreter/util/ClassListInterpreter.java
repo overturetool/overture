@@ -21,8 +21,8 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.TransactionValue;
-import org.overture.pog.POContextStack;
-import org.overture.pog.ProofObligationList;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.ProofObligationList;
 
 public class ClassListInterpreter extends ClassList
 {

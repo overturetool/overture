@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-    
+	
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>core</artifactId>
@@ -13,17 +13,17 @@
   <artifactId>pog</artifactId>
   <name>VDM Proof Obligation Generator</name>
 
-  <dependencies>        
+  <dependencies>		
     <dependency>
       <groupId>org.overture.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
-    </dependency>        
+    </dependency>		
     <dependency>
       <groupId>org.overture.core</groupId>
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
-    </dependency>        
+    </dependency>		
     <dependency>
       <groupId>org.overture.core</groupId>
       <artifactId>typechecker</artifactId>
@@ -37,49 +37,19 @@
   </dependencies>
 
   <build>
-    <resources>
-        <resource>
-            <directory>src/main/java</directory>
-            <excludes>
-                <exclude>assistant</exclude>
-                <exclude>obligation</exclude>
-                <exclude>util</exclude>
-                <exclude>visitors</exclude>
-            </excludes>
-        </resource>
-    </resources>
     <plugins>
       <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <configuration>
-      <testFailureIgnore>true</testFailureIgnore>
-      <includes>
-        <include>**/*Test.java</include>
-        <include>**/*Test?.java</include>
-        <include>**/*TestSuite.java</include>
-      </includes>
-    </configuration>
-</plugin>
-<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/java/assistant</source>
-                                <source>src/main/java/obligation</source>
-                                <source>src/main/java/util</source>
-                                <source>src/main/java/visitors</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+	  <testFailureIgnore>true</testFailureIgnore>
+	  <includes>
+	    <include>**/*Test.java</include>
+	    <include>**/*Test?.java</include>
+	    <include>**/*TestSuite.java</include>
+	  </includes>
+	</configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

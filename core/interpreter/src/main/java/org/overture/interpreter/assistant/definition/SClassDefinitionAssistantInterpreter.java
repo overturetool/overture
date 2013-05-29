@@ -44,8 +44,8 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueListenerList;
-import org.overture.pog.POContextStack;
-import org.overture.pog.ProofObligationList;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssistantTC

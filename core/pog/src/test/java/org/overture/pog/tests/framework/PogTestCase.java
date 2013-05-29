@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.parser.messages.VDMMessage;
-import org.overture.pog.ProofObligation;
-import org.overture.pog.ProofObligationList;
-import org.overture.pog.PogUtil.PogResult;
+import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.util.PogUtil.PogResult;
 import org.overture.util.Base64;
 import org.overture.test.framework.ResultTestCase;
 import org.overture.test.framework.results.IMessage;

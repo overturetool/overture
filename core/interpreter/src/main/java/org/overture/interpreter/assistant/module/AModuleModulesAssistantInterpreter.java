@@ -13,8 +13,8 @@ import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInt
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
-import org.overture.pog.POContextStack;
-import org.overture.pog.ProofObligationList;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 
 public class AModuleModulesAssistantInterpreter extends

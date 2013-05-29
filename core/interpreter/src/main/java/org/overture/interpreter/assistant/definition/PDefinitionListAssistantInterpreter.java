@@ -8,9 +8,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
-import org.overture.pog.POContextStack;
-import org.overture.pog.PONameContext;
-import org.overture.pog.ProofObligationList;
+import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.obligation.PONameContext;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistantTC

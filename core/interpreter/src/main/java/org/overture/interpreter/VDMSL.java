@@ -48,7 +48,7 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.interpreter.util.ModuleListInterpreter;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ModuleReader;
-import org.overture.pog.ProofObligationList;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeChecker;
 
