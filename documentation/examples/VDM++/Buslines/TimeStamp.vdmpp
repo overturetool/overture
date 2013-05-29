@@ -6,13 +6,10 @@ Class used for concurrent VDM++ models. All threads should call the following op
 - WaitRelative(t): makes the thread periodic with t = the period
 - NotifyAll(): notified all threads sleeping in the wakeUpMap
 - Awake(): puts the thread to sleep - will wakeup when t time units has passed  
-\begin{vdm_al}
 
-values
-
-\end{vdm_al}
 The step length with which the currentTime is incremented
 \begin{vdm_al}
+values
 
 public stepLength : nat = 1;
 

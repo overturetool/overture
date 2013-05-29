@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -116,7 +117,13 @@ public class ModelBuildPath
 						{
 							Node pathAttribute = fstNode.getAttributes().getNamedItem("path");
 							String pathValue = pathAttribute.getNodeValue();
-							srcPaths.add(this.project.getFolder(pathValue));
+							if(pathValue.equals("."))
+							{
+								add(getDefaultModelSrcPath());
+							}else
+							{
+								add(this.project.getFolder(pathValue));
+							}
 						} else if (kindValue.equals("output"))
 						{
 							Node pathAttribute = fstNode.getAttributes().getNamedItem("path");
@@ -132,6 +139,12 @@ public class ModelBuildPath
 				}
 
 			}
+			
+			if(srcPaths.isEmpty())
+			{
+				srcPaths.add(getDefaultModelSrcPath());
+			}
+			
 		} catch (Exception e)
 		{
 			VdmCore.log("Faild to parse .modelpath file", e);
@@ -150,6 +163,26 @@ public class ModelBuildPath
 
 	public synchronized void add(IContainer container)
 	{
+		if(container instanceof IProject)
+		{
+			srcPaths.clear();
+		}
+		else if(container instanceof IFolder)
+		{
+			String fullPath = container.getProjectRelativePath().toString();
+			
+			
+			
+			boolean flag = true;
+			for (IContainer s : srcPaths)
+			{
+				flag = flag && s.getProjectRelativePath().toString().startsWith(fullPath);
+			}
+			
+			if(flag)
+				srcPaths.clear();
+		}
+		
 		if (!srcPaths.contains(container))
 		{
 			srcPaths.add(container);
@@ -182,6 +215,9 @@ public class ModelBuildPath
 			{
 				sb.append("\t<modelpathentry kind=\"src\" path=\""
 						+ src.getProjectRelativePath() + "\"/>\n");
+			}else if (src instanceof IProject)
+			{
+				sb.append("\t<modelpathentry kind=\"src\" path=\".\"/>\n");
 			}
 
 		}
