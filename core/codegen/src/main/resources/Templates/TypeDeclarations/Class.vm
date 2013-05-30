@@ -3,7 +3,7 @@
 	#set( $abstract = "abstract")
 #end
 ##
-$abstract $node.getAccess() class $node.getName()
+$abstract $node.getAccess() class $node.getName() $CG.formatSuperType($node)
 {
 
 #foreach( $field in $node.getFields() )

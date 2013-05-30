@@ -1,0 +1,1 @@
+new Seq<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))

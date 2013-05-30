@@ -1,0 +1,1 @@
+Seq<$CG.formatTemplateParam($node.getSeqOf())>

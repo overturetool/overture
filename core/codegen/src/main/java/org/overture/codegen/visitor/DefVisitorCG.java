@@ -6,6 +6,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -25,12 +27,17 @@ public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
 		boolean isAbstract = node.getIsAbstract();
-		
+		LinkedList<ILexNameToken> superNames = node.getSupernames();
+		if(superNames.size() > 1)
+			throw new AnalysisException("Multiple inheritance not supported.");
 		
 		AClassTypeDeclCG classCg = new AClassTypeDeclCG();
 		classCg.setName(name);
 		classCg.setAccess(access);
 		classCg.setAbstract(isAbstract);
+		if(superNames.size() == 1)
+			classCg.setSuperName(superNames.get(0).getName());
+		
 		
 		question.getRootVisitor().registerClass(classCg);
 		

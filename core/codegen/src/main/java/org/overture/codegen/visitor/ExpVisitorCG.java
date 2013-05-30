@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -16,6 +17,7 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
@@ -23,11 +25,19 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.PType;
+import org.overture.ast.types.SSeqType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
@@ -44,7 +54,12 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
+import org.overture.typechecker.assistant.type.ASeq1SeqTypeAssistantTC;
+import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 {
@@ -58,6 +73,37 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, CodeGenInfo question)
+			throws AnalysisException
+	{	
+		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+		
+		PType type = node.getType();
+		if(type instanceof SSeqType)
+		{
+			PTypeCG seqType = ((SSeqType) type).getSeqof().apply(question.getTypeVisitor(), question);
+			enumSeq.setType(seqType);
+		}
+		else
+		{
+			
+			throw new AnalysisException("Unexpected seq type");
+		}
+		
+		//TODO: For the empty sequence [] the type is the unknown type
+		//This is a problem if the assignment var1 is a field
+		//That has a declared type or we are talking about an assignment
+		
+		LinkedList<PExp> members = node.getMembers();
+		for (PExp member : members)
+		{
+			enumSeq.getMembers().add(member.apply(question.getExpVisitor(), question));
+		}
+		
+		return enumSeq;
 	}
 	
 	@Override

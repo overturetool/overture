@@ -10,12 +10,15 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
@@ -25,6 +28,25 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 
 	public TypeVisitorCG()
 	{
+	}
+	
+	@Override
+	public PTypeCG caseAUnknownType(AUnknownType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return null; //Indicates an unknown type
+	}
+	
+	@Override
+	public PTypeCG caseASeqSeqType(ASeqSeqType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
+		
+		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+		seqType.setSeqOf(seqOf);
+	
+		return seqType;
 	}
 	
 	@Override
@@ -38,7 +60,6 @@ public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
 	public PTypeCG caseAClassType(AClassType node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		System.out.println();
 		String typeName = node.getClassdef().getName().getName();
 
 		AClassTypeCG classType = new AClassTypeCG();

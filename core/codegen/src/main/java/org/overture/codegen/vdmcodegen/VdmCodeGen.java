@@ -1,5 +1,13 @@
 package org.overture.codegen.vdmcodegen;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,27 +35,26 @@ import org.overture.codegen.visitor.CodeGenVisitor;
 public class VdmCodeGen
 {
 	private ILogger log;
-	
+
 	public VdmCodeGen()
 	{
 		init(null);
 	}
-	
+
 	public VdmCodeGen(ILogger log)
 	{
 		init(log);
 	}
-	
+
 	private void init(ILogger log)
 	{
 		initVelocity();
-		
-		if(log == null)
+
+		if (log == null)
 			this.log = new DefaultLogger();
 		else
-			this.log = log;	
+			this.log = log;
 	}
-
 
 	private void initVelocity()
 	{
@@ -55,9 +62,23 @@ public class VdmCodeGen
 		Velocity.init(propertyPath);
 	}
 
-	public void generateCode(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException
+	public void generateCode(List<SClassDefinition> mergedParseLists)
+			throws AnalysisException
 	{
+		// take default Eclipse formatting options
+		@SuppressWarnings("unchecked")
+		Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+
+		// initialize the compiler settings to be able to format 1.5 code
+		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+
+		// change the option to wrap each enum constant on a new line
+		options.put(DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ENUM_CONSTANTS, DefaultCodeFormatterConstants.createAlignmentValue(true, DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE, DefaultCodeFormatterConstants.INDENT_ON_COLUMN));
+
+		CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
+
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
 
 		for (INode node : mergedParseLists)
@@ -67,7 +88,7 @@ public class VdmCodeGen
 
 		ArrayList<AClassTypeDeclCG> classes = codeGenVisitor.getClasses();
 		MergeVisitor mergeVisitor = new MergeVisitor();
-		
+
 		for (AClassTypeDeclCG classCg : classes)
 		{
 			try
@@ -76,79 +97,116 @@ public class VdmCodeGen
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
 
-				// take default Eclipse formatting options
-				@SuppressWarnings("unchecked")
-				Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
-				
-				// initialize the compiler settings to be able to format 1.5 code
-				options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_5);
-				options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_5);
-				options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
-				
-				// change the option to wrap each enum constant on a new line
-				options.put(
-					DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ENUM_CONSTANTS,
-					DefaultCodeFormatterConstants.createAlignmentValue(
-						true,
-						DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE,
-						DefaultCodeFormatterConstants.INDENT_ON_COLUMN));
-				
-				CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
-				
-				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_COMPILATION_UNIT, code, 0, code.length(), 0, null);
+				System.out.println("File: " + classCg.getName());
+
+				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
 				IDocument doc = new Document(code);
-				try {
+				try
+				{
 					textEdit.apply(doc);
 					System.out.println(doc.get());
-				} catch (MalformedTreeException e) {
+					saveClass(classCg.getName() + ".java", doc.get());
+				} catch (MalformedTreeException e)
+				{
 					e.printStackTrace();
 				} catch (BadLocationException e)
 				{
 					e.printStackTrace();
 				}
 				
+				
+				copyDirectory(new File("src\\main\\java\\org\\overture\\codegen\\generated\\collections"), new File("target\\sources"));
+
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				e.printStackTrace();
-			} 
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void saveClass(String javaFileName, String code)
+	{
+		try
+		{
+			new File("target\\sources\\").mkdirs();
+			String file_name = "target\\sources\\" + javaFileName;
+			FileWriter file = new FileWriter(file_name);
+			BufferedWriter out = new BufferedWriter(file);
+			out.write(code);
+			out.close();
+			
+		} catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 	
-//	public void save(CodeGenContextMap contextMap)
-//	{
-//
-		// java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//
-		// iFile.getLocationURI();
-		// URL url;
-		// try
-		// {
-		// url = FileLocator.toFileURL(absolutePath.toURL());
-		// File file = new File(url.toURI());
-		// } catch (IOException e)
-		// {
-		// e.printStackTrace();
-		// } catch (URISyntaxException e)
-		// {
-		// e.printStackTrace();
-		// }
+	public void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
+	    if (sourceLocation.isDirectory()) {
+	        if (!targetLocation.exists()) {
+	            targetLocation.mkdir();
+	        }
 
-		// ********** COMMENT BELOW BACK IN:
+	        String[] children = sourceLocation.list();
+	        for (int i=0; i<children.length; i++) {
+	            copyDirectory(new File(sourceLocation, children[i]),
+	                    new File(targetLocation, children[i]));
+	        }
+	    } else {
 
-//		Set<String> set = contextMap.getContextKeys();
-//
-//		Template template = Vdm2CppUtil.getTemplate("class.vm");
-//
-//		if (template == null)
-//		{
-//			return;
-//		}
-//		PrintWriter out = new PrintWriter(System.out);
-//		for (String classDef : set)
-//		{
-//			template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
-//			out.flush();
-//			out.println();
-//		}
-//	}
-	
+	        InputStream in = new FileInputStream(sourceLocation);
+	        OutputStream out = new FileOutputStream(targetLocation);
+
+	        // Copy the bits from instream to outstream
+	        byte[] buf = new byte[1024];
+	        int len;
+	        while ((len = in.read(buf)) > 0) {
+	            out.write(buf, 0, len);
+	        }
+	        in.close();
+	        out.close();
+	    }
+	}
+
+	// public void save(CodeGenContextMap contextMap)
+	// {
+	//
+	// java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//
+	// iFile.getLocationURI();
+	// URL url;
+	// try
+	// {
+	// url = FileLocator.toFileURL(absolutePath.toURL());
+	// File file = new File(url.toURI());
+	// } catch (IOException e)
+	// {
+	// e.printStackTrace();
+	// } catch (URISyntaxException e)
+	// {
+	// e.printStackTrace();
+	// }
+
+	// ********** COMMENT BELOW BACK IN:
+
+	// Set<String> set = contextMap.getContextKeys();
+	//
+	// Template template = Vdm2CppUtil.getTemplate("class.vm");
+	//
+	// if (template == null)
+	// {
+	// return;
+	// }
+	// PrintWriter out = new PrintWriter(System.out);
+	// for (String classDef : set)
+	// {
+	// template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
+	// out.flush();
+	// out.println();
+	// }
+	// }
+
 }

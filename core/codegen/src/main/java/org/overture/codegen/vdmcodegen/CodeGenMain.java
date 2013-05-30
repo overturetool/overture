@@ -47,10 +47,10 @@ public class CodeGenMain
 				continue;
 			}
 				
-			VdmCodeGen vdm2cpp = new VdmCodeGen();
+			VdmCodeGen vdmCodGen = new VdmCodeGen();
 			try
 			{
-				vdm2cpp.generateCode(typeCheckResult.result);
+				vdmCodGen.generateCode(typeCheckResult.result);
 			} catch (AnalysisException e)
 			{
 				e.printStackTrace();

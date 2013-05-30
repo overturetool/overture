@@ -38,8 +38,9 @@ typeDeclCG {-> package='org.overture.codegen.cgast'}
     	[name]:java_String
     	[fields]:field*
     	[methods]:declCG.method*
+    	[superName]:java_String
     ;
-
+    
 declCG {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method}
 		[access]:java_String
@@ -103,6 +104,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{intLiteral} [value]:java_String
     |	{realLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
+    |	#Seq
     ;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
@@ -129,11 +131,23 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{cast}
     |	{isolation}       
     ;
+    
+#Seq {-> package='org.overture.codegen.cgast.expressions'}
+	= {enum} [members]:expCG*// (types):typeCG*
+	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
+	//|   {seqEnum} [members]:exp* (types):type*
+	;
 
 typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{void}
     |	{class} [name]:java_String
+    |	#seq
+    ;
+    
+#seq {-> package='org.overture.codegen.cgast.types'}
+    =   {seq} 
+    |   {seq1} 
     ;
     
 #basic {-> package='org.overture.codegen.cgast.types'}
@@ -160,4 +174,8 @@ Aspect Declaration
     
 %expCG->#Binary = [left]:expCG [right]:expCG
 	;
+	
+%typeCG->#seq
+    = [seqOf]:typeCG//(seqof):type [empty]:java_Boolean
+    ;
 

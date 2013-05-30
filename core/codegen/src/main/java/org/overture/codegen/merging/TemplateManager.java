@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
@@ -48,6 +49,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.constants.IText;
 
@@ -90,6 +92,23 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");
 		
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
+		
+		// Seq types
+		
+		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, IText.SEQ_TYPE_PATH + "Seq");
+		
+		// Basic types
+		nodeTemplateFileNames.put(ACharBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Char");
+
+		// Basic numeric types
+		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Integer");
+		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Real");
+
+		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Bool");
 
 		// Statements
 		nodeTemplateFileNames.put(AIfStmCG.class, IText.STM_PATH + "If");
@@ -159,19 +178,11 @@ public class TemplateManager
 				+ "RealLiteral");
 		nodeTemplateFileNames.put(ACharLiteralExpCG.class, IText.EXPS_PATH
 				+ "CharLiteral");
-
-		// Basic types
-		nodeTemplateFileNames.put(ACharBasicTypeCG.class, IText.BASIC_TYPE_PATH
-				+ "Char");
-
-		// Basic numeric types
-		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
-				+ "Integer");
-		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
-				+ "Real");
-
-		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
-				+ "Bool");
+		
+		
+		//Seq expressions
+		nodeTemplateFileNames.put(AEnumSeqExpCG.class, IText.SEQ_EXPS_PATH
+				+ "Enum");
 		
 		//State designators
 		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Field");

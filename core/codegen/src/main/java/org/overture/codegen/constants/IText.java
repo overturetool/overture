@@ -26,9 +26,14 @@ public class IText
 	
 	public static final String UNARY_EXPS_PATH = EXPS_PATH + "Unary" + SEPARATOR_CHAR;
 
+	public static final String SEQ_EXPS_PATH = EXPS_PATH + "Seq" + SEPARATOR_CHAR;
+	
 	public static final String TYPE_PATH = ROOT + "Types" + SEPARATOR_CHAR;
 	
+	//TODO: Name it basic instead of basic type
 	public static final String BASIC_TYPE_PATH = TYPE_PATH + "BasicType" + SEPARATOR_CHAR;
+	
+	public static final String SEQ_TYPE_PATH = TYPE_PATH + "Seq" + SEPARATOR_CHAR;
 	
 	public static final String STATE_DESIGNATOR_PATH = ROOT + "StateDesignator" + SEPARATOR_CHAR; 
 	

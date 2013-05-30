@@ -16,6 +16,8 @@ import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 {
