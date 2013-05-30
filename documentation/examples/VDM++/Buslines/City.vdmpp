@@ -113,7 +113,7 @@ class City
 			);
 		)
 		pre len route > 1 --there actually is a route
-		and lineNumber not in set rng buses; --bus linenumber is not known
+		and lineNumber not in set dom buses; --bus linenumber is not known
 
 
 		private findRoadsFromRoadNumber : seq of Road`RoadNumber ==> seq of Road
