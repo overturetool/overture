@@ -126,6 +126,7 @@ public class AtomicStatement extends Statement
 		{
 			try
 			{
+				stmt.location.hit();
 				targets.add(stmt.target.eval(ctxt));
 				values.add(stmt.exp.eval(ctxt).convertTo(stmt.targetType, ctxt));
 			}
