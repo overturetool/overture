@@ -32,22 +32,17 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.AParameterType;
-import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AUnionTypeAssistantInterpreter;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Vdm Class Reader that uses Vdmj to extract most of the information (the exception is annotation)
@@ -304,38 +299,38 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	}
 
-	public static boolean isClass(PType type)
-	{
-		// FIXME
-		if (type instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType in = (ANamedInvariantType) type;
-			if (in.getOpaque())
-			{
-				return false;
-			}
-			return isClass(in.getType());
-		} else if (type instanceof AOptionalType)
-		{
-			AOptionalType opt = (AOptionalType) type;
-			return isClass(opt.getType());
-		} else if (type instanceof AParameterType)
-		{
-			return true;
-		} else if (type instanceof AUnionType)
-		{
-			AUnionType ut = (AUnionType) type;
-			return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
-		} else if (type instanceof AUnknownType)
-		{
-			return true;
-		}
-		return false;
-	}
+//	public static boolean isClass(PType type)
+//	{
+//		// FIXME
+//		if (type instanceof ANamedInvariantType)
+//		{
+//			ANamedInvariantType in = (ANamedInvariantType) type;
+//			if (in.getOpaque())
+//			{
+//				return false;
+//			}
+//			return isClass(in.getType());
+//		} else if (type instanceof AOptionalType)
+//		{
+//			AOptionalType opt = (AOptionalType) type;
+//			return isClass(opt.getType());
+//		} else if (type instanceof AParameterType)
+//		{
+//			return true;
+//		} else if (type instanceof AUnionType)
+//		{
+//			AUnionType ut = (AUnionType) type;
+//			return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return true;
+//		}
+//		return false;
+//	}
 
 	public static VdmType getType(PType type)
 	{
-		if (isClass(type))
+		if (PTypeAssistantTC.isClass(type))
 		{
 			return new VdmType(type.getLocation().getModule(), true);
 		}
