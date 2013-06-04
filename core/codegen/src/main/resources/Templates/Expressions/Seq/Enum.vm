@@ -1,1 +1,3 @@
-new Seq<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))
+##new Vector<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))
+##new Vector<$CG.formatTemplateParam($node.getType())>
+Utils.seq<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))

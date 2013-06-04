@@ -4,44 +4,47 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASelfExp;
+import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
+import org.overture.ast.expressions.ATailUnaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.statements.AAssignmentStm;
-import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
@@ -49,17 +52,17 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
-import org.overture.typechecker.assistant.type.ASeq1SeqTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 {
@@ -73,6 +76,66 @@ public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseASelfExp(ASelfExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return new ASelfExpCG();
+	}
+	
+	@Override
+	public PExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		//Operator prec?
+		return expAssistant.handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		//FIXME: Only works for simple types, i.e. not references
+		//Operator pec?
+		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseALenUnaryExp(ALenUnaryExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		ALenUnaryExpCG lenExp = new ALenUnaryExpCG();
+		
+		lenExp.setType(new AIntNumericBasicTypeCG());
+		lenExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
+		
+		return lenExp;
+	}
+	
+	@Override
+	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		AHeadUnaryExpCG headExp = new AHeadUnaryExpCG();
+		
+		headExp.setType(node.getType().apply(question.getTypeVisitor(), question));
+		headExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
+		
+		return headExp;
+	}
+	
+	@Override
+	public PExpCG caseATailUnaryExp(ATailUnaryExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		ATailUnaryExpCG tailExp = new ATailUnaryExpCG();
+		
+		tailExp.setType(node.getType().apply(question.getTypeVisitor(), question));
+		tailExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
+		
+		return tailExp;
 	}
 	
 	@Override

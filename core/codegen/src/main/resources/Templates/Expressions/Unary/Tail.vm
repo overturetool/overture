@@ -1,0 +1,4 @@
+#set ($sizeCall = ".size()")
+#set( $exp = $CG.format($node.getExp()) )
+#set( $tailCall = ".subList(1,$exp$sizeCall)")
+$exp$tailCall

@@ -104,12 +104,15 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{intLiteral} [value]:java_String
     |	{realLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
+    |	{self}
     |	#Seq
     ;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
     =   #Numeric 
-    ;   
+    |	{equals}
+    |	{seqConcat}
+    ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
     =	{div}
@@ -129,7 +132,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     =   {plus} 
     |   {minus}
     |	{cast}
-    |	{isolation}       
+    |	{isolation}
+    |	{len}
+    |	{head}
+    |	{tail}      
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

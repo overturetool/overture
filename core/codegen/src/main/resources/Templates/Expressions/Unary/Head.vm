@@ -1,0 +1,2 @@
+#set( $getCall = ".firstElement()")
+$CG.format($node.getExp())$getCall

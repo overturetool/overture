@@ -6,7 +6,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;

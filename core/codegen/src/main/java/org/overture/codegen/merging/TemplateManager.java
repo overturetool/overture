@@ -13,7 +13,6 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -21,11 +20,14 @@ import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
@@ -33,7 +35,10 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -84,10 +89,6 @@ public class TemplateManager
 		
 		// Local declarations
 
-		//TODO: Template not currently used
-		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, IText.LOCAL_DECLS_PATH
-				+ "FormalParam");
-
 		// Type
 		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");
 		
@@ -133,6 +134,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AVariableExpCG.class, IText.EXPS_PATH + "Variable");
 		
+		nodeTemplateFileNames.put(ASelfExpCG.class, IText.EXPS_PATH + "Self");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, IText.UNARY_EXPS_PATH
@@ -145,7 +148,19 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, IText.UNARY_EXPS_PATH
 				+ "Isolation");
+		
+		nodeTemplateFileNames.put(ALenUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Len");
+		
+		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Head");
+		
+		nodeTemplateFileNames.put(ATailUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Tail");
 
+		// Binary expressions
+		
+		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, IText.BINARY_EXPS_PATH + "Equals");
+		
+		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, IText.BINARY_EXPS_PATH + "SeqConcat");
+		
 		// Numeric binary expressions
 
 		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH

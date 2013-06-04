@@ -8,6 +8,10 @@ import java.util.Vector;
 public class Seq<T> extends Vector<T>
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7647880993052986425L;
 	private List<T> sequence;
 	
 	
@@ -15,6 +19,7 @@ public class Seq<T> extends Vector<T>
 	{
 		 sequence = new ArrayList<>();
 	}
+	
 	
 	public Seq(T... elements)
 	{
@@ -26,12 +31,5 @@ public class Seq<T> extends Vector<T>
 		}
 	}
 	
-	public T hd()
-	{
-		if(sequence.size() <= 0)
-			throw new SeqException("");
-
-		return sequence.get(0);
-	}
 	
 }
