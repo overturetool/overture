@@ -62,9 +62,9 @@ import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
+import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
-import org.overturetool.vdmj.values.ValueListenerList;
 
 /**
  * A class to represent a VDM++ class definition.
@@ -111,8 +111,6 @@ public class ClassDefinition extends Definition
 
 	/** The class invariant operation definition, if any. */
 	public ExplicitOperationDefinition invariant = null;
-	/** A listener list. */
-	public ValueListenerList invlistenerlist = null;
 	/** True if the class defines any abstract operations or functions. */
 	public boolean isAbstract = false;
 	/** True if the class has any constructors at all. */
@@ -183,19 +181,6 @@ public class ClassDefinition extends Definition
 		if (invariant != null)
 		{
 			invariant.setClassDefinition(this);
-
-			// This listener is created for static invariants. This gets called
-			// when any statics get updated, but that could affect the validity
-			// of all instances that mention the static in their inv clause.
-			// For now, we suppress the trigger for static updates... one for
-			// the LB :-)
-
-			invlistenerlist = null;
-
-//			OperationValue invop = new OperationValue(invariant, null, null, null);
-//			invop.isStatic = true;
-//			ClassInvariantListener listener = new ClassInvariantListener(invop);
-//			invlistenerlist = new ValueListenerList(listener);
 		}
 	}
 
@@ -1049,7 +1034,7 @@ public class ClassDefinition extends Definition
 				}
 				else if (d.isStatic() && d.isInstanceVariable())
 				{
-					nvl = d.getNamedValues(initCtxt).getUpdatable(invlistenerlist);
+					nvl = d.getNamedValues(initCtxt).getUpdatable(null);
 				}
 			}
 
@@ -1251,24 +1236,12 @@ public class ClassDefinition extends Definition
 			}
 		}
 
-		// Object instances have their own listeners
-		ValueListenerList listeners = null;
-		ClassInvariantListener listener = null;
-
-		if (invariant != null)
-		{
-			OperationValue invop = new OperationValue(invariant, null, null, null);
-			listener = new ClassInvariantListener(invop);
-			listener.doInvariantChecks = false;	// during construction
-			listeners = new ValueListenerList(listener);
-		}
-
 		for (Definition d: definitions)
 		{
 			if (!d.isStatic() && !d.isFunctionOrOperation())
 			{
 				NameValuePairList nvpl =
-					d.getNamedValues(initCtxt).getUpdatable(listeners);
+					d.getNamedValues(initCtxt).getUpdatable(null);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
@@ -1283,11 +1256,6 @@ public class ClassDefinition extends Definition
 		ObjectValue object =
 			new ObjectValue((ClassType)getType(), members, inherited,
 			ctxt.threadState.CPU, creator);
-
-		if (listener != null)
-		{
-			object.setListener(listener);
-		}
 
 		Value ctor = null;
 
@@ -1320,6 +1288,28 @@ public class ClassDefinition extends Definition
     				location, name.name + " constructor", ctxt, object);
 
        		ov.eval(ov.name.location, argvals, ctorCtxt);
+		}
+
+		// Do invariants and guards after construction, so values fields are set. The
+		// invariant does not apply during construction anyway.
+
+		if (invariant != null)
+		{
+			OperationValue invop = new OperationValue(invariant, null, null, null);
+			ClassInvariantListener listener = new ClassInvariantListener(invop);
+			
+			for (Definition d: getInvDefs())
+			{
+				ClassInvariantDefinition inv = (ClassInvariantDefinition)d;
+				
+				for (Value v: inv.expression.getValues(initCtxt))
+				{
+					UpdatableValue uv = (UpdatableValue) v;
+					uv.addListener(listener);
+				}
+			}
+			
+			object.setListener(listener);
 		}
 
 		if (hasPermissions)

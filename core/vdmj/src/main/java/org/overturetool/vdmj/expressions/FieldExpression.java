@@ -31,6 +31,7 @@ import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
@@ -291,6 +292,17 @@ public class FieldExpression extends Expression
 			}
 			
 			return values;
+		}
+		catch (ContextException e)
+		{
+			if (e.number == 4034)
+			{
+				return values;	// Non existent variable
+			}
+			else
+			{
+				throw e;
+			}
 		}
 		catch (ValueException e)
 		{
