@@ -1,9 +1,11 @@
 package org.overture.codegen.vdmcodegen;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.AClassTypeDeclCG;
+import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -89,6 +92,9 @@ public class VdmCodeGen
 		ArrayList<AClassTypeDeclCG> classes = codeGenVisitor.getClasses();
 		MergeVisitor mergeVisitor = new MergeVisitor();
 
+		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
+		String targetr = "target\\sources";
+		
 		for (AClassTypeDeclCG classCg : classes)
 		{
 			try
@@ -113,10 +119,9 @@ public class VdmCodeGen
 				{
 					e.printStackTrace();
 				}
-				
-				
-				copyDirectory(new File("src\\main\\java\\org\\overture\\codegen\\generated\\collections"), new File("target\\sources"));
 
+				copyDirectory(new File(utilsPath), new File(targetr));
+				
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				e.printStackTrace();
@@ -126,6 +131,8 @@ public class VdmCodeGen
 				e.printStackTrace();
 			}
 		}
+		
+		replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
 	}
 
 	public void saveClass(String javaFileName, String code)
@@ -138,38 +145,71 @@ public class VdmCodeGen
 			BufferedWriter out = new BufferedWriter(file);
 			out.write(code);
 			out.close();
-			
+
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	public void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
-	    if (sourceLocation.isDirectory()) {
-	        if (!targetLocation.exists()) {
-	            targetLocation.mkdir();
-	        }
 
-	        String[] children = sourceLocation.list();
-	        for (int i=0; i<children.length; i++) {
-	            copyDirectory(new File(sourceLocation, children[i]),
-	                    new File(targetLocation, children[i]));
-	        }
-	    } else {
+	public void replaceInFile(String filePath, String regex, String replacement)
+	{
+        try
+        {
+        File file = new File(filePath);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = "", oldtext = "";
+        while((line = reader.readLine()) != null)
+            {
+            oldtext += line + IText.NEW_LINE;
+        }
+        reader.close();
+        // replace a word in a file
+        //String newtext = oldtext.replaceAll("drink", "Love");
+        //To replace a line in a file
+        String newtext = oldtext.replaceAll(regex, replacement);
+       
+        FileWriter writer = new FileWriter(filePath);
+        writer.write(newtext);
+        writer.close();
+    }
+    catch (IOException ioe)
+        {
+        ioe.printStackTrace();
+    }
+	}
 
-	        InputStream in = new FileInputStream(sourceLocation);
-	        OutputStream out = new FileOutputStream(targetLocation);
+	public void copyDirectory(File sourceLocation, File targetLocation)
+			throws IOException
+	{
+		if (sourceLocation.isDirectory())
+		{
+			if (!targetLocation.exists())
+			{
+				targetLocation.mkdir();
+			}
 
-	        // Copy the bits from instream to outstream
-	        byte[] buf = new byte[1024];
-	        int len;
-	        while ((len = in.read(buf)) > 0) {
-	            out.write(buf, 0, len);
-	        }
-	        in.close();
-	        out.close();
-	    }
+			String[] children = sourceLocation.list();
+			for (int i = 0; i < children.length; i++)
+			{
+				copyDirectory(new File(sourceLocation, children[i]), new File(targetLocation, children[i]));
+			}
+		} else
+		{
+
+			InputStream in = new FileInputStream(sourceLocation);
+			OutputStream out = new FileOutputStream(targetLocation);
+
+			// Copy the bits from instream to outstream
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0)
+			{
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+		}
 	}
 
 	// public void save(CodeGenContextMap contextMap)

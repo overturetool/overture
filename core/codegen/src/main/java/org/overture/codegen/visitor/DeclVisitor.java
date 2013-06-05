@@ -1,14 +1,16 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistant;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -52,19 +54,15 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
 		
-		
-		LinkedList<PDefinition> paramDefs = node.getParamDefinitions();
+		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
 		
 		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
 		
 		for(int i = 0; i < paramPatterns.size(); i++)
 		{
-			PDefinition def = paramDefs.get(i);
-			PPattern pattern = paramPatterns.get(i);
-			
-			PTypeCG type = def.getType().apply(question.getTypeVisitor(), question);
-			String name = pattern.toString();
+			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			String name = paramPatterns.get(i).toString();
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
 			param.setType(type);
@@ -82,7 +80,7 @@ public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
-		String name = node.getName().getName();//node.getPattern().toString();
+		String name = node.getName().getName();
 		boolean isStatic = node.getAccess().getStatic() != null;
 		boolean isFinal = false;
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);

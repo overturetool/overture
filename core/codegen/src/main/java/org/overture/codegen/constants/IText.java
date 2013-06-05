@@ -4,6 +4,8 @@ import java.io.File;
 
 public class IText
 {
+	public static final String NEW_LINE = System.getProperty("line.separator");
+	
 	public final static char SEPARATOR_CHAR = File.separatorChar;
 	
 	public static final String TEMPLATE_FILE_EXTENSION = ".vm";

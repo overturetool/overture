@@ -1,1 +1,1 @@
-Seq<$CG.formatTemplateParam($node.getSeqOf())>
+List<$CG.formatTemplateParam($node.getSeqOf())>
