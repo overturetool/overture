@@ -55,28 +55,21 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 				e1.printStackTrace();
 			}
 		}
-//		Settings.dynamictypechecks = file.getProject().hasDynamictypechecks();
-//		Settings.invchecks = file.getProject().hasInvchecks();
-//		Settings.postchecks = file.getProject().hasPostchecks();
-//		Settings.prechecks = file.getProject().hasPrechecks();
 
 		Properties.init();
 		Properties.parser_tabstop = 1;
-		
+
 		ModuleList modules = new ModuleList();
 		modules.clear();
 		LexLocation.resetLocations();
-//		int perrs = 0;
-//		int pwarn = 0;
 
 		ModuleReader reader = null;
 		ParseResult result = new ParseResult();
 		try
 		{
-
 			ReaderType streamReaderType = AbstractParserParticipant.findStreamReaderType(file.getFile());
-			
-			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
+
+			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset, streamReaderType);
 			reader = new ModuleReader(ltr);
 			modules.addAll(reader.readModules());
 
@@ -90,45 +83,29 @@ public class SourceParserVdmSl extends AbstractParserParticipant
 				result.setAst(nodes);
 			} else
 			{
-//				perrs++;
 				result.setFatalError(new Exception("No VDM source in file"));
 			}
 
 		} catch (InternalException e)
 		{
-//			perrs++;
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
 			e.printStackTrace();
-//			perrs++;
 			result.setFatalError(e);
 		}
 
 		if (reader != null && reader.getErrorCount() > 0)
 		{
-//			perrs += reader.getErrorCount();
-
 			result.setErrors(reader.getErrors());
 		}
 
 		if (reader != null && reader.getWarningCount() > 0)
 		{
-//			pwarn += reader.getWarningCount();
-
 			result.setWarnings(reader.getWarnings());
 		}
-		
-//		if(reader.getErrorCount()==0)
-//		{
-//			org.overture.internal.ast.preview.Main.show(result.getAst().get(0), false);
-//		}
 
-		result.setAllLocation(LexLocation.getAllLocations());
-		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 		return result;
 	}
-
-	
 
 }
