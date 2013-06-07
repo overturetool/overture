@@ -51,6 +51,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	
 	
+	
 	/**
 	 * Get a complete list of all definitions, including duplicates. This method should only be used 
 	 * only by PP

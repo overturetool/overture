@@ -161,4 +161,9 @@ public class PTypeAssistant {
 	            hashCode = 31*hashCode + (e==null ? 0 : hashCode(e));
 	        return hashCode;
 	}
+	
+	 public static String getName(PType type)
+	 {
+		 return type.getLocation().getModule();
+	 }
 }

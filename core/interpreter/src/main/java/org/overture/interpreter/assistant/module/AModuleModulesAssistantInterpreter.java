@@ -1,18 +1,22 @@
 package org.overture.interpreter.assistant.module;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
+import org.overture.interpreter.util.ModuleListInterpreter;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -21,6 +25,54 @@ public class AModuleModulesAssistantInterpreter extends
 		AModuleModulesAssistantTC
 {
 
+	public static PStm findStatement(ModuleListInterpreter modules, File file,
+			int lineno)
+	{
+		for (AModuleModules m: modules)
+		{
+			if (m.getName().getLocation().getFile().equals(file))
+			{
+    			PStm stmt = findStatement(m, lineno);
+
+    			if (stmt != null)
+    			{
+    				return stmt;
+    			}
+			}
+		}
+
+		return null;
+	}
+
+	public static PStm findStatement(AModuleModules m, int lineno)
+	{
+		return PDefinitionAssistantInterpreter.findStatement(m.getDefs(),lineno);
+	}
+	
+	public static PExp findExpression(ModuleListInterpreter modules, File file,
+			int lineno)
+	{
+		for (AModuleModules m: modules)
+		{
+			if (m.getName().getLocation().getFile().equals(file))
+			{
+    			PExp exp = findExpression(m, lineno);
+
+    			if (exp != null)
+    			{
+    				return exp;
+    			}
+			}
+		}
+
+		return null;
+	}
+	
+	public static PExp findExpression(AModuleModules d, int lineno)
+	{
+		return PDefinitionListAssistantInterpreter.findExpression(d.getDefs(), lineno);
+	}
+	
 	public static Context getStateContext(AModuleModules defaultModule)
 	{
 		AStateDefinition sdef = PDefinitionListAssistantInterpreter.findStateDefinition(defaultModule.getDefs());
