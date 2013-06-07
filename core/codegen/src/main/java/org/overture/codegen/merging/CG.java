@@ -3,7 +3,7 @@ package org.overture.codegen.merging;
 import java.io.StringWriter;
 import java.util.List;
 
-import org.overture.codegen.cgast.AClassTypeDeclCG;
+import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;

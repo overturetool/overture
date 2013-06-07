@@ -31,7 +31,7 @@ Abstract Syntax Tree
 /*
     Expressions
 */    
-typeDeclCG {-> package='org.overture.codegen.cgast'}
+typeDeclCG {-> package='org.overture.codegen.cgast.typedeclarations'}
     =   {class}
       	[access]:java_String
       	[abstract]:java_Boolean 

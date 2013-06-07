@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.codegen.cgast.AClassTypeDeclCG;
+import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.logging.ILogger;
 
 public class CodeGenVisitor extends AnalysisAdaptor
@@ -40,7 +40,8 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	{
 		classes.add(classCg);
 	}
-		
+	//TODO: Later this class should be extended to generate code from smaller parts of a
+	//VDM model that passes the type check
 	@Override
 	public void defaultPDefinition(PDefinition node) throws AnalysisException
 	{

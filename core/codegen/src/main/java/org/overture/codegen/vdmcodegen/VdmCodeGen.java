@@ -28,7 +28,7 @@ import org.eclipse.text.edits.TextEdit;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
-import org.overture.codegen.cgast.AClassTypeDeclCG;
+import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
