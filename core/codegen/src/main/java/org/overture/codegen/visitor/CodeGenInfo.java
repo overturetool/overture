@@ -4,6 +4,8 @@ public class CodeGenInfo
 {
 	private CodeGenVisitor rootVisitor;
 
+	private TypeDeclVisitor typeDeclVisitor;
+	
 	private DeclVisitor declVisitor;
 	
 	private ExpVisitorCG expVisitor;
@@ -18,6 +20,7 @@ public class CodeGenInfo
 	{
 		super();
 		this.rootVisitor = rootVisitor;
+		this.typeDeclVisitor = new TypeDeclVisitor();
 		this.declVisitor = new DeclVisitor();
 		this.expVisitor = new ExpVisitorCG();
 		this.typeVisitor = new TypeVisitorCG();
@@ -28,6 +31,11 @@ public class CodeGenInfo
 	public CodeGenVisitor getRootVisitor()
 	{
 		return rootVisitor;
+	}
+	
+	public TypeDeclVisitor getTypeDeclVisitor()
+	{
+		return typeDeclVisitor;
 	}
 	
 	public DeclVisitor getDeclVisitor()

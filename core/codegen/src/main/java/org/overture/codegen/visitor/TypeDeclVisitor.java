@@ -12,11 +12,11 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 
-public class DefVisitorCG extends QuestionAdaptor<CodeGenInfo>
+public class TypeDeclVisitor extends QuestionAdaptor<CodeGenInfo>
 {
 	private static final long serialVersionUID = 81602965450922571L;
 	
-	public DefVisitorCG()
+	public TypeDeclVisitor()
 	{
 	}
 	
