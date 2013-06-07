@@ -27,6 +27,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.constants.IText;
@@ -68,20 +69,9 @@ public class VdmCodeGen
 	public void generateCode(List<SClassDefinition> mergedParseLists)
 			throws AnalysisException
 	{
-		// take default Eclipse formatting options
-		@SuppressWarnings("unchecked")
-		Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
 
-		// initialize the compiler settings to be able to format 1.5 code
-		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
-
-		// change the option to wrap each enum constant on a new line
-		options.put(DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ENUM_CONSTANTS, DefaultCodeFormatterConstants.createAlignmentValue(true, DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE, DefaultCodeFormatterConstants.INDENT_ON_COLUMN));
-
-		CodeFormatter codeFormatter = ToolFactory.createCodeFormatter(options);
-
+		CodeFormatter codeFormatter = constructCodeFormatter();
+		
 		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
 
 		for (INode node : mergedParseLists)
@@ -94,7 +84,7 @@ public class VdmCodeGen
 
 		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
 		String targetr = "target\\sources";
-		
+
 		for (AClassTypeDeclCG classCg : classes)
 		{
 			try
@@ -121,7 +111,7 @@ public class VdmCodeGen
 				}
 
 				copyDirectory(new File(utilsPath), new File(targetr));
-				
+
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				e.printStackTrace();
@@ -131,8 +121,38 @@ public class VdmCodeGen
 				e.printStackTrace();
 			}
 		}
-		
+
 		replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
+	}
+
+	public void generateCode(PExp exp) throws AnalysisException
+	{
+//		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
+//		
+//		exp.apply(codeGenVisitor);
+//		
+//		MergeVisitor mergeVisitor = new MergeVisitor();
+//		StringWriter writer = new StringWriter();
+//		classCg.apply(mergeVisitor, writer);
+//		String code = writer.toString();
+	}
+	
+	public CodeFormatter constructCodeFormatter()
+	{
+		// take default Eclipse formatting options
+		@SuppressWarnings("unchecked")
+		Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
+
+		// initialize the compiler settings to be able to format 1.5 code
+		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
+
+		// change the option to wrap each enum constant on a new line
+		options.put(DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ENUM_CONSTANTS, DefaultCodeFormatterConstants.createAlignmentValue(true, DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE, DefaultCodeFormatterConstants.INDENT_ON_COLUMN));
+
+		return ToolFactory.createCodeFormatter(options);
+
 	}
 
 	public void saveClass(String javaFileName, String code)
@@ -154,29 +174,28 @@ public class VdmCodeGen
 
 	public void replaceInFile(String filePath, String regex, String replacement)
 	{
-        try
-        {
-        File file = new File(filePath);
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line = "", oldtext = "";
-        while((line = reader.readLine()) != null)
-            {
-            oldtext += line + IText.NEW_LINE;
-        }
-        reader.close();
-        // replace a word in a file
-        //String newtext = oldtext.replaceAll("drink", "Love");
-        //To replace a line in a file
-        String newtext = oldtext.replaceAll(regex, replacement);
-       
-        FileWriter writer = new FileWriter(filePath);
-        writer.write(newtext);
-        writer.close();
-    }
-    catch (IOException ioe)
-        {
-        ioe.printStackTrace();
-    }
+		try
+		{
+			File file = new File(filePath);
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line = "", oldtext = "";
+			while ((line = reader.readLine()) != null)
+			{
+				oldtext += line + IText.NEW_LINE;
+			}
+			reader.close();
+			// replace a word in a file
+			// String newtext = oldtext.replaceAll("drink", "Love");
+			// To replace a line in a file
+			String newtext = oldtext.replaceAll(regex, replacement);
+
+			FileWriter writer = new FileWriter(filePath);
+			writer.write(newtext);
+			writer.close();
+		} catch (IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
 	}
 
 	public void copyDirectory(File sourceLocation, File targetLocation)
