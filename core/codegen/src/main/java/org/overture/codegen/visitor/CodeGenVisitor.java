@@ -45,7 +45,8 @@ public class CodeGenVisitor extends AnalysisAdaptor
 	@Override
 	public void defaultPDefinition(PDefinition node) throws AnalysisException
 	{
-		node.apply(codeGenInfo.getTypeDeclVisitor(), codeGenInfo);
+		AClassTypeDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
+		registerClass(classCg);
 	}
 
 }
