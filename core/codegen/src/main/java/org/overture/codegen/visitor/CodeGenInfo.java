@@ -2,7 +2,7 @@ package org.overture.codegen.visitor;
 
 public class CodeGenInfo
 {
-	private CodeGenVisitor rootVisitor;
+	private CodeGenerator rootVisitor;
 
 	private ClassVisitorCG classVisitor;
 	
@@ -16,7 +16,7 @@ public class CodeGenInfo
 	
 	private StateDesignatorVisitor stateDesignatorVisitor;
 	
-	public CodeGenInfo(CodeGenVisitor rootVisitor)
+	public CodeGenInfo(CodeGenerator rootVisitor)
 	{
 		super();
 		this.rootVisitor = rootVisitor;
@@ -28,7 +28,7 @@ public class CodeGenInfo
 		this.stateDesignatorVisitor = new StateDesignatorVisitor();
 	}
 
-	public CodeGenVisitor getRootVisitor()
+	public CodeGenerator getRootVisitor()
 	{
 		return rootVisitor;
 	}

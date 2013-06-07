@@ -28,13 +28,13 @@ import org.eclipse.text.edits.TextEdit;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.node.INode;
+import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.visitor.CodeGenVisitor;
+import org.overture.codegen.visitor.CodeGenerator;
 
 public class VdmCodeGen
 {
@@ -72,14 +72,16 @@ public class VdmCodeGen
 
 		CodeFormatter codeFormatter = constructCodeFormatter();
 		
-		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
+		CodeGenerator generator = new CodeGenerator(log);
 
-		for (INode node : mergedParseLists)
+		
+		List<AClassTypeDeclCG> classes = new ArrayList<>();
+		
+		for (SClassDefinition classDef : mergedParseLists)
 		{
-			node.apply(codeGenVisitor);
+			classes.add(generator.generateFrom(classDef));
 		}
 
-		ArrayList<AClassTypeDeclCG> classes = codeGenVisitor.getClasses();
 		MergeVisitor mergeVisitor = new MergeVisitor();
 
 		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
@@ -127,14 +129,22 @@ public class VdmCodeGen
 
 	public void generateCode(PExp exp) throws AnalysisException
 	{
-//		CodeGenVisitor codeGenVisitor = new CodeGenVisitor(log);
-//		
-//		exp.apply(codeGenVisitor);
-//		
-//		MergeVisitor mergeVisitor = new MergeVisitor();
-//		StringWriter writer = new StringWriter();
-//		classCg.apply(mergeVisitor, writer);
-//		String code = writer.toString();
+		CodeGenerator generator = new CodeGenerator(log);
+		
+		PExpCG expCg = generator.generateFrom(exp);
+		
+		MergeVisitor mergeVisitor = new MergeVisitor();
+		StringWriter writer = new StringWriter();
+			
+		try
+		{
+			expCg.apply(mergeVisitor, writer);
+			String code = writer.toString();
+			System.out.println(code);
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public CodeFormatter constructCodeFormatter()
