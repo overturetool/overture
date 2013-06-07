@@ -1,14 +1,13 @@
 package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 
-public class StateDesignatorVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PStateDesignatorCG>
+public class StateDesignatorVisitor extends AbstractVisitorCG<CodeGenInfo, PStateDesignatorCG>
 {
 
 	private static final long serialVersionUID = 7252896277917207085L;

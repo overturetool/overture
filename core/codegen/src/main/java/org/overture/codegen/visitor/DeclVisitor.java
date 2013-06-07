@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -19,7 +18,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
-public class DeclVisitor extends QuestionAnswerAdaptor<CodeGenInfo, PDeclCG>
+public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
 	private static final long serialVersionUID = -7968170190668212627L;
 	

@@ -3,7 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -12,7 +11,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 
-public class ClassVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
 {
 	private static final long serialVersionUID = 81602965450922571L;
 	

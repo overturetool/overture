@@ -1,7 +1,6 @@
 package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -22,7 +21,7 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
-public class TypeVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PTypeCG>
+public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 {
 	private static final long serialVersionUID = 8845855407070139031L;
 

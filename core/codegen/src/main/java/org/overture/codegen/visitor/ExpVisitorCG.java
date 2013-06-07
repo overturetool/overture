@@ -3,7 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -64,7 +63,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
 
-public class ExpVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PExpCG>
+public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 {
 	private static final long serialVersionUID = -7481045116217669686L;
 	

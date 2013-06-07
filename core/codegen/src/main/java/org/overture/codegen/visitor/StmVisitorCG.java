@@ -3,7 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.statements.AAssignmentStm;
@@ -29,7 +28,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 
-public class StmVisitorCG extends QuestionAnswerAdaptor<CodeGenInfo, PStmCG>
+public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 {
 	
 	private static final long serialVersionUID = -602593891699169007L;
