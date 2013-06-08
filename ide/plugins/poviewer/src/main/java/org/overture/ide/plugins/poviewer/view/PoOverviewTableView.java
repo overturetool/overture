@@ -59,10 +59,10 @@ import org.overture.pog.obligation.ProofObligation;
 public class PoOverviewTableView extends ViewPart implements ISelectionListener
 {
 
-	private TableViewer viewer;
+	protected TableViewer viewer;
 	private Action doubleClickAction;
 	final Display display = Display.getCurrent();
-	private IVdmProject project;
+	protected IVdmProject project;
 	
 	private ViewerFilter provedFilter = new ViewerFilter() {
 
@@ -79,7 +79,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	};
 	private Action actionSetProvedFilter;
 
-	class ViewContentProvider implements IStructuredContentProvider
+	protected class ViewContentProvider implements IStructuredContentProvider
 	{
 		public void inputChanged(Viewer v, Object oldInput, Object newInput)
 		{
@@ -249,20 +249,20 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 		});
 	}
 	
-	private void contributeToActionBars() {
+	protected void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		
 		fillLocalToolBar(bars.getToolBarManager());
 	}
 	
-	private void fillLocalToolBar(IToolBarManager manager) {
+	protected void fillLocalToolBar(IToolBarManager manager) {
 
 		manager.add(actionSetProvedFilter);
 		
 		//drillDownAdapter.addNavigationActions(manager);
 	}
 
-	private void makeActions()
+	protected void makeActions()
 	{
 		doubleClickAction = new Action() {
 			@Override
@@ -321,7 +321,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	
 	}
 
-	private void hookDoubleClickAction()
+	protected void hookDoubleClickAction()
 	{
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event)
