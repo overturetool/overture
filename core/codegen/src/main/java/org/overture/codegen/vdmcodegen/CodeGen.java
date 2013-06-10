@@ -36,16 +36,16 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.visitor.CodeGenerator;
 
-public class VdmCodeGen
+public class CodeGen
 {
 	private ILogger log;
 
-	public VdmCodeGen()
+	public CodeGen()
 	{
 		init(null);
 	}
 
-	public VdmCodeGen(ILogger log)
+	public CodeGen(ILogger log)
 	{
 		init(log);
 	}
@@ -62,21 +62,19 @@ public class VdmCodeGen
 
 	private void initVelocity()
 	{
-		String propertyPath = VdmCodeGenUtil.getVelocityPropertiesPath("velocity.properties");
+		String propertyPath = CodeGenUtil.getVelocityPropertiesPath("velocity.properties");
 		Velocity.init(propertyPath);
 	}
 
-	public void generateCode(List<SClassDefinition> mergedParseLists)
-			throws AnalysisException
+	public List<String> generateCode(List<SClassDefinition> mergedParseLists,
+			boolean writeGeneratedCodeToFiles) throws AnalysisException
 	{
-
-		CodeFormatter codeFormatter = constructCodeFormatter();
-		
+		List<AClassTypeDeclCG> classes = new ArrayList<>();
+		List<String> generatedClasses = new ArrayList<>();
 		CodeGenerator generator = new CodeGenerator(log);
 
-		
-		List<AClassTypeDeclCG> classes = new ArrayList<>();
-		
+		CodeFormatter codeFormatter = constructCodeFormatter();
+
 		for (SClassDefinition classDef : mergedParseLists)
 		{
 			classes.add(generator.generateFrom(classDef));
@@ -84,9 +82,7 @@ public class VdmCodeGen
 
 		MergeVisitor mergeVisitor = new MergeVisitor();
 
-		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
-		String targetr = "target\\sources";
-
+		IDocument doc = null;
 		for (AClassTypeDeclCG classCg : classes)
 		{
 			try
@@ -95,15 +91,18 @@ public class VdmCodeGen
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
 
-				System.out.println("File: " + classCg.getName());
-
 				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
-				IDocument doc = new Document(code);
+				doc = new Document(code);
 				try
 				{
 					textEdit.apply(doc);
-					System.out.println(doc.get());
-					saveClass(classCg.getName() + ".java", doc.get());
+					generatedClasses.add(doc.get());
+
+					if (writeGeneratedCodeToFiles)
+					{
+						saveClass(classCg.getName() + ".java", doc.get());
+					}
+
 				} catch (MalformedTreeException e)
 				{
 					e.printStackTrace();
@@ -112,41 +111,52 @@ public class VdmCodeGen
 					e.printStackTrace();
 				}
 
-				copyDirectory(new File(utilsPath), new File(targetr));
-
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				e.printStackTrace();
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
+		return generatedClasses;
+	}
+
+	public void generateCodeGenUtils()
+	{
+		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
+		String targetr = "target\\sources";
+
+		try
+		{
+			copyDirectory(new File(utilsPath), new File(targetr));
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
 	}
 
-	public void generateCode(PExp exp) throws AnalysisException
+	public String generateCode(PExp exp) throws AnalysisException
 	{
 		CodeGenerator generator = new CodeGenerator(log);
-		
+
 		PExpCG expCg = generator.generateFrom(exp);
-		
+
 		MergeVisitor mergeVisitor = new MergeVisitor();
 		StringWriter writer = new StringWriter();
-			
+
 		try
 		{
 			expCg.apply(mergeVisitor, writer);
 			String code = writer.toString();
-			System.out.println(code);
+
+			return code;
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			e.printStackTrace();
+			return null;
 		}
 	}
-	
+
 	public CodeFormatter constructCodeFormatter()
 	{
 		// take default Eclipse formatting options
@@ -194,9 +204,6 @@ public class VdmCodeGen
 				oldtext += line + IText.NEW_LINE;
 			}
 			reader.close();
-			// replace a word in a file
-			// String newtext = oldtext.replaceAll("drink", "Love");
-			// To replace a line in a file
 			String newtext = oldtext.replaceAll(regex, replacement);
 
 			FileWriter writer = new FileWriter(filePath);
