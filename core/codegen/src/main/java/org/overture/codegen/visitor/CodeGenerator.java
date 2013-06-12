@@ -6,24 +6,18 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.logging.ILogger;
+import org.overture.codegen.logging.Logger;
 
 public class CodeGenerator
 {
-	private ILogger log;
-
 	private CodeGenInfo codeGenInfo;
 	
 	public CodeGenerator(ILogger log)
 	{
-		this.log = log;		
 		this.codeGenInfo = new CodeGenInfo(this);
+		Logger.setLog(log);
 	}
 			
-	public ILogger getLog()
-	{
-		return log;
-	}
-		
 	public AClassTypeDeclCG generateFrom(SClassDefinition classDef) throws AnalysisException
 	{
 		return classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);

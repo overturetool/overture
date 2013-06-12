@@ -1,0 +1,138 @@
+import java.util.List;
+
+abstract public class Employee {
+
+	public abstract double getSalary();
+
+}
+
+import java.util.List;
+
+public class HourlyPaidEmployee extends Employee {
+
+	public double hours;
+	private double rate;
+
+	public HourlyPaidEmployee(double pHours, double pRate) {
+
+		hours = pHours;
+		rate = pRate;
+
+	}
+
+	public double getSalary() {
+
+		return hours * rate;
+	}
+
+	public void SetRate(double pRate) {
+
+		if (pRate > 150) {
+
+			rate = 150;
+
+		} else if (pRate < 0) {
+
+			rate = 0;
+
+		} else {
+
+			rate = pRate;
+
+		}
+
+	}
+
+}
+
+import java.util.List;
+
+public class FixedSalaryEmployee extends Employee {
+
+	private double fixedSalary;
+
+	public FixedSalaryEmployee(double pFixedSalary) {
+
+		fixedSalary = pFixedSalary;
+	}
+
+	public double getSalary() {
+
+		return fixedSalary;
+	}
+
+}
+
+import java.util.List;
+
+public class Company {
+
+	private List<Employee> employees;
+
+	public Company() {
+
+		employees = Utils.seq();
+
+	}
+
+	public void op1() {
+
+		int x = employees.size();
+		List<Employee> y = employees;
+		Employee q = employees.get(0);
+
+		//Skip;
+	}
+
+	public double calculateSalary() {
+
+		return start_calc(0, employees);
+	}
+
+	private double start_calc(double sum, List<Employee> emps) {
+
+		if (emps.size() == 0) {
+
+			return sum;
+
+		} else {
+
+			return start_calc(sum + emps.get(0).getSalary(), emps.subList(1,
+					emps.size()));
+
+		}
+
+	}
+
+	private double start_calc(double r, int n1, int n, char c, boolean b) {
+
+		return 2.1;
+	}
+
+	public Company addEmp(Employee emp) {
+
+		employees = Utils.seqConc(employees, Utils.seq(emp));
+		return this;
+
+	}
+
+}
+
+import java.util.List;
+
+public class World {
+
+	public double run() {
+
+		HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100);
+		FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000);
+		FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000);
+		HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100);
+		Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
+				.addEmp(emp4);
+
+		return company.calculateSalary();
+	}
+
+}
+

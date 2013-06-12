@@ -8,6 +8,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.utils.GeneratedClass;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
@@ -39,7 +40,7 @@ public class CodeGenUtil
 		return path;
 	}
 	
-	public static List<String> generateOO(File file, boolean writeClassesToFiles) throws AnalysisException
+	public static List<GeneratedClass> generateOO(File file) throws AnalysisException
 	{
 		if (!file.exists() || !file.isFile())
 		{
@@ -66,7 +67,7 @@ public class CodeGenUtil
 		CodeGen vdmCodGen = new CodeGen();
 		try
 		{
-			return vdmCodGen.generateCode(typeCheckResult.result, writeClassesToFiles);		
+			return vdmCodGen.generateCode(typeCheckResult.result);		
 		} catch (AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from specification. Exception message: "
@@ -74,15 +75,15 @@ public class CodeGenUtil
 		}
 	}
 
-	public static List<String> generateOO(String[] args, boolean writeClassesToFiles) throws AnalysisException
+	public static List<GeneratedClass> generateOO(String[] args) throws AnalysisException
 	{		
-		List <String> allClasses = new ArrayList<>();
+		List <GeneratedClass> allClasses = new ArrayList<>();
 		
 		for (int i = 1; i < args.length; i++)
 		{
 			String fileName = args[i];
 			File file = new File(fileName);
-			allClasses.addAll(generateOO(file, writeClassesToFiles));
+			allClasses.addAll(generateOO(file));
 		}
 		
 		return allClasses;
@@ -137,6 +138,12 @@ public class CodeGenUtil
 					+ exp + ". Exception message: " + e.getMessage());
 		}
 
+	}
+	
+	public static void generateSourceFiles(List<GeneratedClass> classes)
+	{
+		CodeGen vdmCodGen = new CodeGen();
+		vdmCodGen.generateSourceFiles(classes);
 	}
 	
 	public static void generateCodeGenUtils()

@@ -1,5 +1,6 @@
 package org.overture.codegen.visitor;
 
+
 public class CodeGenInfo
 {
 	private CodeGenerator rootVisitor;
@@ -62,5 +63,4 @@ public class CodeGenInfo
 	{
 		return stateDesignatorVisitor;
 	}
-	
 }

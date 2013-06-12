@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.utils.GeneratedClass;
 import org.overture.config.Settings;
 
 public class CodeGenMain
@@ -20,13 +21,15 @@ public class CodeGenMain
 		{
 			try
 			{
-				List<String> generatedClasses = CodeGenUtil.generateOO(args, true);
+				List<GeneratedClass> generatedClasses = CodeGenUtil.generateOO(args);
 				
-				for (String generatedClass : generatedClasses)
+				for (GeneratedClass generatedClass : generatedClasses)
 				{
 					System.out.println("**********");
-					System.out.println(generatedClass);
+					System.out.println(generatedClass.getContent());
 				}
+				
+				CodeGenUtil.generateSourceFiles(generatedClasses);
 				
 				CodeGenUtil.generateCodeGenUtils();
 				

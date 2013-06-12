@@ -31,9 +31,9 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.constants.IText;
-import org.overture.codegen.logging.DefaultLogger;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.utils.GeneratedClass;
 import org.overture.codegen.visitor.CodeGenerator;
 
 public class CodeGen
@@ -53,11 +53,7 @@ public class CodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
-
-		if (log == null)
-			this.log = new DefaultLogger();
-		else
-			this.log = log;
+		this.log = log;
 	}
 
 	private void initVelocity()
@@ -66,11 +62,11 @@ public class CodeGen
 		Velocity.init(propertyPath);
 	}
 
-	public List<String> generateCode(List<SClassDefinition> mergedParseLists,
-			boolean writeGeneratedCodeToFiles) throws AnalysisException
+	public List<GeneratedClass> generateCode(
+			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
 		List<AClassTypeDeclCG> classes = new ArrayList<>();
-		List<String> generatedClasses = new ArrayList<>();
+		List<GeneratedClass> generatedClasses = new ArrayList<>();
 		CodeGenerator generator = new CodeGenerator(log);
 
 		CodeFormatter codeFormatter = constructCodeFormatter();
@@ -96,12 +92,7 @@ public class CodeGen
 				try
 				{
 					textEdit.apply(doc);
-					generatedClasses.add(doc.get());
-
-					if (writeGeneratedCodeToFiles)
-					{
-						saveClass(classCg.getName() + ".java", doc.get());
-					}
+					generatedClasses.add(new GeneratedClass(classCg.getName(), doc.get()));
 
 				} catch (MalformedTreeException e)
 				{
@@ -118,6 +109,14 @@ public class CodeGen
 		}
 
 		return generatedClasses;
+	}
+
+	public void generateSourceFiles(List<GeneratedClass> generatedClasses)
+	{
+		for (GeneratedClass classCg : generatedClasses)
+		{
+			saveClass(classCg.getName() + ".java", classCg.getContent());
+		}
 	}
 
 	public void generateCodeGenUtils()

@@ -19,7 +19,7 @@ public class CodeGenTestUtil
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line = "";
 			while ((line = reader.readLine()) != null)
-			{				
+			{								
 				content.append(line + IText.NEW_LINE);
 			}
 			reader.close();

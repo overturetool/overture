@@ -4,8 +4,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.INode;
+import org.overture.codegen.logging.Logger;
 
-//QuestionAnswerAdaptor<Q, A>
 public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> extends QuestionAnswerAdaptor<Q, A>
 {
 
@@ -18,7 +18,7 @@ public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> ex
 		
 		if(node instanceof AUndefinedExp)
 		{
-			System.err.println(node.toString());
+			Logger.getLog().printErrorln("Ignoring undefined expression in " + this.getClass().getName());
 			return null;
 		}
 			

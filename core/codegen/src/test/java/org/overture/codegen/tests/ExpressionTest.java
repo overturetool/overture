@@ -10,7 +10,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.test.framework.BaseTestSuite;
 import org.overture.test.framework.Properties;
 
-public class ExpressionCodeGenTest extends BaseTestSuite
+public class ExpressionTest extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
