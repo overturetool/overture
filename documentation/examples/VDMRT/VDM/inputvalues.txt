@@ -1,0 +1,14 @@
+[mk_Types`VechicleRun(1,1000000),   
+mk_Types`VechicleRun(9,1000000),
+mk_Types`VechicleRun(2,1000000),
+mk_Types`VehicleUpdateDirection(2,<WEST>, 1000000000),
+mk_Types`VehicleLowGrip (1,true, 8000000000),
+mk_Types`VehicleLowGrip (1,false, 8800000000),
+mk_Types`VehicleUpdateDirection(2,<SOUTH>, 9000000000),
+mk_Types`VehicleUpdateDirection(2,<EAST>, 11000000000),
+mk_Types`VehicleUpdateDirection(1,<WEST>, 15000000000),
+mk_Types`VehicleUpdateDirection(9,<EAST>, 2000000000),
+mk_Types`VehicleLowGrip (1,true, 21000000000),
+mk_Types`VehicleLowGrip (1,false, 22000000000),
+mk_Types`WasteTime(25000000000)
+]

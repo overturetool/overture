@@ -23,15 +23,13 @@
 
 package org.overture.ast.lex;
 
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -40,35 +38,34 @@ import java.util.Vector;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.ExternalNode;
-import org.overture.ast.node.INode;
-
-
 
 /**
  * A class to hold the location of a token.
  */
 
-public class LexLocation implements Serializable , ExternalNode, ILexLocation
+public class LexLocation implements Serializable, ExternalNode, ILexLocation
 {
 	@Override
 	public LexLocation clone()
 	{
 		return new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
 	}
-	
+
 	public static boolean absoluteToStringLocation = true;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/** A collection of all LexLocation objects. */
 	private static List<LexLocation> allLocations = new Vector<LexLocation>();
-	
-	/** A collection of all LexLocation objects to the AstNodes. */
-	private static Map<LexLocation,INode> locationToAstNode = new Hashtable<LexLocation,INode>();
+
+	/** A unique map of LexLocation objects, for rapid searching. */
+	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
+
+//	/** A collection of all LexLocation objects to the AstNodes. */
+//	private static Map<LexLocation, INode> locationToAstNode = new Hashtable<LexLocation, INode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
-	private static Map<LexNameToken, LexLocation> nameSpans =
-		new HashMap<LexNameToken, LexLocation>();//TODO
+	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<LexNameToken, LexLocation>();// TODO
 
 	/** True if the location is executable. */
 	private boolean executable = false;
@@ -85,24 +82,22 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	public final int endLine;
 	/** The character position of the end of the token. */
 	public final int endPos;
-	
+
 	public final int startOffset;
-	
+
 	public final int endOffset;
 
 	/** The number of times the location has been executed. */
 	public long hits = 0;
 
-	
-
-
 	/**
 	 * Create a location with the given fields.
-	 * @param endOffset 
+	 * 
+	 * @param endOffset
 	 */
 
-	public LexLocation(File file, String module,
-		int startLine, int startPos, int endLine, int endPos, int startOffset, int endOffset)
+	public LexLocation(File file, String module, int startLine, int startPos,
+			int endLine, int endPos, int startOffset, int endOffset)
 	{
 		this.file = file;
 		this.module = module;
@@ -112,32 +107,34 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		this.endPos = endPos;
 		this.startOffset = startOffset;
 		this.endOffset = endOffset;
+
 		synchronized (allLocations)
 		{
 			allLocations.add(this);
+			uniqueLocations.put(this, this);
 		}
 	}
-	
-	public LexLocation(String filePath, String module,
-			int startLine, int startPos, int endLine, int endPos, int startOffset, int endOffset)
+
+	public LexLocation(String filePath, String module, int startLine,
+			int startPos, int endLine, int endPos, int startOffset,
+			int endOffset)
+	{
+		this.file = new File(filePath);
+		this.module = module;
+		this.startLine = startLine;
+		this.startPos = startPos;
+		this.endLine = endLine;
+		this.endPos = endPos;
+		this.startOffset = startOffset;
+		this.endOffset = endOffset;
+
+		synchronized (allLocations)
 		{
-			this.file = new File(filePath);
-			this.module = module;
-			this.startLine = startLine;
-			this.startPos = startPos;
-			this.endLine = endLine;
-			this.endPos = endPos;
-			this.startOffset = startOffset;
-			this.endOffset = endOffset;
-			synchronized (allLocations)
-			{
-				allLocations.add(this);
-			}
+			allLocations.add(this);
+			uniqueLocations.put(this, this);
 		}
+	}
 
-
-	
-	
 	/**
 	 * Create a default location.
 	 */
@@ -146,8 +143,6 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	{
 		this(new File("?"), "?", 0, 0, 0, 0, 0, 0);
 	}
-
-
 
 	@Override
 	public boolean getExecutable()
@@ -164,7 +159,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	@Override
 	public void setHits(long hits)
 	{
-		this.hits=hits;
+		this.hits = hits;
 	}
 
 	@Override
@@ -220,15 +215,16 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	{
 		if (file.getPath().equals("?"))
 		{
-			return "";		// Default LexLocation has no location string
-		}
-		else if (module == null || module.equals(""))
+			return ""; // Default LexLocation has no location string
+		} else if (module == null || module.equals(""))
 		{
-			return "in '" + (absoluteToStringLocation ? file : file.getName()) + "' at line " + startLine + ":" + startPos;
-		}
-		else
+			return "in '" + (absoluteToStringLocation ? file : file.getName())
+					+ "' at line " + startLine + ":" + startPos;
+		} else
 		{
-			return "in '" + module + "' (" +  (absoluteToStringLocation ? file : file.getName()) + ") at line " + startLine + ":" + startPos;
+			return "in '" + module + "' ("
+					+ (absoluteToStringLocation ? file : file.getName())
+					+ ") at line " + startLine + ":" + startPos;
 		}
 	}
 
@@ -236,25 +232,41 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	{
 		if (file.getPath().equals("?"))
 		{
-			return "";		// Default LexLocation has no location string
-		}
-		else
+			return ""; // Default LexLocation has no location string
+		} else
 		{
 			return "at " + startLine + ":" + startPos;
+		}
+	}
+
+	/**
+	 * Method to resolve existing locations during de-serialise - as used during deep copy. This is to avoid problems
+	 * with coverage.
+	 */
+	private Object readResolve() throws ObjectStreamException
+	{
+		LexLocation existing = uniqueLocations.get(this);
+
+		if (existing == null)
+		{
+			return this;
+		} else
+		{
+			return existing;
 		}
 	}
 
 	@Override
 	public boolean equals(Object other)
 	{
-		if (other instanceof LexLocation)
+		if (other instanceof ILexLocation)
 		{
-			LexLocation lother = (LexLocation)other;
+			ILexLocation lother = (ILexLocation) other;
 
-			return  startPos == lother.startPos &&
-					startLine == lother.startLine &&
-					module.equals(lother.module) &&
-					file.equals(lother.file);
+			return startPos == lother.getStartPos()
+					&& startLine == lother.getStartLine()
+					&& module.equals(lother.getModule())
+					&& file.equals(lother.getFile());
 		}
 
 		return false;
@@ -268,12 +280,9 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 	public boolean within(ILexLocation span)
 	{
-		return
-			(startLine > span.getStartLine() ||
-				(startLine == span.getStartLine() && startPos >= span.getStartPos())) &&
-			(startLine <= span.getEndLine() ||
-				(startLine == span.getEndLine() && startPos < span.getEndPos())) &&
-			file.equals(span.getFile());
+		return (startLine > span.getStartLine() || (startLine == span.getStartLine() && startPos >= span.getStartPos()))
+				&& (startLine <= span.getEndLine() || (startLine == span.getEndLine() && startPos < span.getEndPos()))
+				&& file.equals(span.getFile());
 	}
 
 	public void executable(boolean exe)
@@ -283,14 +292,15 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 	public void hit()
 	{
-		if (executable) hits++;
+		if (executable)
+			hits++;
 	}
 
 	public static void clearLocations()
 	{
 		synchronized (allLocations)
 		{
-			for (LexLocation loc: allLocations)
+			for (LexLocation loc : allLocations)
 			{
 				loc.hits = 0;
 			}
@@ -303,16 +313,21 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		{
 			allLocations = new Vector<LexLocation>();
 		}
-		
-		synchronized (locationToAstNode)
+
+		synchronized (uniqueLocations)
 		{
-			locationToAstNode = new Hashtable<LexLocation, INode>();
+			uniqueLocations = new HashMap<LexLocation, LexLocation>();
 		}
-//		
-//		synchronized (nameSpans)
+
+//		synchronized (locationToAstNode)
 //		{
-//			nameSpans =	new HashMap<LexNameToken, LexLocation>();
+//			locationToAstNode = new Hashtable<LexLocation, INode>();
 //		}
+		//
+		// synchronized (nameSpans)
+		// {
+		// nameSpans = new HashMap<LexNameToken, LexLocation>();
+		// }
 	}
 
 	public static void clearAfter(File file, int linecount, int charpos)
@@ -322,24 +337,20 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		// the vector.
 		synchronized (allLocations)
 		{
-	
-
-			ListIterator<LexLocation> it =
-				allLocations.listIterator(allLocations.size());
+			ListIterator<LexLocation> it = allLocations.listIterator(allLocations.size());
 
 			while (it.hasPrevious())
 			{
 				LexLocation l = it.previous();
 
-				if (!l.file.equals(file) ||
-						l.startLine < linecount ||
-						(l.startLine == linecount && l.startPos < charpos))
+				if (!l.file.equals(file) || l.startLine < linecount
+						|| (l.startLine == linecount && l.startPos < charpos))
 				{
 					break;
-				}
-				else
+				} else
 				{
 					it.remove();
+					uniqueLocations.remove(l);
 				}
 			}
 		}
@@ -347,15 +358,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 	public static void addSpan(LexNameToken name, LexToken upto)
 	{
-		LexLocation span = new LexLocation(
-			name.location.getFile(),
-			name.location.getModule(),
-			name.location.getStartLine(),
-			name.location.getStartPos(),
-			upto.location.getEndLine(),
-			upto.location.getEndPos(),
-			upto.location.getStartOffset(),
-			upto.location.getEndOffset());
+		LexLocation span = new LexLocation(name.location.getFile(), name.location.getModule(), name.location.getStartLine(), name.location.getStartPos(), upto.location.getEndLine(), upto.location.getEndPos(), upto.location.getStartOffset(), upto.location.getEndOffset());
 
 		nameSpans.put(name, span);
 	}
@@ -364,7 +367,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 	{
 		LexNameList list = new LexNameList();
 
-		for (LexNameToken name: nameSpans.keySet())
+		for (LexNameToken name : nameSpans.keySet())
 		{
 			LexLocation span = nameSpans.get(name);
 
@@ -382,23 +385,22 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		int hits = 0;
 		int misses = 0;
 		LexLocation span = null;
-		
+
 		synchronized (nameSpans)
 		{
 			span = nameSpans.get(name);
 		}
-		
+
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.within(span))
 				{
 					if (l.hits > 0)
 					{
 						hits++;
-					}
-					else
+					} else
 					{
 						misses++;
 					}
@@ -407,7 +409,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		}
 
 		int sum = hits + misses;
-		return sum == 0 ? 0 : (float)(1000 * hits/sum)/10;		// NN.N%
+		return sum == 0 ? 0 : (float) (1000 * hits / sum) / 10; // NN.N%
 	}
 
 	public static long getSpanCalls(ILexNameToken name)
@@ -416,15 +418,15 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		// the span for the name is hit as many time as the span is called.
 
 		LexLocation span = null;
-		
+
 		synchronized (nameSpans)
 		{
 			span = nameSpans.get(name);
 		}
-		
+
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.within(span))
 				{
@@ -442,7 +444,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.hits > 0 && l.file.equals(file))
 				{
@@ -460,7 +462,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.hits == 0 && l.file.equals(file))
 				{
@@ -479,7 +481,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.startLine != last && l.file.equals(file))
 				{
@@ -494,12 +496,11 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 	public static Map<Integer, List<LexLocation>> getHitLocations(File file)
 	{
-		Map<Integer, List<LexLocation>> map =
-				new HashMap<Integer, List<LexLocation>>();
+		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.hits > 0 && l.file.equals(file))
 				{
@@ -526,15 +527,14 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.file.equals(file) && l.executable)
 				{
 					if (l.hits > 0)
 					{
 						hits++;
-					}
-					else
+					} else
 					{
 						misses++;
 					}
@@ -543,17 +543,16 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 		}
 
 		int sum = hits + misses;
-		return sum == 0 ? 0 : (float)(1000 * hits/sum)/10;		// NN.N%
+		return sum == 0 ? 0 : (float) (1000 * hits / sum) / 10; // NN.N%
 	}
 
 	public static Map<Integer, List<LexLocation>> getMissLocations(File file)
 	{
-		Map<Integer, List<LexLocation>> map =
-				new HashMap<Integer, List<LexLocation>>();
+		Map<Integer, List<LexLocation>> map = new HashMap<Integer, List<LexLocation>>();
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.hits == 0 && l.file.equals(file))
 				{
@@ -579,7 +578,7 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l: allLocations)
+			for (LexLocation l : allLocations)
 			{
 				if (l.executable && l.file.equals(file))
 				{
@@ -608,15 +607,14 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 				int s3 = line.indexOf('=');
 
 				int lnum = Integer.parseInt(line.substring(1, s1));
-				int from = Integer.parseInt(line.substring(s1+1, s2));
-				int to   = Integer.parseInt(line.substring(s2+1, s3));
-				int hits = Integer.parseInt(line.substring(s3+1));
+				int from = Integer.parseInt(line.substring(s1 + 1, s2));
+				int to = Integer.parseInt(line.substring(s2 + 1, s3));
+				int hits = Integer.parseInt(line.substring(s3 + 1));
 
-				for (LexLocation l: locations)	// Only executable locations
+				for (LexLocation l : locations) // Only executable locations
 				{
-					if (l.startLine == lnum &&
-						l.startPos == from &&
-						l.endPos == to)
+					if (l.startLine == lnum && l.startPos == from
+							&& l.endPos == to)
 					{
 						l.hits += hits;
 						break;
@@ -629,21 +627,21 @@ public class LexLocation implements Serializable , ExternalNode, ILexLocation
 
 		br.close();
 	}
-	
-	//FIXME we know this is never called a new solutions is needed
-	public static void addAstNode(LexLocation location, INode node)
-	{
-		synchronized (locationToAstNode)
-		{
-			locationToAstNode.put(location, node);
-		}
-	}
-	
-	public static Map<LexLocation,INode> getLocationToAstNodeMap()
-	{
-		return locationToAstNode;
-	}
-	
+
+//	// FIXME we know this is never called a new solutions is needed
+//	public static void addAstNode(LexLocation location, INode node)
+//	{
+//		synchronized (locationToAstNode)
+//		{
+//			locationToAstNode.put(location, node);
+//		}
+//	}
+//
+//	public static Map<LexLocation, INode> getLocationToAstNodeMap()
+//	{
+//		return locationToAstNode;
+//	}
+
 	public static List<LexLocation> getAllLocations()
 	{
 		return allLocations;

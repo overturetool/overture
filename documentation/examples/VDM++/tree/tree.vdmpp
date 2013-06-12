@@ -23,7 +23,7 @@ class Tree
     nodes () ==
       cases root:
         <Empty> -> return ({}),
-        mk_node(lt,v,rt) -> return(lt.nodes() union {v} union rt.nodes())
+        mk_node(lt,v,rt) -> return(lt.nodes() union rt.nodes()),
         others -> error
       end ;
 
@@ -84,7 +84,7 @@ class Tree
          <Empty> -> return [],
          mk_node(lt,v,rt) -> let ln = lt.depth_first_search(),
                                  rn = rt.depth_first_search()
-                             in return [v]^ln^rn
+                             in return [v]^ln^rn,
 		others -> error                             
       end;
 
@@ -94,7 +94,7 @@ class Tree
         <Empty> -> return [],
         mk_node(lt,v,rt) -> let ln = lt.inorder(),
                                 rn = rt.inorder()
-                            in return ln^[v]^rn
+                            in return ln^[v]^rn,
 		others -> error                            
       end
 

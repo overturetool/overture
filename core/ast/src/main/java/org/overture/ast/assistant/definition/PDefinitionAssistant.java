@@ -44,6 +44,16 @@ public class PDefinitionAssistant {
 		}
 		
 	}
+	
+	 public static String getName(PDefinition node)
+	 {
+		  if (node.getName() != null)
+		  {
+			  return node.getName().getName();
+		  }
+		  
+		  return null;
+	 }
 
 	public static void setClassDefinitionBaseCase(PDefinition pDefinition,SClassDefinition def)
 	{

@@ -87,7 +87,7 @@ operations
                            then [{<L2>},drivelamps]
                            else [] -- already in drivelamps state
                    in
-                     return mk_Dwarf(t,drivelamps)
+                     return mk_Dwarf(t,drivelamps),
       others -> error
     end
   pre AllowedCommand(command,lampstate);
@@ -109,7 +109,7 @@ operations
              <warning> -> NoCorrection(com,dwarf,failures),
              <drive>   -> let errdwarf = NormalTrans(<warning>)
                           in
-                            NoCorrection(com,errdwarf,failures)
+                            NoCorrection(com,errdwarf,failures),
              others -> error
            end;
           )

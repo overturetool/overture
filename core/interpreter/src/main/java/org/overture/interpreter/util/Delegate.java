@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,11 @@ public class Delegate implements Serializable
 			List<PPattern> plist = null;
 			String mname = title.substring(0, title.indexOf('('));
 
-			for (PDefinition d: definitions)
+			//FIXME: this is to handle inheritance in the same way as VDMJ did. See CSV and IO, where the subclass declared methods is in the tail of the list
+			List<PDefinition> defs = new Vector<PDefinition>(definitions);
+			Collections.reverse(defs);
+			
+			for (PDefinition d: defs)
 			{
 				if (d.getName().getName().equals(mname))
 				{

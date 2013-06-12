@@ -40,6 +40,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SInvariantTypeBase;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
@@ -774,6 +775,17 @@ public class PTypeAssistantTC extends PTypeAssistant
 				return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
 			case AUnknownType.kindPType:
 				return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
+			case SInvariantTypeBase.kindPType:
+				
+				SInvariantTypeBase invariantType = (SInvariantTypeBase) type;
+				switch(invariantType.kindSInvariantType())
+				{
+					case ANamedInvariantType.kindSInvariantType:
+						return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) invariantType, accessSpecifier);
+					case ARecordInvariantType.kindSInvariantType:
+						return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) invariantType, accessSpecifier);
+				}
+				
 			default:
 				return narrowerThanBaseCase(type, accessSpecifier);
 		}

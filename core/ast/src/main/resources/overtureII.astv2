@@ -668,6 +668,10 @@ Aspect Declaration
      
 %type->#Map = (from):type (to):type [empty]:java_Boolean
     ;
+
+%type->#invariant = [inNarrower]:java_Boolean
+    ;    
+
 %export 
     =   [location]:location [definition]:definition*
     ;

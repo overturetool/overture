@@ -271,7 +271,7 @@ operations
     if mWorld.cosim
     then cases (pName) :
            "LEFT_ACC" -> ChessWay`acc_out.SetValue(pValue),
-           "RIGHT_VEL" -> ChessWay`vel_out.SetValue(pValue)
+           "RIGHT_VEL" -> ChessWay`vel_out.SetValue(pValue),
            others -> skip
          end;
 
