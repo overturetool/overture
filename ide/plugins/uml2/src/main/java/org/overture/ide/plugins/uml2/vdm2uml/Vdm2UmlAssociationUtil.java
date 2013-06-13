@@ -33,7 +33,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
-
+@SuppressWarnings("deprecation")
 public class Vdm2UmlAssociationUtil
 {
 	public static boolean isSimpleType(PType type)

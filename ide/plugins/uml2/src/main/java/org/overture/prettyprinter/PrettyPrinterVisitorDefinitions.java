@@ -25,7 +25,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
-
+@SuppressWarnings("deprecation")
 public class PrettyPrinterVisitorDefinitions extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {

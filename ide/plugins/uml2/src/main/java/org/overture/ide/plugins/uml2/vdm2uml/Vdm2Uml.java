@@ -52,7 +52,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-
+@SuppressWarnings("deprecation")
 public class Vdm2Uml
 {
 	private UmlConsole console = new UmlConsole();

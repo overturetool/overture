@@ -56,9 +56,11 @@ import org.overture.ide.plugins.uml2.UmlConsole;
  * 
  * @author kel
  */
+@SuppressWarnings("deprecation")
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
-
+	public static final String BASIC_VDM_TYPES_PACKAGE = "Basic VDM Types";
+	
 	public interface ClassTypeLookup
 	{
 		Class lookup(AClassType type);
@@ -114,6 +116,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		this.modelWorkingCopy = modelWorkingCopy;
 	}
 
+	
 	public void create(Class class_, PType type)
 	{
 		System.out.println(type + " " + type.kindPType().toString() + " "
@@ -360,9 +363,12 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 					String simpleName = getName(type);
 					simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
 
-					Class owningClass = class_;
+					Class owningClass = null;
 
-					if (!class_.getName().equals(type.getLocation().getModule()))
+					if(class_.getName().equals(type.getLocation().getModule()))
+					{
+						owningClass = class_;
+					}else
 					{
 						owningClass = classLookup.lookup(type.getLocation().getModule());
 					}
@@ -385,9 +391,12 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				String simpleName = getName(type);
 				simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
 
-				Class owningClass = class_;
+				Class owningClass = null;
 
-				if (!class_.getName().equals(type.getLocation().getModule()))
+				if(class_.getName().equals(type.getLocation().getModule()))
+				{
+					owningClass = class_;
+				}else
 				{
 					owningClass = classLookup.lookup(type.getLocation().getModule());
 				}
@@ -499,7 +508,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	{
 		if (basicTypePackage == null)
 		{
-			basicTypePackage = this.modelWorkingCopy.createNestedPackage("Basic VDM Types");
+			basicTypePackage = this.modelWorkingCopy.createNestedPackage(BASIC_VDM_TYPES_PACKAGE);
 		}
 		return basicTypePackage;
 	}
