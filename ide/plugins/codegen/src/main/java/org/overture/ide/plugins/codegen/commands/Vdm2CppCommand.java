@@ -8,7 +8,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.codegen.vdmcodegen.VdmCodeGen;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -16,6 +15,7 @@ import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.vdm2cpp.PluginVdm2CppUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.interpreter.messages.Console;
+import org.overture.codegen.vdmcodegen.CodeGen;
 
 public class Vdm2CppCommand extends AbstractHandler
 {
@@ -39,7 +39,7 @@ public class Vdm2CppCommand extends AbstractHandler
 				|| !PluginVdm2CppUtil.isSupportedVdmDialect(vdmProject))
 			return null;
 
-		final VdmCodeGen vdm2cpp = new VdmCodeGen();
+		final CodeGen vdm2cpp = new CodeGen();
 
 		try
 		{			

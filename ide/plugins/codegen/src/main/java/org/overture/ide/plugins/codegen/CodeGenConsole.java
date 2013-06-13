@@ -119,4 +119,10 @@ public class CodeGenConsole implements ILogger
 			}
 		}
 	}
+
+	@Override
+	public void setSilent(boolean arg0)
+	{
+		//TODO: For now simply do nothing..
+	}
 }
