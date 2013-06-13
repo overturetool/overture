@@ -1,35 +1,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overture.ide</groupId>
-    <artifactId>org.overture.ide.plugins</artifactId>
-    <version>2.0.0<!--Replaceable: Main Version--></version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.overture.ide</groupId>
+		<artifactId>org.overture.ide.plugins</artifactId>
+		<version>2.0.0<!--Replaceable: Main Version--></version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-  <packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-plugin</packaging>
 
-  <groupId>org.overture.ide.plugins</groupId>
-  <artifactId>org.overture.ide.plugins.uml2</artifactId>
-  <name>UML2 Translator</name>
+	<groupId>org.overture.ide.plugins</groupId>
+	<artifactId>org.overture.ide.plugins.uml2</artifactId>
+	<name>UML2 Translator</name>
 
 
- <build>
-    <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-surefire-plugin</artifactId>
-	<configuration>
-	  <testFailureIgnore>true</testFailureIgnore>
-	  <includes>
-	    <include>**/*Test.java</include>
-	    <include>**/*Test?.java</include>
-	    <include>**/*TestSuite.java</include>
-	  </includes>
-	</configuration>
-      </plugin>
-    </plugins>
-  </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Test?.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<!-- plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>0.16.0</version>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Test?.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+					<skip>false</skip>
+				</configuration>
+			</plugin-->
+		</plugins>
+	</build>
 </project>

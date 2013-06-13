@@ -39,20 +39,20 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-
+@SuppressWarnings("deprecation")
 public class Vdm2Uml
 {
 	private UmlConsole console = new UmlConsole();
@@ -264,7 +264,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType) && !extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType)&&!(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: " + name);
@@ -458,7 +458,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType) && !extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType)&&!(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "
