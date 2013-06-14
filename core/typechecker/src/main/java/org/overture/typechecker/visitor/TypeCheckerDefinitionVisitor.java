@@ -58,11 +58,13 @@ import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
@@ -88,6 +90,7 @@ import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
+import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -1417,10 +1420,33 @@ public class TypeCheckerDefinitionVisitor extends
 		PType type = PDefinitionAssistantTC.getType(node);
 		node.setType(type);
 		
-		if(PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
+
+		// We have to do the "top level" here, rather than delegating to the types
+		// because the definition pointer from these top level types just refers
+		// to the definition we are checking, which is never "narrower" than itself.
+		// See the narrowerThan method in NamedType and RecordType.
+		
+		if (type instanceof ANamedInvariantType)
 		{
-			TypeCheckerErrors.report(3321,
-					"Type component visibility less than type's definition", node.getLocation(), node);
+			ANamedInvariantType ntype = (ANamedInvariantType)type;
+				
+			if (PTypeAssistantTC.narrowerThan(ntype.getType(), node.getAccess()))
+			{
+				TypeCheckerErrors.report(3321,
+				"Type component visibility less than type's definition", node.getLocation(), node);
+			}
+		}
+		else if (type instanceof ARecordInvariantType)
+		{
+			ARecordInvariantType rtype = (ARecordInvariantType)type;
+			
+			for (AFieldField field: rtype.getFields())
+			{
+				if (PTypeAssistantTC.narrowerThan(field.getType(), node.getAccess()))
+				{
+					TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
+				}
+			}
 		}
 		
 		return node.getType();
