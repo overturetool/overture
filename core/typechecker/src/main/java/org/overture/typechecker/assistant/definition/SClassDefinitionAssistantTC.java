@@ -349,19 +349,6 @@ public class SClassDefinitionAssistantTC
 		if (invariant != null)
 		{
 			PDefinitionAssistantTC.setClassDefinition(invariant, d);
-
-			// This listener is created for static invariants. This gets called
-			// when any statics get updated, but that could affect the validity
-			// of all instances that mention the static in their inv clause.
-			// For now, we suppress the trigger for static updates... one for
-			// the LB :-)
-
-			// invlistenerlist = null;
-
-			// OperationValue invop = new OperationValue(invariant, null, null, null);
-			// invop.isStatic = true;
-			// ClassInvariantListener listener = new ClassInvariantListener(invop);
-			// invlistenerlist = new ValueListenerList(listener);
 		}
 
 	}
