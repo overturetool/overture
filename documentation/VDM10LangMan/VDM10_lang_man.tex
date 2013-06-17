@@ -5505,9 +5505,26 @@ or in the context of a VDM++ instance variables
   All of the expressions or operation calls on the right hand sides
   are executed or evaluated, and then the results are bound to the
   corresponding state designators. The right-hand sides are executed
-  atomically with respect to invariant evaluation.  However in the
-  case of a multi-threaded concurrent VDM++ or VDM-RT model, execution
-  is not necessarily atomic with respect to task switching.
+  in the order given in the statement, and normal invariant processing
+  and thread switching and statement durations can occur. But once all
+  of the right-hand values have been obtained, they are assigned to the
+  left-hand variables in one atomic step, which occurs without invariant
+  checking, thread switching or extra duration. It is as if the
+  statement is as follows:
+  \begin{lstlisting}
+    let t1 = ec1,
+        ...
+        tN = ecN in
+    (
+        -- turn off invariants, threading and durations
+        sd1 := t1;
+        ...
+        sdN := tN;
+        -- turn on invariants, threading and durations
+        -- and check that invariants hold. 
+    );
+  \end{lstlisting}
+  
 
 \item[Examples:] The operation in the previous example (\texttt{Swap}) 
   illustrated normal assignment. The operation \texttt{Win\_sd}, a 
