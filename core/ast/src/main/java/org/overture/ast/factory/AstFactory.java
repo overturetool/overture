@@ -388,6 +388,14 @@ public class AstFactory {
 		//this.delegate = new Delegate(name.name, definitions);
 		result.setDefinitions(members);
 		
+		if(members!=null)
+		{
+			for (PDefinition p : members)
+			{
+				p.parent(result);
+			}
+		}
+		
 		// Classes are all effectively public types
 		PDefinitionAssistant.setClassDefinition(result.getDefinitions(),result);
 		
@@ -1870,6 +1878,15 @@ public class AstFactory {
 		result.setImports(null);
 		result.setExports(null);
 		result.setDefs(definitions);
+		
+		if(definitions!=null)
+		{
+			for (PDefinition d : definitions)
+			{
+				d.parent(result);
+			}
+		}
+		
 		result.setTypeChecked(false);		
 		result.setIsDLModule(false); //TODO: this does not exist in VDMj
 		

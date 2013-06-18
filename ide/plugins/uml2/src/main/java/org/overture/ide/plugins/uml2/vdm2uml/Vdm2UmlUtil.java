@@ -27,7 +27,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-
+@SuppressWarnings("deprecation")
 public class Vdm2UmlUtil
 {
 

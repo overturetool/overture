@@ -10,6 +10,7 @@ import java.util.Vector;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
@@ -28,6 +29,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.StateContext;
@@ -41,9 +43,9 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.interpreter.values.ValueListenerList;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -184,7 +186,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 
 		// We create a RootContext here so that the scope for member
 		// initializations are restricted.
-
+		
 		Context initCtxt = new StateContext(node.getLocation(), "field initializers", ctxt, null);
 		initCtxt.putList(members.asList());
 
@@ -203,24 +205,12 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 			}
 		}
 
-		// Object instances have their own listeners
-		ValueListenerList listeners = null;
-		ClassInvariantListener listener = null;
-
-		if (node.getInvariant() != null)
-		{
-			OperationValue invop = new OperationValue(node.getInvariant(), null, null, null);
-			listener = new ClassInvariantListener(invop);
-			listener.doInvariantChecks = false;	// during construction
-			listeners = new ValueListenerList(listener);
-		}
-
 		for (PDefinition d: node.getDefinitions())
 		{
 			if (!PDefinitionAssistantInterpreter.isStatic(d) && !PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl =
-						PDefinitionAssistantInterpreter.getNamedValues(d,initCtxt).getUpdatable(listeners);
+						PDefinitionAssistantInterpreter.getNamedValues(d,initCtxt).getUpdatable(null);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
@@ -235,11 +225,6 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 		ObjectValue object =
 			new ObjectValue((AClassType) SClassDefinitionAssistantTC.getType(node), members, inherited,
 			ctxt.threadState.CPU, creator);
-
-		if (listener != null)
-		{
-			object.setListener(listener);
-		}
 
 		Value ctor = null;
 
@@ -274,6 +259,33 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
        		ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
 		}
 
+
+		// Do invariants and guards after construction, so values fields are set. The
+		// invariant does not apply during construction anyway.
+		
+		if (node.getInvariant() != null)
+		{
+			
+			OperationValue invop = new OperationValue(node.getInvariant(), null, null, null);
+			ClassInvariantListener listener = new ClassInvariantListener(invop);
+			
+			for (PDefinition d: getInvDefs(node))
+			{
+				AClassInvariantDefinition inv = (AClassInvariantDefinition)d;
+				
+				//Is this correct?
+				ValueList values = PExpAssistantInterpreter.getValues(inv.getExpression(), new ObjectContext(node.getLocation(), node.getName().getName() + " object context", initCtxt, object));
+				for (Value v: values)
+				{
+					UpdatableValue uv = (UpdatableValue) v;
+					uv.addListener(listener);
+				}
+			}
+			
+			object.setListener(listener);
+		}
+
+		
 		if (VdmRuntime.getNodeState(node).hasPermissions)
 		{
     		ObjectContext self = new ObjectContext(
@@ -388,7 +400,7 @@ public class SClassDefinitionAssistantInterpreter extends SClassDefinitionAssist
 				}
 				else if (PDefinitionAssistantInterpreter.isStatic(d) && PDefinitionAssistantInterpreter.isInstanceVariable(d))
 				{
-					nvl =PDefinitionAssistantInterpreter.getNamedValues(d,initCtxt).getUpdatable(VdmRuntime.getNodeState(node).invlistenerlist);
+					nvl =PDefinitionAssistantInterpreter.getNamedValues(d,initCtxt).getUpdatable(null);
 				}
 			}
 

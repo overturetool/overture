@@ -19,14 +19,11 @@
 package org.overture.ide.core.resources;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Platform;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IVdmElementDelta;
@@ -38,8 +35,6 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	protected IVdmProject project;
 	protected IFile file;
 	protected int type;
-	protected final List<LexLocation> allLocation = new Vector<LexLocation>();
-	protected final HashMap<LexLocation, INode> locationToAstNodeMap = new HashMap<LexLocation, INode>();
 	protected boolean parseErrors = false;
 
 	protected List<INode> parseList = new Vector<INode>();
@@ -68,30 +63,17 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	}
 
 	public synchronized void reconcile(List<INode> parseResult,
-			List<LexLocation> allLocation,
-			Map<LexLocation, INode> locationToAstNodeMap, boolean parseErrors)
+			boolean parseErrors)
 	{
 		boolean added = this.parseList.isEmpty();
 		this.parseList.clear();
-		this.allLocation.clear();
-		this.locationToAstNodeMap.clear();
 		this.parseErrors = parseErrors;
 		if (!parseErrors)
 		{
 			this.parseList.addAll(parseResult);
-			synchronized (allLocation)
-			{
-				this.allLocation.addAll(allLocation);
-			}
-
-			synchronized (locationToAstNodeMap)
-			{
-				this.locationToAstNodeMap.putAll(locationToAstNodeMap);
-			}
-
 		}
 
-		if(added)
+		if (added)
 		{
 			fireAddedEvent();
 		}
@@ -102,7 +84,7 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	{
 		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_RECONCILE));
 	}
-	
+
 	protected void fireAddedEvent()
 	{
 		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this, IVdmElementDelta.ADDED), ElementChangedEvent.DeltaType.POST_RECONCILE));
@@ -153,15 +135,6 @@ public class VdmSourceUnit implements IVdmSourceUnit
 	public boolean hasParseTree()
 	{
 		return parseList.size() > 0;
-	}
-
-	/**
-	 * No not make this synchronized it will lock up due to getParse list and this one being called at the same time
-	 */
-	public/* synchronized */Map<LexLocation, INode> getLocationToAstNodeMap()
-	{
-		// return (Map<LexLocation, IAstNode>) locationToAstNodeMap.clone();
-		return locationToAstNodeMap;
 	}
 
 	public boolean hasParseErrors()

@@ -8,8 +8,6 @@ import org.overture.ast.node.ExternalNode;
 public interface ILexLocation extends ExternalNode
 {
 
-	String file = null;
-
 	String toString();
 	String toShortString();
 	

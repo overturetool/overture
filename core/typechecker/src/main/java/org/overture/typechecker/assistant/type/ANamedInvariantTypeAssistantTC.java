@@ -175,16 +175,30 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		type.setInNarrower(true);
 		boolean result = false;
 		
-		
-		if (type.getDefinitions().size() == 0)
+		if (type.getDefinitions().size() > 0)
+		{
+			for (PDefinition d: type.getDefinitions())
+			{
+				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		else if(type.getType().getDefinitions().size() == 0)
 		{
 			result = PTypeAssistantTC.narrowerThan(type, accessSpecifier) || PTypeAssistantTC.narrowerThanBaseCase(type, accessSpecifier);
 		}
 		else
 		{
-			for (PDefinition d : type.getDefinitions())
+			for (PDefinition d : type.getType().getDefinitions())
 			{
-				result = result || PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier);
+				if(PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				{
+					result = true;
+					break;
+				}
 			}
 			
 		}

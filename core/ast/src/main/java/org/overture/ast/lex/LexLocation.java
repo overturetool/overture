@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -39,7 +38,6 @@ import java.util.Vector;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.ExternalNode;
-import org.overture.ast.node.INode;
 
 /**
  * A class to hold the location of a token.
@@ -63,8 +61,8 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	/** A unique map of LexLocation objects, for rapid searching. */
 	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
 
-	/** A collection of all LexLocation objects to the AstNodes. */
-	private static Map<LexLocation, INode> locationToAstNode = new Hashtable<LexLocation, INode>();
+//	/** A collection of all LexLocation objects to the AstNodes. */
+//	private static Map<LexLocation, INode> locationToAstNode = new Hashtable<LexLocation, INode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
 	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<LexNameToken, LexLocation>();// TODO
@@ -321,10 +319,10 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 			uniqueLocations = new HashMap<LexLocation, LexLocation>();
 		}
 
-		synchronized (locationToAstNode)
-		{
-			locationToAstNode = new Hashtable<LexLocation, INode>();
-		}
+//		synchronized (locationToAstNode)
+//		{
+//			locationToAstNode = new Hashtable<LexLocation, INode>();
+//		}
 		//
 		// synchronized (nameSpans)
 		// {
@@ -630,19 +628,19 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 		br.close();
 	}
 
-	// FIXME we know this is never called a new solutions is needed
-	public static void addAstNode(LexLocation location, INode node)
-	{
-		synchronized (locationToAstNode)
-		{
-			locationToAstNode.put(location, node);
-		}
-	}
-
-	public static Map<LexLocation, INode> getLocationToAstNodeMap()
-	{
-		return locationToAstNode;
-	}
+//	// FIXME we know this is never called a new solutions is needed
+//	public static void addAstNode(LexLocation location, INode node)
+//	{
+//		synchronized (locationToAstNode)
+//		{
+//			locationToAstNode.put(location, node);
+//		}
+//	}
+//
+//	public static Map<LexLocation, INode> getLocationToAstNodeMap()
+//	{
+//		return locationToAstNode;
+//	}
 
 	public static List<LexLocation> getAllLocations()
 	{

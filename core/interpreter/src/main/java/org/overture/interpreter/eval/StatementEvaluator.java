@@ -59,7 +59,6 @@ import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
@@ -70,13 +69,34 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.SharedStateListner;
-import org.overture.interpreter.values.*;
+import org.overture.interpreter.values.BooleanValue;
+import org.overture.interpreter.values.FunctionValue;
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.Quantifier;
+import org.overture.interpreter.values.QuantifierList;
+import org.overture.interpreter.values.RecordValue;
+import org.overture.interpreter.values.SeqValue;
+import org.overture.interpreter.values.SetValue;
+import org.overture.interpreter.values.UndefinedValue;
+import org.overture.interpreter.values.UpdatableValue;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
+import org.overture.interpreter.values.ValueListenerList;
+import org.overture.interpreter.values.ValueMap;
+import org.overture.interpreter.values.ValueSet;
+import org.overture.interpreter.values.VoidReturnValue;
+import org.overture.interpreter.values.VoidValue;
 import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
@@ -194,6 +214,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			try
 			{
+				stmt.getLocation().hit();
 				targets.add(stmt.getTarget().apply(VdmRuntime.getStatementEvaluator(), ctxt));				
 				values.add(stmt.getExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).convertTo(stmt.getTargetType(), ctxt));
 			}

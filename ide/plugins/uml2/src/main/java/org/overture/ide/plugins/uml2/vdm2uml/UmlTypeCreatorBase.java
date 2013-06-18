@@ -8,7 +8,6 @@ import org.eclipse.uml2.uml.Type;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -32,7 +31,7 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-
+@SuppressWarnings("deprecation")
 public class UmlTypeCreatorBase
 {
 	public final Map<String, Type> types = new HashMap<String, Type>();

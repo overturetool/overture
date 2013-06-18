@@ -344,6 +344,11 @@
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="M1+7">
      </key>
+      <key
+           commandId="org.overture.ide.ui.editor.commandGoToDefinition"
+           schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+           sequence="F3">
+     </key>
   </extension>
   <extension
         point="org.eclipse.ui.commands">
@@ -361,6 +366,10 @@
            id="org.overture.ide.ui.commands.removeFromBuildPath"
            name="Remove from Build Path">
      </command>
+      <command
+           id="org.overture.ide.ui.editor.commandGoToDefinition"
+           name="Open Decleration">
+    </command>
   </extension>
   <extension
         point="org.eclipse.ui.decorators">
@@ -462,6 +471,24 @@
            </command>
         </menu>
      </menuContribution>
+     
+     <!--for see locationuri see MenuUtil and IWorkbenchActionConstants-->
+     <menuContribution
+           locationURI="popup:#TextEditorContext?before=additions" >
+        
+           <command
+                 commandId="org.overture.ide.ui.editor.commandGoToDefinition"
+                 label="Open Decleration"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <count
+                      value="+">
+                 </count>
+              </visibleWhen>
+           </command>
+        
+     </menuContribution>
   </extension>
   
 <!-- 
@@ -479,6 +506,10 @@ Handlers
            class="org.overture.ide.ui.handlers.RemoveSourceFolderFromBuildPathCommandHandler"
            commandId="org.overture.ide.ui.commands.removeFromBuildPath">
      </handler>
+      <handler
+           class="org.overture.ide.ui.handlers.GotoDefinitionHandler"
+           commandId="org.overture.ide.ui.editor.commandGoToDefinition">
+    </handler>
 
   </extension>
   <extension
