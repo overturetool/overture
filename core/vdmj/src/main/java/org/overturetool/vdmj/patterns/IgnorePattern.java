@@ -41,7 +41,8 @@ import org.overturetool.vdmj.values.Value;
 public class IgnorePattern extends Pattern
 {
 	private static final long serialVersionUID = 1L;
-	private static int var = 1;		// Used in getMatchingValue()
+	private static int var = 1;		// Used in getMatchingExpression()
+	private LexNameToken anyName = null;
 
 	public IgnorePattern(LexLocation location)
 	{
@@ -57,8 +58,15 @@ public class IgnorePattern extends Pattern
 	@Override
 	public Expression getMatchingExpression()
 	{
-		LexNameToken any = new LexNameToken("", "any" + var++, location);
-		return new VariableExpression(any);
+		// Generate a new "any" name for use during PO generation. The name
+		// must be unique for the pattern instance.
+		
+		if (anyName == null)
+		{
+			anyName = new LexNameToken("", "any" + var++, location);
+		}
+		
+		return new VariableExpression(anyName);
 	}
 
 	@Override

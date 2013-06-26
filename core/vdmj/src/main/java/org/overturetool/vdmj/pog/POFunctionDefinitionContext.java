@@ -30,7 +30,6 @@ import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexNameToken;
-import org.overturetool.vdmj.patterns.IgnorePattern;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
 import org.overturetool.vdmj.types.FunctionType;
@@ -81,14 +80,11 @@ public class POFunctionDefinitionContext extends POContext
 
     			for (Pattern p: pl)
     			{
-    				if (!(p instanceof IgnorePattern))
-    				{
-    					sb.append(sep);
-    					sb.append(p.toString());
-    					sb.append(":");
-    					sb.append(types.next());
-    					sep = ", ";
-    				}
+					sb.append(sep);
+					sb.append(p.getMatchingExpression());	// Expands anys
+					sb.append(":");
+					sb.append(types.next());
+					sep = ", ";
     			}
 
     			if (ftype.result instanceof FunctionType)

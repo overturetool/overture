@@ -70,14 +70,11 @@ public class POOperationDefinitionContext extends POContext
 
 			for (Pattern p: paramPatternList)
 			{
-				if (!(p instanceof IgnorePattern))
-				{
-					sb.append(sep);
-					sb.append(p.toString());
-					sb.append(":");
-					sb.append(types.next());
-					sep = ", ";
-				}
+				sb.append(sep);
+				sb.append(p.getMatchingExpression());	// Expands anys
+				sb.append(":");
+				sb.append(types.next());
+				sep = ", ";
 			}
 
 			if (stateDefinition != null)
