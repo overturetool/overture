@@ -728,6 +728,7 @@ public class ExplicitFunctionDefinition extends Definition
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
+		boolean matchNeeded = false;
 
 		for (PatternList pl: paramPatternList)
 		{
@@ -735,9 +736,14 @@ public class ExplicitFunctionDefinition extends Definition
 			{
 				pids.addAll(p.getVariableNames());
 			}
+			
+			if (!pl.alwaysMatches())
+			{
+				matchNeeded = true;
+			}
 		}
 
-		if (pids.hasDuplicates())
+		if (pids.hasDuplicates() || matchNeeded)
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

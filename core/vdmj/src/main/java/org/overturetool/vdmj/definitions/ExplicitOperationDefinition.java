@@ -510,7 +510,7 @@ public class ExplicitOperationDefinition extends Definition
 			pids.addAll(p.getVariableNames());
 		}
 
-		if (pids.hasDuplicates())
+		if (pids.hasDuplicates() || !parameterPatterns.alwaysMatches())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

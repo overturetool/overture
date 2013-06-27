@@ -281,6 +281,12 @@ public class RecordPattern extends Pattern
 	}
 
 	@Override
+	public boolean alwaysMatches()
+	{
+		return plist.alwaysMatches();
+	}
+
+	@Override
 	public List<IdentifierPattern> findIdentifiers()
 	{
 		List<IdentifierPattern> list = new Vector<IdentifierPattern>();

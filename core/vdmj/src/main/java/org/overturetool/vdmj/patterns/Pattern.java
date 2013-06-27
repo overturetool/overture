@@ -213,6 +213,17 @@ public abstract class Pattern implements Serializable
 	{
 		return true;
 	}
+	
+	/**
+	 * @return True if the pattern will always match a value of the corresponding
+	 * type. For example, an identifier will always match a value, but a
+	 * sequence pattern [a,b] will only match sequences of two values, and a
+	 * constant pattern line "123" will only match the value 123.
+	 */
+	public boolean alwaysMatches()
+	{
+		return false;
+	}
 
 	/**
 	 * An expression that matches the pattern. This is used in

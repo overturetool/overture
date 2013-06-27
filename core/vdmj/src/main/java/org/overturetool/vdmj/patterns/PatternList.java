@@ -129,4 +129,14 @@ public class PatternList extends Vector<Pattern>
 
 		return true;
 	}
+
+	public boolean alwaysMatches()
+	{
+		for (Pattern p: this)
+		{
+			if (!p.alwaysMatches()) return false;	// NB. AND
+		}
+
+		return true;
+	}
 }

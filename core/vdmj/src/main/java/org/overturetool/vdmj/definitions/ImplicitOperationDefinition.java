@@ -648,13 +648,14 @@ public class ImplicitOperationDefinition extends Definition
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
+		PatternList plist = getParamPatternList();
 
-		for (Pattern p: getParamPatternList())
+		for (Pattern p: plist)
 		{
 			pids.addAll(p.getVariableNames());
 		}
 
-		if (pids.hasDuplicates())
+		if (pids.hasDuplicates() || !plist.alwaysMatches())
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

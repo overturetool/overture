@@ -616,6 +616,7 @@ public class ImplicitFunctionDefinition extends Definition
 	{
 		ProofObligationList obligations = new ProofObligationList();
 		LexNameList pids = new LexNameList();
+		boolean matchNeeded = false;
 
 		for (PatternListTypePair pltp: parameterPatterns)
 		{
@@ -623,9 +624,14 @@ public class ImplicitFunctionDefinition extends Definition
 			{
 				pids.addAll(p.getVariableNames());
 			}
+			
+			if (!pltp.patterns.alwaysMatches())
+			{
+				matchNeeded = true;
+			}
 		}
 
-		if (pids.hasDuplicates())
+		if (pids.hasDuplicates() || matchNeeded)
 		{
 			obligations.add(new ParameterPatternObligation(this, ctxt));
 		}

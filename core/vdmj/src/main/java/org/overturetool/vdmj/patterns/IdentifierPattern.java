@@ -114,6 +114,12 @@ public class IdentifierPattern extends Pattern
 		return false;
 	}
 
+	@Override
+	public boolean alwaysMatches()
+	{
+		return true;
+	}
+
 	public void setConstrained(boolean c)
 	{
 		constrained = c;

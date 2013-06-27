@@ -106,4 +106,10 @@ public class IgnorePattern extends Pattern
 	{
 		return false;
 	}
+
+	@Override
+	public boolean alwaysMatches()
+	{
+		return true;
+	}
 }
