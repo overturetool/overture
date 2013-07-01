@@ -191,7 +191,7 @@ public class ImplicitOperationDefinition extends Definition
 	{
 		scope = NameScope.NAMESANDSTATE;
 		DefinitionList defs = new DefinitionList();
-		DefinitionSet argdefs = new DefinitionSet();
+		DefinitionList argdefs = new DefinitionList();
 
 		if (base.isVDMPP())
 		{
@@ -207,7 +207,7 @@ public class ImplicitOperationDefinition extends Definition
 			argdefs.addAll(ptp.getDefinitions(NameScope.LOCAL));
 		}
 
-		defs.addAll(argdefs.asList());
+		defs.addAll(checkDuplicatePatterns(argdefs));
 
 		if (result != null)
 		{

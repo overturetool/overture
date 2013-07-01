@@ -673,6 +673,7 @@ as the expected and actual values.
 3319, "'in set' expression is always false"
 3320, "'not in set' expression is always true"
 3321, "Type component visibility less than type's definition"
+3322, "Duplicate patterns bind to different types"
 
 
 4000, "Cannot instantiate abstract class <class>"

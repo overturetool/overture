@@ -494,7 +494,7 @@ public class ExplicitFunctionDefinition extends Definition
 		while (piter.hasNext())
 		{
 			PatternList plist = piter.next();
-			DefinitionSet defs = new DefinitionSet();
+			DefinitionList defs = new DefinitionList();
 			TypeList ptypes = ftype.parameters;
 			Iterator<Type> titer = ptypes.iterator();
 
@@ -517,8 +517,8 @@ public class ExplicitFunctionDefinition extends Definition
     				defs.addAll(p.getDefinitions(titer.next(), NameScope.LOCAL));
     			}
 			}
-
-			defList.add(defs.asList());
+			
+			defList.add(checkDuplicatePatterns(defs));
 
 			if (ftype.result instanceof FunctionType)	// else???
 			{

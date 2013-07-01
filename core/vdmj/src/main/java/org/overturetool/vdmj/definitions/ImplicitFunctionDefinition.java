@@ -236,14 +236,14 @@ public class ImplicitFunctionDefinition extends Definition
 			defs.addAll(getTypeParamDefinitions());
 		}
 
-		DefinitionSet argdefs = new DefinitionSet();
+		DefinitionList argdefs = new DefinitionList();
 
 		for (PatternListTypePair pltp: parameterPatterns)
 		{
 			argdefs.addAll(pltp.getDefinitions(NameScope.LOCAL));
 		}
 
-		defs.addAll(argdefs.asList());
+		defs.addAll(checkDuplicatePatterns(argdefs));
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(defs, base, scope);
 		local.setStatic(accessSpecifier);
 		local.setEnclosingDefinition(this);

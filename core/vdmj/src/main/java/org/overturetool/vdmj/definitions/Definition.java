@@ -42,6 +42,7 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.typechecker.TypeChecker;
+import org.overturetool.vdmj.typechecker.TypeComparator;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.Value;
@@ -618,5 +619,32 @@ public abstract class Definition implements Serializable, IAstNode
 	public LexLocation getLocation()
 	{
 		return location;
+	}
+	
+	/**
+	 * Check a DefinitionList for incompatible duplicate pattern definitions.
+	 */
+	public DefinitionList checkDuplicatePatterns(DefinitionList defs)
+	{
+		DefinitionSet noDuplicates = new DefinitionSet();
+		
+		for (Definition d1: defs)
+		{
+			for (Definition d2: defs)
+			{
+				if (d1 != d2 && d1.name != null && d2.name != null && d1.name.equals(d2.name))
+				{
+					if (!TypeComparator.compatible(d1.getType(), d2.getType()))
+					{
+						report(3322, "Duplicate patterns bind to different types");
+						detail2(d1.name.name, d1.getType(), d2.name.name, d2.getType());
+					}
+				}
+			}
+			
+			noDuplicates.add(d1);
+		}
+
+		return noDuplicates.asList();
 	}
 }

@@ -300,7 +300,7 @@ public class ExplicitOperationDefinition extends Definition
 
 	private DefinitionList getParamDefinitions()
 	{
-		DefinitionSet defs = new DefinitionSet();
+		DefinitionList defs = new DefinitionList();
 		Iterator<Type> titer = type.parameters.iterator();
 
 		for (Pattern p: parameterPatterns)
@@ -308,7 +308,7 @@ public class ExplicitOperationDefinition extends Definition
    			defs.addAll(p.getDefinitions(titer.next(), NameScope.LOCAL));
 		}
 
-		return defs.asList();
+		return checkDuplicatePatterns(defs);
 	}
 
 	public List<PatternList> getParamPatternList()

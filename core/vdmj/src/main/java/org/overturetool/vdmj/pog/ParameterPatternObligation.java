@@ -23,10 +23,13 @@
 
 package org.overturetool.vdmj.pog;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionList;
 import org.overturetool.vdmj.definitions.ExplicitFunctionDefinition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitFunctionDefinition;
@@ -34,6 +37,7 @@ import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.patterns.PatternList;
+import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeList;
@@ -82,45 +86,97 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		StringBuilder foralls = new StringBuilder();
 		StringBuilder argnames = new StringBuilder();
-		StringBuilder ebindings = new StringBuilder();
-		StringBuilder epredicates = new StringBuilder();
+		StringBuilder exists = new StringBuilder();
 
+		String INDENT = "  ";
 		String fprefix = "";
-		String eprefix = "";
+		String lprefix = "";
 		int argn = 1;
 
 		for (PatternList pl: plist)
 		{
+			StringBuilder ebindings = new StringBuilder();
+			StringBuilder epredicates = new StringBuilder();
 			Iterator<Type> titer = params.iterator();
-
-			for (Pattern p: pl)
+			String eprefix = "";
+			String aprefix = "";
+			int bindn = 1;
+			
+			if (!pl.isEmpty())
 			{
-				String aname = "arg" + argn++;
-				Type atype = titer.next();
-
-				foralls.append(fprefix);
-				foralls.append(aname);
-				foralls.append(":");
-				foralls.append(atype);
-
-				argnames.append(fprefix);
-				argnames.append(aname);
-
-				Expression pmatch = p.getMatchingExpression();
-				ebindings.append(fprefix);
-				ebindings.append(pmatch);
-				ebindings.append(":");
-				ebindings.append(atype);
-
-				epredicates.append(eprefix);
-				epredicates.append("(");
-				epredicates.append(aname);
-				epredicates.append(" = ");
-				epredicates.append(pmatch);
-				epredicates.append(")");
-
-				fprefix = ", ";
-				eprefix = " and ";
+				argnames.append("(");
+				
+				if (predef != null)
+				{
+					exists.append(INDENT);
+					exists.append(INDENT);
+					exists.append(lprefix);
+					exists.append("(exists ");
+				}
+				else
+				{
+					exists.append(INDENT);
+					exists.append(lprefix);
+					exists.append("(exists ");
+				}
+				
+				Set<String> existingBindings = new HashSet<String>();
+	
+				for (Pattern p: pl)
+				{
+					String aname = "arg" + argn++;
+					String bname = "bind" + bindn++;
+					Type atype = titer.next();
+					Expression pmatch = p.getMatchingExpression();
+					DefinitionList dlist = p.getDefinitions(atype, NameScope.LOCAL);
+					
+					foralls.append(fprefix);
+					foralls.append(aname);
+					foralls.append(":");
+					foralls.append(atype);
+	
+					argnames.append(aprefix);
+					argnames.append(aname);
+	
+					ebindings.append(aprefix);
+					aprefix = ", ";
+					ebindings.append(bname);
+					ebindings.append(":");
+					ebindings.append(atype);
+	
+					for (Definition def: dlist)
+					{
+						if (def.name != null && !existingBindings.contains(def.name.name))
+						{
+							ebindings.append(aprefix);
+							ebindings.append(def.name.name);
+							ebindings.append(":");
+							ebindings.append(def.getType());
+							existingBindings.add(def.name.name);
+						}
+					}
+	
+					epredicates.append(eprefix);
+					eprefix = " and ";
+					epredicates.append("(");
+					epredicates.append(aname);
+					epredicates.append(" = ");
+					epredicates.append(bname);
+					epredicates.append(") and (");
+					epredicates.append(pmatch);
+					epredicates.append(" = ");
+					epredicates.append(bname);
+					epredicates.append(")");
+	
+					fprefix = ", ";
+				}
+				
+				argnames.append(")");
+				exists.append(ebindings.toString());
+				exists.append(" & ");
+				exists.append(epredicates.toString());
+				exists.append(")\n");
+				lprefix = "and ";
 			}
 
 			if (result instanceof FunctionType)
@@ -136,25 +192,15 @@ public class ParameterPatternObligation extends ProofObligation
 		}
 
 		foralls.append(" &\n");
-		String INDENT = "  ";
 
 		if (predef != null)
 		{
 			foralls.append(INDENT);
 			foralls.append(predef.name.name);
-			foralls.append("(");
 			foralls.append(argnames);
-			foralls.append(")");
-			foralls.append(" =>\n" + INDENT + INDENT);
-			ebindings.append(" &\n" + INDENT + INDENT + INDENT);
-		}
-		else
-		{
-			foralls.append(INDENT);
-			ebindings.append(" &\n" + INDENT + INDENT);
+			foralls.append(" =>\n");
 		}
 
-		return "forall " + foralls.toString() +
-			"exists " + ebindings.toString() + epredicates.toString();
+		return "forall " + foralls.toString() + exists.toString();
 	}
 }
