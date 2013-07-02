@@ -71,6 +71,17 @@
         <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
       </distributionManagement>
     </profile>
+    <profile>
+      <id>DESTECS-Repo</id>
+      <distributionManagement>
+        <repository>
+          <id>build.overture.org</id>
+          <name>Overture Repo for DESTECS on the buildserver</name>
+          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/destecs-overture-m2repo</url>
+        </repository>
+        <downloadUrl>http://build.overturetool.org/builds/destecs-overture-m2repo/</downloadUrl>
+      </distributionManagement>
+    </profile>
   </profiles>
 
   <repositories>
