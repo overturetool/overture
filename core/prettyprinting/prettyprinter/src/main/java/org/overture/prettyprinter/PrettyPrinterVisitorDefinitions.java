@@ -10,7 +10,6 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.EDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.prettyprinter.PrettyPrinterEnv;
 
