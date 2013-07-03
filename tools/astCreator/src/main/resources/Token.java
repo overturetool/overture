@@ -12,17 +12,17 @@ public abstract class %Token% extends %Node% implements %IToken% {
 	private int line;
 	private int pos;
 
-	/**
-	 * Returns the {@link TokenEnum} corresponding to the
-	 * type of this {@link Token} node.
-	 * @return the {@link TokenEnum} for this node
-	 */
+//	/**
+//	 * Returns the {@link TokenEnum} corresponding to the
+//	 * type of this {@link Token} node.
+//	 * @return the {@link TokenEnum} for this node
+//	 */
 //	public abstract TokenEnum kindToken();
 
 	/**
-	 * Returns the {@link NodeEnum} corresponding to the
+	 * Returns the {@link String} corresponding to the
 	 * type of this {@link Node} node.
-	 * @return the {@link NodeEnum} for this node
+	 * @return the {@link String} for this node
 	 */
 	@Override public String kindNode() {
 		return kindNode;
@@ -84,8 +84,8 @@ public abstract class %Token% extends %Node% implements %IToken% {
 	/**
 	 * Implements the {@link %INode%#removeChild(%INode%)} method. Since tokens have no
 	 * children, it always throws a {@link RuntimeException}.
-	 * @param child the child node to be removed from this {@link Token} node
-	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node
+	 * @param child the child node to be removed from this {@link %INode%} node
+	 * @throws RuntimeException if {@code child} is not a child of this {@link %INode%} node
 	 */
 	public @Override void removeChild(%INode% child) {
 		throw new RuntimeException("Not a child.");
