@@ -65,7 +65,7 @@ public class AClassTypeAssistantTC {
 						continue;	// Skip polymorphic functions
 					}
 				}
-				question = new TypeCheckInfo(self,question.scope,question.qualifiers);				
+				question = new TypeCheckInfo(question.assistantFactory,self,question.scope,question.qualifiers);				
 				PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), root, rootVisitor, question);
 			}
 

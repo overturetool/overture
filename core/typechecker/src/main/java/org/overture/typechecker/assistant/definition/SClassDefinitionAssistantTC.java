@@ -34,6 +34,7 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -554,7 +555,7 @@ public class SClassDefinitionAssistantTC
 	{
 
 		Environment cenv = new FlatEnvironment(d.getDefinitions(), question.env);
-		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(cenv));
+		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory,cenv));
 	}
 
 	public static PDefinition findThread(SClassDefinition d)
@@ -776,7 +777,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void typeCheckPass(SClassDefinition c, Pass p,
+	public static void typeCheckPass(ITypeCheckerAssistantFactory assistantFacotry, SClassDefinition c, Pass p,
 			Environment base, TypeCheckVisitor tc) throws AnalysisException
 	{
 		if (c.getTypeChecked())
@@ -786,13 +787,13 @@ public class SClassDefinitionAssistantTC
 		{
 			if (d.getPass() == p)
 			{
-				d.apply(tc, new TypeCheckInfo(base, NameScope.NAMES));
+				d.apply(tc, new TypeCheckInfo(assistantFacotry,base, NameScope.NAMES));
 			}
 		}
 
 		if (c.getInvariant() != null && c.getInvariant().getPass() == p)
 		{
-			c.getInvariant().apply(tc, new TypeCheckInfo(base, NameScope.NAMES));
+			c.getInvariant().apply(tc, new TypeCheckInfo(assistantFacotry,base, NameScope.NAMES));
 		}
 
 	}

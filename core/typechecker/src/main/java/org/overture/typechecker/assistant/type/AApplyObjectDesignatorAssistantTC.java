@@ -17,10 +17,11 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AApplyObjectDesignatorAssistantTC {
 
-	public static PType mapApply(AApplyObjectDesignator node, SMapType map, Environment env,
+	public static PType mapApply(ITypeCheckerAssistantFactory assistantFactory,AApplyObjectDesignator node, SMapType map, Environment env,
 			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 
 		if (node.getArgs().size() != 1) {
@@ -28,7 +29,7 @@ public class AApplyObjectDesignatorAssistantTC {
 			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
-		PType argtype = node.getArgs().get(0).apply(rootVisitor,new TypeCheckInfo(env, scope));
+		PType argtype = node.getArgs().get(0).apply(rootVisitor,new TypeCheckInfo(assistantFactory,env, scope));
 
 		if (!TypeComparator.compatible(map.getFrom(), argtype)) {
 			TypeCheckerErrors.concern(unique, 3251,
@@ -39,7 +40,7 @@ public class AApplyObjectDesignatorAssistantTC {
 		return map.getTo();
 	}
 
-	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq, Environment env,
+	public static PType seqApply(ITypeCheckerAssistantFactory assistantFactory,AApplyObjectDesignator node, SSeqType seq, Environment env,
 			NameScope scope, boolean unique,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
 		
@@ -49,7 +50,7 @@ public class AApplyObjectDesignatorAssistantTC {
 			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
-		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(env, scope));
+		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(assistantFactory,env, scope));
 
 		if (!PTypeAssistantTC.isNumeric(argtype))
 		{
@@ -60,7 +61,7 @@ public class AApplyObjectDesignatorAssistantTC {
 		return seq.getSeqof();
 	}
 
-	public static PType functionApply(AApplyObjectDesignator node,
+	public static PType functionApply(ITypeCheckerAssistantFactory assistantFactory,AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
 			boolean unique,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
@@ -84,7 +85,7 @@ public class AApplyObjectDesignatorAssistantTC {
 
 		for (PExp a: node.getArgs())
 		{
-			PType at = a.apply(rootVisitor, new TypeCheckInfo(env,scope));
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(assistantFactory,env,scope));
 			PType pt = ptypes.get(i++);
 
 			if (!TypeComparator.compatible(pt, at))
@@ -99,7 +100,7 @@ public class AApplyObjectDesignatorAssistantTC {
 		return ftype.getResult();
 	}
 
-	public static PType operationApply(AApplyObjectDesignator node,
+	public static PType operationApply(ITypeCheckerAssistantFactory assistantFactory,AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
 			boolean unique,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
@@ -122,7 +123,7 @@ public class AApplyObjectDesignatorAssistantTC {
 
 		for (PExp a: node.getArgs())
 		{
-			PType at = a.apply(rootVisitor, new TypeCheckInfo(env, scope));
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(assistantFactory,env, scope));
 			PType pt = ptypes.get(i++);
 
 			if (!TypeComparator.compatible(pt, at))

@@ -10,6 +10,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class AFromModuleImportsAssistantTC {
@@ -30,9 +31,9 @@ public class AFromModuleImportsAssistantTC {
 		return defs;
 	}
 
-	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env) throws AnalysisException {
+	public static void typeCheck(ITypeCheckerAssistantFactory assistantFactory, AFromModuleImports ifm, ModuleEnvironment env) throws AnalysisException {
 		TypeCheckVisitor tc = new TypeCheckVisitor();
-		TypeCheckInfo question = new TypeCheckInfo(env, null, null);
+		TypeCheckInfo question = new TypeCheckInfo(assistantFactory,env, null, null);
 		
 		for (List<PImport> ofType: ifm.getSignatures())
 		{

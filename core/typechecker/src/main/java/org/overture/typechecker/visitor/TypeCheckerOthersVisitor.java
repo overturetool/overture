@@ -270,9 +270,9 @@ public class TypeCheckerOthersVisitor extends
 	public PType caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
 			TypeCheckInfo question) throws AnalysisException {
 		PType etype = node.getExp().apply(rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE));
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE));
 		PType rtype = node.getMapseq().apply(rootVisitor,
-				new TypeCheckInfo(question.env));
+				new TypeCheckInfo(question.assistantFactory,question.env));
 		PTypeSet result = new PTypeSet();
 
 		if (PTypeAssistantTC.isMap(rtype)) {
@@ -334,32 +334,32 @@ public class TypeCheckerOthersVisitor extends
 		LinkedList<PType> argtypes = new LinkedList<PType>();
 
 		for (PExp a : node.getArgs()) {
-			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.env,
+			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,question.env,
 					NameScope.NAMESANDSTATE)));
 		}
 
 		PType type = node.getObject().apply(rootVisitor,
-				new TypeCheckInfo(question.env, null, argtypes));
+				new TypeCheckInfo(question.assistantFactory,question.env, null, argtypes));
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 		PTypeSet result = new PTypeSet();
 
 		if (PTypeAssistantTC.isMap(type)) {
 			SMapType map = PTypeAssistantTC.getMap(type);
-			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node, map,
+			result.add(AApplyObjectDesignatorAssistantTC.mapApply(question.assistantFactory,node, map,
 					question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
 		}
 
 		if (PTypeAssistantTC.isSeq(type)) {
 			SSeqType seq = PTypeAssistantTC.getSeq(type);
-			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node, seq,
+			result.add(AApplyObjectDesignatorAssistantTC.seqApply(question.assistantFactory,node, seq,
 					question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
 		}
 
 		if (PTypeAssistantTC.isFunction(type)) {
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
 			PTypeAssistantTC.typeResolve(ft, null, rootVisitor,
-					new TypeCheckInfo(question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,
+					new TypeCheckInfo(question.assistantFactory,question.env));
+			result.add(AApplyObjectDesignatorAssistantTC.functionApply(question.assistantFactory,node,
 					ft, question.env, NameScope.NAMESANDSTATE, unique,
 					rootVisitor));
 		}
@@ -367,8 +367,8 @@ public class TypeCheckerOthersVisitor extends
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType ot = PTypeAssistantTC.getOperation(type);
 			PTypeAssistantTC.typeResolve(ot, null, rootVisitor,
-					new TypeCheckInfo(question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node,
+					new TypeCheckInfo(question.assistantFactory,question.env));
+			result.add(AApplyObjectDesignatorAssistantTC.operationApply(question.assistantFactory,node,
 					ot, question.env, NameScope.NAMESANDSTATE, unique,
 					rootVisitor));
 		}
@@ -391,7 +391,7 @@ public class TypeCheckerOthersVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 		return node.getExpression().apply(
 				rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE,
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE,
 						question.qualifiers));
 	}
 
@@ -401,7 +401,7 @@ public class TypeCheckerOthersVisitor extends
 			throws AnalysisException {
 		return node.getExpression().apply(
 				rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE,
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE,
 						question.qualifiers));
 	}
 
@@ -410,7 +410,7 @@ public class TypeCheckerOthersVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 
 		PType type = node.getObject().apply(rootVisitor,
-				new TypeCheckInfo(question.env, null, question.qualifiers));
+				new TypeCheckInfo(question.assistantFactory,question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet();
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 

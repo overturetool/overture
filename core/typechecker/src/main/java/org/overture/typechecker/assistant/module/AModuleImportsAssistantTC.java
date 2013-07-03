@@ -10,6 +10,7 @@ import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AModuleImportsAssistantTC {
 
@@ -40,12 +41,12 @@ public class AModuleImportsAssistantTC {
 		return defs;
 	}
 
-	public static void typeCheck(AModuleImports imports,
+	public static void typeCheck(ITypeCheckerAssistantFactory assistantFactory,AModuleImports imports,
 			ModuleEnvironment env) throws AnalysisException {
 		
 		for (AFromModuleImports ifm: imports.getImports())
 		{
-			AFromModuleImportsAssistantTC.typeCheck(ifm,env);
+			AFromModuleImportsAssistantTC.typeCheck(assistantFactory,ifm,env);
 		}
 		
 	}

@@ -127,9 +127,9 @@ public class TypeCheckerStmVisitor extends
 			throws AnalysisException {
 
 		node.setTargetType(node.getTarget().apply(rootVisitor,
-				new TypeCheckInfo(question.env)));
+				new TypeCheckInfo(question.assistantFactory,question.env)));
 		node.setExpType(node.getExp().apply(rootVisitor,
-				new TypeCheckInfo(question.env, question.scope)));
+				new TypeCheckInfo(question.assistantFactory,question.env, question.scope)));
 
 		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType())) {
 			TypeCheckerErrors.report(3239, "Incompatible types in assignment",
@@ -186,17 +186,17 @@ public class TypeCheckerStmVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 
 		PType stype = node.getExp().apply(rootVisitor,
-				new TypeCheckInfo(question.env, question.scope));
+				new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 		Environment local = question.env;
 
 		if (PTypeAssistantTC.isSeq(stype)) {
 			node.setSeqType(PTypeAssistantTC.getSeq(stype));
 			node.getPatternBind().apply(rootVisitor,
-					new TypeCheckInfo(question.env, question.scope));
+					new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 			List<PDefinition> defs = PPatternBindAssistantTC
 					.getDefinitions(node.getPatternBind());
 			PDefinitionListAssistantTC.typeCheck(defs, rootVisitor,
-					new TypeCheckInfo(question.env, question.scope));
+					new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 			local = new FlatCheckedEnvironment(defs, question.env,
 					question.scope);
 		} else {
@@ -206,7 +206,7 @@ public class TypeCheckerStmVisitor extends
 		}
 
 		PType rt = node.getStatement().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		local.unusedCheck();
 		node.setType(rt);
 		return rt;
@@ -276,14 +276,14 @@ public class TypeCheckerStmVisitor extends
 		for (PDefinition d : node.getAssignmentDefs()) {
 			local = new FlatCheckedEnvironment(d, local, question.scope); // cumulative
 			PDefinitionAssistantTC.implicitDefinitions(d, local);
-			d.apply(rootVisitor, new TypeCheckInfo(local, question.scope));
+			d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		}
 
 		// For type checking purposes, the definitions are treated as
 		// local variables. At runtime (below) they have to be treated
 		// more like (updatable) state.
 
-		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(local,
+		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(question.assistantFactory,local,
 				question.scope));
 		local.unusedCheck(question.env);
 		node.setType(r);
@@ -536,7 +536,7 @@ public class TypeCheckerStmVisitor extends
 		Environment local = new FlatCheckedEnvironment(node.getDefs(),
 				question.env, question.scope);
 		PType r = node.getResult().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		local.unusedCheck();
 
 		return r;
@@ -626,7 +626,7 @@ public class TypeCheckerStmVisitor extends
 				local = new FlatCheckedEnvironment(d, local, question.scope); // cumulative
 				PDefinitionAssistantTC.implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, rootVisitor,
-						new TypeCheckInfo(local));
+						new TypeCheckInfo(question.assistantFactory,local));
 
 				if (question.env.isVDMPP()) {
 					SClassDefinition cdef = question.env.findClassDefinition();
@@ -634,17 +634,17 @@ public class TypeCheckerStmVisitor extends
 					d.setAccess(PAccessSpecifierAssistantTC.getStatic(d, true));
 				}
 
-				d.apply(rootVisitor, new TypeCheckInfo(local, question.scope));
+				d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,local, question.scope));
 			} else {
 				PDefinitionAssistantTC.implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, rootVisitor, question);
-				d.apply(rootVisitor, new TypeCheckInfo(local, question.scope));
+				d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,local, question.scope));
 				local = new FlatCheckedEnvironment(d, local, question.scope); // cumulative
 			}
 		}
 
 		PType r = node.getStatement().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -740,7 +740,7 @@ public class TypeCheckerStmVisitor extends
 			Environment local = new FlatCheckedEnvironment(defs, question.env,
 					question.scope);
 			PType rt = node.getStatement().apply(rootVisitor,
-					new TypeCheckInfo(local, question.scope));
+					new TypeCheckInfo(question.assistantFactory,local, question.scope));
 			local.unusedCheck();
 			node.setType(rt);
 			return rt;
@@ -783,7 +783,7 @@ public class TypeCheckerStmVisitor extends
 		Environment local = new FlatCheckedEnvironment(vardef, question.env,
 				question.scope);
 		PType rt = node.getStatement().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		local.unusedCheck();
 		node.setType(rt);
 		return rt;
@@ -832,14 +832,14 @@ public class TypeCheckerStmVisitor extends
 		if (node.getSuchThat() != null
 				&& !PTypeAssistantTC.isType(
 						node.getSuchThat().apply(rootVisitor,
-								new TypeCheckInfo(local, question.scope)),
+								new TypeCheckInfo(question.assistantFactory,local, question.scope)),
 						ABooleanBasicType.class)) {
 			TypeCheckerErrors.report(3225, "Such that clause is not boolean",
 					node.getLocation(), node);
 		}
 
 		PType r = node.getStatement().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope));
 		local.unusedCheck();
 		node.setType(r);
 		return r;
@@ -964,7 +964,7 @@ public class TypeCheckerStmVisitor extends
 				&& !PTypeAssistantTC.isType(
 						node.getPrecondition().apply(
 								rootVisitor,
-								new TypeCheckInfo(local,
+								new TypeCheckInfo(question.assistantFactory,local,
 										NameScope.NAMESANDSTATE)),
 						ABooleanBasicType.class)) {
 			TypeCheckerErrors.report(3233,
@@ -977,7 +977,7 @@ public class TypeCheckerStmVisitor extends
 				&& !PTypeAssistantTC.isType(
 						node.getPostcondition().apply(
 								rootVisitor,
-								new TypeCheckInfo(local,
+								new TypeCheckInfo(question.assistantFactory,local,
 										NameScope.NAMESANDANYSTATE)),
 						ABooleanBasicType.class)) {
 			TypeCheckerErrors.report(3234,
@@ -1020,7 +1020,7 @@ public class TypeCheckerStmVisitor extends
 		Environment local = new FlatCheckedEnvironment(defs, question.env,
 				question.scope);
 		rtypes.add(node.getWith().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope, question.qualifiers)));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope, question.qualifiers)));
 
 		node.setType(rtypes.getType(node.getLocation()));
 		return node.getType();
@@ -1192,14 +1192,14 @@ public class TypeCheckerStmVisitor extends
 		// rootVisitor, question);
 		// DefinitionList defs = patternBind.getDefinitions();
 		node.getPatternBind().apply(rootVisitor,
-				new TypeCheckInfo(question.env, question.scope));
+				new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node
 				.getPatternBind());
 		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);
 		Environment local = new FlatCheckedEnvironment(defs, question.env,
 				question.scope);
 		node.getStatement().apply(rootVisitor,
-				new TypeCheckInfo(local, question.scope, question.qualifiers));
+				new TypeCheckInfo(question.assistantFactory,local, question.scope, question.qualifiers));
 		local.unusedCheck();
 
 		return null;

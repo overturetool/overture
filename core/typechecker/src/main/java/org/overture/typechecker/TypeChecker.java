@@ -32,6 +32,8 @@ import org.overture.ast.messages.InternalException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.messages.VDMWarning;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 
 /**
@@ -44,6 +46,8 @@ abstract public class TypeChecker
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
 	private static VDMMessage lastMessage = null;
 	private static final int MAX = 100;
+	
+	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	public TypeChecker()
 	{

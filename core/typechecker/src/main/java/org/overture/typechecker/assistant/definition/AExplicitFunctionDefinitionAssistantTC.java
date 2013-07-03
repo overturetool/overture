@@ -241,7 +241,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
 			
-			TypeCheckInfo newQuestion = new TypeCheckInfo(params,question.scope);			
+			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory,params,question.scope);			
 			
 			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, newQuestion));
 		}

@@ -26,13 +26,13 @@ public class ACaseAlternativeAssistantTC {
 		if (c.getDefs().size() == 0)
 		{
 			//c.setDefs(new ArrayList<PDefinition>());
-			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.env));
+			PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.assistantFactory,question.env));
 
 			if (c.getPattern() instanceof AExpressionPattern)
 			{
 				// Only expression patterns need type checking...
 				AExpressionPattern ep = (AExpressionPattern)c.getPattern();
-				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.env, question.scope));
+				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 				
 				if (!TypeComparator.compatible(ptype, expType))
 				{
@@ -41,7 +41,7 @@ public class ACaseAlternativeAssistantTC {
 			}
 
 			try{
-				PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.env));
+				PPatternAssistantTC.typeResolve(c.getPattern(),rootVisitor,new TypeCheckInfo(question.assistantFactory,question.env));
 				c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(),expType, NameScope.LOCAL));
 			} catch (TypeCheckException e)
 			{
@@ -50,7 +50,7 @@ public class ACaseAlternativeAssistantTC {
 			}
 		}
 
-		PDefinitionListAssistantTC.typeCheck(c.getDefs(),rootVisitor,new TypeCheckInfo(question.env, question.scope));
+		PDefinitionListAssistantTC.typeCheck(c.getDefs(),rootVisitor,new TypeCheckInfo(question.assistantFactory,question.env, question.scope));
 		
 		if(!PPatternAssistantTC.matches(c.getPattern(),expType))
 		{
@@ -58,7 +58,7 @@ public class ACaseAlternativeAssistantTC {
 		}
 		
 		Environment local = new FlatCheckedEnvironment(c.getDefs(), question.env, question.scope);
-		question  = new TypeCheckInfo(local, question.scope,question.qualifiers);
+		question  = new TypeCheckInfo(question.assistantFactory,local, question.scope,question.qualifiers);
 		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();
 		return c.getType();

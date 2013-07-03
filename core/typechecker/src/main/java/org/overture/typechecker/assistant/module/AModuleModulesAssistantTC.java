@@ -7,6 +7,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typechecker.ModuleEnvironment;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AModuleModulesAssistantTC
 {
@@ -67,10 +68,10 @@ public class AModuleModulesAssistantTC
    		return null;
 	}
 
-	public static void typeCheckImports(AModuleModules m) throws AnalysisException {
+	public static void typeCheckImports(ITypeCheckerAssistantFactory assistantFactory,AModuleModules m) throws AnalysisException {
 		if (m.getImports() != null)
 		{
-			AModuleImportsAssistantTC.typeCheck(m.getImports(),new ModuleEnvironment(m));	
+			AModuleImportsAssistantTC.typeCheck(assistantFactory,m.getImports(),new ModuleEnvironment(m));	
 		}
 		
 	}

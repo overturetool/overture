@@ -33,6 +33,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.typechecker.Pass;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -182,7 +183,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{	
-				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(env));
+				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(),env));
 			}
 			catch (TypeCheckException te)
 			{
@@ -212,7 +213,7 @@ public class ModuleTypeChecker extends TypeChecker
     					{
     						try
     						{
-    							d.apply(tc,new TypeCheckInfo(e,NameScope.NAMES));
+    							d.apply(tc,new TypeCheckInfo(assistantFactory,e,NameScope.NAMES));
 //    							System.out.println();
     						}
     						catch (TypeCheckException te)
@@ -243,7 +244,7 @@ public class ModuleTypeChecker extends TypeChecker
     			try
     			{
     				//TODO
-    				AModuleModulesAssistantTC.typeCheckImports(m);
+    				AModuleModulesAssistantTC.typeCheckImports(assistantFactory,m);
 //    				m.typeCheckImports();		// Imports compared to exports
     			}
     			catch (TypeCheckException te)

@@ -67,7 +67,7 @@ public class TypeCheckerUtil
 		{
 			try
 			{
-				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
 			} catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block

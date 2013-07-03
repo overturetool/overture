@@ -117,7 +117,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
 				AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
-			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(params, question.scope,question.qualifiers)));
+			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory,params, question.scope,question.qualifiers)));
 		}
 		else
 		{
