@@ -14,7 +14,7 @@
   <name>The Overture Abstract Syntax Tree </name>
 
   <properties>
-    <astcreator.version>1.2.0</astcreator.version>
+    <astcreator.version>1.2.1</astcreator.version>
   </properties>
 
   <build>
