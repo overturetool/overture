@@ -75,6 +75,7 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistant;
@@ -384,30 +385,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			Value v = node.getObject().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			PType objtype = null;
-			Value r = null;
-
-			if (v.isType(ObjectValue.class))
-			{
-				ObjectValue ov = v.objectValue(ctxt);
-				objtype = ov.type;
-				r = ov.get(node.getMemberName(), node.getMemberName().getExplicit());
-			} else
-			{
-				RecordValue rv = v.recordValue(ctxt);
-				objtype = rv.type;
-				FieldMap fields = rv.fieldmap;
-				r = fields.get(node.getField().getName());
-			}
-			if (r == null)
-			{
-				VdmRuntimeError.abort(node.getLocation(), 4006, "Type "
-						+ objtype + " has no field "
-						+ node.getField().getName(), ctxt);
-			}
-
-			return r;
+			return AFieldExpAssistantInterpreter.evaluate(node, ctxt);
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
