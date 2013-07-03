@@ -69,7 +69,7 @@ public class PogTest extends TestCase
 			"(let x:nat1 = 123 in\n  (not (m(-1) > 0) =>\n    (not (m(-2) > 0) =>\n      (not ((x < 0) or ((x > 10) or (x = 100))) =>\n        999 in set dom m))))\n",
 			"(forall a:int, b:int & (a < b) =>\n  a in set dom m)\n",
 			"(forall a:int, b:int &\n  pre_prepostf(a, b) => post_prepostf(a, b, (a + b)))\n",
-			"(forall mk_(a, b):(int * int), c:(int * int) &\n  pre_prepostfi(mk_(a, b), c) => exists r:int & post_prepostfi(mk_(a, b), c, r))\n",
+			"(forall mk_(a, b):(int * int), c:(int * int) & (a < b) =>\n  pre_prepostfi(mk_(a, b), c) => exists r:int & post_prepostfi(mk_(a, b), c, r))\n",
 			"(forall x:seq of (int) &\n  (exists [a]:seq1 of (int) & [a] = (x ^ [-999]) =>\n  let [a] = (x ^ [-999]) in\n    a in set dom m))\n",
 			"(forall x:seq of (int) &\n  (not exists [a]:seq1 of (int) & [a] = (x ^ [-999]) =>\n    (exists [a, b]:seq1 of (int) & [a, b] = (x ^ [-999]) =>\n    let [a, b] = (x ^ [-999]) in\n      (a + b) in set dom m)))\n",
 			"(forall x:seq of (int) &\n  (not exists [a]:seq1 of (int) & [a] = (x ^ [-999]) =>\n    (not exists [a, b]:seq1 of (int) & [a, b] = (x ^ [-999]) =>\n      (exists ([a] ^ [b]):seq1 of (int) & ([a] ^ [b]) = (x ^ [-999]) =>\n      let [a] ^ [b] = (x ^ [-999]) in\n        (a + b) in set dom m))))\n",

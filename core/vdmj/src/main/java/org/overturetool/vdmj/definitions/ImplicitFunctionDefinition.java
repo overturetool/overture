@@ -655,7 +655,7 @@ public class ImplicitFunctionDefinition extends Definition
 			ctxt.pop();
 		}
 
-		ctxt.push(new POFunctionDefinitionContext(this, false));
+		ctxt.push(new POFunctionDefinitionContext(this, true));
 
 		if (body == null)
 		{
