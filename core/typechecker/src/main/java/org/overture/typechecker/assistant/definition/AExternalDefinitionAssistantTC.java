@@ -50,7 +50,7 @@ public class AExternalDefinitionAssistantTC {
 
 	public static PType getType(
 			AExternalDefinition def) {
-		return af.createPDefinitionAssistantTC().getType(def.getState());
+		return af.createPDefinitionAssistant().getType(def.getState());
 	}
 
 	public static boolean isUsed(AExternalDefinition u) {

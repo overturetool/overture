@@ -171,7 +171,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new ModuleEnvironment(defaultModule);
+		return new ModuleEnvironment(assistantFactory,defaultModule);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class ModuleInterpreter extends Interpreter
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		Context mainContext = new StateContext(defaultModule.getName().getLocation(),
+		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
 				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
@@ -259,7 +259,7 @@ public class ModuleInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		Environment env = new ModuleEnvironment(defaultModule);
+		Environment env = new ModuleEnvironment(assistantFactory,defaultModule);
 
 		try
 		{

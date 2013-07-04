@@ -26,8 +26,6 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
-import org.overture.pog.assistant.ACaseAlternativeAssistantPOG;
-import org.overture.pog.assistant.PDefinitionAssistantPOG;
 import org.overture.pog.obligation.CasesExhaustiveObligation;
 import org.overture.pog.obligation.FiniteMapObligation;
 import org.overture.pog.obligation.FuncComposeObligation;
@@ -207,7 +205,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 	    if (alt.getPattern() instanceof AIgnorePattern)
 		hasIgnore = true;
 
-	    obligations.addAll(ACaseAlternativeAssistantPOG
+	    obligations.addAll(question.assistantFactory.createACaseAlternativeAssistant()
 		    .getProofObligations(alt, rootVisitor, question, node
 			    .getExpression().getType()));
 	    /*
@@ -534,7 +532,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     @Override
     public ProofObligationList caseADefExp(ADefExp node, POContextStack question)
 	    throws AnalysisException {
-	ProofObligationList obligations = PDefinitionAssistantPOG
+	ProofObligationList obligations = question.assistantFactory.createPDefinitionAssistant()
 		.getProofObligations(node.getLocalDefs(), rootVisitor, question);
 
 	// RWL Question, are we going
@@ -641,7 +639,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
     {
 		ProofObligationList obligations = new ProofObligationList();
 		
-		PType expected = (node.getTypedef() == null ? node.getBasicType() : PDefinitionAssistantTC.getType(node.getTypedef()));
+		PType expected = (node.getTypedef() == null ? node.getBasicType() : question.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()));
 		question.noteType(node.getTest(), expected);
 
 		if (!TypeComparator.isSubType(node.getTest().getType(), expected))

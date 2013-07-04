@@ -575,7 +575,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 							}
 						}
 
-						PType ftype = af.createPDefinitionAssistantTC().getType(f);
+						PType ftype = af.createPDefinitionAssistant().getType(f);
 
 						if (current == null)
 						{

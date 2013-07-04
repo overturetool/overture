@@ -86,7 +86,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 			PType other) {
 
 		if (PTypeAssistantTC.equals(
-				af.createPDefinitionAssistantTC().getType(aClassDefDefinition), other)) {
+				af.createPDefinitionAssistant().getType(aClassDefDefinition), other)) {
 			return true;
 		} else {
 			for (PType type : aClassDefDefinition.getSupertypes()) {
@@ -688,7 +688,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 					.isUpdatable(((AInheritedDefinition) d).getSuperdef());
 		case ALocalDefinition.kindPDefinition:
 			return ((ALocalDefinition) d).getNameScope().matches(
-					NameScope.STATE) || PTypeAssistantTC.isClass(af.createPDefinitionAssistantTC().getType(d));
+					NameScope.STATE) || PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(d));
 		case ARenamedDefinition.kindPDefinition:
 			return PDefinitionAssistantTC.isUpdatable(((ARenamedDefinition) d)
 					.getDef());

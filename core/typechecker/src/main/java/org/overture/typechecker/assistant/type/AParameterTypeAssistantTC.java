@@ -43,7 +43,7 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 
 		PDefinition p = question.env.findName(type.getName(), NameScope.NAMES);
 
-		if (p == null || !(question.assistantFactory.createPDefinitionAssistantTC().getType(p) instanceof AParameterType))
+		if (p == null || !(question.assistantFactory.createPDefinitionAssistant().getType(p) instanceof AParameterType))
 		{
 			TypeCheckerErrors.report(3433, "Parameter type @" + type.getName() + " not defined",type.getLocation(),type);
 		}

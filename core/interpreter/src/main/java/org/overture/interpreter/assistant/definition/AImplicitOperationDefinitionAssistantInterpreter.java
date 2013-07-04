@@ -4,6 +4,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.PStm;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.FunctionValue;
@@ -13,25 +14,36 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
-public class AImplicitOperationDefinitionAssistantInterpreter extends AImplicitOperationDefinitionAssistantTC
+public class AImplicitOperationDefinitionAssistantInterpreter extends
+		AImplicitOperationDefinitionAssistantTC
 {
+
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AImplicitOperationDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static NameValuePairList getNamedValues(
 			AImplicitOperationDefinition d, Context initialContext)
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
-		FunctionValue prefunc =
-			(d.getPredef() == null) ? null : new FunctionValue(d.getPredef(), null, null, null);
+		FunctionValue prefunc = (d.getPredef() == null) ? null
+				: new FunctionValue(d.getPredef(), null, null, null);
 
-		FunctionValue postfunc =
-			(d.getPostdef() == null) ? null : new FunctionValue(d.getPostdef(), null, null, null);
+		FunctionValue postfunc = (d.getPostdef() == null) ? null
+				: new FunctionValue(d.getPostdef(), null, null, null);
 
 		// Note, body may be null if it is really implicit. This is caught
 		// when the function is invoked. The value is needed to implement
 		// the pre_() expression for implicit functions.
 
-		OperationValue op =	new OperationValue(d, prefunc, postfunc, d.getState());
+		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState());
 		op.isConstructor = d.getIsConstructor();
 		op.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
 		nvl.add(new NameValuePair(d.getName(), op));
@@ -55,31 +67,36 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends AImplicitO
 	{
 		if (d.getPredef() != null)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(),lineno);
-			if (found != null) return found;
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
+			if (found != null)
+				return found;
 		}
 
 		if (d.getPostdef() != null)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(),lineno);
-			if (found != null) return found;
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
+			if (found != null)
+				return found;
 		}
-		
+
 		if (d.getErrors() != null)
 		{
-			for (AErrorCase err: d.getErrors())
+			for (AErrorCase err : d.getErrors())
 			{
-				PExp found = AErrorCaseAssistantIntepreter.findExpression(err,lineno);
-				if (found != null) return found;
+				PExp found = AErrorCaseAssistantInterpreter.findExpression(err, lineno);
+				if (found != null)
+					return found;
 			}
 		}
 
-		return d.getBody() == null ? null : PStmAssistantInterpreter.findExpression(d.getBody(),lineno);
+		return d.getBody() == null ? null
+				: PStmAssistantInterpreter.findExpression(d.getBody(), lineno);
 	}
 
 	public static PStm findStatement(AImplicitOperationDefinition d, int lineno)
 	{
-		return d.getBody() == null ? null : PStmAssistantInterpreter.findStatement(d.getBody(),lineno);
+		return d.getBody() == null ? null
+				: PStmAssistantInterpreter.findStatement(d.getBody(), lineno);
 	}
 
 }

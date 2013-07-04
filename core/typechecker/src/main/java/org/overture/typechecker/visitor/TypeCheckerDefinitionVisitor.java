@@ -116,7 +116,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question.qualifiers = null;
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
 		node.setType(PTypeAssistantTC.typeResolve(
-				question.assistantFactory.createPDefinitionAssistantTC().getType(node), null, rootVisitor,
+				question.assistantFactory.createPDefinitionAssistant().getType(node), null, rootVisitor,
 				question));
 
 		if (node.getExpType() instanceof AVoidType) {
@@ -165,7 +165,7 @@ public class TypeCheckerDefinitionVisitor extends
 				new TypeCheckInfo(question.assistantFactory,cenv, NameScope.NAMESANDSTATE,
 						question.qualifiers)));
 		node.setType(PTypeAssistantTC.typeResolve(
-				question.assistantFactory.createPDefinitionAssistantTC().getType(node), null, rootVisitor,
+				question.assistantFactory.createPDefinitionAssistant().getType(node), null, rootVisitor,
 				question));
 
 		if (node.getExpType() instanceof AVoidType) {
@@ -174,13 +174,13 @@ public class TypeCheckerDefinitionVisitor extends
 							.getLocation(), node.getExpression());
 		}
 
-		if (!TypeComparator.compatible(question.assistantFactory.createPDefinitionAssistantTC().getType(node),
+		if (!TypeComparator.compatible(question.assistantFactory.createPDefinitionAssistant().getType(node),
 				node.getExpType())) {
 			TypeCheckerErrors.report(3000,
 					"Expression does not match declared type",
 					node.getLocation(), node);
 			TypeCheckerErrors.detail2("Declared",
-					question.assistantFactory.createPDefinitionAssistantTC().getType(node), "Expression",
+					question.assistantFactory.createPDefinitionAssistant().getType(node), "Expression",
 					node.getExpType());
 		}
 
@@ -537,7 +537,7 @@ public class TypeCheckerDefinitionVisitor extends
 			}
 		}
 
-		if (PTypeAssistantTC.narrowerThan(question.assistantFactory.createPDefinitionAssistantTC().getType(node),
+		if (PTypeAssistantTC.narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node),
 				node.getAccess())) {
 			TypeCheckerErrors
 					.report(3030,
@@ -1417,7 +1417,7 @@ public class TypeCheckerDefinitionVisitor extends
 			node.getInvdef().apply(rootVisitor, question);
 		}
 		
-		PType type = question.assistantFactory.createPDefinitionAssistantTC().getType(node);
+		PType type = question.assistantFactory.createPDefinitionAssistant().getType(node);
 		node.setType(type);
 		
 

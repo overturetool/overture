@@ -183,169 +183,169 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	//Type
 
 	@Override
-	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistantTC()
+	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
 	{
 		return new AApplyObjectDesignatorAssistantTC(this);
 	}
 
 	@Override
-	public ABracketTypeAssistantTC createABracketTypeAssistantTC()
+	public ABracketTypeAssistantTC createABracketTypeAssistant()
 	{
 		return new ABracketTypeAssistantTC(this);
 	}
 
 	@Override
-	public AClassTypeAssistantTC createAClassTypeAssistantTC()
+	public AClassTypeAssistantTC createAClassTypeAssistant()
 	{
 		return new AClassTypeAssistantTC(this);
 	}
 
 	@Override
-	public AFieldFieldAssistantTC createAFieldFieldAssistantTC()
+	public AFieldFieldAssistantTC createAFieldFieldAssistant()
 	{
 		return new AFieldFieldAssistantTC(this);
 	}
 
 	@Override
-	public AFunctionTypeAssistantTC createAFunctionTypeAssistantTC()
+	public AFunctionTypeAssistantTC createAFunctionTypeAssistant()
 	{
 		return new AFunctionTypeAssistantTC(this);
 	}
 
 	@Override
-	public AInMapMapTypeAssistantTC createAInMapMapTypeAssistantTC()
+	public AInMapMapTypeAssistantTC createAInMapMapTypeAssistant()
 	{
 		return new AInMapMapTypeAssistantTC(this);
 	}
 
 	@Override
-	public AMapMapTypeAssistantTC createAMapMapTypeAssistantTC()
+	public AMapMapTypeAssistantTC createAMapMapTypeAssistant()
 	{
 		return new AMapMapTypeAssistantTC(this);
 	}
 
 	@Override
-	public ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistantTC()
+	public ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant()
 	{
 		return new ANamedInvariantTypeAssistantTC(this);
 	}
 
 	@Override
-	public AOperationTypeAssistantTC createAOperationTypeAssistantTC()
+	public AOperationTypeAssistantTC createAOperationTypeAssistant()
 	{
 		return new AOperationTypeAssistantTC(this);
 	}
 
 	@Override
-	public AOptionalTypeAssistantTC createAOptionalTypeAssistantTC()
+	public AOptionalTypeAssistantTC createAOptionalTypeAssistant()
 	{
 		return new AOptionalTypeAssistantTC(this);
 	}
 
 	@Override
-	public AParameterTypeAssistantTC createAParameterTypeAssistantTC()
+	public AParameterTypeAssistantTC createAParameterTypeAssistant()
 	{
 		return new AParameterTypeAssistantTC(this);
 	}
 
 	@Override
-	public APatternListTypePairAssistantTC createAPatternListTypePairAssistantTC()
+	public APatternListTypePairAssistantTC createAPatternListTypePairAssistant()
 	{
 		return new APatternListTypePairAssistantTC(this);
 	}
 
 	@Override
-	public AProductTypeAssistantTC createAProductTypeAssistantTC()
+	public AProductTypeAssistantTC createAProductTypeAssistant()
 	{
 		return new AProductTypeAssistantTC(this);
 	}
 
 	@Override
-	public AQuoteTypeAssistantTC createAQuoteTypeAssistantTC()
+	public AQuoteTypeAssistantTC createAQuoteTypeAssistant()
 	{
 		return new AQuoteTypeAssistantTC(this);
 	}
 
 	@Override
-	public ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistantTC()
+	public ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant()
 	{
 		return new ARecordInvariantTypeAssistantTC(this);
 	}
 
 	@Override
-	public ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistantTC()
+	public ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistant()
 	{
 		return new ASeq1SeqTypeAssistantTC(this);
 	}
 
 	@Override
-	public ASeqSeqTypeAssistantTC createASeqSeqTypeAssistantTC()
+	public ASeqSeqTypeAssistantTC createASeqSeqTypeAssistant()
 	{
 		return new ASeqSeqTypeAssistantTC(this);
 	}
 
 	@Override
-	public ASetTypeAssistantTC createASetTypeAssistantTC()
+	public ASetTypeAssistantTC createASetTypeAssistant()
 	{
 		return new ASetTypeAssistantTC(this);
 	}
 
 	@Override
-	public AUndefinedTypeAssistantTC createAUndefinedTypeAssistantTC()
+	public AUndefinedTypeAssistantTC createAUndefinedTypeAssistant()
 	{
 		return new AUndefinedTypeAssistantTC(this);
 	}
 
 	@Override
-	public AUnionTypeAssistantTC createAUnionTypeAssistantTC()
+	public AUnionTypeAssistantTC createAUnionTypeAssistant()
 	{
 		return new AUnionTypeAssistantTC(this);
 	}
 
 	@Override
-	public AUnknownTypeAssistantTC createAUnknownTypeAssistantTC()
+	public AUnknownTypeAssistantTC createAUnknownTypeAssistant()
 	{
 		return new AUnknownTypeAssistantTC(this);
 	}
 
 	@Override
-	public AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistantTC()
+	public AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistant()
 	{
 		return new AUnresolvedTypeAssistantTC(this);
 	}
 
 	@Override
-	public AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistantTC()
+	public AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistant()
 	{
 		return new AVoidReturnTypeAssistantTC(this);
 	}
 
 	@Override
-	public AVoidTypeAssistantTC createAVoidTypeAssistantTC()
+	public AVoidTypeAssistantTC createAVoidTypeAssistant()
 	{
 		return new AVoidTypeAssistantTC(this);
 	}
 
 	@Override
-	public PTypeAssistantTC createPTypeAssistantTC()
+	public PTypeAssistantTC createPTypeAssistant()
 	{
 		return new PTypeAssistantTC(this);
 	}
 
 	@Override
-	public SMapTypeAssistantTC createSMapTypeAssistantTC()
+	public SMapTypeAssistantTC createSMapTypeAssistant()
 	{
 		return new SMapTypeAssistantTC(this);
 	}
 
 	@Override
-	public SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistantTC()
+	public SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant()
 	{
 		return new SNumericBasicTypeAssistantTC(this);
 	}
 
 	@Override
-	public SSeqTypeAssistantTC createSSeqTypeAssistantTC()
+	public SSeqTypeAssistantTC createSSeqTypeAssistant()
 	{
 		return new SSeqTypeAssistantTC(this);
 	}
@@ -353,169 +353,169 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	//definition
 
 	@Override
-	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistantTC()
+	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
 	{
 		return new AAssignmentDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistantTC()
+	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
 	{
 		return new ABusClassDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AClassInvariantDefinitionAssistantTC createAClassInvariantDefinitionAssistantTC()
+	public AClassInvariantDefinitionAssistantTC createAClassInvariantDefinitionAssistant()
 	{
 		return new AClassInvariantDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistantTC()
+	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant()
 	{
 		return new ACpuClassDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AEqualsDefinitionAssistantTC createAEqualsDefinitionAssistantTC()
+	public AEqualsDefinitionAssistantTC createAEqualsDefinitionAssistant()
 	{
 		return new AEqualsDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistantTC()
+	public AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant()
 	{
 		return new AExplicitFunctionDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistantTC()
+	public AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant()
 	{
 		return new AExplicitOperationDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AExternalDefinitionAssistantTC createAExternalDefinitionAssistantTC()
+	public AExternalDefinitionAssistantTC createAExternalDefinitionAssistant()
 	{
 		return new AExternalDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AImplicitFunctionDefinitionAssistantTC createAImplicitFunctionDefinitionAssistantTC()
+	public AImplicitFunctionDefinitionAssistantTC createAImplicitFunctionDefinitionAssistant()
 	{
 		return new AImplicitFunctionDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AImplicitOperationDefinitionAssistantTC createAImplicitOperationDefinitionAssistantTC()
+	public AImplicitOperationDefinitionAssistantTC createAImplicitOperationDefinitionAssistant()
 	{
 		return new AImplicitOperationDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistantTC()
+	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
 	{
 		return new AImportedDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AInheritedDefinitionAssistantTC createAInheritedDefinitionAssistantTC()
+	public AInheritedDefinitionAssistantTC createAInheritedDefinitionAssistant()
 	{
 		return new AInheritedDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistantTC()
+	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
 	{
 		return new AInstanceVariableDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ALocalDefinitionAssistantTC createALocalDefinitionAssistantTC()
+	public ALocalDefinitionAssistantTC createALocalDefinitionAssistant()
 	{
 		return new ALocalDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AMultiBindListDefinitionAssistantTC createAMultiBindListDefinitionAssistantTC()
+	public AMultiBindListDefinitionAssistantTC createAMultiBindListDefinitionAssistant()
 	{
 		return new AMultiBindListDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AMutexSyncDefinitionAssistantTC createAMutexSyncDefinitionAssistantTC()
+	public AMutexSyncDefinitionAssistantTC createAMutexSyncDefinitionAssistant()
 	{
 		return new AMutexSyncDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ANamedTraceDefinitionAssistantTC createANamedTraceDefinitionAssistantTC()
+	public ANamedTraceDefinitionAssistantTC createANamedTraceDefinitionAssistant()
 	{
 		return new ANamedTraceDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public APerSyncDefinitionAssistantTC createAPerSyncDefinitionAssistantTC()
+	public APerSyncDefinitionAssistantTC createAPerSyncDefinitionAssistant()
 	{
 		return new APerSyncDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ARenamedDefinitionAssistantTC createARenamedDefinitionAssistantTC()
+	public ARenamedDefinitionAssistantTC createARenamedDefinitionAssistant()
 	{
 		return new ARenamedDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AStateDefinitionAssistantTC createAStateDefinitionAssistantTC()
+	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
 	{
 		return new AStateDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistantTC()
+	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
 	{
 		return new ASystemClassDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistantTC()
+	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
 	{
 		return new AThreadDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public ATypeDefinitionAssistantTC createATypeDefinitionAssistantTC()
+	public ATypeDefinitionAssistantTC createATypeDefinitionAssistant()
 	{
 		return new ATypeDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AUntypedDefinitionAssistantTC createAUntypedDefinitionAssistantTC()
+	public AUntypedDefinitionAssistantTC createAUntypedDefinitionAssistant()
 	{
 		return new AUntypedDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public AValueDefinitionAssistantTC createAValueDefinitionAssistantTC()
+	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
 	{
 		return new AValueDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public PAccessSpecifierAssistantTC createPAccessSpecifierAssistantTC()
+	public PAccessSpecifierAssistantTC createPAccessSpecifierAssistant()
 	{
 		return new PAccessSpecifierAssistantTC(this);
 	}
 
 	@Override
-	public PDefinitionAssistantTC createPDefinitionAssistantTC()
+	public PDefinitionAssistantTC createPDefinitionAssistant()
 	{
 		return new PDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public PDefinitionListAssistantTC createPDefinitionListAssistantTC()
+	public PDefinitionListAssistantTC createPDefinitionListAssistant()
 	{
 		return new PDefinitionListAssistantTC(this);
 	}
@@ -527,13 +527,13 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistantTC()
+	public PTraceDefinitionAssistantTC createPTraceDefinitionAssistant()
 	{
 		return new PTraceDefinitionAssistantTC(this);
 	}
 
 	@Override
-	public SClassDefinitionAssistantTC createSClassDefinitionAssistantTC()
+	public SClassDefinitionAssistantTC createSClassDefinitionAssistant()
 	{
 		return new SClassDefinitionAssistantTC(this);
 	}
@@ -541,265 +541,265 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// expression
 
 	@Override
-	public AApplyExpAssistantTC createAApplyExpAssistantTC()
+	public AApplyExpAssistantTC createAApplyExpAssistant()
 	{
 		return new AApplyExpAssistantTC(this);
 	}
 
 	@Override
-	public ACaseAlternativeAssistantTC createACaseAlternativeAssistantTC()
+	public ACaseAlternativeAssistantTC createACaseAlternativeAssistant()
 	{
 		return new ACaseAlternativeAssistantTC(this);
 	}
 
 	@Override
-	public ACasesExpAssistantTC createACasesExpAssistantTC()
+	public ACasesExpAssistantTC createACasesExpAssistant()
 	{
 		return new ACasesExpAssistantTC(this);
 	}
 
 	@Override
-	public AElementsUnaryExpAssistantTC createAElementsUnaryExpAssistantTC()
+	public AElementsUnaryExpAssistantTC createAElementsUnaryExpAssistant()
 	{
 		return new AElementsUnaryExpAssistantTC(this);
 	}
 
 	@Override
-	public AElseIfExpAssistantTC createAElseIfExpAssistantTC()
+	public AElseIfExpAssistantTC createAElseIfExpAssistant()
 	{
 		return new AElseIfExpAssistantTC(this);
 	}
 
 	@Override
-	public AExists1ExpAssistantTC createAExists1ExpAssistantTC()
+	public AExists1ExpAssistantTC createAExists1ExpAssistant()
 	{
 		return new AExists1ExpAssistantTC(this);
 	}
 
 	@Override
-	public AExistsExpAssistantTC createAExistsExpAssistantTC()
+	public AExistsExpAssistantTC createAExistsExpAssistant()
 	{
 		return new AExistsExpAssistantTC(this);
 	}
 
 	@Override
-	public AFieldExpAssistantTC createAFieldExpAssistantTC()
+	public AFieldExpAssistantTC createAFieldExpAssistant()
 	{
 		return new AFieldExpAssistantTC(this);
 	}
 
 	@Override
-	public AFieldNumberExpAssistantTC createAFieldNumberExpAssistantTC()
+	public AFieldNumberExpAssistantTC createAFieldNumberExpAssistant()
 	{
 		return new AFieldNumberExpAssistantTC(this);
 	}
 
 	@Override
-	public AForAllExpAssistantTC createAForAllExpAssistantTC()
+	public AForAllExpAssistantTC createAForAllExpAssistant()
 	{
 		return new AForAllExpAssistantTC(this);
 	}
 
 	@Override
-	public AFuncInstatiationExpAssistantTC createAFuncInstatiationExpAssistantTC()
+	public AFuncInstatiationExpAssistantTC createAFuncInstatiationExpAssistant()
 	{
 		return new AFuncInstatiationExpAssistantTC(this);
 	}
 
 	@Override
-	public AIfExpAssistantTC createAIfExpAssistantTC()
+	public AIfExpAssistantTC createAIfExpAssistant()
 	{
 		return new AIfExpAssistantTC(this);
 	}
 
 	@Override
-	public AIotaExpAssistantTC createAIotaExpAssistantTC()
+	public AIotaExpAssistantTC createAIotaExpAssistant()
 	{
 		return new AIotaExpAssistantTC(this);
 	}
 
 	@Override
-	public AIsExpAssistantTC createAIsExpAssistantTC()
+	public AIsExpAssistantTC createAIsExpAssistant()
 	{
 		return new AIsExpAssistantTC(this);
 	}
 
 	@Override
-	public AIsOfBaseClassExpAssistantTC createAIsOfBaseClassExpAssistantTC()
+	public AIsOfBaseClassExpAssistantTC createAIsOfBaseClassExpAssistant()
 	{
 		return new AIsOfBaseClassExpAssistantTC(this);
 	}
 
 	@Override
-	public AIsOfClassExpAssistantTC createAIsOfClassExpAssistantTC()
+	public AIsOfClassExpAssistantTC createAIsOfClassExpAssistant()
 	{
 		return new AIsOfClassExpAssistantTC(this);
 	}
 
 	@Override
-	public ALambdaExpAssistantTC createALambdaExpAssistantTC()
+	public ALambdaExpAssistantTC createALambdaExpAssistant()
 	{
 		return new ALambdaExpAssistantTC(this);
 	}
 
 	@Override
-	public ALetBeStExpAssistantTC createALetBeStExpAssistantTC()
+	public ALetBeStExpAssistantTC createALetBeStExpAssistant()
 	{
 		return new ALetBeStExpAssistantTC(this);
 	}
 
 	@Override
-	public ALetDefExpAssistantTC createALetDefExpAssistantTC()
+	public ALetDefExpAssistantTC createALetDefExpAssistant()
 	{
 		return new ALetDefExpAssistantTC(this);
 	}
 
 	@Override
-	public AMapCompMapExpAssistantTC createAMapCompMapExpAssistantTC()
+	public AMapCompMapExpAssistantTC createAMapCompMapExpAssistant()
 	{
 		return new AMapCompMapExpAssistantTC(this);
 	}
 
 	@Override
-	public AMapEnumMapExpAssistantTC createAMapEnumMapExpAssistantTC()
+	public AMapEnumMapExpAssistantTC createAMapEnumMapExpAssistant()
 	{
 		return new AMapEnumMapExpAssistantTC(this);
 	}
 
 	@Override
-	public AMapletExpAssistantTC createAMapletExpAssistantTC()
+	public AMapletExpAssistantTC createAMapletExpAssistant()
 	{
 		return new AMapletExpAssistantTC(this);
 	}
 
 	@Override
-	public AMkBasicExpAssistantTC createAMkBasicExpAssistantTC()
+	public AMkBasicExpAssistantTC createAMkBasicExpAssistant()
 	{
 		return new AMkBasicExpAssistantTC(this);
 	}
 
 	@Override
-	public AMkTypeExpAssistantTC createAMkTypeExpAssistantTC()
+	public AMkTypeExpAssistantTC createAMkTypeExpAssistant()
 	{
 		return new AMkTypeExpAssistantTC(this);
 	}
 
 	@Override
-	public AMuExpAssistantTC createAMuExpAssistantTC()
+	public AMuExpAssistantTC createAMuExpAssistant()
 	{
 		return new AMuExpAssistantTC(this);
 	}
 
 	@Override
-	public ANarrowExpAssistantTC createANarrowExpAssistantTC()
+	public ANarrowExpAssistantTC createANarrowExpAssistant()
 	{
 		return new ANarrowExpAssistantTC(this);
 	}
 
 	@Override
-	public ANewExpAssistantTC createANewExpAssistantTC()
+	public ANewExpAssistantTC createANewExpAssistant()
 	{
 		return new ANewExpAssistantTC(this);
 	}
 
 	@Override
-	public APostOpExpAssistantTC createAPostOpExpAssistantTC()
+	public APostOpExpAssistantTC createAPostOpExpAssistant()
 	{
 		return new APostOpExpAssistantTC(this);
 	}
 
 	@Override
-	public ARecordModifierAssistantTC createARecordModifierAssistantTC()
+	public ARecordModifierAssistantTC createARecordModifierAssistant()
 	{
 		return new ARecordModifierAssistantTC(this);
 	}
 
 	@Override
-	public ASameBaseClassExpAssistantTC createASameBaseClassExpAssistantTC()
+	public ASameBaseClassExpAssistantTC createASameBaseClassExpAssistant()
 	{
 		return new ASameBaseClassExpAssistantTC(this);
 	}
 
 	@Override
-	public ASameClassExpAssistantTC createASameClassExpAssistantTC()
+	public ASameClassExpAssistantTC createASameClassExpAssistant()
 	{
 		return new ASameClassExpAssistantTC(this);
 	}
 
 	@Override
-	public ASeqCompSeqExpAssistantTC createASeqCompSeqExpAssistantTC()
+	public ASeqCompSeqExpAssistantTC createASeqCompSeqExpAssistant()
 	{
 		return new ASeqCompSeqExpAssistantTC(this);
 	}
 
 	@Override
-	public ASeqEnumSeqExpAssistantTC createASeqEnumSeqExpAssistantTC()
+	public ASeqEnumSeqExpAssistantTC createASeqEnumSeqExpAssistant()
 	{
 		return new ASeqEnumSeqExpAssistantTC(this);
 	}
 
 	@Override
-	public ASetCompSetExpAssistantTC createASetCompSetExpAssistantTC()
+	public ASetCompSetExpAssistantTC createASetCompSetExpAssistant()
 	{
 		return new ASetCompSetExpAssistantTC(this);
 	}
 
 	@Override
-	public ASetEnumSetExpAssistantTC createASetEnumSetExpAssistantTC()
+	public ASetEnumSetExpAssistantTC createASetEnumSetExpAssistant()
 	{
 		return new ASetEnumSetExpAssistantTC(this);
 	}
 
 	@Override
-	public ASubseqExpAssistantTC createASubseqExpAssistantTC()
+	public ASubseqExpAssistantTC createASubseqExpAssistant()
 	{
 		return new ASubseqExpAssistantTC(this);
 	}
 
 	@Override
-	public ATupleExpAssistantTC createATupleExpAssistantTC()
+	public ATupleExpAssistantTC createATupleExpAssistant()
 	{
 		return new ATupleExpAssistantTC(this);
 	}
 
 	@Override
-	public AVariableExpAssistantTC createAVariableExpAssistantTC()
+	public AVariableExpAssistantTC createAVariableExpAssistant()
 	{
 		return new AVariableExpAssistantTC(this);
 	}
 
 	@Override
-	public PExpAssistantTC createPExpAssistantTC()
+	public PExpAssistantTC createPExpAssistant()
 	{
 		return new PExpAssistantTC(this);
 	}
 
 	@Override
-	public SBinaryExpAssistantTC createSBinaryExpAssistantTC()
+	public SBinaryExpAssistantTC createSBinaryExpAssistant()
 	{
 		return new SBinaryExpAssistantTC(this);
 	}
 
 	@Override
-	public SMapExpAssistantTC createSMapExpAssistantTC()
+	public SMapExpAssistantTC createSMapExpAssistant()
 	{
 		return new SMapExpAssistantTC(this);
 	}
 
 	@Override
-	public SSeqExpAssistantTC createSSeqExpAssistantTC()
+	public SSeqExpAssistantTC createSSeqExpAssistant()
 	{
 		return new SSeqExpAssistantTC(this);
 	}
 
 	@Override
-	public SSetExpAssistantTC createSSetExpAssistantTC()
+	public SSetExpAssistantTC createSSetExpAssistant()
 	{
 		return new SSetExpAssistantTC(this);
 	}
 
 	@Override
-	public SUnaryExpAssistantTC createSUnaryExpAssistantTC()
+	public SUnaryExpAssistantTC createSUnaryExpAssistant()
 	{
 		return new SUnaryExpAssistantTC(this);
 	}
@@ -807,61 +807,61 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	//module
 
 	@Override
-	public AAllImportAssistantTC createAAllImportAssistantTC()
+	public AAllImportAssistantTC createAAllImportAssistant()
 	{
 		return new AAllImportAssistantTC(this);
 	}
 
 	@Override
-	public AFromModuleImportsAssistantTC createAFromModuleImportsAssistantTC()
+	public AFromModuleImportsAssistantTC createAFromModuleImportsAssistant()
 	{
 		return new AFromModuleImportsAssistantTC(this);
 	}
 
 	@Override
-	public AModuleExportsAssistantTC createAModuleExportsAssistantTC()
+	public AModuleExportsAssistantTC createAModuleExportsAssistant()
 	{
 		return new AModuleExportsAssistantTC(this);
 	}
 
 	@Override
-	public AModuleImportsAssistantTC createAModuleImportsAssistantTC()
+	public AModuleImportsAssistantTC createAModuleImportsAssistant()
 	{
 		return new AModuleImportsAssistantTC(this);
 	}
 
 	@Override
-	public AModuleModulesAssistantTC createAModuleModulesAssistantTC()
+	public AModuleModulesAssistantTC createAModuleModulesAssistant()
 	{
 		return new AModuleModulesAssistantTC(this);
 	}
 
 	@Override
-	public ATypeImportAssistantTC createATypeImportAssistantTC()
+	public ATypeImportAssistantTC createATypeImportAssistant()
 	{
 		return new ATypeImportAssistantTC(this);
 	}
 
 	@Override
-	public AValueValueImportAssistantTC createAValueValueImportAssistantTC()
+	public AValueValueImportAssistantTC createAValueValueImportAssistant()
 	{
 		return new AValueValueImportAssistantTC(this);
 	}
 
 	@Override
-	public PExportAssistantTC createPExportAssistantTC()
+	public PExportAssistantTC createPExportAssistant()
 	{
 		return new PExportAssistantTC(this);
 	}
 
 	@Override
-	public PImportAssistantTC createPImportAssistantTC()
+	public PImportAssistantTC createPImportAssistant()
 	{
 		return new PImportAssistantTC(this);
 	}
 
 	@Override
-	public SValueImportAssistantTC createSValueImportAssistantTC()
+	public SValueImportAssistantTC createSValueImportAssistant()
 	{
 		return new SValueImportAssistantTC(this);
 	}
@@ -869,67 +869,67 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	//pattern
 
 	@Override
-	public ABooleanPatternAssistantTC createABooleanPatternAssistantTC()
+	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
 	{
 		return new ABooleanPatternAssistantTC(this);
 	}
 
 	@Override
-	public ACharacterPatternAssistantTC createACharacterPatternAssistantTC()
+	public ACharacterPatternAssistantTC createACharacterPatternAssistant()
 	{
 		return new ACharacterPatternAssistantTC(this);
 	}
 
 	@Override
-	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistantTC()
+	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
 	{
 		return new AConcatenationPatternAssistantTC(this);
 	}
 
 	@Override
-	public AExpressionPatternAssistantTC createAExpressionPatternAssistantTC()
+	public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
 	{
 		return new AExpressionPatternAssistantTC(this);
 	}
 
 	@Override
-	public AIdentifierPatternAssistantTC createAIdentifierPatternAssistantTC()
+	public AIdentifierPatternAssistantTC createAIdentifierPatternAssistant()
 	{
 		return new AIdentifierPatternAssistantTC(this);
 	}
 
 	@Override
-	public AIgnorePatternAssistantTC createAIgnorePatternAssistantTC()
+	public AIgnorePatternAssistantTC createAIgnorePatternAssistant()
 	{
 		return new AIgnorePatternAssistantTC(this);
 	}
 
 	@Override
-	public AIntegerPatternAssistantTC createAIntegerPatternAssistantTC()
+	public AIntegerPatternAssistantTC createAIntegerPatternAssistant()
 	{
 		return new AIntegerPatternAssistantTC(this);
 	}
 
 	@Override
-	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistantTC()
+	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
 	{
 		return new AMapletPatternMapletAssistantTC(this);
 	}
 
 	@Override
-	public AMapPatternAssistantTC createAMapPatternAssistantTC()
+	public AMapPatternAssistantTC createAMapPatternAssistant()
 	{
 		return new AMapPatternAssistantTC(this);
 	}
 
 	@Override
-	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistantTC()
+	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
 	{
 		return new AMapUnionPatternAssistantTC(this);
 	}
 
 	@Override
-	public ANilPatternAssistantTC createANilPatternAssistantTC()
+	public ANilPatternAssistantTC createANilPatternAssistant()
 	{
 		return new ANilPatternAssistantTC(this);
 	}
@@ -941,109 +941,109 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AQuotePatternAssistantTC createAQuotePatternAssistantTC()
+	public AQuotePatternAssistantTC createAQuotePatternAssistant()
 	{
 		return new AQuotePatternAssistantTC(this);
 	}
 
 	@Override
-	public ARealPatternAssistantTC createARealPatternAssistantTC()
+	public ARealPatternAssistantTC createARealPatternAssistant()
 	{
 		return new ARealPatternAssistantTC(this);
 	}
 
 	@Override
-	public ARecordPatternAssistantTC createARecordPatternAssistantTC()
+	public ARecordPatternAssistantTC createARecordPatternAssistant()
 	{
 		return new ARecordPatternAssistantTC(this);
 	}
 
 	@Override
-	public ASeqPatternAssistantTC createASeqPatternAssistantTC()
+	public ASeqPatternAssistantTC createASeqPatternAssistant()
 	{
 		return new ASeqPatternAssistantTC(this);
 	}
 
 	@Override
-	public ASetBindAssistantTC createASetBindAssistantTC()
+	public ASetBindAssistantTC createASetBindAssistant()
 	{
 		return new ASetBindAssistantTC(this);
 	}
 
 	@Override
-	public ASetMultipleBindAssistantTC createASetMultipleBindAssistantTC()
+	public ASetMultipleBindAssistantTC createASetMultipleBindAssistant()
 	{
 		return new ASetMultipleBindAssistantTC(this);
 	}
 
 	@Override
-	public ASetPatternAssistantTC createASetPatternAssistantTC()
+	public ASetPatternAssistantTC createASetPatternAssistant()
 	{
 		return new ASetPatternAssistantTC(this);
 	}
 
 	@Override
-	public AStringPatternAssistantTC createAStringPatternAssistantTC()
+	public AStringPatternAssistantTC createAStringPatternAssistant()
 	{
 		return new AStringPatternAssistantTC(this);
 	}
 
 	@Override
-	public ATuplePatternAssistantTC createATuplePatternAssistantTC()
+	public ATuplePatternAssistantTC createATuplePatternAssistant()
 	{
 		return new ATuplePatternAssistantTC(this);
 	}
 
 	@Override
-	public ATypeBindAssistantTC createATypeBindAssistantTC()
+	public ATypeBindAssistantTC createATypeBindAssistant()
 	{
 		return new ATypeBindAssistantTC(this);
 	}
 
 	@Override
-	public ATypeMultipleBindAssistantTC createATypeMultipleBindAssistantTC()
+	public ATypeMultipleBindAssistantTC createATypeMultipleBindAssistant()
 	{
 		return new ATypeMultipleBindAssistantTC(this);
 	}
 
 	@Override
-	public AUnionPatternAssistantTC createAUnionPatternAssistantTC()
+	public AUnionPatternAssistantTC createAUnionPatternAssistant()
 	{
 		return new AUnionPatternAssistantTC(this);
 	}
 
 	@Override
-	public PatternListTC createPatternListTC()
+	public PatternListTC createPatternList()
 	{
 		return new PatternListTC(this);
 	}
 
 	@Override
-	public PBindAssistantTC createPBindAssistantTC()
+	public PBindAssistantTC createPBindAssistant()
 	{
 		return new PBindAssistantTC(this);
 	}
 
 	@Override
-	public PMultipleBindAssistantTC createPMultipleBindAssistantTC()
+	public PMultipleBindAssistantTC createPMultipleBindAssistant()
 	{
 		return new PMultipleBindAssistantTC(this);
 	}
 
 	@Override
-	public PPatternAssistantTC createPPatternAssistantTC()
+	public PPatternAssistantTC createPPatternAssistant()
 	{
 		return new PPatternAssistantTC(this);
 	}
 
 	@Override
-	public PPatternBindAssistantTC createPPatternBindAssistantTC()
+	public PPatternBindAssistantTC createPPatternBindAssistant()
 	{
 		return new PPatternBindAssistantTC(this);
 	}
 
 	@Override
-	public PPatternListAssistantTC createPPatternListAssistantTC()
+	public PPatternListAssistantTC createPPatternListAssistant()
 	{
 		return new PPatternListAssistantTC(this);
 	}
@@ -1051,145 +1051,145 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	//statement
 
 	@Override
-	public AAlwaysStmAssistantTC createAAlwaysStmAssistantTC()
+	public AAlwaysStmAssistantTC createAAlwaysStmAssistant()
 	{
 		return new AAlwaysStmAssistantTC(this);
 	}
 
 	@Override
-	public AAssignmentStmAssistantTC createAAssignmentStmAssistantTC()
+	public AAssignmentStmAssistantTC createAAssignmentStmAssistant()
 	{
 		return new AAssignmentStmAssistantTC(this);
 	}
 
 	@Override
-	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistantTC()
+	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant()
 	{
 		return new ABlockSimpleBlockStmAssistantTC(this);
 	}
 
 	@Override
-	public ACallObjectStatementAssistantTC createACallObjectStatementAssistantTC()
+	public ACallObjectStatementAssistantTC createACallObjectStatementAssistant()
 	{
 		return new ACallObjectStatementAssistantTC(this);
 	}
 
 	@Override
-	public ACallStmAssistantTC createACallStmAssistantTC()
+	public ACallStmAssistantTC createACallStmAssistant()
 	{
 		return new ACallStmAssistantTC(this);
 	}
 
 	@Override
-	public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistantTC()
+	public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
 	{
 		return new ACaseAlternativeStmAssistantTC(this);
 	}
 
 	@Override
-	public ACasesStmAssistantTC createACasesStmAssistantTC()
+	public ACasesStmAssistantTC createACasesStmAssistant()
 	{
 		return new ACasesStmAssistantTC(this);
 	}
 
 	@Override
-	public AElseIfStmAssistantTC createAElseIfStmAssistantTC()
+	public AElseIfStmAssistantTC createAElseIfStmAssistant()
 	{
 		return new AElseIfStmAssistantTC(this);
 	}
 
 	@Override
-	public AExitStmAssistantTC createAExitStmAssistantTC()
+	public AExitStmAssistantTC createAExitStmAssistant()
 	{
 		return new AExitStmAssistantTC(this);
 	}
 
 	@Override
-	public AExternalClauseAssistantTC createAExternalClauseAssistantTC()
+	public AExternalClauseAssistantTC createAExternalClauseAssistant()
 	{
 		return new AExternalClauseAssistantTC(this);
 	}
 
 	@Override
-	public AForAllStmAssistantTC createAForAllStmAssistantTC()
+	public AForAllStmAssistantTC createAForAllStmAssistant()
 	{
 		return new AForAllStmAssistantTC(this);
 	}
 
 	@Override
-	public AForIndexStmAssistantTC createAForIndexStmAssistantTC()
+	public AForIndexStmAssistantTC createAForIndexStmAssistant()
 	{
 		return new AForIndexStmAssistantTC(this);
 	}
 
 	@Override
-	public AForPatternBindStmAssitantTC createAForPatternBindStmAssitantTC()
+	public AForPatternBindStmAssitantTC createAForPatternBindStmAssitant()
 	{
 		return new AForPatternBindStmAssitantTC(this);
 	}
 
 	@Override
-	public AIfStmAssistantTC createAIfStmAssistantTC()
+	public AIfStmAssistantTC createAIfStmAssistant()
 	{
 		return new AIfStmAssistantTC(this);
 	}
 
 	@Override
-	public ALetBeStStmAssistantTC createALetBeStStmAssistantTC()
+	public ALetBeStStmAssistantTC createALetBeStStmAssistant()
 	{
 		return new ALetBeStStmAssistantTC(this);
 	}
 
 	@Override
-	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistantTC()
+	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
 	{
 		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
 	}
 
 	@Override
-	public AReturnStmAssistantTC createAReturnStmAssistantTC()
+	public AReturnStmAssistantTC createAReturnStmAssistant()
 	{
 		return new AReturnStmAssistantTC(this);
 	}
 
 	@Override
-	public ATixeStmAssistantTC createATixeStmAssistantTC()
+	public ATixeStmAssistantTC createATixeStmAssistant()
 	{
 		return new ATixeStmAssistantTC(this);
 	}
 
 	@Override
-	public ATrapStmAssistantTC createATrapStmAssistantTC()
+	public ATrapStmAssistantTC createATrapStmAssistant()
 	{
 		return new ATrapStmAssistantTC(this);
 	}
 
 	@Override
-	public AWhileStmAssistantTC createAWhileStmAssistantTC()
+	public AWhileStmAssistantTC createAWhileStmAssistant()
 	{
 		return new AWhileStmAssistantTC(this);
 	}
 
 	@Override
-	public PStateDesignatorAssistantTC createPStateDesignatorAssistantTC()
+	public PStateDesignatorAssistantTC createPStateDesignatorAssistant()
 	{
 		return new PStateDesignatorAssistantTC(this);
 	}
 
 	@Override
-	public PStmAssistantTC createPStmAssistantTC()
+	public PStmAssistantTC createPStmAssistant()
 	{
 		return new PStmAssistantTC(this);
 	}
 
 	@Override
-	public SLetDefStmAssistantTC createSLetDefStmAssistantTC()
+	public SLetDefStmAssistantTC createSLetDefStmAssistant()
 	{
 		return new SLetDefStmAssistantTC(this);
 	}
 
 	@Override
-	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistantTC()
+	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
 	{
 		return new SSimpleBlockStmAssistantTC(this);
 	}

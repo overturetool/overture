@@ -5,20 +5,29 @@ import java.util.List;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.ACasesExpAssistantTC;
 
 public class ACasesExpAssistantInterpreter extends ACasesExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ACasesExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(ACasesExp exp, ObjectContext ctxt)
 	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(),ctxt);
+		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
 
-		for (ACaseAlternative c: exp.getCases())
+		for (ACaseAlternative c : exp.getCases())
 		{
-			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c,ctxt));
+			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
 		}
 
 		if (exp.getOthers() != null)
@@ -32,26 +41,30 @@ public class ACasesExpAssistantInterpreter extends ACasesExpAssistantTC
 	public static PExp findExpression(ACasesExp exp, int lineno)
 	{
 		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 
 		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 
-		for (ACaseAlternative c: exp.getCases())
+		for (ACaseAlternative c : exp.getCases())
 		{
-			found = PExpAssistantInterpreter.findExpression(c.getResult(),lineno);
-			if (found != null) break;
+			found = PExpAssistantInterpreter.findExpression(c.getResult(), lineno);
+			if (found != null)
+				break;
 		}
 
-		return found != null ? found :
-				exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(),lineno) : null;
+		return found != null ? found
+				: exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(), lineno)
+						: null;
 	}
 
 	public static List<PExp> getSubExpressions(ACasesExp exp)
 	{
 		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
 
-		for (ACaseAlternative c: exp.getCases())
+		for (ACaseAlternative c : exp.getCases())
 		{
 			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
 		}

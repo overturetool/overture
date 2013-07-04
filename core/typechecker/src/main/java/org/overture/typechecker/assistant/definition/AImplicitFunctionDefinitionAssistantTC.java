@@ -124,12 +124,12 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		{
 			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(af,
 				AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
-			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistantTC().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory,params, question.scope,question.qualifiers)));
+			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory,params, question.scope,question.qualifiers)));
 		}
 		else
 		{
 			question.qualifiers = null;
-			d.setType(PTypeAssistantTC.typeResolve( af.createPDefinitionAssistantTC().getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve( af.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
 		}
 
 		if (d.getResult() != null)
@@ -139,7 +139,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 
 		if (question.env.isVDMPP())
 		{
-			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistantTC().getType(d);
+			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(d);
 			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)

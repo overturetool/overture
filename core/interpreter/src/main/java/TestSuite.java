@@ -8,6 +8,7 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.NameValuePair;
@@ -61,7 +62,7 @@ public class TestSuite
 				{
 					tests.add(p.name.getName());
 
-					Context mainContext = new StateContext(p.name.getLocation(), "reflection scope");
+					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
@@ -104,7 +105,7 @@ public class TestSuite
 							vdmTestExpression = "new " + p.name.getModule() + "()";
 							Value testClassInstance = ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext);
 							ObjectValue tmp = (ObjectValue) testClassInstance;
-							ObjectContext octxt = new ObjectContext(mainContext.location, "TestClassContext", mainContext, tmp);
+							ObjectContext octxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),mainContext.location, "TestClassContext", mainContext, tmp);
 							vdmTestExpression = "setName(\"" + p.name.getName()
 									+ "\")";
 

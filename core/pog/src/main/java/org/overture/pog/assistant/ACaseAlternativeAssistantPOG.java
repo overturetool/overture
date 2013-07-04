@@ -11,10 +11,20 @@ import org.overture.pog.obligation.POCaseContext;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONotCaseContext;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
 
-public class ACaseAlternativeAssistantPOG {
+public class ACaseAlternativeAssistantPOG extends ACaseAlternativeAssistantTC {
 
-	public static ProofObligationList getProofObligations(ACaseAlternative node,
+	protected static IPogAssistantFactory af;
+	
+	@SuppressWarnings("static-access")
+	public ACaseAlternativeAssistantPOG(IPogAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public  ProofObligationList getProofObligations(ACaseAlternative node,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor,
 			POContextStack question, PType type) throws AnalysisException {
 

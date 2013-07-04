@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -23,30 +24,40 @@ import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 public class AMapUnionPatternAssistantInterpreter extends
 		AMapUnionPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static List<NameValuePairList> getAllNamedValues(AMapUnionPattern pattern,
-			Value expval, Context ctxt) throws PatternMatchException
+	@SuppressWarnings("static-access")
+	public AMapUnionPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static List<NameValuePairList> getAllNamedValues(
+			AMapUnionPattern pattern, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		ValueMap values = null;
 
 		try
 		{
 			values = expval.mapValue(ctxt);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
 		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
 		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
 		int size = values.size();
 
-		if ((llen == PPatternAssistantInterpreter.ANY && rlen > size) ||
-			(rlen == PPatternAssistantInterpreter.ANY && llen > size) ||
-			(rlen != PPatternAssistantInterpreter.ANY && llen != PPatternAssistantInterpreter.ANY && size != llen + rlen))
+		if ((llen == PPatternAssistantInterpreter.ANY && rlen > size)
+				|| (rlen == PPatternAssistantInterpreter.ANY && llen > size)
+				|| (rlen != PPatternAssistantInterpreter.ANY
+						&& llen != PPatternAssistantInterpreter.ANY && size != llen
+						+ rlen))
 		{
-			VdmRuntimeError.patternFail(4155, "Map union pattern does not match expression",pattern.getLocation());
+			VdmRuntimeError.patternFail(4155, "Map union pattern does not match expression", pattern.getLocation());
 		}
 
 		// If the left and right sizes are zero (ie. flexible) then we have to
@@ -60,10 +71,11 @@ public class AMapUnionPatternAssistantInterpreter extends
 			if (rlen == PPatternAssistantInterpreter.ANY)
 			{
 				// Divide size roughly between l/r initially, then diverge
-				int half = size/2;
-				if (half > 0) leftSizes.add(half);
+				int half = size / 2;
+				if (half > 0)
+					leftSizes.add(half);
 
-				for (int delta=1; half - delta > 0; delta++)
+				for (int delta = 1; half - delta > 0; delta++)
 				{
 					leftSizes.add(half + delta);
 					leftSizes.add(half - delta);
@@ -74,14 +86,13 @@ public class AMapUnionPatternAssistantInterpreter extends
 					leftSizes.add(size);
 				}
 
-				if (!leftSizes.contains(0))	leftSizes.add(0);	// Always as a last resort
-			}
-			else
+				if (!leftSizes.contains(0))
+					leftSizes.add(0); // Always as a last resort
+			} else
 			{
 				leftSizes.add(size - rlen);
 			}
-		}
-		else
+		} else
 		{
 			leftSizes.add(llen);
 		}
@@ -97,8 +108,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 		if (isConstrained(pattern))
 		{
 			allMaps = values.permutedMaps();
-		}
-		else
+		} else
 		{
 			allMaps = new Vector<ValueMap>();
 			allMaps.add(values);
@@ -109,14 +119,14 @@ public class AMapUnionPatternAssistantInterpreter extends
 
 		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
 
-		for (Integer lsize: leftSizes)
+		for (Integer lsize : leftSizes)
 		{
-			for (ValueMap setPerm: allMaps)
+			for (ValueMap setPerm : allMaps)
 			{
 				Iterator<Entry<Value, Value>> iter = setPerm.entrySet().iterator();
 				ValueMap first = new ValueMap();
 
-				for (int i=0; i<lsize; i++)
+				for (int i = 0; i < lsize; i++)
 				{
 					Entry<Value, Value> e = iter.next();
 					first.put(e.getKey(), e.getValue());
@@ -124,7 +134,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 
 				ValueMap second = new ValueMap();
 
-				while (iter.hasNext())	// Everything else in second
+				while (iter.hasNext()) // Everything else in second
 				{
 					Entry<Value, Value> e = iter.next();
 					second.put(e.getKey(), e.getValue());
@@ -143,8 +153,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 					List<NameValuePairList> rnvps = PPatternAssistantInterpreter.getAllNamedValues(pattern.getRight(), new MapValue(second), ctxt);
 					nvplists.add(rnvps);
 					counts[1] = rnvps.size();
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					continue;
 				}
@@ -158,29 +167,28 @@ public class AMapUnionPatternAssistantInterpreter extends
 						NameValuePairMap results = new NameValuePairMap();
 						int[] selection = permutor.next();
 
-						for (int p=0; p<psize; p++)
+						for (int p = 0; p < psize; p++)
 						{
-							for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+							for (NameValuePair nvp : nvplists.get(p).get(selection[p]))
 							{
 								Value v = results.get(nvp.name);
 
 								if (v == null)
 								{
 									results.put(nvp);
-								}
-								else	// Names match, so values must also
+								} else
+								// Names match, so values must also
 								{
 									if (!v.equals(nvp.value))
 									{
-										VdmRuntimeError.patternFail(4126, "Values do not match union pattern",pattern.getLocation());
+										VdmRuntimeError.patternFail(4126, "Values do not match union pattern", pattern.getLocation());
 									}
 								}
 							}
 						}
 
 						finalResults.add(results.asList());
-					}
-					catch (PatternMatchException pme)
+					} catch (PatternMatchException pme)
 					{
 						// Try next perm then...
 					}
@@ -190,7 +198,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 
 		if (finalResults.isEmpty())
 		{
-			VdmRuntimeError.patternFail(4156, "Cannot match map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4156, "Cannot match map pattern", pattern.getLocation());
 		}
 
 		return finalResults;
@@ -198,15 +206,16 @@ public class AMapUnionPatternAssistantInterpreter extends
 
 	static boolean isConstrained(AMapUnionPattern pattern)
 	{
-		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft()) || 
-				PPatternAssistantInterpreter.isConstrained(pattern.getRight());
+		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
+				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
 	}
 
 	public static int getLength(AMapUnionPattern pattern)
 	{
 		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
 		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
-		return (llen == PPatternAssistantInterpreter.ANY || rlen == PPatternAssistantInterpreter.ANY) ? PPatternAssistantInterpreter.ANY : llen + rlen;
+		return (llen == PPatternAssistantInterpreter.ANY || rlen == PPatternAssistantInterpreter.ANY) ? PPatternAssistantInterpreter.ANY
+				: llen + rlen;
 	}
 
 	public static List<AIdentifierPattern> findIdentifiers(
@@ -217,5 +226,5 @@ public class AMapUnionPatternAssistantInterpreter extends
 		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
 		return list;
 	}
-	
+
 }

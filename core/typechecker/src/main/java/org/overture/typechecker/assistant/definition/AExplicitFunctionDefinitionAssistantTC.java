@@ -250,16 +250,16 @@ public class AExplicitFunctionDefinitionAssistantTC {
 			
 			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory,params,question.scope);			
 			
-			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistantTC().getType(d), null, rootVisitor, newQuestion));
+			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, newQuestion));
 		}
 		else
 		{
-			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistantTC().getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
 		}
 
 		if (question.env.isVDMPP())
 		{
-			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistantTC().getType(d);
+			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistant().getType(d);
 			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)

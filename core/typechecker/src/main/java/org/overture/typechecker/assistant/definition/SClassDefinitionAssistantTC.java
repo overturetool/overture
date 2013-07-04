@@ -316,7 +316,7 @@ public class SClassDefinitionAssistantTC
 	public static PDefinition getSelfDefinition( SClassDefinition classDefinition)
 	{
 
-		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistantTC().getType(classDefinition));
+		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
 		PDefinitionAssistantTC.markUsed(def);
 		return def;
 	}
@@ -542,7 +542,7 @@ public class SClassDefinitionAssistantTC
 				setInherited(superdef, base);
 
 				d.getSuperDefs().add(superdef);
-				d.getSupertypes().add(af.createPDefinitionAssistantTC().getType(superdef));
+				d.getSupertypes().add(af.createPDefinitionAssistant().getType(superdef));
 			} else
 			{
 				TypeCheckerErrors.report(3004, "Superclass name is not a class: "
@@ -712,8 +712,8 @@ public class SClassDefinitionAssistantTC
 					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
 				} else
 				{
-					PType to = af.createPDefinitionAssistantTC().getType(indef);
-					PType from = af.createPDefinitionAssistantTC().getType(override);
+					PType to = af.createPDefinitionAssistant().getType(indef);
+					PType from = af.createPDefinitionAssistant().getType(override);
 
 					// Note this uses the "parameters only" comparator option
 

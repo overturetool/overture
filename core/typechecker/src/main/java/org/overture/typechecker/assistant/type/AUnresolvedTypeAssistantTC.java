@@ -101,7 +101,7 @@ public class AUnresolvedTypeAssistantTC {
 //			r = ((AStateDefinition)def).getRecordType();
 //		} else
 //		{
-			r = af.createPDefinitionAssistantTC().getType(def);
+			r = af.createPDefinitionAssistant().getType(def);
 //		}
 		
 		List<PDefinition> tempDefs = new Vector<PDefinition>();

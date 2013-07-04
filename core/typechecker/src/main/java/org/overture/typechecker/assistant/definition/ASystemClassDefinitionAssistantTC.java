@@ -36,7 +36,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AInstanceVariableDefinition iv = (AInstanceVariableDefinition)d;
 
-				PType ivType = af.createPDefinitionAssistantTC().getType(iv);
+				PType ivType = af.createPDefinitionAssistant().getType(iv);
 				if (ivType instanceof AUnresolvedType &&
 					iv.getExpression() instanceof AUndefinedExp)
 				{

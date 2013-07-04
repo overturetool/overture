@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -19,30 +20,39 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 		AInstanceVariableDefinitionAssistantTC
 {
 
-	public static NameValuePairList getNamedValues(
-			AInstanceVariableDefinition d, Context initialContext) 
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AInstanceVariableDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
 	{
-		 try
-	        {
-		        Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
+		super(af);
+		this.af = af;
+	}
 
-		        if (!v.isUndefined())
-		        {
-		        	v = v.convertTo(d.getType(), initialContext);
-		        }
+	public static NameValuePairList getNamedValues(
+			AInstanceVariableDefinition d, Context initialContext)
+	{
+		try
+		{
+			Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext);
 
-				return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));
-	        }
-	        catch (ValueException e)
-	        {
-	        	VdmRuntimeError.abort(d.getLocation(),e);
-	        	return null;
-	        } catch (AnalysisException e)
+			if (!v.isUndefined())
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return null;
-			} 
+				v = v.convertTo(d.getType(), initialContext);
+			}
+
+			return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));
+		} catch (ValueException e)
+		{
+			VdmRuntimeError.abort(d.getLocation(), e);
+			return null;
+		} catch (AnalysisException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static ValueList getValues(AInstanceVariableDefinition d,

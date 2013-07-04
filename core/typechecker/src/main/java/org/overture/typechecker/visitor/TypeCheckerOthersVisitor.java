@@ -209,7 +209,7 @@ public class TypeCheckerOthersVisitor extends
 						+ "' in assignment", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (!question.assistantFactory.createPDefinitionAssistantTC().isUpdatable(def)) {
+			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
 				TypeCheckerErrors.report(3301, "Variable '" + name
 						+ "' in scope is not updatable", name.getLocation(),
 						name);
@@ -223,7 +223,7 @@ public class TypeCheckerOthersVisitor extends
 							name.getLocation(), name);
 					node.setType(AstFactory.newAUnknownType(name.getLocation()));
 					return node.getType();
-				} else if (!question.assistantFactory.createPDefinitionAssistantTC().isStatic(def)
+				} else if (!question.assistantFactory.createPDefinitionAssistant().isStatic(def)
 						&& env.isStatic()) {
 					TypeCheckerErrors.report(3181, "Cannot access " + name
 							+ " from a static context", name.getLocation(),
@@ -233,7 +233,7 @@ public class TypeCheckerOthersVisitor extends
 				}
 			}
 
-			node.setType(question.assistantFactory.createPDefinitionAssistantTC().getType(def));
+			node.setType(question.assistantFactory.createPDefinitionAssistant().getType(def));
 			return node.getType();
 		} else {
 			ILexNameToken name = node.getName();
@@ -244,7 +244,7 @@ public class TypeCheckerOthersVisitor extends
 						+ name + "' in assignment", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (!question.assistantFactory.createPDefinitionAssistantTC().isUpdatable(def)) {
+			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
 				TypeCheckerErrors.report(3301, "Variable '" + name
 						+ "' in scope is not updatable", name.getLocation(),
 						name);
@@ -261,7 +261,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 			// else just state access in (say) an explicit operation
 
-			node.setType(question.assistantFactory.createPDefinitionAssistantTC().getType(def));
+			node.setType(question.assistantFactory.createPDefinitionAssistant().getType(def));
 			return node.getType();
 		}
 	}
@@ -325,7 +325,7 @@ public class TypeCheckerOthersVisitor extends
 			return AstFactory.newAUnknownType(node.getSelf().getLocation());
 		}
 
-		return question.assistantFactory.createPDefinitionAssistantTC().getType(def);
+		return question.assistantFactory.createPDefinitionAssistant().getType(def);
 	}
 
 	@Override
@@ -426,7 +426,7 @@ public class TypeCheckerOthersVisitor extends
 
 			ILexNameToken field = node.getField();
 			field.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = question.assistantFactory.createPDefinitionAssistantTC().findName(
+			PDefinition fdef = question.assistantFactory.createPDefinitionAssistant().findName(
 					ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
 
 			if (fdef == null) {
@@ -435,7 +435,7 @@ public class TypeCheckerOthersVisitor extends
 						node.getLocation(), node);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else {
-				result.add(question.assistantFactory.createPDefinitionAssistantTC().getType(fdef));
+				result.add(question.assistantFactory.createPDefinitionAssistant().getType(fdef));
 			}
 		}
 

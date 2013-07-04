@@ -46,13 +46,13 @@ public class ALocalDefinitionAssistantTC {
 		
 		if (d.getType() != null)
    		{
-   			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistantTC().getType(d), null, rootVisitor, question));
+   			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
    		}
 		
 	}
 
 	public static boolean isFunction(ALocalDefinition def) {
-		return (def.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistantTC().getType(def),AParameterType.class)) ? false : PTypeAssistantTC.isFunction(af.createPDefinitionAssistantTC().getType(def));
+		return (def.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(def),AParameterType.class)) ? false : PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(def));
 	}
 
 	

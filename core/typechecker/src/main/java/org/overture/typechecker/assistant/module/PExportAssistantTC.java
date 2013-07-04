@@ -57,7 +57,7 @@ public class PExportAssistantTC
 								+ name + " not defined in module", name.getLocation(), exp);
 					} else
 					{
-						PType act = af.createPDefinitionAssistantTC().getType(def);
+						PType act = af.createPDefinitionAssistant().getType(def);
 						PType type = ((AFunctionExport) exp).getExportType();
 
 						if (act != null && !PTypeAssistantTC.equals(act, type))
@@ -120,7 +120,7 @@ public class PExportAssistantTC
 						list.add(def);
 					} else
 					{
-						PType type = af.createPDefinitionAssistantTC().getType(def);
+						PType type = af.createPDefinitionAssistant().getType(def);
 
 						if (type instanceof ANamedInvariantType)
 						{

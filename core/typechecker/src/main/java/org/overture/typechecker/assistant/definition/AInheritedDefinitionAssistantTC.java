@@ -93,7 +93,7 @@ public class AInheritedDefinitionAssistantTC {
 
 	public static PType getType( AInheritedDefinition def) {
 		checkSuperDefinition(def);
-		return af.createPDefinitionAssistantTC().getType(def.getSuperdef());
+		return af.createPDefinitionAssistant().getType(def.getSuperdef());
 	}
 
 	public static boolean isUsed(AInheritedDefinition u) {

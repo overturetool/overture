@@ -24,6 +24,7 @@
 package org.overture.interpreter.runtime;
 
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.ObjectValue;
 
 
@@ -38,17 +39,17 @@ public abstract class RootContext extends Context
 {
 	protected final Context freeVariables;
 
-	public RootContext(
+	public RootContext(IInterpreterAssistantFactory af,
 		ILexLocation location, String title, Context freeVariables, Context outer)
 	{
-		super(location, title, outer);
+		super(af,location, title, outer);
 		this.freeVariables = freeVariables;
 	}
 
 	@Override
 	public Context getVisibleVariables()
 	{
-		Context visible = new Context(location, title, null);
+		Context visible = new Context(assistantFactory,location, title, null);
 		visible.putAll(this);
 
 		if (freeVariables != null)

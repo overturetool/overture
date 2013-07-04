@@ -50,7 +50,7 @@ public class TypeCheckerImportsVisitor extends
 			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
 			def.setType((SInvariantType) PTypeAssistantTC.typeResolve(
-					question.assistantFactory.createPDefinitionAssistantTC().getType(def), null, rootVisitor,
+					question.assistantFactory.createPDefinitionAssistant().getType(def), null, rootVisitor,
 					question));
 			PDefinition expdef = PDefinitionListAssistantTC.findType(
 					from.getExportdefs(), name, null);

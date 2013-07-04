@@ -506,7 +506,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				try
 				{
-					Context evalContext = new Context(node.getLocation(), "for all", ctxt);
+					Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for all", ctxt);
 					evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPattern(),val, ctxt));
 					Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -551,7 +551,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				 (bval > 0 && value <= tval) || (bval < 0 && value >= tval);
 				 value += bval)
 			{
-				Context evalContext = new Context(node.getLocation(), "for index", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for index", ctxt);
 				evalContext.put(node.getVar(), new IntegerValue(value));
 				Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -598,7 +598,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					try
 					{
-						Context evalContext = new Context(node.getLocation(), "for pattern", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for pattern", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPatternBind().getPattern(),val, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -627,7 +627,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 							VdmRuntimeError.abort(node.getLocation(),4039, "Set bind does not contain value " + val, ctxt);
 						}
 
-						Context evalContext = new Context(node.getLocation(), "for set bind", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for set bind", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(setbind.getPattern(),val, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -652,7 +652,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					{
 						Value converted = val.convertTo(typebind.getType(), ctxt);
 
-						Context evalContext = new Context(node.getLocation(), "for type bind", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for type bind", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(typebind.getPattern(),converted, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -733,7 +733,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			while (quantifiers.hasNext(ctxt))
 			{
-				Context evalContext = new Context(node.getLocation(), "let be st statement", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st statement", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -775,7 +775,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Context evalContext = new Context(node.getLocation(), "let statement", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let statement", ctxt);
 
 		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
 		ObjectValue self = (ObjectValue)ctxt.check(sname);
@@ -832,7 +832,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Context evalContext = new Context(node.getLocation(), "block statement", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "block statement", ctxt);
 
 		for (PDefinition d: node.getAssignmentDefs())
 		{
@@ -974,7 +974,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
     			if (node.getPatternBind().getPattern() != null)
     			{
-    				Context evalContext = new Context(node.getLocation(), "trap pattern", ctxt);
+    				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap pattern", ctxt);
     				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPatternBind().getPattern(),exval, ctxt));
     				rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     			}
@@ -985,7 +985,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
     				if (set.contains(exval))
     				{
-    					Context evalContext = new Context(node.getLocation(), "trap set", ctxt);
+    					Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap set", ctxt);
     					evalContext.putList(PPatternAssistantInterpreter.getNamedValues(setbind.getPattern(),exval, ctxt));
     					rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     				}
@@ -998,7 +998,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
     			{
     				ATypeBind typebind = (ATypeBind)node.getPatternBind().getBind();
     				Value converted = exval.convertTo(typebind.getType(), ctxt);
-    				Context evalContext = new Context(node.getLocation(), "trap type", ctxt);
+    				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap type", ctxt);
     				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(typebind.getPattern(),converted, ctxt));
     				rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     			}

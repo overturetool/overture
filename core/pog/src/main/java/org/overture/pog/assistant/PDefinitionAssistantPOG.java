@@ -8,11 +8,17 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONameContext;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 
-	public static ProofObligationList getProofObligations(
+	public PDefinitionAssistantPOG(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+	}
+
+	public  ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
 			POContextStack ctxt) throws AnalysisException {

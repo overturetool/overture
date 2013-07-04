@@ -311,7 +311,7 @@ public class TypeCheckerStmVisitor extends
 
 		if (self == classdef
 				|| PDefinitionAssistantTC.hasSupertype(self,
-						question.assistantFactory.createPDefinitionAssistantTC().getType(classdef))) {
+						question.assistantFactory.createPDefinitionAssistant().getType(classdef))) {
 			// All fields visible. Note that protected fields are inherited
 			// into "locals" so they are effectively private
 			classenv = new PrivateClassEnvironment(question.assistantFactory,self);
@@ -384,13 +384,13 @@ public class TypeCheckerStmVisitor extends
 					+ " is not in scope", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
-		} else if (question.assistantFactory.createPDefinitionAssistantTC().isStatic(fdef)
+		} else if (question.assistantFactory.createPDefinitionAssistant().isStatic(fdef)
 				&& !question.env.isStatic()) {
 			// warning(5005, "Should invoke member " + field +
 			// " from a static context");
 		}
 
-		PType type = question.assistantFactory.createPDefinitionAssistantTC().getType(fdef);
+		PType type = question.assistantFactory.createPDefinitionAssistant().getType(fdef);
 
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType optype = PTypeAssistantTC.getOperation(type);
@@ -442,14 +442,14 @@ public class TypeCheckerStmVisitor extends
 			return node.getType();
 		}
 
-		if (!question.assistantFactory.createPDefinitionAssistantTC().isStatic(opdef) && question.env.isStatic()) {
+		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef) && question.env.isStatic()) {
 			TypeCheckerErrors.report(3214, "Cannot call " + node.getName()
 					+ " from static context", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		PType type = question.assistantFactory.createPDefinitionAssistantTC().getType(opdef);
+		PType type = question.assistantFactory.createPDefinitionAssistant().getType(opdef);
 
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType optype = PTypeAssistantTC.getOperation(type);

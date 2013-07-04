@@ -52,6 +52,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -172,7 +173,7 @@ public class FunctionValue extends Value
 		this.type = (AFunctionType) def.getType();
 
 		this.paramPatternList = new Vector<List<PPattern>>();
-		PatternListTC plist = new PatternListTC();
+		PatternListTC plist = Interpreter.getInstance().getAssistantFactory().createPatternList();
 
 		for (APatternListTypePair ptp: def.getParamPatterns())
 		{
@@ -567,17 +568,17 @@ public class FunctionValue extends Value
 
 		if (self != null)
 		{
-			evalContext = new ObjectContext(
+			evalContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			evalContext = new ClassContext(
+			evalContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, classdef);
 		}
 		else
 		{
-			evalContext = new StateContext(
+			evalContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, sctxt);
 		}
 

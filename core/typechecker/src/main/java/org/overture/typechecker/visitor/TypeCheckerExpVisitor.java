@@ -1195,7 +1195,7 @@ public class TypeCheckerExpVisitor extends
 					// " from a static context");
 				}
 
-				results.add(question.assistantFactory.createPDefinitionAssistantTC().getType(fdef));
+				results.add(question.assistantFactory.createPDefinitionAssistant().getType(fdef));
 				// At runtime, type qualifiers must match exactly
 				memberName.setTypeQualifier(fdef.getName().getTypeQualifier());
 			} else {
@@ -1873,7 +1873,7 @@ public class TypeCheckerExpVisitor extends
 		} else if (typeDef instanceof AStateDefinition) {
 			rec = ((AStateDefinition) typeDef).getRecordType();
 		} else {
-			rec = question.assistantFactory.createPDefinitionAssistantTC().getType(typeDef);
+			rec = question.assistantFactory.createPDefinitionAssistant().getType(typeDef);
 		}
 
 		while (rec instanceof ANamedInvariantType) {
@@ -2015,7 +2015,7 @@ public class TypeCheckerExpVisitor extends
 			}
 			else
 			{
-				result = question.assistantFactory.createPDefinitionAssistantTC().getType(node.getTypedef());
+				result = question.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef());
 			}
 			
 		}
@@ -2095,7 +2095,7 @@ public class TypeCheckerExpVisitor extends
 			}
 		}
 
-		PType type = question.assistantFactory.createPDefinitionAssistantTC().getType(classdef);
+		PType type = question.assistantFactory.createPDefinitionAssistant().getType(classdef);
 		node.setType(type);
 		return type;
 	}
@@ -2272,7 +2272,7 @@ public class TypeCheckerExpVisitor extends
 
 		if (PPatternAssistantTC
 				.getVariableNames(node.getSetBind().getPattern()).size() != 1
-				|| !PTypeAssistantTC.isNumeric(question.assistantFactory.createPDefinitionAssistantTC()
+				|| !PTypeAssistantTC.isNumeric(question.assistantFactory.createPDefinitionAssistant()
 						.getType(def))) {
 			TypeCheckerErrors.report(3155,
 					"List comprehension must define one numeric bind variable",
@@ -2591,7 +2591,7 @@ public class TypeCheckerExpVisitor extends
 				// else we raise an ambiguity error.
 
 				for (PDefinition possible : env.findMatches(name)) {
-					if (question.assistantFactory.createPDefinitionAssistantTC().isFunctionOrOperation(possible)) {
+					if (question.assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(possible)) {
 						if (vardef != null) {
 							TypeCheckerErrors.report(3269,
 									"Ambiguous function/operation name: "
@@ -2634,7 +2634,7 @@ public class TypeCheckerExpVisitor extends
 			// we don't need to retry at the top level (assuming all names
 			// are in the environment).
 			node.setType(PTypeAssistantTC.typeResolve(
-					question.assistantFactory.createPDefinitionAssistantTC().getType(node.getVardef()), null,
+					question.assistantFactory.createPDefinitionAssistant().getType(node.getVardef()), null,
 					rootVisitor, question));
 			return node.getType();
 		}
