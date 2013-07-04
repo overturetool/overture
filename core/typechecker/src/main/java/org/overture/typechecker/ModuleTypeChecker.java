@@ -125,7 +125,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				Environment env = new ModuleEnvironment(m);
+				Environment env = new ModuleEnvironment(assistantFactory,m);
 				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
 			}
 		}
@@ -177,7 +177,7 @@ public class ModuleTypeChecker extends TypeChecker
 
 		// Attempt type resolution of unchecked definitions from all modules.
 		Environment env =
-			new FlatCheckedEnvironment(alldefs, NameScope.NAMESANDSTATE,null);
+			new FlatCheckedEnvironment(assistantFactory,alldefs, NameScope.NAMESANDSTATE,null);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		for (PDefinition d: checkDefs)
 		{
@@ -203,7 +203,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (!m.getTypeChecked())
 				{
-    				Environment e = new ModuleEnvironment(m);
+    				Environment e = new ModuleEnvironment(assistantFactory,m);
 
     				for (PDefinition d: m.getDefs())
     				{
@@ -244,7 +244,7 @@ public class ModuleTypeChecker extends TypeChecker
     			try
     			{
     				//TODO
-    				AModuleModulesAssistantTC.typeCheckImports(assistantFactory,m);
+    				AModuleModulesAssistantTC.typeCheckImports(m);
 //    				m.typeCheckImports();		// Imports compared to exports
     			}
     			catch (TypeCheckException te)

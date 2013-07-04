@@ -33,6 +33,7 @@ import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
@@ -44,6 +45,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 abstract public class Environment
 {
+	protected final ITypeCheckerAssistantFactory af;
 	/** The extended search strategy */
 	protected final EnvironmentSearchStrategy searchStrategy;
 	
@@ -58,8 +60,9 @@ abstract public class Environment
 	 * @param outer
 	 */
 
-	public Environment(Environment outer, EnvironmentSearchStrategy searchStrategy)
+	public Environment(ITypeCheckerAssistantFactory af,Environment outer, EnvironmentSearchStrategy searchStrategy)
 	{
+		this.af = af;
 		this.outer = outer;
 		this.searchStrategy = searchStrategy;
 	}
@@ -83,7 +86,7 @@ abstract public class Environment
 	 * @param list	The list of definitions to check.
 	 */
 
-	protected void dupHideCheck(List<PDefinition> list, NameScope scope)
+	protected void dupHideCheck( List<PDefinition> list, NameScope scope)
 	{
 		LexNameList allnames = PDefinitionListAssistantTC.getVariableNames(list);
 
@@ -151,10 +154,10 @@ abstract public class Environment
 	}
 
 	/** Find a name in the environment of the given scope. */
-	abstract public PDefinition findName(ILexNameToken name, NameScope scope);
+	abstract public PDefinition findName( ILexNameToken name, NameScope scope);
 
 	/** Find a type in the environment. */
-	abstract public PDefinition findType(ILexNameToken name, String fromModule);
+	abstract public PDefinition findType( ILexNameToken name, String fromModule);
 	
 	/** Find the state defined in the environment, if any. */
 	abstract public AStateDefinition findStateDefinition();
@@ -175,7 +178,7 @@ abstract public class Environment
 	abstract public boolean isSystem();
 
 	/** Find functions and operations of the given basic name. */
-	abstract public Set<PDefinition> findMatches(ILexNameToken name);
+	abstract public Set<PDefinition> findMatches( ILexNameToken name);
 
 	/** Mark all definitions, at this level, used. */
 	public void markUsed()

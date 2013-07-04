@@ -11,6 +11,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AModuleModulesAssistantTC
 {
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AModuleModulesAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	/**
 	 * Generate the exportdefs list of definitions. The exports list of
 	 * export declarations is processed by searching the defs list of
@@ -68,10 +75,10 @@ public class AModuleModulesAssistantTC
    		return null;
 	}
 
-	public static void typeCheckImports(ITypeCheckerAssistantFactory assistantFactory,AModuleModules m) throws AnalysisException {
+	public static void typeCheckImports(AModuleModules m) throws AnalysisException {
 		if (m.getImports() != null)
 		{
-			AModuleImportsAssistantTC.typeCheck(assistantFactory,m.getImports(),new ModuleEnvironment(m));	
+			AModuleImportsAssistantTC.typeCheck(m.getImports(),new ModuleEnvironment(af,m));	
 		}
 		
 	}

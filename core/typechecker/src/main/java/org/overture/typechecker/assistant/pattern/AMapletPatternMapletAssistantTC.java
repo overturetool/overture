@@ -13,9 +13,16 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AMapletPatternMapletAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AMapletPatternMapletAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static void unResolve(AMapletPatternMaplet mp) {
 		PPatternAssistantTC.unResolve(mp.getFrom());
 		PPatternAssistantTC.unResolve(mp.getTo());

@@ -9,9 +9,16 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PImportAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PImportAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PDefinition> getDefinitions(PImport imp,
 			AModuleModules from) {
 		switch (imp.kindPImport()) {

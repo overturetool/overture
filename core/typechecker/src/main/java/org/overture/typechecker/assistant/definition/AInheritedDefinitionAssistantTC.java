@@ -10,10 +10,17 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.util.HelpLexNameToken;
 
 public class AInheritedDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AInheritedDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PDefinition findType(AInheritedDefinition d,
 			ILexNameToken sought, String fromModule) {
 		
@@ -67,7 +74,7 @@ public class AInheritedDefinitionAssistantTC {
 		return names;
 	}
 	
-	private static void checkSuperDefinition(AInheritedDefinition d)
+	private static void checkSuperDefinition( AInheritedDefinition d)
 	{
 		// This is used to get over the case where an inherited definition
 		// is a ValueDefinition that has since been replaced with a new
@@ -84,9 +91,9 @@ public class AInheritedDefinitionAssistantTC {
 		}
 	}
 
-	public static PType getType(AInheritedDefinition def) {
+	public static PType getType( AInheritedDefinition def) {
 		checkSuperDefinition(def);
-		return PDefinitionAssistantTC.getType(def.getSuperdef());
+		return af.createPDefinitionAssistantTC().getType(def.getSuperdef());
 	}
 
 	public static boolean isUsed(AInheritedDefinition u) {

@@ -7,9 +7,16 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PBindAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PBindAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PMultipleBind> getMultipleBindList(PBind bind) {
 		
 		switch (bind.kindPBind()) {

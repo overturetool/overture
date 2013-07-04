@@ -9,9 +9,16 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AExternalDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AExternalDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PDefinition findName(AExternalDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		
@@ -37,12 +44,13 @@ public class AExternalDefinitionAssistantTC {
 		return result;
 	}
 
-	public static LexNameList getVariableNames(AExternalDefinition d) {
+	public static LexNameList getVariableNames( AExternalDefinition d) {
 		return PDefinitionAssistantTC.getVariableNames(d.getState());
 	}
 
-	public static PType getType(AExternalDefinition def) {
-		return PDefinitionAssistantTC.getType(def.getState());
+	public static PType getType(
+			AExternalDefinition def) {
+		return af.createPDefinitionAssistantTC().getType(def.getState());
 	}
 
 	public static boolean isUsed(AExternalDefinition u) {

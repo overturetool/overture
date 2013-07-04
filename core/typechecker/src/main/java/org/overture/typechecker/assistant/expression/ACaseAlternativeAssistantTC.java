@@ -14,11 +14,18 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class ACaseAlternativeAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ACaseAlternativeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PType typeCheck(ACaseAlternative c,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question, PType expType) throws AnalysisException {
@@ -57,7 +64,7 @@ public class ACaseAlternativeAssistantTC {
 			TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
 		}
 		
-		Environment local = new FlatCheckedEnvironment(c.getDefs(), question.env, question.scope);
+		Environment local = new FlatCheckedEnvironment(af,c.getDefs(), question.env, question.scope);
 		question  = new TypeCheckInfo(question.assistantFactory,local, question.scope,question.qualifiers);
 		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();

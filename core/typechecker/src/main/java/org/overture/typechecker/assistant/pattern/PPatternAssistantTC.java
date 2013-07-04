@@ -31,38 +31,43 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 
 public class PPatternAssistantTC extends PPatternAssistant
 {
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public PPatternAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	/**
-	 * Get a set of definitions for the pattern's variables. Note that if the
-	 * pattern includes duplicate variable names, these are collapse into one.
+	 * Get a set of definitions for the pattern's variables. Note that if the pattern includes duplicate variable names,
+	 * these are collapse into one.
 	 */
 	public static List<PDefinition> getDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
-		PDefinitionSet set = new PDefinitionSet();
-		set.addAll(getAllDefinitions(rp,ptype, scope));
+		PDefinitionSet set = af.createPDefinitionSet();
+		set.addAll(getAllDefinitions(rp, ptype, scope));
 		List<PDefinition> result = new Vector<PDefinition>(set);
 		return result;
 	}
 
-	
-	
-	
 	/**
-	 * Get a complete list of all definitions, including duplicates. This method should only be used 
-	 * only by PP
+	 * Get a complete list of all definitions, including duplicates. This method should only be used only by PP
 	 */
-	private static List<PDefinition> getAllDefinitions(PPattern rp, PType ptype,
-			NameScope scope)
+	private static List<PDefinition> getAllDefinitions(PPattern rp,
+			PType ptype, NameScope scope)
 	{
 		switch (rp.kindPPattern())
 		{
 			case AIdentifierPattern.kindPPattern:
-				return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) rp,ptype,scope);
+				return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) rp, ptype, scope);
 			case ABooleanPattern.kindPPattern:
 			case ACharacterPattern.kindPPattern:
 			case AExpressionPattern.kindPPattern:
@@ -86,9 +91,9 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case AUnionPattern.kindPPattern:
 				return AUnionPatternAssistantTC.getAllDefinitions((AUnionPattern) rp, ptype, scope);
 			case AMapUnionPattern.kindPPattern:
-				return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern)rp,ptype,scope);
+				return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern) rp, ptype, scope);
 			case AMapPattern.kindPPattern:
-				return AMapPatternAssistantTC.getAllDefinitions((AMapPattern)rp,ptype,scope);
+				return AMapPatternAssistantTC.getAllDefinitions((AMapPattern) rp, ptype, scope);
 			default:
 				assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 				return null;
@@ -124,10 +129,10 @@ public class PPatternAssistantTC extends PPatternAssistant
 				AUnionPatternAssistantTC.typeResolve((AUnionPattern) pattern, rootVisitor, question);
 				break;
 			case AMapPattern.kindPPattern:
-				AMapPatternAssistantTC.typeResolve((AMapPattern)pattern,rootVisitor, question);
+				AMapPatternAssistantTC.typeResolve((AMapPattern) pattern, rootVisitor, question);
 				break;
 			case AMapUnionPattern.kindPPattern:
-				AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern,rootVisitor, question);
+				AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern, rootVisitor, question);
 				break;
 			default:
 				pattern.setResolved(true);
@@ -173,11 +178,11 @@ public class PPatternAssistantTC extends PPatternAssistant
 		switch (pattern.kindPPattern())
 		{
 			case ABooleanPattern.kindPPattern:
-				return ABooleanPatternAssistantTC.getPossibleType((ABooleanPattern) pattern);				
+				return ABooleanPatternAssistantTC.getPossibleType((ABooleanPattern) pattern);
 			case ACharacterPattern.kindPPattern:
-				return ACharacterPatternAssistantTC.getPossibleType((ACharacterPattern) pattern);	
+				return ACharacterPatternAssistantTC.getPossibleType((ACharacterPattern) pattern);
 			case AConcatenationPattern.kindPPattern:
-				return AConcatenationPatternAssistantTC.getPossibleType((AConcatenationPattern) pattern);			
+				return AConcatenationPatternAssistantTC.getPossibleType((AConcatenationPattern) pattern);
 			case AExpressionPattern.kindPPattern:
 				return AExpressionPatternAssistantTC.getPossibleTypes((AExpressionPattern) pattern);
 			case AIdentifierPattern.kindPPattern:
@@ -195,11 +200,11 @@ public class PPatternAssistantTC extends PPatternAssistant
 			case ARecordPattern.kindPPattern:
 				return ARecordPatternAssistantTC.getPossibleTypes((ARecordPattern) pattern);
 			case ASetPattern.kindPPattern:
-				return ASetPatternAssistantTC.getPossibleTypes((ASetPattern) pattern);			
+				return ASetPatternAssistantTC.getPossibleTypes((ASetPattern) pattern);
 			case ASeqPattern.kindPPattern:
 				return ASeqPatternAssistantTC.getPossibleTypes((ASeqPattern) pattern);
 			case AStringPattern.kindPPattern:
-				return AStringPatternAssistantTC.getPossibleTypes((AStringPattern) pattern);			
+				return AStringPatternAssistantTC.getPossibleTypes((AStringPattern) pattern);
 			case ATuplePattern.kindPPattern:
 				return ATuplePatternAssistantTC.getPossibleTypes((ATuplePattern) pattern);
 			case AUnionPattern.kindPPattern:
@@ -215,80 +220,80 @@ public class PPatternAssistantTC extends PPatternAssistant
 		return TypeComparator.compatible(getPossibleType(pattern), expType);
 	}
 
-	
-	
-	public static PExp getMatchingExpression(PPattern p) {
-		switch (p.kindPPattern()) {
-		case ABooleanPattern.kindPPattern:
-			return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) p);
-		case ACharacterPattern.kindPPattern:
-			return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern)p);
-		case AConcatenationPattern.kindPPattern:
-			return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern)p);
-		case AExpressionPattern.kindPPattern:
-			return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) p);
-		case AIdentifierPattern.kindPPattern:
-			return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) p);
-		case AIgnorePattern.kindPPattern:
-			return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) p);
-		case AIntegerPattern.kindPPattern:
-			return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) p);
-		case ANilPattern.kindPPattern:
-			return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) p);
-		case AQuotePattern.kindPPattern:
-			return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) p);
-		case ARealPattern.kindPPattern:
-			return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) p);
-		case ARecordPattern.kindPPattern:
-			return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) p);
-		case ASeqPattern.kindPPattern:
-			return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) p);
-		case ASetPattern.kindPPattern:
-			return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) p);
-		case AStringPattern.kindPPattern:
-			return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) p);
-		case ATuplePattern.kindPPattern:
-			return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) p);
-		case AUnionPattern.kindPPattern:
-			return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) p);
-		default:
-			assert false : "Should not happen";
-			return null;
+	public static PExp getMatchingExpression(PPattern p)
+	{
+		switch (p.kindPPattern())
+		{
+			case ABooleanPattern.kindPPattern:
+				return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) p);
+			case ACharacterPattern.kindPPattern:
+				return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern) p);
+			case AConcatenationPattern.kindPPattern:
+				return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern) p);
+			case AExpressionPattern.kindPPattern:
+				return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) p);
+			case AIdentifierPattern.kindPPattern:
+				return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) p);
+			case AIgnorePattern.kindPPattern:
+				return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) p);
+			case AIntegerPattern.kindPPattern:
+				return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) p);
+			case ANilPattern.kindPPattern:
+				return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) p);
+			case AQuotePattern.kindPPattern:
+				return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) p);
+			case ARealPattern.kindPPattern:
+				return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) p);
+			case ARecordPattern.kindPPattern:
+				return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) p);
+			case ASeqPattern.kindPPattern:
+				return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) p);
+			case ASetPattern.kindPPattern:
+				return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) p);
+			case AStringPattern.kindPPattern:
+				return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) p);
+			case ATuplePattern.kindPPattern:
+				return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) p);
+			case AUnionPattern.kindPPattern:
+				return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) p);
+			default:
+				assert false : "Should not happen";
+				return null;
 		}
 	}
-	
+
 	public static boolean isSimple(PPattern p)
 	{
-		
-		switch (p.kindPPattern()) {
-		case AConcatenationPattern.kindPPattern:
-			return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) p);
-		case AIdentifierPattern.kindPPattern:
-			return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) p);
-		case AIgnorePattern.kindPPattern:
-			return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) p);
-		case AMapUnionPattern.kindPPattern:
-			return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) p);
-		case ARecordPattern.kindPPattern:
-			return ARecordPatternAssistantTC.isSimple((ARecordPattern) p);
-		case ASeqPattern.kindPPattern:
-			return ASeqPatternAssistantTC.isSimple((ASeqPattern) p);
-		case ASetPattern.kindPPattern:
-			return ASetPatternAssistantTC.isSimple((ASetPattern) p);
-		case ATuplePattern.kindPPattern:
-			return ATuplePatternAssistantTC.isSimple((ATuplePattern) p);
-		case AUnionPattern.kindPPattern:
-			return AUnionPatternAssistantTC.isSimple((AUnionPattern) p);
-		case AMapPattern.kindPPattern:
-			return AMapPatternAssistantTC.isSimple((AMapPattern) p);
-		default:
-			/*
-			 * True if the pattern is a simple value that can match only
-			 * one value for certain. Most pattern types are like this, but any
-			 * that include variables or ignore patterns are not.
-			 */ 
-			return true;
+
+		switch (p.kindPPattern())
+		{
+			case AConcatenationPattern.kindPPattern:
+				return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) p);
+			case AIdentifierPattern.kindPPattern:
+				return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) p);
+			case AIgnorePattern.kindPPattern:
+				return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) p);
+			case AMapUnionPattern.kindPPattern:
+				return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) p);
+			case ARecordPattern.kindPPattern:
+				return ARecordPatternAssistantTC.isSimple((ARecordPattern) p);
+			case ASeqPattern.kindPPattern:
+				return ASeqPatternAssistantTC.isSimple((ASeqPattern) p);
+			case ASetPattern.kindPPattern:
+				return ASetPatternAssistantTC.isSimple((ASetPattern) p);
+			case ATuplePattern.kindPPattern:
+				return ATuplePatternAssistantTC.isSimple((ATuplePattern) p);
+			case AUnionPattern.kindPPattern:
+				return AUnionPatternAssistantTC.isSimple((AUnionPattern) p);
+			case AMapPattern.kindPPattern:
+				return AMapPatternAssistantTC.isSimple((AMapPattern) p);
+			default:
+				/*
+				 * True if the pattern is a simple value that can match only one value for certain. Most pattern types
+				 * are like this, but any that include variables or ignore patterns are not.
+				 */
+				return true;
 		}
 	}
-	
+
 }

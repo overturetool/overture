@@ -9,9 +9,16 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class SSeqTypeAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public SSeqTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static void unResolve(SSeqType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
 		PTypeAssistantTC.unResolve(type.getSeqof());

@@ -24,6 +24,7 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class TypeCheckerUtil
@@ -59,7 +60,7 @@ public class TypeCheckerUtil
 
 		public ExpressionTypeChecker(PExp expression)
 		{
-			this(expression, new FlatEnvironment(new Vector<PDefinition>()));// new ModuleEnvironment(""));
+			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(),new Vector<PDefinition>()));// new ModuleEnvironment(""));
 		}
 
 		@Override

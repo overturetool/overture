@@ -24,13 +24,20 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AImplicitFunctionDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AImplicitFunctionDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static AFunctionType getType(AImplicitFunctionDefinition impdef, List<PType> actualTypes)
 	{		
 		Iterator<PType> ti = actualTypes.iterator();
@@ -65,7 +72,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		return defs;
 	}
 
-	public static PDefinition findName(AImplicitFunctionDefinition d,
+	public static PDefinition findName( AImplicitFunctionDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
@@ -115,14 +122,14 @@ public class AImplicitFunctionDefinitionAssistantTC {
 		
 		if (d.getTypeParams().size() > 0)
 		{
-			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
+			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(af,
 				AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);			
-			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory,params, question.scope,question.qualifiers)));
+			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistantTC().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory,params, question.scope,question.qualifiers)));
 		}
 		else
 		{
 			question.qualifiers = null;
-			d.setType(PTypeAssistantTC.typeResolve( PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve( af.createPDefinitionAssistantTC().getType(d), null, rootVisitor, question));
 		}
 
 		if (d.getResult() != null)
@@ -132,7 +139,7 @@ public class AImplicitFunctionDefinitionAssistantTC {
 
 		if (question.env.isVDMPP())
 		{
-			AFunctionType fType = (AFunctionType) PDefinitionAssistantTC.getType(d);
+			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistantTC().getType(d);
 			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)

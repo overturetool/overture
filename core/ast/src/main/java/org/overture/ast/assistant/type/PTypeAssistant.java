@@ -2,6 +2,7 @@ package org.overture.ast.assistant.type;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -23,7 +24,16 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 
-public class PTypeAssistant {
+public class PTypeAssistant
+{
+
+	protected static IAstAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public PTypeAssistant(IAstAssistantFactory af)
+	{
+		this.af = af;
+	}
 
 	public static boolean isNumeric(PType type)
 	{
@@ -53,14 +63,14 @@ public class PTypeAssistant {
 		}
 		return false;
 	}
-	
+
 	public static SNumericBasicType getNumeric(PType type)
 	{
 		switch (type.kindPType())
 		{
 			case SBasicType.kindPType:
 				SBasicType bType = (SBasicType) type;
-				//FIXME doesn't the outer if imply the inner? -jwc/1Apr2013 
+				// FIXME doesn't the outer if imply the inner? -jwc/1Apr2013
 				if (SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType()))
 				{
 					if (type instanceof SNumericBasicType)
@@ -91,27 +101,28 @@ public class PTypeAssistant {
 		assert false : "Can't getNumeric of a non-numeric";
 		return null;
 	}
-	
+
 	public static int hashCode(PType type)
 	{
 		switch (type.kindPType())
 		{
 			case ABracketType.kindPType:
-				return hashCode(((ABracketType)type).getType());
+				return hashCode(((ABracketType) type).getType());
 			case AClassType.kindPType:
-				return ((AClassType)type).getName().hashCode();
+				return ((AClassType) type).getName().hashCode();
 			case AFunctionType.kindPType:
 				AFunctionType ftype = (AFunctionType) type;
-				return hashCode(ftype.getParameters()) + hashCode(ftype.getResult());
+				return hashCode(ftype.getParameters())
+						+ hashCode(ftype.getResult());
 			case SInvariantType.kindPType:
 			{
 				SInvariantType stype = (SInvariantType) type;
 				switch (stype.kindSInvariantType())
 				{
 					case ANamedInvariantType.kindSInvariantType:
-						return ((ANamedInvariantType)type).getName().hashCode();
+						return ((ANamedInvariantType) type).getName().hashCode();
 					case ARecordInvariantType.kindSInvariantType:
-						return ((ARecordInvariantType)type).getName().hashCode();
+						return ((ARecordInvariantType) type).getName().hashCode();
 				}
 			}
 			case SMapType.kindPType:
@@ -122,25 +133,26 @@ public class PTypeAssistant {
 			case AOperationType.kindPType:
 			{
 				AOperationType otype = (AOperationType) type;
-				return hashCode(otype.getParameters()) + hashCode(otype.getResult());
+				return hashCode(otype.getParameters())
+						+ hashCode(otype.getResult());
 			}
 			case AOptionalType.kindPType:
-				return hashCode(((AOptionalType)type).getType());
+				return hashCode(((AOptionalType) type).getType());
 			case AParameterType.kindPType:
-				return ((AParameterType)type).getName().hashCode();
+				return ((AParameterType) type).getName().hashCode();
 			case AProductType.kindPType:
-				return hashCode(((AProductType)type).getTypes());
+				return hashCode(((AProductType) type).getTypes());
 			case AQuoteType.kindPType:
-				return ((AQuoteType)type).getValue().hashCode();
+				return ((AQuoteType) type).getValue().hashCode();
 			case SSeqType.kindPType:
 			{
 				SSeqType stype = (SSeqType) type;
-				return  stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
+				return stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
 			}
 			case ASetType.kindPType:
 			{
 				ASetType stype = (ASetType) type;
-				return  stype.getEmpty() ? 0 : hashCode(stype.getSetof());
+				return stype.getEmpty() ? 0 : hashCode(stype.getSetof());
 			}
 			case AUnionType.kindPType:
 			{
@@ -148,7 +160,7 @@ public class PTypeAssistant {
 				return hashCode(utype.getTypes());
 			}
 			case AUnresolvedType.kindPType:
-				return ((AUnresolvedType)type).getName().hashCode();
+				return ((AUnresolvedType) type).getName().hashCode();
 			default:
 				return type.getClass().hashCode();
 		}
@@ -156,14 +168,14 @@ public class PTypeAssistant {
 
 	public static int hashCode(List<PType> list)
 	{
-		 int hashCode = 1;
-	        for (PType e : list)
-	            hashCode = 31*hashCode + (e==null ? 0 : hashCode(e));
-	        return hashCode;
+		int hashCode = 1;
+		for (PType e : list)
+			hashCode = 31 * hashCode + (e == null ? 0 : hashCode(e));
+		return hashCode;
 	}
-	
-	 public static String getName(PType type)
-	 {
-		 return type.getLocation().getModule();
-	 }
+
+	public static String getName(PType type)
+	{
+		return type.getLocation().getModule();
+	}
 }

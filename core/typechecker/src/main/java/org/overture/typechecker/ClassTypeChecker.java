@@ -96,7 +96,7 @@ public class ClassTypeChecker extends TypeChecker
 			return;
 		}
 
-		Environment allClasses = new PublicClassEnvironment(classes,null);
+		Environment allClasses = new PublicClassEnvironment(assistantFactory,classes,null);
 
 		for (SClassDefinition c: classes)
 		{
@@ -112,7 +112,7 @@ public class ClassTypeChecker extends TypeChecker
 			{
     			try
     			{
-    				Environment self = new PrivateClassEnvironment(c, allClasses);
+    				Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
     				SClassDefinitionAssistantTC.typeResolve(c, null, new TypeCheckInfo(new TypeCheckerAssistantFactory(),self));
     			}
     			catch (TypeCheckException te)
@@ -142,8 +142,8 @@ public class ClassTypeChecker extends TypeChecker
     			{
     				try
     				{
-    					Environment self = new PrivateClassEnvironment(c, allClasses);
-    	         		SClassDefinitionAssistantTC.typeCheckPass(assistantFactory,c,pass, self,tc);
+    					Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
+    	         		SClassDefinitionAssistantTC.typeCheckPass(c,pass, self,tc);
     				}
     				catch (TypeCheckException te)
     				{

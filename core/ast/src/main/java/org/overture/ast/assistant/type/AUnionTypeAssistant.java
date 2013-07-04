@@ -3,6 +3,7 @@ package org.overture.ast.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AUnionType;
@@ -10,7 +11,16 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.util.PTypeSet;
 
-public class AUnionTypeAssistant {
+public class AUnionTypeAssistant
+{
+	protected static IAstAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AUnionTypeAssistant(IAstAssistantFactory af)
+	{
+		this.af = af;
+	}
+
 	public static void expand(AUnionType type)
 	{
 
@@ -52,7 +62,7 @@ public class AUnionTypeAssistant {
 	{
 		return getNumeric(type) != null;
 	}
-	
+
 	public static SNumericBasicType getNumeric(AUnionType type)
 	{
 		if (!type.getNumDone())
@@ -82,5 +92,5 @@ public class AUnionTypeAssistant {
 
 		return type.getNumType();
 	}
-	
+
 }

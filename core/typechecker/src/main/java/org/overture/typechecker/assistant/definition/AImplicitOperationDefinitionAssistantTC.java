@@ -24,14 +24,21 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AImplicitOperationDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findName(AImplicitOperationDefinition d,
+	@SuppressWarnings("static-access")
+	public AImplicitOperationDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findName( AImplicitOperationDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
