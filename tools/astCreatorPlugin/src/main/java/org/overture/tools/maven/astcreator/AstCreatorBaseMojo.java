@@ -36,6 +36,20 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	protected String extendedAst;
+	
+	/**
+	 * The extended tree dependency groupid.
+	 * 
+	 * @parameter
+	 */
+	protected String extendedAstGroupId;
+	
+	/**
+	 * The extended tree dependency artifactid.
+	 * 
+	 * @parameter
+	 */
+	protected String extendedAstArtifactId;
 
 	/**
 	 * The prefix of the extended generated classes.
