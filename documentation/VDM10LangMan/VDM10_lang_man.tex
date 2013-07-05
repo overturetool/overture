@@ -4377,9 +4377,9 @@ quicksort (l) ==
     [] -> [],
     [x] -> [x],
     [x,y] -> if x < y then [x,y] else [y,x],
-    -^[x]^- -> quicksort ([y | y in set elems l & y < x]) ^ 
+    -^[x]^- -> quicksort ([l(i) | i in set inds l & l(i) < x]) ^ 
                [x] ^
-               quicksort ([y | y in set elems l & y > x])
+               quicksort ([l(i) | i in set inds l & l(i) > x])
   end
 \end{lstlisting}
 Here, in the second cases clause a sequence concatenation pattern is
@@ -11360,9 +11360,9 @@ In VDM++ and VDM-RT a call statement looks like:
   \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
   }
 
-\Ruledef{map enumeration pattern}{
-    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
-    }
+\Ruledef{map enumeration pattern}{ 
+\Lit{\{}, \Ruleref{maplet pattern list}, \Lit{\}} \dsep \Lit{\{}, \Lit{|->}, \Lit{\}}
+}
 
 \Ruledef{maplet pattern list}{
      \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}
