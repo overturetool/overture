@@ -32,6 +32,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -60,7 +61,7 @@ public class State implements ValueListener
 		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues),
 			new ValueListenerList(this));
 
-		this.context = new Context(definition.getLocation(), "module state", null);
+		this.context = new Context(Interpreter.getInstance().getAssistantFactory(),definition.getLocation(), "module state", null);
 		this.context.put(definition.getName(), recordValue);
 		this.context.putList(fieldvalues);
 	}

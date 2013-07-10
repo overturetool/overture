@@ -6,9 +6,16 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ABlockSimpleBlockStmAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ABlockSimpleBlockStmAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static void addOne(Set<PType> rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)

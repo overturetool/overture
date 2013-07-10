@@ -5,26 +5,35 @@ import java.util.List;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.AIfExpAssistantTC;
 
 public class AIfExpAssistantInterpreter extends AIfExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AIfExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(AIfExp exp, ObjectContext ctxt)
 	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getTest(),ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(),ctxt));
+		ValueList list = PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
+		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
 
-		for (AElseIfExp elif: exp.getElseList())
+		for (AElseIfExp elif : exp.getElseList())
 		{
-			list.addAll(PExpAssistantInterpreter.getValues(elif,ctxt));
+			list.addAll(PExpAssistantInterpreter.getValues(elif, ctxt));
 		}
 
 		if (exp.getElse() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getElse(),ctxt));
+			list.addAll(PExpAssistantInterpreter.getValues(exp.getElse(), ctxt));
 		}
 
 		return list;
@@ -33,21 +42,25 @@ public class AIfExpAssistantInterpreter extends AIfExpAssistantTC
 	public static PExp findExpression(AIfExp exp, int lineno)
 	{
 		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 		found = PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 		found = PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 
-		for (AElseIfExp stmt: exp.getElseList())
+		for (AElseIfExp stmt : exp.getElseList())
 		{
 			found = PExpAssistantInterpreter.findExpression(stmt, lineno);
-			if (found != null) return found;
+			if (found != null)
+				return found;
 		}
 
 		if (exp.getElse() != null)
 		{
-			found = PExpAssistantInterpreter.findExpression(exp.getElse(),lineno);
+			found = PExpAssistantInterpreter.findExpression(exp.getElse(), lineno);
 		}
 
 		return found;
@@ -58,7 +71,7 @@ public class AIfExpAssistantInterpreter extends AIfExpAssistantTC
 		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getTest());
 		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
 
-		for (AElseIfExp elif: exp.getElseList())
+		for (AElseIfExp elif : exp.getElseList())
 		{
 			subs.addAll(AElseIfExpAssistantInterpreter.getSubExpressions(elif));
 		}

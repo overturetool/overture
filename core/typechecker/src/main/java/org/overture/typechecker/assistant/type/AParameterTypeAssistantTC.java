@@ -23,11 +23,18 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AParameterTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static PType typeResolve(AParameterType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -36,7 +43,7 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 
 		PDefinition p = question.env.findName(type.getName(), NameScope.NAMES);
 
-		if (p == null || !(PDefinitionAssistantTC.getType(p) instanceof AParameterType))
+		if (p == null || !(question.assistantFactory.createPDefinitionAssistant().getType(p) instanceof AParameterType))
 		{
 			TypeCheckerErrors.report(3433, "Parameter type @" + type.getName() + " not defined",type.getLocation(),type);
 		}

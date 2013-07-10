@@ -34,6 +34,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -59,39 +60,39 @@ public class PublicClassEnvironment extends Environment
 	}
 
 
-	public PublicClassEnvironment(SClassDefinition classes)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition classes)
 	{
-		this(classes,null,null);
+		this(af,classes,null,null);
 	}
 
-	public PublicClassEnvironment(List<SClassDefinition> classes, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,List<SClassDefinition> classes, EnvironmentSearchStrategy ess)
 	{
-		super(null,ess);
+		super(af,null,ess);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(List<SClassDefinition> classes, Environment env, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,List<SClassDefinition> classes, Environment env, EnvironmentSearchStrategy ess)
 	{
-		super(env,ess);
+		super(af,env,ess);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(SClassDefinition one, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition one, EnvironmentSearchStrategy ess)
 	{
-		super(null,ess);
+		super(af,null,ess);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
 
-	public PublicClassEnvironment(SClassDefinition one, Environment env, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition one, Environment env, EnvironmentSearchStrategy ess)
 	{
-		super(env,ess);
+		super(af,env,ess);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
 
 	@Override
-	public PDefinition findName(ILexNameToken name, NameScope scope)
+	public PDefinition findName( ILexNameToken name, NameScope scope)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findName(classes,name, scope);
 
@@ -107,7 +108,7 @@ public class PublicClassEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findType(ILexNameToken name, String fromModule)
+	public PDefinition findType( ILexNameToken name, String fromModule)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findType(classes,name);
 
@@ -123,7 +124,7 @@ public class PublicClassEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(ILexNameToken name)
+	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
 		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes,name);
 

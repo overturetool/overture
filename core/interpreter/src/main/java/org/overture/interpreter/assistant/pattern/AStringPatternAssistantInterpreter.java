@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.AStringPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -15,6 +16,14 @@ import org.overture.typechecker.assistant.pattern.AStringPatternAssistantTC;
 public class AStringPatternAssistantInterpreter extends
 		AStringPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AStringPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(AStringPattern p,
 			Value expval, Context ctxt) throws PatternMatchException
@@ -25,12 +34,11 @@ public class AStringPatternAssistantInterpreter extends
 		{
 			if (!expval.stringValue(ctxt).equals(p.getValue().getValue()))
 			{
-				VdmRuntimeError.patternFail(4122, "String pattern match failed",p.getLocation());
+				VdmRuntimeError.patternFail(4122, "String pattern match failed", p.getLocation());
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,p.getLocation());
+			VdmRuntimeError.patternFail(e, p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

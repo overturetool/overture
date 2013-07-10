@@ -225,7 +225,7 @@ public class CSV extends IO implements Serializable
 		Interpreter ip = Interpreter.getInstance();
 		ip.typeCheck(exp, ip.getGlobalEnvironment());
 		
-		Context ectxt = new Context(null, method, null);
+		Context ectxt = new Context(ip.getAssistantFactory(),null, method, null);
 		ectxt.setThreadState(null, CPUValue.vCPU);
 		return exp.apply(VdmRuntime.getExpressionEvaluator(), ectxt);
 	}

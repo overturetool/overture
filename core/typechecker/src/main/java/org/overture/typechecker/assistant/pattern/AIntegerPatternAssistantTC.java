@@ -5,10 +5,17 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 public class AIntegerPatternAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AIntegerPatternAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PType getPossibleTypes(AIntegerPattern pattern) {
 		return SNumericBasicTypeAssistantTC.typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}

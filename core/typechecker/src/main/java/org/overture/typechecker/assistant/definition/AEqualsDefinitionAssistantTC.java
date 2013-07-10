@@ -10,12 +10,19 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 
 public class AEqualsDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findName(AEqualsDefinition d,
+	@SuppressWarnings("static-access")
+	public AEqualsDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findName( AEqualsDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		
 		List<PDefinition> defs = d.getDefs();
@@ -46,7 +53,7 @@ public class AEqualsDefinitionAssistantTC {
 		return d.getDefs() == null ? new Vector<PDefinition>() : d.getDefs();
 	}
 
-	public static LexNameList getVariableNames(AEqualsDefinition d) {
+	public static LexNameList getVariableNames( AEqualsDefinition d) {
 		
 		return d.getDefs() == null ? new LexNameList() : PDefinitionListAssistantTC.getVariableNames(d.getDefs());
 	}

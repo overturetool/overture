@@ -51,7 +51,6 @@ import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 @SuppressWarnings("deprecation")
 public class Vdm2Uml
 {
@@ -217,7 +216,7 @@ public class Vdm2Uml
 			{
 				case ATypeDefinition.kindPDefinition:
 				{
-					PType type = PDefinitionAssistantTC.getType(def);
+					PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
 					console.out.println("\tConverting type: " + type);
 					utc.create(class_, type);
 					break;
@@ -260,7 +259,7 @@ public class Vdm2Uml
 	private void addValueToClass(Class class_, AValueDefinition def)
 	{
 		String name = getDefName(def);
-		PType defType = PDefinitionAssistantTC.getType(def);
+		PType defType = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
@@ -418,7 +417,7 @@ public class Vdm2Uml
 					{
 						continue;
 					}
-					PType type = PDefinitionAssistantTC.getType(d);
+					PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(d);
 					utc.create(class_, type);
 					types.add(utc.getUmlType(type));
 				}
@@ -437,7 +436,7 @@ public class Vdm2Uml
 			}
 		}
 
-		PType returnType = ((AOperationType) PDefinitionAssistantTC.getType(def)).getResult();
+		PType returnType = ((AOperationType) Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def)).getResult();
 		utc.create(class_, returnType);
 		Type returnUmlType = utc.getUmlType(returnType);
 
@@ -453,7 +452,7 @@ public class Vdm2Uml
 	{
 
 		String name = def.getName().getName();
-		PType defType = PDefinitionAssistantTC.getType(def);
+		PType defType = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
 
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);

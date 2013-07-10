@@ -48,6 +48,8 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
@@ -76,6 +78,8 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
+	protected IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;
 
@@ -104,6 +108,15 @@ abstract public class Interpreter
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
 		instance = this;
+	}
+	
+	/**
+	 * Gets the current assistant factory
+	 * @return
+	 */
+	public IInterpreterAssistantFactory getAssistantFactory()
+	{
+		return assistantFactory;
 	}
 
 	/**
@@ -472,7 +485,7 @@ abstract public class Interpreter
 		
 		try
 		{
-			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
 			
 			if (TypeChecker.getErrorCount() > 0)
 			{
@@ -499,7 +512,7 @@ abstract public class Interpreter
 		TypeChecker.clearErrors();
 		try
 		{
-			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
 
 			if (TypeChecker.getErrorCount() > 0)
 			{

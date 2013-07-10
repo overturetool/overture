@@ -4,19 +4,29 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.PStm;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.statement.ACasesStmAssistantTC;
 
 public class ACasesStmAssistantInterpreter extends ACasesStmAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ACasesStmAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static PExp findExpression(ACasesStm stm, int lineno)
 	{
 		PExp found = null;
 
-		for (ACaseAlternativeStm stmt: stm.getCases())
+		for (ACaseAlternativeStm stmt : stm.getCases())
 		{
-			found = PStmAssistantInterpreter.findExpression(stmt.getResult(),lineno);
-			if (found != null) break;
+			found = PStmAssistantInterpreter.findExpression(stmt.getResult(), lineno);
+			if (found != null)
+				break;
 		}
 
 		return found;
@@ -25,12 +35,14 @@ public class ACasesStmAssistantInterpreter extends ACasesStmAssistantTC
 	public static PStm findStatement(ACasesStm stm, int lineno)
 	{
 		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
-		if (found != null) return found;
+		if (found != null)
+			return found;
 
-		for (ACaseAlternativeStm stmt: stm.getCases())
+		for (ACaseAlternativeStm stmt : stm.getCases())
 		{
-			found = PStmAssistantInterpreter.findStatement(stmt.getResult(),lineno);
-			if (found != null) break;
+			found = PStmAssistantInterpreter.findStatement(stmt.getResult(), lineno);
+			if (found != null)
+				break;
 		}
 
 		return found;

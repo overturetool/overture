@@ -40,11 +40,19 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	
 	public static boolean equals(PDefinition def, Object other)		// Used for sets of definitions.
 	{
@@ -74,11 +82,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		return false;
 	}
 	
-	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
+	public static boolean hasSupertype( SClassDefinition aClassDefDefinition,
 			PType other) {
 
 		if (PTypeAssistantTC.equals(
-				PDefinitionAssistantTC.getType(aClassDefDefinition), other)) {
+				af.createPDefinitionAssistant().getType(aClassDefDefinition), other)) {
 			return true;
 		} else {
 			for (PType type : aClassDefDefinition.getSupertypes()) {
@@ -93,11 +101,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static boolean isFunctionOrOperation(PDefinition possible) {
+	public static boolean isFunctionOrOperation( PDefinition possible) {
 		return isFunction(possible) || isOperation(possible);
 	}
 
-	public static PDefinition findType(List<PDefinition> definitions,
+	public static PDefinition findType( List<PDefinition> definitions,
 			ILexNameToken name, String fromModule) {
 
 		for (PDefinition d : definitions) {
@@ -112,7 +120,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static PDefinition findType(PDefinition d, ILexNameToken sought,
+	public static PDefinition findType( PDefinition d, ILexNameToken sought,
 			String fromModule) {
 		switch (d.kindPDefinition()) {
 
@@ -139,7 +147,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		}
 	}
 
-	public static PDefinition findName(PDefinition d, ILexNameToken sought,
+	public static PDefinition findName( PDefinition d, ILexNameToken sought,
 			NameScope scope) {
 		switch (d.kindPDefinition()) {
 		// case AAssignmentDefinition.kindPDefinition:
@@ -355,7 +363,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static PDefinition getSelfDefinition(PDefinition d) {
+	public static PDefinition getSelfDefinition( PDefinition d) {
 		switch (d.kindPDefinition()) {
 		case SClassDefinition.kindPDefinition:
 			return SClassDefinitionAssistantTC
@@ -367,7 +375,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static LexNameList getVariableNames(PDefinition d) {
+	public static LexNameList getVariableNames( PDefinition d) {
 
 		// List<LexNameToken> result = new Vector<LexNameToken>();
 		// result.add(d.getName());
@@ -510,7 +518,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static void implicitDefinitions(PDefinition d, Environment env) {
+	public static void implicitDefinitions( PDefinition d, Environment env) {
 		switch (d.kindPDefinition()) {
 		case SClassDefinition.kindPDefinition:
 			SClassDefinitionAssistantTC.implicitDefinitions((SClassDefinition) d,
@@ -608,7 +616,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static PType getType(PDefinition def) {
+	public  PType getType( PDefinition def) {
 		switch (def.kindPDefinition()) {
 		case AAssignmentDefinition.kindPDefinition:
 			return def.getType();
@@ -666,7 +674,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static boolean isUpdatable(PDefinition d) {
+	public static boolean isUpdatable( PDefinition d) {
 		switch (d.kindPDefinition()) {
 		case AAssignmentDefinition.kindPDefinition:
 		case AInstanceVariableDefinition.kindPDefinition:
@@ -680,7 +688,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 					.isUpdatable(((AInheritedDefinition) d).getSuperdef());
 		case ALocalDefinition.kindPDefinition:
 			return ((ALocalDefinition) d).getNameScope().matches(
-					NameScope.STATE) || PTypeAssistantTC.isClass(PDefinitionAssistantTC.getType(d));
+					NameScope.STATE) || PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(d));
 		case ARenamedDefinition.kindPDefinition:
 			return PDefinitionAssistantTC.isUpdatable(((ARenamedDefinition) d)
 					.getDef());
@@ -744,7 +752,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 
 	}
 
-	public static boolean isFunction(PDefinition def) {
+	public static boolean isFunction( PDefinition def) {
 		switch (def.kindPDefinition()) {
 		case AExplicitFunctionDefinition.kindPDefinition:
 		case AImplicitFunctionDefinition.kindPDefinition:

@@ -13,10 +13,17 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AInstanceVariableDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AInstanceVariableDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PDefinition findName(AInstanceVariableDefinition d, ILexNameToken sought,
 			NameScope scope) {
 		

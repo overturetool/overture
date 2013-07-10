@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
@@ -204,6 +205,10 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory {
 
+	static
+	{
+		new AstAssistantFactory();//FIXME: remove when asssistant conversion is finished
+	}
 	
 	/*
 	 *  Init Methods - correspond to constructors of the abstract classes, e.g. Definition, Pattern, Type, etc.

@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.expression;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.AMapEnumMapExpAssistantTC;
@@ -10,14 +11,22 @@ import org.overture.typechecker.assistant.expression.AMapEnumMapExpAssistantTC;
 public class AMapEnumMapExpAssistantInterpreter extends
 		AMapEnumMapExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AMapEnumMapExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(AMapEnumMapExp exp, ObjectContext ctxt)
 	{
 		ValueList list = new ValueList();
 
-		for (AMapletExp maplet: exp.getMembers())
+		for (AMapletExp maplet : exp.getMembers())
 		{
-			list.addAll(AMapletExpAssistantInterpreter.getValues(maplet,ctxt));
+			list.addAll(AMapletExpAssistantInterpreter.getValues(maplet, ctxt));
 		}
 
 		return list;
@@ -25,13 +34,15 @@ public class AMapEnumMapExpAssistantInterpreter extends
 
 	public static PExp findExpression(AMapEnumMapExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
-		if (found != null) return found;
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+		if (found != null)
+			return found;
 
-		for (AMapletExp m: exp.getMembers())
+		for (AMapletExp m : exp.getMembers())
 		{
-			found = AMapletExpAssistantInterpreter.findExpression(m,lineno);
-			if (found != null) return found;
+			found = AMapletExpAssistantInterpreter.findExpression(m, lineno);
+			if (found != null)
+				return found;
 		}
 
 		return null;

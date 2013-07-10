@@ -9,11 +9,18 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
 
 public class ASetBindAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ASetBindAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PMultipleBind> getMultipleBindList(ASetBind bind) {
 		
 		List<PPattern> plist = new ArrayList<PPattern>();

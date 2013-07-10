@@ -99,7 +99,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		this.classes = new ClassListInterpreter(classes);
 		this.createdValues = new NameValuePairMap();
-		this.createdDefinitions = new PDefinitionSet();
+		this.createdDefinitions = assistantFactory.createPDefinitionSet();
 
 		if (classes.isEmpty())
 		{
@@ -168,7 +168,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new PublicClassEnvironment(classes,null);
+		return new PublicClassEnvironment(assistantFactory,classes,null);
 	}
 
 	@Override
@@ -188,12 +188,12 @@ public class ClassInterpreter extends Interpreter
 		ObjectValue.init();
 
 		logSwapIn();
-		initialContext = classes.initialize(dbgp);
+		initialContext = classes.initialize(assistantFactory,dbgp);
 		classes.systemInit(scheduler, dbgp, initialContext);
 		logSwapOut();
 
 		createdValues = new NameValuePairMap();
-		createdDefinitions = new PDefinitionSet();
+		createdDefinitions = assistantFactory.createPDefinitionSet();
 
 		scheduler.reset();	// Required before a run, as well as init above
 		BUSValue.start();	// Start any BUS threads first...
@@ -206,9 +206,9 @@ public class ClassInterpreter extends Interpreter
 		scheduler.reset();
 
 		SystemClock.init();
-		initialContext = classes.initialize(dbgp);
+		initialContext = classes.initialize(assistantFactory,dbgp);
 		createdValues = new NameValuePairMap();
-		createdDefinitions = new PDefinitionSet();
+		createdDefinitions = assistantFactory.createPDefinitionSet();
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class ClassInterpreter extends Interpreter
 
 	private Value execute(PExp expr, DBGPReader dbgp) throws Exception
 	{
-		Context mainContext = new StateContext(
+		Context mainContext = new StateContext(assistantFactory,
 			defaultClass.getName().getLocation(), "global static scope");
 
 		mainContext.putAll(initialContext);
@@ -275,7 +275,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		PExp expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created = new FlatCheckedEnvironment(
+		Environment created = new FlatCheckedEnvironment(assistantFactory,
 			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		typeCheck(expr, created);
@@ -296,8 +296,8 @@ public class ClassInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		PublicClassEnvironment globals = new PublicClassEnvironment(classes,null);
-		Environment env = new PrivateClassEnvironment(defaultClass, globals);
+		PublicClassEnvironment globals = new PublicClassEnvironment(assistantFactory,classes,null);
+		Environment env = new PrivateClassEnvironment(assistantFactory,defaultClass, globals);
 
 		try
 		{
@@ -398,7 +398,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		PExp expr = parseExpression(exp, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created = new FlatCheckedEnvironment(
+		Environment created = new FlatCheckedEnvironment(assistantFactory,
 			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		PType type = typeCheck(expr, created);
@@ -449,7 +449,7 @@ public class ClassInterpreter extends Interpreter
 		object = SClassDefinitionAssistantInterpreter.newInstance(classdef,null, null, initialContext);
 
 
-		Context ctxt = new ObjectContext(
+		Context ctxt = new ObjectContext(assistantFactory,
 				classdef.getName().getLocation(), classdef.getName().getName() + "()",
 				initialContext, object);
 

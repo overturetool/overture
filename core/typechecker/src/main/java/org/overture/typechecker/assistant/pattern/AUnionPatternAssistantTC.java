@@ -18,10 +18,17 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AUnionPatternAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AUnionPatternAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static void typeResolve(AUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException {

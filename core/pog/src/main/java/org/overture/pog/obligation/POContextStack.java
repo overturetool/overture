@@ -28,11 +28,17 @@ import java.util.Stack;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
+import org.overture.pog.assistant.IPogAssistantFactory;
 
 
 @SuppressWarnings("serial")
 public class POContextStack extends Stack<POContext>
 {
+	public final IPogAssistantFactory assistantFactory;
+	public POContextStack(IPogAssistantFactory assstantFactory)
+	{
+		this.assistantFactory = assstantFactory;
+	}
 	public String getName()
 	{
 		StringBuilder result = new StringBuilder();

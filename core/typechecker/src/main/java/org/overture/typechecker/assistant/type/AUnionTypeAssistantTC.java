@@ -32,14 +32,21 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AUnionTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
@@ -568,7 +575,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 							}
 						}
 
-						PType ftype = PDefinitionAssistantTC.getType(f);
+						PType ftype = af.createPDefinitionAssistant().getType(f);
 
 						if (current == null)
 						{

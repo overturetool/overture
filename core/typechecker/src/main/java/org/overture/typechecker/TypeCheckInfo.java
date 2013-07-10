@@ -8,9 +8,11 @@ import java.util.Stack;
 
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TypeCheckInfo
 {
+	public final ITypeCheckerAssistantFactory assistantFactory;
 	/* Added by RWL
 	 * 
 	 * The Context allows us to resolve the following:
@@ -119,27 +121,31 @@ public class TypeCheckInfo
 	public NameScope scope;
 	public LinkedList<PType> qualifiers;
 
-	public TypeCheckInfo(Environment env, NameScope scope,
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,Environment env, NameScope scope,
 			LinkedList<PType> qualifiers)
 	{
+		this.assistantFactory = assistantFactory;
 		this.env = env;
 		this.scope = scope;
 		this.qualifiers = qualifiers;
 	}
 
-	public TypeCheckInfo(Environment env, NameScope scope)
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,Environment env, NameScope scope)
 	{
+		this.assistantFactory = assistantFactory;
 		this.env = env;
 		this.scope = scope;
 	}
 
-	public TypeCheckInfo(Environment env)
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,Environment env)
 	{
+		this.assistantFactory = assistantFactory;
 		this.env = env;
 	}
 
 	public TypeCheckInfo()
 	{
+		this.assistantFactory = null;
 		env = null;
 	}
 }

@@ -2,12 +2,21 @@ package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.ALambdaExpAssistantTC;
 
 public class ALambdaExpAssistantInterpreter extends ALambdaExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ALambdaExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(ALambdaExp exp, ObjectContext ctxt)
 	{
@@ -16,10 +25,11 @@ public class ALambdaExpAssistantInterpreter extends ALambdaExpAssistantTC
 
 	public static PExp findExpression(ALambdaExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
-		if (found != null) return found;
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+		if (found != null)
+			return found;
 
-		return PExpAssistantInterpreter.findExpression(exp.getExpression(),lineno);
+		return PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
 	}
 
 }
