@@ -54,25 +54,25 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		this.af = af;
 	}
 	
-	public static boolean equals(PDefinition def, Object other)		// Used for sets of definitions.
+	public boolean equals(PDefinition def, Object other)		// Used for sets of definitions.
 	{
 		switch (def.kindPDefinition()) {		
 		case AEqualsDefinition.kindPDefinition:
-			return AEqualsDefinitionAssistantTC.equals((AEqualsDefinition)def, other);		
+			return af.createAEqualsDefinitionAssistant().equals((AEqualsDefinition)def, other);		
 		case AMultiBindListDefinition.kindPDefinition:
-			return AMultiBindListDefinitionAssistantTC.equals((AMultiBindListDefinition)def,other);
+			return af.createAMultiBindListDefinitionAssistant().equals((AMultiBindListDefinition)def,other);
 		case AMutexSyncDefinition.kindPDefinition:
-			return AMutexSyncDefinitionAssistantTC.equals((AMutexSyncDefinition)def,other);		
+			return af.createAMutexSyncDefinitionAssistant().equals((AMutexSyncDefinition)def,other);		
 		case AThreadDefinition.kindPDefinition:
-			return AThreadDefinitionAssistantTC.equals((AThreadDefinition)def,other);
+			return af.createAThreadDefinitionAssistant().equals((AThreadDefinition)def,other);
 		case AValueDefinition.kindPDefinition:
-			return AValueDefinitionAssistantTC.equals((AValueDefinition)def,other);
+			return af.createAValueDefinitionAssistant().equals((AValueDefinition)def,other);
 		default:
 			return equalsBaseCase(def, other);
 		}
 	}
 	
-	private static boolean equalsBaseCase(PDefinition def, Object other)		// Used for sets of definitions.
+	private  boolean equalsBaseCase(PDefinition def, Object other)		// Used for sets of definitions.
 	{
 		if (other instanceof PDefinition)
 		{

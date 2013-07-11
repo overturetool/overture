@@ -94,7 +94,7 @@ public class AValueDefinitionAssistantTC {
 				Iterator<PDefinition> diter = vdo.getDefs().iterator();
 
 				for (PDefinition d : def.getDefs()) {
-					if (!PDefinitionAssistantTC.equals(diter.next(), d)) {
+					if (!af.createPDefinitionAssistant().equals(diter.next(), d)) {
 						return false;
 					}
 				}
