@@ -39,7 +39,7 @@ public class PDefinitionSet extends HashSet<PDefinition>
 	{
 		for (PDefinition def : this)
 		{
-			if(PDefinitionAssistantTC.equals(def, o))
+			if(af.createPDefinitionAssistant().equals(def, o))
 			{
 				return true;
 			}
