@@ -64,9 +64,9 @@
       <id>COMPASS-Repo</id>
       <distributionManagement>
         <repository>
-          <id>build.overture.org</id>
+          <id>build.overture.org-compass</id>
           <name>Overture Repo for COMPASS on the buildserver</name>
-          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-compass-m2repo</url>
+          <url>file:///home/jenkins/web/overture-compass-m2repo/</url>
         </repository>
         <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
       </distributionManagement>
@@ -75,7 +75,7 @@
       <id>DESTECS-Repo</id>
       <distributionManagement>
         <repository>
-          <id>build.overture.org</id>
+          <id>build.overture.org-destecs</id>
           <name>Overture Repo for DESTECS on the buildserver</name>
           <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/destecs-overture-m2repo</url>
         </repository>
@@ -85,7 +85,7 @@
   </profiles>
 
   <repositories>
-    <repository>
+    <!--repository>
       <id>overture.sf.net</id>
       <name>Overture SF Snapshots</name>
       <releases>
@@ -100,7 +100,7 @@
       </snapshots>
       <url>http://overture.sourceforge.net/maven/repo</url>
       <layout>default</layout>
-    </repository>
+    </repository-->
 
     <repository>
       <id>IHA</id>
