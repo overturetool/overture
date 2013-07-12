@@ -26,4 +26,19 @@
       <version>3.2</version>
     </dependency>
   </dependencies>
+  
+  
+  
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+	  <!-- the tests use std out a lot so we dont want that in the console -->
+	 <redirectTestOutputToFile>true</redirectTestOutputToFile>
+	 	</configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
