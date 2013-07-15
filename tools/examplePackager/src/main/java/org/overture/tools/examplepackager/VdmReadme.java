@@ -27,8 +27,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.Dialect;
-import org.overture.config.Release;
 import org.overture.tools.examplepackager.html.EscapeChars;
 import org.overture.tools.examplepackager.util.FileUtils;
 
@@ -148,7 +146,7 @@ public class VdmReadme
 				setLibs(fixSemiSplit(data[1]));
 			else if (data[0].equals(VM_ARGUMENTS))
 				setVmArguments(fixSemiSplit(data[1]));
-			else if(data[0].equals(REALTIME_TIME_INV_CHECKS))
+			else if (data[0].equals(REALTIME_TIME_INV_CHECKS))
 				setRealTimeInvChecks(new Boolean(data[1]));
 		}
 	}
@@ -159,9 +157,9 @@ public class VdmReadme
 		if (text.contains(splitter))
 		{
 			return text.trim().split(splitter);
-		} 
-		
-		splitter=";";
+		}
+
+		splitter = ";";
 		if (text.contains(splitter))
 		{
 			return text.trim().split(splitter);
@@ -177,24 +175,24 @@ public class VdmReadme
 
 		FileUtils.writeFile(getEclipseProject(), projectFile);
 	}
-	
+
 	public void writeSettings(File outputFolder)
 	{
-		if(getEncoding() == null || getEncoding().isEmpty())
+		if (getEncoding() == null || getEncoding().isEmpty())
 			return;
-		
+
 		File settingsFolder = new File(outputFolder, ".settings");
 		settingsFolder.mkdirs();
-		
+
 		File preferencesFile = new File(settingsFolder, "org.eclipse.core.resources.prefs");
-		
+
 		FileUtils.writeFile(getEclipsePreferences(), preferencesFile);
 	}
 
 	public String getEclipseProject()
 	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		String projectNature = getNature();
 		String builderArguments = getBuilderArguments();
 
@@ -202,15 +200,15 @@ public class VdmReadme
 		return sb.toString();
 
 	}
-	
+
 	public String getEclipsePreferences()
 	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		String encoding = getEncoding();
-		
+
 		sb.append(OvertureProjectPreferences.OvertureProjectPreferences.replace(OvertureProjectPreferences.ENCODING_PLACEHOLDER, encoding));
-		
+
 		return sb.toString();
 	}
 
@@ -393,24 +391,26 @@ public class VdmReadme
 		sb.append("\n<stringAttribute key=\"vdm_launch_config_module\" value=\""
 				+ EscapeChars.forXML(module) + "\"/>");
 
-		if(dialect == Dialect.VDM_RT)
+		if (dialect == Dialect.VDM_RT)
 		{
 			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_logging\" value=\"true\"/>");
-			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_time_inv_checks\" value=\""  + getRealTimeInvChecks() + "\"/>");
+			sb.append("\n<booleanAttribute key=\"vdm_launch_config_enable_realtime_time_inv_checks\" value=\""
+					+ getRealTimeInvChecks() + "\"/>");
 		}
-		
-		if(vmArguments.size() > 0)
+
+		if (vmArguments.size() > 0)
 		{
 			String vmArgsStr = "";
-			
-			for(int i = 0; i < vmArguments.size(); i++)
+
+			for (int i = 0; i < vmArguments.size(); i++)
 				vmArgsStr += " -" + vmArguments.get(i);
-			
+
 			vmArgsStr = vmArgsStr.trim();
-			
-			sb.append("<stringAttribute key=\"vdm_launch_config_memory_option\" value=\"" + vmArgsStr + "\"/>");
+
+			sb.append("<stringAttribute key=\"vdm_launch_config_memory_option\" value=\""
+					+ vmArgsStr + "\"/>");
 		}
-		
+
 		sb.append("\n</launchConfiguration>");
 
 		FileUtils.writeFile(sb.toString(), launch);
@@ -642,7 +642,7 @@ public class VdmReadme
 		}
 
 	}
-	
+
 	public void setRealTimeInvChecks(Boolean realTimeInvChecks)
 	{
 		this.realTimeInvChecks = realTimeInvChecks;

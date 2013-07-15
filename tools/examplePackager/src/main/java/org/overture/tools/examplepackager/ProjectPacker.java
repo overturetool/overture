@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.Dialect;
 import org.overture.tools.examplepackager.util.FileUtils;
 import org.overture.tools.examplepackager.util.FolderZipper;
 
@@ -41,12 +40,14 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 	File newLocation;
 	boolean verbose = true;
 
-	public ProjectPacker(File root, Dialect dialect, boolean verbose) {
-		this(root,dialect);
-		this.verbose=verbose;
+	public ProjectPacker(File root, Dialect dialect, boolean verbose)
+	{
+		this(root, dialect);
+		this.verbose = verbose;
 	}
-	
-	public ProjectPacker(File root, Dialect dialect) {
+
+	public ProjectPacker(File root, Dialect dialect)
+	{
 		this.root = root;
 		this.dialect = dialect;
 		File readme = new File(root, VDM_README_FILENAME);
@@ -66,9 +67,10 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 	public File packTo(File location)
 	{
 		File outputLocation = new File(location, settings.getName());
-		return packTo(location,outputLocation);
+		return packTo(location, outputLocation);
 	}
-	public File packTo(File location,File outputLocation)
+
+	public File packTo(File location, File outputLocation)
 	{
 		if (settings == null)
 		{
@@ -87,13 +89,15 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		settings.writeLaunchFile(outputLocation);
 		if (settings.getLibs().size() > 0)
 		{
-			File libDir = new File(outputLocation,"lib");
+			File libDir = new File(outputLocation, "lib");
 			libDir.mkdirs();
 			for (String lib : settings.getLibs())
 			{
 				try
 				{
-					FileUtils.writeFile( FileUtils.readFile("/libs/"+getName(getDialect())+"/"+lib),new File(libDir, "/"+lib));
+					FileUtils.writeFile(FileUtils.readFile("/libs/"
+							+ getName(getDialect()) + "/" + lib), new File(libDir, "/"
+							+ lib));
 				} catch (IOException e)
 				{
 					// TODO Auto-generated catch block
@@ -105,18 +109,16 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 		newLocation = outputLocation;
 		return outputLocation;
 	}
-	
+
 	public void zipTo(File zipFile)
 	{
 		File tmp = new File("zipTmp");
 		tmp.mkdirs();
 		File destination = packTo(tmp);
-		
+
 		FolderZipper.zipFolder(destination.getAbsolutePath(), zipFile.getAbsolutePath());
 		Controller.delete(tmp);
-		
-		
-		
+
 	}
 
 	private static String createNewFileName(File newExample, File file,
@@ -160,7 +162,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 					|| f.getName().toLowerCase().endsWith(".vdmrt")
 					|| f.getName().toLowerCase().endsWith(".vdmsl"))
 				specFiles.add(f);
-			else if(f.isDirectory())
+			else if (f.isDirectory())
 				specFiles.addAll(getSpecFiles(f));
 		}
 		return specFiles;
@@ -170,14 +172,14 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 	{
 		switch (dialect)
 		{
-		case VDM_PP:
-			return "PP";
-		case VDM_RT:
-			return "RT";
-		case VDM_SL:
-			return "SL";
-		default:
-			return "PP";
+			case VDM_PP:
+				return "PP";
+			case VDM_RT:
+				return "RT";
+			case VDM_SL:
+				return "SL";
+			default:
+				return "PP";
 		}
 	}
 
@@ -190,8 +192,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 					|| file.getName().equals(".project")
 					|| file.getName().equals(".classpath")
 					|| file.getName().equals(".DS_Store")
-					|| file.getName().endsWith(".result")
-					)
+					|| file.getName().endsWith(".result"))
 				continue;
 			if (file.isFile())
 			{
@@ -249,10 +250,7 @@ public class ProjectPacker implements Comparable<ProjectPacker>
 
 	public int compareTo(ProjectPacker o)
 	{
-		return this.getSettings()
-				.getName()
-				.toLowerCase()
-				.compareTo(o.getSettings().getName().toLowerCase());
+		return this.getSettings().getName().toLowerCase().compareTo(o.getSettings().getName().toLowerCase());
 	}
 
 }
