@@ -21,6 +21,7 @@ package org.overture.ide.plugins.poviewer;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +56,7 @@ public class PoGeneratorUtil
 	private IWorkbenchSite site;
 	private File selectedFile = null;
 	private File libFolder = null;
+	private File selectedFolder;
 
 	/**
 	 * Constructor for Action1.
@@ -70,17 +72,37 @@ public class PoGeneratorUtil
 	 */
 	public void generate(IProject selectedProject, IFile file)
 	{
+
+		if (file != null)
+		{
+			this.selectedFile = file.getLocation().toFile();
+		}
+
+		generate(selectedProject);
+	}
+
+	/**
+	 * @see IActionDelegate#run(IAction)
+	 */
+	public void generate(IProject selectedProject, IFolder folder)
+	{
+		if (folder != null)
+		{
+			this.selectedFolder = folder.getLocation().toFile();
+		}
+		generate(selectedProject);
+	}
+
+	/**
+	 * @see IActionDelegate#run(IAction)
+	 */
+	public void generate(IProject selectedProject)
+	{
 		try
 		{
 			if (selectedProject == null)
 			{
 				return;
-			}
-
-			IFile tmpFile = file;
-			if (tmpFile != null)
-			{
-				selectedFile = tmpFile.getLocation().toFile();
 			}
 
 			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
@@ -100,7 +122,18 @@ public class PoGeneratorUtil
 	public boolean skipElement(File file)
 	{
 		return (selectedFile != null && !selectedFile.getName().equals((file.getName())))
-				|| (selectedFile == null && isLibrary(file));
+				|| (selectedFile == null && isLibrary(file) || !inSelectedFolder(file));
+
+	}
+
+	private boolean inSelectedFolder(File file)
+	{
+		if (selectedFolder == null)
+		{
+			return true;
+		}
+
+		return file.getAbsolutePath().startsWith(this.selectedFolder.getAbsolutePath());
 
 	}
 

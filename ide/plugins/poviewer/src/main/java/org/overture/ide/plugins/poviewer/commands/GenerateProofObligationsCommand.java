@@ -4,6 +4,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,10 +31,14 @@ public class GenerateProofObligationsCommand extends AbstractHandler
 			PoGeneratorUtil util = new PoGeneratorUtil(Display.getCurrent().getActiveShell(),page.getActivePart().getSite() );
 			if (firstElement instanceof IProject)
 			{
-				util.generate((IProject) firstElement, null);
+				util.generate((IProject) firstElement);
 			}else if (firstElement instanceof IFile)
 			{
 				IFile file = (IFile) firstElement;
+				util.generate(file.getProject(), file);
+			}else if (firstElement instanceof IFolder)
+			{
+				IFolder file = (IFolder) firstElement;
 				util.generate(file.getProject(), file);
 			}
 
