@@ -25,6 +25,7 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.filesystem
 Export-Package: org.overture.ide.ui,
  org.overture.ide.ui.editor.core,
+ org.overture.ide.ui.editor.partitioning,
  org.overture.ide.ui.editor.syntax,
  org.overture.ide.ui.internal.util,
  org.overture.ide.ui.internal.viewsupport,
