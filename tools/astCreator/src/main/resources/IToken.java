@@ -6,17 +6,17 @@ import java.util.Map;
  */
 @SuppressWarnings("nls")
 public interface %IToken% extends %INode% {
-	/**
-	 * Returns the {@link TokenEnum} corresponding to the
-	 * type of this {@link Token} node.
-	 * @return the {@link TokenEnum} for this node
-	 */
+//	/**
+//	 * Returns the {@link TokenEnum} corresponding to the
+//	 * type of this {@link Token} node.
+//	 * @return the {@link TokenEnum} for this node
+//	 */
 //	public abstract TokenEnum kindToken();
 
 	/**
-	 * Returns the {@link NodeEnum} corresponding to the
+	 * Returns the {@link String} corresponding to the
 	 * type of this {@link Node} node.
-	 * @return the {@link NodeEnum} for this node
+	 * @return the {@link String} for this node
 	 */
 	public String kindNode();
 
@@ -63,8 +63,8 @@ public interface %IToken% extends %INode% {
 	/**
 	 * Implements the {@link Node#removeChild(%INode%)} method. Since tokens have no
 	 * children, it always throws a {@link RuntimeException}.
-	 * @param child the child node to be removed from this {@link Token} node
-	 * @throws RuntimeException if {@code child} is not a child of this {@link Token} node
+	 * @param child the child node to be removed from this {@link %IToken%} node
+	 * @throws RuntimeException if {@code child} is not a child of this {@link %IToken%} node
 	 */
 	public void removeChild(%INode% child);
 

@@ -680,7 +680,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 					.isUpdatable(((AInheritedDefinition) d).getSuperdef());
 		case ALocalDefinition.kindPDefinition:
 			return ((ALocalDefinition) d).getNameScope().matches(
-					NameScope.STATE);
+					NameScope.STATE) || PTypeAssistantTC.isClass(PDefinitionAssistantTC.getType(d));
 		case ARenamedDefinition.kindPDefinition:
 			return PDefinitionAssistantTC.isUpdatable(((ARenamedDefinition) d)
 					.getDef());

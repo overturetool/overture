@@ -14,6 +14,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.overture.tools.astcreator.definitions.EnumDefinition;
 import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.IInterfaceDefinition;
@@ -53,6 +54,13 @@ public class SourceFileWriter
 			{
 				continue;
 			}
+			
+			//TODO temporary fix for JWC's fix
+			if (def instanceof EnumDefinition)
+			{
+				continue;
+			}
+			
 
 			if (extOnly && def.isBaseTree() && !def.isExtTree()) {
 				continue;

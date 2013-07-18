@@ -45,17 +45,17 @@ public class KindNodeMethod extends Method
         // }
       }
     
-    @Override
-    public Set<String> getRequiredImports(Environment env)
-      {
-        Set<String> imports = new HashSet<String>();
-        imports.addAll(super.getRequiredImports(env));
-        
-        imports.add(env.getTemplateDefaultPackage() + "."
-            + EnumUtil.getEnumTypeName(env.node, env));
-        
-        return imports;
-      }
+//    @Override
+//    public Set<String> getRequiredImports(Environment env)
+//      {
+//        Set<String> imports = new HashSet<String>();
+//        imports.addAll(super.getRequiredImports(env));
+//        
+//        imports.add(env.getTemplateDefaultPackage() + "."
+//            + EnumUtil.getEnumTypeName(env.node, env));
+//        
+//        return imports;
+//      }
     
     @Override
     protected void prepareVdm(Environment env)

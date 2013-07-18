@@ -1,12 +1,11 @@
 package org.overture.interpreter.runtime.state;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
-import org.overture.interpreter.values.ValueListenerList;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
@@ -21,9 +20,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	public boolean staticInit = false;
 	/** True if the class' static values are initialized. */
 	public boolean staticValuesInit = false;
-	/** A listener list. */
-	public ValueListenerList invlistenerlist = null;
-	
+
 	/** A delegate Java object for any native methods. */
 	private Delegate delegate = null;
 
