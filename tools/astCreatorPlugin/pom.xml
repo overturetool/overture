@@ -13,7 +13,7 @@
 
   <groupId>org.overture.tools.maven</groupId>
   <artifactId>ast-creator</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <name>AST Creator Maven plug-in</name>
  
   <build>
@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.overture.tools</groupId>
       <artifactId>astCreator</artifactId>
-      <version>1.2.1</version>
+      <version>1.2.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

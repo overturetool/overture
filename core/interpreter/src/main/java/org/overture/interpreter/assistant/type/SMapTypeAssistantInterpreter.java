@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.types.SMapType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.MapValue;
@@ -12,36 +13,46 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 
-public class SMapTypeAssistantInterpreter
+public class SMapTypeAssistantInterpreter extends SMapTypeAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getAllValues(SMapType type, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public SMapTypeAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static ValueList getAllValues(SMapType type, Context ctxt)
+			throws ValueException
 	{
 		PTypeList tuple = new PTypeList();
 		tuple.add(type.getFrom());
 		tuple.add(type.getTo());
-		
+
 		ValueList results = new ValueList();
-		ValueList tuples = PTypeListAssistant.getAllValues(tuple,ctxt);
+		ValueList tuples = PTypeListAssistant.getAllValues(tuple, ctxt);
 		ValueSet set = new ValueSet();
 		set.addAll(tuples);
 		List<ValueSet> psets = set.powerSet();
 
-		for (ValueSet map: psets)
+		for (ValueSet map : psets)
 		{
 			ValueMap result = new ValueMap();
-			
-			for (Value v: map)
+
+			for (Value v : map)
 			{
-				TupleValue tv = (TupleValue)v;
+				TupleValue tv = (TupleValue) v;
 				result.put(tv.values.get(0), tv.values.get(1));
 			}
-			
+
 			results.add(new MapValue(result));
 		}
-		
-		return results; 
+
+		return results;
 	}
 
 }

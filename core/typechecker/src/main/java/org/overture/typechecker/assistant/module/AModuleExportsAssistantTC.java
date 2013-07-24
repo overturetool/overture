@@ -8,11 +8,18 @@ import java.util.Vector;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class AModuleExportsAssistantTC
 {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AModuleExportsAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
 	{

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -14,6 +15,14 @@ import org.overture.typechecker.assistant.pattern.ANilPatternAssistantTC;
 
 public class ANilPatternAssistantInterpreter extends ANilPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ANilPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(ANilPattern p,
 			Value expval, Context ctxt) throws PatternMatchException
@@ -22,7 +31,7 @@ public class ANilPatternAssistantInterpreter extends ANilPatternAssistantTC
 
 		if (!(expval.deref() instanceof NilValue))
 		{
-			VdmRuntimeError.patternFail(4106, "Nil pattern match failed",p.getLocation());
+			VdmRuntimeError.patternFail(4106, "Nil pattern match failed", p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

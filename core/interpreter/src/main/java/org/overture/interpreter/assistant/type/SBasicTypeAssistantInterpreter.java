@@ -2,21 +2,31 @@ package org.overture.interpreter.assistant.type;
 
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.SBasicType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
 
 public class SBasicTypeAssistantInterpreter
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getAllValues(SBasicType type, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public SBasicTypeAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		this.af = af;
+	}
+
+	public static ValueList getAllValues(SBasicType type, Context ctxt)
+			throws ValueException
 	{
 		switch (type.kindSBasicType())
 		{
 			case ABooleanBasicType.kindSBasicType:
-				return ABooleanBasicTypeAssistantInterpreter.getAllValues((ABooleanBasicType)type,ctxt);
+				return ABooleanBasicTypeAssistantInterpreter.getAllValues((ABooleanBasicType) type, ctxt);
 			default:
-				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
+				throw new ValueException(4, "Cannot get bind values for type "
+						+ type, ctxt);
 		}
 	}
 

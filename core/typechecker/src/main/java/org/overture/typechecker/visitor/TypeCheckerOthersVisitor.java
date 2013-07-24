@@ -209,7 +209,7 @@ public class TypeCheckerOthersVisitor extends
 						+ "' in assignment", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (!PDefinitionAssistantTC.isUpdatable(def)) {
+			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
 				TypeCheckerErrors.report(3301, "Variable '" + name
 						+ "' in scope is not updatable", name.getLocation(),
 						name);
@@ -223,7 +223,7 @@ public class TypeCheckerOthersVisitor extends
 							name.getLocation(), name);
 					node.setType(AstFactory.newAUnknownType(name.getLocation()));
 					return node.getType();
-				} else if (!PDefinitionAssistantTC.isStatic(def)
+				} else if (!question.assistantFactory.createPDefinitionAssistant().isStatic(def)
 						&& env.isStatic()) {
 					TypeCheckerErrors.report(3181, "Cannot access " + name
 							+ " from a static context", name.getLocation(),
@@ -233,7 +233,7 @@ public class TypeCheckerOthersVisitor extends
 				}
 			}
 
-			node.setType(PDefinitionAssistantTC.getType(def));
+			node.setType(question.assistantFactory.createPDefinitionAssistant().getType(def));
 			return node.getType();
 		} else {
 			ILexNameToken name = node.getName();
@@ -244,7 +244,7 @@ public class TypeCheckerOthersVisitor extends
 						+ name + "' in assignment", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (!PDefinitionAssistantTC.isUpdatable(def)) {
+			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
 				TypeCheckerErrors.report(3301, "Variable '" + name
 						+ "' in scope is not updatable", name.getLocation(),
 						name);
@@ -261,7 +261,7 @@ public class TypeCheckerOthersVisitor extends
 			}
 			// else just state access in (say) an explicit operation
 
-			node.setType(PDefinitionAssistantTC.getType(def));
+			node.setType(question.assistantFactory.createPDefinitionAssistant().getType(def));
 			return node.getType();
 		}
 	}
@@ -270,9 +270,9 @@ public class TypeCheckerOthersVisitor extends
 	public PType caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
 			TypeCheckInfo question) throws AnalysisException {
 		PType etype = node.getExp().apply(rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE));
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE));
 		PType rtype = node.getMapseq().apply(rootVisitor,
-				new TypeCheckInfo(question.env));
+				new TypeCheckInfo(question.assistantFactory,question.env));
 		PTypeSet result = new PTypeSet();
 
 		if (PTypeAssistantTC.isMap(rtype)) {
@@ -325,7 +325,7 @@ public class TypeCheckerOthersVisitor extends
 			return AstFactory.newAUnknownType(node.getSelf().getLocation());
 		}
 
-		return PDefinitionAssistantTC.getType(def);
+		return question.assistantFactory.createPDefinitionAssistant().getType(def);
 	}
 
 	@Override
@@ -334,12 +334,12 @@ public class TypeCheckerOthersVisitor extends
 		LinkedList<PType> argtypes = new LinkedList<PType>();
 
 		for (PExp a : node.getArgs()) {
-			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.env,
+			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory,question.env,
 					NameScope.NAMESANDSTATE)));
 		}
 
 		PType type = node.getObject().apply(rootVisitor,
-				new TypeCheckInfo(question.env, null, argtypes));
+				new TypeCheckInfo(question.assistantFactory,question.env, null, argtypes));
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 		PTypeSet result = new PTypeSet();
 
@@ -358,7 +358,7 @@ public class TypeCheckerOthersVisitor extends
 		if (PTypeAssistantTC.isFunction(type)) {
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
 			PTypeAssistantTC.typeResolve(ft, null, rootVisitor,
-					new TypeCheckInfo(question.env));
+					new TypeCheckInfo(question.assistantFactory,question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,
 					ft, question.env, NameScope.NAMESANDSTATE, unique,
 					rootVisitor));
@@ -367,7 +367,7 @@ public class TypeCheckerOthersVisitor extends
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType ot = PTypeAssistantTC.getOperation(type);
 			PTypeAssistantTC.typeResolve(ot, null, rootVisitor,
-					new TypeCheckInfo(question.env));
+					new TypeCheckInfo(question.assistantFactory,question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node,
 					ot, question.env, NameScope.NAMESANDSTATE, unique,
 					rootVisitor));
@@ -391,7 +391,7 @@ public class TypeCheckerOthersVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 		return node.getExpression().apply(
 				rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE,
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE,
 						question.qualifiers));
 	}
 
@@ -401,7 +401,7 @@ public class TypeCheckerOthersVisitor extends
 			throws AnalysisException {
 		return node.getExpression().apply(
 				rootVisitor,
-				new TypeCheckInfo(question.env, NameScope.NAMESANDSTATE,
+				new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE,
 						question.qualifiers));
 	}
 
@@ -410,7 +410,7 @@ public class TypeCheckerOthersVisitor extends
 			TypeCheckInfo question) throws AnalysisException {
 
 		PType type = node.getObject().apply(rootVisitor,
-				new TypeCheckInfo(question.env, null, question.qualifiers));
+				new TypeCheckInfo(question.assistantFactory,question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet();
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 
@@ -426,7 +426,7 @@ public class TypeCheckerOthersVisitor extends
 
 			ILexNameToken field = node.getField();
 			field.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = PDefinitionAssistantTC.findName(
+			PDefinition fdef = question.assistantFactory.createPDefinitionAssistant().findName(
 					ctype.getClassdef(), field, NameScope.NAMESANDSTATE);
 
 			if (fdef == null) {
@@ -435,7 +435,7 @@ public class TypeCheckerOthersVisitor extends
 						node.getLocation(), node);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else {
-				result.add(PDefinitionAssistantTC.getType(fdef));
+				result.add(question.assistantFactory.createPDefinitionAssistant().getType(fdef));
 			}
 		}
 

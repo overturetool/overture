@@ -33,6 +33,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
@@ -51,25 +52,25 @@ public class FlatEnvironment extends Environment
 		return definitions;
 	}
 
-	public FlatEnvironment(List<PDefinition> definitions, EnvironmentSearchStrategy strategy)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions, EnvironmentSearchStrategy strategy)
 	{
-		super(null,strategy);
+		super(af,null,strategy);
 		this.definitions = definitions;
 	}
 
-	public FlatEnvironment(List<PDefinition> definitions) {
-		this(definitions,(EnvironmentSearchStrategy)null);
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions) {
+		this(af,definitions,(EnvironmentSearchStrategy)null);
 	}
 
-	public FlatEnvironment(List<PDefinition> definitions, Environment env)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions, Environment env)
 	{
-		super(env,env.searchStrategy);
+		super(af,env,env.searchStrategy);
 		this.definitions = definitions;
 	}
 
-	public FlatEnvironment(PDefinition one, Environment env)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,PDefinition one, Environment env)
 	{
-		super(env,env.searchStrategy);
+		super(af,env,env.searchStrategy);
 		this.definitions = new ArrayList<PDefinition>();
 		this.definitions.add(one);
 	}
@@ -80,7 +81,7 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName(ILexNameToken name, NameScope scope)
+	public PDefinition findName( ILexNameToken name, NameScope scope)
 	{
 		PDefinition def = searchStrategy != null ? searchStrategy.findName(name, scope, getEnclosingDefinition(), outer, getDefinitions()) : null;
 		if (def != null) return def;
@@ -167,7 +168,7 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(ILexNameToken name)
+	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
 		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(definitions,name);
 

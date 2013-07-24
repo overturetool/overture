@@ -8,9 +8,16 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ABusClassDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ABusClassDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	private static String defs =
 			"operations " +
 			"public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS " +

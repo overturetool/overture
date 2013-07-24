@@ -9,6 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<groupId>org.overture.core</groupId>
 	<artifactId>guibuilder</artifactId>
 	<name>Overture GUI Builder</name>
 

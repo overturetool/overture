@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -15,11 +16,18 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class AValueDefinitionAssistantInterpreter extends
 		AValueDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AValueDefinitionAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static NameValuePairList getNamedValues(AValueDefinition d,
 			Context initialContext)
@@ -29,19 +37,17 @@ public class AValueDefinitionAssistantInterpreter extends
 		try
 		{
 			// UpdatableValues are constantized as they cannot be updated.
-			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext).convertTo(PDefinitionAssistantTC.getType(d), initialContext).getConstant();
+			v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext).convertTo(af.createPDefinitionAssistant().getType(d), initialContext).getConstant();
 			return PPatternAssistantInterpreter.getNamedValues(d.getPattern(), v, initialContext);
-     	}
-	    catch (ValueException e)
-     	{
-     		VdmRuntimeError.abort(d.getLocation(),e);
-     	}
-		catch (PatternMatchException e)
+		} catch (ValueException e)
+		{
+			VdmRuntimeError.abort(d.getLocation(), e);
+		} catch (PatternMatchException e)
 		{
 			VdmRuntimeError.abort(e, initialContext);
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 
 		return null;

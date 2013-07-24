@@ -18,10 +18,18 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant{
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ANamedInvariantTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static void unResolve(ANamedInvariantType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
 		PTypeAssistantTC.unResolve(type.getType());

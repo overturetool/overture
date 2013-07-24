@@ -9,9 +9,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-
-import org.overture.ast.lex.Dialect;
 import org.overture.tools.examplepackager.Controller;
+import org.overture.tools.examplepackager.Dialect;
 
 /**
  * Example Packager

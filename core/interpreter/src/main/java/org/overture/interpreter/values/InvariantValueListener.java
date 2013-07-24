@@ -27,7 +27,6 @@ import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;

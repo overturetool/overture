@@ -30,7 +30,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.overture.ast.lex.Dialect;
 
 public class Main
 {
@@ -49,7 +48,7 @@ public class Main
 		// Example of input arguments making this tool generate zip bundles at the specified output location
 		// using the projects at the specified input location:
 		// -z -i <dir>\documentation\examples -o <dir>\Output
-		
+
 		// create the command line parser
 		CommandLineParser parser = new PosixParser();
 
@@ -57,8 +56,8 @@ public class Main
 		Options options = new Options();
 		Option helpOpt = new Option("?", "help", false, "print this message");
 
-		Option genWebOpt = new Option("w","web", false, "generate website");
-		Option genZipbundleOpt = new Option("z","zip", false, "generate zip bundles");
+		Option genWebOpt = new Option("w", "web", false, "generate website");
+		Option genZipbundleOpt = new Option("z", "zip", false, "generate zip bundles");
 
 		Option inputOpt = new Option("i", "input", true, "the path of the examples folder");
 		inputOpt.setRequired(true);
@@ -81,7 +80,7 @@ public class Main
 				// automatically generate the help statement
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("examplepackager", options);
-				return ;
+				return;
 			}
 
 		} catch (ParseException exp)
@@ -89,7 +88,7 @@ public class Main
 			System.err.println("Unexpected exception:" + exp.getMessage());
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("examplepackager", options);
-			return ;
+			return;
 		}
 
 		input = new File(line.getOptionValue(inputOpt.getOpt()));
@@ -102,7 +101,7 @@ public class Main
 		zip = line.hasOption(genZipbundleOpt.getOpt());
 
 		runCompleteTest(input);
-		return ;
+		return;
 	}
 
 	private static Controller runController(Dialect dialect,
@@ -116,13 +115,13 @@ public class Main
 
 			File zipFile = new File(output, "Examples"
 					+ dialect.toString().toUpperCase() + ".zip");
-			controller.packExamples(tmpFolder, zipFile,false);
+			controller.packExamples(tmpFolder, zipFile, false);
 
 			zipFiles.add(zipFile);
 		}
 		if (web)
 		{
-			controller.packExamples(tmpFolder, null,true);
+			controller.packExamples(tmpFolder, null, true);
 			controller.createWebSite();
 		}
 		return controller;
@@ -149,7 +148,7 @@ public class Main
 
 		controller = runController(Dialect.VDM_RT, new File(root, "VDMRT"), tmpFolder);
 		controllers.add(controller);
-		
+
 		if (web)
 		{
 			controller.createWebOverviewPage(controllers, zipFiles);

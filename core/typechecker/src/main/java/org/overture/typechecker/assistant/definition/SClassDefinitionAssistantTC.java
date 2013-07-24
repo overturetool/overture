@@ -34,6 +34,7 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -41,8 +42,14 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class SClassDefinitionAssistantTC
 {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findName(SClassDefinition classdef,
+	@SuppressWarnings("static-access")
+	public SClassDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findName( SClassDefinition classdef,
 			ILexNameToken sought, NameScope scope)
 	{
 
@@ -204,7 +211,7 @@ public class SClassDefinitionAssistantTC
 		return def;
 	}
 
-	public static Set<PDefinition> findMatches(SClassDefinition classdef,
+	public static Set<PDefinition> findMatches( SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 
@@ -213,7 +220,7 @@ public class SClassDefinitionAssistantTC
 		return set;
 	}
 
-	public static PDefinition findName(List<SClassDefinition> classes,
+	public static PDefinition findName( List<SClassDefinition> classes,
 			ILexNameToken name, NameScope scope)
 	{
 
@@ -260,7 +267,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static Set<PDefinition> findMatches(List<SClassDefinition> classes,
+	public static Set<PDefinition> findMatches( List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
@@ -306,10 +313,10 @@ public class SClassDefinitionAssistantTC
 		return all;
 	}
 
-	public static PDefinition getSelfDefinition(SClassDefinition classDefinition)
+	public static PDefinition getSelfDefinition( SClassDefinition classDefinition)
 	{
 
-		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, PDefinitionAssistantTC.getType(classDefinition));
+		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
 		PDefinitionAssistantTC.markUsed(def);
 		return def;
 	}
@@ -319,7 +326,7 @@ public class SClassDefinitionAssistantTC
 		return PDefinitionListAssistantTC.getVariableNames(d.getDefinitions());
 	}
 
-	public static void implicitDefinitions(SClassDefinition d,
+	public static void implicitDefinitions( SClassDefinition d,
 			Environment publicClasses)
 	{
 
@@ -336,7 +343,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitionsBase(SClassDefinition d,
+	public static void implicitDefinitionsBase( SClassDefinition d,
 			Environment publicClasses)
 	{
 		setInherited(d, publicClasses);
@@ -492,7 +499,7 @@ public class SClassDefinitionAssistantTC
 		return defs;
 	}
 
-	private static void setInherited(SClassDefinition d, Environment base)
+	private static void setInherited( SClassDefinition d, Environment base)
 	{
 		switch (d.getSettingHierarchy())
 		{
@@ -535,7 +542,7 @@ public class SClassDefinitionAssistantTC
 				setInherited(superdef, base);
 
 				d.getSuperDefs().add(superdef);
-				d.getSupertypes().add(PDefinitionAssistantTC.getType(superdef));
+				d.getSupertypes().add(af.createPDefinitionAssistant().getType(superdef));
 			} else
 			{
 				TypeCheckerErrors.report(3004, "Superclass name is not a class: "
@@ -553,16 +560,16 @@ public class SClassDefinitionAssistantTC
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		Environment cenv = new FlatEnvironment(d.getDefinitions(), question.env);
-		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(cenv));
+		Environment cenv = new FlatEnvironment(question.assistantFactory,d.getDefinitions(), question.env);
+		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory,cenv));
 	}
 
-	public static PDefinition findThread(SClassDefinition d)
+	public static PDefinition findThread( SClassDefinition d)
 	{
 		return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
 	}
 
-	public static PDefinition findConstructor(SClassDefinition classdef,
+	public static PDefinition findConstructor( SClassDefinition classdef,
 			List<PType> argtypes)
 	{
 
@@ -589,7 +596,7 @@ public class SClassDefinitionAssistantTC
 		return def.getClasstype();
 	}
 
-	public static void checkOver(SClassDefinition c)
+	public static void checkOver( SClassDefinition c)
 	{
 		int inheritedThreads = 0;
 		checkOverloads(c);
@@ -670,7 +677,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static boolean checkOverrides(SClassDefinition c,
+	private static boolean checkOverrides( SClassDefinition c,
 			List<PDefinition> inheritable)
 	{
 		boolean inheritedThread = false;
@@ -705,8 +712,8 @@ public class SClassDefinitionAssistantTC
 					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
 				} else
 				{
-					PType to = PDefinitionAssistantTC.getType(indef);
-					PType from = PDefinitionAssistantTC.getType(override);
+					PType to = af.createPDefinitionAssistant().getType(indef);
+					PType from = af.createPDefinitionAssistant().getType(override);
 
 					// Note this uses the "parameters only" comparator option
 
@@ -723,7 +730,7 @@ public class SClassDefinitionAssistantTC
 		return inheritedThread;
 	}
 
-	private static void checkOverloads(SClassDefinition c)
+	private static void checkOverloads( SClassDefinition c)
 	{
 		List<String> done = new Vector<String>();
 
@@ -786,13 +793,13 @@ public class SClassDefinitionAssistantTC
 		{
 			if (d.getPass() == p)
 			{
-				d.apply(tc, new TypeCheckInfo(base, NameScope.NAMES));
+				d.apply(tc, new TypeCheckInfo(af,base, NameScope.NAMES));
 			}
 		}
 
 		if (c.getInvariant() != null && c.getInvariant().getPass() == p)
 		{
-			c.getInvariant().apply(tc, new TypeCheckInfo(base, NameScope.NAMES));
+			c.getInvariant().apply(tc, new TypeCheckInfo(af,base, NameScope.NAMES));
 		}
 
 	}

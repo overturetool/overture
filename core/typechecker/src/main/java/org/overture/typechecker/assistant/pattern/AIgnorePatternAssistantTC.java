@@ -5,11 +5,18 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AIgnorePatternAssistantTC {
 	
 	private static int var = 1;
-	
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AIgnorePatternAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PType getPossibleTypes(AIgnorePattern pattern) {
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}

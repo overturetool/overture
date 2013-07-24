@@ -10,10 +10,17 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class AValueValueImportAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AValueValueImportAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PDefinition> getDefinitions(AValueValueImport imp,
 			AModuleModules module) {
 		

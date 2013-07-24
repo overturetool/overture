@@ -43,9 +43,16 @@ import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PExpAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PExpAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static String getPreName(PExp root) {
 		String result = null;
 		switch (root.kindPExp()) {

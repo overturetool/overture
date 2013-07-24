@@ -77,7 +77,7 @@ public class AsyncThread extends SchedulablePoolThread
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
 		ILexLocation from = self.type.getClassdef().getLocation();
-		Context ctxt = new ObjectContext(from, "async", global, self);
+		Context ctxt = new ObjectContext(global.assistantFactory,from, "async", global, self);
 
 		if (Settings.usingDBGP)
 		{

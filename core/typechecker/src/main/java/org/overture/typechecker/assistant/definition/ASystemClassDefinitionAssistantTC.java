@@ -14,11 +14,18 @@ import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASystemClassDefinitionAssistantTC
 {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static void implicitDefinitions(ASystemClassDefinition def,
+	@SuppressWarnings("static-access")
+	public ASystemClassDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static void implicitDefinitions( ASystemClassDefinition def,
 			Environment publicClasses)
 	{
 		SClassDefinitionAssistantTC.implicitDefinitionsBase(def, publicClasses);
@@ -29,7 +36,7 @@ public class ASystemClassDefinitionAssistantTC
 			{
 				AInstanceVariableDefinition iv = (AInstanceVariableDefinition)d;
 
-				PType ivType = PDefinitionAssistantTC.getType(iv);
+				PType ivType = af.createPDefinitionAssistant().getType(iv);
 				if (ivType instanceof AUnresolvedType &&
 					iv.getExpression() instanceof AUndefinedExp)
 				{

@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -23,24 +24,32 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static List<NameValuePairList> getAllNamedValues(ASetPattern pattern,
-			Value expval, Context ctxt) throws PatternMatchException
+	@SuppressWarnings("static-access")
+	public ASetPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static List<NameValuePairList> getAllNamedValues(
+			ASetPattern pattern, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		ValueSet values = null;
 
 		try
 		{
 			values = expval.setValue(ctxt);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getPlist().size())
 		{
-			VdmRuntimeError.patternFail(4119, "Wrong number of elements for set pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4119, "Wrong number of elements for set pattern", pattern.getLocation());
 		}
 
 		// Since the member patterns may indicate specific set members, we
@@ -54,8 +63,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 		if (isConstrained(pattern))
 		{
 			allSets = values.permutedSets();
-		}
-		else
+		} else
 		{
 			allSets = new Vector<ValueSet>();
 			allSets.add(values);
@@ -70,7 +78,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 			return finalResults;
 		}
 
-		for (ValueSet setPerm: allSets)
+		for (ValueSet setPerm : allSets)
 		{
 			Iterator<Value> iter = setPerm.iterator();
 
@@ -80,14 +88,13 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 
 			try
 			{
-				for (PPattern p: pattern.getPlist())
+				for (PPattern p : pattern.getPlist())
 				{
-					List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p,iter.next(), ctxt);
+					List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p, iter.next(), ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				continue;
 			}
@@ -101,29 +108,28 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 					NameValuePairMap results = new NameValuePairMap();
 					int[] selection = permutor.next();
 
-					for (int p=0; p<psize; p++)
+					for (int p = 0; p < psize; p++)
 					{
-						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+						for (NameValuePair nvp : nvplists.get(p).get(selection[p]))
 						{
 							Value v = results.get(nvp.name);
 
 							if (v == null)
 							{
 								results.put(nvp);
-							}
-							else	// Names match, so values must also
+							} else
+							// Names match, so values must also
 							{
 								if (!v.equals(nvp.value))
 								{
-									VdmRuntimeError.patternFail(4120, "Values do not match set pattern",pattern.getLocation());
+									VdmRuntimeError.patternFail(4120, "Values do not match set pattern", pattern.getLocation());
 								}
 							}
 						}
 					}
 
 					finalResults.add(results.asList());
-				}
-				catch (PatternMatchException pme)
+				} catch (PatternMatchException pme)
 				{
 					// Try next perm then...
 				}
@@ -132,7 +138,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			VdmRuntimeError.patternFail(4121, "Cannot match set pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4121, "Cannot match set pattern", pattern.getLocation());
 		}
 
 		return finalResults;
@@ -140,10 +146,10 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 
 	static boolean isConstrained(ASetPattern pattern)
 	{
-		
-		if (PTypeAssistantInterpreter.isUnion(PPatternListAssistantTC.getPossibleType(pattern.getPlist(),pattern.getLocation())))
+
+		if (PTypeAssistantInterpreter.isUnion(PPatternListAssistantTC.getPossibleType(pattern.getPlist(), pattern.getLocation())))
 		{
-			return true;	// Set types are various, so we must permute
+			return true; // Set types are various, so we must permute
 		}
 
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
@@ -158,7 +164,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		for (PPattern p: pattern.getPlist())
+		for (PPattern p : pattern.getPlist())
 		{
 			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 		}

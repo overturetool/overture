@@ -21,11 +21,17 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 public class AUnresolvedTypeAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AUnresolvedTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PType typeResolve(AUnresolvedType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
@@ -95,7 +101,7 @@ public class AUnresolvedTypeAssistantTC {
 //			r = ((AStateDefinition)def).getRecordType();
 //		} else
 //		{
-			r = PDefinitionAssistantTC.getType(def);
+			r = af.createPDefinitionAssistant().getType(def);
 //		}
 		
 		List<PDefinition> tempDefs = new Vector<PDefinition>();

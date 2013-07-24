@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -11,10 +12,19 @@ import org.overture.typechecker.assistant.pattern.ATypeMultipleBindAssistantTC;
 public class ATypeMultipleBindAssistantInterpreter extends
 		ATypeMultipleBindAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getBindValues(ATypeMultipleBind mb, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public ATypeMultipleBindAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		return PTypeAssistantInterpreter.getAllValues(mb.getType(),ctxt);
+		super(af);
+		this.af = af;
+	}
+
+	public static ValueList getBindValues(ATypeMultipleBind mb, Context ctxt)
+			throws ValueException
+	{
+		return PTypeAssistantInterpreter.getAllValues(mb.getType(), ctxt);
 	}
 
 	public static ValueList getValues(ATypeMultipleBind mb, ObjectContext ctxt)

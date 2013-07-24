@@ -1,7 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
-
 import org.overture.ast.expressions.ARecordModifier;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.ARecordModifierAssistantTC;
@@ -9,11 +9,18 @@ import org.overture.typechecker.assistant.expression.ARecordModifierAssistantTC;
 public class ARecordModifierAssistantInterpreter extends
 		ARecordModifierAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getValues(ARecordModifier rm,
-			ObjectContext ctxt)
+	@SuppressWarnings("static-access")
+	public ARecordModifierAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		return PExpAssistantInterpreter.getValues(rm.getValue(),ctxt);
+		super(af);
+		this.af = af;
 	}
-	
+
+	public static ValueList getValues(ARecordModifier rm, ObjectContext ctxt)
+	{
+		return PExpAssistantInterpreter.getValues(rm.getValue(), ctxt);
+	}
+
 }

@@ -1,6 +1,7 @@
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ExitException;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.ObjectValue;
@@ -25,7 +26,7 @@ public class TestCase
 				if (p.value instanceof OperationValue)
 				{
 					OperationValue opVal = (OperationValue) p.value;
-					Context mainContext = new StateContext(p.name.getLocation(), "reflection scope");
+					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					// mainContext.putAll(ClassInterpreter.getInstance().);

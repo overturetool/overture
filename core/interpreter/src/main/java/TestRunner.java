@@ -4,6 +4,7 @@ import java.util.Vector;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.SetValue;
@@ -31,7 +32,7 @@ public class TestRunner
 			}
 		}
 
-		Context mainContext = new StateContext(instance.type.getLocation(), "reflection scope");
+		Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),instance.type.getLocation(), "reflection scope");
 
 		mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 		mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);

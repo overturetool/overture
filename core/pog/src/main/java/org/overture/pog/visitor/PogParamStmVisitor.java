@@ -34,7 +34,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.statements.SSimpleBlockStm;
-import org.overture.pog.assistant.PDefinitionAssistantPOG;
 import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONameContext;
@@ -350,7 +349,7 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 		try {
 			ProofObligationList obligations = new ProofObligationList();
 
-			obligations.addAll(PDefinitionAssistantPOG.getProofObligations(
+			obligations.addAll(question.assistantFactory.createPDefinitionAssistant().getProofObligations(
 					node.getLocalDefs(), rootVisitor, question));
 
 			question.push(new POScopeContext());
@@ -537,7 +536,7 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 			ABlockSimpleBlockStm node, POContextStack question)
 			throws AnalysisException {
 		try {
-			ProofObligationList obligations = PDefinitionAssistantPOG
+			ProofObligationList obligations = question.assistantFactory.createPDefinitionAssistant()
 					.getProofObligations(node.getAssignmentDefs(), rootVisitor,
 							question);
 

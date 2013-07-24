@@ -42,6 +42,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.Lock;
@@ -471,7 +472,7 @@ public class ObjectValue extends Value
 	public MapValue getOldValues(LexNameList oldnames)
 	{
 		ValueMap values = new ValueMap();
-		ObjectContext ctxt = new ObjectContext(type.getLocation(), "Old Object Creation", null, this);
+		ObjectContext ctxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),type.getLocation(), "Old Object Creation", null, this);
 
 		for (ILexNameToken name: oldnames)
 		{

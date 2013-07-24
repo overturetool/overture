@@ -15,10 +15,18 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class AClassTypeAssistantTC {
+
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AClassTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 
 	public static LexNameToken getMemberName(AClassType cls,
 			ILexIdentifierToken id) {
@@ -47,7 +55,7 @@ public class AClassTypeAssistantTC {
 			// to this class. We need the private environment to see all
 			// the definitions that are available to us while resolving...
 
-			Environment self = new PrivateClassEnvironment(type.getClassdef(), question.env);
+			Environment self = new PrivateClassEnvironment(question.assistantFactory,type.getClassdef(), question.env);
 
 			for (PDefinition d: type.getClassdef().getDefinitions())
 			{
@@ -65,8 +73,8 @@ public class AClassTypeAssistantTC {
 						continue;	// Skip polymorphic functions
 					}
 				}
-				question = new TypeCheckInfo(self,question.scope,question.qualifiers);				
-				PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), root, rootVisitor, question);
+				question = new TypeCheckInfo(question.assistantFactory,self,question.scope,question.qualifiers);				
+				PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), root, rootVisitor, question);
 			}
 
 			return type;
@@ -86,7 +94,7 @@ public class AClassTypeAssistantTC {
 
     		for (PDefinition d: type.getClassdef().getDefinitions())
     		{
-    			PTypeAssistantTC.unResolve(PDefinitionAssistantTC.getType(d));
+    			PTypeAssistantTC.unResolve(af.createPDefinitionAssistant().getType(d));
     		}
 		}
 		

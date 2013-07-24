@@ -50,13 +50,6 @@ public class Vdm2UmlCommand extends AbstractHandler
 				if (model.isParseCorrect())
 				{
 
-					if (!model.isParseCorrect())
-					{
-						return null;
-						// return new Status(Status.ERROR, IPoviewerConstants.PLUGIN_ID,
-						// "Project contains parse errors");
-					}
-
 					if (model == null || !model.isTypeCorrect())
 					{
 						VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);

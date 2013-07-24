@@ -9,9 +9,17 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PAccessSpecifierAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static boolean isPublic(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
