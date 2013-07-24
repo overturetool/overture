@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.type;
 
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.InvariantValue;
@@ -12,21 +13,30 @@ import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 public class ANamedInvariantTypeAssistantInterpreter extends
 		ANamedInvariantTypeAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getAllValues(ANamedInvariantType type, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public ANamedInvariantTypeAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static ValueList getAllValues(ANamedInvariantType type, Context ctxt)
+			throws ValueException
 	{
 		ValueList raw = PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
 		boolean checks = Settings.invchecks;
 		Settings.invchecks = true;
 
 		ValueList result = new ValueList();
-		for (Value v: raw)
+		for (Value v : raw)
 		{
 			try
 			{
 				result.add(new InvariantValue(type, v, ctxt));
-			}
-			catch (ValueException e)
+			} catch (ValueException e)
 			{
 				// Raw value not in type because of invariant
 			}

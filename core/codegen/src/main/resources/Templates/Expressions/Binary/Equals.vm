@@ -1,2 +1,4 @@
 ##Only supports basic types
-$CG.format($node.getLeft()) == $CG.format($node.getRight())
+##$CG.format($node.getLeft()) == $CG.format($node.getRight())
+##New version:
+$CG.formatEqualsBinaryExp($node)

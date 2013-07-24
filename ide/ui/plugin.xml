@@ -528,5 +528,12 @@ Handlers
               type="org.eclipse.ui.model.IWorkbenchAdapter">
         </adapter>
      </factory>
+     <factory
+           adaptableType="org.overture.ast.node.INode"
+           class="org.overture.ide.ui.adapters.AdapterFactoryWorkbenchAdapter">
+        <adapter
+              type="org.eclipse.ui.model.IWorkbenchAdapter3">
+        </adapter>
+     </factory>
   </extension>  
 </plugin>

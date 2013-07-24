@@ -20,6 +20,8 @@
 	<artifactId>maven-surefire-plugin</artifactId>
 	<configuration>
 	  <testFailureIgnore>true</testFailureIgnore>
+	   <!-- the tests use std out a lot so we dont want that in the console -->
+	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
 	  <includes>
 	    <include>**/*Test.java</include>
 	    <include>**/*Test?.java</include>

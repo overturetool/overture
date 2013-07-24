@@ -9,11 +9,18 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class SBinaryExpAssistantTC {
 
-	
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public SBinaryExpAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
 			ABooleanBasicType expected,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,

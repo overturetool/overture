@@ -50,7 +50,7 @@ public class TypeCheckerImportsVisitor extends
 			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
 			def.setType((SInvariantType) PTypeAssistantTC.typeResolve(
-					PDefinitionAssistantTC.getType(def), null, rootVisitor,
+					question.assistantFactory.createPDefinitionAssistant().getType(def), null, rootVisitor,
 					question));
 			PDefinition expdef = PDefinitionListAssistantTC.findType(
 					from.getExportdefs(), name, null);
@@ -124,10 +124,10 @@ public class TypeCheckerImportsVisitor extends
 				defs.add(p);
 			}
 
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(defs,
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory,defs,
 					question.env, NameScope.NAMES);
 
-			defaultSValueImport(node, new TypeCheckInfo(params, question.scope,
+			defaultSValueImport(node, new TypeCheckInfo(question.assistantFactory,params, question.scope,
 					question.qualifiers));
 		}
 		return null;

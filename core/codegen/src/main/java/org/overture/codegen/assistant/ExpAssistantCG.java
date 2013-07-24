@@ -30,8 +30,16 @@ public class ExpAssistantCG
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, CodeGenInfo question, TypeLookup typeLookup) throws AnalysisException
 	{	
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
+		
+		//Set the expressions
 		codeGenExp.setLeft(formatExp(vdmExp, vdmExp.getLeft(), question));
 		codeGenExp.setRight(formatExp(vdmExp, vdmExp.getRight(), question));
+		
+		//Set the expression types:
+		PType leftVdmType = vdmExp.getLeft().getType();
+		codeGenExp.getLeft().setType(typeLookup.getType(leftVdmType));
+		PType rightVdmType = vdmExp.getRight().getType();
+		codeGenExp.getRight().setType(typeLookup.getType(rightVdmType));
 		
 		return codeGenExp;
 	}

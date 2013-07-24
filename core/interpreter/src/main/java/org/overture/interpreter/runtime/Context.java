@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -46,6 +47,8 @@ import org.overture.typechecker.util.LexNameTokenMap;
 @SuppressWarnings("serial")
 public class Context extends LexNameTokenMap<Value>
 {
+	public final IInterpreterAssistantFactory assistantFactory;
+	
 	/** The location of the context. */
 	public final ILexLocation location;
 	/** The name of the location. */
@@ -70,8 +73,9 @@ public class Context extends LexNameTokenMap<Value>
 	 * @param outer
 	 */
 
-	public Context(ILexLocation location, String title, Context outer)
+	public Context(IInterpreterAssistantFactory af,ILexLocation location, String title, Context outer)
 	{
+		this.assistantFactory = af;
 		this.location = location;
 		this.outer = outer;
 		this.title = title;
@@ -135,7 +139,7 @@ public class Context extends LexNameTokenMap<Value>
 			below = outer.deepCopy();
 		}
 
-		Context result = new Context(location, title, below);
+		Context result = new Context(assistantFactory,location, title, below);
 		result.threadState = threadState;
 		
 		for (ILexNameToken var: keySet())
@@ -216,7 +220,7 @@ public class Context extends LexNameTokenMap<Value>
 
 	public Context getVisibleVariables()
 	{
-		Context visible = new Context(location, title, null);
+		Context visible = new Context(assistantFactory,location, title, null);
 
 		if (outer != null)
 		{

@@ -27,12 +27,19 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitOperationDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AExplicitOperationDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<? extends PDefinition> getParamDefinitions(
 			AExplicitOperationDefinition node) {
 		
@@ -47,7 +54,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 		return new Vector<PDefinition>(defs);
 	}
 
-	public static PDefinition findName(AExplicitOperationDefinition d,
+	public static PDefinition findName( AExplicitOperationDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{

@@ -28,6 +28,7 @@ import java.io.PrintWriter;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.values.Value;
 
@@ -37,18 +38,18 @@ public class ClassContext extends RootContext
 {
 	public final SClassDefinition classdef;
 
-	public ClassContext(ILexLocation location,
+	public ClassContext(IInterpreterAssistantFactory af,ILexLocation location,
 		String title, Context freeVariables, Context outer,
 		SClassDefinition classdef)
 	{
-		super(location, title, freeVariables, outer);
+		super(af,location, title, freeVariables, outer);
 		this.classdef = classdef;
 	}
 
-	public ClassContext(ILexLocation location,
+	public ClassContext(IInterpreterAssistantFactory af,ILexLocation location,
 		String title, Context outer, SClassDefinition classdef)
 	{
-		this(location, title, null, outer, classdef);
+		this(af,location, title, null, outer, classdef);
 	}
 
 	/**

@@ -58,6 +58,7 @@ import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -435,15 +436,15 @@ public class OperationValue extends Value
 
 		if (self != null)
 		{
-			argContext = new ObjectContext(from, title, ctxt, self);
+			argContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			argContext = new ClassContext(from, title, ctxt, classdef);
+			argContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, classdef);
 		}
 		else
 		{
-			argContext = new StateContext(from, title, ctxt, stateContext);
+			argContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, stateContext);
 		}
 
 		return argContext;

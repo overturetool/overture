@@ -95,9 +95,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	@Override
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
-	{
-		//FIXME: Only works for simple types, i.e. not references
-		//Operator pec?
+	{	
 		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question, typeLookup);
 	}
 	

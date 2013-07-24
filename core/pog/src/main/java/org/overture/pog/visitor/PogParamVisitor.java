@@ -29,7 +29,6 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
-import org.overture.pog.assistant.PDefinitionAssistantPOG;
 import org.overture.pog.obligation.POCaseContext;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.PONotCaseContext;
@@ -65,7 +64,7 @@ public class PogParamVisitor<Q extends POContextStack, A extends ProofObligation
 	// See [1] pg. 167 for the definition
 	public ProofObligationList caseAModuleModules(AModuleModules node,
 			POContextStack question) throws AnalysisException {
-		return PDefinitionAssistantPOG.getProofObligations(node.getDefs(),
+		return question.assistantFactory.createPDefinitionAssistant().getProofObligations(node.getDefs(),
 				pogDefinitionVisitor, question);
 
 	}

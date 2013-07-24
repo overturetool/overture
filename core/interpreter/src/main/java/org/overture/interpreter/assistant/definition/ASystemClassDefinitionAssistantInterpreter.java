@@ -13,6 +13,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.PType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.rtlog.RTDeclareCPUMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -30,9 +31,20 @@ import org.overture.interpreter.values.RealValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 
-public class ASystemClassDefinitionAssistantInterpreter
+public class ASystemClassDefinitionAssistantInterpreter extends
+		ASystemClassDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ASystemClassDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static void systemInit(ASystemClassDefinition systemClass,
 			ResourceScheduler scheduler, DBGPReader dbgp,

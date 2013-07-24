@@ -8,10 +8,14 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASeq1SeqTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 public class TypeLookup
@@ -38,6 +42,10 @@ public class TypeLookup
 		typeMap.put(ANatNumericBasicType.class, new AIntNumericBasicTypeCG());
 		typeMap.put(ARationalNumericBasicType.class, new ARealNumericBasicTypeCG());
 		typeMap.put(ARealNumericBasicType.class, new ARealNumericBasicTypeCG());
+		
+		//Collections
+		typeMap.put(ASeqSeqType.class, new ASeqSeqTypeCG());
+		typeMap.put(ASeq1SeqType.class, new ASeq1SeqTypeCG());
 	}
 	
 	public PTypeCG getType(PType type)

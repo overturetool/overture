@@ -8,11 +8,19 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ACpuClassDefinitionAssistantTC
 {
 
 	public static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
+	protected static ITypeCheckerAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ACpuClassDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 
 	private static String defs =
 			"operations " +

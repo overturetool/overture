@@ -4,11 +4,14 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.model.IWorkbenchAdapter3;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
+import org.overture.ide.ui.internal.viewsupport.VdmColoringLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 
@@ -57,10 +60,10 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 
 	}
 
-	public static class NodeWorkbenchAdapter implements IWorkbenchAdapter
+	public static class NodeWorkbenchAdapter implements IWorkbenchAdapter,IWorkbenchAdapter3
 	{
 		INode node;
-		ILabelProvider labelProvider;
+		VdmColoringLabelProvider labelProvider;
 		VdmOutlineTreeContentProvider contentProvider = new VdmOutlineTreeContentProvider();
 
 		public NodeWorkbenchAdapter(INode node)
@@ -104,6 +107,12 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 			return null;
 		}
 
+		@Override
+		public StyledString getStyledText(Object element)
+		{
+			return labelProvider.getStyledStringProvider().getStyledText(element);
+		}
+
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -115,7 +124,12 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 			if (adaptableObject instanceof IVdmSourceUnit)
 			{
 				return new VdmSourcenitWorkbenchAdapter((IVdmSourceUnit) adaptableObject);
-			} else if (adaptableObject instanceof INode)
+			} 
+		}
+		
+		if(adapterType ==IWorkbenchAdapter.class|| adapterType==IWorkbenchAdapter3.class)
+		{
+			if (adaptableObject instanceof INode)
 			{
 				return new NodeWorkbenchAdapter((INode) adaptableObject);
 			}

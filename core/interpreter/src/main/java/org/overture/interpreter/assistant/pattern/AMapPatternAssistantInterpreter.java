@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -18,27 +19,36 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
+import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 
-public class AMapPatternAssistantInterpreter
+public class AMapPatternAssistantInterpreter extends AMapPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static List<NameValuePairList> getAllNamedValues(AMapPattern pattern,
-			Value expval, Context ctxt) throws PatternMatchException
+	@SuppressWarnings("static-access")
+	public AMapPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static List<NameValuePairList> getAllNamedValues(
+			AMapPattern pattern, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		ValueMap values = null;
 
 		try
 		{
 			values = expval.mapValue(ctxt);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getMaplets().size())
 		{
-			VdmRuntimeError.patternFail(4152, "Wrong number of elements for map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4152, "Wrong number of elements for map pattern", pattern.getLocation());
 		}
 
 		// Since the member patterns may indicate specific map members, we
@@ -52,8 +62,7 @@ public class AMapPatternAssistantInterpreter
 		if (isConstrained(pattern))
 		{
 			allMaps = values.permutedMaps();
-		}
-		else
+		} else
 		{
 			allMaps = new Vector<ValueMap>();
 			allMaps.add(values);
@@ -68,7 +77,7 @@ public class AMapPatternAssistantInterpreter
 			return finalResults;
 		}
 
-		for (ValueMap mapPerm: allMaps)
+		for (ValueMap mapPerm : allMaps)
 		{
 			Iterator<Entry<Value, Value>> iter = mapPerm.entrySet().iterator();
 
@@ -78,14 +87,13 @@ public class AMapPatternAssistantInterpreter
 
 			try
 			{
-				for (AMapletPatternMaplet p: pattern.getMaplets())
+				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					List<NameValuePairList> pnvps = AMapPatternMapletAssistantInterpreter.getAllNamedValues(p,iter.next(), ctxt);
+					List<NameValuePairList> pnvps = AMapPatternMapletAssistantInterpreter.getAllNamedValues(p, iter.next(), ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				continue;
 			}
@@ -99,29 +107,28 @@ public class AMapPatternAssistantInterpreter
 					NameValuePairMap results = new NameValuePairMap();
 					int[] selection = permutor.next();
 
-					for (int p=0; p<psize; p++)
+					for (int p = 0; p < psize; p++)
 					{
-						for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+						for (NameValuePair nvp : nvplists.get(p).get(selection[p]))
 						{
 							Value v = results.get(nvp.name);
 
 							if (v == null)
 							{
 								results.put(nvp);
-							}
-							else	// Names match, so values must also
+							} else
+							// Names match, so values must also
 							{
 								if (!v.equals(nvp.value))
 								{
-									VdmRuntimeError.patternFail(4153, "Values do not match map pattern",pattern.getLocation());
+									VdmRuntimeError.patternFail(4153, "Values do not match map pattern", pattern.getLocation());
 								}
 							}
 						}
 					}
 
 					finalResults.add(results.asList());
-				}
-				catch (PatternMatchException pme)
+				} catch (PatternMatchException pme)
 				{
 					// Try next perm then...
 				}
@@ -130,7 +137,7 @@ public class AMapPatternAssistantInterpreter
 
 		if (finalResults.isEmpty())
 		{
-			VdmRuntimeError.patternFail(4154, "Cannot match map pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4154, "Cannot match map pattern", pattern.getLocation());
 		}
 
 		return finalResults;
@@ -138,9 +145,10 @@ public class AMapPatternAssistantInterpreter
 
 	public static boolean isConstrained(AMapPattern pattern)
 	{
-		for (AMapletPatternMaplet p: pattern.getMaplets())
+		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
-			if (AMapPatternMapletAssistantInterpreter.isConstrained(p)) return true;
+			if (AMapPatternMapletAssistantInterpreter.isConstrained(p))
+				return true;
 		}
 
 		return false;
@@ -155,12 +163,12 @@ public class AMapPatternAssistantInterpreter
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		for (AMapletPatternMaplet p: pattern.getMaplets())
+		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
 			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
 		}
 
 		return list;
 	}
-	
+
 }

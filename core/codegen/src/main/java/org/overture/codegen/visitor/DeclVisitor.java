@@ -4,10 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistant;
@@ -27,6 +29,56 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	public DeclVisitor()
 	{
 		this.declAssistant = new DeclAssistant();
+	}
+	
+	@Override
+	public PDeclCG caseAExplicitFunctionDefinition(
+			AExplicitFunctionDefinition node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		if(node.getIsCurried() || node.getIsUndefined() || node.getIsTypeInvariant())
+			return null;
+		
+		String access = node.getAccess().getAccess().toString();
+		boolean isStatic = false;
+		String operationName = node.getName().getName();
+		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
+		PExpCG body = node.getBody().apply(question.getExpVisitor(), question);
+		boolean isAbstract = body == null;
+		
+		
+		AMethodDeclCG method = new AMethodDeclCG();
+		
+		method.setAccess(access);
+		method.setStatic(isStatic);
+		method.setReturnType(returnType);
+		method.setName(operationName);		
+		//FIXME:
+		//method.setBody(body);
+		method.setIsConstructor(isConstructor);
+		method.setAbstract(isAbstract);
+		
+		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
+		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
+
+		//((AFunctionType) node.getType()).getParameters()
+		node.getP
+		
+		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
+		
+		for(int i = 0; i < paramPatterns.size(); i++)
+		{
+			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			String name = paramPatterns.get(i).toString();
+			
+			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
+			param.setType(type);
+			param.setName(name);
+			
+			formalParameters.add(param);
+		}
+		
+		return method;
 	}
 	
 	@Override

@@ -3,10 +3,17 @@ package org.overture.typechecker.assistant.expression;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 
 public class ASetCompSetExpAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ASetCompSetExpAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static LexNameList getOldNames(ASetCompSetExp expression) {
 		
 		LexNameList list = PExpAssistantTC.getOldNames(expression.getFirst());

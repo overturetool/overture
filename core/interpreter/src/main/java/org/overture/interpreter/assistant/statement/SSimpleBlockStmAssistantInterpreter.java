@@ -4,15 +4,27 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.VoidValue;
+import org.overture.typechecker.assistant.statement.SSimpleBlockStmAssistantTC;
 
-public class SSimpleBlockStmAssistantInterpreter
+public class SSimpleBlockStmAssistantInterpreter extends
+		SSimpleBlockStmAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static Value evalBlock(SSimpleBlockStm node, Context ctxt) throws AnalysisException
+	@SuppressWarnings("static-access")
+	public SSimpleBlockStmAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static Value evalBlock(SSimpleBlockStm node, Context ctxt)
+			throws AnalysisException
 	{
 		// Note, no breakpoint check - designed to be called by eval
 
@@ -33,10 +45,11 @@ public class SSimpleBlockStmAssistantInterpreter
 	{
 		PExp found = null;
 
-		for (PStm stmt: stm.getStatements())
+		for (PStm stmt : stm.getStatements())
 		{
-			found = PStmAssistantInterpreter.findExpression(stmt,lineno);
-			if (found != null) break;
+			found = PStmAssistantInterpreter.findExpression(stmt, lineno);
+			if (found != null)
+				break;
 		}
 
 		return found;
@@ -44,13 +57,15 @@ public class SSimpleBlockStmAssistantInterpreter
 
 	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
 	{
-		if (stm.getLocation().getStartLine() == lineno) return stm;
+		if (stm.getLocation().getStartLine() == lineno)
+			return stm;
 		PStm found = null;
 
-		for (PStm stmt: stm.getStatements())
+		for (PStm stmt : stm.getStatements())
 		{
-			found = PStmAssistantInterpreter.findStatement(stmt,lineno);
-			if (found != null) break;
+			found = PStmAssistantInterpreter.findStatement(stmt, lineno);
+			if (found != null)
+				break;
 		}
 
 		return found;

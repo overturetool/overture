@@ -46,7 +46,7 @@ public class TraceVariableList extends Vector<TraceVariable>
 
 	public TraceVariableList(Context ctxt, List<PDefinition> localDefs)
 	{
-		Environment local = new FlatEnvironment(localDefs);
+		Environment local = new FlatEnvironment(ctxt.assistantFactory,localDefs);
 
 		for (ILexNameToken key: ctxt.keySet())
 		{

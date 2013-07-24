@@ -64,7 +64,7 @@ public class ObjectThread extends SchedulablePoolThread
 			", self #" + object.objectReference +
 			", class " + object.type.getName().getName();
 
-		this.ctxt = new ObjectContext(location, title, ctxt.getGlobal(), object);
+		this.ctxt = new ObjectContext(ctxt.assistantFactory,location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
 		this.breakAtStart = ctxt.threadState.isStepping();
 	}

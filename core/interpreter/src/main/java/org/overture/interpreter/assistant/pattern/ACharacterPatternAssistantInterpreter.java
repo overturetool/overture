@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.ACharacterPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -15,9 +16,18 @@ import org.overture.typechecker.assistant.pattern.ACharacterPatternAssistantTC;
 public class ACharacterPatternAssistantInterpreter extends
 		ACharacterPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ACharacterPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(
-			ACharacterPattern p, Value expval, Context ctxt) throws PatternMatchException
+			ACharacterPattern p, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
@@ -25,12 +35,11 @@ public class ACharacterPatternAssistantInterpreter extends
 		{
 			if (expval.charValue(ctxt) != p.getValue().getValue())
 			{
-				VdmRuntimeError.patternFail(4107, "Character pattern match failed",p.getLocation());
+				VdmRuntimeError.patternFail(4107, "Character pattern match failed", p.getLocation());
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,p.getLocation());
+			VdmRuntimeError.patternFail(e, p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

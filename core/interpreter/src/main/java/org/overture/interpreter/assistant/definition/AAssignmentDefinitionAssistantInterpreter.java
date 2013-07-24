@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -13,31 +14,42 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
+import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 
-public class AAssignmentDefinitionAssistantInterpreter
+public class AAssignmentDefinitionAssistantInterpreter extends
+		AAssignmentDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AAssignmentDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static NameValuePairList getNamedValues(AAssignmentDefinition d,
-			Context initialContext) 
+			Context initialContext)
 	{
-		 try
-	        {
-		        Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(),initialContext);
+		try
+		{
+			Value v = d.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext);
 
-		        if (!v.isUndefined())
-		        {
-		        	v = v.convertTo(d.getType(), initialContext);
-		        }
-
-				return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));
-	        } catch (AnalysisException e)
+			if (!v.isUndefined())
 			{
-	        	if(e instanceof ValueException)
-				{
-	        		VdmRuntimeError.abort(d.getLocation(),(ValueException) e);
-				}
-	        	return null;
+				v = v.convertTo(d.getType(), initialContext);
 			}
+
+			return new NameValuePairList(new NameValuePair(d.getName(), v.getUpdatable(null)));
+		} catch (AnalysisException e)
+		{
+			if (e instanceof ValueException)
+			{
+				VdmRuntimeError.abort(d.getLocation(), (ValueException) e);
+			}
+			return null;
+		}
 	}
 
 	public static ValueList getValues(AAssignmentDefinition d,

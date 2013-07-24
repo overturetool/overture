@@ -137,4 +137,9 @@ public interface IVdmModel extends IVdmElement
 	 * @return returns true if working copies has been issued
 	 */
 	 boolean hasWorkingCopies();
+	 
+	 
+	 public boolean hasAttribute(String attributeName);
+	 public <K> K getAttribute(String attributeName, K defaultValue);
+	 public <K> void setAttribute(String attributeName, K value);
 }

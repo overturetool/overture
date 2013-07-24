@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -20,8 +21,17 @@ import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
 
 public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static Value evaluate(AFieldExp node, Context ctxt) throws AnalysisException
+	@SuppressWarnings("static-access")
+	public AFieldExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static Value evaluate(AFieldExp node, Context ctxt)
+			throws AnalysisException
 	{
 		Value v = node.getObject().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 		PType objtype = null;
@@ -41,23 +51,22 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 		}
 		if (r == null)
 		{
-			VdmRuntimeError.abort(node.getLocation(), 4006, "Type "
-					+ objtype + " has no field "
-					+ node.getField().getName(), ctxt);
+			VdmRuntimeError.abort(node.getLocation(), 4006, "Type " + objtype
+					+ " has no field " + node.getField().getName(), ctxt);
 		}
 
 		return r;
 	}
-	
-	public static ValueList getValues(AFieldExp exp, ObjectContext ctxt) 
+
+	public static ValueList getValues(AFieldExp exp, ObjectContext ctxt)
 	{
-		ValueList values = PExpAssistantInterpreter.getValues(exp.getObject(),ctxt);
-		
+		ValueList values = PExpAssistantInterpreter.getValues(exp.getObject(), ctxt);
+
 		try
 		{
 			// This evaluation should not affect scheduling as we are trying to
 			// discover the sync variables to listen to only.
-			
+
 			ctxt.threadState.setAtomic(true);
 			Value r = evaluate(exp, ctxt);
 			ctxt.threadState.setAtomic(false);
@@ -66,21 +75,18 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 			{
 				values.add(r);
 			}
-			
+
 			return values;
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			if (e.number == 4034)
 			{
-				return values;	// Non existent variable
-			}
-			else
+				return values; // Non existent variable
+			} else
 			{
 				throw e;
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(exp.getLocation(), e);
 			return null;
@@ -93,10 +99,11 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 
 	public static PExp findExpression(AFieldExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
-		if (found != null) return found;
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+		if (found != null)
+			return found;
 
-		return PExpAssistantInterpreter.findExpression(exp.getObject(),lineno);
+		return PExpAssistantInterpreter.findExpression(exp.getObject(), lineno);
 	}
 
 }

@@ -1,18 +1,25 @@
 package org.overture.codegen.merging;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASeq1SeqTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 
 public class CG
 {
@@ -23,6 +30,57 @@ public class CG
 		field.apply(mergeVisitor, writer);
 
 		return writer.toString();
+	}
+	
+	public static String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
+	{
+		//FIXME: Only works for simple types, i.e. not references
+		//Operator pec?
+		
+		/*
+		 * Things to consider:
+		 * 
+		 * Collections: sets, sequences and maps
+		 * Classes: Maps to == 
+		 * Type defs: Not supported anyway
+		 * Records: Not supported anyway
+		 * Primitive types: Maps to == 
+		 * 
+		 */
+		PTypeCG leftNodeType = node.getLeft().getType();
+		
+		if(leftNodeType instanceof SSeqTypeCGBase)
+		{
+			//In VDM the types of the equals are compatible when the AST passes the type check
+			PExpCG leftNode = node.getLeft();
+			PExpCG rightNode = node.getRight();
+			
+			if(isEmptySeq(leftNode))
+			{
+				return CG.format(node.getRight()) + ".isEmpty()";
+			}
+			else if(isEmptySeq(rightNode))
+			{
+				return CG.format(node.getLeft()) + ".isEmpty()";
+			}
+		
+			return "Utils.seqEquals(" + CG.format(node.getLeft()) + ", " + CG.format(node.getRight()) + ")";
+		}
+		//else if(..)
+		
+		return CG.format(node.getLeft()) + " == " + CG.format(node.getRight());
+	}
+	
+	private static boolean isEmptySeq(PExpCG exp)
+	{
+		if(exp instanceof AEnumSeqExpCG)
+		{
+			AEnumSeqExpCG v = (AEnumSeqExpCG) exp;
+
+			return v.getMembers().size() == 0;
+		}
+		
+		return false;
 	}
 	
 	public static String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException

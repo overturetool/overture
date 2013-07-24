@@ -22,12 +22,19 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AStateDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findType(AStateDefinition d, ILexNameToken sought,
+	@SuppressWarnings("static-access")
+	public AStateDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findType( AStateDefinition d, ILexNameToken sought,
 			String fromModule) {
 		
 		if (PDefinitionAssistantTC.findName(d,sought, NameScope.STATE) != null)

@@ -48,7 +48,10 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	@Override
 	public LexLocation clone()
 	{
-		return new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
+		LexLocation location= new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
+		location.hits = hits;
+		location.executable=executable;
+		return location;
 	}
 
 	public static boolean absoluteToStringLocation = true;
@@ -60,9 +63,6 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	/** A unique map of LexLocation objects, for rapid searching. */
 	private static Map<LexLocation, LexLocation> uniqueLocations = new HashMap<LexLocation, LexLocation>();
-
-//	/** A collection of all LexLocation objects to the AstNodes. */
-//	private static Map<LexLocation, INode> locationToAstNode = new Hashtable<LexLocation, INode>();
 
 	/** A map of f/op/class names to their lexical span, for coverage. */
 	private static Map<LexNameToken, LexLocation> nameSpans = new HashMap<LexNameToken, LexLocation>();// TODO
@@ -393,7 +393,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.executable && l.within(span))
 				{
@@ -426,7 +426,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.executable && l.within(span))
 				{
@@ -444,7 +444,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.hits > 0 && l.file.equals(file))
 				{
@@ -462,7 +462,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.hits == 0 && l.file.equals(file))
 				{
@@ -500,7 +500,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.executable && l.hits > 0 && l.file.equals(file))
 				{
@@ -527,7 +527,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.file.equals(file) && l.executable)
 				{
@@ -552,7 +552,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		synchronized (allLocations)
 		{
-			for (LexLocation l : allLocations)
+			for (LexLocation l : removeDuplicates(allLocations))
 			{
 				if (l.executable && l.hits == 0 && l.file.equals(file))
 				{
@@ -627,20 +627,34 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		br.close();
 	}
-
-//	// FIXME we know this is never called a new solutions is needed
-//	public static void addAstNode(LexLocation location, INode node)
-//	{
-//		synchronized (locationToAstNode)
-//		{
-//			locationToAstNode.put(location, node);
-//		}
-//	}
-//
-//	public static Map<LexLocation, INode> getLocationToAstNodeMap()
-//	{
-//		return locationToAstNode;
-//	}
+	
+	/**
+	 * This method handles the case where a location exist both with hits>0 and hits==0. It will remove the location with hits==0 when another location hits>0 exists
+	 * @param locations
+	 * @return
+	 */
+	public static List<LexLocation> removeDuplicates(List<LexLocation> locations)
+	{
+		List<LexLocation> tmp = new Vector<LexLocation>();
+	c:	for (LexLocation l1 : locations)
+		{
+			if(l1.hits==0)
+			{
+				for (LexLocation l2 : locations)
+				{
+					if(l1.equals(l2)&& l2.hits>0)
+					{
+						continue c;
+					}
+				}
+				tmp.add(l1);
+			}else
+			{
+				tmp.add(l1);
+			}
+		}
+		return tmp;
+	}
 
 	public static List<LexLocation> getAllLocations()
 	{

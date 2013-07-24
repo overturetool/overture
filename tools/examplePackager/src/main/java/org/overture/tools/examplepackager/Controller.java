@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.lex.Dialect;
 import org.overture.tools.examplepackager.html.HtmlPage;
 import org.overture.tools.examplepackager.html.HtmlTable;
 import org.overture.tools.examplepackager.util.FileUtils;
@@ -44,11 +43,12 @@ public class Controller
 		this.inputRootFolder = inputRootFolder;
 		this.webDir = new File(output, "Web");
 	}
-	
-	public Controller(Dialect dialect, File inputRootFolder, File output, boolean verbose)
-	{	
+
+	public Controller(Dialect dialect, File inputRootFolder, File output,
+			boolean verbose)
+	{
 		this(dialect, inputRootFolder, output);
-		this.verbose = verbose; 
+		this.verbose = verbose;
 	}
 
 	public String getName()
@@ -110,7 +110,8 @@ public class Controller
 
 			FolderZipper.zipFolder(outputFolder.getAbsolutePath(), zipName.getAbsolutePath());
 			if (verbose)
-				printSubHeading("Folder zipped: ".toUpperCase() + zipName.getName());
+				printSubHeading("Folder zipped: ".toUpperCase()
+						+ zipName.getName());
 		}
 
 	}

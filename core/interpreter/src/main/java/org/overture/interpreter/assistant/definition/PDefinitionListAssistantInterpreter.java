@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
@@ -13,18 +14,27 @@ import org.overture.pog.obligation.PONameContext;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
-public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistantTC
+public class PDefinitionListAssistantInterpreter extends
+		PDefinitionListAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public PDefinitionListAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs, POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PDefinition d: defs)
+		for (PDefinition d : defs)
 		{
 			ctxt.push(new PONameContext(PDefinitionAssistantInterpreter.getVariableNames(d)));
-			obligations.addAll(PDefinitionAssistantInterpreter.getProofObligations(d,ctxt));
+			obligations.addAll(PDefinitionAssistantInterpreter.getProofObligations(d, ctxt));
 			ctxt.pop();
 		}
 
@@ -36,20 +46,19 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 	{
 		ValueList list = new ValueList();
 
-		for (PDefinition d: defs)
+		for (PDefinition d : defs)
 		{
-			list.addAll(PDefinitionAssistantInterpreter.getValues(d,ctxt));
+			list.addAll(PDefinitionAssistantInterpreter.getValues(d, ctxt));
 		}
 
 		return list;
 	}
 
-	public static PExp findExpression(LinkedList<PDefinition> list,
-			int lineno)
+	public static PExp findExpression(LinkedList<PDefinition> list, int lineno)
 	{
-		for (PDefinition d: list)
+		for (PDefinition d : list)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d,lineno);
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d, lineno);
 
 			if (found != null)
 			{
@@ -57,7 +66,7 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 			}
 		}
 
-   		return null;
+		return null;
 	}
 
 	public static NameValuePairList getNamedValues(
@@ -65,9 +74,9 @@ public class PDefinitionListAssistantInterpreter extends PDefinitionListAssistan
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
-		for (PDefinition d: definitions)
+		for (PDefinition d : definitions)
 		{
-			nvl.addAll(PDefinitionAssistantInterpreter.getNamedValues(d,ctxt));
+			nvl.addAll(PDefinitionAssistantInterpreter.getNamedValues(d, ctxt));
 		}
 
 		return nvl;

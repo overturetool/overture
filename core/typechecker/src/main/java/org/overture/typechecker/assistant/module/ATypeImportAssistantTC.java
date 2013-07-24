@@ -8,10 +8,17 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.ATypeImport;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class ATypeImportAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ATypeImportAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PDefinition> getDefinitions(ATypeImport imp,
 			AModuleModules module) {
 		

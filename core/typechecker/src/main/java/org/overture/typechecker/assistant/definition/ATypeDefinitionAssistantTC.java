@@ -24,11 +24,18 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ATypeDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ATypeDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PDefinition findType(ATypeDefinition d, ILexNameToken sought,
 			String fromModule) {
 		
@@ -52,7 +59,7 @@ public class ATypeDefinitionAssistantTC {
 		return PDefinitionAssistantTC.findNameBaseCase(d,sought, NameScope.TYPENAME);
 	}
 
-	public static PDefinition findName(ATypeDefinition d, ILexNameToken sought,
+	public static PDefinition findName( ATypeDefinition d, ILexNameToken sought,
 			NameScope scope) { 
 
 		PDefinition invdef = d.getInvdef();

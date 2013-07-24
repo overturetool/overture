@@ -32,4 +32,16 @@ public class Utils
 		
 		return result;
 	}
+	
+	public static boolean seqEquals(List<? extends Object> left, List<? extends Object> right)
+	{
+		if(left.size() != right.size())
+			return false;
+		
+		for(int i = 0; i < left.size(); i++)
+			if(!left.get(i).equals(right.get(i)))
+				return false;
+				
+		return true;
+	}
 }

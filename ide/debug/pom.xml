@@ -39,6 +39,12 @@
                   <artifactId>interpreter</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
+                
+                 <artifactItem>
+                  <groupId>org.overture.core</groupId>
+                  <artifactId>pog</artifactId>
+                  <version>${project.version}</version>
+                </artifactItem>
               </artifactItems>
 	    </configuration>
 	  </execution>

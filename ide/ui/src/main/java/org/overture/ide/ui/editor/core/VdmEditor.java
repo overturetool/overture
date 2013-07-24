@@ -35,7 +35,6 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -101,7 +100,7 @@ public abstract class VdmEditor extends TextEditor
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
 	final boolean TRACE_GET_ELEMENT_AT = false;
 	ISourceViewer viewer;
-	ILocationSearcher locationSearcher = null;
+	protected ILocationSearcher locationSearcher = null;
 
 	public VdmEditor()
 	{
@@ -176,7 +175,13 @@ public abstract class VdmEditor extends TextEditor
 		// VdmContentOutlinePage(fOutlinerContextMenuId, this);
 		VdmContentOutlinePage page = new VdmContentOutlinePage(this);
 		setOutlinePageInput(page, getEditorInput());
-		page.addSelectionChangedListener(new ISelectionChangedListener()
+		page.addSelectionChangedListener(createOutlineSelectionChangedListener());
+		return page;
+	}
+	
+	protected ISelectionChangedListener createOutlineSelectionChangedListener()
+	{
+		return new ISelectionChangedListener()
 		{
 
 			public void selectionChanged(SelectionChangedEvent event)
@@ -198,8 +203,7 @@ public abstract class VdmEditor extends TextEditor
 					}
 				}
 			}
-		});
-		return page;
+		};
 	}
 	
 	/**

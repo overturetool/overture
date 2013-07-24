@@ -12,10 +12,17 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AMultiBindListDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findName(AMultiBindListDefinition d,
+	@SuppressWarnings("static-access")
+	public AMultiBindListDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findName( AMultiBindListDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		
 		if (d.getDefs() != null)
