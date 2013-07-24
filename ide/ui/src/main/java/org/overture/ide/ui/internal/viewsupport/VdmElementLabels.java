@@ -524,7 +524,7 @@ public class VdmElementLabels {
 		return definition.toString();
 	}
 
-	private static String getSimpleTypeString(PType type) {
+	protected static String getSimpleTypeString(PType type) {
 		String typeName = processUnresolved(type);
 		typeName = typeName.replace("(", "");
 		typeName = typeName.replace(")", "");

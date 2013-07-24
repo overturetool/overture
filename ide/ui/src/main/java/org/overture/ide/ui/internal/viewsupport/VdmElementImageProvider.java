@@ -114,7 +114,7 @@ public class VdmElementImageProvider {
 	//so that definitions contain a reference to the module they belong
 	static Map<String,AModuleModules> activeModule = new HashMap<String,AModuleModules>();
 
-	private ImageDescriptor computeDescriptor(Object element, int flags) {
+	protected ImageDescriptor computeDescriptor(Object element, int flags) {
 		int adornmentFlags = 0;
 
 		adornmentFlags = computeVdmAdornmentFlags(element);
@@ -553,7 +553,7 @@ public class VdmElementImageProvider {
 //		return (flags & OVERLAY_ICONS) != 0;
 //	}
 
-	private static boolean useSmallSize(int flags) {
+	protected static boolean useSmallSize(int flags) {
 		return (flags & SMALL_ICONS) != 0;
 	}
 
