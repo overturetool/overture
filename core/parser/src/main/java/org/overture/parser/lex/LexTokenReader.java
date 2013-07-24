@@ -821,7 +821,9 @@ public class LexTokenReader extends BacktrackInputReader
 					{
 						unpush();
 						last = new LexQuoteToken(name,
-								location(tokline, tokpos, tokOffset, offset));
+								new LexLocation(file, currentModule, tokline, tokpos,
+										linecount, charpos+1, tokOffset, offset+1));
+								//location(tokline, tokpos, tokOffset, offset));
 						type = VDMToken.QUOTE;
 					}
 					else

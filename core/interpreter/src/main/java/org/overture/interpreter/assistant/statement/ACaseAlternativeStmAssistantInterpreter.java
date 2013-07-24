@@ -28,6 +28,8 @@ public class ACaseAlternativeStmAssistantInterpreter extends
 	{
 		Context evalContext = new Context(af, node.getLocation(), "case alternative", ctxt);
 
+		node.getPattern().getLocation().hit();
+		node.getLocation().hit();
 		try
 		{
 			evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPattern(), val, ctxt));

@@ -2532,6 +2532,7 @@ public class AstFactory {
 			PStm stmt) {
 		ACaseAlternativeStm result = new ACaseAlternativeStm();
 		result.setLocation(pattern.getLocation());
+		result.getLocation().executable(true);
 		result.setPattern(pattern);
 		result.setResult(stmt);
 		return result;	

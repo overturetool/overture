@@ -33,7 +33,6 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
@@ -908,6 +907,7 @@ public class StatementReader extends SyntaxReader
 
 		for (PPattern p : plist)
 		{
+			p.getLocation().executable(true);
 			alts.add(AstFactory.newACaseAlternativeStm(p.clone(), result.clone()));
 		}
 
