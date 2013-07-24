@@ -360,7 +360,7 @@ public class VdmModel implements IVdmModel
 	public <K> K getAttribute(String attributeName, K defaultValue)
 	{
 		Object attr = state.get(attributeName);
-		if (attr != null)
+		if (attr != null || defaultValue!=null)
 		{
 			if (defaultValue.getClass().isInstance(attr))
 			{
