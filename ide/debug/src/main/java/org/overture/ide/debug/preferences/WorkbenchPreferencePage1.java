@@ -54,13 +54,14 @@ public class WorkbenchPreferencePage1 extends
 	protected void performDefaults()
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_PORT, IDebugPreferenceConstants.DBGP_DEFAULT_PORT);
+		VdmDebugPlugin.initializeDefaultDebugPreferences(store);
 		super.performDefaults();
 	}
 
 	public void init(IWorkbench workbench)
 	{
-
+		IPreferenceStore store = getPreferenceStore();
+		VdmDebugPlugin.initializeDefaultDebugPreferences(store);
 	}
 
 }

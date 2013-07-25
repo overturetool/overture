@@ -127,7 +127,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	protected void waitDebuggerConnected(ILaunch launch,
 			DebugSessionAcceptor acceptor) throws CoreException
 	{
-		int timeout = VdmDebugPlugin.getConnectionTimeout();
+		int timeout = VdmDebugPlugin.getDefault().getConnectionTimeout();
 		if (!acceptor.waitConnection(timeout))
 		{
 			launch.terminate();
@@ -173,15 +173,15 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-		int port = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, -1);
+//		int port = VdmDebugPlugin.getDefault().getPreferencePort();
 		// Start debug service with the override port or just start the service and get the port
-		if (port > 0)
-		{
-			port = VdmDebugPlugin.getDefault().getDbgpService(port).getPort();
-		} else
-		{
-			port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
-		}
+//		if (port > 0)
+//		{
+//			port = VdmDebugPlugin.getDefault().getDbgpService(port).getPort();
+//		} else
+//		{
+		int	port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
+//		}
 		commandList.add(Integer.valueOf(port).toString());
 
 		commandList.add("-k");
