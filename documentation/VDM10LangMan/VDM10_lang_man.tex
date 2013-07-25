@@ -4378,7 +4378,7 @@ quicksort (l) ==
     [x] -> [x],
     [x,y] -> if x < y then [x,y] else [y,x],
     -^[x]^- -> quicksort ([l(i) | i in set inds l & l(i) < x]) ^ 
-               [x] ^
+               [l(i) | i in set inds l & l(i) = x] ^
                quicksort ([l(i) | i in set inds l & l(i) > x])
   end
 \end{lstlisting}
