@@ -24,11 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -47,11 +44,11 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.utility.ClasspathUtils;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
+import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
 
@@ -132,7 +129,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		{
 			launch.terminate();
 			return;
-			// abort(InterpreterMessages.errDebuggingEngineNotConnected, null);
 		}
 		if (!acceptor.waitInitialized(60 * 60 * 1000))
 		{
@@ -146,12 +142,11 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			IProgressMonitor monitor) throws CoreException
 	{
 		List<String> commandList = null;
-		
+
 		Integer debugSessionId = Integer.valueOf(getSessionId());
 		if (useRemoteDebug(configuration))
 		{
 			debugSessionId = 1;
-			// debugComm.removeSession(debugSessionId.toString());
 		}
 
 		commandList = new ArrayList<String>();
@@ -173,15 +168,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("-h");
 		commandList.add("localhost");
 		commandList.add("-p");
-//		int port = VdmDebugPlugin.getDefault().getPreferencePort();
-		// Start debug service with the override port or just start the service and get the port
-//		if (port > 0)
-//		{
-//			port = VdmDebugPlugin.getDefault().getDbgpService(port).getPort();
-//		} else
-//		{
-		int	port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
-//		}
+		int port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
 		commandList.add(Integer.valueOf(port).toString());
 
 		commandList.add("-k");
@@ -232,12 +219,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			commandList.add(Base64.encode("A".getBytes()).toString());
 		}
 
-		// if (isCoverageEnabled(configuration))
-		// {
-		// commandList.add("-coverage");
-		// commandList.add(getCoverageDir(project));
-		// }
-
 		if (isRemoteControllerEnabled(configuration))
 		{
 			commandList.add("-remote");
@@ -265,8 +246,8 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		}
 		commandList.add(0, "java");
 
-		File vdmjPropertiesFile =prepareCustomDebuggerProperties(vdmProject, configuration);
-		commandList.addAll(1, getClassPath(vdmProject, configuration,vdmjPropertiesFile));
+		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
+		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(getProject(configuration), IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS, vdmjPropertiesFile));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
@@ -321,28 +302,29 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		try
 		{
 			String properties = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, "");
-		
+
 			File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();
 			if (outputDir.mkdirs())
 			{
 				// ignore
 			}
-			File vdmjProperties = new File(outputDir,"vdmj.properties");
-			
-			PrintWriter out=null;
-			try{
+			File vdmjProperties = new File(outputDir, "vdmj.properties");
+
+			PrintWriter out = null;
+			try
+			{
 				FileWriter outFile = new FileWriter(vdmjProperties);
 				out = new PrintWriter(outFile);
 				for (String p : properties.split(";"))
 				{
 					out.println(p);
 				}
-				
+
 				return vdmjProperties;
-			}catch(IOException e)
+			} catch (IOException e)
 			{
 				abort("Faild to create custom properties file while writing properties", e);
-			}finally
+			} finally
 			{
 				out.close();
 			}
@@ -435,8 +417,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			ILaunchConfiguration configuration) throws CoreException
 	{
 		File outputDir = project.getModelBuildPath().getOutput().getLocation().toFile();// new
-																						// File(getProject(configuration).getLocation().toFile(),
-																						// "generated");
 		outputDir.mkdirs();
 		return outputDir;
 	}
@@ -445,20 +425,15 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			List<String> commandList, IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
 	{
-		//String executeString = getArgumentString(commandList);
-
 		ProcessBuilder procBuilder = new ProcessBuilder(commandList);
-		
-		//System.out.println(executeString);
+
 		Process process = null;
-		// System.out.println(executeString);
 		try
 		{
 			procBuilder.directory(getProject(configuration).getLocation().toFile());
 			if (!useRemoteDebug(launch.getLaunchConfiguration()))
 			{
 				process = procBuilder.start();
-//				process = Runtime.getRuntime().exec(executeString, null, getProject(configuration).getLocation().toFile());
 
 			} else
 			{
@@ -508,115 +483,6 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			abort("Unsuported encoding used for expression", e);
 		}
 		return "";
-	}
-
-	private List<String> getClassPath(IVdmProject project,
-			ILaunchConfiguration configuration, File vdmjPropertiesFile) throws CoreException
-	{
-		List<String> commandList = new Vector<String>();
-		List<String> entries = new Vector<String>();
-		// get the bundled class path of the debugger
-		ClasspathUtils.collectClasspath(IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS, entries);
-		// get the class path for all jars in the project lib folder
-		File lib = new File(getProject(configuration).getLocation().toFile(), "lib");
-		if (lib.exists() && lib.isDirectory())
-		{
-			for (File f : getAllDirectories(lib))
-			{
-				entries.add(f.getAbsolutePath());
-			}
-
-			for (File f : getAllFiles(lib, new HashSet<String>(Arrays.asList(new String[] { ".jar" }))))
-			{
-				entries.add(f.getAbsolutePath());
-			}
-		}
-		
-		//add custom properties file vdmj.properties
-		entries.add(vdmjPropertiesFile.getParentFile().getAbsolutePath());
-
-		if (entries.size() > 0)
-		{
-			commandList.add("-cp");
-			StringBuffer classPath = new StringBuffer(" ");
-			for (String cp : new HashSet<String>(entries))// remove dublicates
-			{
-				classPath.append(toPlatformPath(cp));
-				classPath.append(getCpSeperator());
-			}
-			classPath.deleteCharAt(classPath.length() - 1);
-			commandList.add(classPath.toString().trim());
-
-		}
-		return commandList;
-	}
-
-	private static List<File> getAllDirectories(File file)
-	{
-		List<File> files = new Vector<File>();
-		if (file.isDirectory())
-		{
-			files.add(file);
-			for (File f : file.listFiles())
-			{
-				files.addAll(getAllDirectories(f));
-			}
-
-		}
-		return files;
-	}
-
-	private static List<File> getAllFiles(File file, Set<String> extensionFilter)
-	{
-		List<File> files = new Vector<File>();
-		if (file.isDirectory())
-		{
-			for (File f : file.listFiles())
-			{
-				files.addAll(getAllFiles(f, extensionFilter));
-			}
-
-		} else
-		{
-			for (String filter : extensionFilter)
-			{
-				if (file.getAbsolutePath().endsWith(filter))
-				{
-					files.add(file);
-				}
-			}
-
-		}
-		return files;
-	}
-
-	private String getCpSeperator()
-	{
-		if (isWindowsPlatform())
-			return ";";
-		else
-			return ":";
-	}
-
-	public static boolean isWindowsPlatform()
-	{
-		return System.getProperty("os.name").toLowerCase().contains("win");
-	}
-	
-	public static boolean isMacPlatform()
-	{
-		return System.getProperty("os.name").toLowerCase().contains("mac");
-	}
-
-	protected static String toPlatformPath(String path)
-	{
-		if (isWindowsPlatform())
-		{
-			return "\"" + path + "\"";
-		} else
-		{
-			return path.replace(" ", "\\ ");
-		}
 	}
 
 	/**

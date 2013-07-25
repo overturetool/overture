@@ -26,6 +26,7 @@ Export-Package: org.overture.ide.debug.core,
  org.overture.ide.debug.core.launching,
  org.overture.ide.debug.ui.launchconfigurations,
  org.overture.ide.debug.ui.launching,
+ org.overture.ide.debug.utils,
  org.overture.interpreter,
  org.overture.interpreter.assistant,
  org.overture.interpreter.assistant.definition,
@@ -52,4 +53,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
  jars/interpreter.jar,
- jars/pog.jar
+ jars/pog-string-based.jar
