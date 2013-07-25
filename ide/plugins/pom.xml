@@ -22,7 +22,7 @@
     <module>quickinterpreter</module>
     <module>externaleditor</module>
     <module>latex</module>
-    <module>poviewer</module>
+    <module>poviewer-string-based</module>
     <module>combinatorialtesting</module>
     <module>developerutils</module>
     <module>uml2</module>

@@ -27,5 +27,5 @@ public interface IPoviewerConstants
 	String PoViewerId = "org.overture.ide.plugins.poviewer";
 	final String ExternalEditorId = "org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor";
 	
-	public final static String PLUGIN_ID = "org.overture.ide.plugins.poviewer";
+	public final static String PLUGIN_ID = "org.overture.ide.plugins.poviewer-string-based";
 }

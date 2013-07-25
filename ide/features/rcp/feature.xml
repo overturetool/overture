@@ -25,7 +25,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.overture.ide.plugins.features.poviewer"
+         id="org.overture.ide.plugins.features.poviewer-string-based"
          version="0.0.0"/>
 
    <includes

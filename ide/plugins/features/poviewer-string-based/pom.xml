@@ -12,7 +12,7 @@
   <packaging>eclipse-feature</packaging>
 
   <groupId>org.overture.ide.plugins.features</groupId>
-  <artifactId>org.overture.ide.plugins.features.poviewer</artifactId>
+  <artifactId>org.overture.ide.plugins.features.poviewer-string-based</artifactId>
   <name>Overture IDE Eclipse Proof Obligation Viewer feature</name>
   
 </project>

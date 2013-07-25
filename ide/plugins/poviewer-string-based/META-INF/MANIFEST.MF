@@ -5,9 +5,9 @@ Bundle-Version: 2.0.0.qualifier
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
-Bundle-Name: org.overture.ide.plugins.poviewer
+Bundle-Name: org.overture.ide.plugins.poviewer-string-based
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: org.overture.ide.plugins.poviewer;singleton:=true
+Bundle-SymbolicName: org.overture.ide.plugins.poviewer-string-based;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.overture.pog.assistant,
  org.overture.pog.obligation,
@@ -26,4 +26,4 @@ Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.builders.vdmj
 Bundle-Activator: org.overture.ide.plugins.poviewer.Activator
 Bundle-ClassPath: .,
- jars/pog.jar
+ jars/pog-string-based.jar

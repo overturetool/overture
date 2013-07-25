@@ -42,7 +42,7 @@
                 
                  <artifactItem>
                   <groupId>org.overture.core</groupId>
-                  <artifactId>pog</artifactId>
+                  <artifactId>pog-string-based</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
               </artifactItems>

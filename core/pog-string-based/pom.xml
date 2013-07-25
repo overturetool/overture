@@ -10,7 +10,7 @@
   </parent>
 
   <groupId>org.overture.core</groupId>
-  <artifactId>pog</artifactId>
+  <artifactId>pog-string-based</artifactId>
   <name>VDM Proof Obligation Generator</name>
 
   <dependencies>		

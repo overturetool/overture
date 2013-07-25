@@ -21,8 +21,11 @@ package org.overture.ide.plugins.poviewer.view;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -163,7 +166,16 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 			else if (data.status == POStatus.TRIVIAL)
 				imgPath = "icons/cview16/trivial.png";
 
-			return Activator.getImageDescriptor(imgPath).createImage();
+			ImageDescriptor d =  Activator.getImageDescriptor(imgPath);
+			
+			if(d!=null)
+			{
+				return d.createImage();
+			}else
+			{
+				Activator.getDefault().getLog().log(new Status(IStatus.ERROR,IPoviewerConstants.PLUGIN_ID,"Could not create image\n"+Activator.getDefault().getBundle()));
+			}
+			return null;
 		}
 
 	}
