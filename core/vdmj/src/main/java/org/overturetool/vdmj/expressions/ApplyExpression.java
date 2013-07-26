@@ -116,7 +116,7 @@ public class ApplyExpression extends Expression
 
 		if (inFunction)
 		{
-			Definition called = getRecursiveDefinition(env);
+			Definition called = getRecursiveDefinition(env, scope);
 
 			if (called instanceof ExplicitFunctionDefinition)
 			{
@@ -491,14 +491,14 @@ public class ApplyExpression extends Expression
 		return subs;
 	}
 	
-	private Definition getRecursiveDefinition(Environment env)
+	private Definition getRecursiveDefinition(Environment env, NameScope scope)
 	{
 		LexNameToken fname = null;
 		
 		if (root instanceof ApplyExpression)
 		{
 			ApplyExpression aexp = (ApplyExpression)root;
-			return aexp.getRecursiveDefinition(env);
+			return aexp.getRecursiveDefinition(env, scope);
 		}
 		else if (root instanceof VariableExpression)
 		{
@@ -521,7 +521,7 @@ public class ApplyExpression extends Expression
 			
 		if (fname != null)
 		{
-			return env.findName(fname, NameScope.NAMESANDSTATE);
+			return env.findName(fname, scope);
 		}
 		else
 		{
