@@ -121,24 +121,24 @@ public class VdmDebugPlugin extends AbstractUIPlugin
 
 	}
 
-	//
-	// /**
-	// * Inefficient use getDbgpService
-	// * @param freePort
-	// * @return
-	// */
-	// public synchronized IDbgpService getDbgpService(int freePort) {
-	//
-	// // if (dbgpService == null) {
-	// dbgpService = new DbgpService(freePort);
-	// getPluginPreferences().addPropertyChangeListener(
-	// new DbgpServicePreferenceUpdater());
-	//
-	// // }
-	//
-	// return dbgpService;
-	//
-	// }
+	/**
+	 * Inefficient use getDbgpService
+	 * 
+	 * @param freePort
+	 * @return
+	 */
+	public synchronized IDbgpService getDbgpService(int freePort)
+	{
+
+		// if (dbgpService == null) {
+		dbgpService = new DbgpService(freePort);
+		getPluginPreferences().addPropertyChangeListener(new DbgpServicePreferenceUpdater());
+
+		// }
+
+		return dbgpService;
+
+	}
 
 	private class DbgpServicePreferenceUpdater implements
 

@@ -46,6 +46,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
@@ -169,6 +170,14 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("localhost");
 		commandList.add("-p");
 		int port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
+		
+		//Hook for external tools to direct the debugger to listen on a specific port
+		int overridePort =configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
+		if(overridePort!=IDebugPreferenceConstants.DBGP_AVAILABLE_PORT)
+		{
+			port = VdmDebugPlugin.getDefault().getDbgpService(overridePort).getPort();
+		}
+		
 		commandList.add(Integer.valueOf(port).toString());
 
 		commandList.add("-k");
