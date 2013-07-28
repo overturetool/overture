@@ -1,0 +1,9 @@
+module A
+definitions
+
+functions
+
+a : int -> int
+a(b) == b;
+
+end A

@@ -1,0 +1,22 @@
+Packages
+base org.overture.pof.node;
+
+Tokens
+
+Abstract Syntax Tree
+
+
+
+
+/*
+    Proof Obligations
+*/
+
+poTree {-> package='org.overture.pof'}
+    = {vdm} [predicate]:exp 
+    ;
+
+
+Aspect Declaration
+
+/* This section allows fields of root types to be declared e.g. exp*/

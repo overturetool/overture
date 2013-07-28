@@ -1,0 +1,10 @@
+class B
+
+	functions
+	
+	public dummy0 (arg : seq1 of nat) r: seq of nat
+	post false;
+		
+
+	
+end B

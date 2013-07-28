@@ -42,19 +42,27 @@ import org.overture.ast.expressions.SMapExp;
 import org.overture.ast.expressions.SSeqExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PExpAssistantTC {
+public class PExpAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
-
+	// A LexNameToken to indicate that a function has no precondition name, rather than
+	// that it is not a pure function (indicated by null).
+	public final static LexNameToken NO_PRECONDITION = new LexNameToken("", "", null);
+	
 	@SuppressWarnings("static-access")
 	public PExpAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	public static String getPreName(PExp root) {
-		String result = null;
+
+	public static ILexNameToken getPreName(PExp root) {
+		ILexNameToken result = null;
+		
 		switch (root.kindPExp()) {
 		case AFuncInstatiationExp.kindPExp: {
 			AFuncInstatiationExp func = AFuncInstatiationExp.class.cast(root);
@@ -76,13 +84,13 @@ public class PExpAssistantTC {
 				AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class
 						.cast(def);
 				PDefinition predef = ex.getPredef();
-				result = predef == null ? "" : predef.getName().getName();
+				result = predef == null ? NO_PRECONDITION : predef.getName();
 
 			} else if (def instanceof AImplicitFunctionDefinition) {
 				AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class
 						.cast(def);
 				PDefinition predef = im.getPredef();
-				result = predef == null ? "" : predef.getName().getName();
+				result = predef == null ? NO_PRECONDITION : predef.getName();
 			}
 			break;
 		}

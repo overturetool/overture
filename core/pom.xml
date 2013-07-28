@@ -19,6 +19,7 @@
     <module>typechecker</module>
     <module>interpreter</module>
     <module>pog-string-based</module>
+    <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>
     <module>latex</module>

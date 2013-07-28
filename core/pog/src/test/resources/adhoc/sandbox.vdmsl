@@ -1,0 +1,11 @@
+module A
+definitions
+
+
+operations
+impF1 (p1 : nat, p2 : nat, p3 : bool) result : nat
+pre p3 => p1 / p2 > 0
+post result = p1 /p2;
+	
+end A
+
