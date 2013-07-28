@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="org.eclipse.ui.views">
+    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoTableView" name="Proof Obligation View"/>
+    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView" name="Proof Obligation Explorer"/>
+  </extension>
+  <extension point="org.eclipse.ui.perspectives">
+    <perspective class="org.overture.ide.plugins.poviewer.ProofObligationPerspectiveFactory" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.perspective" name="Proof Obligation"/>
+  </extension>
+  <!-- generate pos command -->
+  <extension point="org.eclipse.ui.commands">
+    <command defaultHandler="org.overture.ide.plugins.poviewer.commands.GenerateProofObligationsCommand" id="org.overture.ide.plugins.poviewer.commandGeneratedPO" name="Generate Proof Obligations"/>
+  </extension>
+  <!-- generate po menu binding -->
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution locationURI="popup:org.overture.ide.ui.VdmExplorer">
+      <menu icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer" label="Proof Obligations">
+        <command commandId="org.overture.ide.plugins.poviewer.commandGeneratedPO" label="Generate Proof Obligations" style="push" tooltip="Show POs">
+          <visibleWhen checkEnabled="false">
+            <iterate ifEmpty="false">
+              <or>
+                <adapt type="org.overture.ide.core.resources.IVdmProject"/>
+                <adapt type="org.eclipse.core.resources.IFile">
+                  <or>
+                    <test property="org.eclipse.core.resources.extension" value="vdmpp"/>
+                    <test property="org.eclipse.core.resources.extension" value="vdmrt"/>
+                    <test property="org.eclipse.core.resources.extension" value="vdmsl"/>
+                  </or>
+                </adapt>
+              </or>
+            </iterate>
+          </visibleWhen>
+        </command>
+      </menu>
+    </menuContribution>
+  </extension>
+  <!-- key bindings -->
+  <extension point="org.eclipse.ui.bindings">
+    <key commandId="org.overture.ide.plugins.poviewer.commandGeneratedPO" contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="Alt+P"/>
+  </extension>
+</plugin>
