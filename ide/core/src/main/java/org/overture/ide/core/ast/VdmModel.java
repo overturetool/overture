@@ -357,16 +357,6 @@ public class VdmModel implements IVdmModel
 	}
 
 	
-	public <K> K getValue(String key, Class<K> valClass){
-		
-		Object val = state.get(key);
-		if (val == null){
-			return null;
-		}
-		return (K) val;
-	}
-
-	
 	@SuppressWarnings("unchecked")
 	public <K> K getAttribute(String key, Class<K> valClass)
 	{
