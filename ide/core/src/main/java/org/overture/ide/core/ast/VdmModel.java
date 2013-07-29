@@ -356,18 +356,25 @@ public class VdmModel implements IVdmModel
 		return state.containsKey(attributeName);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <K> K getAttribute(String attributeName, K defaultValue)
-	{
-		Object attr = state.get(attributeName);
-		if (attr != null || defaultValue!=null)
-		{
-			if (defaultValue.getClass().isInstance(attr))
-			{
-				return (K) attr;
-			}
+	
+	public <K> K getValue(String key, Class<K> valClass){
+		
+		Object val = state.get(key);
+		if (val == null){
+			return null;
 		}
-		return defaultValue;
+		return (K) val;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public <K> K getAttribute(String key, Class<K> valClass)
+	{
+		Object val = state.get(key);
+		if (val == null){
+			return null;
+		}
+		return (K) val;
 
 	}
 
