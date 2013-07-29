@@ -38,6 +38,9 @@ public interface IDebugConstants
 	
 	final static String VDM_LAUNCH_CONFIG_IS_TRACE = "vdm_launch_config_is_trace";
 	
+	//This is used by external tools to force listening on a specific port
+	final String VDM_LAUNCH_CONFIG_OVERRIDE_PORT = "vdm_launch_config_override_port";
+	
 	final static String VDM_LAUNCH_CONFIG_REMOTE_CONTROL = "vdm_launch_config_remote_control_class";
 	final static String VDM_LAUNCH_CONFIG_CREATE_COVERAGE = "vdm_launch_config_create_coverage";
 	final static String VDM_LAUNCH_CONFIG_REMOTE_DEBUG = "vdm_launch_config_remote_debug";
