@@ -66,6 +66,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
@@ -653,40 +654,17 @@ public class TypeCheckerStmVisitor extends
 	@Override
 	public PType caseADurationStm(ADurationStm node, TypeCheckInfo question)
 			throws AnalysisException {
-		long durationValue = 0;
+		
+		PType argType = node.getDuration().apply(rootVisitor, question);
 
-		if (node.getDuration() instanceof AIntLiteralExp) {
-			AIntLiteralExp i = (AIntLiteralExp) node.getDuration();
-
-			if (i.getValue().getValue() < 0) {
-				TypeCheckerErrors.report(3281,
-						"Arguments to duration must be integer >= 0", node
-								.getDuration().getLocation(), node
-								.getDuration());
-			}
-
-			durationValue = i.getValue().getValue();
-		} else if (node.getDuration() instanceof ARealLiteralExp) {
-			ARealLiteralExp i = (ARealLiteralExp) node.getDuration();
-
-			if (i.getValue().getValue() < 0
-					|| Math.floor(i.getValue().getValue()) != i.getValue().getValue()) {
-				TypeCheckerErrors.report(3282,
-						"Argument to duration must be integer >= 0", node
-								.getDuration().getLocation(), node
-								.getDuration());
-			}
-
-			durationValue = (long) i.getValue().getValue();
-		} else {
-			TypeCheckerErrors.report(3281,
-					"Arguments to duration must be integer >= 0", node
-							.getDuration().getLocation(), node.getDuration());
+		if (!TypeComparator.compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
+		{
+			TypeCheckerErrors.report(3281, "Arguments to duration must be a nat",
+					node.getLocation(), node);
+			TypeCheckerErrors.detail("Actual", argType);
 		}
 
-		node.setStep(durationValue);// sets the input value [ns] to internal
-		node.setType(node.getStatement().apply(rootVisitor, question));
-		return node.getType();
+		return node.getStatement().apply(rootVisitor, question);
 	}
 
 	@Override
