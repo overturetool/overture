@@ -154,6 +154,11 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	
 
 	@Override
+	public String getUniqueName() {
+		return getName()+getNumber();
+	}
+
+	@Override
 	public INode getNode() {
 		return rootNode;
 	}

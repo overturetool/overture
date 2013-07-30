@@ -64,6 +64,7 @@ public class PogUtil
 				try
 				{
 					proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack()));
+					proofObligations.renumber();
 				} catch (AnalysisException e)
 				{
 					throw new Exception("Internal error",e);

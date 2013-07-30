@@ -11,6 +11,4 @@ public interface IProofObligationList extends List<IProofObligation>
 	
 	void renumber();
 	
-	void renumber(int from);
-
 }
