@@ -4378,9 +4378,10 @@ quicksort (l) ==
     [] -> [],
     [x] -> [x],
     [x,y] -> if x < y then [x,y] else [y,x],
-    -^[x]^- -> quicksort([l(i) | i in set inds l & l(i) < x])
-               ^ [l(i) | i in set inds l & l(i) = x] ^
-               quicksort([l(i) | i in set inds l & l(i) > x])
+    -^[x]^- ->
+          quicksort([l(i) | i in set inds l & l(i) < x])
+                  ^ [l(i) | i in set inds l & l(i) = x] ^
+          quicksort([l(i) | i in set inds l & l(i) > x])
   end
 \end{lstlisting}
 Here, in the second cases clause a sequence concatenation pattern is
