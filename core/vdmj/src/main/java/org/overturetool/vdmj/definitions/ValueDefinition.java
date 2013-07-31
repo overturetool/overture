@@ -151,6 +151,8 @@ public class ValueDefinition extends Definition
 		if (type != null)
 		{
 			type = type.typeResolve(env, null);
+			pattern.typeResolve(env);
+			updateDefs();
 		}
 	}
 
@@ -188,6 +190,12 @@ public class ValueDefinition extends Definition
 		}
 
 		pattern.typeResolve(base);
+		updateDefs();
+		defs.typeCheck(base, scope);
+	}
+	
+	private void updateDefs()
+	{
 		DefinitionList newdefs = pattern.getDefinitions(type, nameScope);
 
 		// The untyped definitions may have had "used" markers, so we copy
@@ -217,7 +225,6 @@ public class ValueDefinition extends Definition
 		defs = newdefs;
 		defs.setAccessibility(accessSpecifier);
 		defs.setClassDefinition(classDefinition);
-		defs.typeCheck(base, scope);
 	}
 
 	@Override
