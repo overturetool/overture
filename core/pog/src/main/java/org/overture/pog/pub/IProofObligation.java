@@ -10,6 +10,8 @@ public interface IProofObligation extends Comparable<IProofObligation>
 	
 	String getName();
 	
+	String getUniqueName();
+	
 	String getValue();
 	
 	AVdmPoTree getValueTree();
