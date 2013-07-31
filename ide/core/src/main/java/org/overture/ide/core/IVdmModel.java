@@ -130,16 +130,46 @@ public interface IVdmModel extends IVdmElement
 	public void refresh(boolean completeRefresh, IProgressMonitor monitor);
 
 	public abstract void remove(IVdmSourceUnit iVdmSourceUnit);
-	
+
 	/**
-	 * Returns if any working copies has been issued from the current model. If this returns true
-	 * any changes to the model might be overridden when a working copy is committed.
+	 * Returns if any working copies has been issued from the current model. If this returns true any changes to the
+	 * model might be overridden when a working copy is committed.
+	 * 
 	 * @return returns true if working copies has been issued
 	 */
-	 boolean hasWorkingCopies();
-	 
-	 
-	 public boolean hasAttribute(String attributeName);
-	 public <K> K getAttribute(String attributeName, Class<K> defaultValue);
-	 public <K> void setAttribute(String attributeName, K value);
+	boolean hasWorkingCopies();
+
+	/**
+	 * Check if the internal state has a certain attribute name defined
+	 * 
+	 * @param attributeName
+	 *            the name to check for
+	 * @return true if the name exists
+	 */
+	public boolean hasAttribute(String attributeName);
+
+	/**
+	 * Gets an internal state object defined by the attribute name.<br/>
+	 * The return type is defined by the class it is called with.
+	 * <p/>
+	 * Note that the intension is that PLUG_IN ids should be used as the attribyteName
+	 * 
+	 * @param attributeName
+	 *            a plugin id
+	 * @param returnClassType
+	 *            the class type which should be returned
+	 * @return if the attribute is defined then the state object is returned otherwise null
+	 */
+	public <K> K getAttribute(String attributeName, Class<K> returnClassType);
+
+	/**
+	 * Sets an internal state object using attribute name.<br/>
+	 * If a state already exists with the attributename then it will be overwritten.
+	 * <p/>
+	 * Note that the intension is that PLUG_IN ids should be used as the attribyteName
+	 * 
+	 * @param attributeName the plugin id to store the state under
+	 * @param value the state to be stored
+	 */
+	public <K> void setAttribute(String attributeName, K value);
 }
