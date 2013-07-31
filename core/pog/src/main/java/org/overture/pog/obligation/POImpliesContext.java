@@ -23,8 +23,8 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
-
 
 public class POImpliesContext extends POContext
 {
@@ -34,6 +34,16 @@ public class POImpliesContext extends POContext
 	{
 		this.exp = exp;
 	}
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
+		impliesExp.setLeft(exp.clone());
+		impliesExp.setRight(stitch);
+		return impliesExp;
+	}
+
 
 	@Override
 	public String getContext()

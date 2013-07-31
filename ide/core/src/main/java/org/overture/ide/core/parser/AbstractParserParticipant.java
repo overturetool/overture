@@ -25,7 +25,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
@@ -266,8 +265,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setAst(List<INode> ast)
 		{
-			Assert.isNotNull(ast, "AST cannot be null");
-			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
+//			Assert.isNotNull(ast, "AST cannot be null");
+//			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
 			this.ast = ast;
 		}
 

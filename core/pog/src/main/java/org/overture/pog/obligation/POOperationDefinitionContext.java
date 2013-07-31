@@ -24,15 +24,22 @@
 package org.overture.pog.obligation;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.AStringPattern;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -46,9 +53,11 @@ public class POOperationDefinitionContext extends POContext
 	public final boolean addPrecond;
 	public final PExp precondition;
 	public final PDefinition stateDefinition;
+	final AImplicitOperationDefinition opDef;
 
-	public POOperationDefinitionContext(AImplicitOperationDefinition definition,
-		boolean precond, PDefinition stateDefinition)
+	public POOperationDefinitionContext(
+			AImplicitOperationDefinition definition, boolean precond,
+			PDefinition stateDefinition)
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
@@ -56,6 +65,71 @@ public class POOperationDefinitionContext extends POContext
 		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
+		this.opDef = definition;
+		opDef.setLocation(null);
+	}
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		if (!deftype.getParameters().isEmpty())
+		{
+			AForAllExp forAllExp = new AForAllExp();
+			forAllExp.setBindList(makeBinds());
+
+			if (addPrecond && precondition != null)
+			{
+				AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
+				impliesExp.setLeft(precondition);
+				impliesExp.setRight(stitch);
+				forAllExp.setPredicate(impliesExp);
+			} else
+			{
+				forAllExp.setPredicate(stitch);
+			}
+
+			return forAllExp;
+
+		}
+		return stitch;
+
+	}
+
+	private List<? extends PMultipleBind> makeBinds()
+	{
+		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
+
+		ATypeMultipleBind tmBind = new ATypeMultipleBind();
+		tmBind.setPlist(paramPatternList);
+		tmBind.setType(deftype);
+		r.add(tmBind);
+
+		if (stateDefinition != null)
+		{
+			ATypeMultipleBind tmBind2 = new ATypeMultipleBind();
+			AStringPattern pattern = new AStringPattern();
+
+			if (stateDefinition instanceof AStateDefinition)
+			{
+				AStateDefinition def = (AStateDefinition) stateDefinition;
+				tmBind2.setType(def.getType());
+				pattern.setValue(new LexStringToken("oldstate", null));
+			} else
+			{
+				SClassDefinition def = (SClassDefinition) stateDefinition;
+				tmBind2.setType(def.getType());
+				pattern.setValue(new LexStringToken("oldself", null));
+			}
+
+			List<PPattern> plist = new LinkedList<PPattern>();
+			plist.add(pattern);
+			tmBind2.setPlist(plist);
+			r.add(tmBind2);
+
+		}
+
+		return r;
+
 	}
 
 	@Override
@@ -65,11 +139,11 @@ public class POOperationDefinitionContext extends POContext
 
 		if (!deftype.getParameters().isEmpty())
 		{
-    		sb.append("forall ");
-    		String sep = "";
+			sb.append("forall ");
+			String sep = "";
 			Iterator<PType> types = deftype.getParameters().iterator();
 
-			for (PPattern p: paramPatternList)
+			for (PPattern p : paramPatternList)
 			{
 				if (!(p instanceof AIgnorePattern))
 				{
@@ -86,14 +160,14 @@ public class POOperationDefinitionContext extends POContext
 				appendStatePatterns(sb);
 			}
 
-    		sb.append(" &");
+			sb.append(" &");
 
-    		if (addPrecond && precondition != null)
-    		{
-    			sb.append(" ");
-    			sb.append(precondition);
-    			sb.append(" =>");
-    		}
+			if (addPrecond && precondition != null)
+			{
+				sb.append(" ");
+				sb.append(precondition);
+				sb.append(" =>");
+			}
 		}
 
 		return sb.toString();
@@ -104,16 +178,14 @@ public class POOperationDefinitionContext extends POContext
 		if (stateDefinition == null)
 		{
 			return;
-		}
-		else if (stateDefinition instanceof AStateDefinition)
+		} else if (stateDefinition instanceof AStateDefinition)
 		{
-			AStateDefinition def = (AStateDefinition)stateDefinition;
+			AStateDefinition def = (AStateDefinition) stateDefinition;
 			sb.append(", oldstate:");
 			sb.append(def.getName().getName());
-		}
-		else
+		} else
 		{
-			SClassDefinition def = (SClassDefinition)stateDefinition;
+			SClassDefinition def = (SClassDefinition) stateDefinition;
 			sb.append(", oldself:");
 			sb.append(def.getName().getName());
 		}

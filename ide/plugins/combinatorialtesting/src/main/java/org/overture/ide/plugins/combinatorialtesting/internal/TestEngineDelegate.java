@@ -12,12 +12,12 @@ import java.util.Vector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.utility.ClasspathUtils;
+import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.util.Base64;
-import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 
 public class TestEngineDelegate
 {
@@ -127,7 +127,7 @@ public class TestEngineDelegate
 		}
 		commandList.add(0, "java");
 
-		commandList.addAll(1, getClassPath(project));
+		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(project,ITracesConstants.TEST_ENGINE_BUNDLE_IDs,new String[]{}));
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
@@ -187,86 +187,6 @@ public class TestEngineDelegate
 
 	}
 
-	private List<String> getClassPath(IProject project) throws CoreException
-	{
-		List<String> commandList = new Vector<String>();
-
-		// get the bundled class path of the debugger
-		List<String> entries = ClasspathUtils.collectJars(ITracesConstants.PLUGIN_ID);
-
-		// get the class path for all jars in the project lib folder
-		File lib = new File(project.getLocation().toFile(), "lib");
-		if (lib.exists() && lib.isDirectory())
-		{
-			for (File f : getAllFiles(lib))
-			{
-				if (f.getName().toLowerCase().endsWith(".jar"))
-				{
-					entries.add(toPlatformPath(f.getAbsolutePath()));
-				}
-			}
-		}
-
-		if (entries.size() > 0)
-		{
-			commandList.add("-cp");
-			StringBuilder classPath = new StringBuilder();
-			for (String cp : entries)
-			{
-				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
-				{
-					classPath.append(toPlatformPath(cp));
-					classPath.append(getCpSeperator());
-				}
-			}
-			if (classPath.length()>0)
-				commandList.add(classPath.toString());
-			else
-				commandList.add(" ");
-		}
-		return commandList;
-	}
-
-	private static List<File> getAllFiles(File file)
-	{
-		List<File> files = new Vector<File>();
-		if (file.isDirectory())
-		{
-			for (File f : file.listFiles())
-			{
-				files.addAll(getAllFiles(f));
-			}
-
-		} else
-		{
-			files.add(file);
-		}
-		return files;
-	}
-
-	private String getCpSeperator()
-	{
-		if (isWindowsPlatform())
-			return ";";
-		else
-			return ":";
-	}
-
-	public static boolean isWindowsPlatform()
-	{
-		return System.getProperty("os.name").toLowerCase().contains("win");
-	}
-
-	protected static String toPlatformPath(String path)
-	{
-		if (isWindowsPlatform())
-		{
-			return "\"" + path + "\"";
-		} else
-		{
-			return path.replace(" ", "\\ ");
-		}
-	}
 
 	/**
 	 * Returns a free port number on localhost, or -1 if unable to find a free port.

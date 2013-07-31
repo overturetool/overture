@@ -53,8 +53,9 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.ui.utility.EditorUtility;
-import org.overture.pog.obligation.POStatus;
 import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.pub.POStatus;
+import org.overture.pog.pub.IProofObligation;
 
 public class PoOverviewTableView extends ViewPart implements ISelectionListener
 {
@@ -124,8 +125,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				columnText =new Integer(data.number).toString();// count.toString();
 				break;
 			case 1:
-				if (!data.location.getModule().equals("DEFAULT"))
-					columnText = data.location.getModule() + "`" + data.name;
+				if (!data.getLocation().getModule().equals("DEFAULT"))
+					columnText = data.getLocation().getModule() + "`" + data.name;
 				else
 					columnText = data.name;
 				break;
@@ -160,8 +161,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 			if (data.status == POStatus.PROVED)
 				imgPath = "icons/cview16/proved.png";
-			else if (data.status == POStatus.TRIVIAL)
-				imgPath = "icons/cview16/trivial.png";
+			
 
 			return Activator.getImageDescriptor(imgPath).createImage();
 		}
@@ -279,12 +279,12 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 			private void gotoDefinition(ProofObligation po)
 			{
-				IFile file = project.findIFile(po.location.getFile());
+				IFile file = project.findIFile(po.getLocation().getFile());
 				if(IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
 				{
-					EditorUtility.gotoLocation(IPoviewerConstants.ExternalEditorId,file, po.location, po.name);
+					EditorUtility.gotoLocation(IPoviewerConstants.ExternalEditorId,file, po.getLocation(), po.name);
 				}else{
-					EditorUtility.gotoLocation(file, po.location, po.name);	
+					EditorUtility.gotoLocation(file, po.getLocation(), po.name);	
 				}
 				
 			}
@@ -389,7 +389,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	}
 
 	public void setDataList(final IVdmProject project,
-			final List<ProofObligation> data)
+			final List<IProofObligation> data)
 	{
 		this.project = project;
 		display.asyncExec(new Runnable() {

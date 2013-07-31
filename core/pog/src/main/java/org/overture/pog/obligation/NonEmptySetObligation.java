@@ -23,7 +23,13 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+
+import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class NonEmptySetObligation extends ProofObligation
@@ -33,9 +39,21 @@ public class NonEmptySetObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6816002531259689986L;
 
-	public NonEmptySetObligation(PExp exp, POContextStack ctxt)
+	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.NON_EMPTY_SET, ctxt);
-		value = ctxt.getObligation(exp + " <> {}");
+		super(exp, POType.NON_EMPTY_SET, ctxt);
+		
+		// exp <> {}
+		
+		ANotEqualBinaryExp notEqualsExp = new ANotEqualBinaryExp();
+		notEqualsExp.setLeft(exp);
+		
+		ASetEnumSetExp setExp = new ASetEnumSetExp();
+		setExp.setMembers(new LinkedList<PExp>()); // empty list
+		
+		notEqualsExp.setRight(setExp);
+	
+		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
+//		valuetree.setContext(ctxt.getContextNodeList());
 	}
 }

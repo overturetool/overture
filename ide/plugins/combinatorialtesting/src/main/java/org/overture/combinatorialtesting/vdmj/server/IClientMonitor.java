@@ -8,6 +8,8 @@ public interface IClientMonitor
 	void initialize(String module);
 
 	void completed();
+	
+	void terminating();
 
 	void traceStart(String traceName);
 	

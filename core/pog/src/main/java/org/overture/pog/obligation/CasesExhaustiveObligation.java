@@ -23,53 +23,90 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
 	/**
-	 * 
+	 * VDM bit:
+	 * 		cases x: 
+	 * 	 		a -> ....
+	 * 	  		default -> ...
+	 * yields PO:
+	 * 		x = a or (exists default : X & x = default)
 	 */
 	private static final long serialVersionUID = -2266396606434510800L;
 
-	public CasesExhaustiveObligation(ACasesExp exp, POContextStack ctxt)
+	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(exp.getLocation(), POType.CASES_EXHAUSTIVE, ctxt);
-		StringBuilder sb = new StringBuilder();
-		String prefix = "";
-
-		for (ACaseAlternative alt : exp.getCases())
-		{
-			sb.append(prefix);
-
-			if (PPatternAssistantTC.isSimple(alt.getPattern()))
-			{
-				sb.append(exp.getExpression());
-				sb.append(" = ");
-				sb.append(alt.getPattern());
-			} else
-			{
-				
-				PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
-				
-				sb.append("(exists ");
-				sb.append(matching);
-				sb.append(":");
-				sb.append(exp.getExpression().getType());
-				sb.append(" & ");
-				sb.append(exp.getExpression());
-				sb.append(" = ");
-				sb.append(matching);
-				sb.append(")");
-			}
-
-			prefix = " or ";
-		}
-
-		value = ctxt.getObligation(sb.toString());
+		super(exp, POType.CASES_EXHAUSTIVE, ctxt);
+		
+		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp);
+		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());
+		initialCases.remove(0);
+		
+		PExp pred = recOnExp(exp, initialCases, initialExp);
+		
+		//valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
-}
-;
+	
+	
+	private PExp recOnExp(ACasesExp exp, List<ACaseAlternative> cases, PExp r) throws AnalysisException{
+		if (cases.isEmpty()){
+			return r;
+		}
+		
+		AOrBooleanBinaryExp orExp = AstExpressionFactory.newAOrBooleanBinaryExp(r, alt2Exp(cases.get(0), exp));
+		
+		List<ACaseAlternative> newCases = new LinkedList<ACaseAlternative>(cases);
+		newCases.remove(0);
+		
+		return recOnExp(exp, newCases, orExp);
+	}
+
+	private PExp alt2Exp(ACaseAlternative alt, ACasesExp exp) throws AnalysisException
+	{
+		if (PPatternAssistantTC.isSimple(alt.getPattern()))
+		{
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), patternToExp(alt.getPattern()));
+			return equalsExp;
+		} else
+		{
+			PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
+
+			AExistsExp existsExp = new AExistsExp();
+
+			ATypeMultipleBind tbind = new ATypeMultipleBind();
+			List<PPattern> plist = new LinkedList<PPattern>();
+			plist.add(alt.getPattern());
+			tbind.setPlist(plist);
+			tbind.setType(exp.getExpression().getType());
+			List<PMultipleBind> bindList = new LinkedList<PMultipleBind>();
+			bindList.add(tbind);
+			existsExp.setBindList(bindList);
+
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression(), matching);
+			existsExp.setPredicate(equalsExp);
+
+			return existsExp;
+		}
+	}
+
+};

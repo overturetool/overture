@@ -21,7 +21,8 @@
     <module>combinatorialtesting</module>
     <module>developerutils</module>
     <module>latex</module>
-    <module>poviewer</module>
+    <module>poviewer-string-based</module>
+	<module>poviewer</module>
     <module>quickinterpreter</module>
     <module>uml2</module>
     <module>rttraceviewer</module>

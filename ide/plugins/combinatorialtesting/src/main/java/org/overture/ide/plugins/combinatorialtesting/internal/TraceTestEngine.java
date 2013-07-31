@@ -72,7 +72,6 @@ public class TraceTestEngine
 
 							monitor.done();
 							display.updateView(texe.project);
-							threadFinished();
 						}
 
 						public void traceStart(String traceName)
@@ -88,6 +87,12 @@ public class TraceTestEngine
 							out.println("Message: " + message);
 							monitor.done();
 							display.updateView(texe.project);
+							threadFinished();
+						}
+
+						@Override
+						public void terminating()
+						{
 							threadFinished();
 						}
 					});

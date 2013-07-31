@@ -23,9 +23,17 @@
 
 package org.overture.pog.obligation;
 
+import java.util.List;
+
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.pog.utility.ContextHelper;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 
@@ -35,12 +43,61 @@ public class POCaseContext extends POContext
 	public final PType type;
 	public final PExp exp;
 
+	
+
+
+
 	public POCaseContext(PPattern pattern, PType type, PExp exp)
 	{
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
 	} 
+
+	
+
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		if (PPatternAssistantTC.isSimple(pattern)){
+			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
+			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
+			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			equalsExp.setLeft(matching);
+			equalsExp.setRight(exp);
+			impliesExp.setLeft(equalsExp);
+			impliesExp.setRight(stitch);
+			return impliesExp;
+		}
+		else
+		{
+			AExistsExp existsExp = new AExistsExp();
+			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(pattern, type);
+			existsExp.setBindList(bindList);
+			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
+			equalsExp.setLeft(matching);
+			equalsExp.setRight(exp);
+							
+			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
+			impliesExp.setLeft(equalsExp);
+			
+			ALetDefExp letDefExp = new ALetDefExp();
+			letDefExp.setLocalDefs(pattern.getDefinitions());
+			letDefExp.setExpression(stitch);
+
+			impliesExp.setRight(letDefExp);
+			
+			existsExp.setPredicate(impliesExp);
+			    		
+    		return existsExp;
+		}
+
+	}
+
+
+
 
 	@Override
 	public String getContext()
