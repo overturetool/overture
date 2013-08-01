@@ -7,11 +7,13 @@ import java.util.Vector;
 public class CollectedContextException extends ContextException implements ICollectedRuntimeExceptions
 {
 	public final List<Exception> exceptions;
+	String message = "";
 
 	public CollectedContextException(ContextException e,
 			List<Exception> exceptions)
 	{
 		super(e.number, e.getMessage(), e.location, e.ctxt);
+		message = e.getMessage();
 		this.exceptions = exceptions;
 	}
 
@@ -36,4 +38,10 @@ public class CollectedContextException extends ContextException implements IColl
 		return this.exceptions;
 	}
 
+
+	@Override
+	public String getMessage()
+	{
+		return message;
+	}
 }

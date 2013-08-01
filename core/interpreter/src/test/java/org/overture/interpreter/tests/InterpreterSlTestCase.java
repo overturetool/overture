@@ -85,7 +85,7 @@ public class InterpreterSlTestCase extends InterpreterBaseTestCase
 				result = new Result<Value>(val, new Vector<IMessage>(), new Vector<IMessage>());
 			} catch (Exception e)
 			{
-				result = new Result<Value>(new SeqValue(e.getMessage()), new Vector<IMessage>(), new Vector<IMessage>());
+				result = ExecutionToResultTranslator.wrapValue(e);
 			}
 
 			compareResults(result, file.getName() + ".result");

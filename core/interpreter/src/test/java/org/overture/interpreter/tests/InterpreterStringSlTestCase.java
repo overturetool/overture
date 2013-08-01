@@ -6,20 +6,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.interpreter.runtime.ICollectedRuntimeExceptions;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
 {
@@ -88,19 +86,7 @@ public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
 				System.out.println(file.getName() + " -> " + val);
 			} catch (Exception e)
 			{
-				String message =e.getMessage();
-				if(e instanceof ICollectedRuntimeExceptions)
-				{
-					List<String> messages = new Vector<String>();
-					for (Exception err : ((ICollectedRuntimeExceptions) e).getCollectedExceptions())
-					{
-						messages.add(err.getMessage());
-					}
-					Collections.sort(messages);
-					message = messages.toString();
-				}
-				//TODO change this to use the error collection of messages
-				result = new Result<String>(message, new Vector<IMessage>(), new Vector<IMessage>());
+				result = ExecutionToResultTranslator.wrap(e);
 			}
 			compareResults(result, file.getName() + ".result");
 		}
