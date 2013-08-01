@@ -1,0 +1,50 @@
+import java.util.List;
+
+public class Functions {
+
+	public int f1() {
+
+		if (1 == 1) {
+
+			return 1;
+
+		} else {
+
+			return 2;
+
+		}
+
+	}
+
+	public int f2() {
+
+		if (1 == 1) {
+
+			if (2 == 2) {
+
+				return 3;
+
+			} else if (3 == 3) {
+
+				return 4;
+
+			} else {
+
+				return 5;
+
+			}
+
+		} else {
+
+			return 6;
+
+		}
+
+	}
+
+	public int f3() {
+
+		return 5;
+	}
+
+}
