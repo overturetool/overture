@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterSlTestCase">
+<message column="3" line="16" message="Error 4029: Sequence comprehension bindings must be one numeric value in 'A' (seqcomp-03.vdm) at line 16:3" messageType="error" number="4029" resource="seqcomp-03.vdm.result"/>
 <result>
-<output object="Error 4029: Sequence comprehension bindings must be one numeric value in 'A' (seqcomp-03.vdm) at line 16:3" resource="seqcomp-03.vdm" value="Error 4029: Sequence comprehension bindings must be one numeric value in 'A' (seqcomp-03.vdm) at line 16:3"/>
+<output object="[]" resource="seqcomp-03.vdm" value="[]"/>
 </result>
 </testResult>

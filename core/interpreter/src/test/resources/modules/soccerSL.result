@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.framework.ModuleTestCase">
+<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
 <result>
 <output object="Error 3182: Name 'SOCCER_EXPL`SUBSTITUTION' is not in scope in 'SOCCER_IMPL' (console) at line 1:1" resource="soccerSL" value="Error 3182: Name 'SOCCER_EXPL`SUBSTITUTION' is not in scope in 'SOCCER_IMPL' (console) at line 1:1"/>
 </result>
