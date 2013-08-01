@@ -122,7 +122,7 @@ public class ExitStatement extends Statement
 	@Override
 	public Expression findExpression(int lineno)
 	{
-		return expression.findExpression(lineno);
+		return expression == null ? null : expression.findExpression(lineno);
 	}
 
 	@Override
