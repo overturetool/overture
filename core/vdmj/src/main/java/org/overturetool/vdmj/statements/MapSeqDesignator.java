@@ -32,7 +32,9 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.MapType;
+import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.SeqType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
@@ -94,13 +96,27 @@ public class MapSeqDesignator extends StateDesignator
 
 			if (!etype.isNumeric())
 			{
-				report(3243, "Seq element assignment is not numeric");
+				report(3243, "Seq index is not numeric");
 				detail("Actual", etype);
 			}
 			else
 			{
 				result.add(seqType.seqof);
 			}
+		}
+		
+		if (rtype.isFunction())
+		{
+			// Error case, but improves errors if we work out the return type
+			FunctionType ftype = rtype.getFunction();
+			result.add(ftype.result);
+		}
+
+		if (rtype.isOperation())
+		{
+			// Error case, but improves errors if we work out the return type
+			OperationType otype = rtype.getOperation();
+			result.add(otype.result);
 		}
 
 		if (result.isEmpty())

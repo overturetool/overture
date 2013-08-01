@@ -25,11 +25,14 @@ package org.overturetool.vdmj.statements;
 
 import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
+import org.overturetool.vdmj.definitions.DefinitionSet;
 import org.overturetool.vdmj.definitions.ExternalDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.types.FunctionType;
+import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.UnknownType;
 import org.overturetool.vdmj.values.Value;
@@ -64,7 +67,28 @@ public class IdentifierDesignator extends StateDesignator
 
 			if (def == null)
 			{
-				report(3247, "Unknown variable '" + name + "' in assignment");
+				DefinitionSet matches = env.findMatches(exname);
+				
+				if (!matches.isEmpty())
+				{
+					Definition match = matches.iterator().next();	// Just take first
+					
+					if (match.isFunction())
+					{
+						report(3247, "Function apply not allowed in state designator");
+					}
+					else
+					{
+						report(3247, "Operation call not allowed in state designator");
+					}
+					
+					return match.getType();
+				}
+				else
+				{
+					report(3247, "Symbol '" + name + "' is not an updatable variable");
+				}
+				
 				return new UnknownType(location);
 			}
 			else if (!def.isUpdatable())
@@ -96,6 +120,16 @@ public class IdentifierDesignator extends StateDesignator
 			if (def == null)
 			{
 				report(3247, "Unknown state variable '" + name + "' in assignment");
+				return new UnknownType(name.location);
+			}
+			else if (def.isFunction())
+			{
+				report(3247, "Function apply not allowed in state designator");
+				return new UnknownType(name.location);
+			}
+			else if (def.isOperation())
+			{
+				report(3247, "Operation call not allowed in state designator");
 				return new UnknownType(name.location);
 			}
 			else if (!def.isUpdatable())
