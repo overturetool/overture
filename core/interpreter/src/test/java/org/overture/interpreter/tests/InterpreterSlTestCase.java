@@ -13,12 +13,11 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
-import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class InterpreterSlTestCase extends InterpreterBaseTestCase
 {
