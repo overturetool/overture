@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ADefLetDefStm;
@@ -36,6 +39,18 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	public StmVisitorCG()
 	{
 	}
+	
+	@Override
+	public PStmCG defaultPExp(PExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		AReturnStmCG returnStm = new AReturnStmCG();
+		
+		PExpCG exp =  node.apply(question.getExpVisitor(), question);
+		returnStm.setExp(exp);
+		
+		return returnStm;
+	}	
 	
 	@Override
 	public PStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
@@ -122,6 +137,40 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
+	public PStmCG caseAIfExp(AIfExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PExpCG ifExp = node.getTest().apply(question.getExpVisitor(), question);
+		PStmCG then = node.getThen().apply(question.getStatementVisitor(), question);
+
+		AIfStmCG ifStm = new AIfStmCG();
+
+		ifStm.setIfExp(ifExp);
+		ifStm.setThenStm(then);
+		LinkedList<AElseIfExp> elseIfs = node.getElseList();	
+		
+		for (AElseIfExp exp : elseIfs)
+		{
+			ifExp = exp.getElseIf().apply(question.getExpVisitor(), question);
+			then = exp.getThen().apply(question.getStatementVisitor(), question);
+						
+			AElseIfStmCG elseIfStm = new AElseIfStmCG();
+			elseIfStm.setElseIf(ifExp);
+			elseIfStm.setThenStm(then);
+			
+			ifStm.getElseIf().add(elseIfStm);
+		}
+		
+		if(node.getElse() != null)
+		{
+			PStmCG elseStm = node.getElse().apply(question.getStatementVisitor(), question);
+			ifStm.setElseStm(elseStm);
+		}
+
+		return ifStm;
+	}
+	
+	@Override
 	public PStmCG caseAIfStm(AIfStm node, CodeGenInfo question)
 			throws AnalysisException
 	{
@@ -158,6 +207,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 		return ifStm;
 		
 	}
+	
 	
 	@Override
 	public PStmCG caseASkipStm(ASkipStm node, CodeGenInfo question)

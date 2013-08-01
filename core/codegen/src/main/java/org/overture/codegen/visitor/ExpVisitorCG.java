@@ -149,14 +149,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 		}
 		else
 		{
-			
 			throw new AnalysisException("Unexpected seq type");
 		}
 		
 		//TODO: For the empty sequence [] the type is the unknown type
 		//This is a problem if the assignment var1 is a field
 		//That has a declared type or we are talking about an assignment
-		
 		LinkedList<PExp> members = node.getMembers();
 		for (PExp member : members)
 		{

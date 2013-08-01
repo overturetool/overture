@@ -31,55 +31,50 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		this.declAssistant = new DeclAssistant();
 	}
 	
-//	@Override
-//	public PDeclCG caseAExplicitFunctionDefinition(
-//			AExplicitFunctionDefinition node, CodeGenInfo question)
-//			throws AnalysisException
-//	{
-//		if(node.getIsCurried() || node.getIsUndefined() || node.getIsTypeInvariant())
-//			return null;
-//		
-//		String access = node.getAccess().getAccess().toString();
-//		boolean isStatic = false;
-//		String operationName = node.getName().getName();
-//		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
-//		PExpCG body = node.getBody().apply(question.getExpVisitor(), question);
-//		boolean isAbstract = body == null;
-//		
-//		
-//		AMethodDeclCG method = new AMethodDeclCG();
-//		
-//		method.setAccess(access);
-//		method.setStatic(isStatic);
-//		method.setReturnType(returnType);
-//		method.setName(operationName);		
-//		//FIXME:
-//		//method.setBody(body);
-//		method.setIsConstructor(isConstructor);
-//		method.setAbstract(isAbstract);
-//		
-//		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
-//		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
-//
-//		//((AFunctionType) node.getType()).getParameters()
-//		node.getP
-//		
-//		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
-//		
-//		for(int i = 0; i < paramPatterns.size(); i++)
-//		{
-//			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
-//			String name = paramPatterns.get(i).toString();
-//			
-//			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-//			param.setType(type);
-//			param.setName(name);
-//			
-//			formalParameters.add(param);
-//		}
-//		
-//		return method;
-//	}
+	@Override
+	public PDeclCG caseAExplicitFunctionDefinition(
+			AExplicitFunctionDefinition node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		if(node.getIsCurried() || node.getIsUndefined() || node.getIsTypeInvariant())
+			return null;
+		
+		String access = node.getAccess().getAccess().toString();
+		boolean isStatic = false;
+		String operationName = node.getName().getName();
+
+		PTypeCG returnType = ((AFunctionType) node.getType()).getResult().apply(question.getTypeVisitor(), question);
+		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
+		boolean isAbstract = body == null;
+		
+		AMethodDeclCG method = new AMethodDeclCG();
+		
+		method.setAccess(access);
+		method.setStatic(isStatic);
+		method.setReturnType(returnType);
+		method.setName(operationName);		
+		method.setBody(body);
+		method.setAbstract(isAbstract);
+		
+		List<PType> ptypes = ((AFunctionType) node.getType()).getParameters();
+		List<PPattern> paramPatterns = node.getParamPatternList().get(0);
+		
+		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
+		
+		for(int i = 0; i < paramPatterns.size(); i++)
+		{
+			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			String name = paramPatterns.get(i).toString();
+			
+			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
+			param.setType(type);
+			param.setName(name);
+			
+			formalParameters.add(param);
+		}
+		
+		return method;
+	}
 	
 	@Override
 	public PDeclCG caseAExplicitOperationDefinition(
