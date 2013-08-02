@@ -89,7 +89,7 @@ types
          
 types
 
-  EngageState = <AAH_off> | <AAH_started> | <AAH_on> | <pressed_once> |
+public  EngageState = <AAH_off> | <AAH_started> | <AAH_on> | <pressed_once> |
                 <AAH_closing> | <pressed_twice>;
 
 values
@@ -160,9 +160,9 @@ types
     mode: ControlModeSwitch
     aah : ControlButton;
 
-  ControlModeSwitch = <Rot> | <Tran>;
+ public ControlModeSwitch = <Rot> | <Tran>;
 
-  ControlButton = <Up> | <Down>;
+ public ControlButton = <Up> | <Down>;
   
  public HandGripPosition:: vert  : AxisCommand
                      horiz : AxisCommand
@@ -190,7 +190,7 @@ functions
 
 types 
 
-  ThrusterName = <B1> | <B2> | <B3> | <B4> | <F1> | <F2> | <F3> | <F4> |
+ public ThrusterName = <B1> | <B2> | <B3> | <B4> | <F1> | <F2> | <F3> | <F4> |
                  <L1R>| <L1F>| <R2R>| <R2F>| <L3R>| <L3F>| <R4R>| <R4F>|
                  <D1R>| <D1F>| <D2R>| <D2F>| <U3R>| <U3F>| <U4R>| <U4F>;
 
