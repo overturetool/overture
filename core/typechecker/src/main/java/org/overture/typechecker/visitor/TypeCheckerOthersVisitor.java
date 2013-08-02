@@ -41,7 +41,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -83,6 +82,12 @@ public class TypeCheckerOthersVisitor extends
 			if (node.getBind() instanceof ATypeBind) {
 				ATypeBind typebind = (ATypeBind) node.getBind();
 				typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+				
+				//resolve pattern such that it is resolved before it is cloned later in newAMultiBindListDefinition
+				if(node.getBind().getPattern()!=null)
+				{
+					PPatternAssistantTC.typeResolve(node.getBind().getPattern(), rootVisitor, question);
+				}
 				
 				if (!TypeComparator.compatible(typebind.getType(), type)) {
 					TypeCheckerErrors.report(3198,

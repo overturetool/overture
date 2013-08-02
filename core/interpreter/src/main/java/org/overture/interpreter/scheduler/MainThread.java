@@ -23,10 +23,14 @@
 
 package org.overture.interpreter.scheduler;
 
+import java.util.Vector;
+
 import org.overture.ast.expressions.PExp;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.runtime.CollectedContextException;
+import org.overture.interpreter.runtime.CollectedExceptions;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ThreadState;
@@ -48,7 +52,7 @@ public class MainThread extends SchedulablePoolThread
 	public final PExp expression;
 
 	private Value result = new UndefinedValue();
-	private Exception exception = null;
+	private Vector<Exception> exception = new Vector<Exception>();
 
 	public MainThread(PExp expr, Context ctxt)
 	{
@@ -56,7 +60,7 @@ public class MainThread extends SchedulablePoolThread
 
 		this.expression = expr;
 		this.ctxt = ctxt;
-		this.exception = null;
+		this.exception = new Vector<Exception>();
 
 		setName("MainThread-" + getId());
 	}
@@ -154,9 +158,15 @@ public class MainThread extends SchedulablePoolThread
 
 	public Value getResult() throws Exception
 	{
-		if (exception != null)
+		if (!exception.isEmpty())
 		{
-			throw exception;
+			if(exception.firstElement() instanceof ContextException)
+			{
+				throw new CollectedContextException((ContextException) exception.firstElement(),exception);
+			}else
+			{
+				throw new CollectedExceptions(exception);
+			}
 		}
 
 		return result;
@@ -165,7 +175,7 @@ public class MainThread extends SchedulablePoolThread
 	public void setException(Exception e)
 	{
 		Console.err.println(e.getMessage());
-		exception = e;
+		exception.add(e);
 
 		if (ctxt.threadState.dbgp != null)
 		{

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.intepreter.tests.external.NewModuleTestCase">
+<testResult type="org.overture.interpreter.tests.external.ExternalStringInterpreterSlTestCase">
+<message column="10" line="11" message="Error 4099: Can't get sequence value of &lt;ERROR&gt; in 'A' (subseq-02.vdm) at line 11:10" messageType="error" number="4099" resource="subseq-02.vdm.result"/>
 <result>
-<output object="Error 4099: Can't get sequence value of &lt;ERROR&gt; in 'A' (subseq-02.vdm) at line 11:10" resource="subseq-02.vdm" value="Error 4099: Can't get sequence value of &lt;ERROR&gt; in 'A' (subseq-02.vdm) at line 11:10"/>
+<output object="[]" resource="subseq-02.vdm" value="[]"/>
 </result>
 </testResult>

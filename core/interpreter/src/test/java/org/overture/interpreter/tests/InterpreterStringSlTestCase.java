@@ -14,10 +14,10 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
 {
@@ -86,7 +86,7 @@ public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
 				System.out.println(file.getName() + " -> " + val);
 			} catch (Exception e)
 			{
-				result = new Result<String>(e.getMessage(), new Vector<IMessage>(), new Vector<IMessage>());
+				result = ExecutionToResultTranslator.wrap(e);
 			}
 			compareResults(result, file.getName() + ".result");
 		}
