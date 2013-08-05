@@ -81,10 +81,10 @@ public class POFunctionDefinitionContext extends POContext
 		if (addPrecond && precondition != null)
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-			implies.setLeft(precondition);
+			implies.setLeft(precondition.clone());
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(stitch);
-			forAllExp.setPredicate(implies);
+			forAllExp.setPredicate(implies.clone());
 		}
 		else
 		{

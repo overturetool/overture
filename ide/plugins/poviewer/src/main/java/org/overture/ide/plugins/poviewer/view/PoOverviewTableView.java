@@ -62,7 +62,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 	protected TableViewer viewer;
 	protected Action doubleClickAction;
-	final Display display = Display.getCurrent();
+	protected Display display = Display.getCurrent();
 	protected IVdmProject project;
 	
 	private ViewerFilter provedFilter = new ViewerFilter() {
