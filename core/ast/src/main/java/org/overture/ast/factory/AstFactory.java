@@ -918,6 +918,7 @@ public class AstFactory {
 		result.setPathname(namesClonable);
 		result.setTerms(terms);
 		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setType(newAOperationType(location));
 		
 		return result;
 	}
