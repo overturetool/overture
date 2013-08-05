@@ -413,7 +413,7 @@ public class LexTokenReader extends BacktrackInputReader
 			charpos += Properties.parser_tabstop - charpos
 					% Properties.parser_tabstop;
 		}
-		else
+		else if(c!=(char)-1)
 		{
 			charpos++;
 		}
