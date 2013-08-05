@@ -149,7 +149,7 @@ public class SetPattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueSet values = null;

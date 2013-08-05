@@ -120,9 +120,9 @@ public class MapCompExpression extends MapExpression
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "map comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

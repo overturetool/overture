@@ -133,7 +133,7 @@ public class ConcatenationPattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueList values = null;
@@ -158,7 +158,7 @@ public class ConcatenationPattern extends Pattern
 			patternFail(4108, "Sequence concatenation pattern does not match expression");
 		}
 
-		// If the left and right sizes are zero (ie. flexible) then we have to
+		// If the left and right sizes are ANY (ie. flexible) then we have to
 		// generate a set of splits of the values, and offer these to sub-matches
 		// to see whether they fit. Otherwise, there is just one split at this level.
 
@@ -168,22 +168,39 @@ public class ConcatenationPattern extends Pattern
 		{
 			if (rlen == ANY)
 			{
-				// Divide size roughly between l/r initially, then diverge
-				int half = size/2;
-				if (half > 0) leftSizes.add(half);
-
-				for (int delta=1; half - delta > 0; delta++)
+				if (size == 0)
 				{
-					leftSizes.add(half + delta);
-					leftSizes.add(half - delta);
+					// Can't match a ^ b with []
 				}
-
-				if (size % 2 == 1)
+				else if (size % 2 == 1)
 				{
+					// Odd => add the middle, then those either side
+					int half = size/2 + 1;
+					if (half > 0) leftSizes.add(half);
+
+					for (int delta=1; half - delta > 0; delta++)
+					{
+						leftSizes.add(half + delta);
+						leftSizes.add(half - delta);
+					}
+
+					leftSizes.add(0);
+				}
+				else
+				{
+					// Even => add those either side of the middle
+					int half = size/2;
+					if (half > 0) leftSizes.add(half);
+
+					for (int delta=1; half - delta > 0; delta++)
+					{
+						leftSizes.add(half + delta);
+						leftSizes.add(half - delta);
+					}
+					
 					leftSizes.add(size);
+					leftSizes.add(0);
 				}
-
-				if (!leftSizes.contains(0))	leftSizes.add(0);	// Always as a last resort
 			}
 			else
 			{

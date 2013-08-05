@@ -125,9 +125,9 @@ public class LetBeStExpression extends Expression
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "let be st expression", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

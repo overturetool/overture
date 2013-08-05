@@ -122,9 +122,9 @@ public class SetCompExpression extends SetExpression
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "set comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

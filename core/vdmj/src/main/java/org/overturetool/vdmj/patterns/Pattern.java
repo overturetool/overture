@@ -152,7 +152,7 @@ public abstract class Pattern implements Serializable
 	}
 
 	/** Get a name/value pair list for the pattern's variables. */
-	protected abstract List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public abstract List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException;
 
 	/** Get the type(s) that could match this pattern. */

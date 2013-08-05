@@ -23,6 +23,9 @@
 
 package org.overturetool.vdmj.values;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overturetool.vdmj.patterns.Pattern;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.PatternMatchException;
@@ -31,33 +34,47 @@ public class Quantifier
 {
 	public final Pattern pattern;
 	public final ValueList values;
-	private NameValuePairList[] nvlist;
+	private List<NameValuePairList> nvlist;
 
 	public Quantifier(Pattern pattern, ValueList values)
 	{
 		this.pattern = pattern;
 		this.values = values;
-		this.nvlist = new NameValuePairList[values.size()];
+		this.nvlist = new Vector<NameValuePairList>(values.size());
 	}
 
-	public int size()
+	public int size(Context ctxt, boolean allPossibilities)
 	{
-		return nvlist.length;
+		for (Value value: values)
+		{
+			try
+			{
+				if (allPossibilities)
+				{
+					nvlist.addAll(pattern.getAllNamedValues(value, ctxt));
+				}
+				else
+				{
+					nvlist.add(pattern.getNamedValues(value, ctxt));
+				}
+			}
+			catch (PatternMatchException e)
+			{
+				// Should never happen
+			}
+		}
+		
+		return nvlist.size();
 	}
 
-	public NameValuePairList get(int index, Context ctxt)
+	public NameValuePairList get(int index)
 		throws PatternMatchException
 	{
-		if (index >= nvlist.length)		// no values
+		if (index >= nvlist.size())		// no values
 		{
 			return new NameValuePairList();
 		}
 
-		if (nvlist[index] == null)
-		{
-			nvlist[index] = pattern.getNamedValues(values.get(index), ctxt);
-		}
-
-		return nvlist[index];
+		return nvlist.get(index);
 	}
 }

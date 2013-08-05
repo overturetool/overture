@@ -112,7 +112,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
 			if (quantifiers.finished())		// No entries at all
 			{
@@ -120,7 +120,7 @@ public class TraceLetBeStBinding extends TraceDefinition
 				return node;
 			}
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "TRACE", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

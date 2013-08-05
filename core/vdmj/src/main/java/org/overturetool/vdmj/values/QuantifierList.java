@@ -38,7 +38,7 @@ public class QuantifierList extends Vector<Quantifier>
 	private NameValuePairList result = null;
 	private boolean done = false;
 
-	public void init()
+	public void init(Context ctxt, boolean allPossibilities)
 	{
 		count = size();
 		size = new int[count];
@@ -48,7 +48,7 @@ public class QuantifierList extends Vector<Quantifier>
 
 		for (int i=0; i<count; i++)
 		{
-			size[i] = get(i).size();
+			size[i] = get(i).size(ctxt, allPossibilities);
 			someData = someData || size[i] > 0;
 			oneHasNoData = oneHasNoData || size[i] == 0;
 			next[i] = 0;
@@ -80,7 +80,7 @@ public class QuantifierList extends Vector<Quantifier>
 		return result;
 	}
 
-	public boolean hasNext(Context ctxt)
+	public boolean hasNext()
 	{
 		while (!done)
 		{
@@ -91,7 +91,7 @@ public class QuantifierList extends Vector<Quantifier>
         		for (int i=0; i<count; i++)
         		{
         			Quantifier q = get(i);
-        			result.addAll(q.get(next[i], ctxt));
+        			result.addAll(q.get(next[i]));
         		}
 
         		permute();

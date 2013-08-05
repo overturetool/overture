@@ -165,7 +165,7 @@ public class MapPattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		ValueMap values = null;

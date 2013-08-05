@@ -82,7 +82,7 @@ public class IgnorePattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 		result.add(new NameValuePairList());

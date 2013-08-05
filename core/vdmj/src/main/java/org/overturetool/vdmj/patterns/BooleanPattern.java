@@ -63,7 +63,7 @@ public class BooleanPattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 		throws PatternMatchException
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();

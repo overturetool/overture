@@ -118,9 +118,9 @@ public class ExistsExpression extends Expression
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "exists", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

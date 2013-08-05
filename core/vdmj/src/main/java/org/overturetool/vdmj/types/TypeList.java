@@ -94,10 +94,10 @@ public class TypeList extends Vector<Type>
 			quantifiers.add(q);
 		}
 
-		quantifiers.init();
+		quantifiers.init(ctxt, true);
 		ValueList results = new ValueList();
 
-		while (quantifiers.hasNext(ctxt))
+		while (quantifiers.hasNext())
 		{
 			NameValuePairList nvpl = quantifiers.next();
 			ValueList list = new ValueList();

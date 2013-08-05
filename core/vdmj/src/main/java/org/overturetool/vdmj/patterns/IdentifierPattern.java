@@ -81,7 +81,7 @@ public class IdentifierPattern extends Pattern
 	}
 
 	@Override
-	protected List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
+	public List<NameValuePairList> getAllNamedValues(Value expval, Context ctxt)
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 		NameValuePairList list = new NameValuePairList();

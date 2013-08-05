@@ -117,9 +117,9 @@ public class ForAllExpression extends Expression
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(location, "forall", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
