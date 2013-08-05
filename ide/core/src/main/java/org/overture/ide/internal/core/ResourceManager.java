@@ -40,8 +40,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.jobs.Job;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
@@ -522,14 +524,27 @@ public class ResourceManager implements IResourceChangeListener
 
 	private void scheduleBuilder(IVdmProject project)
 	{
-		try
+		final IVdmProject vdmProject = project;
+		Job job = new Job("Refresh resources")
 		{
-			project.getModel().setIsTypeChecked(false);
-			project.typeCheck(true, new NullProgressMonitor());
-		} catch (CoreException e)
-		{
-			VdmCore.log("Faild to auto build project", e);
-		}
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				try
+				{
+					vdmProject.getModel().setIsTypeChecked(false);
+					vdmProject.typeCheck(true, monitor);
+				} catch (CoreException e)
+				{
+					VdmCore.log("Faild to auto build project", e);
+				}
+				return Status.OK_STATUS;
+			}
+		};
+
+		job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		job.schedule();
 	}
 
 }
