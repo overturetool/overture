@@ -12,11 +12,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.overture.combinatorialtesting.vdmj.server.ConnectionListener;
+import org.overture.combinatorialtesting.vdmj.server.IClientMonitor;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.ide.plugins.combinatorialtesting.OvertureTracesPlugin;
 import org.overture.ide.plugins.combinatorialtesting.store.StorageManager;
-import org.overture.combinatorialtesting.vdmj.server.ConnectionListener;
-import org.overture.combinatorialtesting.vdmj.server.IClientMonitor;
 
 public class TraceTestEngine
 {
@@ -47,7 +47,8 @@ public class TraceTestEngine
 				try
 				{
 					Integer port = TestEngineDelegate.findFreePort();
-					if (preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_FIXED_PORT) && preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE))
+					if (preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_FIXED_PORT)
+							&& preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE))
 					{
 						port = 1213;
 					}
@@ -57,18 +58,21 @@ public class TraceTestEngine
 						public void initialize(String module)
 						{
 							// System.out.println("CT init recieved");
-							out.println(texe.project.getName()+":"+module+" Initialized");
+							out.println(texe.project.getName() + ":" + module
+									+ " Initialized");
 							monitor.subTask(module);
 						}
 
 						public void progress(String traceName, Integer progress)
 						{
-							out.println(texe.project.getName()+":"+traceName+" Worked "	+ progress+"%");
+							out.println(texe.project.getName() + ":"
+									+ traceName + " Worked " + progress + "%");
 						}
 
 						public void completed()
 						{
-							out.println(texe.project.getName()+" Completed execution");
+							out.println(texe.project.getName()
+									+ " Completed execution");
 
 							monitor.done();
 							display.updateView(texe.project);
@@ -81,8 +85,9 @@ public class TraceTestEngine
 						}
 
 						@Override
-						public void traceError(String message) {
-							
+						public void traceError(String message)
+						{
+
 							out.println("Error CT runtime");
 							out.println("Message: " + message);
 							monitor.done();
@@ -117,7 +122,7 @@ public class TraceTestEngine
 				{
 					try
 					{
-						if(p!=null)
+						if (p != null)
 						{
 							p.exitValue();
 						}

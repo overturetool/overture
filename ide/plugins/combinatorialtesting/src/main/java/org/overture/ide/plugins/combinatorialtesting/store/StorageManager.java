@@ -30,10 +30,10 @@ public class StorageManager
 	}
 
 	public static File getCtOutputFolder(IVdmProject project)
-	{//project.getLocation().getModelBuildPath().getOutput().
-		
-//		IProject p = (IProject) project.getAdapter(IProject.class);
-//		return new File(p.getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
+	{// project.getLocation().getModelBuildPath().getOutput().
+
+		// IProject p = (IProject) project.getAdapter(IProject.class);
+		// return new File(p.getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
 		return new File(project.getModelBuildPath().getOutput().getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
 	}
 

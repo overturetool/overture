@@ -31,7 +31,7 @@ import org.overture.ide.plugins.combinatorialtesting.TracesXmlStoreReader;
 import org.overture.ide.plugins.combinatorialtesting.views.TraceAstUtility;
 import org.overture.interpreter.traces.TraceReductionType;
 
-public class VdmjTracesHelper 
+public class VdmjTracesHelper
 {
 	final String COVERAGE_DIR_NAME = "generated/coverage";
 	public final IVdmProject project;
@@ -118,19 +118,22 @@ public class VdmjTracesHelper
 			IProgressMonitor monitor, ITracesDisplay display)
 			throws IOException, CoreException
 	{
-		evaluateTraces(container, traceDef, 0,null,0,monitor, display, false);
+		evaluateTraces(container, traceDef, 0, null, 0, monitor, display, false);
 	}
 
 	public void evaluateTraces(INode container, ANamedTraceDefinition traceDef,
 			float subset, TraceReductionType traceReductionType, long seed,
-			IProgressMonitor monitor, ITracesDisplay display) throws IOException, CoreException
+			IProgressMonitor monitor, ITracesDisplay display)
+			throws IOException, CoreException
 	{
-		evaluateTraces(container, traceDef, subset,traceReductionType,seed,monitor, display, true);
+		evaluateTraces(container, traceDef, subset, traceReductionType, seed, monitor, display, true);
 	}
-	
-	private void evaluateTraces(INode container, ANamedTraceDefinition traceDef,
-			float subset, TraceReductionType traceReductionType, long seed,
-			IProgressMonitor monitor, ITracesDisplay display, boolean useReduction) throws IOException, CoreException
+
+	private void evaluateTraces(INode container,
+			ANamedTraceDefinition traceDef, float subset,
+			TraceReductionType traceReductionType, long seed,
+			IProgressMonitor monitor, ITracesDisplay display,
+			boolean useReduction) throws IOException, CoreException
 	{
 		List<TraceExecutionSetup> traceSetups = new Vector<TraceExecutionSetup>();
 
@@ -138,29 +141,29 @@ public class VdmjTracesHelper
 		{
 			if (traceDef != null)
 			{
-				TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), traceDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+				TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), traceDef.getName().getName(), getCTRunCoverageDir(), subset, traceReductionType, seed, useReduction);
 				traceSetups.add(texe);
 			} else
 			{
 				for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(container))
 				{
-					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), tDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(container), tDef.getName().getName(), getCTRunCoverageDir(), subset, traceReductionType, seed, useReduction);
 					traceSetups.add(texe);
 				}
 			}
-		}else
+		} else
 		{
 			for (INode c : TraceAstUtility.getTraceContainers(project))
 			{
 				if (traceDef != null)
 				{
-					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), traceDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+					TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), traceDef.getName().getName(), getCTRunCoverageDir(), subset, traceReductionType, seed, useReduction);
 					traceSetups.add(texe);
 				} else
 				{
 					for (ANamedTraceDefinition tDef : TraceAstUtility.getTraceDefinitions(c))
 					{
-						TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), tDef.getName().getName(), getCTRunCoverageDir(),subset, traceReductionType,seed,useReduction);
+						TraceExecutionSetup texe = new TraceExecutionSetup(project, TraceAstUtility.getContainerName(c), tDef.getName().getName(), getCTRunCoverageDir(), subset, traceReductionType, seed, useReduction);
 						traceSetups.add(texe);
 					}
 				}

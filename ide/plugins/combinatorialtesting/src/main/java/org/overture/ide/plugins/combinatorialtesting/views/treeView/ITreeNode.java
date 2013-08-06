@@ -33,6 +33,6 @@ public interface ITreeNode
 	public boolean hasChildren();
 
 	public boolean hasChild(String name);
-	
+
 	public String getName();
 }

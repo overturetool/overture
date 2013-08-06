@@ -103,33 +103,33 @@ public class TraceAstUtility
 		return containers;
 
 	}
-	
+
 	public static String getContainerName(INode node)
 	{
-		if(node instanceof SClassDefinition)
+		if (node instanceof SClassDefinition)
 		{
-			return ((SClassDefinition)node).getName().getName();
-		}else if(node instanceof AModuleModules)
+			return ((SClassDefinition) node).getName().getName();
+		} else if (node instanceof AModuleModules)
 		{
-			return ((AModuleModules)node).getName().getName();
+			return ((AModuleModules) node).getName().getName();
 		}
 		return null;
 	}
-	
+
 	public static List<ANamedTraceDefinition> getTraceDefinitions(INode node)
 	{
 		return new TraceSearch().getTraces(node);
 	}
-	
+
 	public static INode getTraceDefinitionContainer(ANamedTraceDefinition node)
 	{
 		INode parent = null;
-		parent =node.getAncestor(SClassDefinition.class);
-		if(parent!=null)
+		parent = node.getAncestor(SClassDefinition.class);
+		if (parent != null)
 		{
 			return parent;
 		}
-		parent =node.getAncestor(AModuleModules.class);
+		parent = node.getAncestor(AModuleModules.class);
 		return parent;
 	}
 }

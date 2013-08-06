@@ -30,9 +30,10 @@ public class TraceExecutionSetup
 		this.reductionType = TraceReductionType.NONE;
 		this.seed = 999;
 	}
-	
+
 	public TraceExecutionSetup(final IVdmProject project,
-			final String container, final String traceName, final File coverage,float subset,
+			final String container, final String traceName,
+			final File coverage, float subset,
 			TraceReductionType reductionType, long seed)
 	{
 		this.project = project;
@@ -45,9 +46,10 @@ public class TraceExecutionSetup
 		this.reductionType = reductionType;
 		this.seed = seed;
 	}
-	
+
 	public TraceExecutionSetup(final IVdmProject project,
-			final String container, final String traceName, final File coverage,float subset,
+			final String container, final String traceName,
+			final File coverage, float subset,
 			TraceReductionType reductionType, long seed, boolean customReduction)
 	{
 		this.project = project;

@@ -250,45 +250,51 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		manager.add(actionSetInconclusiveFilter);
 	}
 
-    private final Image getImage(String path)
-    {
-        ImageDescriptor theDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.combinatorialtesting", path);
-        Image theImage = null;
-        if(theDescriptor != null)
-            theImage = theDescriptor.createImage();
-        return theImage;
-    }
-	
+	private final Image getImage(String path)
+	{
+		ImageDescriptor theDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.combinatorialtesting", path);
+		Image theImage = null;
+		if (theDescriptor != null)
+			theImage = theDescriptor.createImage();
+		return theImage;
+	}
+
 	private void makeActions()
 	{
-		refreshAction = new Action("Refresh") {
+		refreshAction = new Action("Refresh")
+		{
 			@Override
-			public void run() {
-				
-				
-				Job job = new Job("Refresh Projects") {
+			public void run()
+			{
+
+				Job job = new Job("Refresh Projects")
+				{
 
 					@Override
-					protected IStatus run(IProgressMonitor monitor) {
+					protected IStatus run(IProgressMonitor monitor)
+					{
 
 						refreshAction.setEnabled(false);
-						
-						for (IVdmProject proj : TraceAstUtility.getProjects()) {
+
+						for (IVdmProject proj : TraceAstUtility.getProjects())
+						{
 
 							IVdmModel model = proj.getModel();
 							model.refresh(false, null);
 						}
-					
+
 						refreshAction.setEnabled(true);
-						
-						display.asyncExec(new Runnable() {
-							
-							public void run() {
+
+						display.asyncExec(new Runnable()
+						{
+
+							public void run()
+							{
 
 								init();
 							}
 						});
-						
+
 						return Status.OK_STATUS;
 					}
 				};
@@ -317,7 +323,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				Shell dialog = new Shell(display, SWT.DIALOG_TRIM);
 				dialog.setText("Select filtering options");
 				dialog.setSize(200, 200);
-				
+
 				Image ctIcon = getImage(new StringBuilder("icons").append(File.separator).append("ctool16").append(File.separator).append("ct_tsk.png").toString());
 				dialog.setImage(ctIcon);
 
@@ -513,12 +519,12 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 					} else
 						try
 						{
-						IViewPart view=	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
-						if(view instanceof TraceTest)
-						{
-							TraceTest traceTestView = (TraceTest) view;
-							traceTestView.selectionChanged(TracesTreeView.this, event.getSelection());
-						}
+							IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
+							if (view instanceof TraceTest)
+							{
+								TraceTest traceTestView = (TraceTest) view;
+								traceTestView.selectionChanged(TracesTreeView.this, event.getSelection());
+							}
 							gotoTraceDefinition(findTraceTreeNode((TraceTestTreeNode) selection));
 						} catch (PartInitException e)
 						{
@@ -624,7 +630,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 	{
 		viewer.getControl().setFocus();
 	}
-
 
 	private void ConsolePrint(final String message)
 	{
@@ -733,7 +738,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			traceDef = ((TraceTreeNode) selectedItem).getTraceDefinition();
 			container = TraceAstUtility.getTraceDefinitionContainer(traceDef);
 			project = TraceAstUtility.getProject(traceDef);
-		}else if(selectedItem instanceof IVdmProject)
+		} else if (selectedItem instanceof IVdmProject)
 		{
 			project = (IVdmProject) selectedItem;
 		}

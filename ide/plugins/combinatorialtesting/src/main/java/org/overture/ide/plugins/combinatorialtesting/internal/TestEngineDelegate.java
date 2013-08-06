@@ -23,38 +23,37 @@ public class TestEngineDelegate
 {
 	static int sessionId = 0;
 
-	public Process launch(TraceExecutionSetup texe, IPreferenceStore preferences,
-			 File traceFolder, 
-			Integer port) throws CoreException, IOException
+	public Process launch(TraceExecutionSetup texe,
+			IPreferenceStore preferences, File traceFolder, Integer port)
+			throws CoreException, IOException
 	{
-		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences,  traceFolder, port));
+		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences, traceFolder, port));
 
-		IProject project = (IProject)texe.project.getAdapter(IProject.class);
+		IProject project = (IProject) texe.project.getAdapter(IProject.class);
 
 		pb.directory(project.getLocation().toFile());
 
 		if (useRemoteDebug(preferences))
 		{
 			return null;
-		} 
-			
+		}
+
 		Process process = pb.start();
-		
-		//Redirect streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
-		Utils.inheritOutput(process); //Instead of pb.inheritIO() which is Java7 specific;
-		
-		
+
+		// Redirect streams from the trace runner to the streams of this process. If not the trace runner dies on stream
+		// write.
+		Utils.inheritOutput(process); // Instead of pb.inheritIO() which is Java7 specific;
+
 		return process;
 	}
 
 	private List<String> initializeLaunch(TraceExecutionSetup texe,
-			IPreferenceStore preferences,
-			File traceFolder, Integer port)
+			IPreferenceStore preferences, File traceFolder, Integer port)
 			throws CoreException, UnsupportedEncodingException
 	{
 		List<String> commandList = null;
 		Integer debugSessionId = new Integer(getSessionId());
-		if (useRemoteDebug(preferences) )//|| ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))// || ITracesConstants.DEBUG)
 		{
 			debugSessionId = 1;
 			// debugComm.removeSession(debugSessionId.toString());
@@ -62,7 +61,7 @@ public class TestEngineDelegate
 
 		commandList = new ArrayList<String>();
 
-		IProject project = (IProject)texe.project.getAdapter(IProject.class);
+		IProject project = (IProject) texe.project.getAdapter(IProject.class);
 
 		String charSet = project.getDefaultCharset();
 
@@ -106,28 +105,29 @@ public class TestEngineDelegate
 		commandList.add("-tracefolder");
 		commandList.add(traceFolder.toURI().toASCIIString());
 
-		if (texe.coverageFolder!= null)
+		if (texe.coverageFolder != null)
 		{
 			commandList.add("-coverage");
 			commandList.add(texe.coverageFolder.toURI().toASCIIString());
 		}
-		
-		if(texe.customReduction)
+
+		if (texe.customReduction)
 		{
 			commandList.add("-traceReduction");
-			commandList.add("{"+texe.subset+","+texe.reductionType.name()+","+texe.seed+"}");
+			commandList.add("{" + texe.subset + "," + texe.reductionType.name()
+					+ "," + texe.seed + "}");
 		}
 		// commandList.addAll(getExtendedCommands(vdmProject, configuration));
 
 		commandList.addAll(getSpecFiles(texe.project));
-		if (useRemoteDebug(preferences))//|| ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))// || ITracesConstants.DEBUG)
 		{
 			System.out.println("Debugger Arguments:\n"
 					+ getArgumentString(commandList));
 		}
 		commandList.add(0, "java");
 
-		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(project,ITracesConstants.TEST_ENGINE_BUNDLE_IDs,new String[]{}));
+		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
@@ -136,7 +136,7 @@ public class TestEngineDelegate
 			System.out.println("Full Debugger Arguments:\n"
 					+ getArgumentString(commandList));
 		}
-		
+
 		return commandList;
 	}
 
@@ -157,12 +157,12 @@ public class TestEngineDelegate
 	{
 		return preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE);
 	}
-	
-//	private boolean useDebugInfo(IPreferenceStore preferences)
-//			throws CoreException
-//	{
-//		return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
-//	}
+
+	// private boolean useDebugInfo(IPreferenceStore preferences)
+	// throws CoreException
+	// {
+	// return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
+	// }
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
@@ -186,7 +186,6 @@ public class TestEngineDelegate
 		return executeString.trim();
 
 	}
-
 
 	/**
 	 * Returns a free port number on localhost, or -1 if unable to find a free port.

@@ -8,8 +8,7 @@ import org.overture.interpreter.traces.Verdict;
 public class OkTraceViewerFilter extends ViewerFilter
 {
 	@Override
-	public boolean select(Viewer viewer, Object parentElement,
-			Object element)
+	public boolean select(Viewer viewer, Object parentElement, Object element)
 	{
 		if (element instanceof TraceTestTreeNode
 				&& ((TraceTestTreeNode) element).getStatus() == Verdict.PASSED)
