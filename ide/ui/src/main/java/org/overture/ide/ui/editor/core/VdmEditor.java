@@ -52,6 +52,7 @@ import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.types.AFieldField;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -820,7 +821,7 @@ public abstract class VdmEditor extends TextEditor
 		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
 		// the tree until one is found.
 		INode def = null;
-		if (node instanceof PDefinition)
+		if (node instanceof PDefinition ||node instanceof  AFieldField)
 		{
 			def = node;
 		} else if (node != null)
