@@ -71,6 +71,7 @@ public class ConnectionListener extends Thread
 		{
 			while (listening)
 			{
+				try{
 				Socket conn = socket.accept();
 
 				if (group.activeCount() >= 1)
@@ -88,6 +89,10 @@ public class ConnectionListener extends Thread
 				}
 
 				worker.start();
+				}catch (SocketTimeoutException e)
+				{
+//					System.out.println("Listener timed out: " + e.getMessage());
+				} 
 			}
 		} catch (SocketException e)
 		{
