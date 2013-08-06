@@ -21,11 +21,9 @@ package org.overture.ide.ui.outline;
 import java.util.List;
 
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -40,12 +38,12 @@ import org.overture.ide.core.ElementChangedEvent;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 
-@SuppressWarnings("deprecation")
 public class VdmContentOutlinePage extends ContentOutlinePage implements
 		IContentOutlinePage
 {
@@ -63,6 +61,15 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 			if (getControl() == null || getControl().isDisposed())
 				return;
 
+			if (e.getSource() != null
+					&& e.getSource() instanceof VdmElementDelta)
+			{
+				if (((VdmElementDelta) e.getSource()).getElement() != fInput)
+				{
+					return;// the change source was not the one shown here
+				}
+			}
+
 			Display d = getControl().getDisplay();
 			if (d != null)
 			{
@@ -74,10 +81,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 								&& !fOutlineViewer.getControl().isDisposed())
 						{
 
-							fOutlineViewer.setInternalSelectionMode();
 							fOutlineViewer.refresh(true);
 							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
-							fOutlineViewer.setExternalSelectionMode();
 						}
 					}
 				});
@@ -97,10 +102,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	private VdmOutlineViewer fOutlineViewer;
 	private IVdmElement fInput;
 	private ElementChangedListener fListener;
-
-	private ListenerList fSelectionChangedListeners = new ListenerList(ListenerList.IDENTITY);
-
-	boolean inExternalSelectionMode = false;
 
 	private static final int AUTO_EXPAND_LEVEL = 2;
 
@@ -127,22 +128,11 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	public void createControl(Composite parent)
 	{
 
-		fOutlineViewer = new VdmOutlineViewer(this, parent);
+		fOutlineViewer = new VdmOutlineViewer(parent);
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
 		fOutlineViewer.setContentProvider(contentProvider);
-		// fOutlineViewer.setLabelProvider(new VdmOutlineLabelProvider());
-		// uiLabelProvider = new VdmUILabelProvider();
 		fOutlineViewer.setLabelProvider(labelProvider);
 		fOutlineViewer.addSelectionChangedListener(this);
-
-		Object[] listeners = fSelectionChangedListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++)
-		{
-			fSelectionChangedListeners.remove(listeners[i]);
-			fOutlineViewer.addSelectionChangedListener((ISelectionChangedListener) listeners[i]);
-		}
-
-		// addSelectionChangedListener(new VdmSelectionListener());
 
 		registerToolBarActions();
 
@@ -151,7 +141,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	private void registerToolBarActions()
 	{
-
 		IPageSite site = getSite();
 		IActionBars actionBars = site.getActionBars();
 
@@ -245,19 +234,8 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 	@Override
 	public void setFocus()
 	{
-		// TODO Auto-generated method stub
+		this.fOutlineViewer.getControl().setFocus();
 
-	}
-
-	/*
-	 * @see ISelectionProvider#addSelectionChangedListener(ISelectionChangedListener)
-	 */
-	public void addSelectionChangedListener(ISelectionChangedListener listener)
-	{
-		if (fOutlineViewer != null)
-			fOutlineViewer.addSelectionChangedListener(listener);
-		else
-			fSelectionChangedListeners.add(listener);
 	}
 
 	/*
@@ -281,18 +259,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 		return fOutlineViewer.getSelection();
 	}
 
-	/*
-	 * @see ISelectionProvider#removeSelectionChangedListener(ISelectionChangedListener)
-	 */
-	public void removeSelectionChangedListener(
-			ISelectionChangedListener listener)
-	{
-		if (fOutlineViewer != null)
-			fOutlineViewer.removeSelectionChangedListener(listener);
-		else
-			fSelectionChangedListeners.remove(listener);
-	}
-
 	public void setInput(IVdmElement je)
 	{
 		this.fInput = je;
@@ -310,14 +276,18 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 
 	public void selectNode(INode reference)
 	{
-
 		if (fOutlineViewer != null)
 		{
-			inExternalSelectionMode = true;
 			ISelection s = fOutlineViewer.getSelection();
 			if (s instanceof IStructuredSelection)
 			{
 				IStructuredSelection ss = (IStructuredSelection) s;
+				if (ss.getFirstElement() == reference)// this should probably be avoided by the caller but if it is
+														// selected then dont load the UI with the task of doing the
+														// same again
+				{
+					return;
+				}
 				@SuppressWarnings("rawtypes")
 				List elements = ss.toList();
 				if (!elements.contains(reference))
@@ -327,7 +297,6 @@ public class VdmContentOutlinePage extends ContentOutlinePage implements
 					fOutlineViewer.setSelection(s, true);
 				}
 			}
-			inExternalSelectionMode = false;
 		}
 	}
 
