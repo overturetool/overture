@@ -255,7 +255,8 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		hookDoubleClickAction();
 		// contributeToActionBars();
 
-		getViewSite().getPage().addSelectionListener(ITracesConstants.TRACES_VIEW_ID,this);
+		//we do this directly instead
+//		getViewSite().getPage().addSelectionListener(ITracesConstants.TRACES_VIEW_ID,this);
 		
 	}
 

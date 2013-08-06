@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -512,7 +513,12 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 					} else
 						try
 						{
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
+						IViewPart view=	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
+						if(view instanceof TraceTest)
+						{
+							TraceTest traceTestView = (TraceTest) view;
+							traceTestView.selectionChanged(TracesTreeView.this, event.getSelection());
+						}
 							gotoTraceDefinition(findTraceTreeNode((TraceTestTreeNode) selection));
 						} catch (PartInitException e)
 						{
