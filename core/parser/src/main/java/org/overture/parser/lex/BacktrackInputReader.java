@@ -273,7 +273,7 @@ public class BacktrackInputReader extends Reader
 
 	public char readCh()
 	{
-		return (pos == max) ? (char)-1 : data[pos++];
+		return (pos == max-1) ? (char)-1 : data[pos++];
 	}
 
 	/**

@@ -19,6 +19,7 @@
 package org.overture.ide.ui.wizard;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
@@ -45,7 +46,8 @@ public abstract class VdmNewFileWizard extends Wizard implements
 	private String fPageDescription;
 	private IStructuredSelection fStructuredSelection;
 
-	public VdmNewFileWizard() {
+	public VdmNewFileWizard()
+	{
 		setWindowTitle(WIZARD_NAME);
 		this.fPageName = getPageName();
 		this.fPageTitle = getPageTitle();
@@ -56,8 +58,7 @@ public abstract class VdmNewFileWizard extends Wizard implements
 	public void addPages()
 	{
 		super.addPages();
-		_pageOne = new WizardNewFileCreationPage(this.fPageName,
-				this.fStructuredSelection);
+		_pageOne = new WizardNewFileCreationPage(this.fPageName, this.fStructuredSelection);
 		_pageOne.setTitle(this.fPageTitle);
 		_pageOne.setDescription(this.fPageDescription);
 
@@ -107,16 +108,46 @@ public abstract class VdmNewFileWizard extends Wizard implements
 		if (file.exists())
 		{
 			String fileName = file.getName();
-			if(fileName.contains("."))
+			if (fileName.contains("."))
 			{
-				fileName = fileName.substring(0,fileName.indexOf("."));
+				fileName = fileName.substring(0, fileName.indexOf("."));
 			}
-			String fileTemplate = getFileTemplate(fileName);
-			if (fileTemplate != null)
+
+			boolean isClean = false;
+			InputStream in =null;
+			try
 			{
-				applyTemplate(file, fileTemplate);
+				in= file.getContents();
+				if (file.getContents().read() == -1)
+				{
+					isClean = true;
+				}
+			} catch (IOException e)
+			{
+			} catch (CoreException e)
+			{
+			}finally
+			{
+				if(in!=null)
+				{
+					try
+					{
+						in.close();
+					} catch (IOException e)
+					{
+					}
+				}
 			}
-			
+
+			if (isClean)
+			{
+				String fileTemplate = getFileTemplate(fileName);
+				if (fileTemplate != null)
+				{
+					applyTemplate(file, fileTemplate);
+				}
+			}
+
 		}
 		try
 		{
