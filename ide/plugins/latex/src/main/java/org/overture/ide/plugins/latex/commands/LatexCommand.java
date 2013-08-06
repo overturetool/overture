@@ -34,19 +34,19 @@ public class LatexCommand extends AbstractHandler
 			{
 				IProject project = (IProject) firstElement;
 				IVdmProject selectedProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-				
+
 				final Shell shell = Display.getCurrent().getActiveShell();
 				if (selectedProject != null)
 				{
 					try
 					{
-					LatexUtils util = new LatexUtils(shell);
-					if (project.hasNature(IVdmPpCoreConstants.NATURE))
-						util.makeLatex(selectedProject, Dialect.VDM_PP);
-					if (project.hasNature(IVdmSlCoreConstants.NATURE))
-						util.makeLatex(selectedProject, Dialect.VDM_SL);
-					if (project.hasNature(IVdmRtCoreConstants.NATURE))
-						util.makeLatex(selectedProject, Dialect.VDM_RT);
+						LatexUtils util = new LatexUtils(shell);
+						if (project.hasNature(IVdmPpCoreConstants.NATURE))
+							util.makeLatex(selectedProject, Dialect.VDM_PP);
+						if (project.hasNature(IVdmSlCoreConstants.NATURE))
+							util.makeLatex(selectedProject, Dialect.VDM_SL);
+						if (project.hasNature(IVdmRtCoreConstants.NATURE))
+							util.makeLatex(selectedProject, Dialect.VDM_RT);
 					} catch (Exception ex)
 					{
 						ConsoleWriter console = new ConsoleWriter("LATEX");

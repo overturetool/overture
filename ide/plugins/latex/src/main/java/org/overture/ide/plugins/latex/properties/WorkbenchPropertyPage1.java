@@ -76,89 +76,89 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 		// org.eclipse.swt.widgets.FileDialog
 
 		final Composite myComposite = new Composite(parent, SWT.NONE);
-try{
-		FillLayout layout = new FillLayout();
-		// layout.numColumns = 1;
-		layout.type = SWT.VERTICAL;
-		myComposite.setLayout(layout);
-
-		ISelection selection = WorkbenchPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
-		this.project = getSelectedProject(selection);// new LatexProject(getSelectedProject(selection));
-
-		Group mainDocumentGroup = new Group(myComposite, SWT.NONE);
-		mainDocumentGroup.setText("Latex options");
-		GridLayout mylayout = new GridLayout();
-		mylayout.marginHeight = 2;
-		mylayout.marginWidth = 2;
-		mylayout.horizontalSpacing = 20;
-		mylayout.numColumns = 2;
-		mainDocumentGroup.setLayout(mylayout);
-
-		Label mylabel = new Label(mainDocumentGroup, SWT.NONE);
-		mylabel.setLayoutData(new GridData());
-		mylabel.setText("Main document");
-
-		fileNameText = new Text(mainDocumentGroup, SWT.FILL);
-		fileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
-		IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID,true);
-				
-		String documentName = null;
-		String tmpDoc = opt.getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT,null);
-		if (tmpDoc != null)
+		try
 		{
-			documentName = tmpDoc;
+			FillLayout layout = new FillLayout();
+			// layout.numColumns = 1;
+			layout.type = SWT.VERTICAL;
+			myComposite.setLayout(layout);
+
+			ISelection selection = WorkbenchPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+			this.project = getSelectedProject(selection);// new LatexProject(getSelectedProject(selection));
+
+			Group mainDocumentGroup = new Group(myComposite, SWT.NONE);
+			mainDocumentGroup.setText("Latex options");
+			GridLayout mylayout = new GridLayout();
+			mylayout.marginHeight = 2;
+			mylayout.marginWidth = 2;
+			mylayout.horizontalSpacing = 20;
+			mylayout.numColumns = 2;
+			mainDocumentGroup.setLayout(mylayout);
+
+			Label mylabel = new Label(mainDocumentGroup, SWT.NONE);
+			mylabel.setLayoutData(new GridData());
+			mylabel.setText("Main document");
+
+			fileNameText = new Text(mainDocumentGroup, SWT.FILL);
+			fileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+			IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
+			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID, true);
+
+			String documentName = null;
+			String tmpDoc = opt.getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, null);
+			if (tmpDoc != null)
+			{
+				documentName = tmpDoc;
+			}
+			if (documentName == null)
+				fileNameText.setText(project.getProject().getName() + ".tex");
+			else
+				fileNameText.setText(documentName);
+			buttonSelectFile = new Button(mainDocumentGroup, SWT.NONE);
+			buttonSelectFile.setLayoutData(new GridData());
+			buttonSelectFile.setText("Browse...");
+			buttonSelectFile.addSelectionListener(new SelectionListener()
+			{
+
+				public void widgetSelected(SelectionEvent e)
+				{
+					org.eclipse.swt.widgets.FileDialog dialog = new FileDialog(myComposite.getShell());
+					dialog.setFileName(project.getProject().getLocation().toFile().getAbsolutePath()
+							+ File.separatorChar
+							+ project.getProject().getName() + ".tex");
+
+					fileNameText.setText(dialog.open());
+					useAutoReportGeneration.setSelection(fileNameText.getText().trim().length() == 0);
+
+				}
+
+				public void widgetDefaultSelected(SelectionEvent e)
+				{
+					// TODO Auto-generated method stub
+
+				}
+			});
+
+			useAutoReportGeneration = new Button(mainDocumentGroup, SWT.CHECK);
+			useAutoReportGeneration.setText("Generate main document");
+			useAutoReportGeneration.setSelection(opt.getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true));
+
+			buttonInsertCoverageTables = new Button(mainDocumentGroup, SWT.CHECK);
+			buttonInsertCoverageTables.setText("Insert coverage tables");
+			buttonInsertCoverageTables.setSelection(opt.getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true));
+
+			buttonMarkCoverage = new Button(mainDocumentGroup, SWT.CHECK);
+			buttonMarkCoverage.setText("Mark coverage");
+			buttonMarkCoverage.setSelection(opt.getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true));
+
+			buttonModelOnly = new Button(mainDocumentGroup, SWT.CHECK);
+			buttonModelOnly.setText("Model only");
+			buttonModelOnly.setSelection(opt.getAttribute(ILatexConstants.LATEX_MODEL_ONLY, true));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
-		if (documentName == null)
-			fileNameText.setText(project.getProject().getName() + ".tex");
-		else
-			fileNameText.setText(documentName);
-		buttonSelectFile = new Button(mainDocumentGroup, SWT.NONE);
-		buttonSelectFile.setLayoutData(new GridData());
-		buttonSelectFile.setText("Browse...");
-		buttonSelectFile.addSelectionListener(new SelectionListener()
-		{
-
-			public void widgetSelected(SelectionEvent e)
-			{
-				org.eclipse.swt.widgets.FileDialog dialog = new FileDialog(myComposite.getShell());
-				dialog.setFileName(project.getProject().getLocation().toFile().getAbsolutePath()
-						+ File.separatorChar
-						+ project.getProject().getName()
-						+ ".tex");
-
-				fileNameText.setText(dialog.open());
-				useAutoReportGeneration.setSelection(fileNameText.getText().trim().length() == 0);
-
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		useAutoReportGeneration = new Button(mainDocumentGroup, SWT.CHECK);
-		useAutoReportGeneration.setText("Generate main document");
-		useAutoReportGeneration.setSelection(opt.getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT,true));
-
-		buttonInsertCoverageTables = new Button(mainDocumentGroup, SWT.CHECK);
-		buttonInsertCoverageTables.setText("Insert coverage tables");
-		buttonInsertCoverageTables.setSelection( opt.getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE,true));
-
-		buttonMarkCoverage = new Button(mainDocumentGroup, SWT.CHECK);
-		buttonMarkCoverage.setText("Mark coverage");
-		buttonMarkCoverage.setSelection( opt.getAttribute(ILatexConstants.LATEX_MARK_COVERAGE,true));
-
-		buttonModelOnly = new Button(mainDocumentGroup, SWT.CHECK);
-		buttonModelOnly.setText("Model only");
-		buttonModelOnly.setSelection(opt.getAttribute(ILatexConstants.LATEX_MODEL_ONLY,true));
-}catch(Exception e)
-{
-	e.printStackTrace();
-}
 		return myComposite;
 	}
 
@@ -209,8 +209,8 @@ try{
 		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
 		if (p != null)
 		{
-			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID,true);
-			
+			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID, true);
+
 			if (useAutoReportGeneration.getSelection())
 			{
 				opt.setAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true);

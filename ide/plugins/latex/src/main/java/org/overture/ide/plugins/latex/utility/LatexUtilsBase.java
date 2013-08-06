@@ -45,14 +45,13 @@ public class LatexUtilsBase
 	{
 		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MODEL_ONLY, true);
 	}
-	
+
 	public static String getFileName(File file)
 	{
 		int index = file.getName().lastIndexOf('.');
 		return file.getName().substring(0, index);
 
 	}
-	
 
 	static List<File> getFileChildern(File file)
 	{
@@ -73,10 +72,8 @@ public class LatexUtilsBase
 		return list;
 
 	}
-	
-	
-	ClassList parseClasses(final IVdmProject project)
-			throws CoreException
+
+	ClassList parseClasses(final IVdmProject project) throws CoreException
 	{
 		ClassReader reader;
 		ClassList classes = new ClassList();
@@ -92,8 +89,7 @@ public class LatexUtilsBase
 		return classes;
 	}
 
-	ModuleList parseModules(final IVdmProject project)
-			throws CoreException
+	ModuleList parseModules(final IVdmProject project) throws CoreException
 	{
 		ModuleReader reader;
 		ModuleList modules = new ModuleList();
@@ -109,5 +105,5 @@ public class LatexUtilsBase
 		}
 		return modules;
 	}
-	
+
 }
