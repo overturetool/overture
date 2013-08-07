@@ -63,7 +63,6 @@ public class CasesExhaustiveObligation extends ProofObligation
 		
 		PExp pred = recOnExp(exp, initialCases, initialExp);
 		
-		//valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 	

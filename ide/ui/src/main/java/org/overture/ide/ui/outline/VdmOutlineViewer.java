@@ -18,9 +18,15 @@
  *******************************************************************************/
 package org.overture.ide.ui.outline;
 
+import org.eclipse.jface.util.IOpenEventListener;
+import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
@@ -39,7 +45,37 @@ public class VdmOutlineViewer extends TreeViewer
 	}
 	
 	boolean disableSelectionChangeEvents = false;
+	
+	@Override
+	protected void hookControl(Control control) {
+		//super.hookControl(control);
+		OpenStrategy handler = new OpenStrategy(control);
+		handler.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				// On Windows, selection events may happen during a refresh.
+				// Ignore these events if we are currently in preservingSelection().
+				// See bug 184441.
+				// if (!inChange) {
+				//	handleSelect(e);
+				// }
+			}
 
+			public void widgetDefaultSelected(SelectionEvent e) {
+				handleDoubleSelect(e);
+			}
+		});
+		handler.addPostSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				handlePostSelect(e);
+			}
+		});
+		handler.addOpenListener(new IOpenEventListener() {
+			public void handleOpen(SelectionEvent e) {
+				VdmOutlineViewer.this.handleOpen(e);
+			}
+		});
+	}
+	
 	@Override
 	protected void fireSelectionChanged(SelectionChangedEvent event)
 	{
@@ -51,7 +87,7 @@ public class VdmOutlineViewer extends TreeViewer
 	
 	public synchronized void setSelection(ISelection selection, boolean reveal) {
 		disableSelectionChangeEvents = true;
-		super.setSelection(selection, reveal);
+ 		super.setSelection(selection, reveal);
 		disableSelectionChangeEvents = false;
 	}
 

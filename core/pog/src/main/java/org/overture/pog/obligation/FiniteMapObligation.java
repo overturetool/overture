@@ -66,7 +66,6 @@ public class FiniteMapObligation extends ProofObligation
 		existsExp.setBindList(getMultipleTypeBindList(mapType, finmap));
 		existsExp.setPredicate(getForallExp(exp, finmap, findex));
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 
