@@ -44,6 +44,7 @@
           <dateFormat>yyyy MMM dd HH:mm z</dateFormat>
           <verbose>false</verbose>
           <gitDescribe>
+            <tags>true</tags>
             <skip>false</skip>
             <always>false</always>
             <abbrev>7</abbrev>
