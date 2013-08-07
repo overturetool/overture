@@ -31,7 +31,8 @@ import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
-public class PdfLatex extends Thread {
+public class PdfLatex extends Thread
+{
 
 	private String documentName;
 	private IProject project;
@@ -43,87 +44,100 @@ public class PdfLatex extends Thread {
 	private String currentOS = null;
 	private boolean latexFailed = false;
 
-	public PdfLatex(IProject project, File outputFolder, String documentName) {
+	public PdfLatex(IProject project, File outputFolder, String documentName)
+	{
 		this.documentName = documentName;
 		this.outputFolder = outputFolder;
 		this.project = project;
 		currentOS = Platform.getOS();
 	}
 
-	public void kill() {
-		try {
+	public void kill()
+	{
+		try
+		{
 			process.destroy();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 		}
 	}
 
-	public void setLatexFail(boolean b){
+	public void setLatexFail(boolean b)
+	{
 		this.latexFailed = b;
 	}
-	
+
 	@Override
-	public void run() {
+	public void run()
+	{
 
 		ConsoleWriter cw = new ConsoleWriter("PDF LATEX");
 		cw.show();
-		try {
+		try
+		{
 
-				if (documentName.contains(new Character(File.separatorChar)
-					.toString())) {
+			if (documentName.contains(new Character(File.separatorChar).toString()))
+			{
 				// Map<String, String> env = pb.environment();
-				// // watch out here! this could be “PATH” or “path”
-				// // Windows doesn’t care, but Java will
+				// // watch out here! this could be ï¿½PATHï¿½ or ï¿½pathï¿½
+				// // Windows doesnï¿½t care, but Java will
 				// String path = (String) env.get("PATH");
 				// env.put("PATH", path + File.pathSeparator
 				// + new File(documentName).getParentFile().getAbsolutePath());
 				// path = (String) env.get("PATH");
 
-				documentName = getRelativePath(new File(documentName),
-						outputFolder);
+				documentName = getRelativePath(new File(documentName), outputFolder);
 			}
 
 			String argument = "pdflatex " + documentName;
 			cw.println("Starting: " + argument + "\nIn: "
 					+ outputFolder.getAbsolutePath());
 			ProcessBuilder pb = new ProcessBuilder(argument);
-			if (currentOS.equals(Platform.OS_MACOSX)) { // fix for MacOS
-				String osxpath = VdmUIPlugin.getDefault().getPreferenceStore()
-						.getString(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE);
-				if (osxpath.equals("")) {
-					pb.command("/usr/texbin/pdflatex","-interaction=nonstopmode", documentName);
+			if (currentOS.equals(Platform.OS_MACOSX))
+			{ // fix for MacOS
+				String osxpath = VdmUIPlugin.getDefault().getPreferenceStore().getString(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE);
+				if (osxpath.equals(""))
+				{
+					pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+				} else
+				{
+					pb.command(osxpath, "-interaction=nonstopmode", documentName);
 				}
-				else{
-					pb.command(osxpath,"-interaction=nonstopmode",documentName);
-				}
-			} else {
-				pb.command("pdflatex","-interaction=nonstopmode", "\"" + documentName + "\"");
+			} else
+			{
+				pb.command("pdflatex", "-interaction=nonstopmode", "\""
+						+ documentName + "\"");
 			}
-			
+
 			pb.directory(outputFolder);
 
 			process = pb.start();
-			new ProcessConsolePrinter(cw, process.getInputStream(),this).start();
-			new ProcessConsolePrinter(cw, process.getErrorStream(),this).start();
+			new ProcessConsolePrinter(cw, process.getInputStream(), this).start();
+			new ProcessConsolePrinter(cw, process.getErrorStream(), this).start();
 
 			process.waitFor();
-						
+
 			if (project != null)
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			
-			if(latexFailed){
+
+			if (latexFailed)
+			{
 				this.hasFailed = true;
 			}
-			
+
 			isFinished = true;
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			this.hasFailed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			this.hasFailed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 			this.hasFailed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,9 +146,9 @@ public class PdfLatex extends Thread {
 	}
 
 	public static String getRelativePath(File file, File relativeTo)
-			throws IOException {
-		file = new File(file + File.separator + "89243jmsjigs45u9w43545lkhj7")
-				.getParentFile();
+			throws IOException
+	{
+		file = new File(file + File.separator + "89243jmsjigs45u9w43545lkhj7").getParentFile();
 		relativeTo = new File(relativeTo + File.separator
 				+ "984mvcxbsfgqoykj30487df556").getParentFile();
 		File origFile = file;
@@ -143,12 +157,14 @@ public class PdfLatex extends Thread {
 		List<File> relativeToPathStack = new ArrayList<File>();
 		// build the path stack info to compare it afterwards
 		file = file.getCanonicalFile();
-		while (file != null) {
+		while (file != null)
+		{
 			filePathStack.add(0, file);
 			file = file.getParentFile();
 		}
 		relativeTo = relativeTo.getCanonicalFile();
-		while (relativeTo != null) {
+		while (relativeTo != null)
+		{
 			relativeToPathStack.add(0, relativeTo);
 			relativeTo = relativeTo.getParentFile();
 		}
@@ -158,7 +174,8 @@ public class PdfLatex extends Thread {
 		relativeTo = (File) relativeToPathStack.get(count);
 		while ((count < filePathStack.size() - 1)
 				&& (count < relativeToPathStack.size() - 1)
-				&& file.equals(relativeTo)) {
+				&& file.equals(relativeTo))
+		{
 			count++;
 			file = (File) filePathStack.get(count);
 			relativeTo = (File) relativeToPathStack.get(count);
@@ -167,20 +184,22 @@ public class PdfLatex extends Thread {
 			count++;
 		// up as far as necessary
 		StringBuffer relString = new StringBuffer();
-		for (int i = count; i < relativeToPathStack.size(); i++) {
+		for (int i = count; i < relativeToPathStack.size(); i++)
+		{
 			relString.append(".." + File.separator);
 		}
 		// now back down to the file
-		for (int i = count; i < filePathStack.size() - 1; i++) {
+		for (int i = count; i < filePathStack.size() - 1; i++)
+		{
 			relString.append(((File) filePathStack.get(i)).getName()
 					+ File.separator);
 		}
-		relString.append(((File) filePathStack.get(filePathStack.size() - 1))
-				.getName());
+		relString.append(((File) filePathStack.get(filePathStack.size() - 1)).getName());
 		// just to test
 		File relFile = new File(origRelativeTo.getAbsolutePath()
 				+ File.separator + relString.toString());
-		if (!relFile.getCanonicalFile().equals(origFile.getCanonicalFile())) {
+		if (!relFile.getCanonicalFile().equals(origFile.getCanonicalFile()))
+		{
 			throw new IOException("Failed to find relative path.");
 		}
 		return relString.toString();

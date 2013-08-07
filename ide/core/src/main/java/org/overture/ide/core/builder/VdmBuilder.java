@@ -35,24 +35,22 @@ public class VdmBuilder extends VdmCoreBuilder
 	{
 		if (VdmCore.DEBUG)
 		{
-			System.out.println("buildModelElements");
+			System.out.println("VdmBuilder.build:      "+ getProject().getName());
 		}
 		try
 		{
 			final SafeBuilder builder = new SafeBuilder(getVdmProject(),monitor);
 
-//			clearProblemMarkers();
 			builder.start();
 			while (!builder.isInterrupted() && builder.isAlive())
 			{
-				Thread.sleep(2000);
-
 				if (monitor.isCanceled())
 				{
 					builder.interrupt();
 					Thread.sleep(2000);
 					builder.stop();
 				}
+				Thread.sleep(10);
 			}
 		} catch (Exception e)
 		{
@@ -65,7 +63,7 @@ public class VdmBuilder extends VdmCoreBuilder
 	{
 		if (VdmCore.DEBUG)
 		{
-			System.out.println("clean");
+			System.out.println("VdmBuilder.clean:      "+ getProject().getName());
 		}
 		monitor.beginTask("Cleaning project: " + getProject().getName(), IProgressMonitor.UNKNOWN);
 
@@ -80,7 +78,6 @@ public class VdmBuilder extends VdmCoreBuilder
 
 			try
 			{
-				// IResource res = getProject().findMember("generated");
 				IVdmProject vdmProject = ((IVdmProject) getProject().getAdapter(IVdmProject.class));
 				if (vdmProject != null)
 				{
@@ -91,35 +88,6 @@ public class VdmBuilder extends VdmCoreBuilder
 			} catch (Exception e)
 			{
 				VdmCore.log("Error cleaning project: " + getProject(), e);
-				// we can't do any thing about it
-				// the following code pops up a dialog saying the clean failed
-				// but it was suggested to leave it commented for the moment
-
-				// if (!poppedDialog) {
-				// poppedDialog = true;
-				//					
-				// final IWorkbenchWindow[] windows = PlatformUI
-				// .getWorkbench().getWorkbenchWindows();
-				// if (windows != null && windows.length > 0) {
-				// windows[0].getShell().getDisplay()
-				// .asyncExec(new Runnable() {
-				//
-				// public void run() {
-				// MessageDialog.openWarning(
-				// windows[0].getShell(),
-				// "Clean fail",
-				// "Problems ocurred while cleaning the project(s),"
-				// + " please inspect the error log for more information ");
-				//
-				// }
-				// });
-				//
-				// }
-				// }
-				// else
-				// {
-				// poppedDialog = false;
-				// }
 			}
 		}
 		monitor.done();
@@ -134,7 +102,7 @@ public class VdmBuilder extends VdmCoreBuilder
 	{
 		if (VdmCore.DEBUG)
 		{
-			System.out.println("initialize");
+			System.out.println("VdmBuilder.initialize: "+ getProject().getName());
 		}
 
 		syncProjectResources();

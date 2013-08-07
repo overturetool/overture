@@ -48,26 +48,26 @@ public class LatexBuilder
 	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
-//		String overturesty = readFile("latex/overture.sty");
-//
-//		String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
-//		
-//		overturesty = overturesty.replaceAll("OVERTURE_LANGUAGE", dialect.toString());
-//
-//		writeFile(outputFolder, "overture.sty", overturesty);
-//		writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
+		// String overturesty = readFile("latex/overture.sty");
+		//
+		// String overturelanguagedef = readFile("latex/overturelanguagedef.sty");
+		//
+		// overturesty = overturesty.replaceAll("OVERTURE_LANGUAGE", dialect.toString());
+		//
+		// writeFile(outputFolder, "overture.sty", overturesty);
+		// writeFile(outputFolder, "overturelanguagedef.sty", overturelanguagedef);
 
 	}
 
-	public void saveDocument(IProject project,File projectRoot, String name) throws IOException
+	public void saveDocument(IProject project, File projectRoot, String name)
+			throws IOException
 	{
 		String document = readFile("latex/document.tex");
 		String documentFileName = name;// + ".tex";
 		File latexRoot = makeOutputFolder(project);
 		StringBuilder sb = new StringBuilder();
-		String title = //"Coverage Report: " + 
-		projectRoot.getName().replace('\\', '/').substring(0,
-						projectRoot.getName().length());
+		String title = // "Coverage Report: " +
+		projectRoot.getName().replace('\\', '/').substring(0, projectRoot.getName().length());
 
 		for (String path : includes)
 		{
@@ -93,27 +93,16 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(TITLE, latexQuote(title))
-				.replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
 	}
-	
+
 	private String latexQuote(String s)
 	{
 		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
 
-		return s.
-			replace("\\", "\\textbackslash ").
-			replace("#", "\\#").
-			replace("$", "\\$").
-			replace("%", "\\%").
-			replace("&", "\\&").
-			replace("_", "\\_").
-			replace("{", "\\{").
-			replace("}", "\\}").
-			replace("~", "\\~").
-			replaceAll("\\^{1}", "\\\\^{}");
+		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
 	public void addInclude(String path)
@@ -124,15 +113,16 @@ public class LatexBuilder
 
 	public static File makeOutputFolder(IProject project)
 	{
-//		File projectRoot = project.getLocation().toFile();
-//		return makeOutputFolder(project);
-//	}
-//
-//	public static File makeOutputFolder(IProject  project)
-//	{
+		// File projectRoot = project.getLocation().toFile();
+		// return makeOutputFolder(project);
+		// }
+		//
+		// public static File makeOutputFolder(IProject project)
+		// {
 
 		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
-		File outputFolder = p.getModelBuildPath().getOutput().getLocation().toFile();//new File(projectRoot, "generated");
+		File outputFolder = p.getModelBuildPath().getOutput().getLocation().toFile();// new File(projectRoot,
+																						// "generated");
 		if (!outputFolder.exists())
 			outputFolder.mkdirs();
 
@@ -163,8 +153,7 @@ public class LatexBuilder
 	private void writeFile(File outputFolder, String fileName, String content)
 			throws IOException
 	{
-		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-				fileName),false);
+		FileWriter outputFileReader = new FileWriter(new File(outputFolder, fileName), false);
 		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
 		outputStream.write(content);
 		outputStream.close();

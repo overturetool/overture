@@ -26,5 +26,5 @@ public interface ILatexConstants
 	public final static String LATEX_MARK_COVERAGE = "LATEX_MARK_COVERAGE";
 	public final static String LATEX_MODEL_ONLY = "LATEX_MODEL_ONLY";
 	public static final String QUALIFIER = "LATEX";
-	
+
 }

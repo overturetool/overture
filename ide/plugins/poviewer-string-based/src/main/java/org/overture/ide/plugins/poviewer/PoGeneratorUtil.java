@@ -269,6 +269,7 @@ public class PoGeneratorUtil
 				IViewPart v;
 				try
 				{
+					openPoviewPerspective();
 					v = site.getPage().showView(IPoviewerConstants.PoOverviewTableViewId);
 					if (v instanceof PoOverviewTableView)
 					{
@@ -276,7 +277,7 @@ public class PoGeneratorUtil
 
 					}
 
-					openPoviewPerspective();
+					;
 				} catch (PartInitException e)
 				{
 					if (Activator.DEBUG)

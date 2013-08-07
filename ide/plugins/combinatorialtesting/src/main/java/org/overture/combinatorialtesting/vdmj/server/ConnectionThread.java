@@ -90,10 +90,14 @@ public class ConnectionThread extends Thread
 			}
 		} catch (SocketException e)
 		{
+			monitor.traceError("Connection error: " + e.getMessage());
 			// Caused by die(), and VDMJ death
 		} catch (IOException e)
 		{
 			System.out.println("Connection exception: " + e.getMessage());
+
+		} finally
+		{
 			die();
 		}
 
@@ -241,7 +245,7 @@ public class ConnectionThread extends Thread
 			}
 			monitor.completed();
 
-		}else if (status.equals("terminating"))
+		} else if (status.equals("terminating"))
 		{
 			try
 			{
@@ -251,7 +255,7 @@ public class ConnectionThread extends Thread
 			{
 			}
 			monitor.terminating();
-
+			die();
 		}
 	}
 
