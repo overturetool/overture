@@ -43,15 +43,14 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 	}
 
 	@Override
-	protected void fireChangedEvent()
-	{
-		VdmCore.getDeltaProcessor().fire(this, new ElementChangedEvent(new VdmElementDelta(this.sourceUnit, IVdmElementDelta.CHANGED), ElementChangedEvent.DeltaType.POST_BUILD));
-	}
-
-	@Override
 	public String toString()
 	{
 		return super.toString() + " - Working copy";
+	}
+	
+	public IVdmSourceUnit getSource()
+	{
+		return this.sourceUnit;
 	}
 
 }
