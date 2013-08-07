@@ -1,5 +1,6 @@
 package org.overture.ide.ui.utility.ast;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 /**
  * Class used by an editor to search the editor text for source code node locations. Used to find nodes in the source
@@ -51,6 +53,11 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	 * The offset used when searching for nodes within this location of the source code
 	 */
 	private int offSet;
+	
+	/**
+	 * The source file to search
+	 */
+	private File sourceFile;
 
 	private static final AstLocationSearcher seacher = new AstLocationSearcher();
 
@@ -88,7 +95,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	 *            The offset to match a node to
 	 * @return The node closest to the offset or null
 	 */
-	public static INode search(List<INode> nodes, int offSet)
+	public static INode search(List<INode> nodes, int offSet, IVdmSourceUnit source)
 	{
 		synchronized (seacher)
 		{
@@ -98,6 +105,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			}
 			seacher.init();
 			seacher.offSet = offSet;
+			seacher.sourceFile = source.getSystemFile();
 			try
 			{
 				for (INode node : nodes)
@@ -247,7 +255,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			elementNodeCache.get(currentElement).put(location, node);
 		}
 		if (location.getStartOffset() - 1 <= this.offSet
-				&& location.getEndOffset() - 1 >= this.offSet)
+				&& location.getEndOffset() - 1 >= this.offSet && location.getFile().equals(sourceFile))
 		{
 			bestHit = node;
 			if (!indexing)
@@ -259,7 +267,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		// Store the last best match where best is closest with abs
 		if (bestAlternativeLocation == null
 				|| Math.abs(offSet - location.getStartOffset()) <= Math.abs(offSet
-						- bestAlternativeLocation.getStartOffset()))
+						- bestAlternativeLocation.getStartOffset())&& location.getFile().equals(sourceFile))
 		{
 			bestAlternativeLocation = location;
 			bestAlternativeHit = node;
@@ -273,7 +281,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		} else if (bestAlternativeLocation == null
 				|| (offSet - bestAlternativeLocation.getStartOffset() > 0)
 				&& Math.abs(offSet - location.getStartOffset()) > Math.abs(offSet
-						- bestAlternativeLocation.getStartOffset()))
+						- bestAlternativeLocation.getStartOffset())&& location.getFile().equals(sourceFile))
 		{
 			if (DEBUG_PRINT)
 			{

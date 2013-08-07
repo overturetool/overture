@@ -56,7 +56,7 @@ public class GotoDefinitionHandler extends AbstractHandler
 							VdmTypeCheckerUi.typeCheck(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), p);
 						}
 					}
-					INode node = AstLocationSearcher.search(source.getParseList(), tselection.getOffset());
+					INode node = AstLocationSearcher.search(source.getParseList(), tselection.getOffset(),source);
 
 					PType gotoType = null;
 					ILexLocation gotoLocation = null;

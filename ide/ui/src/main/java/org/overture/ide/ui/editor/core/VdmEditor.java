@@ -86,7 +86,6 @@ public abstract class VdmEditor extends TextEditor
 		public void selectionChanged(SelectionChangedEvent event)
 		{
 			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
-			// FIXME: this appears to cause the cursor to jump around in eclipse -jwc/22Feb2013
 			VdmEditor.this.selectionChanged();
 		}
 	}
@@ -114,7 +113,13 @@ public abstract class VdmEditor extends TextEditor
 			@Override
 			public INode search(List<INode> nodes, int offSet)
 			{
-				return AstLocationSearcher.search(nodes, offSet);
+				// Fix for bug #185, the location searcher did not consider the file name.
+				IVdmElement element = getInputVdmElement();
+				if (element instanceof IVdmSourceUnit)
+				{
+					return AstLocationSearcher.search(nodes, offSet, (IVdmSourceUnit) element);
+				}
+				return null;
 			}
 			
 			@Override
@@ -194,13 +199,21 @@ public abstract class VdmEditor extends TextEditor
 					IStructuredSelection ss = (IStructuredSelection) s;
 					@SuppressWarnings("rawtypes")
 					List elements = ss.toList();
+					/*As a fix for bug #185 the selectAndReveal is changed to highlight range, and thus just highlights the line instead of selecting the text. If no selection then the selection is reset*/
 					if (!elements.isEmpty())
 					{
 						if (elements.get(0) instanceof INode)
 						{
 							INode node = (INode) elements.get(0);
-							selectAndReveal(node);
+							// selectAndReveal(node);
+							if (node != computeHighlightRangeSourceReference())
+							{
+								setHighlightRange(node);
+							}
 						}
+					} else
+					{
+						resetHighlightRange();
 					}
 				}
 			}
@@ -215,6 +228,23 @@ public abstract class VdmEditor extends TextEditor
 	{
 		int[] offsetLength = this.locationSearcher.getNodeOffset(node);
 		selectAndReveal(offsetLength[0], offsetLength[1]);
+	}
+
+	/**
+	 * highlights a node in the text editor.
+	 * @param node
+	 */
+	public void setHighlightRange(INode node)
+	{
+		try
+		{
+			int[] offsetLength = this.locationSearcher.getNodeOffset(node);
+//			int offset = getSourceViewer().getTextWidget().getCaretOffset();
+			super.setHighlightRange(offsetLength[0], offsetLength[1], true);
+		} catch (IllegalArgumentException e)
+		{
+			super.resetHighlightRange();
+		}
 	}
 
 	/*
@@ -403,8 +433,6 @@ public abstract class VdmEditor extends TextEditor
 		// vdmSourceViewer.prepareDelayedProjection();
 
 		super.doSetInput(input);
-
-		// TODO can we comment this: IVdmElement inputElement = getInputVdmElement();
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
 		{
@@ -713,7 +741,17 @@ public abstract class VdmEditor extends TextEditor
 		if (fOutlinePage != null && element != null
 				&& !(checkIfOutlinePageActive))
 		{// && isJavaOutlinePageActive()
-			fOutlinePage.selectNode(element);
+			
+			//if added for bug #185, it prevents the outline from being update if the selection from the searcher determine that the node is the same. 
+			if (fOutlinePage.getSelection() != null
+					&& fOutlinePage.getSelection() instanceof IStructuredSelection
+					&& element == ((IStructuredSelection) fOutlinePage.getSelection()).getFirstElement())
+			{
+				// skip
+			} else
+			{
+				fOutlinePage.selectNode(element);
+			}
 		}
 	}
 
@@ -821,7 +859,7 @@ public abstract class VdmEditor extends TextEditor
 		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
 		// the tree until one is found.
 		INode def = null;
-		if (node instanceof PDefinition ||node instanceof  AFieldField)
+		if (node instanceof PDefinition || node instanceof AFieldField)
 		{
 			def = node;
 		} else if (node != null)
