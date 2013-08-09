@@ -23,10 +23,6 @@
 
 package org.overturetool.vdmj.types;
 
-import java.util.Vector;
-
-import org.overturetool.vdmj.definitions.AccessSpecifier;
-import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.TypeDefinition;
 import org.overturetool.vdmj.lex.LexNameToken;
@@ -64,145 +60,6 @@ public class ParameterType extends Type
 
 		return this;
 	}
-
-	@Override
-	public boolean narrowerThan(AccessSpecifier accessSpecifier)
-	{
-		return false;
-	}
-
-	@Override
-	public Type isType(String typename)
-	{
-		return new UnknownType(location);
-	}
-
-	@Override
-	public boolean isType(Class<? extends Type> typeclass)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isUnknown()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isSeq()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isSet()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isMap()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isRecord()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isClass()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isNumeric()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isProduct()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isProduct(int n)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isFunction()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isOperation()
-	{
-		return true;
-	}
-
-	@Override
-	public SeqType getSeq()
-	{
-		return new SeqType(location);	// empty
-	}
-
-	@Override
-	public SetType getSet()
-	{
-		return new SetType(location);	// empty
-	}
-
-	@Override
-	public MapType getMap()
-	{
-		return new MapType(location);	// Unknown |-> Unknown
-	}
-
-	@Override
-	public RecordType getRecord()
-	{
-		return new RecordType(location, new Vector<Field>());
-	}
-
-	@Override
-	public ClassType getClassType()
-	{
-		return new ClassType(location, new ClassDefinition());
-	}
-
-	@Override
-	public NumericType getNumeric()
-	{
-		return new RealType(location);
-	}
-
-	@Override
-	public ProductType getProduct()
-	{
-		return new ProductType(location, new TypeList());
-	}
-
-	@Override
-	public ProductType getProduct(int n)
-	{
-		TypeList tl = new TypeList();
-
-		for (int i=0; i<n; i++)
-		{
-			tl.add(new UnknownType(location));
-		}
-
-		return new ProductType(location, tl);
-	}
 	
 	@Override
 	public ValueList getAllValues(Context ctxt) throws ValueException
@@ -227,12 +84,6 @@ public class ParameterType extends Type
 	public Type polymorph(LexNameToken pname, Type actualType)
 	{
 		return (name.equals(pname)) ? actualType : this;
-	}
-
-	@Override
-	public boolean equals(Object other)
-	{
-		return true;	// Runtime dependent - assume OK
 	}
 
 	@Override

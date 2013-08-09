@@ -1,3 +1,4 @@
 let obj = new A() in
 	obj.curry(2,3)(4) = 6 and
-	obj.fmap[nat](add1)([1,2,3]) = [2,3,4]
+	obj.fmap[nat](add1)([1,2,3]) = [2,3,4] and
+	obj.poly[nat]([1,2,3,4]) = 4

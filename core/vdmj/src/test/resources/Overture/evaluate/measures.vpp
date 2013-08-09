@@ -4,7 +4,7 @@ operations
 	op() ==
 	(	
 		for i = 1 to 100 do
-			let - = f[int](100 + i) in skip;
+			let - = f(100 + i) in skip;
 	);
 	
 	public run: () ==> ()
@@ -17,11 +17,11 @@ operations
 	);
 		
 functions
-	public f[@T]: @T -> int
-	f(a) == if a = 1 then 1 else fid[@T](-a) + f[@T](a-1)
+	public f: int -> int
+	f(a) == if a = 1 then 1 else fid(-a) + f(a-1)
 	measure fid;
 	
-	public fid[@T]: @T -> nat
+	public fid: int -> nat
 	fid(a) == if a < 0 then 1 else a;
 	
 thread
