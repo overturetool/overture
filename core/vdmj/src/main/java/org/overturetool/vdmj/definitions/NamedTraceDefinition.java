@@ -94,7 +94,7 @@ public class NamedTraceDefinition extends Definition
 	@Override
 	public LexNameList getVariableNames()
 	{
-		return new LexNameList();
+		return new LexNameList(name);
 	}
 
 	@Override
