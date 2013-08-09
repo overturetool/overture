@@ -21,8 +21,4 @@ public ReadValue: () ==> nat
 ReadValue() ==
   return Value;
 
-public Step: () ==> ()
-Step() ==
-  is subclass responsibility
-
 end Sensor

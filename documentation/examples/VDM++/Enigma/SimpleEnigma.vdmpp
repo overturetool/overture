@@ -32,6 +32,11 @@ operations
   Keystroke (pch) ==
     let pidx = alph.GetIndex(pch) in
       return alph.GetChar(next.Substitute(pidx))
-  pre isofclass(Plugboard,next)
+  pre isofclass(Plugboard,next);
+
+  -- this is needed to make this a non-abstract class
+  public Substitute: nat ==> nat
+  Substitute (-) == return 1;
+  
 
 end SimpleEnigma
