@@ -25,11 +25,11 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swt.widgets.Display;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ct.utils.TraceHelperNotInitializedException;
+import org.overture.ct.utils.TraceTestResult;
 import org.overture.ide.plugins.combinatorialtesting.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.plugins.combinatorialtesting.store.StorageManager;
 import org.overture.ide.plugins.combinatorialtesting.views.TraceAstUtility;
-import org.overture.ct.utils.TraceHelperNotInitializedException;
-import org.overture.ct.utils.TraceTestResult;
 import org.xml.sax.SAXException;
 
 public class TraceTreeNode implements IAdaptable, ITreeNode
@@ -51,13 +51,12 @@ public class TraceTreeNode implements IAdaptable, ITreeNode
 		traceStore = new StorageManager(TraceAstUtility.getProject(traceDef), traceDef);
 		this.children = new ArrayList<ITreeNode>();
 
-		
-			setInfo( traceStore.getTraceInfo());
+		setInfo(traceStore.getTraceInfo());
 
-		Integer totalTests = traceStore.getTraceTestCount( );
+		Integer totalTests = traceStore.getTraceTestCount();
 		this.setTestTotal(totalTests);
 
-		this.setSkippedCount(traceStore.getSkippedCount( traceDef.getName().getName()));
+		this.setSkippedCount(traceStore.getSkippedCount(traceDef.getName().getName()));
 
 		if (totalTests > 0)
 		{
@@ -223,13 +222,13 @@ public class TraceTreeNode implements IAdaptable, ITreeNode
 	{
 		children.clear();
 
-		Long size = new Long(traceStore.getTraceTestCount( ));
+		Long size = new Long(traceStore.getTraceTestCount());
 
 		GroupSizeCalculator gs = new GroupSizeCalculator(size);
 
 		if (!gs.hasGroups())
 		{
-			List<TraceTestResult> traceStatus = traceStore.getTraceTests( );
+			List<TraceTestResult> traceStatus = traceStore.getTraceTests();
 			for (TraceTestResult traceTestStatus : traceStatus)
 			{
 				this.addChild(new TraceTestTreeNode(traceTestStatus));
@@ -290,7 +289,6 @@ public class TraceTreeNode implements IAdaptable, ITreeNode
 		children.clear();
 		children.add(new NotYetReadyTreeNode());
 	}
-
 
 	private void setInfo(TraceInfo info)
 	{

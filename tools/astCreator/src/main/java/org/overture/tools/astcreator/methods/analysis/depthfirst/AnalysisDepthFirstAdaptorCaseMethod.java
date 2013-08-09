@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.tools.astcreator.definitions.ExternalJavaClassDefinition;
 import org.overture.tools.astcreator.definitions.Field;
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
@@ -84,7 +85,12 @@ public class AnalysisDepthFirstAdaptorCaseMethod extends AnalysisMethodTemplate 
 		allFields.addAll(c.getFields());
 		for (Field f : allFields) {
 			if (f.isTokenField) {
+				if(f.type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition)f.type).extendsNode)
+				{
+					
+				}else{
 				continue;
+				}
 			}
 			Method getMethod = new GetMethod(c, f);
 			getMethod.getJavaSourceCode(env);

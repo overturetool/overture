@@ -71,23 +71,29 @@ public class ConnectionListener extends Thread
 		{
 			while (listening)
 			{
-				Socket conn = socket.accept();
-
-				if (group.activeCount() >= 1)
+				try
 				{
-					System.out.println("Too many DBGp connections");
-					conn.close();
-					continue;
-				}
+					Socket conn = socket.accept();
 
-				ConnectionThread worker = new ConnectionThread(group, conn, (principal == null), monitor);
+					if (group.activeCount() >= 1)
+					{
+						System.out.println("Too many DBGp connections");
+						conn.close();
+						continue;
+					}
 
-				if (principal == null)
+					ConnectionThread worker = new ConnectionThread(group, conn, (principal == null), monitor);
+
+					if (principal == null)
+					{
+						principal = worker; // The main connection
+					}
+
+					worker.start();
+				} catch (SocketTimeoutException e)
 				{
-					principal = worker; // The main connection
+					// System.out.println("Listener timed out: " + e.getMessage());
 				}
-
-				worker.start();
 			}
 		} catch (SocketException e)
 		{

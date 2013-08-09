@@ -34,11 +34,7 @@ public class XMLDataNode extends XMLNode
 
 	private static String dequote(String in)
 	{
-		return in
-    		.replaceAll("&amp;", "&")
-    		.replaceAll("&lt;", "<")
-    		.replaceAll("&gt;", ">")
-    		.replaceAll("&quot;", "\\\"");
+		return in.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\\\"");
 	}
 
 	@Override

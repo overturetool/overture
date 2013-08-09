@@ -46,26 +46,22 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.IViewDescriptor;
-import org.overture.ide.plugins.combinatorialtesting.OvertureTracesPlugin;
+import org.overture.ct.utils.TraceTestResult;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
+import org.overture.ide.plugins.combinatorialtesting.OvertureTracesPlugin;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.TraceTestGroup;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.TraceTestTreeNode;
 import org.overture.interpreter.traces.Verdict;
-import org.overture.ct.utils.TraceTestResult;
 
 /**
- * This sample class demonstrates how to plug-in a new workbench view. The view
- * shows data obtained from the model. The sample creates a dummy model on the
- * fly, but a real implementation would connect to the model available either in
- * this or another plug-in (e.g. the workspace). The view is connected to the
- * model using a content provider.
+ * This sample class demonstrates how to plug-in a new workbench view. The view shows data obtained from the model. The
+ * sample creates a dummy model on the fly, but a real implementation would connect to the model available either in
+ * this or another plug-in (e.g. the workspace). The view is connected to the model using a content provider.
  * <p>
- * The view uses a label provider to define how model objects should be
- * presented in the view. Each view can present the same model objects using
- * different labels and icons, if needed. Alternatively, a single label provider
- * can be shared between views in order to ensure that objects of the same type
- * are presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be presented in the view. Each view can present the
+ * same model objects using different labels and icons, if needed. Alternatively, a single label provider can be shared
+ * between views in order to ensure that objects of the same type are presented in the same way everywhere.
  * <p>
  */
 
@@ -76,6 +72,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	private Action action2;
 	private Action doubleClickAction;
 	final Display display = Display.getCurrent();
+
 	private class Data
 	{
 		String traceDef;
@@ -97,11 +94,9 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	}
 
 	/*
-	 * The content provider class is responsible for providing objects to the
-	 * view. It can wrap existing objects in adapters or simply return objects
-	 * as-is. These objects may be sensitive to the current input of the view,
-	 * or ignore it and always show the same content (like Task List, for
-	 * example).
+	 * The content provider class is responsible for providing objects to the view. It can wrap existing objects in
+	 * adapters or simply return objects as-is. These objects may be sensitive to the current input of the view, or
+	 * ignore it and always show the same content (like Task List, for example).
 	 */
 
 	class ViewContentProvider implements IStructuredContentProvider
@@ -116,11 +111,11 @@ public class TraceTest extends ViewPart implements ISelectionListener
 
 		public Object[] getElements(Object inputElement)
 		{
-			if(inputElement instanceof List)
+			if (inputElement instanceof List)
 			{
-			@SuppressWarnings("rawtypes")
-			List list = (List) inputElement;
-			return list.toArray();
+				@SuppressWarnings("rawtypes")
+				List list = (List) inputElement;
+				return list.toArray();
 			}
 			return new Object[0];
 		}
@@ -136,17 +131,17 @@ public class TraceTest extends ViewPart implements ISelectionListener
 			String columnText;
 			switch (columnIndex)
 			{
-			case 0:
-				columnText = data.traceDef;
-				break;
-			case 1:
-				columnText = data.description; // StringConverter.asString(data.number);
-				break;
-			case 2:
-				columnText = ""; // StringConverter.asString(data.number);
-				break;
-			default:
-				columnText = "not set";
+				case 0:
+					columnText = data.traceDef;
+					break;
+				case 1:
+					columnText = data.description; // StringConverter.asString(data.number);
+					break;
+				case 2:
+					columnText = ""; // StringConverter.asString(data.number);
+					break;
+				default:
+					columnText = "not set";
 			}
 			return columnText;
 
@@ -211,8 +206,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	}
 
 	/**
-	 * This is a callback that will allow us to create the viewer and initialize
-	 * it.
+	 * This is a callback that will allow us to create the viewer and initialize it.
 	 */
 	@Override
 	public void createPartControl(Composite parent)
@@ -255,10 +249,10 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		hookDoubleClickAction();
 		// contributeToActionBars();
 
-		getViewSite().getPage().addSelectionListener(ITracesConstants.TRACES_VIEW_ID,this);
-		
-	}
+		// we do this directly instead
+		// getViewSite().getPage().addSelectionListener(ITracesConstants.TRACES_VIEW_ID,this);
 
+	}
 
 	private void makeActions()
 	{
@@ -270,8 +264,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 				showMessage("Action 1 executed");
 				for (IViewDescriptor v : getViewSite().getWorkbenchWindow().getWorkbench().getViewRegistry().getViews())
 				{
-					if (v.getId().equals(
-							ITracesConstants.TRACES_VIEW_ID))
+					if (v.getId().equals(ITracesConstants.TRACES_VIEW_ID))
 					{
 						this.addListenerObject(v);
 					}
@@ -280,8 +273,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		};
 		action1.setText("Action 1");
 		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-				ISharedImages.IMG_OBJS_INFO_TSK));
+		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 
 		action2 = new Action()
 		{
@@ -293,8 +285,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		};
 		action2.setText("Action 2");
 		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-				ISharedImages.IMG_OBJS_INFO_TSK));
+		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		doubleClickAction = new Action()
 		{
 			@Override
@@ -321,10 +312,7 @@ public class TraceTest extends ViewPart implements ISelectionListener
 
 	private void showMessage(String message)
 	{
-		MessageDialog.openInformation(
-				viewer.getControl().getShell(),
-				"Trace Test",
-				message);
+		MessageDialog.openInformation(viewer.getControl().getShell(), "Trace Test", message);
 	}
 
 	/**
@@ -339,43 +327,43 @@ public class TraceTest extends ViewPart implements ISelectionListener
 	public void selectionChanged(IWorkbenchPart part, ISelection selection)
 	{
 
-		if (selection instanceof IStructuredSelection && part instanceof TracesTreeView)
+		if (selection instanceof IStructuredSelection
+				&& part instanceof TracesTreeView)
 		{
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-//			System.out.println(first);
+			// System.out.println(first);
 			if (first instanceof TraceTestTreeNode
 					&& part instanceof TracesTreeView
 					&& !(first instanceof NotYetReadyTreeNode)
 					&& !(first instanceof TraceTestGroup))
 			{
 				TraceTestTreeNode traceTestCaseNode = (TraceTestTreeNode) first;
-			
+
 				TraceTestResult res = traceTestCaseNode.getResult();
-				
+
 				List<Data> list = new ArrayList<Data>();
 
 				for (int i = 0; res != null && i < res.getArguments().size(); i++)
 				{
 
 					if (res.getResults().size() > i)
-						list.add(new Data(res.getArguments().get(i),
-								res.getResults().get(i), res.getStatus()));
+						list.add(new Data(res.getArguments().get(i), res.getResults().get(i), res.getStatus()));
 					else if (res.getResults().size() <= i)
-						list.add(new Data(res.getArguments().get(i), "N / A",
-								res.getStatus()));
+						list.add(new Data(res.getArguments().get(i), "N / A", res.getStatus()));
 				}
 
 				viewer.setInput(list);
 
-			}else
+			} else
 			{
 				viewer.setInput(null);
-			
+
 			}
 			refreshList();
 		}
 
 	}
+
 	private void refreshList()
 	{
 		display.asyncExec(new Runnable()

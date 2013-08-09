@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.interpreter.traces.Verdict;
 import org.overture.ct.utils.TraceTestResult;
 import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.ct.utils.XmlFileWriter;
+import org.overture.interpreter.traces.TraceReductionType;
+import org.overture.interpreter.traces.Verdict;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -101,7 +101,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 			return inconclusiveCount;
 		}
 	}
-	
+
 	public class TraceInfo
 	{
 		private String className;
@@ -110,50 +110,62 @@ public class TracesXmlStoreReader extends DefaultHandler
 		private Float subset;
 		private TraceReductionType traceReductionType;
 		private Long seed;
+
 		public void setSeed(Long seed)
 		{
 			this.seed = seed;
 		}
+
 		public Long getSeed()
-		{ 
+		{
 			return seed;
 		}
+
 		public void setTraceReductionType(TraceReductionType traceReductionType)
 		{
 			this.traceReductionType = traceReductionType;
 		}
+
 		public TraceReductionType getTraceReductionType()
 		{
 			return traceReductionType;
 		}
+
 		public void setSubset(Float subset)
 		{
 			this.subset = subset;
 		}
+
 		public Float getSubset()
 		{
 			return subset;
 		}
+
 		public void setTestCount(Integer testCount)
 		{
 			this.testCount = testCount;
 		}
+
 		public Integer getTestCount()
 		{
 			return testCount;
 		}
+
 		public void setTraceName(String traceName)
 		{
 			this.traceName = traceName;
 		}
+
 		public String getTraceName()
 		{
 			return traceName;
 		}
+
 		public void setClassName(String className)
 		{
 			this.className = className;
 		}
+
 		public String getClassName()
 		{
 			return className;
@@ -463,12 +475,12 @@ public class TracesXmlStoreReader extends DefaultHandler
 		{
 			switch (ch[i])
 			{
-				// case '\\':
-				// System.out.print("\\\\");
-				// break;
-				// case '"':
-				// System.out.print("\\\"");
-				// break;
+			// case '\\':
+			// System.out.print("\\\\");
+			// break;
+			// case '"':
+			// System.out.print("\\\"");
+			// break;
 				case '\n':
 					// System.out.print("\\n");
 					break;
@@ -521,12 +533,12 @@ public class TracesXmlStoreReader extends DefaultHandler
 		else
 			return 0; // TODO
 	}
-	
+
 	public TraceInfo getTraceInfo(String traceName)
 	{
 		if (traceCount.containsKey(traceName))
 			return traceCount.get(traceName);
-		
+
 		return null;
 	}
 

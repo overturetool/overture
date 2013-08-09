@@ -21,68 +21,66 @@ package org.overture.ide.plugins.combinatorialtesting.views.treeView;
 import org.eclipse.core.runtime.IAdaptable;
 import org.overture.ct.utils.TraceTestResult;
 
-
-public class NotYetReadyTreeNode extends TraceTestTreeNode implements IAdaptable {
-//	private NamedTraceDefinition traceDefinition;
+public class NotYetReadyTreeNode extends TraceTestTreeNode implements
+		IAdaptable
+{
+	// private NamedTraceDefinition traceDefinition;
 	private ITreeNode parent;
-	
 
-	public NotYetReadyTreeNode() {
+	public NotYetReadyTreeNode()
+	{
 		super(new TraceTestResult());
-//		traceDefinition = traceDef;
-		
+		// traceDefinition = traceDef;
+
 	}
 
 	@Override
-	public ITreeNode getParent() {
+	public ITreeNode getParent()
+	{
 		return parent;
 	}
 
-//	public NamedTraceDefinition GetTraceDefinition() {
-//		return traceDefinition;
-//	}
-
-	
+	// public NamedTraceDefinition GetTraceDefinition() {
+	// return traceDefinition;
+	// }
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "Please wait...";
 	}
 
-	
 	@Override
-	public String getName() {
-		
-			return toString();
-		
+	public String getName()
+	{
+
+		return toString();
+
 	}
 
 	@Override
-	public void setParent(ITreeNode parent) {
+	public void setParent(ITreeNode parent)
+	{
 		this.parent = parent;
 	}
 
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
 		return null;
 	}
 
-	
-
-	
-
 	@Override
-	public boolean hasChildren() {
+	public boolean hasChildren()
+	{
 		return false;
 	}
 
 	@Override
-	public boolean hasChild(String name) {
-		
+	public boolean hasChild(String name)
+	{
+
 		return false;
 	}
-
-	
 
 }
-

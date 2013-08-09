@@ -1226,6 +1226,7 @@ public class DefinitionReader extends SyntaxReader
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd = AstFactory.newAInstanceVariableDefinition(def.getName(), def.getType(), def.getExpression());
+			def.getType().parent(ivd);//the type of ivd is graph but we trough away the assignment
 			ivd.setAccess(access);
 			return ivd;
 		}
