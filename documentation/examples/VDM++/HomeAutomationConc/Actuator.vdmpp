@@ -21,8 +21,4 @@ protected GetCorr: () ==> NetworkTypes`correction
 GetCorr() ==
   return Corr;
 
-public Step: () ==> ()
-Step() ==
-  is subclass responsibility
-
 end Actuator

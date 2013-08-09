@@ -172,16 +172,13 @@ Since a Channel object will be shared by both the client and the server, we
 specify synchronization constraints to ensure that the integrity of the object 
 is preserved.
 
-\begin{vdm_al}
-sync
-\end{vdm_al}
-
 A SendRequest can only be accepted if all previous SendRequests have been 
 received, all previous SendResponses have been received, and the number of 
 requests equals the number of responses. This ensures that no requests are 
 accepted while a response to a previous request is being processed.
 
 \end{vdm_al}
+sync
   per SendRequest => 
         AllReceived(#act(SendRequest), #fin(SendRequest),
                     #act(ReceiveRequest), #fin(ReceiveRequest)) and
@@ -195,6 +192,7 @@ that the number of SendRequests previously received must be exactly one more
 than the number of SendResponses previously received.
 
 \begin{vdm_al}
+sync
   per SendResponse => 
         AllReceived(#act(SendRequest), #fin(SendRequest),
                     #act(ReceiveRequest), #fin(ReceiveRequest)) and
