@@ -3,13 +3,16 @@ package org.overture.typechecker.assistant.definition;
 import java.util.Iterator;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.InvocationAssistantException;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -67,13 +70,53 @@ public class AValueDefinitionAssistantTC {
 
 	public static void typeResolve(AValueDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question) throws AnalysisException {
 
 		// d.setType(getType(d));
 		if (d.getType() != null)
+		{
 			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null,
 					rootVisitor, question));
+			PPatternAssistantTC.typeResolve(d.getPattern(), rootVisitor, question);
+			updateDefs(d, question);
+		}
 
+	}
+	
+	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
+	{
+		PType type = node.getType();
+		PPattern pattern = node.getPattern();
+		
+		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern,
+				type, question.scope);
+
+		// The untyped definitions may have had "used" markers, so we copy
+		// those into the new typed definitions, lest we get warnings. We
+		// also mark the local definitions as "ValueDefintions" (proxies),
+		// so that classes can be constructed correctly (values are statics).
+
+		for (PDefinition d : newdefs) {
+			for (PDefinition u : node.getDefs()) {
+				if (u.getName().equals(d.getName())) {
+					if (PDefinitionAssistantTC.isUsed(u)) {
+						PDefinitionAssistantTC.markUsed(d);
+					}
+
+					break;
+				}
+			}
+
+			ALocalDefinition ld = (ALocalDefinition) d;
+			ALocalDefinitionAssistantTC.setValueDefinition(ld);
+		}
+
+		node.setDefs(newdefs);
+		List<PDefinition> defs = node.getDefs();
+		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess()
+				.clone());
+		PDefinitionListAssistantTC.setClassDefinition(defs,
+				node.getClassDefinition());
 	}
 
 	public static PType getType(AValueDefinition def) {
