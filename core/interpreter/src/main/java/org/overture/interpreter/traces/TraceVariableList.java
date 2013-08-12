@@ -30,6 +30,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
@@ -52,7 +53,19 @@ public class TraceVariableList extends Vector<TraceVariable>
 		{
 			Value value = ctxt.get(key);
 			PDefinition d = local.findName(key, NameScope.NAMES);
-			add(new TraceVariable(key.getLocation(), key, value, d.getType()));
+			boolean clone = false;
+			
+			if (value.isType(ObjectValue.class))
+			{
+				ObjectValue obj = (ObjectValue)value;
+				ObjectValue self = ctxt.getSelf();
+				
+				// We have to clone new objects that were created within the trace,
+				// while using other (local instance variable) objects unchanged. 
+				clone = (self != null && obj.objectReference > self.objectReference);
+			}
+
+			add(new TraceVariable(key.getLocation(), key, value, d.getType(), clone));
 		}
 	}
 
