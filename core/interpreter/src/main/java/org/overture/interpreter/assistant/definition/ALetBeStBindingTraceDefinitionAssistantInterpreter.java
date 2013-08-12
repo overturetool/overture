@@ -54,7 +54,7 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
 			if (quantifiers.finished()) // No entries at all
 			{
@@ -62,7 +62,7 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 				return node;
 			}
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(af, term.getLocation(), "TRACE", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
