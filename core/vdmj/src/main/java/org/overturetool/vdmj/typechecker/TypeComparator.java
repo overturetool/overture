@@ -823,7 +823,7 @@ public class TypeComparator
 				SeqType subs = (SeqType)sub;
 				SeqType sups = (SeqType)sup;
 
-				if (subs.empty || sups.empty)
+				if ((subs.empty && !(sup instanceof Seq1Type)) || sups.empty)
 				{
 					return Result.Yes;
 				}
