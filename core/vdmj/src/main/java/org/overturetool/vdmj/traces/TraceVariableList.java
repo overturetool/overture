@@ -32,6 +32,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
+import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.Value;
 
 public class TraceVariableList extends Vector<TraceVariable>
@@ -51,7 +52,19 @@ public class TraceVariableList extends Vector<TraceVariable>
 		{
 			Value value = ctxt.get(key);
 			Definition d = local.findName(key, NameScope.NAMES);
-			add(new TraceVariable(key.location, key, value, d.getType()));
+			boolean clone = false;
+			
+			if (value.isType(ObjectValue.class))
+			{
+				ObjectValue obj = (ObjectValue)value;
+				ObjectValue self = ctxt.getSelf();
+				
+				// We have to clone new objects that were created within the trace,
+				// while using other (local instance variable) objects unchanged. 
+				clone = (self != null && obj.objectReference > self.objectReference);
+			}
+
+			add(new TraceVariable(key.location, key, value, d.getType(), clone));
 		}
 	}
 

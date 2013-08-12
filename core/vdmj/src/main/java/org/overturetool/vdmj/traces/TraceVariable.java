@@ -34,13 +34,15 @@ public class TraceVariable
 	public final LexNameToken name;
 	public final Value value;
 	public final Type type;
+	public final boolean clone;
 
-	public TraceVariable(LexLocation location, LexNameToken name, Value value, Type type)
+	public TraceVariable(LexLocation location, LexNameToken name, Value value, Type type, boolean clone)
 	{
 		this.location = location;
 		this.name = name;
 		this.value = value;
 		this.type = type;
+		this.clone = clone;
 	}
 
 	@Override

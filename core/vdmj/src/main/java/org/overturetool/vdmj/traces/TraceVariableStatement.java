@@ -51,7 +51,7 @@ public class TraceVariableStatement extends Statement
 		location.hit();
 		Value val = var.value;
 
-		if (val.isType(ObjectValue.class))
+		if (var.clone)
 		{
 			val = (Value)var.value.clone();		// To allow updates to objects
 		}
