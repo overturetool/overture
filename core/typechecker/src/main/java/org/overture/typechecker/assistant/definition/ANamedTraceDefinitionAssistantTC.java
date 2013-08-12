@@ -37,7 +37,7 @@ public class ANamedTraceDefinitionAssistantTC {
 	}
 
 	public static LexNameList getVariableNames(ANamedTraceDefinition d) {
-		return new LexNameList();
+		return new LexNameList(d.getName());
 	}
 
 }
