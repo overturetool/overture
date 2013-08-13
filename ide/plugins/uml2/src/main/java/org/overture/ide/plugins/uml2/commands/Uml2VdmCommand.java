@@ -12,12 +12,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.uml2.Activator;
 import org.overture.ide.plugins.uml2.uml2vdm.Uml2Vdm;
 
@@ -49,7 +51,23 @@ public class Uml2VdmCommand extends AbstractHandler
 					{
 						progress.beginTask("Importing", 100);
 						progress.worked(5);
-						if (!uml2vdm.initialize(uri))
+						
+						IVdmProject p = (IVdmProject) iFile.getProject().getAdapter(IVdmProject.class);
+						String extension = null;
+						if(p!=null)
+						{
+							for (IContentType ct : p.getContentTypeIds())
+							{
+								if(!ct.getId().contains(".external."))
+								{
+									extension = ct.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)[0];
+									break;
+								}
+							}
+							
+						}
+						
+						if (!uml2vdm.initialize(uri,extension))
 						{
 							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed importing .uml file. Maybe it doesnt have the EMF UML format");
 						}
