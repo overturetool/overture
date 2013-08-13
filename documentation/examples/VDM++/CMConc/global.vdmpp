@@ -36,9 +36,6 @@ canObserve (pangle, pleft, psize) ==
     then return (pangle < pright or pangle >= pleft)
     -- check between [pleft, pright>
     else return (pangle >= pleft and pangle < pright);
-       
-public getAperture: () ==> Angle * Angle
-getAperture () == is subclass responsibility;
 
 end GLOBAL
 \end{vdm_al}

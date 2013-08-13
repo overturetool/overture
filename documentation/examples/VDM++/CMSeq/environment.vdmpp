@@ -74,8 +74,8 @@ createSignal () ==
          return nil));
 
 public handleEvent: EventId * FlareType * Angle * Time * Time ==> ()
-handleEvent (evid,pfltp,angle,pt1,pt2) ==
-  (outlines := outlines ^ [mk_ (evid,pfltp, angle,pt1, pt2)] );
+handleEvent (newevid,pfltp,angle,pt1,pt2) ==
+  (outlines := outlines ^ [mk_ (newevid,pfltp, angle,pt1, pt2)] );
 
 public showResult: () ==> ()
 showResult () ==
