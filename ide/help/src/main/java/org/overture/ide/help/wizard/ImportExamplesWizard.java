@@ -3,6 +3,7 @@ package org.overture.ide.help.wizard;
 import java.io.IOException;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
@@ -50,7 +51,6 @@ public class ImportExamplesWizard extends Wizard implements IImportWizard
 	public void createPageControls(Composite pageContainer)
 	{
 		super.createPageControls(pageContainer);
-		updateImportPage();
 	}
 
 	void updateImportPage()
@@ -78,10 +78,20 @@ public class ImportExamplesWizard extends Wizard implements IImportWizard
 	{
 
 	}
+	
+	@Override
+	public IWizardPage getNextPage(IWizardPage page)
+	{
+		IWizardPage p =  super.getNextPage(page);
+		updateImportPage();
+		return p;
+	}
+	
 
 	@Override
 	public boolean performFinish()
 	{
+		updateImportPage();
 		this.importPageProxy.performFinish();
 		return true;
 	}
