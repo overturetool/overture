@@ -16,14 +16,4 @@ public class AParameterTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(AParameterType type)
-	{
-		return true;
-	}
-
-	public static ARealNumericBasicType getNumeric(AParameterType type)
-	{
-		return AstFactory.newARealNumericBasicType(type.getLocation());
-	}
-
 }

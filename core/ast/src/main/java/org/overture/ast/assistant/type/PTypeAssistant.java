@@ -52,8 +52,6 @@ public class PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistant.isNumeric((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistant.isNumeric((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -89,8 +87,6 @@ public class PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistant.getNumeric((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistant.getNumeric((AUnionType) type);
 			case AUnknownType.kindPType:
