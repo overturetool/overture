@@ -17,7 +17,7 @@ public class PStateDesignatorAssistantTC {
 		this.af = af;
 	}
 	public static PDefinition targetDefinition(PStateDesignator pStateDesignator, TypeCheckInfo question) {
-		if (AIdentifierStateDesignator.kindPStateDesignator.equals(pStateDesignator.kindPStateDesignator()))
+		if (pStateDesignator instanceof AIdentifierStateDesignator)
 		{
 			AIdentifierStateDesignator stateDesignator = (AIdentifierStateDesignator) pStateDesignator;
 			return question.env.findName(stateDesignator.getName(),NameScope.STATE);

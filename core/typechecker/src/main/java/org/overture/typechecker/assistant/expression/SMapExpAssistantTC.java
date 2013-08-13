@@ -15,12 +15,11 @@ public class SMapExpAssistantTC {
 		this.af = af;
 	}
 	public static LexNameList getOldNames(SMapExp expression) {
-		switch (expression.kindSMapExp()) {		
-		case AMapCompMapExp.kindSMapExp:
+		if (expression instanceof AMapCompMapExp) {
 			return AMapCompMapExpAssistantTC.getOldNames((AMapCompMapExp) expression);
-		case AMapEnumMapExp.kindSMapExp:
+		} else if (expression instanceof AMapEnumMapExp) {
 			return AMapEnumMapExpAssistantTC.getOldNames((AMapEnumMapExp) expression);
-		default:
+		} else {
 			assert false : "Should not happen";
 			return new LexNameList();
 		}

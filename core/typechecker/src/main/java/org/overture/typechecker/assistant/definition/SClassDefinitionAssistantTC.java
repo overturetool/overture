@@ -329,16 +329,10 @@ public class SClassDefinitionAssistantTC
 	public static void implicitDefinitions( SClassDefinition d,
 			Environment publicClasses)
 	{
-
-		switch (d.kindSClassDefinition())
-		{
-			case ASystemClassDefinition.kindSClassDefinition:
-				ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) d, publicClasses);
-				break;
-
-			default:
-				implicitDefinitionsBase(d, publicClasses);
-				break;
+		if (d instanceof ASystemClassDefinition) {
+			ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) d, publicClasses);
+		} else {
+			implicitDefinitionsBase(d, publicClasses);
 		}
 
 	}

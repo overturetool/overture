@@ -14,10 +14,9 @@ public class SUnaryExpAssistantTC {
 		this.af = af;
 	}
 	public static LexNameList getOldNames(SUnaryExp expression) {
-		switch (expression.kindSUnaryExp()) {		
-		case AElementsUnaryExp.kindSUnaryExp:
+		if (expression instanceof AElementsUnaryExp) {
 			return AElementsUnaryExpAssistantTC.getOldNames((AElementsUnaryExp) expression);
-		default:
+		} else {
 			return PExpAssistantTC.getOldNames(expression.getExp());
 		}
 	}

@@ -24,20 +24,20 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return APublicAccess.kindPAccess.equals(a.getAccess().kindPAccess());
+			return a.getAccess() instanceof APublicAccess;
 		}		
 		return false;
 	}
 	
 	public static boolean isPrivate(AAccessSpecifierAccessSpecifier access) {
-		return APrivateAccess.kindPAccess.equals(access.getAccess().kindPAccess());
+		return access.getAccess() instanceof APrivateAccess;
 	}
 	
 	public static boolean isProtected(PAccessSpecifier access) {
 		if(access instanceof AAccessSpecifierAccessSpecifier)
 		{
 			AAccessSpecifierAccessSpecifier a = (AAccessSpecifierAccessSpecifier) access;
-			return AProtectedAccess.kindPAccess.equals(a.getAccess().kindPAccess());
+			return a.getAccess() instanceof AProtectedAccess;
 		}		
 		return false;
 	}
@@ -65,13 +65,12 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant{
 	}
 
 	private static boolean narrowerThan(PAccess access, PAccess other) {
-		switch (access.kindPAccess()) {
-		case APrivateAccess.kindPAccess:
-			return ! APrivateAccess.kindPAccess.equals(other.kindPAccess());
-		case AProtectedAccess.kindPAccess:
-			return APublicAccess.kindPAccess.equals(other.kindPAccess());
-		case APublicAccess.kindPAccess:
-			return false;		
+		if (access instanceof APrivateAccess) {
+			return ! (other instanceof APrivateAccess);
+		} else if (access instanceof AProtectedAccess) {
+			return other instanceof APublicAccess;
+		} else if (access instanceof APublicAccess) {
+			return false;
 		}
 		assert false : "PAccessSpecifierAssistent : narrowerThan PAccess switch is not comprehensive";
 		return false;

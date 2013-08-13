@@ -442,7 +442,7 @@ public class TypeCheckerDefinitionVisitor extends
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {
-					if (AProductType.kindPType.equals(mtype.getResult().kindPType())) {
+					if (mtype.getResult() instanceof AProductType) {
 						AProductType pt = PTypeAssistantTC.getProduct(mtype
 								.getResult());
 

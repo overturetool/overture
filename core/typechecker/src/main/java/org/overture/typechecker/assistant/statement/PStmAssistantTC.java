@@ -30,46 +30,45 @@ public class PStmAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static PTypeSet exitCheck(PStm statement) {
-		
-		switch (statement.kindPStm()) {		
-		case AAlwaysStm.kindPStm:
+		if (statement instanceof AAlwaysStm) {
 			return AAlwaysStmAssistantTC.exitCheck((AAlwaysStm)statement);
-		case AAssignmentStm.kindPStm:
-			return AAssignmentStmAssistantTC.exitCheck((AAssignmentStm)statement);		
-		case ACallStm.kindPStm:
+		} else if (statement instanceof AAssignmentStm) {
+			return AAssignmentStmAssistantTC.exitCheck((AAssignmentStm)statement);
+		} else if (statement instanceof ACallStm) {
 			return ACallStmAssistantTC.exitCheck((ACallStm)statement);
-		case ACallObjectStm.kindPStm:
+		} else if (statement instanceof ACallObjectStm) {
 			return ACallObjectStatementAssistantTC.exitCheck((ACallObjectStm)statement);
-		case ACasesStm.kindPStm:
+		} else if (statement instanceof ACasesStm) {
 			return ACasesStmAssistantTC.exitCheck((ACasesStm)statement);
-		case AElseIfStm.kindPStm:
-			return AElseIfStmAssistantTC.exitCheck((AElseIfStm)statement);		
-		case AExitStm.kindPStm:
+		} else if (statement instanceof AElseIfStm) {
+			return AElseIfStmAssistantTC.exitCheck((AElseIfStm)statement);
+		} else if (statement instanceof AExitStm) {
 			return AExitStmAssistantTC.exitCheck((AExitStm)statement);
-		case AForAllStm.kindPStm:
+		} else if (statement instanceof AForAllStm) {
 			return AForAllStmAssistantTC.exitCheck((AForAllStm)statement);
-		case AForIndexStm.kindPStm:
+		} else if (statement instanceof AForIndexStm) {
 			return AForIndexStmAssistantTC.exitCheck((AForIndexStm)statement);
-		case AForPatternBindStm.kindPStm:
+		} else if (statement instanceof AForPatternBindStm) {
 			return AForPatternBindStmAssitantTC.exitCheck((AForPatternBindStm)statement);
-		case AIfStm.kindPStm:
+		} else if (statement instanceof AIfStm) {
 			return AIfStmAssistantTC.exitCheck((AIfStm)statement);
-		case ALetBeStStm.kindPStm:
+		} else if (statement instanceof ALetBeStStm) {
 			return ALetBeStStmAssistantTC.exitCheck((ALetBeStStm)statement);
-		case SLetDefStm.kindPStm:
-			return SLetDefStmAssistantTC.exitCheck((SLetDefStm)statement);		
-		case AReturnStm.kindPStm:
+		} else if (statement instanceof SLetDefStm) {
+			return SLetDefStmAssistantTC.exitCheck((SLetDefStm)statement);
+		} else if (statement instanceof AReturnStm) {
 			return AReturnStmAssistantTC.exitCheck((AReturnStm)statement);
-		case SSimpleBlockStm.kindPStm:
+		} else if (statement instanceof SSimpleBlockStm) {
 			return SSimpleBlockStmAssistantTC.exitCheck((SSimpleBlockStm)statement);
-		case ATixeStm.kindPStm:
+		} else if (statement instanceof ATixeStm) {
 			return ATixeStmAssistantTC.exitCheck((ATixeStm)statement);
-		case ATrapStm.kindPStm:
+		} else if (statement instanceof ATrapStm) {
 			return ATrapStmAssistantTC.exitCheck((ATrapStm)statement);
-		case AWhileStm.kindPStm:
+		} else if (statement instanceof AWhileStm) {
 			return AWhileStmAssistantTC.exitCheck((AWhileStm)statement);
-		default:
+		} else {
 			return exitCheckBaseCase(statement);
 		}
 	}
