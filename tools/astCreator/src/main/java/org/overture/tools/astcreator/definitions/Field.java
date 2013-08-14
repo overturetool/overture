@@ -247,6 +247,10 @@ public class Field {
 	public boolean isTypeExternalNotNode() {
 		return (type instanceof ExternalJavaClassDefinition && !((ExternalJavaClassDefinition) type).extendsNode);
 	}
+	
+	public boolean isTypeExternalNode() {
+		return (type instanceof ExternalJavaClassDefinition && ((ExternalJavaClassDefinition) type).extendsNode);
+	}
 
 	public String getCast(Environment env) {
 		return "(" + getType(env) + ")";

@@ -60,6 +60,8 @@ import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.outline.VdmContentOutlinePage;
 import org.overture.ide.ui.utility.ast.AstLocationSearcher;
+import org.overture.ide.ui.utility.ast.AstLocationSearcher2;
+import org.overture.ide.ui.utility.ast.AstLocationSearcher2.TextReference;
 
 public abstract class VdmEditor extends TextEditor
 {
@@ -117,7 +119,8 @@ public abstract class VdmEditor extends TextEditor
 				IVdmElement element = getInputVdmElement();
 				if (element instanceof IVdmSourceUnit)
 				{
-					return AstLocationSearcher.search(nodes, offSet, (IVdmSourceUnit) element);
+					//return AstLocationSearcher.search(nodes, offSet, (IVdmSourceUnit) element);
+					return  new AstLocationSearcher2().getNode(new TextReference(((IVdmSourceUnit) element).getSystemFile(), offSet), nodes);
 				}
 				return null;
 			}
@@ -841,6 +844,7 @@ public abstract class VdmEditor extends TextEditor
 
 			long startTime = System.currentTimeMillis();
 			node = this.locationSearcher.search(nodes, offset);
+			
 			if (TRACE_GET_ELEMENT_AT)
 			{
 				System.out.println("Search Time for offset " + offset + " in "

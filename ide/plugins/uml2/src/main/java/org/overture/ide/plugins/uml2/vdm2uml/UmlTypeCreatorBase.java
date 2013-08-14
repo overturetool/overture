@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.uml2.uml.Type;
-import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ABracketType;
@@ -31,6 +32,7 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+
 @SuppressWarnings("deprecation")
 public class UmlTypeCreatorBase
 {
@@ -43,22 +45,22 @@ public class UmlTypeCreatorBase
 	public static final String ANY_TYPE = "Any";
 	public static final String templateOptionalName = "Optional<T>";
 	public static final String NAME_SEPERATOR = "::";
-	public	 static final String UNKNOWN_TYPE = "_Unknown_";
+	public static final String UNKNOWN_TYPE = "_Unknown_";
 
 	protected static String getTemplateUnionName(int templateNameCount)
 	{
-		return getTemplateBaseName("Union",templateNameCount);
+		return getTemplateBaseName("Union", templateNameCount);
 	}
-	
+
 	protected static String getTemplateProductName(int templateNameCount)
 	{
-		return getTemplateBaseName("Product",templateNameCount);
+		return getTemplateBaseName("Product", templateNameCount);
 	}
-	
-	private static String getTemplateBaseName(String name,int templateNameCount)
+
+	private static String getTemplateBaseName(String name, int templateNameCount)
 	{
 		String[] templateNames = getTemplateNames(templateNameCount);
-		 name+= "<";
+		name += "<";
 		for (int i = 0; i < templateNames.length; i++)
 		{
 			name += templateNames[i];
@@ -69,13 +71,13 @@ public class UmlTypeCreatorBase
 		}
 		return name + ">";
 	}
-	
+
 	protected static String[] getTemplateNames(int templateNameCount)
 	{
 		String[] names = new String[templateNameCount];
 		for (int i = 0; i < templateNameCount; i++)
 		{
-			names[i]= Character.valueOf((char)('A'+i)).toString();
+			names[i] = Character.valueOf((char) ('A' + i)).toString();
 		}
 		return names;
 	}
@@ -104,20 +106,24 @@ public class UmlTypeCreatorBase
 						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 								+ NAME_SEPERATOR
 								+ ((ARecordInvariantType) type).getName().getName();
-						
+
 				}
 			}
 				break;
 			case SMapType.kindPType:
-				return (AInMapMapType.kindSMapType.equals(((SMapType)type).kindSMapType())?"In":"")
-						+ "Map<" + getName(((SMapType) type).getFrom()) + ","
+				return (AInMapMapType.kindSMapType.equals(((SMapType) type).kindSMapType()) ? "In"
+						: "")
+						+ "Map<"
+						+ getName(((SMapType) type).getFrom())
+						+ ","
 						+ getName(((SMapType) type).getTo()) + ">";
 			case AOperationType.kindPType:
 				return getName(((AOperationType) type).getResult());
 			case AOptionalType.kindPType:
-				return "Optional<"+getName(((AOptionalType) type).getType())+">";
+				return "Optional<" + getName(((AOptionalType) type).getType())
+						+ ">";
 			case AParameterType.kindPType:
-				return ((AParameterType)type).getName().getName();
+				return ((AParameterType) type).getName().getName();
 			case AProductType.kindPType:
 			{
 				String name = "Product<";
@@ -143,23 +149,29 @@ public class UmlTypeCreatorBase
 				break;
 			case AUnionType.kindPType:
 			{
-				
+
 				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 				{
-					ATypeDefinition typeDef = type.getAncestor(ATypeDefinition.class);
-					if(typeDef!=null)
+					String namePostfix = "_"+type.toString().replaceAll("[^A-Za-z0-9]", "")+("_"+type.toString().hashCode()).replace('-', '_');
+					PDefinition def = type.getAncestor(PDefinition.class);
+					if (def != null)
 					{
-						ILexNameToken nameTypeDef = ATypeDefinition.class.cast(typeDef).getName();
-						return nameTypeDef.getModule() + NAME_SEPERATOR + nameTypeDef.getName();
-					}else
-				{
-					String name="GeneratedUnion";
-					for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
+						if(def instanceof AValueDefinition)
+						{
+							return def.getLocation().getModule()+NAME_SEPERATOR+ ((AValueDefinition) def).getPattern().toString().replace(" ", "").trim()+namePostfix; 
+						}
+						ILexNameToken nameTypeDef = PDefinition.class.cast(def).getName();
+						return nameTypeDef.getModule() + NAME_SEPERATOR
+								+ nameTypeDef.getName()+namePostfix;
+					} else
 					{
-						name += getName(itr.next());
+						String name = "GeneratedUnion";
+						for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
+						{
+							name += getName(itr.next());
+						}
+						return name;
 					}
-					return name;
-				}
 				}
 				String name = "Union<";
 				for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)

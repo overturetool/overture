@@ -13,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.modules.AModuleModules;
@@ -24,7 +25,8 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.editor.core.VdmEditor;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overture.ide.ui.utility.ast.AstLocationSearcher;
+import org.overture.ide.ui.utility.ast.AstLocationSearcher2;
+import org.overture.ide.ui.utility.ast.AstLocationSearcher2.TextReference;
 
 public class GotoDefinitionHandler extends AbstractHandler
 {
@@ -56,10 +58,17 @@ public class GotoDefinitionHandler extends AbstractHandler
 							VdmTypeCheckerUi.typeCheck(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), p);
 						}
 					}
-					INode node = AstLocationSearcher.search(source.getParseList(), tselection.getOffset(),source);
+					INode node = new AstLocationSearcher2().getNode(new TextReference(source.getSystemFile(), tselection.getOffset()),source.getParseList() );
 
-					PType gotoType = null;
+					PType gotoType = null;//all code related to this var is actually togo type defeinition
 					ILexLocation gotoLocation = null;
+					//behaviour toto definition - connecnt this block to get goto type
+					if(node instanceof AVariableExp)
+					{
+						gotoLocation = ((AVariableExp) node).getVardef().getLocation();
+					}
+					else
+						//end goto definition
 					if (node instanceof PDefinition)
 					{
 						gotoType = ((PDefinition) node).getType();

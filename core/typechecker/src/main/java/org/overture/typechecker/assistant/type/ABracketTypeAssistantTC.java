@@ -37,16 +37,19 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		
 		if (type.getResolved()) return type; else { type.setResolved(true); }
 
+		PType tmp = type;
 		try
 		{
 			do
 			{
-				type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
+				tmp=PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question);
 			}
-			while (type.getType() instanceof ABracketType);
+			while (tmp instanceof ABracketType);
 
-			type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
-			return type.getType();
+			tmp=PTypeAssistantTC.typeResolve(tmp, root, rootVisitor, question);
+			
+			tmp.parent(type.parent());//re-link tree after bracket removal
+			return tmp;
 		}
 		catch (TypeCheckException e)
 		{

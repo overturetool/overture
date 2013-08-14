@@ -455,12 +455,15 @@ public class AstFactory {
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
-		
-		if(type.getDefinitions() == null)
-			type.setDefinitions(new LinkedList<PDefinition>());
-		
-		type.getDefinitions().add(result);
-		
+
+		if (type != null)
+		{
+			if (type.getDefinitions() == null)
+			{
+				type.setDefinitions(new LinkedList<PDefinition>());
+			}
+			type.getDefinitions().add(result);
+		}
 		return result;
 		
 	}

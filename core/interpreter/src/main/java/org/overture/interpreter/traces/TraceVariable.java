@@ -35,13 +35,15 @@ public class TraceVariable
 	public final ILexNameToken name;
 	public final Value value;
 	public final PType type;
+	public final boolean clone;
 
-	public TraceVariable(ILexLocation location, ILexNameToken name, Value value, PType type)
+	public TraceVariable(ILexLocation location, ILexNameToken name, Value value, PType type, boolean clone)
 	{
 		this.location = location;
 		this.name = name;
 		this.value = value;
 		this.type = type;
+		this.clone = clone;
 	}
 
 	@Override

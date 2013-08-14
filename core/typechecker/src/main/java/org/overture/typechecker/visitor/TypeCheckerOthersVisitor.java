@@ -1,6 +1,7 @@
 package org.overture.typechecker.visitor;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
@@ -41,6 +42,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -210,8 +212,30 @@ public class TypeCheckerOthersVisitor extends
 			PDefinition def = env.findName(exname, NameScope.STATE);
 
 			if (def == null) {
-				TypeCheckerErrors.report(3247, "Unknown variable '" + name
-						+ "' in assignment", name.getLocation(), name);
+				
+				Set<PDefinition> matches = env.findMatches(exname);
+				
+				if (!matches.isEmpty())
+				{
+					PDefinition match = matches.iterator().next();	// Just take first
+					
+					if (PDefinitionAssistantTC.isFunction(match))
+					{
+						TypeCheckerErrors.report(3247, "Function apply not allowed in state designator", name.getLocation(), name);
+					}
+					else
+					{
+						TypeCheckerErrors.report(3247, "Operation call not allowed in state designator", name.getLocation(), name);
+					}
+					
+					node.setType(match.getType());
+					return node.getType();
+				}
+				else
+				{
+					TypeCheckerErrors.report(3247, "Symbol '" + name + "' is not an updatable variable", name.getLocation(), name);
+				}
+				
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
@@ -247,6 +271,16 @@ public class TypeCheckerOthersVisitor extends
 			if (def == null) {
 				TypeCheckerErrors.report(3247, "Unknown state variable '"
 						+ name + "' in assignment", name.getLocation(), name);
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
+				return node.getType();
+			} else if(PDefinitionAssistantTC.isFunction(def))
+			{
+				TypeCheckerErrors.report(3247, "Function apply not allowed in state designator", name.getLocation(), name);
+				node.setType(AstFactory.newAUnknownType(name.getLocation()));
+				return node.getType();
+			} else if(PDefinitionAssistantTC.isOperation(def))
+			{
+				TypeCheckerErrors.report(3247, "Operation call not allowed in state designator", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
 			} else if (!question.assistantFactory.createPDefinitionAssistant().isUpdatable(def)) {
@@ -299,7 +333,7 @@ public class TypeCheckerOthersVisitor extends
 
 			if (!PTypeAssistantTC.isNumeric(etype)) {
 				TypeCheckerErrors.report(3243,
-						"Seq element assignment is not numeric",
+						"Seq index is not numeric",
 						node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", etype);
 			} else {
@@ -307,6 +341,20 @@ public class TypeCheckerOthersVisitor extends
 			}
 		}
 
+		if(PTypeAssistantTC.isFunction(rtype))
+		{
+			// Error case, but improves errors if we work out the return type
+			AFunctionType ftype = PTypeAssistantTC.getFunction(rtype);
+			result.add(ftype.getResult());
+		}
+		
+		if(PTypeAssistantTC.isOperation(rtype))
+		{
+			// Error case, but improves errors if we work out the return type
+			AOperationType otype = PTypeAssistantTC.getOperation(rtype);
+			result.add(otype.getResult());
+		}
+		
 		if (result.isEmpty()) {
 			TypeCheckerErrors.report(3244, "Expecting a map or a sequence",
 					node.getLocation(), node);
