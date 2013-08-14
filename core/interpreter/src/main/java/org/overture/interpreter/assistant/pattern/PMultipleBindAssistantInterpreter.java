@@ -24,28 +24,23 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	public static ValueList getBindValues(PMultipleBind mb, Context ctxt)
 			throws ValueException
 	{
-		switch (mb.kindPMultipleBind())
-		{
-			case ASetMultipleBind.kindPMultipleBind:
-				return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb, ctxt);
-			case ATypeMultipleBind.kindPMultipleBind:
-				return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind) mb, ctxt);
-			default:
-				break;
+		if (mb instanceof ASetMultipleBind) {
+			return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb, ctxt);
+		} else if (mb instanceof ATypeMultipleBind) {
+			return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind) mb, ctxt);
+		} else {
 		}
 		return null;
 	}
 
 	public static ValueList getValues(PMultipleBind mb, ObjectContext ctxt)
 	{
-		switch (mb.kindPMultipleBind())
-		{
-			case ASetMultipleBind.kindPMultipleBind:
-				return ASetMultipleBindAssistantInterpreter.getValues((ASetMultipleBind) mb, ctxt);
-			case ATypeMultipleBind.kindPMultipleBind:
-				return ATypeMultipleBindAssistantInterpreter.getValues((ATypeMultipleBind) mb, ctxt);
-			default:
-				return new ValueList();
+		if (mb instanceof ASetMultipleBind) {
+			return ASetMultipleBindAssistantInterpreter.getValues((ASetMultipleBind) mb, ctxt);
+		} else if (mb instanceof ATypeMultipleBind) {
+			return ATypeMultipleBindAssistantInterpreter.getValues((ATypeMultipleBind) mb, ctxt);
+		} else {
+			return new ValueList();
 		}
 	}
 

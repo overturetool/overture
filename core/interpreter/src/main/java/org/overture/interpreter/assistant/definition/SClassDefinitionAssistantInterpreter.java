@@ -19,6 +19,7 @@ import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -104,17 +105,15 @@ public class SClassDefinitionAssistantInterpreter extends
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws ValueException
 	{
-		switch (node.kindSClassDefinition())
-		{
-			case ABusClassDefinition.kindSClassDefinition:
-				return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
-			case AClassClassDefinition.kindSClassDefinition:
-				return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
-			case ACpuClassDefinition.kindSClassDefinition:
-				return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
-			case ASystemClassDefinition.kindSClassDefinition:
-				VdmRuntimeError.abort(node.getLocation(), 4135, "Cannot instantiate system class "
-						+ node.getName(), ctxt);
+		if (node instanceof ABusClassDefinition) {
+			return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
+		} else if (node instanceof AClassClassDefinition) {
+			return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
+		} else if (node instanceof ACpuClassDefinition) {
+			return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
+		} else if (node instanceof ASystemClassDefinition) {
+			VdmRuntimeError.abort(node.getLocation(), 4135, "Cannot instantiate system class "
+					+ node.getName(), ctxt);
 		}
 
 		return null;
@@ -414,37 +413,28 @@ public class SClassDefinitionAssistantInterpreter extends
 			{
 				// Values are implicitly static, but NOT updatable
 
-				switch (d.getAccess().getAccess().kindPAccess())
-				{
-					case APrivateAccess.kindPAccess:
-					case AProtectedAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
-						initCtxt.putAllNew(nvl);
-						break;
-
-					case APublicAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
-						initCtxt.putAllNew(nvl);
-						break;
-
+				PAccess pAccess = d.getAccess().getAccess();
+				if (pAccess instanceof APrivateAccess
+						|| pAccess instanceof AProtectedAccess) {
+					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
+					initCtxt.putAllNew(nvl);
+				} else if (pAccess instanceof APublicAccess) {
+					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
+					initCtxt.putAllNew(nvl);
 				}
 			} else if (PDefinitionAssistantInterpreter.isStatic(d)
 					&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 			{
 				// Static instance variables are updatable
 
-				switch (d.getAccess().getAccess().kindPAccess())
-				{
-					case APrivateAccess.kindPAccess:
-					case AProtectedAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
-						initCtxt.putAllNew(nvl);
-						break;
-
-					case APublicAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
-						initCtxt.putAllNew(nvl);
-						break;
+				PAccess pAccess = d.getAccess().getAccess();
+				if (pAccess instanceof APrivateAccess
+						|| pAccess instanceof AProtectedAccess) {
+					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
+					initCtxt.putAllNew(nvl);
+				} else if (pAccess instanceof APublicAccess) {
+					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
+					initCtxt.putAllNew(nvl);
 				}
 			}
 		}
@@ -490,18 +480,14 @@ public class SClassDefinitionAssistantInterpreter extends
 				Context empty = new Context(af, node.getLocation(), "empty", null);
 				NameValuePairList nvl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
 
-				switch (d.getAccess().getAccess().kindPAccess())
-				{
-					case APrivateAccess.kindPAccess:
-					case AProtectedAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
-						initCtxt.putList(nvl);
-						break;
-
-					case APublicAccess.kindPAccess:
-						VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
-						initCtxt.putList(nvl);
-						break;
+				PAccess pAccess = d.getAccess().getAccess();
+				if (pAccess instanceof APrivateAccess
+						|| pAccess instanceof AProtectedAccess) {
+					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
+					initCtxt.putList(nvl);
+				} else if (pAccess instanceof APublicAccess) {
+					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
+					initCtxt.putList(nvl);
 				}
 			}
 		}

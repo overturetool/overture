@@ -43,15 +43,13 @@ public class SInvariantTypeAssistantInterpreter
 	public static ValueList getAllValues(SInvariantType type, Context ctxt)
 			throws ValueException
 	{
-		switch (type.kindSInvariantType())
-		{
-			case ANamedInvariantType.kindSInvariantType:
-				return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
-			case ARecordInvariantType.kindSInvariantType:
-				return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
-			default:
-				throw new ValueException(4, "Cannot get bind values for type "
-						+ type, ctxt);
+		if (type instanceof ANamedInvariantType) {
+			return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
+		} else if (type instanceof ARecordInvariantType) {
+			return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
+		} else {
+			throw new ValueException(4, "Cannot get bind values for type "
+					+ type, ctxt);
 		}
 	}
 

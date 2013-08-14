@@ -22,27 +22,23 @@ public class SMapExpAssistantInterpreter extends SMapExpAssistantTC
 
 	public static ValueList getValues(SMapExp exp, ObjectContext ctxt)
 	{
-		switch (exp.kindSMapExp())
-		{
-			case AMapCompMapExp.kindSMapExp:
-				return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp) exp, ctxt);
-			case AMapEnumMapExp.kindSMapExp:
-				return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp) exp, ctxt);
-			default:
-				return new ValueList();
+		if (exp instanceof AMapCompMapExp) {
+			return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp) exp, ctxt);
+		} else if (exp instanceof AMapEnumMapExp) {
+			return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp) exp, ctxt);
+		} else {
+			return new ValueList();
 		}
 	}
 
 	public static PExp findExpression(SMapExp exp, int lineno)
 	{
-		switch (exp.kindSMapExp())
-		{
-			case AMapCompMapExp.kindSMapExp:
-				return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
-			case AMapEnumMapExp.kindSMapExp:
-				return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
-			default:
-				return null;
+		if (exp instanceof AMapCompMapExp) {
+			return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
+		} else if (exp instanceof AMapEnumMapExp) {
+			return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
+		} else {
+			return null;
 		}
 	}
 

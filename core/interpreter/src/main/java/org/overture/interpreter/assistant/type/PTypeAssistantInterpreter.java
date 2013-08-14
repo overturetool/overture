@@ -32,36 +32,30 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 	public static ValueList getAllValues(PType type, Context ctxt)
 			throws ValueException
 	{
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				return SBasicTypeAssistantInterpreter.getAllValues((SBasicType) type, ctxt);
-			case SInvariantType.kindPType:
-				return SInvariantTypeAssistantInterpreter.getAllValues((SInvariantType) type, ctxt);
-			case SMapType.kindPType:
-				switch (((SMapType) type).kindSMapType())
-				{
-					case AInMapMapType.kindSMapType:
-						return AInMapMapTypeAssistantInterpreter.getAllValues((AInMapMapType) type, ctxt);
-					case AMapMapType.kindSMapType:
-						return SMapTypeAssistantInterpreter.getAllValues((AMapMapType) type, ctxt);
-				}
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantInterpreter.getAllValues((AOptionalType) type, ctxt);
-			case AProductType.kindPType:
-				return AProductTypeAssistantInterpreter.getAllValues((AProductType) type, ctxt);
-			case AQuoteType.kindPType:
-				return AQuoteTypeAssistantInterpreter.getAllValues((AQuoteType) type, ctxt);
-			case ASetType.kindPType:
-				return ASetTypeAssistantInterpreter.getAllValues((ASetType) type, ctxt);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantInterpreter.getAllValues((AUnionType) type, ctxt);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantInterpreter.getAllValues((AParameterType) type, ctxt);
-			default:
-				throw new ValueException(4, "Cannot get bind values for type "
-						+ type, ctxt);
+		if (type instanceof SBasicType) {
+			return SBasicTypeAssistantInterpreter.getAllValues((SBasicType) type, ctxt);
+		} else if (type instanceof SInvariantType) {
+			return SInvariantTypeAssistantInterpreter.getAllValues((SInvariantType) type, ctxt);
+		} else if (type instanceof SMapType) {
+			if (type instanceof AInMapMapType) {
+				return AInMapMapTypeAssistantInterpreter.getAllValues((AInMapMapType) type, ctxt);
+			} else if (type instanceof AMapMapType) {
+				return SMapTypeAssistantInterpreter.getAllValues((AMapMapType) type, ctxt);
+			}
+		} else if (type instanceof AOptionalType) {
+			return AOptionalTypeAssistantInterpreter.getAllValues((AOptionalType) type, ctxt);
+		} else if (type instanceof AProductType) {
+			return AProductTypeAssistantInterpreter.getAllValues((AProductType) type, ctxt);
+		} else if (type instanceof AQuoteType) {
+			return AQuoteTypeAssistantInterpreter.getAllValues((AQuoteType) type, ctxt);
+		} else if (type instanceof ASetType) {
+			return ASetTypeAssistantInterpreter.getAllValues((ASetType) type, ctxt);
+		} else if (type instanceof AUnionType) {
+			return AUnionTypeAssistantInterpreter.getAllValues((AUnionType) type, ctxt);
+		} else if (type instanceof AParameterType) {
+			return AParameterTypeAssistantInterpreter.getAllValues((AParameterType) type, ctxt);
 		}
+		throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
 	}
 
 }
