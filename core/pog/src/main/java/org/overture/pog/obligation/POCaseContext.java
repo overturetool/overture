@@ -25,110 +25,87 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
-import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.utility.ContextHelper;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-
-public class POCaseContext extends POContext
-{
+public class POCaseContext extends POContext {
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
 
-	
-
-
-
-	public POCaseContext(PPattern pattern, PType type, PExp exp)
-	{
+	public POCaseContext(PPattern pattern, PType type, PExp exp) {
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
-	} 
-
-	
-
+	}
 
 	@Override
-	public PExp getContextNode(PExp stitch)
-	{
-		if (PPatternAssistantTC.isSimple(pattern)){
+	public PExp getContextNode(PExp stitch) {
+		if (PPatternAssistantTC.isSimple(pattern)) {
 			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			equalsExp.setLeft(matching);
-			equalsExp.setRight(exp);
-			impliesExp.setLeft(equalsExp);
+			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
+					matching.clone(), exp.clone()));
 			impliesExp.setRight(stitch);
 			return impliesExp;
-		}
-		else
-		{
+		} else {
 			AExistsExp existsExp = new AExistsExp();
-			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(pattern, type);
+			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(
+					pattern.clone(), type.clone());
 			existsExp.setBindList(bindList);
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
-			equalsExp.setLeft(matching);
-			equalsExp.setRight(exp);
-							
+
 			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-			impliesExp.setLeft(equalsExp);
-			
+			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
+					matching.clone(), exp.clone()));
+
 			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(pattern.getDefinitions());
+			letDefExp.setLocalDefs(pattern.clone().getDefinitions());
 			letDefExp.setExpression(stitch);
 
 			impliesExp.setRight(letDefExp);
-			
+
 			existsExp.setPredicate(impliesExp);
-			    		
-    		return existsExp;
+
+			return existsExp;
 		}
 
 	}
 
-
-
-
 	@Override
-	public String getContext()
-	{
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern))
-		{
-    		sb.append(pattern);
-    		sb.append(" = ");
-    		sb.append(exp);
-    		sb.append(" => ");
-		}
-		else
-		{
+		if (PPatternAssistantTC.isSimple(pattern)) {
+			sb.append(pattern);
+			sb.append(" = ");
+			sb.append(exp);
+			sb.append(" => ");
+		} else {
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			
-    		sb.append("exists ");
-    		sb.append(matching);
-    		sb.append(":");
-    		sb.append(type);
-    		sb.append(" & ");
-    		sb.append(matching);
-    		sb.append(" = ");
-    		sb.append(exp);
 
-    		sb.append(" =>\nlet ");
-    		sb.append(pattern);
-    		sb.append(" = ");
-    		sb.append(exp);
-    		sb.append(" in");
+			sb.append("exists ");
+			sb.append(matching);
+			sb.append(":");
+			sb.append(type);
+			sb.append(" & ");
+			sb.append(matching);
+			sb.append(" = ");
+			sb.append(exp);
+
+			sb.append(" =>\nlet ");
+			sb.append(pattern);
+			sb.append(" = ");
+			sb.append(exp);
+			sb.append(" in");
 		}
 
 		return sb.toString();

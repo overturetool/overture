@@ -46,14 +46,14 @@ public class OperationPostConditionObligation extends ProofObligation
 	{
 		super(op, POType.FUNC_POST_CONDITION, ctxt);
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition(), null)));
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), null)));
 	}
 
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
 			IPOContextStack ctxt)
 	{
 		super(op, POType.FUNC_POST_CONDITION, ctxt);
-		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition(), op.getErrors())));
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), op.clone().getErrors())));
 	}
 
 	private PExp handlePrePost(PExp preexp, PExp postexp, List<AErrorCase> errs)

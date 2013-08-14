@@ -122,7 +122,7 @@ public class RecursiveObligation extends ProofObligation
 		if (typeParams != null && !typeParams.isEmpty())
 		{
 			AFuncInstatiationExp func_exp = new AFuncInstatiationExp();
-			func_exp.setActualTypes(cloneList(apply.getArgtypes()));
+			func_exp.setActualTypes(cloneListType(apply.getArgtypes()));
 			func_exp.setFunction(wrapName(measure.clone()));
 			apply_exp.setRoot(func_exp);
 		}
@@ -174,7 +174,7 @@ public class RecursiveObligation extends ProofObligation
 		{
 			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
 			AFuncInstatiationExp func_exp = new AFuncInstatiationExp();
-			func_exp.setActualTypes(cloneList(fie.getActualTypes()));
+			func_exp.setActualTypes(cloneListType(fie.getActualTypes()));
 			func_exp.setFunction(wrapName(measure.clone()));
 			start = func_exp;
 		} else
@@ -256,7 +256,7 @@ public class RecursiveObligation extends ProofObligation
 		if_exp.setTest(notEquals_exp);
 		if_exp.setThen(gt_exp);
 
-		if_exp.setElse(buildStructuralLessThan(left_exp, right_exp, tupleCounter + 1, recCounter - 1));
+		if_exp.setElse(buildStructuralLessThan(left_exp.clone(), right_exp.clone(), tupleCounter + 1, recCounter - 1));
 
 		return if_exp;
 	}
@@ -275,22 +275,16 @@ public class RecursiveObligation extends ProofObligation
 		return valDef;
 	}
 
-	private List<PType> cloneList(List<PType> types)
-	{
-		List<PType> r = new LinkedList<PType>();
-		for (PType type : types)
-		{
-			r.add(type.clone());
-		}
-		return r;
-	}
 
 	private AVariableExp wrapName(ILexNameToken name)
 	{
 		AVariableExp r = new AVariableExp();
-		r.setName(name);
+		r.setName(name.clone());
 		r.setOriginal(name.getFullName());
 		return r;
 	}
+	
+
+	
 
 }

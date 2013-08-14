@@ -61,7 +61,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());
 		initialCases.remove(0);
 		
-		PExp pred = recOnExp(exp, initialCases, initialExp);
+		PExp pred = recOnExp(exp.clone(), initialCases, initialExp);
 		
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
@@ -88,15 +88,15 @@ public class CasesExhaustiveObligation extends ProofObligation
 			return equalsExp;
 		} else
 		{
-			PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
+			PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern().clone());
 
 			AExistsExp existsExp = new AExistsExp();
 
 			ATypeMultipleBind tbind = new ATypeMultipleBind();
 			List<PPattern> plist = new LinkedList<PPattern>();
-			plist.add(alt.getPattern());
+			plist.add(alt.getPattern().clone());
 			tbind.setPlist(plist);
-			tbind.setType(exp.getExpression().getType());
+			tbind.setType(exp.getExpression().getType().clone());
 			List<PMultipleBind> bindList = new LinkedList<PMultipleBind>();
 			bindList.add(tbind);
 			existsExp.setBindList(bindList);

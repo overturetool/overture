@@ -29,7 +29,6 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -58,7 +57,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
-			params.addAll(PPatternListAssistantTC.getMatchingExpressionList(pl));
+			params.addAll(cloneListPExp(PPatternListAssistantTC.getMatchingExpressionList(pl)));
 		}
 
 		PExp body = null;
@@ -82,7 +81,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 	//	valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), params, body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef().clone(), func.getPostdef().clone(), params, body)));
 	}
 
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
@@ -115,16 +114,16 @@ public class FuncPostConditionObligation extends ProofObligation
 			AApplyExp applyExp = new AApplyExp();
 			applyExp.setArgs(params);
 			AVariableExp varExp = new AVariableExp();
-			varExp.setName(func.getName());
+			varExp.setName(func.getName().clone());
 			applyExp.setRoot(varExp);
 			body = applyExp;
 		} else
 		{
-			body = func.getBody();
+			body = func.getBody().clone();
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), params, body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
 
 	}
 
@@ -135,12 +134,10 @@ public class FuncPostConditionObligation extends ProofObligation
 		if (predef != null)
 		{
 			// pre(params) =>
-			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
 			AApplyExp applyExp = new AApplyExp();
 			applyExp.setArgs(params);
-			AVariableExp varExp = getVarExp(predef.getName());
+			AVariableExp varExp = getVarExp(predef.getName().clone());
 			applyExp.setRoot(varExp);
-			impliesExp.setLeft(applyExp);
 			
 			return AstExpressionFactory.newAImpliesBooleanBinaryExp(applyExp, generateBody(postdef, params, body));
 			
@@ -158,7 +155,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		AVariableExp varExp = getVarExp(postdef.getName());
 		applyExp.setRoot(varExp);
 		List<PExp> args = params;
-		args.add(body);
+		args.add(body.clone());
 		applyExp.setArgs(args);
 		return applyExp;
 	}

@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -220,7 +221,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 		}
 
 		typeBind.setPlist(patternList);
-		typeBind.setType(patternType);
+		typeBind.setType(patternType.clone());
 
 		return typeBind;
 	}
@@ -372,4 +373,33 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 				getUniqueGenerator());
 		return pattern.apply(visitor);
 	}
+	
+	/**
+	 * Clone a list of PTypes (and return a typed list)
+	 * @param the list to clone
+	 * @return a Typed list of PTypes
+	 */
+	protected List<PType> cloneListType(List<PType> types)
+	{
+		List<PType> r = new LinkedList<PType>();
+		for (PType type : types)
+		{
+			r.add(type.clone());
+		}
+		return r;
+	}
+
+	/**
+	 * Clone a list of PExps (and return a typed list)
+	 * @param the list to clone
+	 * @return a Typed list of PExps
+	 */
+	protected List<PExp> cloneListPExp(List<PExp> args){
+		List<PExp> clones = new  LinkedList<PExp>();
+		for (PExp pexp : args){
+			clones.add(pexp.clone());
+		}
+		return clones;
+	}
+
 }
