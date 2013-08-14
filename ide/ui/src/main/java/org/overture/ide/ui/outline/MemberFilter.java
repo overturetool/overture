@@ -123,7 +123,7 @@ public class MemberFilter extends ViewerFilter {
 	}
 	private boolean isNonPublic(Object element) {
 		if(element instanceof PDefinition){
-			return ! APublicAccess.kindPAccess.equals(((PDefinition)element).getAccess().getAccess().kindPAccess());
+			return ! (((PDefinition)element).getAccess().getAccess() instanceof APublicAccess);
 		}
 		return false;
 	}

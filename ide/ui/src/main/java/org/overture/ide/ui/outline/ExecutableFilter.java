@@ -40,7 +40,7 @@ public class ExecutableFilter extends ViewerFilter {
 						|| element instanceof AInheritedDefinition
 						)
 					&& (element instanceof PDefinition
-						&& APublicAccess.kindPAccess.equals(((PDefinition)element).getAccess().getAccess().kindPAccess())
+						&& ((PDefinition)element).getAccess().getAccess() instanceof APublicAccess
 						)
 					)
 				|| (parentElement instanceof AModuleModules
