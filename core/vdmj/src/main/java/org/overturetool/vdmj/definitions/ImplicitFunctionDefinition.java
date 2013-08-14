@@ -655,18 +655,18 @@ public class ImplicitFunctionDefinition extends Definition
 			ctxt.pop();
 		}
 
-		ctxt.push(new POFunctionDefinitionContext(this, true));
-
 		if (body == null)
 		{
 			if (postcondition != null)
 			{
-				obligations.add(
-					new SatisfiabilityObligation(this, ctxt));
+				ctxt.push(new POFunctionDefinitionContext(this, false));
+				obligations.add(new SatisfiabilityObligation(this, ctxt));
+				ctxt.pop();
 			}
 		}
 		else
 		{
+			ctxt.push(new POFunctionDefinitionContext(this, true));
     		obligations.addAll(body.getProofObligations(ctxt));
 
 			if (isUndefined ||
@@ -675,9 +675,9 @@ public class ImplicitFunctionDefinition extends Definition
 				obligations.add(new SubTypeObligation(
 					this, type.result, actualResult, ctxt));
 			}
-		}
 
-		ctxt.pop();
+			ctxt.pop();
+		}
 
 		return obligations;
 	}
