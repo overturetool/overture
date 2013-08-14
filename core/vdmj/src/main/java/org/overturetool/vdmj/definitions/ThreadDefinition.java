@@ -33,6 +33,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.statements.PeriodicStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
 import org.overturetool.vdmj.types.OperationType;
@@ -150,7 +151,8 @@ public class ThreadDefinition extends Definition
 	@Override
 	public void typeCheck(Environment base, NameScope scope)
 	{
-		Type rt = statement.typeCheck(base, NameScope.NAMESANDSTATE);
+		FlatEnvironment local = new FlatEnvironment(getSelfDefinition(), base);
+		Type rt = statement.typeCheck(local, NameScope.NAMESANDSTATE);
 
 		if (!(rt instanceof VoidType) && !(rt instanceof UnknownType))
 		{
