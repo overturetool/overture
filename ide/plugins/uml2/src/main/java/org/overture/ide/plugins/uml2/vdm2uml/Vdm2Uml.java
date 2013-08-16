@@ -118,7 +118,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes,utc).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
