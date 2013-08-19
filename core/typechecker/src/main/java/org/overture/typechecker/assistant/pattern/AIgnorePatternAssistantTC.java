@@ -9,7 +9,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AIgnorePatternAssistantTC {
 	
-	private static int var = 1;
+	private static int var = 1;	// Used in getMatchingExpression()
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -22,8 +22,16 @@ public class AIgnorePatternAssistantTC {
 	}
 
 	public static PExp getMatchingExpression(AIgnorePattern iptrn) {
-		LexNameToken any = new LexNameToken("", "any" + var++, iptrn.getLocation());
-		return AstFactory.newAVariableExp(any);
+		
+		// Generate a new "any" name for use during PO generation. The name
+		// must be unique for the pattern instance.
+				
+		if(iptrn.getAnyName() == null)
+		{
+			iptrn.setAnyName(new LexNameToken("", "any" + var++, iptrn.getLocation()));
+		}
+		
+		return AstFactory.newAVariableExp(iptrn.getAnyName());
 	}
 	
 	public static boolean isSimple(AIgnorePattern p)

@@ -734,9 +734,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st statement", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

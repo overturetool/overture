@@ -78,8 +78,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isType((AOptionalType) b, typeclass);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isType((AParameterType) b, typeclass);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isType((AUnionType) b, typeclass);
 			case AUnknownType.kindPType:
@@ -131,7 +129,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isUnknown((AUnionType)type);
-			case AParameterType.kindPType:
 			case AUnknownType.kindPType:
 				return true;
 		}
@@ -195,8 +192,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isFunction((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isFunction((AFunctionType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isFunction((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -368,8 +363,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				return true;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isOperation((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isOperation((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isOperation((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -424,8 +417,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isSeq((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isSeq((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isSeq((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -452,8 +443,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getSeq((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getSeq((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.getSeq((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -486,8 +475,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isMap((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isMap((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isMap((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -514,8 +501,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getMap((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getMap((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.getMap((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -543,8 +528,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isSet((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isSet((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isSet((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -571,8 +554,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getSet((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getSet((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.getSet((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -601,8 +582,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isRecord((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isRecord((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isRecord((AUnionType) type);
 			default:
@@ -630,8 +609,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getRecord((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.getRecord((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -659,8 +636,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isClass((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isClass((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isClass((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -689,8 +664,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getClassType((AParameterType) type);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.getClassType((AUnionType) type);
 			case AUnknownType.kindPType:
@@ -717,8 +690,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getProduct((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getProduct((AProductType) type);
 			case AProductType.kindPType:
 				return AProductTypeAssistantTC.getProduct((AProductType) type);
 			case AUnionType.kindPType:
@@ -746,8 +717,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isProduct((AParameterType) type);
 			case AProductType.kindPType:
 				return AProductTypeAssistantTC.isProduct((AProductType) type);
 			case AUnionType.kindPType:
@@ -773,8 +742,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				return AOperationTypeAssistantTC.narrowerThan((AOperationType) type, accessSpecifier);
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.narrowerThan((AOptionalType) type, accessSpecifier);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.narrowerThan((AParameterType) type, accessSpecifier);
 			case SSeqType.kindPType:
 				return SSeqTypeAssistantTC.narrowerThan((SSeqType) type, accessSpecifier);
 			case ASetType.kindPType:
@@ -841,8 +808,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				return AOperationTypeAssistantTC.equals((AOperationType) type, other);
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.equals((AOptionalType) type, other);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.equals((AParameterType) type, other);
 			case AProductType.kindPType:
 				return AProductTypeAssistantTC.equals((AProductType) type, other);
 			case AQuoteType.kindPType:
@@ -900,8 +865,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				break;
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.isType((AOptionalType) exptype, typename);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isType((AParameterType) exptype, typename);
 			case AUnionType.kindPType:
 				return AUnionTypeAssistantTC.isType((AUnionType) exptype, typename);
 			case AUnknownType.kindPType:
@@ -1051,8 +1014,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 				}
 			case AOptionalType.kindPType:
 				return AOptionalTypeAssistantTC.getProduct((AOptionalType) type, size);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getProduct((AProductType) type, size);
 			case AProductType.kindPType:
 				return AProductTypeAssistantTC.getProduct((AProductType) type, size);
 			case AUnionType.kindPType:

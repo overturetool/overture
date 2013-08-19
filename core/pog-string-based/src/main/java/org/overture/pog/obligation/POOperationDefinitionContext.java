@@ -37,6 +37,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class POOperationDefinitionContext extends POContext
 {
@@ -71,14 +72,11 @@ public class POOperationDefinitionContext extends POContext
 
 			for (PPattern p: paramPatternList)
 			{
-				if (!(p instanceof AIgnorePattern))
-				{
 					sb.append(sep);
-					sb.append(p.toString());
+					sb.append(PPatternAssistantTC.getMatchingExpression(p));	// Expands anys
 					sb.append(":");
 					sb.append(types.next());
 					sep = ", ";
-				}
 			}
 
 			if (stateDefinition != null)

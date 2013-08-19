@@ -7,14 +7,14 @@
 <message column="7" line="151" message="Undefined superclass: TestCase" messageType="error" number="3003" resource="EnigmaPP.result"/>
 <message column="7" line="414" message="Undefined superclass: TestCase" messageType="error" number="3003" resource="EnigmaPP.result"/>
 <message column="7" line="530" message="Undefined superclass: TestCase" messageType="error" number="3003" resource="EnigmaPP.result"/>
-<message column="23" line="64" message="Unknown variable 'name' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
+<message column="23" line="64" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP.result"/>
 <message column="11" line="73" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="11" line="74" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="11" line="75" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="7" line="76" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="7" line="77" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
-<message column="28" line="160" message="Unknown variable 'name' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
-<message column="15" line="163" message="Unknown variable 'config' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
+<message column="28" line="160" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP.result"/>
+<message column="15" line="163" message="Symbol 'config' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP.result"/>
 <message column="18" line="167" message="Name 'Encode(nat1)' is not in scope" messageType="error" number="3182" resource="EnigmaPP.result"/>
 <message column="7" line="167" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="18" line="168" message="Name 'Encode(nat1)' is not in scope" messageType="error" number="3182" resource="EnigmaPP.result"/>
@@ -31,10 +31,10 @@
 <message column="7" line="173" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
 <message column="18" line="174" message="Name 'Decode(nat1)' is not in scope" messageType="error" number="3182" resource="EnigmaPP.result"/>
 <message column="7" line="174" message="Operation AssertTrue(bool) is not in scope" messageType="error" number="3213" resource="EnigmaPP.result"/>
-<message column="24" line="426" message="Unknown variable 'name' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
+<message column="24" line="426" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP.result"/>
 <message column="30" line="433" message="Class name Reflector not in scope" messageType="error" number="3133" resource="EnigmaPP.result"/>
 <message column="17" line="433" message="Unable to resolve type name 'Reflector'" messageType="error" number="3428" resource="EnigmaPP.result"/>
-<message column="20" line="545" message="Unknown variable 'name' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
+<message column="20" line="545" message="Symbol 'name' is not an updatable variable" messageType="error" number="3247" resource="EnigmaPP.result"/>
 <message column="25" line="552" message="Class name Rotor not in scope" messageType="error" number="3133" resource="EnigmaPP.result"/>
 <message column="16" line="552" message="Unable to resolve type name 'Rotor'" messageType="error" number="3428" resource="EnigmaPP.result"/>
 <result/>

@@ -79,7 +79,7 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -90,7 +90,6 @@ import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -1388,9 +1387,11 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseAThreadDefinition(AThreadDefinition node,
 			TypeCheckInfo question) throws AnalysisException {
-		question.scope = NameScope.NAMESANDSTATE;
 
-		PType rt = node.getStatement().apply(rootVisitor, question);
+		question.scope = NameScope.NAMESANDSTATE;
+		FlatEnvironment local = new FlatEnvironment(question.assistantFactory, PDefinitionAssistantTC.getSelfDefinition(node), question.env);
+		
+		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 
 		if (!(rt instanceof AVoidType) && !(rt instanceof AUnknownType)) {
 			TypeCheckerErrors.report(3049,
@@ -1510,37 +1511,9 @@ public class TypeCheckerDefinitionVisitor extends
 
 		PPattern pattern = node.getPattern();
 		PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern,
-				type, question.scope);
-
-		// The untyped definitions may have had "used" markers, so we copy
-		// those into the new typed definitions, lest we get warnings. We
-		// also mark the local definitions as "ValueDefintions" (proxies),
-		// so that classes can be constructed correctly (values are statics).
-
-		for (PDefinition d : newdefs) {
-			for (PDefinition u : node.getDefs()) {
-				if (u.getName().equals(d.getName())) {
-					if (PDefinitionAssistantTC.isUsed(u)) {
-						PDefinitionAssistantTC.markUsed(d);
-					}
-
-					break;
-				}
-			}
-
-			ALocalDefinition ld = (ALocalDefinition) d;
-			ALocalDefinitionAssistantTC.setValueDefinition(ld);
-		}
-
-		node.setDefs(newdefs);
-		List<PDefinition> defs = node.getDefs();
-		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess()
-				.clone());
-		PDefinitionListAssistantTC.setClassDefinition(defs,
-				node.getClassDefinition());
+		AValueDefinitionAssistantTC.updateDefs(node, question);
 		question.qualifiers = null;
-		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistantTC.typeCheck(node.getDefs(), rootVisitor, question);
 		return node.getType();
 	}
 

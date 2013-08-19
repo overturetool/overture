@@ -35,6 +35,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class POFunctionDefinitionContext extends POContext
 {
@@ -81,14 +82,11 @@ public class POFunctionDefinitionContext extends POContext
 
     			for (PPattern p: pl)
     			{
-    				if (!(p instanceof AIgnorePattern))
-    				{
     					sb.append(sep);
-    					sb.append(p.toString());
+    					sb.append(PPatternAssistantTC.getMatchingExpression(p));	// Expands anys
     					sb.append(":");
     					sb.append(types.next());
     					sep = ", ";
-    				}
     			}
 
     			if (ftype.getResult() instanceof AFunctionType)

@@ -19,7 +19,7 @@ public class AExitStmAssistantInterpreter extends AExitStmAssistantTC
 
 	public static PExp findExpression(AExitStm stm, int lineno)
 	{
-		return PExpAssistantInterpreter.findExpression(stm.getExpression(), lineno);
+		return stm.getExpression() == null ? null : PExpAssistantInterpreter.findExpression(stm.getExpression(), lineno);
 	}
 
 }
