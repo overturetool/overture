@@ -1387,9 +1387,11 @@ public class TypeCheckerDefinitionVisitor extends
 	@Override
 	public PType caseAThreadDefinition(AThreadDefinition node,
 			TypeCheckInfo question) throws AnalysisException {
-		question.scope = NameScope.NAMESANDSTATE;
 
-		PType rt = node.getStatement().apply(rootVisitor, question);
+		question.scope = NameScope.NAMESANDSTATE;
+		FlatEnvironment local = new FlatEnvironment(question.assistantFactory, PDefinitionAssistantTC.getSelfDefinition(node), question.env);
+		
+		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 
 		if (!(rt instanceof AVoidType) && !(rt instanceof AUnknownType)) {
 			TypeCheckerErrors.report(3049,

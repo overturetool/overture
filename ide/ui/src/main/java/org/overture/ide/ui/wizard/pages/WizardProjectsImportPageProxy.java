@@ -113,6 +113,13 @@ public class WizardProjectsImportPageProxy {
 			throws IOException {
 		URL examplesUrl = getResource(bundleId, relativePath);
 		this.inputPath = FileLocator.resolve(examplesUrl).getPath();
+		try
+		{
+			invokeMainPageMethod("updateProjectsList",this.inputPath);
+		} catch (Exception e)
+		{
+			VdmUIPlugin.log("Failed to update project list from path",	e);
+		}
 	}
 
 	public static URL getResource(String pluginId, String path) {
@@ -164,10 +171,23 @@ public class WizardProjectsImportPageProxy {
 		} else {
 			List<Class<?>> parameterTypes = new Vector<Class<?>>();
 			for (Object object : args) {
+				if(object instanceof Boolean)
+				{
+					parameterTypes.add(boolean.class);
+				}else{
 				parameterTypes.add(object.getClass());
+				}
 			}
+			try{
+				m = mainPage.getClass().getMethod(method,
+						parameterTypes.toArray(new Class<?>[] {}));
+			}catch(NoSuchMethodException e)
+			{;}
+			if(m==null)
+			{
 			m = mainPage.getClass().getDeclaredMethod(method,
 					parameterTypes.toArray(new Class<?>[] {}));
+			}
 		}
 		m.setAccessible(true);
 		return m.invoke(mainPage, args);

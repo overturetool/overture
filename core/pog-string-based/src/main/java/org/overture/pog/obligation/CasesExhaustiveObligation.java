@@ -52,9 +52,9 @@ public class CasesExhaustiveObligation extends ProofObligation
 				sb.append(alt.getPattern());
 			} else
 			{
-				
+
 				PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
-				
+
 				sb.append("(exists ");
 				sb.append(matching);
 				sb.append(":");
@@ -71,5 +71,4 @@ public class CasesExhaustiveObligation extends ProofObligation
 
 		value = ctxt.getObligation(sb.toString());
 	}
-}
-;
+};

@@ -29,7 +29,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 
-
 public class ValueBindingObligation extends ProofObligation
 {
 	/**
@@ -71,8 +70,8 @@ public class ValueBindingObligation extends ProofObligation
 		value = ctxt.getObligation(sb.toString());
 	}
 
-	public ValueBindingObligation(
-		PPattern p, PType t, PExp e, POContextStack ctxt)
+	public ValueBindingObligation(PPattern p, PType t, PExp e,
+			POContextStack ctxt)
 	{
 		super(p.getLocation(), POType.VALUE_BINDING, ctxt);
 		StringBuilder sb = new StringBuilder();

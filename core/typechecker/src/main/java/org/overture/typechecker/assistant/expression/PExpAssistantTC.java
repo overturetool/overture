@@ -46,6 +46,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PExpAssistantTC
 {
@@ -53,7 +54,7 @@ public class PExpAssistantTC
 	// A LexNameToken to indicate that a function has no precondition name, rather than
 	// that it is not a pure function (indicated by null).
 	public final static LexNameToken NO_PRECONDITION = new LexNameToken("", "", null);
-	
+
 	@SuppressWarnings("static-access")
 	public PExpAssistantTC(ITypeCheckerAssistantFactory af)
 	{
@@ -68,24 +69,26 @@ public class PExpAssistantTC
 			result = getPreName(func.getFunction());
 		} else if (expression instanceof AVariableExp) {
 			AVariableExp var = AVariableExp.class.cast(expression);
-			PDefinition def = var.getVardef();
-			//TODO: This will not work if the functions is renamed more than one time, can this occur??
-			if (def instanceof ARenamedDefinition)
-				def = ((ARenamedDefinition) def).getDef();
-			else if (def instanceof AInheritedDefinition)
-				def = ((AInheritedDefinition) def).getSuperdef();
-			if (def instanceof AExplicitFunctionDefinition) {
-				AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class
-						.cast(def);
-				PDefinition predef = ex.getPredef();
-				result = predef == null ? NO_PRECONDITION : predef.getName();
+                        PDefinition def = PDefinitionAssistantTC.deref(var.getVardef());
 
-			} else if (def instanceof AImplicitFunctionDefinition) {
-				AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class
-						.cast(def);
-				PDefinition predef = im.getPredef();
-				result = predef == null ? NO_PRECONDITION : predef.getName();
-			}
+			//TODO: This will not work if the functions is renamed more than one time, can this occur??
+			// if (def instanceof ARenamedDefinition)
+			// 	def = ((ARenamedDefinition) def).getDef();
+			// else if (def instanceof AInheritedDefinition)
+			// 	def = ((AInheritedDefinition) def).getSuperdef();
+                        if (def instanceof AExplicitFunctionDefinition)
+                        {
+                            AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class.cast(def);
+                            PDefinition predef = ex.getPredef();
+                            result = predef == null ? NO_PRECONDITION : predef.getName();
+
+                        } else if (def instanceof AImplicitFunctionDefinition)
+                        {
+                            AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class.cast(def);
+                            PDefinition predef = im.getPredef();
+                            result = predef == null ? NO_PRECONDITION
+                                : predef.getName();
+                        }
 		}
 		return result;
 	}
@@ -164,10 +167,11 @@ public class PExpAssistantTC
 		}
 	}
 
-	public static LexNameList getOldNames(LinkedList<PExp> args) {
+	public static LexNameList getOldNames(LinkedList<PExp> args)
+	{
 		LexNameList list = new LexNameList();
 
-		for (PExp exp: args)
+		for (PExp exp : args)
 		{
 			list.addAll(getOldNames(exp));
 		}

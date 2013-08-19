@@ -407,6 +407,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 				{
 					projectTreeNode = new ProjectTreeNode(project);
 					invisibleRoot.addChild(projectTreeNode);
+					break;
 				}
 			}
 		}

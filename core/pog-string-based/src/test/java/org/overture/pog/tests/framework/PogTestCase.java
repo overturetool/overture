@@ -14,11 +14,11 @@ import org.overture.parser.messages.VDMMessage;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.util.PogUtil.PogResult;
-import org.overture.util.Base64;
 import org.overture.test.framework.ResultTestCase;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
+import org.overture.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -83,14 +83,14 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 					&& cn.getNodeName().equals("po"))
 			{
 				String nodeType = cn.getAttributes().getNamedItem("object").getNodeValue();
-				if(nodeType!=null && !nodeType.isEmpty())
-				try
-				{
-					list.add((ProofObligation) fromString(nodeType));
-				} catch (Exception e)
-				{
-					fail("Not able to decode object stored result");
-				}
+				if (nodeType != null && !nodeType.isEmpty())
+					try
+					{
+						list.add((ProofObligation) fromString(nodeType));
+					} catch (Exception e)
+					{
+						fail("Not able to decode object stored result");
+					}
 			}
 		}
 		return list;
@@ -101,7 +101,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 			ProofObligationList actual)
 	{
 		// FIXME: check is not sufficient
-		if(expected == null)
+		if (expected == null)
 		{
 			assert false : "No result file";
 		}
@@ -132,18 +132,18 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 
 		return Base64.encode(baos.toByteArray()).toString();
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	protected static Result<ProofObligationList> convert(@SuppressWarnings("rawtypes") PogResult result)
+	protected static Result<ProofObligationList> convert(
+			@SuppressWarnings("rawtypes") PogResult result)
 	{
-		if(result.result==null)
+		if (result.result == null)
 		{
 			return new Result<ProofObligationList>(result.result, convert(result.typeCheckResult.warnings), convert(result.typeCheckResult.errors));
 		}
 		return new Result<ProofObligationList>(result.result, convert(result.warnings), convert(result.errors));
 	}
-	
+
 	public static List<IMessage> convert(List<? extends VDMMessage> messages)
 	{
 		List<IMessage> testMessages = new Vector<IMessage>();

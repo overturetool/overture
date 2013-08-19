@@ -25,7 +25,6 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.APlusPlusBinaryExp;
 
-
 public class SeqModificationObligation extends ProofObligation
 {
 	/**
@@ -36,7 +35,7 @@ public class SeqModificationObligation extends ProofObligation
 	public SeqModificationObligation(APlusPlusBinaryExp arg, POContextStack ctxt)
 	{
 		super(arg.getLocation(), POType.SEQ_MODIFICATION, ctxt);
-		value = ctxt.getObligation(
-			"dom " + arg.getRight() + " subset inds " + arg.getLeft());
+		value = ctxt.getObligation("dom " + arg.getRight() + " subset inds "
+				+ arg.getLeft());
 	}
 }

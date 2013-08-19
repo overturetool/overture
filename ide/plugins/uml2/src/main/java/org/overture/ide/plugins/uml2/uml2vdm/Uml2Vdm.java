@@ -67,8 +67,12 @@ public class Uml2Vdm
 			tc = new VdmTypeCreator(console);
 		}
 
-	public boolean initialize(URI uri)
+	public boolean initialize(URI uri, String extension)
 	{
+		if(extension!=null)
+		{
+			this.extension = extension;
+		}
 		Resource resource = new ResourceSetImpl().getResource(uri, true);
 		for (EObject c : resource.getContents())
 		{

@@ -53,6 +53,10 @@ public class SelectDialectWizardPage extends WizardPage
 						b.setSelection(true);
 					}
 				}
+				if(e.widget instanceof Button &&((Button)e.widget).getSelection())
+				{
+					handler.dialectSelected(((Button)e.widget).getText());
+				}
 			}
 
 			@Override

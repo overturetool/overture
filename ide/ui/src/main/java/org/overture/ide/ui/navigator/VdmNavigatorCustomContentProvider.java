@@ -92,7 +92,10 @@ public class VdmNavigatorCustomContentProvider
 					 */
 					public void run()
 					{
-						viewer.refresh();
+						if (!viewer.getControl().isDisposed())
+						{
+							viewer.refresh();
+						}
 					}
 				});
 		}

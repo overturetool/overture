@@ -75,38 +75,44 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
-public class SubTypeObligation extends ProofObligation {
+public class SubTypeObligation extends ProofObligation
+{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1108478780469068741L;
 
 	public SubTypeObligation(PExp exp, PType etype, PType atype,
-			POContextStack ctxt) {
+			POContextStack ctxt)
+	{
 		super(exp.getLocation(), POType.SUB_TYPE, ctxt);
 		value = ctxt.getObligation(oneType(false, exp, etype, atype));
 		return;
 	}
 
 	public SubTypeObligation(AExplicitFunctionDefinition func, PType etype,
-			PType atype, POContextStack ctxt) {
+			PType atype, POContextStack ctxt)
+	{
 		super(func.getLocation(), POType.SUB_TYPE, ctxt);
 
 		PExp body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
-				|| func.getBody() instanceof ASubclassResponsibilityExp) {
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
+		{
 			// We have to say "f(a)" because we have no body
 
 			PExp root = AstFactory.newAVariableExp(func.getName());
 			List<PExp> args = new ArrayList<PExp>();
 
-			for (PPattern p : func.getParamPatternList().get(0)) {
+			for (PPattern p : func.getParamPatternList().get(0))
+			{
 				args.add(PPatternAssistantTC.getMatchingExpression(p));
 			}
 			body = AstFactory.newAApplyExp(root, args);
 
-		} else {
+		} else
+		{
 			body = func.getBody();
 		}
 
@@ -114,26 +120,31 @@ public class SubTypeObligation extends ProofObligation {
 	}
 
 	public SubTypeObligation(AImplicitFunctionDefinition func, PType etype,
-			PType atype, POContextStack ctxt) {
+			PType atype, POContextStack ctxt)
+	{
 		super(func.getLocation(), POType.SUB_TYPE, ctxt);
 
 		PExp body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
-				|| func.getBody() instanceof ASubclassResponsibilityExp) {
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
+		{
 			// We have to say "f(a)" because we have no body
 
 			PExp root = AstFactory.newAVariableExp(func.getName());
 			List<PExp> args = new ArrayList<PExp>();
 
-			for (APatternListTypePair pltp : func.getParamPatterns()) {
-				for (PPattern p : pltp.getPatterns()) {
+			for (APatternListTypePair pltp : func.getParamPatterns())
+			{
+				for (PPattern p : pltp.getPatterns())
+				{
 					args.add(PPatternAssistantTC.getMatchingExpression(p));
 				}
 			}
 
 			body = AstFactory.newAApplyExp(root, args);
-		} else {
+		} else
+		{
 			body = func.getBody();
 		}
 
@@ -141,30 +152,32 @@ public class SubTypeObligation extends ProofObligation {
 	}
 
 	public SubTypeObligation(AExplicitOperationDefinition def,
-			PType actualResult, POContextStack ctxt) {
+			PType actualResult, POContextStack ctxt)
+	{
 		super(def.getLocation(), POType.SUB_TYPE, ctxt);
 
-		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT",
-				def.getLocation()));
+		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT", def.getLocation()));
 
-		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType())
-				.getResult(), actualResult));
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType()).getResult(), actualResult));
 	}
 
 	public SubTypeObligation(AImplicitOperationDefinition def,
-			PType actualResult, POContextStack ctxt) {
+			PType actualResult, POContextStack ctxt)
+	{
 		super(def.getLocation(), POType.SUB_TYPE, ctxt);
 		PExp result = null;
 
-		if (def.getResult().getPattern() instanceof AIdentifierPattern) {
-			AIdentifierPattern ip = (AIdentifierPattern) def.getResult()
-					.getPattern();
+		if (def.getResult().getPattern() instanceof AIdentifierPattern)
+		{
+			AIdentifierPattern ip = (AIdentifierPattern) def.getResult().getPattern();
 			result = AstFactory.newAVariableExp(ip.getName());
-		} else {
+		} else
+		{
 			ATuplePattern tp = (ATuplePattern) def.getResult().getPattern();
 			List<PExp> args = new ArrayList<PExp>();
 
-			for (PPattern p : tp.getPlist()) {
+			for (PPattern p : tp.getPlist())
+			{
 				AIdentifierPattern ip = (AIdentifierPattern) p;
 				args.add(AstFactory.newAVariableExp(ip.getName()));
 			}
@@ -172,13 +185,15 @@ public class SubTypeObligation extends ProofObligation {
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
-		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType())
-				.getResult(), actualResult));
+		value = ctxt.getObligation(oneType(false, result, ((AOperationType) def.getType()).getResult(), actualResult));
 	}
 
-	private String oneType(boolean rec, PExp exp, PType etype, PType atype) {
-		if (atype != null && rec) {
-			if (TypeComparator.isSubType(atype, etype)) {
+	private String oneType(boolean rec, PExp exp, PType etype, PType atype)
+	{
+		if (atype != null && rec)
+		{
+			if (TypeComparator.isSubType(atype, etype))
+			{
 				return ""; // A sub comparison is OK without checks
 			}
 		}
@@ -188,19 +203,23 @@ public class SubTypeObligation extends ProofObligation {
 
 		etype = PTypeAssistantTC.deBracket(etype);
 
-		if (etype instanceof AUnionType) {
+		if (etype instanceof AUnionType)
+		{
 			AUnionType ut = (AUnionType) etype;
 			PTypeSet possibles = new PTypeSet();
 
-			for (PType pos : ut.getTypes()) {
-				if (atype == null || TypeComparator.compatible(pos, atype)) {
+			for (PType pos : ut.getTypes())
+			{
+				if (atype == null || TypeComparator.compatible(pos, atype))
+				{
 					possibles.add(pos);
 				}
 			}
 
 			prefix = "";
 
-			for (PType poss : possibles) {
+			for (PType poss : possibles)
+			{
 				String s = oneType(true, exp, poss, null);
 
 				sb.append(prefix);
@@ -208,7 +227,8 @@ public class SubTypeObligation extends ProofObligation {
 				addIs(sb, exp, poss);
 
 				if (s.length() > 0 && !s.startsWith("is_(")
-						&& !s.startsWith("(is_(")) {
+						&& !s.startsWith("(is_("))
+				{
 					sb.append(" and ");
 					sb.append(s);
 				}
@@ -216,11 +236,13 @@ public class SubTypeObligation extends ProofObligation {
 				sb.append(")");
 				prefix = " or\n";
 			}
-		} else if (etype instanceof SInvariantType) {
+		} else if (etype instanceof SInvariantType)
+		{
 			SInvariantType et = (SInvariantType) etype;
 			prefix = "";
 
-			if (et.getInvDef() != null) {
+			if (et.getInvDef() != null)
+			{
 				sb.append(et.getInvDef().getName().getName());
 				sb.append("(");
 
@@ -241,37 +263,45 @@ public class SubTypeObligation extends ProofObligation {
 				prefix = " and ";
 			}
 
-			if (etype instanceof ANamedInvariantType) {
+			if (etype instanceof ANamedInvariantType)
+			{
 				ANamedInvariantType nt = (ANamedInvariantType) etype;
 
-				if (atype instanceof ANamedInvariantType) {
+				if (atype instanceof ANamedInvariantType)
+				{
 					atype = ((ANamedInvariantType) atype).getType();
-				} else {
+				} else
+				{
 					atype = null;
 				}
 
 				String s = oneType(true, exp, nt.getType(), atype);
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append(prefix);
 					sb.append("(");
 					sb.append(s);
 					sb.append(")");
 				}
-			} else if (etype instanceof ARecordInvariantType) {
-				if (exp instanceof AMkTypeExp) {
+			} else if (etype instanceof ARecordInvariantType)
+			{
+				if (exp instanceof AMkTypeExp)
+				{
 					ARecordInvariantType rt = (ARecordInvariantType) etype;
 					AMkTypeExp mk = (AMkTypeExp) exp;
 
-					if (rt.getFields().size() == mk.getArgs().size()) {
+					if (rt.getFields().size() == mk.getArgs().size())
+					{
 						Iterator<AFieldField> fit = rt.getFields().iterator();
 						Iterator<PType> ait = mk.getArgTypes().iterator();
 
-						for (PExp e : mk.getArgs()) {
-							String s = oneType(true, e, fit.next().getType(),
-									ait.next());
+						for (PExp e : mk.getArgs())
+						{
+							String s = oneType(true, e, fit.next().getType(), ait.next());
 
-							if (s.length() > 0) {
+							if (s.length() > 0)
+							{
 								sb.append(prefix);
 								sb.append("(");
 								sb.append(s);
@@ -280,32 +310,39 @@ public class SubTypeObligation extends ProofObligation {
 							}
 						}
 					}
-				} else {
+				} else
+				{
 					sb.append(prefix);
 					addIs(sb, exp, etype);
 				}
-			} else {
+			} else
+			{
 				sb.append(prefix);
 				addIs(sb, exp, etype);
 			}
-		} else if (etype instanceof SSeqType) {
+		} else if (etype instanceof SSeqType)
+		{
 			prefix = "";
 
-			if (etype instanceof ASeq1SeqType) {
+			if (etype instanceof ASeq1SeqType)
+			{
 				sb.append(exp);
 				sb.append(" <> []");
 				prefix = " and ";
 			}
 
-			if (exp instanceof ASeqEnumSeqExp) {
+			if (exp instanceof ASeqEnumSeqExp)
+			{
 				SSeqType stype = (SSeqType) etype;
 				ASeqEnumSeqExp seq = (ASeqEnumSeqExp) exp;
 				Iterator<PType> it = seq.getTypes().iterator();
 
-				for (PExp m : seq.getMembers()) {
+				for (PExp m : seq.getMembers())
+				{
 					String s = oneType(true, m, stype.getSeqof(), it.next());
 
-					if (s.length() > 0) {
+					if (s.length() > 0)
+					{
 						sb.append(prefix);
 						sb.append("(");
 						sb.append(s);
@@ -313,13 +350,14 @@ public class SubTypeObligation extends ProofObligation {
 						prefix = "\nand ";
 					}
 				}
-			} else if (exp instanceof ASubseqExp) {
+			} else if (exp instanceof ASubseqExp)
+			{
 				ASubseqExp subseq = (ASubseqExp) exp;
 				PType itype = AstFactory.newANatOneNumericBasicType(exp.getLocation());
-				String s = oneType(true, subseq.getFrom(), itype,
-						subseq.getFtype());
+				String s = oneType(true, subseq.getFrom(), itype, subseq.getFtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append("(");
 					sb.append(s);
 					sb.append(")");
@@ -328,7 +366,8 @@ public class SubTypeObligation extends ProofObligation {
 
 				s = oneType(true, subseq.getTo(), itype, subseq.getTtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append("(");
 					sb.append(s);
 					sb.append(")");
@@ -341,23 +380,27 @@ public class SubTypeObligation extends ProofObligation {
 
 				sb.append(" and ");
 				addIs(sb, exp, etype); // Like set range does
-			} else {
+			} else
+			{
 				sb = new StringBuilder(); // remove any "x <> []"
 				addIs(sb, exp, etype);
 			}
-		} else if (etype instanceof SMapType) {
-			if (exp instanceof AMapEnumMapExp) {
+		} else if (etype instanceof SMapType)
+		{
+			if (exp instanceof AMapEnumMapExp)
+			{
 				SMapType mtype = (SMapType) etype;
 				AMapEnumMapExp seq = (AMapEnumMapExp) exp;
 				Iterator<PType> dit = seq.getDomTypes().iterator();
 				Iterator<PType> rit = seq.getRngTypes().iterator();
 				prefix = "";
 
-				for (AMapletExp m : seq.getMembers()) {
-					String s = oneType(true, m.getLeft(), mtype.getFrom(),
-							dit.next());
+				for (AMapletExp m : seq.getMembers())
+				{
+					String s = oneType(true, m.getLeft(), mtype.getFrom(), dit.next());
 
-					if (s.length() > 0) {
+					if (s.length() > 0)
+					{
 						sb.append(prefix);
 						sb.append("(");
 						sb.append(s);
@@ -367,7 +410,8 @@ public class SubTypeObligation extends ProofObligation {
 
 					s = oneType(true, m.getRight(), mtype.getTo(), rit.next());
 
-					if (s.length() > 0) {
+					if (s.length() > 0)
+					{
 						sb.append(prefix);
 						sb.append("(");
 						sb.append(s);
@@ -375,20 +419,25 @@ public class SubTypeObligation extends ProofObligation {
 						prefix = "\nand ";
 					}
 				}
-			} else {
+			} else
+			{
 				addIs(sb, exp, etype);
 			}
-		} else if (etype instanceof ASetType) {
-			if (exp instanceof ASetEnumSetExp) {
+		} else if (etype instanceof ASetType)
+		{
+			if (exp instanceof ASetEnumSetExp)
+			{
 				ASetType stype = (ASetType) etype;
 				ASetEnumSetExp set = (ASetEnumSetExp) exp;
 				Iterator<PType> it = set.getTypes().iterator();
 				prefix = "";
 
-				for (PExp m : set.getMembers()) {
+				for (PExp m : set.getMembers())
+				{
 					String s = oneType(true, m, stype.getSetof(), it.next());
 
-					if (s.length() > 0) {
+					if (s.length() > 0)
+					{
 						sb.append(prefix);
 						sb.append("(");
 						sb.append(s);
@@ -398,16 +447,17 @@ public class SubTypeObligation extends ProofObligation {
 				}
 
 				sb.append("\nand ");
-			} else if (exp instanceof ASetRangeSetExp) {
+			} else if (exp instanceof ASetRangeSetExp)
+			{
 				ASetType stype = (ASetType) etype;
 				ASetRangeSetExp range = (ASetRangeSetExp) exp;
 				PType itype = AstFactory.newAIntNumericBasicType(exp.getLocation());
 				prefix = "";
 
-				String s = oneType(true, range.getFirst(), itype,
-						range.getFtype());
+				String s = oneType(true, range.getFirst(), itype, range.getFtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append(prefix);
 					sb.append("(");
 					sb.append(s);
@@ -415,10 +465,10 @@ public class SubTypeObligation extends ProofObligation {
 					prefix = "\nand ";
 				}
 
-				s = oneType(true, range.getFirst(), stype.getSetof(),
-						range.getFtype());
+				s = oneType(true, range.getFirst(), stype.getSetof(), range.getFtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append(prefix);
 					sb.append("(");
 					sb.append(s);
@@ -428,7 +478,8 @@ public class SubTypeObligation extends ProofObligation {
 
 				s = oneType(true, range.getLast(), itype, range.getLtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append(prefix);
 					sb.append("(");
 					sb.append(s);
@@ -436,10 +487,10 @@ public class SubTypeObligation extends ProofObligation {
 					prefix = "\nand ";
 				}
 
-				s = oneType(true, range.getLast(), stype.getSetof(),
-						range.getLtype());
+				s = oneType(true, range.getLast(), stype.getSetof(), range.getLtype());
 
-				if (s.length() > 0) {
+				if (s.length() > 0)
+				{
 					sb.append(prefix);
 					sb.append("(");
 					sb.append(s);
@@ -450,18 +501,22 @@ public class SubTypeObligation extends ProofObligation {
 
 			sb.append(prefix);
 			addIs(sb, exp, etype);
-		} else if (etype instanceof AProductType) {
-			if (exp instanceof ATupleExp) {
+		} else if (etype instanceof AProductType)
+		{
+			if (exp instanceof ATupleExp)
+			{
 				AProductType pt = (AProductType) etype;
 				ATupleExp te = (ATupleExp) exp;
 				Iterator<PType> eit = pt.getTypes().iterator();
 				Iterator<PType> ait = te.getTypes().iterator();
 				prefix = "";
 
-				for (PExp e : te.getArgs()) {
+				for (PExp e : te.getArgs())
+				{
 					String s = oneType(true, e, eit.next(), ait.next());
 
-					if (s.length() > 0) {
+					if (s.length() > 0)
+					{
 						sb.append(prefix);
 						sb.append("(");
 						sb.append(s);
@@ -469,28 +524,36 @@ public class SubTypeObligation extends ProofObligation {
 						prefix = " and ";
 					}
 				}
-			} else {
+			} else
+			{
 				addIs(sb, exp, etype);
 			}
-		} else if (etype instanceof SBasicType) {
-			if (etype instanceof SNumericBasicType) {
+		} else if (etype instanceof SBasicType)
+		{
+			if (etype instanceof SNumericBasicType)
+			{
 				SNumericBasicType nt = (SNumericBasicType) etype;
 
-				if (atype instanceof SNumericBasicType) {
+				if (atype instanceof SNumericBasicType)
+				{
 					SNumericBasicType ant = (SNumericBasicType) atype;
 
-					if (SNumericBasicTypeAssistantTC.getWeight(ant) > SNumericBasicTypeAssistantTC
-							.getWeight(nt)) {
-						
+					if (SNumericBasicTypeAssistantTC.getWeight(ant) > SNumericBasicTypeAssistantTC.getWeight(nt))
+					{
+
 						boolean isWhole = SNumericBasicTypeAssistantTC.getWeight(ant) < 3;
-						
-						if (isWhole && nt instanceof ANatOneNumericBasicType) {
+
+						if (isWhole && nt instanceof ANatOneNumericBasicType)
+						{
 							sb.append(exp);
 							sb.append(" > 0");
-						} else if (isWhole && nt instanceof ANatNumericBasicType) {
+						} else if (isWhole
+								&& nt instanceof ANatNumericBasicType)
+						{
 							sb.append(exp);
 							sb.append(" >= 0");
-						} else {
+						} else
+						{
 							sb.append("is_");
 							sb.append(nt);
 							sb.append("(");
@@ -498,32 +561,40 @@ public class SubTypeObligation extends ProofObligation {
 							sb.append(")");
 						}
 					}
-				} else {
+				} else
+				{
 					sb.append("is_");
 					sb.append(nt);
 					sb.append("(");
 					sb.append(exp);
 					sb.append(")");
 				}
-			} else if (etype instanceof ABooleanBasicType) {
-				if (!(exp instanceof ABooleanConstExp)) {
+			} else if (etype instanceof ABooleanBasicType)
+			{
+				if (!(exp instanceof ABooleanConstExp))
+				{
 					addIs(sb, exp, etype);
 				}
-			} else if (etype instanceof ACharBasicType) {
-				if (!(exp instanceof ACharLiteralExp)) {
+			} else if (etype instanceof ACharBasicType)
+			{
+				if (!(exp instanceof ACharLiteralExp))
+				{
 					addIs(sb, exp, etype);
 				}
-			} else {
+			} else
+			{
 				addIs(sb, exp, etype);
 			}
-		} else {
+		} else
+		{
 			addIs(sb, exp, etype);
 		}
 
 		return sb.toString();
 	}
 
-	private void addIs(StringBuilder sb, PExp exp, PType type) {
+	private void addIs(StringBuilder sb, PExp exp, PType type)
+	{
 		sb.append("is_(");
 		sb.append(exp);
 		sb.append(", ");

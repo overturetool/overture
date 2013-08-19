@@ -52,8 +52,8 @@ public class StateInvariantObligation extends ProofObligation
 		if (ass.getClassDefinition() != null)
 		{
 			sb.append(invDefs(ass.getClassDefinition()));
-		}
-		else	// must be because we have a module state invariant
+		} else
+		// must be because we have a module state invariant
 		{
 			AStateDefinition def = ass.getStateDefinition();
 
@@ -68,21 +68,19 @@ public class StateInvariantObligation extends ProofObligation
 		value = ctxt.getObligation(sb.toString());
 	}
 
-	public StateInvariantObligation(
-		AClassInvariantDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AClassInvariantDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
 		sb.append("-- After instance variable initializers\n");
 		sb.append(invDefs(def.getClassDefinition()));
 
-    	value = ctxt.getObligation(sb.toString());
+		value = ctxt.getObligation(sb.toString());
 	}
 
-	public StateInvariantObligation(
-		AExplicitOperationDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AExplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -91,12 +89,11 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append(" constructor body\n");
 		sb.append(invDefs(def.getClassDefinition()));
 
-    	value = ctxt.getObligation(sb.toString());
+		value = ctxt.getObligation(sb.toString());
 	}
 
-	public StateInvariantObligation(
-		AImplicitOperationDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AImplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -105,7 +102,7 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append(" constructor body\n");
 		sb.append(invDefs(def.getClassDefinition()));
 
-    	value = ctxt.getObligation(sb.toString());
+		value = ctxt.getObligation(sb.toString());
 	}
 
 	private String invDefs(SClassDefinition def)
@@ -114,14 +111,14 @@ public class StateInvariantObligation extends ProofObligation
 		List<PDefinition> invdefs = SClassDefinitionAssistantTC.getInvDefs(def);
 		String sep = "";
 
-		for (PDefinition d: invdefs)
+		for (PDefinition d : invdefs)
 		{
-			AClassInvariantDefinition cid = (AClassInvariantDefinition)d;
+			AClassInvariantDefinition cid = (AClassInvariantDefinition) d;
 			sb.append(sep);
 			sb.append(cid.getExpression());
 			sep = " and ";
 		}
 
-    	return sb.toString();
+		return sb.toString();
 	}
 }

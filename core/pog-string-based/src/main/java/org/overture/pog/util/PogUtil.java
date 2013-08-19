@@ -26,8 +26,9 @@ public class PogUtil
 		public final List<VDMError> errors;
 		public final ProofObligationList result;
 
-		public PogResult(TypeCheckResult<T> typeCheckResult, ProofObligationList result,
-				List<VDMWarning> warnings, List<VDMError> errors)
+		public PogResult(TypeCheckResult<T> typeCheckResult,
+				ProofObligationList result, List<VDMWarning> warnings,
+				List<VDMError> errors)
 		{
 			this.typeCheckResult = typeCheckResult;
 			this.result = result;
@@ -35,47 +36,49 @@ public class PogUtil
 			this.errors = errors;
 		}
 	}
-	
-	
-	public static PogResult<List<AModuleModules>> pogSl(File file) throws Exception
+
+	public static PogResult<List<AModuleModules>> pogSl(File file)
+			throws Exception
 	{
 		TypeCheckResult<List<AModuleModules>> result = TypeCheckerUtil.typeCheckSl(file);
 		return pog(result);
 	}
-	
-	public static PogResult<List<SClassDefinition>> pogPp(File file) throws Exception
+
+	public static PogResult<List<SClassDefinition>> pogPp(File file)
+			throws Exception
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckPp(file);
 		return pog(result);
-	} 
-	
-	public static PogResult<List<SClassDefinition>> pogRt(File file) throws Exception
+	}
+
+	public static PogResult<List<SClassDefinition>> pogRt(File file)
+			throws Exception
 	{
 		TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil.typeCheckRt(file);
 		return pog(result);
 	}
-	
+
 	public static <P extends List<? extends INode>> PogResult<P> pog(
 			TypeCheckResult<P> typeCheckResult) throws Exception
 	{
 		if (typeCheckResult.errors.isEmpty())
 		{
 			ProofObligationList proofObligations = new ProofObligationList();
-			for (INode aModule : typeCheckResult.result) {
+			for (INode aModule : typeCheckResult.result)
+			{
 				try
 				{
 					proofObligations.addAll(aModule.apply(new PogVisitor(), new POContextStack(new PogAssistantFactory())));
 				} catch (AnalysisException e)
 				{
-					throw new Exception("Internal error",e);
+					e.printStackTrace();
+					throw new Exception("Internal error", e);
 				}
 			}
 			return new PogResult<P>(typeCheckResult, proofObligations, new Vector<VDMWarning>(), new Vector<VDMError>());
 		}
-		throw new Exception("Failed to type check");
-		//return new PogResult<P>(typeCheckResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
+		throw new Exception("Failed to type check: " + typeCheckResult);
+		// return new PogResult<P>(typeCheckResult, null, new Vector<VDMWarning>(), new Vector<VDMError>());
 	}
-	
-	
-	
+
 }

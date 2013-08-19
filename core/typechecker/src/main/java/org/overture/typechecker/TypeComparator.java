@@ -775,7 +775,7 @@ public class TypeComparator
 				SSeqType subs = (SSeqType) sub;
 				SSeqType sups = (SSeqType) sup;
 
-				if (subs.getEmpty() || sups.getEmpty())
+				if ((subs.getEmpty() && !(sup instanceof ASeq1SeqType)) || sups.getEmpty())
 				{
 					return Result.Yes;
 				}
