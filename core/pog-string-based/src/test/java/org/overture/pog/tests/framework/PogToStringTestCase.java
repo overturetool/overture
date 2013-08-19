@@ -110,7 +110,8 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 
 		if (expected.size() != actual.size())
 		{
-			System.out.println("The expected number of generated POs differs from what was actually generated.");
+			System.out.print("The expected number of generated POs differs from what was actually generated in: " + file.getName());
+			System.out.println(" #Actual: " + actual.size() + ". #Expected: " + expected.size());
 			return false;
 		}
 
