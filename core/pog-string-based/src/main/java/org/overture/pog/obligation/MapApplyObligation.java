@@ -26,8 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStateDesignator;
 
-
-
 public class MapApplyObligation extends ProofObligation
 {
 	/**
@@ -41,8 +39,8 @@ public class MapApplyObligation extends ProofObligation
 		value = ctxt.getObligation(arg + " in set dom " + root);
 	}
 
-	public MapApplyObligation(PStateDesignator root,
-		PExp arg, POContextStack ctxt)
+	public MapApplyObligation(PStateDesignator root, PExp arg,
+			POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.MAP_APPLY, ctxt);
 		value = ctxt.getObligation(arg + " in set dom " + root);

@@ -25,7 +25,6 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.PExp;
 
-
 public class POImpliesContext extends POContext
 {
 	public final PExp exp;

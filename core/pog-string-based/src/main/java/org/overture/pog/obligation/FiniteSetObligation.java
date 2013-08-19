@@ -34,8 +34,8 @@ public class FiniteSetObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 4471304924561635823L;
 
-	public FiniteSetObligation(
-		ASetCompSetExp exp, ASetType settype, POContextStack ctxt)
+	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
+			POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.FINITE_SET, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -49,7 +49,7 @@ public class FiniteSetObligation extends ProofObligation
 		sb.append("  forall ");
 		String prefix = "";
 
-		for (PMultipleBind mb: exp.getBindings())
+		for (PMultipleBind mb : exp.getBindings())
 		{
 			sb.append(prefix);
 			sb.append(mb);
@@ -64,8 +64,8 @@ public class FiniteSetObligation extends ProofObligation
 			sb.append(" => ");
 		}
 
-		sb.append("exists " + findex + " in set dom " + finmap +
-			" & " + finmap + "(" + findex + ") = ");
+		sb.append("exists " + findex + " in set dom " + finmap + " & " + finmap
+				+ "(" + findex + ") = ");
 		sb.append(exp.getFirst());
 
 		value = ctxt.getObligation(sb.toString());

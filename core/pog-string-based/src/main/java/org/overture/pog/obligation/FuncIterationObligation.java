@@ -33,8 +33,8 @@ public class FuncIterationObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -6041213040266345023L;
 
-	public FuncIterationObligation(
-		AStarStarBinaryExp exp, String prename, POContextStack ctxt)
+	public FuncIterationObligation(AStarStarBinaryExp exp, String prename,
+			POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.FUNC_ITERATION, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -45,23 +45,22 @@ public class FuncIterationObligation extends ProofObligation
 
 		if (prename != null)
 		{
-    		sb.append(" & ");
-    		sb.append(prename);
-    		sb.append("(arg) => ");
-    		sb.append(prename);
-    		sb.append("(");
-    		sb.append(exp.getLeft());
-    		sb.append("(arg))");
-		}
-		else
+			sb.append(" & ");
+			sb.append(prename);
+			sb.append("(arg) => ");
+			sb.append(prename);
+			sb.append("(");
+			sb.append(exp.getLeft());
+			sb.append("(arg))");
+		} else
 		{
-    		sb.append(" & pre_(");
-    		sb.append(exp.getLeft());
-    		sb.append(", arg) => pre_(");
-    		sb.append(exp.getLeft());
-    		sb.append(", ");
-    		sb.append(exp.getLeft());
-    		sb.append("(arg))");
+			sb.append(" & pre_(");
+			sb.append(exp.getLeft());
+			sb.append(", arg) => pre_(");
+			sb.append(exp.getLeft());
+			sb.append(", ");
+			sb.append(exp.getLeft());
+			sb.append("(arg))");
 		}
 
 		value = ctxt.getObligation(sb.toString());

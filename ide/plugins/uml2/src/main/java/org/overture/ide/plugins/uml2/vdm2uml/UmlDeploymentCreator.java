@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.uml2.uml.Artifact;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.CommunicationPath;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Node;
@@ -27,6 +28,8 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 
 public class UmlDeploymentCreator
@@ -34,11 +37,13 @@ public class UmlDeploymentCreator
 	private Model modelWorkingCopy;
 	private UmlConsole console;
 	private boolean deployArtifactsOutsideNodes = true;
+	private UmlTypeCreator utc;
 
-	public UmlDeploymentCreator(Model model, UmlConsole console,boolean deployArtifactsOutsideNodes)
+	public UmlDeploymentCreator(Model model, UmlConsole console,boolean deployArtifactsOutsideNodes, UmlTypeCreator utc)
 	{
 		this.modelWorkingCopy = model;
 		this.console = console;
+		this.utc = utc;
 //		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
 //		if (preferences != null)
 //		{
@@ -169,6 +174,15 @@ public class UmlDeploymentCreator
 														+ artifact.getName()
 														+ " is deployed onto Node "
 														+ nodeName);
+												
+												PType type = call.getArgs().getFirst().getType();
+												if(type instanceof AOptionalType)
+												{
+													PType ot = ((AOptionalType) type).getType();
+													utc.create((Class) utc.getUmlType(ot), type);
+												}
+												//utc.create(utc.getBindingPackage(), type);
+												nodes.get(nodeName).createOwnedAttribute(deployedName, utc.getUmlType(type));
 											} else
 											{
 												artifact = (Artifact) nodes.get(nodeName).createNestedClassifier(deployedName, UMLPackage.Literals.ARTIFACT);

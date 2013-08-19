@@ -51,43 +51,40 @@ public class ParameterPatternObligation extends ProofObligation
 	private static final long serialVersionUID = 6831031423902894299L;
 	private final PDefinition predef;
 
-	public ParameterPatternObligation(
-		AExplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitFunctionDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitFunctionDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AExplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
 	}
 
-	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)
+	private String generate(List<List<PPattern>> plist, List<PType> params,
+			PType result)
 	{
 		StringBuilder foralls = new StringBuilder();
 		StringBuilder argnames = new StringBuilder();
@@ -98,17 +95,17 @@ public class ParameterPatternObligation extends ProofObligation
 		String eprefix = "";
 		int argn = 1;
 
-		for (List<PPattern> pl: plist)
+		for (List<PPattern> pl : plist)
 		{
 			Iterator<PType> titer = params.iterator();
 
-			for (PPattern p: pl)
+			for (PPattern p : pl)
 			{
 				String aname = "arg" + argn++;
 				PType atype = titer.next();
 
-				if (!(p instanceof AIgnorePattern) &&
-					!(p instanceof AIdentifierPattern))
+				if (!(p instanceof AIgnorePattern)
+						&& !(p instanceof AIdentifierPattern))
 				{
 					foralls.append(fprefix);
 					foralls.append(aname);
@@ -142,11 +139,10 @@ public class ParameterPatternObligation extends ProofObligation
 
 			if (result instanceof AFunctionType)
 			{
-				AFunctionType ft = (AFunctionType)result;
+				AFunctionType ft = (AFunctionType) result;
 				result = ft.getResult();
 				params = ft.getParameters();
-			}
-			else
+			} else
 			{
 				break;
 			}
@@ -162,8 +158,7 @@ public class ParameterPatternObligation extends ProofObligation
 			foralls.append(argnames);
 			foralls.append(")");
 			foralls.append(" =>\n    ");
-		}
-		else
+		} else
 		{
 			foralls.append("  ");
 		}

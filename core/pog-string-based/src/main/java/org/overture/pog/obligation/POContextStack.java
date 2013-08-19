@@ -30,21 +30,22 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.pog.assistant.IPogAssistantFactory;
 
-
 @SuppressWarnings("serial")
 public class POContextStack extends Stack<POContext>
 {
 	public final IPogAssistantFactory assistantFactory;
+
 	public POContextStack(IPogAssistantFactory assstantFactory)
 	{
 		this.assistantFactory = assstantFactory;
 	}
+
 	public String getName()
 	{
 		StringBuilder result = new StringBuilder();
 		String prefix = "";
 
-		for (POContext ctxt: this)
+		for (POContext ctxt : this)
 		{
 			String name = ctxt.getName();
 
@@ -66,7 +67,7 @@ public class POContextStack extends Stack<POContext>
 		String indent = "";
 		StringBuilder tail = new StringBuilder();
 
-		for (POContext ctxt: this)
+		for (POContext ctxt : this)
 		{
 			String po = ctxt.getContext();
 
@@ -95,7 +96,7 @@ public class POContextStack extends Stack<POContext>
 		String[] parts = line.split("\n");
 		String prefix = "";
 
-		for (int i=0; i<parts.length; i++)
+		for (int i = 0; i < parts.length; i++)
 		{
 			sb.append(prefix);
 			sb.append(parts[i]);
@@ -120,7 +121,7 @@ public class POContextStack extends Stack<POContext>
 
 			if (c.isScopeBoundary())
 			{
-				break;		// Change of name scope for expressions.
+				break; // Change of name scope for expressions.
 			}
 
 			PType t = c.checkType(exp);

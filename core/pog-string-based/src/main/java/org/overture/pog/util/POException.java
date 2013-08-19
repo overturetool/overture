@@ -3,30 +3,36 @@ package org.overture.pog.util;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 
-public class POException extends AnalysisException {
+public class POException extends AnalysisException
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	INode errorNode;
-	
-	public POException(INode errorNode, String message)
+
+	// public POException(INode errorNode, String message)
+	// {
+	// super(message);
+	// this.errorNode = errorNode;
+	// }
+
+	public POException(INode errorNode, Throwable t)
 	{
-		super(message);
-		this.errorNode = errorNode; 
+		super(t);
+		this.errorNode = errorNode;
 	}
 
-	public INode getErrorNode() {
+	public INode getErrorNode()
+	{
 		return errorNode;
 	}
 
-	public void setErrorNode(INode errorNode) {
+	public void setErrorNode(INode errorNode)
+	{
 		this.errorNode = errorNode;
 	}
-	
-	
-	
 
 }

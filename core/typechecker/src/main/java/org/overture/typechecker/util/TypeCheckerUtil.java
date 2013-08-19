@@ -44,6 +44,27 @@ public class TypeCheckerUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
+		
+		@Override
+		public String toString()
+		{
+		StringBuilder sb = new StringBuilder();
+		sb.append("Parse result:\n"+parserResult);
+		sb.append("\n\n\n");
+		sb.append("TypeCheck result:\n");
+		sb.append("\tErrors:");
+		for (VDMError err : errors)
+		{
+			sb.append("\n\t"+err);
+		}
+		sb.append("\tWarnings:");
+		for (VDMWarning err : warnings)
+		{
+			sb.append("\n\t"+err);
+		}
+		
+		return sb.toString();
+		}
 	}
 
 	public static class ExpressionTypeChecker extends TypeChecker

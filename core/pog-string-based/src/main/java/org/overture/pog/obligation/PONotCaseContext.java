@@ -28,8 +28,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-
-
 public class PONotCaseContext extends POContext
 {
 	public final PPattern pattern;
@@ -51,22 +49,21 @@ public class PONotCaseContext extends POContext
 		if (PPatternAssistantTC.isSimple(pattern))
 		{
 			sb.append("not ");
-    		sb.append(pattern);
-    		sb.append(" = ");
-    		sb.append(exp);
-		}
-		else
+			sb.append(pattern);
+			sb.append(" = ");
+			sb.append(exp);
+		} else
 		{
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			
-    		sb.append("not exists ");
-    		sb.append(matching);
-    		sb.append(":");
-    		sb.append(type);
-    		sb.append(" & ");
-    		sb.append(matching);
-    		sb.append(" = ");
-    		sb.append(exp);
+
+			sb.append("not exists ");
+			sb.append(matching);
+			sb.append(":");
+			sb.append(type);
+			sb.append(" & ");
+			sb.append(matching);
+			sb.append(" = ");
+			sb.append(exp);
 		}
 
 		sb.append(" =>");

@@ -35,7 +35,8 @@ public class FunctionApplyObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -7146271970744572457L;
 
-	public FunctionApplyObligation(PExp root, List<PExp> args, String prename, POContextStack ctxt)
+	public FunctionApplyObligation(PExp root, List<PExp> args, String prename,
+			POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.FUNC_APPLY, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -47,8 +48,7 @@ public class FunctionApplyObligation extends ProofObligation
 			sb.append(", ");
 			sb.append(Utils.listToString(args));
 			sb.append(")");
-		}
-		else
+		} else
 		{
 			sb.append(prename);
 			sb.append(Utils.listToString("(", args, ", ", ")"));

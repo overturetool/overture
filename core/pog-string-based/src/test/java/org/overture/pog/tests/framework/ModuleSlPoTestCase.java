@@ -1,14 +1,11 @@
 package org.overture.pog.tests.framework;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.parser.lex.LexException;
-import org.overture.parser.syntax.ParserException;
 import org.overture.pog.util.PogUtil;
 import org.overture.test.framework.results.Result;
 
@@ -34,20 +31,22 @@ public class ModuleSlPoTestCase extends PogToStringTestCase
 		Settings.release = Release.VDM_10;
 	}
 
-	public void test() throws ParserException, LexException, IOException
+	public void test() throws Exception
 	{
-	
-		Result<List<String>> result;
-		try
+		if (file == null)
 		{
-			result = convert(PogUtil.pogSl(file));
-			compareResults(result, file.getAbsolutePath());
-		} catch (Exception e)
-		{
-			assert false : "Test failed: " + e.getMessage();
+			return;
 		}
-	}
 
-	
+		Result<List<String>> result;
+		// try
+		// {
+		result = convert(PogUtil.pogSl(file));
+		compareResults(result, file.getAbsolutePath());
+		// } catch (Exception e)
+		// {
+		// assert false : "Test failed: " + e.getMessage();
+		// }
+	}
 
 }

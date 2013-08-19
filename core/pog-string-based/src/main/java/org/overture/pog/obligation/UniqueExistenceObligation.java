@@ -25,7 +25,6 @@ package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.AIotaExp;
 
-
 public class UniqueExistenceObligation extends ProofObligation
 {
 	/**

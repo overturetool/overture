@@ -11,20 +11,23 @@ import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
+public class PDefinitionAssistantPOG extends PDefinitionAssistantTC
+{
 
 	public PDefinitionAssistantPOG(ITypeCheckerAssistantFactory af)
 	{
 		super(af);
 	}
 
-	public  ProofObligationList getProofObligations(
+	public ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
-			POContextStack ctxt) throws AnalysisException {
+			POContextStack ctxt) throws AnalysisException
+	{
 		ProofObligationList obligations = new ProofObligationList();
 
-		for (PDefinition d : defs) {
+		for (PDefinition d : defs)
+		{
 			ctxt.push(new PONameContext(getVariableNames(d)));
 			obligations.addAll(d.apply(pogVisitor, ctxt));
 			ctxt.pop();

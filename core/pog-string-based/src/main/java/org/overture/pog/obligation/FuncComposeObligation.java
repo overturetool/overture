@@ -26,7 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-
 public class FuncComposeObligation extends ProofObligation
 {
 	/**
@@ -34,8 +33,8 @@ public class FuncComposeObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 8813166638915813635L;
 
-	public FuncComposeObligation(
-		ACompBinaryExp exp, String pref1, String pref2, POContextStack ctxt)
+	public FuncComposeObligation(ACompBinaryExp exp, String pref1,
+			String pref2, POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.FUNC_COMPOSE, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -46,33 +45,31 @@ public class FuncComposeObligation extends ProofObligation
 
 		if (pref2 == null || !pref2.equals(""))
 		{
-    		if (pref2 != null)
-    		{
-        		sb.append(pref2);
-        		sb.append("(arg) => ");
-    		}
-    		else
-    		{
-        		sb.append("pre_(");
-        		sb.append(exp.getRight());
-        		sb.append(", arg) => ");
-    		}
+			if (pref2 != null)
+			{
+				sb.append(pref2);
+				sb.append("(arg) => ");
+			} else
+			{
+				sb.append("pre_(");
+				sb.append(exp.getRight());
+				sb.append(", arg) => ");
+			}
 		}
 
 		if (pref1 != null)
 		{
-    		sb.append(pref1);
-    		sb.append("(");
-    		sb.append(exp.getRight());
-    		sb.append("(arg))");
-		}
-		else
+			sb.append(pref1);
+			sb.append("(");
+			sb.append(exp.getRight());
+			sb.append("(arg))");
+		} else
 		{
-    		sb.append("pre_(");
-    		sb.append(exp.getLeft());
-    		sb.append(", ");
-    		sb.append(exp.getRight());
-    		sb.append("(arg))");
+			sb.append("pre_(");
+			sb.append(exp.getLeft());
+			sb.append(", ");
+			sb.append(exp.getRight());
+			sb.append("(arg))");
 		}
 
 		value = ctxt.getObligation(sb.toString());

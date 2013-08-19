@@ -4,6 +4,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public interface IPogAssistantFactory extends ITypeCheckerAssistantFactory
 {
-		ACaseAlternativeAssistantPOG createACaseAlternativeAssistant();
-		PDefinitionAssistantPOG createPDefinitionAssistant();
+	ACaseAlternativeAssistantPOG createACaseAlternativeAssistant();
+
+	PDefinitionAssistantPOG createPDefinitionAssistant();
 }

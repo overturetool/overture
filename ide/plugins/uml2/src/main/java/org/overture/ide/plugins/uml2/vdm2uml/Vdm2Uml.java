@@ -31,7 +31,6 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptorQuestion;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -119,7 +118,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes,utc).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}

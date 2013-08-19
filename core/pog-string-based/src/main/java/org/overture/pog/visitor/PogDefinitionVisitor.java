@@ -7,13 +7,15 @@ import org.overture.pog.obligation.ProofObligationList;
 public class PogDefinitionVisitor extends
 		PogParamDefinitionVisitor<POContextStack, ProofObligationList>
 {
-    
-    /**
+
+	/**
      * 
      */
-    private static final long serialVersionUID = -4015296332732118274L;
+	private static final long serialVersionUID = -4015296332732118274L;
 
-    public PogDefinitionVisitor( QuestionAnswerAdaptor<POContextStack, ProofObligationList> parentVisitor){
-	super(parentVisitor);
-    }
+	public PogDefinitionVisitor(
+			QuestionAnswerAdaptor<POContextStack, ProofObligationList> parentVisitor)
+	{
+		super(parentVisitor);
+	}
 }
