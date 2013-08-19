@@ -33,8 +33,8 @@ public class NonZeroObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 5773921447005368923L;
 
-	public NonZeroObligation(
-		ILexLocation location, PExp exp, POContextStack ctxt)
+	public NonZeroObligation(ILexLocation location, PExp exp,
+			POContextStack ctxt)
 	{
 		super(location, POType.NON_ZERO, ctxt);
 		value = ctxt.getObligation(exp + " <> 0");

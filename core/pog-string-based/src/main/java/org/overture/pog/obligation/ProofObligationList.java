@@ -36,7 +36,7 @@ public class ProofObligationList extends Vector<ProofObligation>
 		StringBuilder sb = new StringBuilder();
 		renumber();
 
-		for (ProofObligation po: this)
+		for (ProofObligation po : this)
 		{
 			sb.append("Proof Obligation ");
 			sb.append(po.number);
@@ -60,7 +60,7 @@ public class ProofObligationList extends Vector<ProofObligation>
 
 	public void trivialCheck()
 	{
-		for (ProofObligation po: this)
+		for (ProofObligation po : this)
 		{
 			po.trivialCheck();
 		}
@@ -75,7 +75,7 @@ public class ProofObligationList extends Vector<ProofObligation>
 	{
 		int n = from;
 
-		for (ProofObligation po: this)
+		for (ProofObligation po : this)
 		{
 			po.number = n++;
 		}

@@ -27,7 +27,8 @@ import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexLocation;
 
-abstract public class ProofObligation implements Comparable<ProofObligation>,Serializable
+abstract public class ProofObligation implements Comparable<ProofObligation>,
+		Serializable
 {
 	/**
 	 * 

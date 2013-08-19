@@ -41,46 +41,47 @@ public class RecursiveObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -6975984943449362262L;
 
-	public RecursiveObligation(
-		AExplicitFunctionDefinition def, AApplyExp apply, POContextStack ctxt)
+	public RecursiveObligation(AExplicitFunctionDefinition def,
+			AApplyExp apply, POContextStack ctxt)
 	{
 		super(apply.getLocation(), POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(def.getMeasure().getFullName());
-			
+
 		if (def.getTypeParams() != null && !def.getTypeParams().isEmpty())
 		{
 			sb.append("[");
-			
-			for (ILexNameToken type: def.getTypeParams())
+
+			for (ILexNameToken type : def.getTypeParams())
 			{
 				sb.append("@");
 				sb.append(type);
 			}
-			
+
 			sb.append("]");
 		}
-		
+
 		String sep = "";
 		sb.append("(");
-		
-		for (List<PPattern> plist: def.getParamPatternList())
+
+		for (List<PPattern> plist : def.getParamPatternList())
 		{
-			 sb.append(sep);
-			 sb.append(Utils.listToString(plist));
-			 sep = ", ";
+			sb.append(sep);
+			sb.append(Utils.listToString(plist));
+			sep = ", ";
 		}
 
 		sb.append(")");
-		sb.append(def.getMeasureLexical() > 0 ? " LEX" + def.getMeasureLexical() + "> " : " > ");
+		sb.append(def.getMeasureLexical() > 0 ? " LEX"
+				+ def.getMeasureLexical() + "> " : " > ");
 		sb.append(AApplyExpAssistantTC.getMeasureApply(apply, def.getMeasure()));
 
 		value = ctxt.getObligation(sb.toString());
 	}
 
-	public RecursiveObligation(
-		AImplicitFunctionDefinition def, AApplyExp apply, POContextStack ctxt)
+	public RecursiveObligation(AImplicitFunctionDefinition def,
+			AApplyExp apply, POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.RECURSIVE, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -88,13 +89,14 @@ public class RecursiveObligation extends ProofObligation
 		sb.append(def.getMeasure());
 		sb.append("(");
 
-		for (APatternListTypePair pltp: def.getParamPatterns())
+		for (APatternListTypePair pltp : def.getParamPatterns())
 		{
 			sb.append(pltp.getPatterns());
 		}
 
 		sb.append(")");
-		sb.append(def.getMeasureLexical() > 0 ? " LEX" + def.getMeasureLexical() + "> " : " > ");
+		sb.append(def.getMeasureLexical() > 0 ? " LEX"
+				+ def.getMeasureLexical() + "> " : " > ");
 		sb.append(def.getMeasure());
 		sb.append("(");
 		sb.append(apply.getArgs());

@@ -27,7 +27,6 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.SInvariantType;
 
-
 public class InvariantObligation extends ProofObligation
 {
 	/**

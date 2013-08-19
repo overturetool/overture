@@ -12,11 +12,11 @@ import org.overture.parser.messages.VDMMessage;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.util.PogUtil.PogResult;
-import org.overture.util.Base64;
 import org.overture.test.framework.ResultTestCase;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
+import org.overture.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,10 +47,12 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 	}
 
 	public void encondeResult(List<String> result, Document doc,
-			Element resultElement) {
+			Element resultElement)
+	{
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	public void encondeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
@@ -60,7 +62,7 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 			message.setAttribute("resource", file.getName());
 			message.setAttribute("number", new Integer(po.number).toString());
 			message.setAttribute("message", po.toString());
-			message.setAttribute("column", po.location.getStartPos()+ "");
+			message.setAttribute("column", po.location.getStartPos() + "");
 			message.setAttribute("line", po.location.getStartLine() + "");
 			try
 			{
@@ -86,7 +88,7 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 					&& cn.getNodeName().equals("po"))
 			{
 				String nodeType = cn.getAttributes().getNamedItem("toString").getNodeValue();
-				if(nodeType!=null && !nodeType.isEmpty())
+				if (nodeType != null && !nodeType.isEmpty())
 				{
 					try
 					{
@@ -105,52 +107,54 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 	protected boolean assertEqualResults(List<String> expected,
 			List<String> actual)
 	{
-				
-		if(expected.size() != actual.size())
+
+		if (expected.size() != actual.size())
 		{
 			System.out.println("The expected number of generated POs differs from what was actually generated.");
 			return false;
 		}
-		
+
 		boolean testPasssed = true;
-		
-		for (String string : actual) {
-			
+
+		for (String string : actual)
+		{
+
 			/*
 			 * The order of the POs is not assumed to be the same
 			 */
-			if(!expected.contains(string))
+			if (!expected.contains(string))
 			{
 				/*
-				 * String permutations are also accepted as valid POs. This will be the case
-				 * when the parameter order is different
+				 * String permutations are also accepted as valid POs. This will be the case when the parameter order is
+				 * different
 				 */
-				if(!PogTestHelper.containsPermutation(string, expected))
+				if (!PogTestHelper.containsPermutation(string, expected))
 				{
-					
+
 					/*
-					 * A valid PO may still exist. Sometimes PO parameters differ in name
-					 * considering two equivalent POs. For example, a parameter may be called
-					 * "any24" for an expected PO, while it is referred to as "any32" in another.
-					 * Currently this is dealt with by considering whether the closest match
+					 * A valid PO may still exist. Sometimes PO parameters differ in name considering two equivalent
+					 * POs. For example, a parameter may be called "any24" for an expected PO, while it is referred to
+					 * as "any32" in another. Currently this is dealt with by considering whether the closest match
 					 * passes a tolerance check.
 					 */
 					StringComparison comp = PogTestHelper.findClosestMatch(string, expected);
-					
-					if(comp == null || !PogTestHelper.ToleranceCheckPassed(comp))
+
+					if (comp == null
+							|| !PogTestHelper.ToleranceCheckPassed(comp))
 					{
 						testPasssed = false;
-						
-						System.out.println("\nNo equivalent PO found Deviation:" + comp.getDistLengthRatio());
+
+						System.out.println("\nNo equivalent PO found Deviation:"
+								+ comp.getDistLengthRatio());
 						System.out.println();
-						System.out.println("Actual  PO: " +  comp.getActual());
+						System.out.println("Actual  PO: " + comp.getActual());
 						System.out.println("Closest PO: " + comp.getResultStr());
 						System.out.println("\n");
 					}
 				}
 			}
 		}
-		
+
 		return testPasssed;
 	}
 
@@ -164,24 +168,27 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 
 		return Base64.encode(baos.toByteArray()).toString();
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	protected static Result<List<String>> convert(@SuppressWarnings("rawtypes") PogResult result)
+	protected static Result<List<String>> convert(
+			@SuppressWarnings("rawtypes") PogResult result)
 	{
-		if(result.result==null)
+		if (result.result == null)
 		{
 			return new Result<List<String>>(convertToStringList(result), convert(result.typeCheckResult.warnings), convert(result.typeCheckResult.errors));
 		}
 		return new Result<List<String>>(convertToStringList(result), convert(result.warnings), convert(result.errors));
 	}
-	
-	private static List<String> convertToStringList(@SuppressWarnings("rawtypes") PogResult result) {
+
+	private static List<String> convertToStringList(
+			@SuppressWarnings("rawtypes") PogResult result)
+	{
 		List<String> list = new Vector<String>();
-		for (ProofObligation po : result.result) {
+		for (ProofObligation po : result.result)
+		{
 			list.add(po.toString());
 		}
-		
+
 		return list;
 	}
 

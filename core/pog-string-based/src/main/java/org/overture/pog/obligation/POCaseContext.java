@@ -28,7 +28,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-
 public class POCaseContext extends POContext
 {
 	public final PPattern pattern;
@@ -40,7 +39,7 @@ public class POCaseContext extends POContext
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
-	} 
+	}
 
 	@Override
 	public String getContext()
@@ -49,29 +48,28 @@ public class POCaseContext extends POContext
 
 		if (PPatternAssistantTC.isSimple(pattern))
 		{
-    		sb.append(pattern);
-    		sb.append(" = ");
-    		sb.append(exp);
-    		sb.append(" => ");
-		}
-		else
+			sb.append(pattern);
+			sb.append(" = ");
+			sb.append(exp);
+			sb.append(" => ");
+		} else
 		{
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			
-    		sb.append("exists ");
-    		sb.append(matching);
-    		sb.append(":");
-    		sb.append(type);
-    		sb.append(" & ");
-    		sb.append(matching);
-    		sb.append(" = ");
-    		sb.append(exp);
 
-    		sb.append(" =>\nlet ");
-    		sb.append(pattern);
-    		sb.append(" = ");
-    		sb.append(exp);
-    		sb.append(" in");
+			sb.append("exists ");
+			sb.append(matching);
+			sb.append(":");
+			sb.append(type);
+			sb.append(" & ");
+			sb.append(matching);
+			sb.append(" = ");
+			sb.append(exp);
+
+			sb.append(" =>\nlet ");
+			sb.append(pattern);
+			sb.append(" = ");
+			sb.append(exp);
+			sb.append(" in");
 		}
 
 		return sb.toString();

@@ -32,8 +32,7 @@ public class MapCompatibleObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -7453383884893058267L;
 
-	public MapCompatibleObligation(
-		PExp left, PExp right, POContextStack ctxt)
+	public MapCompatibleObligation(PExp left, PExp right, POContextStack ctxt)
 	{
 		super(left.getLocation(), POType.MAP_COMPATIBLE, ctxt);
 		StringBuilder sb = new StringBuilder();

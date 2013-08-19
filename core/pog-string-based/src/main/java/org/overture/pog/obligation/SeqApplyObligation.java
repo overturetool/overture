@@ -26,7 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStateDesignator;
 
-
 public class SeqApplyObligation extends ProofObligation
 {
 	/**
@@ -40,11 +39,11 @@ public class SeqApplyObligation extends ProofObligation
 		value = ctxt.getObligation(arg + " in set inds " + root);
 	}
 
-	public SeqApplyObligation(PStateDesignator root,
-		PExp arg, POContextStack ctxt)
+	public SeqApplyObligation(PStateDesignator root, PExp arg,
+			POContextStack ctxt)
 	{
 		super(root.getLocation(), POType.SEQ_APPLY, ctxt);
-		value = ctxt.getObligation(
-			arg + " > 0 and " + arg + " <= len (" + root + ") + 1");
+		value = ctxt.getObligation(arg + " > 0 and " + arg + " <= len (" + root
+				+ ") + 1");
 	}
 }

@@ -12,13 +12,15 @@ import org.overture.test.framework.BaseTestSuite;
 
 public class ClassRtPogTestSuite extends BaseTestSuite
 {
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-//		Properties.recordTestResults = true;
-		String name = "POG Classes PP TestSuite";
+		// Properties.recordTestResults = true;
+		String name = "POG Classes RT TestSuite";
 		String root = "src\\test\\resources\\classesRT";
-		TestSuite test =  createTestCompleteFile(name, root, ClassRtPoTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, root, ClassRtPoTestCase.class, "");
 		return test;
 	}
 }

@@ -32,11 +32,12 @@ import org.overture.ast.types.PType;
 abstract public class POContext
 {
 	abstract public String getContext();
+
 	private Map<PExp, PType> knownTypes = new HashMap<PExp, PType>();
 
 	public String getName()
 	{
-		return "";		// Overridden in PONameContext
+		return ""; // Overridden in PONameContext
 	}
 
 	public boolean isScopeBoundary()
