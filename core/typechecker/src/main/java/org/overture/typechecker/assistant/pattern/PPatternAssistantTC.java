@@ -274,6 +274,8 @@ public class PPatternAssistantTC extends PPatternAssistant
 			return true;
 		else if (pattern instanceof AIdentifierPattern)
 			return true;
+		else if (pattern instanceof ATuplePattern)
+			return PPatternListAssistantTC.alwaysMatches(((ATuplePattern) pattern).getPlist());
 		else
 		{
 			return false;
