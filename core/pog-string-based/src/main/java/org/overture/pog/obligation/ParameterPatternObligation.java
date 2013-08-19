@@ -32,8 +32,6 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -88,9 +86,9 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		StringBuilder foralls = new StringBuilder();
 		StringBuilder argnames = new StringBuilder();
-		StringBuilder exists = new StringBuilder();
+		StringBuilder ebindings = new StringBuilder();
+		StringBuilder epredicates = new StringBuilder();
 
-		foralls.append("forall ");
 		String fprefix = "";
 		String eprefix = "";
 		int argn = 1;
@@ -104,37 +102,29 @@ public class ParameterPatternObligation extends ProofObligation
 				String aname = "arg" + argn++;
 				PType atype = titer.next();
 
-				if (!(p instanceof AIgnorePattern)
-						&& !(p instanceof AIdentifierPattern))
-				{
-					foralls.append(fprefix);
-					foralls.append(aname);
-					foralls.append(":");
-					foralls.append(atype);
+				foralls.append(fprefix);
+				foralls.append(aname);
+				foralls.append(":");
+				foralls.append(atype);
 
-					argnames.append(fprefix);
-					argnames.append(aname);
+				argnames.append(fprefix);
+				argnames.append(aname);
 
-					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
-					exists.append(eprefix);
-					exists.append("(exists ");
-					exists.append(pmatch);
-					exists.append(":");
-					exists.append(atype);
-					exists.append(" & ");
-					exists.append(aname);
-					exists.append(" = ");
-					exists.append(pmatch);
-					exists.append(")");
+				PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
+				ebindings.append(fprefix);
+				ebindings.append(pmatch);
+				ebindings.append(":");
+				ebindings.append(atype);
 
-					fprefix = ", ";
-					eprefix = " and\n  ";
+				epredicates.append(eprefix);
+				epredicates.append("(");
+				epredicates.append(aname);
+				epredicates.append(" = ");
+				epredicates.append(pmatch);
+				epredicates.append(")");
 
-					if (predef != null)
-					{
-						eprefix = eprefix + "  ";
-					}
-				}
+				fprefix = ", ";
+				eprefix = " and ";	
 			}
 
 			if (result instanceof AFunctionType)
@@ -149,20 +139,24 @@ public class ParameterPatternObligation extends ProofObligation
 		}
 
 		foralls.append(" &\n");
-
+		String INDENT = "  ";
+		
 		if (predef != null)
 		{
-			foralls.append("  ");
+			foralls.append(INDENT);
 			foralls.append(predef.getName().getName());
 			foralls.append("(");
 			foralls.append(argnames);
 			foralls.append(")");
-			foralls.append(" =>\n    ");
+			foralls.append(" =>\n" + INDENT + INDENT);
+			ebindings.append(" &\n" + INDENT + INDENT + INDENT);
 		} else
 		{
-			foralls.append("  ");
+			foralls.append(INDENT);
+			ebindings.append(" &\n" + INDENT + INDENT);
 		}
 
-		return foralls.toString() + exists.toString();
+		return "forall " + foralls.toString() +
+				"exists " + ebindings.toString() + epredicates.toString();
 	}
 }
