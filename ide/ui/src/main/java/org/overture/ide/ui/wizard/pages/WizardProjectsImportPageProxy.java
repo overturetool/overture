@@ -45,12 +45,16 @@ public class WizardProjectsImportPageProxy {
 	public void performCancel() {
 		try {
 			invokeMainPageMethod("performCancel");
-		} catch (NoSuchMethodException | SecurityException
-				| IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			VdmUIPlugin
-					.log("Failed to invoke performCancel on WizardProjectsImportPage",
-							e);
+		} catch (NoSuchMethodException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (SecurityException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (IllegalAccessException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (IllegalArgumentException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (InvocationTargetException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
 		}
 	}
 
@@ -61,12 +65,16 @@ public class WizardProjectsImportPageProxy {
 	public void createProjects() {
 		try {
 			invokeMainPageMethod("createProjects");
-		} catch (NoSuchMethodException | SecurityException
-				| IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			VdmUIPlugin
-					.log("Failed to invoke createProjects on WizardProjectsImportPage",
-							e);
+		} catch (NoSuchMethodException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (SecurityException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (IllegalAccessException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (IllegalArgumentException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (InvocationTargetException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
 		}
 	}
 
