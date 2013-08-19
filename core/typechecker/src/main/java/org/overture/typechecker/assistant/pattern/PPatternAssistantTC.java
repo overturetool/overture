@@ -37,7 +37,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionSet;
 public class PPatternAssistantTC extends PPatternAssistant
 {
 	protected static ITypeCheckerAssistantFactory af;
-
+	
 	@SuppressWarnings("static-access")
 	public PPatternAssistantTC(ITypeCheckerAssistantFactory af)
 	{
@@ -263,6 +263,20 @@ public class PPatternAssistantTC extends PPatternAssistant
 			 * are like this, but any that include variables or ignore patterns are not.
 			 */
 			return true;
+		}
+	}
+	
+	public static boolean alwaysMatches(PPattern pattern)
+	{
+		if (pattern instanceof ARecordPattern)
+			return PPatternListAssistantTC.alwaysMatches(((ARecordPattern) pattern).getPlist());
+		else if (pattern instanceof AIgnorePattern)
+			return true;
+		else if (pattern instanceof AIdentifierPattern)
+			return true;
+		else
+		{
+			return false;
 		}
 	}
 

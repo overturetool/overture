@@ -85,4 +85,14 @@ public class PPatternListAssistantTC {
 		return true;
 	}
 	
+	public static boolean alwaysMatches(List<PPattern> pl)
+	{
+		for (PPattern p: pl)
+		{
+			if (!PPatternAssistantTC.alwaysMatches(p)) return false;	// NB. AND
+		}
+
+		return true;
+	}
+	
 }
