@@ -72,7 +72,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
 	}
 
 	public ParameterPatternObligation(AImplicitOperationDefinition def,
