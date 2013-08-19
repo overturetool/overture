@@ -117,53 +117,43 @@ public class Vdm2UmlAssociationUtil
 
 	public static boolean validType(PType type)
 	{
-
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				return false;
-			case ABracketType.kindPType:
-				break;
-			case AClassType.kindPType:
-				break;
-			case AFunctionType.kindPType:
-				return false;
-			case SInvariantType.kindPType:
-				return type instanceof ANamedInvariantType;
-				// ANamedInvariantType nInvType = (ANamedInvariantType) type;
-				// return
-				// break;
-			case SMapType.kindPType:
-				SMapType mType = (SMapType) type;
-				// return isSimpleType(mType.getFrom())
-				// && isSimpleType(mType.getTo());
-				return validMapFromType(mType.getFrom())
-						&& validMapType(mType.getTo());
-			case AOperationType.kindPType:
-				return false;
-			case AOptionalType.kindPType:
-				AOptionalType optionalType = (AOptionalType) type;
-				return isSimpleType(optionalType.getType());
-			case AParameterType.kindPType:
-				return false;
-			case AProductType.kindPType:
-				return false;
-			case AQuoteType.kindPType:
-				break;
-			case SSeqType.kindPType:
-				SSeqType seqType = (SSeqType) type;
-				return isSimpleType(seqType.getSeqof());
-			case ASetType.kindPType:
-				ASetType setType = (ASetType) type;
-				return isSimpleType(setType.getSetof());
-			case AUndefinedType.kindPType:
-			case AUnionType.kindPType:
-			case AUnknownType.kindPType:
-			case AUnresolvedType.kindPType:
-			case AVoidType.kindPType:
-			case AVoidReturnType.kindPType:
-				return false;
-
+		if (type instanceof SBasicType) {
+			return false;
+		} else if (type instanceof ABracketType) {
+		} else if (type instanceof AClassType) {
+		} else if (type instanceof AFunctionType) {
+			return false;
+		} else if (type instanceof SInvariantType) {
+			return type instanceof ANamedInvariantType;
+		} else if (type instanceof SMapType) {
+			SMapType mType = (SMapType) type;
+			// return isSimpleType(mType.getFrom())
+			// && isSimpleType(mType.getTo());
+			return validMapFromType(mType.getFrom())
+					&& validMapType(mType.getTo());
+		} else if (type instanceof AOperationType) {
+			return false;
+		} else if (type instanceof AOptionalType) {
+			AOptionalType optionalType = (AOptionalType) type;
+			return isSimpleType(optionalType.getType());
+		} else if (type instanceof AParameterType) {
+			return false;
+		} else if (type instanceof AProductType) {
+			return false;
+		} else if (type instanceof AQuoteType) {
+		} else if (type instanceof SSeqType) {
+			SSeqType seqType = (SSeqType) type;
+			return isSimpleType(seqType.getSeqof());
+		} else if (type instanceof ASetType) {
+			ASetType setType = (ASetType) type;
+			return isSimpleType(setType.getSetof());
+		} else if (type instanceof AUndefinedType
+				|| type instanceof AUnionType
+				|| type instanceof AUnknownType
+				|| type instanceof AUnresolvedType
+				|| type instanceof AVoidType
+				|| type instanceof AVoidReturnType) {
+			return false;
 		}
 
 		if (PTypeAssistantInterpreter.isClass(type))
@@ -181,40 +171,33 @@ public class Vdm2UmlAssociationUtil
 			return true;
 		}
 
-		switch (type.kindPType())
-		{
-			case SSeqType.kindPType:
-				SSeqType seqType = (SSeqType) type;
-				return isSimpleType(seqType.getSeqof());
-			case ASetType.kindPType:
-				ASetType setType = (ASetType) type;
-				return isSimpleType(setType.getSetof());
-			default:
-				return false;
+		if (type instanceof SSeqType) {
+			SSeqType seqType = (SSeqType) type;
+			return isSimpleType(seqType.getSeqof());
+		} else if (type instanceof ASetType) {
+			ASetType setType = (ASetType) type;
+			return isSimpleType(setType.getSetof());
+		} else {
+			return false;
 		}
 	}
 
 	private static boolean validMapFromType(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case SSeqType.kindPType:
-				SSeqType seqType = (SSeqType) type;
-				if (seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
-				{
-					return true;
-				}
-				break;
-			case ASetType.kindPType:
-				ASetType setType = (ASetType) type;
-				if (setType.getSetof().kindPType().equals(SBasicType.kindPType))
-				{
-					return true;
-				}
-				break;
-			case SBasicType.kindPType:
+		if (type instanceof SSeqType) {
+			SSeqType seqType = (SSeqType) type;
+			if (seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
+			{
 				return true;
-
+			}
+		} else if (type instanceof ASetType) {
+			ASetType setType = (ASetType) type;
+			if (setType.getSetof().kindPType().equals(SBasicType.kindPType))
+			{
+				return true;
+			}
+		} else if (type instanceof SBasicType) {
+			return true;
 		}
 		return validMapType(type);
 	}
@@ -230,57 +213,37 @@ public class Vdm2UmlAssociationUtil
 			return getType(classes, type);
 		}
 
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				return getType(classes, type);
-			case ABracketType.kindPType:
-				break;
-			case AClassType.kindPType:
-				break;
-			case AFunctionType.kindPType:
-				break;
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					ANamedInvariantType nInvType = (ANamedInvariantType) type;
-					return getType(classes, nInvType);
-				}
-				break;
-			case SMapType.kindPType:
-				SMapType mType = (SMapType) type;
-				return getTypeForMap(classes, mType.getTo());
-			case AOperationType.kindPType:
-				break;
-			case AOptionalType.kindPType:
-				// AOptionalType optionalType = (AOptionalType) type;
-				// return getType(classes, optionalType.getType());
-				break;
-			case AParameterType.kindPType:
-				break;
-			case AProductType.kindPType:
-				break;
-			case AQuoteType.kindPType:
-				break;
-			case SSeqType.kindPType:
-				SSeqType seqType = (SSeqType) type;
-				return getType(classes, seqType.getSeqof());
-			case ASetType.kindPType:
-				ASetType setType = (ASetType) type;
-				return getType(classes, setType.getSetof());
-			case AUndefinedType.kindPType:
-				break;
-			case AUnionType.kindPType:
-				break;
-			case AUnknownType.kindPType:
-				break;
-			case AUnresolvedType.kindPType:
-				break;
-			case AVoidType.kindPType:
-				break;
-			case AVoidReturnType.kindPType:
-				break;
-
+		if (type instanceof SBasicType) {
+			return getType(classes, type);
+		} else if (type instanceof ABracketType) {
+		} else if (type instanceof AClassType) {
+		} else if (type instanceof AFunctionType) {
+		} else if (type instanceof SInvariantType) {
+			if (type instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType nInvType = (ANamedInvariantType) type;
+				return getType(classes, nInvType);
+			}
+		} else if (type instanceof SMapType) {
+			SMapType mType = (SMapType) type;
+			return getTypeForMap(classes, mType.getTo());
+		} else if (type instanceof AOperationType) {
+		} else if (type instanceof AOptionalType) {
+		} else if (type instanceof AParameterType) {
+		} else if (type instanceof AProductType) {
+		} else if (type instanceof AQuoteType) {
+		} else if (type instanceof SSeqType) {
+			SSeqType seqType = (SSeqType) type;
+			return getType(classes, seqType.getSeqof());
+		} else if (type instanceof ASetType) {
+			ASetType setType = (ASetType) type;
+			return getType(classes, setType.getSetof());
+		} else if (type instanceof AUndefinedType) {
+		} else if (type instanceof AUnionType) {
+		} else if (type instanceof AUnknownType) {
+		} else if (type instanceof AUnresolvedType) {
+		} else if (type instanceof AVoidType) {
+		} else if (type instanceof AVoidReturnType) {
 		}
 
 		return null;
@@ -323,10 +286,10 @@ public class Vdm2UmlAssociationUtil
 
 	static Type getTypeForMap(Map<String, Class> classes, PType type)
 	{
-		if (SSeqType.kindPType.equals(type.kindPType()))
+		if (type instanceof SSeqType)
 		{
 			type = ((SSeqType) type).getSeqof();
-		} else if (ASetType.kindPType.equals(type.kindPType()))
+		} else if (type instanceof ASetType)
 		{
 			type = ((ASetType) type).getSetof();
 		}
@@ -358,11 +321,11 @@ public class Vdm2UmlAssociationUtil
 		prop.setIsStatic(access.getStatic() != null);
 
 		// set ordered
-		prop.setIsOrdered(SSeqType.kindPType.equals(defType.kindPType()));
-		prop.setIsUnique(!(SSeqType.kindPType.equals(defType.kindPType()) || SMapType.kindPType.equals(defType.kindPType())));
+		prop.setIsOrdered(defType instanceof SSeqType);
+		prop.setIsUnique(!(defType instanceof SSeqType || defType instanceof SMapType));
 
 		// set qualifier if map
-		if (SMapType.kindPType.equals(defType.kindPType()))
+		if (defType instanceof SMapType)
 		{
 			SMapType mType = (SMapType) defType;
 			PType fromType = mType.getFrom();
@@ -372,17 +335,17 @@ public class Vdm2UmlAssociationUtil
 			qualifier.setLower(Vdm2UmlUtil.extractLower(fromType));
 			qualifier.setUpper(Vdm2UmlUtil.extractUpper(fromType));
 			// set ordered
-			qualifier.setIsOrdered(SSeqType.kindPType.equals(fromType.kindPType()));
-			qualifier.setIsUnique(!(SSeqType.kindPType.equals(fromType.kindPType()) || SMapType.kindPType.equals(fromType.kindPType())));
+			qualifier.setIsOrdered(fromType instanceof SSeqType);
+			qualifier.setIsUnique(!(fromType instanceof SSeqType || fromType instanceof SMapType));
 
 			prop.setLower(Vdm2UmlUtil.extractLower(toType));
 			prop.setUpper(Vdm2UmlUtil.extractUpper(toType));
 			// set ordered
-			prop.setIsOrdered(SSeqType.kindPType.equals(toType.kindPType()));
-			prop.setIsUnique(!(SSeqType.kindPType.equals(toType.kindPType()) || SMapType.kindPType.equals(toType.kindPType())));
+			prop.setIsOrdered(toType instanceof SSeqType);
+			prop.setIsUnique(!(toType instanceof SSeqType || toType instanceof SMapType));
 
 			// Map unique
-			prop.setIsUnique(AInMapMapType.kindSMapType.equals(mType.kindSMapType()));
+			prop.setIsUnique(mType instanceof AInMapMapType);
 			Property targetProp = association.getMemberEnd("", null);
 			targetProp.setIsUnique(true);
 
@@ -403,12 +366,10 @@ public class Vdm2UmlAssociationUtil
 
 	private static PType unfoldSetSeqTypes(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case SSeqType.kindPType:
-				return ((SSeqType) type).getSeqof();
-			case ASetType.kindPType:
-				return ((ASetType) type).getSetof();
+		if (type instanceof SSeqType) {
+			return ((SSeqType) type).getSeqof();
+		} else if (type instanceof ASetType) {
+			return ((ASetType) type).getSetof();
 		}
 		return type;
 	}

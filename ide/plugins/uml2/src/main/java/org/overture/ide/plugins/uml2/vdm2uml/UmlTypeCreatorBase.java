@@ -33,7 +33,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 
-@SuppressWarnings("deprecation")
 public class UmlTypeCreatorBase
 {
 	public final Map<String, Type> types = new HashMap<String, Type>();
@@ -84,117 +83,97 @@ public class UmlTypeCreatorBase
 
 	public static String getName(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				return type.toString();
-			case ABracketType.kindPType:
-				return getName(((ABracketType) type).getType());
-			case AClassType.kindPType:
-				return ((AClassType) type).getName().getName();
-			case AFunctionType.kindPType:
-				return getName(((AFunctionType) type).getResult());
-			case SInvariantType.kindPType:
-			{
-				switch (((SInvariantType) type).kindSInvariantType())
-				{
-					case ANamedInvariantType.kindSInvariantType:
-						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
-								+ NAME_SEPERATOR
-								+ ((ANamedInvariantType) type).getName().getName();
-					case ARecordInvariantType.kindSInvariantType:
-						return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
-								+ NAME_SEPERATOR
-								+ ((ARecordInvariantType) type).getName().getName();
-
-				}
+		if (type instanceof SBasicType) {
+			return type.toString();
+		} else if (type instanceof ABracketType) {
+			return getName(((ABracketType) type).getType());
+		} else if (type instanceof AClassType) {
+			return ((AClassType) type).getName().getName();
+		} else if (type instanceof AFunctionType) {
+			return getName(((AFunctionType) type).getResult());
+		} else if (type instanceof SInvariantType) {
+			if (type instanceof ANamedInvariantType) {
+				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
+						+ NAME_SEPERATOR
+						+ ((ANamedInvariantType) type).getName().getName();
+			} else if (type instanceof ARecordInvariantType) {
+				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
+						+ NAME_SEPERATOR
+						+ ((ARecordInvariantType) type).getName().getName();
 			}
-				break;
-			case SMapType.kindPType:
-				return (AInMapMapType.kindSMapType.equals(((SMapType) type).kindSMapType()) ? "In"
-						: "")
-						+ "Map<"
-						+ getName(((SMapType) type).getFrom())
-						+ ","
-						+ getName(((SMapType) type).getTo()) + ">";
-			case AOperationType.kindPType:
-				return getName(((AOperationType) type).getResult());
-			case AOptionalType.kindPType:
-				return "Optional<" + getName(((AOptionalType) type).getType())
-						+ ">";
-			case AParameterType.kindPType:
-				return ((AParameterType) type).getName().getName();
-			case AProductType.kindPType:
+		} else if (type instanceof SMapType) {
+			return (type instanceof AInMapMapType ? "In" : "")
+					+ "Map<"
+					+ getName(((SMapType) type).getFrom())
+					+ ","
+					+ getName(((SMapType) type).getTo()) + ">";
+		} else if (type instanceof AOperationType) {
+			return getName(((AOperationType) type).getResult());
+		} else if (type instanceof AOptionalType) {
+			return "Optional<" + getName(((AOptionalType) type).getType())
+					+ ">";
+		} else if (type instanceof AParameterType) {
+			return ((AParameterType) type).getName().getName();
+		} else if (type instanceof AProductType) {
+			String name = "Product<";
+			for (Iterator<PType> itr = ((AProductType) type).getTypes().iterator(); itr.hasNext();)
 			{
-				String name = "Product<";
-				for (Iterator<PType> itr = ((AProductType) type).getTypes().iterator(); itr.hasNext();)
+				name += getName(itr.next());
+				if (itr.hasNext())
 				{
-					name += getName(itr.next());
-					if (itr.hasNext())
-					{
-						name += ",";
-					}
-
+					name += ",";
 				}
-				return name + ">";
 
 			}
-			case AQuoteType.kindPType:
-				return ((AQuoteType) type).getValue().getValue();
-			case SSeqType.kindPType:
-				return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
-			case ASetType.kindPType:
-				return "Set<" + getName(((ASetType) type).getSetof()) + ">";
-			case AUndefinedType.kindPType:
-				break;
-			case AUnionType.kindPType:
+			return name + ">";
+		} else if (type instanceof AQuoteType) {
+			return ((AQuoteType) type).getValue().getValue();
+		} else if (type instanceof SSeqType) {
+			return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
+		} else if (type instanceof ASetType) {
+			return "Set<" + getName(((ASetType) type).getSetof()) + ">";
+		} else if (type instanceof AUndefinedType) {
+		} else if (type instanceof AUnionType) {
+			if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 			{
-
-				if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
+				String namePostfix = "_"+type.toString().replaceAll("[^A-Za-z0-9]", "")+("_"+type.toString().hashCode()).replace('-', '_');
+				PDefinition def = type.getAncestor(PDefinition.class);
+				if (def != null)
 				{
-					String namePostfix = "_"+type.toString().replaceAll("[^A-Za-z0-9]", "")+("_"+type.toString().hashCode()).replace('-', '_');
-					PDefinition def = type.getAncestor(PDefinition.class);
-					if (def != null)
+					if(def instanceof AValueDefinition)
 					{
-						if(def instanceof AValueDefinition)
-						{
-							return def.getLocation().getModule()+NAME_SEPERATOR+ ((AValueDefinition) def).getPattern().toString().replace(" ", "").trim()+namePostfix; 
-						}
-						ILexNameToken nameTypeDef = PDefinition.class.cast(def).getName();
-						return nameTypeDef.getModule() + NAME_SEPERATOR
-								+ nameTypeDef.getName()+namePostfix;
-					} else
-					{
-						String name = "GeneratedUnion";
-						for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
-						{
-							name += getName(itr.next());
-						}
-						return name;
+						return def.getLocation().getModule()+NAME_SEPERATOR+ ((AValueDefinition) def).getPattern().toString().replace(" ", "").trim()+namePostfix; 
 					}
-				}
-				String name = "Union<";
-				for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
+					ILexNameToken nameTypeDef = PDefinition.class.cast(def).getName();
+					return nameTypeDef.getModule() + NAME_SEPERATOR
+							+ nameTypeDef.getName()+namePostfix;
+				} else
 				{
-					name += getName(itr.next());
-					if (itr.hasNext())
+					String name = "GeneratedUnion";
+					for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
 					{
-						name += ",";
+						name += getName(itr.next());
 					}
-
+					return name;
 				}
-				return name + ">";
+			}
+			String name = "Union<";
+			for (Iterator<PType> itr = ((AUnionType) type).getTypes().iterator(); itr.hasNext();)
+			{
+				name += getName(itr.next());
+				if (itr.hasNext())
+				{
+					name += ",";
+				}
 
 			}
-			case AUnknownType.kindPType:
-				return ANY_TYPE;
-			case AUnresolvedType.kindPType:
-				break;
-			case AVoidType.kindPType:
-				return VOID_TYPE;
-			case AVoidReturnType.kindPType:
-				break;
-
+			return name + ">";
+		} else if (type instanceof AUnknownType) {
+			return ANY_TYPE;
+		} else if (type instanceof AUnresolvedType) {
+		} else if (type instanceof AVoidType) {
+			return VOID_TYPE;
+		} else if (type instanceof AVoidReturnType) {
 		}
 		return UNKNOWN_TYPE;
 	}
