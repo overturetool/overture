@@ -11,7 +11,7 @@
 
 	<groupId>org.overture.core</groupId>
 	<artifactId>pog</artifactId>
-	<name>VDM Proof Obligation Generator</name>
+	<name>New Proof Obligation Generator</name>
 
 	<properties>
 		<astcreator.version>1.2.3</astcreator.version>
