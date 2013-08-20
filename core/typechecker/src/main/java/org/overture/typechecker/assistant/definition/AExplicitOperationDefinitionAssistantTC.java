@@ -43,7 +43,7 @@ public class AExplicitOperationDefinitionAssistantTC {
 	public static List<? extends PDefinition> getParamDefinitions(
 			AExplicitOperationDefinition node) {
 		
-		Set<PDefinition> defs = new HashSet<PDefinition>();
+		List<PDefinition> defs = new Vector<PDefinition>();
 		Iterator<PType> titer = ((AOperationType) node.getType()).getParameters().iterator();
 
 		for (PPattern p:  node.getParameterPatterns())
@@ -51,7 +51,7 @@ public class AExplicitOperationDefinitionAssistantTC {
    			defs.addAll(PPatternAssistantTC.getDefinitions(p,titer.next(), NameScope.LOCAL));
 		}
 
-		return new Vector<PDefinition>(defs);
+		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
 	}
 
 	public static PDefinition findName( AExplicitOperationDefinition d,

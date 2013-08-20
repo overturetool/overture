@@ -1,6 +1,8 @@
 package org.overture.typechecker.assistant.definition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -40,6 +42,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -737,4 +740,32 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant {
 		
 	}
 
+
+	/**
+	 * Check a DefinitionList for incompatible duplicate pattern definitions.
+	 */
+	public static List<PDefinition> checkDuplicatePatterns(PDefinition d, List<PDefinition> defs)
+	{
+		Set<PDefinition> noDuplicates = new HashSet<PDefinition>();
+		
+		for (PDefinition d1: defs)
+		{
+			for (PDefinition d2: defs)
+			{
+				if (d1 != d2 && d1.getName() != null && d2.getName() != null && d1.getName().equals(d2.getName()))
+				{
+					if (!TypeComparator.compatible(d1.getType(), d2.getType()))
+					{
+						TypeCheckerErrors.report(3322, "Duplicate patterns bind to different types", d.getLocation(), d);
+						TypeCheckerErrors.detail2(d1.getName().getName(), d1.getType(), d2.getName().getName(), d2.getType());
+					}
+				}
+			}
+			
+			noDuplicates.add(d1);
+		}
+
+		return new Vector<PDefinition>(noDuplicates);
+	}
+	
 }
