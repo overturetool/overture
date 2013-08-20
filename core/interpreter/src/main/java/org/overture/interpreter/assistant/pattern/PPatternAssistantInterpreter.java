@@ -76,76 +76,71 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 
 	public static List<AIdentifierPattern> findIdentifiers(PPattern pattern)
 	{
-		switch (pattern.kindPPattern())
-		{
-			case AConcatenationPattern.kindPPattern:
-				return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern) pattern);
-			case AIdentifierPattern.kindPPattern:
-				return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern) pattern);
-			case AMapPattern.kindPPattern:
-				return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern) pattern);
-			case AMapUnionPattern.kindPPattern:
-				return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern) pattern);
-			case ARecordPattern.kindPPattern:
-				return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
-			case ASeqPattern.kindPPattern:
-				return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
-			case ASetPattern.kindPPattern:
-				return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
-			case ATuplePattern.kindPPattern:
-				return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
-			case AUnionPattern.kindPPattern:
-				return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
-			default:
-				return new Vector<AIdentifierPattern>(); // Most have none
+		if (pattern instanceof AConcatenationPattern) {
+			return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern) pattern);
+		} else if (pattern instanceof AIdentifierPattern) {
+			return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern) pattern);
+		} else if (pattern instanceof AMapPattern) {
+			return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern) pattern);
+		} else if (pattern instanceof AMapUnionPattern) {
+			return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern) pattern);
+		} else if (pattern instanceof ARecordPattern) {
+			return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
+		} else if (pattern instanceof ASeqPattern) {
+			return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
+		} else if (pattern instanceof ASetPattern) {
+			return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
+		} else if (pattern instanceof ATuplePattern) {
+			return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
+		} else if (pattern instanceof AUnionPattern) {
+			return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
+		} else {
+			return new Vector<AIdentifierPattern>(); // Most have none
 		}
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(PPattern p,
+	public static List<NameValuePairList> getAllNamedValues(PPattern pattern,
 			Value expval, Context ctxt) throws PatternMatchException
 	{
-		// Abstract method, needs to be implemented by all subclasses
-		switch (p.kindPPattern())
-		{
-			case ABooleanPattern.kindPPattern:
-				return ABooleanPatternAssistantInterpreter.getAllNamedValues((ABooleanPattern) p, expval, ctxt);
-			case ACharacterPattern.kindPPattern:
-				return ACharacterPatternAssistantInterpreter.getAllNamedValues((ACharacterPattern) p, expval, ctxt);
-			case AConcatenationPattern.kindPPattern:
-				return AConcatenationPatternAssistantInterpreter.getAllNamedValues((AConcatenationPattern) p, expval, ctxt);
-			case AExpressionPattern.kindPPattern:
-				return AExpressionPatternAssistantInterpreter.getAllNamedValues((AExpressionPattern) p, expval, ctxt);
-			case AIdentifierPattern.kindPPattern:
-				return AIdentifierPatternAssistantInterpreter.getAllNamedValues((AIdentifierPattern) p, expval, ctxt);
-			case AIgnorePattern.kindPPattern:
-				return AIgnorePatternAssistantInterpreter.getAllNamedValues((AIgnorePattern) p, expval, ctxt);
-			case AIntegerPattern.kindPPattern:
-				return AIntegerPatternAssistantInterpreter.getAllNamedValues((AIntegerPattern) p, expval, ctxt);
-			case AMapPattern.kindPPattern:
-				return AMapPatternAssistantInterpreter.getAllNamedValues((AMapPattern) p, expval, ctxt);
-			case AMapUnionPattern.kindPPattern:
-				return AMapUnionPatternAssistantInterpreter.getAllNamedValues((AMapUnionPattern) p, expval, ctxt);
-			case ANilPattern.kindPPattern:
-				return ANilPatternAssistantInterpreter.getAllNamedValues((ANilPattern) p, expval, ctxt);
-			case AQuotePattern.kindPPattern:
-				return AQuotePatternAssistantInterpreter.getAllNamedValues((AQuotePattern) p, expval, ctxt);
-			case ARealPattern.kindPPattern:
-				return ARealPatternAssistantInterpreter.getAllNamedValues((ARealPattern) p, expval, ctxt);
-			case ARecordPattern.kindPPattern:
-				return ARecordPatternAssistantInterpreter.getAllNamedValues((ARecordPattern) p, expval, ctxt);
-			case ASeqPattern.kindPPattern:
-				return ASeqPatternAssistantInterpreter.getAllNamedValues((ASeqPattern) p, expval, ctxt);
-			case ASetPattern.kindPPattern:
-				return ASetPatternAssistantInterpreter.getAllNamedValues((ASetPattern) p, expval, ctxt);
-			case AStringPattern.kindPPattern:
-				return AStringPatternAssistantInterpreter.getAllNamedValues((AStringPattern) p, expval, ctxt);
-			case ATuplePattern.kindPPattern:
-				return ATuplePatternAssistantInterpreter.getAllNamedValues((ATuplePattern) p, expval, ctxt);
-			case AUnionPattern.kindPPattern:
-				return AUnionPatternAssistantInterpreter.getAllNamedValues((AUnionPattern) p, expval, ctxt);
-			default:
-				assert false : "Should not happen!";
-				return null;
+		if (pattern instanceof ABooleanPattern) {
+			return ABooleanPatternAssistantInterpreter.getAllNamedValues((ABooleanPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ACharacterPattern) {
+			return ACharacterPatternAssistantInterpreter.getAllNamedValues((ACharacterPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AConcatenationPattern) {
+			return AConcatenationPatternAssistantInterpreter.getAllNamedValues((AConcatenationPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AExpressionPattern) {
+			return AExpressionPatternAssistantInterpreter.getAllNamedValues((AExpressionPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AIdentifierPattern) {
+			return AIdentifierPatternAssistantInterpreter.getAllNamedValues((AIdentifierPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AIgnorePattern) {
+			return AIgnorePatternAssistantInterpreter.getAllNamedValues((AIgnorePattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AIntegerPattern) {
+			return AIntegerPatternAssistantInterpreter.getAllNamedValues((AIntegerPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AMapPattern) {
+			return AMapPatternAssistantInterpreter.getAllNamedValues((AMapPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AMapUnionPattern) {
+			return AMapUnionPatternAssistantInterpreter.getAllNamedValues((AMapUnionPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ANilPattern) {
+			return ANilPatternAssistantInterpreter.getAllNamedValues((ANilPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AQuotePattern) {
+			return AQuotePatternAssistantInterpreter.getAllNamedValues((AQuotePattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ARealPattern) {
+			return ARealPatternAssistantInterpreter.getAllNamedValues((ARealPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ARecordPattern) {
+			return ARecordPatternAssistantInterpreter.getAllNamedValues((ARecordPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ASeqPattern) {
+			return ASeqPatternAssistantInterpreter.getAllNamedValues((ASeqPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ASetPattern) {
+			return ASetPatternAssistantInterpreter.getAllNamedValues((ASetPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AStringPattern) {
+			return AStringPatternAssistantInterpreter.getAllNamedValues((AStringPattern) pattern, expval, ctxt);
+		} else if (pattern instanceof ATuplePattern) {
+			return ATuplePatternAssistantInterpreter.getAllNamedValues((ATuplePattern) pattern, expval, ctxt);
+		} else if (pattern instanceof AUnionPattern) {
+			return AUnionPatternAssistantInterpreter.getAllNamedValues((AUnionPattern) pattern, expval, ctxt);
+		} else {
+			assert false : "Should not happen!";
+			return null;
 		}
 	}
 
@@ -155,28 +150,26 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 
 	public static int getLength(PPattern pattern)
 	{
-		switch (pattern.kindPPattern())
-		{
-			case AConcatenationPattern.kindPPattern:
-				return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
-			case AIdentifierPattern.kindPPattern:
-				return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
-			case AIgnorePattern.kindPPattern:
-				return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
-			case AMapPattern.kindPPattern:
-				return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
-			case AMapUnionPattern.kindPPattern:
-				return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern) pattern);
-			case ASeqPattern.kindPPattern:
-				return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
-			case ASetPattern.kindPPattern:
-				return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
-			case AStringPattern.kindPPattern:
-				return AStringPatternAssistantInterpreter.getLength((AStringPattern) pattern);
-			case AUnionPattern.kindPPattern:
-				return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
-			default:
-				return 1; // Most only identify one member
+		if (pattern instanceof AConcatenationPattern) {
+			return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
+		} else if (pattern instanceof AIdentifierPattern) {
+			return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
+		} else if (pattern instanceof AIgnorePattern) {
+			return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
+		} else if (pattern instanceof AMapPattern) {
+			return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
+		} else if (pattern instanceof AMapUnionPattern) {
+			return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern) pattern);
+		} else if (pattern instanceof ASeqPattern) {
+			return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
+		} else if (pattern instanceof ASetPattern) {
+			return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
+		} else if (pattern instanceof AStringPattern) {
+			return AStringPatternAssistantInterpreter.getLength((AStringPattern) pattern);
+		} else if (pattern instanceof AUnionPattern) {
+			return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
+		} else {
+			return 1; // Most only identify one member
 		}
 	}
 
@@ -186,30 +179,28 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 */
 	public static boolean isConstrained(PPattern pattern)
 	{
-		switch (pattern.kindPPattern())
-		{
-			case AConcatenationPattern.kindPPattern:
-				return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern) pattern);
-			case AIdentifierPattern.kindPPattern:
-				return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern) pattern);
-			case AIgnorePattern.kindPPattern:
-				return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern) pattern);
-			case AMapPattern.kindPPattern:
-				return AMapPatternAssistantInterpreter.isConstrained((AMapPattern) pattern);
-			case AMapUnionPattern.kindPPattern:
-				return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern) pattern);
-			case ARecordPattern.kindPPattern:
-				return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
-			case ASeqPattern.kindPPattern:
-				return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
-			case ASetPattern.kindPPattern:
-				return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
-			case ATuplePattern.kindPPattern:
-				return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
-			case AUnionPattern.kindPPattern:
-				return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern) pattern);
-			default:
-				return true;
+		if (pattern instanceof AConcatenationPattern) {
+			return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern) pattern);
+		} else if (pattern instanceof AIdentifierPattern) {
+			return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern) pattern);
+		} else if (pattern instanceof AIgnorePattern) {
+			return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern) pattern);
+		} else if (pattern instanceof AMapPattern) {
+			return AMapPatternAssistantInterpreter.isConstrained((AMapPattern) pattern);
+		} else if (pattern instanceof AMapUnionPattern) {
+			return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern) pattern);
+		} else if (pattern instanceof ARecordPattern) {
+			return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
+		} else if (pattern instanceof ASeqPattern) {
+			return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
+		} else if (pattern instanceof ASetPattern) {
+			return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
+		} else if (pattern instanceof ATuplePattern) {
+			return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
+		} else if (pattern instanceof AUnionPattern) {
+			return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern) pattern);
+		} else {
+			return true;
 		}
 	}
 }

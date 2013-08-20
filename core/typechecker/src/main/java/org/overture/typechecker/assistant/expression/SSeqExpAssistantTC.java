@@ -15,12 +15,11 @@ public class SSeqExpAssistantTC {
 		this.af = af;
 	}
 	public static LexNameList getOldNames(SSeqExp expression) {
-		switch (expression.kindSSeqExp()) {
-		case ASeqCompSeqExp.kindSSeqExp:
+		if (expression instanceof ASeqCompSeqExp) {
 			return ASeqCompSeqExpAssistantTC.getOldNames((ASeqCompSeqExp) expression);
-		case ASeqEnumSeqExp.kindSSeqExp:
+		} else if (expression instanceof ASeqEnumSeqExp) {
 			return ASeqEnumSeqExpAssistantTC.getOldNames((ASeqEnumSeqExp) expression);
-		default:
+		} else {
 			assert false : "Should not happen";
 			return new LexNameList();
 		}

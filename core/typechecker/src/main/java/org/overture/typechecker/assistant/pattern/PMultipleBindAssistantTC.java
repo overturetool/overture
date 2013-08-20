@@ -24,7 +24,7 @@ public class PMultipleBindAssistantTC {
 	}
 	public static Collection<? extends PDefinition> getDefinitions(
 			PMultipleBind mb, PType type, TypeCheckInfo question) {
-		
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		for (PPattern p: mb.getPlist())
@@ -43,28 +43,25 @@ public class PMultipleBindAssistantTC {
 	}
 
 	public static PType getPossibleType(PMultipleBind mb) {
-		switch (mb.kindPMultipleBind()) {
-		case ASetMultipleBind.kindPMultipleBind:
+		if (mb instanceof ASetMultipleBind) {
 			return ASetMultipleBindAssistantTC
 					.getPossibleType((ASetMultipleBind) mb);
-		case ATypeMultipleBind.kindPMultipleBind:
+		} else if (mb instanceof ATypeMultipleBind) {
 			return ATypeMultipleBindAssistantTC
 					.getPossibleType((ATypeMultipleBind) mb);
-		default:
+		} else {
 			assert false : "Should not happen";
 			return null;
 		}
 
 	}
 
-	public static LexNameList getOldNames(
-			PMultipleBind mb) {
-		switch (mb.kindPMultipleBind()) {
-		case ASetMultipleBind.kindPMultipleBind:
+	public static LexNameList getOldNames(PMultipleBind mb) {
+		if (mb instanceof ASetMultipleBind) {
 			return ASetMultipleBindAssistantTC.getOldNames((ASetMultipleBind) mb);
-		case ATypeMultipleBind.kindPMultipleBind:
+		} else if (mb instanceof ATypeMultipleBind) {
 			return ATypeMultipleBindAssistantTC.getOldNames((ATypeMultipleBind) mb);
-		default:
+		} else {
 			assert false : "Should not happen";
 			return null;
 		}

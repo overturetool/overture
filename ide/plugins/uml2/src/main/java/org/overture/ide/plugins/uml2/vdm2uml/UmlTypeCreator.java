@@ -17,19 +17,15 @@ import org.eclipse.uml2.uml.TemplateParameter;
 import org.eclipse.uml2.uml.TemplateParameterSubstitution;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARationalNumericBasicType;
@@ -37,11 +33,8 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.AUnresolvedType;
-import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
@@ -126,59 +119,45 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			return;
 		}
 
-		switch (type.kindPType())
-		{
-			case AUnionType.kindPType:
-				createNewUmlUnionType(class_, (AUnionType) type);
-				return;
-			case SInvariantType.kindPType:
-				createNewUmlInvariantType(class_, (SInvariantType) type);
-				return;
-			case SBasicType.kindPType:
-				convertBasicType(class_, (SBasicType) type);
-				return;
-			case ABracketType.kindPType:
-				break;
-			case AClassType.kindPType:
-				break;
-			case AFunctionType.kindPType:
-				break;
-			case SMapType.kindPType:
-				createMapType(class_, (SMapType) type);
-				return;
-			case AOperationType.kindPType:
-				break;
-			case AOptionalType.kindPType:
-				createOptionalType(class_, (AOptionalType) type);
-				return;
-				// break;
-			case AParameterType.kindPType:
-				break;
-			case AProductType.kindPType:
-				createProductType(class_, (AProductType) type);
-				return;
-			case AQuoteType.kindPType:
-				break;
-			case SSeqType.kindPType:
-				createSeqType(class_, (SSeqType) type);
-				return;
-			case ASetType.kindPType:
-				createSetType(class_, (ASetType) type);
-				return;
-			case AUndefinedType.kindPType:
-				break;
-			case AUnknownType.kindPType:
-				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(ANY_TYPE));
-				return;
-			case AUnresolvedType.kindPType:
-				break;
-			case AVoidType.kindPType:
-				types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(VOID_TYPE));
-				return;
-			case AVoidReturnType.kindPType:
-
-			default:
-				break;
+		if (type instanceof AUnionType) {
+			createNewUmlUnionType(class_, (AUnionType) type);
+			return;
+		} else if (type instanceof SInvariantType) {
+			createNewUmlInvariantType(class_, (SInvariantType) type);
+			return;
+		} else if (type instanceof SBasicType) {
+			convertBasicType(class_, (SBasicType) type);
+			return;
+		} else if (type instanceof SMapType) {
+			createMapType(class_, (SMapType) type);
+			return;
+		} else if (type instanceof AOptionalType) {
+			createOptionalType(class_, (AOptionalType) type);
+			return;
+		} else if (type instanceof AProductType) {
+			createProductType(class_, (AProductType) type);
+			return;
+		} else if (type instanceof SSeqType) {
+			createSeqType(class_, (SSeqType) type);
+			return;
+		} else if (type instanceof ASetType) {
+			createSetType(class_, (ASetType) type);
+			return;
+		} else if (type instanceof AUnknownType) {
+			types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(ANY_TYPE));
+			return;
+		} else if (type instanceof AVoidType) {
+			types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(VOID_TYPE));
+			return;
+		// } else if (type instanceof ABracketType) {
+		// } else if (type instanceof AClassType) {
+		// } else if (type instanceof AFunctionType) {
+		// } else if (type instanceof AOperationType) {
+		// } else if (type instanceof AParameterType) {
+		// } else if (type instanceof AQuoteType) {
+		// } else if (type instanceof AUndefinedType) {
+		// } else if (type instanceof AUnresolvedType) {
+		// } else if (type instanceof AVoidReturnType) {
 		}
 
 		if (type instanceof AClassType
@@ -219,7 +198,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-		createTemplateType(class_, type, AInMapMapType.kindSMapType.equals(type.kindSMapType()) ? templateInMapName
+            createTemplateType(class_, type, (type instanceof AInMapMapType) ? templateInMapName
 				: templateMapName, new String[] { "D", "R" }, type.getFrom(), type.getTo());
 	}
 
@@ -352,41 +331,9 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createNewUmlInvariantType(Class class_, SInvariantType type)
 	{
-		switch (type.kindSInvariantType())
-		{
-			case ANamedInvariantType.kindSInvariantType:
-			{
-				PType ptype = ((ANamedInvariantType) type).getType();
-
-				if (!getName(ptype).equals(getName(type)))
-				{
-					String simpleName = getName(type);
-					simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
-
-					Class owningClass = null;
-
-					if(class_.getName().equals(type.getLocation().getModule()))
-					{
-						owningClass = class_;
-					}else
-					{
-						owningClass = classLookup.lookup(type.getLocation().getModule());
-					}
-					Classifier recordClass = owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
-
-					types.put(getName(type), recordClass);
-					create(class_, ptype);
-					recordClass.createGeneralization(getUmlType(ptype));
-
-				} else
-				{
-					create(class_, ptype);
-				}
-
-				break;
-			}
-
-			case ARecordInvariantType.kindSInvariantType:
+		if (type instanceof ANamedInvariantType) {
+			PType ptype = ((ANamedInvariantType) type).getType();
+			if (!getName(ptype).equals(getName(type)))
 			{
 				String simpleName = getName(type);
 				simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
@@ -400,21 +347,36 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 				{
 					owningClass = classLookup.lookup(type.getLocation().getModule());
 				}
+				Classifier recordClass = owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
 
-				Class recordClass = (Class) owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
-
-				for (AFieldField field : ((ARecordInvariantType) type).getFields())
-				{
-					create(class_, field.getType());
-					recordClass.createOwnedAttribute(field.getTag(), getUmlType(field.getType()));
-				}
-
-				Stereotype sterotype = (Stereotype) recordClass.createNestedClassifier("steriotype", UMLPackage.Literals.STEREOTYPE);
-				sterotype.setName("record");
 				types.put(getName(type), recordClass);
+				create(class_, ptype);
+				recordClass.createGeneralization(getUmlType(ptype));
 
+			} else
+			{
+				create(class_, ptype);
 			}
-				break;
+		} else if (type instanceof ARecordInvariantType) {
+			String simpleName = getName(type);
+			simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
+			Class owningClass = null;
+			if(class_.getName().equals(type.getLocation().getModule()))
+			{
+				owningClass = class_;
+			}else
+			{
+				owningClass = classLookup.lookup(type.getLocation().getModule());
+			}
+			Class recordClass = (Class) owningClass.createNestedClassifier(simpleName, UMLPackage.Literals.CLASS);
+			for (AFieldField field : ((ARecordInvariantType) type).getFields())
+			{
+				create(class_, field.getType());
+				recordClass.createOwnedAttribute(field.getTag(), getUmlType(field.getType()));
+			}
+			Stereotype sterotype = (Stereotype) recordClass.createNestedClassifier("steriotype", UMLPackage.Literals.STEREOTYPE);
+			sterotype.setName("record");
+			types.put(getName(type), recordClass);
 		}
 
 	}
@@ -447,23 +409,17 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private void convertBasicType(Class class_, SBasicType type)
 	{
 		String typeName = null;
-		switch (type.kindSBasicType())
-		{
-			case ABooleanBasicType.kindSBasicType:
-				typeName = "bool";
-				break;
-			case ACharBasicType.kindSBasicType:
-				typeName = "char";
-				break;
-			case SNumericBasicType.kindSBasicType:
-				convertNumericType((SNumericBasicType) type);
-				return;
-			case ATokenBasicType.kindSBasicType:
-				typeName = "token";
-				break;
-			default:
-				assert false : "Should not happen";
-				break;
+		if (type instanceof ABooleanBasicType) {
+			typeName = "bool";
+		} else if (type instanceof ACharBasicType) {
+			typeName = "char";
+		} else if (type instanceof SNumericBasicType) {
+			convertNumericType((SNumericBasicType) type);
+			return;
+		} else if (type instanceof ATokenBasicType) {
+			typeName = "token";
+		} else {
+			assert false : "Should not happen";
 		}
 
 		if (!types.containsKey(getName(type)))
@@ -476,26 +432,19 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private void convertNumericType(SNumericBasicType type)
 	{
 		String typeName = null;
-		switch (type.kindSNumericBasicType())
-		{
-			case AIntNumericBasicType.kindSNumericBasicType:
-				typeName = "int";
-				break;
-			case ANatNumericBasicType.kindSNumericBasicType:
-				typeName = "nat";
-				break;
-			case ANatOneNumericBasicType.kindSNumericBasicType:
-				typeName = "nat1";
-				break;
-			case ARationalNumericBasicType.kindSNumericBasicType:
-				typeName = "rat";
-				break;
-			case ARealNumericBasicType.kindSNumericBasicType:
-				typeName = "real";
-				break;
-			default:
-				assert false : "Should not happen";
-				return;
+		if (type instanceof AIntNumericBasicType) {
+			typeName = "int";
+		} else if (type instanceof ANatNumericBasicType) {
+			typeName = "nat";
+		} else if (type instanceof ANatOneNumericBasicType) {
+			typeName = "nat1";
+		} else if (type instanceof ARationalNumericBasicType) {
+			typeName = "rat";
+		} else if (type instanceof ARealNumericBasicType) {
+			typeName = "real";
+		} else {
+			assert false : "Should not happen";
+			return;
 		}
 		if (!types.containsKey(getName(type)))
 		{

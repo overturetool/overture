@@ -66,7 +66,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;

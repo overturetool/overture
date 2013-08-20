@@ -26,7 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.statements.ALetBeStStm;
 
-
 public class LetBeExistsObligation extends ProofObligation
 {
 	/**

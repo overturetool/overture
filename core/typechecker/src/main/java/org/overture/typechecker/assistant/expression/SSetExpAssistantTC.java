@@ -15,12 +15,11 @@ public class SSetExpAssistantTC {
 		this.af = af;
 	}
 	public static LexNameList getOldNames(SSetExp expression) {
-		switch (expression.kindSSetExp()) {
-		case ASetCompSetExp.kindSSetExp:
+		if (expression instanceof ASetCompSetExp) {
 			return ASetCompSetExpAssistantTC.getOldNames((ASetCompSetExp) expression);
-		case ASetEnumSetExp.kindSSetExp:
+		} else if (expression instanceof ASetEnumSetExp) {
 			return ASetEnumSetExpAssistantTC.getOldNames((ASetEnumSetExp) expression);
-		default:
+		} else {
 			return new LexNameList();
 		}
 	}

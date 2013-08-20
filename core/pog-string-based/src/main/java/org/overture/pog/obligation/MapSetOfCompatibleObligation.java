@@ -61,15 +61,19 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 		String d1 = getVar("d");
 		String d2 = getVar("d");
 
-		sb.append(" &\n  forall " + d1 + " in set dom " + m1 + ", " +
-									d2 + " in set dom " + m2 + " &\n");
-		sb.append("    " + d1 + " = " + d2 + " => " +
-						m1 + "(" + d1 + ") = " + m2 + "(" + d2 + ")");
+		sb.append(" &\n  forall " + d1 + " in set dom " + m1 + ", " + d2
+				+ " in set dom " + m2 + " &\n");
+		sb.append("    " + d1 + " = " + d2 + " => " + m1 + "(" + d1 + ") = "
+				+ m2 + "(" + d2 + ")");
 	}
 
 	private String mapCompAsSet(AMapCompMapExp exp)
 	{
-		return "{{" + exp.getFirst() + "} | " + Utils.listToString(exp.getBindings()) +
-			(exp.getPredicate() == null ? "}" : " & " + exp.getPredicate() + "}");
+		return "{{"
+				+ exp.getFirst()
+				+ "} | "
+				+ Utils.listToString(exp.getBindings())
+				+ (exp.getPredicate() == null ? "}" : " & "
+						+ exp.getPredicate() + "}");
 	}
 }

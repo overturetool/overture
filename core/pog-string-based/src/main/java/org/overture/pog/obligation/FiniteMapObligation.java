@@ -27,7 +27,6 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.PType;
 
-
 public class FiniteMapObligation extends ProofObligation
 {
 	/**
@@ -35,8 +34,8 @@ public class FiniteMapObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -2891663568497319141L;
 
-	public FiniteMapObligation(
-		AMapCompMapExp exp, PType maptype, POContextStack ctxt)
+	public FiniteMapObligation(AMapCompMapExp exp, PType maptype,
+			POContextStack ctxt)
 	{
 		super(exp.getLocation(), POType.FINITE_MAP, ctxt);
 		StringBuilder sb = new StringBuilder();
@@ -49,7 +48,7 @@ public class FiniteMapObligation extends ProofObligation
 		sb.append(") &\n  forall ");
 		String prefix = "";
 
-		for (PMultipleBind mb: exp.getBindings())
+		for (PMultipleBind mb : exp.getBindings())
 		{
 			sb.append(prefix);
 			sb.append(mb);
@@ -58,8 +57,8 @@ public class FiniteMapObligation extends ProofObligation
 
 		sb.append(" &\n    ");
 		sb.append(exp.getPredicate());
-		sb.append(" => exists " + findex + " in set dom " + finmap + " & " +
-			finmap + "(" + findex + ") = {");
+		sb.append(" => exists " + findex + " in set dom " + finmap + " & "
+				+ finmap + "(" + findex + ") = {");
 		sb.append(exp.getFirst());
 		sb.append("}");
 

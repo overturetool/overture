@@ -26,7 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapletExp;
 
-
 public class MapSeqOfCompatibleObligation extends ProofObligation
 {
 	/**
@@ -45,7 +44,7 @@ public class MapSeqOfCompatibleObligation extends ProofObligation
 		sb.append("forall " + m1 + ", " + m2 + " in set {");
 		String prefix = "";
 
-		for (AMapletExp m: exp.getMembers())
+		for (AMapletExp m : exp.getMembers())
 		{
 			sb.append(prefix);
 			sb.append("{");
@@ -57,8 +56,10 @@ public class MapSeqOfCompatibleObligation extends ProofObligation
 		String d1 = getVar("d");
 		String d2 = getVar("d");
 
-		sb.append("} &\n  forall " + d1 + " in set dom " + m1 + ", " + d2 + " in set dom " + m2 + " &\n");
-		sb.append("    " + d1 + " = " + d2 + " => " + m1 + "(" + d1 + ") = " + m2 + "(" + d2 + ")");
+		sb.append("} &\n  forall " + d1 + " in set dom " + m1 + ", " + d2
+				+ " in set dom " + m2 + " &\n");
+		sb.append("    " + d1 + " = " + d2 + " => " + m1 + "(" + d1 + ") = "
+				+ m2 + "(" + d2 + ")");
 
 		value = ctxt.getObligation(sb.toString());
 	}

@@ -92,7 +92,7 @@ public class POForAllContext extends POContext
 		{
 			List<PPattern> pl = new ArrayList<PPattern>();
 			pl.add(tb.getPattern().clone());
-			ATypeMultipleBind mtb =AstFactory.newATypeMultipleBind( pl, tb.getType().clone());
+			ATypeMultipleBind mtb = AstFactory.newATypeMultipleBind(pl, tb.getType().clone());
 			bindings.add(mtb);
 		}
 	}

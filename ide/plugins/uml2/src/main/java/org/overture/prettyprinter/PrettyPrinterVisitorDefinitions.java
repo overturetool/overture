@@ -25,7 +25,6 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
-@SuppressWarnings("deprecation")
 public class PrettyPrinterVisitorDefinitions extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
@@ -46,15 +45,15 @@ public class PrettyPrinterVisitorDefinitions extends
 		sb.append("\n");
 
 		// print types
-		printDefsToStringBuffer(sb, node, question, ATypeDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb, node, question, ATypeDefinition.class);
 
-		printDefsToStringBuffer(sb, node, question, AValueDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb, node, question, AValueDefinition.class);
 
-		printDefsToStringBuffer(sb, node, question, AInstanceVariableDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb, node, question, AInstanceVariableDefinition.class);
 
-		printDefsToStringBuffer(sb, node, question, AExplicitOperationDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb, node, question, AExplicitOperationDefinition.class);
 
-		printDefsToStringBuffer(sb, node, question, AExplicitFunctionDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb, node, question, AExplicitFunctionDefinition.class);
 
 		sb.append("end " + node.getName());
 		return sb.toString();
@@ -62,91 +61,73 @@ public class PrettyPrinterVisitorDefinitions extends
 
 	private void printDefsToStringBuffer(StringBuffer sb,
 			AClassClassDefinition node, PrettyPrinterEnv question,
-			String kind) throws AnalysisException
+			Class<? extends PDefinition> pDefClass) throws AnalysisException
 	{
-		List<PDefinition> defs = getDefinitions(node.getDefinitions(), kind);
+		List<PDefinition> defs = getDefinitions(node.getDefinitions(), pDefClass);
 
 		if (defs.isEmpty())
 		{
 			return;
 		}
 
-		switch (kind)
-		{
-			case ATypeDefinition.kindPDefinition:
+		if (ATypeDefinition.class.equals(pDefClass)) {
+			sb.append("types\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("types\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this, question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this, question));
+				sb.append("\n");
 			}
-				break;
-			case AValueDefinition.kindPDefinition:
+			question.decreaseIdent();
+		} else if (AValueDefinition.class.equals(pDefClass)) {
+			sb.append("values\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("values\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this, question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this, question));
+				sb.append("\n");
 			}
-				break;
-			case AInstanceVariableDefinition.kindPDefinition:
+			question.decreaseIdent();
+		} else if (AInstanceVariableDefinition.class.equals(pDefClass)) {
+			sb.append("instance variables\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("instance variables\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this, question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this, question));
+				sb.append("\n");
 			}
-				break;
-			case AExplicitOperationDefinition.kindPDefinition:
+			question.decreaseIdent();
+		} else if (AExplicitOperationDefinition.class.equals(pDefClass)) {
+			sb.append("operations\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("operations\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this, question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this, question));
+				sb.append("\n");
 			}
-				break;
-			case AExplicitFunctionDefinition.kindPDefinition:
+			question.decreaseIdent();
+		} else if (AExplicitFunctionDefinition.class.equals(pDefClass)) {
+			sb.append("functions\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("functions\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this, question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this, question));
+				sb.append("\n");
 			}
-				break;
-			default:
-				break;
+			question.decreaseIdent();
+		} else {
 		}
 		sb.append("\n");
 	}
 
 	private List<PDefinition> getDefinitions(
-			LinkedList<PDefinition> definitions, String kind)
+			LinkedList<PDefinition> definitions, Class<? extends PDefinition> pDefClass)
 	{
 		List<PDefinition> result = new Vector<PDefinition>();
 
 		for (PDefinition pDefinition : definitions)
 		{
-			if (pDefinition.kindPDefinition() == kind)
+                        if (pDefClass.isInstance(pDefinition))
 			{
 				result.add(pDefinition);
 			}

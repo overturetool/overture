@@ -17,14 +17,13 @@ public class PBindAssistantTC {
 	{
 		this.af = af;
 	}
-	public static List<PMultipleBind> getMultipleBindList(PBind bind) {
-		
-		switch (bind.kindPBind()) {
-		case ASetBind.kindPBind:
+	
+	public static List<PMultipleBind> getMultipleBindList(PBind bind) 
+	{	
+		if (bind instanceof ASetBind) {
 			return ASetBindAssistantTC.getMultipleBindList((ASetBind)bind);
-		case ATypeBind.kindPBind:
+		} else if (bind instanceof ATypeBind) {
 			return ATypeBindAssistantTC.getMultipleBindList((ATypeBind)bind);
-		
 		}
 		return null;
 		
@@ -32,17 +31,13 @@ public class PBindAssistantTC {
 	
 	public static LexNameList getOldNames(PBind bind)
 	{
-		switch (bind.kindPBind()) {
-		case ASetBind.kindPBind:
+		if (bind instanceof ASetBind) {
 			return ASetBindAssistantTC.getOldNames((ASetBind)bind);
-		case ATypeBind.kindPBind:
+		} else if (bind instanceof ATypeBind) {
 			return ATypeBindAssistantTC.getOldNames((ATypeBind)bind);
-		default:
+		} else {
 			assert false : "Should not happen";
-			return null;	
+			return null;
 		}
-		
 	}
-
-	
 }

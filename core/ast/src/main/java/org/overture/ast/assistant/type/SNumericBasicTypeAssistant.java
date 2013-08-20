@@ -21,18 +21,16 @@ public class SNumericBasicTypeAssistant
 
 	public static int getWeight(SNumericBasicType subn)
 	{
-		switch (subn.kindSNumericBasicType())
-		{
-			case AIntNumericBasicType.kindSNumericBasicType:
-				return 2;
-			case ANatNumericBasicType.kindSNumericBasicType:
-				return 1;
-			case ANatOneNumericBasicType.kindSNumericBasicType:
-				return 0;
-			case ARationalNumericBasicType.kindSNumericBasicType:
-				return 3;
-			case ARealNumericBasicType.kindSNumericBasicType:
-				return 4;
+		if (subn instanceof AIntNumericBasicType) {
+			return 2;
+		} else if (subn instanceof ANatNumericBasicType) {
+			return 1;
+		} else if (subn instanceof ANatOneNumericBasicType) {
+			return 0;
+		} else if (subn instanceof ARationalNumericBasicType) {
+			return 3;
+		} else if (subn instanceof ARealNumericBasicType) {
+			return 4;
 		}
 		return -1;
 	}

@@ -23,7 +23,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.Utils;
-@SuppressWarnings("deprecation")
 public class TypePrettyPrinterVisitor extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
@@ -118,15 +117,10 @@ public class TypePrettyPrinterVisitor extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		ILexNameToken name = null;
-		switch(node.kindSInvariantType())
-		{
-			case ANamedInvariantType.kindSInvariantType:
-				name = ((ANamedInvariantType)node).getName();
-				break;
-			case ARecordInvariantType.kindSInvariantType:
-				name = ((ARecordInvariantType)node).getName();
-				break;
-			
+		if (node instanceof ANamedInvariantType) {
+			name = ((ANamedInvariantType)node).getName();
+		} else if (node instanceof ARecordInvariantType) {
+			name = ((ARecordInvariantType)node).getName();
 		}
 		if(name !=null)
 		{

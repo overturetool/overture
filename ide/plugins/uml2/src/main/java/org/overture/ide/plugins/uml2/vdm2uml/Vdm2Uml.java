@@ -31,7 +31,6 @@ import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptorQuestion;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -55,7 +54,6 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
-@SuppressWarnings("deprecation")
 public class Vdm2Uml
 {
 	private UmlConsole console = new UmlConsole();
@@ -119,7 +117,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes,utc).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
@@ -217,18 +215,11 @@ public class Vdm2Uml
 				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
-
-			switch (def.kindPDefinition())
-			{
-				case ATypeDefinition.kindPDefinition:
-				{
-					PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
-					console.out.println("\tConverting type: " + type);
-					utc.create(class_, type);
-					break;
-				}
-				default:
-					break;
+			if (def instanceof ATypeDefinition) {
+				PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
+				console.out.println("\tConverting type: " + type);
+				utc.create(class_, type);
+			} else {
 			}
 		}
 
@@ -240,23 +231,15 @@ public class Vdm2Uml
 				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
-
-			switch (def.kindPDefinition())
-			{
-
-				case AInstanceVariableDefinition.kindPDefinition:
-					addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
-					break;
-				case AExplicitOperationDefinition.kindPDefinition:
-					addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
-					break;
-				case AExplicitFunctionDefinition.kindPDefinition:
-					addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
-					break;
-				case AValueDefinition.kindPDefinition:
-					addValueToClass(class_, (AValueDefinition) def);
-				default:
-					break;
+			if (def instanceof AInstanceVariableDefinition) {
+				addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
+			} else if (def instanceof AExplicitOperationDefinition) {
+				addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
+			} else if (def instanceof AExplicitFunctionDefinition) {
+				addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
+			} else if (def instanceof AValueDefinition) {
+				addValueToClass(class_, (AValueDefinition) def);
+			} else {
 			}
 		}
 
@@ -299,18 +282,15 @@ public class Vdm2Uml
 
 	private String getDefName(PDefinition def)
 	{
-		switch (def.kindPDefinition())
-		{
-			case AValueDefinition.kindPDefinition:
-				AValueDefinition valueDef = (AValueDefinition) def;
-				PPattern expression = valueDef.getPattern();
-				if (expression instanceof AIdentifierPattern)
-				{
-					return ((AIdentifierPattern) expression).getName().getName();
-				}
-				break;
-			default:
-				return def.getName().getName();
+		if (def instanceof AValueDefinition) {
+			AValueDefinition valueDef = (AValueDefinition) def;
+			PPattern expression = valueDef.getPattern();
+			if (expression instanceof AIdentifierPattern)
+			{
+				return ((AIdentifierPattern) expression).getName().getName();
+			}
+		} else {
+			return def.getName().getName();
 		}
 		return "null";
 	}

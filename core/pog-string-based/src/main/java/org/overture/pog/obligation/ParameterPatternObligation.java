@@ -23,8 +23,10 @@
 
 package org.overture.pog.obligation;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -32,9 +34,8 @@ import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
@@ -51,102 +52,142 @@ public class ParameterPatternObligation extends ProofObligation
 	private static final long serialVersionUID = 6831031423902894299L;
 	private final PDefinition predef;
 
-	public ParameterPatternObligation(
-		AExplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitFunctionDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitFunctionDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AExplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitOperationDefinition def,
+			POContextStack ctxt)
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
 	}
 
-	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)
+	private String generate(List<List<PPattern>> plist, List<PType> params,
+			PType result)
 	{
 		StringBuilder foralls = new StringBuilder();
 		StringBuilder argnames = new StringBuilder();
 		StringBuilder exists = new StringBuilder();
 
-		foralls.append("forall ");
+		String INDENT = "  ";
 		String fprefix = "";
-		String eprefix = "";
+		String lprefix = "";
 		int argn = 1;
 
-		for (List<PPattern> pl: plist)
+		for (List<PPattern> pl : plist)
 		{
+			StringBuilder ebindings = new StringBuilder();
+			StringBuilder epredicates = new StringBuilder();
 			Iterator<PType> titer = params.iterator();
-
-			for (PPattern p: pl)
+			String eprefix = "";
+			String aprefix = "";
+			int bindn = 1;
+			
+			if (!pl.isEmpty())
 			{
-				String aname = "arg" + argn++;
-				PType atype = titer.next();
-
-				if (!(p instanceof AIgnorePattern) &&
-					!(p instanceof AIdentifierPattern))
+				argnames.append("(");
+				
+				if (predef != null)
 				{
+					exists.append(INDENT);
+					exists.append(INDENT);
+					exists.append(lprefix);
+					exists.append("(exists ");
+				}
+				else
+				{
+					exists.append(INDENT);
+					exists.append(lprefix);
+					exists.append("(exists ");
+				}
+				
+				Set<String> existingBindings = new HashSet<String>();
+	
+				for (PPattern p: pl)
+				{
+					String aname = "arg" + argn++;
+					String bname = "bind" + bindn++;
+					PType atype = titer.next();
+					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
+					List<PDefinition> dlist = PPatternAssistantTC.getDefinitions(p, atype, NameScope.LOCAL);
+					
 					foralls.append(fprefix);
 					foralls.append(aname);
 					foralls.append(":");
 					foralls.append(atype);
-
-					argnames.append(fprefix);
+	
+					argnames.append(aprefix);
 					argnames.append(aname);
-
-					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
-					exists.append(eprefix);
-					exists.append("(exists ");
-					exists.append(pmatch);
-					exists.append(":");
-					exists.append(atype);
-					exists.append(" & ");
-					exists.append(aname);
-					exists.append(" = ");
-					exists.append(pmatch);
-					exists.append(")");
-
-					fprefix = ", ";
-					eprefix = " and\n  ";
-
-					if (predef != null)
+	
+					ebindings.append(aprefix);
+					aprefix = ", ";
+					ebindings.append(bname);
+					ebindings.append(":");
+					ebindings.append(atype);
+	
+					for (PDefinition def: dlist)
 					{
-						eprefix = eprefix + "  ";
+						if (def.getName() != null && !existingBindings.contains(def.getName().getName()))
+						{
+							ebindings.append(aprefix);
+							ebindings.append(def.getName().getName());
+							ebindings.append(":");
+							ebindings.append(def.getType());
+							existingBindings.add(def.getName().getName());
+						}
 					}
+	
+					epredicates.append(eprefix);
+					eprefix = " and ";
+					epredicates.append("(");
+					epredicates.append(aname);
+					epredicates.append(" = ");
+					epredicates.append(bname);
+					epredicates.append(") and (");
+					epredicates.append(pmatch);
+					epredicates.append(" = ");
+					epredicates.append(bname);
+					epredicates.append(")");
+	
+					fprefix = ", ";
 				}
+				
+				argnames.append(")");
+				exists.append(ebindings.toString());
+				exists.append(" & ");
+				exists.append(epredicates.toString());
+				exists.append(")\n");
+				lprefix = "and ";
 			}
 
 			if (result instanceof AFunctionType)
 			{
-				AFunctionType ft = (AFunctionType)result;
+				AFunctionType ft = (AFunctionType) result;
 				result = ft.getResult();
 				params = ft.getParameters();
-			}
-			else
+			} else
 			{
 				break;
 			}
@@ -156,18 +197,12 @@ public class ParameterPatternObligation extends ProofObligation
 
 		if (predef != null)
 		{
-			foralls.append("  ");
+			foralls.append(INDENT);
 			foralls.append(predef.getName().getName());
-			foralls.append("(");
 			foralls.append(argnames);
-			foralls.append(")");
-			foralls.append(" =>\n    ");
-		}
-		else
-		{
-			foralls.append("  ");
+			foralls.append(" =>\n");
 		}
 
-		return foralls.toString() + exists.toString();
+		return "forall " + foralls.toString() + exists.toString();
 	}
 }

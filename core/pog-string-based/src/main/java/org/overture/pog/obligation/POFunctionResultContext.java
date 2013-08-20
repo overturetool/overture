@@ -48,13 +48,7 @@ public class POFunctionResultContext extends POContext
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = 
-				AstFactory.newAPatternTypePair(
-						AstFactory.newAIdentifierPattern(
-						new LexNameToken(
-					definition.getName().getModule(), "RESULT", definition.getLocation())),
-					((AFunctionType) definition.getType()).getResult().clone());
-				
+		this.result = AstFactory.newAPatternTypePair(AstFactory.newAIdentifierPattern(new LexNameToken(definition.getName().getModule(), "RESULT", definition.getLocation())), ((AFunctionType) definition.getType()).getResult().clone());
 
 	}
 
