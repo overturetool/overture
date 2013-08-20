@@ -307,16 +307,17 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				question.pop();
 			}
 
-			question.push(new POFunctionDefinitionContext(node, false));
-
 			if (node.getBody() == null)
 			{
 				if (node.getPostcondition() != null)
 				{
+					question.push(new POFunctionDefinitionContext(node, false));
 					obligations.add(new SatisfiabilityObligation(node, question));
+					question.pop();
 				}
 			} else
 			{
+				question.push(new POFunctionDefinitionContext(node, true));
 				obligations.addAll(node.getBody().apply(rootVisitor, question));
 
 				if (node.getIsUndefined()
@@ -324,9 +325,9 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				{
 					obligations.add(new SubTypeObligation(node, ((AOperationType) node.getType()).getResult(), node.getActualResult(), question));
 				}
+				
+				question.pop();
 			}
-
-			question.pop();
 
 			return obligations;
 		} catch (Exception e)
