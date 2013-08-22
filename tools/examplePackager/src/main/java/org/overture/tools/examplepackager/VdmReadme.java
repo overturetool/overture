@@ -240,6 +240,8 @@ public class VdmReadme
 	public String getReadmeContent()
 	{
 		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Author: " + (texAuthor==null?"Overture":texAuthor)+"\n\n");
 
 		sb.append(content);
 
@@ -453,7 +455,7 @@ public class VdmReadme
 				sb.append(";");
 			sb.append(libs.get(i).substring(0, libs.get(i).indexOf('.')));
 		}
-		sb.append("\n#" + TEX_AUTHOR + "=" + encoding);
+		sb.append("\n#" + TEX_AUTHOR + "=" + texAuthor);
 
 		// sb.append("\n#LANGUAGE_VERSION=vdm10");
 		// sb.append("\n#INV_CHECKS=true");
