@@ -242,7 +242,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 		}
 
 		setBind.setPlist(patternList);
-		setBind.setSet(setExp);
+		setBind.setSet(setExp.clone());
 
 		return setBind;
 	}
@@ -282,9 +282,9 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	 */
 	protected AEqualsBinaryExp getEqualsExp(PExp left, PExp right) {
 		AEqualsBinaryExp equals = new AEqualsBinaryExp();
-		equals.setLeft(left);
+		equals.setLeft(left.clone());
 		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
-		equals.setRight(right);
+		equals.setRight(right.clone());
 		return equals;
 	}
 
@@ -338,10 +338,10 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	protected PExp makeAnd(PExp root, PExp e) {
 		if (root != null) {
 			AAndBooleanBinaryExp a = new AAndBooleanBinaryExp();
-			a.setLeft(root);
+			a.setLeft(root.clone());
 			a.setOp(new LexKeywordToken(VDMToken.AND, null));
 			a.setType(new ABooleanBasicType());
-			a.setRight(e);
+			a.setRight(e.clone());
 			return a;
 		} else {
 			return e;
@@ -355,10 +355,10 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	protected PExp makeOr(PExp root, PExp e) {
 		if (root != null) {
 			AOrBooleanBinaryExp o = new AOrBooleanBinaryExp();
-			o.setLeft(root);
+			o.setLeft(root.clone());
 			o.setOp(new LexKeywordToken(VDMToken.OR, null));
 			o.setType(new ABooleanBasicType());
-			o.setRight(e);
+			o.setRight(e.clone());
 			return o;
 		} else {
 			return e;
