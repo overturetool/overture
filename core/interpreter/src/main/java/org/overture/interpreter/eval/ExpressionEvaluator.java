@@ -567,23 +567,23 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				switch (node.getHop().getType())
 				{
 					case ACT:
-						result += ov.hashAct;
+						result += ov.getHashAct();
 						break;
 
 					case FIN:
-						result += ov.hashFin;
+						result += ov.getHashFin();
 						break;
 
 					case REQ:
-						result += ov.hashReq;
+						result += ov.getHashReq();
 						break;
 
 					case ACTIVE:
-						result += ov.hashAct - ov.hashFin;
+						result += ov.getHashAct() - ov.getHashFin();
 						break;
 
 					case WAITING:
-						result += ov.hashReq - ov.hashAct;
+						result += ov.getHashReq() - ov.getHashAct();
 						break;
 
 					default:
