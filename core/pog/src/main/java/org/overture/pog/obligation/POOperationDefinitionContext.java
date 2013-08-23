@@ -112,12 +112,13 @@ public class POOperationDefinitionContext extends POContext
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
+				
+				tmBind2.setType(def.getRecordType().clone());
 				pattern.setValue(new LexStringToken("oldstate", null));
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
+				tmBind2.setType(def.getClasstype().clone());
 				pattern.setValue(new LexStringToken("oldself", null));
 			}
 
