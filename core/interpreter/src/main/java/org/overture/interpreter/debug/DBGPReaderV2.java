@@ -69,6 +69,7 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -420,6 +421,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 						PrintWriter p = new PrintWriter(new FileOutputStream(
 								logfile, false));
 						RTLogger.setLogfile(p);
+						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
 					}
 					
 					if(logTimeInvfile != null)
@@ -1750,6 +1752,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 				}
 
 				RTLogger.setLogfile(null);
+				NextGenRTLogger.getInstance().setLogfile(null);
 				out.append("RT events now logged to the console");
 			} else if (c.data.equals("off")) {
 				RTLogger.enable(false);

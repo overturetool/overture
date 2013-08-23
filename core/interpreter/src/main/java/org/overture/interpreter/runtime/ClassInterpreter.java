@@ -24,9 +24,6 @@
 package org.overture.interpreter.runtime;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -240,19 +237,8 @@ public class ClassInterpreter extends Interpreter
 		main.start();
 		scheduler.start(main);
 		
-		//The dialect must be VDM_RT. The last condition ensures logging is enabled
-		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) {
-			
-			String logDirStr = "generated/logs";
-			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-			Date date = new Date();
-			File logDir = new File(logDirStr);
-			String dateString = dateFormat.format(date);
-			logDir.mkdirs();
-			String logFilename = logDirStr + "/" + dateString;
-			
-			NextGenRTLogger.getInstance().setLogfile(logFilename);
-			//NextGenRTLogger.getInstance().toFile();
+		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
+		{
 			NextGenRTLogger.getInstance().persistToFile();
 		}
 		
