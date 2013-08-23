@@ -24,28 +24,24 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	public static ValueList getBindValues(PBind bind, Context ctxt)
 			throws ValueException
 	{
-		switch (bind.kindPBind())
-		{
-			case ASetBind.kindPBind:
-				return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-			case ATypeBind.kindPBind:
-				return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
-			default:
-				assert false : "Should not happen";
-				return null;
+		if (bind instanceof ASetBind) {
+			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
+		} else if (bind instanceof ATypeBind) {
+			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
+		} else {
+			assert false : "Should not happen";
+			return null;
 		}
 	}
 
 	public static ValueList getValues(PBind bind, ObjectContext ctxt)
 	{
-		switch (bind.kindPBind())
-		{
-			case ASetBind.kindPBind:
-				return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-			case ATypeBind.kindPBind:
-				return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
-			default:
-				return new ValueList();
+		if (bind instanceof ASetBind) {
+			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
+		} else if (bind instanceof ATypeBind) {
+			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+		} else {
+			return new ValueList();
 		}
 	}
 

@@ -1,5 +1,6 @@
 package org.overture.pog.visitor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -48,6 +49,7 @@ import org.overture.pog.util.POException;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogParamDefinitionVisitor<Q extends POContextStack, A extends ProofObligationList>
@@ -93,15 +95,23 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 		{
 			ProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
+			boolean matchNeeded = false; 
 
 			// add all defined names from the function parameter list
 			for (List<PPattern> patterns : node.getParamPatternList())
+			{
 				for (PPattern p : patterns)
 					for (PDefinition def : p.getDefinitions())
 						pids.add(def.getName());
+				
+				if (!PPatternListAssistantTC.alwaysMatches(patterns))
+				{
+					matchNeeded = true;
+				}
+			}
 
 			// check for duplicates
-			if (pids.hasDuplicates())
+			if (pids.hasDuplicates() || matchNeeded)
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}
@@ -257,7 +267,8 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 		{
 			ProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
-
+			boolean matchNeeded = false;
+			
 			for (APatternListTypePair pltp : node.getParamPatterns())
 			{
 				for (PPattern p : pltp.getPatterns())
@@ -265,9 +276,14 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 					for (PDefinition def : p.getDefinitions())
 						pids.add(def.getName());
 				}
+				
+				if (!PPatternListAssistantTC.alwaysMatches(pltp.getPatterns()))
+				{
+					matchNeeded = true;
+				}
 			}
 
-			if (pids.hasDuplicates())
+			if (pids.hasDuplicates() || matchNeeded)
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}
@@ -291,16 +307,17 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				question.pop();
 			}
 
-			question.push(new POFunctionDefinitionContext(node, false));
-
 			if (node.getBody() == null)
 			{
 				if (node.getPostcondition() != null)
 				{
+					question.push(new POFunctionDefinitionContext(node, false));
 					obligations.add(new SatisfiabilityObligation(node, question));
+					question.pop();
 				}
 			} else
 			{
+				question.push(new POFunctionDefinitionContext(node, true));
 				obligations.addAll(node.getBody().apply(rootVisitor, question));
 
 				if (node.getIsUndefined()
@@ -308,9 +325,9 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				{
 					obligations.add(new SubTypeObligation(node, ((AOperationType) node.getType()).getResult(), node.getActualResult(), question));
 				}
+				
+				question.pop();
 			}
-
-			question.pop();
 
 			return obligations;
 		} catch (Exception e)
@@ -334,7 +351,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				for (PDefinition def : p.getDefinitions())
 					pids.add(def.getName());
 
-			if (pids.hasDuplicates())
+			if (pids.hasDuplicates() || !PPatternListAssistantTC.alwaysMatches(node.getParameterPatterns()))
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}
@@ -380,17 +397,20 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 		{
 			ProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
+			LinkedList<APatternListTypePair> plist = node.getParameterPatterns();
 
-			for (APatternListTypePair tp : node.getParameterPatterns())
+			LinkedList<PPattern> tmpPatterns = new LinkedList<PPattern>();
+			for (APatternListTypePair tp : plist)
 			{
 				for (PPattern p : tp.getPatterns())
 				{
+					tmpPatterns.add(p);
 					for (PDefinition def : p.getDefinitions())
 						pids.add(def.getName());
 				}
 			}
 
-			if (pids.hasDuplicates())
+			if (pids.hasDuplicates() || !PPatternListAssistantTC.alwaysMatches(tmpPatterns))
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}

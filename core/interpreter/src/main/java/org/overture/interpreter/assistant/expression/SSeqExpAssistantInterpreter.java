@@ -22,27 +22,23 @@ public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 
 	public static ValueList getValues(SSeqExp exp, ObjectContext ctxt)
 	{
-		switch (exp.kindSSeqExp())
-		{
-			case ASeqCompSeqExp.kindSSeqExp:
-				return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
-			case ASeqEnumSeqExp.kindSSeqExp:
-				return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
-			default:
-				return new ValueList();
+		if (exp instanceof ASeqCompSeqExp) {
+			return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
+		} else if (exp instanceof ASeqEnumSeqExp) {
+			return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
+		} else {
+			return new ValueList();
 		}
 	}
 
 	public static PExp findExpression(SSeqExp exp, int lineno)
 	{
-		switch (exp.kindSSeqExp())
-		{
-			case ASeqCompSeqExp.kindSSeqExp:
-				return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
-			case ASeqEnumSeqExp.kindSSeqExp:
-				return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
-			default:
-				return null;
+		if (exp instanceof ASeqCompSeqExp) {
+			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
+		} else if (exp instanceof ASeqEnumSeqExp) {
+			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
+		} else {
+			return null;
 		}
 	}
 

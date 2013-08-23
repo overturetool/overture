@@ -24,6 +24,7 @@ import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -39,16 +40,14 @@ public class DisplayImageCreator
 		else if (element instanceof AValueDefinition)
 		{
 			PDefinition def = (PDefinition) element;
-			switch (def.getAccess().getAccess().kindPAccess())
-			{
-			case APrivateAccess.kindPAccess:
+			PAccess pAccess = def.getAccess().getAccess();
+			if (pAccess instanceof APrivateAccess) {
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PRIVATE);
-
-			case AProtectedAccess.kindPAccess:
+			} else if (pAccess instanceof AProtectedAccess) {
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PROTECTED);
-
-			case APublicAccess.kindPAccess:
-			default:
+			} else if (pAccess instanceof APublicAccess) {
+				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PUBLIC);
+			} else {
 				return VdmPluginImages.get(VdmPluginImages.IMG_FIELD_PUBLIC);
 			}
 		} else if (element instanceof PDefinition)
@@ -56,16 +55,14 @@ public class DisplayImageCreator
 			PDefinition def = (PDefinition) element;
 			if(def.getClassDefinition()==null)
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);//VDM-SL
-			switch (def.getAccess().getAccess().kindPAccess())
-			{
-			case APrivateAccess.kindPAccess:
+			PAccess pAccess = def.getAccess().getAccess();
+			if (pAccess instanceof APrivateAccess) {
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PRIVATE);
-
-			case AProtectedAccess.kindPAccess:
+			} else if (pAccess instanceof AProtectedAccess) {
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PROTECTED);
-
-			case APublicAccess.kindPAccess:
-			default:
+			} else if (pAccess instanceof APublicAccess) {
+				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);
+			} else {
 				return VdmPluginImages.get(VdmPluginImages.IMG_METHOD_PUBLIC);
 			}
 		}

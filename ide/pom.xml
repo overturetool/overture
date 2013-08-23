@@ -19,7 +19,7 @@
   <properties>
     <maven.test.skip>true</maven.test.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.16.0</tycho.version>
+    <tycho.version>0.18.1</tycho.version>
   </properties>
 
   <modules>
@@ -124,10 +124,15 @@
   </build>
 
   <repositories>
+    <!-- <repository> -->
+    <!--   <id>eclipse-juno</id> -->
+    <!--   <layout>p2</layout> -->
+    <!--   <url>http://download.eclipse.org/releases/juno</url> -->
+    <!-- </repository> -->
     <repository>
-      <id>eclipse-juno</id>
+      <id>eclipse-kepler</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/juno</url>
+      <url>http://download.eclipse.org/releases/kepler</url>
     </repository>
   </repositories>
 

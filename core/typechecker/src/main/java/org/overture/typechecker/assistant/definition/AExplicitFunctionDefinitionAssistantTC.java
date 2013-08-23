@@ -120,7 +120,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 		while (piter.hasNext())
 		{
 			List<PPattern> plist = piter.next();
-			Set<PDefinition> defs = new HashSet<PDefinition>(); 
+			List<PDefinition> defs = new Vector<PDefinition>(); 
 			List<PType> ptypes = ftype.getParameters();
 			Iterator<PType> titer = ptypes.iterator();
 
@@ -145,7 +145,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
     			}
 			}
 			
-			defList.add(new ArrayList<PDefinition>(defs));
+			defList.add(PDefinitionAssistantTC.checkDuplicatePatterns(node, defs));
 
 			if (ftype.getResult() instanceof AFunctionType)	// else???
 			{

@@ -153,8 +153,7 @@ public class ToStringUtil
 				sb.append(d.getAccess());
 				sb.append(" ");
 			}
-			sb.append(d.kindPDefinition() + " " + getVariableNames(d) + ":"
-					+ d.getType());
+			sb.append(d.getClass().getName() + " " + getVariableNames(d) + ":" + d.getType());
 			sb.append("\n");
 		}
 
@@ -175,109 +174,90 @@ public class ToStringUtil
 
 	private static LexNameList getVariableNames(PDefinition d)
 	{
-		switch (d.kindPDefinition())
-		{
-			case SClassDefinition.kindPDefinition:
-				if (d instanceof SClassDefinition)
+		if (d instanceof SClassDefinition) {
+			if (d instanceof SClassDefinition)
+			{
+				return getVariableNames(((SClassDefinition) d).getDefinitions());
+			}
+			assert false : "Error in class getVariableNames";
+		} else if (d instanceof AEqualsDefinition) {
+			if (d instanceof AEqualsDefinition)
+			{
+				return ((AEqualsDefinition) d).getDefs() == null ? new LexNameList()
+						: getVariableNames(((AEqualsDefinition) d).getDefs());
+			}
+			assert false : "Error in equals getVariableNames";
+		} else if (d instanceof AExternalDefinition) {
+			// return state.getVariableNames();
+			// TODO
+			return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
+		} else if (d instanceof AImportedDefinition) {
+			if (d instanceof AImportedDefinition)
+			{
+				return getVariableNames(((AImportedDefinition) d).getDef());
+			}
+			assert false : "Error in imported getVariableNames";
+		} else if (d instanceof AInheritedDefinition) {
+			if (d instanceof AInheritedDefinition)
+			{
+				LexNameList names = new LexNameList();
+				// checkSuperDefinition();//TODO
+				AInheritedDefinition t = (AInheritedDefinition) d;
+				for (ILexNameToken vn : getVariableNames(t.getSuperdef()))
 				{
-					return getVariableNames(((SClassDefinition) d).getDefinitions());
+					names.add(vn.getModifiedName(t.getName().getModule()));
 				}
-				assert false : "Error in class getVariableNames";
-				break;
 
-			case AEqualsDefinition.kindPDefinition:
-				if (d instanceof AEqualsDefinition)
+				return names;
+			}
+			assert false : "Error in inherited getVariableNames";
+		} else if (d instanceof AMultiBindListDefinition) {
+			if (d instanceof AMultiBindListDefinition)
+			{
+				return ((AMultiBindListDefinition) d).getDefs() == null ? new LexNameList()
+						: getVariableNames(((AMultiBindListDefinition) d).getDefs());
+			}
+		} else if (d instanceof AMutexSyncDefinition
+				|| d instanceof ANamedTraceDefinition
+				|| d instanceof APerSyncDefinition) {
+			return new LexNameList();
+		} else if (d instanceof ARenamedDefinition) {
+			if (d instanceof ARenamedDefinition)
+			{
+				LexNameList both = new LexNameList(d.getName());
+				both.add(((ARenamedDefinition) d).getDef().getName());
+				return both;
+			}
+			assert false : "Error in renamed getVariableNames";
+		} else if (d instanceof AStateDefinition) {
+			// return statedefs.getVariableNames();
+			// TODO
+			return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
+		} else if (d instanceof AThreadDefinition) {
+			if (d instanceof AThreadDefinition)
+			{
+				if (((AThreadDefinition) d).getOperationDef() != null)// Differnt from VDMJ
 				{
-					return ((AEqualsDefinition) d).getDefs() == null ? new LexNameList()
-							: getVariableNames(((AEqualsDefinition) d).getDefs());
+					return new LexNameList(((AThreadDefinition) d).getOperationDef().getName());
+				} else
+				{
+					return null;
 				}
-				assert false : "Error in equals getVariableNames";
-				break;
-
-			case AExternalDefinition.kindPDefinition:
-				// return state.getVariableNames();
+			}
+			assert false : "Error in thread getVariableNames";
+		} else if (d instanceof ATypeDefinition) {
+			return new LexNameList(d.getName());
+		} else if (d instanceof AUntypedDefinition) {
+			assert false : "Can't get variables of untyped definition?";
+		} else if (d instanceof AValueDefinition) {
+			if (d instanceof AValueDefinition)
+			{
+				// return ((AValueDefinition) d).getPattern()
 				// TODO
 				return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-
-			case AImportedDefinition.kindPDefinition:
-				if (d instanceof AImportedDefinition)
-				{
-					return getVariableNames(((AImportedDefinition) d).getDef());
-				}
-				assert false : "Error in imported getVariableNames";
-				break;
-			case AInheritedDefinition.kindPDefinition:
-				if (d instanceof AInheritedDefinition)
-				{
-					LexNameList names = new LexNameList();
-					// checkSuperDefinition();//TODO
-					AInheritedDefinition t = (AInheritedDefinition) d;
-					for (ILexNameToken vn : getVariableNames(t.getSuperdef()))
-					{
-						names.add(vn.getModifiedName(t.getName().getModule()));
-					}
-
-					return names;
-				}
-				assert false : "Error in inherited getVariableNames";
-				break;
-
-			case AMultiBindListDefinition.kindPDefinition:
-				if (d instanceof AMultiBindListDefinition)
-				{
-					return ((AMultiBindListDefinition) d).getDefs() == null ? new LexNameList()
-							: getVariableNames(((AMultiBindListDefinition) d).getDefs());
-				}
-				break;
-			case AMutexSyncDefinition.kindPDefinition:
-			case ANamedTraceDefinition.kindPDefinition:
-			case APerSyncDefinition.kindPDefinition:
-				return new LexNameList();
-			case ARenamedDefinition.kindPDefinition:
-				if (d instanceof ARenamedDefinition)
-				{
-					LexNameList both = new LexNameList(d.getName());
-					both.add(((ARenamedDefinition) d).getDef().getName());
-					return both;
-				}
-				assert false : "Error in renamed getVariableNames";
-
-			case AStateDefinition.kindPDefinition:
-				// return statedefs.getVariableNames();
-				// TODO
-				return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-			case AThreadDefinition.kindPDefinition:
-				if (d instanceof AThreadDefinition)
-				{
-					if (((AThreadDefinition) d).getOperationDef() != null)// Differnt from VDMJ
-					{
-						return new LexNameList(((AThreadDefinition) d).getOperationDef().getName());
-					} else
-					{
-						return null;
-					}
-				}
-				assert false : "Error in thread getVariableNames";
-				break;
-			case ATypeDefinition.kindPDefinition:
-				return new LexNameList(d.getName());
-			case AUntypedDefinition.kindPDefinition:
-				assert false : "Can't get variables of untyped definition?";
-				return null;
-
-			case AValueDefinition.kindPDefinition:
-				if (d instanceof AValueDefinition)
-				{
-					// return ((AValueDefinition) d).getPattern()
-					// TODO
-					return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-				}
-				// return pattern.getVariableNames();
-				break;
-
-			default:
-				return new LexNameList(d.getName());
-
+			}
+		} else {
+			return new LexNameList(d.getName());
 		}
 		return null;
 	}

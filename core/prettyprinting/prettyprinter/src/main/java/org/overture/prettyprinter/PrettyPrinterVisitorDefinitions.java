@@ -43,9 +43,9 @@ public class PrettyPrinterVisitorDefinitions extends
 		
 		
 		//print types
-		printDefsToStringBuffer(sb,node,question,ATypeDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb,node,question,ATypeDefinition.class);
 		
-		printDefsToStringBuffer(sb,node,question,AValueDefinition.kindPDefinition);
+		printDefsToStringBuffer(sb,node,question,AValueDefinition.class);
 		
 		
 		
@@ -57,57 +57,44 @@ public class PrettyPrinterVisitorDefinitions extends
 	
 	
 	private void printDefsToStringBuffer(StringBuffer sb,
-			AClassClassDefinition node, PrettyPrinterEnv question, String kind) throws AnalysisException
+			AClassClassDefinition node, PrettyPrinterEnv question, Class<? extends PDefinition> classKind) throws AnalysisException
 	{
-		List<PDefinition> defs = getDefinitions(node.getDefinitions(), kind);
+		List<PDefinition> defs = getDefinitions(node.getDefinitions(), classKind);
 		
 		if(defs.isEmpty())
 		{
 			return;
 		}
 		
-		switch (kind)
-		{		
-			case ATypeDefinition.kindPDefinition:
+		if (ATypeDefinition.class.equals(classKind)) {
+			sb.append("types\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("types\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this,question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this,question));
+				sb.append("\n");
 			}
-			break;
-			case AValueDefinition.kindPDefinition:
+			question.decreaseIdent();
+		} else if (AValueDefinition.class.equals(classKind)) {
+			sb.append("values\n");
+			question.increaseIdent();
+			for (PDefinition def : defs)
 			{
-				sb.append("values\n");
-				question.increaseIdent();
-				for (PDefinition def : defs)
-				{
-					sb.append(def.apply(this,question));
-					sb.append("\n");
-				}
-				question.decreaseIdent();
+				sb.append(def.apply(this,question));
+				sb.append("\n");
 			}
-			break;
-			default:
-				break;
+			question.decreaseIdent();
 		}
-		
 	}
 
 
 
-	private List<PDefinition> getDefinitions(LinkedList<PDefinition> definitions, String kind)	
+	private List<PDefinition> getDefinitions(LinkedList<PDefinition> definitions, Class<? extends PDefinition> classKind)	
 	{
 		List<PDefinition> result = new Vector<PDefinition>();
 		
-		for (PDefinition pDefinition : definitions)
-		{
-			if(pDefinition.kindPDefinition() == kind)
-			{
+		for (PDefinition pDefinition : definitions)	{
+			if (classKind.isInstance(pDefinition)) {
 				result.add(pDefinition);
 			}
 		}

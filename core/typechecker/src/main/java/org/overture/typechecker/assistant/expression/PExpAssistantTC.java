@@ -61,125 +61,109 @@ public class PExpAssistantTC
 		this.af = af;
 	}
 
-	public static ILexNameToken getPreName(PExp root)
-	{
+	public static ILexNameToken getPreName(PExp expression) {
 		ILexNameToken result = null;
+		
+		if (expression instanceof AFuncInstatiationExp) {
+			AFuncInstatiationExp func = AFuncInstatiationExp.class.cast(expression);
+			result = getPreName(func.getFunction());
+		} else if (expression instanceof AVariableExp) {
+			AVariableExp var = AVariableExp.class.cast(expression);
+                        PDefinition def = PDefinitionAssistantTC.deref(var.getVardef());
 
-		switch (root.kindPExp())
-		{
-			case AFuncInstatiationExp.kindPExp:
-			{
-				AFuncInstatiationExp func = AFuncInstatiationExp.class.cast(root);
-				result = getPreName(func.getFunction());
-			}
-				break;
-			case AVariableExp.kindPExp:
-			{
-				AVariableExp var = AVariableExp.class.cast(root);
+			//TODO: This will not work if the functions is renamed more than one time, can this occur??
+			// if (def instanceof ARenamedDefinition)
+			// 	def = ((ARenamedDefinition) def).getDef();
+			// else if (def instanceof AInheritedDefinition)
+			// 	def = ((AInheritedDefinition) def).getSuperdef();
+                        if (def instanceof AExplicitFunctionDefinition)
+                        {
+                            AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class.cast(def);
+                            PDefinition predef = ex.getPredef();
+                            result = predef == null ? NO_PRECONDITION : predef.getName();
 
-				PDefinition def = PDefinitionAssistantTC.deref(var.getVardef());
-
-				// TODO: This will not work if the functions is renamed more than one time, can this occur??
-//				if (def instanceof ARenamedDefinition)
-//					def = ((ARenamedDefinition) def).getDef();
-//				else if (def instanceof AInheritedDefinition)
-//					def = ((AInheritedDefinition) def).getSuperdef();
-
-				if (def instanceof AExplicitFunctionDefinition)
-				{
-					AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class.cast(def);
-					PDefinition predef = ex.getPredef();
-					result = predef == null ? NO_PRECONDITION
-							: predef.getName();
-
-				} else if (def instanceof AImplicitFunctionDefinition)
-				{
-					AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class.cast(def);
-					PDefinition predef = im.getPredef();
-					result = predef == null ? NO_PRECONDITION
-							: predef.getName();
-				}
-				break;
-			}
+                        } else if (def instanceof AImplicitFunctionDefinition)
+                        {
+                            AImplicitFunctionDefinition im = AImplicitFunctionDefinition.class.cast(def);
+                            PDefinition predef = im.getPredef();
+                            result = predef == null ? NO_PRECONDITION
+                                : predef.getName();
+                        }
 		}
 		return result;
 	}
 
-	public static LexNameList getOldNames(PExp expression)
-	{
-
-		switch (expression.kindPExp())
-		{
-			case AApplyExp.kindPExp:
-				return AApplyExpAssistantTC.getOldNames((AApplyExp) expression);
-			case SBinaryExp.kindPExp:
-				return SBinaryExpAssistantTC.getOldNames((SBinaryExp) expression);
-			case ACasesExp.kindPExp:
-				return ACasesExpAssistantTC.getOldNames((ACasesExp) expression);
-			case AElseIfExp.kindPExp:
-				return AElseIfExpAssistantTC.getOldNames((AElseIfExp) expression);
-			case AExistsExp.kindPExp:
-				return AExistsExpAssistantTC.getOldNameS((AExistsExp) expression);
-			case AExists1Exp.kindPExp:
-				return AExists1ExpAssistantTC.getOldNames((AExists1Exp) expression);
-			case AFieldExp.kindPExp:
-				return AFieldExpAssistantTC.getOldNames((AFieldExp) expression);
-			case AFieldNumberExp.kindPExp:
-				return AFieldNumberExpAssistantTC.getOldNames((AFieldNumberExp) expression);
-			case AForAllExp.kindPExp:
-				return AForAllExpAssistantTC.getOldNames((AForAllExp) expression);
-			case AFuncInstatiationExp.kindPExp:
-				return AFuncInstatiationExpAssistantTC.getOldNames((AFuncInstatiationExp) expression);
-			case AIfExp.kindPExp:
-				return AIfExpAssistantTC.getOldNames((AIfExp) expression);
-			case AIotaExp.kindPExp:
-				return AIotaExpAssistantTC.getOldNames((AIotaExp) expression);
-			case AIsExp.kindPExp:
-				return AIsExpAssistantTC.getOldNames((AIsExp) expression);
-			case AIsOfBaseClassExp.kindPExp:
-				return AIsOfBaseClassExpAssistantTC.getOldNames((AIsOfBaseClassExp) expression);
-			case AIsOfClassExp.kindPExp:
-				return AIsOfClassExpAssistantTC.getOldNames((AIsOfClassExp) expression);
-			case ALambdaExp.kindPExp:
-				return ALambdaExpAssistantTC.getOldNames((ALambdaExp) expression);
-			case ALetBeStExp.kindPExp:
-				return ALetBeStExpAssistantTC.getOldNames((ALetBeStExp) expression);
-			case ALetDefExp.kindPExp:
-				return ALetDefExpAssistantTC.getOldNames((ALetDefExp) expression);
-			case SMapExp.kindPExp:
-				return SMapExpAssistantTC.getOldNames((SMapExp) expression);
-			case AMapletExp.kindPExp:
-				return AMapletExpAssistantTC.getOldNames((AMapletExp) expression);
-			case AMkBasicExp.kindPExp:
-				return AMkBasicExpAssistantTC.getOldNames((AMkBasicExp) expression);
-			case AMkTypeExp.kindPExp:
-				return AMkTypeExpAssistantTC.getOldNames((AMkTypeExp) expression);
-			case AMuExp.kindPExp:
-				return AMuExpAssistantTC.getOldNames((AMuExp) expression);
-			case ANarrowExp.kindPExp:
-				return ANarrowExpAssistantTC.getOldNames((ANarrowExp) expression);
-			case ANewExp.kindPExp:
-				return ANewExpAssistantTC.getOldNames((ANewExp) expression);
-			case APostOpExp.kindPExp:
-				return APostOpExpAssistantTC.getOldNames((APostOpExp) expression);
-			case ASameBaseClassExp.kindPExp:
-				return ASameBaseClassExpAssistantTC.getOldNames((ASameBaseClassExp) expression);
-			case ASameClassExp.kindPExp:
-				return ASameClassExpAssistantTC.getOldNames((ASameClassExp) expression);
-			case SSeqExp.kindPExp:
-				return SSeqExpAssistantTC.getOldNames((SSeqExp) expression);
-			case SSetExp.kindPExp:
-				return SSetExpAssistantTC.getOldNames((SSetExp) expression);
-			case ASubseqExp.kindPExp:
-				return ASubseqExpAssistantTC.getOldNames((ASubseqExp) expression);
-			case ATupleExp.kindPExp:
-				return ATupleExpAssistantTC.getOldNames((ATupleExp) expression);
-			case SUnaryExp.kindPExp:
-				return SUnaryExpAssistantTC.getOldNames((SUnaryExp) expression);
-			case AVariableExp.kindPExp:
-				return AVariableExpAssistantTC.getOldNames((AVariableExp) expression);
-			default:
-				return new LexNameList();
+	public static LexNameList getOldNames(PExp expression) {
+		if (expression instanceof AApplyExp) {
+			return AApplyExpAssistantTC.getOldNames((AApplyExp) expression);
+		} else if (expression instanceof SBinaryExp) {
+			return SBinaryExpAssistantTC.getOldNames((SBinaryExp) expression);
+		} else if (expression instanceof ACasesExp) {
+			return ACasesExpAssistantTC.getOldNames((ACasesExp) expression);
+		} else if (expression instanceof AElseIfExp) {
+			return AElseIfExpAssistantTC.getOldNames((AElseIfExp) expression);
+		} else if (expression instanceof AExistsExp) {
+			return AExistsExpAssistantTC.getOldNameS((AExistsExp) expression);
+		} else if (expression instanceof AExists1Exp) {
+			return AExists1ExpAssistantTC.getOldNames((AExists1Exp) expression);
+		} else if (expression instanceof AFieldExp) {
+			return AFieldExpAssistantTC.getOldNames((AFieldExp) expression);
+		} else if (expression instanceof AFieldNumberExp) {
+			return AFieldNumberExpAssistantTC.getOldNames((AFieldNumberExp) expression);
+		} else if (expression instanceof AForAllExp) {
+			return AForAllExpAssistantTC.getOldNames((AForAllExp) expression);
+		} else if (expression instanceof AFuncInstatiationExp) {
+			return AFuncInstatiationExpAssistantTC.getOldNames((AFuncInstatiationExp) expression);
+		} else if (expression instanceof AIfExp) {
+			return AIfExpAssistantTC.getOldNames((AIfExp) expression);
+		} else if (expression instanceof AIotaExp) {
+			return AIotaExpAssistantTC.getOldNames((AIotaExp) expression);
+		} else if (expression instanceof AIsExp) {
+			return AIsExpAssistantTC.getOldNames((AIsExp) expression);
+		} else if (expression instanceof AIsOfBaseClassExp) {
+			return AIsOfBaseClassExpAssistantTC.getOldNames((AIsOfBaseClassExp) expression);
+		} else if (expression instanceof AIsOfClassExp) {
+			return AIsOfClassExpAssistantTC.getOldNames((AIsOfClassExp) expression);
+		} else if (expression instanceof ALambdaExp) {
+			return ALambdaExpAssistantTC.getOldNames((ALambdaExp) expression);
+		} else if (expression instanceof ALetBeStExp) {
+			return ALetBeStExpAssistantTC.getOldNames((ALetBeStExp) expression);
+		} else if (expression instanceof ALetDefExp) {
+			return ALetDefExpAssistantTC.getOldNames((ALetDefExp) expression);
+		} else if (expression instanceof SMapExp) {
+			return SMapExpAssistantTC.getOldNames((SMapExp) expression);
+		} else if (expression instanceof AMapletExp) {
+			return AMapletExpAssistantTC.getOldNames((AMapletExp) expression);
+		} else if (expression instanceof AMkBasicExp) {
+			return AMkBasicExpAssistantTC.getOldNames((AMkBasicExp) expression);
+		} else if (expression instanceof AMkTypeExp) {
+			return AMkTypeExpAssistantTC.getOldNames((AMkTypeExp) expression);
+		} else if (expression instanceof AMuExp) {
+			return AMuExpAssistantTC.getOldNames((AMuExp) expression);
+		} else if (expression instanceof ANarrowExp) {
+			return ANarrowExpAssistantTC.getOldNames((ANarrowExp) expression);
+		} else if (expression instanceof ANewExp) {
+			return ANewExpAssistantTC.getOldNames((ANewExp) expression);
+		} else if (expression instanceof APostOpExp) {
+			return APostOpExpAssistantTC.getOldNames((APostOpExp) expression);
+		} else if (expression instanceof ASameBaseClassExp) {
+			return ASameBaseClassExpAssistantTC.getOldNames((ASameBaseClassExp) expression);
+		} else if (expression instanceof ASameClassExp) {
+			return ASameClassExpAssistantTC.getOldNames((ASameClassExp) expression);
+		} else if (expression instanceof SSeqExp) {
+			return SSeqExpAssistantTC.getOldNames((SSeqExp) expression);
+		} else if (expression instanceof SSetExp) {
+			return SSetExpAssistantTC.getOldNames((SSetExp) expression);
+		} else if (expression instanceof ASubseqExp) {
+			return ASubseqExpAssistantTC.getOldNames((ASubseqExp) expression);
+		} else if (expression instanceof ATupleExp) {
+			return ATupleExpAssistantTC.getOldNames((ATupleExp) expression);
+		} else if (expression instanceof SUnaryExp) {
+			return SUnaryExpAssistantTC.getOldNames((SUnaryExp)expression);
+		} else if (expression instanceof AVariableExp) {
+			return AVariableExpAssistantTC.getOldNames((AVariableExp) expression);
+		} else {
+			return new LexNameList();
 		}
 	}
 

@@ -442,7 +442,7 @@ public class TypeCheckerDefinitionVisitor extends
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType)) {
-					if (AProductType.kindPType.equals(mtype.getResult().kindPType())) {
+					if (mtype.getResult() instanceof AProductType) {
 						AProductType pt = PTypeAssistantTC.getProduct(mtype
 								.getResult());
 
@@ -499,14 +499,14 @@ public class TypeCheckerDefinitionVisitor extends
 					.getTypeParamDefinitions(node));
 		}
 
-		Set<PDefinition> argdefs = new HashSet<PDefinition>();
+		List<PDefinition> argdefs = new Vector<PDefinition>();
 
 		for (APatternListTypePair pltp : node.getParamPatterns()) {
 			argdefs.addAll(APatternListTypePairAssistantTC.getDefinitions(pltp,
 					NameScope.LOCAL));
 		}
 
-		defs.addAll(new Vector<PDefinition>(argdefs));
+		defs.addAll(PDefinitionAssistantTC.checkDuplicatePatterns(node, argdefs));
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory,defs,
 				question.env, question.scope);
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
@@ -891,7 +891,7 @@ public class TypeCheckerDefinitionVisitor extends
 		question = new TypeCheckInfo(question.assistantFactory,question.env, NameScope.NAMESANDSTATE,
 				question.qualifiers);
 		List<PDefinition> defs = new Vector<PDefinition>();
-		Set<PDefinition> argdefs = new HashSet<PDefinition>();
+		List<PDefinition> argdefs = new Vector<PDefinition>();
 
 		if (question.env.isVDMPP()) {
 			node.setStateDefinition(question.env.findClassDefinition());
@@ -904,7 +904,7 @@ public class TypeCheckerDefinitionVisitor extends
 					NameScope.LOCAL));
 		}
 
-		defs.addAll(new Vector<PDefinition>(argdefs));
+		defs.addAll(PDefinitionAssistantTC.checkDuplicatePatterns(node, argdefs));
 
 		if (node.getResult() != null) {
 			defs.addAll(PPatternAssistantTC.getDefinitions(node.getResult()

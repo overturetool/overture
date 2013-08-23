@@ -97,8 +97,8 @@ instance variables
 operations
 
 public StartServer: POP3Server ==> ()
-StartServer(server) ==
-(  start(server);
+StartServer(myserver) ==
+(  start(myserver);
 --   server.WaitForServerStart()
 );
 
