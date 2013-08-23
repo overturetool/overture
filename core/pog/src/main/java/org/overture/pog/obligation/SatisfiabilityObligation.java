@@ -178,10 +178,10 @@ public class SatisfiabilityObligation extends ProofObligation
 			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
 			existsExp.setPredicate(ctxt.getPredWithContext(postApply));
 			mainExp = existsExp;
+		} else
+		{
+			mainExp = getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(arglist));
 		}
-		
-		mainExp = getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(arglist));
-
 		if (preApply != null)
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
