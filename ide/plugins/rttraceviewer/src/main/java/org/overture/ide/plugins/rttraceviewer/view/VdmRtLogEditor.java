@@ -19,6 +19,9 @@
 package org.overture.ide.plugins.rttraceviewer.view;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,8 +29,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -43,15 +48,18 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPathEditorInput;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-
 import org.overture.ide.core.utility.FileUtility;
-import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem.AllowedOverrunDirection;
+import org.overture.ide.plugins.rttraceviewer.IRealTimeTaceViewer;
+import org.overture.ide.plugins.rttraceviewer.TracefileViewerPlugin;
 import org.overture.ide.plugins.rttraceviewer.data.Conjecture;
 import org.overture.ide.plugins.rttraceviewer.data.Conjecture.ConjectureType;
 import org.overture.ide.plugins.rttraceviewer.data.ConjectureData;
+import org.overture.ide.plugins.rttraceviewer.view.GenericTabItem.AllowedOverrunDirection;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
 public class VdmRtLogEditor extends EditorPart implements IViewCallback
@@ -64,10 +72,10 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 	private SashForm form;
 	private TabFolder folder;
-	private ValidationTable theConjectures;
+	// private ValidationTable theConjectures;
 	private GenericTabItem theArch;
 	private GenericTabItem theOverview;
-	private HashMap<Long, GenericTabItem> cpuTabs; //CPU Id, Tab
+	private HashMap<Long, GenericTabItem> cpuTabs; // CPU Id, Tab
 	private String fileName;
 	private List<Long> theTimes;
 	private long currentTime;
@@ -83,7 +91,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	public VdmRtLogEditor()
 	{
 		conjectureData = new ConjectureData();
-		theConjectures = null;
+		// theConjectures = null;
 		theArch = null;
 		theOverview = null;
 		cpuTabs = new HashMap<Long, GenericTabItem>();
@@ -119,15 +127,16 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		form = new SashForm(parent, 512);
 		form.setLayout(new FillLayout());
 		folder = new TabFolder(form, 128);
-		theConjectures = new ValidationTable(form, this);
-		form.setWeights(new int[] { 85, 15 });
+		// theConjectures = new ValidationTable(form, this);
+		// form.setWeights(new int[] { 85, 15 });
 		theArch = new GenericTabItem("Architecture overview", folder, AllowedOverrunDirection.Both);
 		theOverview = new GenericTabItem("Execution overview", folder, AllowedOverrunDirection.Vertical);
 		cw.clear();
+		IFile file = null;
 		try
 		{
 
-			IFile file = ((FileEditorInput) getEditorInput()).getFile();
+			file = ((FileEditorInput) getEditorInput()).getFile();
 
 			FileUtility.deleteMarker(file, null, TracefileViewerPlugin.PLUGIN_ID);
 
@@ -135,16 +144,14 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 			if (FileUtility.getContent(file).size() == 0)
 			{
-				// FileUtility.addMarker(file, "File is empty", 0, 0, 0, 0, IMarker.SEVERITY_ERROR,
-				// TracefileViewerPlugin.PLUGIN_ID);
 				ErrorDialog.openError(getSite().getShell(), "Editor open", "File is empty", Status.CANCEL_STATUS);
 				return;
 			}
+
 		} catch (Exception e)
 		{
-			showMessage(e);
-			e.printStackTrace();
-		} catch(OutOfMemoryError m)
+			TracefileViewerPlugin.log(e);
+		} catch (OutOfMemoryError m)
 		{
 			showMessage("The trace file can not be visualized because the Java Virtual Machine ran out of heap space. Try to allow Overture more heap space using Virtual Machine custom arguments (e.g. -Xms40m -Xmx512m).");
 			return;
@@ -155,29 +162,88 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			parseFile(selectedFile.getAbsolutePath());
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			TracefileViewerPlugin.log(e);
+		}
+		openValidationConjectures(file);
+	}
+
+	private void openValidationConjectures(IFile editorInputFile)
+	{
+		IPath p = new Path(editorInputFile.getName());
+		p = p.addFileExtension("vtc");
+		IFile vtcFile = editorInputFile.getParent().getFile(p);
+		if (vtcFile.exists())
+		{
+			try
+			{
+				ValidationConjecturesView v = getValidationConjecturesView();
+				if (v != null)
+				{
+					conjectureData.clear();
+					v.initializeLink(new InputStreamReader(vtcFile.getContents()), this);
+					updateOverviewPage();
+				}
+			} catch (PartInitException e)
+			{
+				TracefileViewerPlugin.log(e);
+			} catch (CoreException e)
+			{
+				TracefileViewerPlugin.log(e);
+			}
+
 		}
 
+	}
+
+	private ValidationConjecturesView getValidationConjecturesView()
+	{
+		IViewPart v;
+		try
+		{
+			if (PlatformUI.getWorkbench().isClosing())
+			{
+				return null;
+			}
+			v = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IRealTimeTaceViewer.CONJECTURE_VIEW_ID);
+			if (v instanceof ValidationConjecturesView)
+			{
+				return (ValidationConjecturesView) v;
+			}
+		} catch (CoreException e)
+		{
+			TracefileViewerPlugin.log(e);
+		}
+		return null;
 	}
 
 	void openValidationConjectures()
 	{
 		FileDialog fDlg = new FileDialog(getSite().getShell());
 		String valFileName = fDlg.open();
-		theConjectures.parseValidationFile(valFileName);
-		
-		updateOverviewPage();
+
+		ValidationConjecturesView v = getValidationConjecturesView();
+		if (v != null)
+		{
+			conjectureData.clear();
+			try
+			{
+				v.initializeLink(new FileReader(valFileName), this);
+			} catch (FileNotFoundException e)
+			{
+				TracefileViewerPlugin.log(e);
+			}
+			updateOverviewPage();
+		}
 	}
 
 	void diagramExportAction()
 	{
-		theArch.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".arch").toString());
-		theOverview.exportJPG((new StringBuilder(String.valueOf(fileName))).append(".overview").toString());
-		
-		for(GenericTabItem tab : cpuTabs.values())
+		theArch.exportJPG(fileName + ".arch");
+		theOverview.exportJPG(fileName + ".overview");
+
+		for (GenericTabItem tab : cpuTabs.values())
 		{
-			String jpegFile = (new StringBuilder(String.valueOf(fileName))).append(".").append(tab.getName()).toString();
-			tab.exportJPG(jpegFile);
+			tab.exportJPG(fileName + "." + tab.getName());
 		}
 	}
 
@@ -212,7 +278,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			updateOverviewPage();
 		}
 	}
-	
+
 	void refresh()
 	{
 		updateOverviewPage();
@@ -231,6 +297,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				currentTime = theTime;
 		}
 
+		folder.setSelection(theOverview.getTabItem());
 		updateOverviewPage();
 	}
 
@@ -264,11 +331,11 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			new ProgressMonitorDialog(shell).run(false, true, op);
 		} catch (InvocationTargetException e)
 		{
-			e.printStackTrace();
+			TracefileViewerPlugin.log(e);
 
 		} catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			TracefileViewerPlugin.log(e);
 		}
 	}
 
@@ -294,9 +361,8 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		if (t.error != null)
 		{
-			showMessage(t.error.getMessage());
-		}		
-		else if (t.data != null)
+			showMessage("Parser error " + t.error.getMessage());
+		} else if (t.data != null)
 		{
 			traceRunner = new TraceFileRunner(t.data, conjectureData);
 			theTimes = t.data.getEventManager().getEventTimes();
@@ -307,7 +373,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 					createTabPages();
 				}
 			});
-			
+
 		} else
 		{
 			showMessage("Unable to display log data. RT Logger is unset");
@@ -321,26 +387,24 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 			traceRunner.drawArchitecture(theArch);
 			traceRunner.drawOverview(theOverview, new Long(currentTime));
 			canExportJpg = true;
-			canMoveHorizontal = true; 
+			canMoveHorizontal = true;
 			canOpenValidation = true;
 			Vector<Long> theCpus = traceRunner.getCpuIds();
-			
+
 			cpuTabs.clear();
-			
-			for(Long cpu : theCpus)
+
+			for (Long cpu : theCpus)
 			{
 				String cpuName = traceRunner.getCpuName(cpu);
 				GenericTabItem theDetail = new GenericTabItem(cpuName, folder, AllowedOverrunDirection.Horizontal);
 				traceRunner.drawCpu(theDetail, cpu, new Long(currentTime));
 				cpuTabs.put(cpu, theDetail);
 			}
-		} 
-		catch (Exception e)
+		} catch (Exception e)
 		{
-			e.printStackTrace();
-			showMessage(e.getMessage());
+			TracefileViewerPlugin.log(e);
 
-		} 
+		}
 
 	}
 
@@ -354,17 +418,17 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 		{
 			theOverview.disposeFigures();
 			traceRunner.drawOverview(theOverview, new Long(currentTime));
-			
-			for(Long cpu : cpuTabs.keySet())
+
+			for (Long cpu : cpuTabs.keySet())
 			{
 				GenericTabItem tab = cpuTabs.get(cpu);
 				tab.disposeFigures();
 				traceRunner.drawCpu(tab, cpu, new Long(currentTime));
 			}
 
-		} catch (Exception cge)
+		} catch (Exception e)
 		{
-			showMessage(cge.getMessage());
+			TracefileViewerPlugin.log(e);
 		}
 	}
 
@@ -382,22 +446,6 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 				cw.println(message);
 				cw.show();
-				// MessageDialog.openInformation(getSite().getShell(),
-				// "Tracefile viewer", message);
-			}
-		});
-	}
-
-	private void showMessage(final Exception cge)
-	{
-		display.asyncExec(new Runnable()
-		{
-
-			public void run()
-			{
-				cw.println(cge.getMessage());
-				ConsoleWriter.getExceptionStackTraceAsString(cge);
-				cw.show();
 			}
 		});
 	}
@@ -411,16 +459,24 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	@Override
 	public void dispose()
 	{
+
 		try
 		{
+			ValidationConjecturesView v = getValidationConjecturesView();
+			if (v != null)
+			{
+				v.unlink(this);
+			}
+
 			theOverview.disposeFigures();
 			if (theMarkers != null)
 			{
 				theMarkers.dispose();
 			}
-		} catch (Exception cge)
+
+		} catch (Exception e)
 		{
-			cge.printStackTrace(System.out);
+			TracefileViewerPlugin.log(e);
 		}
 	}
 

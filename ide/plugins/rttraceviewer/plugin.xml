@@ -40,6 +40,17 @@
          
          
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.overture.ide.ui.view.category"
+            class="org.overture.ide.plugins.rttraceviewer.view.ValidationConjecturesView"
+            icon="icons/overture.gif"
+            id="org.overture.ide.plugins.rttraceviewer.viewConjectures"
+            name="Validation conjectures"
+            restorable="true">
+      </view>
+   </extension>
   <!--extension point="org.eclipse.ui.editorActions"> 
 <editorContribution 
       id="org.eclipse.ui.articles.action.contribution.editor" 

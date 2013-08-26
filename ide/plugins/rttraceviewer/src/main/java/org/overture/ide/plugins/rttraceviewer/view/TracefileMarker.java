@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ide.core.utility.FileUtility;
+import org.overture.ide.plugins.rttraceviewer.TracefileViewerPlugin;
 
 @SuppressWarnings({"unchecked","rawtypes"})
 public class TracefileMarker

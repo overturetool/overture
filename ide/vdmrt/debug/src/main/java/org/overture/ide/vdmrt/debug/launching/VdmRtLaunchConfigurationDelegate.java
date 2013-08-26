@@ -75,7 +75,7 @@ public class VdmRtLaunchConfigurationDelegate extends
 		if (configuration.getAttribute(IVdmRtDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_REALTIME_TIME_INV_CHECKS, false))
 		{
 			logDir.mkdirs();
-			String logFilename = dateString + ".txt";
+			String logFilename = dateString + ".rt.rtbin.vtc";
 			File f = new File(logDir, logFilename);
 			if (!f.exists())
 			{
