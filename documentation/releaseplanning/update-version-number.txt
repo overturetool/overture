@@ -1,7 +1,7 @@
 To update *all* of the version numbers in the pom.xml files all at
 once, use this command at the repository root:
 
-$ find . -name "pom.xml" | xargs -n1 sed -i '' -e 's/2.0.0<!--Replaceable: Main Version-->/2.0.1<!--Replaceable: Main Version-->/'
+$ find . -name pom.xml | xargs -n1 sed -i '' -e 's/2.0.1-SHAPSHOT<!--Replaceable: Main Version-->/2.0.2<!--Replaceable: Main Version-->/'
 
 Make sure you leave the "<!--Replaceable: Main Version-->" portion of
 the string in place, otherwise this method will break and Joey will
@@ -9,16 +9,14 @@ come after you with sharp, pointy objects.
 
 Also, the Bundle-Version field of the MANIFEST.MFs needs updating
 
-$ find . -name MANIFEST.MF | xargs -n1 sed -i '' -e 's/^Bundle-Version: 2\.0\.0$/Bundle-Version: 2.0.1/'
+$ find . -name MANIFEST.MF | xargs -n1 sed -i '' -e 's/^Bundle-Version: 2\.0\.1\.qualifier$/Bundle-Version: 2.0.2/'
 
 Edit the main versions in the feature.xml files...
 
-$ find . -name feature.xml | xargs -n1 sed -i '' -e 's/0.1.3.qualifier/0.1.4/'
+$ find . -name feature.xml -or -name overture.product | xargs -n1 sed -i '' -e 's/2\.0\.1\.qualifier/2.0.2/'
 
-...and ide/product/overture.product, and check to make sure that
-version numbers on the overture dependencies haven't crept in.
-
-Check ide/product/category.xml to make sure that version numbers
-haven't crept in.
+...and check to make sure that version numbers on the overture
+dependencies haven't crept in across all of the xml files (check
+ide/product/category.xml, too).
 
 
