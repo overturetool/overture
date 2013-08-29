@@ -175,7 +175,7 @@
 
 \begin{document}
 \title{Overture VDM-10 Tool Support: User Guide}
-\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen, Joey Coleman and Sune Wolff \\
+\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen,\\ Joey Coleman, Sune Wolff and Luis Diogo Couto \\
 Aarhus University, Department of Engineering\\
 Finlandsgade 22, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
@@ -199,14 +199,14 @@ March   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
 February& 2011 & 2       & 1.0.0   \\ \hline
 June    & 2011 & 3       & 1.0.1   \\ \hline
-April   & 2013 & 4       & 2.0.0 \\ \hline
+August  & 2013 & 4       & 2.0.0 \\ \hline
 \end{tabular}
 
 \tableofcontents
 
 \begin{abstract}
 This document is the user manual for the Overture Integrated Development
-Environment (IDE) for
+Environment (IDE) version 2.0.0 for
 VDM. It serves as a reference for anybody wishing to make use of
 the tool with one of the VDM dialects (VDM-SL, VDM++ or VDM-RT).
 Overture tool support is built on top of the Eclipse platform. The
@@ -307,9 +307,9 @@ to~\ref{app:POcategories} give complete lists of possible errors,
 warnings and proof obligation categories. Appendix~\ref{chap:umlrules} provides
 an overview of the VDM++/VDM-RT to UML mapping rules. 
 Appendix~\ref{cha:VDMvalues} provides details about how to represent VDM 
-values in order to combine Java with VDM as described in Chapter~\ref{sec:linkToJava}.
-Finally, Appendix~\ref{sec:index} is an index of significant terms used in the
-user manual.
+values in order to combine Java with VDM as described in Chapter~\ref{sec:linkToJava}
+Finally, there is an \hyperref[sec:index]{index} of significant terms used in this
+manual.
 
 
 \chapter{Getting Hold of the Software}\label{sec:install}
@@ -332,22 +332,23 @@ go to:
     can be a risky process because of the dependencies on non-Overture
     components and so is not yet supported.}.
 
-\item[\textbf{Modelio:}] This is a tool that is both available in a commercial version as well as in an open source setting from a
-  company called Softeam. Just like Overture this tool is built on top of the Eclipse platform. The product can be
-  obtained from
+  \item[\textbf{Modelio:}]   In order to take advantage of the UML-VDM mapping,
+      a tool for UML modelling is needed. We recommend Modelio. This is a tool that
+      is both available in a commercial version as well as in an open source
+      setting from a company called Softeam. Just like Overture this tool is
+      built on top of the Eclipse platform. The product can be obtained from
 \begin{quote}
 \texttt{http://www.modelio.org/}.
 \end{quote}
 \end{description}
 
-For Overture you can use the \textit{Download Now} button to
-  automatically download pre-installed versions of Overture for your
-  operating system.  Supported systems are: Windows, Linux and
-  Mac.
-Simply extract the zip file downloaded and run the Overture executable
+For Overture, a link is offered at the top with the latest version (2.0.0) for
+your operating system.  Supported systems are: Windows, Linux and Mac. If you
+wish another version, simply browse the \texttt{Overture\_IDE} section.  Simply
+extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool. Note that in order to be able
 to execute Overture you need to have Java Runtime Environment (minimum
-version~1.7) installed on your computer.
+version~1.6) installed on your computer.
 When you start Overture for the first time, it will request a workspace
 location. We recommend that you choose the default location proposed
 by Overture and tick the box for ``Use this as the default and do
@@ -382,9 +383,12 @@ Finally, in order to make use of the
 test coverage feature described in Section~\ref{sec:testcoverage} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
-\begin{quote}
-\url{http://miktex.org/2.9/}
-\end{quote}
+
+\begin{itemize}
+    \item Windows: \url{http://miktex.org}
+    \item Mac: \url{http://tug.org/mactex/}
+    \item Linux: Most distributions offer \LaTeX\ packages
+\end{itemize}
 
 \chapter{Using the VDM Perspective}\label{sec:vdmsupport}
 
@@ -919,7 +923,7 @@ that can be performed are:
 \begin{description}
 \item[Dynamic type checks:] This is an option for the interpreter (default on)
   to continuously type check  values during interpretation of a VDM model.
-  It is possible to switch off the check here\footnote{However a consequence of doing that can be that you may get internal Java errors (null pointer or class cast exceptions typically) rather than nice clean VDM type errors about mismatched types.}.
+  It is possible to switch off the check here\footnote{However a consequence of doing that is that you may get internal Java errors (null pointer or class cast exceptions typically) rather than nice clean VDM type errors about mismatched types.}.
 \item[Invariant checks:] This is an option for the interpreter (default on)
   to continuously check both state and type invariants.
   It is possible to switch off
@@ -1247,7 +1251,7 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 \end{figure}
 
 In the CT Overview view, you can right-click on any individual
-test case and then execute it with the interpreter (see
+test case and then send it to the interpreter for execution (\see
 Figure~\ref{fig:SendToInterpreter}). This is particularly useful for
 failed test cases since the interpreter allows you to step through the
 evaluation to the place where it is failing. You can inspect the exact
@@ -1337,7 +1341,8 @@ changed at all. So this is simply a quick and easy way to get to the
 starting point for a VDM-RT model. You would then manually create
 a {\textbf\texttt{system}} class with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses and proceed with the real time
-model development.
+model development. Also keep in mind that you may have some errors
+if your VDM++ model uses VDM-RT keywords as names.
 
 \chapter{Analysing Logs from VDM-RT Executions}\label{sec:showlog}
 
@@ -1438,7 +1443,7 @@ The concrete syntax for the timing invariants in VDM-RT is defined as:
 property(trigger,ending,interval);
 \end{lstlisting}
 
-The different kinds properties that can be used are called:
+The different kinds of properties that can be used are called:
 
 \begin{description}
 \item[\texttt{deadlineMet}:] A deadline by definition is a time by which something must be finished. In real-time embedded systems there is typically deadlines that must be respected from when an event happens to its response. In our terminology, it means that the ending event must happen within a certain timeframe from the trigger event.
@@ -2476,7 +2481,7 @@ This appendix gives a list of the internal errors in Overture
 and the circumstances under which each internal error can be expected.
 Most of these errors should \emph{never} be seen, so if they appear
 please report the occurrence via the Overture bug reporting utility
-(\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}).
+(\url{https://sourceforge.net/p/overture/bugs/}).
 
 \input{MESSAGES_Internal}
 
@@ -2775,7 +2780,12 @@ This appendix describes the internal class hierarchy used by Overture to represe
 
 \section{The Value Class Hierarchy}
 
-All internal VDM values in Overture are held by instances of the \texttt{Value} class with the fully qualified name, \url{org.overture.interpreter.values.Value}. The \texttt{Value} class itself is abstract, but subclasses can be instantiated to represent any VDM value, such as a ``\kw{seq of char}'', ``\kw{nat1}'” or a value of an arbitrarily complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
+All internal VDM values in Overture are held by instances of the \texttt{Value}
+class with the fully qualified name,
+\texttt{org.overture.interpreter.values.Value}. The \texttt{Value} class itself
+is abstract, but subclasses can be instantiated to represent any VDM value,
+such as a ``\kw{seq of char}'', ``\kw{nat1}'” or a value of an arbitrarily
+complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
 
 Generally, the name of the \texttt{Value} subclass for a VDM type is on the form \texttt{<\textit{name}>Value}, for example \texttt{BooleanValue} or \texttt{SeqValue}.
  
@@ -2990,10 +3000,12 @@ The \texttt{NamedType} is obtained in a similar way to the \texttt{RecordType} a
 
 Operations which do not return a value in VDM (i.e.\ \texttt{==> ()}) return an instance of \texttt{VoidValue} in Java. The constructor has no arguments.
 
-\addcontentsline{toc}{chapter}{Index}
+\newpage%\section{Index}
+\phantomsection
 \label{sec:index}
+\addcontentsline{toc}{chapter}{Index}
 \printindex
-\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
+%\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 
 
 
