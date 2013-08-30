@@ -23,23 +23,52 @@ ThreadDone // Non Blocking
 
 values
 
-public stepLength : nat = 5;
+public stepLength : nat = 1;
 
 instance variables
 
 currentTime  : nat   := 0;
 wakeUpMap    : map nat to [nat] := {|->};
-barrierCount : nat1;
+barrierCount : nat := 0;
+registeredThreads : set of BaseThread := {};
+isInitialising : bool := true;
 
 operations
 
-public TimeStamp : nat1 ==> TimeStamp
+public TimeStamp : nat ==> TimeStamp
 TimeStamp(count) ==
 	barrierCount := count;
 
+public RegisterThread : BaseThread ==> ()
+RegisterThread(t) ==
+ (barrierCount := barrierCount + 1;
+  registeredThreads := registeredThreads union {t};  
+ );
+ 
+public UnRegisterThread : () ==> ()
+UnRegisterThread() ==
+ (barrierCount := barrierCount - 1;
+  --registeredThreads := registeredThreads \ {t};
+ );
+ 
+public IsInitialising: () ==> bool
+IsInitialising() ==
+  return isInitialising;
+ 
+public DoneInitialising: () ==> ()
+DoneInitialising() ==
+ (if isInitialising
+  then (isInitialising := false;
+        for all t in set registeredThreads 
+        do
+          start(t);
+       );
+ );
+
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  WaitAbsolute(currentTime + val);
+ (WaitAbsolute(currentTime + val);  
+ );
  
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) == (
@@ -53,7 +82,7 @@ WaitAbsolute(val) == (
 BarrierReached : () ==> ()
 BarrierReached() == 
 (
-	while  (card dom wakeUpMap = barrierCount) do
+	while (card dom wakeUpMap = barrierCount) do
   	(
   		currentTime := currentTime + stepLength;
   		let threadSet : set of nat = {th | th in set dom wakeUpMap 
@@ -88,6 +117,8 @@ ThreadDone() ==
 sync
   per Awake => threadid not in set dom wakeUpMap;
 
+mutex(IsInitialising);
+mutex(DoneInitialising);
   -- Is this really needed?
   mutex(AddToWakeUpMap);
   mutex(NotifyThread);

@@ -1,5 +1,5 @@
 
-class HostController
+class HostController is subclass of BaseThread
 
 instance variables
 
@@ -22,10 +22,12 @@ private algType	= <THTW> | <TTW> | <TT> | <TW> | <HW> | <NONE>;
 
 operations
 
-public HostController: nat * nat ==> HostController
-HostController(t, h) ==
+public HostController: nat * nat * nat1 * bool ==> HostController
+HostController(t, h, p, isP) ==
  (TargetTemp := t;
   TargetHumid := h;
+  period := p;
+  isPeriodic := isP;
  );
 
 private UpdateValues: () ==> ()
@@ -201,19 +203,15 @@ public Finish: () ==> ()
 Finish() == 
   finished := true;
 
+Step: () ==> ()
+Step() ==
+ (UpdateValues();
+  Algorithm();
+ );
+
 sync
 
 per IsFinished => finished;
 per printStr => print;
-
-
-thread
- (while true 
-  do
-   (UpdateValues();
-    Algorithm();
-    World`timerRef.WaitRelative(World`timerRef.stepLength);
-   )
- )
 
 end HostController

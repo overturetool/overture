@@ -140,8 +140,8 @@
 \begin{document}
 \title{Development Process of Distributed Embedded Systems using VDM}
 \author{Peter Gorm Larsen and Sune Wolff \\ 
-Engineering College of Aarhus\\
-Dalgas Avenue 2, DK-8000 \AA{}rhus C, Denmark\\[3mm]
+Department of Engineering, Aarhus University\\
+Finlandsgade 22, DK-8200 \AA{}rhus N, Denmark\\[3mm]
 Nick Battle\\
 Fujitsu Services\\
 Lovelace Road, Bracknell, \\
@@ -165,6 +165,7 @@ Month   & Year & Version & Version of Overture.exe \\ \hline
 April   & 2010 &   & 0.2   \\ \hline
 May     & 2010 & 1 & 0.2 \\ \hline
 February& 2011 & 2 & 1.0.0\\ \hline
+August  & 2013 & 3 & 2.0.0\\ \hline
 \end{tabular}
 
 \tableofcontents
@@ -179,10 +180,11 @@ using for concurrent systems
 \cite{Ben-Ari82,Hoare85,Chandy&88,Milner89,Lea99}. From a tool perspective
 it is also assumed that the readers are already familiar with the
 basic functionality from Overture (\url{http://www.overturetool.org}) 
-and/or \VDMTools\
-(\url{http://www.vdmbook.com/tools.php)} and a UML tool such as
-Enterprise Arhictect (\url{http://www.sparxsystems.com/})
-or Rational Rose (\url{http://www-306.ibm.com/software/rational/}).
+%and/or \VDMTools\
+%(\url{http://www.vdmbook.com/tools.php)} 
+and a UML tool such as Modelio (\url{www.modelio.org}).
+%Enterprise Arhictect (\url{http://www.sparxsystems.com/})
+%or Rational Rose (\url{http://www-306.ibm.com/software/rational/}).
 
 VDM \cite{Jones90a,Dawes91,Fitzgerald&98} is a formal method
 \cite{Craigen&93b,Hinchey&95} and these are characterized by being
@@ -215,10 +217,10 @@ In
 Chapter~\ref{chap:period} periodic threads and statically schedulable
 systems are treated. Chapter~\ref{chap:schedule} provides insight 
 into the scheduling principles that can be used for the execution of
-concurrent and for distributed VDM-RT models in Overture and \VDMTools. In 
+concurrent and for distributed VDM-RT models in Overture. In 
 Chapter~\ref{chap:timetrace} it is presented how post-execution analysis
-can be made of timed logfiles produced by \VDMTools\ during execution 
-of a scenario (primarily using the \showtrace\ from Overture). 
+can be made of timed logfiles produced by Overture during execution 
+of a scenario (primarily using the \showtrace). 
 Finally, Chapter~\ref{chap:postscript} rounds off the document with a 
 postscript indicating what the reader should have obtained at this point.
 
@@ -227,14 +229,13 @@ postscript indicating what the reader should have obtained at this point.
 
 This document describes the envisaged process by which reactive
 distributed embedded real-time
-systems could be developed using Overture and \VDMTools. In particular, the
+systems could be developed using Overture. In particular, the
 document describes how key features of real-time systems can be
 modelled and analyzed using tool support.  In this document the main
 focus is on the different activities performed during the analysis and
 design phases of the development process. Thus, the implementation
 phase of the traditional waterfall life cycle \cite{Royce70} is not
-dealt with in detail in this document. However, the use of Overture or
-\VDMTools\
+dealt with in detail in this document. However, the use of Overture
 does not require the use of the waterfall life cycle and thus parts of
 the guidelines can be selected on a needs basis.
 
@@ -253,8 +254,7 @@ described. Often it is simply not possible to check whether a system
 design will be adequate before it is fully implemented and operating
 in its real environment. For a number of critical systems this is
 unacceptably late and this document describes how one can get a higher
-level of confidence in the correctness of a design using Overture or 
-\VDMTools.
+level of confidence in the correctness of a design using Overture.
 
 \subsection{Challenges of Reactive Systems}
 
@@ -368,7 +368,7 @@ types, instance variables, functions and operations. Note that
 functions are not allowed to read or write instance variables, whereas
 operations are.
 
-Overture and \VDMTools\ are tool suites which support amongst other
+Overture is a tool suite which support amongst other
 things, static analysis of models (syntax and type checking), and
 execution of models with dynamic type analysis (invariant checking,
 pre- and post-condition checking). In addition Overture and
@@ -377,10 +377,10 @@ a graphical UML view and a textual detailed VDM++ view. As described
 in \cite{Guidelines}, this allows the complementary benefits of UML
 and VDM to be exploited.
 
-A variety of scheduling algorithms are supported by Overture and \vdmtools,
+A variety of scheduling algorithms are supported by Overture,
 and during model execution, information on the real-time behaviour of
 the model is accumulated for post-execution analysis. More details of
-how Overture and \VDMTools\ facilitates timing analysis is given in
+how Overture facilitates timing analysis is given in
 Section~\ref{sec:timingintro}. For post-execution analysis there is also
 a feature in Overture
 called \showtrace\ that may be used. More details will be
@@ -618,8 +618,7 @@ assigned to it. The same holds for normal theads in active classes.
 
 \section{Timing Analysis}\label{sec:timingintro}
 
-The objective when performing timing analysis using Overture or
-\VDMTools\ is to
+The objective when performing timing analysis using Overture is to
 identify potential performance bottlenecks. That is, to identify
 those portions of the model that could cause scheduling problems
 and/or failure to meet deadlines. This allows the feasibility of a
@@ -627,20 +626,13 @@ particular \emph{dynamic architecture} to be examined. A dynamic
 architecture is a design which has been decomposed into a number of
 processes or threads onto a number of processors.
 
- Note that the
-interpreters for Overture and \VDMTools\ will {\bf not} use the same
-timing defaults nor use the same scheduling principles. In general one
-can say that the interpreter developed for this in
-\VDMTools\ originally was developed by Peter Gorm Larsen when these
-extensions of VDM++ was first developed as a conservative extsion for
-the different VDM interpreters for the other VDM dialects supported by
-\VDMTools. The interpreter developed for
-Overture follows the final principles from the PhD thesis from Marcel
-Verhoef \cite{Verhoef08} by Nick Battle in two iterations. The first
-version made use of Java threads directly, but this had the difficulty
-of the interpretation not being deterministic. Thus a new top level
-scheduler was developed making the interpretation deterministic and
-enable breaking all threads whenever breakpoints are met. 
+%% The interpreter developed for
+%% Overture follows the final principles from the PhD thesis from Marcel
+%% Verhoef \cite{Verhoef08} by Nick Battle in two iterations. The first
+%% version made use of Java threads directly, but this had the difficulty
+%% of the interpretation not being deterministic. Thus a new top level
+%% scheduler was developed making the interpretation deterministic and
+%% enable breaking all threads whenever breakpoints are met. 
 
 \begin{figure}
 \begin{center}
@@ -652,7 +644,7 @@ enable breaking all threads whenever breakpoints are met.
   \parbox{2cm}{\raggedright Task Switching Overhead}}}
 
 \put(130,180){\framebox(80,60){%
-  \parbox{2cm}{\raggedright Overture/ \VDMTools}}}
+  \parbox{2cm}{\raggedright Overture}}}
 
 \put(260,180){\framebox(80,60){%
   \parbox{2cm}{\raggedright Default Duration Information}}}
@@ -749,8 +741,7 @@ text file, it may be analyzed separately.
 After this short introduction to reactive systems, VDM and timing
 analysis this document proceeds in Chapter~\ref{chap:process} with a
 relatively short description of the envisaged development process for
-real-time systems using Overture or 
-\VDMTools. As mentioned above, this document
+real-time systems using Overture. As mentioned above, this document
 focuses on the different activities in the analysis and design phases
 in order to be able to get feedback on the timing properties of
 suggested designs before they are carried into the final
@@ -764,15 +755,14 @@ measures system.
 
 Then a series of chapters follows with more reference material about
 how different aspects of reactive systems can be modelled using the
-\VDMTools\ technology for real-time systems. Chapter~\ref{chap:sync}
+Overture technology for real-time systems. Chapter~\ref{chap:sync}
 explains how synchronization is ensured in VDM++.  In
 Chapter~\ref{chap:period} modelling of periodic systems and events is
-explained. In Chapter~\ref{chap:schedule} the different
-kinds of scheduling policy supported by Overture and \VDMTools\ technology are
+explained. In Chapter~\ref{chap:schedule} the
+scheduling policy supported by the Overture technology is
 presented. Finally in Chapter~\ref{chap:timetrace} it is illustrated
 what kind of post-execution trace analysis can be performed using
-Overture and
-\VDMTools\ including calibration of the timing results. In
+Overture including calibration of the timing results. In
 Chapter~\ref{chap:example} there are a number of forward references to
 some of the reference chapters. Readers who are unfamiliar with the
 kind of material may therefore benefit from jumping to the reference
@@ -1369,7 +1359,7 @@ The model should be executed using the same scheduling policy as that
 used by the target real-time kernels used for the processors in the
 target environment. Upon execution the model should be free of
 deadlocks (note that there is not yet a formal analysis conducted in 
-Overture or \VDMTools\ for this, so it is limited to the scenarios used as test
+Overture for this, so it is limited to the scenarios used as test
 cases). Moreover the model should functionally yield the same
 results as the sequential model, perhaps modulo some adjustments with
 the formulation of the values and the time at which they appear.
@@ -2159,8 +2149,7 @@ Angle2MagId(angle) ==
 In order to gain confidence in the functionality of the model being 
 appropriate it is necessary to validate it somehow. Since this model 
 is made in VDM-SL it is fortunately possible to validate it using
-the VDM-SL version of Overture or 
-\VDMTools. Once the model have been syntax and 
+the VDM-SL version of Overture. Once the model have been syntax and 
 type checked it is possible to test that the main function called
 \texttt{CounterMeasures} behave in the intended fashion. Here the strategy
 is as always with testing to start from simple values and gratually 
@@ -2172,8 +2161,7 @@ In Appendix~\ref{app:VDMSLmodel} three
 value definitions are presented that has been used to test the intended
 behaviour with more complex scenarios. These three turned out to be 
 enough to cover all parts of the model which can be shown using the
-test coverage feature from Overture and
-\VDMTools. This first model in VDM-SL is
+test coverage feature from Overture. This first model in VDM-SL is
 abstracting away from different timing delays but even though it makes
 sense to inspect the specific timing requirements for the system 
 (listed as item 3 and 4 on page~\pageref{timereq34}). Both of these
@@ -3177,8 +3165,7 @@ There is a rather complex \texttt{scenario.txt} available in the electronic
 version of this model on the web that is sufficient to ensure that all parts of the
 model have been exercised at least once just by interpreting
 \texttt{new World().Run()}. Again is this documented using the
-test coverage feature from Overture or 
-\VDMTools. In this sequential model in VDM++
+test coverage feature from Overture. In this sequential model in VDM++
 there is still a considerable amount of
 abstracting away from different timing delays. However, it still makes
 sense to inspect the specific timing requirements for the system 
@@ -3755,7 +3742,7 @@ version of this model available on the web there is a rather complex
 \texttt{scenario.txt} that is sufficient to ensure that all parts of the
 model have been exercised at least once just by interpreting
 \texttt{new World().Run()}. Again is this documented using the
-test coverage feature from Overture or \VDMTools. 
+test coverage feature from Overture. 
 
 \subsection{Summary}
 
@@ -4043,7 +4030,7 @@ version of this model available on the web there is a rather complex
 \texttt{scenario.txt} that is sufficient to ensure that all parts of the
 model have been exercised at least once just by interpreting
 \texttt{new World().Run()}. Again is this documented using the test
-coverage feature from Overture or \VDMTools.
+coverage feature from Overture.
 
 \subsection{Summary}
 
@@ -4991,8 +4978,7 @@ time at which the event occurred.
 \item[Message events] are similar to operation requests except that they
     identify requests, activations and completions of messages communicated
     over a \texttt{BUS}. These messages are automatically derived by 
-    Overture and 
-\VDMTools\ when an operation is to be invoked on an instance that has been
+    Overture when an operation is to be invoked on an instance that has been
     deployed to a different \texttt{CPU}. Each message is given a unique
     identification. Thus, it is only the message request events that contain
     all information about the \texttt{BUS} used, the \texttt{CPU} it is 
@@ -5034,8 +5020,7 @@ desired analysis.
 \subsection{Generic Analysis Tools}
 
 At the moment one external generic analysis tool for trace files produced by
-Overture or
-\VDMTools\ exists. This is the \showtrace\ feature from Overture.
+Overture exists. This is the \showtrace\ feature from Overture.
 
 The \showtrace\ feature is able to type check a trace file and if it 
 is parsed and checked to be correct it is able to show:
@@ -5392,11 +5377,9 @@ identified by the VDM model.
 \chapter{Postscript}\label{chap:postscript}
 
 In this document we have described how reactive real-time and distributed systems can
-be developed using Overture or
-\VDMTools. We have focused on how key features of
+be developed using Overture. We have focused on how key features of
 reactive real-time systems can be modelled and analyzed using
-Overture or 
-\VDMTools. The main message is that this is a viable alternative to
+Overture. The main message is that this is a viable alternative to
 the conventional development approaches. More time is spent in the
 early phases, but more confidence is gained in the different designs'
 ability to meet the necessary timing requirements earlier than
