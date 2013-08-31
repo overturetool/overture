@@ -1,4 +1,4 @@
-class TemperatureSensor is subclass of Sensor
+class TemperatureSensor is subclass of Sensor, BaseThread
 
 instance variables
 
@@ -6,13 +6,14 @@ finished	: bool := false;
 
 operations
 
-public TemperatureSensor: nat * NetworkTypes`nodeType * nat * 
-Surroundings ==> TemperatureSensor
-TemperatureSensor (id, type, val, envir) ==
+public TemperatureSensor: nat * NetworkTypes`nodeType * nat * Surroundings * nat1 * bool ==> TemperatureSensor
+TemperatureSensor (id, type, val, envir, p, isP) ==
  (ID := id;
   Type := type;
   Value := val;
   Env := envir;
+  period := p;
+  isPeriodic := isP;
  );
 
 public Finish: () ==> ()
@@ -23,16 +24,12 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+Step: () ==> ()
+Step() ==
+  Value := Env.ReadTemp();
+
 sync
 	
   per IsFinished => finished;
-
-thread
- (while true 
-  do
-   (Value := Env.ReadTemp();
-    World`timerRef.WaitRelative(World`timerRef.stepLength);
-   )
- )
 
 end TemperatureSensor

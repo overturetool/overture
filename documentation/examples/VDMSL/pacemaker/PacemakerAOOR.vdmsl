@@ -131,16 +131,15 @@ HeartController (mk_(-,acc,time)) ==
                              
 values 
 
-MED  : AccelerometerData = 3;
 LOW  : AccelerometerData = 0;
 MED  : AccelerometerData = 1;
 HIGH : AccelerometerData = 2;
 
 sensedData : seq of (Sense * [AccelerometerData] * Time) = 
 [mk_(<NONE>,nil,i) | i in set {1,...,120}]^
-[mk_(<NONE>,<HIGH>,121)]^
+[mk_(<NONE>,HIGH,121)]^
 [mk_(<NONE>,nil,i) | i in set {121,...,190}]^
-[mk_(<NONE>,<LOW>,191)]^
+[mk_(<NONE>,LOW,191)]^
 [mk_(<NONE>,nil,i) | i in set {192,...,436}];	
 
 end PacemakerAOOR
