@@ -5,8 +5,7 @@ instance variables
 
 -- maintain a link to the environment
 
-public static timerRef : TimeStamp := new TimeStamp(0);--(13);
---public static cm : CM := new CM();
+public static timerRef : TimeStamp := new TimeStamp(0);
 public static env : [Environment] := nil;
 
 
@@ -14,9 +13,7 @@ operations
 
 public World: () ==> World
 World () ==
-  (-- set-up the sensors
-   --cm := new CM();
-   env := new Environment("scenario.txt", 1, true);
+  (env := new Environment("scenario.txt", 1, true);
    
    env.addSensor(CM`sensor0);
    env.addSensor(CM`sensor1);

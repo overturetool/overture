@@ -47,9 +47,7 @@ RegisterThread(t) ==
  
 public UnRegisterThread : () ==> ()
 UnRegisterThread() ==
- (barrierCount := barrierCount - 1;
-  --registeredThreads := registeredThreads \ {t};
- );
+  barrierCount := barrierCount - 1;
  
 public IsInitialising: () ==> bool
 IsInitialising() ==
@@ -67,8 +65,7 @@ DoneInitialising() ==
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
- (WaitAbsolute(currentTime + val);  
- );
+  WaitAbsolute(currentTime + val);  
  
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) == (
@@ -81,27 +78,25 @@ WaitAbsolute(val) == (
 
 BarrierReached : () ==> ()
 BarrierReached() == 
-(
-	while (card dom wakeUpMap = barrierCount) do
-  	(
-  		currentTime := currentTime + stepLength;
-  		let threadSet : set of nat = {th | th in set dom wakeUpMap 
-  										 & wakeUpMap(th) <> nil and wakeUpMap(th) <= currentTime }
-		in
-			for all t in set threadSet 
-			do
-				wakeUpMap := {t} <-: wakeUpMap;
-	);
-)
+  while (card dom wakeUpMap = barrierCount) do
+    (currentTime := currentTime + stepLength;
+     let threadSet : set of nat = {th | th in set dom wakeUpMap 
+                                      & wakeUpMap(th) <> nil and 
+                                        wakeUpMap(th) <= currentTime }
+     in
+       for all t in set threadSet 
+       do
+         wakeUpMap := {t} <-: wakeUpMap;
+    )
 post forall x in set rng wakeUpMap & x = nil or x >= currentTime;
 
 AddToWakeUpMap : nat * [nat] ==> ()
 AddToWakeUpMap(tId, val) ==
-   wakeUpMap := wakeUpMap ++ { tId |-> val };
+  wakeUpMap := wakeUpMap ++ { tId |-> val };
 
 public NotifyThread : nat ==> ()
 NotifyThread(tId) ==
- wakeUpMap := {tId} <-: wakeUpMap;
+  wakeUpMap := {tId} <-: wakeUpMap;
 
 public GetTime : () ==> nat
 GetTime() ==
@@ -112,14 +107,13 @@ Awake() == skip;
 
 public ThreadDone : () ==> ()
 ThreadDone() == 
-	AddToWakeUpMap(threadid, nil);
+  AddToWakeUpMap(threadid, nil);
 
 sync
   per Awake => threadid not in set dom wakeUpMap;
 
-mutex(IsInitialising);
-mutex(DoneInitialising);
-  -- Is this really needed?
+  mutex(IsInitialising);
+  mutex(DoneInitialising);
   mutex(AddToWakeUpMap);
   mutex(NotifyThread);
   mutex(BarrierReached);
