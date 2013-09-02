@@ -1,11 +1,10 @@
-class Environment
+class Environment is subclass of BaseThread
 
 instance variables
 
-private ha       : HA;
 private io       : IO := new IO();
 private inlines	 : seq of inline := [];
-private simtime	 : nat;
+private simtime	 : nat := 1E9;
 
 private finished : bool := false;
 
@@ -16,14 +15,16 @@ public inline	= nat * nat * nat;
 
 operations
 
-public Environment: seq of char ==> Environment
-Environment(fname) ==
- (def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
+public Environment: seq of char * nat1 * bool ==> Environment
+Environment(fname, p, isP) ==
+ (period := p;
+  isPeriodic := isP;
+  
+  def mk_ (-,mk_(t,input)) = io.freadval[nat * seq of inline](fname) 
   in
    (inlines := input;
     simtime := t;
    );
-  ha := new HA();
  );
 
 private CreateSignal: () ==> ()
@@ -33,8 +34,8 @@ CreateSignal() ==
   def mk_ (temp, humid, time) = hd inlines 
   in
    (if time = curtime
-    then (HA`Env.SetTemp(temp);
-          HA`Env.SetHumid(humid);
+    then (HA`Sur.SetTemp(temp);
+          HA`Sur.SetHumid(humid);
           IO`print([time] ^ ["New env values set!"]);
           IO`print(" \n");
           inlines := tl inlines;
@@ -50,21 +51,21 @@ CreateSignal() ==
 public IsFinished: () ==> ()
 IsFinished() ==
   skip;
+  
+public Finish: () ==> ()
+Finish() ==
+  finished := true;
+
+Step: () ==> ()
+Step() ==
+ (if World`timerRef.GetTime() < simtime 
+  then CreateSignal()   
+  else finished := true;     
+ );
 
 sync
 
   per IsFinished => finished;
 
-thread
- (--start(new ClockTick(threadid));
-  while World`timerRef.GetTime() < simtime 
-  do
-   (if not finished
-    then CreateSignal();
-		
-    World`timerRef.WaitRelative(1);
-   );
-  finished := true;
- )
 
 end Environment
