@@ -174,8 +174,8 @@
 \makeindex
 
 \begin{document}
-\title{Overture VDM-10 Tool Support: User Guide}
-\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen,\\ Joey Coleman, Sune Wolff and Luis Diogo Couto \\
+\title{Overture VDM-10 Tool Support: User Guide \\{\large Version 2.0.0}}
+\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen,\\ Joey Coleman, Sune Wolff and  Lu\'{i}s Diogo Couto \\
 Aarhus University, Department of Engineering\\
 Finlandsgade 22, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
@@ -1135,6 +1135,21 @@ text-parts outside these specification blocks are ignored by the VDM parser,
 though note that each source file must start with a recognizable \LaTeX\
 construct: a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
 
+When using this functionality, it is possible to configure additional options
+for the PdfLatex generation in the project properties (see
+\autoref{fig:latexProperties}). For example, you can choose whether to use an
+auto generated main Tex file or a user provided one.  It is also possible to
+generate a pdf containing only the model (all text outside \texttt{vdm\_al}
+will be ignored).
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=\textwidth]{screenDumps/latex_properties}
+  \caption{The \LaTeX\ project properties window}
+  \label{fig:latexProperties}
+\end{center}
+\end{figure}
+
 
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
@@ -1887,14 +1902,18 @@ terminal can use a different character set to the specification files.
 \item[\texttt{-remote}:] This enables remote control of the Overture executable.
 \end{description}
 
-Alternatively a script file is also made for the different platforms (script and bat files) wrapping this
-so one does not need to set up paths and call java directly.
+Alternatively, a script file will also be made for the different platforms
+(script and bat files) wrapping this functionality so one does not need to
+explicitly point to the Overture jar.  This script is planned for the next
+version version of the tool.
 
-Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
-one source file must be specified unless the \texttt{-i} option is used, in which case the interpreter can be
-started with no specification. If a directory is specified rather than a file, then Overture will load
-all files in that directory with a suffix that matches the dialect (e.g.\ \texttt{*.vdmpp} files for VDM++).
-Multiple files and directory arguments can be mixed.
+Normally, a VDM model will be loaded by identifying all of the VDM source files
+to include. At least one source file must be specified unless the \texttt{-i}
+option is used, in which case the interpreter can be started with no
+specification. If a directory is specified rather than a file, then Overture
+will load all files in that directory with a suffix that matches the dialect
+(e.g.\ \texttt{*.vdmpp} files for VDM++).  Multiple files and directory
+arguments can be mixed.
 
 If no \texttt{-i} option is given, the tool will only parse and type check
 the VDM model files, giving any errors and warnings on
