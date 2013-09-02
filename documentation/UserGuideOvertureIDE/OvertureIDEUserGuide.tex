@@ -376,8 +376,11 @@ and can be downloaded from SourceForge under the
 \begin{quote}
 \url{https://sourceforge.net/projects/overture/files/Examples/}
 \end{quote}
-Such existing projects can be imported into Overture as described in
-section~\ref{subsec:importproj}.
+
+Such existing projects can be downloaded and manually imported into Overture as
+described in section~\ref{subsec:importproj}. However, the examples are 
+also bundled with Overture and be automatically imported without the need for
+a download. See \autoref{ssec:importexamples} for more details.
 
 Finally, in order to make use of the
 test coverage feature described in Section~\ref{sec:testcoverage} it is
@@ -603,6 +606,28 @@ by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
 mentioned in Chapter~\ref{sec:install} can be imported very
 easily.\index{project!import}
+
+\subsection{Importing Overture Examples}
+\label{ssec:importexamples}
+
+It is possible to automatically import the Overture examples mentioned in
+Chapter \ref{sec:install}. To do this, right click the Explorer view and select
+\emph{Import} $\rightarrow$ \emph{Overture} $\rightarrow$ \emph{Overture
+Examples}.  You can then select which VDM dialect you wish to import examples
+for. Finally, a selection screen with all examples will be shown\footnote{Note
+that any previously imported examples will be greyed out}. Simply pick the ones
+you wish to import. See Figure \ref{fig:example_import} for more
+details.\index{examples!import}
+
+
+\begin{figure}[!htb]
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{figures/ImportExamples}
+	  \caption[Import VDM Examples]{Import VDM Examples}
+	  \label{fig:example_import}
+	\end{center}
+\end{figure}
+
 
 \section{Creating a New Overture Project}
 
@@ -1486,7 +1511,13 @@ $ button, Overture will list the violations as shown in Figure~\ref{fig:userguid
 \end{center}
 \end{figure}
 
-In addition, the RealTime Log viewer will show the violations graphically by marking the trigger and corresponding response in the model execution overview. Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations from Figure~\ref{fig:userguide:listedConjecturesViolated}, where the response and trigger of the first and second violation, respectively, occur at the same point in time. This explains why only tree markers, i.e. the circles, are visible in the figure.
+In addition, the RealTime Log viewer will show the violations graphically by
+marking the trigger and corresponding response in the model execution overview.
+Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations
+from Figure~\ref{fig:userguide:listedConjecturesViolated}, where the response
+and trigger of the first and second violation, respectively, occur at the same
+point in time. This explains why only three markers (the red circles), are
+visible in the figure.
 
 \begin{figure}[htp]
 \begin{center}
