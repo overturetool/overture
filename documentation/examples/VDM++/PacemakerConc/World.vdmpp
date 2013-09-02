@@ -10,7 +10,7 @@ types
 instance variables
 
 public static env      : [Environment] := nil;
-public static timerRef : TimeStamp := new TimeStamp(3);
+public static timerRef : TimeStamp := new TimeStamp(0); --3
 \end{vdm_al}
 
 The World constructor its the responsible for connect system and environment.
@@ -21,7 +21,7 @@ operations
 public World: seq of char * Mode ==> World
 World(filename,mode) == 
   (  -- create an environment
-     env := new Environment(filename);
+     env := new Environment(filename, 1, true);
 
      -- bind leads to the environment
      env.addLeadSensor(Pacemaker`atriaLead);
@@ -36,11 +36,6 @@ World(filename,mode) ==
 
      -- set up mode
      Pacemaker`heartController.setMode(mode);
-     
-     start(Pacemaker`heartController);
-     start(Pacemaker`rateController);     
-
-     start(Pacemaker`ventricleLead);
   );
 
 \end{vdm_al}
@@ -51,7 +46,7 @@ And Run is the operation that starts a test sequence.
 public Run: () ==> ()
 Run () == 
   (
-   start(env); 
+   timerRef.DoneInitialising();
    env.isFinished();
    Pacemaker`heartController.isFinished();
    env.showResult()

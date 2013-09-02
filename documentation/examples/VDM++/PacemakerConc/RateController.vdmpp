@@ -3,7 +3,7 @@
 The RateController is the class that models the rate adaptation control.
 
 \begin{vdm_al}
-class RateController is subclass of GLOBAL
+class RateController is subclass of GLOBAL, BaseThread
 
 instance variables
  rateplan : map Time to Time;
@@ -39,8 +39,8 @@ The Constructor initializes the instance variables with the default values as co
 operations
   
  public 
- RateController: () ==> RateController
- RateController() ==
+ RateController: nat1 * bool ==> RateController
+ RateController(p, isP) ==
    (LRL       := 60;
     MSR       := 120;
     threshold := MED;
@@ -50,6 +50,8 @@ operations
     sensed    := nil; 
     interval  := 1/((LRL/60)/1000);
     finished  := false;
+    period := p;
+    isPeriodic := isP;
    );
 \end{vdm_al} 
 
@@ -87,7 +89,7 @@ getInterval () == return interval;
  increaseRate () == 
    (
     interval := 1 / ((MSR / 60) / 1000);
-    Pacemaker`heartController.setInterval(interval)
+    Pacemaker`heartController.SetPeriod(interval); --setInterval(interval)
    );
 
 \end{vdm_al}
@@ -112,19 +114,14 @@ getInterval () == return interval;
  isFinished : () ==> ()
  isFinished () == skip; 
 
-
+public Step: () ==> ()
+Step() ==
+  if (sensed <> nil)
+  then controlRate();
 
 \end{vdm_al}
 
-The usual Step by thread substitution is done in the RateController class.
-\begin{vdm_al}
-
-thread
- while true do
-    controlRate();
-\end{vdm_al}
-
-And syncronization is added.
+The syncronization is added.
 
 \begin{vdm_al}    
 
@@ -135,8 +132,7 @@ mutex(increaseRate,decreaseRate,getInterval);
 
 per isFinished => finished;
 
-per controlRate => sensed <> nil;
-
+mutex(Step);
 \end{vdm_al} 
 
 \begin{vdm_al}
