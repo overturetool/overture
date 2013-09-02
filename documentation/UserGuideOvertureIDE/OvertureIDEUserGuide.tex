@@ -1280,28 +1280,28 @@ variables in scope.
 \end{center}
 \end{figure}
 
+
+
+
+
+
 \chapter{Mapping VDM++ To and From UML}\label{sec:vdmuml}
 
-VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
-and the corresponding UML model.
-%\footnote{In the current version of
-%Overture this feature is somewhat unstable.}.  Essentially, VDM and
-UML can be considered as different views of the same model. A UML
-model is typically used to give a graphical overview of the model
-using class diagrams.  The VDM model is typically used to define the
-implementation and constraints for each class and is therefore used
-for detailed semantic analysis. Note that state charts, activity
-diagrams, sequence diagrams, objects charts, package charts are not
-used in the UML mapping. It is essentially only the information used
-statically inside classes and their usage in class diagrams that is
-used.
+VDM++ and VDM-RT projects can be converted automatically back and forth between
+VDM and the corresponding UML model.  Essentially, VDM and UML can be
+considered as different views of the same model. A UML model is typically used
+to give a graphical overview of the model using class diagrams.  The VDM model
+is typically used to define the implementation and constraints for each class
+and is therefore used for detailed semantic analysis. Note that state charts,
+activity diagrams, sequence diagrams, objects charts, package charts are not
+used in the UML mapping. It is essentially only the information
+used statically inside classes and their usage in class diagrams that is used.
 
-To convert a UML class diagram model to a VDM++ model, you first need to export the UML
-model from Modelio to the Eclipse XMI\index{XMI} format, called UML using the EMF UML3.0.0 format
-At the moment,
-Modelio\index{Modelio} is the only UML tool
-%Enterprise Architect\index{Exterprise Architect} is the only UML tool
-supported. Export from Modelio is done as illustrated in Figure~\ref{fig:exportfromUML}.
+To convert a UML class diagram model to a VDM++ model, you first need to export
+the UML model from Modelio to the Eclipse XMI\index{XMI} format, called UML
+using the EMF UML3.0.0 format At the moment, Modelio\index{Modelio} is the only
+UML tool supported. Export from Modelio is done as illustrated in
+Figure~\ref{fig:exportfromUML}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -1311,15 +1311,21 @@ supported. Export from Modelio is done as illustrated in Figure~\ref{fig:exportf
 \end{figure}
 
 Importing and exporting a UML model is
-an option in the Overture \emph{Explorer} view, where right-clicking
-a VDM++ or VDM-RT project gives a submenu for
-\emph{UML Transformation}\index{UML transformation}. From here
-it is possible to 
-\emph{Convert to UML}\index{Convert to UML}. If the mouse is placed over
-a \texttt{.uml} file it is also possible to right-click and choose
-the submenu for
-\emph{UML Transformation}\index{UML transformation} and then select
-\emph{Convert to VDM}\index{Convert to VDM}. 
+an option in the Overture \emph{Explorer} view.
+\begin{description}
+    \item[Exporting:] Right-click a VDM++ or VDM-RT project to access a submenu
+        for \emph{UML Transformation}. From here it is possible to
+        \emph{Convert to UML}\index{Convert to UML}. The resulting \texttt{.uml} 
+        file will be saved to the \texttt{generated} folder of your project.
+    
+    \item[Importing:] To perform a UML import you must have the \texttt{.uml} 
+        file in the relevant project folder. You can either copy it manually or
+        use the Eclipse \emph{Import - File System} feature. Afterwards, it
+        is possible to right-click the \texttt{.uml} file and choose the
+        submenu for \emph{UML Transformation}\index{UML transformation} and
+        then select \emph{Convert to VDM}\index{Convert to VDM}. 
+
+\end{description}
 
 The mapping rules between VDM++/VDM-RT and UML models are further explained 
 in Appendix~\ref{chap:umlrules}. Note that the mapping depends on the settings
@@ -1489,6 +1495,11 @@ In addition, the RealTime Log viewer will show the violations graphically by mar
   \label{fig:userguide:markedConjecturesViolated}
 \end{center}
 \end{figure}
+
+
+
+
+
 
 \chapter{Expanding VDM Models Scope and Functionality by Linking Java and VDM} \label{sec:linkToJava}
 
