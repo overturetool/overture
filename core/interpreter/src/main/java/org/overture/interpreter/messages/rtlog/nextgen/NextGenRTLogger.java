@@ -1,6 +1,7 @@
 package org.overture.interpreter.messages.rtlog.nextgen;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -80,7 +81,7 @@ public class NextGenRTLogger {
 	//private ArrayList<INextGenEvent> events = new ArrayList<INextGenEvent>();
 	private Map<Long, ArrayList<INextGenEvent>> events = new TreeMap<Long, ArrayList<INextGenEvent>>();
 	private NextGenBus vBus;
-	private String logFile = null;
+	private File logFile = null;
 	private long currentAbsoluteTime = -1L;
 	private int currentRelativeTime = -1;
 		
@@ -216,6 +217,17 @@ public class NextGenRTLogger {
 		}	
 	}
 	
+	public static void dump() 
+	{
+		try
+		{
+			getInstance().persistToFile();
+		} catch (IOException e)
+		{
+			//silent ignore
+		}
+	}
+	
 	public void persistToFile() throws IOException
 	{
 		if(logFile != null)
@@ -335,7 +347,7 @@ public class NextGenRTLogger {
         out.close();
 	}
 	
-	public void setLogfile(String logfile)
+	public void setLogfile(File logfile)
 	{
 		this.logFile = logfile;
 	}

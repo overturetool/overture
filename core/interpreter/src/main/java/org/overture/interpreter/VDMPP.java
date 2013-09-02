@@ -287,7 +287,7 @@ public class VDMPP extends VDMJ
     		{
     			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
     			RTLogger.setLogfile(p);
-    			NextGenRTLogger.getInstance().setLogfile(logfile);
+    			NextGenRTLogger.getInstance().setLogfile(new File(logfile));
     			println("RT events now logged to " + logfile);
     		}
     		catch (FileNotFoundException e)

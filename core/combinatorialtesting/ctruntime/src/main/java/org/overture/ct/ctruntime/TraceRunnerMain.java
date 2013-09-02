@@ -26,6 +26,7 @@ import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.SourceFile;
@@ -418,6 +419,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					{
 						PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
 						RTLogger.setLogfile(p);
+						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();

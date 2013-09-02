@@ -106,9 +106,24 @@ public class OperationValue extends Value
 
 	private PExp guard = null;
 
-	public int hashAct = 0; // Number of activations
-	public int hashFin = 0; // Number of finishes
-	public int hashReq = 0; // Number of requests
+	private int hashAct = 0; // Number of activations
+	private int hashFin = 0; // Number of finishes
+	private int hashReq = 0; // Number of requests
+	
+	public int getHashAct()
+	{
+		return this.hashAct;
+	}
+	
+	public int getHashFin()
+	{
+		return this.hashFin;
+	}
+	
+	public int getHashReq()
+	{
+		return this.hashReq;
+	}
 
 	private long priority = 0;
 	private boolean traceRT = true;
@@ -346,6 +361,7 @@ public class OperationValue extends Value
 
 		Value rv = null;
 
+		boolean evalFailed = false;
 		try
 		{
     		if (precondition != null && Settings.prechecks)
@@ -455,6 +471,7 @@ public class OperationValue extends Value
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 		if (th == null || th instanceof InitThread )
 		{
+			act();
 			return;		// Probably during initialization.
 		}
 
