@@ -1,6 +1,13 @@
 package org.overture.typechecker.assistant;
 
+import java.util.List;
+
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.*;
 import org.overture.typechecker.assistant.expression.*;
 import org.overture.typechecker.assistant.module.*;
@@ -190,5 +197,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	PTypeAssistantTC createPTypeAssistant();
 	SMapTypeAssistantTC createSMapTypeAssistant();
 	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
-	SSeqTypeAssistantTC createSSeqTypeAssistant(); 
+	SSeqTypeAssistantTC createSSeqTypeAssistant();
+	
+	// visitors
+	IAnswer<List<PDefinition>> getDefinitionCollector();
+	IAnswer<PType> getDefinitionTypeFinder();
+	IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker(); 
 }

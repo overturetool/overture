@@ -28,7 +28,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ATypeDefinitionAssistantTC {
+public class ATypeDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -36,35 +37,39 @@ public class ATypeDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static PDefinition findType(ATypeDefinition d, ILexNameToken sought,
-			String fromModule) {
-		
+			String fromModule)
+	{
+
 		PType type = d.getType();
-		
+
 		if (type instanceof ANamedInvariantType)
 		{
-			ANamedInvariantType nt = (ANamedInvariantType)type;
+			ANamedInvariantType nt = (ANamedInvariantType) type;
 
 			if (nt.getType() instanceof ARecordInvariantType)
 			{
-				ARecordInvariantType rt = (ARecordInvariantType)nt.getType();
+				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
 
 				if (rt.getName().equals(sought))
 				{
-					return d;	// T1 = compose T2 x:int end;
+					return d; // T1 = compose T2 x:int end;
 				}
 			}
 		}
 
-		return PDefinitionAssistantTC.findNameBaseCase(d,sought, NameScope.TYPENAME);
+		return PDefinitionAssistantTC.findNameBaseCase(d, sought, NameScope.TYPENAME);
 	}
 
-	public static PDefinition findName( ATypeDefinition d, ILexNameToken sought,
-			NameScope scope) { 
+	public static PDefinition findName(ATypeDefinition d, ILexNameToken sought,
+			NameScope scope)
+	{
 
 		PDefinition invdef = d.getInvdef();
-		
-		if (invdef != null &&  PDefinitionAssistantTC.findName(invdef, sought, scope)  != null)
+
+		if (invdef != null
+				&& PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
 		{
 			return invdef;
 		}
@@ -72,7 +77,8 @@ public class ATypeDefinitionAssistantTC {
 		return null;
 	}
 
-	public static List<PDefinition> getDefinitions(ATypeDefinition d) {
+	public static List<PDefinition> getDefinitions(ATypeDefinition d)
+	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(d);
 
@@ -84,58 +90,61 @@ public class ATypeDefinitionAssistantTC {
 		return defs;
 	}
 
-	public static LexNameList getVariableNames(ATypeDefinition d) {
+	public static LexNameList getVariableNames(ATypeDefinition d)
+	{
 		// This is only used in VDM++ type inheritance
 		return new LexNameList(d.getName());
 	}
 
 	public static void typeResolve(ATypeDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
+			TypeCheckInfo question) throws AnalysisException
+	{
 		try
 		{
 			d.setInfinite(false);
-			d.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType)d.getInvType(), d, rootVisitor, question));
+			d.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType) d.getInvType(), d, rootVisitor, question));
 
 			if (d.getInfinite())
 			{
-				TypeCheckerErrors.report(3050, "Type '" + d.getName() + "' is infinite",d.getLocation(),d);
+				TypeCheckerErrors.report(3050, "Type '" + d.getName()
+						+ "' is infinite", d.getLocation(), d);
 			}
 
-			//set type before in case the invdef uses a type defined in this one
+			// set type before in case the invdef uses a type defined in this one
 			d.setType(d.getInvType());
-			
+
 			if (d.getInvdef() != null)
 			{
 				PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
 				PPatternAssistantTC.typeResolve(d.getInvPattern(), rootVisitor, question);
 			}
-			
+
 			d.setType(d.getInvType());
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			PTypeAssistantTC.unResolve(d.getInvType());
 			throw e;
 		}
 	}
 
-	public static void implicitDefinitions(ATypeDefinition d, Environment env) {
+	public static void implicitDefinitions(ATypeDefinition d, Environment env)
+	{
 		if (d.getInvPattern() != null)
 		{
-    		d.setInvdef(getInvDefinition(d));
-    		d.getInvType().setInvDef(d.getInvdef());
-		}
-		else
+			d.setInvdef(getInvDefinition(d));
+			d.getInvType().setInvDef(d.getInvdef());
+		} else
 		{
 			d.setInvdef(null);
 		}
-		
+
 	}
 
 	private static AExplicitFunctionDefinition getInvDefinition(
-			ATypeDefinition d) {
-		
+			ATypeDefinition d)
+	{
+
 		ILexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
@@ -149,26 +158,20 @@ public class ATypeDefinitionAssistantTC {
 		{
 			// Records are inv_R: R +> bool
 			ptypes.add(AstFactory.newAUnresolvedType(d.getName().clone()));
-		}
-		else
+		} else
 		{
 			// Named types are inv_T: x +> bool, for T = x
 			ANamedInvariantType nt = (ANamedInvariantType) d.getInvType();
 			ptypes.add(nt.getType().clone());
 		}
 
-		AFunctionType ftype =
-			AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
-		AExplicitFunctionDefinition def = 
-				AstFactory.newAExplicitFunctionDefinition(
-						d.getName().getInvName(loc), 
-						NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), 
-						null, null, true, null);
-		
-		def.setAccess(d.getAccess().clone());	// Same as type's
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
+
+		def.setAccess(d.getAccess().clone()); // Same as type's
 		def.setClassDefinition(d.getClassDefinition());
-		
+
 		return def;
 	}
 

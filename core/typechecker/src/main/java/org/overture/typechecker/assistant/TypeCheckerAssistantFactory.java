@@ -1,6 +1,12 @@
 package org.overture.typechecker.assistant;
 
+import java.util.List;
+
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
@@ -168,6 +174,9 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.DefinitionCollector;
+import org.overture.typechecker.utilities.DefinitionEqualityChecker;
+import org.overture.typechecker.utilities.DefinitionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1192,6 +1201,26 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
 	{
 		return new SSimpleBlockStmAssistantTC(this);
+	}
+	
+	/*New visitor utilities*/
+
+	@Override
+	public IAnswer<List<PDefinition>> getDefinitionCollector()
+	{
+		return new DefinitionCollector(this);
+	}
+
+	@Override
+	public IAnswer<PType> getDefinitionTypeFinder()
+	{
+		return new DefinitionTypeFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker()
+	{
+		return new DefinitionEqualityChecker(this);
 	}
 
 

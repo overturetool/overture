@@ -1,7 +1,6 @@
 package org.overture.typechecker.assistant.definition;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -14,7 +13,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 
-public class AEqualsDefinitionAssistantTC {
+public class AEqualsDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -22,11 +22,13 @@ public class AEqualsDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PDefinition findName( AEqualsDefinition d,
-			ILexNameToken sought, NameScope scope) {
-		
+
+	public static PDefinition findName(AEqualsDefinition d,
+			ILexNameToken sought, NameScope scope)
+	{
+
 		List<PDefinition> defs = d.getDefs();
-		
+
 		if (defs != null)
 		{
 			PDefinition def = PDefinitionListAssistantTC.findName(defs, sought, scope);
@@ -39,31 +41,32 @@ public class AEqualsDefinitionAssistantTC {
 		return null;
 	}
 
-	public static void unusedCheck(AEqualsDefinition d) {
-		
+	public static void unusedCheck(AEqualsDefinition d)
+	{
+
 		if (d.getDefs() != null)
 		{
 			PDefinitionListAssistantTC.unusedCheck(d.getDefs());
 		}
-		
+
 	}
 
-	public static List<PDefinition> getDefinitions(AEqualsDefinition d) {
-		
-		return d.getDefs() == null ? new Vector<PDefinition>() : d.getDefs();
+	public static LexNameList getVariableNames(AEqualsDefinition d)
+	{
+
+		return d.getDefs() == null ? new LexNameList()
+				: PDefinitionListAssistantTC.getVariableNames(d.getDefs());
 	}
 
-	public static LexNameList getVariableNames( AEqualsDefinition d) {
-		
-		return d.getDefs() == null ? new LexNameList() : PDefinitionListAssistantTC.getVariableNames(d.getDefs());
+	public static PType getType(AEqualsDefinition def)
+	{
+		return def.getDefType() != null ? def.getDefType()
+				: AstFactory.newAUnknownType(def.getLocation());
 	}
 
-	public static PType getType(AEqualsDefinition def) {
-		return def.getDefType() != null ? def.getDefType() : AstFactory.newAUnknownType(def.getLocation());
-	}
+	public static LexNameList getOldNames(AEqualsDefinition def)
+	{
 
-	public static LexNameList getOldNames(AEqualsDefinition def) {
-		
 		LexNameList list = PExpAssistantTC.getOldNames(def.getTest());
 
 		if (def.getSetbind() != null)
@@ -74,15 +77,5 @@ public class AEqualsDefinitionAssistantTC {
 		return list;
 	}
 
-	public static boolean equals(AEqualsDefinition def, Object other) {
-		
-		if (other instanceof AEqualsDefinition)
-		{
-			return def.toString().equals(other.toString());
-		}
-		
-		return false;
-		
-	}
 
 }
