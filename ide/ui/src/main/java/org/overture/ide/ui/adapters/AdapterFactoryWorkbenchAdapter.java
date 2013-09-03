@@ -3,7 +3,6 @@ package org.overture.ide.ui.adapters;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -18,7 +17,7 @@ import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 {
 	public static class VdmSourcenitWorkbenchAdapter implements
-			IWorkbenchAdapter
+			IWorkbenchAdapter,IWorkbenchAdapter3
 	{
 
 		private IVdmSourceUnit sourceUnit;
@@ -56,6 +55,12 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 		public Object getParent(Object o)
 		{
 			return this.adapter.getParent(o);
+		}
+
+		@Override
+		public StyledString getStyledText(Object element)
+		{
+return 			new StyledString(getLabel(element));
 		}
 
 	}
@@ -119,7 +124,7 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
-		if (adapterType == IWorkbenchAdapter.class)
+		if (adapterType == IWorkbenchAdapter.class|| adapterType==IWorkbenchAdapter3.class)
 		{
 			if (adaptableObject instanceof IVdmSourceUnit)
 			{
