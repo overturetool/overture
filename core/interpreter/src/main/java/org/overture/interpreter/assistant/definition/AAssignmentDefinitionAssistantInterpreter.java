@@ -14,10 +14,9 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 
-public class AAssignmentDefinitionAssistantInterpreter extends
-		AAssignmentDefinitionAssistantTC
+public class AAssignmentDefinitionAssistantInterpreter /*extends
+		AAssignmentDefinitionAssistantTC*/
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -25,7 +24,7 @@ public class AAssignmentDefinitionAssistantInterpreter extends
 	public AAssignmentDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+//		super(af);
 		this.af = af;
 	}
 

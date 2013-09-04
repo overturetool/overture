@@ -29,7 +29,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -77,7 +76,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAAssignmentDefinition(AAssignmentDefinition node)
 			throws AnalysisException
 	{
-		return AAssignmentDefinitionAssistantTC.getVariableNames((AAssignmentDefinition) node);
+		return new LexNameList(node.getName());
 	}
 	
 	@Override

@@ -9,7 +9,6 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -179,6 +178,7 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.VariableNameCollector;
 
@@ -365,11 +365,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	
 	//definition
 
-	@Override
-	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
-	{
-		return new AAssignmentDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
+//	{
+//		return new AAssignmentDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
@@ -1237,6 +1237,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<LexNameList> getVariableNameCollector()
 	{
 		return new VariableNameCollector(this);
+	}
+
+	@Override
+	public IAnswer<PDefinition> getSelfDefinitionFinder()
+	{
+		return new SelfDefinitionFinder(this);
 	}
 
 

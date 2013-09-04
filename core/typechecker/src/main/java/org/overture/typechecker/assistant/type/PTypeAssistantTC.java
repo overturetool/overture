@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.type;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -453,29 +454,36 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isMap(PType type)
 	{
-		if (type instanceof SMapType)
+		try
 		{
-			return SMapTypeAssistantTC.isMap((SMapType) type);
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getMapBasisChecker());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.isMap((ABracketType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isMap((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isMap((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isMap((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
+			return false;
 		}
-		return false;
+//		if (type instanceof SMapType)
+//		{
+//			return SMapTypeAssistantTC.isMap((SMapType) type);
+//		} else if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isMap((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isMap((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isMap((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isMap((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
+//		}
+//		return false;
 	}
 
 	public static SMapType getMap(PType type)

@@ -298,12 +298,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static PDefinition getSelfDefinition(PDefinition d)
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantTC.getSelfDefinition((SClassDefinition) d);
-		} else
+			return d.apply(af.getSelfDefinitionFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return getSelfDefinition(d.getClassDefinition());
+			return null;
 		}
 
 	}
