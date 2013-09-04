@@ -22,6 +22,7 @@ import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 {
@@ -89,7 +90,7 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 						&& (term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
 					TraceNode exp = PTraceDefinitionAssistantInterpreter.expand(term.getBody(), evalContext);
-					exp.addVariables(new TraceVariableList(evalContext, AMultiBindListDefinitionAssistantTC.getDefinitions(term.getDef())));
+					exp.addVariables(new TraceVariableList(evalContext, PDefinitionAssistantTC.getDefinitions(term.getDef())));
 					node.alternatives.add(exp);
 				}
 			}
