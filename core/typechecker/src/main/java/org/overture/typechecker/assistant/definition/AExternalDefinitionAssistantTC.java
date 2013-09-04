@@ -1,8 +1,5 @@
 package org.overture.typechecker.assistant.definition;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -11,7 +8,8 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AExternalDefinitionAssistantTC {
+public class AExternalDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -19,9 +17,11 @@ public class AExternalDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static PDefinition findName(AExternalDefinition d,
-			ILexNameToken sought, NameScope scope) {
-		
+			ILexNameToken sought, NameScope scope)
+	{
+
 		if (sought.getOld())
 		{
 			return (sought.equals(d.getOldname())) ? d : null;
@@ -30,32 +30,27 @@ public class AExternalDefinitionAssistantTC {
 		return (sought.equals(d.getState().getName())) ? d : null;
 	}
 
-	public static void markUsed(AExternalDefinition d) {
+	public static void markUsed(AExternalDefinition d)
+	{
 		d.setUsed(true);
 		PDefinitionAssistantTC.markUsed(d.getState());
-		
+
 	}
 
-	public static List<PDefinition> getDefinitions(AExternalDefinition d) {
-		
-		List<PDefinition> result =  new Vector<PDefinition>();
-		result.add(d.getState());
-	
-		return result;
-	}
-
-	public static LexNameList getVariableNames( AExternalDefinition d) {
+	public static LexNameList getVariableNames(AExternalDefinition d)
+	{
 		return PDefinitionAssistantTC.getVariableNames(d.getState());
 	}
 
-	public static PType getType(
-			AExternalDefinition def) {
+	public static PType getType(AExternalDefinition def)
+	{
 		return af.createPDefinitionAssistant().getType(def.getState());
 	}
 
-	public static boolean isUsed(AExternalDefinition u) {
+	public static boolean isUsed(AExternalDefinition u)
+	{
 		return PDefinitionAssistantTC.isUsed(u.getState());
-		
+
 	}
 
 }

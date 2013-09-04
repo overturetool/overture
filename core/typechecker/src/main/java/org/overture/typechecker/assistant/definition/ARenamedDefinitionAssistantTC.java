@@ -15,7 +15,8 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ARenamedDefinitionAssistantTC {
+public class ARenamedDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -23,60 +24,59 @@ public class ARenamedDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PDefinition findType( ARenamedDefinition d,
-			ILexNameToken sought, String fromModule) {
-		
+
+	public static PDefinition findType(ARenamedDefinition d,
+			ILexNameToken sought, String fromModule)
+	{
+
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 
-		if (fromModule != null && !d.getLocation().getModule().equals(fromModule))
+		if (fromModule != null
+				&& !d.getLocation().getModule().equals(fromModule))
 		{
-			return null;	// Someone else's import
+			return null; // Someone else's import
 		}
 
-		PDefinition renamed = PDefinitionAssistantTC.findName(d,sought, NameScope.TYPENAME);
+		PDefinition renamed = PDefinitionAssistantTC.findName(d, sought, NameScope.TYPENAME);
 
 		if (renamed != null && d.getDef() instanceof ATypeDefinition)
 		{
 			PDefinitionAssistantTC.markUsed(d.getDef());
 			return renamed;
-		}
-		else
+		} else
 		{
-			return  PDefinitionAssistantTC.findType(d.getDef(),sought, fromModule);
+			return PDefinitionAssistantTC.findType(d.getDef(), sought, fromModule);
 		}
 	}
 
 	public static PDefinition findName(ARenamedDefinition d,
-			ILexNameToken sought, NameScope scope) {
-		
+			ILexNameToken sought, NameScope scope)
+	{
+
 		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(d, sought, scope);
 
 		if (renamed != null)
 		{
 			PDefinitionAssistantTC.markUsed(d.getDef());
 			return renamed;
-		}
-		else
+		} else
 		{
 			// Renamed definitions hide the original name
-			return  null;//PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
+			return null;// PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
 		}
 	}
 
-	public static void markUsed(ARenamedDefinition d) {
+	public static void markUsed(ARenamedDefinition d)
+	{
 		d.setUsed(true);
 		PDefinitionAssistantTC.markUsed(d.getDef());
-		
+
 	}
 
-	public static List<PDefinition> getDefinitions(ARenamedDefinition d) {
-		List<PDefinition> result = new Vector<PDefinition>();
-		result.add(d);
-		return result;
-	}
 
-	public static LexNameList getVariableNames(ARenamedDefinition d) {
+	public static LexNameList getVariableNames(ARenamedDefinition d)
+	{
 		LexNameList both = new LexNameList(d.getName());
 		both.add(d.getDef().getName());
 		return both;
@@ -84,12 +84,13 @@ public class ARenamedDefinitionAssistantTC {
 
 	public static void typeResolve(ARenamedDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);		
+			TypeCheckInfo question) throws AnalysisException
+	{
+		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
 	}
 
-//	public static boolean isUsed(ARenamedDefinition u) {
-//		return PDefinitionAssistantTC.isUsed(u.getDef());
-//	}
+	// public static boolean isUsed(ARenamedDefinition u) {
+	// return PDefinitionAssistantTC.isUsed(u.getDef());
+	// }
 
 }

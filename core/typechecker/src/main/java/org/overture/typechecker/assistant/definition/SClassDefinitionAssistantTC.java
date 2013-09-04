@@ -49,7 +49,8 @@ public class SClassDefinitionAssistantTC
 	{
 		this.af = af;
 	}
-	public static PDefinition findName( SClassDefinition classdef,
+
+	public static PDefinition findName(SClassDefinition classdef,
 			ILexNameToken sought, NameScope scope)
 	{
 
@@ -211,7 +212,7 @@ public class SClassDefinitionAssistantTC
 		return def;
 	}
 
-	public static Set<PDefinition> findMatches( SClassDefinition classdef,
+	public static Set<PDefinition> findMatches(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 
@@ -220,7 +221,7 @@ public class SClassDefinitionAssistantTC
 		return set;
 	}
 
-	public static PDefinition findName( List<SClassDefinition> classes,
+	public static PDefinition findName(List<SClassDefinition> classes,
 			ILexNameToken name, NameScope scope)
 	{
 
@@ -267,7 +268,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static Set<PDefinition> findMatches( List<SClassDefinition> classes,
+	public static Set<PDefinition> findMatches(List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
@@ -302,18 +303,7 @@ public class SClassDefinitionAssistantTC
 		return all;
 	}
 
-	public static List<PDefinition> getDefinitions(SClassDefinition d)
-	{
-
-		List<PDefinition> all = new Vector<PDefinition>();
-
-		all.addAll(d.getAllInheritedDefinitions());
-		all.addAll(PDefinitionListAssistantTC.singleDefinitions(d.getDefinitions()));
-
-		return all;
-	}
-
-	public static PDefinition getSelfDefinition( SClassDefinition classDefinition)
+	public static PDefinition getSelfDefinition(SClassDefinition classDefinition)
 	{
 
 		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
@@ -326,18 +316,20 @@ public class SClassDefinitionAssistantTC
 		return PDefinitionListAssistantTC.getVariableNames(d.getDefinitions());
 	}
 
-	public static void implicitDefinitions( SClassDefinition d,
+	public static void implicitDefinitions(SClassDefinition d,
 			Environment publicClasses)
 	{
-		if (d instanceof ASystemClassDefinition) {
+		if (d instanceof ASystemClassDefinition)
+		{
 			ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) d, publicClasses);
-		} else {
+		} else
+		{
 			implicitDefinitionsBase(d, publicClasses);
 		}
 
 	}
 
-	public static void implicitDefinitionsBase( SClassDefinition d,
+	public static void implicitDefinitionsBase(SClassDefinition d,
 			Environment publicClasses)
 	{
 		setInherited(d, publicClasses);
@@ -493,7 +485,7 @@ public class SClassDefinitionAssistantTC
 		return defs;
 	}
 
-	private static void setInherited( SClassDefinition d, Environment base)
+	private static void setInherited(SClassDefinition d, Environment base)
 	{
 		switch (d.getSettingHierarchy())
 		{
@@ -554,16 +546,16 @@ public class SClassDefinitionAssistantTC
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		Environment cenv = new FlatEnvironment(question.assistantFactory,d.getDefinitions(), question.env);
-		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory,cenv));
+		Environment cenv = new FlatEnvironment(question.assistantFactory, d.getDefinitions(), question.env);
+		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
 	}
 
-	public static PDefinition findThread( SClassDefinition d)
+	public static PDefinition findThread(SClassDefinition d)
 	{
 		return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
 	}
 
-	public static PDefinition findConstructor( SClassDefinition classdef,
+	public static PDefinition findConstructor(SClassDefinition classdef,
 			List<PType> argtypes)
 	{
 
@@ -590,7 +582,7 @@ public class SClassDefinitionAssistantTC
 		return def.getClasstype();
 	}
 
-	public static void checkOver( SClassDefinition c)
+	public static void checkOver(SClassDefinition c)
 	{
 		int inheritedThreads = 0;
 		checkOverloads(c);
@@ -671,7 +663,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static boolean checkOverrides( SClassDefinition c,
+	private static boolean checkOverrides(SClassDefinition c,
 			List<PDefinition> inheritable)
 	{
 		boolean inheritedThread = false;
@@ -724,7 +716,7 @@ public class SClassDefinitionAssistantTC
 		return inheritedThread;
 	}
 
-	private static void checkOverloads( SClassDefinition c)
+	private static void checkOverloads(SClassDefinition c)
 	{
 		List<String> done = new Vector<String>();
 
@@ -787,13 +779,13 @@ public class SClassDefinitionAssistantTC
 		{
 			if (d.getPass() == p)
 			{
-				d.apply(tc, new TypeCheckInfo(af,base, NameScope.NAMES));
+				d.apply(tc, new TypeCheckInfo(af, base, NameScope.NAMES));
 			}
 		}
 
 		if (c.getInvariant() != null && c.getInvariant().getPass() == p)
 		{
-			c.getInvariant().apply(tc, new TypeCheckInfo(af,base, NameScope.NAMES));
+			c.getInvariant().apply(tc, new TypeCheckInfo(af, base, NameScope.NAMES));
 		}
 
 	}

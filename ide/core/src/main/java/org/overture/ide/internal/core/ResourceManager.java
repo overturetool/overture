@@ -277,6 +277,14 @@ public class ResourceManager implements IResourceChangeListener
 				vdmProject.getModel().remove(vdmSourceUnits.get(res));
 				vdmSourceUnits.remove(res);
 
+				IProject p = res.getProject();
+				synchronized (projectsToRebuild)
+				{
+					if (!projectsToRebuild.contains(p))
+					{
+						projectsToRebuild.add(p);
+					}
+				}
 			}
 
 		} else if (res instanceof IFolder)
@@ -284,7 +292,7 @@ public class ResourceManager implements IResourceChangeListener
 			// no special action
 		} else
 		{
-			System.err.println("Resource not handled in remove: " + res);
+//			System.err.println("Resource not handled in remove: " + res);
 		}
 
 	}
@@ -304,18 +312,21 @@ public class ResourceManager implements IResourceChangeListener
 					break;
 				case IResourceDelta.REMOVED:
 					remove(res);
-					if (res instanceof IFile)
-					{
-						IProject p = res.getProject();
-						synchronized (projectsToRebuild)
-						{
-							if (!projectsToRebuild.contains(p))
-							{
-								projectsToRebuild.add(p);
-							}
-						}
-
-					}
+//					if (res instanceof IFile)
+//					{
+//						if (isProjectBuildConttent((IFile) res))
+//						{
+//							IProject p = res.getProject();
+//							synchronized (projectsToRebuild)
+//							{
+//								if (!projectsToRebuild.contains(p))
+//								{
+//									projectsToRebuild.add(p);
+//								}
+//							}
+//						}
+//
+//					}
 
 					break;
 				case IResourceDelta.CHANGED:
@@ -347,6 +358,8 @@ public class ResourceManager implements IResourceChangeListener
 			} else if (res instanceof IFile)
 			{
 				IFile file = (IFile) res;
+				
+				//FIXME use new method 	isProjectBuildConttent(file)
 				if (VdmProject.isVdmProject(file.getProject()))
 				{
 					// Add the VDM builder to the project if missing and the
@@ -377,6 +390,41 @@ public class ResourceManager implements IResourceChangeListener
 			}
 
 		}
+	}
+
+	private boolean isProjectBuildConttent(IFile file)
+	{
+		if (VdmProject.isVdmProject(file.getProject()))
+		{
+			// Add the VDM builder to the project if missing and the
+			// project have the correct nature
+			if (!projects.containsValue(file.getProject()))
+			{
+				addBuilderProject(file.getProject());
+			}
+			// Call getVdmSourceUnit to associate the the IFile to the
+			// project if the project contains the content type
+
+			IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
+			Assert.isNotNull(project, "Project in ResourceManager is null for file: "
+					+ file);
+			IContentType contentTypeId = null;
+			try
+			{
+				if (file.getContentDescription() != null)
+				{
+					contentTypeId = file.getContentDescription().getContentType();
+				}
+			} catch (CoreException e)
+			{
+
+			}
+			if (project.getContentTypeIds().contains(contentTypeId))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<IProject> addBuilders = new Vector<IProject>();

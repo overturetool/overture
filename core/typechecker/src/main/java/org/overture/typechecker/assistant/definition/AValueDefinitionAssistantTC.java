@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.definition;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -21,7 +20,8 @@ import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class AValueDefinitionAssistantTC {
+public class AValueDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -29,39 +29,48 @@ public class AValueDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PDefinition findName(AValueDefinition d, ILexNameToken sought,
-			NameScope scope) {
 
-		if (scope.matches(NameScope.NAMES)) {
-			return PDefinitionListAssistantTC.findName(d.getDefs(), sought,
-					scope);
+	public static PDefinition findName(AValueDefinition d,
+			ILexNameToken sought, NameScope scope)
+	{
+
+		if (scope.matches(NameScope.NAMES))
+		{
+			return PDefinitionListAssistantTC.findName(d.getDefs(), sought, scope);
 		}
 
 		return null;
 	}
 
-	public static void unusedCheck(AValueDefinition d) {
+	public static void unusedCheck(AValueDefinition d)
+	{
 		if (d.getUsed()) // Indicates all definitions exported (used)
 		{
 			return;
 		}
 
-		if (d.getDefs() != null) {
-			for (PDefinition def : d.getDefs()) {
+		if (d.getDefs() != null)
+		{
+			for (PDefinition def : d.getDefs())
+			{
 				PDefinitionAssistantTC.unusedCheck(def);
 			}
 		}
 
 	}
 
-	public static List<PDefinition> getDefinitions(AValueDefinition d) {
+	public static List<PDefinition> getDefinitions(AValueDefinition d)
+	{
 		return d.getDefs();
 	}
 
-	public static LexNameList getVariableNames(AValueDefinition d) {
-		try {
+	public static LexNameList getVariableNames(AValueDefinition d)
+	{
+		try
+		{
 			return PPatternAssistantTC.getVariableNames(d.getPattern());
-		} catch (InvocationAssistantException e) {
+		} catch (InvocationAssistantException e)
+		{
 			// TODO Auto-generated catch block; needs to be smarter
 			e.printStackTrace();
 			return new LexNameList();
@@ -70,36 +79,39 @@ public class AValueDefinitionAssistantTC {
 
 	public static void typeResolve(AValueDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
+			TypeCheckInfo question) throws AnalysisException
+	{
 
 		// d.setType(getType(d));
 		if (d.getType() != null)
 		{
-			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null,
-					rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 			PPatternAssistantTC.typeResolve(d.getPattern(), rootVisitor, question);
 			updateDefs(d, question);
 		}
 
 	}
-	
+
 	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
 	{
 		PType type = node.getType();
 		PPattern pattern = node.getPattern();
-		
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern,
-				type, question.scope);
+
+		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, question.scope);
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We
 		// also mark the local definitions as "ValueDefintions" (proxies),
 		// so that classes can be constructed correctly (values are statics).
 
-		for (PDefinition d : newdefs) {
-			for (PDefinition u : node.getDefs()) {
-				if (u.getName().equals(d.getName())) {
-					if (PDefinitionAssistantTC.isUsed(u)) {
+		for (PDefinition d : newdefs)
+		{
+			for (PDefinition u : node.getDefs())
+			{
+				if (u.getName().equals(d.getName()))
+				{
+					if (PDefinitionAssistantTC.isUsed(u))
+					{
 						PDefinitionAssistantTC.markUsed(d);
 					}
 
@@ -113,40 +125,21 @@ public class AValueDefinitionAssistantTC {
 
 		node.setDefs(newdefs);
 		List<PDefinition> defs = node.getDefs();
-		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess()
-				.clone());
-		PDefinitionListAssistantTC.setClassDefinition(defs,
-				node.getClassDefinition());
+		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
+		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
 	}
 
-	public static PType getType(AValueDefinition def) {
+	public static PType getType(AValueDefinition def)
+	{
 		return def.getType() != null ? def.getType()
-				: (def.getExpType() != null ? def.getExpType() : AstFactory
-						.newAUnknownType(def.getLocation()));
+				: (def.getExpType() != null ? def.getExpType()
+						: AstFactory.newAUnknownType(def.getLocation()));
 	}
 
-	public static LexNameList getOldNames(AValueDefinition def) {
+	public static LexNameList getOldNames(AValueDefinition def)
+	{
 		return PExpAssistantTC.getOldNames(def.getExpression());
 	}
 
-	public static boolean equals(AValueDefinition def, Object other) {
-		if (other instanceof AValueDefinition) {
-			AValueDefinition vdo = (AValueDefinition) other;
-
-			if (def.getDefs().size() == vdo.getDefs().size()) {
-				Iterator<PDefinition> diter = vdo.getDefs().iterator();
-
-				for (PDefinition d : def.getDefs()) {
-					if (!af.createPDefinitionAssistant().equals(diter.next(), d)) {
-						return false;
-					}
-				}
-
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 }

@@ -1,7 +1,14 @@
 package org.overture.typechecker.assistant;
 
+import java.util.List;
+
+import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
-import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -168,6 +175,12 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.DefinitionCollector;
+import org.overture.typechecker.utilities.DefinitionEqualityChecker;
+import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.SelfDefinitionFinder;
+import org.overture.typechecker.utilities.TypeUtils;
+import org.overture.typechecker.utilities.VariableNameCollector;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -352,11 +365,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	
 	//definition
 
-	@Override
-	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
-	{
-		return new AAssignmentDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
+//	{
+//		return new AAssignmentDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
@@ -1192,6 +1205,44 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
 	{
 		return new SSimpleBlockStmAssistantTC(this);
+	}
+	
+	/*New visitor utilities*/
+
+	@Override
+	public IAnswer<List<PDefinition>> getDefinitionCollector()
+	{
+		return new DefinitionCollector(this);
+	}
+
+	@Override
+	public IAnswer<PType> getDefinitionTypeFinder()
+	{
+		return new DefinitionTypeFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker()
+	{
+		return new DefinitionEqualityChecker(this);
+	}
+
+	@Override
+	public AnswerAdaptor<Boolean> getMapBasisChecker()
+	{
+		return new TypeUtils.MapBasisChecker(this);
+	}
+
+	@Override
+	public IAnswer<LexNameList> getVariableNameCollector()
+	{
+		return new VariableNameCollector(this);
+	}
+
+	@Override
+	public IAnswer<PDefinition> getSelfDefinitionFinder()
+	{
+		return new SelfDefinitionFinder(this);
 	}
 
 

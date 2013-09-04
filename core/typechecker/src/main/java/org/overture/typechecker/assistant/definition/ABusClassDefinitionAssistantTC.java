@@ -10,7 +10,8 @@ import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ABusClassDefinitionAssistantTC {
+public class ABusClassDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -18,17 +19,17 @@ public class ABusClassDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
-	private static String defs =
-			"operations " +
-			"public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS " +
-			"	BUS(policy, speed, cpus) == is not yet specified;";
-	
-	public static List<PDefinition> operationDefs()
-			throws ParserException, LexException
-		{
-			LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);
-			DefinitionReader dr = new DefinitionReader(ltr);
-			dr.setCurrentModule("BUS");
-			return dr.readDefinitions();
-		}
+
+	private static String defs = "operations "
+			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
+			+ "	BUS(policy, speed, cpus) == is not yet specified;";
+
+	public static List<PDefinition> operationDefs() throws ParserException,
+			LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);
+		DefinitionReader dr = new DefinitionReader(ltr);
+		dr.setCurrentModule("BUS");
+		return dr.readDefinitions();
+	}
 }

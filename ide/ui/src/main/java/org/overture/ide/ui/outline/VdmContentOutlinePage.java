@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.viewers.DecoratingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -29,10 +31,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -120,15 +126,15 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 		this.vdmEditor = vdmEditor;
 	}
 
-	IContentProvider contentProvider = new VdmOutlineTreeContentProvider();
-	ILabelProvider labelProvider = new DecorationgVdmLabelProvider(new VdmUILabelProvider());
-
-	public void configure(IContentProvider contentProvider,
-			ILabelProvider labelProvider)
-	{
-		this.contentProvider = contentProvider;
-		this.labelProvider = labelProvider;
-	}
+//	IContentProvider contentProvider = new VdmOutlineTreeContentProvider();
+//	ILabelProvider labelProvider = new DecorationgVdmLabelProvider(new VdmUILabelProvider());
+//
+//	public void configure(IContentProvider contentProvider,
+//			ILabelProvider labelProvider)
+//	{
+//		this.contentProvider = contentProvider;
+//		this.labelProvider = labelProvider;
+//	}
 
 	@Override
 	public void createControl(Composite parent)
@@ -136,8 +142,8 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 
 		fOutlineViewer = new VdmOutlineViewer(parent);
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
-		fOutlineViewer.setContentProvider(contentProvider);
-		fOutlineViewer.setLabelProvider(labelProvider);
+		fOutlineViewer.setContentProvider(new WorkbenchContentProvider());
+		fOutlineViewer.setLabelProvider(new NavigatorDecoratingLabelProvider(new WorkbenchLabelProvider()));
 		// fOutlineViewer.addSelectionChangedListener(this);
 
 		Object[] listeners = fSelectionChangedListeners.getListeners();

@@ -25,31 +25,32 @@ public class ASystemClassDefinitionAssistantTC
 	{
 		this.af = af;
 	}
-	public static void implicitDefinitions( ASystemClassDefinition def,
+
+	public static void implicitDefinitions(ASystemClassDefinition def,
 			Environment publicClasses)
 	{
 		SClassDefinitionAssistantTC.implicitDefinitionsBase(def, publicClasses);
-		
+
 		for (PDefinition d : def.getDefinitions())
 		{
 			if (d instanceof AInstanceVariableDefinition)
 			{
-				AInstanceVariableDefinition iv = (AInstanceVariableDefinition)d;
+				AInstanceVariableDefinition iv = (AInstanceVariableDefinition) d;
 
 				PType ivType = af.createPDefinitionAssistant().getType(iv);
-				if (ivType instanceof AUnresolvedType &&
-					iv.getExpression() instanceof AUndefinedExp)
+				if (ivType instanceof AUnresolvedType
+						&& iv.getExpression() instanceof AUndefinedExp)
 				{
 					AUnresolvedType ut = (AUnresolvedType) ivType;
 
 					if (ut.getName().getFullName().equals("BUS"))
 					{
-						TypeCheckerErrors.warning(5014, "Uninitialized BUS ignored",d.getLocation(),d);
+						TypeCheckerErrors.warning(5014, "Uninitialized BUS ignored", d.getLocation(), d);
 					}
-				}else if (ivType instanceof AUnresolvedType &&
-						iv.getExpression() instanceof ANewExp)
+				} else if (ivType instanceof AUnresolvedType
+						&& iv.getExpression() instanceof ANewExp)
 				{
-					AUnresolvedType ut = (AUnresolvedType)ivType;
+					AUnresolvedType ut = (AUnresolvedType) ivType;
 
 					if (ut.getName().getFullName().equals("CPU"))
 					{
@@ -60,7 +61,7 @@ public class ASystemClassDefinitionAssistantTC
 						{
 							AIntLiteralExp frequencyExp = (AIntLiteralExp) newExp.getArgs().get(1);
 							speed = frequencyExp.getValue().getValue();
-						}else if (exp instanceof ARealLiteralExp)
+						} else if (exp instanceof ARealLiteralExp)
 						{
 							ARealLiteralExp frequencyExp = (ARealLiteralExp) newExp.getArgs().get(1);
 							speed = frequencyExp.getValue().getValue();
@@ -68,44 +69,43 @@ public class ASystemClassDefinitionAssistantTC
 
 						if (speed == 0)
 						{
-							TypeCheckerErrors.report(3305, "CPU frequency to slow: " + speed + " Hz",d.getLocation(),d);
-						}else if (speed > ACpuClassDefinitionAssistantTC.CPU_MAX_FREQUENCY)
+							TypeCheckerErrors.report(3305, "CPU frequency to slow: "
+									+ speed + " Hz", d.getLocation(), d);
+						} else if (speed > ACpuClassDefinitionAssistantTC.CPU_MAX_FREQUENCY)
 						{
-							TypeCheckerErrors.report(3306, "CPU frequency to fast: " + speed + " Hz",d.getLocation(),d);
+							TypeCheckerErrors.report(3306, "CPU frequency to fast: "
+									+ speed + " Hz", d.getLocation(), d);
 						}
 					}
 				}
-			}
-			else if (d instanceof AExplicitOperationDefinition)
+			} else if (d instanceof AExplicitOperationDefinition)
 			{
-				AExplicitOperationDefinition edef = (AExplicitOperationDefinition)d;
+				AExplicitOperationDefinition edef = (AExplicitOperationDefinition) d;
 
-				if (!edef.getName().getName().equals(def.getName().getName()) ||
-					!edef.getParameterPatterns().isEmpty())
+				if (!edef.getName().getName().equals(def.getName().getName())
+						|| !edef.getParameterPatterns().isEmpty())
 				{
-					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
+					TypeCheckerErrors.report(3285, "System class can only define a default constructor", d.getLocation(), d);
 				}
-			}
-			else if (d instanceof AImplicitOperationDefinition)
+			} else if (d instanceof AImplicitOperationDefinition)
 			{
-				AImplicitOperationDefinition idef = (AImplicitOperationDefinition)d;
+				AImplicitOperationDefinition idef = (AImplicitOperationDefinition) d;
 
 				if (!d.getName().getName().equals(def.getName().getName()))
 				{
-					TypeCheckerErrors.report(3285, "System class can only define a default constructor",d.getLocation(),d);
+					TypeCheckerErrors.report(3285, "System class can only define a default constructor", d.getLocation(), d);
 				}
 
 				if (idef.getBody() == null)
 				{
-					TypeCheckerErrors.report(3283, "System class constructor cannot be implicit",d.getLocation(),d);
+					TypeCheckerErrors.report(3283, "System class constructor cannot be implicit", d.getLocation(), d);
 				}
-			}
-			else
+			} else
 			{
-				TypeCheckerErrors.report(3284, "System class can only define instance variables and a constructor",d.getLocation(),d);
+				TypeCheckerErrors.report(3284, "System class can only define instance variables and a constructor", d.getLocation(), d);
 			}
 		}
-		
+
 	}
 
 }

@@ -30,29 +30,35 @@ import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class AImplicitOperationDefinitionAssistantTC {
+public class AImplicitOperationDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
-	public AImplicitOperationDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	public AImplicitOperationDefinitionAssistantTC(
+			ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	public static PDefinition findName( AImplicitOperationDefinition d,
-			ILexNameToken sought, NameScope scope) {
+
+	public static PDefinition findName(AImplicitOperationDefinition d,
+			ILexNameToken sought, NameScope scope)
+	{
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
-		if (predef != null && PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		if (predef != null
+				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
-		if (postdef != null && PDefinitionAssistantTC.findName(postdef,sought, scope) != null)
+		if (postdef != null
+				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -60,32 +66,16 @@ public class AImplicitOperationDefinitionAssistantTC {
 		return null;
 	}
 
-	public static List<PDefinition> getDefinitions(
-			AImplicitOperationDefinition d) {
-		List<PDefinition> defs = new Vector<PDefinition>();
-		defs.add(d);
-
-		if (d.getPredef() != null)
-		{
-			defs.add(d.getPredef());
-		}
-
-		if (d.getPostdef() != null)
-		{
-			defs.add(d.getPostdef());
-		}
-
-		return defs;
-	}
-
-	public static LexNameList getVariableNames(AImplicitOperationDefinition d) {
+	public static LexNameList getVariableNames(AImplicitOperationDefinition d)
+	{
 		return new LexNameList(d.getName());
 	}
 
 	public static void typeResolve(AImplicitOperationDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		
+			TypeCheckInfo question) throws AnalysisException
+	{
+
 		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
 
 		if (d.getResult() != null)
@@ -113,40 +103,42 @@ public class AImplicitOperationDefinitionAssistantTC {
 			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 		}
 
-		for (APatternListTypePair ptp: d.getParameterPatterns())
+		for (APatternListTypePair ptp : d.getParameterPatterns())
 		{
 			APatternListTypePairAssistantTC.typeResolve(ptp, rootVisitor, question);
 		}
-		
+
 	}
 
 	public static void implicitDefinitions(AImplicitOperationDefinition d,
-			Environment base) {
-		
+			Environment base)
+	{
+
 		d.setState(base.findStateDefinition());
 
 		if (d.getPrecondition() != null)
 		{
-			d.setPredef(getPreDefinition(d,base));
+			d.setPredef(getPreDefinition(d, base));
 			PDefinitionAssistantTC.markUsed(d.getPredef());
 		}
 
 		if (d.getPostcondition() != null)
 		{
-			d.setPostdef(getPostDefinition(d,base));
+			d.setPostdef(getPostDefinition(d, base));
 			PDefinitionAssistantTC.markUsed(d.getPostdef());
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	private static AExplicitFunctionDefinition getPostDefinition(
-			AImplicitOperationDefinition d, Environment base) {
-		
+			AImplicitOperationDefinition d, Environment base)
+	{
+
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns())
+		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{
 			plist.addAll((Collection<PPattern>) pl.getPatterns().clone());
 		}
@@ -157,29 +149,22 @@ public class AImplicitOperationDefinitionAssistantTC {
 		}
 
 		AStateDefinition state = d.getState();
-		
+
 		if (state != null)
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().getOldName()));
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
-		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+		} else if (base.isVDMPP()
+				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName().getOldName()));
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);
-		PExp postop = 
-				AstFactory.newAPostOpExp(d.getName().clone(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), d.getState());
-		
-		AExplicitFunctionDefinition def = 
-				AstFactory.newAExplicitFunctionDefinition(
-						d.getName().getPostName(d.getPostcondition().getLocation()), 
-						NameScope.GLOBAL, 
-						null, 
-						AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-						parameters, postop,  null, null, false, null);
+		PExp postop = AstFactory.newAPostOpExp(d.getName().clone(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), d.getState());
+
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, postop, null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
@@ -192,44 +177,41 @@ public class AImplicitOperationDefinitionAssistantTC {
 
 	@SuppressWarnings("unchecked")
 	private static AExplicitFunctionDefinition getPreDefinition(
-			AImplicitOperationDefinition d, Environment base) {
-		
+			AImplicitOperationDefinition d, Environment base)
+	{
+
 		List<List<PPattern>> parameters = new Vector<List<PPattern>>();
 		List<PPattern> plist = new Vector<PPattern>();
 
-		for (APatternListTypePair pl: (LinkedList<APatternListTypePair>) d.getParameterPatterns())
+		for (APatternListTypePair pl : (LinkedList<APatternListTypePair>) d.getParameterPatterns())
 		{
 			plist.addAll((Collection<PPattern>) pl.getPatterns().clone());
 		}
 
 		AStateDefinition state = d.getState();
-		
+
 		if (state != null)
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
-		}
-		else if (base.isVDMPP() && !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+		} else if (base.isVDMPP()
+				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
 
 		parameters.add(plist);
-		PExp preop = 
-				AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(), d.getErrors(), d.getState());
-		
-		AExplicitFunctionDefinition def = 
-				AstFactory.newAExplicitFunctionDefinition(
-						d.getName().getPreName(d.getPrecondition().getLocation()), 
-						NameScope.GLOBAL, 
-						null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-						parameters, preop, null, null, false, null);
-//				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
-//				d.getName().getPreName(d.getPrecondition().getLocation()), 
-//				NameScope.GLOBAL, false, null, PAccessSpecifierAssistantTC.getDefault(), null, 
-//				parameters, 
-//				AOperationTypeAssistantTC.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-//				preop, null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1, null);
-		
+		PExp preop = AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(), d.getErrors(), d.getState());
+
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, preop, null, null, false, null);
+		// new AExplicitFunctionDefinition(d.getPrecondition().getLocation(),
+		// d.getName().getPreName(d.getPrecondition().getLocation()),
+		// NameScope.GLOBAL, false, null, PAccessSpecifierAssistantTC.getDefault(), null,
+		// parameters,
+		// AOperationTypeAssistantTC.getPreType(d.getType(), state, d.getClassDefinition(),
+		// PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
+		// preop, null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1,
+		// null);
+
 		// Operation precondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
@@ -239,23 +221,26 @@ public class AImplicitOperationDefinitionAssistantTC {
 		return def;
 	}
 
-	public static List<PPattern> getParamPatternList(AImplicitOperationDefinition definition)
+	public static List<PPattern> getParamPatternList(
+			AImplicitOperationDefinition definition)
 	{
 		List<PPattern> plist = new ArrayList<PPattern>();
 
-		for (APatternListTypePair pl: definition.getParameterPatterns() )
+		for (APatternListTypePair pl : definition.getParameterPatterns())
 		{
 			plist.addAll(pl.getPatterns());
 		}
 
 		return plist;
 	}
-	
-	public static List<List<PPattern>> getListParamPatternList(AImplicitOperationDefinition func) {
+
+	public static List<List<PPattern>> getListParamPatternList(
+			AImplicitOperationDefinition func)
+	{
 		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();
 		List<PPattern> plist = new ArrayList<PPattern>();
 
-		for (APatternListTypePair pl: func.getParameterPatterns())
+		for (APatternListTypePair pl : func.getParameterPatterns())
 		{
 			plist.addAll(pl.getPatterns());
 		}
