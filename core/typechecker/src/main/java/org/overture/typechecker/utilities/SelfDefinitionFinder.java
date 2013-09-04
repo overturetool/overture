@@ -25,14 +25,14 @@ public class SelfDefinitionFinder extends AnswerAdaptor<PDefinition>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PDefinition defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
 		return SClassDefinitionAssistantTC.getSelfDefinition((SClassDefinition) node);
 	}
-	
+
 	@Override
 	public PDefinition defaultPDefinition(PDefinition node)
 			throws AnalysisException

@@ -70,22 +70,20 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		this.af = af;
 	}
-	
-	
+
 	@Override
 	public LexNameList caseAAssignmentDefinition(AAssignmentDefinition node)
 			throws AnalysisException
 	{
 		return new LexNameList(node.getName());
 	}
-	
+
 	@Override
 	public LexNameList defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
 		return SClassDefinitionAssistantTC.getVariableNames((SClassDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAClassInvariantDefinition(
@@ -122,7 +120,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		return AExternalDefinitionAssistantTC.getVariableNames((AExternalDefinition) node);
 	}
 
-	
 	@Override
 	public LexNameList caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node) throws AnalysisException
@@ -130,7 +127,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		return AImplicitFunctionDefinitionAssistantTC.getVariableNames((AImplicitFunctionDefinition) node);
 	}
 
-	
 	@Override
 	public LexNameList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
@@ -144,7 +140,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return AImportedDefinitionAssistantTC.getVariableNames((AImportedDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAInheritedDefinition(AInheritedDefinition node)
@@ -152,14 +147,13 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
 	}
-	
+
 	@Override
 	public LexNameList caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node) throws AnalysisException
 	{
 		return AInstanceVariableDefinitionAssistantTC.getVariableNames((AInstanceVariableDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseALocalDefinition(ALocalDefinition node)
@@ -167,7 +161,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return ALocalDefinitionAssistantTC.getVariableNames((ALocalDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAMultiBindListDefinition(
@@ -175,7 +168,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return AMultiBindListDefinitionAssistantTC.getVariableNames((AMultiBindListDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAMutexSyncDefinition(AMutexSyncDefinition node)
@@ -183,7 +175,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return AMutexSyncDefinitionAssistantTC.getVariableNames((AMutexSyncDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseANamedTraceDefinition(ANamedTraceDefinition node)
@@ -191,7 +182,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return ANamedTraceDefinitionAssistantTC.getVariableNames((ANamedTraceDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAPerSyncDefinition(APerSyncDefinition node)
@@ -199,8 +189,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return APerSyncDefinitionAssistantTC.getVariableNames((APerSyncDefinition) node);
 	}
-	
-	
+
 	@Override
 	public LexNameList caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
@@ -228,7 +217,6 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return ATypeDefinitionAssistantTC.getVariableNames((ATypeDefinition) node);
 	}
-	
 
 	@Override
 	public LexNameList caseAUntypedDefinition(AUntypedDefinition node)
@@ -236,15 +224,14 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return AUntypedDefinitionAssistantTC.getVariableNames((AUntypedDefinition) node);
 	}
-	
+
 	@Override
 	public LexNameList caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
 		return AValueDefinitionAssistantTC.getVariableNames((AValueDefinition) node);
 	}
-	
-	
+
 	@Override
 	public LexNameList defaultINode(INode node) throws AnalysisException
 	{
@@ -253,8 +240,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	}
 
 	@Override
-	public LexNameList defaultIToken(IToken node)
-			throws AnalysisException
+	public LexNameList defaultIToken(IToken node) throws AnalysisException
 	{
 		assert false : "default case should never happen in getVariableNames";
 		return null;

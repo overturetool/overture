@@ -8,7 +8,8 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ABlockSimpleBlockStmAssistantTC {
+public class ABlockSimpleBlockStmAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -16,16 +17,16 @@ public class ABlockSimpleBlockStmAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static void addOne(Set<PType> rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)
 		{
 			rtypes.add(AstFactory.newAVoidType(add.getLocation()));
-		}
-		else if (!(add instanceof AVoidType))
+		} else if (!(add instanceof AVoidType))
 		{
 			rtypes.add(add);
 		}
 	}
-	
+
 }

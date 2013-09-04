@@ -9,6 +9,7 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -123,30 +124,13 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.AAlwaysStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AAssignmentStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACaseAlternativeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACasesStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AElseIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AExitStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.statement.AForAllStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForIndexStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForPatternBindStmAssitantTC;
-import org.overture.typechecker.assistant.statement.AIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ALetBeStStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AReturnStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATixeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATrapStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AWhileStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SLetDefStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
@@ -178,6 +162,7 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.VariableNameCollector;
@@ -188,12 +173,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	static
 	{
 		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		//init(new AstAssistantFactory());
+		// init(new AstAssistantFactory());
 		init(new TypeCheckerAssistantFactory());
 	}
 
-	
-	//Type
+	// Type
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -362,14 +346,14 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SSeqTypeAssistantTC(this);
 	}
-	
-	//definition
 
-//	@Override
-//	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
-//	{
-//		return new AAssignmentDefinitionAssistantTC(this);
-//	}
+	// definition
+
+	// @Override
+	// public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
+	// {
+	// return new AAssignmentDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
@@ -550,7 +534,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SClassDefinitionAssistantTC(this);
 	}
-	
+
 	// expression
 
 	@Override
@@ -816,8 +800,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SUnaryExpAssistantTC(this);
 	}
-	
-	//module
+
+	// module
 
 	@Override
 	public AAllImportAssistantTC createAAllImportAssistant()
@@ -878,8 +862,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SValueImportAssistantTC(this);
 	}
-	
-	//pattern
+
+	// pattern
 
 	@Override
 	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
@@ -1060,20 +1044,20 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new PPatternListAssistantTC(this);
 	}
-	
-	//statement
 
-	@Override
-	public AAlwaysStmAssistantTC createAAlwaysStmAssistant()
-	{
-		return new AAlwaysStmAssistantTC(this);
-	}
+	// statement
 
-	@Override
-	public AAssignmentStmAssistantTC createAAssignmentStmAssistant()
-	{
-		return new AAssignmentStmAssistantTC(this);
-	}
+	// @Override
+	// public AAlwaysStmAssistantTC createAAlwaysStmAssistant()
+	// {
+	// return new AAlwaysStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AAssignmentStmAssistantTC createAAssignmentStmAssistant()
+	// {
+	// return new AAssignmentStmAssistantTC(this);
+	// }
 
 	@Override
 	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant()
@@ -1093,29 +1077,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ACallStmAssistantTC(this);
 	}
 
-	@Override
-	public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
-	{
-		return new ACaseAlternativeStmAssistantTC(this);
-	}
-
-	@Override
-	public ACasesStmAssistantTC createACasesStmAssistant()
-	{
-		return new ACasesStmAssistantTC(this);
-	}
-
-	@Override
-	public AElseIfStmAssistantTC createAElseIfStmAssistant()
-	{
-		return new AElseIfStmAssistantTC(this);
-	}
-
-	@Override
-	public AExitStmAssistantTC createAExitStmAssistant()
-	{
-		return new AExitStmAssistantTC(this);
-	}
+	// @Override
+	// public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
+	// {
+	// return new ACaseAlternativeStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ACasesStmAssistantTC createACasesStmAssistant()
+	// {
+	// return new ACasesStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AElseIfStmAssistantTC createAElseIfStmAssistant()
+	// {
+	// return new AElseIfStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AExitStmAssistantTC createAExitStmAssistant()
+	// {
+	// return new AExitStmAssistantTC(this);
+	// }
 
 	@Override
 	public AExternalClauseAssistantTC createAExternalClauseAssistant()
@@ -1123,35 +1107,35 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AExternalClauseAssistantTC(this);
 	}
 
-	@Override
-	public AForAllStmAssistantTC createAForAllStmAssistant()
-	{
-		return new AForAllStmAssistantTC(this);
-	}
+	// @Override
+	// public AForAllStmAssistantTC createAForAllStmAssistant()
+	// {
+	// return new AForAllStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AForIndexStmAssistantTC createAForIndexStmAssistant()
+	// {
+	// return new AForIndexStmAssistantTC(this);
+	// }
 
-	@Override
-	public AForIndexStmAssistantTC createAForIndexStmAssistant()
-	{
-		return new AForIndexStmAssistantTC(this);
-	}
-
-	@Override
-	public AForPatternBindStmAssitantTC createAForPatternBindStmAssitant()
-	{
-		return new AForPatternBindStmAssitantTC(this);
-	}
-
-	@Override
-	public AIfStmAssistantTC createAIfStmAssistant()
-	{
-		return new AIfStmAssistantTC(this);
-	}
-
-	@Override
-	public ALetBeStStmAssistantTC createALetBeStStmAssistant()
-	{
-		return new ALetBeStStmAssistantTC(this);
-	}
+	// @Override
+	// public AForPatternBindStmAssitantTC createAForPatternBindStmAssitant()
+	// {
+	// return new AForPatternBindStmAssitantTC(this);
+	// }
+	//
+	// @Override
+	// public AIfStmAssistantTC createAIfStmAssistant()
+	// {
+	// return new AIfStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ALetBeStStmAssistantTC createALetBeStStmAssistant()
+	// {
+	// return new ALetBeStStmAssistantTC(this);
+	// }
 
 	@Override
 	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
@@ -1159,29 +1143,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
 	}
 
-	@Override
-	public AReturnStmAssistantTC createAReturnStmAssistant()
-	{
-		return new AReturnStmAssistantTC(this);
-	}
+	// @Override
+	// public AReturnStmAssistantTC createAReturnStmAssistant()
+	// {
+	// return new AReturnStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ATixeStmAssistantTC createATixeStmAssistant()
+	// {
+	// return new ATixeStmAssistantTC(this);
+	// }
 
-	@Override
-	public ATixeStmAssistantTC createATixeStmAssistant()
-	{
-		return new ATixeStmAssistantTC(this);
-	}
-
-	@Override
-	public ATrapStmAssistantTC createATrapStmAssistant()
-	{
-		return new ATrapStmAssistantTC(this);
-	}
-
-	@Override
-	public AWhileStmAssistantTC createAWhileStmAssistant()
-	{
-		return new AWhileStmAssistantTC(this);
-	}
+	// @Override
+	// public ATrapStmAssistantTC createATrapStmAssistant()
+	// {
+	// return new ATrapStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AWhileStmAssistantTC createAWhileStmAssistant()
+	// {
+	// return new AWhileStmAssistantTC(this);
+	// }
 
 	@Override
 	public PStateDesignatorAssistantTC createPStateDesignatorAssistant()
@@ -1195,19 +1179,19 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PStmAssistantTC(this);
 	}
 
-	@Override
-	public SLetDefStmAssistantTC createSLetDefStmAssistant()
-	{
-		return new SLetDefStmAssistantTC(this);
-	}
+	// @Override
+	// public SLetDefStmAssistantTC createSLetDefStmAssistant()
+	// {
+	// return new SLetDefStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
+	// {
+	// return new SSimpleBlockStmAssistantTC(this);
+	// }
 
-	@Override
-	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
-	{
-		return new SSimpleBlockStmAssistantTC(this);
-	}
-	
-	/*New visitor utilities*/
+	/* New visitor utilities */
 
 	@Override
 	public IAnswer<List<PDefinition>> getDefinitionCollector()
@@ -1245,7 +1229,10 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new SelfDefinitionFinder(this);
 	}
 
+	@Override
+	public IAnswer<PTypeSet> getExitTypeCollector()
+	{
+		return new ExitTypeCollector(this);
+	}
 
-	
-	
 }

@@ -5,16 +5,15 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.AWhileStmAssistantTC;
 
-public class AWhileStmAssistantInterpreter extends AWhileStmAssistantTC
+public class AWhileStmAssistantInterpreter // extends AWhileStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AWhileStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 
