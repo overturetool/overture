@@ -74,12 +74,6 @@ public class ARenamedDefinitionAssistantTC
 
 	}
 
-	public static List<PDefinition> getDefinitions(ARenamedDefinition d)
-	{
-		List<PDefinition> result = new Vector<PDefinition>();
-		result.add(d);
-		return result;
-	}
 
 	public static LexNameList getVariableNames(ARenamedDefinition d)
 	{

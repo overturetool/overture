@@ -310,78 +310,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static LexNameList getVariableNames(PDefinition d)
 	{
-		if (d instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantTC.getVariableNames((AAssignmentDefinition) d);
-		} else if (d instanceof SClassDefinition)
+			return d.apply(af.getVariableNameCollector());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return SClassDefinitionAssistantTC.getVariableNames((SClassDefinition) d);
-		} else if (d instanceof AClassInvariantDefinition)
-		{
-			return AClassInvariantDefinitionAssistantTC.getVariableNames((AClassInvariantDefinition) d);
-		} else if (d instanceof AEqualsDefinition)
-		{
-			return AEqualsDefinitionAssistantTC.getVariableNames((AEqualsDefinition) d);
-		} else if (d instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantTC.getVariableNames((AExplicitFunctionDefinition) d);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantTC.getVariableNames((AExplicitOperationDefinition) d);
-		} else if (d instanceof AExternalDefinition)
-		{
-			return AExternalDefinitionAssistantTC.getVariableNames((AExternalDefinition) d);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantTC.getVariableNames((AImplicitFunctionDefinition) d);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantTC.getVariableNames((AImplicitOperationDefinition) d);
-		} else if (d instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantTC.getVariableNames((AImportedDefinition) d);
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) d);
-		} else if (d instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantTC.getVariableNames((AInstanceVariableDefinition) d);
-		} else if (d instanceof ALocalDefinition)
-		{
-			return ALocalDefinitionAssistantTC.getVariableNames((ALocalDefinition) d);
-		} else if (d instanceof AMultiBindListDefinition)
-		{
-			return AMultiBindListDefinitionAssistantTC.getVariableNames((AMultiBindListDefinition) d);
-		} else if (d instanceof AMutexSyncDefinition)
-		{
-			return AMutexSyncDefinitionAssistantTC.getVariableNames((AMutexSyncDefinition) d);
-		} else if (d instanceof ANamedTraceDefinition)
-		{
-			return ANamedTraceDefinitionAssistantTC.getVariableNames((ANamedTraceDefinition) d);
-		} else if (d instanceof APerSyncDefinition)
-		{
-			return APerSyncDefinitionAssistantTC.getVariableNames((APerSyncDefinition) d);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantTC.getVariableNames((ARenamedDefinition) d);
-		} else if (d instanceof AStateDefinition)
-		{
-			return AStateDefinitionAssistantTC.getVariableNames((AStateDefinition) d);
-		} else if (d instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantTC.getVariableNames((AThreadDefinition) d);
-		} else if (d instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantTC.getVariableNames((ATypeDefinition) d);
-		} else if (d instanceof AUntypedDefinition)
-		{
-			return AUntypedDefinitionAssistantTC.getVariableNames((AUntypedDefinition) d);
-		} else if (d instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantTC.getVariableNames((AValueDefinition) d);
-		} else
-		{
-			assert false : "default case should never happen in getVariableNames";
 			return null;
 		}
 

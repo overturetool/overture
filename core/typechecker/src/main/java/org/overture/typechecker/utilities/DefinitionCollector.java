@@ -32,7 +32,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
@@ -257,7 +256,9 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return ARenamedDefinitionAssistantTC.getDefinitions((ARenamedDefinition) node);
+		List<PDefinition> result = new Vector<PDefinition>();
+		result.add(node);
+		return result;
 	}
 
 	@Override

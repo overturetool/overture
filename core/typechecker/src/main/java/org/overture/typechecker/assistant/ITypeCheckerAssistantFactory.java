@@ -2,11 +2,14 @@ package org.overture.typechecker.assistant;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.*;
 import org.overture.typechecker.assistant.expression.*;
@@ -202,5 +205,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// visitors
 	IAnswer<List<PDefinition>> getDefinitionCollector();
 	IAnswer<PType> getDefinitionTypeFinder();
-	IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker(); 
+	IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker();
+	AnswerAdaptor<Boolean> getMapBasisChecker();
+	IAnswer<LexNameList> getVariableNameCollector(); 
 }

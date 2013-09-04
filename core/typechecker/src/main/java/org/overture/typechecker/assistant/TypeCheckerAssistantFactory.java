@@ -2,10 +2,12 @@ package org.overture.typechecker.assistant;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
@@ -177,6 +179,8 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.TypeUtils;
+import org.overture.typechecker.utilities.VariableNameCollector;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1221,6 +1225,18 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker()
 	{
 		return new DefinitionEqualityChecker(this);
+	}
+
+	@Override
+	public AnswerAdaptor<Boolean> getMapBasisChecker()
+	{
+		return new TypeUtils.MapBasisChecker(this);
+	}
+
+	@Override
+	public IAnswer<LexNameList> getVariableNameCollector()
+	{
+		return new VariableNameCollector(this);
 	}
 
 
