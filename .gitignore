@@ -17,6 +17,7 @@
 *.blg
 *.ilg
 *.ind
+*.fdb_latexmk
 
 # Packages #
 ############
@@ -76,3 +77,8 @@ bin
 ide/help/html/OvertureIDEUserGuide.pdf
 ide/help/html/QuickOverviewofVDMOperators.pdf
 ide/help/html/VDM10_lang_man.pdf
+
+
+# Vim Swap Files #
+##################
+*.swp
