@@ -9,6 +9,7 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
@@ -145,6 +146,28 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	private static LexNameToken varName(String name)
 	{
 		return new LexNameToken("CPU", name, new LexLocation());
+	}
+	
+	public static Value sleep(ANotYetSpecifiedStm node, Context ctxt) {
+		
+		ObjectContext octxt = (ObjectContext) ctxt;
+		CPUValue cpu = (CPUValue) octxt.self;
+		
+		CPUResource cpuResc = cpu.resource;
+		cpuResc.setSleeping(true);
+		
+		return new VoidValue();
+	}
+
+	public static Value active(ANotYetSpecifiedStm node, Context ctxt) {
+
+		ObjectContext octxt = (ObjectContext) ctxt;
+		CPUValue cpu = (CPUValue) octxt.self;
+		
+		CPUResource cpuResc = cpu.resource;
+		cpuResc.setSleeping(false);
+		
+		return new VoidValue();
 	}
 
 }

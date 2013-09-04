@@ -43,7 +43,19 @@ public class CPUResource extends Resource
 	private final double clock;
 
 	private ISchedulableThread swappedIn = null;
-
+	
+	private boolean sleeping;
+	
+	public void setSleeping(boolean sleeping)
+	{
+		this.sleeping = sleeping;
+	}
+	
+	public boolean isSleeping()
+	{
+		return sleeping;
+	}
+	
 	public CPUResource(SchedulingPolicy policy, double clock)
 	{
 		super(policy);
@@ -51,6 +63,7 @@ public class CPUResource extends Resource
 		this.clock = clock;
 
 		swappedIn = null;
+		sleeping = false;
 
 		if (cpuNumber == 0)
 		{
@@ -79,6 +92,9 @@ public class CPUResource extends Resource
 	@Override
 	public boolean reschedule()
 	{
+		if(sleeping)
+			return false;
+		
 		if (swappedIn != null &&
 			swappedIn.getRunState() == RunState.TIMESTEP)
 		{

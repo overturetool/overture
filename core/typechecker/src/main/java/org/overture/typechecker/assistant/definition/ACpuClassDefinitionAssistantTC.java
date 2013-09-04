@@ -22,23 +22,27 @@ public class ACpuClassDefinitionAssistantTC
 		this.af = af;
 	}
 
-	private static String defs = "operations "
-			+ "public CPU:(<FP>|<FCFS>) * real ==> CPU "
-			+ "	CPU(policy, speed) == is not yet specified; "
-			+ "public deploy: ? ==> () "
-			+ "	deploy(obj) == is not yet specified; "
-			+ "public deploy: ? * seq of char ==> () "
-			+ "	deploy(obj, name) == is not yet specified; "
-			+ "public setPriority: ? * nat ==> () "
-			+ "	setPriority(opname, priority) == is not yet specified;";
-
-	public static List<PDefinition> operationDefs() throws ParserException,
-			LexException
-	{
+	private static String defs =
+			"operations " +
+			"public CPU:(<FP>|<FCFS>) * real ==> CPU " +
+			"	CPU(policy, speed) == is not yet specified; " +
+			"public deploy: ? ==> () " +
+			"	deploy(obj) == is not yet specified; " +
+			"public deploy: ? * seq of char ==> () " +
+			"	deploy(obj, name) == is not yet specified; " +
+			"public setPriority: ? * nat ==> () " +
+			"	setPriority(opname, priority) == is not yet specified;" +
+			"public sleep : () ==> ()" +
+			"	sleep() == is not yet specified;" +
+			"public active : () ==> ()" +
+			"	active() == is not yet specified";
+	
+	
+	public static List<PDefinition> operationDefs() throws ParserException, LexException {
 		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);
 		DefinitionReader dr = new DefinitionReader(ltr);
 		dr.setCurrentModule("CPU");
 		return dr.readDefinitions();
 	}
-
+	
 }

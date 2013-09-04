@@ -88,6 +88,15 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		{
     			return ACpuClassDefinitionAssistantInterpreter.setPriority(node,ctxt);
     		}
+    		else if (ctxt.title.equals("sleep()"))
+    		{
+    			return ACpuClassDefinitionAssistantInterpreter.sleep(node,ctxt);
+    		}
+    		else if (ctxt.title.equals("active()"))
+    		{
+    			return ACpuClassDefinitionAssistantInterpreter.active(node,ctxt);
+    		}
+    		
 		}
 
 		return VdmRuntimeError.abort(node.getLocation(),4041, "'is not yet specified' statement reached", ctxt);

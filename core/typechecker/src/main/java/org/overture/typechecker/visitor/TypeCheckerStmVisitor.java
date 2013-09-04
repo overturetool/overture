@@ -379,6 +379,14 @@ public class TypeCheckerStmVisitor extends
 
 			node.setType(AstFactory.newAVoidType(node.getLocation()));
 			return node.getType();
+			
+		} else if(Settings.dialect == Dialect.VDM_RT
+				&& node.getField().getModule().equals("CPU")
+				&& (node.getField().getName().equals("sleep")) || node.getField().getName().equals("active")) {
+			
+			node.setType(AstFactory.newAVoidType(node.getLocation()));
+			return node.getType();
+			
 		} else if (fdef == null) {
 			TypeCheckerErrors.report(3209, "Member " + node.getField()
 					+ " is not in scope", node.getLocation(), node);
