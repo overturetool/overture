@@ -6,5 +6,7 @@ public interface ILexBooleanToken extends ILexToken
 	String toString();
 
 	boolean getValue();
+	
+	ILexBooleanToken clone();
 
 }

@@ -7,4 +7,7 @@ public interface ILexRealToken extends ILexToken
 	
 	public String toString();
 	
+	
+	public ILexRealToken clone();
+	
 }

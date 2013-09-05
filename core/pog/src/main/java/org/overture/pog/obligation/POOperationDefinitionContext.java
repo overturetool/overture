@@ -100,8 +100,8 @@ public class POOperationDefinitionContext extends POContext
 		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
 
 		ATypeMultipleBind tmBind = new ATypeMultipleBind();
-		tmBind.setPlist(paramPatternList);
-		tmBind.setType(deftype);
+		tmBind.setPlist(cloneList(paramPatternList));
+		tmBind.setType(deftype.clone());
 		r.add(tmBind);
 
 		if (stateDefinition != null)
@@ -112,12 +112,12 @@ public class POOperationDefinitionContext extends POContext
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
-				tmBind2.setType(def.getType());
+				tmBind2.setType(def.getType().clone());
 				pattern.setValue(new LexStringToken("oldstate", null));
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
-				tmBind2.setType(def.getType());
+				tmBind2.setType(def.getType().clone());
 				pattern.setValue(new LexStringToken("oldself", null));
 			}
 
@@ -190,4 +190,14 @@ public class POOperationDefinitionContext extends POContext
 			sb.append(def.getName().getName());
 		}
 	}
+	
+	private List<PPattern> cloneList(List<PPattern> list){
+		List<PPattern> r = new LinkedList<PPattern>();
+		for (PPattern p : list){
+			r.add(p);
+		}
+		return r;
+	}
+	
+
 }

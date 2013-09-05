@@ -46,14 +46,13 @@ public class MapInverseObligation extends ProofObligation
 		super(exp, POType.MAP_INVERSE, ctxt);
 		
 		AIsExp is_Exp = new AIsExp();
-		is_Exp.setTest(exp.getExp());
+		is_Exp.setTest(exp.getExp().clone());
 		
 		AInMapMapType inMap_type = new AInMapMapType();
-		inMap_type.setFrom(exp.getMapType().getFrom());
-		inMap_type.setTo(exp.getMapType().getTo());
+		inMap_type.setFrom(exp.getMapType().getFrom().clone());
+		inMap_type.setTo(exp.getMapType().getTo().clone());
 		is_Exp.setBasicType(inMap_type);
 		
-		is_Exp.toString();
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(is_Exp));

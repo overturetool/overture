@@ -32,9 +32,8 @@ import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
@@ -87,15 +86,14 @@ public class MapSeqOfCompatibleObligation extends ProofObligation
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
 		domM2.setExp(getVarExp(m2));
 		
-		AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-		implies.setLeft(getEqualsExp(getVarExp(d1), getVarExp(d2)));
-		implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-		implies.setRight(getEqualsExp(
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(
 				getApplyExp(getVarExp(m1), getVarExp(d1)),
 				getApplyExp(getVarExp(m2), getVarExp(d2))));
 		
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));
+	
+		
 		domForallExp.setBindList(domBinding);
 		domForallExp.setPredicate(implies);
 		

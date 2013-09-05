@@ -70,6 +70,10 @@ target/
 .project
 bin
 
+# Added by Jenkins for local mvn repos #
+########################################
+.repository/
+
 # Java files created by ASTgen &c #
 ###################################
 /core/parser/bin

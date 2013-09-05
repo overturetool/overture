@@ -49,7 +49,7 @@ public class POLetDefContext extends POContext
 		if (!exp.getLocalDefs().isEmpty())
 		{
 			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(exp.getLocalDefs());
+			letDefExp.setLocalDefs(exp.clone().getLocalDefs());
 			letDefExp.setExpression(stitch);
 			return letDefExp;
 

@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
 import org.overture.test.util.XmlResultReaderWritter;
@@ -85,7 +86,10 @@ public class VdmjModuleSlPoTestCase extends BasicPogTestCase implements IResultS
 		
 		xmlResult.setResult("proof_obligation", new Result<ProofObligationList>(pos,new Vector<IMessage>(),new Vector<IMessage>()));
 		try {
-			xmlResult.saveInXml();			
+			if(Properties.recordTestResults)
+			{
+				xmlResult.saveInXml();
+			}
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {

@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -40,9 +41,8 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -65,7 +65,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.FUNC_PATTERNS, ctxt);
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult())));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(
@@ -73,7 +73,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.FUNC_PATTERNS, ctxt);
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult())));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(
@@ -81,7 +81,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt);
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult())));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(
@@ -89,7 +89,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt);
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult())));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
 	private PExp generate(PDefinition predef, List<List<PPattern>> plist, List<PType> params, PType result) throws AnalysisException
@@ -135,8 +135,7 @@ public class ParameterPatternObligation extends ProofObligation
 					AEqualsBinaryExp eq1 = getEqualsExp(getVarExp(aname), getVarExp(bname));
 					AEqualsBinaryExp eq2 = getEqualsExp(pmatch, getVarExp(bname));
 					existsPredicate = makeAnd(existsPredicate, makeAnd(eq1, eq2));
-				}
-				
+				}			
 				existsExp.setBindList(existsBindList);
 				existsExp.setPredicate(existsPredicate);
 				
@@ -159,10 +158,7 @@ public class ParameterPatternObligation extends ProofObligation
 		
 		if (predef != null)
 		{
-			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-			implies.setLeft(getApplyExp(getVarExp(predef.getName()), arglist));
-			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-			implies.setRight(forallPredicate);
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getApplyExp(getVarExp(predef.getName().clone()), arglist), forallPredicate);
 			forallExp.setPredicate(implies);
 		}
 		else
@@ -172,4 +168,22 @@ public class ParameterPatternObligation extends ProofObligation
 
 		return forallExp;
 	}
+	
+	private List<List<PPattern>> cloneListPatternList(List<List<PPattern>> list){
+		List<List<PPattern>> r = new LinkedList<List<PPattern>>();
+		for (List<PPattern> list2 : list){
+			r.add(cloneList(list2));
+		}
+		return r;
+		
+	}
+	
+	private List<PPattern> cloneList(List<PPattern> list){
+		List<PPattern> r = new LinkedList<PPattern>();
+		for (PPattern p : list){
+			r.add(p);
+		}
+		return r;
+	}
+	
 }

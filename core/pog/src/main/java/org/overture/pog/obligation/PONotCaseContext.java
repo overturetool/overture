@@ -30,29 +30,26 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.utility.ContextHelper;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-public class PONotCaseContext extends POContext
-{
+public class PONotCaseContext extends POContext {
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
 
-	public PONotCaseContext(PPattern pattern, PType type, PExp exp)
-	{
+	public PONotCaseContext(PPattern pattern, PType type, PExp exp) {
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
 	}
 
-
 	@Override
-	public PExp getContextNode(PExp stitch)
-	{
+	public PExp getContextNode(PExp stitch) {
 		AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
 		impliesExp.setLeft(getCaseExp());
 		impliesExp.setRight(stitch);
@@ -60,28 +57,28 @@ public class PONotCaseContext extends POContext
 
 	}
 
-	private PExp getCaseExp()
-	{
-		if (PPatternAssistantTC.isSimple(pattern))
-		{
+	private PExp getCaseExp() {
+		if (PPatternAssistantTC.isSimple(pattern)) {
 			ANotUnaryExp notExp = new ANotUnaryExp();
-			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
-			equalsExp.setLeft(PPatternAssistantTC.getMatchingExpression(pattern));
-			equalsExp.setRight(exp);
+			AEqualsBinaryExp equalsExp = AstExpressionFactory
+					.newAEqualsBinaryExp(PPatternAssistantTC
+							.getMatchingExpression(pattern.clone()), exp
+							.clone());
 			notExp.setExp(equalsExp);
 			return notExp;
 
-		} else
-		{
+		} else {
 
 			ANotUnaryExp notExp = new ANotUnaryExp();
 			AExistsExp existsExp = new AExistsExp();
-			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(pattern, type);
+			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(
+					pattern.clone(), type.clone());
+
 			existsExp.setBindList(bindList);
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
-			AEqualsBinaryExp equalsExp = new AEqualsBinaryExp();
-			equalsExp.setLeft(matching);
-			equalsExp.setRight(exp);
+			AEqualsBinaryExp equalsExp = AstExpressionFactory
+					.newAEqualsBinaryExp(matching, exp.clone());
+
 			existsExp.setPredicate(equalsExp);
 			notExp.setExp(existsExp);
 			return notExp;
@@ -90,18 +87,15 @@ public class PONotCaseContext extends POContext
 	}
 
 	@Override
-	public String getContext()
-	{
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern))
-		{
+		if (PPatternAssistantTC.isSimple(pattern)) {
 			sb.append("not ");
 			sb.append(pattern);
 			sb.append(" = ");
 			sb.append(exp);
-		} else
-		{
+		} else {
 			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
 
 			sb.append("not exists ");

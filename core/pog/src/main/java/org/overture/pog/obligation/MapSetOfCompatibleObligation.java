@@ -31,9 +31,8 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -52,7 +51,7 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 	{
 		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
 		
-		PExp predicate = buildPredicate(exp);
+		PExp predicate = buildPredicate(exp.clone());
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
@@ -62,7 +61,7 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 	{
 		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
 		
-		PExp predicate = buildPredicate(exp);
+		PExp predicate = buildPredicate(exp.clone());
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
@@ -111,7 +110,7 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 		PPattern p2= makePattern(m2);
 		
 		ASetMultipleBind setBind= new ASetMultipleBind();
-		setBind.setSet(mapExp);
+		setBind.setSet(mapExp.clone());
 		List<PPattern> patternList = new LinkedList<PPattern>();
 		patternList.add(p1);
 		patternList.add(p2);
@@ -128,12 +127,11 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
 		domM2.setExp(getVarExp(m2));
 		
-		AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-		implies.setLeft(getEqualsExp(getVarExp(d1), getVarExp(d2)));
-		implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-		implies.setRight(getEqualsExp(
+		
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(
 				getApplyExp(getVarExp(m1), getVarExp(d1)),
 				getApplyExp(getVarExp(m2), getVarExp(d2))));
+
 		
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));

@@ -5,4 +5,6 @@ public interface ILexStringToken extends ILexToken
 	String toString();
 	
 	String getValue();
+	
+	ILexStringToken clone();
 }

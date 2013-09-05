@@ -43,8 +43,8 @@ public class UniqueExistenceObligation extends ProofObligation
 		//exists1 iotaBinds & iotaPredicate
 		
 		AExists1Exp exists1Exp = new AExists1Exp();
-		exists1Exp.setBind(iota.getBind());
-		exists1Exp.setPredicate(iota.getPredicate());
+		exists1Exp.setBind(iota.getBind().clone());
+		exists1Exp.setPredicate(iota.getPredicate().clone());
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(exists1Exp));

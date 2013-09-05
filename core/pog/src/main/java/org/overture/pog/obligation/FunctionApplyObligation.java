@@ -23,7 +23,6 @@
 
 package org.overture.pog.obligation;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.expressions.APreExp;
@@ -57,23 +56,16 @@ public class FunctionApplyObligation extends ProofObligation
 			// pre_(root, args)
 			APreExp preExp = new APreExp();
 			preExp.setFunction(root.clone());
-			preExp.setArgs(cloneArgList(args));
+			preExp.setArgs(cloneListPExp(args));
 			valuetree.setPredicate(ctxt.getPredWithContext(preExp));
 		}
 		else
 		{
 			// pre_f(args)
-			valuetree.setPredicate(ctxt.getPredWithContext(getApplyExp(getVarExp(prename), cloneArgList(args))));
+			valuetree.setPredicate(ctxt.getPredWithContext(getApplyExp(getVarExp(prename), cloneListPExp(args))));
 		}
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 	}
 	
-	List<PExp> cloneArgList(List<PExp> args){
-		List<PExp> clones = new  LinkedList<PExp>();
-		for (PExp pexp : args){
-			clones.add(pexp.clone());
-		}
-		return clones;
-	}
 }
