@@ -14,7 +14,7 @@
 	<name>VDM Proof Obligation Generator</name>
 
 	<properties>
-		<astcreator.version>1.2.5</astcreator.version>
+		<astcreator.version>1.2.6</astcreator.version>
 	</properties>
 
 	<dependencies>
