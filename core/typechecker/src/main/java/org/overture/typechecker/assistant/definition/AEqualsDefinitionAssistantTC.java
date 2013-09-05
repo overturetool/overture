@@ -51,13 +51,6 @@ public class AEqualsDefinitionAssistantTC
 
 	}
 
-	public static LexNameList getVariableNames(AEqualsDefinition d)
-	{
-
-		return d.getDefs() == null ? new LexNameList()
-				: PDefinitionListAssistantTC.getVariableNames(d.getDefs());
-	}
-
 	public static PType getType(AEqualsDefinition def)
 	{
 		return def.getDefType() != null ? def.getDefType()

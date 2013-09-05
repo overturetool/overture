@@ -19,7 +19,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
@@ -309,11 +308,6 @@ public class SClassDefinitionAssistantTC
 		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
 		PDefinitionAssistantTC.markUsed(def);
 		return def;
-	}
-
-	public static LexNameList getVariableNames(SClassDefinition d)
-	{
-		return PDefinitionListAssistantTC.getVariableNames(d.getDefinitions());
 	}
 
 	public static void implicitDefinitions(SClassDefinition d,

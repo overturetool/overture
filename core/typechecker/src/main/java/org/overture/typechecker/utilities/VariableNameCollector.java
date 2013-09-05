@@ -29,8 +29,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
@@ -50,7 +48,8 @@ import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantT
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
+
 
 /**
  * This class implements a way to collect variable names from a node in the AST
@@ -82,21 +81,23 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantTC.getVariableNames((SClassDefinition) node);
+		return PDefinitionListAssistantTC.getVariableNames(node.getDefinitions());
 	}
+	
 
 	@Override
 	public LexNameList caseAClassInvariantDefinition(
 			AClassInvariantDefinition node) throws AnalysisException
 	{
-		return AClassInvariantDefinitionAssistantTC.getVariableNames((AClassInvariantDefinition) node);
+		return new LexNameList(node.getName());
 	}
 
 	@Override
 	public LexNameList caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
 	{
-		return AEqualsDefinitionAssistantTC.getVariableNames((AEqualsDefinition) node);
+		return node.getDefs() == null ? new LexNameList()
+		: PDefinitionListAssistantTC.getVariableNames(node.getDefs());
 	}
 
 	@Override
