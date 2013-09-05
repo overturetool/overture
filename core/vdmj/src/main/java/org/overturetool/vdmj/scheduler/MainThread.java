@@ -159,4 +159,9 @@ public class MainThread extends SchedulablePoolThread
 			ctxt.threadState.dbgp.setErrorState();
 		}
 	}
+	
+	public Exception getException()
+	{
+		return exception;
+	}
 }

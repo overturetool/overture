@@ -110,7 +110,7 @@ public class ResourceScheduler implements Serializable
 				idle = false;
 			}
 		}
-		while (!idle && main.getRunState() != RunState.COMPLETE);
+		while (!idle && main.getRunState() != RunState.COMPLETE && main.getException() == null);
 
 		stopping = true;
 
