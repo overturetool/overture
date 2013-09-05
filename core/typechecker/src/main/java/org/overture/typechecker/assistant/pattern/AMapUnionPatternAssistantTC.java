@@ -15,7 +15,8 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class AMapUnionPatternAssistantTC {
+public class AMapUnionPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -23,8 +24,10 @@ public class AMapUnionPatternAssistantTC {
 	{
 		this.af = af;
 	}
-	public static void unResolve(AMapUnionPattern pattern) {
-		
+
+	public static void unResolve(AMapUnionPattern pattern)
+	{
+
 		PPatternAssistantTC.unResolve(pattern.getLeft());
 		PPatternAssistantTC.unResolve(pattern.getRight());
 		pattern.setResolved(false);
@@ -32,42 +35,49 @@ public class AMapUnionPatternAssistantTC {
 
 	public static void typeResolve(AMapUnionPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		
-		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		if (pattern.getResolved())
+			return;
+		else
+		{
+			pattern.setResolved(true);
+		}
 
 		try
 		{
 			PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
 			PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			unResolve(pattern);
 			throw e;
 		}
-		
+
 	}
 
 	public static List<PDefinition> getAllDefinitions(AMapUnionPattern rp,
-			PType ptype, NameScope scope) {
-		
+			PType ptype, NameScope scope)
+	{
+
 		List<PDefinition> defs = new Vector<PDefinition>();
-		
-		if(!PTypeAssistantTC.isMap(ptype))
+
+		if (!PTypeAssistantTC.isMap(ptype))
 		{
-			TypeCheckerErrors.report(3315, "Matching expression is not a map type",rp.getLocation(),rp);
+			TypeCheckerErrors.report(3315, "Matching expression is not a map type", rp.getLocation(), rp);
 		}
-		
+
 		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope));
 		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
-		
+
 		return defs;
 	}
-	
+
 	public static boolean isSimple(AMapUnionPattern p)
 	{
-		return PPatternAssistantTC.isSimple(p.getLeft()) && PPatternAssistantTC.isSimple(p.getRight());
+		return PPatternAssistantTC.isSimple(p.getLeft())
+				&& PPatternAssistantTC.isSimple(p.getRight());
 	}
 
 }

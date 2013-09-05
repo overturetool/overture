@@ -11,16 +11,14 @@ import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
-import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
 
-public class APostOpExpAssistantInterpreter extends APostOpExpAssistantTC
+public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public APostOpExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

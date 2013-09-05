@@ -18,8 +18,8 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-
-public class ASeqPatternAssistantTC {
+public class ASeqPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -27,71 +27,81 @@ public class ASeqPatternAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static void typeResolve(ASeqPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		
-		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		if (pattern.getResolved())
+			return;
+		else
+		{
+			pattern.setResolved(true);
+		}
 
 		try
 		{
 			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			unResolve(pattern);
 			throw e;
 		}
-		
+
 	}
 
-	public static void unResolve(ASeqPattern pattern) {
+	public static void unResolve(ASeqPattern pattern)
+	{
 		PPatternListAssistantTC.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
-		
+
 	}
 
-//	public static LexNameList getVariableNames(ASeqPattern pattern) {
-//		LexNameList list = new LexNameList();
-//
-//		for (PPattern p: pattern.getPlist())
-//		{
-//			list.addAll(PPatternTCAssistant.getVariableNames(p));
-//		}
-//
-//		return list;
-//	}
+	// public static LexNameList getVariableNames(ASeqPattern pattern) {
+	// LexNameList list = new LexNameList();
+	//
+	// for (PPattern p: pattern.getPlist())
+	// {
+	// list.addAll(PPatternTCAssistant.getVariableNames(p));
+	// }
+	//
+	// return list;
+	// }
 
-	public static List<PDefinition> getAllDefinitions(ASeqPattern rp, PType type,
-			NameScope scope) {
-		
+	public static List<PDefinition> getAllDefinitions(ASeqPattern rp,
+			PType type, NameScope scope)
+	{
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		if (!PTypeAssistantTC.isSeq(type))
 		{
-			TypeCheckerErrors.report(3203, "Sequence pattern is matched against " + type,rp.getLocation(),rp);
-		}
-		else
+			TypeCheckerErrors.report(3203, "Sequence pattern is matched against "
+					+ type, rp.getLocation(), rp);
+		} else
 		{
 			PType elem = PTypeAssistantTC.getSeq(type).getSeqof();
 
-    		for (PPattern p: rp.getPlist())
-    		{
-    			defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, scope));
-    		}
+			for (PPattern p : rp.getPlist())
+			{
+				defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, scope));
+			}
 		}
 
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ASeqPattern pattern) {
+	public static PType getPossibleTypes(ASeqPattern pattern)
+	{
 		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
 
-	public static PExp getMatchingExpression(ASeqPattern seqp) {
+	public static PExp getMatchingExpression(ASeqPattern seqp)
+	{
 		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
 	}
-	
+
 	public static boolean isSimple(ASeqPattern p)
 	{
 		return PPatternListAssistantTC.isSimple(p.getPlist());

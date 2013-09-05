@@ -21,13 +21,17 @@ public class PTraceCoreDefinitionAssistantInterpreter
 
 	public static TraceNode expand(PTraceCoreDefinition core, Context ctxt)
 	{
-		if (core instanceof AApplyExpressionTraceCoreDefinition) {
+		if (core instanceof AApplyExpressionTraceCoreDefinition)
+		{
 			return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
-		} else if (core instanceof ABracketedExpressionTraceCoreDefinition) {
+		} else if (core instanceof ABracketedExpressionTraceCoreDefinition)
+		{
 			return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
-		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition) {
+		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition)
+		{
 			return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
-		} else {
+		} else
+		{
 			assert false : "Should not happen";
 			return null;
 		}

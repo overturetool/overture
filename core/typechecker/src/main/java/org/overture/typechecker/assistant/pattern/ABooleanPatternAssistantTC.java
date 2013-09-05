@@ -9,7 +9,8 @@ import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ABooleanPatternAssistantTC {
+public class ABooleanPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -17,11 +18,14 @@ public class ABooleanPatternAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PType getPossibleType(ABooleanPattern pattern) {
+
+	public static PType getPossibleType(ABooleanPattern pattern)
+	{
 		return AstFactory.newABooleanBasicType(pattern.getLocation());
 	}
 
-	public static PExp getMatchingExpression(ABooleanPattern bp) {
+	public static PExp getMatchingExpression(ABooleanPattern bp)
+	{
 		ILexBooleanToken tok = bp.getValue();
 		ABooleanConstExp res = AstFactory.newABooleanConstExp((LexBooleanToken) tok.clone());
 		return res;

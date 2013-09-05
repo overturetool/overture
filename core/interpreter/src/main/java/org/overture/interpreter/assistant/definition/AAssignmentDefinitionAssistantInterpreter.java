@@ -7,16 +7,17 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 
-public class AAssignmentDefinitionAssistantInterpreter /*extends
-		AAssignmentDefinitionAssistantTC*/
+public class AAssignmentDefinitionAssistantInterpreter /*
+														 * extends AAssignmentDefinitionAssistantTC
+														 */
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -24,7 +25,7 @@ public class AAssignmentDefinitionAssistantInterpreter /*extends
 	public AAssignmentDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-//		super(af);
+		// super(af);
 		this.af = af;
 	}
 

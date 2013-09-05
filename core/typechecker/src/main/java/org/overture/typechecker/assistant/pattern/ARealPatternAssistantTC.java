@@ -8,7 +8,8 @@ import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ARealPatternAssistantTC {
+public class ARealPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -16,11 +17,14 @@ public class ARealPatternAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PType getPossibleTypes(ARealPattern pattern) {
+
+	public static PType getPossibleTypes(ARealPattern pattern)
+	{
 		return AstFactory.newARealNumericBasicType(pattern.getLocation());
 	}
 
-	public static PExp getMatchingExpression(ARealPattern rp) {
+	public static PExp getMatchingExpression(ARealPattern rp)
+	{
 		ILexRealToken v = rp.getValue();
 		return AstFactory.newARealLiteralExp((LexRealToken) v.clone());
 	}

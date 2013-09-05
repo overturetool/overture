@@ -8,7 +8,8 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AStringPatternAssistantTC {
+public class AStringPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -16,14 +17,17 @@ public class AStringPatternAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PType getPossibleTypes(AStringPattern pattern) {
-		ASeqSeqType t = AstFactory.newASeqSeqType(pattern.getLocation(),AstFactory.newACharBasicType(pattern.getLocation()));
+
+	public static PType getPossibleTypes(AStringPattern pattern)
+	{
+		ASeqSeqType t = AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newACharBasicType(pattern.getLocation()));
 		return t;
 	}
 
-	public static PExp getMatchingExpression(AStringPattern sp) {
+	public static PExp getMatchingExpression(AStringPattern sp)
+	{
 		ILexStringToken v = sp.getValue();
-		return AstFactory.newAStringLiteralExp( (ILexStringToken) v.clone());
+		return AstFactory.newAStringLiteralExp((ILexStringToken) v.clone());
 	}
 
 }

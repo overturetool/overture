@@ -5,10 +5,9 @@ import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AFuncInstatiationExpAssistantTC;
 
-public class AFuncInstatiationExpAssistantInterpreter extends
-		AFuncInstatiationExpAssistantTC
+public class AFuncInstatiationExpAssistantInterpreter // extends
+// AFuncInstatiationExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -16,7 +15,6 @@ public class AFuncInstatiationExpAssistantInterpreter extends
 	public AFuncInstatiationExpAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

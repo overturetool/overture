@@ -7,37 +7,41 @@ import org.overture.ast.expressions.SSeqExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
 
-public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
+public class SSeqExpAssistantInterpreter // extends SSeqExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public SSeqExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
 	public static ValueList getValues(SSeqExp exp, ObjectContext ctxt)
 	{
-		if (exp instanceof ASeqCompSeqExp) {
+		if (exp instanceof ASeqCompSeqExp)
+		{
 			return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
-		} else if (exp instanceof ASeqEnumSeqExp) {
+		} else if (exp instanceof ASeqEnumSeqExp)
+		{
 			return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
-		} else {
+		} else
+		{
 			return new ValueList();
 		}
 	}
 
 	public static PExp findExpression(SSeqExp exp, int lineno)
 	{
-		if (exp instanceof ASeqCompSeqExp) {
+		if (exp instanceof ASeqCompSeqExp)
+		{
 			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
-		} else if (exp instanceof ASeqEnumSeqExp) {
+		} else if (exp instanceof ASeqEnumSeqExp)
+		{
 			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
-		} else {
+		} else
+		{
 			return null;
 		}
 	}

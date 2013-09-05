@@ -61,14 +61,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			return d.apply(af.getDefinitionEqualityChecker(),other);// FIXME: should we handle exceptions like this
+			return d.apply(af.getDefinitionEqualityChecker(), other);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
-
-	
 
 	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other)
@@ -632,20 +630,6 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static LexNameList getOldNames(PDefinition d)
-	{
-		if (d instanceof AEqualsDefinition)
-		{
-			return AEqualsDefinitionAssistantTC.getOldNames((AEqualsDefinition) d);
-		} else if (d instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantTC.getOldNames((AValueDefinition) d);
-		} else
-		{
-			return new LexNameList();
-		}
-
-	}
 
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.

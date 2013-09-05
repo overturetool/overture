@@ -8,7 +8,8 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
-public class AIntegerPatternAssistantTC {
+public class AIntegerPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -16,11 +17,14 @@ public class AIntegerPatternAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PType getPossibleTypes(AIntegerPattern pattern) {
+
+	public static PType getPossibleTypes(AIntegerPattern pattern)
+	{
 		return SNumericBasicTypeAssistantTC.typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
 
-	public static PExp getMatchingExpression(AIntegerPattern intptrn) {
+	public static PExp getMatchingExpression(AIntegerPattern intptrn)
+	{
 		return AstFactory.newAIntLiteralExp((LexIntegerToken) intptrn.getValue().clone());
 	}
 
