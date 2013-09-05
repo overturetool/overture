@@ -12,7 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
@@ -88,12 +87,6 @@ public class ATypeDefinitionAssistantTC
 		}
 
 		return defs;
-	}
-
-	public static LexNameList getVariableNames(ATypeDefinition d)
-	{
-		// This is only used in VDM++ type inheritance
-		return new LexNameList(d.getName());
 	}
 
 	public static void typeResolve(ATypeDefinition d,

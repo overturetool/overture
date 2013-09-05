@@ -15,7 +15,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
@@ -64,11 +63,6 @@ public class AImplicitOperationDefinitionAssistantTC
 		}
 
 		return null;
-	}
-
-	public static LexNameList getVariableNames(AImplicitOperationDefinition d)
-	{
-		return new LexNameList(d.getName());
 	}
 
 	public static void typeResolve(AImplicitOperationDefinition d,

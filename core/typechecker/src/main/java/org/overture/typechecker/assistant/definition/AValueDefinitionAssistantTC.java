@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -62,19 +61,6 @@ public class AValueDefinitionAssistantTC
 	public static List<PDefinition> getDefinitions(AValueDefinition d)
 	{
 		return d.getDefs();
-	}
-
-	public static LexNameList getVariableNames(AValueDefinition d)
-	{
-		try
-		{
-			return PPatternAssistantTC.getVariableNames(d.getPattern());
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block; needs to be smarter
-			e.printStackTrace();
-			return new LexNameList();
-		}
 	}
 
 	public static void typeResolve(AValueDefinition d,

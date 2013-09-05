@@ -16,7 +16,6 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.patterns.PPattern;
@@ -173,12 +172,6 @@ public class AExplicitFunctionDefinitionAssistantTC
 		}
 
 		return defs;
-	}
-
-	public static LexNameList getVariableNames(AExplicitFunctionDefinition efd)
-	{
-
-		return new LexNameList(efd.getName());
 	}
 
 	public static AFunctionType getType(AExplicitFunctionDefinition efd,

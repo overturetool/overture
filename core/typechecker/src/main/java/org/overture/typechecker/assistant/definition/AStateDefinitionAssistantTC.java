@@ -13,7 +13,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
@@ -98,12 +97,6 @@ public class AStateDefinitionAssistantTC
 	{
 		return d.getStateDefs();
 	}
-
-	public static LexNameList getVariableNames(AStateDefinition d)
-	{
-		return PDefinitionListAssistantTC.getVariableNames(d.getStateDefs());
-	}
-
 	public static void typeResolve(AStateDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
