@@ -40,9 +40,12 @@ import org.overture.interpreter.traces.PermuteArray;
  * performing quantifiers like "a,b,c in set {{1,2,3}, {4,5,6}}".
  */
 
-@SuppressWarnings("serial")
 public class ValueSet extends Vector<Value>		// NB based on Vector
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1364718882230227399L;
 	private boolean isSorted;
 
 	public ValueSet()

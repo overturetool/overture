@@ -194,17 +194,7 @@ public class PDefinitionListAssistantTC
 		}
 	}
 
-	public static LexNameList getOldNames(LinkedList<PDefinition> definitions)
-	{
-		LexNameList list = new LexNameList();
 
-		for (PDefinition d : definitions)
-		{
-			list.addAll(PDefinitionAssistantTC.getOldNames(d));
-		}
-
-		return list;
-	}
 
 	public static void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)

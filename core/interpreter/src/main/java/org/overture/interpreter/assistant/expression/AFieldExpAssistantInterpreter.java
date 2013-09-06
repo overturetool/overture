@@ -17,16 +17,14 @@ import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
 
-public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
+public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AFieldExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

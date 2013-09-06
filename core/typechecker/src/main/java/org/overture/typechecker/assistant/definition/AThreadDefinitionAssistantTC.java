@@ -57,5 +57,4 @@ public class AThreadDefinitionAssistantTC
 		return def;
 	}
 
-
 }

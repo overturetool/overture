@@ -42,48 +42,8 @@ import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
 import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
-import org.overture.typechecker.assistant.expression.ACasesExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElementsUnaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElseIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExists1ExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExistsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldNumberExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AForAllExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFuncInstatiationExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIotaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALambdaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetBeStExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetDefExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapCompMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapEnumMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapletExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkBasicExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkTypeExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMuExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANarrowExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANewExpAssistantTC;
-import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ARecordModifierAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqCompSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqEnumSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetCompSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetEnumSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASubseqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ATupleExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AVariableExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SUnaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AAllImportAssistantTC;
 import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
@@ -159,8 +119,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
-//import org.overture.typechecker.assistant.statement.AAlwaysStmAssistantTC;
-//import org.overture.typechecker.assistant.statement.AAssignmentStmAssistantTC;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
@@ -231,89 +189,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ACaseAlternativeAssistantTC createACaseAlternativeAssistant();
 
-	ACasesExpAssistantTC createACasesExpAssistant();
-
-	AElementsUnaryExpAssistantTC createAElementsUnaryExpAssistant();
-
-	AElseIfExpAssistantTC createAElseIfExpAssistant();
-
-	AExists1ExpAssistantTC createAExists1ExpAssistant();
-
-	AExistsExpAssistantTC createAExistsExpAssistant();
-
-	AFieldExpAssistantTC createAFieldExpAssistant();
-
-	AFieldNumberExpAssistantTC createAFieldNumberExpAssistant();
-
-	AForAllExpAssistantTC createAForAllExpAssistant();
-
-	AFuncInstatiationExpAssistantTC createAFuncInstatiationExpAssistant();
-
-	AIfExpAssistantTC createAIfExpAssistant();
-
-	AIotaExpAssistantTC createAIotaExpAssistant();
-
-	AIsExpAssistantTC createAIsExpAssistant();
-
-	AIsOfBaseClassExpAssistantTC createAIsOfBaseClassExpAssistant();
-
-	AIsOfClassExpAssistantTC createAIsOfClassExpAssistant();
-
-	ALambdaExpAssistantTC createALambdaExpAssistant();
-
-	ALetBeStExpAssistantTC createALetBeStExpAssistant();
-
-	ALetDefExpAssistantTC createALetDefExpAssistant();
-
-	AMapCompMapExpAssistantTC createAMapCompMapExpAssistant();
-
-	AMapEnumMapExpAssistantTC createAMapEnumMapExpAssistant();
-
-	AMapletExpAssistantTC createAMapletExpAssistant();
-
-	AMkBasicExpAssistantTC createAMkBasicExpAssistant();
-
-	AMkTypeExpAssistantTC createAMkTypeExpAssistant();
-
-	AMuExpAssistantTC createAMuExpAssistant();
-
-	ANarrowExpAssistantTC createANarrowExpAssistant();
-
-	ANewExpAssistantTC createANewExpAssistant();
-
-	APostOpExpAssistantTC createAPostOpExpAssistant();
-
-	ARecordModifierAssistantTC createARecordModifierAssistant();
-
-	ASameBaseClassExpAssistantTC createASameBaseClassExpAssistant();
-
-	ASameClassExpAssistantTC createASameClassExpAssistant();
-
-	ASeqCompSeqExpAssistantTC createASeqCompSeqExpAssistant();
-
-	ASeqEnumSeqExpAssistantTC createASeqEnumSeqExpAssistant();
-
-	ASetCompSetExpAssistantTC createASetCompSetExpAssistant();
-
-	ASetEnumSetExpAssistantTC createASetEnumSetExpAssistant();
-
-	ASubseqExpAssistantTC createASubseqExpAssistant();
-
-	ATupleExpAssistantTC createATupleExpAssistant();
-
-	AVariableExpAssistantTC createAVariableExpAssistant();
-
 	PExpAssistantTC createPExpAssistant();
 
 	SBinaryExpAssistantTC createSBinaryExpAssistant();
-
-	SMapExpAssistantTC createSMapExpAssistant();
-
-	SSeqExpAssistantTC createSSeqExpAssistant();
-
-	SSetExpAssistantTC createSSetExpAssistant();
-
-	SUnaryExpAssistantTC createSUnaryExpAssistant();
 
 	// module
 	AAllImportAssistantTC createAAllImportAssistant();
@@ -501,5 +379,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PDefinition> getSelfDefinitionFinder();
 
 	IAnswer<PTypeSet> getExitTypeCollector();
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> ba03283eade5df75fb1b337743f8ccfe5ed443f8
 }

@@ -53,8 +53,10 @@ public class GenerateTree extends AstCreatorBaseMojo
 			{
 				getLog().error("\tExtension base dependency not configures with groupId and artifactId");
 			}
-			
-			getLog().info("\tExtension base dependency is: \""+this.extendedAstGroupId+":"+this.extendedAstArtifactId+"\"");
+
+			getLog().info("\tExtension base dependency is: \""
+					+ this.extendedAstGroupId + ":"
+					+ this.extendedAstArtifactId + "\"");
 			getLog().info("\tSearching for base dependency artifact");
 			if (extendedAstFile != null)
 			{
@@ -75,16 +77,15 @@ public class GenerateTree extends AstCreatorBaseMojo
 				getLog().info("\tExtension base artifact found - exstracting base tree definition files");
 				File baseJar = baseArtifact.getFile();
 				preparebase(baseJar, ast);
-				
+
 				getLog().info("\tSetting base definition files to:");
-				
+
 				baseAstFile = new File(getProjectOutputDirectory(), ast);
 				baseAsttoStringFile = new File(baseAstFile.getAbsolutePath()
 						+ Main.TO_STRING_FILE_NAME_EXT);
-				getLog().info("\t\tbase: "+baseAstFile);
-				getLog().info("\t\tbase tostring: "+baseAsttoStringFile);
-						
-				
+				getLog().info("\t\tbase: " + baseAstFile);
+				getLog().info("\t\tbase tostring: " + baseAsttoStringFile);
+
 				getLog().info("\tExtension base artifact configured.");
 			}
 		}
@@ -158,9 +159,48 @@ public class GenerateTree extends AstCreatorBaseMojo
 	}
 
 	private void preparebase(File baseJar, String ast)
+			throws MojoExecutionException, MojoFailureException
+	{
+
+		if (baseJar.isFile())
+		{
+			preparebaseJar(baseJar, ast);
+		} else
+		{
+			preparebaseDirectory(baseJar, ast);
+		}
+	}
+
+	private void preparebaseDirectory(File baseJar, String ast)
+			throws MojoExecutionException
+	{
+		File astDefinition = new File(baseJar, ast);
+		File astDefinitionToString = new File(baseJar, ast
+				+ Main.TO_STRING_FILE_NAME_EXT);
+
+		try
+		{
+			Util.copyFile(astDefinition, new File(getProjectOutputDirectory(), astDefinition.getName()));
+		} catch (IOException e)
+		{
+			throw new MojoExecutionException("Failed to copy AST defintion file from source: "+astDefinition);
+		}
+
+		try
+		{
+			Util.copyFile(astDefinitionToString, new File(getProjectOutputDirectory(), astDefinitionToString.getName()));
+		} catch (IOException e)
+		{
+		}
+
+	}
+
+	private void preparebaseJar(File baseJar, String ast)
+			throws MojoExecutionException, MojoFailureException
 	{
 		// assuming you already have an InputStream to the jar file..
 		JarInputStream jis = null;
+		boolean astDefinitionPrepared = false;
 		try
 		{
 			jis = new JarInputStream(new FileInputStream(baseJar));
@@ -183,20 +223,29 @@ public class GenerateTree extends AstCreatorBaseMojo
 					OutputStream resStreamOut = null;
 					int readBytes;
 					byte[] buffer = new byte[4096];
+					boolean copyContentSuccess = false;
 					try
 					{
 						resStreamOut = new FileOutputStream(new File(getProjectOutputDirectory(), entry.getName()));
 						while ((readBytes = jis.read(buffer)) > 0)
 						{
 							resStreamOut.write(buffer, 0, readBytes);
+							copyContentSuccess = true;
 						}
 					} catch (IOException e1)
 					{
+						copyContentSuccess = false;
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} finally
 					{
 						resStreamOut.close();
+					}
+
+					if (entry.getName().equalsIgnoreCase(ast)
+							&& copyContentSuccess)
+					{
+						astDefinitionPrepared = true;
 					}
 
 				}
@@ -207,18 +256,33 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		} catch (FileNotFoundException e)
 		{
-			getLog().error("Failed to find file for base artifact: "+baseJar);
+			getLog().error("Failed to find file for base artifact: " + baseJar);
+			throw new MojoExecutionException("Unable to find base artifact jar: "
+					+ baseJar, e);
+
 		} catch (IOException e)
 		{
-			getLog().error("Failed to while reading from base artifact: "+baseJar);
+			getLog().error("Failed to while reading from base artifact: "
+					+ baseJar);
+			throw new MojoExecutionException("Unable to read from base artifact jar: "
+					+ baseJar, e);
 		} finally
 		{
 			try
 			{
-				jis.close();
+				if (jis != null)
+				{
+					jis.close();
+				}
 			} catch (IOException e)
 			{
 			}
+		}
+
+		if (!astDefinitionPrepared)
+		{
+			throw new MojoFailureException("Failed to prepare base AST definition, from source: "
+					+ baseJar);
 		}
 	}
 

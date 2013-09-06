@@ -24,16 +24,21 @@ public class PTraceDefinitionAssistantInterpreter extends
 
 	public static TraceNode expand(PTraceDefinition term, Context ctxt)
 	{
-		if (term instanceof AInstanceTraceDefinition) {
+		if (term instanceof AInstanceTraceDefinition)
+		{
 			assert false : "this one is not in Nicks tree";
 			return null;
-		} else if (term instanceof ALetBeStBindingTraceDefinition) {
+		} else if (term instanceof ALetBeStBindingTraceDefinition)
+		{
 			return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition) term, ctxt);
-		} else if (term instanceof ALetDefBindingTraceDefinition) {
+		} else if (term instanceof ALetDefBindingTraceDefinition)
+		{
 			return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition) term, ctxt);
-		} else if (term instanceof ARepeatTraceDefinition) {
+		} else if (term instanceof ARepeatTraceDefinition)
+		{
 			return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term, ctxt);
-		} else {
+		} else
+		{
 		}
 
 		return null;

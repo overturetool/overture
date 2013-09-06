@@ -14,7 +14,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ATypeBindAssistantTC {
+public class ATypeBindAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -22,15 +23,18 @@ public class ATypeBindAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static void typeResolve(ATypeBind typebind,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		
+			TypeCheckInfo question)
+	{
+
 		typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
-		
+
 	}
 
-	public static List<PMultipleBind> getMultipleBindList(ATypeBind bind) {
+	public static List<PMultipleBind> getMultipleBindList(ATypeBind bind)
+	{
 		List<PPattern> plist = new Vector<PPattern>();
 		plist.add(bind.getPattern().clone());
 		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
@@ -38,7 +42,8 @@ public class ATypeBindAssistantTC {
 		return mblist;
 	}
 
-	public static LexNameList getOldNames(ATypeBind bind) {
+	public static LexNameList getOldNames(ATypeBind bind)
+	{
 		return new LexNameList();
 	}
 
