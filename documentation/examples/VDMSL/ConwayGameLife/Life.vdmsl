@@ -1,0 +1,107 @@
+/**
+ * Conway's Game of Life
+ * Modelled in VDM-SL by Nick Battle and Peter Gorm Larsen
+ * The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells,
+ * each of which is in one of two possible states, alive or dead. Every cell interacts with its eight
+ * neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent.
+ * At each step in time, the following transitions occur:
+ *
+ *   Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+ *   Any live cell with two or three live neighbours lives on to the next generation.
+ *   Any live cell with more than three live neighbours dies, as if by overcrowding.
+ *   Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+ *
+ * The initial pattern constitutes the seed of the system. The first generation is created by applying
+ * the above rules simultaneously to every cell in the seed-births and deaths occur simultaneously,
+ * and the discrete moment at which this happens is sometimes called a tick (in other words, each
+ * generation is a pure function of the preceding one). The rules continue to be applied repeatedly
+ * to create further generations.
+ *
+ * See http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life.
+ */
+
+values
+	GENERATE	= 3;		-- Number of neighbours to cause generation
+	SURVIVE		= {2, 3};	-- Numbers of neighbours to ensure survival, else death
+	
+types
+	Point ::				-- Plain is indexed by integers
+		x : int
+		y : int;
+		
+	Population = set of Point
+	
+functions
+	-- Generate the Points around a given Point
+	around: Point -> set of Point
+	around(p) ==
+		{ mk_Point(p.x + x, p.y + y) | x, y in set { -1, 0, +1 }
+			& x <> 0 or y <> 0 }
+	post card RESULT < 9;
+	
+	-- Count the number of live cells around a given point 
+	neighbourCount: Population * Point -> nat
+	neighbourCount(pop, p) ==
+		card { q | q in set around(p) & q in set pop }
+	post RESULT < 9;
+
+	-- Generate the set of empty cells that will become live
+	newCells: Population -> set of Point
+	newCells(pop) ==
+		dunion
+		{
+			{ q | q in set around(p)
+				  & q not in set pop and neighbourCount(pop, q) = GENERATE }		
+			| p in set pop
+		}
+	post RESULT inter pop = {};		-- None currently live
+		
+	-- Generate the set of cells to die
+	deadCells: Population -> set of Point
+	deadCells(pop) ==
+		{ p | p in set pop
+			& neighbourCount(pop, p) not in set SURVIVE }
+	post RESULT inter pop = RESULT;	-- All currently live
+	
+	-- Perform one generation
+	generation: Population -> Population
+	generation(pop) ==
+		(pop \ deadCells(pop)) union newCells(pop);
+
+	periodN: Population * nat1 -> bool
+	periodN(pop, n) == (generation ** n)(pop) = pop;
+
+	generations: nat1 * Population -> seq of Population
+	generations(n,pop) ==
+		let new_p = generation(pop)
+		in
+			if n = 1
+			then [new_p] 
+			else [new_p] ^ generations(n-1,new_p)
+	measure measureGenerations;
+     
+	measureGenerations: nat1 * Population -> nat
+	measureGenerations(n,-) == n;
+	
+-- Test games from http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+values
+	BLINKER = { mk_Point(1,0), mk_Point(2,0), mk_Point(3,0) };
+	
+	TOAD = BLINKER union { mk_Point(1,2), mk_Point(1,3), mk_Point(1,4) };
+	
+	BEACON = { mk_Point(0,2), mk_Point(0,3), mk_Point(1,3), mk_Point(2,0), 
+            mk_Point(3,0), mk_Point(3,1 )};
+            
+	PULSAR = let quadrant = { mk_Point(2,1), mk_Point(3,1), mk_Point(3,2),
+                           mk_Point(1,2), mk_Point(1,3), mk_Point(2,3),
+                           mk_Point(5,2), mk_Point(5,3), mk_Point(6,3), mk_Point(7,3),
+                           mk_Point(2,5), mk_Point(3,5), mk_Point(3,6), mk_Point(3,7) }
+			in
+				quadrant union
+				{ mk_Point(-x,y)| mk_Point(x,y) in set quadrant } union
+				{ mk_Point(x,-y)| mk_Point(x,y) in set quadrant } union
+				{ mk_Point(-x,-y)| mk_Point(x,y) in set quadrant };
+				
+  DIEHARD = {mk_Point(0,1),mk_Point(1,1),mk_Point(1,0),
+             mk_Point(0,5),mk_Point(0,6),mk_Point(0,7),mk_Point(2,6)}
+	          
