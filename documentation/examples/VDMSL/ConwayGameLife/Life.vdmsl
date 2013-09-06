@@ -1,6 +1,6 @@
 /**
  * Conway's Game of Life
- * Modelled in VDM-SL by Nick Battle and Peter Gorm Larsen
+ *
  * The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells,
  * each of which is in one of two possible states, alive or dead. Every cell interacts with its eight
  * neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent.
@@ -18,6 +18,7 @@
  * to create further generations.
  *
  * See http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life.
+ * Modelled in VDM-SL by Nick Battle and Peter Gorm Larsen
  */
 
 values
@@ -68,9 +69,7 @@ functions
 	generation(pop) ==
 		(pop \ deadCells(pop)) union newCells(pop);
 
-	periodN: Population * nat1 -> bool
-	periodN(pop, n) == (generation ** n)(pop) = pop;
-
+	-- Generate a sequence of N generations 
 	generations: nat1 * Population -> seq of Population
 	generations(n,pop) ==
 		let new_p = generation(pop)
@@ -83,11 +82,51 @@ functions
 	measureGenerations: nat1 * Population -> nat
 	measureGenerations(n,-) == n;
 	
+	-- Generate an offset of a Population (for testing gliders)
+	offset: Population * int * int -> Population
+	offset(pop, dx, dy) ==
+		{ mk_Point(x + dx, y + dy) | mk_Point(x, y) in set pop };
+		
+	-- Test whether two Populations are within an offset of each other
+	isOffset: Population * Population * nat1 -> bool
+	isOffset(pop1, pop2, max) ==
+		exists dx, dy in set {-max, ..., max}
+			& (dx <> 0 or dy <> 0) and offset(pop1, dx, dy) = pop2;
+			
+	-- Test whether a game is N-periodic
+	periodN: Population * nat1 -> bool
+	periodN(pop, n) == (generation ** n)(pop) = pop;
+
+	-- Test whether a game disappears after N generations
+	disappearN: Population * nat1 -> bool
+	disappearN(pop, n) ==
+		(generation ** n)(pop) = {};
+ 
+	-- Test whether a game is N-gliding within max cells
+	gliderN: Population * nat1 * nat1 -> bool
+	gliderN(pop, n, max) ==
+		isOffset(pop, (generation ** n)(pop), max);
+		
+ 	-- Versions of the three tests that check that N is the least value
+	periodNP: Population * nat1 -> bool
+	periodNP(pop, n) ==
+		{ a | a in set {1, ..., n} & periodN(pop, a) } = {n};
+
+	disappearNP: Population * nat1 -> bool
+	disappearNP(pop, n) ==
+		{ a | a in set {1, ..., n} & disappearN(pop, a) } = {n};
+		
+	gliderNP: Population * nat1 * nat1 -> bool
+	gliderNP(pop, n, max) ==
+		{ a | a in set {1, ..., n} & gliderN(pop, a, max) } = {n};
+ 
 -- Test games from http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 values
+	BLOCK = { mk_Point(0,0), mk_Point(0,1), mk_Point(1,0), mk_Point(1,1) };
+
 	BLINKER = { mk_Point(1,0), mk_Point(2,0), mk_Point(3,0) };
 	
-	TOAD = BLINKER union { mk_Point(1,2), mk_Point(1,3), mk_Point(1,4) };
+	TOAD = BLINKER union { mk_Point(2,1), mk_Point(3,1), mk_Point(4,1) };
 	
 	BEACON = { mk_Point(0,2), mk_Point(0,3), mk_Point(1,3), mk_Point(2,0), 
             mk_Point(3,0), mk_Point(3,1 )};
@@ -98,10 +137,37 @@ values
                            mk_Point(2,5), mk_Point(3,5), mk_Point(3,6), mk_Point(3,7) }
 			in
 				quadrant union
-				{ mk_Point(-x,y)| mk_Point(x,y) in set quadrant } union
-				{ mk_Point(x,-y)| mk_Point(x,y) in set quadrant } union
-				{ mk_Point(-x,-y)| mk_Point(x,y) in set quadrant };
+				{ mk_Point(-x, y)  | mk_Point(x, y) in set quadrant } union
+				{ mk_Point(x, -y)  | mk_Point(x, y) in set quadrant } union
+				{ mk_Point(-x, -y) | mk_Point(x, y) in set quadrant };
 				
-  DIEHARD = {mk_Point(0,1),mk_Point(1,1),mk_Point(1,0),
-             mk_Point(0,5),mk_Point(0,6),mk_Point(0,7),mk_Point(2,6)}
+	GLIDER = { mk_Point(1,0), mk_Point(2,0), mk_Point(3,0), mk_Point(3,1), mk_Point(2,2) };
+	
+	DIEHARD = { mk_Point(0,1), mk_Point(1,1), mk_Point(1,0),
+             mk_Point(0,5), mk_Point(0,6), mk_Point(0,7), mk_Point(2,6) };
+	
+	GOSPER_GLIDER_GUN =
+    {
+        mk_Point(2,0), mk_Point(2,1), mk_Point(2,2), mk_Point(3,0), mk_Point(3,1),
+        mk_Point(3,2), mk_Point(4,-1), mk_Point(4,3), mk_Point(6,-2), mk_Point(6,-1),
+        mk_Point(6,3), mk_Point(6,4), mk_Point(16,1), mk_Point(16,2), mk_Point(17,1),
+        mk_Point(17,2), mk_Point(-1,-1), mk_Point(-2,-2), mk_Point(-2,-1), mk_Point(-2,0),
+        mk_Point(-3,-3), mk_Point(-3,1), mk_Point(-4,-1), mk_Point(-5,-4), mk_Point(-5,2),
+        mk_Point(-6,-4), mk_Point(-6,2), mk_Point(-7,-3), mk_Point(-7,1), mk_Point(-8,-2),
+        mk_Point(-8,-1), mk_Point(-8,0), mk_Point(-17,-1), mk_Point(-17,0), mk_Point(-18,-1),
+        mk_Point(-18,0)
+    };
+	
+functions
+	tests: () -> seq of bool
+	tests() ==
+	[
+		periodNP(BLOCK,		1),	-- ie. constant
+		periodNP(BLINKER,	2),
+		periodNP(TOAD,		2),
+		periodNP(BEACON,	2),
+		periodNP(PULSAR,	3),
+		gliderNP(GLIDER,	4, 1),
+		disappearNP(DIEHARD,130)
+	];
 	          
