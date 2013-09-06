@@ -35,6 +35,27 @@
     </dependency>
   </dependencies>
 
+  
+
+  <pluginRepositories>
+        <pluginRepository>
+          <id>overture-astcreator-github</id>
+      <name>Overture AST Creator Maven plugin</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+         <url>https://github.com/overturetool/astcreator/raw/mvn-repo/release</url>
+          <layout>default</layout>
+        </pluginRepository>
+      </pluginRepositories>
+  
   <profiles>
     <profile>
       <id>With-IDE</id>
@@ -85,6 +106,9 @@
   </profiles>
 
   <repositories>
+  
+  
+	
     <!--repository>
       <id>overture.sf.net</id>
       <name>Overture SF Snapshots</name>
