@@ -501,4 +501,5 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PDefinition> getSelfDefinitionFinder();
 
 	IAnswer<PTypeSet> getExitTypeCollector();
+	
 }
