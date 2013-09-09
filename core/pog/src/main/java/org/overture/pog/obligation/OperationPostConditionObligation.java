@@ -53,7 +53,7 @@ public class OperationPostConditionObligation extends ProofObligation
 			IPOContextStack ctxt)
 	{
 		super(op, POType.FUNC_POST_CONDITION, ctxt);
-		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), op.clone().getErrors())));
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors())));
 	}
 
 	private PExp handlePrePost(PExp preexp, PExp postexp, List<AErrorCase> errs)
@@ -62,7 +62,7 @@ public class OperationPostConditionObligation extends ProofObligation
 		{
 			// (preexp and postexp)
 			AAndBooleanBinaryExp andExp = new AAndBooleanBinaryExp();
-			andExp.setLeft(preexp);
+			andExp.setLeft(preexp.clone());
 			andExp.setRight(postexp);
 			return andExp;
 		} else

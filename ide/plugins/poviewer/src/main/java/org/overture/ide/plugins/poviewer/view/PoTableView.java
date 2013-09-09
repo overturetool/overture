@@ -37,9 +37,9 @@ import org.overture.pog.pub.IProofObligation;
 
 public class PoTableView extends ViewPart implements ISelectionListener
 {
-	private Text viewer;
-	final Display display = Display.getCurrent();
-	private Font font = null;
+	protected Text viewer;
+	protected final Display display = Display.getCurrent();
+	protected Font font = null;
 
 	/**
 	 * The constructor.
