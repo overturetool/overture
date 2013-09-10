@@ -82,7 +82,7 @@ public class AValueDefinitionAssistantTC
 		PType type = node.getType();
 		PPattern pattern = node.getPattern();
 
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, question.scope);
+		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We
