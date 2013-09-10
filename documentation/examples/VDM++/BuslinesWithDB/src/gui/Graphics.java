@@ -2,9 +2,10 @@ package gui;
 
 import java.io.Serializable;
 
-import org.overturetool.vdmj.runtime.ValueException;
-import org.overturetool.vdmj.values.Value;
-import org.overturetool.vdmj.values.VoidValue;
+import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.VoidValue;
+
 
 public class Graphics implements Serializable  {
 
@@ -29,14 +30,14 @@ public class Graphics implements Serializable  {
     }
     
     public Value move(){
-    	model.move();
+    	model.move(); 
     	Controller.buslinesControl.GfxDone();
     	return new VoidValue();
     }
     
     public Value busInRouteTo(Value busline, Value roadid, Value waypoint, Value time) {
     	
-    	try {
+    	try { 
     		String road = roadid.stringValue(null);
     		
     		if(road.startsWith("<"))
@@ -57,7 +58,7 @@ public class Graphics implements Serializable  {
 		
 		return new VoidValue();
     }
-
+    
     public Value passengerAtCentral(Value id, Value goal) throws ValueException{
 
     	final Value temp = id;
@@ -104,15 +105,16 @@ public class Graphics implements Serializable  {
 	}
 	
 	public Value busAdded(Value busline) throws ValueException {
-		
-		model.busAdded((int)busline.intValue(null));
+
+		model.busAdded((int) busline.intValue(null));
 		return new VoidValue();
 	}
 	
-	public Value busPassengerCountChanged(Value busline, Value count) throws ValueException {
-		
-		model.busPassengerCountChanged((int)busline.intValue(null), (int)count.intValue(null));
-		
+	public Value busPassengerCountChanged(Value busline, Value count)
+			throws ValueException {
+
+		model.busPassengerCountChanged((int) busline.intValue(null),
+				(int) count.intValue(null));
 		return new VoidValue();
 	}
 }
