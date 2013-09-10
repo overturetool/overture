@@ -23,15 +23,14 @@
 
 package org.overture.interpreter.messages.rtlog;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
-import org.overture.interpreter.values.CPUValue;
 
 
 public class RTLogger
@@ -40,7 +39,6 @@ public class RTLogger
 	private static List<RTMessage> events = new LinkedList<RTMessage>();
 	private static PrintWriter logfile = null;
 	private static RTMessage cached = null;
-	private static final List<RTMessage> deployEvents = new LinkedList<RTMessage>();
 	private static NextGenRTLogger nextGenLog = NextGenRTLogger.getInstance();
 	
 	public static synchronized void enable(boolean on)
@@ -70,151 +68,10 @@ public class RTLogger
 		// generate any static deploys required for this message
 		message.generateStaticDeploys();
 		
-		//TODO remove all filtering and clean up when the new log standard have been defined
-		if (message.time == 0)
-		{
-			if (RTMessage.cachedStaticDeploys.size() > 0)
-			{
-				deployEvents.addAll(RTMessage.cachedStaticDeploys);
-				RTMessage.cachedStaticDeploys.clear();
-			}
-			deployEvents.add(message);
-		} 
-		else
-		{
-			if (deployEvents.size() > 0)
-			{
-				cleanUpDeployment();
-				moveMessageToStart(RTDeployObjectMessage.class);
-				moveMessageToStart(RTDeclareBUSMessage.class);
-				moveMessageToStart(RTDeclareCPUMessage.class);
-				updateCpuForSystemCreationOperations();
-				removeSystemCreatedOperations();
-				for (RTMessage deployMessage : deployEvents)
-				{
-					doLog(deployMessage);
-				}
-				deployEvents.clear();
-			}
-			if (RTMessage.cachedStaticDeploys.size() > 0)
-			{
-				for (RTDeployStaticMessage deployStatic : RTMessage.cachedStaticDeploys)
-				{
-					doLog(deployStatic);
-				}
-				RTMessage.cachedStaticDeploys.clear();
-			}
-			doLog(message);
-		}
+		doLog(message);
 
 	}
 
-	private synchronized static void updateCpuForSystemCreationOperations()
-	{
-		//TODO this method should be removed when the new log standard have been defined
-		for (RTMessage message : deployEvents)
-		{
-			if (message instanceof RTOperationMessage)
-			{
-				RTOperationMessage opMsg = (RTOperationMessage) message;
-				if (opMsg.madeDuringSystemConstruction && opMsg.getCpu() == CPUValue.vCPU.resource)
-				{
-					// ok we have to fix the CPU since vCPU is used during object construction in the system
-					// constructor, but objects can have calls in their constructor, which may end here
-					for (RTMessage message1 : deployEvents)
-					{
-						if (message1 instanceof RTDeployObjectMessage)
-						{
-							RTDeployObjectMessage deployMsg = (RTDeployObjectMessage) message1;
-							if(deployMsg.getObjRef() == opMsg.getObjRef())
-							{
-								opMsg.updateCpu(deployMsg.getCpu());
-							}
-						}
-					}
-				}
-			}
-
-		}
-
-	}
-	
-	private synchronized static void removeSystemCreatedOperations()
-	{
-		//TODO this method should be removed when the new log standard have been defined
-		List<RTMessage> tmp = new Vector<RTMessage>();
-		for (RTMessage message : deployEvents)
-		{
-			if (message instanceof RTOperationMessage)
-			{
-				RTOperationMessage opMsg = (RTOperationMessage) message;
-				if (opMsg.madeDuringSystemConstruction)
-				{
-					tmp.add(message);
-				}
-			}
-		}
-		deployEvents.removeAll(tmp);
-	}
-
-	private synchronized static void cleanUpDeployment()
-	{
-		//TODO this method should be removed when the new log standard have been defined
-		for (int i = deployEvents.size() - 1; i >= 0; i--)
-		{
-			RTMessage item = deployEvents.get(i);
-			if (item instanceof RTDeployObjectMessage)
-			{
-				for (int j = 0; j < deployEvents.size(); j++)
-				{
-					RTMessage priviousItem = deployEvents.get(j);
-					if (priviousItem instanceof RTDeployObjectMessage)
-					{
-						RTDeployObjectMessage priviousDeploy = (RTDeployObjectMessage) priviousItem;
-						if (item != priviousDeploy
-								&& ((RTDeployObjectMessage) item).object.objectReference == priviousDeploy.object.objectReference)
-						{
-							deployEvents.remove(priviousDeploy);
-						}
-					}
-				}
-			}
-
-		}
-	}
-
-	// private synchronized static void moveDeployMessageToStart()
-	// {
-	// List<VDMRTMessage> deploys = new Vector<VDMRTMessage>();
-	// for (VDMRTMessage message : deployEvents)
-	// {
-	// if(message instanceof VDMRTDeployObjectMessage)
-	// {
-	// deploys.add(message);
-	// }
-	// }
-	// deployEvents.removeAll(deploys);
-	//		
-	// deployEvents.addAll(0, deploys);
-	//		
-	// }
-	//	
-	private synchronized static void moveMessageToStart(@SuppressWarnings("rawtypes") Class definition)
-	{
-		//TODO this method should be removed when the new log standard have been defined
-		List<RTMessage> tmp = new Vector<RTMessage>();
-		for (RTMessage message : deployEvents)
-		{
-			if (message.getClass().equals(definition))
-			{
-				tmp.add(message);
-			}
-		}
-		deployEvents.removeAll(tmp);
-
-		deployEvents.addAll(0, tmp);
-
-	}
 	
 	private static synchronized void doLog(RTMessage message)
 	{
@@ -304,6 +161,15 @@ public class RTLogger
 			if (close)
 			{
 				logfile.close();
+			}
+			
+			try
+			{
+				nextGenLog.persistToFile();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}

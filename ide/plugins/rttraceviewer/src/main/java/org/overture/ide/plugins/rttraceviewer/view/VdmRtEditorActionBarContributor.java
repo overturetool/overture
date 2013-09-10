@@ -26,9 +26,11 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.overture.ide.plugins.rttraceviewer.TracefileViewerPlugin;
 
 public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 {
@@ -47,21 +49,11 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 	{
 		super();
 		createActions();
+		
 	}
 
 	private void createActions()
 	{
-		// sampleAction = new Action()
-		// {
-		// public void run()
-		// {
-		// MessageDialog.openInformation(null, "MultipageEditor", "Sample Action Executed");
-		// }
-		// };
-		// sampleAction.setText("Sample Action");
-		// sampleAction.setToolTipText("Sample Action tool tip");
-		// sampleAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(IDE.SharedImages.IMG_OBJS_TASK_TSK));
-		//		
 
 		openValidationAction = new Action("Show failed conjectures")
 		{
@@ -75,7 +67,7 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 			}
 		};
 		openValidationAction.setToolTipText("Open the validation conjecture file");
-		openValidationAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor("IMG_OBJS_WARN_TSK"));
+		openValidationAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK));
 		openValidationAction.setEnabled(true);
 
 		exportDiagramAction = new Action("Export to JPG")
@@ -164,11 +156,11 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		menu.add(new Separator());
 		menu.add(exportDiagramAction);
 
-		menu.add(new Separator());
+//		menu.add(new Separator());
 		menu.add(openValidationAction);
 		
-		menu.add(new Separator());
-		menu.add(refreshAction);
+//		menu.add(new Separator());
+//		menu.add(refreshAction);
 
 	}
 
@@ -180,14 +172,14 @@ public class VdmRtEditorActionBarContributor extends EditorActionBarContributor
 		manager.add(movePreviousHorizontalAction);
 		manager.add(moveNextHorizontalAction);
 
-		manager.add(new Separator());
+//		manager.add(new Separator());
 		manager.add(exportDiagramAction);
 
-		manager.add(new Separator());
+//		manager.add(new Separator());
 		manager.add(openValidationAction);
-		manager.add(new Separator());
+//		manager.add(new Separator());
 		
-		manager.add(refreshAction);
+//		manager.add(refreshAction);
 		manager.add(new Separator());
 	}
 

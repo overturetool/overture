@@ -9,10 +9,10 @@ class Pacemaker
  instance variables
 
  public static 
- atriaLead     : Lead      := new Lead(<ATRIA>);
+ atriaLead     : Lead      := new Lead(<ATRIA>, 5, true);
 
  public static 
- ventricleLead : Lead      := new Lead(<VENTRICLE>);
+ ventricleLead : Lead      := new Lead(<VENTRICLE>, 5, true);
 \end{vdm_al}
 
 The accelerometer component and the RateContoller.
@@ -25,14 +25,14 @@ The accelerometer component and the RateContoller.
  accelerometer       : Accelerometer   := new Accelerometer();
 
  public static 
- rateController      : RateController  := new RateController();
+ rateController      : RateController  := new RateController(1, true);
 \end{vdm_al}
 
 \begin{vdm_al}
  instance variables
  
  public static 
- heartController     : HeartController := new HeartController();
+ heartController     : HeartController := new HeartController(1000, true);
 
 end Pacemaker
 \end{vdm_al}

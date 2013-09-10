@@ -16,13 +16,10 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-// Decompiled by DJ v3.7.7.81 Copyright 2004 Atanas Neshkov  Date: 31-07-2009 16:17:14
-// Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
-// Decompiler options: packimports(3) 
-// Source File Name:   TracefileViewerPlugin.java
+package org.overture.ide.plugins.rttraceviewer;
 
-package org.overture.ide.plugins.rttraceviewer.view;
-
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -30,7 +27,7 @@ import org.osgi.framework.BundleContext;
 public class TracefileViewerPlugin extends AbstractUIPlugin
 {
 
-    protected static final String PLUGIN_ID = "org.overture.ide.plugins.rttraceviewer";
+    public static final String PLUGIN_ID = IRealTimeTaceViewer.PLUGIN_ID;;
 
 	public TracefileViewerPlugin()
     {
@@ -59,8 +56,19 @@ public class TracefileViewerPlugin extends AbstractUIPlugin
 
     public static ImageDescriptor getImageDescriptor(String path)
     {
-        return AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.rttraceviewer", path);
+        return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 
     private static TracefileViewerPlugin plugin;
+    
+    
+	public static void log(Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, IRealTimeTaceViewer.PLUGIN_ID, "RealTimeTraceViewerPlugin", exception));
+	}
+
+	public static void log(String message, Exception exception)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, IRealTimeTaceViewer.PLUGIN_ID, message, exception));
+	}
 }

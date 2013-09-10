@@ -101,6 +101,12 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		{
 			e.printStackTrace();
 			result.setFatalError(e);
+		} finally
+		{
+			if (reader != null)
+			{
+				reader.close();
+			}
 		}
 
 		if (reader != null && reader.getErrorCount() > 0)
