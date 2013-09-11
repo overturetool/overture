@@ -28,8 +28,8 @@ import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmValue;
 import org.overture.ide.debug.core.model.IVdmVariable;
 
-public class VdmVariableWrapper extends VdmDebugElement implements
-		IVdmVariable {
+public class VdmVariableWrapper extends VdmDebugElement implements IVdmVariable
+{
 
 	final IDebugTarget target;
 	private final String name;
@@ -38,101 +38,125 @@ public class VdmVariableWrapper extends VdmDebugElement implements
 	private IVdmValue value = null;
 
 	public VdmVariableWrapper(IDebugTarget target, String name,
-			IVariable[] children) {
+			IVariable[] children)
+	{
 		this.target = target;
 		this.name = name;
 		this.children = children;
 	}
 
-	public IVariable[] getChildren() throws DebugException {
-		if (children == null) {
+	public IVariable[] getChildren() throws DebugException
+	{
+		if (children == null)
+		{
 			return new IVdmVariable[0];
 		}
 		return (IVdmVariable[]) children.clone();
 	}
 
-	public String getEvalName() {
+	public String getEvalName()
+	{
 		return name;
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return null;
 	}
 
-	public String getValueString() {
+	public String getValueString()
+	{
 		return ""; //$NON-NLS-1$
 	}
 
-	public boolean hasChildren() {
-		if (children == null) {
+	public boolean hasChildren()
+	{
+		if (children == null)
+		{
 			return false;
 		}
 		return children.length > 0;
 	}
 
-	public boolean isConstant() {
+	public boolean isConstant()
+	{
 		return false;
 	}
 
-	public String getName() throws DebugException {
+	public String getName() throws DebugException
+	{
 		return name;
 	}
 
-	public String getReferenceTypeName() throws DebugException {
+	public String getReferenceTypeName() throws DebugException
+	{
 		return "getReferenceTypeName"; //$NON-NLS-1$
 	}
 
-	public boolean hasValueChanged() throws DebugException {
+	public boolean hasValueChanged() throws DebugException
+	{
 		return false;
 	}
 
-	public void setValue(String expression) throws DebugException {
+	public void setValue(String expression) throws DebugException
+	{
 
 	}
 
-	public void setValue(IValue value) throws DebugException {
+	public void setValue(IValue value) throws DebugException
+	{
 
 	}
 
-	public boolean supportsValueModification() {
+	public boolean supportsValueModification()
+	{
 		return false;
 	}
 
-	public boolean verifyValue(String expression) throws DebugException {
+	public boolean verifyValue(String expression) throws DebugException
+	{
 		return false;
 	}
 
-	public boolean verifyValue(IValue value) throws DebugException {
+	public boolean verifyValue(IValue value) throws DebugException
+	{
 		return false;
 	}
 
-	public boolean shouldHasChildren() {
+	public boolean shouldHasChildren()
+	{
 		return false;
 	}
 
-	public IVdmType getType() {
+	public IVdmType getType()
+	{
 		return new AtomicVdmType("getType"); //$NON-NLS-1$
 	}
 
-	public IVdmStackFrame getStackFrame() {
+	public IVdmStackFrame getStackFrame()
+	{
 		return null;
 	}
 
-	public IValue getValue() throws DebugException {
-		if (value == null) {
+	public IValue getValue() throws DebugException
+	{
+		if (value == null)
+		{
 			value = new VdmVariableWrapperValue(this);
 		}
 		return value;
 	}
 
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return target;
 	}
 
 	/**
 	 * @param classes
 	 */
-	public void refreshValue(IVariable[] newChildren) {
+	public void refreshValue(IVariable[] newChildren)
+	{
 		this.children = newChildren;
 	}
 }

@@ -31,4 +31,4 @@
 //	public static ISmartStepEvaluator getEvaluator(String nature) {
 //		return (ISmartStepEvaluator) manager.getObject(nature);
 //	}
-//} 
+// }

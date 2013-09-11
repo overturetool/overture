@@ -218,4 +218,4 @@
 //	public String getTypeName() throws CoreException {
 //		return (String) ensureMarker().getAttribute(TYPE_NAME);
 //	}
-//}
+// }
