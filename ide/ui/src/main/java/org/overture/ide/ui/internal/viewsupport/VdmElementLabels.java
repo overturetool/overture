@@ -175,9 +175,10 @@ public class VdmElementLabels {
 			return getRenamedDefinitionLabel((ARenamedDefinition) element, flags);
 		}
 
-		StyledString result = new StyledString();
-		result.append("Unsupported type reached: " + element);
-		return result;
+//		StyledString result = new StyledString();
+//		result.append("Unsupported type reached: " + element);
+//		return result;
+		return null;
 
 	}
 
