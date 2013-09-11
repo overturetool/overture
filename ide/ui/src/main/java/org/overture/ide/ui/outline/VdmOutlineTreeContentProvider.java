@@ -39,7 +39,6 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.internal.viewsupport.ImportsContainer;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 {
