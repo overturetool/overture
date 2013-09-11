@@ -37,6 +37,11 @@ public class TypeUtils
 		}
 	}
 
+	/**
+	 * Used to determine if the of the a type is a map type
+	 * 
+	 * @author kel
+	 */
 	public static class MapBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		/**

@@ -2,6 +2,7 @@ package org.overture.typechecker.utilities;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -25,32 +26,15 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ANamedTraceDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.APerSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+
 
 /**
  * This class implements a way to collect variable names from a node in the AST
@@ -70,20 +54,19 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		this.af = af;
 	}
-	
-	
+
 	@Override
 	public LexNameList caseAAssignmentDefinition(AAssignmentDefinition node)
 			throws AnalysisException
 	{
 		return new LexNameList(node.getName());
 	}
-	
+
 	@Override
 	public LexNameList defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantTC.getVariableNames((SClassDefinition) node);
+		return PDefinitionListAssistantTC.getVariableNames(node.getDefinitions());
 	}
 	
 
@@ -91,160 +74,172 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAClassInvariantDefinition(
 			AClassInvariantDefinition node) throws AnalysisException
 	{
-		return AClassInvariantDefinitionAssistantTC.getVariableNames((AClassInvariantDefinition) node);
+		return new LexNameList(node.getName());
 	}
 
 	@Override
 	public LexNameList caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
 	{
-		return AEqualsDefinitionAssistantTC.getVariableNames((AEqualsDefinition) node);
+		return node.getDefs() == null ? new LexNameList()
+		: PDefinitionListAssistantTC.getVariableNames(node.getDefs());
 	}
 
 	@Override
 	public LexNameList caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
 	{
-		return AExplicitFunctionDefinitionAssistantTC.getVariableNames((AExplicitFunctionDefinition) node);
+		return new LexNameList(node.getName());
 	}
 
 	@Override
 	public LexNameList caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
 	{
-		return AExplicitOperationDefinitionAssistantTC.getVariableNames((AExplicitOperationDefinition) node);
+		return new LexNameList(node.getName());	
 	}
 
 	@Override
 	public LexNameList caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-		return AExternalDefinitionAssistantTC.getVariableNames((AExternalDefinition) node);
+		return node.getState().apply(this); //TODO: Is this applicable?
 	}
 
-	
 	@Override
 	public LexNameList caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node) throws AnalysisException
 	{
-		return AImplicitFunctionDefinitionAssistantTC.getVariableNames((AImplicitFunctionDefinition) node);
+		return new LexNameList(node.getName());
 	}
 
-	
 	@Override
 	public LexNameList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
 	{
-		return AImplicitOperationDefinitionAssistantTC.getVariableNames((AImplicitOperationDefinition) node);
+		return new LexNameList(node.getName());
 	}
 
 	@Override
 	public LexNameList caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return AImportedDefinitionAssistantTC.getVariableNames((AImportedDefinition) node);
+		return node.getDef().apply(this);
 	}
-	
 
 	@Override
 	public LexNameList caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
+		//return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
+		LexNameList names = new LexNameList();
+		//TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
+		AInheritedDefinitionAssistantTC.checkSuperDefinition(node);
+
+		for (ILexNameToken vn : node.getSuperdef().apply(this))
+		{
+			names.add(vn.getModifiedName(node.getName().getModule()));
+		}
+
+		return names;
 	}
-	
+
 	@Override
 	public LexNameList caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node) throws AnalysisException
 	{
-		return AInstanceVariableDefinitionAssistantTC.getVariableNames((AInstanceVariableDefinition) node);
+		return new LexNameList(node.getName());
 	}
-	
 
 	@Override
 	public LexNameList caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		return ALocalDefinitionAssistantTC.getVariableNames((ALocalDefinition) node);
+		return new LexNameList(node.getName());
 	}
-	
 
 	@Override
 	public LexNameList caseAMultiBindListDefinition(
 			AMultiBindListDefinition node) throws AnalysisException
 	{
-		return AMultiBindListDefinitionAssistantTC.getVariableNames((AMultiBindListDefinition) node);
+		return node.getDefs() == null ? new LexNameList()
+		: PDefinitionListAssistantTC.getVariableNames(node.getDefs());
 	}
-	
 
 	@Override
 	public LexNameList caseAMutexSyncDefinition(AMutexSyncDefinition node)
 			throws AnalysisException
 	{
-		return AMutexSyncDefinitionAssistantTC.getVariableNames((AMutexSyncDefinition) node);
+		return new LexNameList();
 	}
-	
 
 	@Override
 	public LexNameList caseANamedTraceDefinition(ANamedTraceDefinition node)
 			throws AnalysisException
 	{
-		return ANamedTraceDefinitionAssistantTC.getVariableNames((ANamedTraceDefinition) node);
+		return new LexNameList(node.getName());
 	}
-	
 
 	@Override
 	public LexNameList caseAPerSyncDefinition(APerSyncDefinition node)
 			throws AnalysisException
 	{
-		return APerSyncDefinitionAssistantTC.getVariableNames((APerSyncDefinition) node);
+		return new LexNameList();
 	}
-	
-	
+
 	@Override
 	public LexNameList caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return ARenamedDefinitionAssistantTC.getVariableNames((ARenamedDefinition) node);
+		LexNameList both = new LexNameList(node.getName());
+		both.add(node.getDef().getName());
+		return both;
 	}
 
 	@Override
 	public LexNameList caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
-		return AStateDefinitionAssistantTC.getVariableNames((AStateDefinition) node);
+		return PDefinitionListAssistantTC.getVariableNames(node.getStateDefs());
 	}
 
 	@Override
 	public LexNameList caseAThreadDefinition(AThreadDefinition node)
 			throws AnalysisException
 	{
-		return AThreadDefinitionAssistantTC.getVariableNames((AThreadDefinition) node);
+		return node.getOperationDef() == null ? null
+				: new LexNameList(node.getOperationDef().getName());
 	}
 
 	@Override
 	public LexNameList caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
-		return ATypeDefinitionAssistantTC.getVariableNames((ATypeDefinition) node);
+		return new LexNameList(node.getName());
 	}
-	
 
 	@Override
 	public LexNameList caseAUntypedDefinition(AUntypedDefinition node)
 			throws AnalysisException
 	{
-		return AUntypedDefinitionAssistantTC.getVariableNames((AUntypedDefinition) node);
+		return new LexNameList(node.getName());
 	}
-	
+
 	@Override
 	public LexNameList caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		return AValueDefinitionAssistantTC.getVariableNames((AValueDefinition) node);
+		try
+		{
+			return PPatternAssistantTC.getVariableNames(node.getPattern());
+		} catch (InvocationAssistantException e)
+		{
+			// TODO Auto-generated catch block; needs to be smarter
+			e.printStackTrace();
+			return new LexNameList();
+		}
 	}
-	
-	
+
 	@Override
 	public LexNameList defaultINode(INode node) throws AnalysisException
 	{
@@ -253,10 +248,10 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	}
 
 	@Override
-	public LexNameList defaultIToken(IToken node)
-			throws AnalysisException
+	public LexNameList defaultIToken(IToken node) throws AnalysisException
 	{
 		assert false : "default case should never happen in getVariableNames";
 		return null;
 	}
+	
 }

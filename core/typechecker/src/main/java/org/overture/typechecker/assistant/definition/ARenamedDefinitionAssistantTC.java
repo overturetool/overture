@@ -1,15 +1,11 @@
 package org.overture.typechecker.assistant.definition;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -72,14 +68,6 @@ public class ARenamedDefinitionAssistantTC
 		d.setUsed(true);
 		PDefinitionAssistantTC.markUsed(d.getDef());
 
-	}
-
-
-	public static LexNameList getVariableNames(ARenamedDefinition d)
-	{
-		LexNameList both = new LexNameList(d.getName());
-		both.add(d.getDef().getName());
-		return both;
 	}
 
 	public static void typeResolve(ARenamedDefinition d,

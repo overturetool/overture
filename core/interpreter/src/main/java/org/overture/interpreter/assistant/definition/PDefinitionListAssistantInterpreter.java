@@ -2,8 +2,10 @@ package org.overture.interpreter.assistant.definition;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -80,6 +82,24 @@ public class PDefinitionListAssistantInterpreter extends
 		}
 
 		return nvl;
+	}
+
+	public static LexNameList getOldNames(LinkedList<PDefinition> definitions)
+	{
+		LexNameList list = new LexNameList();
+
+		for (PDefinition d : definitions)
+		{
+			try
+			{
+				list.addAll(d.apply(af.getOldNameCollector()));
+			} catch (AnalysisException e)
+			{
+				list.add(null);
+			}
+		}
+
+		return list;
 	}
 
 }

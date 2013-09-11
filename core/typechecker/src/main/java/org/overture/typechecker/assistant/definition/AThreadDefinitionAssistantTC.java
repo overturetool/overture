@@ -8,7 +8,6 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
@@ -38,13 +37,7 @@ public class AThreadDefinitionAssistantTC
 		result.add(d.getOperationDef());
 		return result;
 	}
-
-	public static LexNameList getVariableNames(AThreadDefinition d)
-	{
-		return d.getOperationDef() == null ? null
-				: new LexNameList(d.getOperationDef().getName());
-	}
-
+	
 	public static void implicitDefinitions(AThreadDefinition d, Environment env)
 	{
 		d.setOperationDef(getThreadDefinition(d));
@@ -63,6 +56,5 @@ public class AThreadDefinitionAssistantTC
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
-
 
 }

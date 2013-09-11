@@ -5,16 +5,15 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.typechecker.assistant.statement.ATixeStmAssistantTC;
 
-public class ATixeStmAssistantInterpreter extends ATixeStmAssistantTC
+public class ATixeStmAssistantInterpreter // extends ATixeStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ATixeStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

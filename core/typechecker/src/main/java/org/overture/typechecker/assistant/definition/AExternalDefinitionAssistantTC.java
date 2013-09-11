@@ -3,7 +3,6 @@ package org.overture.typechecker.assistant.definition;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -37,10 +36,10 @@ public class AExternalDefinitionAssistantTC
 
 	}
 
-	public static LexNameList getVariableNames(AExternalDefinition d)
-	{
-		return PDefinitionAssistantTC.getVariableNames(d.getState());
-	}
+//	public static LexNameList getVariableNames(AExternalDefinition d)
+//	{
+//		return PDefinitionAssistantTC.getVariableNames(d.getState());
+//	}
 
 	public static PType getType(AExternalDefinition def)
 	{

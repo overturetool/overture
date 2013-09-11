@@ -5,7 +5,6 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -47,13 +46,6 @@ public class AMultiBindListDefinitionAssistantTC
 
 	}
 
-	public static LexNameList getVariableNames(AMultiBindListDefinition d)
-	{
-
-		return d.getDefs() == null ? new LexNameList()
-				: PDefinitionListAssistantTC.getVariableNames(d.getDefs());
-	}
-
 	public static PType getType(AMultiBindListDefinition def)
 	{
 		PTypeList types = new PTypeList();
@@ -67,6 +59,5 @@ public class AMultiBindListDefinitionAssistantTC
 
 		return result;
 	}
-
 
 }

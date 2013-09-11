@@ -147,12 +147,12 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-public PType caseALocalDefinition(ALocalDefinition node)
-		throws AnalysisException
-{
-	return node.getType() == null ? AstFactory.newAUnknownType(node.getLocation())
-			: node.getType();
-}
+	public PType caseALocalDefinition(ALocalDefinition node)
+			throws AnalysisException
+	{
+		return node.getType() == null ? AstFactory.newAUnknownType(node.getLocation())
+				: node.getType();
+	}
 
 	@Override
 	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node)
@@ -232,8 +232,7 @@ public PType caseALocalDefinition(ALocalDefinition node)
 	}
 
 	@Override
-	public PType defaultIToken(IToken node)
-			throws AnalysisException
+	public PType defaultIToken(IToken node) throws AnalysisException
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;

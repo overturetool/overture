@@ -14,7 +14,6 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -100,11 +99,6 @@ public class AImplicitFunctionDefinitionAssistantTC
 		}
 
 		return null;
-	}
-
-	public static LexNameList getVariableNames(AImplicitFunctionDefinition d)
-	{
-		return new LexNameList(d.getName());
 	}
 
 	public static void typeResolve(AImplicitFunctionDefinition d,

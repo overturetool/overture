@@ -40,51 +40,74 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 
 	public static PExp findExpression(PStm stm, int lineno)
 	{
-		if (stm instanceof AAlwaysStm) {
+		if (stm instanceof AAlwaysStm)
+		{
 			return AAlwaysStmAssistantInterpreter.findExpression((AAlwaysStm) stm, lineno);
-		} else if (stm instanceof AAssignmentStm) {
+		} else if (stm instanceof AAssignmentStm)
+		{
 			return AAssignmentStmAssistantInterpreter.findExpression((AAssignmentStm) stm, lineno);
-		} else if (stm instanceof AAtomicStm) {
+		} else if (stm instanceof AAtomicStm)
+		{
 			return AAtomicStmAssistantInterpreter.findExpression((AAtomicStm) stm, lineno);
-		} else if (stm instanceof ACallStm) {
+		} else if (stm instanceof ACallStm)
+		{
 			return ACallStmAssistantInterpreter.findExpression((ACallStm) stm, lineno);
-		} else if (stm instanceof ACallObjectStm) {
+		} else if (stm instanceof ACallObjectStm)
+		{
 			return ACallObjectStatementAssistantInterpreter.findExpression((ACallObjectStm) stm, lineno);
-		} else if (stm instanceof ACasesStm) {
+		} else if (stm instanceof ACasesStm)
+		{
 			return ACasesStmAssistantInterpreter.findExpression((ACasesStm) stm, lineno);
-		} else if (stm instanceof ACyclesStm) {
+		} else if (stm instanceof ACyclesStm)
+		{
 			return ACyclesStmAssistantInterpreter.findExpression((ACyclesStm) stm, lineno);
-		} else if (stm instanceof ADurationStm) {
+		} else if (stm instanceof ADurationStm)
+		{
 			return ADurationStmAssistantInterpreter.findExpression((ADurationStm) stm, lineno);
-		} else if (stm instanceof AElseIfStm) {
+		} else if (stm instanceof AElseIfStm)
+		{
 			return AElseIfStmAssistantInterpreter.findExpression((AElseIfStm) stm, lineno);
-		} else if (stm instanceof AExitStm) {
+		} else if (stm instanceof AExitStm)
+		{
 			return AExitStmAssistantInterpreter.findExpression((AExitStm) stm, lineno);
-		} else if (stm instanceof AForAllStm) {
+		} else if (stm instanceof AForAllStm)
+		{
 			return AForAllStmAssistantInterpreter.findExpression((AForAllStm) stm, lineno);
-		} else if (stm instanceof AForIndexStm) {
+		} else if (stm instanceof AForIndexStm)
+		{
 			return AForIndexStmAssistantInterpreter.findExpression((AForIndexStm) stm, lineno);
-		} else if (stm instanceof AForPatternBindStm) {
+		} else if (stm instanceof AForPatternBindStm)
+		{
 			return AForPatternBindStmAssitantInterpreter.findExpression((AForPatternBindStm) stm, lineno);
-		} else if (stm instanceof AIfStm) {
+		} else if (stm instanceof AIfStm)
+		{
 			return AIfStmAssistantInterpreter.findExpression((AIfStm) stm, lineno);
-		} else if (stm instanceof ALetBeStStm) {
+		} else if (stm instanceof ALetBeStStm)
+		{
 			return ALetBeStStmAssistantInterpreter.findExpression((ALetBeStStm) stm, lineno);
-		} else if (stm instanceof SLetDefStm) {
+		} else if (stm instanceof SLetDefStm)
+		{
 			return SLetDefStmAssistantInterpreter.findExpression((SLetDefStm) stm, lineno);
-		} else if (stm instanceof AReturnStm) {
+		} else if (stm instanceof AReturnStm)
+		{
 			return AReturnStmAssistantInterpreter.findExpression((AReturnStm) stm, lineno);
-		} else if (stm instanceof SSimpleBlockStm) {
+		} else if (stm instanceof SSimpleBlockStm)
+		{
 			return SSimpleBlockStmAssistantInterpreter.findExpression((SSimpleBlockStm) stm, lineno);
-		} else if (stm instanceof AStartStm) {
+		} else if (stm instanceof AStartStm)
+		{
 			return AStartStmAssistantInterpreter.findExpression((AStartStm) stm, lineno);
-		} else if (stm instanceof ATixeStm) {
+		} else if (stm instanceof ATixeStm)
+		{
 			return ATixeStmAssistantInterpreter.findExpression((ATixeStm) stm, lineno);
-		} else if (stm instanceof ATrapStm) {
+		} else if (stm instanceof ATrapStm)
+		{
 			return ATrapStmAssistantInterpreter.findExpression((ATrapStm) stm, lineno);
-		} else if (stm instanceof AWhileStm) {
+		} else if (stm instanceof AWhileStm)
+		{
 			return AWhileStmAssistantInterpreter.findExpression((AWhileStm) stm, lineno);
-		} else {
+		} else
+		{
 			return null;
 		}
 	}
@@ -99,39 +122,56 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 	 */
 	public static PStm findStatement(PStm stm, int lineno)
 	{
-		if (stm instanceof AAlwaysStm) {
+		if (stm instanceof AAlwaysStm)
+		{
 			return AAlwaysStmAssistantInterpreter.findStatement((AAlwaysStm) stm, lineno);
-		} else if (stm instanceof AAtomicStm) {
+		} else if (stm instanceof AAtomicStm)
+		{
 			return AAtomicStmAssistantInterpreter.findStatement((AAtomicStm) stm, lineno);
-		} else if (stm instanceof ACasesStm) {
+		} else if (stm instanceof ACasesStm)
+		{
 			return ACasesStmAssistantInterpreter.findStatement((ACasesStm) stm, lineno);
-		} else if (stm instanceof ACyclesStm) {
+		} else if (stm instanceof ACyclesStm)
+		{
 			return ACyclesStmAssistantInterpreter.findStatement((ACyclesStm) stm, lineno);
-		} else if (stm instanceof ADurationStm) {
+		} else if (stm instanceof ADurationStm)
+		{
 			return ADurationStmAssistantInterpreter.findStatement((ADurationStm) stm, lineno);
-		} else if (stm instanceof AElseIfStm) {
+		} else if (stm instanceof AElseIfStm)
+		{
 			return AElseIfStmAssistantInterpreter.findStatement((AElseIfStm) stm, lineno);
-		} else if (stm instanceof AForAllStm) {
+		} else if (stm instanceof AForAllStm)
+		{
 			return AForAllStmAssistantInterpreter.findStatement((AForAllStm) stm, lineno);
-		} else if (stm instanceof AForIndexStm) {
+		} else if (stm instanceof AForIndexStm)
+		{
 			return AForIndexStmAssistantInterpreter.findStatement((AForIndexStm) stm, lineno);
-		} else if (stm instanceof AForPatternBindStm) {
+		} else if (stm instanceof AForPatternBindStm)
+		{
 			return AForPatternBindStmAssitantInterpreter.findStatement((AForPatternBindStm) stm, lineno);
-		} else if (stm instanceof AIfStm) {
+		} else if (stm instanceof AIfStm)
+		{
 			return AIfStmAssistantInterpreter.findStatement((AIfStm) stm, lineno);
-		} else if (stm instanceof ALetBeStStm) {
+		} else if (stm instanceof ALetBeStStm)
+		{
 			return ALetBeStStmAssistantInterpreter.findStatement((ALetBeStStm) stm, lineno);
-		} else if (stm instanceof SLetDefStm) {
+		} else if (stm instanceof SLetDefStm)
+		{
 			return SLetDefStmAssistantInterpreter.findStatement((SLetDefStm) stm, lineno);
-		} else if (stm instanceof SSimpleBlockStm) {
+		} else if (stm instanceof SSimpleBlockStm)
+		{
 			return SSimpleBlockStmAssistantInterpreter.findStatement((SSimpleBlockStm) stm, lineno);
-		} else if (stm instanceof ATixeStm) {
+		} else if (stm instanceof ATixeStm)
+		{
 			return ATixeStmAssistantInterpreter.findStatement((ATixeStm) stm, lineno);
-		} else if (stm instanceof ATrapStm) {
+		} else if (stm instanceof ATrapStm)
+		{
 			return ATrapStmAssistantInterpreter.findStatement((ATrapStm) stm, lineno);
-		} else if (stm instanceof AWhileStm) {
+		} else if (stm instanceof AWhileStm)
+		{
 			return AWhileStmAssistantInterpreter.findStatement((AWhileStm) stm, lineno);
-		} else {
+		} else
+		{
 			return findStatementBaseCase(stm, lineno);
 		}
 	}

@@ -5,7 +5,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -61,20 +60,7 @@ public class AInheritedDefinitionAssistantTC
 		PDefinitionAssistantTC.markUsed(d.getSuperdef());
 	}
 
-	public static LexNameList getVariableNames(AInheritedDefinition d)
-	{
-		LexNameList names = new LexNameList();
-		checkSuperDefinition(d);
-
-		for (ILexNameToken vn : PDefinitionAssistantTC.getVariableNames(d.getSuperdef()))
-		{
-			names.add(vn.getModifiedName(d.getName().getModule()));
-		}
-
-		return names;
-	}
-
-	private static void checkSuperDefinition(AInheritedDefinition d)
+	public static void checkSuperDefinition(AInheritedDefinition d)
 	{
 		// This is used to get over the case where an inherited definition
 		// is a ValueDefinition that has since been replaced with a new

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -16,7 +15,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -64,19 +62,6 @@ public class AValueDefinitionAssistantTC
 		return d.getDefs();
 	}
 
-	public static LexNameList getVariableNames(AValueDefinition d)
-	{
-		try
-		{
-			return PPatternAssistantTC.getVariableNames(d.getPattern());
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block; needs to be smarter
-			e.printStackTrace();
-			return new LexNameList();
-		}
-	}
-
 	public static void typeResolve(AValueDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
@@ -97,7 +82,7 @@ public class AValueDefinitionAssistantTC
 		PType type = node.getType();
 		PPattern pattern = node.getPattern();
 
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, question.scope);
+		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We
@@ -136,10 +121,9 @@ public class AValueDefinitionAssistantTC
 						: AstFactory.newAUnknownType(def.getLocation()));
 	}
 
-	public static LexNameList getOldNames(AValueDefinition def)
-	{
-		return PExpAssistantTC.getOldNames(def.getExpression());
-	}
-
+	// public static LexNameList getOldNames(AValueDefinition def)
+	// {
+	// return PExpAssistantTC.getOldNames(def.getExpression());
+	// }
 
 }

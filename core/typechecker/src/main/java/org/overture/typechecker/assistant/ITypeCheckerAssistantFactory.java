@@ -9,6 +9,7 @@ import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -41,48 +42,8 @@ import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
 import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
-import org.overture.typechecker.assistant.expression.ACasesExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElementsUnaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElseIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExists1ExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExistsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldNumberExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AForAllExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFuncInstatiationExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIotaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALambdaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetBeStExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetDefExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapCompMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapEnumMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapletExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkBasicExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkTypeExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMuExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANarrowExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANewExpAssistantTC;
-import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ARecordModifierAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqCompSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqEnumSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetCompSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetEnumSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASubseqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ATupleExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AVariableExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SUnaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AAllImportAssistantTC;
 import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
@@ -123,30 +84,13 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.AAlwaysStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AAssignmentStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACaseAlternativeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACasesStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AElseIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AExitStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.statement.AForAllStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForIndexStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForPatternBindStmAssitantTC;
-import org.overture.typechecker.assistant.statement.AIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ALetBeStStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AReturnStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATixeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATrapStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AWhileStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SLetDefStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
@@ -178,193 +122,262 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
-	//Definition
-//	AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
+	// Definition
+	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
+
 	AClassInvariantDefinitionAssistantTC createAClassInvariantDefinitionAssistant();
+
 	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
+
 	AEqualsDefinitionAssistantTC createAEqualsDefinitionAssistant();
+
 	AExplicitFunctionDefinitionAssistantTC createAExplicitFunctionDefinitionAssistant();
+
 	AExplicitOperationDefinitionAssistantTC createAExplicitOperationDefinitionAssistant();
 
 	AExternalDefinitionAssistantTC createAExternalDefinitionAssistant();
+
 	AImplicitFunctionDefinitionAssistantTC createAImplicitFunctionDefinitionAssistant();
+
 	AImplicitOperationDefinitionAssistantTC createAImplicitOperationDefinitionAssistant();
 
 	AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
+
 	AInheritedDefinitionAssistantTC createAInheritedDefinitionAssistant();
+
 	AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant();
+
 	ALocalDefinitionAssistantTC createALocalDefinitionAssistant();
+
 	AMultiBindListDefinitionAssistantTC createAMultiBindListDefinitionAssistant();
+
 	AMutexSyncDefinitionAssistantTC createAMutexSyncDefinitionAssistant();
+
 	ANamedTraceDefinitionAssistantTC createANamedTraceDefinitionAssistant();
+
 	APerSyncDefinitionAssistantTC createAPerSyncDefinitionAssistant();
+
 	ARenamedDefinitionAssistantTC createARenamedDefinitionAssistant();
+
 	AStateDefinitionAssistantTC createAStateDefinitionAssistant();
+
 	ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant();
+
 	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
+
 	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
+
 	AUntypedDefinitionAssistantTC createAUntypedDefinitionAssistant();
+
 	AValueDefinitionAssistantTC createAValueDefinitionAssistant();
+
 	PAccessSpecifierAssistantTC createPAccessSpecifierAssistant();
+
 	PDefinitionAssistantTC createPDefinitionAssistant();
+
 	PDefinitionListAssistantTC createPDefinitionListAssistant();
+
 	PDefinitionSet createPDefinitionSet();
+
 	PTraceDefinitionAssistantTC createPTraceDefinitionAssistant();
+
 	SClassDefinitionAssistantTC createSClassDefinitionAssistant();
-	
-	//expression
+
+	// expression
 	AApplyExpAssistantTC createAApplyExpAssistant();
+
 	ACaseAlternativeAssistantTC createACaseAlternativeAssistant();
-	ACasesExpAssistantTC createACasesExpAssistant();
-	AElementsUnaryExpAssistantTC createAElementsUnaryExpAssistant();
-	AElseIfExpAssistantTC createAElseIfExpAssistant();
-	AExists1ExpAssistantTC createAExists1ExpAssistant();
-	AExistsExpAssistantTC createAExistsExpAssistant();
-	AFieldExpAssistantTC createAFieldExpAssistant();
-	AFieldNumberExpAssistantTC createAFieldNumberExpAssistant();
-	AForAllExpAssistantTC createAForAllExpAssistant();
-	AFuncInstatiationExpAssistantTC createAFuncInstatiationExpAssistant();
-	AIfExpAssistantTC createAIfExpAssistant();
-	AIotaExpAssistantTC createAIotaExpAssistant();
-	AIsExpAssistantTC createAIsExpAssistant();
-	AIsOfBaseClassExpAssistantTC createAIsOfBaseClassExpAssistant();
-	AIsOfClassExpAssistantTC createAIsOfClassExpAssistant();
-	ALambdaExpAssistantTC createALambdaExpAssistant();
-	ALetBeStExpAssistantTC createALetBeStExpAssistant();
-	ALetDefExpAssistantTC createALetDefExpAssistant();
-	AMapCompMapExpAssistantTC createAMapCompMapExpAssistant();
-	AMapEnumMapExpAssistantTC createAMapEnumMapExpAssistant();
-	AMapletExpAssistantTC createAMapletExpAssistant();
-	AMkBasicExpAssistantTC createAMkBasicExpAssistant();
-	AMkTypeExpAssistantTC createAMkTypeExpAssistant();
-	AMuExpAssistantTC createAMuExpAssistant();
-	ANarrowExpAssistantTC createANarrowExpAssistant();
-	ANewExpAssistantTC createANewExpAssistant();
-	APostOpExpAssistantTC createAPostOpExpAssistant();
-	ARecordModifierAssistantTC createARecordModifierAssistant();
-	ASameBaseClassExpAssistantTC createASameBaseClassExpAssistant();
-	ASameClassExpAssistantTC createASameClassExpAssistant();
-	ASeqCompSeqExpAssistantTC createASeqCompSeqExpAssistant();
-	ASeqEnumSeqExpAssistantTC createASeqEnumSeqExpAssistant();
-	ASetCompSetExpAssistantTC createASetCompSetExpAssistant();
-	ASetEnumSetExpAssistantTC createASetEnumSetExpAssistant();
-	ASubseqExpAssistantTC createASubseqExpAssistant();
-	ATupleExpAssistantTC createATupleExpAssistant();
-	AVariableExpAssistantTC createAVariableExpAssistant();
+
 	PExpAssistantTC createPExpAssistant();
+
 	SBinaryExpAssistantTC createSBinaryExpAssistant();
-	SMapExpAssistantTC createSMapExpAssistant();
-	SSeqExpAssistantTC createSSeqExpAssistant();
-	SSetExpAssistantTC createSSetExpAssistant();
-	SUnaryExpAssistantTC createSUnaryExpAssistant();
-	
-	//module
+
+	// module
 	AAllImportAssistantTC createAAllImportAssistant();
+
 	AFromModuleImportsAssistantTC createAFromModuleImportsAssistant();
+
 	AModuleExportsAssistantTC createAModuleExportsAssistant();
+
 	AModuleImportsAssistantTC createAModuleImportsAssistant();
+
 	AModuleModulesAssistantTC createAModuleModulesAssistant();
+
 	ATypeImportAssistantTC createATypeImportAssistant();
+
 	AValueValueImportAssistantTC createAValueValueImportAssistant();
+
 	PExportAssistantTC createPExportAssistant();
+
 	PImportAssistantTC createPImportAssistant();
+
 	SValueImportAssistantTC createSValueImportAssistant();
-	
-	//pattern
+
+	// pattern
 	ABooleanPatternAssistantTC createABooleanPatternAssistant();
+
 	ACharacterPatternAssistantTC createACharacterPatternAssistant();
+
 	AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
+
 	AExpressionPatternAssistantTC createAExpressionPatternAssistant();
+
 	AIdentifierPatternAssistantTC createAIdentifierPatternAssistant();
+
 	AIgnorePatternAssistantTC createAIgnorePatternAssistant();
+
 	AIntegerPatternAssistantTC createAIntegerPatternAssistant();
+
 	AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant();
+
 	AMapPatternAssistantTC createAMapPatternAssistant();
+
 	AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
+
 	ANilPatternAssistantTC createANilPatternAssistant();
+
 	APatternTypePairAssistant createAPatternTypePairAssistant();
+
 	AQuotePatternAssistantTC createAQuotePatternAssistant();
+
 	ARealPatternAssistantTC createARealPatternAssistant();
+
 	ARecordPatternAssistantTC createARecordPatternAssistant();
+
 	ASeqPatternAssistantTC createASeqPatternAssistant();
+
 	ASetBindAssistantTC createASetBindAssistant();
+
 	ASetMultipleBindAssistantTC createASetMultipleBindAssistant();
+
 	ASetPatternAssistantTC createASetPatternAssistant();
+
 	AStringPatternAssistantTC createAStringPatternAssistant();
+
 	ATuplePatternAssistantTC createATuplePatternAssistant();
+
 	ATypeBindAssistantTC createATypeBindAssistant();
+
 	ATypeMultipleBindAssistantTC createATypeMultipleBindAssistant();
+
 	AUnionPatternAssistantTC createAUnionPatternAssistant();
+
 	PatternListTC createPatternList();
+
 	PBindAssistantTC createPBindAssistant();
+
 	PMultipleBindAssistantTC createPMultipleBindAssistant();
+
 	PPatternAssistantTC createPPatternAssistant();
+
 	PPatternBindAssistantTC createPPatternBindAssistant();
+
 	PPatternListAssistantTC createPPatternListAssistant();
-	
-	//statement
-	AAlwaysStmAssistantTC createAAlwaysStmAssistant();
-	AAssignmentStmAssistantTC createAAssignmentStmAssistant();
+
+	// statement
+	// AAlwaysStmAssistantTC createAAlwaysStmAssistant();
+	// AAssignmentStmAssistantTC createAAssignmentStmAssistant();
 	ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant();
+
 	ACallObjectStatementAssistantTC createACallObjectStatementAssistant();
+
 	ACallStmAssistantTC createACallStmAssistant();
-	ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant();
-	ACasesStmAssistantTC createACasesStmAssistant();
-	AElseIfStmAssistantTC createAElseIfStmAssistant();
-	AExitStmAssistantTC createAExitStmAssistant();
+
+	// ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant();
+	// ACasesStmAssistantTC createACasesStmAssistant();
+	// AElseIfStmAssistantTC createAElseIfStmAssistant();
+	// AExitStmAssistantTC createAExitStmAssistant();
 	AExternalClauseAssistantTC createAExternalClauseAssistant();
-	AForAllStmAssistantTC createAForAllStmAssistant();
-	AForIndexStmAssistantTC createAForIndexStmAssistant();
-	AForPatternBindStmAssitantTC createAForPatternBindStmAssitant();
-	AIfStmAssistantTC createAIfStmAssistant();
-	ALetBeStStmAssistantTC createALetBeStStmAssistant();
+
+	// AForAllStmAssistantTC createAForAllStmAssistant();
+	// AForIndexStmAssistantTC createAForIndexStmAssistant();
+	// AForPatternBindStmAssitantTC createAForPatternBindStmAssitant();
+	// AIfStmAssistantTC createAIfStmAssistant();
+	// ALetBeStStmAssistantTC createALetBeStStmAssistant();
 	ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant();
 
-	AReturnStmAssistantTC createAReturnStmAssistant();
-	ATixeStmAssistantTC createATixeStmAssistant();
-	ATrapStmAssistantTC createATrapStmAssistant();
-	AWhileStmAssistantTC createAWhileStmAssistant();
+	// AReturnStmAssistantTC createAReturnStmAssistant();
+	// ATixeStmAssistantTC createATixeStmAssistant();
+	// ATrapStmAssistantTC createATrapStmAssistant();
+	// AWhileStmAssistantTC createAWhileStmAssistant();
 	PStateDesignatorAssistantTC createPStateDesignatorAssistant();
+
 	PStmAssistantTC createPStmAssistant();
-	SLetDefStmAssistantTC createSLetDefStmAssistant();
-	SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant();
-	
-	//Type
+
+	// SLetDefStmAssistantTC createSLetDefStmAssistant();
+	// SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant();
+
+	// Type
 	AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant();
+
 	ABracketTypeAssistantTC createABracketTypeAssistant();
-	AClassTypeAssistantTC createAClassTypeAssistant(); 
+
+	AClassTypeAssistantTC createAClassTypeAssistant();
+
 	AFieldFieldAssistantTC createAFieldFieldAssistant();
-	AFunctionTypeAssistantTC createAFunctionTypeAssistant(); 
-	AInMapMapTypeAssistantTC createAInMapMapTypeAssistant(); 
+
+	AFunctionTypeAssistantTC createAFunctionTypeAssistant();
+
+	AInMapMapTypeAssistantTC createAInMapMapTypeAssistant();
+
 	AMapMapTypeAssistantTC createAMapMapTypeAssistant();
+
 	ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant();
+
 	AOperationTypeAssistantTC createAOperationTypeAssistant();
+
 	AOptionalTypeAssistantTC createAOptionalTypeAssistant();
+
 	AParameterTypeAssistantTC createAParameterTypeAssistant();
+
 	APatternListTypePairAssistantTC createAPatternListTypePairAssistant();
+
 	AProductTypeAssistantTC createAProductTypeAssistant();
+
 	AQuoteTypeAssistantTC createAQuoteTypeAssistant();
+
 	ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant();
+
 	ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistant();
+
 	ASeqSeqTypeAssistantTC createASeqSeqTypeAssistant();
+
 	ASetTypeAssistantTC createASetTypeAssistant();
+
 	AUndefinedTypeAssistantTC createAUndefinedTypeAssistant();
+
 	AUnionTypeAssistantTC createAUnionTypeAssistant();
+
 	AUnknownTypeAssistantTC createAUnknownTypeAssistant();
+
 	AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistant();
+
 	AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistant();
+
 	AVoidTypeAssistantTC createAVoidTypeAssistant();
+
 	PTypeAssistantTC createPTypeAssistant();
+
 	SMapTypeAssistantTC createSMapTypeAssistant();
+
 	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
+
 	SSeqTypeAssistantTC createSSeqTypeAssistant();
-	
+
 	// visitors
 	IAnswer<List<PDefinition>> getDefinitionCollector();
+
 	IAnswer<PType> getDefinitionTypeFinder();
+
 	IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker();
+
 	AnswerAdaptor<Boolean> getMapBasisChecker();
+
 	IAnswer<LexNameList> getVariableNameCollector();
-	IAnswer<PDefinition> getSelfDefinitionFinder(); 
+
+	IAnswer<PDefinition> getSelfDefinitionFinder();
+
+	IAnswer<PTypeSet> getExitTypeCollector();
+
 }

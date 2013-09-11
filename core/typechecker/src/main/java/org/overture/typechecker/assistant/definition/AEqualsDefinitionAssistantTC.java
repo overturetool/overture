@@ -10,8 +10,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 
 public class AEqualsDefinitionAssistantTC
 {
@@ -51,30 +49,10 @@ public class AEqualsDefinitionAssistantTC
 
 	}
 
-	public static LexNameList getVariableNames(AEqualsDefinition d)
-	{
-
-		return d.getDefs() == null ? new LexNameList()
-				: PDefinitionListAssistantTC.getVariableNames(d.getDefs());
-	}
-
 	public static PType getType(AEqualsDefinition def)
 	{
 		return def.getDefType() != null ? def.getDefType()
 				: AstFactory.newAUnknownType(def.getLocation());
-	}
-
-	public static LexNameList getOldNames(AEqualsDefinition def)
-	{
-
-		LexNameList list = PExpAssistantTC.getOldNames(def.getTest());
-
-		if (def.getSetbind() != null)
-		{
-			list.addAll(ASetBindAssistantTC.getOldNames(def.getSetbind()));
-		}
-
-		return list;
 	}
 
 

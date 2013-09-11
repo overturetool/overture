@@ -6,16 +6,14 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
 
-public class AIsOfClassExpAssistantInterpreter extends AIsOfClassExpAssistantTC
+public class AIsOfClassExpAssistantInterpreter // extends AIsOfClassExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AIsOfClassExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

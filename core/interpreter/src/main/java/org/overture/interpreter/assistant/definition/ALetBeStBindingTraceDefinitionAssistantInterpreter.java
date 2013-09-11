@@ -21,7 +21,6 @@ import org.overture.interpreter.values.Quantifier;
 import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class ALetBeStBindingTraceDefinitionAssistantInterpreter

@@ -6,16 +6,15 @@ import org.overture.ast.statements.SLetDefStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.SLetDefStmAssistantTC;
 
-public class SLetDefStmAssistantInterpreter extends SLetDefStmAssistantTC
+public class SLetDefStmAssistantInterpreter// extends SLetDefStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public SLetDefStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

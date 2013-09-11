@@ -2,7 +2,6 @@ package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -18,11 +17,6 @@ public class ALocalDefinitionAssistantTC
 	public ALocalDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static LexNameList getVariableNames(ALocalDefinition ld)
-	{
-		return new LexNameList(ld.getName());
 	}
 
 	public static void setValueDefinition(ALocalDefinition ld)
