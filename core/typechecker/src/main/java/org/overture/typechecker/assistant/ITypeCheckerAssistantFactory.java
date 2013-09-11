@@ -379,9 +379,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PDefinition> getSelfDefinitionFinder();
 
 	IAnswer<PTypeSet> getExitTypeCollector();
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> ba03283eade5df75fb1b337743f8ccfe5ed443f8
+	IAnswer<PDefinition> getTypeFinder();
 }

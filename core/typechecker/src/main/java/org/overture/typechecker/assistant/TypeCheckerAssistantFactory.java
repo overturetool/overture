@@ -124,6 +124,7 @@ import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
+import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.VariableNameCollector;
 
@@ -954,5 +955,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new ExitTypeCollector(this);
 	}
+	
+	public IAnswer<PDefinition> getTypeFinder()
+	{
+		return new TypeFinder(this);
+	}
+	
 
 }

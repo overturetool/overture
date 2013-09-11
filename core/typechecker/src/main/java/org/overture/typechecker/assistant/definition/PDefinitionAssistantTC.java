@@ -117,28 +117,35 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	public static PDefinition findType(PDefinition d, ILexNameToken sought,
 			String fromModule)
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantTC.findType((SClassDefinition) d, sought, fromModule);
-		} else if (d instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantTC.findType((AImportedDefinition) d, sought, fromModule);
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantTC.findType((AInheritedDefinition) d, sought, fromModule);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantTC.findType((ARenamedDefinition) d, sought, fromModule);
-		} else if (d instanceof AStateDefinition)
-		{
-			return AStateDefinitionAssistantTC.findType((AStateDefinition) d, sought, fromModule);
-		} else if (d instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantTC.findType((ATypeDefinition) d, sought, fromModule);
-		} else
+			return d.apply(af.getTypeFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+//		if (d instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantTC.findType((SClassDefinition) d, sought, fromModule);
+//		} else if (d instanceof AImportedDefinition)
+//		{
+//			return AImportedDefinitionAssistantTC.findType((AImportedDefinition) d, sought, fromModule);
+//		} else if (d instanceof AInheritedDefinition)
+//		{
+//			return AInheritedDefinitionAssistantTC.findType((AInheritedDefinition) d, sought, fromModule);
+//		} else if (d instanceof ARenamedDefinition)
+//		{
+//			return ARenamedDefinitionAssistantTC.findType((ARenamedDefinition) d, sought, fromModule);
+//		} else if (d instanceof AStateDefinition)
+//		{
+//			return AStateDefinitionAssistantTC.findType((AStateDefinition) d, sought, fromModule);
+//		} else if (d instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantTC.findType((ATypeDefinition) d, sought, fromModule);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 	public static PDefinition findName(PDefinition d, ILexNameToken sought,
