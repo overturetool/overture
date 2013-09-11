@@ -27,7 +27,8 @@ import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
 public interface IVdmThreadManager extends IDbgpThreadAcceptor, ITerminate,
-		ISuspendResume {
+		ISuspendResume
+{
 
 	// Listener
 	void addListener(IVdmThreadManagerListener listener);
@@ -58,9 +59,8 @@ public interface IVdmThreadManager extends IDbgpThreadAcceptor, ITerminate,
 	void stepInto() throws DebugException;
 
 	void stepOver() throws DebugException;
-	void stepReturn() throws DebugException;
 
-	
+	void stepReturn() throws DebugException;
 
 	void handleCustomTerminationCommands();
 }

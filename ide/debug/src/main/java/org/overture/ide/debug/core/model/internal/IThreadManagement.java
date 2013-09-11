@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
-public interface IThreadManagement {
+public interface IThreadManagement
+{
 	IVdmStreamProxy getStreamProxy();
 }

@@ -35,7 +35,7 @@ import org.overture.ide.debug.core.dbgp.internal.packets.DbgpPacketSender;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.IDbgpRawLogger;
-import org.overture.ide.debug.core.model.internal.DebugEventHelper;
+import org.overture.ide.debug.core.model.DebugEventHelper;
 
 public class DbgpDebugingEngine extends DbgpTermination implements
 		IDbgpDebugingEngine, IDbgpTerminationListener

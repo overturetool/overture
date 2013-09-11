@@ -72,15 +72,14 @@ public class VdmConsoleInputListener
 				} catch (UnsupportedEncodingException e)
 				{
 					//
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					// dont't care
 				}
 
 			}
 		});
-		thread.setName("DBGP Console reader: "+ target.getName());
+		thread.setName("DBGP Console reader: " + target.getName());
 		thread.setDaemon(true);
 		thread.start();
 	}

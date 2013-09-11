@@ -18,30 +18,39 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.internal;
 
-public class StrUtils {
+public class StrUtils
+{
 
-	public static boolean equals(String s1, String s2) {
+	public static boolean equals(String s1, String s2)
+	{
 		return s1 == null ? s2 == null : s1.equals(s2);
 	}
 
-	public static boolean isEmpty(String str) {
+	public static boolean isEmpty(String str)
+	{
 		return str == null || str.length() == 0;
 	}
 
-	public static boolean isNotEmpty(String str) {
+	public static boolean isNotEmpty(String str)
+	{
 		return str != null && str.length() != 0;
 	}
 
-	public static boolean isBlank(String str) {
-		if (str == null) {
+	public static boolean isBlank(String str)
+	{
+		if (str == null)
+		{
 			return true;
 		}
 		final int strLen = str.length();
-		if (strLen == 0) {
+		if (strLen == 0)
+		{
 			return true;
 		}
-		for (int i = 0; i < strLen; i++) {
-			if ((Character.isWhitespace(str.charAt(i)) == false)) {
+		for (int i = 0; i < strLen; i++)
+		{
+			if ((Character.isWhitespace(str.charAt(i)) == false))
+			{
 				return false;
 			}
 		}

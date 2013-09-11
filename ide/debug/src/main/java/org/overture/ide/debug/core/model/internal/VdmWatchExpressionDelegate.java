@@ -29,69 +29,82 @@ import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationListener;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationResult;
 
-public class VdmWatchExpressionDelegate implements IWatchExpressionDelegate {
-	protected static class ListenerAdpater implements IVdmEvaluationListener {
+public class VdmWatchExpressionDelegate implements IWatchExpressionDelegate
+{
+	protected static class ListenerAdpater implements IVdmEvaluationListener
+	{
 		protected final IWatchExpressionListener listener;
 
-		public ListenerAdpater(IWatchExpressionListener listener) {
+		public ListenerAdpater(IWatchExpressionListener listener)
+		{
 			this.listener = listener;
 		}
 
-		public void evaluationComplete(IVdmEvaluationResult result) {
-			listener.watchEvaluationFinished(new VdmWatchExpressionResult(
-					result));
+		public void evaluationComplete(IVdmEvaluationResult result)
+		{
+			listener.watchEvaluationFinished(new VdmWatchExpressionResult(result));
 		}
 	}
 
-	protected static IVdmThread getVdmThread(Object context) {
-		if (context instanceof IVdmThread) {
+	protected static IVdmThread getVdmThread(Object context)
+	{
+		if (context instanceof IVdmThread)
+		{
 			return (IVdmThread) context;
-		} else if (context instanceof IVdmStackFrame) {
+		} else if (context instanceof IVdmStackFrame)
+		{
 			return (IVdmThread) ((IVdmStackFrame) context).getThread();
 		}
 
 		return null;
 	}
 
-	protected static IVdmStackFrame getStackFrame(IDebugElement context) {
-		try {
-			if (context instanceof IVdmThread) {
-				IStackFrame[] frames = ((IVdmThread) context)
-						.getStackFrames();
+	protected static IVdmStackFrame getStackFrame(IDebugElement context)
+	{
+		try
+		{
+			if (context instanceof IVdmThread)
+			{
+				IStackFrame[] frames = ((IVdmThread) context).getStackFrames();
 				if (frames.length > 0)
 					return (IVdmStackFrame) frames[0];
-			} else if (context instanceof IVdmStackFrame) {
+			} else if (context instanceof IVdmStackFrame)
+			{
 				return (IVdmStackFrame) context;
 			}
-		} catch (DebugException e) {
+		} catch (DebugException e)
+		{
 		}
 
 		return null;
 	}
 
 	public void evaluateExpression(String expression, IDebugElement context,
-			IWatchExpressionListener listener) {
+			IWatchExpressionListener listener)
+	{
 
 		IVdmThread thread = getVdmThread(context);
 		IVdmStackFrame frame = getStackFrame(context);
-		if (thread != null && frame != null) {
+		if (thread != null && frame != null)
+		{
 			IVdmEvaluationEngine engine = thread.getEvaluationEngine();
-			if (engine != null) {
-				engine.asyncEvaluate(prepareExpression(expression), frame,
-						createListener(listener, expression));
+			if (engine != null)
+			{
+				engine.asyncEvaluate(prepareExpression(expression), frame, createListener(listener, expression));
 				return;
 			}
 		}
-		listener
-				.watchEvaluationFinished(new NoWatchExpressionResult(expression));
+		listener.watchEvaluationFinished(new NoWatchExpressionResult(expression));
 	}
 
-	protected String prepareExpression(String expression) {
+	protected String prepareExpression(String expression)
+	{
 		return expression;
 	}
 
 	protected ListenerAdpater createListener(IWatchExpressionListener listener,
-			String expression) {
+			String expression)
+	{
 		return new ListenerAdpater(listener);
 	}
 }

@@ -33,8 +33,8 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmWatchpoint;
 
-public class VdmWatchpoint extends VdmLineBreakpoint implements
-		IVdmWatchpoint {
+public class VdmWatchpoint extends VdmLineBreakpoint implements IVdmWatchpoint
+{
 
 	public static final String FIELD_NAME = VdmDebugPlugin.PLUGIN_ID
 			+ ".fieldName"; //$NON-NLS-1$
@@ -44,20 +44,21 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements
 	public static final String MODIFICATION = VdmDebugPlugin.PLUGIN_ID
 			+ ".modification"; //$NON-NLS-1$
 
-	public VdmWatchpoint(final String debugModelId,
-			final IResource resource, final IPath path, final int lineNumber,
-			final int start, final int end, final String fieldName)
-			throws CoreException {
-		IWorkspaceRunnable wr = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
+	public VdmWatchpoint(final String debugModelId, final IResource resource,
+			final IPath path, final int lineNumber, final int start,
+			final int end, final String fieldName) throws CoreException
+	{
+		IWorkspaceRunnable wr = new IWorkspaceRunnable()
+		{
+			public void run(IProgressMonitor monitor) throws CoreException
+			{
 				// create the marker
 				setMarker(resource.createMarker(getMarkerId()));
 
-				final Map<String,Object> attributes = new HashMap<String,Object>();
+				final Map<String, Object> attributes = new HashMap<String, Object>();
 				// add attributes
 				addVdmBreakpointAttributes(attributes, debugModelId, true);
-				addLineBreakpointAttributes(attributes, path, lineNumber,
-						start, end);
+				addLineBreakpointAttributes(attributes, path, lineNumber, start, end);
 				attributes.put(FIELD_NAME, fieldName);
 
 				// set attributes
@@ -70,52 +71,62 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements
 		run(getMarkerRule(resource), wr);
 	}
 
-	public VdmWatchpoint() {
+	public VdmWatchpoint()
+	{
 	}
 
-	public String getFieldName() throws CoreException {
+	public String getFieldName() throws CoreException
+	{
 		return this.getMarker().getAttribute(FIELD_NAME, ""); //$NON-NLS-1$
 	}
 
-	public void setFieldName(String name) throws CoreException {
+	public void setFieldName(String name) throws CoreException
+	{
 		this.getMarker().setAttribute(FIELD_NAME, name);
 	}
 
-	protected String getMarkerId() {
+	protected String getMarkerId()
+	{
 		return IDebugConstants.WATCHPOINT_MARKER_ID;
 	}
 
-	public boolean isAccess() throws CoreException {
+	public boolean isAccess() throws CoreException
+	{
 		return (new Boolean(this.getMarker().getAttribute(ACCESS, "true"))) //$NON-NLS-1$
-				.booleanValue();
+		.booleanValue();
 	}
 
-	public boolean isModification() throws CoreException {
+	public boolean isModification() throws CoreException
+	{
 		return (new Boolean(this.getMarker().getAttribute(MODIFICATION, "true"))) //$NON-NLS-1$
-				.booleanValue();
+		.booleanValue();
 	}
 
-	public void setAccess(boolean access) throws CoreException {
+	public void setAccess(boolean access) throws CoreException
+	{
 		this.getMarker().setAttribute(ACCESS, Boolean.toString(access));
 	}
 
-	public void setModification(boolean modification) throws CoreException {
-		this.getMarker().setAttribute(MODIFICATION,
-				Boolean.toString(modification));
+	public void setModification(boolean modification) throws CoreException
+	{
+		this.getMarker().setAttribute(MODIFICATION, Boolean.toString(modification));
 	}
 
-	public boolean supportsAccess() {
+	public boolean supportsAccess()
+	{
 		return true;
 	}
 
-	public boolean supportsModification() {
+	public boolean supportsModification()
+	{
 		return true;
 	}
 
 	private static final String[] UPDATABLE_ATTRS = new String[] { FIELD_NAME,
 			ACCESS, MODIFICATION };
 
-	public String[] getUpdatableAttributes() {
+	public String[] getUpdatableAttributes()
+	{
 		List<String> all = new ArrayList<String>();
 		all.addAll(Arrays.asList(super.getUpdatableAttributes()));
 		all.addAll(Arrays.asList(UPDATABLE_ATTRS));

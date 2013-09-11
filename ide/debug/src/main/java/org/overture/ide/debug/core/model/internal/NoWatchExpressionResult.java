@@ -23,34 +23,41 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IWatchExpressionResult;
 import org.overture.ide.debug.utils.CharOperation;
 
-public class NoWatchExpressionResult implements IWatchExpressionResult {
+public class NoWatchExpressionResult implements IWatchExpressionResult
+{
 
 	private final String expressionText;
 
 	/**
 	 * @param expressionText
 	 */
-	public NoWatchExpressionResult(String expressionText) {
+	public NoWatchExpressionResult(String expressionText)
+	{
 		this.expressionText = expressionText;
 	}
 
-	public String[] getErrorMessages() {
+	public String[] getErrorMessages()
+	{
 		return CharOperation.NO_STRINGS;
 	}
 
-	public DebugException getException() {
+	public DebugException getException()
+	{
 		return null;
 	}
 
-	public String getExpressionText() {
+	public String getExpressionText()
+	{
 		return expressionText;
 	}
 
-	public IValue getValue() {
+	public IValue getValue()
+	{
 		return null;
 	}
 
-	public boolean hasErrors() {
+	public boolean hasErrors()
+	{
 		return false;
 	}
 

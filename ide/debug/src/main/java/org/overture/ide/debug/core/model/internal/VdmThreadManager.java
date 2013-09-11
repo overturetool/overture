@@ -42,32 +42,39 @@ import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpLineBreakpoint;
 import org.overture.ide.debug.core.dbgp.commands.IDbgpFeatureCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
+import org.overture.ide.debug.core.model.DebugEventHelper;
 import org.overture.ide.debug.core.model.IVdmDebugThreadConfigurator;
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
-
-public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener {
+public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener
+{
 	private static final boolean DEBUG = VdmDebugPlugin.DEBUG;
 	private boolean errorState = false;
 	private IVdmDebugThreadConfigurator configurator = null;
 
 	// Helper methods
-	private interface IThreadBoolean {
+	private interface IThreadBoolean
+	{
 		boolean get(IThread thread);
 	}
 
-	private boolean getThreadBoolean(IThreadBoolean b) {
-		synchronized (threads) {
+	private boolean getThreadBoolean(IThreadBoolean b)
+	{
+		synchronized (threads)
+		{
 			IThread[] ths = getThreads();
 
-			if (ths.length == 0) {
+			if (ths.length == 0)
+			{
 				return false;
 			}
 
-			for (int i = 0; i < ths.length; ++i) {
-				if (!b.get(ths[i])) {
+			for (int i = 0; i < ths.length; ++i)
+			{
+				if (!b.get(ths[i]))
+				{
 					return false;
 				}
 			}
@@ -76,8 +83,7 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 		}
 	}
 
-	private final ListenerList listeners = new ListenerList(
-			ListenerList.IDENTITY);
+	private final ListenerList listeners = new ListenerList(ListenerList.IDENTITY);
 
 	private final List<VdmThread> threads = new ArrayList<VdmThread>();
 
@@ -85,48 +91,60 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 
 	private final VdmDebugTarget target;
 
-	protected void fireThreadAccepted(IVdmThread thread, boolean first) {
+	protected void fireThreadAccepted(IVdmThread thread, boolean first)
+	{
 		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
+		for (int i = 0; i < list.length; ++i)
+		{
 			((IVdmThreadManagerListener) list[i]).threadAccepted(thread, first);
 		}
 	}
 
-	protected void fireAllThreadsTerminated() {
+	protected void fireAllThreadsTerminated()
+	{
 		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
+		for (int i = 0; i < list.length; ++i)
+		{
 			((IVdmThreadManagerListener) list[i]).allThreadsTerminated();
 		}
 	}
 
-	public void addListener(IVdmThreadManagerListener listener) {
+	public void addListener(IVdmThreadManagerListener listener)
+	{
 		listeners.add(listener);
 	}
 
-	public void removeListener(IVdmThreadManagerListener listener) {
+	public void removeListener(IVdmThreadManagerListener listener)
+	{
 		listeners.remove(listener);
 	}
 
-	public boolean isWaitingForThreads() {
+	public boolean isWaitingForThreads()
+	{
 		return waitingForThreads;
 	}
 
-	public boolean hasThreads() {
-		synchronized (threads) {
+	public boolean hasThreads()
+	{
+		synchronized (threads)
+		{
 			return !threads.isEmpty();
 		}
 	}
 
-	public IVdmThread[] getThreads() {
-		synchronized (threads) {
+	public IVdmThread[] getThreads()
+	{
+		synchronized (threads)
+		{
 
-			return (IVdmThread[]) threads
-					.toArray(new IVdmThread[threads.size()]);
+			return (IVdmThread[]) threads.toArray(new IVdmThread[threads.size()]);
 		}
 	}
 
-	public VdmThreadManager(VdmDebugTarget target) {
-		if (target == null) {
+	public VdmThreadManager(VdmDebugTarget target)
+	{
+		if (target == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
@@ -140,11 +158,15 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	 * @param stdout
 	 * @return
 	 */
-	private String filter(String data, int stream) {
-		if (streamFilters != null) {
-			for (int i = 0; i < streamFilters.length; ++i) {
+	private String filter(String data, int stream)
+	{
+		if (streamFilters != null)
+		{
+			for (int i = 0; i < streamFilters.length; ++i)
+			{
 				data = streamFilters[i].filter(data, stream);
-				if (data == null) {
+				if (data == null)
+				{
 					return null;
 				}
 			}
@@ -152,38 +174,46 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 		return data;
 	}
 
-	public void stdoutReceived(String data) {
+	public void stdoutReceived(String data)
+	{
 		final IVdmStreamProxy proxy = target.getStreamProxy();
-		if (proxy != null) {
+		if (proxy != null)
+		{
 			data = filter(data, IDbgpStreamFilter.STDOUT);
-			if (data != null) {
+			if (data != null)
+			{
 				proxy.writeStdout(data);
 			}
 		}
-		if (DEBUG) {
-//			System.out.println("Received (stdout): " + data); //$NON-NLS-1$
+		if (DEBUG)
+		{
+			//			System.out.println("Received (stdout): " + data); //$NON-NLS-1$
 		}
 	}
 
-	public void stderrReceived(String data) {
-		
+	public void stderrReceived(String data)
+	{
+
 		final IVdmStreamProxy proxy = target.getStreamProxy();
-		
-		if (proxy != null) {
+
+		if (proxy != null)
+		{
 			data = filter(data, IDbgpStreamFilter.STDERR);
-			if (data != null) {
+			if (data != null)
+			{
 				proxy.writeStderr(data);
 			}
 		}
-		if (DEBUG) {
+		if (DEBUG)
+		{
 			System.out.println("Received (stderr): " + data); //$NON-NLS-1$
 		}
-		
+
 		DebugEventHelper.fireChangeEvent(target);
 	}
-	
 
-	void setStreamFilters(IDbgpStreamFilter[] streamFilters) {
+	void setStreamFilters(IDbgpStreamFilter[] streamFilters)
+	{
 		this.streamFilters = streamFilters;
 	}
 
@@ -193,29 +223,38 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	 * @param thread
 	 * @return
 	 */
-	private static boolean hasBreakpointAtCurrentPosition(VdmThread thread) {
-		try {
+	private static boolean hasBreakpointAtCurrentPosition(VdmThread thread)
+	{
+		try
+		{
 			thread.updateStack();
-			if (thread.hasStackFrames()) {
+			if (thread.hasStackFrames())
+			{
 				final IStackFrame top = thread.getTopStackFrame();
-				if (top instanceof IVdmStackFrame && top.getLineNumber() > 0) {
+				if (top instanceof IVdmStackFrame && top.getLineNumber() > 0)
+				{
 					final IVdmStackFrame frame = (IVdmStackFrame) top;
-					if (frame.getSourceURI() != null) {
+					if (frame.getSourceURI() != null)
+					{
 						final String location = frame.getSourceURI().getPath();
-						final IDbgpBreakpoint[] breakpoints = thread
-								.getDbgpSession().getCoreCommands()
-								.getBreakpoints();
-						for (int i = 0; i < breakpoints.length; ++i) {
-							if (breakpoints[i] instanceof IDbgpLineBreakpoint) {
+						final IDbgpBreakpoint[] breakpoints = thread.getDbgpSession().getCoreCommands().getBreakpoints();
+						for (int i = 0; i < breakpoints.length; ++i)
+						{
+							if (breakpoints[i] instanceof IDbgpLineBreakpoint)
+							{
 								final IDbgpLineBreakpoint bp = (IDbgpLineBreakpoint) breakpoints[i];
-								if (frame.getLineNumber() == bp.getLineNumber()) {
-									try {
-										if (new URI(bp.getFilename()).getPath()
-												.equals(location)) {
+								if (frame.getLineNumber() == bp.getLineNumber())
+								{
+									try
+									{
+										if (new URI(bp.getFilename()).getPath().equals(location))
+										{
 											return true;
 										}
-									} catch (URISyntaxException e) {
-										if (VdmDebugPlugin.DEBUG) {
+									} catch (URISyntaxException e)
+									{
+										if (VdmDebugPlugin.DEBUG)
+										{
 											e.printStackTrace();
 										}
 									}
@@ -225,12 +264,16 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 					}
 				}
 			}
-		} catch (DebugException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		} catch (DebugException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
-		} catch (DbgpException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		} catch (DbgpException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -238,18 +281,20 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	}
 
 	/**
-	 * Tests if the specified thread has valid current stack. In some cases it
-	 * is better to skip first internal location.
+	 * Tests if the specified thread has valid current stack. In some cases it is better to skip first internal
+	 * location.
 	 * 
 	 * @param thread
 	 * @return
 	 */
-	private static boolean isValidStack(VdmThread thread) {
-		final IDebugOptions debugOptions = thread.getDbgpSession()
-				.getDebugOptions();
-		if (debugOptions.get(DebugOption.ENGINE_VALIDATE_STACK)) {
+	private static boolean isValidStack(VdmThread thread)
+	{
+		final IDebugOptions debugOptions = thread.getDbgpSession().getDebugOptions();
+		if (debugOptions.get(DebugOption.ENGINE_VALIDATE_STACK))
+		{
 			thread.updateStack();
-			if (thread.hasStackFrames()) {
+			if (thread.hasStackFrames())
+			{
 				return thread.isValidStack();
 			}
 		}
@@ -257,11 +302,14 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 	}
 
 	// IDbgpThreadAcceptor
-	public void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor) {
+	public void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor)
+	{
 		SubMonitor sub = SubMonitor.convert(monitor, 100);
-		try {
+		try
+		{
 			DbgpException error = session.getInfo().getError();
-			if (error != null) {
+			if (error != null)
+			{
 				throw error;
 			}
 			session.configure(target.getOptions());
@@ -275,76 +323,92 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 			addThread(thread);
 
 			final boolean isFirstThread = waitingForThreads;
-			if (isFirstThread) {
+			if (isFirstThread)
+			{
 				waitingForThreads = false;
 			}
-			if (isFirstThread || !isSupportsThreads(thread)) {
+			if (isFirstThread || !isSupportsThreads(thread))
+			{
 				SubMonitor child = sub.newChild(25);
-				target.breakpointManager.initializeSession(
-						thread.getDbgpSession(), child);
+				target.breakpointManager.initializeSession(thread.getDbgpSession(), child);
 				child = sub.newChild(25);
-				if (configurator != null) {
+				if (configurator != null)
+				{
 					configurator.initializeBreakpoints(thread, child);
 				}
 			}
 
 			DebugEventHelper.fireCreateEvent(thread);
 
-			final boolean stopBeforeCode = thread.getDbgpSession()
-					.getDebugOptions().get(DebugOption.ENGINE_STOP_BEFORE_CODE);
+			final boolean stopBeforeCode = thread.getDbgpSession().getDebugOptions().get(DebugOption.ENGINE_STOP_BEFORE_CODE);
 			boolean executed = false;
-			if (!breakOnFirstLine) {
-				if (stopBeforeCode || !hasBreakpointAtCurrentPosition(thread)) {
+			if (!breakOnFirstLine)
+			{
+				if (stopBeforeCode || !hasBreakpointAtCurrentPosition(thread))
+				{
 					thread.resumeAfterAccept();
 					executed = true;
 				}
-			} else {
-				if (stopBeforeCode || !isValidStack(thread)) {
+			} else
+			{
+				if (stopBeforeCode || !isValidStack(thread))
+				{
 					thread.initialStepInto();
 					executed = true;
 				}
 			}
-			if (!executed) {
-				if (!thread.isStackInitialized()) {
+			if (!executed)
+			{
+				if (!thread.isStackInitialized())
+				{
 					thread.updateStack();
 				}
 				DebugEventHelper.fireChangeEvent(thread);
-				DebugEventHelper.fireSuspendEvent(thread,
-						DebugEvent.CLIENT_REQUEST);
+				DebugEventHelper.fireSuspendEvent(thread, DebugEvent.CLIENT_REQUEST);
 			}
 			sub.worked(25);
 			fireThreadAccepted(thread, isFirstThread);
-		} catch (Exception e) {
-			try {
+		} catch (Exception e)
+		{
+			try
+			{
 				target.terminate();
-			} catch (DebugException e1) {
+			} catch (DebugException e1)
+			{
 			}
 			VdmDebugPlugin.log(e);
-		} finally {
+		} finally
+		{
 			sub.done();
 		}
 	}
 
-	private static boolean isSupportsThreads(IVdmThread thread) {
-		try {
-			final IDbgpFeature feature = thread.getDbgpSession()
-					.getCoreCommands()
-					.getFeature(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS);
+	private static boolean isSupportsThreads(IVdmThread thread)
+	{
+		try
+		{
+			final IDbgpFeature feature = thread.getDbgpSession().getCoreCommands().getFeature(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS);
 			return feature != null
 					&& IDbgpFeature.ONE_VALUE.equals(feature.getValue());
-		} catch (DbgpException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		} catch (DbgpException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
 			return false;
 		}
 	}
 
-	private boolean isAnyThreadInStepInto() {
-		synchronized (threads) {
-			for (Iterator<VdmThread> i = threads.iterator(); i.hasNext();) {
+	private boolean isAnyThreadInStepInto()
+	{
+		synchronized (threads)
+		{
+			for (Iterator<VdmThread> i = threads.iterator(); i.hasNext();)
+			{
 				VdmThread thread = (VdmThread) i.next();
-				if (thread.isStepInto()) {
+				if (thread.isStepInto())
+				{
 					return true;
 				}
 			}
@@ -352,40 +416,52 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 		return false;
 	}
 
-	private void addThread(VdmThread thread) {
-		synchronized (threads) {
+	private void addThread(VdmThread thread)
+	{
+		synchronized (threads)
+		{
 			threads.add(thread);
 		}
 	}
 
-	public void terminateThread(IVdmThread thread) {
-		synchronized (threads) {
+	public void terminateThread(IVdmThread thread)
+	{
+		synchronized (threads)
+		{
 			threads.remove(thread);
 		}
 		DebugEventHelper.fireTerminateEvent(thread);
 		final IDbgpSession session = ((VdmThread) thread).getDbgpSession();
 		session.getStreamManager().removeListener(this);
 		target.breakpointManager.removeSession(thread.getDbgpSession());
-		if (!hasThreads()) {
+		if (!hasThreads())
+		{
 			fireAllThreadsTerminated();
 		}
 	}
 
 	// ITerminate
-	public boolean canTerminate() {
-		synchronized (threads) {
+	public boolean canTerminate()
+	{
+		synchronized (threads)
+		{
 			IThread[] ths = getThreads();
 
-			if (ths.length == 0) {
-				if (waitingForThreads) {
+			if (ths.length == 0)
+			{
+				if (waitingForThreads)
+				{
 					return true;
-				} else {
+				} else
+				{
 					return false;
 				}
 			}
 
-			for (int i = 0; i < ths.length; ++i) {
-				if (!ths[i].canTerminate()) {
+			for (int i = 0; i < ths.length; ++i)
+			{
+				if (!ths[i].canTerminate())
+				{
 					return false;
 				}
 			}
@@ -394,146 +470,189 @@ public class VdmThreadManager implements IVdmThreadManager, IDbgpStreamListener 
 		}
 	}
 
-	public boolean isTerminated() {
-		if (!hasThreads()) {
+	public boolean isTerminated()
+	{
+		if (!hasThreads())
+		{
 			return !isWaitingForThreads();
 		}
 
-		return getThreadBoolean(new IThreadBoolean() {
-			public boolean get(IThread thread) {
+		return getThreadBoolean(new IThreadBoolean()
+		{
+			public boolean get(IThread thread)
+			{
 				return thread.isTerminated();
 			}
 		});
 	}
 
-	public void terminate() throws DebugException {
+	public void terminate() throws DebugException
+	{
 		target.terminate();
 	}
 
-	public void sendTerminationRequest() throws DebugException {
-		synchronized (threads) {
+	public void sendTerminationRequest() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IVdmThread[] threads = getThreads();
-			if (threads.length > 0) {
+			if (threads.length > 0)
+			{
 				waitingForThreads = false;
 				handleCustomPreTerminationCommands();
 			}
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				threads[i].sendTerminationRequest();
 			}
-			
+
 		}
 	}
 
-	public boolean canResume() {
-		if(errorState)
+	public boolean canResume()
+	{
+		if (errorState)
 		{
 			return false;
 		}
-		return getThreadBoolean(new IThreadBoolean() {
-			public boolean get(IThread thread) {
+		return getThreadBoolean(new IThreadBoolean()
+		{
+			public boolean get(IThread thread)
+			{
 				return thread.canResume();
 			}
 		});
 	}
 
-	public boolean canSuspend() {
-		return getThreadBoolean(new IThreadBoolean() {
-			public boolean get(IThread thread) {
+	public boolean canSuspend()
+	{
+		return getThreadBoolean(new IThreadBoolean()
+		{
+			public boolean get(IThread thread)
+			{
 				return thread.canSuspend();
 			}
 		});
 	}
 
-	public boolean isSuspended() {
-		return getThreadBoolean(new IThreadBoolean() {
-			public boolean get(IThread thread) {
+	public boolean isSuspended()
+	{
+		return getThreadBoolean(new IThreadBoolean()
+		{
+			public boolean get(IThread thread)
+			{
 				return thread.isSuspended();
 			}
 		});
 	}
 
-	public void resume() throws DebugException {
-		synchronized (threads) {
+	public void resume() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				((VdmThread) threads[i]).resumeInner();
 			}
 		}
 	}
 
-	public void stepInto() throws DebugException {
-		synchronized (threads) {
+	public void stepInto() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
 			// System.out.println("Thread number:" + threads.length );
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				((VdmThread) threads[i]).stepIntoInner();
 				// System.out.println("Step Thread: " + i);
 			}
 		}
 	}
 
-	public void stepOver() throws DebugException {
-		synchronized (threads) {
+	public void stepOver() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				((VdmThread) threads[i]).stepOverInner();
 			}
 		}
 	}
 
-	public void stepReturn() throws DebugException {
-		synchronized (threads) {
+	public void stepReturn() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				((VdmThread) threads[i]).stepReturnInner();
 			}
 		}
 	}
 
-	public void suspend() throws DebugException {
-		synchronized (threads) {
+	public void suspend() throws DebugException
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				threads[i].suspend();
 			}
 		}
 	}
 
-	public void refreshThreads() {
-		synchronized (threads) {
+	public void refreshThreads()
+	{
+		synchronized (threads)
+		{
 			IThread[] threads = getThreads();
-			for (int i = 0; i < threads.length; ++i) {
+			for (int i = 0; i < threads.length; ++i)
+			{
 				((IVdmThread) threads[i]).updateStackFrames();
 			}
 		}
 	}
 
 	public void setVdmThreadConfigurator(
-			IVdmDebugThreadConfigurator configurator) {
+			IVdmDebugThreadConfigurator configurator)
+	{
 		this.configurator = configurator;
 	}
 
-	public void configureThread(DbgpDebugger engine, VdmThread scriptThread) {
-		if (configurator != null) {
+	public void configureThread(DbgpDebugger engine, VdmThread scriptThread)
+	{
+		if (configurator != null)
+		{
 			configurator.configureThread(engine, scriptThread);
 		}
 	}
 
-	public void handleCustomTerminationCommands() {
-		synchronized (threads) {
-			if (threads.size() == 1) {
-				target.handleCustomTerminationCommands(threads.get(0)
-						.getDbgpSession());
+	public void handleCustomTerminationCommands()
+	{
+		synchronized (threads)
+		{
+			if (threads.size() == 1)
+			{
+				target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
 			}
 		}
 
 	}
-	
-	public void handleCustomPreTerminationCommands() {
-		synchronized (threads) {
-			if (!threads.isEmpty()) {
-				target.handleCustomTerminationCommands(threads.get(0)
-						.getDbgpSession());
+
+	public void handleCustomPreTerminationCommands()
+	{
+		synchronized (threads)
+		{
+			if (!threads.isEmpty())
+			{
+				target.handleCustomTerminationCommands(threads.get(0).getDbgpSession());
 			}
 		}
 
