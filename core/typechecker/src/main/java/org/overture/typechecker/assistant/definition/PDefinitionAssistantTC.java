@@ -45,6 +45,7 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.TypeFinder;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -119,7 +120,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			return d.apply(af.getTypeFinder());// FIXME: should we handle exceptions like this
+			return d.apply(af.getTypeFinder(),new TypeFinder.Newquestion(sought, fromModule));// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null;

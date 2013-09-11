@@ -1,7 +1,7 @@
 package org.overture.typechecker.utilities;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
@@ -25,19 +25,26 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
  * 
  * @author kel
  */
-public class TypeFinder extends AnswerAdaptor<PDefinition>
+public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDefinition>
 {
-	
+	public static class Newquestion
+	{
+		final ILexNameToken sought;
+		final String fromModule;
+		
+		public Newquestion(ILexNameToken sought,String fromModule)
+		{
+			this.fromModule = fromModule;
+			this.sought = sought;
+		}
+
+	} 
 	
 	/**
-	 * I have no idea what is going wrong in order to fix it!
+	 * 
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ILexNameToken sought;
-	private String fromModule;
-	
-	Newquestion question = new Newquestion(sought,fromModule);
 	
 	protected ITypeCheckerAssistantFactory af;
 
@@ -45,70 +52,64 @@ public class TypeFinder extends AnswerAdaptor<PDefinition>
 	{
 		this.af = af;
 	}
-
-	public PDefinition defaultSClassDefinition(SClassDefinition node) throws AnalysisException
+	
+	
+	@Override
+	public PDefinition defaultSClassDefinition(SClassDefinition node, Newquestion question) throws AnalysisException
 	{
 		return SClassDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
 	
-	public PDefinition caseAImportedDEfinition(AImportedDefinition node) throws AnalysisException
+	@Override
+	public PDefinition caseAImportedDefinition(AImportedDefinition node, Newquestion question) throws AnalysisException
 	{
 		return AImportedDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
-	
-	public PDefinition caseAInheritedDefinition(AInheritedDefinition node) throws AnalysisException
+	@Override
+	public PDefinition caseAInheritedDefinition(AInheritedDefinition node, Newquestion question) throws AnalysisException
 	{
 		return AInheritedDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
-	
-	public PDefinition caseARenameDefinition(ARenamedDefinition node) throws AnalysisException
+	@Override
+	public PDefinition caseARenamedDefinition(ARenamedDefinition node, Newquestion question) throws AnalysisException
 	{
 		return ARenamedDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
-	
-	public PDefinition caseAStateDefinition(AStateDefinition node)
+	@Override
+	public PDefinition caseAStateDefinition(AStateDefinition node, Newquestion question)
 			throws AnalysisException
 	{
 		return AStateDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
 	
-	
-	public PDefinition caseATypeDefinition(ATypeDefinition node)
+	@Override
+	public PDefinition caseATypeDefinition(ATypeDefinition node, Newquestion question)
 			throws AnalysisException
 	{
 		return ATypeDefinitionAssistantTC.findType(node, question.sought, question.fromModule);
 	}
 	
-	public PDefinition DefaultPDefinition(PDefinition node)
+	
+	@Override
+	public PDefinition defaultPDefinition(PDefinition node, Newquestion question)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
-	public PDefinition defaultINode(INode node) throws AnalysisException
+	@Override
+	public PDefinition defaultINode(INode node, Newquestion question) throws AnalysisException
 	{
 		assert false : "default case should never happen in TypeFinder";
 		return null;
 	}
 
-	
-	public PDefinition defaultIToken(IToken node) throws AnalysisException
+	@Override
+	public PDefinition defaultIToken(IToken node, Newquestion question) throws AnalysisException
 	{
 		assert false : "default case should never happen in TypeFinder";
 		return null;
 	}
 	
-	class Newquestion
-	{
-		final ILexNameToken sought;
-		final String fromModule;
-		
-		public Newquestion(ILexNameToken s,String Module)
-		{
-			this.fromModule = Module;
-			this.sought = s;
-		}
-
-	} 
+	
 
 }

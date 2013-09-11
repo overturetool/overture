@@ -7,6 +7,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -127,6 +128,7 @@ import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -956,7 +958,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ExitTypeCollector(this);
 	}
 	
-	public IAnswer<PDefinition> getTypeFinder()
+	@Override
+	public IQuestionAnswer<Newquestion, PDefinition> getTypeFinder()
 	{
 		return new TypeFinder(this);
 	}
