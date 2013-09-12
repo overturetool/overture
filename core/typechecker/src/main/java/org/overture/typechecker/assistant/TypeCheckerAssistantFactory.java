@@ -123,6 +123,7 @@ import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
 import org.overture.typechecker.utilities.ExitTypeCollector;
+import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeUtils;
@@ -961,6 +962,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<Newquestion, PDefinition> getTypeFinder()
 	{
 		return new TypeFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<NameFinder.Newquestion, PDefinition> getNameFinder()
+	{
+		return new NameFinder(this);
 	}
 	
 

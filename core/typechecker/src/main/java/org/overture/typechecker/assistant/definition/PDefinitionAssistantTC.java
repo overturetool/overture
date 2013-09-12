@@ -45,6 +45,7 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
@@ -125,95 +126,20 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		{
 			return null;
 		}
-//		if (d instanceof SClassDefinition)
-//		{
-//			return SClassDefinitionAssistantTC.findType((SClassDefinition) d, sought, fromModule);
-//		} else if (d instanceof AImportedDefinition)
-//		{
-//			return AImportedDefinitionAssistantTC.findType((AImportedDefinition) d, sought, fromModule);
-//		} else if (d instanceof AInheritedDefinition)
-//		{
-//			return AInheritedDefinitionAssistantTC.findType((AInheritedDefinition) d, sought, fromModule);
-//		} else if (d instanceof ARenamedDefinition)
-//		{
-//			return ARenamedDefinitionAssistantTC.findType((ARenamedDefinition) d, sought, fromModule);
-//		} else if (d instanceof AStateDefinition)
-//		{
-//			return AStateDefinitionAssistantTC.findType((AStateDefinition) d, sought, fromModule);
-//		} else if (d instanceof ATypeDefinition)
-//		{
-//			return ATypeDefinitionAssistantTC.findType((ATypeDefinition) d, sought, fromModule);
-//		} else
-//		{
-//			return null;
-//		}
 	}
 
 	public static PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope)
 	{
-		if (d instanceof SClassDefinition)
+		
+		try
 		{
-			return SClassDefinitionAssistantTC.findName((SClassDefinition) d, sought, scope);
-		} else if (d instanceof AEqualsDefinition)
+			return d.apply(af.getNameFinder(),new NameFinder.Newquestion(sought, scope));// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AEqualsDefinitionAssistantTC.findName((AEqualsDefinition) d, sought, scope);
-		} else if (d instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantTC.findName((AExplicitFunctionDefinition) d, sought, scope);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantTC.findName((AExplicitOperationDefinition) d, sought, scope);
-		} else if (d instanceof AExternalDefinition)
-		{
-			return AExternalDefinitionAssistantTC.findName((AExternalDefinition) d, sought, scope);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantTC.findName((AImplicitFunctionDefinition) d, sought, scope);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantTC.findName((AImplicitOperationDefinition) d, sought, scope);
-		} else if (d instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantTC.findName((AImportedDefinition) d, sought, scope);
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantTC.findName((AInheritedDefinition) d, sought, scope);
-		} else if (d instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantTC.findName((AInstanceVariableDefinition) d, sought, scope);
-		} else if (d instanceof AMultiBindListDefinition)
-		{
-			return AMultiBindListDefinitionAssistantTC.findName((AMultiBindListDefinition) d, sought, scope);
-		} else if (d instanceof AMutexSyncDefinition)
-		{
-			return AMutexSyncDefinitionAssistantTC.findName((AMutexSyncDefinition) d, sought, scope);
-		} else if (d instanceof ANamedTraceDefinition)
-		{
-			return ANamedTraceDefinitionAssistantTC.findName((ANamedTraceDefinition) d, sought, scope);
-		} else if (d instanceof APerSyncDefinition)
-		{
-			return APerSyncDefinitionAssistantTC.findName((APerSyncDefinition) d, sought, scope);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantTC.findName((ARenamedDefinition) d, sought, scope);
-		} else if (d instanceof AStateDefinition)
-		{
-			return AStateDefinitionAssistantTC.findName((AStateDefinition) d, sought, scope);
-		} else if (d instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantTC.findName((AThreadDefinition) d, sought, scope);
-		} else if (d instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantTC.findName((ATypeDefinition) d, sought, scope);
-		} else if (d instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantTC.findName((AValueDefinition) d, sought, scope);
-		} else
-		{
-			return findNameBaseCase(d, sought, scope);
+			return null;
 		}
-
+		
 	}
 
 	public static PDefinition findNameBaseCase(PDefinition d,

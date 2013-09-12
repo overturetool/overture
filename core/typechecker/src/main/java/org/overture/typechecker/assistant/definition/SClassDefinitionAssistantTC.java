@@ -185,7 +185,9 @@ public class SClassDefinitionAssistantTC
 	public static PDefinition findType(SClassDefinition classdef,
 			ILexNameToken sought, String fromModule)
 	{
-
+		//FIXME: This method is used and outside the TypeFinder visitor so I can't delete it!
+		//It is used in this class "public class PrivateClassEnvironment"
+		//How do I proceed in this case?
 		if ((!sought.getExplicit() && sought.getName().equals(classdef.getName().getName()))
 				|| sought.equals(classdef.getName().getClassName()))
 		{
