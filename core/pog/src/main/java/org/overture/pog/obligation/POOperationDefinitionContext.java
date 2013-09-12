@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.omg.CORBA.PolicyOperations;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -54,6 +55,22 @@ public class POOperationDefinitionContext extends POContext
 	public final PExp precondition;
 	public final PDefinition stateDefinition;
 	final AImplicitOperationDefinition opDef;
+
+
+	protected POOperationDefinitionContext(ILexNameToken name,
+			AOperationType deftype, List<PPattern> paramPatternList,
+			boolean addPrecond, PExp precondition, PDefinition stateDefinition,
+			AImplicitOperationDefinition opDef)
+	{
+		super();
+		this.name = name;
+		this.deftype = deftype;
+		this.paramPatternList = paramPatternList;
+		this.addPrecond = addPrecond;
+		this.precondition = precondition;
+		this.stateDefinition = stateDefinition;
+		this.opDef = opDef;
+	}
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
@@ -112,12 +129,13 @@ public class POOperationDefinitionContext extends POContext
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
+				
+				tmBind2.setType(def.getRecordType().clone());
 				pattern.setValue(new LexStringToken("oldstate", null));
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
+				tmBind2.setType(def.getClasstype().clone());
 				pattern.setValue(new LexStringToken("oldself", null));
 			}
 

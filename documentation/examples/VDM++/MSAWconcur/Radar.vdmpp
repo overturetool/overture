@@ -1,4 +1,4 @@
-class Radar is subclass of GLOBAL
+class Radar is subclass of GLOBAL, BaseThread
 
 types 
 
@@ -12,11 +12,13 @@ inv forall foid in set dom detected & detected(foid).getId() = foid
   
 operations
 
-public Radar : int * int * nat1 ==> Radar
-Radar(x,y,r) ==
+public Radar : int * int * nat1 * nat1 * bool ==> Radar
+Radar(x,y,r, p, isP) ==
  (location := mk_Coordinates(x,y);
   range := r;
   detected := {|->};
+  period := p;
+  isPeriodic := isP;
  );
 
 public Scan : AirSpace ==> ()
@@ -77,6 +79,15 @@ addNewlyDetected(newlyDetect) ==
 public isFinished: () ==> ()
 isFinished() == skip;
 
+public Step: () ==> ()
+Step() ==
+  let as = MSAW`airspace
+  in
+  (detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
+   UpdatePriorityList();
+   --World`timerRef.WaitRelative(TimeStamp`stepLength);
+  )
+
 functions
 set2seqFO : set of FO -> seq of FO
 set2seqFO(fos) ==
@@ -91,19 +102,12 @@ measure set2seqFOm;
 set2seqFOm : set of FO -> nat
 set2seqFOm(fos) == card fos;
      
-thread
-
-while true do
- (
-  let as = MSAW`airspace
-  in
-  (detected := { x.getId() |-> x | x in set as.getAirspace() & InRange(x) };
-   UpdatePriorityList();
-   World`timerRef.WaitRelative(TimeStamp`stepLength);
-  )
- )
 
 sync 
+mutex(Step);
+mutex(InRange);
+mutex(UpdatePriorityList);
+
 per isFinished => not busy;
 mutex(removeNotDetected);
 mutex (addNewlyDetected);

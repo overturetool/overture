@@ -343,7 +343,7 @@ public class SubTypeObligation extends ProofObligation
 
 				for (PExp m : seq.getMembers())
 				{
-					PExp s = oneType(true, m, stype.getSeqof(), it.next());
+					PExp s = oneType(true, m.clone(), stype.getSeqof().clone(), it.next().clone());
 
 					if (s != null)
 					{

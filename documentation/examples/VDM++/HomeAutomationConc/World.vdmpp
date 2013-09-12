@@ -3,34 +3,32 @@ class World
 instance variables
 
 private env				: Environment;
-public static timerRef	: TimeStamp := new TimeStamp(6);
+public static timerRef	: TimeStamp := new TimeStamp(); 
+private ha : HA;
 
 operations
 
 public World: () ==> World
 World() ==
- (env := new Environment("scenario.txt");
-  HA`Host.AddNode(HA`TempNode.GetID(),HA`TempNode.GetType());
-  HA`Host.AddNode(HA`HumidNode.GetID(),HA`HumidNode.GetType());
-  HA`Host.AddNode(HA`ThermNode.GetID(),HA`ThermNode.GetType());
-  HA`Host.AddNode(HA`WinNode.GetID(),HA`WinNode.GetType());
+ (ha := new HA();  
+  env := new Environment("scenario.txt", 1, true);
+  
+  ha.Host.AddNode(ha.TempNode.GetID(), ha.TempNode.GetType());
+  ha.Host.AddNode(ha.HumidNode.GetID(), ha.HumidNode.GetType());
+  ha.Host.AddNode(ha.ThermNode.GetID(), ha.ThermNode.GetType());
+  ha.Host.AddNode(ha.WinNode.GetID(), ha.WinNode.GetType());
 
-  start(HA`TempNode);
-  start(HA`HumidNode);
-  start(HA`ThermNode);
-  start(HA`WinNode);
-  start(HA`Host);
+  -- End the initialisation phase of system threads
+  World`timerRef.DoneInitialising();  
  );
 
 public Run: () ==> ()
 Run() ==
- (-- start environment creating input
-  start(env);
-  -- wait til environment has finished creating input
+ (-- wait til environment has finished creating input
   env.IsFinished();
-  -- kill HostController thread
-  --HA`Host.Finish();
-  IO`print("Test run finished");
+  -- print simulation finishing message
+  IO`print("Test run finished at time: ");
+  IO`print(timerRef.GetTime());
  );
 
 end World
