@@ -42,9 +42,9 @@ public class MapComposeObligation extends ProofObligation
 		 * The obligation for m1 comp m2 is:  rng m2 subset dom m1
 		 */
 		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
-		rng.setExp(exp.getLeft());
+		rng.setExp(exp.getLeft().clone());
 		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
-		dom.setExp(exp.getRight());
+		dom.setExp(exp.getRight().clone());
 		
 		ASubsetBinaryExp subset = new ASubsetBinaryExp();
 		subset.setLeft(rng);

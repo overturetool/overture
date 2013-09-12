@@ -31,6 +31,7 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 
 public class POForAllPredicateContext extends POForAllContext
 {
@@ -72,14 +73,13 @@ public class POForAllPredicateContext extends POForAllContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		AForAllExp forAllExp = new AForAllExp();
-		AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-		impliesExp.parent(forAllExp);
-		impliesExp.setLeft(predicate);
-		impliesExp.setRight(stitch);
-		forAllExp.setPredicate(impliesExp);
+		AForAllExp forAll_exp = new AForAllExp();
 		
-		return forAllExp;
+		AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
+		
+		forAll_exp.setPredicate(implies_exp);
+		
+		return forAll_exp;
 	}
 
 

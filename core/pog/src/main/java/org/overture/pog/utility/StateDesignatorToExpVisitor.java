@@ -28,11 +28,11 @@ public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>{
 		// pack this with the output of the visitor recursive calls.
 		PExp value = node.getObject().apply(this);
 		AFieldExp fieldExp =  new AFieldExp();
-		fieldExp.setObject(value);
-		fieldExp.setField(node.getField());
+		fieldExp.setObject(value.clone());
+		fieldExp.setField(node.getField().clone());
 		// Not 100%  sure these 2 match
-		fieldExp.setMemberName(node.getObjectfield());
-		fieldExp.setType(node.getType());
+		fieldExp.setMemberName(node.getObjectfield().clone());
+		fieldExp.setType(node.getType().clone());
 		
 		return fieldExp;
 	}
@@ -55,10 +55,10 @@ public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>{
 			throws AnalysisException {
 			
 		AApplyExp applyExp = new AApplyExp();
-		applyExp.setRoot(node.getMapseq().apply(this));
+		applyExp.setRoot(node.getMapseq().apply(this).clone());
 		
 		List<PExp> args = new LinkedList<PExp>();
-		args.add(node.getExp());
+		args.add(node.getExp().clone());
 		
 		applyExp.setArgs(args);
 		

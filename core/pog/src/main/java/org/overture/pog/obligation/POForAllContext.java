@@ -24,6 +24,7 @@
 package org.overture.pog.obligation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -100,7 +101,15 @@ public class POForAllContext extends POContext
 
 	public POForAllContext(ALetBeStExp exp)
 	{
-		this.bindings = PMultipleBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = cloneBinds(PMultipleBindAssistantTC.getMultipleBindList(exp.getBind()));
+	}
+
+	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList) {
+		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		for (PMultipleBind pmb : multipleBindList){
+			r.add(pmb.clone());
+		}
+		return r;
 	}
 
 	@Override

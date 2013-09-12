@@ -26,7 +26,6 @@
     <!-- vdmtools will move away; it's fine but not necessary for astv2 -jwc/4mar2013 -->
     <!-- <module>vdmtools</module> -->
     <module>prettyprinting</module>
-    <module>vdmj_compatibility_tests</module>
     <module>commandline</module>
 	<module>guibuilder</module>
   </modules>
@@ -68,4 +67,12 @@
       <!-- </plugin> -->
     </plugins>
   </reporting>
+<profiles>  
+  <profile>
+      <id>vdmj</id>
+      <modules>
+        <module>vdmj_compatibility_tests</module>
+      </modules>
+	</profile>
+</profiles>
 </project>

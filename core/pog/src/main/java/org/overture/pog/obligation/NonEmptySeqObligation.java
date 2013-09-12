@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
 
@@ -44,13 +45,11 @@ public class NonEmptySeqObligation extends ProofObligation
 		
 		// exp <> []
 		
-		ANotEqualBinaryExp notEqualsExp = new ANotEqualBinaryExp();
-		notEqualsExp.setLeft(exp);
 		
 		ASeqEnumSeqExp seqExp = new ASeqEnumSeqExp();
 		seqExp.setMembers(new LinkedList<PExp>()); // empty list
-		
-		notEqualsExp.setRight(seqExp);
+				
+		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(),seqExp);
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));

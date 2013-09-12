@@ -28,12 +28,10 @@ import java.util.Vector;
 
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
@@ -68,7 +66,7 @@ public class FuncComposeObligation extends ProofObligation
 		ILexNameToken arg = getUnique("arg");
 		
 		AForAllExp forallExp = new AForAllExp();
-		PType leftPType = PTypeAssistantTC.getFunction(exp.getLeft().getType()).getParameters().get(0);
+		PType leftPType = PTypeAssistantTC.getFunction(exp.getLeft().getType()).getParameters().get(0).clone();
 		forallExp.setBindList(getMultipleTypeBindList(leftPType, arg));
 		PExp firstPart = null;
 		
@@ -83,7 +81,7 @@ public class FuncComposeObligation extends ProofObligation
     		{
     			// pre_(exp.getRight(), arg) =>
     			APreExp preExp = new APreExp();
-    			preExp.setFunction(exp.getRight());
+    			preExp.setFunction(exp.getRight().clone());
     			List<PExp> args = new Vector<PExp>();
     			args.add(getVarExp(arg));
     			preExp.setArgs(args);
@@ -103,9 +101,9 @@ public class FuncComposeObligation extends ProofObligation
 		{
 			// pre_(exp.getLeft(), exp.getRight()(arg))
 			APreExp preExp = new APreExp();
-			preExp.setFunction(exp.getLeft());
+			preExp.setFunction(exp.getLeft().clone());
 			List<PExp> args = new Vector<PExp>();
-			args.add(getApplyExp(exp.getRight(), getVarExp(arg)));
+			args.add(getApplyExp(exp.getRight().clone(), getVarExp(arg)));
 			preExp.setArgs(args);
 			secondPart = preExp;
 		}
@@ -116,11 +114,7 @@ public class FuncComposeObligation extends ProofObligation
 		}
 		else
 		{
-			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
-			implies.setLeft(firstPart);
-			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
-			implies.setRight(secondPart);
-			forallExp.setPredicate(implies);
+			forallExp.setPredicate(AstExpressionFactory.newAImpliesBooleanBinaryExp(firstPart, secondPart));
 		}
 
 		//valuetree.setContext(ctxt.getContextNodeList());

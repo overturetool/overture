@@ -96,7 +96,7 @@ public class SubTypeObligation extends ProofObligation
 		super(exp, POType.SUB_TYPE, ctxt);
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, exp.clone(), etype, atype)));
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, exp.clone(), etype.clone(), atype.clone())));
 	}
 
 	public SubTypeObligation(AExplicitFunctionDefinition func,
@@ -125,7 +125,7 @@ public class SubTypeObligation extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype, atype)));
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
 	public SubTypeObligation(AImplicitFunctionDefinition func,
@@ -157,7 +157,7 @@ public class SubTypeObligation extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype, atype)));
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
 	public SubTypeObligation(AExplicitOperationDefinition def,
@@ -170,7 +170,7 @@ public class SubTypeObligation extends ProofObligation
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(
-				oneType(false, result, ((AOperationType) def.getType()).getResult(), actualResult)));
+				oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
 	public SubTypeObligation(AImplicitOperationDefinition def,
@@ -200,7 +200,7 @@ public class SubTypeObligation extends ProofObligation
 
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(
-				oneType(false, result, ((AOperationType) def.getType()).getResult(), actualResult)));
+				oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
 	private PExp oneType(boolean rec, PExp exp, PType etype, PType atype)

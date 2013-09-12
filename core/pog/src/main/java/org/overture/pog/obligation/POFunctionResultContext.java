@@ -104,7 +104,7 @@ public class POFunctionResultContext extends POContext {
 
 		else {
 			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(result.getPattern().getDefinitions());
+			letDefExp.setLocalDefs(result.getPattern().clone().getDefinitions());
 			letDefExp.setExpression(stitch);
 			return letDefExp;
 		}

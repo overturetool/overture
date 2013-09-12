@@ -63,8 +63,8 @@ public class FiniteMapObligation extends ProofObligation
 		//				m(idx) = { a |-> b }
 		
 		AExistsExp existsExp = new AExistsExp();
-		existsExp.setBindList(getMultipleTypeBindList(mapType, finmap));
-		existsExp.setPredicate(getForallExp(exp, finmap, findex));
+		existsExp.setBindList(getMultipleTypeBindList(mapType.clone(), finmap));
+		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 		
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
@@ -78,7 +78,7 @@ public class FiniteMapObligation extends ProofObligation
 	private PExp getForallExp(AMapCompMapExp exp, ILexNameToken finmap, ILexNameToken findex)
 	{
 		AForAllExp forallExp = new AForAllExp();
-		forallExp.setBindList(exp.getBindings());
+		forallExp.setBindList(exp.clone().getBindings());
 		forallExp.setPredicate(getImpliesExpression(exp, finmap, findex));
 		return forallExp;
 	}

@@ -36,7 +36,7 @@ public class WhileLoopObligation extends ProofObligation
 	{
 		super(stmt, POType.WHILE_LOOP, ctxt);
 		AWhileStm whileStmt = new AWhileStm();
-		whileStmt.setExp(stmt.getExp());
+		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());
 		
 		// TODO what do we do with loop invariants?

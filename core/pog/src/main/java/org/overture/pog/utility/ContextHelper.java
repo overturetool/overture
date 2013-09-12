@@ -17,9 +17,10 @@ import org.overture.ast.types.PType;
 		List<PMultipleBind> bindList = new LinkedList<PMultipleBind>();
 		ATypeMultipleBind tmBind = new ATypeMultipleBind();
 		List<PPattern> plist= new LinkedList<PPattern>();
-		plist.add(pattern);
+		plist.add(pattern.clone());
 		tmBind.setPlist(plist);
-		tmBind.setType(type);
+		tmBind.setType(type.clone());
+		bindList.add(tmBind);
 		return bindList;
 	}
 

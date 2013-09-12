@@ -86,9 +86,9 @@ public class SatisfiabilityObligation extends ProofObligation
 		
 		if (func.getResult().getPattern() instanceof AIdentifierPattern)
 		{
-			AIdentifierPattern ip = (AIdentifierPattern)func.getResult().getPattern();
+			AIdentifierPattern ip = (AIdentifierPattern)func.getResult().getPattern().clone();
 			postArglist.add(patternToExp(func.getResult().getPattern()));
-			existsExp.setBindList(getMultipleTypeBindList(func.getResult().getType(), ip.getName()));
+			existsExp.setBindList(getMultipleTypeBindList(func.getResult().getType().clone(), ip.getName()));
 		}
 		else
 		{
@@ -173,7 +173,7 @@ public class SatisfiabilityObligation extends ProofObligation
 				postArglist.add(getVarExp(SELF_ARG));
 			}
 
-			existsExp.setBindList(getMultipleTypeBindList(op.getResult().getType(), ip.getName()));
+			existsExp.setBindList(getMultipleTypeBindList(op.getResult().getType().clone(), ip.getName().clone()));
 		}
 		else
 		{

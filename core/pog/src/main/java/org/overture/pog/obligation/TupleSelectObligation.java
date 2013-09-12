@@ -46,8 +46,8 @@ public class TupleSelectObligation extends ProofObligation
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		AIsExp isExp = new AIsExp();
 		
-		isExp.setTest(exp);
-		isExp.setBasicType(type); //Do we need the type definition instead? If so, the visitor must provide it.
+		isExp.setTest(exp.clone());
+		isExp.setBasicType(type.clone()); //Do we need the type definition instead? If so, the visitor must provide it.
 		
 		notExp.setExp(isExp);
 		

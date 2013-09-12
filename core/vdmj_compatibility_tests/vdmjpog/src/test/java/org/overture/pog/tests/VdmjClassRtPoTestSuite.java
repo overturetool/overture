@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.overture.pog.tests.framework.BaseTestSuite;
 import org.overture.pog.tests.framework.VdmjClassRtPoTestCase;
+import org.overture.test.framework.Properties;
 import org.overturetool.vdmj.lex.LexLocation;
 
 import junit.framework.Test;
@@ -17,6 +18,7 @@ public class VdmjClassRtPoTestSuite extends BaseTestSuite {
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
+		Properties.recordTestResults = false;
 		String name = "VDMJ PO Class PP TestSuite";
 		String root = "src\\test\\resources\\classesRT\\";
 		TestSuite test = createTestCompleteFile(name, root, VdmjClassRtPoTestCase.class);

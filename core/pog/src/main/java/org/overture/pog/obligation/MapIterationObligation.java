@@ -50,14 +50,14 @@ public class MapIterationObligation extends ProofObligation
 		AIntLiteralExp zero = getIntLiteral(0);
 		AIntLiteralExp one = getIntLiteral(1);
 		
-		orExp.setLeft(getEqualsExp(exp, zero));
+		orExp.setLeft(getEqualsExp(exp.clone(), zero));
 		AOrBooleanBinaryExp orExp2 = new AOrBooleanBinaryExp();
-		orExp2.setLeft(getEqualsExp(exp, one));
+		orExp2.setLeft(getEqualsExp(exp.clone(), one));
 		
 		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
-		rng.setExp(exp.getLeft());
+		rng.setExp(exp.getLeft().clone());
 		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
-		dom.setExp(exp.getLeft());
+		dom.setExp(exp.getLeft().clone());
 		ASubsetBinaryExp subset = new ASubsetBinaryExp();
 		subset.setLeft(rng);
 		subset.setRight(dom);

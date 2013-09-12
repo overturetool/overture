@@ -195,7 +195,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	PExp fake = exp.clone();
 	if (exp instanceof AVariableExp) {
 	    AVariableExp var = (AVariableExp) fake;
-	    var.setName(new LexNameToken("", var.getName().getIdentifier()));
+	    var.setName(new LexNameToken("", var.getName().getIdentifier().clone()));
 	}
 
 	if(!PTypeAssistantTC.isType(exp.getType(), ASeq1SeqType.class))

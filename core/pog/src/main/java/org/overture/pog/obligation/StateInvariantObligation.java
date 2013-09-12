@@ -50,7 +50,7 @@ public class StateInvariantObligation extends ProofObligation
 		
 		if (ass.getClassDefinition() != null)
 		{
-			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition())));
+			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition().clone())));
 		}
 		else
 		{
@@ -59,11 +59,11 @@ public class StateInvariantObligation extends ProofObligation
 			
 			List<PDefinition> invDefs = new Vector<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
-			local.setPattern(def.getInvPattern());
-			local.setName(def.getName());
+			local.setPattern(def.getInvPattern().clone());
+			local.setName(def.getName().clone());
 			invDefs.add(local);
 			letExp.setLocalDefs(invDefs);
-			letExp.setExpression(def.getInvExpression());
+			letExp.setExpression(def.getInvExpression().clone());
 
 			valuetree.setPredicate(ctxt.getPredWithContext(letExp));
 		}
@@ -75,7 +75,7 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		super(def, POType.STATE_INVARIANT, ctxt);
 		// After instance variable initializers
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
@@ -83,7 +83,7 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		super(def, POType.STATE_INVARIANT, ctxt);
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
@@ -91,7 +91,7 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		super(def, POType.STATE_INVARIANT, ctxt);
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 

@@ -46,7 +46,7 @@ public class NonEmptySetObligation extends ProofObligation
 		// exp <> {}
 		
 		ANotEqualBinaryExp notEqualsExp = new ANotEqualBinaryExp();
-		notEqualsExp.setLeft(exp);
+		notEqualsExp.setLeft(exp.clone());
 		
 		ASetEnumSetExp setExp = new ASetEnumSetExp();
 		setExp.setMembers(new LinkedList<PExp>()); // empty list

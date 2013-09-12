@@ -49,12 +49,12 @@ public class LetBeExistsObligation extends ProofObligation
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
-		bindList.add(exp.getBind());
+		bindList.add(exp.getBind().clone());
 		exists.setBindList(bindList);
 		
 		if (exp.getSuchThat() != null)
 		{
-			exists.setPredicate(exp.getSuchThat());
+			exists.setPredicate(exp.getSuchThat().clone());
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
@@ -67,12 +67,12 @@ public class LetBeExistsObligation extends ProofObligation
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
-		bindList.add(stmt.getBind());
+		bindList.add(stmt.getBind().clone());
 		exists.setBindList(bindList);
 		
 		if (stmt.getSuchThat() != null)
 		{
-			exists.setPredicate(stmt.getSuchThat());
+			exists.setPredicate(stmt.getSuchThat().clone());
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());

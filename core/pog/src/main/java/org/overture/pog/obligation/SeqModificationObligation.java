@@ -47,9 +47,9 @@ public class SeqModificationObligation extends ProofObligation
 		ASubsetBinaryExp subsetExp = new ASubsetBinaryExp();
 		subsetExp.setOp(new LexKeywordToken(VDMToken.SUBSET, null));
 		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
-		domExp.setExp(arg.getRight());
+		domExp.setExp(arg.getRight().clone());
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
-		indsExp.setExp(arg.getLeft());
+		indsExp.setExp(arg.getLeft().clone());
 		subsetExp.setLeft(domExp);
 		subsetExp.setRight(indsExp);
 		

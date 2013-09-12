@@ -69,21 +69,21 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseABooleanPattern(ABooleanPattern node) throws AnalysisException
 	{
 		ABooleanConstExp b = new ABooleanConstExp();
-		b.setValue(node.getValue());
+		b.setValue(node.getValue().clone());
 		return b;
 	}
 
 	public PExp caseACharacterPattern(ACharacterPattern node) throws AnalysisException
 	{
 		ACharLiteralExp ch = new ACharLiteralExp();
-		ch.setValue(node.getValue());
+		ch.setValue(node.getValue().clone());
 		return ch;
 	}
 
 	public PExp caseAStringPattern(AStringPattern node) throws AnalysisException
 	{
 		AStringLiteralExp string = new AStringLiteralExp();
-		string.setValue(node.getValue());
+		string.setValue(node.getValue().clone());
 		return string;
 	}
 
@@ -111,7 +111,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAIntegerPattern(AIntegerPattern node) throws AnalysisException
 	{
 		AIntLiteralExp exp = new AIntLiteralExp();
-		exp.setValue(node.getValue());
+		exp.setValue(node.getValue().clone());
 		return exp;
 	}
 
@@ -123,14 +123,14 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAQuotePattern(AQuotePattern node) throws AnalysisException
 	{
 		AQuoteLiteralExp quote = new AQuoteLiteralExp();
-		quote.setValue(node.getValue());
+		quote.setValue(node.getValue().clone());
 		return quote;
 	}
 
 	public PExp caseARealPattern(ARealPattern node) throws AnalysisException
 	{
 		ARealLiteralExp exp = new ARealLiteralExp();
-		exp.setValue(node.getValue());
+		exp.setValue(node.getValue().clone());
 		return exp;
 	}
 
@@ -142,12 +142,12 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseARecordPattern(ARecordPattern node) throws AnalysisException
 	{
 		AMkTypeExp mkExp = new AMkTypeExp();
-		mkExp.setTypeName(node.getTypename());
+		mkExp.setTypeName(node.getTypename().clone());
 		List<PExp> args = new Vector<PExp>();
 		
 		for (PPattern p: node.getPlist())
 		{
-			args.add(p.apply(this));
+			args.add(p.apply(this).clone());
 		}
 		
 		mkExp.setArgs(args);
@@ -161,7 +161,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		
 		for (PPattern p: node.getPlist())
 		{
-			values.add(p.apply(this));
+			values.add(p.apply(this).clone());
 		}
 		
 		tuple.setArgs(values);
@@ -175,7 +175,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		
 		for (PPattern p: node.getPlist())
 		{
-			values.add(p.apply(this));
+			values.add(p.apply(this).clone());
 		}
 		
 		seq.setMembers(values);
@@ -185,9 +185,9 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAConcatenationPattern(AConcatenationPattern node) throws AnalysisException
 	{
 		ASeqConcatBinaryExp conc = new ASeqConcatBinaryExp();
-		conc.setLeft(node.getLeft().apply(this));
+		conc.setLeft(node.getLeft().apply(this).clone());
 		conc.setOp(new LexKeywordToken(VDMToken.CONCATENATE, null));
-		conc.setRight(node.getRight().apply(this));
+		conc.setRight(node.getRight().apply(this).clone());
 		return conc;
 	}
 
@@ -198,7 +198,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		
 		for (PPattern p: node.getPlist())
 		{
-			values.add(p.apply(this));
+			values.add(p.apply(this).clone());
 		}
 		
 		set.setMembers(values);
@@ -208,9 +208,9 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAUnionPattern(AUnionPattern node) throws AnalysisException
 	{
 		ASetUnionBinaryExp union = new ASetUnionBinaryExp();
-		union.setLeft(node.getLeft().apply(this));
+		union.setLeft(node.getLeft().apply(this).clone());
 		union.setOp(new LexKeywordToken(VDMToken.UNION, null));
-		union.setRight(node.getRight().apply(this));
+		union.setRight(node.getRight().apply(this).clone());
 		return union;
 	}
 
@@ -221,7 +221,7 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		
 		for (AMapletPatternMaplet p: node.getMaplets())
 		{
-			values.add((AMapletExp) p.apply(this));
+			values.add((AMapletExp) p.apply(this).clone());
 		}
 		
 		map.setMembers(values);
@@ -231,17 +231,17 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	public PExp caseAMapletPatternMaplet(AMapletPatternMaplet node) throws AnalysisException
 	{
 		AMapletExp maplet = new AMapletExp();
-		maplet.setLeft(node.getFrom().apply(this));
-		maplet.setRight(node.getTo().apply(this));
+		maplet.setLeft(node.getFrom().apply(this).clone());
+		maplet.setRight(node.getTo().apply(this).clone());
 		return maplet;
 	}
 
 	public PExp caseAMapUnionPattern(AMapUnionPattern node) throws AnalysisException
 	{
 		AMapUnionBinaryExp union = new AMapUnionBinaryExp();
-		union.setLeft(node.getLeft().apply(this));
+		union.setLeft(node.getLeft().apply(this).clone());
 		union.setOp(new LexKeywordToken(VDMToken.MUNION, null));
-		union.setRight(node.getRight().apply(this));
+		union.setRight(node.getRight().apply(this).clone());
 		return union;
 	}
 }

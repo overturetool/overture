@@ -66,15 +66,15 @@ public class ValueBindingObligation extends ProofObligation
 		patternList.add(pattern);
 		ATypeMultipleBind typeBind = new ATypeMultipleBind();
 		typeBind.setPlist(patternList);
-		typeBind.setType(type);
+		typeBind.setType(type.clone());
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
 		bindList.add(typeBind);
 		existsExp.setBindList(bindList);
 		
 		AEqualsBinaryExp equals = new AEqualsBinaryExp();
-		equals.setLeft(patternToExp(pattern));
+		equals.setLeft(patternToExp(pattern.clone()));
 		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
-		equals.setRight(exp);
+		equals.setRight(exp.clone());
 
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 //    	valuetree.setContext(ctxt.getContextNodeList());

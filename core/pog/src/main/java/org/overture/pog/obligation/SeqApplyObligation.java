@@ -33,6 +33,7 @@ import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.pog.pub.IPOContextStack;
@@ -49,9 +50,9 @@ public class SeqApplyObligation extends ProofObligation
 	{
 		super(root, POType.SEQ_APPLY, ctxt);
 		AInSetBinaryExp inSetExp = new AInSetBinaryExp();
-		inSetExp.setLeft(arg);
+		inSetExp.setLeft(arg.clone());
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
-		indsExp.setExp(root);
+		indsExp.setExp(root.clone());
 		inSetExp.setRight(indsExp);
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
@@ -63,37 +64,29 @@ public class SeqApplyObligation extends ProofObligation
 	{
 		super(root, POType.SEQ_APPLY, ctxt);
 		//arg >0
-		AGreaterNumericBinaryExp grExp = new AGreaterNumericBinaryExp();
-		grExp.setLeft(arg);
 		AIntLiteralExp zeroExp = new AIntLiteralExp();
 		zeroExp.setValue(new LexIntegerToken(0, null));
-		grExp.setRight(zeroExp);
+		AGreaterNumericBinaryExp grExp = AstExpressionFactory.newAGreaterNumericBinaryExp(arg.clone(), zeroExp);
 		
 		
 		// len(root)
 		ALenUnaryExp lenExp = new ALenUnaryExp();
 		PExp stateExp = root.apply(new StateDesignatorToExpVisitor());
-		lenExp.setExp(stateExp);
+		lenExp.setExp(stateExp.clone());
 		
 		// len(root)+1
-		APlusNumericBinaryExp plusExp = new APlusNumericBinaryExp();
-		plusExp.setLeft(lenExp);
 		AIntLiteralExp oneExp = new AIntLiteralExp();
 		oneExp.setValue(new LexIntegerToken(1, null));
-		plusExp.setRight(oneExp);
+		APlusNumericBinaryExp plusExp = AstExpressionFactory.newAPlusNumericBinaryExp(lenExp, oneExp);
 		
 		//arg <= len(root) +1
-		ALessEqualNumericBinaryExp lteExp = new ALessEqualNumericBinaryExp();
-		lteExp.setLeft(arg);
-		lteExp.setRight(plusExp);
+		ALessEqualNumericBinaryExp lteExp = AstExpressionFactory.newALessEqualNumericBinaryExp(arg.clone(), plusExp);
 		
 		//arg > 0 and arg <= len(root)+1
-		AAndBooleanBinaryExp andExp = new AAndBooleanBinaryExp();
-		andExp.setLeft(grExp);
-		andExp.setRight(lteExp);
+		AAndBooleanBinaryExp andExp = AstExpressionFactory.newAAndBooleanBinaryExp(grExp, lteExp);
 
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(lteExp));
+		valuetree.setPredicate(ctxt.getPredWithContext(andExp));
 	}
 }

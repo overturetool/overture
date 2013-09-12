@@ -56,7 +56,7 @@ public class MapApplyObligation extends ProofObligation
 	{
 		super(root, POType.MAP_APPLY, ctxt);
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
-		dom_exp.setExp(root.apply(new StateDesignatorToExpVisitor()));
+		dom_exp.setExp(root.clone().apply(new StateDesignatorToExpVisitor()));
 		
 		
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), dom_exp);
