@@ -35,18 +35,6 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static PDefinition findType(AStateDefinition d,
-			ILexNameToken sought, String fromModule)
-	{
-
-		if (PDefinitionAssistantTC.findName(d, sought, NameScope.STATE) != null)
-		{
-			return d;
-		}
-
-		return null;
-	}
-
 	public static PDefinition findName(AStateDefinition definition,
 			ILexNameToken sought, NameScope scope)
 	{

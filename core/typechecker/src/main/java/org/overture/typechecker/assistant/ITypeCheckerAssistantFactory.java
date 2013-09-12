@@ -120,7 +120,6 @@ import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.TypeFinder;
-import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {

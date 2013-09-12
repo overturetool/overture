@@ -16,28 +16,6 @@ public class AImportedDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static PDefinition findType(AImportedDefinition d,
-			ILexNameToken sought, String fromModule)
-	{
-		// We can only find an import if it is being sought from the module that
-		// imports it.
-
-		if (fromModule != null
-				&& !d.getLocation().getModule().equals(fromModule))
-		{
-			return null; // Someone else's import
-		}
-
-		PDefinition def = PDefinitionAssistantTC.findType(d.getDef(), sought, fromModule);
-
-		if (def != null)
-		{
-			PDefinitionAssistantTC.markUsed(d);
-		}
-
-		return def;
-	}
-
 	public static PDefinition findName(AImportedDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{

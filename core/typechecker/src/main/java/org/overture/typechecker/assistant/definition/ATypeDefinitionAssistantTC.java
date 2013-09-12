@@ -37,30 +37,6 @@ public class ATypeDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static PDefinition findType(ATypeDefinition d, ILexNameToken sought,
-			String fromModule)
-	{
-
-		PType type = d.getType();
-
-		if (type instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nt = (ANamedInvariantType) type;
-
-			if (nt.getType() instanceof ARecordInvariantType)
-			{
-				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
-
-				if (rt.getName().equals(sought))
-				{
-					return d; // T1 = compose T2 x:int end;
-				}
-			}
-		}
-
-		return PDefinitionAssistantTC.findNameBaseCase(d, sought, NameScope.TYPENAME);
-	}
-
 	public static PDefinition findName(ATypeDefinition d, ILexNameToken sought,
 			NameScope scope)
 	{

@@ -1,7 +1,6 @@
 package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -20,18 +19,6 @@ public class AInheritedDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static PDefinition findType(AInheritedDefinition d,
-			ILexNameToken sought, String fromModule)
-	{
-
-		if (d.getSuperdef() instanceof ATypeDefinition
-				&& sought.equals(d.getName()))
-		{
-			return d;
-		}
-
-		return null;
-	}
 
 	public static PDefinition findName(AInheritedDefinition d,
 			ILexNameToken sought, NameScope scope)
