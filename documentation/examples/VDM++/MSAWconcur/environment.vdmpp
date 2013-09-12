@@ -1,4 +1,4 @@
-class Environment is subclass of GLOBAL
+class Environment is subclass of GLOBAL, BaseThread
 
 types 
 
@@ -26,12 +26,15 @@ instance variables
   simtime : Time;  
 operations
   
-public Environment : String ==> Environment
-Environment(fname) == 
-  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+public Environment : String * nat1 * bool ==> Environment
+Environment(fname, p, isP) == 
+ (def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
   in
     (inlines := input;
-     simtime := timeval);    
+     simtime := timeval);
+ period := p;
+ isPeriodic := isP;    
+ );    
       
 public setAirSpace : AirSpace ==> ()
 setAirSpace(as) ==
@@ -73,6 +76,16 @@ updateFOs() ==
 public isFinished : () ==> () 
 isFinished() == skip;
 
+public Step: () ==> ()
+Step() ==
+ (if World`timerRef.GetTime() < simtime
+  then(updateFOs();
+       if updating
+       then updating := false;
+      )
+  else busy := false; 
+ );
+
 sync
 
 mutex(handleFOWarningEvent);
@@ -80,18 +93,5 @@ per isFinished => not busy;
 
 mutex(handleRadarWarningEvent);
 mutex(handleRadarWarningEvent,handleFOWarningEvent);
-
-thread
- (
-  while World`timerRef.GetTime() < simtime do
-   (updateFOs();
-              
-    if updating
-    then (World`timerRef.WaitRelative(1);
-          updating := false);
-   );
-  busy := false; 
-  )
-
 
 end Environment

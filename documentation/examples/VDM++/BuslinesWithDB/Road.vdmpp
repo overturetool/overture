@@ -16,14 +16,11 @@ class Road
 		public Road : RoadNumber * set of Waypoint * nat ==> Road
 		Road(roadnumber, waypoints, length) ==
 		(
-			atomic 
-			(
 			roadNmbr := roadnumber;
 			roadLength := length;
 			speedlimit := Config`DefaultRoadSpeedLimit;
 			wps := waypoints;
 			timePenalty := floor(roadLength / speedlimit);
-			)
 		)
 		pre card waypoints > 1;
 

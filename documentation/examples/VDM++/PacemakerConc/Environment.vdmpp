@@ -3,7 +3,7 @@
 The environment class is the class responsible for read a file containing inputs labelled by time and deliver them to the correct system sensor at the right time. It also collects the (re)actions from the system and provides functionality to enable the inspection of them.
 
 \begin{vdm_al}
-class Environment is subclass of GLOBAL
+class Environment is subclass of GLOBAL, BaseThread
 
  types 
 public InputTP   = (Time * seq of Inpline)
@@ -51,11 +51,13 @@ The environment constructor reads the test file which name is provided in the va
 
 -- Constructor
 public 
-Environment : seq of char ==> Environment
-Environment (fname) ==
+Environment : seq of char * nat1 * bool ==> Environment
+Environment (fname, p, isP) ==
   def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
   in (inplines := input;
-      simtime  := timeval
+      simtime  := timeval;
+      period := p;
+      isPeriodic := isP;
      );
 
 \end{vdm_al}
@@ -129,24 +131,20 @@ The isFinished operation is redefined and blocks until the simulation is finishe
 public 
 isFinished: () ==> ()
 isFinished () == skip;
+
+public Step: () ==> ()
+Step() ==
+ (if busy
+  then createSignal();
+  
+  if World`timerRef.GetTime() >= simtime
+  then (Pacemaker`heartController.finish();
+        Pacemaker`rateController.finish()
+       );
+ );
 \end{vdm_al}
 
 The Run function it's substituted by a thread definition.	
-
-\begin{vdm_al}
-thread
-  (
-   while true do
-     ( if busy
-       then createSignal();
-       if World`timerRef.GetTime() >= simtime
-       then (Pacemaker`heartController.finish();
-             Pacemaker`rateController.finish());
-       World`timerRef.WaitRelative(1);
-     );
-
-  );
-\end{vdm_al}  
 
 Because of the concurrency introduction handleEvent and showResult that both manipulate the outlines instance variable are made mutex. The operation isFinished is released just when the Environment is not busy (no more inputs to be delivered) and the whole amount of simulation time is equal or above the desired.
 

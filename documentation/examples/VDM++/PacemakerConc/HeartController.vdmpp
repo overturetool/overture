@@ -3,7 +3,7 @@
 This is the core class monitoring and regulating the heart.
 
 \begin{vdm_al}
-class HeartController is subclass of GLOBAL
+class HeartController is subclass of GLOBAL, BaseThread
 
 instance variables 
 
@@ -22,8 +22,8 @@ instance variables
 operations
  
  public 
- HeartController : () ==> HeartController
- HeartController() == 
+ HeartController : nat1 * bool ==> HeartController
+ HeartController(p, isP) == 
    (
     leads     := {|->};
     sensed    := {|->};
@@ -33,6 +33,8 @@ operations
     lastpulse := 0;
     ARP       := 250;
     interval:= Pacemaker`rateController.getInterval();
+    period := p;
+    isPeriodic := isP;
    );
 
 \end{vdm_al}
@@ -151,20 +153,14 @@ To switch the operating modes one should use
  setMode : Mode ==> ()
  setMode (m) == 
    (mode := m);
+   
+public Step: () ==> ()
+Step() ==
+  pace();
+ 
 \end{vdm_al}
 
 The changes in this class are the Step function that is transformed to a thread
-
-\begin{vdm_al}
-thread
-
- (while true do
-    (      
-      pace();
-      World`timerRef.WaitRelative(interval);
-    );
- );
-\end{vdm_al}
 
 And the introduction of syncronization primitives. A mutex to the functions that access and write the sensed variable and isFinished.
 

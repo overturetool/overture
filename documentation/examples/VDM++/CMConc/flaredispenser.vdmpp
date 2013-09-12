@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class FlareDispenser is subclass of GLOBAL
+class FlareDispenser is subclass of GLOBAL, BaseThread
 
 values
 
@@ -37,9 +37,12 @@ eventid        : [EventId];
 
 operations
 
-public FlareDispenser: Angle ==> FlareDispenser
-FlareDispenser(ang) ==
-  aperture := ang;
+public FlareDispenser: Angle * nat1 * bool ==> FlareDispenser
+FlareDispenser(ang, p, isP) ==
+ (aperture := ang;
+  period := p;
+  isPeriodic := isP;
+ );
 
 public GetAngle: () ==> nat
 GetAngle() ==
@@ -89,23 +92,21 @@ releaseFlare (evid, pfltp, pt1, pt2) ==
   World`env.handleEvent(evid,pfltp,aperture,pt1,pt2);
 
 public isFinished: () ==> ()
-isFinished () == skip
+isFinished () == skip;
+
+public Step: () ==> ()
+Step() ==
+  evalQueue();
 
 sync
 
+mutex(Step);
+mutex(evalQueue);
 mutex (addThreat,evalQueue);
 per isFinished => not busy
 
-thread
-  while true do
-    (evalQueue();
-     World`timerRef.WaitRelative(World`timerRef.stepLength);
-	);
-     
 end FlareDispenser
 \end{vdm_al}
 
-\begin{rtinfo}[FlareDispenser`FlareDispenser]
-{vdm.tc}[FlareDispenser]
-\end{rtinfo}
+
 
