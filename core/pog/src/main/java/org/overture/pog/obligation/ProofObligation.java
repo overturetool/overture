@@ -56,7 +56,6 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.POStatus;
 import org.overture.pog.pub.POType;
-import org.overture.pog.utility.GetLocationHelper;
 import org.overture.pog.utility.PatternToExpVisitor;
 import org.overture.pog.utility.UniqueNameGenerator;
 
@@ -88,10 +87,10 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	private final UniqueNameGenerator generator;
 	private ILexLocation location;
 
-	public ProofObligation(INode rootNode, POType kind, IPOContextStack context) {
-		this(rootNode, kind, context, GetLocationHelper.findLocation(rootNode));
-		//FIXME Node location must be a parameter of COMPASS nodes crash
-	}
+//	public ProofObligation(INode rootNode, POType kind, IPOContextStack context) {
+//		this(rootNode, kind, context, GetLocationHelper.findLocation(rootNode));
+//		//FIXME Node location must be a parameter of COMPASS nodes crash
+//	}
 
 	public ProofObligation(INode rootnode, POType kind,
 			IPOContextStack context, ILexLocation location) {
@@ -106,10 +105,10 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 
 	public ProofObligation(INode rootNode, String name, AVdmPoTree valuetree,
 			POStatus status, POType kind, int number, POTrivialProof proof,
-			int var) {
+			int var, ILexLocation location) {
 		super();
 		this.rootNode = rootNode;
-		this.location = GetLocationHelper.findLocation(rootNode);
+		this.location = location;
 		this.name = name;
 		this.valuetree = valuetree;
 		this.status = status;

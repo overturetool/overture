@@ -44,7 +44,7 @@ public class MapSeqOfCompatibleObligation extends ProofObligation
 
 	public MapSeqOfCompatibleObligation(AMapEnumMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SEQ_OF_COMPATIBLE, ctxt);
+		super(exp, POType.MAP_SEQ_OF_COMPATIBLE, ctxt, exp.getLocation());
 		
 		/**
 		 * This obligation applies to a map enumeration. Given a map enum of the form
