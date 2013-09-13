@@ -66,8 +66,6 @@ import org.overture.pog.utility.UniqueNameGenerator;
  * @author ldc
  */
 
-// FIXME Old PO Extension and Comparable are placeholders to keep the POG
-// compiling while we transition to the new style
 
 abstract public class ProofObligation implements IProofObligation, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -92,6 +90,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 
 	public ProofObligation(INode rootNode, POType kind, IPOContextStack context) {
 		this(rootNode, kind, context, GetLocationHelper.findLocation(rootNode));
+		//FIXME Node location must be a parameter of COMPASS nodes crash
 	}
 
 	public ProofObligation(INode rootnode, POType kind,
