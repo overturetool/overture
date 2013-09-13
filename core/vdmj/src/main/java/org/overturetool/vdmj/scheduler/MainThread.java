@@ -46,7 +46,7 @@ public class MainThread extends SchedulablePoolThread
 	public final Expression expression;
 
 	private Value result = new UndefinedValue();
-	private Exception exception = null;
+	protected Exception exception = null;
 
 	public MainThread(Expression expr, Context ctxt)
 	{

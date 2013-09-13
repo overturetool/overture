@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexLocation;
+import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.statements.Statement;
@@ -183,6 +184,13 @@ public class CTMainThread extends MainThread
 		}
 
 		super.handleSignal(sig, lctxt, location);
+	}
+
+	@Override
+	public void setException(Exception e)
+	{
+		// Don't print out the error for CT
+		exception = e;
 	}
 
 	public List<Object> getList()
