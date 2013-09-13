@@ -158,9 +158,17 @@ public class CTMainThread extends MainThread
     			}
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
-			result.add(e.getMessage());
+			if (getException() != null)
+			{
+				result.add(getException());
+			}
+			else
+			{
+				result.add(e.getMessage());
+			}
+			
 			result.add(Verdict.FAILED);
 		}
 	}

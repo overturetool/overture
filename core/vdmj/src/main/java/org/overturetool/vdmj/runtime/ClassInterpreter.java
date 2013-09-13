@@ -54,6 +54,7 @@ import org.overturetool.vdmj.scheduler.CTMainThread;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.scheduler.InitThread;
 import org.overturetool.vdmj.scheduler.MainThread;
+import org.overturetool.vdmj.scheduler.RunState;
 import org.overturetool.vdmj.scheduler.SystemClock;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.syntax.ExpressionReader;
@@ -449,6 +450,19 @@ public class ClassInterpreter extends Interpreter
 		CTMainThread main = new CTMainThread(test, ctxt, debug);
 		main.start();
 		scheduler.start(main);
+		BasicSchedulableThread.terminateAll();
+
+		while (main.getRunState() != RunState.COMPLETE)
+		{
+			try
+            {
+                Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+		}
 
 		return main.getList();
 	}

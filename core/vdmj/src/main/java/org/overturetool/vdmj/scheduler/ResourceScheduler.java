@@ -114,7 +114,7 @@ public class ResourceScheduler implements Serializable
 
 		stopping = true;
 
-		if (main.getRunState() != RunState.COMPLETE)
+		if (main.getRunState() != RunState.COMPLETE && main.getException() == null)
 		{
     		for (Resource resource: resources)
     		{
