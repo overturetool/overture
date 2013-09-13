@@ -19,11 +19,15 @@ busy : bool := false
 
 operations
 
-public FlareController: Angle * nat1 * bool ==> FlareController
-FlareController (papp, p, isP) == 
+public FlareController: Angle * [ThreadDef] ==> FlareController
+FlareController (papp, tDef) == 
  (aperture := papp;
-  period := p;
-  isPeriodic := isP;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
  );
 
 public addDispenser: FlareDispenser ==> ()
@@ -35,7 +39,6 @@ addDispenser (pfldisp) ==
                  {id |-> mk_(angle, DISPENSER_APERTURE)};
        dispensers := dispensers munion {id |-> pfldisp}
       );
-     --start (pfldisp) 
      );
 
 -- get the left hand-side start point and opening angle
@@ -62,34 +65,33 @@ isFinished () ==
   for all id in set dom dispensers do
     dispensers(id).isFinished();
 
-processThreat: () ==> ()
-processThreat() ==
-  (def mk_ (evid,pmt, pa, pt) = getThreat() in
-      for all id in set dom ranges do
-        def mk_(papplhs, pappsize) = ranges(id) in
-          if canObserve(pa, papplhs, pappsize)
-          then dispensers(id).addThreat(evid,pmt,pt);
-    busy := len threats > 0 );
-
-public Step: () ==> ()
+Step: () ==> ()
 Step() ==
-  if len threats > 0
-  then processThreat();
+  (if threats <> []
+  then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+         for all id in set dom ranges do
+           def mk_(papplhs, pappsize) = ranges(id) in
+             if canObserve(pa, papplhs, pappsize)
+             then dispensers(id).addThreat(evid,pmt,pt);
+        busy := len threats > 0 );
+       );
 
 sync
 
 -- addThreat and getThreat modify the same instance variables
 -- therefore they need to be declared mutual exclusive
 mutex (addThreat,getThreat);
-mutex(Step);
-mutex(processThreat);
+mutex (Step);
 
 -- getThreat is used as a 'blocking read' from the main
 -- thread of control of the missile detector
 per getThreat => len threats > 0;
 per isFinished => len threats = 0 --not busy
 
-
 end FlareController
 \end{vdm_al}
+
+\begin{rtinfo}[FlareController`FlareController]
+{vdm.tc}[FlareController]
+\end{rtinfo}
 
