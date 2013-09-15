@@ -7,9 +7,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -22,13 +20,6 @@ public class AThreadDefinitionAssistantTC
 	public AThreadDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findName(AThreadDefinition definition,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		return PDefinitionAssistantTC.findName(definition.getOperationDef(), sought, scope);
 	}
 
 	public static List<PDefinition> getDefinitions(AThreadDefinition d)

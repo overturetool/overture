@@ -48,7 +48,7 @@ public class SClassDefinitionAssistantTC
 	{
 		this.af = af;
 	}
-
+	//FIXME: Can't delete it is used in other places!
 	public static PDefinition findName(SClassDefinition classdef,
 			ILexNameToken sought, NameScope scope)
 	{

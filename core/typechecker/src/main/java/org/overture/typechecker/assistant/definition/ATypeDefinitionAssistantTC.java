@@ -11,7 +11,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
@@ -35,21 +34,6 @@ public class ATypeDefinitionAssistantTC
 	public ATypeDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findName(ATypeDefinition d, ILexNameToken sought,
-			NameScope scope)
-	{
-
-		PDefinition invdef = d.getInvdef();
-
-		if (invdef != null
-				&& PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
-		{
-			return invdef;
-		}
-
-		return null;
 	}
 
 	public static List<PDefinition> getDefinitions(ATypeDefinition d)

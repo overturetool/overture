@@ -1,5 +1,7 @@
 package org.overture.typechecker.utilities;
 
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -24,27 +26,11 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ANamedTraceDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.APerSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
+import org.overture.typechecker.util.HelpLexNameToken;
 
 /**
  * This class implements a way to find type from a node in the AST
@@ -81,14 +67,93 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 	public PDefinition defaultSClassDefinition(SClassDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return SClassDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		PDefinition def = null;
+
+		for (PDefinition d : node.getDefinitions())
+		{
+			PDefinition found = d.apply(this, question);//PDefinitionAssistantTC.findName(d, question.sought, question.scope);
+
+			// It is possible to have an ambiguous name if the name has
+			// type qualifiers that are a union of types that match several
+			// overloaded functions/ops (even though they themselves are
+			// distinguishable).
+
+			if (found != null)
+			{
+				if (def == null)
+				{
+					def = found;
+
+					if (question.sought.getTypeQualifier() == null)
+					{
+						break; // Can't be ambiguous
+					}
+				} else
+				{
+					if (!def.getLocation().equals(found.getLocation())
+							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
+					{
+						TypeCheckerErrors.report(3010, "Name " + question.sought
+								+ " is ambiguous", question.sought.getLocation(), question.sought);
+						TypeCheckerErrors.detail2("1", def.getLocation(), "2", found.getLocation());
+						break;
+					}
+				}
+			}
+		}
+
+		if (def == null)
+		{
+			for (PDefinition d : node.getAllInheritedDefinitions())
+			{
+				PDefinition indef = d.apply(this, question);//PDefinitionAssistantTC.findName(d, question.sought, question.scope);
+
+				// See above for the following...
+
+				if (indef != null)
+				{
+					if (def == null)
+					{
+						def = indef;
+
+						if (question.sought.getTypeQualifier() == null)
+						{
+							break; // Can't be ambiguous
+						}
+					} else if (def.equals(indef)
+							&& // Compares qualified names
+							!def.getLocation().equals(indef.getLocation())
+							&& !PDefinitionAssistantTC.hasSupertype(def.getClassDefinition(), indef.getClassDefinition().getType())
+							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
+					{
+						TypeCheckerErrors.report(3011, "Name " + question.sought
+								+ " is multiply defined in class", question.sought.getLocation(), question.sought);
+						TypeCheckerErrors.detail2("1", def.getLocation(), "2", indef.getLocation());
+						break;
+					}
+				}
+			}
+		}
+
+		return def;
 	}
 	
 	@Override
 	public PDefinition caseAEqualsDefinition(AEqualsDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AEqualsDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		List<PDefinition> defs = node.getDefs();
+
+		if (defs != null)
+		{
+			PDefinition def = PDefinitionListAssistantTC.findName(defs, question.sought, question.scope);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+		return null;
 	}
 	
 	@Override
@@ -96,7 +161,26 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			AExplicitFunctionDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AExplicitFunctionDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope) != null)
+		{
+			return node;
+		}
+
+		PDefinition predef = node.getPredef();
+		if (predef != null
+				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = node.getPostdef();
+		if (postdef != null
+				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 	
 	@Override
@@ -104,14 +188,38 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			AExplicitOperationDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AExplicitOperationDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope) != null)
+		{
+			return node;
+		}
+
+		PDefinition predef = node.getPredef();
+		if (predef != null
+				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = node.getPostdef();
+		if (postdef != null
+				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseAExternalDefinition(AExternalDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AExternalDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (question.sought.getOld())
+		{
+			return (question.sought.equals(node.getOldname())) ? node : null;
+		}
+
+		return (question.sought.equals(node.getState().getName())) ? node : null;
 	}
 	
 	@Override
@@ -119,7 +227,26 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			AImplicitFunctionDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AImplicitFunctionDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope) != null)
+		{
+			return node;
+		}
+
+		PDefinition predef = node.getPredef();
+		if (predef != null
+				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = node.getPostdef();
+		if (postdef != null
+				&& postdef.apply(this, question) != null) //PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 	
 	@Override
@@ -127,28 +254,73 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			AImplicitOperationDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AImplicitOperationDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope) != null)
+		{
+			return node;
+		}
+
+		PDefinition predef = node.getPredef();
+		if (predef != null
+				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		{
+			return predef;
+		}
+
+		PDefinition postdef = node.getPostdef();
+		if (postdef != null
+				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		{
+			return postdef;
+		}
+
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseAImportedDefinition(AImportedDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AImportedDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		PDefinition def = node.getDef().apply(this, question);//PDefinitionAssistantTC.findName(d.getDef(), sought, scope);
+
+		if (def != null)
+		{
+			PDefinitionAssistantTC.markUsed(node);
+		}
+
+		return def;
 	}
 
 	@Override
 	public PDefinition caseAInheritedDefinition(AInheritedDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AInheritedDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		// The problem is, when the InheritedDefinition is created, we
+		// don't know its fully qualified name.
+
+		ILexNameToken name = node.getName();
+		name.setTypeQualifier(node.getSuperdef().getName().getTypeQualifier());
+
+		if (HelpLexNameToken.isEqual(name, question.sought))
+		{
+			return node;
+		} else if (question.scope.matches(NameScope.OLDSTATE)
+				&& node.getOldname().equals(question.sought))
+		{
+			return node;
+		}
+
+		return null;
 	}
 	@Override
 	public PDefinition caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AInstanceVariableDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		PDefinition found = PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope);
+		if (found != null)
+			return found;
+		return question.scope.matches(NameScope.OLDSTATE)
+				&& node.getOldname().equals(question.sought) ? node : null;
 	}
 	
 	@Override
@@ -156,63 +328,134 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			AMultiBindListDefinition node, Newquestion question)
 			throws AnalysisException
 	{
-		return AMultiBindListDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (node.getDefs() != null)
+		{
+			PDefinition def = PDefinitionListAssistantTC.findName(node.getDefs(), question.sought, question.scope);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AMutexSyncDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseANamedTraceDefinition(ANamedTraceDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return ANamedTraceDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope) != null)
+		{
+			return node;
+		}
+
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseAPerSyncDefinition(APerSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return APerSyncDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node,
 			Newquestion question) throws AnalysisException
-	{
-		return ARenamedDefinitionAssistantTC.findName(node, question.sought, question.scope);
+	{		
+		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope);
+
+		if (renamed != null)
+		{
+			PDefinitionAssistantTC.markUsed(node.getDef());
+			return renamed;
+		} else
+		{
+			// Renamed definitions hide the original name
+			return null;// PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
+		}
 	}
 	
 	@Override
 	public PDefinition caseAStateDefinition(AStateDefinition node,
 			Newquestion question) throws AnalysisException
-	{
-		return AStateDefinitionAssistantTC.findName(node, question.sought, question.scope);
+	{		
+		if (question.scope.matches(NameScope.NAMES))
+		{
+			PDefinition invdef = node.getInvdef();
+
+			if (invdef != null
+					&& invdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
+			{
+				return invdef;
+			}
+
+			PDefinition initdef = node.getInitdef();
+			if (initdef != null
+					&& initdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(initdef, sought, scope) != null)
+			{
+				return initdef;
+			}
+		}
+
+		// if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
+		// {
+		// return definition.getRecordDefinition();
+		// }
+
+		for (PDefinition d : node.getStateDefs())
+		{
+			PDefinition def = d.apply(this, question);//PDefinitionAssistantTC.findName(d, sought, scope);
+
+			if (def != null)
+			{
+				return def;
+			}
+		}
+
+		return null;
 	}
 	
 	@Override
 	public PDefinition caseAThreadDefinition(AThreadDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AThreadDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		return node.getOperationDef().apply(this,question); //PDefinitionAssistantTC.findName(definition.getOperationDef(), sought, scope);
 	}
 	
 	@Override
 	public PDefinition caseATypeDefinition(ATypeDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return ATypeDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		PDefinition invdef = node.getInvdef();
+
+		if (invdef != null
+				&& invdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
+		{
+			return invdef;
+		}
+
+		return null;
 	}
 
 	@Override
 	public PDefinition caseAValueDefinition(AValueDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return AValueDefinitionAssistantTC.findName(node, question.sought, question.scope);
+		if (question.scope.matches(NameScope.NAMES))
+		{
+			return PDefinitionListAssistantTC.findName(node.getDefs(), question.sought, question.scope);
+		}
+
+		return null;
 	}
 	
 	@Override

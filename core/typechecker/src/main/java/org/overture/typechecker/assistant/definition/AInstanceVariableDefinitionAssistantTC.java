@@ -2,9 +2,6 @@ package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
@@ -21,17 +18,6 @@ public class AInstanceVariableDefinitionAssistantTC
 			ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findName(AInstanceVariableDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		PDefinition found = PDefinitionAssistantTC.findNameBaseCase(d, sought, scope);
-		if (found != null)
-			return found;
-		return scope.matches(NameScope.OLDSTATE)
-				&& d.getOldname().equals(sought) ? d : null;
 	}
 
 	public static void typeResolve(AInstanceVariableDefinition d,
