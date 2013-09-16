@@ -33,6 +33,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.typechecker.Pass;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -124,7 +125,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				Environment env = new ModuleEnvironment(m);
+				Environment env = new ModuleEnvironment(assistantFactory,m);
 				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
 			}
 		}
@@ -176,13 +177,13 @@ public class ModuleTypeChecker extends TypeChecker
 
 		// Attempt type resolution of unchecked definitions from all modules.
 		Environment env =
-			new FlatCheckedEnvironment(alldefs, NameScope.NAMESANDSTATE);
+			new FlatCheckedEnvironment(assistantFactory,alldefs, NameScope.NAMESANDSTATE,null);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		for (PDefinition d: checkDefs)
 		{
 			try
 			{	
-				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(env));
+				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(),env));
 			}
 			catch (TypeCheckException te)
 			{
@@ -202,7 +203,7 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				if (!m.getTypeChecked())
 				{
-    				Environment e = new ModuleEnvironment(m);
+    				Environment e = new ModuleEnvironment(assistantFactory,m);
 
     				for (PDefinition d: m.getDefs())
     				{
@@ -212,7 +213,7 @@ public class ModuleTypeChecker extends TypeChecker
     					{
     						try
     						{
-    							d.apply(tc,new TypeCheckInfo(e,NameScope.NAMES));
+    							d.apply(tc,new TypeCheckInfo(assistantFactory,e,NameScope.NAMES));
 //    							System.out.println();
     						}
     						catch (TypeCheckException te)

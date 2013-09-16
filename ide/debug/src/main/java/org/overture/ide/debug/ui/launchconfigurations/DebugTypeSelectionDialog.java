@@ -91,11 +91,11 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 			
 			if(type instanceof AExplicitFunctionDefinition)
 			{
-				return ((AExplicitFunctionDefinition)type).getLocation().module;
+				return ((AExplicitFunctionDefinition)type).getLocation().getModule();
 			}
 			if(type instanceof AExplicitOperationDefinition)
 			{
-				return ((AExplicitOperationDefinition)type).getLocation().module;
+				return ((AExplicitOperationDefinition)type).getLocation().getModule();
 			}
 			
 			return "";

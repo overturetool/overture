@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.resources.VdmProject;
@@ -134,7 +135,7 @@ public class FileUtility
 	 *            The source if of the plugin calling this function. The PLUGIN id.
 	 */
 	public static void addMarker(IFile file, String message,
-			LexLocation location, int severity, String sourceId)
+			ILexLocation location, int severity, String sourceId)
 	{
 		if (file == null)
 			return;
@@ -166,7 +167,7 @@ public class FileUtility
 	 *            The source if of the plugin calling this function. The PLUGIN id.
 	 */
 	public static void addMarker(IFile file, String message,
-			LexLocation location, int severity, String sourceId, String content)
+			ILexLocation location, int severity, String sourceId, String content)
 	{
 		if (file == null)
 			return;
@@ -192,7 +193,7 @@ public class FileUtility
 	 * 				The content used when calculating the char offset for the markers
 	 */
 	protected static void addInternalMarker(IFile file, String message,
-			LexLocation location, int severity, String sourceId,String content)
+			ILexLocation location, int severity, String sourceId,String content)
 	{
 		try
 		{
@@ -214,8 +215,8 @@ public class FileUtility
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, sourceId);
-			marker.setAttribute(IMarker.LOCATION, "line: " + location.startLine);
-			marker.setAttribute(IMarker.LINE_NUMBER, location.startLine);
+			marker.setAttribute(IMarker.LOCATION, "line: " + location.getStartLine());
+			marker.setAttribute(IMarker.LINE_NUMBER, location.getStartLine());
 
 			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(location));
 			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(location));

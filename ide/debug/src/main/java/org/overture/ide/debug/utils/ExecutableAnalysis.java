@@ -56,7 +56,7 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 		
 		if(classDef != null)
 		{
-			nodeModule = classDef.getLocation().module;
+			nodeModule = classDef.getLocation().getModule();
 		}
 		else
 		{
@@ -73,12 +73,12 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 	
 	private boolean isValidModule(PStm node){
 		
-		return module == null || (node.getLocation().startLine == searchLine &&  module.equals(node.getLocation().module));
+		return module == null || (node.getLocation().getStartLine() == searchLine &&  module.equals(node.getLocation().getModule()));
 	}
 	
 	private boolean isValidModule(PExp node){
 		
-		return module == null || (node.getLocation().startLine == searchLine &&  module.equals(node.getLocation().module));
+		return module == null || (node.getLocation().getStartLine() == searchLine &&  module.equals(node.getLocation().getModule()));
 	}
 
 	public void defaultInPStm(PStm node) throws ExecutableAnalysisException

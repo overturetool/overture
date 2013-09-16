@@ -72,7 +72,8 @@ public class DotHandler extends AbstractHandler implements IHandler
 						File dotpath = getDotPath();
 						if(!dotpath.exists())
 						{
-							MessageDialog.openError(HandlerUtil.getActiveShell(event), "Dot path not valid", dotpath.toString());
+							MessageDialog.openError(HandlerUtil.getActiveShell(event), "Dot path not valid", "Could not find the following path: \""+dotpath.toString()+"\". Check that the path is set under Preferences->VDM->Dot DOT Path.");
+							return null;
 						}
 						makeImage(dotpath, node, "svg", new File(generated, name));
 					} catch (Exception e)

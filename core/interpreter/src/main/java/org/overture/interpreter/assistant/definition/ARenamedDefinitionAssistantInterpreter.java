@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -9,13 +10,22 @@ import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistant
 public class ARenamedDefinitionAssistantInterpreter extends
 		ARenamedDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ARenamedDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static NameValuePairList getNamedValues(ARenamedDefinition d,
 			Context initialContext)
 	{
 		NameValuePairList renamed = new NameValuePairList();
 
-		for (NameValuePair nv: PDefinitionAssistantInterpreter.getNamedValues(d.getDef(), initialContext))
+		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(d.getDef(), initialContext))
 		{
 			// We exclude any name from the definition other than the one
 			// explicitly renamed. Otherwise, generated names like pre_f

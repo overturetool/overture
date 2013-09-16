@@ -26,11 +26,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 public class EditorUtility
 {
-	public static void gotoLocation(IFile file, LexLocation location,
+	public static void gotoLocation(IFile file, ILexLocation location,
 			String message) {
 		try {
 
@@ -47,7 +47,7 @@ public class EditorUtility
 		}
 	}
 
-	private static void gotoLocaion(IFile file, LexLocation location,
+	private static void gotoLocaion(IFile file, ILexLocation location,
 			String message, IEditorPart editor) throws CoreException
 	{
 		IMarker marker = file.createMarker(IMarker.MARKER);
@@ -55,14 +55,14 @@ public class EditorUtility
 		marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 
 //		SourceLocationConverter converter = new SourceLocationConverter(FileUtility.getContent(file));
-		marker.setAttribute(IMarker.CHAR_START,location.startOffset - 1);//converter.getStartPos( location));
-		marker.setAttribute(IMarker.CHAR_END,location.endOffset - 1);//converter.getEndPos(location));
+		marker.setAttribute(IMarker.CHAR_START,location.getStartOffset() - 1);//converter.getStartPos( location));
+		marker.setAttribute(IMarker.CHAR_END,location.getEndOffset()- 1);//converter.getEndPos(location));
 		IDE.gotoMarker(editor, marker);
 
 		marker.delete();
 	}
 
-	public static void gotoLocation(String editorId, IFile file, LexLocation location,
+	public static void gotoLocation(String editorId, IFile file, ILexLocation location,
 			String message) {
 		try {
 

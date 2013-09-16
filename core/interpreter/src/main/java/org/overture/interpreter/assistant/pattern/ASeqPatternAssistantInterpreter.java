@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -21,24 +22,32 @@ import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
 
 public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static List<NameValuePairList> getAllNamedValues(ASeqPattern pattern,
-			Value expval, Context ctxt) throws PatternMatchException
+	@SuppressWarnings("static-access")
+	public ASeqPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static List<NameValuePairList> getAllNamedValues(
+			ASeqPattern pattern, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		ValueList values = null;
 
 		try
 		{
 			values = expval.seqValue(ctxt);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,pattern.getLocation());
+			VdmRuntimeError.patternFail(e, pattern.getLocation());
 		}
 
 		if (values.size() != pattern.getPlist().size())
 		{
-			VdmRuntimeError.patternFail(4117, "Wrong number of elements for sequence pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4117, "Wrong number of elements for sequence pattern", pattern.getLocation());
 		}
 
 		ListIterator<Value> iter = values.listIterator();
@@ -47,9 +56,9 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 		int[] counts = new int[psize];
 		int i = 0;
 
-		for (PPattern p: pattern.getPlist())
+		for (PPattern p : pattern.getPlist())
 		{
-			List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p,iter.next(), ctxt);
+			List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p, iter.next(), ctxt);
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
@@ -70,29 +79,28 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 				NameValuePairMap results = new NameValuePairMap();
 				int[] selection = permutor.next();
 
-				for (int p=0; p<psize; p++)
+				for (int p = 0; p < psize; p++)
 				{
-					for (NameValuePair nvp: nvplists.get(p).get(selection[p]))
+					for (NameValuePair nvp : nvplists.get(p).get(selection[p]))
 					{
 						Value v = results.get(nvp.name);
 
 						if (v == null)
 						{
 							results.put(nvp);
-						}
-						else	// Names match, so values must also
+						} else
+						// Names match, so values must also
 						{
 							if (!v.equals(nvp.value))
 							{
-								VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
+								VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern", pattern.getLocation());
 							}
 						}
 					}
 				}
 
-				finalResults.add(results.asList());		// Consistent set of nvps
-			}
-			catch (PatternMatchException pme)
+				finalResults.add(results.asList()); // Consistent set of nvps
+			} catch (PatternMatchException pme)
 			{
 				// try next perm
 			}
@@ -100,7 +108,7 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 
 		if (finalResults.isEmpty())
 		{
-			VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern",pattern.getLocation());
+			VdmRuntimeError.patternFail(4118, "Values do not match sequence pattern", pattern.getLocation());
 		}
 
 		return finalResults;
@@ -120,7 +128,7 @@ public class ASeqPatternAssistantInterpreter extends ASeqPatternAssistantTC
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		for (PPattern p: pattern.getPlist())
+		for (PPattern p : pattern.getPlist())
 		{
 			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 		}

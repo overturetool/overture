@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.modules.AModuleModules;
@@ -18,9 +18,9 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.RootContext;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.state.AModuleModulesRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.values.NaturalOneValue;
@@ -41,11 +41,11 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			Context ctxt) throws AnalysisException
 	{
-		LexLocation location = node.getLocation();
+		ILexLocation location = node.getLocation();
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		if (location.module.equals("VDMUtil") ||
-			location.module.equals("DEFAULT"))
+		if (location.getModule().equals("VDMUtil") ||
+			location.getModule().equals("DEFAULT"))
 		{
     		if (ctxt.title.equals("get_file_pos()"))
     		{
@@ -56,8 +56,8 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
     		}
 		}
 
-		if (location.module.equals("IO") ||
-			location.module.equals("DEFAULT"))
+		if (location.getModule().equals("IO") ||
+			location.getModule().equals("DEFAULT"))
 		{
 			if (ctxt.title.equals("freadval(filename)"))
 			{
@@ -89,7 +89,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ModuleInterpreter i = (ModuleInterpreter)Interpreter.getInstance();
-			AModuleModules module = i.findModule(location.module);
+			AModuleModules module = i.findModule(location.getModule());
 
 			if (module != null)
 			{
@@ -107,7 +107,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
     		if (self == null)
     		{
     			ClassInterpreter i = (ClassInterpreter)Interpreter.getInstance();
-    			SClassDefinition cls = i.findClass(location.module);
+    			SClassDefinition cls = i.findClass(location.getModule());
 
     			if (cls != null)
     			{
@@ -139,10 +139,10 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 			Context outer = ctxt.getRoot().outer;
 			RootContext root = outer.getRoot();
 
-			tuple.add(new SeqValue(ctxt.location.file.getPath()));
-			tuple.add(new NaturalOneValue(ctxt.location.startLine));
-			tuple.add(new NaturalOneValue(ctxt.location.startPos));
-			tuple.add(new SeqValue(ctxt.location.module));
+			tuple.add(new SeqValue(ctxt.location.getFile().getPath()));
+			tuple.add(new NaturalOneValue(ctxt.location.getStartLine()));
+			tuple.add(new NaturalOneValue(ctxt.location.getStartPos()));
+			tuple.add(new SeqValue(ctxt.location.getModule()));
 
 			int bra = root.title.indexOf('(');
 

@@ -1,5 +1,6 @@
 package org.overture.ast.assistant.type;
 
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -7,10 +8,20 @@ import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.SNumericBasicType;
 
-public class SNumericBasicTypeAssistant {
+public class SNumericBasicTypeAssistant
+{
 
-	public static int getWeight(SNumericBasicType subn) {
-		switch(subn.kindSNumericBasicType())
+	protected static IAstAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public SNumericBasicTypeAssistant(IAstAssistantFactory af)
+	{
+		this.af = af;
+	}
+
+	public static int getWeight(SNumericBasicType subn)
+	{
+		switch (subn.kindSNumericBasicType())
 		{
 			case AIntNumericBasicType.kindSNumericBasicType:
 				return 2;
@@ -22,8 +33,8 @@ public class SNumericBasicTypeAssistant {
 				return 3;
 			case ARealNumericBasicType.kindSNumericBasicType:
 				return 4;
-		}			
+		}
 		return -1;
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="8" line="92" message="State init expression cannot be executed" messageType="warning" number="5010" resource="crosswordSL.result"/>
 <message column="1" line="291" message="Definition 'VALIDATE_WORD' not used" messageType="warning" number="5000" resource="crosswordSL.result"/>
 <message column="1" line="326" message="Definition 'ADD_WORD' not used" messageType="warning" number="5000" resource="crosswordSL.result"/>

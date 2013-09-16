@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewClassTestCase">
 <message column="9" line="15" message="Definition 'b' not used" messageType="warning" number="5000" resource="rectrapstmt.vpp.result"/>
 <message column="9" line="16" message="a at 3:3 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp.result"/>
 <message column="19" line="16" message="a at 16:9 hidden by a" messageType="warning" number="5008" resource="rectrapstmt.vpp.result"/>

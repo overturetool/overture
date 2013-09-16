@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="3" line="317" message="Definition 'Count' not used" messageType="warning" number="5000" resource="barSL.result"/>
 <message column="3" line="328" message="Definition 'baga' not used" messageType="warning" number="5000" resource="barSL.result"/>
 <message column="3" line="329" message="Definition 'bagb' not used" messageType="warning" number="5000" resource="barSL.result"/>

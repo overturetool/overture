@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassRtTestCase">
 <message column="5" line="20" message="Operation '(fo.getId)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>
 <message column="11" line="185" message="Operation '(a.getDetected)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>
 <message column="33" line="185" message="Operation '(b.getDetected)' cannot be called from a function" messageType="error" number="3300" resource="MSAWRT.result"/>

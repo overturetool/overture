@@ -44,10 +44,11 @@ DoneInitialising() ==
  );
  
 sync 
-  mutex (RegisterThread);
-  mutex (UnRegisterThread);
-  mutex (RegisterThread, UnRegisterThread);
-  mutex (IsInitialising);
-  mutex (DoneInitialising);
+
+mutex (RegisterThread);
+mutex (UnRegisterThread);
+mutex (RegisterThread, UnRegisterThread);
+mutex (IsInitialising);
+mutex (DoneInitialising);
 
 end RTTimeStamp

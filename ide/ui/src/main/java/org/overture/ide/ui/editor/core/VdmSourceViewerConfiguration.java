@@ -49,10 +49,11 @@ public abstract class VdmSourceViewerConfiguration extends
 		TextSourceViewerConfiguration
 {
 	private ITokenScanner vdmCodeScanner = null;
-	PresentationReconciler reconciler = null;
-	private String[] commentingPrefix = new String[] { "--" };
-	private ITokenScanner vdmSingleLineCommentScanner;
+	private PresentationReconciler reconciler = null;
+	protected String[] commentingPrefix = new String[] { "--" };
+	protected ITokenScanner vdmSingleLineCommentScanner;
 	private ITokenScanner vdmMultiLineCommentScanner;
+	private ITokenScanner vdmStringScanner;
 	
 	public VdmSourceViewerConfiguration()
 	{
@@ -69,7 +70,7 @@ public abstract class VdmSourceViewerConfiguration extends
 		super(preferenceStore);
 	}
 	
-	private ITokenScanner vdmStringScanner;
+	
 
 	// private Object fScanner;
 
@@ -150,7 +151,7 @@ public abstract class VdmSourceViewerConfiguration extends
 		return vdmStringScanner;
 	}
 
-	private ITokenScanner getVdmSingleLineCommentScanner()
+	protected ITokenScanner getVdmSingleLineCommentScanner()
 	{
 		if(vdmSingleLineCommentScanner == null)
 		{

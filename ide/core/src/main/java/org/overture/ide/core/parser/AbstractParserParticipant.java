@@ -21,12 +21,10 @@ package org.overture.ide.core.parser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
@@ -69,7 +67,9 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
 			setFileMarkers(file.getFile(), result,null);
 			if (result != null && result.getAst() != null)
-				file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
+			{
+				file.reconcile(result.getAst(), result.hasParseErrors());
+			}
 
 		} catch (CoreException e)
 		{
@@ -95,7 +95,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
 				addError(file.getFile(), "Linked file not found "
 						+ file.getFile(), 0);
-				file.reconcile(null, null, null, true);
+				file.reconcile(null, true);
 			} else
 			{
 				LexLocation.getAllLocations().clear();
@@ -103,7 +103,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				setFileMarkers(file.getFile(), result, null);
 				if (result != null && result.getAst() != null)
 				{
-					file.reconcile(result.getAst(), result.getAllLocation(), result.getLocationToAstNodeMap(), result.hasParseErrors());
+					file.reconcile(result.getAst(), result.hasParseErrors());
 				}
 			}
 
@@ -123,7 +123,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit", e);
 			}
 
-			file.reconcile(null, null, null, true);
+			file.reconcile(null, true);
 		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)
@@ -132,7 +132,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			}
 			FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
 			addError(file.getFile(), "Internal error: " + e.getMessage(), 0);
-			file.reconcile(null, null, null, true);
+			file.reconcile(null, true);
 		}
 
 	}
@@ -252,8 +252,6 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		private List<VDMError> errors = new ArrayList<VDMError>();
 		private List<VDMWarning> warnings = new ArrayList<VDMWarning>();
 		private Throwable fatalError;
-		private List<LexLocation> allLocation;
-		private Map<LexLocation, INode> locationToAstNodeMap;
 
 		public ParseResult()
 		{
@@ -267,8 +265,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setAst(List<INode> ast)
 		{
-			Assert.isNotNull(ast, "AST cannot be null");
-			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
+//			Assert.isNotNull(ast, "AST cannot be null");
+//			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
 			this.ast = ast;
 		}
 
@@ -310,27 +308,6 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		{
 			return fatalError;
 		}
-
-		public void setAllLocation(List<LexLocation> allLocation)
-		{
-			this.allLocation = allLocation;
-		}
-
-		public List<LexLocation> getAllLocation()
-		{
-			return allLocation;
-		}
-
-		public void setLocationToAstNodeMap(
-				Map<LexLocation, INode> locationToAstNodeMap)
-		{
-			this.locationToAstNodeMap = locationToAstNodeMap;
-		}
-
-		public Map<LexLocation, INode> getLocationToAstNodeMap()
-		{
-			return locationToAstNodeMap;
-		};
 
 	}
 }

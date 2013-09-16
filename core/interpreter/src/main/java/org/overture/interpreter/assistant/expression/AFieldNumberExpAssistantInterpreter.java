@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.AFieldNumberExpAssistantTC;
@@ -9,6 +10,14 @@ import org.overture.typechecker.assistant.expression.AFieldNumberExpAssistantTC;
 public class AFieldNumberExpAssistantInterpreter extends
 		AFieldNumberExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AFieldNumberExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(AFieldNumberExp exp, ObjectContext ctxt)
 	{
@@ -17,10 +26,11 @@ public class AFieldNumberExpAssistantInterpreter extends
 
 	public static PExp findExpression(AFieldNumberExp exp, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp,lineno);
-		if (found != null) return found;
+		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+		if (found != null)
+			return found;
 
-		return PExpAssistantInterpreter.findExpression(exp.getTuple(),lineno);
+		return PExpAssistantInterpreter.findExpression(exp.getTuple(), lineno);
 	}
 
 }

@@ -457,7 +457,8 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 					
 
-					new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder,subset,reductionType,seed).startup();
+					TraceRunnerMain runner = new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder,subset,reductionType,seed);
+					runner.startup();
 
 					if (coverage != null)
 					{
@@ -465,6 +466,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
+					runner.progressTerminating();
 					System.exit(0);
 				} catch (ContextException e)
 				{
@@ -692,10 +694,21 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progressCompleted() throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"completed\" ");
 		sb.append("progress=\"" + 100 + "\" ");
+		sb.append("/>\n");
+
+		write(sb);
+
+	}
+	
+	
+	public void progressTerminating() throws IOException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("<response ");
+		sb.append("status=\"terminating\" ");
 		sb.append("/>\n");
 
 		write(sb);

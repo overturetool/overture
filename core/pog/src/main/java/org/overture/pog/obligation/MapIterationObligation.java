@@ -23,31 +23,49 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMapRangeUnaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.ASubsetBinaryExp;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class MapIterationObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -9122478081832322687L;
 
-	public MapIterationObligation(AStarStarBinaryExp exp, POContextStack ctxt)
+	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.MAP_ITERATION, ctxt);
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(exp.getRight());
-		sb.append(" = 0 or ");
-		sb.append(exp.getRight());
-		sb.append(" = 1 or ");
-		sb.append("rng(");
-		sb.append(exp.getLeft());
-		sb.append(") subset dom(");
-		sb.append(exp.getLeft());
-		sb.append(")");
-
-		value = ctxt.getObligation(sb.toString());
+		super(exp, POType.MAP_ITERATION, ctxt);
+		
+		/**
+		 * The obligation for m ** e is:
+		 * 		e = 0 or e = 1 or rng m subset dom m  
+		 */
+		
+		AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
+		AIntLiteralExp zero = getIntLiteral(0);
+		AIntLiteralExp one = getIntLiteral(1);
+		
+		orExp.setLeft(getEqualsExp(exp, zero));
+		AOrBooleanBinaryExp orExp2 = new AOrBooleanBinaryExp();
+		orExp2.setLeft(getEqualsExp(exp, one));
+		
+		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
+		rng.setExp(exp.getLeft());
+		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
+		dom.setExp(exp.getLeft());
+		ASubsetBinaryExp subset = new ASubsetBinaryExp();
+		subset.setLeft(rng);
+		subset.setRight(dom);
+		
+		orExp2.setRight(subset);
+		orExp.setRight(orExp2);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(orExp));
 	}
 }

@@ -1,0 +1,22 @@
+module A
+exports all
+definitions
+
+ 
+operations
+
+Test : () ==> () 
+Test () ==
+  for mk_R(a) : R in [mk_R(1)] do
+  	skip;
+  	
+Test2 : () ==> () 
+Test2 () ==
+  let mk_R(a) : R = mk_R(1) in skip;
+  	
+
+
+types 
+  R:: int  
+   
+end A

@@ -231,6 +231,24 @@ public abstract class CoverageEditor
 		{
 		try
 		{
+			
+			for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
+				// executable
+				{
+					if (l.hits == 0)
+					{
+						int start = converter.getStartPos(l);
+						int end = converter.getEndPos(l);
+						if (start < content.length() && start < end
+								&& end < content.length())
+						{
+							styleRanges.add(new StyleRange(start, end - start, black, red));
+						}
+					}
+
+				}
+			
+			
 			if(!selectedFile.isSynchronized(IResource.DEPTH_ZERO))
 			{
 				selectedFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
@@ -280,21 +298,7 @@ public abstract class CoverageEditor
 
 			br.close();
 
-			for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
-			// executable
-			{
-				if (l.hits == 0)
-				{
-					int start = converter.getStartPos(l);
-					int end = converter.getEndPos(l);
-					if (start < content.length() && start < end
-							&& end < content.length())
-					{
-						styleRanges.add(new StyleRange(start, end - start, black, red));
-					}
-				}
-
-			}
+	
 
 		} catch (IOException e)
 		{

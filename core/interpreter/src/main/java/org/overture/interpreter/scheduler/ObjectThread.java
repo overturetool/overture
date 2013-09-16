@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
@@ -51,7 +52,7 @@ public class ObjectThread extends SchedulablePoolThread
 	public final String title;
 	public final boolean breakAtStart;
 
-	public ObjectThread(LexLocation location, ObjectValue object, Context ctxt)
+	public ObjectThread(ILexLocation location, ObjectValue object, Context ctxt)
 		throws ValueException
 	{
 		super(object.getCPU().resource, object, 0, false, 0);
@@ -63,7 +64,7 @@ public class ObjectThread extends SchedulablePoolThread
 			", self #" + object.objectReference +
 			", class " + object.type.getName().getName();
 
-		this.ctxt = new ObjectContext(location, title, ctxt.getGlobal(), object);
+		this.ctxt = new ObjectContext(ctxt.assistantFactory,location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
 		this.breakAtStart = ctxt.threadState.isStepping();
 	}

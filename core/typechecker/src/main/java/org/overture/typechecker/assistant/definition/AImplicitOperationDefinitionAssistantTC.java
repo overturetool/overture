@@ -24,14 +24,21 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AImplicitOperationDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findName(AImplicitOperationDefinition d,
+	@SuppressWarnings("static-access")
+	public AImplicitOperationDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findName( AImplicitOperationDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
@@ -88,7 +95,7 @@ public class AImplicitOperationDefinitionAssistantTC {
 
 		if (question.env.isVDMPP())
 		{
-			d.getName().setTypeQualifier(d.getType().getParameters());
+			d.getName().setTypeQualifier(((AOperationType) d.getType()).getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityStm)
 			{
@@ -171,7 +178,7 @@ public class AImplicitOperationDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						null, 
-						AOperationTypeAssistantTC.getPostType(d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
+						AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(),state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 						parameters, postop,  null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
@@ -214,7 +221,7 @@ public class AImplicitOperationDefinitionAssistantTC {
 				AstFactory.newAExplicitFunctionDefinition(
 						d.getName().getPreName(d.getPrecondition().getLocation()), 
 						NameScope.GLOBAL, 
-						null, AOperationTypeAssistantTC.getPreType(d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
+						null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
 						parameters, preop, null, null, false, null);
 //				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 
 //				d.getName().getPreName(d.getPrecondition().getLocation()), 

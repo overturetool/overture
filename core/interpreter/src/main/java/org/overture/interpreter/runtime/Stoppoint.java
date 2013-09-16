@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.debug.BreakpointManager;
@@ -41,14 +41,14 @@ public class Stoppoint extends Breakpoint
 {
 	private static final long serialVersionUID = 1L;
 
-	public Stoppoint(LexLocation location, int number, String trace)
+	public Stoppoint(ILexLocation location, int number, String trace)
 		throws ParserException, LexException
 	{
 		super(location, number, trace);
 	}
 
 	@Override
-	public void check(LexLocation execl, Context ctxt)
+	public void check(ILexLocation execl, Context ctxt)
 	{
 		//skips if breakpoint is disabled
 		if(!enabled){
@@ -69,7 +69,7 @@ public class Stoppoint extends Breakpoint
 				// in the expression
 				Context outctxt = ctxt.threadState.outctxt;
 				RootContext rootContext = ctxt.threadState.nextctxt;
-				LexLocation stepline = ctxt.threadState.stepline;
+				ILexLocation stepline = ctxt.threadState.stepline;
 				ctxt.threadState.init();
 				shouldBreak = BreakpointManager.shouldStop(parsed,ctxt);
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);

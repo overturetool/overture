@@ -95,7 +95,7 @@ public class LatexUtils extends LatexUtilsBase
 
 							for (SClassDefinition classDefinition : classes)
 							{
-								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().file, modelOnly);
+								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().getFile(), modelOnly);
 
 							}
 						} else if (selectedProject.getDialect() == Dialect.VDM_SL)

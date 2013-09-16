@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ModuleTestCase">
 <message column="3" line="49" message="Definition 'colMap' not used" messageType="warning" number="5000" resource="CountryColouringSL.result"/>
 <message column="3" line="87" message="Definition 'colMapExpl' not used" messageType="warning" number="5000" resource="CountryColouringSL.result"/>
 <result/>

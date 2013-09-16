@@ -23,7 +23,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.Utils;
-
+@SuppressWarnings("deprecation")
 public class TypePrettyPrinterVisitor extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {

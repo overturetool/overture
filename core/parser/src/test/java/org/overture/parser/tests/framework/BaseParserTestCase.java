@@ -178,7 +178,7 @@ public final static boolean DEBUG = true;
 		{
 			for (VDMError msg : reader.getErrors())
 			{
-				errors.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+				errors.add(new Message(msg.location.getFile().getName(), msg.number, msg.location.getStartLine(), msg.location.getStartPos(), msg.message));
 			}
 		}
 
@@ -186,7 +186,7 @@ public final static boolean DEBUG = true;
 		{
 			for (VDMWarning msg : reader.getWarnings())
 			{
-				warnings.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+				warnings.add(new Message(msg.location.getFile().getName(), msg.number, msg.location.getStartLine(), msg.location.getStartPos(), msg.message));
 			}
 		}
 	}

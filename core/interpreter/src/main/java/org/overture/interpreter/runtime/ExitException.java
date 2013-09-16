@@ -23,7 +23,7 @@
 
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.values.Value;
 
 
@@ -32,7 +32,7 @@ public class ExitException extends ContextException
 {
 	public final Value value;
 
-	public ExitException(Value value, LexLocation location, Context ctxt)
+	public ExitException(Value value, ILexLocation location, Context ctxt)
 	{
 		super(4129, "Exit " + value.toString(), location, ctxt);
 		this.value = value;

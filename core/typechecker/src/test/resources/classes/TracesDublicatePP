@@ -1,0 +1,13 @@
+class Test1
+operations
+
+op1:()==>()
+op1()==skip;
+
+
+traces
+
+T: op1();
+T: op1();
+                       
+end Test1

@@ -28,12 +28,12 @@ public class ConnectionThread extends Thread
 	private final BufferedOutputStream output;
 
 	private String id = "";
-//	private long xid = 0;
+	// private long xid = 0;
 
 	private boolean connected;
 	private static boolean trace = false;
 	private static boolean quiet = false;
-//	private static ConnectionThread focus = null;
+	// private static ConnectionThread focus = null;
 
 	private final IClientMonitor monitor;
 
@@ -68,10 +68,10 @@ public class ConnectionThread extends Thread
 		return quiet;
 	}
 
-//	public static synchronized void setFocus(ConnectionThread f)
-//	{
-//		focus = f;
-//	}
+	// public static synchronized void setFocus(ConnectionThread f)
+	// {
+	// focus = f;
+	// }
 
 	@Override
 	public void run()
@@ -90,10 +90,14 @@ public class ConnectionThread extends Thread
 			}
 		} catch (SocketException e)
 		{
+			monitor.traceError("Connection error: " + e.getMessage());
 			// Caused by die(), and VDMJ death
 		} catch (IOException e)
 		{
 			System.out.println("Connection exception: " + e.getMessage());
+
+		} finally
+		{
 			die();
 		}
 
@@ -115,15 +119,15 @@ public class ConnectionThread extends Thread
 		}
 	}
 
-//	private synchronized void write(String cmd) throws IOException
-//	{
-//		if (trace)
-//			System.err.println("[" + id + "] " + cmd); // diags!
-//
-//		output.write(cmd.getBytes("UTF-8"));
-//		output.write('\n');
-//		output.flush();
-//	}
+	// private synchronized void write(String cmd) throws IOException
+	// {
+	// if (trace)
+	// System.err.println("[" + id + "] " + cmd); // diags!
+	//
+	// output.write(cmd.getBytes("UTF-8"));
+	// output.write('\n');
+	// output.flush();
+	// }
 
 	private void receive() throws IOException
 	{
@@ -186,7 +190,7 @@ public class ConnectionThread extends Thread
 
 	private void process(byte[] data) throws IOException
 	{
-//		System.out.println(new String(data));
+		// System.out.println(new String(data));
 		XMLParser parser = new XMLParser(data);
 		XMLNode node = parser.readNode();
 
@@ -215,25 +219,23 @@ public class ConnectionThread extends Thread
 		String traceName = tagnode.getAttr("tracename");
 		String progress = tagnode.getAttr("progress");
 		String status = tagnode.getAttr("status");
-		
+
 		if (monitor == null)
 		{
 			System.out.println("PROGRESS: " + traceName + " " + progress);
-		} else if(status.equals("combinatorialtestingtart"))
+		} else if (status.equals("combinatorialtestingtart"))
 		{
 			monitor.traceStart(traceName);
-		}else if( status.equals("progress"))
+		} else if (status.equals("progress"))
 		{
 			Integer p = Integer.parseInt(progress);
 			monitor.progress(traceName, p);
-		}else if(status.equals("error"))
+		} else if (status.equals("error"))
 		{
 			String errorMessage = tagnode.getAttr("message");
 			monitor.traceError(errorMessage);
-		}
-		else if( status.equals("completed"))
+		} else if (status.equals("completed"))
 		{
-			
 			try
 			{
 				output.write("exit".getBytes());
@@ -242,10 +244,20 @@ public class ConnectionThread extends Thread
 			{
 			}
 			monitor.completed();
-			
+
+		} else if (status.equals("terminating"))
+		{
+			try
+			{
+				output.write("terminating".getBytes());
+				output.flush();
+			} catch (IOException e)
+			{
+			}
+			monitor.terminating();
+			die();
 		}
 	}
-
 
 	private void processInit(XMLTagNode tagnode)
 	{

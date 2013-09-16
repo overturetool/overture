@@ -6,9 +6,16 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ATixeStmAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ATixeStmAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PTypeSet exitCheck(ATixeStm statement) {
 		
 		PTypeSet types = new PTypeSet();

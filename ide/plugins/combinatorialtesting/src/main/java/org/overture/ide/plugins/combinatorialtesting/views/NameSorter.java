@@ -20,5 +20,6 @@ package org.overture.ide.plugins.combinatorialtesting.views;
 
 import org.eclipse.jface.viewers.ViewerSorter;
 
-public class NameSorter extends ViewerSorter {
+public class NameSorter extends ViewerSorter
+{
 }

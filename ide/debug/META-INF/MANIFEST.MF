@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
-Bundle-Version: 2.0.0
+Bundle-Version: 2.0.0.qualifier
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
@@ -22,7 +22,13 @@ Require-Bundle: org.eclipse.debug.core;visibility:=reexport,
  org.overture.ide.core,
  org.overture.ide.builders.vdmj,
  org.overture.ide.ui;visibility:=reexport
-Export-Package: org.overture.interpreter,
+Export-Package: org.overture.ide.debug.core,
+ org.overture.ide.debug.core.launching,
+ org.overture.ide.debug.ui.launchconfigurations,
+ org.overture.ide.debug.ui.launching,
+ org.overture.ide.debug.utils,
+ org.overture.interpreter,
+ org.overture.interpreter.assistant,
  org.overture.interpreter.assistant.definition,
  org.overture.interpreter.assistant.expression,
  org.overture.interpreter.assistant.module,
@@ -42,12 +48,9 @@ Export-Package: org.overture.interpreter,
  org.overture.interpreter.scheduler,
  org.overture.interpreter.traces,
  org.overture.interpreter.util,
- org.overture.interpreter.values,
- org.overture.ide.debug.core,
- org.overture.ide.debug.core.launching,
- org.overture.ide.debug.ui.launchconfigurations,
- org.overture.ide.debug.ui.launching
+ org.overture.interpreter.values
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.overture.ide.debug.core.VdmDebugPlugin
 Bundle-ClassPath: .,
- jars/interpreter.jar
+ jars/interpreter.jar,
+ jars/pog-string-based.jar

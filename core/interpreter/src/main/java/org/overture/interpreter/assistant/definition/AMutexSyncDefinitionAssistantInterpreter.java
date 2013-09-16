@@ -9,11 +9,21 @@ import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
 
 public class AMutexSyncDefinitionAssistantInterpreter extends
 		AMutexSyncDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AMutexSyncDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static PExp getExpression(AMutexSyncDefinition sync,
 			ILexNameToken excluding)
@@ -22,19 +32,16 @@ public class AMutexSyncDefinitionAssistantInterpreter extends
 
 		if (sync.getOperations().size() == 1)
 		{
-			list =new LexNameList();
+			list = new LexNameList();
 			list.addAll(sync.getOperations());
-		}
-		else
+		} else
 		{
 			list = new LexNameList();
 			list.addAll(sync.getOperations());
 			list.remove(excluding);
 		}
 
-		return AstFactory.newAEqualsBinaryExp(AstFactory.newAHistoryExp(sync.getLocation(), new LexToken(sync.getLocation(),VDMToken.ACTIVE), list), 
-    		new LexKeywordToken(VDMToken.EQUALS, sync.getLocation()),
-    		AstFactory.newAIntLiteralExp(new LexIntegerToken(0, sync.getLocation())));
+		return AstFactory.newAEqualsBinaryExp(AstFactory.newAHistoryExp(sync.getLocation(), new LexToken(sync.getLocation(), VDMToken.ACTIVE), list), new LexKeywordToken(VDMToken.EQUALS, sync.getLocation()), AstFactory.newAIntLiteralExp(new LexIntegerToken(0, sync.getLocation())));
 	}
 
 }

@@ -25,7 +25,7 @@ package org.overture.interpreter.runtime;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
@@ -46,7 +46,7 @@ public class ThreadState implements Serializable
 
 	private int atomic = 0;			// Don't reschedule if >0
 
-	public LexLocation stepline;	// Breakpoint stepping values
+	public ILexLocation stepline;	// Breakpoint stepping values
 	public RootContext nextctxt;
 	public Context outctxt;
 
@@ -65,7 +65,7 @@ public class ThreadState implements Serializable
 	}
 
 	public synchronized void setBreaks(
-		LexLocation stepline, RootContext nextctxt, Context outctxt)
+		ILexLocation stepline, RootContext nextctxt, Context outctxt)
 	{
 		this.stepline = stepline;
 		this.nextctxt = nextctxt;
@@ -77,7 +77,7 @@ public class ThreadState implements Serializable
 		return stepline != null;
 	}
 
-	public void reschedule(Context ctxt, LexLocation location)
+	public void reschedule(Context ctxt, ILexLocation location)
 	{
 		if (atomic == 0)
 		{

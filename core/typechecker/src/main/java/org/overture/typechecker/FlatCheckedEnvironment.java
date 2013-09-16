@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 
@@ -39,25 +40,25 @@ public class FlatCheckedEnvironment extends FlatEnvironment
 {
 	private boolean isStatic = false;
 
-	public FlatCheckedEnvironment(
-		List<PDefinition> definitions, NameScope scope)
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
+		List<PDefinition> definitions, NameScope scope, EnvironmentSearchStrategy ess)
 	{
-		super(definitions);
+		super(af,definitions,ess);
 		dupHideCheck(definitions, scope);
 	}
 
-	public FlatCheckedEnvironment(
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
 		List<PDefinition> definitions, Environment env, NameScope scope)
 	{
-		super(definitions, env);
+		super(af,definitions, env);
 		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}
 
-	public FlatCheckedEnvironment(
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
 		PDefinition one, Environment env, NameScope scope)
 	{
-		super(one, env);
+		super(af,one,env);
 		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}

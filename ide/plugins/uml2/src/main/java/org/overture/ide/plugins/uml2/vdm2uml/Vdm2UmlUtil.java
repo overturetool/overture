@@ -24,12 +24,16 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-
+@SuppressWarnings("deprecation")
 public class Vdm2UmlUtil
 {
+public final static ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+
 
 	public static VisibilityKind convertAccessSpecifierToVisibility(
 			AAccessSpecifierAccessSpecifier accessSpecifier)
@@ -169,7 +173,7 @@ public class Vdm2UmlUtil
 	public static boolean hasPolymorphic(AExplicitFunctionDefinition pDefinition)
 	{
 
-		AFunctionType funcType = (AFunctionType) PDefinitionAssistantTC.getType(pDefinition);
+		AFunctionType funcType = (AFunctionType) assistantFactory.createPDefinitionAssistant().getType(pDefinition);
 
 		for (PType t : funcType.getParameters())
 		{

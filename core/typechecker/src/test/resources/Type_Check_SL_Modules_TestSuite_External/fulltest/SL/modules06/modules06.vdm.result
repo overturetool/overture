@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
-<message column="13" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="11" line="14" message="Definition 'a' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
+<message column="13" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
 <message column="9" line="34" message="Definition 'i' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
-<message column="13" line="45" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
 <message column="11" line="45" message="Definition 'a' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
+<message column="13" line="45" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
 <message column="20" line="48" message="r at 48:12 hidden by r" messageType="warning" number="5008" resource="modules06.vdm.result"/>
 <message column="20" line="48" message="Definition 'r' not used" messageType="warning" number="5000" resource="modules06.vdm.result"/>
 <message column="13" line="76" message="Duplicate definition: n" messageType="warning" number="5007" resource="modules06.vdm.result"/>
@@ -24,5 +24,6 @@
 <message column="3" line="45" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="modules06.vdm.result"/>
 <message column="3" line="51" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="modules06.vdm.result"/>
 <message column="5" line="60" message="Name 'A`inst' is not in scope" messageType="error" number="3182" resource="modules06.vdm.result"/>
+<message column="7" line="77" message="'in set' expression is always false" messageType="error" number="3319" resource="modules06.vdm.result"/>
 <result/>
 </testResult>

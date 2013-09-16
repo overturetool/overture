@@ -27,9 +27,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDbgpService;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.DbgpServer;
 import org.overture.ide.debug.core.dbgp.IDbgpServerListener;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
@@ -38,7 +38,8 @@ import org.overture.ide.debug.core.dbgp.IDbgpThreadAcceptor;
 import org.overture.ide.debug.core.dbgp.internal.IDbgpTerminationListener;
 
 public class DbgpService implements IDbgpService, IDbgpTerminationListener,
-		IDbgpServerListener {
+		IDbgpServerListener
+{
 	private static final int FROM_PORT = 10000;
 	private static final int TO_PORT = 50000;
 
@@ -47,28 +48,35 @@ public class DbgpService implements IDbgpService, IDbgpTerminationListener,
 
 	private DbgpServer server;
 
-	private final Map<String,IDbgpThreadAcceptor> acceptors = Collections.synchronizedMap(new HashMap<String,IDbgpThreadAcceptor>());
+	private final Map<String, IDbgpThreadAcceptor> acceptors = Collections.synchronizedMap(new HashMap<String, IDbgpThreadAcceptor>());
 
 	private int serverPort;
 
-	private void stopServer() {
-		if (server != null) {
-			try {
+	private void stopServer()
+	{
+		if (server != null)
+		{
+			try
+			{
 				server.removeTerminationListener(this);
 				server.setListener(null);
 				server.requestTermination();
-				try {
+				try
+				{
 					server.waitTerminated();
-				} catch (InterruptedException e) {
+				} catch (InterruptedException e)
+				{
 					VdmDebugPlugin.log(e);
 				}
-			} finally {
+			} finally
+			{
 				server = null;
 			}
 		}
 	}
 
-	private void startServer(int port) {
+	private void startServer(int port)
+	{
 		serverPort = port;
 
 		server = createServer(port);
@@ -77,73 +85,92 @@ public class DbgpService implements IDbgpService, IDbgpTerminationListener,
 		server.start();
 	}
 
-	protected DbgpServer createServer(int port) {
+	protected DbgpServer createServer(int port)
+	{
 		return new DbgpServer(port, CLIENT_SOCKET_TIMEOUT);
 	}
 
-	private void restartServer(int port) {
+	private void restartServer(int port)
+	{
 		stopServer();
 		startServer(port);
 	}
 
-	public DbgpService(int port) {
-		if (port == IDebugPreferenceConstants.DBGP_AVAILABLE_PORT) {
+	public DbgpService(int port)
+	{
+		startServer(autoSelectPost(port));
+	}
+
+	private int autoSelectPost(int port)
+	{
+		if (port == IDebugPreferenceConstants.DBGP_AVAILABLE_PORT)
+		{
 			port = DbgpServer.findAvailablePort(FROM_PORT, TO_PORT);
 		}
-		startServer(port);
+		return port;
 	}
 
-	public void shutdown() {
+	public void shutdown()
+	{
 		stopServer();
 	}
 
-	public int getPort() {
+	public int getPort()
+	{
 		return serverPort;
 	}
 
 	/**
 	 * Waits until the socket is actually started using the default timeout.
 	 * 
-	 * @return <code>true</code> if socket was successfully started and
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if socket was successfully started and <code>false</code> otherwise.
 	 */
-	public boolean waitStarted() {
+	public boolean waitStarted()
+	{
 		return server != null && server.waitStarted();
 	}
 
 	/**
 	 * Waits until the socket is actually started using specified timeout.
 	 * 
-	 * @return <code>true</code> if socket was successfully started and
-	 *         <code>false</code> otherwise.
+	 * @return <code>true</code> if socket was successfully started and <code>false</code> otherwise.
 	 */
-	public boolean waitStarted(long timeout) {
+	public boolean waitStarted(long timeout)
+	{
 		return server != null && server.waitStarted(timeout);
 	}
 
 	// Acceptors
-	public void registerAcceptor(String id, IDbgpThreadAcceptor acceptor) {
+	public void registerAcceptor(String id, IDbgpThreadAcceptor acceptor)
+	{
 		acceptors.put(id, acceptor);
 	}
 
-	public IDbgpThreadAcceptor unregisterAcceptor(String id) {
+	public IDbgpThreadAcceptor unregisterAcceptor(String id)
+	{
 		return (IDbgpThreadAcceptor) acceptors.remove(id);
 	}
 
-	public void restart(int newPort) {
-		if (newPort != IDebugPreferenceConstants.DBGP_AVAILABLE_PORT) {
+	public void restart(int newPort)
+	{
+		if (serverPort != newPort)
+		{
 			// Only restart if concrete port specified
-			restartServer(newPort);
+			restartServer(autoSelectPost(newPort));
 		}
 	}
 
 	// IDbgpTerminationListener
-	public void objectTerminated(Object object, Exception e) {
-		if (e != null) {
+	public void objectTerminated(Object object, Exception e)
+	{
+		if (e != null)
+		{
 			VdmDebugPlugin.log(e);
-			final Job job = new Job("ServerRestart") {
+			final Job job = new Job("ServerRestart")
+			{
 
-				protected IStatus run(IProgressMonitor monitor) {
+				protected IStatus run(IProgressMonitor monitor)
+				{
 					restartServer(serverPort);
 					return Status.OK_STATUS;
 				}
@@ -153,19 +180,23 @@ public class DbgpService implements IDbgpService, IDbgpTerminationListener,
 		}
 	}
 
-	public boolean available() {
+	public boolean available()
+	{
 		return true;
 	}
 
 	// INewDbgpServerListener
-	public void clientConnected(IDbgpSession session) {
+	public void clientConnected(IDbgpSession session)
+	{
 		final IDbgpSessionInfo info = session.getInfo();
-		if (info != null) {
-			final IDbgpThreadAcceptor acceptor = (IDbgpThreadAcceptor) acceptors
-					.get(info.getIdeKey());
-			if (acceptor != null) {
+		if (info != null)
+		{
+			final IDbgpThreadAcceptor acceptor = (IDbgpThreadAcceptor) acceptors.get(info.getIdeKey());
+			if (acceptor != null)
+			{
 				acceptor.acceptDbgpThread(session, new NullProgressMonitor());
-			} else {
+			} else
+			{
 				session.requestTermination();
 			}
 		}

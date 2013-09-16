@@ -23,20 +23,37 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.AIndicesUnaryExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.ASubsetBinaryExp;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class SeqModificationObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2541416807923302230L;
 
-	public SeqModificationObligation(APlusPlusBinaryExp arg, POContextStack ctxt)
+	public SeqModificationObligation(APlusPlusBinaryExp arg, IPOContextStack ctxt)
 	{
-		super(arg.getLocation(), POType.SEQ_MODIFICATION, ctxt);
-		value = ctxt.getObligation(
-			"dom " + arg.getRight() + " subset inds " + arg.getLeft());
+		super(arg, POType.SEQ_MODIFICATION, ctxt);
+		
+		/**
+		 * "seq ++ map" produces "dom map subset inds seq"
+		 */
+		ASubsetBinaryExp subsetExp = new ASubsetBinaryExp();
+		subsetExp.setOp(new LexKeywordToken(VDMToken.SUBSET, null));
+		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
+		domExp.setExp(arg.getRight());
+		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
+		indsExp.setExp(arg.getLeft());
+		subsetExp.setLeft(domExp);
+		subsetExp.setRight(indsExp);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(subsetExp));
 	}
 }

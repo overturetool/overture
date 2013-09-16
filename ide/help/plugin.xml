@@ -9,5 +9,22 @@
             primary="true">
       </toc>
    </extension>
+   
+   
+    <extension
+       point="org.eclipse.ui.importWizards">
+   
+    <wizard
+          category="org.overture.ide.ui.wizard"
+          class="org.overture.ide.help.wizard.ImportExamplesWizard"
+          icon="platform:/plugin/org.overture.ide.platform/icons/ctool16/overture_misc.png"
+          id="org.overture.ide.help.wizardImportExamples"
+          name="Overture Examples">
+    </wizard>
+    <category
+          id="org.overture.ide.ui.wizard"
+          name="Overture">
+    </category>
+ </extension>
 
 </plugin>

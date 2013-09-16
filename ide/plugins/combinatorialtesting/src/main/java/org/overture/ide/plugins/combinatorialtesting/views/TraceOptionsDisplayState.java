@@ -1,13 +1,12 @@
 package org.overture.ide.plugins.combinatorialtesting.views;
 
-import org.overture.interpreter.traces.TraceReductionType;
 
 public class TraceOptionsDisplayState
 {
 	private int subset = -1;
 	private int seed = -1;
 	private String reductionType;
-	
+
 	public TraceOptionsDisplayState(int subset, int seed, String reductionType)
 	{
 		super();
@@ -30,5 +29,5 @@ public class TraceOptionsDisplayState
 	{
 		return reductionType;
 	}
-	
+
 }

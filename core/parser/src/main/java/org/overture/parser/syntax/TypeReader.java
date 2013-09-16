@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexIdentifierToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.lex.LexToken;
@@ -292,7 +292,7 @@ public class TypeReader extends SyntaxReader
 	{
 		PType type = null;
 		LexToken token = lastToken();
-		LexLocation location = token.location;
+		ILexLocation location = token.location;
 
 		switch (token.type)
 		{

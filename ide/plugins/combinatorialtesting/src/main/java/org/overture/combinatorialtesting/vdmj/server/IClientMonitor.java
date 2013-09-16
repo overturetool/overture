@@ -9,8 +9,10 @@ public interface IClientMonitor
 
 	void completed();
 
+	void terminating();
+
 	void traceStart(String traceName);
-	
+
 	void traceError(String message);
 
 }

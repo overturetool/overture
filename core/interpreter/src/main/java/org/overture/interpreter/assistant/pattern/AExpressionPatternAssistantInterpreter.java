@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AExpressionPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -16,33 +17,39 @@ import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
 public class AExpressionPatternAssistantInterpreter extends
 		AExpressionPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AExpressionPatternAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(
-			AExpressionPattern p, Value expval, Context ctxt) throws PatternMatchException
+			AExpressionPattern p, Value expval, Context ctxt)
+			throws PatternMatchException
 	{
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
-		
-			
-				try
-				{
-					if (!expval.equals(p.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt)))
-					{
-						VdmRuntimeError.patternFail(4110, "Expression pattern match failed",p.getLocation());
-					}
-				} catch (AnalysisException e)
-				{
-					if(e instanceof PatternMatchException)
-					{
-						throw (PatternMatchException)e;
-					}
-					e.printStackTrace();
-				}
-			
-		
+		try
+		{
+			if (!expval.equals(p.getExp().apply(VdmRuntime.getExpressionEvaluator(), ctxt)))
+			{
+				VdmRuntimeError.patternFail(4110, "Expression pattern match failed", p.getLocation());
+			}
+		} catch (AnalysisException e)
+		{
+			if (e instanceof PatternMatchException)
+			{
+				throw (PatternMatchException) e;
+			}
+			e.printStackTrace();
+		}
 
 		result.add(new NameValuePairList());
-		return result;		// NB no values for a match, as there's no definition
+		return result; // NB no values for a match, as there's no definition
 	}
 
 }

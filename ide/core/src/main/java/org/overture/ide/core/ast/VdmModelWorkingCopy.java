@@ -26,7 +26,7 @@ public class VdmModelWorkingCopy extends VdmModel implements IVdmModel
 {
 	VdmModel sourceModel;
 	boolean discarded = false;
-
+//FIXME: state!!
 	public VdmModelWorkingCopy(VdmModel sourceModel)
 	{
 		this.sourceModel = sourceModel;

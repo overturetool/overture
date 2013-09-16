@@ -18,37 +18,41 @@
  *******************************************************************************/
 package org.overture.ide.ui.outline;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
 
-
 public class VdmOutlineViewer extends TreeViewer
 {
 	/**
 	 * 
 	 */
-	private final VdmContentOutlinePage vdmContentOutlinePage;
 
-	public VdmOutlineViewer(VdmContentOutlinePage vdmContentOutlinePage, Composite parent)
+	public VdmOutlineViewer(Composite parent)
 	{
 		super(parent);
-		this.vdmContentOutlinePage = vdmContentOutlinePage;
 		setAutoExpandLevel(2);
 		setUseHashlookup(true);
-
-		//setSorter(new OutlineSorter());
 	}
+	
+	boolean disableSelectionChangeEvents = false;
 
 	@Override
 	protected void fireSelectionChanged(SelectionChangedEvent event)
 	{
-		if (!this.vdmContentOutlinePage.inExternalSelectionMode)
+		if(!disableSelectionChangeEvents)
 		{
 			super.fireSelectionChanged(event);
 		}
+	}
+	
+	public synchronized void setSelection(ISelection selection, boolean reveal) {
+		disableSelectionChangeEvents = true;
+		super.setSelection(selection, reveal);
+		disableSelectionChangeEvents = false;
 	}
 
 	public void dispose()
@@ -69,5 +73,4 @@ public class VdmOutlineViewer extends TreeViewer
 		}
 
 	}
-
 }

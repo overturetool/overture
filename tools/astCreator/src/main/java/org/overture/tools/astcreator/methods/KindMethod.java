@@ -2,7 +2,6 @@ package org.overture.tools.astcreator.methods;
 
 import org.overture.tools.astcreator.definitions.IClassDefinition;
 import org.overture.tools.astcreator.env.Environment;
-import org.overture.tools.astcreator.utils.EnumUtil;
 
 public class KindMethod extends Method
 {
@@ -43,7 +42,7 @@ public class KindMethod extends Method
 				this.body = "\t\treturn " + this.name + ";";
 			}
 		}
-			javaDoc = "\t/**@Deprecated We wish to get rid of all enum.\n";
+			javaDoc = "\t/**@deprecated We wish to get rid of all enum.\n";
 			javaDoc += "\t * Returns the {@link " + this.returnType
 					+ "} corresponding to the\n";
 			javaDoc += "\t * type of this {@link " + this.returnType + "} node.\n";

@@ -23,8 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -103,7 +103,7 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public void set(LexLocation location, Value newval, Context ctxt)
+	public void set(ILexLocation location, Value newval, Context ctxt)
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure

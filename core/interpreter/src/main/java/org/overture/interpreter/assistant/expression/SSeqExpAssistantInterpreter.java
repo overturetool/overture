@@ -4,21 +4,30 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SSeqExp;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
 
 public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public SSeqExpAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getValues(SSeqExp exp, ObjectContext ctxt)
 	{
 		switch (exp.kindSSeqExp())
 		{
 			case ASeqCompSeqExp.kindSSeqExp:
-				return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp)exp,ctxt);
+				return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
 			case ASeqEnumSeqExp.kindSSeqExp:
-				return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp)exp,ctxt);
+				return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
 			default:
 				return new ValueList();
 		}
@@ -29,9 +38,9 @@ public class SSeqExpAssistantInterpreter extends SSeqExpAssistantTC
 		switch (exp.kindSSeqExp())
 		{
 			case ASeqCompSeqExp.kindSSeqExp:
-				return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp)exp,lineno);
+				return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
 			case ASeqEnumSeqExp.kindSSeqExp:
-				return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp)exp,lineno);
+				return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
 			default:
 				return null;
 		}

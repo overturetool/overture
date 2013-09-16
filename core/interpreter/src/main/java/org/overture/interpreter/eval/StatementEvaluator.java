@@ -1,6 +1,8 @@
 package org.overture.interpreter.eval;
 
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -67,13 +69,34 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.SharedStateListner;
-import org.overture.interpreter.values.*;
+import org.overture.interpreter.values.BooleanValue;
+import org.overture.interpreter.values.FunctionValue;
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.Quantifier;
+import org.overture.interpreter.values.QuantifierList;
+import org.overture.interpreter.values.RecordValue;
+import org.overture.interpreter.values.SeqValue;
+import org.overture.interpreter.values.SetValue;
+import org.overture.interpreter.values.UndefinedValue;
+import org.overture.interpreter.values.UpdatableValue;
+import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
+import org.overture.interpreter.values.ValueListenerList;
+import org.overture.interpreter.values.ValueMap;
+import org.overture.interpreter.values.ValueSet;
+import org.overture.interpreter.values.VoidReturnValue;
+import org.overture.interpreter.values.VoidValue;
 import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
@@ -177,41 +200,60 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		State state = null;
-		ClassInvariantListener listener = null;
-
-		if (node.getStatedef() != null)
+		
+		int size = node.getAssignments().size();
+		ValueList targets = new ValueList(size);
+		ValueList values = new ValueList(size);
+		
+		// Rather than execute the assignment statements directly, we calculate the
+		// Updateable values that would be affected, and the new values to put in them.
+		// Note that this does not provoke any invariant checks (other than those that
+		// may be present in the RHS expression of each assignment).
+		
+		for (AAssignmentStm stmt: node.getAssignments())
 		{
-			state =VdmRuntime.getNodeState( node.getStatedef()).moduleState;
-			state.doInvariantChecks = false;
-		}
-		else
-		{
-			ObjectValue self = ctxt.getSelf();
-
-			if (self != null && self.invlistener != null)
+			try
 			{
-				listener = self.invlistener;
-				listener.doInvariantChecks = false;
+				stmt.getLocation().hit();
+				targets.add(stmt.getTarget().apply(VdmRuntime.getStatementEvaluator(), ctxt));				
+				values.add(stmt.getExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).convertTo(stmt.getTargetType(), ctxt));
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), e);
+			}
+		}
+		
+		// We make the assignments atomically by turning off thread swaps and time
+		// then temporarily removing the listener lists from each Updateable target.
+		// Then, when all assignments have been made, we check the invariants by
+		// passing the updated values to each listener list, as the assignment would have.
+		// Finally, we re-enable the thread swapping and time stepping, before returning
+		// a void value.
+		
+		ctxt.threadState.setAtomic(true);
+		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+
+		for (int i = 0; i < size; i++)
+		{
+			UpdatableValue target = (UpdatableValue) targets.get(i);
+			listenerLists.add(target.listeners);
+			target.listeners = null;
+			target.set(node.getLocation(), values.get(i), ctxt);	// No invariant listeners
+			target.listeners = listenerLists.get(i);
+		}
+		
+		for (int i = 0; i < size; i++)
+		{
+			ValueListenerList listeners = listenerLists.get(i);
+			
+			if (listeners != null)
+			{
+				listeners.changedValue(node.getLocation(), values.get(i), ctxt);
 			}
 		}
 
-		for (AAssignmentStm stmt: node.getAssignments())
-		{
-			stmt.apply(VdmRuntime.getStatementEvaluator(),ctxt);
-		}
-
-		if (state != null)
-		{
-			state.doInvariantChecks = true;
-			state.changedValue(node.getLocation(), null, ctxt);
-		}
-		else if (listener != null)
-		{
-			listener.doInvariantChecks = true;
-			listener.changedValue(node.getLocation(), null, ctxt);
-		}
+		ctxt.threadState.setAtomic(false);
 
 		return new VoidValue();
 	}
@@ -227,7 +269,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		// do the evaluations of the designator below, so we correct the
 		// hit count here...
 
-		node.getLocation().hits--;
+		node.getLocation().setHits(node.getLocation().getHits()-1);
+		//node.getLocation().hits--;
 
 		try
 		{
@@ -399,11 +442,16 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		else
 		{
-			me.inOuterTimestep(true);
-			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),ctxt);
-			me.inOuterTimestep(false);
-			me.duration(node.getStep(), ctxt, node.getLocation());
-			return rv;
+			// We disable the swapping and time (RT) as duration evaluation should be "free".
+		    ctxt.threadState.setAtomic(true);
+		    long step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(),ctxt).intValue(ctxt);
+		    ctxt.threadState.setAtomic(false);
+
+		    me.inOuterTimestep(true);
+		    Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),ctxt);
+		    me.inOuterTimestep(false);
+		    me.duration(step, ctxt, node.getLocation());
+		    return rv;
 		}
 	}
 	
@@ -463,7 +511,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				try
 				{
-					Context evalContext = new Context(node.getLocation(), "for all", ctxt);
+					Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for all", ctxt);
 					evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPattern(),val, ctxt));
 					Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -508,7 +556,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				 (bval > 0 && value <= tval) || (bval < 0 && value >= tval);
 				 value += bval)
 			{
-				Context evalContext = new Context(node.getLocation(), "for index", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for index", ctxt);
 				evalContext.put(node.getVar(), new IntegerValue(value));
 				Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -555,7 +603,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					try
 					{
-						Context evalContext = new Context(node.getLocation(), "for pattern", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for pattern", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPatternBind().getPattern(),val, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -584,7 +632,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 							VdmRuntimeError.abort(node.getLocation(),4039, "Set bind does not contain value " + val, ctxt);
 						}
 
-						Context evalContext = new Context(node.getLocation(), "for set bind", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for set bind", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(setbind.getPattern(),val, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -609,7 +657,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					{
 						Value converted = val.convertTo(typebind.getType(), ctxt);
 
-						Context evalContext = new Context(node.getLocation(), "for type bind", ctxt);
+						Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "for type bind", ctxt);
 						evalContext.putList(PPatternAssistantInterpreter.getNamedValues(typebind.getPattern(),converted, ctxt));
 						Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),evalContext);
 
@@ -690,7 +738,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			while (quantifiers.hasNext(ctxt))
 			{
-				Context evalContext = new Context(node.getLocation(), "let be st statement", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st statement", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -732,9 +780,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Context evalContext = new Context(node.getLocation(), "let statement", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let statement", ctxt);
 
-		LexNameToken sname = new LexNameToken(node.getLocation().module, "self", node.getLocation());
+		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
 		ObjectValue self = (ObjectValue)ctxt.check(sname);
 
 		for (PDefinition d: node.getLocalDefs())
@@ -789,7 +837,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Context evalContext = new Context(node.getLocation(), "block statement", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "block statement", ctxt);
 
 		for (PDefinition d: node.getAssignmentDefs())
 		{
@@ -931,7 +979,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
     			if (node.getPatternBind().getPattern() != null)
     			{
-    				Context evalContext = new Context(node.getLocation(), "trap pattern", ctxt);
+    				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap pattern", ctxt);
     				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPatternBind().getPattern(),exval, ctxt));
     				rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     			}
@@ -942,7 +990,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
     				if (set.contains(exval))
     				{
-    					Context evalContext = new Context(node.getLocation(), "trap set", ctxt);
+    					Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap set", ctxt);
     					evalContext.putList(PPatternAssistantInterpreter.getNamedValues(setbind.getPattern(),exval, ctxt));
     					rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     				}
@@ -955,7 +1003,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
     			{
     				ATypeBind typebind = (ATypeBind)node.getPatternBind().getBind();
     				Value converted = exval.convertTo(typebind.getType(), ctxt);
-    				Context evalContext = new Context(node.getLocation(), "trap type", ctxt);
+    				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "trap type", ctxt);
     				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(typebind.getPattern(),converted, ctxt));
     				rv = node.getWith().apply(VdmRuntime.getStatementEvaluator(),evalContext);
     			}

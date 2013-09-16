@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.PDefinition;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PDefinitionSet extends HashSet<PDefinition>
 {
@@ -14,7 +15,13 @@ public class PDefinitionSet extends HashSet<PDefinition>
 	 */
 	private static final long serialVersionUID = 2315113629324204849L;
 
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PDefinitionSet(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	@Override
 	public boolean add(PDefinition e)
 	{
@@ -32,7 +39,7 @@ public class PDefinitionSet extends HashSet<PDefinition>
 	{
 		for (PDefinition def : this)
 		{
-			if(PDefinitionAssistantTC.equals(def, o))
+			if(af.createPDefinitionAssistant().equals(def, o))
 			{
 				return true;
 			}

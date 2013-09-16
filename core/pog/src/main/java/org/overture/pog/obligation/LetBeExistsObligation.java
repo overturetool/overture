@@ -23,48 +23,59 @@
 
 package org.overture.pog.obligation;
 
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.statements.ALetBeStStm;
+import java.util.List;
+import java.util.Vector;
 
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.statements.ALetBeStStm;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class LetBeExistsObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4190499967249305830L;
 
-	public LetBeExistsObligation(ALetBeStExp exp, POContextStack ctxt)
+	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getBind().getLocation(), POType.LET_BE_EXISTS, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(exp, POType.LET_BE_EXISTS, ctxt);
+		
+		/**
+		 * let <binds> be st <predicate> in <exp>
+		 * produces
+		 * exists <binds> & <predicate>
+		 */
 
-		sb.append("exists ");
-		sb.append(exp.getBind());
-
+		AExistsExp exists = new AExistsExp();
+		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		bindList.add(exp.getBind());
+		exists.setBindList(bindList);
+		
 		if (exp.getSuchThat() != null)
 		{
-			sb.append(" & ");
-			sb.append(exp.getSuchThat());
+			exists.setPredicate(exp.getSuchThat());
 		}
 
-		value = ctxt.getObligation(sb.toString());
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 
-	public LetBeExistsObligation(ALetBeStStm stmt, POContextStack ctxt)
+	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt)
 	{
-		super(stmt.getBind().getLocation(), POType.LET_BE_EXISTS, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(stmt, POType.LET_BE_EXISTS, ctxt);
 
-		sb.append("exists ");
-		sb.append(stmt.getBind());
-
+		AExistsExp exists = new AExistsExp();
+		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		bindList.add(stmt.getBind());
+		exists.setBindList(bindList);
+		
 		if (stmt.getSuchThat() != null)
 		{
-			sb.append(" & ");
-			sb.append(stmt.getSuchThat());
+			exists.setPredicate(stmt.getSuchThat());
 		}
 
-		value = ctxt.getObligation(sb.toString());
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 }

@@ -1,28 +1,28 @@
 package org.overture.typechecker.util;
 
-import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.TypeComparator;
 
 public class HelpLexNameToken {
 
-	public static boolean isEqual(LexNameToken one, Object other)
+	public static boolean isEqual(ILexNameToken one, Object other)
 	{
-		if (!(other instanceof LexNameToken))
+		if (!(other instanceof ILexNameToken))
 		{
 			return false;
 		}
 
-		LexNameToken lother = (LexNameToken)other;
+		ILexNameToken lother = (ILexNameToken)other;
 
-		if (one.typeQualifier != null && lother.getTypeQualifier() != null)
+		if (one.getTypeQualifier() != null && lother.getTypeQualifier() != null)
 		{
-			if (!TypeComparator.compatible(one.typeQualifier, lother.typeQualifier))
+			if (!TypeComparator.compatible(one.getTypeQualifier(), lother.getTypeQualifier()))
 			{
 				return false;
 			}
 		}
-		else if ((one.typeQualifier != null && lother.getTypeQualifier() == null) ||
-				 (one.typeQualifier == null && lother.getTypeQualifier() != null))
+		else if ((one.getTypeQualifier() != null && lother.getTypeQualifier() == null) ||
+				 (one.getTypeQualifier() == null && lother.getTypeQualifier() != null))
 		{
 			return false;
 		}
@@ -34,9 +34,9 @@ public class HelpLexNameToken {
 	public static boolean isEqual(Object one, Object other)
 	{
 		
-		if(one instanceof LexNameToken)
+		if(one instanceof ILexNameToken)
 		{
-			return isEqual((LexNameToken)one, other);
+			return isEqual((ILexNameToken)one, other);
 		}
 		return false;
 		

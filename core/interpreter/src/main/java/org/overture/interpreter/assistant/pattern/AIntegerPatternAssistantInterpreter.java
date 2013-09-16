@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -15,6 +16,14 @@ import org.overture.typechecker.assistant.pattern.AIntegerPatternAssistantTC;
 public class AIntegerPatternAssistantInterpreter extends
 		AIntegerPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AIntegerPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(AIntegerPattern p,
 			Value expval, Context ctxt) throws PatternMatchException
@@ -23,19 +32,17 @@ public class AIntegerPatternAssistantInterpreter extends
 
 		try
 		{
-			if (expval.intValue(ctxt) != p.getValue().value)
+			if (expval.intValue(ctxt) != p.getValue().getValue())
 			{
-				VdmRuntimeError.patternFail(4111, "Integer pattern match failed",p.getLocation());
+				VdmRuntimeError.patternFail(4111, "Integer pattern match failed", p.getLocation());
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,p.getLocation());
+			VdmRuntimeError.patternFail(e, p.getLocation());
 		}
 
 		result.add(new NameValuePairList());
 		return result;
 	}
-
 
 }

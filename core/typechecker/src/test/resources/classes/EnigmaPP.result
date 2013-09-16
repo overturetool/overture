@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="3" line="422" message="Instance variable 'alph' is not initialized" messageType="warning" number="5001" resource="EnigmaPP.result"/>
 <message column="3" line="541" message="Instance variable 'alph' is not initialized" messageType="warning" number="5001" resource="EnigmaPP.result"/>
 <message column="7" line="56" message="Undefined superclass: TestCase" messageType="error" number="3003" resource="EnigmaPP.result"/>
@@ -37,4 +37,5 @@
 <message column="20" line="545" message="Unknown variable 'name' in assignment" messageType="error" number="3247" resource="EnigmaPP.result"/>
 <message column="25" line="552" message="Class name Rotor not in scope" messageType="error" number="3133" resource="EnigmaPP.result"/>
 <message column="16" line="552" message="Unable to resolve type name 'Rotor'" messageType="error" number="3428" resource="EnigmaPP.result"/>
+<result/>
 </testResult>

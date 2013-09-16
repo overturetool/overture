@@ -29,9 +29,11 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
@@ -51,9 +53,9 @@ public class ModuleEnvironment extends Environment
 		return module.getDefs();
 	}
 	
-	public ModuleEnvironment(AModuleModules module)
+	public ModuleEnvironment(ITypeCheckerAssistantFactory af, AModuleModules module)
 	{
-		super(null);
+		super(af,null,null);
 		this.module = module;
 		dupHideCheck(module.getDefs(), NameScope.NAMESANDSTATE);
 	}
@@ -73,7 +75,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName(ILexNameToken name, NameScope scope)
+	public PDefinition findName( ILexNameToken name, NameScope scope)
 	{
 		PDefinition def = PDefinitionListAssistantTC.findName(module.getDefs(),name, scope);
 
@@ -113,7 +115,7 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(ILexNameToken name)
+	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
 		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(module.getDefs(),name);
 		defs.addAll(PDefinitionListAssistantTC.findMatches(module.getImportdefs(),name));
@@ -163,5 +165,10 @@ public class ModuleEnvironment extends Environment
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		return null;
 	}
 }

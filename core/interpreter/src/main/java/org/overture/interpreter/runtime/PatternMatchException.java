@@ -23,14 +23,14 @@
 
 package org.overture.interpreter.runtime;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.parser.messages.LocatedException;
 
 
 @SuppressWarnings("serial")
 public class PatternMatchException extends LocatedException
 {
-	public PatternMatchException(int number, String msg, LexLocation location)
+	public PatternMatchException(int number, String msg, ILexLocation location)
 	{
 		super(number, msg, location);
 	}

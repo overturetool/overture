@@ -892,7 +892,7 @@ public class ExtensionGenerator2 {
 		 * Go Through all the classes in the extension and add the corresponding
 		 * methods in the extended analysis and remove them in the base analysis
 		 */
-		for (IClassDefinition c : getExtClasses(extEnv.getClasses(),
+		for (IClassDefinition c : getExtClasses(result.getClasses(),
 				extEnv.getName(), result)) {
 			switch (result.classToType.get(c)) {
 

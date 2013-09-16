@@ -8,15 +8,22 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AImportedDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findType(AImportedDefinition d,
+	@SuppressWarnings("static-access")
+	public AImportedDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findType( AImportedDefinition d,
 			ILexNameToken sought, String fromModule) {
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 		
-		if (fromModule != null && !d.getLocation().module.equals(fromModule))		
+		if (fromModule != null && !d.getLocation().getModule().equals(fromModule))		
 		{
 			return null;	// Someone else's import
 		}
@@ -32,7 +39,7 @@ public class AImportedDefinitionAssistantTC {
 		return def;
 	}
 
-	public static PDefinition findName(AImportedDefinition d,
+	public static PDefinition findName( AImportedDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		
 		PDefinition def =  PDefinitionAssistantTC.findName(d.getDef(), sought, scope);
@@ -58,7 +65,7 @@ public class AImportedDefinitionAssistantTC {
 		return result;
 	}
 
-	public static LexNameList getVariableNames(AImportedDefinition d) {
+	public static LexNameList getVariableNames( AImportedDefinition d) {
 		return PDefinitionAssistantTC.getVariableNames(d.getDef());
 	}
 

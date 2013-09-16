@@ -13,12 +13,13 @@ import java.util.Vector;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.util.PogUtil.PogResult;
-import org.overture.util.Base64;
+import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.utility.PogUtil.PogResult;
 import org.overture.test.framework.ResultTestCase;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
+import org.overture.util.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,24 +52,6 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 	public void encondeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
-		for (ProofObligation po : result)
-		{
-			Element message = doc.createElement("po");
-			message.setAttribute("resource", file.getName());
-			message.setAttribute("number", new Integer(po.number).toString());
-			message.setAttribute("message", po.toString());
-			message.setAttribute("column", po.location.startPos + "");
-			message.setAttribute("line", po.location.startLine + "");
-			try
-			{
-				message.setAttribute("object", toString(po));
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-				fail("Failed to serialize po");
-			}
-			resultElement.appendChild(message);
-		}
 
 	}
 
@@ -150,7 +133,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 
 		for (VDMMessage msg : messages)
 		{
-			testMessages.add(new Message(msg.location.file.getName(), msg.number, msg.location.startLine, msg.location.startPos, msg.message));
+			testMessages.add(new Message(msg.location.getFile().getName(), msg.number, msg.location.getStartLine(), msg.location.getStartPos(), msg.message));
 		}
 
 		return testMessages;

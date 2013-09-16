@@ -33,8 +33,10 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -50,19 +52,25 @@ public class PrivateClassEnvironment extends Environment
 	}
 	private final SClassDefinition classdef;
 
-	public PrivateClassEnvironment(SClassDefinition classdef)
+	public PrivateClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition classdef) {
+		super(af,null,null);
+		this.classdef = classdef;
+	}
+	
+	public PrivateClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition classdef, EnvironmentSearchStrategy ess)
 	{
-		this(classdef, null);
+		super(af,null,ess);
+		this.classdef = classdef;
 	}
 
-	public PrivateClassEnvironment(SClassDefinition classdef, Environment env)
+	public PrivateClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition classdef, Environment env)
 	{
-		super(env);
+		super(af,env,env.searchStrategy);
 		this.classdef = classdef;
 	}
 
 	@Override
-	public PDefinition findName(ILexNameToken sought, NameScope scope)
+	public PDefinition findName( ILexNameToken sought, NameScope scope)
 	{
 		PDefinition def = SClassDefinitionAssistantTC.findName(classdef,sought, scope);
 
@@ -70,6 +78,9 @@ public class PrivateClassEnvironment extends Environment
 		{
 			return def;
 		}
+		
+		def = searchStrategy != null ? searchStrategy.findName(sought, scope, classdef, outer, classdef.getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findName(sought, scope);
 	}
@@ -83,12 +94,15 @@ public class PrivateClassEnvironment extends Environment
 		{
 			return def;
 		}
+		
+		def = searchStrategy != null ? searchStrategy.findType(name, fromModule, classdef, outer, getDefinitions()) : null;
+		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findType(name, null);
 	}
 
 	@Override
-	public Set<PDefinition> findMatches(ILexNameToken name)
+	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
 		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classdef,name);
 
@@ -136,5 +150,12 @@ public class PrivateClassEnvironment extends Environment
 	public boolean isStatic()
 	{
 		return false;
+	}
+
+	@Override
+	public PDefinition find(ILexIdentifierToken name) {
+		if (super.searchStrategy != null)
+			return searchStrategy.find(name, classdef, outer, classdef.getDefinitions());
+		return null;
 	}
 }

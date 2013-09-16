@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.RecordValue;
@@ -17,26 +18,35 @@ import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 public class ARecordInvariantTypeAssistantInterpreter extends
 		ARecordInvariantTypeAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public ARecordInvariantTypeAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
+			throws ValueException
 	{
 		List<PType> types = new Vector<PType>();
 
-		for (AFieldField f: type.getFields())
+		for (AFieldField f : type.getFields())
 		{
 			types.add(f.getType());
 		}
 
-		ValueList results = new ValueList(); 
+		ValueList results = new ValueList();
 
-		for (Value v: PTypeListAssistant.getAllValues(types,ctxt))
+		for (Value v : PTypeListAssistant.getAllValues(types, ctxt))
 		{
 			try
-			{ 
-				TupleValue tuple = (TupleValue)v;
+			{
+				TupleValue tuple = (TupleValue) v;
 				results.add(new RecordValue(type, tuple.values, ctxt));
-			}
-			catch (ValueException e)
+			} catch (ValueException e)
 			{
 				// Value does not match invariant, so ignore it
 			}

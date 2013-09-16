@@ -100,9 +100,9 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	
 	public V get(Object key)
 	{
-		if(key instanceof LexNameToken)
+		if(key instanceof ILexNameToken)
 		{
-			return map.get(new LexNameTokenWrapper((LexNameToken) key));
+			return map.get(new LexNameTokenWrapper((ILexNameToken) key));
 		}
 		return map.get(key);
 	}

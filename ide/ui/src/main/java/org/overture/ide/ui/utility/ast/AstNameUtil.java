@@ -20,13 +20,13 @@ public class AstNameUtil
 			return ((AModuleModules) node).getName()==null?null:((AModuleModules) node).getName().getName();
 		}else if(node instanceof PStm)
 		{
-			return ((PStm) node).getLocation().module;
+			return ((PStm) node).getLocation().getModule();
 		}else if(node instanceof PExp)
 		{
-			return ((PExp) node).getLocation().module;
+			return ((PExp) node).getLocation().getModule();
 		}else if(node instanceof PType)
 		{
-			return ((PType) node).getLocation().module;
+			return ((PType) node).getLocation().getModule();
 		}else if(node instanceof AFieldField)
 		{
 			return ((AFieldField) node).getTagname().getName();

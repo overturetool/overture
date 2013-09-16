@@ -24,104 +24,87 @@
 package org.overture.pog.obligation;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.AClassInvariantDefinition;
+import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class StateInvariantObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5828298910806421399L;
 
-	public StateInvariantObligation(AAssignmentStm ass, POContextStack ctxt)
+	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt)
 	{
-		super(ass.getLocation(), POType.STATE_INVARIANT, ctxt);
-		StringBuilder sb = new StringBuilder();
-		sb.append("-- After ");
-		sb.append(ass);
-		sb.append("\n");
-
+		super(ass, POType.STATE_INVARIANT, ctxt);
+		
 		if (ass.getClassDefinition() != null)
 		{
-			sb.append(invDefs(ass.getClassDefinition()));
+			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition())));
 		}
-		else	// must be because we have a module state invariant
+		else
 		{
 			AStateDefinition def = ass.getStateDefinition();
+			ALetDefExp letExp = new ALetDefExp();
+			
+			List<PDefinition> invDefs = new Vector<PDefinition>();
+			AEqualsDefinition local = new AEqualsDefinition();
+			local.setPattern(def.getInvPattern());
+			local.setName(def.getName());
+			invDefs.add(local);
+			letExp.setLocalDefs(invDefs);
+			letExp.setExpression(def.getInvExpression());
 
-			sb.append("let ");
-			sb.append(def.getInvPattern());
-			sb.append(" = ");
-			sb.append(def.getName());
-			sb.append(" in ");
-			sb.append(def.getInvExpression());
+			valuetree.setPredicate(ctxt.getPredWithContext(letExp));
 		}
 
-		value = ctxt.getObligation(sb.toString());
+//		valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(
-		AClassInvariantDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AClassInvariantDefinition def, IPOContextStack ctxt)
 	{
-		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
-		StringBuilder sb = new StringBuilder();
-		sb.append("-- After instance variable initializers\n");
-		sb.append(invDefs(def.getClassDefinition()));
-
-    	value = ctxt.getObligation(sb.toString());
+		super(def, POType.STATE_INVARIANT, ctxt);
+		// After instance variable initializers
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+//    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(
-		AExplicitOperationDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AExplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
-		StringBuilder sb = new StringBuilder();
-		sb.append("-- After ");
-		sb.append(def.getName());
-		sb.append(" constructor body\n");
-		sb.append(invDefs(def.getClassDefinition()));
-
-    	value = ctxt.getObligation(sb.toString());
+		super(def, POType.STATE_INVARIANT, ctxt);
+		// After def.getName() constructor body
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+//    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(
-		AImplicitOperationDefinition def,
-		POContextStack ctxt)
+	public StateInvariantObligation(AImplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
-		StringBuilder sb = new StringBuilder();
-		sb.append("-- After ");
-		sb.append(def.getName());
-		sb.append(" constructor body\n");
-		sb.append(invDefs(def.getClassDefinition()));
-
-    	value = ctxt.getObligation(sb.toString());
+		super(def, POType.STATE_INVARIANT, ctxt);
+		// After def.getName() constructor body
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+//    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	private String invDefs(SClassDefinition def)
+	private PExp invDefs(SClassDefinition def)
 	{
-		StringBuilder sb = new StringBuilder();
-		List<PDefinition> invdefs = SClassDefinitionAssistantTC.getInvDefs(def);
-		String sep = "";
-
-		for (PDefinition d: invdefs)
+		PExp root = null;
+		
+		for (PDefinition d: SClassDefinitionAssistantTC.getInvDefs(def))
 		{
 			AClassInvariantDefinition cid = (AClassInvariantDefinition)d;
-			sb.append(sep);
-			sb.append(cid.getExpression());
-			sep = " and ";
+			root = makeAnd(root, cid.getExpression());
 		}
 
-    	return sb.toString();
+    	return root;
 	}
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="11" line="24" message="Instance variable 'ID' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
 <message column="11" line="25" message="Instance variable 'Type' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
 <message column="11" line="26" message="Instance variable 'Corr' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
@@ -19,4 +19,5 @@
 <message column="1" line="1184" message="Instance variable 'tempSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
 <message column="1" line="1185" message="Instance variable 'humidSensor' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
 <message column="1" line="1290" message="Instance variable 'env' is not initialized" messageType="warning" number="5001" resource="HomeautomationSeqPP.result"/>
+<result/>
 </testResult>

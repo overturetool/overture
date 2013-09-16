@@ -49,6 +49,7 @@ import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
 import org.overture.interpreter.traces.CallSequence;
+import org.overture.interpreter.util.ModuleListInterpreter;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
@@ -66,7 +67,7 @@ import org.overture.typechecker.ModuleEnvironment;
 public class ModuleInterpreter extends Interpreter
 {
 	/** A list of module definitions in the specification. */
-	public final ModuleList modules;
+	public final ModuleListInterpreter modules;
 	/** The module starting execution. */
 	public AModuleModules defaultModule;
 
@@ -79,7 +80,7 @@ public class ModuleInterpreter extends Interpreter
 
 	public ModuleInterpreter(ModuleList modules) throws Exception
 	{
-		this.modules = modules;
+		this.modules = new ModuleListInterpreter(modules);
 
 		if (modules.isEmpty())
 		{
@@ -89,6 +90,18 @@ public class ModuleInterpreter extends Interpreter
 		{
 			setDefaultName(modules.get(0).getName().getName());
 		}
+	}
+	
+	@Override
+	public PStm findStatement(File file, int lineno)
+	{
+		return AModuleModulesAssistantInterpreter.findStatement(modules,file, lineno);
+	}
+
+	@Override
+	public PExp findExpression(File file, int lineno)
+	{
+		return AModuleModulesAssistantInterpreter.findExpression(modules,file, lineno);
 	}
 
 	/**
@@ -137,7 +150,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public File getDefaultFile()
 	{
-		return defaultModule.getName().getLocation().file;
+		return defaultModule.getName().getLocation().getFile();
 	}
 
 	@Override
@@ -158,7 +171,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new ModuleEnvironment(defaultModule);
+		return new ModuleEnvironment(assistantFactory,defaultModule);
 	}
 
 	/**
@@ -173,6 +186,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public void init(DBGPReader dbgp)
 	{
+		VdmRuntime.initialize();
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
@@ -212,7 +226,7 @@ public class ModuleInterpreter extends Interpreter
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		Context mainContext = new StateContext(defaultModule.getName().getLocation(),
+		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
 				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
@@ -245,7 +259,7 @@ public class ModuleInterpreter extends Interpreter
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		Environment env = new ModuleEnvironment(defaultModule);
+		Environment env = new ModuleEnvironment(assistantFactory,defaultModule);
 
 		try
 		{
@@ -280,35 +294,35 @@ public class ModuleInterpreter extends Interpreter
 		return modules.findTraceDefinition(name);
 	}
 
-	/**
-	 * Find a Statement in the given file that starts on the given line.
-	 * If there are none, return null.
-	 *
-	 * @param file The file name to search.
-	 * @param lineno The line number in the file.
-	 * @return A Statement starting on the line, or null.
-	 */
+//	/**
+//	 * Find a Statement in the given file that starts on the given line.
+//	 * If there are none, return null.
+//	 *
+//	 * @param file The file name to search.
+//	 * @param lineno The line number in the file.
+//	 * @return A Statement starting on the line, or null.
+//	 */
+//
+//	@Override
+//	public PStm findStatement(File file, int lineno)
+//	{
+//		return modules.findStatement(file, lineno);
+//	}
 
-	@Override
-	public PStm findStatement(File file, int lineno)
-	{
-		return modules.findStatement(file, lineno);
-	}
-
-	/**
-	 * Find an Expression in the given file that starts on the given line.
-	 * If there are none, return null.
-	 *
-	 * @param file The file name to search.
-	 * @param lineno The line number in the file.
-	 * @return An Expression starting on the line, or null.
-	 */
-
-	@Override
-	public PExp findExpression(File file, int lineno)
-	{
-		return modules.findExpression(file, lineno);
-	}
+//	/**
+//	 * Find an Expression in the given file that starts on the given line.
+//	 * If there are none, return null.
+//	 *
+//	 * @param file The file name to search.
+//	 * @param lineno The line number in the file.
+//	 * @return An Expression starting on the line, or null.
+//	 */
+//
+//	@Override
+//	public PExp findExpression(File file, int lineno)
+//	{
+//		return modules.findExpression(file, lineno);
+//	}
 
 	@Override
 	public ProofObligationList getProofObligations()

@@ -25,7 +25,7 @@ package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
 
@@ -41,7 +41,7 @@ public class Holder<T> implements Serializable
 		cq.stim();
 	}
 
-	public T get(Context ctxt, LexLocation location)
+	public T get(Context ctxt, ILexLocation location)
 	{
 		cq.join(ctxt, location);
 

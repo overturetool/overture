@@ -86,7 +86,7 @@ public class InterpreterStringPpTestCase extends InterpreterStringBaseTestCase
 				System.out.println(file.getName() + " -> " + val);
 			} catch (Exception e)
 			{
-				result = new Result<String>(e.getMessage(), new Vector<IMessage>(), new Vector<IMessage>());
+				result = ExecutionToResultTranslator.wrap(e);
 			}
 			compareResults(result, file.getName() + ".result");
 		}

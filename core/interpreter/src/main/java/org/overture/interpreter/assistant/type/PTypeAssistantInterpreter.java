@@ -12,6 +12,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
@@ -19,15 +20,24 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PTypeAssistantInterpreter extends PTypeAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static ValueList getAllValues(PType type, Context ctxt) throws ValueException
+	@SuppressWarnings("static-access")
+	public PTypeAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static ValueList getAllValues(PType type, Context ctxt)
+			throws ValueException
 	{
 		switch (type.kindPType())
 		{
 			case SBasicType.kindPType:
-				return SBasicTypeAssistantInterpreter.getAllValues((SBasicType) type,ctxt);
+				return SBasicTypeAssistantInterpreter.getAllValues((SBasicType) type, ctxt);
 			case SInvariantType.kindPType:
-				return SInvariantTypeAssistantInterpreter.getAllValues((SInvariantType)type,ctxt);
+				return SInvariantTypeAssistantInterpreter.getAllValues((SInvariantType) type, ctxt);
 			case SMapType.kindPType:
 				switch (((SMapType) type).kindSMapType())
 				{
@@ -37,19 +47,20 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 						return SMapTypeAssistantInterpreter.getAllValues((AMapMapType) type, ctxt);
 				}
 			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantInterpreter.getAllValues((AOptionalType)type,ctxt);
+				return AOptionalTypeAssistantInterpreter.getAllValues((AOptionalType) type, ctxt);
 			case AProductType.kindPType:
-				return AProductTypeAssistantInterpreter.getAllValues((AProductType)type,ctxt);
+				return AProductTypeAssistantInterpreter.getAllValues((AProductType) type, ctxt);
 			case AQuoteType.kindPType:
-				return AQuoteTypeAssistantInterpreter.getAllValues((AQuoteType)type,ctxt);
+				return AQuoteTypeAssistantInterpreter.getAllValues((AQuoteType) type, ctxt);
 			case ASetType.kindPType:
-				return ASetTypeAssistantInterpreter.getAllValues((ASetType)type,ctxt);
+				return ASetTypeAssistantInterpreter.getAllValues((ASetType) type, ctxt);
 			case AUnionType.kindPType:
-				return AUnionTypeAssistantInterpreter.getAllValues((AUnionType)type,ctxt);
+				return AUnionTypeAssistantInterpreter.getAllValues((AUnionType) type, ctxt);
 			case AParameterType.kindPType:
 				return AParameterTypeAssistantInterpreter.getAllValues((AParameterType) type, ctxt);
 			default:
-				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
+				throw new ValueException(4, "Cannot get bind values for type "
+						+ type, ctxt);
 		}
 	}
 

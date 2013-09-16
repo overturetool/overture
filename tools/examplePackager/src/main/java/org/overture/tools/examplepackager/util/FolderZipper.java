@@ -19,10 +19,10 @@
 package org.overture.tools.examplepackager.util;
 
 import java.io.File;
-import java.util.zip.ZipOutputStream;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * FolderZiper provide a static method to zip a folder.

@@ -11,8 +11,8 @@ import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
@@ -32,14 +32,21 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AUnionTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
@@ -128,7 +135,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	public static ASetType getSet(AUnionType type)
 	{
 
-		LexLocation location = type.getLocation();
+		ILexLocation location = type.getLocation();
 
 		if (!type.getSetDone())
 		{
@@ -154,7 +161,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static SMapType getMap(AUnionType type)
 	{
-		LexLocation location = type.getLocation();
+		ILexLocation location = type.getLocation();
 
 		if (!type.getMapDone())
 		{
@@ -371,7 +378,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getFuncType();
+		return (AFunctionType) type.getFuncType();
 	}
 
 	public static boolean isOperation(AUnionType type)
@@ -436,7 +443,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 		}
 
-		return type.getOpType();
+		return (AOperationType) type.getOpType();
 	}
 
 	public static boolean isSeq(AUnionType type)
@@ -568,7 +575,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 							}
 						}
 
-						PType ftype = PDefinitionAssistantTC.getType(f);
+						PType ftype = af.createPDefinitionAssistant().getType(f);
 
 						if (current == null)
 						{

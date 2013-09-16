@@ -8,7 +8,7 @@ import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
@@ -91,7 +91,7 @@ public class PTypeSet extends TreeSet<PType>
 		return super.add(t);
 	}
 
-	public PType getType(LexLocation location)
+	public PType getType(ILexLocation location)
 	{
 		// If there are any Optional(Unknowns) these are the result of
 		// nil values, which set the overall type as optional. Other

@@ -23,43 +23,87 @@
 
 package org.overture.pog.obligation;
 
+import java.util.List;
+import java.util.Vector;
+
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapletExp;
-
+import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class MapSeqOfCompatibleObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2042036674338877124L;
 
-	public MapSeqOfCompatibleObligation(AMapEnumMapExp exp, POContextStack ctxt)
+	public MapSeqOfCompatibleObligation(AMapEnumMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.MAP_SEQ_OF_COMPATIBLE, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(exp, POType.MAP_SEQ_OF_COMPATIBLE, ctxt);
+		
+		/**
+		 * This obligation applies to a map enumeration. Given a map enum of the form
+		 * { <maplet>, <maplet>, ... }, the obligation becomes:
+		 * 
+		 * forall m1, m2 in set { {<maplet>}, {<maplet>}, ... } &  -- set of maps
+		 * 		forall d1 in set dom m1, d2 in set dom m2 &
+		 * 			(d1 = d2) => (m1(d1) = m2(d2))
+		 * 
+		 * The obligation means that there are no contradictory maplets, where the same
+		 * domain key maps to different range values.
+		 */
 
-		String m1 = getVar("m");
-		String m2 = getVar("m");
-
-		sb.append("forall " + m1 + ", " + m2 + " in set {");
-		String prefix = "";
-
-		for (AMapletExp m: exp.getMembers())
+		ILexNameToken m1 = getUnique("m");
+		ILexNameToken m2 = getUnique("m");
+		
+		ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
+		List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
+		
+		for (AMapletExp maplet: exp.getMembers())
 		{
-			sb.append(prefix);
-			sb.append("{");
-			sb.append(m);
-			sb.append("}");
-			prefix = ", ";
+			AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
+			List<AMapletExp> members = new Vector<AMapletExp>();
+			members.add(maplet.clone());
+			mapOfOne.setMembers(members);
+			
+			singleMaplets.add(mapOfOne);
 		}
-
-		String d1 = getVar("d");
-		String d2 = getVar("d");
-
-		sb.append("} &\n  forall " + d1 + " in set dom " + m1 + ", " + d2 + " in set dom " + m2 + " &\n");
-		sb.append("    " + d1 + " = " + d2 + " => " + m1 + "(" + d1 + ") = " + m2 + "(" + d2 + ")");
-
-		value = ctxt.getObligation(sb.toString());
+		
+		setOfMaplets.setMembers(singleMaplets);
+		List<PMultipleBind> m1m2binding = getMultipleSetBindList(setOfMaplets, m1, m2);
+		
+		AForAllExp domForallExp = new AForAllExp();
+		ILexNameToken d1 = getUnique("d");
+		ILexNameToken d2 = getUnique("d");
+		
+		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
+		domM1.setExp(getVarExp(m1));
+		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
+		domM2.setExp(getVarExp(m2));
+		
+		AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+		implies.setLeft(getEqualsExp(getVarExp(d1), getVarExp(d2)));
+		implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
+		implies.setRight(getEqualsExp(
+				getApplyExp(getVarExp(m1), getVarExp(d1)),
+				getApplyExp(getVarExp(m2), getVarExp(d2))));
+		
+		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
+		domBinding.addAll(getMultipleSetBindList(domM2, d2));
+		domForallExp.setBindList(domBinding);
+		domForallExp.setPredicate(implies);
+		
+		AForAllExp forallExp = new AForAllExp();
+		forallExp.setBindList(m1m2binding);
+		forallExp.setPredicate(domForallExp);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

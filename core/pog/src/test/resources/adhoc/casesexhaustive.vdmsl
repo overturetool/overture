@@ -1,0 +1,11 @@
+module A
+definitions
+
+functions
+	caser : int -> bool
+	caser(x) == cases x:
+							0-> true,
+							default -> false
+								end;
+
+end A

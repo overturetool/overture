@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
@@ -95,7 +96,7 @@ public class ClassTypeChecker extends TypeChecker
 			return;
 		}
 
-		Environment allClasses = new PublicClassEnvironment(classes);
+		Environment allClasses = new PublicClassEnvironment(assistantFactory,classes,null);
 
 		for (SClassDefinition c: classes)
 		{
@@ -111,8 +112,8 @@ public class ClassTypeChecker extends TypeChecker
 			{
     			try
     			{
-    				Environment self = new PrivateClassEnvironment(c, allClasses);
-    				SClassDefinitionAssistantTC.typeResolve(c, null, new TypeCheckInfo(self));
+    				Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
+    				SClassDefinitionAssistantTC.typeResolve(c, null, new TypeCheckInfo(new TypeCheckerAssistantFactory(),self));
     			}
     			catch (TypeCheckException te)
     			{
@@ -141,7 +142,7 @@ public class ClassTypeChecker extends TypeChecker
     			{
     				try
     				{
-    					Environment self = new PrivateClassEnvironment(c, allClasses);
+    					Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
     	         		SClassDefinitionAssistantTC.typeCheckPass(c,pass, self,tc);
     				}
     				catch (TypeCheckException te)

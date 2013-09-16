@@ -36,7 +36,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
 			ModuleInterpreter i = (ModuleInterpreter)Interpreter.getInstance();
-			AModuleModules module = i.findModule(node.getLocation().module);
+			AModuleModules module = i.findModule(node.getLocation().getModule());
 
 			if (module != null)
 			{
@@ -54,7 +54,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		if (self == null)
     		{
     			ClassInterpreter i = (ClassInterpreter)Interpreter.getInstance();
-    			SClassDefinition cls = i.findClass(node.getLocation().module);
+    			SClassDefinition cls = i.findClass(node.getLocation().getModule());
 
     			if (cls != null)
     			{
@@ -74,7 +74,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		}
 		}
 
-		if (node.getLocation().module.equals("CPU"))
+		if (node.getLocation().getModule().equals("CPU"))
 		{
     		if (ctxt.title.equals("deploy(obj)"))
     		{

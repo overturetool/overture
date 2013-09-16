@@ -40,16 +40,25 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SInvariantTypeBase;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PTypeAssistantTC extends PTypeAssistant
 {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public PTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static boolean hasSupertype(AClassType cto, PType other)
 	{
 		return PDefinitionAssistantTC.hasSupertype(cto.getClassdef(), other);
@@ -774,6 +783,17 @@ public class PTypeAssistantTC extends PTypeAssistant
 				return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
 			case AUnknownType.kindPType:
 				return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
+			case SInvariantTypeBase.kindPType:
+				
+				SInvariantTypeBase invariantType = (SInvariantTypeBase) type;
+				switch(invariantType.kindSInvariantType())
+				{
+					case ANamedInvariantType.kindSInvariantType:
+						return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) invariantType, accessSpecifier);
+					case ARecordInvariantType.kindSInvariantType:
+						return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) invariantType, accessSpecifier);
+				}
+				
 			default:
 				return narrowerThanBaseCase(type, accessSpecifier);
 		}

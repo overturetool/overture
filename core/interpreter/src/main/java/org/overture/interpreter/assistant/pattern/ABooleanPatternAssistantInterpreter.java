@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.ABooleanPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -15,6 +16,14 @@ import org.overture.typechecker.assistant.pattern.ABooleanPatternAssistantTC;
 public class ABooleanPatternAssistantInterpreter extends
 		ABooleanPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ABooleanPatternAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static List<NameValuePairList> getAllNamedValues(ABooleanPattern p,
 			Value expval, Context ctxt) throws PatternMatchException
@@ -23,14 +32,13 @@ public class ABooleanPatternAssistantInterpreter extends
 
 		try
 		{
-			if (expval.boolValue(ctxt) != p.getValue().value)
+			if (expval.boolValue(ctxt) != p.getValue().getValue())
 			{
-				VdmRuntimeError.patternFail(4106, "Boolean pattern match failed",p.getLocation());
+				VdmRuntimeError.patternFail(4106, "Boolean pattern match failed", p.getLocation());
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			VdmRuntimeError.patternFail(e,p.getLocation()); 
+			VdmRuntimeError.patternFail(e, p.getLocation());
 		}
 
 		result.add(new NameValuePairList());

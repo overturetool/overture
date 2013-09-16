@@ -22,12 +22,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -53,6 +56,8 @@ public class VdmModel implements IVdmModel
 	protected Date checkedTime;
 
 	protected List<IVdmSourceUnit> vdmSourceUnits = new Vector<IVdmSourceUnit>();
+
+	protected Map<String, Object> state = new TreeMap<String, Object>();
 
 	public VdmModel()
 	{
@@ -220,7 +225,7 @@ public class VdmModel implements IVdmModel
 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
 	{
-		return null;
+		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
 	public synchronized void addVdmSourceUnit(IVdmSourceUnit unit)
@@ -276,8 +281,6 @@ public class VdmModel implements IVdmModel
 		this.isTypeCorrect = false;
 
 	}
-	
-
 
 	public void refresh(boolean completeRefresh, IProgressMonitor monitor)
 	{
@@ -342,10 +345,32 @@ public class VdmModel implements IVdmModel
 	{
 		this.isTypeChecked = checked;
 	}
-	
+
 	public synchronized boolean hasWorkingCopies()
 	{
-		return workingCopyNotCommitedCount>0;
+		return workingCopyNotCommitedCount > 0;
+	}
+
+	public boolean hasAttribute(String attributeName)
+	{
+		return state.containsKey(attributeName);
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public <K> K getAttribute(String key, Class<K> valClass)
+	{
+		Object val = state.get(key);
+		if (val == null){
+			return null;
+		}
+		return (K) val;
+
+	}
+
+	public <K> void setAttribute(String attributeName, K value)
+	{
+		state.put(attributeName, value);
 	}
 
 }

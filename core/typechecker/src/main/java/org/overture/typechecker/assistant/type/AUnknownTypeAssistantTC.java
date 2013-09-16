@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.type;
 import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
@@ -17,9 +18,17 @@ import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AUnknownTypeAssistantTC {
+public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AUnknownTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static AProductType getProduct(AUnknownType type, int n) {
 		
 		NodeList<PType> tl = new NodeList<PType>(null);

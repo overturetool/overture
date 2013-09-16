@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -16,34 +17,42 @@ import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 public class AMapPatternMapletAssistantInterpreter extends
 		AMapPatternAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static boolean isConstrained(AMapletPatternMaplet p)
 	{
-		if (PPatternAssistantInterpreter.isConstrained(p.getFrom()) || PPatternAssistantInterpreter.isConstrained(p.getTo()))
+		if (PPatternAssistantInterpreter.isConstrained(p.getFrom())
+				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
 		{
 			return true;
 		}
 
-		return (PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom())) ||  
-				PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo())));
+		return (PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom())) || PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo())));
 	}
 
 	public static List<NameValuePairList> getAllNamedValues(
-			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt) throws PatternMatchException
+			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
+			throws PatternMatchException
 	{
 		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
 		List<NameValuePairList> results = new Vector<NameValuePairList>();
 
-		for (NameValuePairList f: flist)
+		for (NameValuePairList f : flist)
 		{
-			for (NameValuePairList t: tlist)
+			for (NameValuePairList t : tlist)
 			{
 				NameValuePairList both = new NameValuePairList();
 				both.addAll(f);
 				both.addAll(t);
-				results.add(both);	// Every combination of from/to mappings
+				results.add(both); // Every combination of from/to mappings
 			}
 		}
 
@@ -60,5 +69,5 @@ public class AMapPatternMapletAssistantInterpreter extends
 
 		return list;
 	}
-	
+
 }

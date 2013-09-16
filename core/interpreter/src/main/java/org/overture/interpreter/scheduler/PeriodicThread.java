@@ -25,8 +25,8 @@ package org.overture.interpreter.scheduler;
 
 import java.util.Random;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.debug.DBGPReader;
@@ -115,8 +115,8 @@ public class PeriodicThread extends SchedulablePoolThread
 	protected void body()
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
-		LexLocation from = object.type.getClassdef().getLocation();
-		Context ctxt = new ObjectContext(from, "async", global, object);
+		ILexLocation from = object.type.getClassdef().getLocation();
+		Context ctxt = new ObjectContext(global.assistantFactory,from, "async", global, object);
 
 		if (Settings.dialect == Dialect.VDM_PP)
 		{
@@ -237,7 +237,7 @@ public class PeriodicThread extends SchedulablePoolThread
 		}
 	}
 
-	private void waitUntil(long until, Context ctxt, LexLocation location)
+	private void waitUntil(long until, Context ctxt, ILexLocation location)
 	{
 		long time = SystemClock.getWallTime();
 

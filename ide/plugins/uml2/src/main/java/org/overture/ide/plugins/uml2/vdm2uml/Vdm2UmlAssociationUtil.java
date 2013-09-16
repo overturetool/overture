@@ -8,7 +8,10 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptorAnswer;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -34,21 +37,86 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 
+@SuppressWarnings("deprecation")
 public class Vdm2UmlAssociationUtil
 {
+	public static class UnknownTypeDetector
+			extends
+			DepthFirstAnalysisAdaptorAnswer<UnknownTypeDetector.UnknownDetectorResult>
+	{
+		public static class UnknownDetectorResult
+		{
+			public boolean hasUnknown = false;
+
+			public UnknownDetectorResult()
+			{
+			}
+
+			public UnknownDetectorResult(boolean found)
+			{
+				this.hasUnknown = found;
+			}
+		}
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public UnknownDetectorResult createNewReturnValue(INode node)
+		{
+			return new UnknownDetectorResult();
+		}
+
+		@Override
+		public UnknownDetectorResult createNewReturnValue(Object node)
+		{
+			return new UnknownDetectorResult();
+		}
+
+		@Override
+		public UnknownDetectorResult caseAUnknownType(AUnknownType node)
+				throws AnalysisException
+		{
+			return new UnknownDetectorResult(true);
+		}
+
+		@Override
+		public UnknownDetectorResult mergeReturns(
+				UnknownDetectorResult original, UnknownDetectorResult new_)
+		{
+			if (new_!=null && new_.hasUnknown)
+			{
+				original.hasUnknown = true;
+			}
+			return original;
+		}
+
+	}
+
+	public static final UnknownTypeDetector unknownDetector = new UnknownTypeDetector();
+
 	public static boolean isSimpleType(PType type)
 	{
 		if (type instanceof ANamedInvariantType)
 		{
 			return true;
-
 		}
-		return PTypeAssistantInterpreter.isClass(type);// || type.kindPType()==EType.BASIC;
+		try
+		{
+			return PTypeAssistantInterpreter.isClass(type)
+					&& !type.apply(unknownDetector).hasUnknown;
+		} catch (AnalysisException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}// || type.kindPType()==EType.BASIC;
 	}
 
 	public static boolean validType(PType type)
 	{
-		
 
 		switch (type.kindPType())
 		{
@@ -97,12 +165,12 @@ public class Vdm2UmlAssociationUtil
 				return false;
 
 		}
-		
+
 		if (PTypeAssistantInterpreter.isClass(type))
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -125,35 +193,35 @@ public class Vdm2UmlAssociationUtil
 				return false;
 		}
 	}
-	
+
 	private static boolean validMapFromType(PType type)
 	{
 		switch (type.kindPType())
 		{
 			case SSeqType.kindPType:
 				SSeqType seqType = (SSeqType) type;
-				if(seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
+				if (seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
 				{
 					return true;
 				}
 				break;
 			case ASetType.kindPType:
 				ASetType setType = (ASetType) type;
-				if(setType.getSetof().kindPType().equals(SBasicType.kindPType))
+				if (setType.getSetof().kindPType().equals(SBasicType.kindPType))
 				{
 					return true;
 				}
 				break;
 			case SBasicType.kindPType:
 				return true;
-			
+
 		}
 		return validMapType(type);
 	}
 
 	public static Type getReferenceClass(PType type, Map<String, Class> classes)
 	{
-		if(type instanceof AOptionalType)
+		if (type instanceof AOptionalType)
 		{
 			type = ((AOptionalType) type).getType();
 		}
@@ -185,8 +253,8 @@ public class Vdm2UmlAssociationUtil
 			case AOperationType.kindPType:
 				break;
 			case AOptionalType.kindPType:
-//				AOptionalType optionalType = (AOptionalType) type;
-//				return getType(classes, optionalType.getType());
+				// AOptionalType optionalType = (AOptionalType) type;
+				// return getType(classes, optionalType.getType());
 				break;
 			case AParameterType.kindPType:
 				break;
@@ -252,20 +320,23 @@ public class Vdm2UmlAssociationUtil
 	{
 		return getType(classes, UmlTypeCreatorBase.getName(type));
 	}
-	
+
 	static Type getTypeForMap(Map<String, Class> classes, PType type)
 	{
-		if(SSeqType.kindPType.equals(type.kindPType()))
+		if (SSeqType.kindPType.equals(type.kindPType()))
 		{
-			type = ((SSeqType)type).getSeqof();
-		}else if (ASetType.kindPType.equals(type.kindPType()))
+			type = ((SSeqType) type).getSeqof();
+		} else if (ASetType.kindPType.equals(type.kindPType()))
 		{
-			type =((ASetType)type).getSetof();
+			type = ((ASetType) type).getSetof();
 		}
 		return getType(classes, UmlTypeCreatorBase.getName(type));
 	}
 
-	public static void createAssociation(String name, PType defType,AAccessSpecifierAccessSpecifier access,PExp defaultExp ,Map<String, Class> classes, Class class_, boolean readOnly, UmlTypeCreator utc)
+	public static void createAssociation(String name, PType defType,
+			AAccessSpecifierAccessSpecifier access, PExp defaultExp,
+			Map<String, Class> classes, Class class_, boolean readOnly,
+			UmlTypeCreator utc)
 	{
 		Type referencedClass = Vdm2UmlAssociationUtil.getReferenceClass(defType, classes);
 
@@ -278,68 +349,66 @@ public class Vdm2UmlAssociationUtil
 		prop.setVisibility(association.getVisibility());
 		prop.setIsReadOnly(readOnly);
 
-		//set default
+		// set default
 		if (defaultExp != null)
 		{
 			prop.setDefault(defaultExp.toString());
 		}
-		//set static
+		// set static
 		prop.setIsStatic(access.getStatic() != null);
-		
-		//set ordered
+
+		// set ordered
 		prop.setIsOrdered(SSeqType.kindPType.equals(defType.kindPType()));
-		prop.setIsUnique( ! (SSeqType.kindPType.equals(defType.kindPType())
-							|| SMapType.kindPType.equals(defType.kindPType())));
-		
-		//set qualifier if map
+		prop.setIsUnique(!(SSeqType.kindPType.equals(defType.kindPType()) || SMapType.kindPType.equals(defType.kindPType())));
+
+		// set qualifier if map
 		if (SMapType.kindPType.equals(defType.kindPType()))
 		{
 			SMapType mType = (SMapType) defType;
 			PType fromType = mType.getFrom();
 			PType toType = mType.getTo();
-			
-			Property qualifier = prop.createQualifier(null, Vdm2UmlAssociationUtil.getQualifierReferenceClass(class_,fromType, classes,utc));
+
+			Property qualifier = prop.createQualifier(null, Vdm2UmlAssociationUtil.getQualifierReferenceClass(class_, fromType, classes, utc));
 			qualifier.setLower(Vdm2UmlUtil.extractLower(fromType));
 			qualifier.setUpper(Vdm2UmlUtil.extractUpper(fromType));
-			//set ordered
+			// set ordered
 			qualifier.setIsOrdered(SSeqType.kindPType.equals(fromType.kindPType()));
-			qualifier.setIsUnique( ! (SSeqType.kindPType.equals(fromType.kindPType())
-									 || SMapType.kindPType.equals(fromType.kindPType())));
-			
+			qualifier.setIsUnique(!(SSeqType.kindPType.equals(fromType.kindPType()) || SMapType.kindPType.equals(fromType.kindPType())));
+
 			prop.setLower(Vdm2UmlUtil.extractLower(toType));
 			prop.setUpper(Vdm2UmlUtil.extractUpper(toType));
-			//set ordered
+			// set ordered
 			prop.setIsOrdered(SSeqType.kindPType.equals(toType.kindPType()));
-			prop.setIsUnique( ! (SSeqType.kindPType.equals(toType.kindPType())
-								|| SMapType.kindPType.equals(toType.kindPType())));
-			
-			//Map unique
+			prop.setIsUnique(!(SSeqType.kindPType.equals(toType.kindPType()) || SMapType.kindPType.equals(toType.kindPType())));
+
+			// Map unique
 			prop.setIsUnique(AInMapMapType.kindSMapType.equals(mType.kindSMapType()));
 			Property targetProp = association.getMemberEnd("", null);
 			targetProp.setIsUnique(true);
-			
+
 		}
 	}
-	
-	private static Type getQualifierReferenceClass(Class class_, PType type, Map<String, Class> classes, UmlTypeCreator utc)
+
+	private static Type getQualifierReferenceClass(Class class_, PType type,
+			Map<String, Class> classes, UmlTypeCreator utc)
 	{
-		PType qualifierType =unfoldSetSeqTypes(type);
-		if(qualifierType.kindPType().equals(SBasicType.kindPType))
+		PType qualifierType = unfoldSetSeqTypes(type);
+		if (qualifierType.kindPType().equals(SBasicType.kindPType))
 		{
 			utc.create(class_, qualifierType);
 			return utc.getUmlType(qualifierType);
 		}
 		return getReferenceClass(qualifierType, classes);
 	}
-	
+
 	private static PType unfoldSetSeqTypes(PType type)
 	{
-		switch(type.kindPType())
+		switch (type.kindPType())
 		{
 			case SSeqType.kindPType:
-				return ((SSeqType)type).getSeqof();
+				return ((SSeqType) type).getSeqof();
 			case ASetType.kindPType:
-				return ((ASetType)type).getSetof();
+				return ((ASetType) type).getSetof();
 		}
 		return type;
 	}

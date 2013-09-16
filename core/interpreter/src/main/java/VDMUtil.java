@@ -1,6 +1,7 @@
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.BooleanValue;
@@ -67,7 +68,7 @@ public class VDMUtil
 			reader.setCurrentModule("VDMUtil");
 			PExp exp = reader.readExpression();
 			result.add(new BooleanValue(true));
-			Context ctxt = new Context(null, "seq_of_char2val", null);
+			Context ctxt = new Context(Interpreter.getInstance().getAssistantFactory(),null, "seq_of_char2val", null);
 			ctxt.setThreadState(null, null);
 			result.add(exp.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 		}

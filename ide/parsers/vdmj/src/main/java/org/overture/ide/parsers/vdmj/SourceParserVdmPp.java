@@ -51,7 +51,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			String charset)
 	{
 		file.setType(IVdmSourceUnit.VDM_CLASS_SPEC);
-		
+
 		try
 		{
 			Settings.release = file.getProject().getLanguageVersion();
@@ -62,10 +62,10 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 				e1.printStackTrace();
 			}
 		}
-		
+
 		Properties.init();
 		Properties.parser_tabstop = 1;
-		
+
 		ClassList classes = new ClassList();
 		classes.clear();
 		LexLocation.resetLocations();
@@ -76,8 +76,8 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 		{
 
 			ReaderType streamReaderType = findStreamReaderType(file.getFile());
-			
-			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset,streamReaderType);
+
+			LexTokenReader ltr = new LexTokenReader(source, Settings.dialect, file.getSystemFile(), charset, streamReaderType);
 			reader = new ClassReader(ltr);
 			classes.addAll(reader.readClasses());
 			List<INode> nodes = new Vector<INode>();
@@ -99,7 +99,7 @@ public class SourceParserVdmPp extends AbstractParserParticipant
 			result.setFatalError(e);
 		} catch (Throwable e)
 		{
-e.printStackTrace();
+			e.printStackTrace();
 			result.setFatalError(e);
 		}
 
@@ -118,9 +118,6 @@ e.printStackTrace();
 		{
 			classDefinition.getDefinitions();
 		}
-
-		result.setAllLocation(LexLocation.getAllLocations());
-		result.setLocationToAstNodeMap(LexLocation.getLocationToAstNodeMap());
 
 		return result;
 	}

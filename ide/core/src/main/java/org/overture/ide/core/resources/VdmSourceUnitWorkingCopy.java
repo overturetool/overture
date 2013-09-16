@@ -18,6 +18,10 @@
  *******************************************************************************/
 package org.overture.ide.core.resources;
 
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.VdmCore;
+import org.overture.ide.core.VdmElementDelta;
 
 public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 		IVdmSourceUnit
@@ -27,29 +31,26 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 
 	public VdmSourceUnitWorkingCopy(VdmSourceUnit vdmSourceUnit)
 	{
-		super(vdmSourceUnit.getProject(),vdmSourceUnit.getFile());
+		super(vdmSourceUnit.getProject(), vdmSourceUnit.getFile());
 		this.sourceUnit = vdmSourceUnit;
 		this.parseList.addAll(this.sourceUnit.getParseList());
-//		this.allLocation.addAll(this.sourceUnit.);
-		this.locationToAstNodeMap.putAll(this.sourceUnit.getLocationToAstNodeMap());
 	}
-	
-	
+
 	public void commit()
 	{
-		this.sourceUnit.reconcile(this.parseList, this.allLocation, this.locationToAstNodeMap, this.parseErrors);
+		this.sourceUnit.reconcile(this.parseList, this.parseErrors);
+		fireChangedEvent();
 	}
-	
-	@Override
-	protected void fireChangedEvent()
-	{
-		//do not fire from working copy
-	}
-	
+
 	@Override
 	public String toString()
 	{
-		return super.toString()+ " - Working copy";
+		return super.toString() + " - Working copy";
+	}
+	
+	public IVdmSourceUnit getSource()
+	{
+		return this.sourceUnit;
 	}
 
 }

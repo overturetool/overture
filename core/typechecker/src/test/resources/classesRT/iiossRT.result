@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassRtTestCase">
 <message column="5" line="65" message="Instance variable 'simtime' is not initialized" messageType="warning" number="5001" resource="iiossRT.result"/>
 <message column="13" line="420" message="Instance variable 'stableController' is not initialized" messageType="warning" number="5001" resource="iiossRT.result"/>
 <message column="13" line="566" message="Instance variable 'parent' is not initialized" messageType="warning" number="5001" resource="iiossRT.result"/>
@@ -10,14 +10,25 @@
 <message column="16" line="52" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT.result"/>
 <message column="10" line="52" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="24" line="463" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="49" line="23" message="Name 'VDMUtil`val2seq_of_char(PigPosition)' is not in scope" messageType="error" number="3182" resource="iiossRT.result"/>
 <message column="9" line="22" message="Member handleEvent(EventId, &lt;SHOW_PIG&gt;, seq1 of ((? | char)), nat) is not in scope" messageType="error" number="3209" resource="iiossRT.result"/>
 <message column="12" line="69" message="Constructor operation must have return type Environment" messageType="error" number="3026" resource="iiossRT.result"/>
+<message column="10" line="52" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="20" line="314" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="45" line="481" message="Name 'VDMUtil`val2seq_of_char(PigId)' is not in scope" messageType="error" number="3182" resource="iiossRT.result"/>
 <message column="13" line="480" message="Member handleEvent(EventId, &lt;SHOW_PIG&gt;, seq1 of ((? | char)), nat) is not in scope" messageType="error" number="3209" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <message column="17" line="838" message="Class name IO not in scope" messageType="error" number="3133" resource="iiossRT.result"/>
 <message column="15" line="898" message="Class has no constructor with these parameter types" messageType="error" number="3134" resource="iiossRT.result"/>
+<message column="18" line="463" message="Unable to resolve type name 'IO'" messageType="error" number="3428" resource="iiossRT.result"/>
 <result/>
 </testResult>

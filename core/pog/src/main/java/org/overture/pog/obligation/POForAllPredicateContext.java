@@ -24,6 +24,8 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
@@ -63,6 +65,23 @@ public class POForAllPredicateContext extends POForAllContext
 		super(exp);
 		this.predicate = exp.getSuchThat();
 	}
+	
+	
+
+	
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		AForAllExp forAllExp = new AForAllExp();
+		AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
+		impliesExp.parent(forAllExp);
+		impliesExp.setLeft(predicate);
+		impliesExp.setRight(stitch);
+		forAllExp.setPredicate(impliesExp);
+		
+		return forAllExp;
+	}
+
 
 	@Override
 	public String getContext()

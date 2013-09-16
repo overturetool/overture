@@ -4,6 +4,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
@@ -13,8 +14,15 @@ import org.overture.interpreter.values.ValueList;
 
 public class SInvariantTypeAssistantInterpreter
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static  FunctionValue getInvariant(SInvariantType type, Context ctxt)
+	@SuppressWarnings("static-access")
+	public SInvariantTypeAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		this.af = af;
+	}
+
+	public static FunctionValue getInvariant(SInvariantType type, Context ctxt)
 	{
 		AExplicitFunctionDefinition invdef = type.getInvDef();
 		if (invdef != null)
@@ -23,26 +31,27 @@ public class SInvariantTypeAssistantInterpreter
 			{
 				Value v = ctxt.getGlobal().lookup(invdef.getName());
 				return v.functionValue(ctxt);
-			}
-			catch (ValueException e)
+			} catch (ValueException e)
 			{
-				VdmRuntimeError.abort(type.getLocation(),e);
+				VdmRuntimeError.abort(type.getLocation(), e);
 			}
 		}
 
 		return null;
 	}
 
-	public static ValueList getAllValues(SInvariantType type, Context ctxt) throws ValueException
+	public static ValueList getAllValues(SInvariantType type, Context ctxt)
+			throws ValueException
 	{
 		switch (type.kindSInvariantType())
 		{
 			case ANamedInvariantType.kindSInvariantType:
-				return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type,ctxt);
+				return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
 			case ARecordInvariantType.kindSInvariantType:
-				return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType)type,ctxt);
+				return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
 			default:
-				throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
+				throw new ValueException(4, "Cannot get bind values for type "
+						+ type, ctxt);
 		}
 	}
 
