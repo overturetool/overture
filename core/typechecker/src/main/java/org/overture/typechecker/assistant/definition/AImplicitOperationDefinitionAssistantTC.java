@@ -11,10 +11,8 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
@@ -38,31 +36,6 @@ public class AImplicitOperationDefinitionAssistantTC
 			ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findName(AImplicitOperationDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
-		{
-			return d;
-		}
-
-		PDefinition predef = d.getPredef();
-		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
-		{
-			return predef;
-		}
-
-		PDefinition postdef = d.getPostdef();
-		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
-		{
-			return postdef;
-		}
-
-		return null;
 	}
 
 	public static void typeResolve(AImplicitOperationDefinition d,

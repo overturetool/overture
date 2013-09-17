@@ -12,7 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
@@ -33,58 +32,6 @@ public class AStateDefinitionAssistantTC
 	public AStateDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findType(AStateDefinition d,
-			ILexNameToken sought, String fromModule)
-	{
-
-		if (PDefinitionAssistantTC.findName(d, sought, NameScope.STATE) != null)
-		{
-			return d;
-		}
-
-		return null;
-	}
-
-	public static PDefinition findName(AStateDefinition definition,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		if (scope.matches(NameScope.NAMES))
-		{
-			PDefinition invdef = definition.getInvdef();
-
-			if (invdef != null
-					&& PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
-			{
-				return invdef;
-			}
-
-			PDefinition initdef = definition.getInitdef();
-			if (initdef != null
-					&& PDefinitionAssistantTC.findName(initdef, sought, scope) != null)
-			{
-				return initdef;
-			}
-		}
-
-		// if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
-		// {
-		// return definition.getRecordDefinition();
-		// }
-
-		for (PDefinition d : definition.getStateDefs())
-		{
-			PDefinition def = PDefinitionAssistantTC.findName(d, sought, scope);
-
-			if (def != null)
-			{
-				return def;
-			}
-		}
-
-		return null;
 	}
 
 	public static void unusedCheck(AStateDefinition d)

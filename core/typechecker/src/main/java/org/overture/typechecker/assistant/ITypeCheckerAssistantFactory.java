@@ -119,6 +119,8 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.NameFinder;
+import org.overture.typechecker.utilities.TypeFinder;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
@@ -379,5 +381,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PDefinition> getSelfDefinitionFinder();
 
 	IAnswer<PTypeSet> getExitTypeCollector();
-
+	
+	IQuestionAnswer<TypeFinder.Newquestion,PDefinition> getTypeFinder();
+	
+	IQuestionAnswer<NameFinder.Newquestion,PDefinition> getNameFinder();
 }

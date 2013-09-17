@@ -14,7 +14,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
@@ -53,31 +52,6 @@ public class AExplicitOperationDefinitionAssistantTC
 		}
 
 		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
-	}
-
-	public static PDefinition findName(AExplicitOperationDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
-		{
-			return d;
-		}
-
-		PDefinition predef = d.getPredef();
-		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
-		{
-			return predef;
-		}
-
-		PDefinition postdef = d.getPostdef();
-		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
-		{
-			return postdef;
-		}
-
-		return null;
 	}
 
 	public static void typeResolve(AExplicitOperationDefinition d,
