@@ -87,11 +87,6 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	private final UniqueNameGenerator generator;
 	private ILexLocation location;
 
-//	public ProofObligation(INode rootNode, POType kind, IPOContextStack context) {
-//		this(rootNode, kind, context, GetLocationHelper.findLocation(rootNode));
-//		//FIXME Node location must be a parameter of COMPASS nodes crash
-//	}
-
 	public ProofObligation(INode rootnode, POType kind,
 			IPOContextStack context, ILexLocation location) {
 		this.rootNode = rootnode;

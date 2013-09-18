@@ -257,7 +257,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			Iterator<PType> typeIter = ftype.getParameters().iterator();
 			boolean alwaysMatches = false;
 			PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
-			
+			//FIXME The pattern match checker isn't working properly. 
 			for (APatternListTypePair pltp : node.getParamPatterns()) {
 				for (PPattern p : pltp.getPatterns()) {
 					for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
