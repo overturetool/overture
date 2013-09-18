@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -21,14 +20,10 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
-import org.overture.ast.definitions.AMutexSyncDefinition;
-import org.overture.ast.definitions.ANamedTraceDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -415,25 +410,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static boolean isUpdatable(PDefinition d)
 	{
-		if (d instanceof AAssignmentDefinition
-				|| d instanceof AInstanceVariableDefinition
-				|| d instanceof AExternalDefinition)
+		try
 		{
-			return true;
-		} else if (d instanceof AImportedDefinition)
-		{
-			return PDefinitionAssistantTC.isUpdatable(((AImportedDefinition) d).getDef());
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return PDefinitionAssistantTC.isUpdatable(((AInheritedDefinition) d).getSuperdef());
-		} else if (d instanceof ALocalDefinition)
-		{
-			return ((ALocalDefinition) d).getNameScope().matches(NameScope.STATE)
-					|| PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(d));
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return PDefinitionAssistantTC.isUpdatable(((ARenamedDefinition) d).getDef());
-		} else
+			return d.apply(af.getUpdatableChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
@@ -441,124 +421,35 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static String kind(PDefinition d)
 	{
-		if (d instanceof AAssignmentDefinition)
+		try
 		{
-			return "assignable variable";
-		} else if (d instanceof SClassDefinition)
-		{
-			return "class";
-		} else if (d instanceof AClassInvariantDefinition)
-		{
-			return "invariant";
-		} else if (d instanceof AEqualsDefinition)
-		{
-			return "equals";
-		} else if (d instanceof AExplicitFunctionDefinition)
-		{
-			return "explicit function";
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			return "explicit operation";
-		} else if (d instanceof AExternalDefinition)
-		{
-			return "external";
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			return "implicit function";
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			return "implicit operation";
-		} else if (d instanceof AImportedDefinition)
-		{
-			return "import";
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return kind(((AInheritedDefinition) d).getSuperdef());
-		} else if (d instanceof AInstanceVariableDefinition)
-		{
-			return "instance variable";
-		} else if (d instanceof ALocalDefinition)
-		{
-			return "local";
-		} else if (d instanceof AMultiBindListDefinition)
-		{
-			return "bind";
-		} else if (d instanceof AMutexSyncDefinition)
-		{
-			return "mutex predicate";
-		} else if (d instanceof ANamedTraceDefinition)
-		{
-			return "trace";
-		} else if (d instanceof APerSyncDefinition)
-		{
-			return "permission predicate";
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return kind(((ARenamedDefinition) d).getDef());
-		} else if (d instanceof AStateDefinition)
-		{
-			return "state";
-		} else if (d instanceof AThreadDefinition)
-		{
-			return "thread";
-		} else if (d instanceof ATypeDefinition)
-		{
-			return "type";
-		} else if (d instanceof AUntypedDefinition)
-		{
-			return "untyped";
-		} else if (d instanceof AValueDefinition)
-		{
-			return "value";
-		} else
+			return d.apply(af.getKindFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+
 
 	}
 
 	public static boolean isFunction(PDefinition d)
 	{
-		if (d instanceof AExplicitFunctionDefinition
-				|| d instanceof AImplicitFunctionDefinition)
+		try
 		{
-			return true;
-		} else if (d instanceof AImportedDefinition)
-		{
-			return isFunction(((AImportedDefinition) d).getDef());
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return isFunction(((AInheritedDefinition) d).getSuperdef());
-		} else if (d instanceof ALocalDefinition)
-		{
-			return ALocalDefinitionAssistantTC.isFunction((ALocalDefinition) d);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return isFunction(((ARenamedDefinition) d).getDef());
-		} else
+			return d.apply(af.getFunctionChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
 	}
 
+	
 	public static boolean isOperation(PDefinition d)
 	{
-		if (d instanceof AExplicitOperationDefinition
-				|| d instanceof AImplicitOperationDefinition
-				|| d instanceof ANamedTraceDefinition
-				|| d instanceof AThreadDefinition)
+		try
 		{
-			return true;
-		} else if (d instanceof AImportedDefinition)
-		{
-			return isOperation(((AImportedDefinition) d).getDef());
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return isOperation(((AInheritedDefinition) d).getSuperdef());
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return isOperation(((ARenamedDefinition) d).getDef());
-		} else
+			return d.apply(af.getOperationChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return false;
 		}

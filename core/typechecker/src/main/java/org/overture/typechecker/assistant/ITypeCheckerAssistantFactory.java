@@ -385,4 +385,12 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<TypeFinder.Newquestion,PDefinition> getTypeFinder();
 	
 	IQuestionAnswer<NameFinder.Newquestion,PDefinition> getNameFinder();
+	
+	AnswerAdaptor<Boolean> getFunctionChecker();
+	
+	IAnswer<Boolean> getOperationChecker();
+	
+	IAnswer<String> getKindFinder();
+	
+	IAnswer<Boolean> getUpdatableChecker();
 }
