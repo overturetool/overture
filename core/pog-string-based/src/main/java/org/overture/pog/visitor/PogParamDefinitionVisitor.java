@@ -423,6 +423,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 			if (node.getPostcondition() != null)
 			{
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+			}
 
 			if (node.getBody() != null)
 			{
