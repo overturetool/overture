@@ -161,22 +161,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static void markUsed(PDefinition d)
 	{
-		if (d instanceof AExternalDefinition)
+		try
 		{
-			AExternalDefinitionAssistantTC.markUsed((AExternalDefinition) d);
-		} else if (d instanceof AImportedDefinition)
+			 d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AImportedDefinitionAssistantTC.markUsed((AImportedDefinition) d);
-		} else if (d instanceof AInheritedDefinition)
-		{
-			AInheritedDefinitionAssistantTC.markUsed((AInheritedDefinition) d);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			ARenamedDefinitionAssistantTC.markUsed((ARenamedDefinition) d);
-			d.setUsed(true);
-		} else
-		{
-			d.setUsed(true);
+			
 		}
 	}
 

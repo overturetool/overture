@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -132,6 +133,7 @@ import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.UpdatableChecker;
+import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 
@@ -1001,6 +1003,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getCallableOperationChecker()
 	{
 		return new CallableOperationChecker(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getUsedMarker()
+	{
+		return new UsedMarker(this);
 	}
 	
 	
