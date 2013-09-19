@@ -38,6 +38,7 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.ui.internal.viewsupport.ImportsContainer;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class VdmOutlineTreeContentProvider implements ITreeContentProvider
@@ -52,10 +53,11 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 
 	public Object[] getChildren(Object parentElement)
 	{
+		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		if (parentElement instanceof SClassDefinition)
 		{
 			// get definitions from the current class without inherited definitions
-			List<PDefinition> defs = PDefinitionListAssistantTC.singleDefinitions(((SClassDefinition) parentElement).getDefinitions());
+			List<PDefinition> defs = factory.createPDefinitionListAssistant().singleDefinitions(((SClassDefinition) parentElement).getDefinitions());
 			// defs.addAll(((ClassDefinition) parentElement).localInheritedDefinitions);
 
 			// defs = checkForThreads(defs);
@@ -72,7 +74,7 @@ public class VdmOutlineTreeContentProvider implements ITreeContentProvider
 			{
 				all.add(new ImportsContainer(module.getImports(), module.getImportdefs()));
 			}
-			all.addAll(filterDefinitionList(PDefinitionListAssistantTC.singleDefinitions(((AModuleModules) parentElement).getDefs())));
+			all.addAll(filterDefinitionList(factory.createPDefinitionListAssistant().singleDefinitions(((AModuleModules) parentElement).getDefs())));
 			filterSLModule(all);
 			// all.addAll(((Module) parentElement).defs.singleDefinitions());
 			return all.toArray();
