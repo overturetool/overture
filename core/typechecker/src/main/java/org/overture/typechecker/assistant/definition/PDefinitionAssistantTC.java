@@ -279,25 +279,14 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static boolean isCallableOperation(PDefinition d)
 	{
-		if (d instanceof AExplicitOperationDefinition)
+		try
 		{
-			return true;
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			return ((AImplicitOperationDefinition) d).getBody() != null;
-		} else if (d instanceof AImportedDefinition)
-		{
-			return isCallableOperation(((AImportedDefinition) d).getDef());
-		} else if (d instanceof AInheritedDefinition)
-		{
-			return isCallableOperation(((AInheritedDefinition) d).getSuperdef());
-		} else if (d instanceof ARenamedDefinition)
-		{
-			return isCallableOperation(((ARenamedDefinition) d).getDef());
-		} else
+			return d.apply(af.getCallableOperationChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+
 	}
 
 	public static boolean isUsed(PDefinition d)
@@ -408,7 +397,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isUpdatable(PDefinition d)
+	public boolean isUpdatable(PDefinition d)
 	{
 		try
 		{

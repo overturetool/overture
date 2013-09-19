@@ -393,4 +393,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<String> getKindFinder();
 	
 	IAnswer<Boolean> getUpdatableChecker();
+	
+	IAnswer<Boolean> getCallableOperationChecker();
 }

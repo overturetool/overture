@@ -119,6 +119,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
@@ -994,6 +995,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getUpdatableChecker()
 	{
 		return new UpdatableChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getCallableOperationChecker()
+	{
+		return new CallableOperationChecker(this);
 	}
 	
 	

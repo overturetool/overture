@@ -74,8 +74,7 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		//TODO: Here is the same problem with the FunctioChecker.
-		//The node.getType.Apply doesn't work.
+		//TODO: Here is the same problem with the FunctioChecker
 		
 		return  node.getNameScope().matches(NameScope.STATE) 
 				|| PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(node));
