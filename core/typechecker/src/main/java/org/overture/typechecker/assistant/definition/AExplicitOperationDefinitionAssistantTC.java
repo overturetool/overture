@@ -88,28 +88,28 @@ public class AExplicitOperationDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitions(AExplicitOperationDefinition d,
-			Environment base)
-	{
-
-		d.setState(base.findStateDefinition());
-
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d, base));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d, base));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
-		}
-
-	}
+//	public static void implicitDefinitions(AExplicitOperationDefinition d,
+//			Environment base)
+//	{
+//
+//		d.setState(base.findStateDefinition());
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			d.setPredef(getPreDefinition(d, base));
+//			PDefinitionAssistantTC.markUsed(d.getPredef());
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			d.setPostdef(getPostDefinition(d, base));
+//			PDefinitionAssistantTC.markUsed(d.getPostdef());
+//		}
+//
+//	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 
@@ -163,7 +163,7 @@ public class AExplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 

@@ -5,12 +5,14 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -398,4 +400,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getCallableOperationChecker();
 	
 	AnalysisAdaptor getUsedMarker();
+	
+	IQuestion<Environment> getImplicitDefinitionFinder();
 }

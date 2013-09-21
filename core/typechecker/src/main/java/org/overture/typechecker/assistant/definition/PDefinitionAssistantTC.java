@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -22,7 +21,6 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -296,37 +294,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static void implicitDefinitions(PDefinition d, Environment env)
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			SClassDefinitionAssistantTC.implicitDefinitions((SClassDefinition) d, env);
-		} else if (d instanceof AClassInvariantDefinition)
+			 d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-		} else if (d instanceof AEqualsDefinition)
-		{
-		} else if (d instanceof AExplicitFunctionDefinition)
-		{
-			AExplicitFunctionDefinitionAssistantTC.implicitDefinitions((AExplicitFunctionDefinition) d, env);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			AExplicitOperationDefinitionAssistantTC.implicitDefinitions((AExplicitOperationDefinition) d, env);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinitionAssistantTC.implicitDefinitions((AImplicitFunctionDefinition) d, env);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			AImplicitOperationDefinitionAssistantTC.implicitDefinitions((AImplicitOperationDefinition) d, env);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.implicitDefinitions((AStateDefinition) d, env);
-		} else if (d instanceof AThreadDefinition)
-		{
-			AThreadDefinitionAssistantTC.implicitDefinitions((AThreadDefinition) d, env);
-		} else if (d instanceof ATypeDefinition)
-		{
-			ATypeDefinitionAssistantTC.implicitDefinitions((ATypeDefinition) d, env);
-		} else
-		{
-			return;
+			
 		}
 
 	}

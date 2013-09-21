@@ -18,7 +18,6 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -81,20 +80,20 @@ public class ATypeDefinitionAssistantTC
 		}
 	}
 
-	public static void implicitDefinitions(ATypeDefinition d, Environment env)
-	{
-		if (d.getInvPattern() != null)
-		{
-			d.setInvdef(getInvDefinition(d));
-			d.getInvType().setInvDef(d.getInvdef());
-		} else
-		{
-			d.setInvdef(null);
-		}
+//	public static void implicitDefinitions(ATypeDefinition d, Environment env)
+//	{
+//		if (d.getInvPattern() != null)
+//		{
+//			d.setInvdef(getInvDefinition(d));
+//			d.getInvType().setInvDef(d.getInvdef());
+//		} else
+//		{
+//			d.setInvdef(null);
+//		}
+//
+//	}
 
-	}
-
-	private static AExplicitFunctionDefinition getInvDefinition(
+	public AExplicitFunctionDefinition getInvDefinition(
 			ATypeDefinition d)
 	{
 

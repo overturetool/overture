@@ -5,12 +5,14 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -126,16 +128,17 @@ import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
+import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
 import org.overture.typechecker.utilities.KindFinder;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
+import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
-import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -571,8 +574,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	@Override
 	public AValueValueImportAssistantTC createAValueValueImportAssistant()
-	{
-		return new AValueValueImportAssistantTC(this);
+	{		return new AValueValueImportAssistantTC(this);
 	}
 
 	@Override
@@ -1009,8 +1011,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnalysisAdaptor getUsedMarker()
 	{
 		return new UsedMarker(this);
+	}	
+	
+	@Override
+	public IQuestion<Environment> getImplicitDefinitionFinder()
+	{
+		return new ImplicitDefinitionFinder(this);
 	}
-	
-	
-
 }

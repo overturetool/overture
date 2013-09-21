@@ -292,7 +292,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 	}
 
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
@@ -342,7 +342,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
