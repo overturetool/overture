@@ -28,6 +28,7 @@
     <module>prettyprinting</module>
     <module>commandline</module>
 	<module>guibuilder</module>
+	<module>constraintsolverconn</module>
   </modules>
 
   <build>
