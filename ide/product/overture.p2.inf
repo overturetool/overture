@@ -1,6 +1,0 @@
-instructions.configure=\
-  copy(source:../../documentation/QuickOverviewVDMPPOperators/QuickOverviewofVDMOperators.pdf,target:${installFolder}/documentation/QuickOverviewofVDMOperators.pdf,overwrite:true);\
-  copy(source:../../documentation/VDM10LangMan/VDM10_lang_man.pdf,target:${installFolder}/documentation/VDM10_lang_man.pdf,overwrite:true);\
-  copy(source:../../documentation/UserGuideOvertureIDE/OvertureIDEUserGuide.pdf,target:${installFolder}/documentation/OvertureIDEUserGuide.pdf,overwrite:true);
-instructions.configure.import=\
-  org.eclipse.equinox.p2.touchpoint.natives.copy
