@@ -402,4 +402,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AnalysisAdaptor getUsedMarker();
 	
 	IQuestion<Environment> getImplicitDefinitionFinder();
+	
+	IAnswer<Boolean> getUsedChecker();
+	
+	IAnswer<Boolean> getPTypeFunctionChecker();
 }

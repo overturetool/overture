@@ -132,11 +132,13 @@ import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
 import org.overture.typechecker.utilities.KindFinder;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
+import org.overture.typechecker.utilities.PTypeFunctionChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.UpdatableChecker;
+import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 
@@ -1017,5 +1019,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestion<Environment> getImplicitDefinitionFinder()
 	{
 		return new ImplicitDefinitionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getUsedChecker()
+	{
+		return new UsedChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getPTypeFunctionChecker()
+	{
+		return new PTypeFunctionChecker(this);
 	}
 }

@@ -66,7 +66,7 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	{
 		//TODO: HERE QUESTION ABOUY HANDLING THIS CODE!
 		return (node.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
-		: PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node));
+		: af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node));
 	}
 	
 	@Override

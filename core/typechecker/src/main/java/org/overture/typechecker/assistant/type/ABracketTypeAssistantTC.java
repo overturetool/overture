@@ -100,9 +100,9 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		return PTypeAssistantTC.isUnion(type.getType());
 	}
 
-	public static boolean isFunction(ABracketType type) {
-		return PTypeAssistantTC.isFunction(type.getType());
-	}
+//	public static boolean isFunction(ABracketType type) {
+//		return PTypeAssistantTC.isFunction(type.getType());
+//	}
 
 	public static AFunctionType getFunction(ABracketType type) {
 		return PTypeAssistantTC.getFunction(type.getType());

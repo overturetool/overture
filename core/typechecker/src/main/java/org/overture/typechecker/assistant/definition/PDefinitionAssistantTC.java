@@ -11,7 +11,6 @@ import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
@@ -279,15 +278,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static boolean isUsed(PDefinition d)
 	{
-		if (d instanceof AExternalDefinition)
+		try
 		{
-			return AExternalDefinitionAssistantTC.isUsed((AExternalDefinition) d);
-		} else if (d instanceof AInheritedDefinition)
+			return d.apply(af.getUsedChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AInheritedDefinitionAssistantTC.isUsed((AInheritedDefinition) d);
-		} else
-		{
-			return d.getUsed();
+			return false;
 		}
 
 	}

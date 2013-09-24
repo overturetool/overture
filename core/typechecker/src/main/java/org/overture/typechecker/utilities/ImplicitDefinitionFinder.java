@@ -22,8 +22,6 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 

@@ -317,10 +317,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return types.contains(other);
 	}
 
-	public static boolean isFunction(AUnionType type)
-	{
-		return getFunction(type) != null;
-	}
+//	public static boolean isFunction(AUnionType type)
+//	{
+//		return getFunction(type) != null;
+//	}
 
 	public static AFunctionType getFunction(AUnionType type)
 	{
