@@ -49,7 +49,7 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 
 	public MapSetOfCompatibleObligation(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
+		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt, exp.getLocation());
 		
 		PExp predicate = buildPredicate(exp.clone());
 		
@@ -59,7 +59,7 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 
 	public MapSetOfCompatibleObligation(AMapCompMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
+		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt, exp.getLocation());
 		
 		PExp predicate = buildPredicate(exp.clone());
 		

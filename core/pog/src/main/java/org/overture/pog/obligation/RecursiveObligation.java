@@ -62,7 +62,7 @@ public class RecursiveObligation extends ProofObligation
 	public RecursiveObligation(AExplicitFunctionDefinition def,
 			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(apply, POType.RECURSIVE, ctxt);
+		super(apply, POType.RECURSIVE, ctxt, apply.getLocation());
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
@@ -76,7 +76,7 @@ public class RecursiveObligation extends ProofObligation
 	public RecursiveObligation(AImplicitFunctionDefinition def,
 			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def, POType.RECURSIVE, ctxt);
+		super(def, POType.RECURSIVE, ctxt, apply.getLocation());
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);

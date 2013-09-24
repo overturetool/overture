@@ -41,7 +41,7 @@ public class NonEmptySetObligation extends ProofObligation
 
 	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.NON_EMPTY_SET, ctxt);
+		super(exp, POType.NON_EMPTY_SET, ctxt, exp.getLocation());
 		
 		// exp <> {}
 		

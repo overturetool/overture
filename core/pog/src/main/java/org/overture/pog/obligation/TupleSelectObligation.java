@@ -41,7 +41,7 @@ public class TupleSelectObligation extends ProofObligation
 		AFieldNumberExp exp, AProductType type, IPOContextStack ctxt)
 	{
 		// not is_(exp, type)
-		super(exp, POType.TUPLE_SELECT, ctxt);
+		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation());
 
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		AIsExp isExp = new AIsExp();

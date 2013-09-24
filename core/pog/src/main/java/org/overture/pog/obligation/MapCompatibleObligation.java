@@ -39,7 +39,7 @@ public class MapCompatibleObligation extends ProofObligation {
 	private static final long serialVersionUID = -7453383884893058267L;
 
 	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt) {
-		super(left, POType.MAP_COMPATIBLE, ctxt);
+		super(left, POType.MAP_COMPATIBLE, ctxt, left.getLocation());
 
 		/**
 		 * This obligation occurs during a map union, and ensures that if there

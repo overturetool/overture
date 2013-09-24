@@ -57,7 +57,7 @@ public class SatisfiabilityObligation extends ProofObligation
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(func, POType.FUNC_SATISFIABILITY, ctxt);
+		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation());
 
 		/**
 		 * f: A * B -> R [pre ...] post ... [pre_f(a, b) =>] exists r:R & post_f(a, b, r)
@@ -115,7 +115,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			PDefinition stateDefinition, IPOContextStack ctxt)
 			throws AnalysisException
 	{
-		super(op, POType.OP_SATISFIABILITY, ctxt);
+		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation());
 
 		/**
 		 * op: A * B ==> R [pre ...] post ... [pre_op(a, b, state) =>] exists r:R, state:Sigma & post_op(a, b, r,

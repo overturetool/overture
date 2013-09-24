@@ -39,7 +39,7 @@ public class MapApplyObligation extends ProofObligation
 
 	public MapApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
 	{
-		super(root, POType.MAP_APPLY, ctxt);
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation());
 		
 		/* <arg> in set dom <root> */
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
@@ -54,7 +54,7 @@ public class MapApplyObligation extends ProofObligation
 	public MapApplyObligation(PStateDesignator root, PExp arg, IPOContextStack ctxt)
 		throws AnalysisException
 	{
-		super(root, POType.MAP_APPLY, ctxt);
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation());
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
 		dom_exp.setExp(root.clone().apply(new StateDesignatorToExpVisitor()));
 		

@@ -38,7 +38,7 @@ public class UniqueExistenceObligation extends ProofObligation
 
 	public UniqueExistenceObligation(AIotaExp iota, IPOContextStack ctxt)
 	{
-		super(iota, POType.UNIQUE_EXISTENCE, ctxt);
+		super(iota, POType.UNIQUE_EXISTENCE, ctxt, iota.getLocation());
 
 		//exists1 iotaBinds & iotaPredicate
 		

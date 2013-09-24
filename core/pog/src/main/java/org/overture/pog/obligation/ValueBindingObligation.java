@@ -59,7 +59,7 @@ public class ValueBindingObligation extends ProofObligation
 	public ValueBindingObligation(PPattern pattern, PType type, PExp exp, IPOContextStack ctxt)
 		throws AnalysisException
 	{
-		super(pattern, POType.VALUE_BINDING, ctxt);
+		super(pattern, POType.VALUE_BINDING, ctxt, pattern.getLocation());
 		AExistsExp existsExp = new AExistsExp();
 		
 		List<PPattern> patternList = new Vector<PPattern>();

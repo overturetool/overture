@@ -39,7 +39,7 @@ public class LetBeExistsObligation extends ProofObligation
 
 	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.LET_BE_EXISTS, ctxt);
+		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getLocation());
 		
 		/**
 		 * let <binds> be st <predicate> in <exp>
@@ -63,7 +63,7 @@ public class LetBeExistsObligation extends ProofObligation
 
 	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt)
 	{
-		super(stmt, POType.LET_BE_EXISTS, ctxt);
+		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getLocation());
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();

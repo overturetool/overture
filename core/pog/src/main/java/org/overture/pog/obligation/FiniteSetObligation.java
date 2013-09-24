@@ -51,7 +51,7 @@ public class FiniteSetObligation extends ProofObligation {
 	 */
 	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
 			IPOContextStack ctxt) {
-		super(exp, POType.FINITE_SET, ctxt);
+		super(exp, POType.FINITE_SET, ctxt, exp.getLocation());
 
 		ILexNameToken finmap = getUnique("finmap");
 		ILexNameToken findex = getUnique("findex");

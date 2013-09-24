@@ -93,7 +93,7 @@ public class SubTypeObligation extends ProofObligation
 	public SubTypeObligation(PExp exp,
 			PType etype, PType atype, IPOContextStack ctxt)
 	{
-		super(exp, POType.SUB_TYPE, ctxt);
+		super(exp, POType.SUB_TYPE, ctxt, exp.getLocation());
 		
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, exp.clone(), etype.clone(), atype.clone())));
@@ -102,7 +102,7 @@ public class SubTypeObligation extends ProofObligation
 	public SubTypeObligation(AExplicitFunctionDefinition func,
 			PType etype, PType atype, IPOContextStack ctxt)
 	{
-		super(func, POType.SUB_TYPE, ctxt);
+		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
 		PExp body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp ||
@@ -131,7 +131,7 @@ public class SubTypeObligation extends ProofObligation
 	public SubTypeObligation(AImplicitFunctionDefinition func,
 			PType etype, PType atype, IPOContextStack ctxt)
 	{
-		super(func, POType.SUB_TYPE, ctxt);
+		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
 		PExp body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp ||
@@ -163,7 +163,7 @@ public class SubTypeObligation extends ProofObligation
 	public SubTypeObligation(AExplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
-		super(def, POType.SUB_TYPE, ctxt);
+		super(def, POType.SUB_TYPE, ctxt,def.getLocation());
 
 		AVariableExp result = AstFactory.newAVariableExp(
 				new LexNameToken(def.getName().getModule(), "RESULT", def.getLocation()));
@@ -176,7 +176,7 @@ public class SubTypeObligation extends ProofObligation
 	public SubTypeObligation(AImplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
-		super(def, POType.SUB_TYPE, ctxt);
+		super(def, POType.SUB_TYPE, ctxt, def.getLocation());
 		PExp result = null;
 
 		if (def.getResult().getPattern() instanceof AIdentifierPattern)
