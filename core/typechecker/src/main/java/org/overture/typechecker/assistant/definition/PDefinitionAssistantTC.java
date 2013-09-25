@@ -12,8 +12,6 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AImportedDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
@@ -230,26 +228,33 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static PDefinition deref(PDefinition d)
 	{
-		if (d instanceof AImportedDefinition)
+		try
 		{
-			if (d instanceof AImportedDefinition)
-			{
-				return deref(((AImportedDefinition) d).getDef());
-			}
-		} else if (d instanceof AInheritedDefinition)
+			return d.apply(af.getDereferer());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			if (d instanceof AInheritedDefinition)
-			{
-				return deref(((AInheritedDefinition) d).getSuperdef());
-			}
-		} else if (d instanceof ARenamedDefinition)
-		{
-			if (d instanceof ARenamedDefinition)
-			{
-				return deref(((ARenamedDefinition) d).getDef());
-			}
+			return null;
 		}
-		return d;
+//		if (d instanceof AImportedDefinition)
+//		{
+//			if (d instanceof AImportedDefinition)
+//			{
+//				return deref(((AImportedDefinition) d).getDef());
+//			}
+//		} else if (d instanceof AInheritedDefinition)
+//		{
+//			if (d instanceof AInheritedDefinition)
+//			{
+//				return deref(((AInheritedDefinition) d).getSuperdef());
+//			}
+//		} else if (d instanceof ARenamedDefinition)
+//		{
+//			if (d instanceof ARenamedDefinition)
+//			{
+//				return deref(((ARenamedDefinition) d).getDef());
+//			}
+//		}
+//		return d;
 
 	}
 

@@ -408,4 +408,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getPTypeFunctionChecker();
 	
 	AnalysisAdaptor getUnusedChecker();
+	
+	IAnswer<PDefinition> getDereferer();
 }

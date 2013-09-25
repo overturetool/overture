@@ -126,6 +126,7 @@ import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
@@ -1038,5 +1039,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnalysisAdaptor getUnusedChecker()
 	{
 		return new UnusedChecker(this);
+	}
+	
+	@Override
+	public IAnswer<PDefinition> getDereferer()
+	{
+		return new Dereferer(this);
 	}
 }
