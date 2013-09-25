@@ -98,7 +98,7 @@ public class AImplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 
@@ -143,7 +143,8 @@ public class AImplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public
+	static AExplicitFunctionDefinition getPreDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 

@@ -17,7 +17,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -75,21 +74,21 @@ public class AStateDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitions(AStateDefinition d, Environment env)
-	{
-		if (d.getInvPattern() != null)
-		{
-			d.setInvdef(getInvDefinition(d));
-		}
+//	public static void implicitDefinitions(AStateDefinition d, Environment env)
+//	{
+//		if (d.getInvPattern() != null)
+//		{
+//			d.setInvdef(getInvDefinition(d));
+//		}
+//
+//		if (d.getInitPattern() != null)
+//		{
+//			d.setInitdef(getInitDefinition(d));
+//		}
+//
+//	}
 
-		if (d.getInitPattern() != null)
-		{
-			d.setInitdef(getInitDefinition(d));
-		}
-
-	}
-
-	private static AExplicitFunctionDefinition getInitDefinition(
+	public static AExplicitFunctionDefinition getInitDefinition(
 			AStateDefinition d)
 	{
 		ILexLocation loc = d.getInitPattern().getLocation();
@@ -110,7 +109,7 @@ public class AStateDefinitionAssistantTC
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getInvDefinition(
+	public static AExplicitFunctionDefinition getInvDefinition(
 			AStateDefinition d)
 	{
 

@@ -9,7 +9,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AThreadDefinitionAssistantTC
@@ -29,13 +28,13 @@ public class AThreadDefinitionAssistantTC
 		return result;
 	}
 	
-	public static void implicitDefinitions(AThreadDefinition d, Environment env)
-	{
-		d.setOperationDef(getThreadDefinition(d));
+//	public static void implicitDefinitions(AThreadDefinition d, Environment env)
+//	{
+//		d.setOperationDef(getThreadDefinition(d));
+//
+//	}
 
-	}
-
-	private static AExplicitOperationDefinition getThreadDefinition(
+	public AExplicitOperationDefinition getThreadDefinition(
 			AThreadDefinition d)
 	{
 

@@ -176,29 +176,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isFunction(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.isFunction((ABracketType) type);
-		} else if (type instanceof AFunctionType)
+			return type.apply(af.getPTypeFunctionChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return true;
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isFunction((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isFunction((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isFunction((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.isFunction((AUnknownType) type);
+			return false;
 		}
-		return false;
 	}
 
 	public static AFunctionType getFunction(PType type)

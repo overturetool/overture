@@ -19,7 +19,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -129,31 +128,31 @@ public class AImplicitFunctionDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitions(AImplicitFunctionDefinition d,
-			Environment env)
-	{
+//	public static void implicitDefinitions(AImplicitFunctionDefinition d,
+//			Environment env)
+//	{
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			d.setPredef(getPreDefinition(d));
+//			PDefinitionAssistantTC.markUsed(d.getPredef());
+//		} else
+//		{
+//			d.setPredef(null);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			d.setPostdef(getPostDefinition(d));
+//			PDefinitionAssistantTC.markUsed(d.getPostdef());
+//		} else
+//		{
+//			d.setPostdef(null);
+//		}
+//
+//	}
 
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
-		} else
-		{
-			d.setPredef(null);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
-		} else
-		{
-			d.setPostdef(null);
-		}
-
-	}
-
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AImplicitFunctionDefinition d)
 	{
 
@@ -175,7 +174,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AImplicitFunctionDefinition d)
 	{
 
