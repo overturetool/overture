@@ -75,32 +75,6 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-	public static PDefinition findName(AImplicitFunctionDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
-		{
-			return d;
-		}
-
-		PDefinition predef = d.getPredef();
-		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
-		{
-			return predef;
-		}
-
-		PDefinition postdef = d.getPostdef();
-		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
-		{
-			return postdef;
-		}
-
-		return null;
-	}
-
 	public static void typeResolve(AImplicitFunctionDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException

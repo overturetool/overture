@@ -8,10 +8,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -26,18 +23,6 @@ public class AValueDefinitionAssistantTC
 	public AValueDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-
-	public static PDefinition findName(AValueDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		if (scope.matches(NameScope.NAMES))
-		{
-			return PDefinitionListAssistantTC.findName(d.getDefs(), sought, scope);
-		}
-
-		return null;
 	}
 
 	public static void unusedCheck(AValueDefinition d)
