@@ -406,4 +406,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getUsedChecker();
 	
 	IAnswer<Boolean> getPTypeFunctionChecker();
+	
+	AnalysisAdaptor getUnusedChecker();
 }

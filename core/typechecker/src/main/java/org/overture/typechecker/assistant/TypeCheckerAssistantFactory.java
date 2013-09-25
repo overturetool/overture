@@ -137,6 +137,7 @@ import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 import org.overture.typechecker.utilities.TypeUtils;
+import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
@@ -1031,5 +1032,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getPTypeFunctionChecker()
 	{
 		return new PTypeFunctionChecker(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getUnusedChecker()
+	{
+		return new UnusedChecker(this);
 	}
 }

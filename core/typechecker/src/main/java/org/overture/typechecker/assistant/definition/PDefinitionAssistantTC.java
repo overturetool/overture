@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -17,7 +16,6 @@ import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -169,25 +167,16 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static void unusedCheck(PDefinition d)
 	{
-		if (d instanceof AEqualsDefinition)
+		try
 		{
-			AEqualsDefinitionAssistantTC.unusedCheck((AEqualsDefinition) d);
-		} else if (d instanceof AMultiBindListDefinition)
+			 d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AMultiBindListDefinitionAssistantTC.unusedCheck((AMultiBindListDefinition) d);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.unusedCheck((AStateDefinition) d);
-		} else if (d instanceof AValueDefinition)
-		{
-			AValueDefinitionAssistantTC.unusedCheck((AValueDefinition) d);
-		} else
-		{
-			unusedCheckBaseCase(d);
+			
 		}
 	}
 
-	public static void unusedCheckBaseCase(PDefinition d)
+	public void unusedCheckBaseCase(PDefinition d)
 	{
 		if (!PDefinitionAssistantTC.isUsed(d))
 		{
