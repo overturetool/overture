@@ -1,0 +1,196 @@
+Overture 1.2.5 Release Notes - 25/09/2013
+=========================================
+
+
+What's New in Overture 1.2.5?
+-----------------------------
+
+This is a bugfix update primarily that includes documentation and
+small language updates on the user-facing side.
+
+It is our intent that this will be the final release in the Overture
+version 1.2.x line.  All future development will moslty take place on
+the version 2 line, starting with version 2.0.0, which will be
+released almost concurrently with this release.
+
+
+System Requirements
+-------------------
+
+Overture is based on the Eclipse platform. To run it, you must have a
+Java runtime system installed, version 6 or later.
+
+
+Downloading
+-----------
+
+Overture can be downloaded from the SourceForge site.
+
+Documentation, including download instructions, tutorials and a
+language manual, are available from the Overture portal site.
+
+
+Installing
+----------
+
+The download file is a ZIP archive. To install the tool, unzip the
+file in a convenient location. The main executable is in the top level
+directory, called OvertureIde.
+
+For 32-bit Windows users, it is possible to use the Overture installer
+which can be found in SourceForge.
+
+Upgrading:
+* ATTENTION: If you are using the ZIP archive to update and if your
+  workspace was located inside the previous installation directory, DO
+  NOT FORGET TO BACKUP the workspace or it will be lost when the old
+  version is deleted.
+* If you are upgrading with the ZIP archive: do not unzip the latest
+  version on top of the oldest one. You will need to delete the
+  previous version before continuing the installation.
+* If you are updating with the installer: the installer will
+  automatically delete the previous version of Overture and preserve
+  your workspace, if it was inside the previous installation
+  directory.
+
+
+Uninstalling
+------------
+
+To uninstall Overture, remove the contents of the directory where you
+installed it. There are no other files stored on the system (apart
+from any workspace files you may have created).
+
+For Windows users, if the Overture installer was used previously, it
+is possible to uninstall via the uninstall shortcut created by the
+installer in the start programs or via the Uninstall menu in the
+Control Panel.
+
+
+Bugs Fixed Since 1.2.4
+----------------------
+
+2013-09-13 Correction to traces running in VDM-RT
+2013-09-05 Clean up threads properly with exit statements
+2013-08-14 Correction to implicit function satisfiability POs
+2013-08-14 Correction to allow self to be used in thread sections 
+2013-08-12 Efficiency improvement for traces that create objects
+2013-08-09 Small correction to empty sequence subtype testing
+2013-08-09 Fix for polymorphic parameter type comparisons
+2013-08-09 Fix to identify duplicate trace definitions in SL
+2013-08-04 Correction to pattern matching in set binds
+2013-08-01 Improvement to state designator error messages
+2013-08-01 Fix for breakpoint on exit statements with no argument
+2013-07-31 Type resolution correction for value definitions
+2013-07-26 Correction for old~ names in postcondition apply expressions
+2013-07-03 Correction to subtype POs for implicit functions
+2013-07-01 Improve ParameterPatternObligation and add missing param pattern checks
+2013-06-28 Correction for duplicate pattern identifiers
+2013-06-27 PO correction for parameter pattern matching
+2013-06-26 Correction for POs that involve ignore patterns
+2013-06-04 Fix for type check of object parameter field access
+2013-06-04 Correction for class invariant handling
+2013-06-01 Fix coverage for atomic statements
+2013-05-28 Another type accessibility correction
+2013-05-14 Fix for coverage tracking of copied objects
+2013-05-13 Correction for type checking of type accessibility
+2013-05-08 Improve type checking for "(not) in set" expressions
+2013-05-07 Tighten syntax check for commas in cases expressions and statements
+2013-05-03 Correction to type checking for expression patterns in cases
+2013-05-03 Small correction to PO for case alternatives
+2013-04-30 Further correction to atomic statement 
+2013-04-26 Fix to atomic statement checks of type invariants
+2013-04-26 Fix to invariant checks for updatable RecordValues
+2013-04-22 Small fix for inconclusive function calls in traces
+2013-04-18 Parser correction for "is not yet specified" and "is subclass responsibility"
+2013-04-17 Correction to field accessibility for state designators
+2013-03-26 Correction for type inference with negative mod expressions
+2013-03-16 Correction to inmap type binds
+2013-03-15 Correction to inmap subtype checking
+2013-03-12 Small fix for errors with implicit constructors
+2013-03-08 Improvement to VDM++ initialization error reporting 
+2013-03-06 Fix to class constructor return type error
+
+
+Known Issues
+------------
+
+The following issues are already known.  You can find the full list of
+Overture bugs at the SourceForge site.  Please check the bug list
+before raising new bugs.
+
+* LaTeX coverage files and VDM-RT log files do not correctly handle
+  international character encodings.
+* Error/warning locations may not be perfect if the source line is
+  indented with tabs, or mixtures of tabs and spaces. Similarly, LaTeX
+  coverage output does not correctly process tabs.
+* If VDM source is embedded in LaTeX, the first line of the file must
+  be a LaTeX document, section or subsection command, or a LaTeX
+  comment.
+* When an execution stops at a breakpoint, the Debug dialogue may not
+  open the stack of the current thread, or may focus on the stack of
+  another thread.
+* Combinatorial testing does not always refresh the results when tests
+  are evaluated. Click the Refresh button at the top of the view to
+  force a refresh.
+* There are several known issues or limitations in the VDMJ
+  engine. See the SourceForge bug list for details.
+* The output console showing the result of an evaluation, or an error
+  raised during evaluation, is not always visible when the evaluation
+  completes. Click the "Display Selected Console" button to cycle
+  through the consoles available.
+* It sometimes takes a long time to generate the GUI representation of
+  a VDM-RT log file, and the log files themselves can become quite
+  large.
+* You may find a Proof Obligation View remains open when you switch
+  out of the Proof Obligations perspective. Just close the view.
+* When you run a set of combinatorial tests, the coverage of the
+  specification is not measured. Individual tests' coverage is
+  measured if you "Send to Interpreter".
+
+
+Troubleshooting
+---------------
+
+If you encounter a problem with the Overture IDE itself, please
+contact the Overture project and we will try to help.  You can contact
+us here:
+
+* email: info@overturetool.org
+* forums: The Overture Help forum on SourceForge
+
+If you encounter a problem with a VDM specification, please try to
+make a small example that illustrates the problem before you contact
+us.  If you are sure the bug is not already known in the SourceForge
+list, you can create a new bug report.
+
+
+Frequently Asked Questions
+--------------------------
+
+* Who produced Overture?
+Overture was written by the members of the Overture project, a group
+of industry and academic researchers interested in the use of VDM.
+
+* How is Overture licensed?
+Overture is open source. It is released under a GPLv3 license.
+
+* What can I do to help?
+If you are interested in helping you can drop a mail to info@overturetool.org.
+
+* Where is Overture source code?
+Overture source code is hosted by SourceForge. 
+
+
+Other Resources and Links
+-------------------------
+
+The following links may be helpful:
+* Overture Community site - http://www.overturetool.org
+* Overture Wiki for developers - http://wiki.overturetool.org
+* VDM Tutorials - http://overturetool.org/?q=Documentation
+* VDM Examples - http://overturetool.org/?q=node/11
+* VDM Portal - http://www.vdmportal.org
+* VDM Books - http://www.vdmbook.com
+* Wikipedia on VDM - http://en.wikipedia.org/wiki/Vienna_Development_Method
+
