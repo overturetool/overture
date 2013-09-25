@@ -33,11 +33,11 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void unusedCheck(AStateDefinition d)
-	{
-
-		PDefinitionListAssistantTC.unusedCheck(d.getStateDefs());
-	}
+//	public static void unusedCheck(AStateDefinition d)
+//	{
+//
+//		PDefinitionListAssistantTC.unusedCheck(d.getStateDefs());
+//	}
 
 	public static List<PDefinition> getDefinitions(AStateDefinition d)
 	{
