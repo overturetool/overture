@@ -19,7 +19,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -75,85 +74,85 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-	public static void typeResolve(AImplicitFunctionDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
+//	public static void typeResolve(AImplicitFunctionDefinition d,
+//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//
+//		if (d.getTypeParams().size() > 0)
+//		{
+//			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
+//			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers)));
+//		} else
+//		{
+//			question.qualifiers = null;
+//			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
+//		}
+//
+//		if (d.getResult() != null)
+//		{
+//			APatternTypePairAssistant.typeResolve(d.getResult(), rootVisitor, question);
+//		}
+//
+//		if (question.env.isVDMPP())
+//		{
+//			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(d);
+//			d.getName().setTypeQualifier(fType.getParameters());
+//
+//			if (d.getBody() instanceof ASubclassResponsibilityExp)
+//			{
+//				d.getClassDefinition().setIsAbstract(true);
+//			}
+//		}
+//
+//		if (d.getBody() instanceof ASubclassResponsibilityExp
+//				|| d.getBody() instanceof ANotYetSpecifiedExp)
+//		{
+//			d.setIsUndefined(true);
+//		}
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+//		}
+//
+//		for (APatternListTypePair pltp : d.getParamPatterns())
+//		{
+//			APatternListTypePairAssistantTC.typeResolve(pltp, rootVisitor, question);
+//		}
+//
+//	}
 
-		if (d.getTypeParams().size() > 0)
-		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
-			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers)));
-		} else
-		{
-			question.qualifiers = null;
-			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
-		}
+//	public static void implicitDefinitions(AImplicitFunctionDefinition d,
+//			Environment env)
+//	{
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			d.setPredef(getPreDefinition(d));
+//			PDefinitionAssistantTC.markUsed(d.getPredef());
+//		} else
+//		{
+//			d.setPredef(null);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			d.setPostdef(getPostDefinition(d));
+//			PDefinitionAssistantTC.markUsed(d.getPostdef());
+//		} else
+//		{
+//			d.setPostdef(null);
+//		}
+//
+//	}
 
-		if (d.getResult() != null)
-		{
-			APatternTypePairAssistant.typeResolve(d.getResult(), rootVisitor, question);
-		}
-
-		if (question.env.isVDMPP())
-		{
-			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(d);
-			d.getName().setTypeQualifier(fType.getParameters());
-
-			if (d.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				d.getClassDefinition().setIsAbstract(true);
-			}
-		}
-
-		if (d.getBody() instanceof ASubclassResponsibilityExp
-				|| d.getBody() instanceof ANotYetSpecifiedExp)
-		{
-			d.setIsUndefined(true);
-		}
-
-		if (d.getPrecondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-		}
-
-		for (APatternListTypePair pltp : d.getParamPatterns())
-		{
-			APatternListTypePairAssistantTC.typeResolve(pltp, rootVisitor, question);
-		}
-
-	}
-
-	public static void implicitDefinitions(AImplicitFunctionDefinition d,
-			Environment env)
-	{
-
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
-		} else
-		{
-			d.setPredef(null);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
-		} else
-		{
-			d.setPostdef(null);
-		}
-
-	}
-
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AImplicitFunctionDefinition d)
 	{
 
@@ -175,7 +174,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AImplicitFunctionDefinition d)
 	{
 

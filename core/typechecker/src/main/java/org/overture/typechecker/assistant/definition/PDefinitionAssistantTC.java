@@ -8,23 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AExternalDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AImportedDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.AMultiBindListDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -42,6 +25,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
+import org.overture.typechecker.utilities.TypeResolver;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -172,25 +156,16 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static void unusedCheck(PDefinition d)
 	{
-		if (d instanceof AEqualsDefinition)
+		try
 		{
-			AEqualsDefinitionAssistantTC.unusedCheck((AEqualsDefinition) d);
-		} else if (d instanceof AMultiBindListDefinition)
+			 d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AMultiBindListDefinitionAssistantTC.unusedCheck((AMultiBindListDefinition) d);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.unusedCheck((AStateDefinition) d);
-		} else if (d instanceof AValueDefinition)
-		{
-			AValueDefinitionAssistantTC.unusedCheck((AValueDefinition) d);
-		} else
-		{
-			unusedCheckBaseCase(d);
+			
 		}
 	}
 
-	public static void unusedCheckBaseCase(PDefinition d)
+	public void unusedCheckBaseCase(PDefinition d)
 	{
 		if (!PDefinitionAssistantTC.isUsed(d))
 		{
@@ -244,26 +219,13 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static PDefinition deref(PDefinition d)
 	{
-		if (d instanceof AImportedDefinition)
+		try
 		{
-			if (d instanceof AImportedDefinition)
-			{
-				return deref(((AImportedDefinition) d).getDef());
-			}
-		} else if (d instanceof AInheritedDefinition)
+			return d.apply(af.getDereferer());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			if (d instanceof AInheritedDefinition)
-			{
-				return deref(((AInheritedDefinition) d).getSuperdef());
-			}
-		} else if (d instanceof ARenamedDefinition)
-		{
-			if (d instanceof ARenamedDefinition)
-			{
-				return deref(((ARenamedDefinition) d).getDef());
-			}
+			return null;
 		}
-		return d;
 
 	}
 
@@ -281,52 +243,24 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public static boolean isUsed(PDefinition d)
 	{
-		if (d instanceof AExternalDefinition)
+		try
 		{
-			return AExternalDefinitionAssistantTC.isUsed((AExternalDefinition) d);
-		} else if (d instanceof AInheritedDefinition)
+			return d.apply(af.getUsedChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AInheritedDefinitionAssistantTC.isUsed((AInheritedDefinition) d);
-		} else
-		{
-			return d.getUsed();
+			return false;
 		}
 
 	}
 
 	public static void implicitDefinitions(PDefinition d, Environment env)
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			SClassDefinitionAssistantTC.implicitDefinitions((SClassDefinition) d, env);
-		} else if (d instanceof AClassInvariantDefinition)
+			 d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-		} else if (d instanceof AEqualsDefinition)
-		{
-		} else if (d instanceof AExplicitFunctionDefinition)
-		{
-			AExplicitFunctionDefinitionAssistantTC.implicitDefinitions((AExplicitFunctionDefinition) d, env);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			AExplicitOperationDefinitionAssistantTC.implicitDefinitions((AExplicitOperationDefinition) d, env);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinitionAssistantTC.implicitDefinitions((AImplicitFunctionDefinition) d, env);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			AImplicitOperationDefinitionAssistantTC.implicitDefinitions((AImplicitOperationDefinition) d, env);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.implicitDefinitions((AStateDefinition) d, env);
-		} else if (d instanceof AThreadDefinition)
-		{
-			AThreadDefinitionAssistantTC.implicitDefinitions((AThreadDefinition) d, env);
-		} else if (d instanceof ATypeDefinition)
-		{
-			ATypeDefinitionAssistantTC.implicitDefinitions((ATypeDefinition) d, env);
-		} else
-		{
-			return;
+			
 		}
 
 	}
@@ -335,42 +269,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			SClassDefinitionAssistantTC.typeResolve((SClassDefinition) d, rootVisitor, question);
-		} else if (d instanceof AExplicitFunctionDefinition)
+			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AExplicitFunctionDefinitionAssistantTC.typeResolve((AExplicitFunctionDefinition) d, rootVisitor, question);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			AExplicitOperationDefinitionAssistantTC.typeResolve((AExplicitOperationDefinition) d, rootVisitor, question);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinitionAssistantTC.typeResolve((AImplicitFunctionDefinition) d, rootVisitor, question);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			AImplicitOperationDefinitionAssistantTC.typeResolve((AImplicitOperationDefinition) d, rootVisitor, question);
-		} else if (d instanceof AInstanceVariableDefinition)
-		{
-			AInstanceVariableDefinitionAssistantTC.typeResolve((AInstanceVariableDefinition) d, rootVisitor, question);
-		} else if (d instanceof ALocalDefinition)
-		{
-			ALocalDefinitionAssistantTC.typeResolve((ALocalDefinition) d, rootVisitor, question);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			ARenamedDefinitionAssistantTC.typeResolve((ARenamedDefinition) d, rootVisitor, question);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.typeResolve((AStateDefinition) d, rootVisitor, question);
-		} else if (d instanceof ATypeDefinition)
-		{
-			ATypeDefinitionAssistantTC.typeResolve((ATypeDefinition) d, rootVisitor, question);
-		} else if (d instanceof AValueDefinition)
-		{
-			AValueDefinitionAssistantTC.typeResolve((AValueDefinition) d, rootVisitor, question);
-		} else
-		{
-			return;
+			
 		}
 
 	}

@@ -66,7 +66,9 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	{
 		//TODO: HERE QUESTION ABOUY HANDLING THIS CODE!
 		return (node.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
-		: PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node));
+		:PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node)); 
+		//af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node)); 
+		//Non-static call works correctly but it give a warning for the static method.
 	}
 	
 	@Override

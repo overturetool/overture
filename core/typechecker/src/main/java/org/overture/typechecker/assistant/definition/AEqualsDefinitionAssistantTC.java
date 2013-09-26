@@ -15,15 +15,15 @@ public class AEqualsDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void unusedCheck(AEqualsDefinition d)
-	{
-
-		if (d.getDefs() != null)
-		{
-			PDefinitionListAssistantTC.unusedCheck(d.getDefs());
-		}
-
-	}
+//	public static void unusedCheck(AEqualsDefinition d)
+//	{
+//
+//		if (d.getDefs() != null)
+//		{
+//			PDefinitionListAssistantTC.unusedCheck(d.getDefs());
+//		}
+//
+//	}
 
 	public static PType getType(AEqualsDefinition def)
 	{

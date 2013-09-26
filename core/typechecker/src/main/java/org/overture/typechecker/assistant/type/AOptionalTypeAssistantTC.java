@@ -101,9 +101,9 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static boolean isFunction(AOptionalType type) {
-		return PTypeAssistantTC.isFunction(type.getType());
-	}
+//	public static boolean isFunction(AOptionalType type) {
+//		return PTypeAssistantTC.isFunction(type.getType());
+//	}
 
 
 	public static AFunctionType getFunction(AOptionalType type) {

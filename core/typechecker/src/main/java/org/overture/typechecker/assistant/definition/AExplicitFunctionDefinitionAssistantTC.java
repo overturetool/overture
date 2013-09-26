@@ -217,56 +217,56 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return null;
 	}
 
-	public static void typeResolve(AExplicitFunctionDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-
-		if (d.getTypeParams().size() != 0)
-		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
-
-			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory, params, question.scope);
-
-			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, newQuestion));
-		} else
-		{
-			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
-		}
-
-		if (question.env.isVDMPP())
-		{
-			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistant().getType(d);
-			d.getName().setTypeQualifier(fType.getParameters());
-
-			if (d.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				d.getClassDefinition().setIsAbstract(true);
-			}
-		}
-
-		if (d.getBody() instanceof ASubclassResponsibilityExp
-				|| d.getBody() instanceof ANotYetSpecifiedExp)
-		{
-			d.setIsUndefined(true);
-		}
-
-		if (d.getPrecondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-		}
-
-		for (List<PPattern> pp : d.getParamPatternList())
-		{
-			PPatternListAssistantTC.typeResolve(pp, rootVisitor, question);
-		}
-
-	}
+//	public static void typeResolve(AExplicitFunctionDefinition d,
+//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//
+//		if (d.getTypeParams().size() != 0)
+//		{
+//			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
+//
+//			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory, params, question.scope);
+//
+//			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, newQuestion));
+//		} else
+//		{
+//			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
+//		}
+//
+//		if (question.env.isVDMPP())
+//		{
+//			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistant().getType(d);
+//			d.getName().setTypeQualifier(fType.getParameters());
+//
+//			if (d.getBody() instanceof ASubclassResponsibilityExp)
+//			{
+//				d.getClassDefinition().setIsAbstract(true);
+//			}
+//		}
+//
+//		if (d.getBody() instanceof ASubclassResponsibilityExp
+//				|| d.getBody() instanceof ANotYetSpecifiedExp)
+//		{
+//			d.setIsUndefined(true);
+//		}
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+//		}
+//
+//		for (List<PPattern> pp : d.getParamPatternList())
+//		{
+//			PPatternListAssistantTC.typeResolve(pp, rootVisitor, question);
+//		}
+//
+//	}
 
 	public static void implicitDefinitions(AExplicitFunctionDefinition d,
 			Environment env)
@@ -292,7 +292,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 	}
 
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
@@ -342,7 +342,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AExplicitFunctionDefinition d)
 	{
 

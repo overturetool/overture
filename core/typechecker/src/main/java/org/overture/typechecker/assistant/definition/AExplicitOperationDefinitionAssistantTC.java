@@ -54,62 +54,62 @@ public class AExplicitOperationDefinitionAssistantTC
 		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
 	}
 
-	public static void typeResolve(AExplicitOperationDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
+//	public static void typeResolve(AExplicitOperationDefinition d,
+//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//
+//		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
+//
+//		if (question.env.isVDMPP())
+//		{
+//			d.getName().setTypeQualifier(((AOperationType) d.getType()).getParameters());
+//
+//			if (d.getBody() instanceof ASubclassResponsibilityStm)
+//			{
+//				d.getClassDefinition().setIsAbstract(true);
+//			}
+//		}
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+//		}
+//
+//		for (PPattern p : d.getParameterPatterns())
+//		{
+//			PPatternAssistantTC.typeResolve(p, rootVisitor, question);
+//		}
+//
+//	}
 
-		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-
-		if (question.env.isVDMPP())
-		{
-			d.getName().setTypeQualifier(((AOperationType) d.getType()).getParameters());
-
-			if (d.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				d.getClassDefinition().setIsAbstract(true);
-			}
-		}
-
-		if (d.getPrecondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-		}
-
-		for (PPattern p : d.getParameterPatterns())
-		{
-			PPatternAssistantTC.typeResolve(p, rootVisitor, question);
-		}
-
-	}
-
-	public static void implicitDefinitions(AExplicitOperationDefinition d,
-			Environment base)
-	{
-
-		d.setState(base.findStateDefinition());
-
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d, base));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d, base));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
-		}
-
-	}
+//	public static void implicitDefinitions(AExplicitOperationDefinition d,
+//			Environment base)
+//	{
+//
+//		d.setState(base.findStateDefinition());
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			d.setPredef(getPreDefinition(d, base));
+//			PDefinitionAssistantTC.markUsed(d.getPredef());
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			d.setPostdef(getPostDefinition(d, base));
+//			PDefinitionAssistantTC.markUsed(d.getPostdef());
+//		}
+//
+//	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPostDefinition(
+	public static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 
@@ -163,7 +163,7 @@ public class AExplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	private static AExplicitFunctionDefinition getPreDefinition(
+	public static AExplicitFunctionDefinition getPreDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 
