@@ -1,26 +1,52 @@
 module A
 definitions
 
-types 
-ChargeRate = <charging>|<discharging>;
-Percent = int
-inv p == p>0 and p <100;
+types
+  Command = Borrow | Renew | Return | Find;
+  
+  String = seq of char;
+  BookId = token;
+  UserId = token;
+  BorrowMap = map UserId to set of BookId;
+  
+  Book ::  
+    title : String
+    author : String;
 
- MeterID :: int;
- AgentID :: int;
+  User :: 
+      name : String ;
+      
+  Borrow ::
+    copy : BookId
+    user : UserId;
+   
+  Renew ::
+    copy : BookId
+    user : UserId;
+    
+  Return :: copy : BookId;
+  Find :: string : String;
+  
+  Library ::
+    books : map BookId to Book
+    users : map UserId to User
+    borrowed : BorrowMap
+  inv mk_Library(bs,us,bor) ==
+    dom bor subset dom us
+    and dunion rng bor subset dom bs
+    and (forall u1, u2 in set dom bor & u1 <> u2 => bor(u1) inter bor(u2) = {})
+    
 
+  
+  functions
+  
+  ExeFind: String * Library -> (set of BookId)
+  ExeFind(s,l) ==
+    {bid | bid in set dom l.books & s in set {l.books(bid).title, l.books(bid).author}}
+  pre card({bid | bid in set dom l.books & s in set {l.books(bid).title, l.books(bid).author}}) > 0
+    
+ 
 
-values
-	 AllMeterIDs : set of MeterID = {x | x :MeterID};
-	
-functions
-	getRanVal() r:Percent
-	post r in set {x | x:Percent} & true;
-
-
-state StateName of
- req:int
-end 
 
 
 
