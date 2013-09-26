@@ -121,6 +121,19 @@ abstract public class OvertureTest extends TestCase
 			assertEquals("Expecting no syntax errors", 0, actual.size());
 		}
 
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			try
+			{
+				classes.add(new CPUClassDefinition());
+				classes.add(new BUSClassDefinition());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);	// Should never happen
+			}
+		}
+
 		TypeChecker typeChecker = new ClassTypeChecker(classes);
 		typeChecker.typeCheck();
 		TypeChecker.printErrors(Console.out);

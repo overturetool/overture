@@ -1,0 +1,60 @@
+system SYS
+instance variables
+	static public obj1 : A := new A();
+	cpu1:CPU := new CPU(<FP>, 1E9);
+
+operations
+	SYS: () ==> SYS
+	SYS() ==
+	(
+		cpu1.deploy(obj1, "Test object one");
+	)
+	
+end SYS
+
+class A
+instance variables
+	public counts:seq of nat := [ a-a | a in set {1, ..., 200}];
+	last:nat := 0;
+
+values
+	MIN = 50;
+	MAX = 100;
+	
+operations
+	public op: () ==> ()
+	op() ==
+	(
+		dcl now:nat := time;
+		
+		if last > 0
+		then let interval = now - last in
+			counts(interval+1) := counts(interval+1) + 1;
+			
+		last := now
+	);
+
+	public run: () ==> ()
+	run() == start(self);
+
+thread
+	sporadic(MIN, MAX, 0)(op)
+	
+end A
+
+class Test
+operations
+	public test: () ==> ()
+	test() ==
+	(
+		SYS`obj1.run();
+		duration(100000) skip;
+		
+		if elems SYS`obj1.counts(1, ..., 49) <> {0}
+		then exit "Sporadic has some short intervals";
+		
+		if elems SYS`obj1.counts(151, ..., 200) <> {0}
+		then exit "Sporadic has some long intervals";
+	)
+
+end Test

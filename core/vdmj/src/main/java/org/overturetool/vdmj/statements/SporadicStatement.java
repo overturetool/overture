@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (C) 2013 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -23,13 +23,11 @@
 
 package org.overturetool.vdmj.statements;
 
-import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.definitions.ExplicitOperationDefinition;
 import org.overturetool.vdmj.definitions.ImplicitOperationDefinition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
-import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -43,7 +41,7 @@ import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.util.Utils;
 import org.overturetool.vdmj.values.Value;
 
-public class PeriodicStatement extends Statement
+public class SporadicStatement extends Statement
 {
 	private static final long serialVersionUID = 1L;
 	public final LexNameToken opname;
@@ -51,7 +49,7 @@ public class PeriodicStatement extends Statement
 
 	public long[] values = new long[4];
 
-	public PeriodicStatement(LexNameToken opname, ExpressionList args)
+	public SporadicStatement(LexNameToken opname, ExpressionList args)
 	{
 		super(opname.location);
 		this.opname = opname;
@@ -61,11 +59,9 @@ public class PeriodicStatement extends Statement
 	@Override
 	public Type typeCheck(Environment env, NameScope scope)
 	{
-		int nargs = (Settings.dialect == Dialect.VDM_RT) ? 4 : 1;
-
-		if (args.size() != nargs)
+		if (args.size() != 3)
 		{
-			report(3287, "Periodic thread must have " + nargs + " argument(s)");
+			report(3287, "Sporadic thread must have 3 arguments");
 		}
 		else
 		{
@@ -75,7 +71,7 @@ public class PeriodicStatement extends Statement
 				
 				if (!type.isNumeric())
 				{
-					arg.report(3316, "Expecting number in periodic argument");
+					arg.report(3316, "Expecting number in sporadic argument");
 				}
 			}
 		}
@@ -147,42 +143,29 @@ public class PeriodicStatement extends Statement
 
 				if (values[i] < 0)
 				{
-					abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + values[i], ctxt);
+					abort(4157, "Expecting +ive integer in sporadic argument " + (i+1) + ", was " + values[i], ctxt);
 				}
 			}
 			catch (ValueException e)
 			{
-				abort(4157, "Expecting +ive integer in periodic argument " + (i+1) + ", was " + argval, ctxt);
+				abort(4157, "Expecting +ive integer in sporadic argument " + (i+1) + ", was " + argval, ctxt);
 			}
 
 			i++;
 		}
 
-		if (values[0] == 0)
-		{
-			abort(4158, "Period argument must be non-zero, was " + values[0], ctxt);
-		}
-
-		if (args.size() == 4)
-		{
-			if (values[2] >= values[0])
-			{
-				abort(4159, "Delay argument (" + values[2] + ") must be less than the period (" + values[0] + ")", ctxt);
-			}
-		}
-		
 		return null;	// Not actually used - see StartStatement
 	}
 
 	@Override
 	public String kind()
 	{
-		return "periodic statement";
+		return "sporadic statement";
 	}
 
 	@Override
 	public String toString()
 	{
-		return "periodic(" + Utils.listToString(args) + ")(" + opname + ")";
+		return "sporadic(" + Utils.listToString(args) + ")(" + opname + ")";
 	}
 }

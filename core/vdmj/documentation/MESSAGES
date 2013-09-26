@@ -360,6 +360,10 @@ as the expected and actual values.
 2309, "Expecting 'stoplist'"
 2310, "Expecting 'stoplist('"
 2311, "Expecting ')' after stoplist objects"
+2312, "Expecting '(' after sporadic");
+2313, "Expecting ')' after sporadic arguments");
+2314, "Expecting '(' after sporadic(...)");
+2315, "Expecting (name) after sporadic(...)");
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"

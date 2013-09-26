@@ -52,13 +52,14 @@ public class PeriodicThread extends SchedulablePoolThread
 	private final long delay;
 	private final long offset;
 	private final long expected;
+	private final boolean sporadic;
 
 	private final boolean first;
 	private final static Random PRNG = new Random();
 
 	public PeriodicThread(
 		ObjectValue self, OperationValue operation,
-		long period, long jitter, long delay, long offset, long expected)
+		long period, long jitter, long delay, long offset, long expected, boolean sporadic)
 	{
 		super(self.getCPU().resource, self, operation.getPriority(), true, expected);
 
@@ -69,6 +70,7 @@ public class PeriodicThread extends SchedulablePoolThread
 		this.jitter = jitter;
 		this.delay = delay;
 		this.offset = offset;
+		this.sporadic = sporadic;
 
 		if (expected == 0)
 		{
@@ -97,12 +99,20 @@ public class PeriodicThread extends SchedulablePoolThread
 
     		if (first)
     		{
-    			if (offset > 0 || jitter > 0)
+    			if (sporadic)
     			{
-        			long noise = (jitter == 0) ? 0 :
-        				Math.abs(PRNG.nextLong() % (jitter + 1));
-
+        			long noise = (jitter == 0) ? 0 : Math.abs(PRNG.nextLong() % jitter);
         			wakeUpTime = offset + noise;
+    			}
+    			else
+    			{
+	    			if (offset > 0 || jitter > 0)
+	    			{
+	        			long noise = (jitter == 0) ? 0 :
+	        				Math.abs(PRNG.nextLong() % (jitter + 1));
+	
+	        			wakeUpTime = offset + noise;
+	    			}
     			}
     		}
 
@@ -137,7 +147,7 @@ public class PeriodicThread extends SchedulablePoolThread
 
 		new PeriodicThread(
 			getObject(), operation, period, jitter, delay, 0,
-			nextTime()).start();
+			nextTime(), sporadic).start();
 
 		if (Settings.usingDBGP)
 		{
@@ -249,19 +259,27 @@ public class PeriodicThread extends SchedulablePoolThread
 
 	private long nextTime()
 	{
-		// "expected" was last run time, the next is one "period" away, but this
-		// is influenced by jitter as long as it's at least "delay" since
-		// "expected".
-
-		long noise = (jitter == 0) ? 0 : PRNG.nextLong() % (jitter + 1);
-		long next = SystemClock.getWallTime() + period + noise;
-
-		if (delay > 0 && next - expected < delay)	// Too close?
+		if (sporadic)
 		{
-			next = expected + delay;
+			long noise = (jitter == 0) ? 0 : Math.abs(PRNG.nextLong() % jitter);
+			return SystemClock.getWallTime() + delay + noise;
 		}
-
-		return next;
+		else
+		{
+			// "expected" was last run time, the next is one "period" away, but this
+			// is influenced by jitter as long as it's at least "delay" since
+			// "expected".
+	
+			long noise = (jitter == 0) ? 0 : PRNG.nextLong() % (jitter + 1);
+			long next = SystemClock.getWallTime() + period + noise;
+	
+			if (delay > 0 && next - expected < delay)	// Too close?
+			{
+				next = expected + delay;
+			}
+	
+			return next;
+		}
 	}
 
 	public static void reset()

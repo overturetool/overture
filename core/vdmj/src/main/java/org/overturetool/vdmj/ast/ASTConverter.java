@@ -122,6 +122,7 @@ import org.overturetool.vdmj.statements.ObjectFieldDesignator;
 import org.overturetool.vdmj.statements.ObjectIdentifierDesignator;
 import org.overturetool.vdmj.statements.ObjectNewDesignator;
 import org.overturetool.vdmj.statements.ObjectSelfDesignator;
+import org.overturetool.vdmj.statements.PeriodicStatement;
 import org.overturetool.vdmj.statements.ReturnStatement;
 import org.overturetool.vdmj.statements.SimpleBlockStatement;
 import org.overturetool.vdmj.statements.SkipStatement;
@@ -839,7 +840,7 @@ public class ASTConverter
 			{
 				IOmlPeriodicThread pt = (IOmlPeriodicThread)th;
 				ExpressionList args = convertExpressionList(pt.getArgs());
-				list.add(new ThreadDefinition(convertName(pt.getName()), args));
+				list.add(new ThreadDefinition(new PeriodicStatement(convertName(pt.getName()), args)));
 			}
 			else if (th instanceof IOmlSporadicThread)
 			{

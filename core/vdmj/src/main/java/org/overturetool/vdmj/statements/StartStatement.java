@@ -141,7 +141,7 @@ public class StartStatement extends Statement
 		if (op.body instanceof PeriodicStatement)
 		{
     		RootContext global = ClassInterpreter.getInstance().initialContext;
-    		Context pctxt = new ObjectContext(op.name.location, "async", global, target);
+    		Context pctxt = new ObjectContext(op.name.location, "periodic", global, target);
 			PeriodicStatement ps = (PeriodicStatement)op.body;
 			
 			// We disable the swapping and time (RT) as periodic evaluation should be "free".
@@ -159,7 +159,30 @@ public class StartStatement extends Statement
 			// Note that periodic threads never set the stepping flag
 
 			new PeriodicThread(
-				target, pop, period, jitter, delay, offset, 0).start();
+				target, pop, period, jitter, delay, offset, 0, false).start();
+		}
+		else if (op.body instanceof SporadicStatement)
+		{
+    		RootContext global = ClassInterpreter.getInstance().initialContext;
+    		Context pctxt = new ObjectContext(op.name.location, "sporadic", global, target);
+    		SporadicStatement ss = (SporadicStatement)op.body;
+			
+			// We disable the swapping and time (RT) as sporadic evaluation should be "free".
+			pctxt.threadState.setAtomic(true);
+			ss.eval(pctxt);	// Ignore return value
+			pctxt.threadState.setAtomic(false);
+			
+			OperationValue pop = pctxt.lookup(ss.opname).operationValue(pctxt);
+
+			long delay  = ss.values[0];
+			long jitter = ss.values[1];		// Jitter used for maximum delay
+			long offset = ss.values[2];
+			long period = 0;
+
+			// Note that periodic threads never set the stepping flag
+
+			new PeriodicThread(
+				target, pop, period, jitter, delay, offset, 0, true).start();
 		}
 		else
 		{

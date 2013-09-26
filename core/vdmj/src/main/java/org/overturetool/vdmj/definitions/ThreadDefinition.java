@@ -59,11 +59,6 @@ public class ThreadDefinition extends Definition
 		setAccessSpecifier(new AccessSpecifier(false, false, Token.PROTECTED));
 	}
 
-	public ThreadDefinition(LexNameToken opname, ExpressionList args)
-	{
-		this(new PeriodicStatement(opname, args));
-	}
-
 	@Override
 	public void implicitDefinitions(Environment base)
 	{

@@ -76,7 +76,9 @@ import org.overturetool.vdmj.statements.CallStatement;
 import org.overturetool.vdmj.statements.ErrorCase;
 import org.overturetool.vdmj.statements.ExternalClause;
 import org.overturetool.vdmj.statements.NotYetSpecifiedStatement;
+import org.overturetool.vdmj.statements.PeriodicStatement;
 import org.overturetool.vdmj.statements.SpecificationStatement;
+import org.overturetool.vdmj.statements.SporadicStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.statements.SubclassResponsibilityStatement;
 import org.overturetool.vdmj.traces.TraceApplyExpression;
@@ -1279,12 +1281,24 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 			checkFor(Token.BRA, 2112, "Expecting '(' after periodic");
 			ExpressionList args = getExpressionReader().readExpressionList();
-			checkFor(Token.KET, 2113, "Expecting ')' after period arguments");
+			checkFor(Token.KET, 2113, "Expecting ')' after periodic arguments");
 			checkFor(Token.BRA, 2114, "Expecting '(' after periodic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
 			checkFor(Token.KET, 2115, "Expecting (name) after periodic(...)");
 
-			return new ThreadDefinition(name, args);
+			return new ThreadDefinition(new PeriodicStatement(name, args));
+		}
+		else if (token.is(Token.SPORADIC))
+		{
+			nextToken();
+			checkFor(Token.BRA, 2312, "Expecting '(' after sporadic");
+			ExpressionList args = getExpressionReader().readExpressionList();
+			checkFor(Token.KET, 2313, "Expecting ')' after sporadic arguments");
+			checkFor(Token.BRA, 2314, "Expecting '(' after sporadic(...)");
+			LexNameToken name = readNameToken("Expecting (name) after sporadic(...)");
+			checkFor(Token.KET, 2315, "Expecting (name) after sporadic(...)");
+
+			return new ThreadDefinition(new SporadicStatement(name, args));
 		}
 		else
 		{
