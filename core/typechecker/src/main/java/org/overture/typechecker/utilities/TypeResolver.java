@@ -19,29 +19,31 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
+import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
+import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
@@ -90,7 +92,6 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AExplicitFunctionDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		//AExplicitFunctionDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
 		if (node.getTypeParams().size() != 0)
 		{
 			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
@@ -101,7 +102,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		} else
 		{
 			//node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question));
-			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); //FIXME: my way to rewrite the above line. Test shows that it is ok <- George Kanakis
 		}
 
 		if (question.question.env.isVDMPP())
@@ -145,7 +146,34 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AExplicitOperationDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AExplicitOperationDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+
+		if (question.question.env.isVDMPP())
+		{
+			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getBody() instanceof ASubclassResponsibilityStm)
+			{
+				node.getClassDefinition().setIsAbstract(true);
+			}
+		}
+
+		if (node.getPrecondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(node.getPredef(), question.rootVisitor, question.question);
+			node.getPredef().apply(this, question);
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(node.getPostdef(), question.rootVisitor, question.question);
+			node.getPostdef().apply(this, question);
+		}
+
+		for (PPattern p : node.getParameterPatterns())
+		{
+			PPatternAssistantTC.typeResolve(p, question.rootVisitor, question.question);
+		}
 	}
 	
 	@Override
@@ -153,7 +181,54 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AImplicitFunctionDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AImplicitFunctionDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		if (node.getTypeParams().size() > 0)
+		{
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
+			node.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope, question.question.qualifiers)));
+		} else
+		{
+			question.question.qualifiers = null;
+			node.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
+		}
+
+		if (node.getResult() != null)
+		{
+			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+		}
+
+		if (question.question.env.isVDMPP())
+		{
+			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(node);
+			node.getName().setTypeQualifier(fType.getParameters());
+
+			if (node.getBody() instanceof ASubclassResponsibilityExp)
+			{
+				node.getClassDefinition().setIsAbstract(true);
+			}
+		}
+
+		if (node.getBody() instanceof ASubclassResponsibilityExp
+				|| node.getBody() instanceof ANotYetSpecifiedExp)
+		{
+			node.setIsUndefined(true);
+		}
+
+		if (node.getPrecondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+			node.getPredef().apply(this, question);
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+			node.getPostdef().apply(this, question);
+		}
+
+		for (APatternListTypePair pltp : node.getParamPatterns())
+		{
+			APatternListTypePairAssistantTC.typeResolve(pltp, question.rootVisitor, question.question);
+		}
 	}
 	
 	@Override
@@ -161,7 +236,39 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AImplicitOperationDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AImplicitOperationDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+
+		if (node.getResult() != null)
+		{
+			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+		}
+
+		if (question.question.env.isVDMPP())
+		{
+			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
+
+			if (node.getBody() instanceof ASubclassResponsibilityStm)
+			{
+				node.getClassDefinition().setIsAbstract(true);
+			}
+		}
+
+		if (node.getPrecondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+			node.getPredef().apply(this, question);
+		}
+
+		if (node.getPostcondition() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+			node.getPostdef().apply(this, question);
+		}
+
+		for (APatternListTypePair ptp : node.getParameterPatterns())
+		{
+			APatternListTypePairAssistantTC.typeResolve(ptp, question.rootVisitor, question.question);
+		}
 	}
 	
 	@Override
@@ -169,41 +276,111 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AInstanceVariableDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AInstanceVariableDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+
+		try
+		{
+			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+		} catch (TypeCheckException e)
+		{
+			PTypeAssistantTC.unResolve(node.getType());
+			throw e;
+		}
 	}
 	
 	@Override
 	public void caseALocalDefinition(ALocalDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		ALocalDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		if (node.getType() != null)
+		{
+			node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
+		}
+
 	}
 	
 	@Override
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		ARenamedDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		//PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
+		node.getDef().apply(this, question);
 	}
 
 	@Override
 	public void caseAStateDefinition(AStateDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AStateDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		for (AFieldField f : node.getFields())
+		{
+			try
+			{
+				AFieldFieldAssistantTC.typeResolve(f, null, question.rootVisitor, question.question);
+			} catch (TypeCheckException e)
+			{
+				AFieldFieldAssistantTC.unResolve(f);
+				throw e;
+			}
+		}
+
+		node.setRecordType(PTypeAssistantTC.typeResolve(node.getRecordType(), null, question.rootVisitor, question.question));
+
+		if (node.getInvPattern() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(node.getInvdef(), question.rootVisitor, question.question);
+			node.getInvdef().apply(this, question);
+		}
+
+		if (node.getInitPattern() != null)
+		{
+			//PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
+			node.getInitdef().apply(this, question);
+		}
+
 	}
 	
 	@Override
 	public void caseATypeDefinition(ATypeDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		ATypeDefinitionAssistantTC.typeResolve(node, question.rootVisitor,question.question);
+		try
+		{
+			node.setInfinite(false);
+			node.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType) node.getInvType(), node, question.rootVisitor, question.question));
+
+			if (node.getInfinite())
+			{
+				TypeCheckerErrors.report(3050, "Type '" + node.getName()
+						+ "' is infinite", node.getLocation(), node);
+			}
+
+			// set type before in case the invdef uses a type defined in this one
+			node.setType(node.getInvType());
+
+			if (node.getInvdef() != null)
+			{
+				//PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
+				node.getInvdef().apply(this, question);
+				PPatternAssistantTC.typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
+			}
+
+			node.setType(node.getInvType());
+		} catch (TypeCheckException e)
+		{
+			PTypeAssistantTC.unResolve(node.getInvType());
+			throw e;
+		}
 	}
 	@Override
 	public void caseAValueDefinition(AValueDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		AValueDefinitionAssistantTC.typeResolve(node, question.rootVisitor, question.question);
+		// d.setType(getType(d));
+		if (node.getType() != null)
+		{
+			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+			PPatternAssistantTC.typeResolve(node.getPattern(), question.rootVisitor, question.question);
+			AValueDefinitionAssistantTC.updateDefs(node, question.question);
+		}
 	}
 	@Override
 	public void defaultPDefinition(PDefinition node, NewQuestion question)
