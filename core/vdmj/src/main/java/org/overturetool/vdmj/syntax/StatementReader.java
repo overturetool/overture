@@ -81,6 +81,7 @@ import org.overturetool.vdmj.statements.SpecificationStatement;
 import org.overturetool.vdmj.statements.StartStatement;
 import org.overturetool.vdmj.statements.StateDesignator;
 import org.overturetool.vdmj.statements.Statement;
+import org.overturetool.vdmj.statements.StopStatement;
 import org.overturetool.vdmj.statements.TixeStatement;
 import org.overturetool.vdmj.statements.TixeStmtAlternative;
 import org.overturetool.vdmj.statements.TrapStatement;
@@ -192,6 +193,24 @@ public class StatementReader extends SyntaxReader
 
 			case STARTLIST:
 				stmt = readStartlistStatement(location);
+				break;
+
+			case STOP:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2304, "'stop' not available in VDM classic");
+				}
+
+				stmt = readStopStatement(location);
+				break;
+
+			case STOPLIST:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2305, "'stoplist' not available in VDM classic");
+				}
+
+				stmt = readStoplistStatement(location);
 				break;
 
 			case CYCLES:
@@ -1006,6 +1025,26 @@ public class StatementReader extends SyntaxReader
 		Expression set = getExpressionReader().readExpression();
 		checkFor(Token.KET, 2248, "Expecting ')' after startlist objects");
 		return new StartStatement(location, set);
+	}
+
+	private Statement readStopStatement(LexLocation location)
+		throws LexException, ParserException
+	{
+		checkFor(Token.STOP, 2306, "Expecting 'stop'");
+		checkFor(Token.BRA, 2307, "Expecting 'stop('");
+		Expression obj = getExpressionReader().readExpression();
+		checkFor(Token.KET, 2308, "Expecting ')' after stop object");
+		return new StopStatement(location, obj);
+	}
+
+	private Statement readStoplistStatement(LexLocation location)
+		throws LexException, ParserException
+	{
+		checkFor(Token.STOPLIST, 2309, "Expecting 'stoplist'");
+		checkFor(Token.BRA, 2310, "Expecting 'stoplist('");
+		Expression set = getExpressionReader().readExpression();
+		checkFor(Token.KET, 2311, "Expecting ')' after stoplist objects");
+		return new StopStatement(location, set);
 	}
 
 	private Statement readDurationStatement(LexLocation location)

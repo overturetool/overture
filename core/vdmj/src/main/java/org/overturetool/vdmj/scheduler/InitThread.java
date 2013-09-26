@@ -184,21 +184,28 @@ public class InitThread implements ISchedulableThread
 	{
 		throw new NotSupportedError();
 	}
-
 	
 	public void alarming(long expected)
 	{
 		throw new NotSupportedError();
 	}
-
 	
 	public long getAlarmWakeTime()
 	{
 		throw new NotSupportedError();
 	}
-
 	
 	public void clearAlarm()
+	{
+		throw new NotSupportedError();
+	}
+
+	public void stopThread()
+	{
+		throw new NotSupportedError();
+	}
+
+	public void reschedule(Context ctxt, LexLocation location)
 	{
 		throw new NotSupportedError();
 	}

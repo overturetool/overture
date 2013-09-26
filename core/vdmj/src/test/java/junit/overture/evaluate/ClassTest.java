@@ -24,6 +24,8 @@
 package junit.overture.evaluate;
 
 import org.overturetool.vdmj.Release;
+import org.overturetool.vdmj.Settings;
+import org.overturetool.vdmj.lex.Dialect;
 
 import junit.overture.OvertureTest;
 
@@ -92,5 +94,11 @@ public class ClassTest extends OvertureTest
 	public void test_ValueFactory()
 	{
 		evaluate("factorytest", ResultType.TRUE);
+	}
+
+	public void test_Stop()
+	{
+		Settings.dialect = Dialect.VDM_RT;
+		evaluate("stoptest", ResultType.VOID, 0, Release.VDM_10);
 	}
 }

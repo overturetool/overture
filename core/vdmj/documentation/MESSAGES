@@ -352,6 +352,14 @@ as the expected and actual values.
 2301, "Expecting narrow_(expression, type)"
 2302, "Expecting ')' after narrow_ expression"
 2303, "Narrow not available in VDM classic"
+2304, "'stop' not available in VDM classic"
+2305, "'stoplist' not available in VDM classic"
+2306, "Expecting 'stop'"
+2307, "Expecting 'stop('"
+2308, "Expecting ')' after stop object"
+2309, "Expecting 'stoplist'"
+2310, "Expecting 'stoplist('"
+2311, "Expecting ')' after stoplist objects"
 
 3000, "Expression does not match declared type"
 3001, "Class inherits thread definition from multiple supertypes"
@@ -834,6 +842,7 @@ as the expected and actual values.
 4157, "Expecting +ive integer in periodic argument <n>"
 4158, "Period argument must be non-zero"
 4159, "Delay argument must be less than the period"
+4160, "Object <#n> is not running a thread to stop"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

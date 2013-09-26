@@ -26,11 +26,13 @@ package org.overturetool.vdmj.scheduler;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.runtime.Context;
+import org.overturetool.vdmj.values.ObjectValue;
 
 public class BasicSchedulableThread implements Serializable
 {
@@ -190,6 +192,24 @@ public class BasicSchedulableThread implements Serializable
 			{
 				th.setSignal(sig);
 			}
+		}
+	}
+
+	public static List<ISchedulableThread> findThreads(ObjectValue target)
+	{
+		synchronized (allThreads)
+		{
+			List<ISchedulableThread> list = new Vector<ISchedulableThread>();
+			
+    		for (ISchedulableThread th: allThreads)
+    		{
+   				if (th.getObject() == target)
+   				{
+   					list.add(th);
+   				}
+    		}
+    		
+    		return list;
 		}
 	}
 

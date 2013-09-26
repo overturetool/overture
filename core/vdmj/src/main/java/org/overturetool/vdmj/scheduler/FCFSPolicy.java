@@ -54,6 +54,7 @@ public class FCFSPolicy extends SchedulingPolicy
 		}
 
 		bestThread = null;
+		durationThread = null;
 	}
 
 	@Override
@@ -71,6 +72,11 @@ public class FCFSPolicy extends SchedulingPolicy
 		synchronized (threads)
 		{
 			threads.remove(thread);
+			
+			if (durationThread == thread)
+			{
+				durationThread = null;
+			}
 		}
 	}
 

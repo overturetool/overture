@@ -35,6 +35,8 @@ import java.util.Vector;
 import org.overturetool.vdmj.Release;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.config.Properties;
+import org.overturetool.vdmj.definitions.BUSClassDefinition;
+import org.overturetool.vdmj.definitions.CPUClassDefinition;
 import org.overturetool.vdmj.definitions.ClassList;
 import org.overturetool.vdmj.lex.Dialect;
 import org.overturetool.vdmj.lex.LexTokenReader;
@@ -181,6 +183,19 @@ abstract public class OvertureTest extends TestCase
 		{
 			Console.out.println(Utils.listToString(actual, "\n"));
 			assertEquals("Expecting no syntax errors", 0, actual.size());
+		}
+		
+		if (Settings.dialect == Dialect.VDM_RT)
+		{
+			try
+			{
+				classes.add(new CPUClassDefinition());
+				classes.add(new BUSClassDefinition());
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);	// Should never happen
+			}
 		}
 
 		TypeChecker typeChecker = new ClassTypeChecker(classes);

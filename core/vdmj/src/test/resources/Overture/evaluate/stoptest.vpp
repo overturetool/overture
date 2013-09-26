@@ -1,0 +1,69 @@
+system SYS
+instance variables
+	static public obj1 : A := new A();
+	static public obj2 : A := new A();
+	
+	cpu1:CPU := new CPU(<FP>, 1E6);
+	cpu2:CPU := new CPU(<FP>, 1E6);
+	
+	bus:BUS := new BUS(<CSMACD>, 1E6, {cpu1, cpu2});
+
+operations
+	SYS: () ==> SYS
+	SYS() ==
+	(
+		cpu1.deploy(obj1, "Test object one");
+		cpu2.deploy(obj2, "Test object two");
+	)
+	
+end SYS
+
+class A
+operations
+	thop: () ==> ()
+	thop() ==
+		while true do skip;
+		
+	public op1: () ==> nat
+	op1() == return 123;
+
+	public null: () ==> ()
+	null() == skip;
+
+	public run: () ==> ()
+	run() == start(self);
+	
+	public kill: () ==> ()
+	kill() == stop(self);
+
+	public kill: A ==> ()
+	kill(obj) == stop(obj);
+
+	public kill: set of A ==> ()
+	kill(objs) == stoplist(objs);
+
+thread
+	thop()
+	
+end A
+
+class Test
+operations
+	public test: () ==> ()
+	test() ==
+	(
+		SYS`obj1.run();
+		SYS`obj1.null();
+		SYS`obj1.kill();
+
+		SYS`obj1.run();
+		SYS`obj2.null();
+		SYS`obj2.kill(SYS`obj1);
+
+		SYS`obj1.run();
+		SYS`obj2.run();
+		SYS`obj2.null();
+		SYS`obj2.kill({SYS`obj1, SYS`obj2});
+	)
+	
+end Test

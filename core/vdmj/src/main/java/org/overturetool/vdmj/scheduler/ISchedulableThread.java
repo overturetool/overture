@@ -57,6 +57,10 @@ public interface ISchedulableThread
 
 	public abstract void suspendOthers();
 
+	public abstract void stopThread();
+	
+	public abstract void reschedule(Context ctxt, LexLocation location);
+
 	public abstract ObjectValue getObject();
 
 	public abstract void setSwapInBy(long swapInBy);

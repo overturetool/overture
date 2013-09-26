@@ -54,11 +54,16 @@ public class Lock implements Serializable
 				waiters.add(th);
 			}
 
-			th.locking(ctxt, location);
-
-			synchronized (waiters)
+			try
 			{
-				waiters.remove(th);
+				th.locking(ctxt, location);
+			}
+			finally
+			{
+				synchronized (waiters)
+				{
+					waiters.remove(th);
+				}
 			}
 		}
 
@@ -94,11 +99,16 @@ public class Lock implements Serializable
 				waiters.add(th);
 			}
 
-			th.waiting(ctxt, location);
-
-			synchronized (waiters)
+			try
 			{
-				waiters.remove(th);
+				th.waiting(ctxt, location);
+			}
+			finally
+			{
+				synchronized (waiters)
+				{
+					waiters.remove(th);
+				}
 			}
 		}
 		while (lockedBy != null);
