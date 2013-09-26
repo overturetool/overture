@@ -1,0 +1,50 @@
+-----------------------------------------------
+-- Author:		Sune Wolf - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	System class in the HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+system HA
+
+-- 
+-- instance variables
+--
+instance variables
+
+  -- cpu for host controller
+  cpu1 : CPU := new CPU(<FCFS>, 1E6);
+  -- cpu for sensors
+  cpu2 : CPU := new CPU(<FCFS>, 1E6);
+  cpu5 : CPU := new CPU(<FCFS>, 1E6);
+  -- cpu for actuators
+  cpu3 : CPU := new CPU(<FCFS>, 1E6);
+  cpu4 : CPU := new CPU(<FCFS>, 1E6);
+
+  -- bus connecting host controller and sensors
+  bus1 : BUS := new BUS(<FCFS>, 1E3, {cpu1, cpu2, cpu3, cpu4, cpu5 });
+
+  public static Host      : HostController := new HostController(20, 75);
+  public static TempNode  : TemperatureSensor := new TemperatureSensor(1, <TEMPSENSOR>, 20);
+  public static HumidNode : HumidSensor := new HumidSensor(2, <HUMIDSENSOR>, 75);
+  public static ThermNode : Thermostat := new Thermostat(3, <THERMOSTAT>);
+  public static WinNode   : Window := new Window(4, <WINDOW>);
+
+--
+-- Operations definition section
+--
+operations
+
+public HA: () ==> HA
+HA() ==
+ (cpu1.deploy(Host);
+  cpu2.deploy(TempNode);
+  cpu5.deploy(HumidNode);
+  cpu3.deploy(ThermNode);
+  cpu4.deploy(WinNode); 
+ );
+
+end HA

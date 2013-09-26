@@ -1,0 +1,36 @@
+\begin{vdm_al} 
+class Sensor is subclass of IIOSSTYPES 
+instance variables
+	private stableController : StableController;
+	private pigs: set of PigId := {}; 
+	
+
+operations
+	public Sensor: StableController ==> Sensor
+	Sensor(controller) == 
+	(	
+		stableController := controller;
+		return self;
+	);
+
+
+	async public trip : EventType * PigId * [Position] ==> ()
+	trip(eventType,pigId, position) == 
+	(
+		if (eventType = <PIG_NEW>) then
+		(
+			stableController.AddPig(pigId, self, position);
+		) 
+		elseif (eventType = <PIG_MOVED>) then
+		(
+			stableController.RemovePig(pigId);
+		);
+	); 
+	 
+end Sensor
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Sensor]
+\end{rtinfo}

@@ -1,0 +1,171 @@
+% LeftController.vdmrt
+
+\subsubsection{Creating the controllers -- the \texttt{LeftController} class}
+
+The \texttt{LeftController} class controls the left wheel and monitors the
+accelerometer and gyroscope. The class \texttt{LeftController} is created by
+subclassing the generic \texttt{Controller} class and by
+overloading the operation prototypes for \texttt{CtrlLoop}, \texttt{PowerUp}
+and \texttt{printDiagnostics}.
+
+\begin{vdm_al}
+class LeftController
+  is subclass of Controller
+
+values
+  -- values for PID controller (acceleration)
+  KP1   : real = 0.009;
+  KI1   : real = 8.69565217391;
+  KD1   : real = 0.02875;
+  BETA1 : real = 0.1
+
+instance variables
+  -- link to the controller
+  public ctrl : DTControl;
+
+  -- sensors connected to the left controller
+  public mAccelerometer : Accelerometer;
+  public mGyroscope : Gyroscope
+
+operations
+  -- constructor for the left motor controller
+  public LeftController: () ==> LeftController
+  LeftController () ==
+    ( -- create the co-sim shared variables
+      ChessWay`acc_in := new Sensor();
+      ChessWay`acc_out := new Actuator();
+      -- create the controller
+      ctrl := new PID(KP1, KI1, KD1, BETA1);
+	  ctrl.SetSampleTime(SAMPLETIME);
+      -- create the sensors
+      mAccelerometer := new Accelerometer(self);
+      mGyroscope := new Gyroscope(self);
+      -- call the controller base constructor
+      Controller("LEFT") )
+
+instance variables
+  -- maintain a link to the other controller
+  private mRight : [RightController] := nil
+
+operations
+  -- auxiliary operation to hook controller models together
+  public setRightController: RightController ==> ()
+  setRightController (pRight) == mRight := pRight
+  pre mRight = nil
+\end{vdm_al}
+
+Two auxiliary variables are introduced that will aid diagnostics.
+\texttt{mLoopCnt} will be incremented every time the control loop
+is executed and \texttt{mDebug} will influence the amount of
+diagnostics messages shown in the output log of the Overture tool.
+
+\begin{vdm_al}
+instance variables
+  -- loop count variable
+  private mLoopCnt : nat := 0;
+
+  -- time at control loop entry
+  private mTimeEntry : nat := 0;
+
+  -- enable debug logging
+  private mDebug : nat := 0
+   
+\end{vdm_al}
+
+The constructor of the \texttt{LeftController} class first initialises
+the accelerometer and the gyroscope. The operation \texttt{setRightController}
+is used by the environment to link the left and right controllers.
+
+\begin{vdm_al}
+operations
+  public CtrlLoopEntry: () ==> ()
+  CtrlLoopEntry () ==
+    ( -- increase the loop counter
+      mLoopCnt := mLoopCnt + 1;
+      -- capture the current time
+      mTimeEntry := time;
+      -- diagnostics
+      if mDebug >= DEBUGCTRLLOOP then
+        IO`printf("LeftController.mainLoop  (S) = %s (%s)\n",
+          [mTimeEntry / 1E9, mLoopCnt]) );
+
+  public CtrlLoopBody: () ==> ()
+  CtrlLoopBody () ==
+    duration (0)
+      ( dcl --hall : bool * bool * bool :=
+            --  mMotorSensor.getHallSensorData(),
+            --acc : real * real * real :=
+            --  mAccelerometer.getAccelerationData(),
+            ---gyro : real :=
+            --  mGyroscope.getYawRateData(),
+            user : real := mEnvironment.getValue("USER");
+        IO`printf("user = %s\n", [user]);
+        -- execute the control loop
+--        mMotorActuator.SetValue(ctrl.Output(mMotorSensor.GetValue()-user));
+        ChessWay`acc_out.SetValue(ctrl.Output(ChessWay`acc_in.GetValue()-user));
+--        -- execute the controller
+--        let pwm = computeResponse(hall, acc, gyro) in
+--          mMotorActuator.setPWM(pwm);
+--        -- local diagnostics 
+--        duration (0)
+--          if ChessWay`debug then
+--            ( -- IO`print("L-HALL  = ");
+--              -- IO`print(hall);  IO`print("\n");
+--              -- IO`print("L-ACC   = ");
+--              -- IO`print(acc);  IO`print("\n");
+--              -- IO`print("L-YRATE = ");
+--              -- IO`print(gyro);  IO`print("\n");
+        skip );
+
+  public CtrlLoopExit: () ==> ()
+  CtrlLoopExit () ==
+    ( dcl mTimeExit : nat := time;
+      -- diagnostics
+      if mDebug >= DEBUGCTRLLOOP then
+        IO`printf("LeftController.mainLoop  (F) = %s (%s)\n",
+          [mTimeExit / 1E9, mLoopCnt]);
+      if mDebug > DEBUGCTRLLOOP then
+        IO`printf("LeftController execution time was %s\n",
+          [(mTimeExit - mTimeEntry) / 1E9]) )
+\end{vdm_al}
+
+The \texttt{CtrlLoop} operation obtains the value of all connected
+sensors and passes these to the \texttt{computeResponse} operation, which
+will return a real value that is in turn passed to the \texttt{setPWM}
+operation of the \texttt{MotorActuator}. Note that the execution time of
+the control loop is 100~msec. The \texttt{PowerUp} operation is called
+once at startup. It initialises the actuator and then starts the periodic
+control loop. 
+
+\begin{vdm_al}
+operations
+  public PowerUp: () ==> ()
+  PowerUp () ==
+    duration (100)
+      ( mMotorActuator.initActuator();
+        mMotorActuator.printDiagnostics() )
+  pre mRight <> nil
+
+operations
+  -- prototype used for simulation diagnostics
+  public printDiagnostics: () ==> ()
+  printDiagnostics () ==
+    duration (0)
+      Controller`printDiagnostics(mLoopCnt)
+\end{vdm_al}
+
+The \texttt{computeResponse} operation processes all the input parameters obtained
+from the sensors in the environment. Note that the on/off behavior is dealt with
+by the other controller, here we set to run forward at 10~percent of its maximum
+power. Since the motor is mounted on the opposite site (it is mirrored), we
+actually have to negate the output signal in order to have the ChessWay move
+forward. 
+
+\begin{vdm_al}
+operations
+  public computeResponse: (bool * bool * bool) *
+    (real * real * real) * real ==> real
+  computeResponse (-, -, -) == return -0.1; 
+
+end LeftController
+\end{vdm_al}

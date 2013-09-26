@@ -1,0 +1,117 @@
+\section{The Class LocalTill}
+
+The class LocalTill acts as an interface between a Channel and the 
+CentralResource, allowing the existing CentralResource class to be 
+used without modification. At the heart of the class, requests are 
+repeatedly removed from the Channel, processed, and responses placed 
+on the Channel.
+
+\begin{vdm_al}
+class LocalTill
+\end{vdm_al}
+
+Since it acts as an interface, the LocalTill has references to the two 
+objects it mediates between: a Channel and the CentralResource. In 
+addition a boolean value is used to represent whether the communication 
+has failed or not (this is used for modelling purposes, allowing us to 
+test behaviour of the overall model in the presence of failed communication).
+
+\begin{vdm_al}
+instance variables
+  c: Channel;
+  resource : CentralResource;
+  enabled : bool := true;
+\end{vdm_al}
+
+The heart of this class is its thread, so we being by describing it. 
+The thread repeatedly receives requests from the Channel and processes them, 
+as long as enabled is true. Note that due to the synchronization constraints 
+in Channel, the call to c.ReceiveRequest will block until a request has been 
+sent by a Till. Also, as well as the looping condition there is a second 
+check of enabled in the body of the loop in case it has changed while the 
+thread was waiting for a request.
+
+\begin{vdm_al}
+thread
+  while enabled do
+      let req = c.ReceiveRequest() in
+      if enabled
+      then ProcessRequest(req);
+\end{vdm_al}
+
+As can be seen from the thread, the main operation in this class is 
+ProcessRequest. This takes a request, converts it into a call to the 
+CentralResource, then converts the result from CentralResource into a 
+response and sends this to the Channel. Of course the call to CentralResource 
+will depend upon the kind of request made, so a case statement is used to 
+distinguish these requests.
+
+\begin{vdm_al}
+operations
+
+  ProcessRequest : Channel`Request ==> ()
+  ProcessRequest(req) ==
+   (dcl respdata : Channel`RespData;
+    cases req:
+        mk_Channel`Request(
+            <Withdrawal>, {mk_Channel`AccountId(accId),
+                           mk_Channel`CardId(cardId),
+                           mk_Channel`Amount(amt)})     
+          -> respdata := resource.Withdrawal(accId, cardId, amt),
+        mk_Channel`Request(
+            <PostStmt>, {mk_Channel`AccountId(accId),
+                         mk_Channel`CardId(cardId)})
+          -> respdata := resource.PostStatement(accId, cardId),
+        mk_Channel`Request(
+            <IsLegalCard>, {mk_Channel`AccountId(accId),
+                            mk_Channel`CardId(cardId)})
+          -> respdata := resource.IsLegalCard(accId, cardId),
+        mk_Channel`Request(
+            <GetBalance>, {mk_Channel`AccountId(accId)})
+          -> respdata := resource.GetBalance(accId),
+        mk_Channel`Request(
+            <TriesExceeded>, {mk_Channel`CardId(cardId)})
+          -> respdata := resource.NumberOfTriesExceeded(cardId),
+        mk_Channel`Request(
+            <ResetTries>, {mk_Channel`CardId(cardId)})
+          -> (resource.ResetNumberOfTries(cardId);
+              respdata := nil),       
+        mk_Channel`Request(
+            <IncTries>, {mk_Channel`CardId(cardId)})
+          -> (resource.IncrNumberOfTries(cardId);
+              respdata := nil)
+    end;
+    c.SendResponse(mk_Channel`Response(req.command, respdata)));
+\end{vdm_al}
+
+Finally we have a few minor operations. Create is used to initialize the 
+Channel and CentralResource.
+
+\begin{vdm_al}
+  public LocalTill : Channel * CentralResource ==> LocalTill
+  LocalTill(nc, nr) ==
+    (c := nc;
+     resource := nr);
+\end{vdm_al}
+
+Fail is used to set the enabled flag to false, when we wish to analyse the 
+behaviour of failed communication.
+
+\begin{vdm_al}
+  public Fail : () ==> ()
+  Fail() ==
+    enabled := false;
+\end{vdm_al}
+
+Repair is used if we wish to reset the communication following a failure. 
+Note that a fresh Channel is used as this gives reset history counters.
+
+\begin{vdm_al}
+  public Repair : Channel ==> ()
+  Repair(nc) ==
+   (c := nc;
+    enabled := true);
+
+end LocalTill
+\end{vdm_al}
+

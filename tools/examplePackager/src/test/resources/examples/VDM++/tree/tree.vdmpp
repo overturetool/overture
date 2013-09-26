@@ -1,0 +1,103 @@
+
+class Tree
+
+  types
+
+    public
+    tree = <Empty> | node;
+    
+    public
+    node :: lt: Tree
+            nval : int
+            rt : Tree
+
+  instance variables
+    protected root: tree := <Empty>;
+
+
+
+  operations
+
+    protected
+    nodes : () ==> set of node
+    nodes () ==
+      cases root:
+        <Empty> -> return ({}),
+        mk_node(lt,v,rt) -> return(lt.nodes() union rt.nodes()),
+        others -> error
+      end ;
+
+    protected
+    addRoot : int ==> ()
+    addRoot (x) ==
+      root := mk_node(new Tree(),x,new Tree());
+
+
+    protected
+    rootval : () ==> int
+    rootval () == return root.nval
+    pre root <> <Empty>;
+
+    protected
+    gettree : () ==> tree
+    gettree () == return root;
+
+    protected
+    leftBranch : () ==> Tree
+    leftBranch () == return root.lt
+    pre not isEmpty();
+
+    protected
+    rightBranch : () ==> Tree
+    rightBranch () == return root.rt
+    pre not isEmpty();
+
+    public
+    isEmpty : () ==> bool
+    isEmpty () == return (root = <Empty>);
+
+    public
+    breadth_first_search : () ==> seq of int 
+    breadth_first_search () ==
+       if isEmpty()
+       then return []
+       else 
+         (dcl to_visit: Queue := new Queue();
+          dcl visited : seq of int := [];
+
+          to_visit.Enqueue(gettree());
+  
+          while (not to_visit.isEmpty()) do
+            def curr_node = to_visit.Dequeue()
+            in ( visited := visited^[curr_node.nval];
+                 if not curr_node.lt.isEmpty()
+                 then to_visit.Enqueue(curr_node.lt.gettree());
+                 if not curr_node.lt.isEmpty()
+                 then to_visit.Enqueue(curr_node.rt.gettree());
+               );
+          return (visited));
+
+    public
+    depth_first_search : () ==> seq of int
+    depth_first_search () ==
+      cases root:
+         <Empty> -> return [],
+         mk_node(lt,v,rt) -> let ln = lt.depth_first_search(),
+                                 rn = rt.depth_first_search()
+                             in return [v]^ln^rn,
+		others -> error                             
+      end;
+
+    public inorder : () ==> seq of int
+    inorder () ==
+      cases root:
+        <Empty> -> return [],
+        mk_node(lt,v,rt) -> let ln = lt.inorder(),
+                                rn = rt.inorder()
+                            in return ln^[v]^rn,
+		others -> error                            
+      end
+
+
+end Tree
+    

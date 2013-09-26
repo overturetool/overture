@@ -1,0 +1,37 @@
+% DirectionSwitch.vdmrt
+
+\subsubsection{Observing user behavior -- the \texttt{DirectionSwitch} class}
+
+The \texttt{DirectionSwitch} class obtains the status of the direction switch
+from the environment and translates this into an enumeration. Note that the
+direction switch status needs to be regularly checked by the controller.
+There is no event notification, it is a pure data pull mechanism.
+
+\begin{vdm_al}
+class DirectionSwitch
+
+instance variables
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public DirectionSwitch: Controller ==> DirectionSwitch
+  DirectionSwitch (pController) == mController := pController
+
+types
+  public tDirectionStatus = <LEFT> | <NEUTRAL> | <RIGHT>
+
+operations
+  public getStatus: () ==> tDirectionStatus
+  getStatus () == 
+    duration (0)
+      ( dcl dir : real := mController.getValue("DIRECTION");
+        -- negative value indicates left turn
+        if dir < 0.0 then return <LEFT>;
+        -- positive value indicates right turn
+        if dir > 0.0 then return <RIGHT>;
+        -- zero indicates no turn - move straight
+        return <NEUTRAL> )
+
+end DirectionSwitch
+\end{vdm_al}

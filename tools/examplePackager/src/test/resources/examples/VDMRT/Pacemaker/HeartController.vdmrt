@@ -1,0 +1,166 @@
+\section{HeartController class}
+
+This is the core class monitoring and regulating the heart.
+
+\begin{vdm_al}
+class HeartController is subclass of GLOBAL
+
+instance variables 
+
+ leads     : map Chamber to Lead;
+ sensed    : map Chamber to Sense;
+ finished  : bool;
+ mode      : Mode;
+ FixedAV   : Time;
+ lastpulse : Time;
+ ARP       : Time;
+ interval  : Time;
+\end{vdm_al}
+
+\begin{vdm_al}
+
+operations
+ 
+ public 
+ HeartController : () ==> HeartController
+ HeartController() == 
+   (
+    leads     := {|->};
+    sensed    := {|->};
+    finished  := false;
+    mode      := <AAT>;
+    FixedAV   := 1500;
+    lastpulse := 0;
+    ARP       := 2500;
+    interval  := Pacemaker`rateController.getInterval();
+   );
+
+\end{vdm_al}
+
+\begin{vdm_al}
+
+ public 
+ addLeadPacer : Lead ==> ()
+ addLeadPacer (lead) == 
+   leads := leads ++ {lead.getChamber() |-> lead};
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ pace : ()  ==> ()
+ pace () == 
+   (cases mode :
+         <AOO>  -> PaceAOO(),
+         <AAT>  -> PaceAAT(),
+         <DOO>  -> PaceDOO(),
+         <OFF>  -> skip,
+         others -> error
+    end;
+    sensed := {|->}
+   );
+
+\end{vdm_al}
+
+AOO mode.
+
+\begin{vdm_al}
+ private
+ PaceAOO : () ==> ()
+ PaceAOO () == 
+   let curTime : Time = time
+   in if (interval + lastpulse <= curTime)
+      then (
+            lastpulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  ;
+\end{vdm_al}
+
+AAT mode.
+
+\begin{vdm_al}
+ private
+ PaceAAT : () ==> ()
+ PaceAAT () == 
+   let curTime : Time = time
+   in if <ATRIA> in set dom sensed and sensed(<ATRIA>) = <PULSE>
+      then if curTime - lastpulse <= ARP 
+           then skip
+           else (
+                 lastpulse := curTime;
+                 leads(<ATRIA>).addLeadPace(<TRI_PULSE>,curTime)
+                 )
+      elseif (interval + lastpulse <= curTime)
+      then (
+            lastpulse  := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  ;
+\end{vdm_al}
+
+DOO mode.
+
+\begin{vdm_al}
+ private
+ PaceDOO : () ==> ()
+ PaceDOO () == 
+   let curTime : Time = time
+   in (if (interval + lastpulse <= curTime)
+       then (
+            lastpulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime);
+            leads(<VENTRICLE>).addLeadPace(<PULSE>,curTime + FixedAV)
+           )
+       else skip;
+       )
+  ;
+\end{vdm_al}
+
+
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> ()
+ isFinished () == for all lead in set rng leads do
+                     lead.isFinished();
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ sensorNotify : Sense * Chamber ==> ()
+ sensorNotify (s,c) == 
+   (sensed := sensed ++ {c |-> s});
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ setInterval : Time ==> ()
+ setInterval (t) == interval := t;
+\end{vdm_al}
+
+To switch the operating modes one should use
+
+\begin{vdm_al}
+ public 
+ setMode : Mode ==> ()
+ setMode (m) == 
+   (mode := m);
+\end{vdm_al}
+
+\begin{vdm_al}
+thread
+ periodic (200E6,0,190,0) (pace);
+   
+sync
+
+per isFinished => sensed = {|->} and #active(pace) = 0;
+
+
+
+mutex(sensorNotify,pace,setInterval);
+mutex(sensorNotify,PaceAOO,PaceDOO,PaceAAT);
+end HeartController
+\end{vdm_al}

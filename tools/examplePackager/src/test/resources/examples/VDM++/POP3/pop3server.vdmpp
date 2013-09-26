@@ -1,0 +1,315 @@
+\section{The POP3 Server Class}
+
+\begin{vdm_al}
+class POP3Server
+
+types
+\end{vdm_al}
+
+\begin{vdm_al}
+public MessageInfo :: index : nat
+                      size  : nat;
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  connChannel: MessageChannelBuffer;
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+  maildrop      : MailDrop;
+  passwords     : map POP3Types`UserName to 
+                  POP3Types`Password;
+  locks         : map ClientHandlerId to 
+                  POP3Types`UserName;
+  serverStarted : bool := false;
+inv dom passwords = dom maildrop and
+    rng locks subset dom maildrop;
+ 
+types
+
+public MailDrop = map POP3Types`UserName to MailBox;
+public MailBox :: 
+  msgs   : seq of POP3Message
+  locked : bool;
+public ClientHandlerId = nat;
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public POP3Server: POP3Server`MailDrop * MessageChannelBuffer * 
+                   map POP3Types`UserName to POP3Types`Password ==> POP3Server
+POP3Server(nmd, nch, npasswords) ==
+( maildrop    := nmd;
+  connChannel := nch;
+  locks       := {|->};
+  passwords   := npasswords
+);
+
+public AuthenticateUser: POP3Types`UserName * POP3Types`Password ==> bool
+AuthenticateUser(user, password) ==
+  return user in set dom passwords and
+         passwords(user) = password;
+
+public IsLocked: POP3Types`UserName ==> bool
+IsLocked(user) ==
+  return user in set rng locks;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+SetUserMessages: POP3Types`UserName * seq of POP3Message 
+                 ==> ()
+SetUserMessages(user, newMsgs) ==
+  maildrop(user) := mu(maildrop(user), msgs |-> newMsgs);
+\end{vdm_al}
+
+\begin{vdm_al}
+GetUserMail: POP3Types`UserName ==> MailBox
+GetUserMail(user) ==
+  return maildrop(user);
+\end{vdm_al}
+
+\begin{vdm_al}
+sync
+  mutex(SetUserMessages);
+  mutex(SetUserMessages, GetUserMail)
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+GetUserMessages: POP3Types`UserName ==> seq of POP3Message
+GetUserMessages(user) ==
+  return GetUserMail(user).msgs;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public RemoveDeletedMessages: POP3Types`UserName ==> bool
+RemoveDeletedMessages(user) ==
+  let oldMsgs = GetUserMessages(user),
+      newMsgs = [ oldMsgs(i) | i in set inds oldMsgs
+                             & not oldMsgs(i).IsDeleted()]
+  in
+    ( SetUserMessages(user, newMsgs);
+      return true
+    );
+\end{vdm_al}
+
+\begin{vdm_al}
+public AcquireLock: ClientHandlerId * POP3Types`UserName ==> ()
+AcquireLock (clId, user) ==
+  locks := locks ++ { clId |-> user}
+pre clId not in set dom locks and
+    user in set dom maildrop;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public ReleaseLock: ClientHandlerId ==> ()
+ReleaseLock(clId) ==
+  locks := {clId} <-: locks
+pre clId in set dom locks;
+
+sync
+mutex(AcquireLock);
+mutex(ReleaseLock);
+mutex(AcquireLock, ReleaseLock, IsLocked);
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+CreateClientHandler: MessageChannel ==> ()
+CreateClientHandler(mc) ==
+  start(new POP3ClientHandler(self, mc));
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public IsMessageNumber: POP3Types`UserName * nat ==> bool
+IsMessageNumber(user, index) ==
+  let mb = GetUserMessages(user) 
+  in
+    return index in set inds mb;  
+
+public IsValidMessageNumber: POP3Types`UserName * nat ==> bool
+IsValidMessageNumber(user, index) ==
+  let mb = GetUserMessages(user) 
+  in
+    return index in set inds mb and
+           not mb(index).IsDeleted();
+
+public MessageIsDeleted: POP3Types`UserName * nat ==> bool
+MessageIsDeleted(user, index) ==
+  let mb = GetUserMessages(user) 
+  in
+    return index in set inds mb and
+           mb(index).IsDeleted();
+
+public DeleteMessage: POP3Types`UserName * nat ==> ()
+DeleteMessage(user, index) ==
+  let oldMsg = GetUserMessages(user)(index),
+      newMsg = oldMsg.Delete()
+  in
+    SetUserMessages(user, GetUserMessages(user) ++ { index |-> newMsg })
+pre user in set dom maildrop and
+    let mb = maildrop(user).msgs 
+    in index in set inds mb and
+       not mb(index).IsDeleted();
+
+public GetMsgHeader: POP3Types`UserName * nat ==> seq of char
+GetMsgHeader(user, index) ==
+  let mb = GetUserMessages(user) 
+  in
+    return mb(index).GetHeader()
+pre user in set dom maildrop and
+    let mb = maildrop(user).msgs 
+    in index in set inds mb and
+       not mb(index).IsDeleted();
+
+public GetMsgBody: POP3Types`UserName * nat ==> seq of char
+GetMsgBody(user, index) ==
+  let mb = GetUserMessages(user) 
+  in
+    return mb(index).GetBody()
+pre user in set dom maildrop and
+    let mb = maildrop(user).msgs 
+    in index in set inds mb and
+       not mb(index).IsDeleted();
+
+
+
+public ResetDeletedMessages: POP3Types`UserName ==> ()
+ResetDeletedMessages(user) ==
+  let oldMsgs = GetUserMessages(user),
+      newMsgs = [ oldMsgs(i).Undelete() 
+                | i in set inds oldMsgs ]
+  in
+    SetUserMessages(user, newMsgs)
+pre user in set dom maildrop;
+
+public GetMessageText: POP3Types`UserName * nat ==> seq of char
+GetMessageText(user, index) ==
+  return GetUserMessages(user)(index).GetText()
+pre user in set dom maildrop and
+    let mb = GetUserMessages(user) 
+    in
+      index in set inds mb and
+      not mb(index).IsDeleted();
+
+public GetMessageSize: POP3Types`UserName * nat ==> nat
+GetMessageSize(user, index) ==
+  return GetUserMessages(user)(index).GetSize()
+pre user in set dom maildrop and
+    let mb = maildrop(user).msgs 
+    in
+      index in set inds mb and
+      not mb(index).IsDeleted();
+
+public GetMessageInfo: POP3Types`UserName * [nat] ==> set of MessageInfo
+GetMessageInfo(user, index) ==
+  let mb = GetUserMessages(user) in
+  if index = nil
+  then 
+    return elems [mk_MessageInfo(i, 
+                                 GetMessageSize(user, i)) |
+                  i in set inds mb & not mb(i).IsDeleted()]
+  else
+    return { mk_MessageInfo(index, 
+                            GetMessageSize(user, index)) }
+pre index <> nil => (index in set inds maildrop(user).msgs and
+                       not maildrop(user).msgs(index).IsDeleted());
+
+\end{vdm_al}
+
+\begin{vdm_al}
+
+public GetUidl: POP3Types`UserName * nat ==> seq of char
+GetUidl (user, index) ==
+  let mb = GetUserMessages(user)
+  in
+    return POP3ClientHandler`int2string(index) ^" " ^
+           mb(index).GetUniqueId();
+
+public GetAllUidls:  POP3Types`UserName ==> seq of seq of char
+GetAllUidls(user) == 
+  let mb = GetUserMessages(user)
+  in
+    return [GetUidl(user, index) | index in set inds mb];
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public GetNumberOfMessages: POP3Types`UserName ==> nat
+GetNumberOfMessages(user) ==
+  return len GetUserMessages(user)
+pre user in set dom maildrop;
+
+\end{vdm_al}
+
+\begin{vdm_al}
+public GetMailBoxSize: POP3Types`UserName ==> nat
+GetMailBoxSize(user) ==
+  let mb = GetUserMail(user) in
+  return sumseq ( [mb.msgs(i).GetSize()| i in set inds mb.msgs] )
+pre user in set dom maildrop;
+
+public GetChannel: () ==> MessageChannelBuffer
+GetChannel() ==
+  return connChannel;
+\end{vdm_al}
+
+\begin{vdm_al}
+functions
+
+public sumseq: seq of nat -> nat
+sumseq(s) ==
+  if s = []
+  then 0
+  else hd s + sumseq(tl s)
+measure Len;
+
+Len: seq of nat -> nat
+Len(l) ==
+  len l; 
+
+\end{vdm_al}
+
+\begin{vdm_al}
+thread
+
+while true do
+( let msgChannel = connChannel.Get() 
+  in
+    CreateClientHandler(msgChannel);
+  serverStarted := true;
+)
+\end{vdm_al}
+
+\begin{vdm_al}
+operations
+
+public WaitForServerStart: () ==> ()
+WaitForServerStart() ==
+  skip;
+
+sync
+
+per WaitForServerStart => serverStarted;
+\end{vdm_al}
+
+\begin{vdm_al}
+end POP3Server
+\end{vdm_al}
+
+
+
+\begin{rtinfo}
+{rtinfo.ast}[POP3Server]
+\end{rtinfo}

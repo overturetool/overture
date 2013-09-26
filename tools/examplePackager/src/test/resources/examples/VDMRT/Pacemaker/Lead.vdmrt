@@ -1,0 +1,108 @@
+\section{Lead class}
+
+The Lead models a Pacemaker lead that read and write pulse values from 
+and to the heart. Each lead its attached to a specific chamber and this 
+is captured using the instance variable chamber.
+
+
+\begin{vdm_al}
+class Lead is subclass of GLOBAL
+
+instance variables
+
+ private chamber : Chamber;       
+ private scheduledPulse : [(Time * Pulse)];
+
+operations
+
+ public 
+ Lead: Chamber ==> Lead
+ Lead(chm) == 
+   (
+    chamber := chm;
+    scheduledPulse := nil
+   );
+\end{vdm_al}
+
+This is an auxiliar function that inspect the chamber where this lead is 
+attached to.
+
+\begin{vdm_al} 
+
+ public 
+ getChamber: () ==> Chamber
+ getChamber () == return chamber;
+\end{vdm_al}
+
+Whenever theres an electrical pulse in that chamber the environment will 
+call the following stimulate operation.
+
+\begin{vdm_al}
+
+ public 
+ stimulate : Sense ==> ()
+ stimulate (s) == Pacemaker`heartController.sensorNotify(s,chamber);
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip;
+
+\end{vdm_al}
+
+The following operation discharges a pulse to the heart.
+
+\begin{vdm_al}
+ public 
+ addLeadPace : Pulse * Time ==> ()
+ addLeadPace (p,t) == 
+   if t <= time
+   then dischargePulse(p,chamber)
+   else (scheduledPulse := mk_(t,p);
+         return);
+\end{vdm_al}
+
+\begin{vdm_al}
+ private 
+ dischargePulse : Pulse * Chamber ==> ()
+ dischargePulse (p,c) ==
+    duration(4)
+    World`env.handleEvent(p,c,time);
+\end{vdm_al}
+
+\begin{vdm_al}
+ private 
+ followPlan : () ==> ()
+ followPlan () ==
+    (
+     dcl curTime : Time := time;
+     if scheduledPulse <> nil
+     then if(curTime >= scheduledPulse.#1) 
+          then (dischargePulse(scheduledPulse.#2,chamber);
+                scheduledPulse := nil);
+     
+   );
+   
+      
+\end{vdm_al}
+
+
+\begin{vdm_al}
+thread
+  periodic (50E6,0,49,0) (followPlan)
+
+
+\end{vdm_al}
+
+\begin{vdm_al}
+sync
+
+mutex(addLeadPace);
+mutex(dischargePulse);
+mutex(followPlan);
+per isFinished =>  scheduledPulse = nil;
+
+end Lead 
+\end{vdm_al}

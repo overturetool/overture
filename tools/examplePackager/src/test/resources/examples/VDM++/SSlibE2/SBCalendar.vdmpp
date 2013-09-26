@@ -1,0 +1,194 @@
+\section{SBCalendar}
+\subsection{Responsibility}
+I'm a calendar of Japanese borkerage firm.
+
+\subsection{Abstract}
+I consider day off of company, country.
+
+\begin{vdm_al}	
+class SBCalendar is subclass of JapaneseCalendar -- date
+
+values
+	io = new IO();
+	calendar = new SBCalendar();
+
+instance variables
+
+public iTodayOnBusiness : [Date] := nil;	-- This value express today for test.
+public iTodayOnCompanyMap : [map seq of char to Date] := { |-> };		-- a map of companyCode to todayOnBusiness
+public timeOfSystem : [Time] := nil;	-- This value express now for test.
+
+functions
+
+static public isCorrectContractMonth: seq of char -> bool
+isCorrectContractMonth(aContractMonth) ==
+	calendar.getDateFromString(aContractMonth ^ "01") <> false;
+
+static public getExerciseDate :  seq of char -> Date
+getExerciseDate(aContractMonth) ==
+	let	firstDayOfContractMonth = calendar.getDateFromString(aContractMonth ^ "01"),
+		designatedYear = firstDayOfContractMonth.Year(),
+		designatedMonth =firstDayOfContractMonth.Month()	in
+	calendar.getNthDayOfTheWeek(designatedYear,designatedMonth,2,<Fri>).getPastWeekday()
+pre
+	isCorrectContractMonth(aContractMonth);
+\end{vdm_al}
+
+\subsubsection{getContractDate}
+信用取引の決済日（期日）を得る。
+弁済期限とは、信用建玉に対して当社がお客様に信用を供与する期限をいいます。弁済期限は、現在のところ6ヶ月のみを取扱っています。
+弁済期限が6ヶ月であるということは、信用建玉の建日（信用建玉が約定した日）の6ヶ月目応当日が信用期日となり、この日を超えて建玉を保有することは法律で禁じられています。信用期日が休日の場合には、直近の前営業日が信用期日となります。
+
+この日本語仕様だと、以下の問題があります。
+\begin{enumerate}
+\item 応答日の定義がない。
+\item たとえば信用建玉の建日が８月３１日だと、応当日は翌年２月３１日になってしまうのだが、そのとき２月２９日にするのか３月１日にするのかの記述がない。
+\item 応当日からfirstDayOfMonthまですべて休日の場合、前月の営業日にしてよいのかどうかの記述がない。
+\item 信用取引の決済日（信用期日）と弁済期限が同じものを指しているが、明確な定義がない。
+\end{enumerate}
+
+\begin{vdm_al}	
+static public getContractDate : Date -> Date 
+getContractDate(aDate) == 	
+	let	 
+		mk_(year, month) = calendar.getMonthOf6monthsLater(aDate.Year(), aDate.Month()),
+		date = aDate.day(),
+		candidateDate = getCandidateDate(year, month, date)
+	in
+	candidateDate.getPastWeekday()	--Sometime the result is a date of previous month. 
+--pre
+	--aDate.isNotDayOff()
+post	
+	let	
+		mk_(year, month) = calendar.getMonthOf6monthsLater(aDate.Year(), aDate.Month()),
+		date = aDate.day(),
+		candidateDate = getCandidateDate(year, month, date) 
+	in
+	RESULT.EQ(candidateDate.getPastWeekday()) and
+	if isDayoffFromTheBeginingOfMonthToCandidateDate(candidateDate) then
+		RESULT.Month() = getPreviousMonth(year, month) 
+	else
+		RESULT.Month() = month;
+
+static public getMonthOf6monthsLater :  int * int ->  int * int
+getMonthOf6monthsLater(year, month) == calendar.getRegularMonth(year, month+6);
+
+static public getCandidateDate : int * int * int -> Date
+getCandidateDate(year, month, date)  == 
+		let	dateOfEndOfMonth = calendar.getLastDayOfMonth(year, month)
+		in
+			if dateOfEndOfMonth.day() < date then
+				dateOfEndOfMonth
+			else
+				calendar.getDateFrom_yyyy_mm_dd(year, month, date);
+
+static public isDayoffFromTheBeginingOfMonthToCandidateDate : Date -> bool
+isDayoffFromTheBeginingOfMonthToCandidateDate(candidateDate) == 
+	forall day in set {1, ..., candidateDate.day()} & 
+		calendar.isSundayOrDayoff(calendar.getDateFrom_yyyy_mm_dd(candidateDate.Year(), candidateDate.Month(), day));
+
+static public getPreviousMonth : int * int -> int
+getPreviousMonth(year, month) == 
+		let	mk_(-, previousMonth) = calendar.getRegularMonth(year, month-1)
+		in
+		previousMonth;
+
+static public isDateNil: [Date] -> bool
+isDateNil(date) ==  date = nil; --or date = maxDate();
+
+static public systemDate : () -> Date
+systemDate() == calendar.today();
+
+operations
+public setTheSetOfDayOffs: int ==> () 	-- get the set of dayoff, but Sundays are not in set
+setTheSetOfDayOffs(year) ==
+	let	japaneseCalendar = new JapaneseCalendar(),
+		japaneseDayoffSet = japaneseCalendar.getSetOfDayOff(year),
+		TR1のsetOfDayOff = {
+			japaneseCalendar.getDateFrom_yyyy_mm_dd(year,1,2), 
+			japaneseCalendar.getDateFrom_yyyy_mm_dd(year,1,3), 
+			japaneseCalendar.getDateFrom_yyyy_mm_dd(year,12,29), 
+			japaneseCalendar.getDateFrom_yyyy_mm_dd(year,12,30), 
+			japaneseCalendar.getDateFrom_yyyy_mm_dd(year,12,31)
+		},
+		saturdaySet = japaneseCalendar.getDayOfTheWeekInYear(year,<Sat>) 	in
+	Year2Holidays := Year2Holidays munion { year |-> japaneseDayoffSet union TR1のsetOfDayOff union saturdaySet}
+pre
+	year >= 2000;
+
+--todayOnBusinessをreadFromFile
+public readTodayOnBusiness : seq of char ==> [Date]
+readTodayOnBusiness(fname) ==
+	let	mk_(rslt, mk_(y,m,d)) = io.freadval[int * int * int](fname)
+	in
+	if rslt then
+		return getDateFrom_yyyy_mm_dd(y,m,d)
+	else
+		let	- = io.echo("Can't read BaseDay's data file.")
+		in
+		return nil;
+
+--get today for test
+public todayOnBusiness: () ==> Date
+todayOnBusiness() == 
+	if iTodayOnBusiness = nil then
+		return readTodayOnBusiness(homedir ^ "/temp/BaseDay.txt")
+	else
+		return iTodayOnBusiness;
+
+public readFromFiletodayOnBusiness: seq of char ==> Date
+readFromFiletodayOnBusiness(fname) == 
+	if iTodayOnBusiness = nil then
+		return readTodayOnBusiness(fname)
+	else
+		return iTodayOnBusiness;
+
+public setTodayOnBusiness : Date ==> ()
+setTodayOnBusiness(date) == iTodayOnBusiness := date;
+
+-- get today for system. For example, many business systems thinks just after midnight is as "today"
+public todayOnCompany: seq of char ==> Date
+todayOnCompany(companyCode) == 
+	(
+	if iTodayOnCompanyMap = nil then
+		setTodayOnCompany(companyCode,todayOnBusiness());
+	return iTodayOnCompanyMap(companyCode)
+	);
+
+public setTodayOnCompany : seq of char * Date ==> ()
+setTodayOnCompany(companyCode,date) == iTodayOnCompanyMap := iTodayOnCompanyMap ++ { companyCode |-> date };
+
+public readSystemTime : () ==> [Time]
+readSystemTime() ==
+	let	mk_(rslt, now) = io.freadval[Time](homedir ^ "/temp/SystemTime.txt")
+	in
+	if rslt then
+		return now
+	else
+		let	- = io.echo("Can't read System Time data file.")
+		in
+		return nil;
+
+public systemTime : () ==> Time
+systemTime() == 
+	if timeOfSystem = nil then
+		readSystemTime()
+	else
+		return timeOfSystem;
+
+public setSystemTime : Time ==> ()
+setSystemTime(t) ==  timeOfSystem := t;
+
+public SBCalendar : () ==> SBCalendar
+SBCalendar() ==
+	(
+	setDifferenceWithGMT(differenceBetweenGMTandJST); 
+	return self
+	);
+	
+end SBCalendar
+\end{vdm_al}
+
+\begin{rtinfo}
+[SBCalendar]{vdm.tc}[SBCalendar]
+\end{rtinfo}

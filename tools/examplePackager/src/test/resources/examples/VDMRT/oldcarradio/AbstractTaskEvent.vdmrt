@@ -1,0 +1,16 @@
+\begin{vdm_al}
+class AbstractTaskEvent
+
+instance variables
+  abstask : AbstractTask;
+  ev : Event
+
+operations
+  public AbstractTaskEvent: AbstractTask * Event ==> AbstractTaskEvent
+  AbstractTaskEvent (pat, pev) == (abstask := pat; ev := pev);
+
+  public getFields: () ==> AbstractTask * Event
+  getFields () == return mk_ (abstask, ev)
+
+end AbstractTaskEvent
+\end{vdm_al}

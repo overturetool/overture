@@ -1,0 +1,66 @@
+\section{World class}
+
+The World class as its name tell is the class modelling the world 
+where the system and environment will co-exist.
+
+\begin{vdm_al}
+class World is subclass of GLOBAL 
+
+types
+
+instance variables
+
+public static env : [Environment] := nil;
+\end{vdm_al}
+
+The World constructor its the responsible for connect system and 
+environment.
+
+\begin{vdm_al}
+operations
+
+public World: seq of char * GLOBAL`Mode ==> World
+World(filename,mode) == 
+  (  -- create an environment
+     env := new Environment(filename);
+
+     -- bind leads to the environment
+     env.addLeadSensor(Pacemaker`atriaLead);
+     env.addLeadSensor(Pacemaker`ventricleLead);
+   
+     -- bind accelerometer to the environment
+     env.addAccelerometer(Pacemaker`accelerometer);
+    
+     -- bind leads to the controler
+        -- bind leads to the controler
+     Pacemaker`heartController.addLeadPacer(Pacemaker`atriaLead);
+     Pacemaker`heartController.addLeadPacer(Pacemaker`ventricleLead);
+     
+     -- set up mode
+     Pacemaker`heartController.setMode(mode);        
+
+     start(Pacemaker`heartController);
+     start(Pacemaker`rateController);
+     start(Pacemaker`atriaLead);
+     start(Pacemaker`ventricleLead);
+     
+     
+  );
+\end{vdm_al}
+
+And Run is the operation that starts a test sequence.
+
+\begin{vdm_al}
+
+public Run: () ==> ()
+Run () == 
+  ( 
+   start(env); 
+   env.isFinished();
+   Pacemaker`heartController.isFinished();
+   env.showResult()
+  );
+  
+
+end World
+\end{vdm_al}

@@ -1,0 +1,43 @@
+\section{SNW class}
+\begin{vdm_al}
+
+
+class SNW is subclass of Strategy
+
+
+instance variables
+
+private state : State := <run>;
+
+types
+
+public State =  <run> | <halt>;
+
+operations
+
+
+
+
+strategyInit : () ==> ()
+strategyInit() == 
+(
+	state := <halt>
+);
+
+strategyNotify : () ==> ()
+strategyNotify() == is subclass responsibility;
+
+
+strategyEnd : () ==> ()
+strategyEnd() == 
+(
+	state := <run>;
+);
+
+handleEvents : ActivePlanManager ==> ()
+handleEvents(apm) == is subclass responsibility;
+
+
+end SNW
+
+\end{vdm_al}

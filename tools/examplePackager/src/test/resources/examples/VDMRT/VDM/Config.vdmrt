@@ -1,0 +1,56 @@
+\section{Config Class}
+
+\begin{vdm_al}
+-----------------------------------------------
+-- Class:			Config
+-- Description: 	Config contains configuration values
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Config
+
+--
+-- instance variables
+--
+instance variables
+--
+-- Types definition section
+--
+types   
+
+--
+-- Operations definition section
+--
+operations
+	
+--
+-- Functions definition section
+--
+functions
+
+--
+-- Values definition section
+--
+values
+--indicates the range in which units in the system can see each other
+public static Range : nat = 1;   				
+--indicates the periode for which a TrafficData Message is valid
+public static TrafficDataLifeTime : nat = 5000; 
+--indicates the number of TrafficData Message held by the a vdm units	
+public static TrafficDataKeeptNumber : nat = 5; 
+--indicates the number of vehicles held for calculation congestion
+public static TrafficCongestionTrack : nat = 5; 
+--indicates the vehicle range for congestion
+public static TrafficCongestionRange : nat = 1; 
+ --indicates the threshold speed for congestion
+public static TrafficCongestionThreshold : nat = 2;
+end Config
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Config]
+\end{rtinfo}

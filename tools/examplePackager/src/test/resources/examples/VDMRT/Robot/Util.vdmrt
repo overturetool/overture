@@ -1,0 +1,32 @@
+class Util
+ 
+ 
+operations
+ 
+ public static PrintValue: Grid`Point ==> ()
+ PrintValue(p) ==
+ (
+   def file = new IO()
+   in
+     def - = file.writeval[int *  int](mk_(p.X,p.Y)) in skip;
+ );
+ public static PrintDebug : seq of char ==> ()
+ PrintDebug(debugData) ==
+ (
+   def file = new IO()
+   in
+     def - = file.echo(debugData ^ "\n") in skip;
+ );
+ 
+ 
+ public static PrintInt: int ==> ()
+ PrintInt(i) ==
+ (
+   def file = new IO()
+   in
+     def - = file.writeval[int](i) in skip;
+ );
+ 
+ 
+ 
+end Util

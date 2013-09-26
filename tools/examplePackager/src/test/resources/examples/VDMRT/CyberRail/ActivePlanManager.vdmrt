@@ -1,0 +1,254 @@
+
+\section{ActivePlanManager class}
+\begin{vdm_al}
+
+class ActivePlanManager is subclass of Strategy
+
+
+instance variables
+
+
+private activeTokens : inmap TokenDevice to TransportPlan := {|->};
+inv forall x,y in set dom activeTokens &
+ x = y =>  activeTokens(x) = activeTokens(y);
+--Ensure only one TokenDevice reside in the map.
+--Tests if 2 elements from domain is equal then (implication) they point
+--to the same entity. 
+
+private busy : bool := false;
+
+private q_CR_out: CyberRail; 
+
+private tokenDevices : set of TokenDevice;
+private q_Tok_in : seq of MessageTypes`MessageT := [];
+private q_CR_in : seq of MessageTypes`MessageT := [];
+private q_Tok_out : seq of TransportPlan := [];
+
+private state : State := <run>;
+
+types
+
+public State =  <run> | <halt>;
+
+operations
+
+
+--Strategy-------------------------------------------------
+strategyInit : () ==> ()
+strategyInit() == 
+(
+	state := <halt>
+);
+
+strategyNotify : () ==> ()
+strategyNotify() == skip; -- is subclass responsibility;
+
+
+strategyEnd : () ==> ()
+strategyEnd() == 
+(
+	state := <run>;
+);
+-----------------------------------------------------------
+  public ActivePlanManager : ()  ==> ActivePlanManager
+  ActivePlanManager() == (skip;);
+
+
+	public isFinished : () ==> ()
+	isFinished () == skip;
+
+  public inactiveRoute : nat ==> ()
+  inactiveRoute(id_route) ==
+  (
+		duration(50)
+		(
+		for all t in set rng activeTokens do
+		(
+
+			if t.containsRoute(id_route)
+			then
+			(let p = inverse activeTokens in
+			   q_CR_out.addToSystemQueue(
+			             mk_MessageTypes`CALCPLAN(
+			              t.getPlanAsNaviInput(),p(t)));
+			)
+ 	 	);
+		);
+	);
+
+
+public addTransportPlan : TransportPlan * TokenDevice ==> ()
+  addTransportPlan(plan,tokenDevice) ==(	
+		
+   activeTokens := activeTokens ++ {tokenDevice|-> plan};
+	q_Tok_out := q_Tok_out ^ [plan];	
+	);	
+
+public removeTransportPlan : TransportPlan * TokenDevice ==> ()
+  removeTransportPlan(plan,tokenDevice) ==(
+  activeTokens := {tokenDevice} <-: activeTokens;  
+  --Restrict map to not contain a mapplet containing tokenDevice
+ );
+
+public getPlans : () ==> set of TransportPlan
+  getPlans() == return rng activeTokens;
+
+
+public handleEvent : () ==> ()
+	handleEvent() == (
+if((len q_CR_in + len q_Tok_in + len q_Tok_out) <> 0)
+then(
+		if(len q_CR_in <> 0  )
+		then 
+			 handleQ_CR_in()
+	   
+		else if(state = <run> and len q_Tok_out <> 0)
+		then 
+			handleQ_Tok_out()
+
+		else if(state = <run> and len q_Tok_in <> 0)
+		then 
+			handleQ_Tok_in()
+	)
+	else
+		busy := false;
+);
+
+
+private handleQ_Tok_out : () ==> ()
+handleQ_Tok_out() == (
+ let ptt_map = inverse activeTokens, plan = hd q_Tok_out in (
+  let tokenDevice = ptt_map(plan) in (
+   tokenDevice.notifyPassenger(plan);
+  );
+  q_Tok_out := tl q_Tok_out;
+ )
+)
+pre len q_Tok_out > 0 and 
+    exists plan in set rng activeTokens & plan = hd q_Tok_out;
+
+private handleQ_CR_in : () ==> ()
+handleQ_CR_in() ==
+(
+	busy := true;
+		
+		let msg = hd q_CR_in in
+		(cases msg:
+		  mk_MessageTypes`RETURNPLAN(-,-) -> handleTransportPlan(msg),
+		  --mk_MessageTypes`INACTIVEROUTE(-) -> handleInactiveRoute(msg),
+		  mk_MessageTypes`STRATEGYNOTIFY(-) -> handleInactiveRoute(msg),
+		  mk_MessageTypes`STRATEGYINIT() -> handleStrategyInit(),
+		  mk_MessageTypes`STRATEGYEND() -> handleStrategyEnd()
+		end;
+		);
+		reduce_Q_CR();
+)
+pre len q_CR_in > 0;
+
+private handleQ_Tok_in : () ==> ()
+handleQ_Tok_in()==
+(
+ busy := true;
+  let msg = hd q_Tok_in in
+  (
+   cases msg:
+    mk_MessageTypes`REQUESTPLAN(-,-) -> handleRequestPlan(msg)
+   end;
+  );
+ reduce_Q_Tok();
+)
+pre len q_Tok_in > 0; 
+
+private handleStrategyInit : () ==> ()
+handleStrategyInit()== (
+	Logger`write("Read StrategyINIT "); Logger`write(time);	
+	state := <halt>;
+);	
+
+private handleStrategyEnd : () ==> ()
+handleStrategyEnd()== (
+	state := <run>;
+);
+private handleInactiveRoute : MessageTypes`MessageT ==> ()
+handleInactiveRoute(msg) ==
+(
+	let mk_MessageTypes`STRATEGYNOTIFY(routeid) = msg in
+	(
+		inactiveRoute(routeid);
+	)
+);
+
+private handleTransportPlan :  MessageTypes`MessageT ==> ()
+handleTransportPlan(msg) ==
+(	
+	
+	let mk_MessageTypes`RETURNPLAN(dto, tok) = msg in
+	(
+		addTransportPlan(new TransportPlan(dto.routeList, 
+		                 dto.choice, dto.id_token), tok);
+	)
+);
+
+private handleRequestPlan : MessageTypes`MessageT ==> ()
+handleRequestPlan(msg) ==
+(
+
+	let mk_MessageTypes`REQUESTPLAN(navi, tok) = msg in
+		(
+			q_CR_out.addToSystemQueue(
+			          mk_MessageTypes`CALCPLAN(navi,tok));
+		)
+);
+
+private reduce_Q_Tok : () ==> ()
+reduce_Q_Tok () == q_Tok_in := tl q_Tok_in
+pre len q_Tok_in > 0;
+
+private reduce_Q_CR : () ==> ()
+reduce_Q_CR () == (q_CR_in := tl q_CR_in;
+)
+pre len q_CR_in > 0;
+							
+--Initialize CyberRail ref.
+public setQ_CR_out :  CyberRail ==> ()
+setQ_CR_out(cr) == (q_CR_out := cr);
+
+
+
+public addToSystemQueue : MessageTypes`MessageT ==> ()
+addToSystemQueue(msg) ==
+(
+	q_CR_in := q_CR_in ^ [msg];
+);
+
+async public addToClientQueue : MessageTypes`MessageT ==> ()
+addToClientQueue(msg)==
+(
+	q_Tok_in := q_Tok_in ^ [msg];
+);
+
+
+thread
+	while true do
+	(
+			handleEvent();
+	)
+
+
+
+
+sync
+
+per handleEvent => ((len q_CR_in + len q_Tok_in + len q_Tok_out) > 0);
+per isFinished => (len q_CR_in + len q_Tok_in + len q_Tok_out)=0;
+mutex(reduce_Q_Tok,addToClientQueue);
+mutex(reduce_Q_CR,addToSystemQueue);
+mutex(addToSystemQueue);
+mutex(addToClientQueue);
+mutex(handleEvent);
+mutex(reduce_Q_Tok);
+mutex(reduce_Q_CR);
+
+end ActivePlanManager
+
+\end{vdm_al}

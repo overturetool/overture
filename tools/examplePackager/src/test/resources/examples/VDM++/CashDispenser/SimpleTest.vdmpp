@@ -1,0 +1,38 @@
+class SimpleTest
+
+values
+
+  c1 : Card = new Card(123456,1,1);
+  cards : set of Card = {c1};
+  resource : CentralResource = new CentralResource();
+  tills : map TillId to Till = {1 |-> new Till(resource)};
+        
+instance variables
+
+  clock : Clock := new Clock();
+  letterbox : Letterbox := new Letterbox();
+
+types
+
+  public TillId = nat;
+
+operations 
+
+public Run : () ==> bool 
+  Run () ==
+    (clock.SetDate("150999");
+    let peter = new Cardholder().Create("Peter Gorm Larsen", "Granvej 24")
+    in
+       let pglacc1 = new Account().Create({1 |-> peter},5000),
+           pglid1 = 1
+       in 
+         (resource.AddAccount(pglid1,pglacc1);         
+          resource.AddLetterbox(clock, new Letterbox());
+          tills(1).InsertCard(c1);
+          if tills(1).Validate(123456) = <PinOk>
+          then return tills(1).MakeWithdrawal(800)
+          else return false;
+         );          
+    );
+
+end SimpleTest

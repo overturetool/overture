@@ -1,0 +1,16 @@
+\begin{vdm_al}
+class CMTest
+operations
+  public Execute: () ==> ()
+  Execute () ==
+    (dcl ts : TestSuite := new TestSuite();
+     ts.AddTest(new CMTestCase2("Busy"));
+     ts.Run())
+
+end CMTest
+\end{vdm_al}
+
+\begin{rtinfo}[CMTest`Execute]
+{vdm.tc}[CMTest]
+\end{rtinfo}
+
