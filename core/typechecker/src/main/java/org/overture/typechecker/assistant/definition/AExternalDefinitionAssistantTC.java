@@ -14,12 +14,12 @@ public class AExternalDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void markUsed(AExternalDefinition d)
-	{
-		d.setUsed(true);
-		PDefinitionAssistantTC.markUsed(d.getState());
-
-	}
+//	public static void markUsed(AExternalDefinition d)
+//	{
+//		d.setUsed(true);
+//		PDefinitionAssistantTC.markUsed(d.getState());
+//
+//	}
 
 //	public static LexNameList getVariableNames(AExternalDefinition d)
 //	{

@@ -17,12 +17,12 @@ public class ARenamedDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void markUsed(ARenamedDefinition d)
-	{
-		d.setUsed(true);
-		PDefinitionAssistantTC.markUsed(d.getDef());
-
-	}
+//	public static void markUsed(ARenamedDefinition d)
+//	{
+//		d.setUsed(true);
+//		PDefinitionAssistantTC.markUsed(d.getDef());
+//
+//	}
 
 	public static void typeResolve(ARenamedDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,

@@ -13,12 +13,12 @@ public class AImportedDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void markUsed(AImportedDefinition d)
-	{
-		d.setUsed(true);
-		PDefinitionAssistantTC.markUsed(d.getDef());
-
-	}
+//	public static void markUsed(AImportedDefinition d)
+//	{
+//		d.setUsed(true);
+//		PDefinitionAssistantTC.markUsed(d.getDef());
+//
+//	}
 
 	 public static boolean isUsed(AImportedDefinition u) {
 	 return PDefinitionAssistantTC.isUsed(u.getDef());

@@ -2,7 +2,6 @@ package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -35,12 +34,6 @@ public class ALocalDefinitionAssistantTC
 			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
 		}
 
-	}
-
-	public static boolean isFunction(ALocalDefinition def)
-	{
-		return (def.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(def), AParameterType.class)) ? false
-				: PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(def));
 	}
 
 }

@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -385,4 +386,16 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<TypeFinder.Newquestion,PDefinition> getTypeFinder();
 	
 	IQuestionAnswer<NameFinder.Newquestion,PDefinition> getNameFinder();
+	
+	AnswerAdaptor<Boolean> getFunctionChecker();
+	
+	IAnswer<Boolean> getOperationChecker();
+	
+	IAnswer<String> getKindFinder();
+	
+	IAnswer<Boolean> getUpdatableChecker();
+	
+	IAnswer<Boolean> getCallableOperationChecker();
+	
+	AnalysisAdaptor getUsedMarker();
 }
