@@ -1,12 +1,30 @@
 module A
 definitions
 
+types 
+ChargeRate = <charging>|<discharging>;
+Percent = int
+inv p == p>0 and p <100;
+
+ MeterID :: int;
+ AgentID :: int;
+
+
+values
+	 AllMeterIDs : set of MeterID = {x | x :MeterID};
+	
+functions
+	getRanVal() r:Percent
+	post r in set {x | x:Percent} & true;
+
+
 state StateName of
  req:int
 end 
 
 
- operations
-    max : set of nat ==> nat
-    max (l) == is not yet specified
+
+
+
 end A
+

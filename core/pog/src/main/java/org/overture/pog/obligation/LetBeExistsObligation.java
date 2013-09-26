@@ -26,8 +26,10 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.pog.pub.IPOContextStack;
@@ -47,6 +49,7 @@ public class LetBeExistsObligation extends ProofObligation
 		 * exists <binds> & <predicate>
 		 */
 
+		
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
 		bindList.add(exp.getBind().clone());
@@ -55,6 +58,14 @@ public class LetBeExistsObligation extends ProofObligation
 		if (exp.getSuchThat() != null)
 		{
 			exists.setPredicate(exp.getSuchThat().clone());
+		}
+		else{
+			// we just use true since we cannot have 
+			// exists by itself
+			ABooleanConstExp replacementNothing_exp = new ABooleanConstExp();
+			replacementNothing_exp.setValue(new LexBooleanToken(true, null));
+			
+			exists.setPredicate(replacementNothing_exp);		
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
