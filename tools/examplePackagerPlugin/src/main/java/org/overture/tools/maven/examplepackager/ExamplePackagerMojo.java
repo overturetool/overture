@@ -2,6 +2,7 @@ package org.overture.tools.maven.examplepackager;
 
 import java.io.File;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -19,6 +20,23 @@ import org.overture.tools.examplepackager.Dialect;
 @Mojo(name="package-examples",
       defaultPhase=LifecyclePhase.PROCESS_RESOURCES)
 public class ExamplePackagerMojo extends AbstractMojo {
+	
+	  /**
+     * A boolean indicating whether example zips should be generated
+     *
+     */
+    @Parameter(alias="output-zip")
+    protected boolean outputZipFiles = true;
+    
+
+	  /**
+   * A boolean indicating whether web pages should be generated
+   *
+   */
+  @Parameter(alias="output-web")
+  protected boolean outputWebFiles = false;
+    
+	
     /**
      * A list of directories containing subdirectories with example
      * VDM-SL projects.  Note that the name of the output bundle will
@@ -68,27 +86,60 @@ public class ExamplePackagerMojo extends AbstractMojo {
     protected File tmpdir;
 
 
+	private boolean overtureCSSWeb= true;
+
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         File zipFile;
         Controller controller;
+        
+        List<Controller> controllers = new Vector<Controller>();
+        List<File> zipFiles = new Vector<File>();
 		
     	for (File exampleDir : exampleSLBaseDirectories) {
             zipFile = new File(outputDirectory, outputPrefix + exampleDir.getName() + ".zip");
+            zipFiles.add(zipFile);
             controller = new Controller(Dialect.VDM_SL, exampleDir, outputDirectory, false);
-            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, false);
+            controllers.add(controller);
+            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, !outputZipFiles);
+            
+            if(outputWebFiles)
+            {
+            	controller.createWebSite(overtureCSSWeb);
+            }
     	}
 
     	for (File exampleDir : examplePPBaseDirectories) {
             zipFile = new File(outputDirectory, outputPrefix + exampleDir.getName() + ".zip");
+            zipFiles.add(zipFile);
             controller = new Controller(Dialect.VDM_PP, exampleDir, outputDirectory, false);
-            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, false);
+            controllers.add(controller);
+            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, !outputZipFiles);
+            
+            if(outputWebFiles)
+            {
+            	controller.createWebSite(overtureCSSWeb);
+            }
     	}
 
     	for (File exampleDir : exampleRTBaseDirectories) {
             zipFile = new File(outputDirectory, outputPrefix + exampleDir.getName() + ".zip");
+            zipFiles.add(zipFile);
             controller = new Controller(Dialect.VDM_RT, exampleDir, outputDirectory, false);
-            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, false);
+            controllers.add(controller);
+            controller.packExamples(new File(tmpdir, exampleDir.getName()), zipFile, !outputZipFiles);
+            
+            if(outputWebFiles)
+            {
+            	controller.createWebSite(overtureCSSWeb);
+            }
+    	}
+    	
+    	
+    	if(!controllers.isEmpty())
+    	{
+    		controllers.iterator().next().createWebOverviewPage(controllers, zipFiles,overtureCSSWeb);
     	}
     }
 }
