@@ -20,10 +20,13 @@ busy : bool := false
 
 operations
 
-public MissileDetector: nat1 * bool ==> MissileDetector
-MissileDetector(p, isP)==
- (period := p;
-  isPeriodic := isP;
+public MissileDetector: [ThreadDef] ==> MissileDetector
+MissileDetector(tDef)==
+ (if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
  );
 
 -- addController is only used to instantiate the model
@@ -56,24 +59,20 @@ isFinished () ==
   for all id in set dom controllers do
     controllers(id).isFinished();
 
-processSensor: () ==> ()
-processSensor() ==
-( def mk_ (evid,pmt, pa, pt) = getThreat() in
-     for all id in set dom ranges do
-       def mk_(papplhs, pappsize) = ranges(id) in
-         if canObserve(pa, papplhs, pappsize)
-         then controllers(id).addThreat(evid,pmt,pa,pt);
-   busy := len threats > 0);
- 
-public Step: () ==> ()
+Step: () ==> ()
 Step() ==
-  if len threats > 0
-  then processSensor();
+( if threats <> []
+  then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+          for all id in set dom ranges do
+            def mk_(papplhs, pappsize) = ranges(id) in
+              if canObserve(pa, papplhs, pappsize)
+              then controllers(id).addThreat(evid,pmt,pa,pt);
+        busy := len threats > 0);
+);
  
 sync
 
-mutex(Step);
-mutex(processSensor);
+mutex (Step);
 
 -- addThreat and getThreat modify the same instance variables
 -- therefore they need to be declared mutual exclusive
@@ -87,3 +86,7 @@ per isFinished => not busy
 
 end MissileDetector
 \end{vdm_al}
+
+\begin{rtinfo}[MissileDetector`addController]
+{vdm.tc}[MissileDetector]
+\end{rtinfo}

@@ -31,16 +31,16 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.modules.AModuleModules;
@@ -48,6 +48,8 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
@@ -76,6 +78,8 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
+	protected IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;
 
@@ -104,6 +108,15 @@ abstract public class Interpreter
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
 		instance = this;
+	}
+	
+	/**
+	 * Gets the current assistant factory
+	 * @return
+	 */
+	public IInterpreterAssistantFactory getAssistantFactory()
+	{
+		return assistantFactory;
 	}
 
 	/**
@@ -243,9 +256,9 @@ abstract public class Interpreter
 	 * Get a line of a source file.
 	 */
 
-	public String getSourceLine(LexLocation src)
+	public String getSourceLine(ILexLocation src)
 	{
-		return getSourceLine(src.file, src.startLine);
+		return getSourceLine(src.getFile(), src.getStartLine());
 	}
 
 	/**
@@ -437,7 +450,7 @@ abstract public class Interpreter
 
 		if (old != null)
 		{
-			PStm stmt = findStatement(old.location.file, old.location.startLine);
+			PStm stmt = findStatement(old.location.getFile(), old.location.getStartLine());
 
 			if (stmt != null)
 			{
@@ -445,7 +458,7 @@ abstract public class Interpreter
 			}
 			else
 			{
-				PExp exp = findExpression(old.location.file, old.location.startLine);
+				PExp exp = findExpression(old.location.getFile(), old.location.getStartLine());
 				assert (exp != null) : "Cannot locate old breakpoint?";
 				BreakpointManager.setBreakpoint(exp, new Breakpoint(exp.getLocation()));
 			}
@@ -472,7 +485,7 @@ abstract public class Interpreter
 		
 		try
 		{
-			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
 			
 			if (TypeChecker.getErrorCount() > 0)
 			{
@@ -499,7 +512,7 @@ abstract public class Interpreter
 		TypeChecker.clearErrors();
 		try
 		{
-			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
 
 			if (TypeChecker.getErrorCount() > 0)
 			{

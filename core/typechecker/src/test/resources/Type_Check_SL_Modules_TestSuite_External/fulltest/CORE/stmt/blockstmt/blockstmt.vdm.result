@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="16" line="23" message="a at 20:10 hidden by a" messageType="warning" number="5008" resource="blockstmt.vdm.result"/>
 <message column="22" line="28" message="Definition 'b1' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>
 <message column="16" line="45" message="Definition 'a' not used" messageType="warning" number="5000" resource="blockstmt.vdm.result"/>

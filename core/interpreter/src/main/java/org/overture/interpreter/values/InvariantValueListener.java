@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -52,22 +52,29 @@ public class InvariantValueListener implements ValueListener, Serializable
 		this.root = value;		// Always an updatable InvariantValue
 	}
 
-	public void changedValue(LexLocation location, Value value, Context ctxt)
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
 	{
-		// InvariantValueListeners are created at every InvariantValue point (with
+		// InvariantValueListeners are created at every Value point (with
 		// an inv function) in a structure, but the simplest level is actually
 		// covered by the convertTo call in the arguments to "set". So to avoid
 		// another unnecessary inv check, we also test whether root = value, which
-		// is true for these simplest levels. The instanceof test is added for
-		// safety, but all non-simple listeners should have InstanceValue roots.
+		// is true for these simplest levels. Note that we also check for whether
+		// we are inside an atomic block.
 		
-		if (root != null && root.value != value &&
-			(root.value instanceof InvariantValue) && Settings.invchecks)
+		if (root != null && root.value != value && Settings.invchecks)
 		{
     		try
     		{
-    			InvariantValue ival = (InvariantValue) root.value;	// Safe
-    			ival.checkInvariant(ctxt);
+    			if (root.value instanceof InvariantValue)
+    			{
+    				InvariantValue ival = (InvariantValue) root.value;
+    				ival.checkInvariant(ctxt);
+    			}
+    			else if (root.value instanceof RecordValue)
+    			{
+    				RecordValue rval = (RecordValue) root.value;
+    				rval.checkInvariant(ctxt);
+    			}
     		}
     		catch (ValueException e)
     		{

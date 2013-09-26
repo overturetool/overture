@@ -23,10 +23,9 @@ import java.util.List;
 
 public class HtmlTable
 {
-	public static final String STYLE_CLASS_FAILD="faild";
-	public static final String STYLE_CLASS_OK="ok";
-	
-	
+	public static final String STYLE_CLASS_FAILD = "faild";
+	public static final String STYLE_CLASS_OK = "ok";
+
 	public static String makeTable(String data)
 	{
 		return "\n<table class=\"mytable\">" + data + "\n</table>";
@@ -36,6 +35,7 @@ public class HtmlTable
 	{
 		return "\n\t<tr>" + data + "\n\t</tr>";
 	}
+
 	public static String makeRowTotal(String data)
 	{
 		return "\n\t<tr class=\"total\">" + data + "\n\t</tr>";
@@ -45,11 +45,12 @@ public class HtmlTable
 	{
 		return "\n<td>" + data + "</td>";
 	}
-	
+
 	public static String makeCells(String[] data)
 	{
-	return makeCells(Arrays.asList(data));	
+		return makeCells(Arrays.asList(data));
 	}
+
 	public static String makeCells(List<String> data)
 	{
 		StringBuilder sb = new StringBuilder();
@@ -59,13 +60,11 @@ public class HtmlTable
 		}
 		return sb.toString();
 	}
-	
-	public static String makeCell(String data,String styleClass)
+
+	public static String makeCell(String data, String styleClass)
 	{
-		return "\n<td class=\""+styleClass+"\">" + data + "</td>";
+		return "\n<td class=\"" + styleClass + "\">" + data + "</td>";
 	}
-	
-	 
 
 	public static String makeCellHeaderss(String[] data)
 	{

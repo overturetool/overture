@@ -1,16 +1,15 @@
 package org.overture.typechecker;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 
 public class LexNameTokenAssistent {
 	public static boolean isEqual(ILexNameToken token, Object other) {
-		if (!(other instanceof LexNameToken))
+		if (!(other instanceof ILexNameToken))
 		{
 			return false;
 		}
 
-		LexNameToken lother = (LexNameToken)other;
+		ILexNameToken lother = (ILexNameToken)other;
 
 		if (token.getTypeQualifier() != null && lother.getTypeQualifier() != null)
 		{

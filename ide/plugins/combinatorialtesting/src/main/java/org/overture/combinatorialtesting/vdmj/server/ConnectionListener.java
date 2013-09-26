@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
+import org.overture.ide.debug.core.VdmDebugPlugin;
 
 public class ConnectionListener extends Thread
 {
@@ -36,11 +39,12 @@ public class ConnectionListener extends Thread
 	private ConnectionThread principal = null;
 	private IClientMonitor monitor;
 
-	public ConnectionListener(int port,IClientMonitor monitor) throws IOException
+	public ConnectionListener(int port, IClientMonitor monitor)
+			throws IOException
 	{
 		socket = new ServerSocket(port);
-		//socket.bind(null);
-		
+		socket.setSoTimeout(VdmDebugPlugin.getDefault().getConnectionTimeout());
+
 		this.monitor = monitor;
 
 		group = new ThreadGroup("Connections");
@@ -67,31 +71,37 @@ public class ConnectionListener extends Thread
 		{
 			while (listening)
 			{
-				Socket conn = socket.accept();
-
-				if (group.activeCount() >= 1)
+				try
 				{
-					System.out.println("Too many DBGp connections");
-					conn.close();
-					continue;
-				}
+					Socket conn = socket.accept();
 
-				ConnectionThread worker =
-					new ConnectionThread(group, conn, (principal == null),monitor);
+					if (group.activeCount() >= 1)
+					{
+						System.out.println("Too many DBGp connections");
+						conn.close();
+						continue;
+					}
 
-				if (principal == null)
+					ConnectionThread worker = new ConnectionThread(group, conn, (principal == null), monitor);
+
+					if (principal == null)
+					{
+						principal = worker; // The main connection
+					}
+
+					worker.start();
+				} catch (SocketTimeoutException e)
 				{
-					principal = worker;		// The main connection
+					// System.out.println("Listener timed out: " + e.getMessage());
 				}
-
-				worker.start();
 			}
-		}
-		catch (SocketException e)
+		} catch (SocketException e)
 		{
 			// Killed by die() or VDMJ crash
-		}
-		catch (IOException e)
+		} catch (SocketTimeoutException e)
+		{
+			System.out.println("Listener timed out: " + e.getMessage());
+		} catch (IOException e)
 		{
 			System.out.println("Listener exception: " + e.getMessage());
 		}
@@ -106,27 +116,28 @@ public class ConnectionListener extends Thread
 			listening = false;
 			socket.close();
 
-			for (ConnectionThread ct: getConnections())
+			for (ConnectionThread ct : getConnections())
 			{
 				ct.die();
 			}
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			System.out.println("Cannot stop connection listener");
 		}
+
+		monitor.terminating();
 	}
 
 	public ConnectionThread findConnection(String id)
 	{
-		if (id ==null)
+		if (id == null)
 		{
 			return principal;
 		}
 
-		for (ConnectionThread ct: getConnections())
+		for (ConnectionThread ct : getConnections())
 		{
-			if (ct.getIdeId()!=null && ct.getIdeId().equals(id))
+			if (ct.getIdeId() != null && ct.getIdeId().equals(id))
 			{
 				return ct;
 			}
@@ -142,8 +153,7 @@ public class ConnectionListener extends Thread
 		do
 		{
 			all = new ConnectionThread[group.activeCount()];
-		}
-		while (group.enumerate(all) != all.length);
+		} while (group.enumerate(all) != all.length);
 
 		return all;
 	}

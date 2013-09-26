@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 
 public class PONameContext extends POContext
@@ -33,6 +34,20 @@ public class PONameContext extends POContext
 	{
 		this.names = names;
 	}
+	
+	
+	
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		//empty context
+		return stitch;
+	}
+
+
+
+
 
 	@Override
 	public String getContext()

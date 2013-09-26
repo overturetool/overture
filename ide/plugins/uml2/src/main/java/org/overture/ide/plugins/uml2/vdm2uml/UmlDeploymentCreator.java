@@ -179,7 +179,7 @@ public class UmlDeploymentCreator
 
 												AVariableExp var = (AVariableExp) call.getArgs().get(0);
 												// Class c = classes.get(((AClassType) var.getType()).getName().name);
-												artifact.setFileName(((AClassType) var.getType()).getName().getLocation().file.getName());
+												artifact.setFileName(((AClassType) var.getType()).getName().getLocation().getFile().getName());
 												console.out.println("Adding artifact: "
 														+ artifact.getName());
 											}

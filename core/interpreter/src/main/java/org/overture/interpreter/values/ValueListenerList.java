@@ -25,7 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.Vector;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
 
@@ -38,7 +38,7 @@ public class ValueListenerList extends Vector<ValueListener>
 		add(listener);
 	}
 
-	public void changedValue(LexLocation location, Value value, Context ctxt)
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
 	{
 		for (ValueListener vl: this)
 		{

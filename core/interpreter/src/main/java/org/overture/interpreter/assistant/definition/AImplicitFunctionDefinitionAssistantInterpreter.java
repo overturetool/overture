@@ -10,6 +10,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -23,17 +24,27 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		AImplicitFunctionDefinitionAssistantTC
 {
 
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public AImplicitFunctionDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
 	public static NameValuePairList getNamedValues(
 			AImplicitFunctionDefinition d, Context initialContext)
 	{
 		NameValuePairList nvl = new NameValuePairList();
 		Context free = initialContext.getVisibleVariables();
 
-		FunctionValue prefunc =
-			(d.getPredef() == null) ? null : new FunctionValue(d.getPredef(), null, null, free);
+		FunctionValue prefunc = (d.getPredef() == null) ? null
+				: new FunctionValue(d.getPredef(), null, null, free);
 
-		FunctionValue postfunc =
-			(d.getPostdef() == null) ? null : new FunctionValue(d.getPostdef(), null, null, free);
+		FunctionValue postfunc = (d.getPostdef() == null) ? null
+				: new FunctionValue(d.getPostdef(), null, null, free);
 
 		// Note, body may be null if it is really implicit. This is caught
 		// when the function is invoked. The value is needed to implement
@@ -67,52 +78,48 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 	public static FunctionValue getPolymorphicValue(
 			AImplicitFunctionDefinition impdef, PTypeList actualTypes)
-	{		
-		
+	{
+
 		Map<List<PType>, FunctionValue> polyfuncs = VdmRuntime.getNodeState(impdef).polyfuncs;
-		
+
 		if (polyfuncs == null)
 		{
 			polyfuncs = new HashMap<List<PType>, FunctionValue>();
-		}
-		else
+		} else
 		{
 			// We always return the same function value for a polymorph
 			// with a given set of types. This is so that the one function
 			// value can record measure counts for recursive polymorphic
 			// functions.
-			
+
 			FunctionValue rv = polyfuncs.get(actualTypes);
-			
+
 			if (rv != null)
 			{
 				return rv;
 			}
 		}
-		
+
 		FunctionValue prefv = null;
 		FunctionValue postfv = null;
 
 		if (impdef.getPredef() != null)
 		{
-			prefv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPredef(),actualTypes);
-		}
-		else
+			prefv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPredef(), actualTypes);
+		} else
 		{
 			prefv = null;
 		}
 
 		if (impdef.getPostdef() != null)
 		{
-			postfv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPostdef(),actualTypes);
-		}
-		else
+			postfv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPostdef(), actualTypes);
+		} else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(
-				impdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(impdef, actualTypes, prefv, postfv, null);
 
 		polyfuncs.put(actualTypes, rv);
 		return rv;
@@ -122,17 +129,20 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 	{
 		if (d.getPredef() != null)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(),lineno);
-			if (found != null) return found;
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
+			if (found != null)
+				return found;
 		}
 
 		if (d.getPostdef() != null)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(),lineno);
-			if (found != null) return found;
+			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
+			if (found != null)
+				return found;
 		}
 
-		return d.getBody() == null ? null : PExpAssistantInterpreter.findExpression(d.getBody(),lineno);
+		return d.getBody() == null ? null
+				: PExpAssistantInterpreter.findExpression(d.getBody(), lineno);
 	}
-	
+
 }

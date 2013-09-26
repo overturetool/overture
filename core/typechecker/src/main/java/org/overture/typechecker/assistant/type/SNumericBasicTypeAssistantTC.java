@@ -5,14 +5,22 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.expressions.SNumericBinaryExp;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public SNumericBasicTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static void checkNumeric(
 			SNumericBinaryExp node, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException {
@@ -35,7 +43,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant {
 		
 	}
 
-	public static PType typeOf(long value, LexLocation location) {
+	public static PType typeOf(long value, ILexLocation location) {
 		if (value > 0)
 		{
 			return AstFactory.newANatOneNumericBasicType(location);

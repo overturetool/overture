@@ -3,6 +3,8 @@ package org.overture.typechecker.assistant.type;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -16,9 +18,18 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant{
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public ANamedInvariantTypeAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 	public static void unResolve(ANamedInvariantType type) {
 		if (!type.getResolved()) return; else { type.setResolved(false); }
 		PTypeAssistantTC.unResolve(type.getType());
@@ -161,5 +172,47 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getClassType(type.getType());
 	}
 	
+	public static boolean narrowerThan(ANamedInvariantType type,
+			AAccessSpecifierAccessSpecifier accessSpecifier) {		
+		
+		if (type.getInNarrower())
+		{
+			return false;
+		}
+
+		type.setInNarrower(true);
+		boolean result = false;
+		
+		if (type.getDefinitions().size() > 0)
+		{
+			for (PDefinition d: type.getDefinitions())
+			{
+				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				{
+					result = true;
+					break;
+				}
+			}
+		}
+		else if(type.getType().getDefinitions().size() == 0)
+		{
+			result = PTypeAssistantTC.narrowerThan(type, accessSpecifier) || PTypeAssistantTC.narrowerThanBaseCase(type, accessSpecifier);
+		}
+		else
+		{
+			for (PDefinition d : type.getType().getDefinitions())
+			{
+				if(PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				{
+					result = true;
+					break;
+				}
+			}
+			
+		}
+		
+		type.setInNarrower(false);
+		return result;
+	}
 
 }

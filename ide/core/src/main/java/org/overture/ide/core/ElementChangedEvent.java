@@ -84,7 +84,20 @@ public class ElementChangedEvent extends EventObject
 		 * @see #getDelta()
 		 * @since 2.0
 		 */
-		POST_RECONCILE(4), DEFAULT_CHANGE_EVENT(0);
+		POST_RECONCILE(4), DEFAULT_CHANGE_EVENT(0),
+		
+		
+		/**
+		 * Event type constant (bit mask) indicating an after-the-fact 
+		 * report of a build. The event contains a hierarchical resource delta
+		 * as returned by <code>getDelta</code>.
+		 * See class comments for further details.
+		 *
+		 * @see #getBuildKind()
+		 * @see #getSource()
+		 * @since 3.0
+		 */
+		 POST_BUILD(16);
 
 //		private final int value;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewModuleTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewModuleTestCase">
 <message column="10" line="11" message="Matching expression is not a set type" messageType="error" number="3206" resource="casesstmt-04.vdm.result"/>
 <message column="10" line="11" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-04.vdm.result"/>
 <message column="32" line="11" message="Left hand of / is not numeric" messageType="error" number="3139" resource="casesstmt-04.vdm.result"/>

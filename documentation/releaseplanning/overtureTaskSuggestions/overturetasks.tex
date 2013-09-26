@@ -1,29 +1,51 @@
-\documentclass[11pt]{overturerep} \usepackage{t1enc,times,a4,t1enc}
+\documentclass[11pt]{overturerep}
+
+\usepackage[a4paper,twoside=false,hmargin=25mm]{geometry}
+
+\usepackage{t1enc}
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage{times}
+\usepackage[scaled]{helvet}
+\usepackage{color}
+\usepackage[bookmarks]{hyperref}
 
-\usepackage{listings} \usepackage{times} \usepackage{color}
-\usepackage[bookmarks]{hyperref} \include{customlangdef}
-
+\include{customlangdef}
 
 \parindent 0mm \parskip\baselineskip
 
 % define the layout for listings
-\lstdefinestyle{tool}{basicstyle=\ttfamily, frame=trBL, showstringspaces=false,
-frameround=ffff, framexleftmargin=0mm, framexrightmargin=0mm}
+\lstdefinestyle{tool}{%
+  basicstyle=\ttfamily,%
+  frame=trBL,%
+  showstringspaces=false,
+  frameround=ffff,%
+  framexleftmargin=0mm,%
+  framexrightmargin=0mm%
+}
 
-\lstdefinestyle{mystyle}{basicstyle=\ttfamily, frame=trBL,
-    showstringspaces=false, frameround=fttt, aboveskip=1mm, belowskip=1mm,
-framexleftmargin=0mm, framexrightmargin=0mm}
+\lstdefinestyle{mystyle}{%
+  basicstyle=\ttfamily,%
+  frame=trBL,%
+  showstringspaces=false,%
+  frameround=fttt,%
+  aboveskip=1mm,%
+  belowskip=1mm,%
+  framexleftmargin=0mm,%
+  framexrightmargin=0mm%
+}
 
-\lstset{style=mystyle} \lstset{language=VDM++}
+\lstset{style=mystyle}
+\lstset{language=VDM++}
 
 \newtheorem{sug}[subsection]{Suggestion}
 
 \title{Overture Task Suggestions} 
-\author{ Peter J\o rgensen \and Luis Diogo Couto \and Rasmus Lauriten }
+\author{Peter J{\o}rgensen \and Luis Diogo Couto \and Rasmus Lauritsen}
 
 \reportno{TASKS}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 \maketitle
@@ -39,6 +61,7 @@ framexleftmargin=0mm, framexrightmargin=0mm}
     tool.  
 \end{abstract}
 
+\tableofcontents
 
 \chapter{Code}
 

@@ -8,6 +8,7 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.values.NameValuePair;
@@ -61,7 +62,7 @@ public class TestSuite
 				{
 					tests.add(p.name.getName());
 
-					Context mainContext = new StateContext(p.name.getLocation(), "reflection scope");
+					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
@@ -70,7 +71,7 @@ public class TestSuite
 					{
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
-								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().module) && ctor.getParamDefinitions().isEmpty())
+								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule()) && ctor.getParamDefinitions().isEmpty())
 								|| !(PAccessSpecifierAssistantTC.isPublic(ctor.getAccess())))
 						{
 							throw new Exception("Class "
@@ -79,7 +80,7 @@ public class TestSuite
 						}
 
 						String vdmTestExpression = "";
-						if (ctor.getType().getParameters().size() == 1)
+						if (((AOperationType) ctor.getType()).getParameters().size() == 1)
 						{
 							vdmTestExpression = "new " + p.name.getModule() + "(\""
 									+ p.name.getName() + "\")";
@@ -104,7 +105,7 @@ public class TestSuite
 							vdmTestExpression = "new " + p.name.getModule() + "()";
 							Value testClassInstance = ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext);
 							ObjectValue tmp = (ObjectValue) testClassInstance;
-							ObjectContext octxt = new ObjectContext(mainContext.location, "TestClassContext", mainContext, tmp);
+							ObjectContext octxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),mainContext.location, "TestClassContext", mainContext, tmp);
 							vdmTestExpression = "setName(\"" + p.name.getName()
 									+ "\")";
 
@@ -146,7 +147,7 @@ public class TestSuite
 				if (op.isConstructor)
 				{
 					if (searchForDefaultCtor
-							&& op.expldef.getType().getParameters().isEmpty())
+							&& ((AOperationType) op.expldef.getType()).getParameters().isEmpty())
 					{
 						if (op.expldef.getName().equals(instance.type.getName().getName()))
 						{
@@ -155,8 +156,8 @@ public class TestSuite
 						{
 							defaultSuperCtor = op.expldef;
 						}
-					} else if (op.expldef.getType().getParameters().size() == 1
-							&& PTypeAssistantInterpreter.isType(op.expldef.getType().getParameters().get(0),typeName) != null
+					} else if (((AOperationType) op.expldef.getType()).getParameters().size() == 1
+							&& PTypeAssistantInterpreter.isType(((AOperationType) op.expldef.getType()).getParameters().get(0),typeName) != null
 							&& op.expldef.getName().equals(instance.type.getName().getName()))
 					{
 						return op.expldef;

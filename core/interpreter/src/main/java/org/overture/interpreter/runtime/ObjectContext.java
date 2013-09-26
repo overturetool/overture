@@ -25,8 +25,9 @@ package org.overture.interpreter.runtime;
 
 import java.io.PrintWriter;
 
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 
@@ -49,18 +50,18 @@ public class ObjectContext extends RootContext
 	 * @param self The object context.
 	 */
 
-	public ObjectContext(
-		LexLocation location, String title, Context freeVariables,
+	public ObjectContext(IInterpreterAssistantFactory af,
+		ILexLocation location, String title, Context freeVariables,
 		Context outer, ObjectValue self)
 	{
-		super(location, title, freeVariables, outer);
+		super(af,location, title, freeVariables, outer);
 		this.self = self;
 	}
 
-	public ObjectContext(
-		LexLocation location, String title, Context outer, ObjectValue self)
+	public ObjectContext(IInterpreterAssistantFactory af,
+		ILexLocation location, String title, Context outer, ObjectValue self)
 	{
-		this(location, title, null, outer, self);
+		this(af,location, title, null, outer, self);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class ObjectContext extends RootContext
 		}
 
 		Context result =
-			new ObjectContext(location, title, freeVariables, below, self.deepCopy());
+			new ObjectContext(assistantFactory,location, title, freeVariables, below, self.deepCopy());
 
 		for (ILexNameToken var: keySet())
 		{

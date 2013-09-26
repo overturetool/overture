@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class Environment is subclass of GLOBAL
+class Environment is subclass of GLOBAL, BaseRTThread
 
 types
 
@@ -26,10 +26,19 @@ busy : bool := true;
 
 operations
 
-public Environment: seq of char ==> Environment
-Environment (fname) ==
-  def mk_ (-,input) = io.freadval[seq of inline](fname) in
+public Environment: seq of char * [ThreadDef] ==> Environment
+Environment (fname, tDef) ==
+ (def mk_ (-,input) = io.freadval[seq of inline](fname) in
     inlines := input;
+   
+  if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+   BaseRTThread(self);
+ );
 
 public addSensor: Sensor ==> ()
 addSensor (psens) ==
@@ -77,15 +86,16 @@ GetAndPurgeOutlines() ==
     (outlines := [];
      return res);
 
+public Step : () ==> ()
+Step() ==
+ (createSignal();
+ );
+
 sync
 
 mutex (handleEvent);
 mutex (createSignal);
 per isFinished => not busy;
-
-thread
-
-periodic (1000E6,10,900,0) (createSignal)
 
 end Environment
 \end{vdm_al}

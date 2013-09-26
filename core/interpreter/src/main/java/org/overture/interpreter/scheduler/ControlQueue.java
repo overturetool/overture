@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
 
@@ -45,7 +45,7 @@ public class ControlQueue implements Serializable
 		waiters.clear();
 	}
 
-	public void join(Context ctxt, LexLocation location)
+	public void join(Context ctxt, ILexLocation location)
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
@@ -62,7 +62,7 @@ public class ControlQueue implements Serializable
 		joined = th;
 	}
 
-	public void block(Context ctxt, LexLocation location)
+	public void block(Context ctxt, ILexLocation location)
 	{
 		if (stimmed)
 		{

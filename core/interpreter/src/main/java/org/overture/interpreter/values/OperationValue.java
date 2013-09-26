@@ -36,10 +36,10 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -58,6 +58,7 @@ import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -119,7 +120,7 @@ public class OperationValue extends Value
 		this.expldef = def;
 		this.impldef = null;
 		this.name = def.getName();
-		this.type = def.getType();
+		this.type = (AOperationType) def.getType();
 		this.paramPatterns = def.getParameterPatterns();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -145,7 +146,7 @@ public class OperationValue extends Value
 		this.impldef = def;
 		this.expldef = null;
 		this.name = def.getName();
-		this.type = def.getType();
+		this.type = (AOperationType) def.getType();
 		this.paramPatterns = new Vector<PPattern>();
 
 		for (APatternListTypePair ptp : def.getParameterPatterns())
@@ -198,7 +199,7 @@ public class OperationValue extends Value
 		{
 			// Create "old and new" expression
 
-			LexLocation where = isMutex ? guard.getLocation() : add.getLocation();
+			ILexLocation where = isMutex ? guard.getLocation() : add.getLocation();
 
 			guard = AstFactory.newAAndBooleanBinaryExp(guard.clone(),
 				new LexKeywordToken(VDMToken.AND, where), add.clone());
@@ -219,7 +220,7 @@ public class OperationValue extends Value
 		}
 	}
 
-	public Value eval(LexLocation from, ValueList argValues, Context ctxt)
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 		throws ValueException
 	{
 		// Note args cannot be Updateable, so we convert them here. This means
@@ -244,7 +245,7 @@ public class OperationValue extends Value
 	}
 
 	public Value localEval(
-		LexLocation from, ValueList argValues, Context ctxt, boolean logreq)
+		ILexLocation from, ValueList argValues, Context ctxt, boolean logreq)
 		throws ValueException
 	{
 		if (body == null)
@@ -429,21 +430,21 @@ public class OperationValue extends Value
 		return rv;
 	}
 
-	private RootContext newContext(LexLocation from, String title, Context ctxt)
+	private RootContext newContext(ILexLocation from, String title, Context ctxt)
 	{
 		RootContext argContext;
 
 		if (self != null)
 		{
-			argContext = new ObjectContext(from, title, ctxt, self);
+			argContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			argContext = new ClassContext(from, title, ctxt, classdef);
+			argContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, classdef);
 		}
 		else
 		{
-			argContext = new StateContext(from, title, ctxt, stateContext);
+			argContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, stateContext);
 		}
 
 		return argContext;

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.node.INode;
-
 import %org.overture.ast.analysis.IAnalysis%;
 import %org.overture.ast.analysis.IAnswer%;
 import %org.overture.ast.analysis.IQuestion%;
@@ -28,9 +26,9 @@ public abstract class %Node% implements %INode%, Cloneable, Serializable, /*expe
 	public abstract %INode% clone(Map<%INode%,%INode%> oldToNewMap);
 	
 	/**
-	 * Returns the {@link NodeEnum} corresponding to the
+	 * Returns the {@link String} corresponding to the
 	 * type of this {@link Node} node.
-	 * @return the {@link NodeEnum} for this node
+	 * @return the {@link String} for this node
 	 */
 	public abstract String kindNode();
 	

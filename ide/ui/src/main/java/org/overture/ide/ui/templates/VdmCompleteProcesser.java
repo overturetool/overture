@@ -205,7 +205,7 @@ public class VdmCompleteProcesser
 		String name = AstNameUtil.getName(node);
 		if (node instanceof ATypeDefinition)
 		{
-			name = ((ATypeDefinition)node).getLocation().module + "`" + name;
+			name = ((ATypeDefinition)node).getLocation().getModule() + "`" + name;
 		}
 		IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 		return new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(node, 0), name, info, name);

@@ -20,7 +20,7 @@ package org.overture.ide.core.utility;
 
 import java.util.List;
 
-import org.overture.ast.lex.LexLocation;
+import org.overture.ast.intf.lex.ILexLocation;
 
 
 public class SourceLocationConverter
@@ -102,14 +102,14 @@ public class SourceLocationConverter
 	}
 
 	
-	public int getStartPos(LexLocation location)
+	public int getStartPos(ILexLocation location)
 	{
-		return this.convert(location.startLine, location.startPos -1);
+		return this.convert(location.getStartLine(), location.getStartPos() -1);
 	}
 	
-	public int getEndPos(LexLocation location)
+	public int getEndPos(ILexLocation location)
 	{
-		return this.convert(location.endLine, location.endPos -1);
+		return this.convert(location.getEndLine(), location.getEndPos() -1);
 	}
 	
 	

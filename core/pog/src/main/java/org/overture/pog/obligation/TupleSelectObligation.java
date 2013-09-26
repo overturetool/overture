@@ -24,7 +24,11 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.types.AProductType;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class TupleSelectObligation extends ProofObligation
 {
@@ -34,17 +38,20 @@ public class TupleSelectObligation extends ProofObligation
 	private static final long serialVersionUID = -7776291065628025047L;
 
 	public TupleSelectObligation(
-		AFieldNumberExp exp, AProductType type, POContextStack ctxt)
+		AFieldNumberExp exp, AProductType type, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.TUPLE_SELECT, ctxt);
-		StringBuilder sb = new StringBuilder();
+		// not is_(exp, type)
+		super(exp, POType.TUPLE_SELECT, ctxt);
 
-		sb.append("not is_(");
-		sb.append(exp.getTuple());
-		sb.append(", ");
-		sb.append(type);
-		sb.append(")");
-
-		value = ctxt.getObligation(sb.toString());
+		ANotUnaryExp notExp = new ANotUnaryExp();
+		AIsExp isExp = new AIsExp();
+		
+		isExp.setTest(exp);
+		isExp.setBasicType(type); //Do we need the type definition instead? If so, the visitor must provide it.
+		
+		notExp.setExp(isExp);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(notExp));		
 	}
 }

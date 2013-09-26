@@ -93,13 +93,13 @@ public class TestSequence extends Vector<CallSequence>
 	
 				if (interpreter instanceof ClassInterpreter)
 				{
-					env = new FlatEnvironment(
+					env = new FlatEnvironment(interpreter.getAssistantFactory(),
 						SClassDefinitionAssistantInterpreter.getSelfDefinition(classdef),
-						new PrivateClassEnvironment(classdef, interpreter.getGlobalEnvironment()));
+						new PrivateClassEnvironment(interpreter.getAssistantFactory(),classdef, interpreter.getGlobalEnvironment()));
 				}
 				else
 				{
-					env = new FlatEnvironment(
+					env = new FlatEnvironment(interpreter.getAssistantFactory(),
 						new Vector<PDefinition>(),
 						interpreter.getGlobalEnvironment());
 				}

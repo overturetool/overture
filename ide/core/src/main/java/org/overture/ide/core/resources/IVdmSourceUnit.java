@@ -17,44 +17,44 @@
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
 package org.overture.ide.core.resources;
+
 //ICompilationUnit
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
 
-public interface IVdmSourceUnit extends IVdmElement{
+public interface IVdmSourceUnit extends IVdmElement
+{
 
-	public static final int VDM_DEFAULT  = 1;
-	public static final int VDM_CLASS_SPEC  = 1;
+	public static final int VDM_DEFAULT = 1;
+	public static final int VDM_CLASS_SPEC = 1;
 	public static final int VDM_MODULE_SPEC = 2;
 	public static final int VDM_MODULE_SPEC_FLAT = 3;
-	
+
 	public int getType();
+
 	public void setType(int type);
-	
+
 	public IFile getFile();
-	
+
 	public File getSystemFile();
-	
-	public  void reconcile(List<INode> parseResult,List<LexLocation> allLocation, Map<LexLocation,INode> locationToAstNodeMap,boolean parseErrors);
-	
-	public  List<INode> getParseList();
+
+	public void reconcile(List<INode> parseResult, boolean parseErrors);
+
+	public List<INode> getParseList();
 
 	public boolean exists();
+
 	public void clean();
+
 	public abstract IVdmProject getProject();
-	
 
 	public abstract boolean hasParseTree();
 
-	public abstract Map<LexLocation, INode> getLocationToAstNodeMap();
-	
 	public abstract boolean hasParseErrors();
-	
+
 	public abstract VdmSourceUnitWorkingCopy getWorkingCopy();
 }

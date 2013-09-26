@@ -23,9 +23,23 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapCompMapExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.util.Utils;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class MapSetOfCompatibleObligation extends ProofObligation
 {
@@ -34,42 +48,106 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6082219504509442557L;
 
-	public MapSetOfCompatibleObligation(PExp exp, POContextStack ctxt)
+	public MapSetOfCompatibleObligation(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.MAP_SET_OF_COMPATIBLE, ctxt);
-		StringBuilder sb = new StringBuilder();
-		append(sb, exp.toString());
-		value = ctxt.getObligation(sb.toString());
+		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
+		
+		PExp predicate = buildPredicate(exp);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
 	}
 
-	public MapSetOfCompatibleObligation(AMapCompMapExp exp, POContextStack ctxt)
+	public MapSetOfCompatibleObligation(AMapCompMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.MAP_SET_OF_COMPATIBLE, ctxt);
-		StringBuilder sb = new StringBuilder();
-		append(sb, mapCompAsSet(exp));
-		value = ctxt.getObligation(sb.toString());
+		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt);
+		
+		PExp predicate = buildPredicate(exp);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
 	}
-
-	private void append(StringBuilder sb, String exp)
-	{
-		String m1 = getVar("m");
-		String m2 = getVar("m");
-
-		sb.append("forall " + m1 + ", " + m2 + " in set ");
-		sb.append(exp);
-
-		String d1 = getVar("d");
-		String d2 = getVar("d");
-
-		sb.append(" &\n  forall " + d1 + " in set dom " + m1 + ", " +
-									d2 + " in set dom " + m2 + " &\n");
-		sb.append("    " + d1 + " = " + d2 + " => " +
-						m1 + "(" + d1 + ") = " + m2 + "(" + d2 + ")");
+	
+	private PPattern makePattern(ILexNameToken name){
+		AIdentifierPattern pattern = new AIdentifierPattern();
+		pattern.setName(name);
+		return pattern;
 	}
+	
+//	private PExp mapCompAsSet(AMapCompMapExp exp){
+//		
+//		ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
+//		List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
+//		
+//		for (AMapletExp maplet: exp.getMembers())
+//		{
+//			AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
+//			List<AMapletExp> members = new Vector<AMapletExp>();
+//			members.add(maplet);
+//			mapOfOne.setMembers(members);
+//			
+//			singleMaplets.add(mapOfOne);
+//		}
+//		
+//		setOfMaplets.setMembers(singleMaplets);
+//		
+//		
+//		return "{{" + exp.getFirst() + "} | " + Utils.listToString(exp.getBindings()) +
+//				(exp.getPredicate() == null ? "}" : " & " + exp.getPredicate() + "}");
+//	}
+	
+	private PExp buildPredicate(PExp mapExp){
 
-	private String mapCompAsSet(AMapCompMapExp exp)
-	{
-		return "{{" + exp.getFirst() + "} | " + Utils.listToString(exp.getBindings()) +
-			(exp.getPredicate() == null ? "}" : " & " + exp.getPredicate() + "}");
+		/*
+		forall m1, m2 in set exp &  -- set of maps
+		 * 		forall d1 in set dom m1, d2 in set dom m2 &
+		 * 			(d1 = d2) => (m1(d1) = m2(d2))
+		*/
+		
+		ILexNameToken m1 = getUnique("m");
+		ILexNameToken m2 = getUnique("m");
+		
+		PPattern p1= makePattern(m1);
+		PPattern p2= makePattern(m2);
+		
+		ASetMultipleBind setBind= new ASetMultipleBind();
+		setBind.setSet(mapExp);
+		List<PPattern> patternList = new LinkedList<PPattern>();
+		patternList.add(p1);
+		patternList.add(p2);
+		setBind.setPlist(patternList);
+		
+		
+		
+		AForAllExp domForallExp = new AForAllExp();
+		ILexNameToken d1 = getUnique("d");
+		ILexNameToken d2 = getUnique("d");
+		
+		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
+		domM1.setExp(getVarExp(m1));
+		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
+		domM2.setExp(getVarExp(m2));
+		
+		AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+		implies.setLeft(getEqualsExp(getVarExp(d1), getVarExp(d2)));
+		implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
+		implies.setRight(getEqualsExp(
+				getApplyExp(getVarExp(m1), getVarExp(d1)),
+				getApplyExp(getVarExp(m2), getVarExp(d2))));
+		
+		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
+		domBinding.addAll(getMultipleSetBindList(domM2, d2));
+		domForallExp.setBindList(domBinding);
+		domForallExp.setPredicate(implies);
+		
+		AForAllExp forallExp = new AForAllExp();
+		List<PMultipleBind> setBindList = new LinkedList<PMultipleBind>();
+		setBindList.add(setBind);
+		forallExp.setBindList(setBindList);
+		forallExp.setPredicate(domForallExp);
+		
+		return forallExp;
+		
 	}
+	
 }

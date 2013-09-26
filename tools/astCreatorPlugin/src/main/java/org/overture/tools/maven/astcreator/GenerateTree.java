@@ -3,14 +3,18 @@ package org.overture.tools.maven.astcreator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
 
+import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.overture.tools.maven.astcreator.util.Util;
-
 import org.overture.tools.astcreator.Main;
 import org.overture.tools.astcreator.env.Environment;
+import org.overture.tools.maven.astcreator.util.Util;
 
 /**
  * Generate Tree
@@ -32,7 +36,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 		// Base tree
 		File baseAstFile = new File(getResourcesDir(), ast);
 		File baseAsttoStringFile = new File(baseAstFile.getAbsolutePath()
-				+ ".tostring");
+				+ Main.TO_STRING_FILE_NAME_EXT);
 
 		// Extended tree
 		File extendedAstFile = (extendedAst == null ? null
@@ -41,10 +45,53 @@ public class GenerateTree extends AstCreatorBaseMojo
 				: new File(extendedAstFile.getAbsolutePath()
 						+ Main.TO_STRING_FILE_NAME_EXT));
 
+		if (extendedAstFile != null)
+		{
+			getLog().info("Configuring extension");
+			if (this.extendedAstGroupId == null
+					|| this.extendedAstArtifactId == null)
+			{
+				getLog().error("\tExtension base dependency not configures with groupId and artifactId");
+			}
+			
+			getLog().info("\tExtension base dependency is: \""+this.extendedAstGroupId+":"+this.extendedAstArtifactId+"\"");
+			getLog().info("\tSearching for base dependency artifact");
+			if (extendedAstFile != null)
+			{
+				DefaultArtifact baseArtifact = null;
+				for (Object a : this.project.getDependencyArtifacts())
+				{
+					if (a instanceof DefaultArtifact)
+					{
+						DefaultArtifact artifact = (DefaultArtifact) a;
+						if (artifact.getGroupId().equals(this.extendedAstGroupId)
+								&& artifact.getArtifactId().equals(this.extendedAstArtifactId))
+						{
+							baseArtifact = artifact;
+							break;
+						}
+					}
+				}
+				getLog().info("\tExtension base artifact found - exstracting base tree definition files");
+				File baseJar = baseArtifact.getFile();
+				preparebase(baseJar, ast);
+				
+				getLog().info("\tSetting base definition files to:");
+				
+				baseAstFile = new File(getProjectOutputDirectory(), ast);
+				baseAsttoStringFile = new File(baseAstFile.getAbsolutePath()
+						+ Main.TO_STRING_FILE_NAME_EXT);
+				getLog().info("\t\tbase: "+baseAstFile);
+				getLog().info("\t\tbase tostring: "+baseAsttoStringFile);
+						
+				
+				getLog().info("\tExtension base artifact configured.");
+			}
+		}
+
 		getLog().info("Checking if generation required.");
 		if (isCrcEqual(baseAstFile) && isCrcEqual(baseAsttoStringFile))
 		{
-			
 
 			if (extendedAst != null && !extendedAst.isEmpty())
 			{
@@ -56,12 +103,12 @@ public class GenerateTree extends AstCreatorBaseMojo
 					return;
 				}
 				getLog().info("Extended AST generation needed");
-			}else
+			} else
 			{
 				getLog().info("All up to date");
 				return;
 			}
-		}else
+		} else
 		{
 			getLog().info("Full AST generation needed");
 		}
@@ -107,6 +154,71 @@ public class GenerateTree extends AstCreatorBaseMojo
 		{
 			getLog().error("Cannot find input file: "
 					+ baseAstFile.getAbsolutePath());
+		}
+	}
+
+	private void preparebase(File baseJar, String ast)
+	{
+		// assuming you already have an InputStream to the jar file..
+		JarInputStream jis = null;
+		try
+		{
+			jis = new JarInputStream(new FileInputStream(baseJar));
+
+			// get the first entry
+			ZipEntry entry = jis.getNextEntry();
+			// we will loop through all the entries in the jar file
+			while (entry != null)
+			{
+				// test the entry.getName() against whatever you are looking for, etc
+				if (entry.getName().equalsIgnoreCase(ast)
+						|| entry.getName().equalsIgnoreCase(ast
+								+ Main.TO_STRING_FILE_NAME_EXT))
+				{
+					// read from the JarInputStream until the read method returns -1
+					// ...
+					// do what ever you want with the read output
+					// ...
+					// if you only care about one file, break here
+					OutputStream resStreamOut = null;
+					int readBytes;
+					byte[] buffer = new byte[4096];
+					try
+					{
+						resStreamOut = new FileOutputStream(new File(getProjectOutputDirectory(), entry.getName()));
+						while ((readBytes = jis.read(buffer)) > 0)
+						{
+							resStreamOut.write(buffer, 0, readBytes);
+						}
+					} catch (IOException e1)
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} finally
+					{
+						resStreamOut.close();
+					}
+
+				}
+				// get the next entry
+				entry = jis.getNextEntry();
+			}
+			jis.close();
+
+		} catch (FileNotFoundException e)
+		{
+			getLog().error("Failed to find file for base artifact: "+baseJar);
+		} catch (IOException e)
+		{
+			getLog().error("Failed to while reading from base artifact: "+baseJar);
+		} finally
+		{
+			try
+			{
+				jis.close();
+			} catch (IOException e)
+			{
+			}
 		}
 	}
 
@@ -168,10 +280,7 @@ public class GenerateTree extends AstCreatorBaseMojo
 
 		try
 		{
-			Main.create(toStringAstFileStream, toStringExtendedFileInputStream,
-                                    new FileInputStream(baseAstFile),
-                                    new FileInputStream(extendedAstFile),
-                                    generated, extendedName, generateVdm(), extendedTreeOnly);
+			Main.create(toStringAstFileStream, toStringExtendedFileInputStream, new FileInputStream(baseAstFile), new FileInputStream(extendedAstFile), generated, extendedName, generateVdm(), extendedTreeOnly);
 			setCrc(baseAstFile);
 			setCrc(baseAstToStringAstFile);
 			setCrc(extendedAstFile);

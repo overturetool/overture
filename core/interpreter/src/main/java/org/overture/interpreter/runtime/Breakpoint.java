@@ -26,9 +26,9 @@ package org.overture.interpreter.runtime;
 import java.io.Serializable;
 
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIntegerToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.config.Settings;
@@ -50,7 +50,7 @@ public class Breakpoint implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** The location of the breakpoint. */
-	public final LexLocation location;
+	public final ILexLocation location;
 	/** The number of the breakpoint. */
 	public final int number;
 	/** The condition or trace expression, in parsed form. */
@@ -64,7 +64,7 @@ public class Breakpoint implements Serializable
 	/** The condition saying if a the breakpoint is enabled */
 	protected boolean enabled = true;
 	
-	public Breakpoint(LexLocation location)
+	public Breakpoint(ILexLocation location)
 	{
 		this.location = location;
 		this.number = 0;
@@ -84,7 +84,7 @@ public class Breakpoint implements Serializable
 	 * @throws LexException
 	 */
 
-	public Breakpoint(LexLocation location, int number, String trace)
+	public Breakpoint(ILexLocation location, int number, String trace)
 		throws ParserException, LexException
 	{
 		this.location = location;
@@ -119,7 +119,7 @@ public class Breakpoint implements Serializable
 				default:
 					ltr.pop();
 					ExpressionReader reader = new ExpressionReader(ltr);
-        			reader.setCurrentModule(location.module);
+        			reader.setCurrentModule(location.getModule());
         			parsed = reader.readExpression();
         			break;
 			}
@@ -174,7 +174,7 @@ public class Breakpoint implements Serializable
 	 * @param ctxt The execution context.
 	 */
 
-	public void check(LexLocation execl, Context ctxt)
+	public void check(ILexLocation execl, Context ctxt)
 	{
 		//skips if breakpoint is disabled
 //		if(!enabled){
@@ -193,7 +193,7 @@ public class Breakpoint implements Serializable
 
 		if (state.stepline != null)
 		{
-			if (execl.startLine != state.stepline.startLine)	// NB just line, not pos
+			if (execl.getStartLine() != state.stepline.getStartLine())	// NB just line, not pos
 			{
 				if ((state.nextctxt == null && state.outctxt == null) ||
 					(state.nextctxt != null && !isAboveNext(ctxt.getRoot())) ||

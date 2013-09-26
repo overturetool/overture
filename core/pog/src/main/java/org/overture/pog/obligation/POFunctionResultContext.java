@@ -23,69 +23,108 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 
-public class POFunctionResultContext extends POContext
-{
+public class POFunctionResultContext extends POContext {
 	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final PExp precondition;
 	public final PExp body;
 	public final APatternTypePair result;
 	public final boolean implicit;
+	final PDefinition function;
 
-	public POFunctionResultContext(AExplicitFunctionDefinition definition)
-	{
+	public POFunctionResultContext(AExplicitFunctionDefinition definition) {
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = 
-				AstFactory.newAPatternTypePair(
-						AstFactory.newAIdentifierPattern(
-						new LexNameToken(
-					definition.getName().getModule(), "RESULT", definition.getLocation())),
-					definition.getType().getResult().clone());
-				
-
+		this.result = AstFactory.newAPatternTypePair(AstFactory
+				.newAIdentifierPattern(new LexNameToken(definition.getName()
+						.getModule(), "RESULT", definition.getLocation())),
+				((AFunctionType) definition.getType()).getResult().clone());
+		this.function = definition.clone();
+		function.setLocation(null);
 	}
 
-	public POFunctionResultContext(AImplicitFunctionDefinition definition)
-	{
+	public POFunctionResultContext(AImplicitFunctionDefinition definition) {
 		this.name = definition.getName();
-		this.deftype = definition.getType();
+		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = true;
 		this.result = definition.getResult();
+		this.function = definition;
+
 	}
 
 	@Override
-	public String getContext()
-	{
+	public PExp getContextNode(PExp stitch) {
+		if (precondition == null) {
+			return getContextNodeMain(stitch);
+		} else {
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(
+					precondition.clone(), stitch);
+		}
+
+	}
+
+	private PExp getContextNodeMain(PExp stitch) {
+		if (implicit) {
+			AForAllExp forAllExp = new AForAllExp();
+			List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
+			ATypeMultipleBind tmBind = new ATypeMultipleBind();
+			List<PPattern> patternList = new LinkedList<PPattern>();
+			patternList.add(result.getPattern().clone());
+			tmBind.setPlist(patternList);
+			tmBind.setType(result.getType().clone());
+			binds.add(tmBind);
+			forAllExp.setBindList(binds);
+			forAllExp.setPredicate(stitch);
+			return forAllExp;
+		}
+
+		else {
+			ALetDefExp letDefExp = new ALetDefExp();
+			letDefExp.setLocalDefs(result.getPattern().getDefinitions());
+			letDefExp.setExpression(stitch);
+			return letDefExp;
+		}
+
+	}
+
+	@Override
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (precondition != null)
-		{
+		if (precondition != null) {
 			sb.append(precondition);
 			sb.append(" => ");
 		}
 
-		if (implicit)
-		{
+		if (implicit) {
 			sb.append("forall ");
 			sb.append(result);
 			sb.append(" & ");
-		} else
-		{
+		} else {
 			sb.append("let ");
 			sb.append(result);
 			sb.append(" = ");

@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class FlareDispenser is subclass of GLOBAL
+class FlareDispenser is subclass of GLOBAL, BaseRTThread
 
 values
 
@@ -36,9 +36,18 @@ eventid        : [EventId];
 
 operations
 
-public FlareDispenser: Angle ==> FlareDispenser
-FlareDispenser(ang) ==
-  aparature := ang;
+public FlareDispenser: Angle * [ThreadDef] ==> FlareDispenser
+FlareDispenser(ang, tDef) ==
+ (aparature := ang;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+  BaseRTThread(self);
+ );
 
 public GetAngle: () ==> nat
 GetAngle() ==
@@ -64,8 +73,8 @@ addThreat (evid, pmt, ptime) ==
 pre pmt in set dom missilePriority and
     pmt in set dom responseDB;
 
-async evalQueue: () ==> ()
-evalQueue () ==
+async Step: () ==> ()
+Step () ==
   cycles (1E5) 
   (if len curplan > 0
    then (dcl curtime : Time := time, done : bool := false;
@@ -91,12 +100,8 @@ isFinished () == skip
 
 sync
 
-mutex (addThreat,evalQueue);
-per isFinished => not busy
-
-thread
-
-periodic (1000E6,0,0,0) (evalQueue)
+mutex (addThreat,Step);
+per isFinished => not busy;
 
 end FlareDispenser
 \end{vdm_al}

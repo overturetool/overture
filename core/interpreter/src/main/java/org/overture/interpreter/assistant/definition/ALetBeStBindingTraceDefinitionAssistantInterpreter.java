@@ -5,6 +5,7 @@ import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -24,6 +25,14 @@ import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAss
 
 public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ALetBeStBindingTraceDefinitionAssistantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		this.af = af;
+	}
 
 	public static TraceNode expand(ALetBeStBindingTraceDefinition term,
 			Context ctxt)
@@ -34,11 +43,11 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 		{
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb: term.getDef().getBindings())
+			for (PMultipleBind mb : term.getDef().getBindings())
 			{
 				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
 
-				for (PPattern p: mb.getPlist())
+				for (PPattern p : mb.getPlist())
 				{
 					Quantifier q = new Quantifier(p, bvals);
 					quantifiers.add(q);
@@ -47,7 +56,7 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 
 			quantifiers.init();
 
-			if (quantifiers.finished())		// No entries at all
+			if (quantifiers.finished()) // No entries at all
 			{
 				node.alternatives.add(new StatementTraceNode(AstFactory.newASkipStm(term.getLocation())));
 				return node;
@@ -55,43 +64,41 @@ public class ALetBeStBindingTraceDefinitionAssistantInterpreter
 
 			while (quantifiers.hasNext(ctxt))
 			{
-				Context evalContext = new Context(term.getLocation(), "TRACE", ctxt);
+				Context evalContext = new Context(af, term.getLocation(), "TRACE", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
-				for (NameValuePair nvp: nvpl)
+				for (NameValuePair nvp : nvpl)
 				{
 					Value v = evalContext.get(nvp.name);
 
 					if (v == null)
 					{
 						evalContext.put(nvp.name, nvp.value);
-					}
-					else
+					} else
 					{
 						if (!v.equals(nvp.value))
 						{
 							matches = false;
-							break;	// This quantifier set does not match
+							break; // This quantifier set does not match
 						}
 					}
 				}
 
-				if (matches &&
-					(term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+				if (matches
+						&& (term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
-					TraceNode exp = PTraceDefinitionAssistantInterpreter.expand(term.getBody(),evalContext);
+					TraceNode exp = PTraceDefinitionAssistantInterpreter.expand(term.getBody(), evalContext);
 					exp.addVariables(new TraceVariableList(evalContext, AMultiBindListDefinitionAssistantTC.getDefinitions(term.getDef())));
 					node.alternatives.add(exp);
 				}
 			}
-		}
-        catch (AnalysisException e)
-        {
-        	if(e instanceof ValueException)
+		} catch (AnalysisException e)
+		{
+			if (e instanceof ValueException)
 			{
-        		throw new ContextException((ValueException) e, term.getLocation());
-			}        	
+				throw new ContextException((ValueException) e, term.getLocation());
+			}
 		}
 
 		return node;

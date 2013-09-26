@@ -10,6 +10,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
@@ -21,6 +22,7 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.TransactionValue;
+import org.overture.pog.assistant.PogAssistantFactory;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 
@@ -60,18 +62,18 @@ public class ClassListInterpreter extends ClassList
 		}
 	}
 
-	public RootContext initialize(DBGPReader dbgp)
+	public RootContext initialize(IInterpreterAssistantFactory af,DBGPReader dbgp)
 	{
 		StateContext globalContext = null;
 
 		if (isEmpty())
 		{
-			globalContext = new StateContext(
+			globalContext = new StateContext(af,
 				new LexLocation(), "global environment");
 		}
 		else
 		{
-			globalContext =	new StateContext(
+			globalContext =	new StateContext(af,
 				this.get(0).getLocation(), "public static environment");
 		}
 
@@ -149,7 +151,7 @@ public class ClassListInterpreter extends ClassList
 
 		for (SClassDefinition c: this)
 		{
-			obligations.addAll(SClassDefinitionAssistantInterpreter.getProofObligations(c,new POContextStack()));
+			obligations.addAll(SClassDefinitionAssistantInterpreter.getProofObligations(c,new POContextStack(new PogAssistantFactory())));
 		}
 
 		obligations.trivialCheck();

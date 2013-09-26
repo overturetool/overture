@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ct.utils.TraceTestResult;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.combinatorialtesting.TracesXmlStoreReader;
 import org.overture.ide.plugins.combinatorialtesting.TracesXmlStoreReader.TraceInfo;
 import org.overture.ide.plugins.combinatorialtesting.TracesXmlStoreReader.TraceStatusXml;
-import org.overture.ct.utils.TraceTestResult;
 import org.xml.sax.SAXException;
 
 public class StorageManager
@@ -31,9 +30,11 @@ public class StorageManager
 	}
 
 	public static File getCtOutputFolder(IVdmProject project)
-	{//project.getLocation().getModelBuildPath().getOutput().
-		IProject p = (IProject) project.getAdapter(IProject.class);
-		return new File(p.getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
+	{// project.getLocation().getModelBuildPath().getOutput().
+
+		// IProject p = (IProject) project.getAdapter(IProject.class);
+		// return new File(p.getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
+		return new File(project.getModelBuildPath().getOutput().getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
 	}
 
 	private void initialize() throws IOException

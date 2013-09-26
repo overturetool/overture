@@ -23,6 +23,8 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.PExp;
+
 public class POScopeContext extends POContext
 {
 	@Override
@@ -30,6 +32,18 @@ public class POScopeContext extends POContext
 	{
 		return "";
 	}
+	
+	
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		// empty context
+		return stitch;
+	}
+
+
+
 
 	@Override
 	public boolean isScopeBoundary()

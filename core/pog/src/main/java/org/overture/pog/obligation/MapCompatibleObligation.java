@@ -23,34 +23,57 @@
 
 package org.overture.pog.obligation;
 
+import java.util.List;
+
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class MapCompatibleObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7453383884893058267L;
 
-	public MapCompatibleObligation(
-		PExp left, PExp right, POContextStack ctxt)
+	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt)
 	{
-		super(left.getLocation(), POType.MAP_COMPATIBLE, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(left, POType.MAP_COMPATIBLE, ctxt);
+		
+		/**
+		 * This obligation occurs during a map union, and ensures that if there are
+		 * overlaps in the maps, then they map to the same thing.
+		 * 
+		 * So m1 munion m2 produces:
+		 * 
+		 * forall v1 in set dom m1, v2 in set dom m2 &
+		 *     (v1 = v2) => (m1(v1) = m2(v2)) 
+		 */
+		
+		ILexNameToken ldom = getUnique("ldom");
+		ILexNameToken rdom = getUnique("rdom");
+		
+		AMapDomainUnaryExp domLeft = new AMapDomainUnaryExp();
+		domLeft.setExp(left);
+		AMapDomainUnaryExp domRight = new AMapDomainUnaryExp();
+		domLeft.setExp(right);
+		List<PMultipleBind> bindings = getMultipleSetBindList(domLeft, ldom);
+		bindings.addAll(getMultipleSetBindList(domRight, rdom));
+		
+		AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+		implies.setLeft(getEqualsExp(getVarExp(ldom), getVarExp(rdom)));
+		implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
+		implies.setRight(getEqualsExp(getApplyExp(left, getVarExp(ldom)), getApplyExp(right, getVarExp(rdom))));
 
-		String ldom = getVar("ldom");
-		String rdom = getVar("rdom");
-
-		sb.append("forall " + ldom + " in set dom ");
-		sb.append(left);
-		sb.append(", " + rdom + " in set dom ");
-		sb.append(right);
-		sb.append(" &\n" + ldom + " = " + rdom + " => ");
-		sb.append(left);
-		sb.append("(" + ldom + ") = ");
-		sb.append(right);
-		sb.append("(" + rdom + ")");
-
-		value = ctxt.getObligation(sb.toString());
+		AForAllExp forallExp = new AForAllExp();
+		forallExp.setBindList(bindings);
+		forallExp.setPredicate(implies);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

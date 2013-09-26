@@ -21,6 +21,7 @@ package org.overture.ide.plugins.poviewer;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -42,9 +43,10 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.visitors.PogVisitor;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.visitor.PogVisitor;
 
 public class PoGeneratorUtil
 {
@@ -54,6 +56,7 @@ public class PoGeneratorUtil
 	private IWorkbenchSite site;
 	private File selectedFile = null;
 	private File libFolder = null;
+	private File selectedFolder;
 
 	/**
 	 * Constructor for Action1.
@@ -69,17 +72,37 @@ public class PoGeneratorUtil
 	 */
 	public void generate(IProject selectedProject, IFile file)
 	{
+
+		if (file != null)
+		{
+			this.selectedFile = file.getLocation().toFile();
+		}
+
+		generate(selectedProject);
+	}
+
+	/**
+	 * @see IActionDelegate#run(IAction)
+	 */
+	public void generate(IProject selectedProject, IFolder folder)
+	{
+		if (folder != null)
+		{
+			this.selectedFolder = folder.getLocation().toFile();
+		}
+		generate(selectedProject);
+	}
+
+	/**
+	 * @see IActionDelegate#run(IAction)
+	 */
+	public void generate(IProject selectedProject)
+	{
 		try
 		{
 			if (selectedProject == null)
 			{
 				return;
-			}
-
-			IFile tmpFile = file;
-			if (tmpFile != null)
-			{
-				selectedFile = tmpFile.getLocation().toFile();
 			}
 
 			IVdmProject project = (IVdmProject) selectedProject.getAdapter(IVdmProject.class);
@@ -99,7 +122,18 @@ public class PoGeneratorUtil
 	public boolean skipElement(File file)
 	{
 		return (selectedFile != null && !selectedFile.getName().equals((file.getName())))
-				|| (selectedFile == null && isLibrary(file));
+				|| (selectedFile == null && isLibrary(file) || !inSelectedFolder(file));
+
+	}
+
+	private boolean inSelectedFolder(File file)
+	{
+		if (selectedFolder == null)
+		{
+			return true;
+		}
+
+		return file.getAbsolutePath().startsWith(this.selectedFolder.getAbsolutePath());
 
 	}
 
@@ -192,11 +226,11 @@ public class PoGeneratorUtil
 			{
 				if (definition instanceof AModuleModules)
 					if (!((AModuleModules) definition).getName().toString().equals("DEFAULT")
-							&& skipElement(((AModuleModules) definition).getName().getLocation().file))
+							&& skipElement(((AModuleModules) definition).getName().getLocation().getFile()))
 						continue;
 					else
 					{
-						ProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor, new POContextStack());
+						IProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor, new POContextStack());
 						tmp.trivialCheck();
 						obligations.addAll(tmp);
 					}
@@ -208,11 +242,11 @@ public class PoGeneratorUtil
 			{
 				if (definition instanceof SClassDefinition)
 				{
-					if (skipElement(((SClassDefinition) definition).getLocation().file))
+					if (skipElement(((SClassDefinition) definition).getLocation().getFile()))
 						continue;
 					else
 					{
-						ProofObligationList tmp = pogVisitor.defaultPDefinition((SClassDefinition) definition, new POContextStack());
+						IProofObligationList tmp = pogVisitor.defaultPDefinition((SClassDefinition) definition, new POContextStack());
 						tmp.trivialCheck();
 						obligations.addAll(tmp);
 					}

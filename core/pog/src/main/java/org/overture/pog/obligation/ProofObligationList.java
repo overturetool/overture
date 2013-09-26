@@ -25,8 +25,12 @@ package org.overture.pog.obligation;
 
 import java.util.Vector;
 
+import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.pub.IProofObligationList;
+
+
 @SuppressWarnings("serial")
-public class ProofObligationList extends Vector<ProofObligation>
+public class ProofObligationList extends Vector<IProofObligation> implements IProofObligationList
 {
 	// Convenience class to hold lists of POs.
 
@@ -36,20 +40,12 @@ public class ProofObligationList extends Vector<ProofObligation>
 		StringBuilder sb = new StringBuilder();
 		renumber();
 
-		for (ProofObligation po: this)
+		for (IProofObligation po: this)
 		{
 			sb.append("Proof Obligation ");
-			sb.append(po.number);
+			sb.append(po.getNumber());
 			sb.append(": (");
-			sb.append(po.status);
-
-			if (po.status == POStatus.TRIVIAL)
-			{
-				sb.append(" by <");
-				sb.append(po.proof);
-				sb.append(">");
-			}
-
+			sb.append(po.getStatus());
 			sb.append(")\n");
 			sb.append(po);
 			sb.append("\n");
@@ -60,10 +56,9 @@ public class ProofObligationList extends Vector<ProofObligation>
 
 	public void trivialCheck()
 	{
-		for (ProofObligation po: this)
-		{
-			po.trivialCheck();
-		}
+
+		
+			// don't have trivial proofs anymore
 	}
 
 	public void renumber()
@@ -75,9 +70,9 @@ public class ProofObligationList extends Vector<ProofObligation>
 	{
 		int n = from;
 
-		for (ProofObligation po: this)
+		for (IProofObligation po: this)
 		{
-			po.number = n++;
+			po.setNumber(n++);
 		}
 	}
 }

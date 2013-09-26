@@ -16,8 +16,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.node.NodeList;
@@ -29,16 +29,23 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AExplicitFunctionDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PType> getMeasureParams(AExplicitFunctionDefinition node)
 	{		
-		AFunctionType functionType = node.getType();
+		AFunctionType functionType = (AFunctionType) node.getType();
 		
 		List<PType> params = new LinkedList<PType>();
 		params.addAll(functionType.getParameters());
@@ -104,7 +111,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 		return ftype.getResult();
 	}
 
-	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, List<List<PPattern>> paramPatternList, LexLocation location)
+	public static List<List<PDefinition>> getParamDefinitions(AExplicitFunctionDefinition node,AFunctionType type, List<List<PPattern>> paramPatternList, ILexLocation location)
 	{
 		List<List<PDefinition>> defList = new ArrayList<List<PDefinition>>(); //new Vector<DefinitionList>();
 		AFunctionType ftype = type;	// Start with the overall function
@@ -176,7 +183,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 	public static AFunctionType getType(AExplicitFunctionDefinition efd, List<PType> actualTypes)
 	{
 		Iterator<PType> ti = actualTypes.iterator();
-		AFunctionType ftype = efd.getType();
+		AFunctionType ftype = (AFunctionType) efd.getType();
 				
 		if (efd.getTypeParams() != null)
 		{
@@ -190,7 +197,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 		return ftype;
 	}
 
-	public static PDefinition findName(AExplicitFunctionDefinition d,
+	public static PDefinition findName( AExplicitFunctionDefinition d,
 			ILexNameToken sought, NameScope scope) {
 		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
 		{
@@ -238,21 +245,21 @@ public class AExplicitFunctionDefinitionAssistantTC {
 		
 		if (d.getTypeParams().size() != 0)
 		{
-			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(
+			FlatCheckedEnvironment params =	new FlatCheckedEnvironment(question.assistantFactory,
 				AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
 			
-			TypeCheckInfo newQuestion = new TypeCheckInfo(params,question.scope);			
+			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory,params,question.scope);			
 			
-			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, newQuestion));
+			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, newQuestion));
 		}
 		else
 		{
-			d.setType(PTypeAssistantTC.typeResolve(PDefinitionAssistantTC.getType(d), null, rootVisitor, question));
+			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
 		}
 
 		if (question.env.isVDMPP())
 		{
-			AFunctionType fType = (AFunctionType) PDefinitionAssistantTC.getType(d);
+			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistant().getType(d);
 			d.getName().setTypeQualifier(fType.getParameters());
 
 			if (d.getBody() instanceof ASubclassResponsibilityExp)
@@ -348,7 +355,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 						d.getName().getPostName(d.getPostcondition().getLocation()), 
 						NameScope.GLOBAL, 
 						(List<ILexNameToken>)d.getTypeParams().clone(), 
-						AFunctionTypeAssistantTC.getCurriedPostType(d.getType(),d.getIsCurried()),
+						AFunctionTypeAssistantTC.getCurriedPostType((AFunctionType) d.getType(),d.getIsCurried()),
 						parameters, 
 						d.getPostcondition(), 
 						null, null, false, null);
@@ -373,7 +380,7 @@ public class AExplicitFunctionDefinitionAssistantTC {
 						d.getName().getPreName(d.getPrecondition().getLocation()),
 						NameScope.GLOBAL, 
 						(List<ILexNameToken>) d.getTypeParams().clone(),
-						AFunctionTypeAssistantTC.getCurriedPreType(d.getType(),d.getIsCurried()), 
+						AFunctionTypeAssistantTC.getCurriedPreType((AFunctionType) d.getType(),d.getIsCurried()), 
 						(LinkedList<List<PPattern>>) d.getParamPatternList().clone(), 
 						d.getPrecondition(), null, null, false, null);
 //				new AExplicitFunctionDefinition(d.getPrecondition().getLocation(), 

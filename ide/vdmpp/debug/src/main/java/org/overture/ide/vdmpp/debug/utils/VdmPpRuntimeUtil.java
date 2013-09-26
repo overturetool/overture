@@ -18,6 +18,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class VdmPpRuntimeUtil
@@ -62,14 +63,14 @@ public class VdmPpRuntimeUtil
 
 		TypeCheckVisitor tc = new TypeCheckVisitor();
 		TypeChecker.clearErrors();
-		Environment env = new PublicClassEnvironment(classes);
+		Environment env = new PublicClassEnvironment(new TypeCheckerAssistantFactory(),classes,null);
 		PExp expr;
 
 		expr = parseExpression(expression, defaultModule.getName().getName(), defaultModule.getName().getName(),dialect);
 
 		try
 		{
-			expr.apply(tc, new TypeCheckInfo(env, NameScope.NAMESANDSTATE));
+			expr.apply(tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(),env, NameScope.NAMESANDSTATE));
 		} catch (Throwable e)
 		{
 			throw new VDMErrorsException(TypeChecker.getErrors());//FIXME: this might not has any errors if it goes wrong

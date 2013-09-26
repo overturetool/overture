@@ -5,6 +5,7 @@ import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.traces.TraceNode;
 import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
@@ -12,8 +13,16 @@ import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC
 public class PTraceDefinitionAssistantInterpreter extends
 		PTraceDefinitionAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
 
-	public static TraceNode expand(PTraceDefinition term, Context ctxt) 
+	@SuppressWarnings("static-access")
+	public PTraceDefinitionAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
+
+	public static TraceNode expand(PTraceDefinition term, Context ctxt)
 	{
 		switch (term.kindPTraceDefinition())
 		{
@@ -21,15 +30,15 @@ public class PTraceDefinitionAssistantInterpreter extends
 				assert false : "this one is not in Nicks tree";
 				return null;
 			case ALetBeStBindingTraceDefinition.kindPTraceDefinition:
-				return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition)term,ctxt);
+				return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition) term, ctxt);
 			case ALetDefBindingTraceDefinition.kindPTraceDefinition:
-				return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition)term,ctxt);
+				return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition) term, ctxt);
 			case ARepeatTraceDefinition.kindPTraceDefinition:
-				return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term,ctxt);
+				return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term, ctxt);
 			default:
 				break;
 		}
-		
+
 		return null;
 	}
 

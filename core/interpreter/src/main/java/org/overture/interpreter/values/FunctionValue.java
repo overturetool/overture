@@ -39,8 +39,8 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
@@ -52,6 +52,7 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -69,7 +70,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class FunctionValue extends Value
 {
 	private static final long serialVersionUID = 1L;
-	public final LexLocation location;
+	public final ILexLocation location;
 	public final String name;
 	public NameValuePairList typeValues;
 	public AFunctionType type;
@@ -97,7 +98,7 @@ public class FunctionValue extends Value
 	public boolean uninstantiated = false;
 	private SClassDefinition classdef = null;
 
-	private FunctionValue(LexLocation location, String name, AFunctionType type,
+	private FunctionValue(ILexLocation location, String name, AFunctionType type,
 			List<List<PPattern>> paramPatternList, PExp body,
 		FunctionValue precondition, FunctionValue postcondition,
 		Context freeVariables, boolean checkInvariants, ValueList curriedArgs,
@@ -122,7 +123,7 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public FunctionValue(LexLocation location, String name, AFunctionType type,
+	public FunctionValue(ILexLocation location, String name, AFunctionType type,
 		PatternListTC paramPatterns, PExp body, Context freeVariables)
 	{
 		this.location = location;
@@ -146,7 +147,7 @@ public class FunctionValue extends Value
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = def.getType();
+		this.type = (AFunctionType) def.getType();
 		this.paramPatternList = def.getParamPatternList();
 		this.body = def.getBody();
 		this.precondition = precondition;
@@ -169,10 +170,10 @@ public class FunctionValue extends Value
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
 		this.typeValues = null;
-		this.type = def.getType();
+		this.type = (AFunctionType) def.getType();
 
 		this.paramPatternList = new Vector<List<PPattern>>();
-		PatternListTC plist = new PatternListTC();
+		PatternListTC plist = Interpreter.getInstance().getAssistantFactory().createPatternList();
 
 		for (APatternListTypePair ptp: def.getParamPatterns())
 		{
@@ -232,7 +233,7 @@ public class FunctionValue extends Value
 	// This constructor is used by IterFunctionValue and CompFunctionValue
 	// The methods which matter are overridden in those classes.
 
-	public FunctionValue(LexLocation location, AFunctionType type, String name)
+	public FunctionValue(ILexLocation location, AFunctionType type, String name)
 	{
 		this.location = location;
 		this.name = name;
@@ -253,14 +254,14 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(
-		LexLocation from, Value arg, Context ctxt) throws ValueException
+		ILexLocation from, Value arg, Context ctxt) throws ValueException
 	{
 		ValueList args = new ValueList(arg);
 		return eval(from, args, ctxt, null);
 	}
 
 	public Value eval(
-		LexLocation from, ValueList argValues, Context ctxt) throws ValueException
+		ILexLocation from, ValueList argValues, Context ctxt) throws ValueException
 	{
 		return eval(from, argValues, ctxt, null);
 	}
@@ -284,7 +285,7 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(
-		LexLocation from, ValueList argValues, Context ctxt, Context sctxt) throws ValueException
+		ILexLocation from, ValueList argValues, Context ctxt, Context sctxt) throws ValueException
 	{
 		if (body == null)
 		{
@@ -351,7 +352,7 @@ public class FunctionValue extends Value
 		if (self != null)
 		{
 			evalContext.put(
-				new LexNameToken(location.module, "self", location), self);
+				new LexNameToken(location.getModule(), "self", location), self);
 		}
 
 		evalContext.putAll(args);
@@ -561,23 +562,23 @@ public class FunctionValue extends Value
 		}
 	}
 
-	private RootContext newContext(LexLocation from, String title, Context ctxt, Context sctxt)
+	private RootContext newContext(ILexLocation from, String title, Context ctxt, Context sctxt)
 	{
 		RootContext evalContext;
 
 		if (self != null)
 		{
-			evalContext = new ObjectContext(
+			evalContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, self);
 		}
 		else if (classdef != null)
 		{
-			evalContext = new ClassContext(
+			evalContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, classdef);
 		}
 		else
 		{
-			evalContext = new StateContext(
+			evalContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),
 				from, title, freeVariables, ctxt, sctxt);
 		}
 

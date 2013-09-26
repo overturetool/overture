@@ -24,6 +24,7 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.util.Utils;
 
 public class POLetDefContext extends POContext
@@ -39,6 +40,21 @@ public class POLetDefContext extends POContext
 	public boolean isScopeBoundary()
 	{
 		return true;
+	}
+
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		if (!exp.getLocalDefs().isEmpty())
+		{
+			ALetDefExp letDefExp = new ALetDefExp();
+			letDefExp.setLocalDefs(exp.getLocalDefs());
+			letDefExp.setExpression(stitch);
+			return letDefExp;
+
+		} else
+			return stitch;
 	}
 
 	@Override

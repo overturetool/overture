@@ -52,6 +52,7 @@ import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.types.AFieldField;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.parser.SourceParserManager;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -62,8 +63,12 @@ import org.overture.ide.ui.utility.ast.AstLocationSearcher;
 
 public abstract class VdmEditor extends TextEditor
 {
-	final boolean TRACE_GET_ELEMENT_AT = false;
-	ISourceViewer viewer;
+	public static interface ILocationSearcher
+	{
+		public INode search(List<INode> nodes, int offSet);
+
+		public int[] getNodeOffset(INode node);
+	}
 
 	/**
 	 * Updates the Java outline page selection and this editor's range indicator.
@@ -81,7 +86,6 @@ public abstract class VdmEditor extends TextEditor
 		public void selectionChanged(SelectionChangedEvent event)
 		{
 			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
-			// FIXME: this appears to cause the cursor to jump around in eclipse -jwc/22Feb2013
 			VdmEditor.this.selectionChanged();
 		}
 	}
@@ -92,17 +96,38 @@ public abstract class VdmEditor extends TextEditor
 	 * @since 3.0
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
-
 	VdmContentOutlinePage fOutlinePage = null;
-	// protected SourceReferenceManager sourceReferenceManager = null;
-
 	protected VdmSourceViewerConfiguration fVdmSourceViewer;
+	final boolean TRACE_GET_ELEMENT_AT = false;
+	ISourceViewer viewer;
+	protected ILocationSearcher locationSearcher = null;
 
 	public VdmEditor()
 	{
 
 		super();
 		setDocumentProvider(new VdmDocumentProvider());
+		this.locationSearcher = new ILocationSearcher()
+		{
+			
+			@Override
+			public INode search(List<INode> nodes, int offSet)
+			{
+				// Fix for bug #185, the location searcher did not consider the file name.
+				IVdmElement element = getInputVdmElement();
+				if (element instanceof IVdmSourceUnit)
+				{
+					return AstLocationSearcher.search(nodes, offSet, (IVdmSourceUnit) element);
+				}
+				return null;
+			}
+			
+			@Override
+			public int[] getNodeOffset(INode node)
+			{
+				return AstLocationSearcher.getNodeOffset(node);
+			}
+		};
 
 	}
 
@@ -128,7 +153,8 @@ public abstract class VdmEditor extends TextEditor
 
 	}
 
-	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(IPreferenceStore fPreferenceStore);
+	protected abstract VdmSourceViewerConfiguration getVdmSourceViewerConfiguration(
+			IPreferenceStore fPreferenceStore);
 
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
 	{
@@ -155,30 +181,70 @@ public abstract class VdmEditor extends TextEditor
 		// VdmContentOutlinePage(fOutlinerContextMenuId, this);
 		VdmContentOutlinePage page = new VdmContentOutlinePage(this);
 		setOutlinePageInput(page, getEditorInput());
-		page.addSelectionChangedListener(new ISelectionChangedListener()
+		page.addSelectionChangedListener(createOutlineSelectionChangedListener());
+		return page;
+	}
+	
+	protected ISelectionChangedListener createOutlineSelectionChangedListener()
+	{
+		return new ISelectionChangedListener()
 		{
 
 			public void selectionChanged(SelectionChangedEvent event)
 			{
+				
 				ISelection s = event.getSelection();
 				if (s instanceof IStructuredSelection)
 				{
 					IStructuredSelection ss = (IStructuredSelection) s;
 					@SuppressWarnings("rawtypes")
 					List elements = ss.toList();
+					/*As a fix for bug #185 the selectAndReveal is changed to highlight range, and thus just highlights the line instead of selecting the text. If no selection then the selection is reset*/
 					if (!elements.isEmpty())
 					{
 						if (elements.get(0) instanceof INode)
 						{
 							INode node = (INode) elements.get(0);
-							int[] offsetLength = AstLocationSearcher.getNodeOffset(node);
-							selectAndReveal(offsetLength[0], offsetLength[1]);
+							// selectAndReveal(node);
+							if (node != computeHighlightRangeSourceReference())
+							{
+								setHighlightRange(node);
+							}
 						}
+					} else
+					{
+						resetHighlightRange();
 					}
 				}
 			}
-		});
-		return page;
+		};
+	}
+	
+	/**
+	 * Selects a node existing within the ast presented by the editor
+	 * @param node
+	 */
+	public void selectAndReveal(INode node)
+	{
+		int[] offsetLength = this.locationSearcher.getNodeOffset(node);
+		selectAndReveal(offsetLength[0], offsetLength[1]);
+	}
+
+	/**
+	 * highlights a node in the text editor.
+	 * @param node
+	 */
+	public void setHighlightRange(INode node)
+	{
+		try
+		{
+			int[] offsetLength = this.locationSearcher.getNodeOffset(node);
+//			int offset = getSourceViewer().getTextWidget().getCaretOffset();
+			super.setHighlightRange(offsetLength[0], offsetLength[1], true);
+		} catch (IllegalArgumentException e)
+		{
+			super.resetHighlightRange();
+		}
 	}
 
 	/*
@@ -265,7 +331,7 @@ public abstract class VdmEditor extends TextEditor
 		// doSetInput(getEditorInput());
 		// } catch (CoreException e)
 		// {
-		// 
+		//
 		// e.printStackTrace();
 		// }
 		// fEditorSelectionChangedListener= new
@@ -367,8 +433,6 @@ public abstract class VdmEditor extends TextEditor
 		// vdmSourceViewer.prepareDelayedProjection();
 
 		super.doSetInput(input);
-
-		//TODO can we comment this: IVdmElement inputElement = getInputVdmElement();
 
 		if (vdmSourceViewer != null && vdmSourceViewer.getReconciler() == null)
 		{
@@ -500,7 +564,7 @@ public abstract class VdmEditor extends TextEditor
 	}
 
 	protected void setSelection(INode reference, boolean moveCursor)
-	{ 
+	{
 		if (getSelectionProvider() == null)
 			return;
 
@@ -677,7 +741,17 @@ public abstract class VdmEditor extends TextEditor
 		if (fOutlinePage != null && element != null
 				&& !(checkIfOutlinePageActive))
 		{// && isJavaOutlinePageActive()
-			fOutlinePage.select(element);
+			
+			//if added for bug #185, it prevents the outline from being update if the selection from the searcher determine that the node is the same. 
+			if (fOutlinePage.getSelection() != null
+					&& fOutlinePage.getSelection() instanceof IStructuredSelection
+					&& element == ((IStructuredSelection) fOutlinePage.getSelection()).getFirstElement())
+			{
+				// skip
+			} else
+			{
+				fOutlinePage.selectNode(element);
+			}
 		}
 	}
 
@@ -766,7 +840,7 @@ public abstract class VdmEditor extends TextEditor
 			nodes = ((IVdmSourceUnit) element).getParseList();
 
 			long startTime = System.currentTimeMillis();
-			node = AstLocationSearcher.search(nodes, offset);
+			node = this.locationSearcher.search(nodes, offset);
 			if (TRACE_GET_ELEMENT_AT)
 			{
 				System.out.println("Search Time for offset " + offset + " in "
@@ -781,11 +855,11 @@ public abstract class VdmEditor extends TextEditor
 			}
 
 		}
-		
+
 		// Get a definition to sync with outline, where only definitions are shown. If not a definition the search up
 		// the tree until one is found.
 		INode def = null;
-		if (node instanceof PDefinition)
+		if (node instanceof PDefinition || node instanceof AFieldField)
 		{
 			def = node;
 		} else if (node != null)
@@ -839,7 +913,7 @@ public abstract class VdmEditor extends TextEditor
 	//
 	// @Override
 	// public Enumeration<String> getKeys() {
-	// 
+	//
 	// return null;
 	// }
 	// };

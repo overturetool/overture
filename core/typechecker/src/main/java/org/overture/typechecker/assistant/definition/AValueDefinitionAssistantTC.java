@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -12,12 +13,19 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AValueDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AValueDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static PDefinition findName(AValueDefinition d, ILexNameToken sought,
 			NameScope scope) {
 
@@ -48,7 +56,13 @@ public class AValueDefinitionAssistantTC {
 	}
 
 	public static LexNameList getVariableNames(AValueDefinition d) {
-		return PPatternAssistantTC.getVariableNames(d.getPattern());
+		try {
+			return PPatternAssistantTC.getVariableNames(d.getPattern());
+		} catch (InvocationAssistantException e) {
+			// TODO Auto-generated catch block; needs to be smarter
+			e.printStackTrace();
+			return new LexNameList();
+		}
 	}
 
 	public static void typeResolve(AValueDefinition d,
@@ -80,7 +94,7 @@ public class AValueDefinitionAssistantTC {
 				Iterator<PDefinition> diter = vdo.getDefs().iterator();
 
 				for (PDefinition d : def.getDefs()) {
-					if (!PDefinitionAssistantTC.equals(diter.next(), d)) {
+					if (!af.createPDefinitionAssistant().equals(diter.next(), d)) {
 						return false;
 					}
 				}

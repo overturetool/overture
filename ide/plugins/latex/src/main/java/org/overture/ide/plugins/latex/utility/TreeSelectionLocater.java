@@ -41,7 +41,7 @@ public class TreeSelectionLocater
 				{
 					IProject p = (IProject) selection.getPaths()[0].getFirstSegment();
 					project = (IVdmProject) p.getAdapter(IVdmProject.class);
-										
+
 				}
 			} else if (objectPluginAction.getSelection() instanceof IStructuredSelection)
 			{

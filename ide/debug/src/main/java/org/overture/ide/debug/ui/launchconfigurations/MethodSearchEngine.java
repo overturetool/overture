@@ -207,7 +207,7 @@ public class MethodSearchEngine
 	
 	public static boolean isConstructor(AExplicitOperationDefinition op)
 	{
-		if (op.getIsConstructor()||op.getClassDefinition()!=null && op.getName().getSimpleName().equalsIgnoreCase(op.getClassDefinition().getLocation().module))
+		if (op.getIsConstructor()||op.getClassDefinition()!=null && op.getName().getSimpleName().equalsIgnoreCase(op.getClassDefinition().getLocation().getModule()))
 		{
 			return true;
 		}

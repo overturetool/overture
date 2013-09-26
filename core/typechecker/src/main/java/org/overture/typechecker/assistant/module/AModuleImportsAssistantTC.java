@@ -10,9 +10,16 @@ import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AModuleImportsAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
+	@SuppressWarnings("static-access")
+	public AModuleImportsAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
 	public static List<PDefinition> getDefinitions(
 			AModuleImports imports, List<AModuleModules> allModules) {
 		List<PDefinition> defs = new Vector<PDefinition>();

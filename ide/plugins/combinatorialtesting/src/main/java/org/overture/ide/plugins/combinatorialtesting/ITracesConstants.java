@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.overture.ide.plugins.combinatorialtesting;
 
+import org.overture.ide.builders.vdmj.IBuilderVdmjConstants;
 import org.overture.ide.core.ICoreConstants;
 import org.overture.ide.debug.core.IDebugConstants;
-import org.overture.ide.builders.vdmj.IBuilderVdmjConstants;
 
 public interface ITracesConstants
 {
@@ -30,25 +30,21 @@ public interface ITracesConstants
 	public final int TRACE_FILTERING_DEFAULT_SEED = 999;
 	public final String TRACE_REDUCTION_DEFAULT_TYPE = "Random";
 	public final int TRACE_SUBSET_LIMITATION_DEFAULT = 100;
-	
-	//String REMOTE_DEBUG = "remote_debug";
+
+	// String REMOTE_DEBUG = "remote_debug";
 	public boolean DEBUG = false;
-//	public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
+	// public final String ENABLE_DEBUGGING_INFO_PREFERENCE = "ct_enable_debugging_info";
 	public final String REMOTE_DEBUG_PREFERENCE = "ct_enable_remote_debug";
 	public final String REMOTE_DEBUG_FIXED_PORT = "ct_enable_remote_debug_fixed_port";
 	public final String TRACE_SEED = "ct_trace_filter_seed";
 	public final String TRACE_REDUCTION_TYPE = "ct_trace_reduction_type";
 	public final String TRACE_SUBSET_LIMITATION = "ct_subset_limitation";
-	
 
 	/**
 	 * This string gives the plugin id that contains the core ctruntime jar file.
 	 */
-	public static final String[] TEST_ENGINE_BUNDLE_IDs = {
-		PLUGIN_ID,
-		ICoreConstants.PLUGIN_ID,
-		IDebugConstants.PLUGIN_ID,
-		IBuilderVdmjConstants.PLUGIN_ID
-		};
+	public static final String[] TEST_ENGINE_BUNDLE_IDs = { PLUGIN_ID,
+			ICoreConstants.PLUGIN_ID, IDebugConstants.PLUGIN_ID,
+			IBuilderVdmjConstants.PLUGIN_ID };
 	public static final String TEST_ENGINE_CLASS = "org.overture.ct.ctruntime.TraceRunnerMain";
 }

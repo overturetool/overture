@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.vdmj.typechecker.tests.external.NewClassTestCase">
+<testResult type="org.overture.typechecker.tests.external.NewClassTestCase">
 <message column="10" line="59" message="Inaccessible member A`i of class A" messageType="error" number="3180" resource="static-05.vpp.result"/>
 <result/>
 </testResult>

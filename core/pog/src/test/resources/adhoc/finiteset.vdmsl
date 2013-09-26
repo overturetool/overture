@@ -1,0 +1,8 @@
+module A
+definitions
+
+functions							
+	exauster : real -> bool
+	exauster(x) == x in set {a/3 | a:int & a<10};
+
+end A

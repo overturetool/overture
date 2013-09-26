@@ -34,7 +34,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 
 		try
 		{
-			return NumericValue.valueOf(node.getValue().value, ctxt);
+			return NumericValue.valueOf(node.getValue().getValue(), ctxt);
 		}
         catch (ValueException e)
         {
@@ -47,7 +47,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return new CharacterValue(node.getValue().unicode);
+		return new CharacterValue(node.getValue().getValue());
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return new BooleanValue(node.getValue().value);
+		return new BooleanValue(node.getValue().getValue());
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return new QuoteValue(node.getValue().value);
+		return new QuoteValue(node.getValue().getValue());
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 
 		try
 		{
-			return NumericValue.valueOf(node.getValue().value, ctxt);
+			return NumericValue.valueOf(node.getValue().getValue(), ctxt);
 		}
 		catch (ValueException e)
 		{
@@ -87,6 +87,6 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return new SeqValue(node.getValue().value);
+		return new SeqValue(node.getValue().getValue());
 	}
 }

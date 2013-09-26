@@ -20,10 +20,17 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PDefinitionListAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static void implicitDefinitions(List<PDefinition> paramDefinitions,
+	@SuppressWarnings("static-access")
+	public PDefinitionListAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static void implicitDefinitions( List<PDefinition> paramDefinitions,
 			Environment env) {
 		for (PDefinition d: paramDefinitions)
 		{
@@ -33,7 +40,7 @@ public class PDefinitionListAssistantTC {
 		
 	}
 	
-	public static PDefinition findName(List<PDefinition> definitions,
+	public static PDefinition findName( List<PDefinition> definitions,
 			ILexNameToken name, NameScope scope) {
 		for (PDefinition d : definitions) {
 			PDefinition def = PDefinitionAssistantTC.findName(d, name, scope);
@@ -65,7 +72,7 @@ public class PDefinitionListAssistantTC {
 
 	}
 	
-	public static Set<PDefinition> findMatches(List<PDefinition> definitions,
+	public static Set<PDefinition> findMatches( List<PDefinition> definitions,
 			ILexNameToken name) {
 
 		Set<PDefinition> set = new HashSet<PDefinition>();
@@ -105,7 +112,7 @@ public class PDefinitionListAssistantTC {
 		}
 	}
 	
-	public static LexNameList getVariableNames(List<PDefinition> list) {		
+	public static LexNameList getVariableNames( List<PDefinition> list) {		
 		
 		LexNameList variableNames = new LexNameList();
 
@@ -133,7 +140,7 @@ public class PDefinitionListAssistantTC {
 		
 	}
 
-	public static PDefinition findType(LinkedList<PDefinition> actualDefs,
+	public static PDefinition findType( LinkedList<PDefinition> actualDefs,
 			ILexNameToken name, String fromModule)
 	{
 		for (PDefinition d: actualDefs)

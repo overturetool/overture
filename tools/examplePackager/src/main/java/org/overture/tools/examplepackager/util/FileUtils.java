@@ -48,7 +48,7 @@ public class FileUtils
 			}
 		} catch (Exception e)
 		{
-			System.err.println("Faild to read file from jar: \""+s+"\"");
+			System.err.println("Faild to read file from jar: \"" + s + "\"");
 			e.printStackTrace();
 		} finally
 		{
@@ -76,41 +76,39 @@ public class FileUtils
 		return sb.toString();
 	}
 
-//	public static void writeFile(File outputFolder, String fileName, String content)
-//			throws IOException
-//	{
-//		FileWriter outputFileReader = new FileWriter(new File(outputFolder,
-//				fileName), false);
-//		BufferedWriter outputStream = new BufferedWriter(outputFileReader);
-//		outputStream.write(content);
-//		outputStream.close();
-//
-//	}
-//
-//	public static void writeFile(File file, String content) throws IOException
-//	{
-//		FileWriter outputFileWriter = new FileWriter(file);
-//		BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
-//		outputStream.write(content);
-//		outputStream.close();
-//		outputFileWriter.close();
-//	}
-	
-	
-	
+	// public static void writeFile(File outputFolder, String fileName, String content)
+	// throws IOException
+	// {
+	// FileWriter outputFileReader = new FileWriter(new File(outputFolder,
+	// fileName), false);
+	// BufferedWriter outputStream = new BufferedWriter(outputFileReader);
+	// outputStream.write(content);
+	// outputStream.close();
+	//
+	// }
+	//
+	// public static void writeFile(File file, String content) throws IOException
+	// {
+	// FileWriter outputFileWriter = new FileWriter(file);
+	// BufferedWriter outputStream = new BufferedWriter(outputFileWriter);
+	// outputStream.write(content);
+	// outputStream.close();
+	// outputFileWriter.close();
+	// }
+
 	public static void writeFile(String data, File file)
 	{
-		writeFile(data,file,false);
+		writeFile(data, file, false);
 	}
-	
-	public static void writeFile(String data, File file,boolean append)
+
+	public static void writeFile(String data, File file, boolean append)
 	{
 		BufferedWriter outputStream = null;
 		try
 		{
-			FileWriter	outputFileReader = new FileWriter(file, append);
+			FileWriter outputFileReader = new FileWriter(file, append);
 			outputStream = new BufferedWriter(outputFileReader);
-			
+
 			outputStream.write(data);
 
 			outputStream.flush();
@@ -120,8 +118,9 @@ public class FileUtils
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			if(outputStream!=null)
+		} finally
+		{
+			if (outputStream != null)
 			{
 				try
 				{
@@ -133,6 +132,6 @@ public class FileUtils
 				}
 			}
 		}
-		
+
 	}
 }

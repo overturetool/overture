@@ -4,6 +4,7 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.types.AClassType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.NameValuePairList;
@@ -16,18 +17,26 @@ import org.overture.parser.syntax.ParserException;
 
 public class ABusClassDefinitionAssitantInterpreter
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ABusClassDefinitionAssitantInterpreter(
+			IInterpreterAssistantFactory af)
+	{
+		this.af = af;
+	}
 
 	public static BUSValue makeVirtualBUS(ValueSet cpus)
 	{
 		try
 		{
-			return new BUSValue((AClassType)AstFactoryTC.newABusClassDefinition().getType(), cpus);
+			return new BUSValue((AClassType) AstFactoryTC.newABusClassDefinition().getType(), cpus);
 		} catch (ParserException e)
 		{
-			
+
 		} catch (LexException e)
 		{
-			
+
 		}
 		return null;
 	}
@@ -35,11 +44,11 @@ public class ABusClassDefinitionAssitantInterpreter
 	public static ObjectValue newInstance(ABusClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 	{
-		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(),ctxt);
+		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(), ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
-		return new BUSValue((AClassType)node.getClasstype(), map, argvals);
+		return new BUSValue((AClassType) node.getClasstype(), map, argvals);
 	}
 
 }

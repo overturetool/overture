@@ -13,16 +13,23 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ARenamedDefinitionAssistantTC {
+	protected static ITypeCheckerAssistantFactory af;
 
-	public static PDefinition findType(ARenamedDefinition d,
+	@SuppressWarnings("static-access")
+	public ARenamedDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	public static PDefinition findType( ARenamedDefinition d,
 			ILexNameToken sought, String fromModule) {
 		
 		// We can only find an import if it is being sought from the module that
 		// imports it.
 
-		if (fromModule != null && !d.getLocation().module.equals(fromModule))
+		if (fromModule != null && !d.getLocation().getModule().equals(fromModule))
 		{
 			return null;	// Someone else's import
 		}

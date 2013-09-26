@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="type_checker">
+<testResult type="org.overture.typechecker.tests.framework.ClassTestCase">
 <message column="11" line="135" message="Definition 'x' not used" messageType="warning" number="5000" resource="QuadilateralPP.result"/>
+<result/>
 </testResult>

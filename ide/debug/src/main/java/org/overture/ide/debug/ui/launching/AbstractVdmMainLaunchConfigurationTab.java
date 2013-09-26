@@ -748,9 +748,9 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition()));
 					}
 				} else if (method.getLocation() != null
-						&& method.getLocation().module != null)
+						&& method.getLocation().getModule()  != null)
 				{
-					defaultModule = method.getLocation().module;
+					defaultModule = method.getLocation().getModule();
 					fModuleNameText.setText(defaultModule);
 				} else
 				{

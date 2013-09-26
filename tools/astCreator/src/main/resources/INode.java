@@ -17,9 +17,9 @@ public interface %INode%
 	public abstract %INode% clone(Map<%INode%, %INode%> oldToNewMap);
 
 	/**
-	 * Returns the {@link NodeEnum} corresponding to the
+	 * Returns the {@link String} corresponding to the
 	 * type of this {@link Node} node.
-	 * @return the {@link NodeEnum} for this node
+	 * @return the {@link String} for this node
 	 */
 	public abstract String kindNode();
 
@@ -43,7 +43,7 @@ public interface %INode%
 	public abstract void removeChild(%INode% child);
 
 	/**
-	 * If {%code oldChild} pointed to by any field of this {@link %INode} instance
+	 * If {%code oldChild} pointed to by any field of this {@link %INode%} instance
 	 * replace it with {@code newChild}.
 	 * 
 	 * @param %INode% oldChild 

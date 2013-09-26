@@ -28,17 +28,41 @@ import java.util.Stack;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
-
+import org.overture.pog.pub.IPOContext;
+import org.overture.pog.pub.IPOContextStack;
 
 @SuppressWarnings("serial")
-public class POContextStack extends Stack<POContext>
+public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 {
+	
+	public PExp getPredWithContext(PExp initialPredicate){
+		return getContextNode(initialPredicate);
+	}
+
+	private PExp getContextNode(PExp stitchPoint)
+	{
+		
+		for (int i = this.size() - 1; i >= 0; i--)
+		{
+			IPOContext ctxt = this.get(i);
+			if (!(ctxt instanceof PONameContext))
+			{
+				stitchPoint = ctxt.getContextNode(stitchPoint);
+			}
+		}
+		return stitchPoint;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.overture.pog.IPOContextStack#getName()
+	 */
+	@Override
 	public String getName()
 	{
 		StringBuilder result = new StringBuilder();
 		String prefix = "";
 
-		for (POContext ctxt: this)
+		for (IPOContext ctxt : this)
 		{
 			String name = ctxt.getName();
 
@@ -53,6 +77,10 @@ public class POContextStack extends Stack<POContext>
 		return result.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.overture.pog.IPOContextStack#getObligation(java.lang.String)
+	 */
+	@Override
 	public String getObligation(String root)
 	{
 		StringBuilder result = new StringBuilder();
@@ -60,7 +88,7 @@ public class POContextStack extends Stack<POContext>
 		String indent = "";
 		StringBuilder tail = new StringBuilder();
 
-		for (POContext ctxt: this)
+		for (IPOContext ctxt : this)
 		{
 			String po = ctxt.getContext();
 
@@ -89,7 +117,7 @@ public class POContextStack extends Stack<POContext>
 		String[] parts = line.split("\n");
 		String prefix = "";
 
-		for (int i=0; i<parts.length; i++)
+		for (int i = 0; i < parts.length; i++)
 		{
 			sb.append(prefix);
 			sb.append(parts[i]);
@@ -106,15 +134,15 @@ public class POContextStack extends Stack<POContext>
 
 	public PType checkType(PExp exp, PType expected)
 	{
-		ListIterator<POContext> p = this.listIterator(size());
+		ListIterator<IPOContext> p = this.listIterator(size());
 
 		while (p.hasPrevious())
 		{
-			POContext c = p.previous();
+			IPOContext c = p.previous();
 
 			if (c.isScopeBoundary())
 			{
-				break;		// Change of name scope for expressions.
+				break; // Change of name scope for expressions.
 			}
 
 			PType t = c.checkType(exp);

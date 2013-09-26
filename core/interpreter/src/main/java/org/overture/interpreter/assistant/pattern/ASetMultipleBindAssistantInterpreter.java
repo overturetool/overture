@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -17,6 +18,14 @@ import org.overture.typechecker.assistant.pattern.ASetMultipleBindAssistantTC;
 public class ASetMultipleBindAssistantInterpreter extends
 		ASetMultipleBindAssistantTC
 {
+	protected static IInterpreterAssistantFactory af;
+
+	@SuppressWarnings("static-access")
+	public ASetMultipleBindAssistantInterpreter(IInterpreterAssistantFactory af)
+	{
+		super(af);
+		this.af = af;
+	}
 
 	public static ValueList getBindValues(ASetMultipleBind mb, Context ctxt)
 	{
@@ -26,38 +35,36 @@ public class ASetMultipleBindAssistantInterpreter extends
 			ValueSet vs = mb.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 			vs.sort();
 
-			for (Value v: vs)
+			for (Value v : vs)
 			{
 				v = v.deref();
 
 				if (v instanceof SetValue)
 				{
-					SetValue sv = (SetValue)v;
+					SetValue sv = (SetValue) v;
 					vl.addAll(sv.permutedSets());
-				}
-				else
+				} else
 				{
 					vl.add(v);
 				}
 			}
 
 			return vl;
-		}
-		catch (AnalysisException e)
+		} catch (AnalysisException e)
 		{
-			if(e instanceof ValueException)
+			if (e instanceof ValueException)
 			{
-				VdmRuntimeError.abort(mb.getLocation(),(ValueException) e);
+				VdmRuntimeError.abort(mb.getLocation(), (ValueException) e);
 			}
 			return null;
 
-		} 
+		}
 	}
 
 	public static ValueList getValues(ASetMultipleBind mb, ObjectContext ctxt)
 	{
 		return PExpAssistantInterpreter.getValues(mb.getSet(), ctxt);
-		
+
 	}
 
 }
