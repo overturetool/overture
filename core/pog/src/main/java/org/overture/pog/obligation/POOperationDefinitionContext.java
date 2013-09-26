@@ -114,11 +114,18 @@ public class POOperationDefinitionContext extends POContext
 	private List<? extends PMultipleBind> makeBinds()
 	{
 		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
-
-		ATypeMultipleBind tmBind = new ATypeMultipleBind();
-		tmBind.setPlist(cloneList(paramPatternList));
-		tmBind.setType(deftype.getResult().clone());
-		r.add(tmBind);
+		
+		Iterator<PType> types = deftype.getParameters().iterator();
+		for (PPattern p : paramPatternList){
+			ATypeMultipleBind tmBind = new ATypeMultipleBind();
+			List<PPattern> pats = new LinkedList<PPattern>();
+			
+			pats.add(p.clone());
+			tmBind.setType(types.next().clone());
+			tmBind.setPlist(pats);
+			r.add(tmBind);
+		}
+		
 
 		if (stateDefinition != null)
 		{
