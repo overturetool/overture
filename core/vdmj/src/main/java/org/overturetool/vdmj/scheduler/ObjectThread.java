@@ -158,6 +158,11 @@ public class ObjectThread extends SchedulablePoolThread
 			ctxt.threadState.dbgp.setErrorState();
 			BasicSchedulableThread.signalAll(Signal.ERROR);
 		}
+		catch (ThreadDeath e)
+		{
+			reader.complete(DBGPReason.ABORTED, null);
+			throw e;
+		}
 		finally
 		{
 			TransactionValue.commitAll();
