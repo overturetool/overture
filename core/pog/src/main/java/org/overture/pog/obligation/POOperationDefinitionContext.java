@@ -56,7 +56,6 @@ public class POOperationDefinitionContext extends POContext
 	public final PDefinition stateDefinition;
 	final AImplicitOperationDefinition opDef;
 
-
 	protected POOperationDefinitionContext(ILexNameToken name,
 			AOperationType deftype, List<PPattern> paramPatternList,
 			boolean addPrecond, PExp precondition, PDefinition stateDefinition,
@@ -118,7 +117,7 @@ public class POOperationDefinitionContext extends POContext
 
 		ATypeMultipleBind tmBind = new ATypeMultipleBind();
 		tmBind.setPlist(cloneList(paramPatternList));
-		tmBind.setType(deftype.clone());
+		tmBind.setType(deftype.getResult().clone());
 		r.add(tmBind);
 
 		if (stateDefinition != null)
@@ -129,7 +128,7 @@ public class POOperationDefinitionContext extends POContext
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
-				
+
 				tmBind2.setType(def.getRecordType().clone());
 				pattern.setValue(new LexStringToken("oldstate", null));
 			} else
@@ -208,14 +207,15 @@ public class POOperationDefinitionContext extends POContext
 			sb.append(def.getName().getName());
 		}
 	}
-	
-	private List<PPattern> cloneList(List<PPattern> list){
+
+	private List<PPattern> cloneList(List<PPattern> list)
+	{
 		List<PPattern> r = new LinkedList<PPattern>();
-		for (PPattern p : list){
-			r.add(p);
+		for (PPattern p : list)
+		{
+			r.add(p.clone());
 		}
 		return r;
 	}
-	
 
 }
