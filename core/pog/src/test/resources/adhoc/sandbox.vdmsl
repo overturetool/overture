@@ -6,10 +6,7 @@ state StateName of
 end 
 
 
-  operations  
-  	test (x:int) r:int
-  	pre x >0
-  	post r = req + x; 
-
+ operations
+    max : set of nat ==> nat
+    max (l) == is not yet specified
 end A
-
