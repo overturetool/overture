@@ -8,6 +8,12 @@ import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * This class implements a way to dereference a node in the AST
+ * 
+ * @author kel
+ */
+
 public class Dereferer extends AnswerAdaptor<PDefinition>
 {
 

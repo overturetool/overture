@@ -8,16 +8,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
-import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -35,6 +25,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
+import org.overture.typechecker.utilities.TypeResolver;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -235,26 +226,6 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		{
 			return null;
 		}
-//		if (d instanceof AImportedDefinition)
-//		{
-//			if (d instanceof AImportedDefinition)
-//			{
-//				return deref(((AImportedDefinition) d).getDef());
-//			}
-//		} else if (d instanceof AInheritedDefinition)
-//		{
-//			if (d instanceof AInheritedDefinition)
-//			{
-//				return deref(((AInheritedDefinition) d).getSuperdef());
-//			}
-//		} else if (d instanceof ARenamedDefinition)
-//		{
-//			if (d instanceof ARenamedDefinition)
-//			{
-//				return deref(((ARenamedDefinition) d).getDef());
-//			}
-//		}
-//		return d;
 
 	}
 
@@ -298,42 +269,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		if (d instanceof SClassDefinition)
+		try
 		{
-			SClassDefinitionAssistantTC.typeResolve((SClassDefinition) d, rootVisitor, question);
-		} else if (d instanceof AExplicitFunctionDefinition)
+			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AExplicitFunctionDefinitionAssistantTC.typeResolve((AExplicitFunctionDefinition) d, rootVisitor, question);
-		} else if (d instanceof AExplicitOperationDefinition)
-		{
-			AExplicitOperationDefinitionAssistantTC.typeResolve((AExplicitOperationDefinition) d, rootVisitor, question);
-		} else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinitionAssistantTC.typeResolve((AImplicitFunctionDefinition) d, rootVisitor, question);
-		} else if (d instanceof AImplicitOperationDefinition)
-		{
-			AImplicitOperationDefinitionAssistantTC.typeResolve((AImplicitOperationDefinition) d, rootVisitor, question);
-		} else if (d instanceof AInstanceVariableDefinition)
-		{
-			AInstanceVariableDefinitionAssistantTC.typeResolve((AInstanceVariableDefinition) d, rootVisitor, question);
-		} else if (d instanceof ALocalDefinition)
-		{
-			ALocalDefinitionAssistantTC.typeResolve((ALocalDefinition) d, rootVisitor, question);
-		} else if (d instanceof ARenamedDefinition)
-		{
-			ARenamedDefinitionAssistantTC.typeResolve((ARenamedDefinition) d, rootVisitor, question);
-		} else if (d instanceof AStateDefinition)
-		{
-			AStateDefinitionAssistantTC.typeResolve((AStateDefinition) d, rootVisitor, question);
-		} else if (d instanceof ATypeDefinition)
-		{
-			ATypeDefinitionAssistantTC.typeResolve((ATypeDefinition) d, rootVisitor, question);
-		} else if (d instanceof AValueDefinition)
-		{
-			AValueDefinitionAssistantTC.typeResolve((AValueDefinition) d, rootVisitor, question);
-		} else
-		{
-			return;
+			
 		}
 
 	}

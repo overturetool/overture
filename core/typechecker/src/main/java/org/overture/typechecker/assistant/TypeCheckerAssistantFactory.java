@@ -137,6 +137,8 @@ import org.overture.typechecker.utilities.PTypeFunctionChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
+import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.TypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
@@ -1045,5 +1047,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<PDefinition> getDereferer()
 	{
 		return new Dereferer(this);
+	}
+	
+	@Override
+	public IQuestion<NewQuestion> getTypeResolver()
+	{
+		return new TypeResolver(this);
 	}
 }

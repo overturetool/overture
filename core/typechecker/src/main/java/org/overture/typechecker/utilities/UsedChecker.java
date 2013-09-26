@@ -9,6 +9,11 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
 
+/**
+ * This class implements a way to check if a node is used in the AST
+ * 
+ * @author kel
+ */
 public class UsedChecker extends AnswerAdaptor<Boolean>
 {
 
