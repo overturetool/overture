@@ -71,6 +71,16 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			}
 
 		}
+		
+		@Override
+		protected void afterExecute(Runnable r, Throwable t)
+		{
+			if (r instanceof SchedulablePoolThread)
+			{
+				SchedulablePoolThread spt = (SchedulablePoolThread) r;
+				spt.setThread(null);
+			}
+		}
 
 		/**
 		 * Prints an error message if a execution is rejected
@@ -464,7 +474,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	{
 		return state == RunState.TIMESTEP || state == RunState.WAITING;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.overturetool.vdmj.scheduler.ISchedulableThread#isVirtual()
 	 */
