@@ -29,7 +29,6 @@ import java.util.Vector;
 import org.overturetool.vdmj.Settings;
 import org.overturetool.vdmj.commands.DebuggerReader;
 import org.overturetool.vdmj.lex.LexLocation;
-import org.overturetool.vdmj.messages.Console;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ContextException;
 import org.overturetool.vdmj.statements.Statement;
@@ -161,16 +160,19 @@ public class CTMainThread extends MainThread
 		}
 		catch (Throwable e)
 		{
-			if (getException() != null)
+			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
-				result.add(getException());
+				if (getException() != null)
+				{
+					result.add(getException());
+				}
+				else
+				{
+					result.add(e.getMessage());
+				}
+				
+				result.add(Verdict.FAILED);
 			}
-			else
-			{
-				result.add(e.getMessage());
-			}
-			
-			result.add(Verdict.FAILED);
 		}
 	}
 
