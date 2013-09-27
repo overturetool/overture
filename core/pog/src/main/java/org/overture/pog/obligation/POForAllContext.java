@@ -116,7 +116,7 @@ public class POForAllContext extends POContext
 	public PExp getContextNode(PExp stitch)
 	{
 		AForAllExp forAllExp = new AForAllExp();
-		forAllExp.setBindList(bindings);
+		forAllExp.setBindList(cloneBinds(bindings));
 		forAllExp.setPredicate(stitch);
 		return forAllExp;
 	}
