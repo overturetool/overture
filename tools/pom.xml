@@ -17,8 +17,7 @@
   <name>Overture Maven tool plugins</name>
 
   <modules>
-    <module>astCreator</module>
-    <module>astCreatorPlugin</module>
+   
     <!--module>vdmt</module-->
     <module>overturetemplategen</module>
     <module>examplePackager</module>

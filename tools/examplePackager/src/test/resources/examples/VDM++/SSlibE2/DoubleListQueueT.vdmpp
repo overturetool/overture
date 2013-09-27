@@ -1,0 +1,51 @@
+class DoubleListQueueT is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests () == 
+	[ new DoubleListQueueT01()
+	];
+end DoubleListQueueT
+
+class DoubleListQueueT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	q0 = DoubleListQueue`empty[int](),
+		q1 = DoubleListQueue`enQueue[int](1, q0),
+		q2 = DoubleListQueue`enQueue[int](2, q1),
+		q3 = DoubleListQueue`enQueue[int](3, q2),
+		h1 = DoubleListQueue`top[int](q3),
+		q4 = DoubleListQueue`deQueue[int](q3),
+		q5 = DoubleListQueue`enQueue[int](4, q4),
+		q6 = DoubleListQueue`enQueue[int](5, q5),
+		q7 = DoubleListQueue`deQueue[int](q6),
+		q8 = DoubleListQueue`deQueue[int](q7),
+		q9 = DoubleListQueue`deQueue[int](q8),
+		q10 = DoubleListQueue`deQueue[int](q9),
+		h2 = DoubleListQueue`top[int](q10),
+		q11 = DoubleListQueue`deQueue[int](q10),
+		q12 = DoubleListQueue`fromList[char]("Sahara Shin", DoubleListQueue`empty[char]())
+	in
+	return
+		DoubleListQueue`isEmpty[int](q0) and q0 = mk_([], []) and
+		DoubleListQueue`toList[int](q1) = [1] and q1 = mk_([], [1]) and
+		DoubleListQueue`toList[int](q2) = [1,2] and q2 = mk_([], [2,1]) and
+		DoubleListQueue`toList[int](q3) = [1,2,3] and q3 = mk_([], [3,2,1]) and
+		h1 = 1 and
+		DoubleListQueue`toList[int](q4) = [2,3] and q4 = mk_([2,3], []) and
+		DoubleListQueue`toList[int](q5) = [2,3,4] and q5 = mk_([2,3], [4]) and
+		DoubleListQueue`toList[int](q6) = [2,3,4,5] and q6 = mk_([2,3], [5, 4]) and
+		DoubleListQueue`toList[int](q7) = [3,4,5] and q7 = mk_([3], [5, 4]) and
+		DoubleListQueue`toList[int](q8) = [4,5] and q8 = mk_([], [5, 4]) and
+		DoubleListQueue`toList[int](q9) = [5] and q9 = mk_([5], []) and
+		DoubleListQueue`toList[int](q10) = [] and DoubleListQueue`isEmpty[int](q10) and q10 = mk_([], []) and
+		h2 = nil and
+		q11 = nil and
+		DoubleListQueue`toList[char](q12) = "Sahara Shin" and q12 = mk_([], "nihS arahaS")
+		
+;
+protected setUp: () ==> ()
+setUp() == TestName := "DoubleListQueueT01:\t Test Queue";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DoubleListQueueT01

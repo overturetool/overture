@@ -105,13 +105,17 @@ public class SClassDefinitionAssistantInterpreter extends
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws ValueException
 	{
-		if (node instanceof ABusClassDefinition) {
+		if (node instanceof ABusClassDefinition)
+		{
 			return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
-		} else if (node instanceof AClassClassDefinition) {
+		} else if (node instanceof AClassClassDefinition)
+		{
 			return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
-		} else if (node instanceof ACpuClassDefinition) {
+		} else if (node instanceof ACpuClassDefinition)
+		{
 			return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
-		} else if (node instanceof ASystemClassDefinition) {
+		} else if (node instanceof ASystemClassDefinition)
+		{
 			VdmRuntimeError.abort(node.getLocation(), 4135, "Cannot instantiate system class "
 					+ node.getName(), ctxt);
 		}
@@ -415,10 +419,12 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				PAccess pAccess = d.getAccess().getAccess();
 				if (pAccess instanceof APrivateAccess
-						|| pAccess instanceof AProtectedAccess) {
+						|| pAccess instanceof AProtectedAccess)
+				{
 					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
-				} else if (pAccess instanceof APublicAccess) {
+				} else if (pAccess instanceof APublicAccess)
+				{
 					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
 				}
@@ -429,10 +435,12 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				PAccess pAccess = d.getAccess().getAccess();
 				if (pAccess instanceof APrivateAccess
-						|| pAccess instanceof AProtectedAccess) {
+						|| pAccess instanceof AProtectedAccess)
+				{
 					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
-				} else if (pAccess instanceof APublicAccess) {
+				} else if (pAccess instanceof APublicAccess)
+				{
 					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
 				}
@@ -482,10 +490,12 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				PAccess pAccess = d.getAccess().getAccess();
 				if (pAccess instanceof APrivateAccess
-						|| pAccess instanceof AProtectedAccess) {
+						|| pAccess instanceof AProtectedAccess)
+				{
 					VdmRuntime.getNodeState(node).privateStaticValues.putAllNew(nvl);
 					initCtxt.putList(nvl);
-				} else if (pAccess instanceof APublicAccess) {
+				} else if (pAccess instanceof APublicAccess)
+				{
 					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 					initCtxt.putList(nvl);
 				}

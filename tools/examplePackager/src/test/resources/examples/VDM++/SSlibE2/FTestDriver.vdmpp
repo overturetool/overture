@@ -1,0 +1,59 @@
+\subsection{FTestDriver}
+回帰テストを実行するモジュール。
+
+TestCase型は、テストケース１件を表す。
+
+\begin{vdm_al}
+--$Id: TestDriver.vpp,v 1.1 2005/10/31 02:09:59 vdmtools Exp $
+class FTestDriver
+
+types
+public TestCase ::
+	testCaseName : seq of char
+	testResult : bool;
+
+functions
+\end{vdm_al}
+
+runは、与えられたテストケース列から結果列を得る。
+結果がすべてtrueならば全体成功メッセージを表示し、１つでも失敗があれば全体失敗メッセージを表示する。
+\begin{vdm_al}
+static public run: seq of FTestDriver`TestCase +> bool
+run(t) ==
+	let	m = "Result-of-testcases.",
+		r = [isOK(t(i)) | i in set inds t]
+	in
+	if  forall i in set inds r & r(i) then
+		FTestLogger`SuccessAll(m)
+	else
+		FTestLogger`FailureAll(m);
+\end{vdm_al}
+
+isOKは、与えられたテストケースのテスト結果を確認し、trueならば成功メッセージを表示し、falseならば失敗メッセージを表示する。
+\begin{vdm_al}
+static public isOK: FTestDriver`TestCase +> bool
+isOK(t) ==
+	if GetTestResult(t) then
+		FTestLogger`Success(t)
+	else
+		FTestLogger`Failure(t);
+\end{vdm_al}
+
+GetTestResultは、テスト結果を得る。
+\begin{vdm_al}
+static public GetTestResult : FTestDriver`TestCase +> bool
+GetTestResult(t) == t.testResult;
+\end{vdm_al}
+
+GetTestNameは、テスト名を得る。 
+\begin{vdm_al}	
+static public GetTestName: FTestDriver`TestCase +> seq of char
+GetTestName(t) == t.testCaseName;
+
+end FTestDriver
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[FTestDriver]{vdm.tc}[FTestDriver]
+\end{rtinfo}

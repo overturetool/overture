@@ -1,0 +1,81 @@
+class Character
+
+values
+--vNumEnglishChars = "0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+vNumOrderMap = 
+	{'0' |-> 1, '1' |-> 2, '2' |-> 3, '3' |-> 4, '4' |-> 5, '5' |-> 6, '6' |-> 7, '7' |-> 8, '8' |-> 9, '9' |-> 10};
+
+vChapitalCharOrderMap =
+	{'A' |-> 12, 'B' |-> 14, 'C' |-> 16, 'D' |-> 18, 'E' |-> 20, 'F' |-> 22, 'G' |-> 24, 'H' |-> 26, 'I' |-> 28, 
+	'J' |-> 30, 'K' |-> 32, 'L' |-> 34, 'M' |-> 36, 'N' |-> 38, 'O' |-> 40, 'P' |-> 42, 'Q' |-> 44, 'R' |-> 46,
+	'S' |-> 48, 'T' |-> 50, 'U' |-> 52, 'V' |-> 54, 'W' |-> 56, 'X' |-> 58, 'Y' |-> 60, 'Z' |-> 62};
+
+vSmallCharOrderMap =
+	{'a' |-> 11, 'b' |-> 13, 'c' |-> 15, 'd' |-> 17, 'e' |-> 19, 'f' |-> 21, 'g' |-> 23, 'h' |-> 25, 'i' |-> 27,
+	'j' |-> 29, 'k' |-> 31, 'l' |-> 33, 'm' |-> 35, 'n' |-> 37, 'o' |-> 39, 'p' |-> 41, 'q' |-> 43, 'r' |-> 45, 
+	's' |-> 47, 't' |-> 49, 'u' |-> 51, 'v' |-> 53, 'w' |-> 55, 'x' |-> 57, 'y' |-> 59, 'z' |-> 61};
+
+vCharOrderMap = vNumOrderMap munion vChapitalCharOrderMap munion vSmallCharOrderMap;
+
+functions
+/* Converted from vNumEnglishChars to vCharOrderMap
+static public makeOrderMap : seq of char +> map char to nat
+makeOrderMap(s) ==
+	{s(i) |-> i | i in set inds s};
+*/
+
+static public asDigit: char -> int | bool
+asDigit(c) ==
+	if isDigit(c) then
+		let s = [c] in
+		let mk_(-, i) = VDMUtil`seq_of_char2val[int](s) in i
+	else
+		false;
+
+static public asDictOrder : char -> int
+asDictOrder(c) == 
+	if c in set dom vCharOrderMap then
+		vCharOrderMap(c)
+	else
+		let nonAsciiChar = 999999 in nonAsciiChar;
+
+static public isDigit : char -> bool
+isDigit(c) == c in set dom vNumOrderMap;
+
+static public isLetter : char -> bool
+isLetter(c) == c in set dom (vChapitalCharOrderMap munion vSmallCharOrderMap);
+
+static public isLetterOrDigit : char -> bool
+isLetterOrDigit(c) == isDigit(c) or isLetter(c);
+
+static public isCapitalLetter : char -> bool
+isCapitalLetter(c) == c in set dom vChapitalCharOrderMap;
+
+static public isLowercaseLetter : char -> bool
+isLowercaseLetter(c) == c in set dom vSmallCharOrderMap;
+
+static public LT: char * char -> bool
+LT(c1,c2) == Character`LT2(c1)(c2);
+
+static public LT2: char -> char -> bool
+LT2(c1)(c2) == Character`asDictOrder(c1) < Character`asDictOrder(c2);
+
+static public LE : char * char -> bool
+LE(c1, c2) == Character`LE2(c1)(c2);
+
+static public LE2 : char -> char -> bool
+LE2(c1)(c2) ==  Character`LT2(c1)(c2) or c1 = c2;
+
+static public GT : char * char -> bool
+GT(c1, c2) == Character`GT2(c1)(c2);
+
+static public GT2 : char -> char -> bool
+GT2(c1)(c2) == Character`LT2(c2)(c1);
+
+static public GE : char * char -> bool
+GE(c1, c2) == Character`GE2(c1)(c2);
+
+static public GE2 : char -> char -> bool
+GE2(c1)(c2) == not Character`LT2(c1)(c2);
+			
+end Character

@@ -1,0 +1,33 @@
+class StockMarket is subclass of GLOBAL
+
+ instance variables
+  stocks : map StockIdentifier to Stock := {|->};
+
+ operations
+  public UpdateStocks:() ==> ()
+  UpdateStocks() == 
+   for all stock in set rng stocks do
+    stock.UpdateStock();
+
+  public AddStock:(Stock )==> ()
+  AddStock(stock) == 
+   stocks := {stock.GetName() |-> stock} munion stocks
+  pre stock.GetName() not in set dom stocks
+  post stock.GetName() in set dom stocks; 
+
+  public RemoveStock:(Stock )==> ()
+  RemoveStock(stock) == 
+   stocks := {stock.GetName()} <-: stocks
+  pre stock.GetName() in set dom stocks
+  post stock.GetName() not in set dom stocks;
+
+  public GetStock:(StockIdentifier)==> Stock 
+  GetStock(name) == 
+   return stocks(name)
+  pre name in set dom stocks;
+
+  public GetStockNames: () ==> set of StockIdentifier 
+  GetStockNames() ==
+   return dom stocks;
+  
+end StockMarket

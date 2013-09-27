@@ -1,7 +1,18 @@
 package org.overture.typechecker.assistant;
 
+import java.util.List;
+
+import org.overture.ast.analysis.AnalysisAdaptor;
+import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
-import org.overture.typechecker.assistant.definition.AAssignmentDefinitionAssistantTC;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
@@ -34,48 +45,8 @@ import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
 import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
-import org.overture.typechecker.assistant.expression.ACasesExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElementsUnaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AElseIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExists1ExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AExistsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFieldNumberExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AForAllExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AFuncInstatiationExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIfExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIotaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AIsOfClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALambdaExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetBeStExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ALetDefExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapCompMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapEnumMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMapletExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkBasicExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMkTypeExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AMuExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANarrowExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ANewExpAssistantTC;
-import org.overture.typechecker.assistant.expression.APostOpExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ARecordModifierAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameBaseClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASameClassExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqCompSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASeqEnumSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetCompSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASetEnumSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ASubseqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ATupleExpAssistantTC;
-import org.overture.typechecker.assistant.expression.AVariableExpAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SMapExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSeqExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SSetExpAssistantTC;
-import org.overture.typechecker.assistant.expression.SUnaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AAllImportAssistantTC;
 import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
@@ -116,30 +87,13 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.statement.AAlwaysStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AAssignmentStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACaseAlternativeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACasesStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AElseIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AExitStmAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
-import org.overture.typechecker.assistant.statement.AForAllStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForIndexStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AForPatternBindStmAssitantTC;
-import org.overture.typechecker.assistant.statement.AIfStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ALetBeStStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AReturnStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATixeStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ATrapStmAssistantTC;
-import org.overture.typechecker.assistant.statement.AWhileStmAssistantTC;
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SLetDefStmAssistantTC;
-import org.overture.typechecker.assistant.statement.SSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
@@ -168,6 +122,25 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.CallableOperationChecker;
+import org.overture.typechecker.utilities.DefinitionCollector;
+import org.overture.typechecker.utilities.DefinitionEqualityChecker;
+import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.ExitTypeCollector;
+import org.overture.typechecker.utilities.FunctionChecker;
+import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
+import org.overture.typechecker.utilities.KindFinder;
+import org.overture.typechecker.utilities.NameFinder;
+import org.overture.typechecker.utilities.OperationChecker;
+import org.overture.typechecker.utilities.PTypeFunctionChecker;
+import org.overture.typechecker.utilities.SelfDefinitionFinder;
+import org.overture.typechecker.utilities.TypeFinder;
+import org.overture.typechecker.utilities.TypeFinder.Newquestion;
+import org.overture.typechecker.utilities.TypeUtils;
+import org.overture.typechecker.utilities.UpdatableChecker;
+import org.overture.typechecker.utilities.UsedChecker;
+import org.overture.typechecker.utilities.UsedMarker;
+import org.overture.typechecker.utilities.VariableNameCollector;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -175,12 +148,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	static
 	{
 		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		//init(new AstAssistantFactory());
+		// init(new AstAssistantFactory());
 		init(new TypeCheckerAssistantFactory());
 	}
 
-	
-	//Type
+	// Type
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -349,14 +321,14 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SSeqTypeAssistantTC(this);
 	}
-	
-	//definition
 
-	@Override
-	public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
-	{
-		return new AAssignmentDefinitionAssistantTC(this);
-	}
+	// definition
+
+	// @Override
+	// public AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant()
+	// {
+	// return new AAssignmentDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant()
@@ -537,7 +509,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SClassDefinitionAssistantTC(this);
 	}
-	
+
 	// expression
 
 	@Override
@@ -553,222 +525,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public ACasesExpAssistantTC createACasesExpAssistant()
-	{
-		return new ACasesExpAssistantTC(this);
-	}
-
-	@Override
-	public AElementsUnaryExpAssistantTC createAElementsUnaryExpAssistant()
-	{
-		return new AElementsUnaryExpAssistantTC(this);
-	}
-
-	@Override
-	public AElseIfExpAssistantTC createAElseIfExpAssistant()
-	{
-		return new AElseIfExpAssistantTC(this);
-	}
-
-	@Override
-	public AExists1ExpAssistantTC createAExists1ExpAssistant()
-	{
-		return new AExists1ExpAssistantTC(this);
-	}
-
-	@Override
-	public AExistsExpAssistantTC createAExistsExpAssistant()
-	{
-		return new AExistsExpAssistantTC(this);
-	}
-
-	@Override
-	public AFieldExpAssistantTC createAFieldExpAssistant()
-	{
-		return new AFieldExpAssistantTC(this);
-	}
-
-	@Override
-	public AFieldNumberExpAssistantTC createAFieldNumberExpAssistant()
-	{
-		return new AFieldNumberExpAssistantTC(this);
-	}
-
-	@Override
-	public AForAllExpAssistantTC createAForAllExpAssistant()
-	{
-		return new AForAllExpAssistantTC(this);
-	}
-
-	@Override
-	public AFuncInstatiationExpAssistantTC createAFuncInstatiationExpAssistant()
-	{
-		return new AFuncInstatiationExpAssistantTC(this);
-	}
-
-	@Override
-	public AIfExpAssistantTC createAIfExpAssistant()
-	{
-		return new AIfExpAssistantTC(this);
-	}
-
-	@Override
-	public AIotaExpAssistantTC createAIotaExpAssistant()
-	{
-		return new AIotaExpAssistantTC(this);
-	}
-
-	@Override
-	public AIsExpAssistantTC createAIsExpAssistant()
-	{
-		return new AIsExpAssistantTC(this);
-	}
-
-	@Override
-	public AIsOfBaseClassExpAssistantTC createAIsOfBaseClassExpAssistant()
-	{
-		return new AIsOfBaseClassExpAssistantTC(this);
-	}
-
-	@Override
-	public AIsOfClassExpAssistantTC createAIsOfClassExpAssistant()
-	{
-		return new AIsOfClassExpAssistantTC(this);
-	}
-
-	@Override
-	public ALambdaExpAssistantTC createALambdaExpAssistant()
-	{
-		return new ALambdaExpAssistantTC(this);
-	}
-
-	@Override
-	public ALetBeStExpAssistantTC createALetBeStExpAssistant()
-	{
-		return new ALetBeStExpAssistantTC(this);
-	}
-
-	@Override
-	public ALetDefExpAssistantTC createALetDefExpAssistant()
-	{
-		return new ALetDefExpAssistantTC(this);
-	}
-
-	@Override
-	public AMapCompMapExpAssistantTC createAMapCompMapExpAssistant()
-	{
-		return new AMapCompMapExpAssistantTC(this);
-	}
-
-	@Override
-	public AMapEnumMapExpAssistantTC createAMapEnumMapExpAssistant()
-	{
-		return new AMapEnumMapExpAssistantTC(this);
-	}
-
-	@Override
-	public AMapletExpAssistantTC createAMapletExpAssistant()
-	{
-		return new AMapletExpAssistantTC(this);
-	}
-
-	@Override
-	public AMkBasicExpAssistantTC createAMkBasicExpAssistant()
-	{
-		return new AMkBasicExpAssistantTC(this);
-	}
-
-	@Override
-	public AMkTypeExpAssistantTC createAMkTypeExpAssistant()
-	{
-		return new AMkTypeExpAssistantTC(this);
-	}
-
-	@Override
-	public AMuExpAssistantTC createAMuExpAssistant()
-	{
-		return new AMuExpAssistantTC(this);
-	}
-
-	@Override
-	public ANarrowExpAssistantTC createANarrowExpAssistant()
-	{
-		return new ANarrowExpAssistantTC(this);
-	}
-
-	@Override
-	public ANewExpAssistantTC createANewExpAssistant()
-	{
-		return new ANewExpAssistantTC(this);
-	}
-
-	@Override
-	public APostOpExpAssistantTC createAPostOpExpAssistant()
-	{
-		return new APostOpExpAssistantTC(this);
-	}
-
-	@Override
-	public ARecordModifierAssistantTC createARecordModifierAssistant()
-	{
-		return new ARecordModifierAssistantTC(this);
-	}
-
-	@Override
-	public ASameBaseClassExpAssistantTC createASameBaseClassExpAssistant()
-	{
-		return new ASameBaseClassExpAssistantTC(this);
-	}
-
-	@Override
-	public ASameClassExpAssistantTC createASameClassExpAssistant()
-	{
-		return new ASameClassExpAssistantTC(this);
-	}
-
-	@Override
-	public ASeqCompSeqExpAssistantTC createASeqCompSeqExpAssistant()
-	{
-		return new ASeqCompSeqExpAssistantTC(this);
-	}
-
-	@Override
-	public ASeqEnumSeqExpAssistantTC createASeqEnumSeqExpAssistant()
-	{
-		return new ASeqEnumSeqExpAssistantTC(this);
-	}
-
-	@Override
-	public ASetCompSetExpAssistantTC createASetCompSetExpAssistant()
-	{
-		return new ASetCompSetExpAssistantTC(this);
-	}
-
-	@Override
-	public ASetEnumSetExpAssistantTC createASetEnumSetExpAssistant()
-	{
-		return new ASetEnumSetExpAssistantTC(this);
-	}
-
-	@Override
-	public ASubseqExpAssistantTC createASubseqExpAssistant()
-	{
-		return new ASubseqExpAssistantTC(this);
-	}
-
-	@Override
-	public ATupleExpAssistantTC createATupleExpAssistant()
-	{
-		return new ATupleExpAssistantTC(this);
-	}
-
-	@Override
-	public AVariableExpAssistantTC createAVariableExpAssistant()
-	{
-		return new AVariableExpAssistantTC(this);
-	}
-
-	@Override
 	public PExpAssistantTC createPExpAssistant()
 	{
 		return new PExpAssistantTC(this);
@@ -780,31 +536,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new SBinaryExpAssistantTC(this);
 	}
 
-	@Override
-	public SMapExpAssistantTC createSMapExpAssistant()
-	{
-		return new SMapExpAssistantTC(this);
-	}
-
-	@Override
-	public SSeqExpAssistantTC createSSeqExpAssistant()
-	{
-		return new SSeqExpAssistantTC(this);
-	}
-
-	@Override
-	public SSetExpAssistantTC createSSetExpAssistant()
-	{
-		return new SSetExpAssistantTC(this);
-	}
-
-	@Override
-	public SUnaryExpAssistantTC createSUnaryExpAssistant()
-	{
-		return new SUnaryExpAssistantTC(this);
-	}
-	
-	//module
+	// module
 
 	@Override
 	public AAllImportAssistantTC createAAllImportAssistant()
@@ -844,8 +576,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	@Override
 	public AValueValueImportAssistantTC createAValueValueImportAssistant()
-	{
-		return new AValueValueImportAssistantTC(this);
+	{		return new AValueValueImportAssistantTC(this);
 	}
 
 	@Override
@@ -865,8 +596,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new SValueImportAssistantTC(this);
 	}
-	
-	//pattern
+
+	// pattern
 
 	@Override
 	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
@@ -1047,20 +778,20 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new PPatternListAssistantTC(this);
 	}
-	
-	//statement
 
-	@Override
-	public AAlwaysStmAssistantTC createAAlwaysStmAssistant()
-	{
-		return new AAlwaysStmAssistantTC(this);
-	}
+	// statement
 
-	@Override
-	public AAssignmentStmAssistantTC createAAssignmentStmAssistant()
-	{
-		return new AAssignmentStmAssistantTC(this);
-	}
+	// @Override
+	// public AAlwaysStmAssistantTC createAAlwaysStmAssistant()
+	// {
+	// return new AAlwaysStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AAssignmentStmAssistantTC createAAssignmentStmAssistant()
+	// {
+	// return new AAssignmentStmAssistantTC(this);
+	// }
 
 	@Override
 	public ABlockSimpleBlockStmAssistantTC createABlockSimpleBlockStmAssistant()
@@ -1080,29 +811,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ACallStmAssistantTC(this);
 	}
 
-	@Override
-	public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
-	{
-		return new ACaseAlternativeStmAssistantTC(this);
-	}
-
-	@Override
-	public ACasesStmAssistantTC createACasesStmAssistant()
-	{
-		return new ACasesStmAssistantTC(this);
-	}
-
-	@Override
-	public AElseIfStmAssistantTC createAElseIfStmAssistant()
-	{
-		return new AElseIfStmAssistantTC(this);
-	}
-
-	@Override
-	public AExitStmAssistantTC createAExitStmAssistant()
-	{
-		return new AExitStmAssistantTC(this);
-	}
+	// @Override
+	// public ACaseAlternativeStmAssistantTC createACaseAlternativeStmAssistant()
+	// {
+	// return new ACaseAlternativeStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ACasesStmAssistantTC createACasesStmAssistant()
+	// {
+	// return new ACasesStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AElseIfStmAssistantTC createAElseIfStmAssistant()
+	// {
+	// return new AElseIfStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AExitStmAssistantTC createAExitStmAssistant()
+	// {
+	// return new AExitStmAssistantTC(this);
+	// }
 
 	@Override
 	public AExternalClauseAssistantTC createAExternalClauseAssistant()
@@ -1110,35 +841,35 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AExternalClauseAssistantTC(this);
 	}
 
-	@Override
-	public AForAllStmAssistantTC createAForAllStmAssistant()
-	{
-		return new AForAllStmAssistantTC(this);
-	}
+	// @Override
+	// public AForAllStmAssistantTC createAForAllStmAssistant()
+	// {
+	// return new AForAllStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AForIndexStmAssistantTC createAForIndexStmAssistant()
+	// {
+	// return new AForIndexStmAssistantTC(this);
+	// }
 
-	@Override
-	public AForIndexStmAssistantTC createAForIndexStmAssistant()
-	{
-		return new AForIndexStmAssistantTC(this);
-	}
-
-	@Override
-	public AForPatternBindStmAssitantTC createAForPatternBindStmAssitant()
-	{
-		return new AForPatternBindStmAssitantTC(this);
-	}
-
-	@Override
-	public AIfStmAssistantTC createAIfStmAssistant()
-	{
-		return new AIfStmAssistantTC(this);
-	}
-
-	@Override
-	public ALetBeStStmAssistantTC createALetBeStStmAssistant()
-	{
-		return new ALetBeStStmAssistantTC(this);
-	}
+	// @Override
+	// public AForPatternBindStmAssitantTC createAForPatternBindStmAssitant()
+	// {
+	// return new AForPatternBindStmAssitantTC(this);
+	// }
+	//
+	// @Override
+	// public AIfStmAssistantTC createAIfStmAssistant()
+	// {
+	// return new AIfStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ALetBeStStmAssistantTC createALetBeStStmAssistant()
+	// {
+	// return new ALetBeStStmAssistantTC(this);
+	// }
 
 	@Override
 	public ANonDeterministicSimpleBlockStmAssistantTC createANonDeterministicSimpleBlockStmAssistant()
@@ -1146,29 +877,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ANonDeterministicSimpleBlockStmAssistantTC(this);
 	}
 
-	@Override
-	public AReturnStmAssistantTC createAReturnStmAssistant()
-	{
-		return new AReturnStmAssistantTC(this);
-	}
+	// @Override
+	// public AReturnStmAssistantTC createAReturnStmAssistant()
+	// {
+	// return new AReturnStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public ATixeStmAssistantTC createATixeStmAssistant()
+	// {
+	// return new ATixeStmAssistantTC(this);
+	// }
 
-	@Override
-	public ATixeStmAssistantTC createATixeStmAssistant()
-	{
-		return new ATixeStmAssistantTC(this);
-	}
-
-	@Override
-	public ATrapStmAssistantTC createATrapStmAssistant()
-	{
-		return new ATrapStmAssistantTC(this);
-	}
-
-	@Override
-	public AWhileStmAssistantTC createAWhileStmAssistant()
-	{
-		return new AWhileStmAssistantTC(this);
-	}
+	// @Override
+	// public ATrapStmAssistantTC createATrapStmAssistant()
+	// {
+	// return new ATrapStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AWhileStmAssistantTC createAWhileStmAssistant()
+	// {
+	// return new AWhileStmAssistantTC(this);
+	// }
 
 	@Override
 	public PStateDesignatorAssistantTC createPStateDesignatorAssistant()
@@ -1182,19 +913,123 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PStmAssistantTC(this);
 	}
 
+	// @Override
+	// public SLetDefStmAssistantTC createSLetDefStmAssistant()
+	// {
+	// return new SLetDefStmAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
+	// {
+	// return new SSimpleBlockStmAssistantTC(this);
+	// }
+
+	/* New visitor utilities */
+
 	@Override
-	public SLetDefStmAssistantTC createSLetDefStmAssistant()
+	public IAnswer<List<PDefinition>> getDefinitionCollector()
 	{
-		return new SLetDefStmAssistantTC(this);
+		return new DefinitionCollector(this);
 	}
 
 	@Override
-	public SSimpleBlockStmAssistantTC createSSimpleBlockStmAssistant()
+	public IAnswer<PType> getDefinitionTypeFinder()
 	{
-		return new SSimpleBlockStmAssistantTC(this);
+		return new DefinitionTypeFinder(this);
 	}
 
+	@Override
+	public IQuestionAnswer<Object, Boolean> getDefinitionEqualityChecker()
+	{
+		return new DefinitionEqualityChecker(this);
+	}
 
+	@Override
+	public AnswerAdaptor<Boolean> getMapBasisChecker()
+	{
+		return new TypeUtils.MapBasisChecker(this);
+	}
+
+	@Override
+	public IAnswer<LexNameList> getVariableNameCollector()
+	{
+		return new VariableNameCollector(this);
+	}
+
+	@Override
+	public IAnswer<PDefinition> getSelfDefinitionFinder()
+	{
+		return new SelfDefinitionFinder(this);
+	}
+
+	@Override
+	public IAnswer<PTypeSet> getExitTypeCollector()
+	{
+		return new ExitTypeCollector(this);
+	}
 	
+	@Override
+	public IQuestionAnswer<Newquestion, PDefinition> getTypeFinder()
+	{
+		return new TypeFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<NameFinder.Newquestion, PDefinition> getNameFinder()
+	{
+		return new NameFinder(this);
+	}
+
+	@Override
+	public AnswerAdaptor<Boolean> getFunctionChecker()
+	{
+		return new FunctionChecker(this);
+	}
+	@Override
+	public IAnswer<Boolean> getOperationChecker()
+	{
+		return new OperationChecker(this);
+	}
+	@Override
+	public IAnswer<String> getKindFinder()
+	{
+		return new KindFinder(this);
+	}
 	
+	@Override
+	public IAnswer<Boolean> getUpdatableChecker()
+	{
+		return new UpdatableChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getCallableOperationChecker()
+	{
+		return new CallableOperationChecker(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getUsedMarker()
+	{
+		return new UsedMarker(this);
+	}	
+	
+	@Override
+	public IQuestion<Environment> getImplicitDefinitionFinder()
+	{
+		return new ImplicitDefinitionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getUsedChecker()
+	{
+		return new UsedChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getPTypeFunctionChecker()
+	{
+		return new PTypeFunctionChecker(this);
+	}
 }

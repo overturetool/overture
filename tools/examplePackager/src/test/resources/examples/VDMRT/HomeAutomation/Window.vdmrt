@@ -1,0 +1,69 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Window actuator sub class
+-----------------------------------------------
+
+--
+-- class definition
+--
+class Window is subclass of Actuator
+
+--
+-- instance variables
+--
+instance variables
+
+  finished : bool := false;
+
+--
+-- Operations definition section
+--
+operations
+
+public Window: nat * NetworkTypes`nodeType ==> Window
+Window (id, type) ==
+ (ID := id;
+  Type := type;
+  Corr := <CLOSE>;
+ );
+
+private PeriodicOp: () ==> ()
+PeriodicOp() ==
+  --cycles(1E3)
+ (dcl tempCorr: NetworkTypes`correction := GetCorrection();
+  if (tempCorr = <OPEN>)
+  then (World`env.DecHumid();
+        World`env.DecTemp();
+       );
+ );
+
+async public SetCorrection: NetworkTypes`correction ==> ()
+SetCorrection(cor) ==
+  --cycles(1E3)
+  Corr := cor
+pre (cor = <OPEN>) or (cor = <CLOSE>);
+
+public GetCorrection: () ==> NetworkTypes`correction
+GetCorrection() ==
+  return Corr;
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+  --mutex(PeriodicOp); -- ADDED
+  per IsFinished => finished;
+  mutex(SetCorrection, GetCorrection);
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (PeriodicOp)
+
+end Window

@@ -125,7 +125,7 @@ public class VdmElementLabels {
 			return getLocalDefinitionLabel((ALocalDefinition) element);
 		}
 		if (element instanceof AValueDefinition) {
-			System.out.println("VALUE DEF");
+//			System.out.println("VALUE DEF");
 		}
 		if (element instanceof ANamedTraceDefinition) {
 			return getNamedTraceDefinitionLabel((ANamedTraceDefinition) element);

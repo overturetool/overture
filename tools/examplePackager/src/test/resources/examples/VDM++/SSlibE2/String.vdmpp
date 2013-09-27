@@ -1,0 +1,152 @@
+class String is subclass of Sequence
+
+functions
+
+--Conversion functions
+static public asInteger: seq of char -> int
+asInteger(s) == String`AsIntegerAux(s)(0);
+
+static private AsIntegerAux : seq of char -> int -> int
+AsIntegerAux(s)(sum) ==
+	if s = [] then
+		sum
+	else
+		AsIntegerAux(tl s)(10 * sum + Character`asDigit(hd s));
+--	measure length;
+
+static length : seq of char +> nat
+length(s) == len s;
+
+static lengthNil : [seq of char] +> nat
+lengthNil(s) == if s = nil then 0 else len s;
+	
+--Decision functions
+static public isSomeString: (char -> bool) -> seq of char -> bool
+isSomeString(f)(s) == forall i in set inds s & f(s(i));
+
+static public isDigits : seq of char -> bool
+isDigits(s) == isSomeString(Character`isDigit)(s);
+
+static public isLetters : seq of char -> bool
+isLetters(s) == isSomeString(Character`isLetter)(s);
+
+static public isLetterOrDigits : seq of char -> bool
+isLetterOrDigits(s) == isSomeString(Character`isLetterOrDigit)(s);
+
+static public isSpaces : [seq of char] -> bool
+isSpaces(s) ==isSomeString(lambda c : char & c = ' ' or c = '\t')(s);
+
+static public LT : seq of char * seq of char -> bool
+LT(s1, s2) == String`LT2(s1)(s2);
+
+static public LT2 : seq of char -> seq of char -> bool
+LT2(s1)(s2) == 
+	cases mk_(s1,s2):
+		mk_([],[])		-> false,
+		mk_([],-)		-> true,
+		mk_(-^-,[])	-> false,
+		mk_([head1]^tails1,[head2]^tails2)	->
+			if Character`LT(head1,head2) then
+				true
+			elseif Character`LT(head2,head1) then
+				false
+			else
+				String`LT(tails1, tails2)
+	end;
+
+static public LE : seq of char * seq of char -> bool
+LE(s1, s2) == String`LE2(s1)(s2);
+
+static public LE2 : seq of char -> seq of char -> bool
+LE2(s1)(s2) == String`LT2(s1)(s2) or s1 = s2;
+
+static public GT : seq of char * seq of char -> bool
+GT(s1, s2) == String`GT2(s1)(s2);
+
+static public GT2 : seq of char -> seq of char -> bool
+GT2(s1)(s2) == String`LT(s2, s1);
+
+static public GE : seq of char * seq of char -> bool
+GE(s1, s2) == String`GE2(s1)(s2);
+
+static public GE2 : seq of char -> seq of char -> bool
+GE2(s1)(s2) == not String`LT2(s1)(s2);
+
+static public Index: char -> seq of char -> int
+Index(c)(aStr) == Sequence`Index[char](c)(aStr);
+
+static public indexAll : seq of char * char -> set of int
+indexAll(aStr,c) == Sequence`IndexAll2[char](c)(aStr);
+
+static public IndexAll2 : char -> seq of char -> set of int
+IndexAll2(c)(aStr) == Sequence`IndexAll2[char](c)(aStr);
+
+static public isInclude : seq of char -> seq of char -> bool
+isInclude(aStr)(aTargetStr) ==
+	let	indexSet = indexAll(aStr,aTargetStr(1))
+	in	exists i in set indexSet & 
+			SubStr(i)(len aTargetStr)(aStr) = aTargetStr
+pre
+	aTargetStr <> ""
+	;
+
+static public subStr :
+	seq1 of char * nat * nat -> seq of char
+subStr(aStr,fromPos,length) == aStr(fromPos,...,fromPos+length-1);
+
+static public SubStr : nat -> nat -> seq1 of char -> seq of char
+SubStr(fromPos)(length)(aStr) == aStr(fromPos,...,fromPos+length-1);
+
+static public GetToken : seq of char * set of char -> seq of char
+GetToken(s, aDelimitterSet) == 
+	TakeWhile[char](lambda c : char & c not in set aDelimitterSet)(s);
+
+static public DropToken : seq of char * set of char -> seq of char
+DropToken(s, aDelimitterSet) == 
+	DropWhile[char](lambda c : char & c not in set aDelimitterSet)(s);
+
+static public getLines : seq of char -> seq of seq of char
+getLines(s) ==
+	getLinesAux(s)([]);
+
+static public getLinesAux : seq of char -> seq of seq of char -> seq of seq of char
+getLinesAux(s)(line) ==
+	if s = [] then
+		line
+	else
+		let wDelimitterSet = {'\n'},
+			wHeadLine = GetToken(s, wDelimitterSet),
+			wTailStringCandidate = DropToken(s, wDelimitterSet),
+			wTailString = 
+				if wTailStringCandidate <> [] and hd wTailStringCandidate = '\n' then tl wTailStringCandidate 
+				else wTailStringCandidate
+		in
+		getLinesAux(wTailString)(line ^ [wHeadLine]);
+--measure length;
+
+operations
+static public index: seq of char * char ==> int
+index(aStr,c) == (
+	for i = 1 to len aStr do
+		if aStr(i) = c then return i;
+	return 0
+);
+
+static public subStrFill :
+	seq of char * nat * nat * char ==> seq of char
+subStrFill(aStr,fromPos,length, fillChar) ==
+	let	lastPos = fromPos+length-1
+	in (
+		dcl aResult : seq of char := "";
+		for i = fromPos to lastPos  do (
+			if i <= len aStr then
+				aResult := aResult ^ [aStr(i)]
+			else
+				aResult := aResult ^ [fillChar]
+		);
+		return aResult
+	)
+pre
+	fromPos > 0 and length >= 0;
+
+end String

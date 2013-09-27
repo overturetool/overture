@@ -12,21 +12,19 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class AStateDefinitionAssistantTC {
+public class AStateDefinitionAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -34,78 +32,28 @@ public class AStateDefinitionAssistantTC {
 	{
 		this.af = af;
 	}
-	public static PDefinition findType( AStateDefinition d, ILexNameToken sought,
-			String fromModule) {
-		
-		if (PDefinitionAssistantTC.findName(d,sought, NameScope.STATE) != null)
-		{
-			return d;
-		}
 
-		return null;
-	}
-
-	public static PDefinition findName(AStateDefinition definition, ILexNameToken sought,
-			NameScope scope) {
-		
-		if (scope.matches(NameScope.NAMES))
-		{
-			PDefinition invdef = definition.getInvdef();
-			
-    		if (invdef != null && PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
-    		{
-    			return invdef;
-    		}
-
-    		PDefinition initdef = definition.getInitdef();
-    		if (initdef != null && PDefinitionAssistantTC.findName(initdef,sought, scope) != null)
-    		{
-    			return initdef;
-    		}
-		}
-		
-//		if ( PDefinitionAssistantTC.findName(definition.getRecordDefinition(), sought, scope) != null)
-//		{
-//			return definition.getRecordDefinition();
-//		}
-
-		for (PDefinition d: definition.getStateDefs())
-		{
-			PDefinition def = PDefinitionAssistantTC.findName(d, sought, scope);
-
-			if (def != null)
-			{
-				return def;
-			}
-		}
-
-		return null;
-	}
-
-	public static void unusedCheck(AStateDefinition d) {
+	public static void unusedCheck(AStateDefinition d)
+	{
 
 		PDefinitionListAssistantTC.unusedCheck(d.getStateDefs());
 	}
 
-	public static List<PDefinition> getDefinitions(AStateDefinition d) {
+	public static List<PDefinition> getDefinitions(AStateDefinition d)
+	{
 		return d.getStateDefs();
 	}
-
-	public static LexNameList getVariableNames(AStateDefinition d) {
-		return PDefinitionListAssistantTC.getVariableNames(d.getStateDefs());
-	}
-
 	public static void typeResolve(AStateDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		
-		for (AFieldField f: d.getFields())
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		for (AFieldField f : d.getFields())
 		{
 			try
 			{
-				AFieldFieldAssistantTC.typeResolve(f,null,rootVisitor,question);
-			}
-			catch (TypeCheckException e)
+				AFieldFieldAssistantTC.typeResolve(f, null, rootVisitor, question);
+			} catch (TypeCheckException e)
 			{
 				AFieldFieldAssistantTC.unResolve(f);
 				throw e;
@@ -123,23 +71,26 @@ public class AStateDefinitionAssistantTC {
 		{
 			PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
 		}
-		
+
 	}
 
-	public static void implicitDefinitions(AStateDefinition d, Environment env) {
-		if (d.getInvPattern() != null)
-		{
-			d.setInvdef(getInvDefinition(d));
-		}
+//	public static void implicitDefinitions(AStateDefinition d, Environment env)
+//	{
+//		if (d.getInvPattern() != null)
+//		{
+//			d.setInvdef(getInvDefinition(d));
+//		}
+//
+//		if (d.getInitPattern() != null)
+//		{
+//			d.setInitdef(getInitDefinition(d));
+//		}
+//
+//	}
 
-		if (d.getInitPattern() != null)
-		{
-			d.setInitdef(getInitDefinition(d));
-		}
-		
-	}
-
-	private static AExplicitFunctionDefinition getInitDefinition(AStateDefinition d) {
+	public static AExplicitFunctionDefinition getInitDefinition(
+			AStateDefinition d)
+	{
 		ILexLocation loc = d.getInitPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInitPattern().clone());
@@ -149,23 +100,19 @@ public class AStateDefinitionAssistantTC {
 
 		PTypeList ptypes = new PTypeList();
 		ptypes.add(AstFactory.newAUnresolvedType(d.getName()));
-		AFunctionType ftype =
-				AstFactory.newAFunctionType( loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
 		PExp body = AstFactory.newAStateInitExp(d);
 
-		AExplicitFunctionDefinition def = 
-				AstFactory.newAExplicitFunctionDefinition(
-						d.getName().getInitName(loc), 
-						NameScope.GLOBAL, 
-						null, ftype, parameters, body, null, null, false, null);
-	
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getInitName(loc), NameScope.GLOBAL, null, ftype, parameters, body, null, null, false, null);
+
 		return def;
 	}
 
-	private static AExplicitFunctionDefinition getInvDefinition(
-			AStateDefinition d) {
-		
+	public static AExplicitFunctionDefinition getInvDefinition(
+			AStateDefinition d)
+	{
+
 		ILexLocation loc = d.getInvPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
 		params.add(d.getInvPattern().clone());
@@ -175,12 +122,9 @@ public class AStateDefinitionAssistantTC {
 
 		PTypeList ptypes = new PTypeList();
 		ptypes.add(AstFactory.newAUnresolvedType(d.getName()));
-		AFunctionType ftype =
-			AstFactory.newAFunctionType( loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
+		AFunctionType ftype = AstFactory.newAFunctionType(loc, false, ptypes, AstFactory.newABooleanBasicType(loc));
 
-		return AstFactory.newAExplicitFunctionDefinition(
-						d.getName().getInvName(loc), NameScope.GLOBAL, 
-						null, ftype, parameters, d.getInvExpression(),  null, null, true, null);
+		return AstFactory.newAExplicitFunctionDefinition(d.getName().getInvName(loc), NameScope.GLOBAL, null, ftype, parameters, d.getInvExpression(), null, null, true, null);
 	}
 
 }

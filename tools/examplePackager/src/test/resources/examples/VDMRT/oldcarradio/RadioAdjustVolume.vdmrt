@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class RadioAdjustVolume is subclass of BasicTask
+
+operations
+  public RadioAdjustVolume: EventDispatcher ==> RadioAdjustVolume
+  RadioAdjustVolume (pde) == BasicTask("AdjustVolume",pde);
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  public AdjustVolume: () ==> ()
+  AdjustVolume () == duration (100) skip;
+
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( AdjustVolume();
+      -- send message to next task in this scenario
+      sendMessage("UpdateScreenVolume", pe.getEvent()) )
+
+end RadioAdjustVolume
+\end{vdm_al}

@@ -1,0 +1,136 @@
+class Evaluator
+
+-- Evaluator is the "top level" class.  It receives an access control
+-- request and returns a response.
+
+instance variables
+
+pdp : PDP;       -- an object of class PDP --- Policy Decision Point
+env : Env;       -- an object of class Env
+req : Request;   -- a request 
+inst: Inst;
+
+types 
+
+Inst :: map FExp`UnId to FExp`Id
+
+values
+
+requester : FExp`UnId = mk_FExp`UnId(<requester>);
+resource  : FExp`UnId = mk_FExp`UnId(<resource>);
+-- action    : FExp`UnVar = mk_FExp`UnVar(<action>);
+
+operations
+
+public Evaluator: Request * PDP * Env ==> Evaluator
+Evaluator(r,p,e) ==
+ ( req := r;
+   pdp := p;
+   env := e;
+   inst := mk_Inst({requester |-> req.GetSubject(), 
+     resource |-> req.GetResource()})
+ );
+
+-- evaluate operates on the request that is part of Evaluator state. 
+
+public evaluate: () ==> PDP`Effect
+evaluate() ==
+  if (pdp.GetpolicyCombAlg() = <denyOverrides>) then  
+    return(evaluatePDPDenyOverrides())
+  elseif (pdp.GetpolicyCombAlg() = <permitOverrides>) then  
+    return(evaluatePDPPermitOverrides())
+  else
+    return(<NotApplicable>);
+
+evaluatePDPDenyOverrides : () ==> PDP`Effect 
+evaluatePDPDenyOverrides() ==
+  if exists p in set pdp.Getpolicies() & 
+    (evaluatePol(p) = <Deny> or evaluatePol(p) = <Indeterminate> )
+  then return(<Deny>)
+  elseif exists p in set pdp.Getpolicies() & 
+    evaluatePol(p) = <Permit>
+  then return(<Permit>)
+  else return(<NotApplicable>);
+
+evaluatePDPPermitOverrides : () ==> PDP`Effect 
+evaluatePDPPermitOverrides() ==
+  if exists p in set pdp.Getpolicies() & 
+    (evaluatePol(p) = <Permit> or evaluatePol(p) = <Indeterminate> )
+  then return(<Permit>)
+  elseif exists p in set pdp.Getpolicies() & 
+    evaluatePol(p) = <Deny>
+  then return(<Deny>)
+  else return(<NotApplicable>);
+
+evaluateRule : PDP`Rule ==> PDP`Effect 
+evaluateRule(rule) ==
+  if targetmatch(rule.target) then 
+     if rule.cond = nil 
+     then return(rule.effect)
+     else  if (rule.cond).wfExpr(env) then
+       cases (rule.cond).EvaluateBind(req,env):
+             true   -> return(rule.effect),
+             false  -> return(<NotApplicable>),
+            <Indet> -> return(<Indeterminate>),
+            others -> error
+       end
+           else return <NotApplicable> 
+  else
+    return(<NotApplicable>);
+  
+evaluatePol : PDP`Policy ==> PDP`Effect
+evaluatePol(pol) ==
+   if targetmatch(pol.target) then
+     cases pol.ruleCombAlg:
+           <denyOverrides>   -> return(evaluateRulesDenyOverrides(pol.rules)),
+           <permitOverrides> -> return(evaluateRulesPermitOverrides(pol.rules)),
+            others -> return(<NotApplicable>)
+     end
+   else  -- target does not match
+     return(<NotApplicable>);
+
+evaluateRulesDenyOverrides : set of PDP`Rule ==> PDP`Effect
+evaluateRulesDenyOverrides(rs) ==
+  if exists r in set rs &
+    evaluateRule(r) = <Deny>
+  then return(<Deny>)
+  elseif exists r in set rs & 
+    (evaluateRule(r) = <Indeterminate> and pdp.GetEffect(r) = <Deny> )
+  then return(<Indeterminate>)
+  elseif exists r in set rs &
+    evaluateRule(r) = <Permit>
+  then return(<Permit>)
+  elseif exists r in set rs & 
+    (evaluateRule(r) = <Indeterminate> and pdp.GetEffect(r) = <Permit> )
+  then return(<Indeterminate>)
+  else return(<NotApplicable>);
+
+evaluateRulesPermitOverrides : set of PDP`Rule ==> PDP`Effect
+evaluateRulesPermitOverrides(rs) ==
+  if exists r in set rs &
+    evaluateRule(r) = <Permit>
+  then return(<Permit>)
+  elseif exists r in set rs & 
+    (evaluateRule(r) = <Indeterminate> and pdp.GetEffect(r) = <Permit> )
+  then return(<Indeterminate>)
+  elseif exists r in set rs & 
+    evaluateRule(r) = <Deny>
+  then return(<Deny>)
+  elseif exists r in set rs & 
+    (evaluateRule(r) = <Indeterminate> and pdp.GetEffect(r) = <Deny> )
+  then return(<Indeterminate>)
+  else return(<NotApplicable>);
+
+-- targetmatch has been adapted.  If any of the sets in the target of 
+-- the (rule|policy) is empty then they match anything.  
+
+targetmatch : PDP`Target ==> bool
+targetmatch(tgt) ==
+     if ((tgt.subjects  = {}) or (req.GetSubject() in set tgt.subjects)) and
+        ((tgt.resources = {}) or (req.GetResource() in set tgt.resources)) and
+        ((tgt.actions = {})   or (req.GetActions() inter tgt.actions) <> {}) 
+     then return true 
+     else return false;
+
+
+end Evaluator

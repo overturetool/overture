@@ -1,0 +1,68 @@
+/*   
+ * Queue using 2 sequences.
+ * Usage:
+ *	make empty queue as following:
+ * 		let Q0 = DoubleListQueue`empty[int]() in ...
+ *	
+ *	append an element to queue:
+ *		DoubleListQueue`enQueue(1, Q0)
+ *	
+*/
+
+class DoubleListQueue
+
+functions
+static public empty[@T] : () -> seq of @T * seq of @T
+empty() == mk_([], []);
+
+static public isEmpty[@T] : (seq of @T * seq of @T) -> bool
+isEmpty(s) == s = mk_([], []);
+
+static public enQueue[@T] : @T * (seq of @T * seq of @T) -> seq of @T * seq of @T
+enQueue(anElem, mk_(aHeads, aTails)) == mk_(aHeads, [anElem] ^ aTails);
+
+static public deQueue[@T] : (seq of @T * seq of @T) -> [seq of @T * seq of @T]
+deQueue(mk_(aHeads, aTails)) == 
+	cases aHeads:
+		[-] ^ aTailsOfHeads	-> mk_(aTailsOfHeads, aTails),
+		[]	-> 
+			cases aTails:
+				[]		-> nil,
+				others	-> mk_(tl Sequence`freverse[@T](aTails), [])
+			end
+	end;
+
+static public top[@T] : (seq of @T * seq of @T) -> [@T]
+top(mk_(aHeads, aTails)) == 
+	cases aHeads:
+		[h] ^ -	-> h,
+		[]	-> 
+			cases aTails:
+				[]		-> nil,
+				others	-> hd Sequence`freverse[@T](aTails)
+			end
+	end;
+
+static public fromList[@T] : seq of @T * (seq of @T * seq of @T) -> seq of @T * seq of @T
+fromList(aSeq, aQueue) ==
+	cases aSeq:
+		[]				-> aQueue,
+		[h] ^ aTailsOfSeq		-> fromList[@T](aTailsOfSeq, enQueue[@T](h, aQueue))
+	end
+measure fromListMeasure;
+
+static fromListMeasure[@T] : seq of @T *  (seq of @T * seq of @T) +> nat
+fromListMeasure(s, -) == len s;
+
+static public toList[@T] : (seq of @T * seq of @T) -> seq of @T
+toList(aaQueue) ==
+	cases aaQueue:
+		(mk_([], []))	-> [],
+		aQueue	-> [top[@T](aQueue)] ^ toList[@T](deQueue[@T](aQueue))
+	end
+measure toListMeasure;
+
+static toListMeasure[@T] :  (seq of @T * seq of @T) +> nat
+toListMeasure(mk_(s1, s2)) == len s1 + len s2;
+
+end DoubleListQueue

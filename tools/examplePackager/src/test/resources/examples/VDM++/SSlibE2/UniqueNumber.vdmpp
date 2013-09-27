@@ -1,0 +1,35 @@
+class ＵｎｉｑｕｅＮｕｍｂｅｒ is subclass of CommonDefinition
+
+values
+ＤｅｆａｕｌｔＶａｌｕｅ = 1;
+
+instance variables
+protected UniqNum  : int := ＤｅｆａｕｌｔＶａｌｕｅ		-- UniqNum of next issued
+
+functions
+public getUniqNum : int * nat1 -> int
+getUniqNum(aCandidateNum, aNumberOfDigit) == 
+	if aCandidateNum >= 10 ** aNumberOfDigit then 
+		initialize() 
+	else
+		aCandidateNum;
+
+operations
+-- make an unique number within aNumberOfDigit
+public ｇｅｔＵｎｉｑＮｕｍＳｔｒ : nat1 ==> seq of char
+ｇｅｔＵｎｉｑＮｕｍＳｔｒ(aNumberOfDigit) ==
+	let	n = getUniqNum(UniqNum, aNumberOfDigit)
+	in
+	(
+	UniqNum := UniqNum + 1;
+	return Integer`asString(n)
+	);
+	
+public initialize : () ==> int
+initialize() == 
+	(
+	UniqNum := ＤｅｆａｕｌｔＶａｌｕｅ;
+	return UniqNum
+	);
+
+end  ＵｎｉｑｕｅＮｕｍｂｅｒ

@@ -1,0 +1,98 @@
+\begin{vdm_al} 
+class StableController is subclass of IIOSSTYPES
+
+instance variables
+	private parent: Server;
+
+	private sensors: map Sensor to PigStyId := {|->}; --map sensor to grisesti
+	private actuators: inmap Actuator to PigStyId := {|->}; --map actuator to grisesti
+	
+	private busy : bool := false;
+
+	private pigsInSty : map PigPosition to PigStyId := {|->}; --map pigID to pigsty;
+	
+operations
+	public StableController : Server ==> StableController
+	StableController(srv) ==
+	(
+		parent := srv;
+		return self;
+	);
+	
+	-- Add a Pig to pigSty and inform the server
+	public AddPig: PigId * Sensor * Position ==> ()
+	AddPig(pigID, sensor, position) ==
+	(
+		dcl pigStyId: PigStyId := sensors(sensor);  
+		dcl pigPos : PigPosition := mk_PigPosition(pigID,position);
+		pigsInSty := pigsInSty munion {pigPos |-> pigStyId};
+		parent.AddPig(pigID, self);
+	)
+	pre sensor in set dom sensors; 
+
+	
+	-- Remove a Pig from pigSty and inform the server
+	public RemovePig: PigId ==> ()
+	RemovePig(pigID) ==
+	(
+		--dcl pigStyId: PigStyId := sensors(sensor);
+		dcl pigPosition : PigPosition := mk_PigPosition(pigID, mk_Position(0,0));
+		pigsInSty := {pigPosition} <-: pigsInSty;
+		parent.RemovePig(pigID);
+ 	)
+ 	pre exists pp in set dom pigsInSty & pp.id = pigID;
+	
+	
+	async public PointAtPig: EventId * PigId ==> ()
+	PointAtPig(eventId, pigId) == 
+	(
+		-- find pig
+		let pigPos in set dom pigsInSty be st pigPos.id = pigId in 
+		(
+			-- find pigStyID
+			for all pigStyID in set rng pigsInSty do
+			(  
+				if (pigPos.id = pigId) then
+				(
+					let invActuators = inverse actuators in
+					(
+						--World`env.handleEvent(1, <SHOW_PIG>, " " ^ [pigId], time);
+						invActuators( pigStyID ).SetValues(eventId, pigPos);
+						return;
+					);
+				);
+			);
+		);
+	);
+	--Pre inmap TODO
+
+	public AddActuator: Actuator * PigStyId ==> ()
+	AddActuator(act, sti) ==
+	(
+		actuators := actuators munion {act |-> sti};
+	)
+	pre act not in set dom actuators; 
+
+	public AddSensor: Sensor * PigStyId ==> ()
+	AddSensor(sens, sti) ==
+	(
+		sensors := sensors munion {sens |-> sti};
+	)
+	pre sens not in set dom sensors;
+
+
+sync
+	mutex(AddSensor);
+	mutex(AddActuator);
+	mutex(RemovePig,AddPig);
+	mutex(AddPig);
+	mutex(RemovePig);
+	--mutex(PointAtPig);
+
+end StableController
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[StableController]
+\end{rtinfo}

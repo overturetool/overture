@@ -351,7 +351,7 @@ public class OperationValue extends Value
 			if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
-				LexNameList oldnames = PExpAssistantTC.getOldNames(postcondition.body);
+				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
 			}
 		}

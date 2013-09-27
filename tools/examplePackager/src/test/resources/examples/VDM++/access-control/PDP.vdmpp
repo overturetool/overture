@@ -1,0 +1,56 @@
+class PDP 
+
+instance variables 
+
+policies : set of Policy;
+policyCombAlg : CombAlg; 
+
+operations
+
+public PDP: set of Policy * CombAlg  ==> PDP
+PDP(ps,pca) == 
+ (policies := ps;
+  policyCombAlg := pca
+ );
+
+types
+
+public Permit = token;
+public Deny = token;
+public Null = token;
+ 
+public CombAlg = <denyOverrides> | <permitOverrides>;
+ 
+public Policy :: target : [Target]
+                  rules : set of Rule
+            ruleCombAlg : CombAlg;
+ 
+public Rule :: target : [Target]  
+               effect : Effect
+                 cond : [FExp];
+
+public Effect = <Permit> | <Deny> | <Indeterminate> | <NotApplicable>;   
+              
+public Target :: subjects : set of Subject
+                resources : set of Resource
+                  actions : set of Action;
+
+public Action = FExp`Id;
+public Subject = FExp`Id;
+public Resource = FExp`Id;
+
+operations
+
+public GetpolicyCombAlg: () ==> CombAlg
+GetpolicyCombAlg() ==
+  return policyCombAlg;
+
+public Getpolicies: () ==> set of Policy
+Getpolicies() ==
+  return policies;
+
+public GetEffect: Rule ==> Effect
+GetEffect(r) ==
+  return r.effect;
+
+end PDP

@@ -1,0 +1,56 @@
+class MapT is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new MapT01(), new MapT02()	
+	];
+end MapT
+----------------------------------------------------
+class MapT01 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	m1 = {1 |-> "Kei Sato", 19 |-> "Shin Sahara", 20 |-> "Hiroshi Sakoh"},
+		m2 = {"Kei Sato" |-> 1,  "Shin Sahara" |-> 19,  "Hiroshi Sakoh" |-> 20},
+		get1 = Map`Get[int, seq of char],
+		get2 = Map`Get[seq of char, int]
+	in
+	return 
+		get1(m1)(19) = "Shin Sahara" and
+		get1(m1)(2) = nil and
+		get2(m2)("Shin Sahara") = 19 and
+		get2(m2)("Worst Prime Minister Koizumi") = nil
+;
+protected setUp: () ==> ()
+setUp() == TestName := "MapT01:\tTest of Get function.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end MapT01
+----------------------------------------------------
+class MapT02 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	m1 = {1 |-> "Kei Sato", 19 |-> "Shin Sahara", 20 |-> "Hiroshi Sakoh"},
+		m2 = {"Kei Sato" |-> 1,  "Shin Sahara" |-> 19,  "Hiroshi Sakoh" |-> 20},
+		c1 = Map`Contains[int, seq of char],
+		k1 = Map`ContainsKey[int, seq of char],
+		c2 = Map`Contains[seq of char, int],
+		k2 = Map`ContainsKey[seq of char, int]
+	in
+	return 
+		c1(m1)("Kei Sato") and c1(m1)("Shin Sahara") and c1(m1)("Hiroshi Sakoh") and
+		c1(m1)("Worst Prime Minister Koizumi") = false and
+		k1(m1)(1) and k1(m1)(19) and k1(m1)(20) and
+		not k1(m1)(99) and
+		c2(m2)(1) and c2(m2)(19) and c2(m2)(20) and
+		c2(m2)(30) = false and
+		k2(m2)("Kei Sato") and k2(m2)("Shin Sahara") and k2(m2)("Hiroshi Sakoh") and
+		k2(m2)("Worst Prime Minister Koizumi") = false
+;
+protected setUp: () ==> ()
+setUp() == TestName := "MapT02:\tTest of Contains related functions.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end MapT02

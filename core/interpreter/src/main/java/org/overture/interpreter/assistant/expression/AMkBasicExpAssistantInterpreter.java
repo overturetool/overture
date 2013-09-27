@@ -5,16 +5,14 @@ import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AMkBasicExpAssistantTC;
 
-public class AMkBasicExpAssistantInterpreter extends AMkBasicExpAssistantTC
+public class AMkBasicExpAssistantInterpreter // extends AMkBasicExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AMkBasicExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

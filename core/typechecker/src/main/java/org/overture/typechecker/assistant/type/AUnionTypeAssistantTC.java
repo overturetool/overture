@@ -34,7 +34,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
@@ -317,10 +317,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return types.contains(other);
 	}
 
-	public static boolean isFunction(AUnionType type)
-	{
-		return getFunction(type) != null;
-	}
+//	public static boolean isFunction(AUnionType type)
+//	{
+//		return getFunction(type) != null;
+//	}
 
 	public static AFunctionType getFunction(AUnionType type)
 	{
@@ -560,7 +560,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 						classname = ct.getClassdef().getName();
 					}
 
-					for (PDefinition f : SClassDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
+					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());

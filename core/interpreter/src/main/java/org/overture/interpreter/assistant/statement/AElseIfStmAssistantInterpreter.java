@@ -5,16 +5,15 @@ import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.AElseIfStmAssistantTC;
 
-public class AElseIfStmAssistantInterpreter extends AElseIfStmAssistantTC
+public class AElseIfStmAssistantInterpreter // extends AElseIfStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AElseIfStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

@@ -1,0 +1,279 @@
+class FExp
+
+instance variables
+
+fexp : Expr; 
+
+operations
+
+public FExp : Expr ==> FExp
+FExp(fe) ==
+ fexp := fe;
+
+public GetExp: () ==> Expr
+GetExp() == 
+  return fexp;
+
+types
+
+public AtomicVal = bool | int | <Indet>;
+public BoolArray = map Id to bool;
+public IntArray = map Id to int;
+public UnArray = map Id to <Indet>;
+public StructuredVal = BoolArray | IntArray | UnArray;
+public Val = AtomicVal | StructuredVal;
+
+
+
+public Expr = Id | UnId | BoolExpr | ArithExpr | ArrayLookup;
+
+public Id = token;
+
+public UnId :: <requester>|<resource>; --<action>;
+
+-- Expressions returning true or false
+public BoolExpr = RelExpr | Unary | Infix | Equal | boolLiteral;
+
+public RelExpr :: left  : Expr
+                  op    : <LT>|<GT>
+	              right : Expr; 
+
+public Unary :: op   : <NOT>
+                body : Expr;
+
+public Infix :: left  : Expr
+                op    : <AND>|<OR>
+                right : Expr;
+
+public Equal ::  left  : Expr
+                 op    : <EQ>
+	             right : Expr;
+
+public boolLiteral :: <TRUE>|<FALSE>;
+
+-- Expression returning integer
+public ArithExpr = intLiteral; -- | ArithInfix
+
+public intLiteral :: <ZERO>|<ONE>|<TWO>|<THREE>|<FOUR>|<FIVE>|<SIX>|<SEVEN>|<EIGHT>|<NINE>|<TEN>;
+
+
+public ArrayLookup :: aname : Id | UnId	
+                      index : Id | UnId; 
+
+operations
+
+-- binds the unbound variables within an expression.
+
+public BindExpr: Expr * Request ==> FExp`Expr 
+BindExpr(fe,req) == 
+ cases fe:
+  mk_UnId(<requester>) -> return req.GetSubject(),
+  mk_UnId(<resource>) -> return req.GetResource(),
+  mk_RelExpr(left,op,right) -> return mk_RelExpr(BindExpr(left,req), op, BindExpr(right,req)), 
+  mk_Unary(op,body) -> return mk_Unary(op,BindExpr(body,req)),
+  mk_Infix(left,op,right) -> return mk_Infix(BindExpr(left,req), op, BindExpr(right,req)), 
+--mk_ArrExp(left,op,right) -> ...
+  mk_intLiteral(-) -> return fe,
+  mk_boolLiteral(-) -> return fe,
+  mk_ArrayLookup(aname,index) -> return mk_ArrayLookup(BindExpr(aname,req),BindExpr(index,req)),
+  others -> return fe
+ end;
+
+-- Evaluate returns the meaning of an expression,  wrt an environment 
+
+---------------------------------------
+-- Dynamic Semantics for Expressions --
+---------------------------------------
+
+public EvaluateBind : Request * Env ==> Val
+EvaluateBind(req,env) == 
+  let expr = BindExpr(fexp,req) in 
+    Evaluate(expr,env);
+
+Evaluate : Expr * Env ==> Val
+Evaluate(expr,env) == 
+    cases expr :  
+      mk_RelExpr(-,-,-)       -> MRelExpr(expr,env),
+      mk_Unary(-,-)           -> MUnary(expr,env),
+      mk_Infix(-,-,-)         -> MInfix(expr,env), 
+      mk_Equal(-,-,-)         -> MEqual(expr,env),
+--mk_ArrExp(-,-,-) -> ... 
+      mk_boolLiteral(-)       -> MLiteral(expr), 
+      mk_intLiteral(-)        -> MLiteral(expr),
+      mk_ArrayLookup(-,-)     -> MArrayLookup(expr,env),
+    others                    -> MId(expr,env)
+  end;
+
+private MId : Id * Env ==> Val
+MId(Id,env) == 
+	return env.GetVal(Id); 
+
+MRelExpr : RelExpr * Env ==> Val
+MRelExpr(exp,env) == 
+  cases exp:
+   mk_RelExpr(-,<GT>,-)  -> return (EvaluateGT(exp.left,exp.right,env)),
+   mk_RelExpr(-,<LT>,-)  -> return (EvaluateLT(exp.left,exp.right,env)),
+   others -> error
+  end;
+
+EvaluateLT: Expr * Expr * Env ==> Val
+EvaluateLT(exp1,exp2,env) == 
+  return (Evaluate(exp1,env) < Evaluate(exp2,env));
+
+EvaluateGT: Expr * Expr * Env ==> Val
+EvaluateGT(exp1,exp2,env) == 
+  return (Evaluate(exp1,env) > Evaluate(exp2,env));
+
+MUnary : Unary * Env ==> Val
+MUnary(unary,env) == 
+	return not (Evaluate(unary.body,env));
+
+MInfix : Infix * Env ==> Val
+MInfix(exp,env) == 
+  cases exp:
+   mk_Infix(-,<AND>,-) -> return (EvaluateAND(exp.left,exp.right,env)),
+   mk_Infix(-,<OR>,-)  -> return (EvaluateOR(exp.left,exp.right,env)),
+   others -> error
+  end;
+
+EvaluateAND: Expr * Expr * Env ==> Val
+EvaluateAND(exp1,exp2,env) ==
+  return (Evaluate(exp1,env) and Evaluate(exp2,env));
+
+MEqual : Equal * Env ==> Val
+MEqual(exp,env) == 
+   return (Evaluate(exp.left, env) = Evaluate(exp.right,env));
+
+-- order of evaluation is left to right, as stipulated by XACML standard
+
+EvaluateOR: Expr * Expr * Env ==> Val
+EvaluateOR(exp1,exp2,env) ==
+  if (Evaluate(exp1,env))
+  then return true
+  else return Evaluate(exp2,env);
+
+MArrayLookup : ArrayLookup * Env ==> Val
+MArrayLookup(mk_ArrayLookup(aname,index),env) == 
+   return (MId(aname,env))(index)
+pre index in set dom MId(aname,env);
+
+functions
+
+ MLiteral : boolLiteral | intLiteral -> Val
+ MLiteral(exp) == 
+   cases exp:
+     mk_boolLiteral(<TRUE>) -> true,
+      mk_boolLiteral(<FALSE>)-> false,
+      mk_intLiteral(<ZERO>)  -> 0,
+      mk_intLiteral(<ONE>)   -> 1,
+      mk_intLiteral(<TWO>)   -> 2,
+      mk_intLiteral(<THREE>) -> 3,
+      mk_intLiteral(<FOUR>)  -> 4,
+      mk_intLiteral(<FIVE>)  -> 5,
+      mk_intLiteral(<SIX>)   -> 6,
+      mk_intLiteral(<SEVEN>) -> 7,
+      mk_intLiteral(<EIGHT>) -> 8,
+      mk_intLiteral(<NINE>)  -> 9,
+     others                             -> 10
+   end;
+
+
+--------------------------------------
+-- Static Semantics for Expressions --
+--------------------------------------
+
+-- types for TP and WF judgements
+
+types
+
+public SType = <B>|<I>|<U>|AType|<Err>;
+
+public AType = map Id to <B>|<I>|<U>;
+
+operations -- for TP and WF judgements
+
+public wfExpr : Env ==> bool
+wfExpr(env) ==
+  return exprTp(fexp,env) = <B>;
+
+private exprTp : Expr * Env ==> SType
+exprTp(ex, env) ==
+  cases ex:
+    mk_Unary(-,-) 		-> wfUnary(ex,env),
+    mk_Infix(-,-,-) 	-> wfInfix(ex,env),
+    mk_RelExpr(-,-,-)	-> wfRelExpr(ex,env),
+--    mk_ArithExpr()
+    mk_Equal(-,-,-)	-> wfEqual(ex,env), 
+    mk_boolLiteral(-)       -> wfLiteral(ex),
+    mk_intLiteral(-)       -> wfLiteral(ex),
+    mk_UnId(-)          -> wfUnId(ex),
+    mk_ArrayLookup(-,-) -> wfArrayLookup(ex,env),
+    others					-> wfId(ex,env)
+  end;
+
+private wfInfix : Infix * Env ==> SType
+wfInfix(mk_Infix(e1,-,e2), env) ==
+  if exprTp(e1, env) = <B> and exprTp(e2, env) = <B>
+  then return <B>
+  else return <Err>;
+
+
+private wfUnary : Unary * Env ==> SType
+wfUnary(mk_Unary(-,e), env) ==
+  if exprTp(e, env) = <B>
+  then return <B>
+  else return <Err>;
+
+private wfRelExpr : RelExpr * Env ==> SType
+wfRelExpr(mk_RelExpr(e1,-,e2), env) ==
+  if exprTp(e1, env) = <I> and exprTp(e2, env) = <I>
+  then return <B>
+  else return <Err>;
+
+private wfLiteral : boolLiteral | intLiteral ==> SType
+wfLiteral(e) ==
+   cases e:
+    mk_boolLiteral(-) -> return <B>,
+    mk_intLiteral(-)  -> return <I>,
+    others -> return <Err>
+   end;
+
+private wfEqual: Equal * Env ==> SType
+wfEqual(mk_Equal(e1,-,e2), env) ==
+  if (exprTp(e1, env) = <B> and exprTp(e2, env) = <B>) or
+     (exprTp(e1, env) = <I> and exprTp(e2, env) = <I>) or
+     (exprTp(e1, env) = <U> and exprTp(e2, env) = <U>)
+  then return <B>
+  else return <Err>;
+
+private wfId: Id * Env ==> SType
+wfId(e,env) ==
+  if (e in set dom env.GetSenv())  
+  then let tp = env.GetSType(e) in
+           if tp = <B> or tp = <I> or tp = <U>
+           then return env.GetSType(e)
+           else return <Err>            
+  else return <Err>;
+
+wfUnId : UnId  ==> SType
+wfUnId(e) ==  
+  cases e:
+   mk_UnId(<requester>)	-> return <U>,
+   mk_UnId(<resource>)	-> return <U>,
+--   mk_UnId(<action>)	-> return <U>,
+   others				-> return <Err>
+  end;  
+
+wfArrayLookup : ArrayLookup * Env ==> SType 
+wfArrayLookup(mk_ArrayLookup(id, index),env) == 
+  if (id in set dom env.GetSenv())  -- Id is in the env
+  then let tp = env.GetSType(id) in  -- get the type of Id in env
+           if tp = <B> or tp = <I> or tp = <U>
+           then return <Err> -- Id is not an array in the env 
+           elseif index in set dom env.GetSenv()(id) -- assuming Id points to an array in senv
+				then return env.GetAType(id,index) -- Get type of index in map
+				else return <Err>
+  else return <Err>;  
+
+
+end FExp

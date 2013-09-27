@@ -1,0 +1,67 @@
+\begin{vdm_al}
+class IIOSSTestCase2 is subclass of TestCase
+instance variables
+	world : World;
+	stbCtr : StableController;
+
+operations
+	public IIOSSTestCase2: seq of char ==> IIOSSTestCase2
+	IIOSSTestCase2(nm) == name := nm;
+
+	protected SetUp: () ==> ()
+	SetUp () == --skip;
+	(
+		world := new World();
+		stbCtr := new StableController(IIOSS`server);
+	);
+
+	-- inline = EventId * EventType * PigId * [Position] * PigStyId * Time;
+	protected RunTest: () ==> ()
+	RunTest () == 
+    (
+    	ServerTest();
+    	EnvTest();
+    );
+    
+    private ServerTest : () ==> ()
+    ServerTest() ==
+    (
+    	(dcl serv : Server := new Server();
+    		serv.PointAtPig(1,1);    	    	
+    		world.env.showResult();
+    	
+    	let reaction = world.env.GetAndPurgeOutlines()
+  		in 
+  			AssertTrue(len reaction = 1);  		    	
+  		
+  			serv.AddPig(1, stbCtr);
+  			AssertTrue(serv.GetNoPigs() = 1);  			  			
+  		
+  			serv.RemovePig(3);
+  			AssertFalse(serv.GetNoPigs() = 0);
+  			
+  			serv.RemovePig(1);
+  			AssertTrue(serv.GetNoPigs() = 0);
+  		)
+  		
+    );
+    
+    private EnvTest: () ==> ()
+    EnvTest() ==
+    (
+    	let env = world.env
+    	in
+    	(
+    		--env.addServer(serv);
+    		AssertTrue(IIOSS`server = env.getServer());
+    		    	    	
+    		AssertTrue(env.getNoSensors() = 4);
+    	)
+    );
+       
+
+	protected TearDown: () ==> ()
+	TearDown () == skip
+
+end IIOSSTestCase2
+\end{vdm_al}

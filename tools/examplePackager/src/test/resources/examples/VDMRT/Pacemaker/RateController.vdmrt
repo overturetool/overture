@@ -1,0 +1,146 @@
+\section{RateController class}
+
+The RateController is the class that models the rate adaptation control.
+
+\begin{vdm_al}
+class RateController is subclass of GLOBAL
+
+instance variables
+ rateplan : map Time to Time;
+ sensed   : [ActivityData];
+ interval : Time;
+ finished : bool;
+
+ 
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+-- programmable values
+ LRL       : PPM;
+ MSR       : PPM;
+ threshold : nat1;
+ reactionT : Time;
+ recoveryT : Time;
+ responseF : nat1;
+
+inv threshold < 8
+    and
+    reactionT in set {10,...,50}
+    and
+    recoveryT in set {2,...,16}
+    and 
+    responseF <= 16;
+\end{vdm_al} 
+
+The Constructor initializes the instance variables with the 
+default values as consulted in (citation needed);
+
+\begin{vdm_al}
+operations
+  
+ public 
+ RateController: () ==> RateController
+ RateController() ==
+   (LRL       := 60;
+    MSR       := 120;
+    threshold := MED;
+    reactionT := 10; -- 10 s
+    recoveryT := 2; -- 2 minutes;
+    responseF := 8;
+    sensed    := nil; 
+    interval  := 1/((LRL/60)/10000);
+    finished  := false;
+
+   );
+\end{vdm_al} 
+
+\begin{vdm_al}
+public
+getInterval : () ==> Time
+getInterval () == return interval;
+\end{vdm_al}
+
+
+\begin{vdm_al}
+ private
+ controlRate : () ==> ()
+ controlRate () == 
+    (
+    (if sensed > threshold
+     then increaseRate()
+     elseif sensed < threshold
+     then decreaseRate()
+     else skip;
+     );
+    sensed := nil;
+    );
+\end{vdm_al}
+
+\begin{vdm_al}
+
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (ad) == sensed := ad;
+\end{vdm_al} 
+
+
+\begin{vdm_al}
+ public
+ increaseRate : () ==> ()
+ increaseRate () == 
+   (
+    interval := 1 / ((MSR / 60) / 10000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public
+ decreaseRate : () ==> ()
+ decreaseRate () == 
+   (
+    interval := 1 / ((LRL / 60) / 10000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ finish : () ==> ()
+ finish () == finished := true; 
+
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip; 
+\end{vdm_al}
+
+\begin{vdm_al}
+
+thread
+ while true do
+    controlRate();
+    
+
+sync
+mutex(stimulate);
+
+per isFinished => finished;
+
+per controlRate => sensed <> nil;
+\end{vdm_al} 
+
+\begin{vdm_al}
+values
+
+--V-LOW 1
+--LOW 2
+--MED-LOW 4
+MED : ActivityData = 4;
+--MED-HIGH 4
+--HIGH 6
+--V-HIGH 6
+
+end RateController
+\end{vdm_al} 

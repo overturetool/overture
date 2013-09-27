@@ -1,0 +1,152 @@
+\section{The Class Till}
+
+This class models a till. A till is connected to a central resource
+and holds a number of retained cards, which have not been returned to
+a user of the till. It may hold a current card and it has an attribute
+to say whether the current card and its PIN code have been validated
+successfully. In this version of the till we assume that the central
+resource will always become available within a reasonable time limit.
+
+\begin{vdm_al}
+class Till
+
+instance variables
+  curCard : [Card] := nil;
+  cardOk : bool := false;
+  retainedCards : set of Card := {};
+  resource : CentralResource;
+
+  inv curCard = nil => not cardOk;
+\end{vdm_al}
+
+The invariant says that if there is no card in the till then the
+validation status of the current card shall be false.
+
+\begin{vdm_al}
+operations
+  public Till: CentralResource ==> Till
+  Till(res) == 
+    resource := res;
+\end{vdm_al}
+
+The Create operation is used once in a till object's lifetime in order to set up a connection to a central resource.
+
+\begin{vdm_al}
+  public InsertCard : Card ==> ()
+  InsertCard(c) ==
+    curCard := c
+  pre not CardInside();
+\end{vdm_al}
+
+The InsertCard operation models the activity of inserting a card into
+the till. This cannot be done if the till holds a card already, which
+is documented in the precondition.
+
+\begin{vdm_al}
+  public Validate : Card`PinCode ==> <PinOk> | <PinNotOk> | <Retained>
+  Validate(pin) ==
+    let cardId = curCard.GetCardId(),
+        codeOk = curCard.GetCode() = Encode(pin),
+        cardLegal = IsLegalCard()
+    in
+      (cardOk := codeOk and cardLegal;
+       if not cardLegal then 
+         (retainedCards := retainedCards union {curCard};
+          curCard := nil;
+          return <Retained>)
+       elseif codeOk then
+         resource.ResetNumberOfTries(cardId)
+       else
+         (resource.IncrNumberOfTries(cardId);
+          if resource.NumberOfTriesExceeded(cardId) then
+            (retainedCards := retainedCards union {curCard};
+             cardOk := false;
+             curCard := nil;
+             return <Retained>));
+       return if cardOk
+              then <PinOk>
+              else <PinNotOk>)
+  pre CardInside() and not cardOk;
+\end{vdm_al}
+
+The operation Validate is used to validate a PIN code and to check
+that a card is not illegal. The precondition ensures that the till
+currently holds a card which has not yet been validated. If a card
+turns out to be illegal, the machine keeps the card.
+
+\begin{vdm_al}
+  public ReturnCard : () ==> ()
+  ReturnCard() ==
+    (cardOk := false;
+     curCard:= nil)
+  pre CardInside();
+\end{vdm_al}
+
+The ReturnCard operation is useful to end user sessions, though it is
+not mentioned in the requirements. It allows the user to perform more
+than one transaction in each session, e.g. to first view the balance
+and then make a withdrawal.
+
+The following three operations are listed in the requirements
+document. They all require that the till holds a card which has been
+validated successfully. The operations are mirrored in the central
+resource. The GetBalance operation return the value nil if it is not
+possible to get the balance.
+
+\begin{vdm_al}
+  public GetBalance : () ==> [nat]
+  GetBalance() ==
+    resource.GetBalance(curCard.GetAccountId())
+  pre CardValidated();
+\end{vdm_al}
+
+The MakeWithdrawal and RequestStatement operations returns a boolean
+indicating whether the requested transactions could be completed.
+
+\begin{vdm_al}
+  public MakeWithdrawal : nat ==> bool
+  MakeWithdrawal(amount) ==
+    resource.Withdrawal
+      (curCard.GetAccountId(),curCard.GetCardId(),amount)
+  pre CardValidated();
+
+  public RequestStatement : () ==> bool
+  RequestStatement() ==
+    resource.PostStatement(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardValidated();
+\end{vdm_al}
+
+The IsLegalCard operation below is only used internally to validate a card.
+
+\begin{vdm_al}
+  public IsLegalCard : () ==> bool
+  IsLegalCard() ==
+    return 
+      resource.IsLegalCard(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardInside();
+
+  public CardValidated: () ==> bool
+  CardValidated() ==
+    return curCard <> nil and cardOk;
+
+  public CardInside: () ==> bool
+  CardInside() ==
+    return curCard <> nil;
+
+functions
+\end{vdm_al}
+
+The requirements say that the till should encode the PIN code before
+comparing it to the code on the card. We have documented this
+requirement in the function below, but not yet made a choice of
+approach to this.
+
+\begin{vdm_al}
+  Encode: Card`PinCode +> Card`Code
+  Encode(pin) ==
+    pin; -- NB! The actual encoding procedure has not yet been chosen
+
+end Till
+\end{vdm_al}
+
+

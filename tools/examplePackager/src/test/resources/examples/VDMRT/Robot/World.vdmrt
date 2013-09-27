@@ -1,0 +1,34 @@
+class World
+ 
+instance variables
+ 
+public static env : [Enviroment] :=nil;
+ 
+operations
+public World : () ==> World
+World() ==
+(
+   env := new Enviroment();
+   Robot`nmc.AddMovingObsticle(Robot`mobs1);
+   Robot`nmc.AddMovingObsticle(Robot`mobs2);
+   Robot`nmc.AddMovingObsticle(Robot`mobs3);
+   Robot`nmc.AddMovingObsticle(Robot`mobs4);
+ 
+   Robot`steering.AddObstacleSensor(Robot`obsSensorNorth);
+   Robot`steering.AddObstacleSensor(Robot`obsSensorSouth);
+   Robot`steering.AddObstacleSensor(Robot`obsSensorEast);
+   Robot`steering.AddObstacleSensor(Robot`obsSensorWest);
+ 
+ 
+ );
+ 
+ public Run : () ==> ()
+ Run() ==
+ (
+   start(env);
+   env.isFinished(); --wait for env to handle alle events
+ 
+ );
+ 
+ 
+end World

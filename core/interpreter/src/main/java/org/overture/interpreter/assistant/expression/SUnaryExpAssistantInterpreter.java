@@ -5,16 +5,14 @@ import org.overture.ast.expressions.SUnaryExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.SUnaryExpAssistantTC;
 
-public class SUnaryExpAssistantInterpreter extends SUnaryExpAssistantTC
+public class SUnaryExpAssistantInterpreter // extends SUnaryExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public SUnaryExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

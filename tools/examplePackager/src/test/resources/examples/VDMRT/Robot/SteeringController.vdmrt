@@ -1,0 +1,295 @@
+class SteeringController
+values
+ 
+MAX_POINT : Grid`Point = mk_Grid`Point(100,100);
+types
+public Route= seq of Grid`Point;
+ 
+instance variables
+ private routes : seq of Route := [];
+ public static obsSensors : set of ObstacleSensor := {};
+ private batCap : int := 1;
+ private dest: Grid`Point;
+ private  workingGrid : Grid;
+ busy : bool := true;
+-- inv batCap > 1 and len routes > 0 => GetBatUsage()*2 <= batCap;
+ 
+operations
+ 
+ public SteeringController : () ==> SteeringController
+ SteeringController() ==
+ (
+   skip;
+ );
+ 
+-- GET
+ 
+ private GetPointDirection : Grid`Point ==> ObstacleSensor`SensorDirection
+ GetPointDirection(p) ==
+   (
+     let curPos = GetPos() in
+     if curPos.X > p.X then return <East>
+     else if  curPos.X < p.X then return <West>
+     else if  curPos.Y > p.Y then return <North>
+     else return <South>
+ 
+   );
+ 
+ private GetBatUsage: () ==> nat
+ GetBatUsage() ==
+    return len routes(len routes)
+ pre len routes > 0;
+ 
+ private GetPos : () ==> Grid`Point
+ GetPos() ==
+    let r = routes(len routes) in
+     return r(len r);
+ 
+ private GetRoutes : () ==> seq of Route
+ GetRoutes () ==
+    return routes;
+ 
+ private GetNeighbourPoints : () ==> set of Grid`Point
+ GetNeighbourPoints() ==
+   return
+   (
+     let cPos = GetPos()
+       in
+       (
+         {mk_Grid`Point(cPos.X,y)| y in set {cPos.Y+1, cPos.Y-1} & y>=0}
+         union
+         {mk_Grid`Point(x,cPos.Y)| x in set {cPos.X+1, cPos.X-1} & x>=0}
+         ) \ {cPos}
+   )
+  
+  post RESULT =
+ (
+   let cPos = GetPos()
+     in
+     (
+       {mk_Grid`Point(cPos.X,y)| y in set {cPos.Y+1, cPos.Y-1} & y>=0}
+       union
+       {mk_Grid`Point(x,cPos.Y)| x in set {cPos.X+1, cPos.X-1} & x>=0}
+       ) \ {cPos}
+  ) and forall p in set RESULT & workingGrid.IsValidGridPoint(p);
+ 
+ 
+  private GetNextMove : set of Grid`Point ==> [Grid`Point]
+ GetNextMove (neighbourPoints) ==
+ (
+   let freePts= {p|p in set neighbourPoints 
+                  & workingGrid.GetPointAvalibility(p.X,p.Y)=<Free> and
+                    not IsInRoute(p)}
+     in
+       if card freePts > 0 then
+         return Robot`nmc.GetNextPoint(freePts, dest)
+       else
+         return nil;
+ 
+ );
+-- Other help operations (GET)
+ 
+ private IsDestination : Grid`Point ==> bool
+ IsDestination(p) ==
+   return p.X = dest.X and p.Y = dest.Y;
+ 
+ private DoesRouteHaveMoreOptions : () ==> bool
+ DoesRouteHaveMoreOptions () ==
+ (
+   return len routes(len routes) > 1
+ );
+ 
+ private IsInRoute : Grid`Point ==> bool
+ IsInRoute(p) ==
+ (
+   let r = conc routes in
+   if card {r(x) | x in set inds r & r(x) = p} > 0
+   then return true
+   else return false
+ );
+ 
+ 
+-- operations moving or changing the location
+ 
+ private StartNewRoute : () ==> ()
+ StartNewRoute() ==
+  (
+   let r = routes(len routes)
+     in
+     if len r > 1 then
+     (
+        routes := routes ^ [r(1,...,len routes(len routes)-1)];
+     );
+ );
+ 
+  public ReturnToBase : () ==> ()
+ ReturnToBase() ==
+   skip;
+ 
+ private Move : Grid`Point ==> ()
+ Move(p) ==
+   duration(1000)
+   (
+     let r = routes(len routes)
+       in routes(len routes) := r ^ [p]
+   )
+ 
+  pre GetBatUsage()*2 <= batCap and batCap > 1 and 
+      let cp = routes(len routes)(len routes(len routes))
+      in p.X <> cp.X or p.Y <> cp.Y
+ post p = routes(len routes)(len routes(len routes));
+ 
+ 
+ 
+ private RestartNewRoute : () ==> ()
+ RestartNewRoute () ==
+ (
+   ReturnToBase();
+   StartNewRoute();
+ );
+ 
+ private FindRoute : () ==> Grid * seq of Route * Grid`Point * bool
+ FindRoute() ==
+ (
+  
+    if FindRouteToDestination() then
+   (  
+      Robot`dataReader.Read();
+     Util`PrintDebug("Succes");
+   )
+   else
+   (
+     Util`PrintDebug("No route found, has reached dead end");
+   );
+   ReturnToBase();
+ 
+   Util`PrintDebug("The End");
+   return mk_( workingGrid,routes, dest, IsDestination(GetPos()) );
+  )
+ pre workingGrid.IsValidGridPoint(dest);
+  
+ 
+ 
+  private FindRouteToDestination : () ==> bool
+ FindRouteToDestination () ==
+ (
+   while not IsDestination(GetPos()) and GetBatUsage()*2 <= batCap do
+   (
+     let neighbourPoints = {n|n in set GetNeighbourPoints() 
+                             & workingGrid.IsValidGridPoint(n)}
+       in
+         if card neighbourPoints > 0 then
+         (
+            DiscoverUnknownNeighbourPoints(neighbourPoints);
+           let nextMove = GetNextMove(neighbourPoints)
+             in
+               if nextMove <> nil then
+               (
+                 Move(nextMove);
+                 Util`PrintDebug("Moved to pos:");
+                  Util`PrintValue(GetPos())
+                )
+               else
+                (
+                   if DoesRouteHaveMoreOptions() then
+                     RestartNewRoute()
+                   else
+                     return false; 
+                     -- no routes to destination. Dead end
+               );
+         )
+         else
+           RestartNewRoute();
+   );
+   return true; -- route found
+ 
+ );
+ 
+ 
+ 
+ private DiscoverUnknownNeighbourPoints : set of Grid`Point ==> ()
+ DiscoverUnknownNeighbourPoints(neighbourPoints) ==
+ (
+   let unknownPoints = {p| p in set neighbourPoints 
+                         & workingGrid.GetPointAvalibility(p.X,p.Y)=<Unknown>}
+     in
+     (
+       let knownMappings = { p |-> obs.GetPointAvalibility(p) 
+                           | obs in set obsSensors, p in set unknownPoints 
+                           & obs.GetDirection() = GetPointDirection(p)}
+         in
+             workingGrid.SetPointMP(knownMappings)
+     );
+ 
+ )
+ pre forall p in set neighbourPoints & workingGrid.IsValidGridPoint(p);
+ 
+ public SetDiscoverInfo: Grid`Point * Grid`Point * int ==> ()
+ SetDiscoverInfo(startingPoint, destination, batCapacity) ==
+ (
+   workingGrid := new Grid(startingPoint, MAX_POINT);
+   workingGrid.SetPointMP({startingPoint |-> <Free>});
+   batCap:= batCapacity;
+   dest:= destination;
+   routes := [ [startingPoint] ];--first route first point = startingPoint
+ )
+ pre ValidatePoint(MAX_POINT,destination) and
+     ValidatePoint(MAX_POINT, startingPoint) and
+     batCapacity >=2;
+ 
+ public AddObstacleSensor: ObstacleSensor ==> ()
+ AddObstacleSensor(obs) ==
+   obsSensors := obsSensors union {obs};
+ 
+ 
+ 
+ public isFinished : () ==> ()
+ isFinished () == skip;
+ 
+  sync
+ per isFinished => not busy;
+ 
+thread
+ while busy do
+ (
+   let res = FindRoute()
+     in
+       World`env.handleEvent(res.#1, res.#2, res.#3, res.#4);
+   busy := false;
+ );
+ 
+sync
+ 
+per FindRoute => #fin(SetDiscoverInfo) > #fin(FindRoute);
+ 
+mutex (FindRoute);
+ 
+mutex (SetDiscoverInfo, FindRoute);
+mutex (SetDiscoverInfo);
+mutex (AddObstacleSensor);
+  
+functions
+ 
+ValidatePoint: Grid`Point * Grid`Point -> bool
+ ValidatePoint(max,point) ==
+   max.X >= point.X and max.Y >= point.Y and point.X>= 0 and point.Y >=0;
+end SteeringController
+
+
+
+class SteeringControllerTest is subclass of TestCase
+values
+ sta : Grid`Point = mk_Grid`Point(0,0);
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == skip;
+    
+  
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end SteeringControllerTest

@@ -105,10 +105,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
-	public static boolean isFunction(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isFunction(type.getType());
-	}
+//	public static boolean isFunction(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isFunction(type.getType());
+//	}
 
 	public static AFunctionType getFunction(ANamedInvariantType type) {		
 		return PTypeAssistantTC.getFunction(type.getType());
