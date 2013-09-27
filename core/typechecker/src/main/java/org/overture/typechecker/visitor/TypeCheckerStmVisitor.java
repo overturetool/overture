@@ -454,7 +454,7 @@ public class TypeCheckerStmVisitor extends
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType optype = PTypeAssistantTC.getOperation(type);
 
-			PTypeAssistantTC.typeResolve(optype, null, rootVisitor, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(optype, null, rootVisitor, question);
 			// Reset the name's qualifier with the actual operation type so
 			// that runtime search has a simple TypeComparator call.
 
@@ -472,7 +472,7 @@ public class TypeCheckerStmVisitor extends
 			// a "return" statement.
 
 			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
-			PTypeAssistantTC.typeResolve(ftype, null, rootVisitor, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(ftype, null, rootVisitor, question);
 
 			// Reset the name's qualifier with the actual function type so
 			// that runtime search has a simple TypeComparator call.

@@ -11,10 +11,10 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -27,15 +27,10 @@ import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssista
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ANamedTraceDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.APerSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -139,12 +134,13 @@ import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
 import org.overture.typechecker.utilities.TypeResolver;
 import org.overture.typechecker.utilities.TypeResolver.NewQuestion;
-import org.overture.typechecker.utilities.TypeUtils;
 import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.type.MapBasisChecker;
+import org.overture.typechecker.utilities.type.MapTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -341,12 +337,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AClassInvariantDefinitionAssistantTC createAClassInvariantDefinitionAssistant()
-	{
-		return new AClassInvariantDefinitionAssistantTC(this);
-	}
-
-	@Override
 	public ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant()
 	{
 		return new ACpuClassDefinitionAssistantTC(this);
@@ -419,30 +409,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AMutexSyncDefinitionAssistantTC createAMutexSyncDefinitionAssistant()
-	{
-		return new AMutexSyncDefinitionAssistantTC(this);
-	}
-
-	@Override
-	public ANamedTraceDefinitionAssistantTC createANamedTraceDefinitionAssistant()
-	{
-		return new ANamedTraceDefinitionAssistantTC(this);
-	}
-
-	@Override
-	public APerSyncDefinitionAssistantTC createAPerSyncDefinitionAssistant()
-	{
-		return new APerSyncDefinitionAssistantTC(this);
-	}
-
-	@Override
-	public ARenamedDefinitionAssistantTC createARenamedDefinitionAssistant()
-	{
-		return new ARenamedDefinitionAssistantTC(this);
-	}
-
-	@Override
 	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
 	{
 		return new AStateDefinitionAssistantTC(this);
@@ -464,12 +430,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public ATypeDefinitionAssistantTC createATypeDefinitionAssistant()
 	{
 		return new ATypeDefinitionAssistantTC(this);
-	}
-
-	@Override
-	public AUntypedDefinitionAssistantTC createAUntypedDefinitionAssistant()
-	{
-		return new AUntypedDefinitionAssistantTC(this);
 	}
 
 	@Override
@@ -580,7 +540,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	@Override
 	public AValueValueImportAssistantTC createAValueValueImportAssistant()
-	{		return new AValueValueImportAssistantTC(this);
+	{
+		return new AValueValueImportAssistantTC(this);
 	}
 
 	@Override
@@ -950,12 +911,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AnswerAdaptor<Boolean> getMapBasisChecker()
-	{
-		return new TypeUtils.MapBasisChecker(this);
-	}
-
-	@Override
 	public IAnswer<LexNameList> getVariableNameCollector()
 	{
 		return new VariableNameCollector(this);
@@ -972,7 +927,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new ExitTypeCollector(this);
 	}
-	
+
 	@Override
 	public IQuestionAnswer<Newquestion, PDefinition> getTypeFinder()
 	{
@@ -990,68 +945,82 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new FunctionChecker(this);
 	}
+
 	@Override
 	public IAnswer<Boolean> getOperationChecker()
 	{
 		return new OperationChecker(this);
 	}
+
 	@Override
 	public IAnswer<String> getKindFinder()
 	{
 		return new KindFinder(this);
 	}
-	
+
 	@Override
 	public IAnswer<Boolean> getUpdatableChecker()
 	{
 		return new UpdatableChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<Boolean> getCallableOperationChecker()
 	{
 		return new CallableOperationChecker(this);
 	}
-	
+
 	@Override
 	public AnalysisAdaptor getUsedMarker()
 	{
 		return new UsedMarker(this);
-	}	
-	
+	}
+
 	@Override
 	public IQuestion<Environment> getImplicitDefinitionFinder()
 	{
 		return new ImplicitDefinitionFinder(this);
 	}
-	
+
 	@Override
 	public IAnswer<Boolean> getUsedChecker()
 	{
 		return new UsedChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<Boolean> getPTypeFunctionChecker()
 	{
 		return new PTypeFunctionChecker(this);
 	}
-	
+
 	@Override
 	public AnalysisAdaptor getUnusedChecker()
 	{
 		return new UnusedChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<PDefinition> getDereferer()
 	{
 		return new Dereferer(this);
 	}
-	
+
 	@Override
 	public IQuestion<NewQuestion> getTypeResolver()
 	{
 		return new TypeResolver(this);
+	}
+
+	@Override
+	public AnswerAdaptor<Boolean> getMapBasisChecker()
+	{
+		return new MapBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<SMapType> getMapTypeFinder()
+	{
+		return new MapTypeFinder(this);
 	}
 }

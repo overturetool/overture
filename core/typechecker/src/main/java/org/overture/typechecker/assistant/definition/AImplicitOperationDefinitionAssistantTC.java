@@ -30,64 +30,6 @@ public class AImplicitOperationDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void typeResolve(AImplicitOperationDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question) throws AnalysisException
-//	{
-//
-//		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-//
-//		if (d.getResult() != null)
-//		{
-//			APatternTypePairAssistant.typeResolve(d.getResult(), rootVisitor, question);
-//		}
-//
-//		if (question.env.isVDMPP())
-//		{
-//			d.getName().setTypeQualifier(((AOperationType) d.getType()).getParameters());
-//
-//			if (d.getBody() instanceof ASubclassResponsibilityStm)
-//			{
-//				d.getClassDefinition().setIsAbstract(true);
-//			}
-//		}
-//
-//		if (d.getPrecondition() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-//		}
-//
-//		if (d.getPostcondition() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-//		}
-//
-//		for (APatternListTypePair ptp : d.getParameterPatterns())
-//		{
-//			APatternListTypePairAssistantTC.typeResolve(ptp, rootVisitor, question);
-//		}
-//
-//	}
-
-//	public static void implicitDefinitions(AImplicitOperationDefinition d,
-//			Environment base)
-//	{
-//
-//		d.setState(base.findStateDefinition());
-//
-//		if (d.getPrecondition() != null)
-//		{
-//			d.setPredef(getPreDefinition(d, base));
-//			PDefinitionAssistantTC.markUsed(d.getPredef());
-//		}
-//
-//		if (d.getPostcondition() != null)
-//		{
-//			d.setPostdef(getPostDefinition(d, base));
-//			PDefinitionAssistantTC.markUsed(d.getPostdef());
-//		}
-//
-//	}
 
 	@SuppressWarnings("unchecked")
 	public static AExplicitFunctionDefinition getPostDefinition(

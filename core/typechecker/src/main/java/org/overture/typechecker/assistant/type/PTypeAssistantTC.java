@@ -204,7 +204,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 			return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
 		} else if (type instanceof AUnionType)
 		{
-			return AUnionTypeAssistantTC.getFunction((AUnionType) type);
+			return af.createAUnionTypeAssistant().getFunction((AUnionType) type);
 		} else if (type instanceof AUnknownType)
 		{
 			return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
@@ -213,7 +213,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return null;
 	}
 
-	public static PType typeResolve(PType type, ATypeDefinition root,
+	public  PType typeResolve(PType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
@@ -472,30 +472,37 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static SMapType getMap(PType type)
 	{
-		if (type instanceof SMapType)
+		try
 		{
-			return SMapTypeAssistantTC.getMap((SMapType) type);
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getMapTypeFinder());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.getMap(((ABracketType) type));
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getMap((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getMap((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getMap((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getMap((AUnknownType) type);
+			return null;
 		}
-		assert false : "Can't getMap of a non-map";
-		return null;
+//		if (type instanceof SMapType)
+//		{
+//			return SMapTypeAssistantTC.getMap((SMapType) type);
+//		} else if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.getMap(((ABracketType) type));
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.getMap((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.getMap((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.getMap((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.getMap((AUnknownType) type);
+//		}
+//		assert false : "Can't getMap of a non-map";
+//		return null;
 	}
 
 	public static boolean isSet(PType type)

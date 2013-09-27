@@ -71,7 +71,7 @@ public class TypeCheckerPatternVisitor extends
 
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor,
 				question);
-		PType type = PTypeAssistantTC.typeResolve(node.getType(), null,
+		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null,
 				rootVisitor, question);
 		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(),
 				node.getLocation());

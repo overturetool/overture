@@ -98,7 +98,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 			TypeCheckInfo newQuestion = new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope);
 
-			node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, newQuestion));
+			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, newQuestion));
 		} else
 		{
 			//node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question));
@@ -146,7 +146,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AExplicitOperationDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+		node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 
 		if (question.question.env.isVDMPP())
 		{
@@ -184,11 +184,11 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		if (node.getTypeParams().size() > 0)
 		{
 			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
-			node.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope, question.question.qualifiers)));
+			node.setType(af.createPTypeAssistant().typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope, question.question.qualifiers)));
 		} else
 		{
 			question.question.qualifiers = null;
-			node.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
+			node.setType(af.createPTypeAssistant().typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
 		}
 
 		if (node.getResult() != null)
@@ -236,7 +236,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AImplicitOperationDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+		node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 
 		if (node.getResult() != null)
 		{
@@ -279,7 +279,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		try
 		{
-			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
 			PTypeAssistantTC.unResolve(node.getType());
@@ -293,7 +293,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	{
 		if (node.getType() != null)
 		{
-			node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
+			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question.question));
 		}
 
 	}
@@ -322,7 +322,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			}
 		}
 
-		node.setRecordType(PTypeAssistantTC.typeResolve(node.getRecordType(), null, question.rootVisitor, question.question));
+		node.setRecordType(af.createPTypeAssistant().typeResolve(node.getRecordType(), null, question.rootVisitor, question.question));
 
 		if (node.getInvPattern() != null)
 		{
@@ -345,7 +345,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		try
 		{
 			node.setInfinite(false);
-			node.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType) node.getInvType(), node, question.rootVisitor, question.question));
+			node.setInvType((SInvariantType) af.createPTypeAssistant().typeResolve((SInvariantType) node.getInvType(), node, question.rootVisitor, question.question));
 
 			if (node.getInfinite())
 			{
@@ -377,7 +377,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		// d.setType(getType(d));
 		if (node.getType() != null)
 		{
-			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null, question.rootVisitor, question.question));
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 			PPatternAssistantTC.typeResolve(node.getPattern(), question.rootVisitor, question.question);
 			AValueDefinitionAssistantTC.updateDefs(node, question.question);
 		}

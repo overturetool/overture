@@ -1367,7 +1367,7 @@ public class TypeCheckerExpVisitor extends
 							}
 						}
 
-						fixed.add(PTypeAssistantTC.typeResolve(ptype, null,
+						fixed.add(question.assistantFactory.createPTypeAssistant().typeResolve(ptype, null,
 								rootVisitor, question));
 					}
 
@@ -1529,7 +1529,7 @@ public class TypeCheckerExpVisitor extends
 		PType basictype = node.getBasicType();
 
 		if (basictype != null) {
-			basictype = PTypeAssistantTC.typeResolve(basictype, null,
+			basictype = question.assistantFactory.createPTypeAssistant().typeResolve(basictype, null,
 					rootVisitor, question);
 		}
 
@@ -1615,7 +1615,7 @@ public class TypeCheckerExpVisitor extends
 			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(
 					tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
-			ptypes.add(PTypeAssistantTC.typeResolve(tb.getType(), null,
+			ptypes.add(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null,
 					rootVisitor, question));
 		}
 
@@ -2000,7 +2000,7 @@ public class TypeCheckerExpVisitor extends
 		if(node.getBasicType() != null)
 		{
 			
-			node.setBasicType(PTypeAssistantTC.typeResolve(node.getBasicType(), null, rootVisitor, question));	
+			node.setBasicType(question.assistantFactory.createPTypeAssistant().typeResolve(node.getBasicType(), null, rootVisitor, question));	
 			result = node.getBasicType();
 		}
 		else
@@ -2632,7 +2632,7 @@ public class TypeCheckerExpVisitor extends
 			// how forward referenced types are resolved, and is the reason
 			// we don't need to retry at the top level (assuming all names
 			// are in the environment).
-			node.setType(PTypeAssistantTC.typeResolve(
+			node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(
 					question.assistantFactory.createPDefinitionAssistant().getType(node.getVardef()), null,
 					rootVisitor, question));
 			return node.getType();

@@ -20,16 +20,5 @@ public class ALocalDefinitionAssistantTC
 
 	}
 
-//	public static void typeResolve(ALocalDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question)
-//	{
-//
-//		if (d.getType() != null)
-//		{
-//			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
-//		}
-//
-//	}
 
 }

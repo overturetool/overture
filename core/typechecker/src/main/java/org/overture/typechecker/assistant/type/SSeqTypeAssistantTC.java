@@ -32,7 +32,7 @@ public class SSeqTypeAssistantTC {
 
 		try
 		{
-			type.setSeqof(PTypeAssistantTC.typeResolve(type.getSeqof(), root, rootVisitor, question));
+			type.setSeqof(af.createPTypeAssistant().typeResolve(type.getSeqof(), root, rootVisitor, question));
 			if (root != null) root.setInfinite(false);	// Could be empty
 			return type;
 		}

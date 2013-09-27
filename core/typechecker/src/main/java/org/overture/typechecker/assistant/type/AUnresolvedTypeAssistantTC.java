@@ -40,7 +40,7 @@ public class AUnresolvedTypeAssistantTC {
 		
 		if (!(deref instanceof AClassType))
 		{
-			deref = PTypeAssistantTC.typeResolve(deref, root, rootVisitor, question);
+			deref = af.createPTypeAssistant().typeResolve(deref, root, rootVisitor, question);
 		}
 
 		//TODO: return deref.clone()

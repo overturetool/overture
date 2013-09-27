@@ -15,11 +15,6 @@ public class AInheritedDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void markUsed(AInheritedDefinition d)
-//	{
-//		d.setUsed(true);
-//		PDefinitionAssistantTC.markUsed(d.getSuperdef());
-//	}
 
 	public static void checkSuperDefinition(AInheritedDefinition d)
 	{

@@ -112,7 +112,7 @@ public class TypeCheckerDefinitionVisitor extends
 
 		question.qualifiers = null;
 		node.setExpType(node.getExpression().apply(rootVisitor, question));
-		node.setType(PTypeAssistantTC.typeResolve(
+		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(
 				question.assistantFactory.createPDefinitionAssistant().getType(node), null, rootVisitor,
 				question));
 
@@ -161,7 +161,7 @@ public class TypeCheckerDefinitionVisitor extends
 				rootVisitor,
 				new TypeCheckInfo(question.assistantFactory,cenv, NameScope.NAMESANDSTATE,
 						question.qualifiers)));
-		node.setType(PTypeAssistantTC.typeResolve(
+		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(
 				question.assistantFactory.createPDefinitionAssistant().getType(node), null, rootVisitor,
 				question));
 
@@ -1179,7 +1179,7 @@ public class TypeCheckerDefinitionVisitor extends
 	public PType caseALocalDefinition(ALocalDefinition node,
 			TypeCheckInfo question) {
 		if (node.getType() != null) {
-			node.setType(PTypeAssistantTC.typeResolve(node.getType(), null,
+			node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null,
 					rootVisitor, question));
 		}
 

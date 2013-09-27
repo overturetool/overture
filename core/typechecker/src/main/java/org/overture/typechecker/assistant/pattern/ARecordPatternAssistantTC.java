@@ -47,7 +47,7 @@ public class ARecordPatternAssistantTC
 		try
 		{
 			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
-			pattern.setType(PTypeAssistantTC.typeResolve(pattern.getType(), null, rootVisitor, question));
+			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
 		} catch (TypeCheckException e)
 		{
 			unResolve(pattern);

@@ -193,7 +193,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);// FIXME: should I do this or use af.getDefinitionCollector()
+		return node.getSuperdef().apply(THIS);
 	}
 
 	@Override
