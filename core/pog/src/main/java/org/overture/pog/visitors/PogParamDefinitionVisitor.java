@@ -22,12 +22,14 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -96,6 +98,11 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
+			// skip not yet specified
+			if ( node.getBody() instanceof ANotYetSpecifiedExp)
+			{
+				return new ProofObligationList();
+			}
 			IProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
 
@@ -355,6 +362,10 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		try
 		{
+			if ( node.getBody() instanceof ANotYetSpecifiedStm)
+			{
+				return new ProofObligationList();
+			}
 			IProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
 
