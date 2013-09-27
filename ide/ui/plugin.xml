@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.overture.ide.ui.templateContextType" name="Template Context Type" schema="schema/org.overture.ide.ui.templateContextType.exsd"/>
+   <extension-point id="org.overture.ide.ui.workbenchDisplay" name="Extention for the workbench adatpr display mechanism in Overture" schema="schema/org.overture.ide.ui.workbenchDisplay.exsd"/>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective

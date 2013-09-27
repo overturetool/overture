@@ -16,7 +16,27 @@
   <name>Overture IDE Standalone Product</name>
 
   <build>
+    <resources>
+      <resource>
+        <targetPath>${basedir}</targetPath>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>p2-inf</id>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+            <phase>process-resources</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>

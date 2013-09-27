@@ -27,81 +27,100 @@ import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmValue;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 
-final class VdmVariableWrapperValue implements IVdmValue {
+final class VdmVariableWrapperValue implements IVdmValue
+{
 
 	private final VdmVariableWrapper owner;
 
-	VdmVariableWrapperValue(VdmVariableWrapper VdmVariableWrapper) {
+	VdmVariableWrapperValue(VdmVariableWrapper VdmVariableWrapper)
+	{
 		this.owner = VdmVariableWrapper;
 	}
 
-	public String getReferenceTypeName() {
+	public String getReferenceTypeName()
+	{
 		return ""; //$NON-NLS-1$
 	}
 
-	public String getRawValue() {
+	public String getRawValue()
+	{
 		return ""; //$NON-NLS-1$
 	}
 
-	public String getValueString() {
+	public String getValueString()
+	{
 		return ""; //$NON-NLS-1$
 	}
 
-	public IVariable[] getVariables() throws DebugException {
+	public IVariable[] getVariables() throws DebugException
+	{
 		return this.owner.getChildren();
 	}
 
-	public boolean hasVariables() {
+	public boolean hasVariables()
+	{
 		return this.owner.hasChildren();
 	}
 
-	public boolean isAllocated() {
+	public boolean isAllocated()
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return owner.target;
 	}
 
-	public ILaunch getLaunch() {
+	public ILaunch getLaunch()
+	{
 		return getDebugTarget().getLaunch();
 	}
 
-	public String getModelIdentifier() {
+	public String getModelIdentifier()
+	{
 		return getDebugTarget().getModelIdentifier();
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
 		return null;
 	}
 
 	public IVdmEvaluationCommand createEvaluationCommand(
-			String messageTemplate, IVdmThread thread) {
+			String messageTemplate, IVdmThread thread)
+	{
 		return null;
 	}
 
-	public String getEvalName() {
+	public String getEvalName()
+	{
 		return null;
 	}
 
-	public String getInstanceId() {
+	public String getInstanceId()
+	{
 		return null;
 	}
 
-	public IVdmType getType() {
+	public IVdmType getType()
+	{
 		return this.owner.getType();
 	}
 
-	public IVariable getVariable(int offset) {
+	public IVariable getVariable(int offset)
+	{
 		return null;
 	}
 
-	public String getMemoryAddress() {
+	public String getMemoryAddress()
+	{
 		return null;
 	}
 
-	public String getDetailsString() {
+	public String getDetailsString()
+	{
 		return getValueString();
 	}
 }

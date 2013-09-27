@@ -27,8 +27,10 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 import org.overture.ide.debug.core.model.internal.operations.IDbgpDebuggerFeedback;
 
-public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
-	public static interface IStateChangeHandler {
+public class VdmThreadStateManager implements IDbgpDebuggerFeedback
+{
+	public static interface IStateChangeHandler
+	{
 		void handleSuspend(int detail);
 
 		void handleResume(int detail);
@@ -44,7 +46,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 	private final DbgpDebugger engine;
 
 	// Abilities of debugging engine
-//	private volatile boolean canSuspend;
+	// private volatile boolean canSuspend;
 
 	// Number of suspends
 	private volatile int modificationsCount;
@@ -63,84 +65,102 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 	private boolean errorState = false;
 
 	protected void handleStatus(DbgpException exception, IDbgpStatus status,
-			int suspendDetail) {
-		if (exception != null) {
+			int suspendDetail)
+	{
+		if (exception != null)
+		{
 			setTerminated(exception);
 		}
-		if (status == null) {
+		if (status == null)
+		{
 			setTerminated(null);
 			return;
 		}
-		
-		//set internal VDMJ state
-		if(status.getInterpreterThreadState()!=null)
+
+		// set internal VDMJ state
+		if (status.getInterpreterThreadState() != null)
 		{
 			handler.setInterpreterState(status.getInterpreterThreadState());
 		}
 
 		// status is break but with an error, f.e. precondition failure
-		if(status.isBreak() && status.reasonError())
+		if (status.isBreak() && status.reasonError())
 		{
-			errorState  = true;
+			errorState = true;
 		}
-		
-		
-		if (status.isBreak()) {
+
+		if (status.isBreak())
+		{
 			setSuspended(true, suspendDetail);
-		} else if (status.isStopping()) {
+		} else if (status.isStopping())
+		{
 			// Temporary solution!
-			try {
+			try
+			{
 				terminate();
-			} catch (DebugException e) {
-				if (VdmDebugPlugin.DEBUG) {
+			} catch (DebugException e)
+			{
+				if (VdmDebugPlugin.DEBUG)
+				{
 					e.printStackTrace();
 				}
 			}
-		} else if (status.isStopped()) {
+		} else if (status.isStopped())
+		{
 			setTerminated(null);
 		}
 	}
 
 	// State management
-	protected void setSuspended(boolean value, int detail) {
+	protected void setSuspended(boolean value, int detail)
+	{
 		suspended = value;
-		if (value) {
+		if (value)
+		{
 			++modificationsCount;
 		}
 
-		if (value) {
+		if (value)
+		{
 			handler.handleSuspend(detail);
-		} else {
+		} else
+		{
 			handler.handleResume(detail);
 		}
 	}
 
-	private void setTerminated(DbgpException e) {
-		if (!terminated) {
+	private void setTerminated(DbgpException e)
+	{
+		if (!terminated)
+		{
 			terminated = true;
 			handler.handleTermination(e);
 		}
 	}
 
-	private boolean canStep() {
-		return (!terminated && suspended) && !errorState; 
+	private boolean canStep()
+	{
+		return (!terminated && suspended) && !errorState;
 	}
 
-	private void beginStep(int detail) {
+	private void beginStep(int detail)
+	{
 		stepping = true;
 		setSuspended(false, detail);
 	}
 
-	private void endStep(DbgpException execption, IDbgpStatus status) {
+	private void endStep(DbgpException execption, IDbgpStatus status)
+	{
 		stepping = false;
 		handleStatus(execption, status, DebugEvent.STEP_END);
 	}
 
-	public VdmThreadStateManager(VdmThread thread) {
+	public VdmThreadStateManager(VdmThread thread)
+	{
 		this.handler = thread;
 		this.engine = new DbgpDebugger(thread, this);
 
-//		canSuspend = true; // engine.isSupportsAsync();
+		// canSuspend = true; // engine.isSupportsAsync();
 		this.modificationsCount = 0;
 
 		this.suspended = true;
@@ -148,127 +168,157 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback {
 		this.stepping = this.suspended;
 	}
 
-	public DbgpDebugger getEngine() {
+	public DbgpDebugger getEngine()
+	{
 		return engine;
 	}
 
 	// Stepping
-	public boolean isStepping() {
+	public boolean isStepping()
+	{
 		return !terminated && stepping;
 	}
 
 	// StepInto
-	public boolean canStepInto() {
+	public boolean canStepInto()
+	{
 		return canStep();
 	}
 
-	public void endStepInto(DbgpException e, IDbgpStatus status) {
+	public void endStepInto(DbgpException e, IDbgpStatus status)
+	{
 		endStep(e, status);
 	}
 
-	public void stepInto() throws DebugException {
+	public void stepInto() throws DebugException
+	{
 		beginStep(DebugEvent.STEP_INTO);
-		synchronized (stepIntoLock) {
+		synchronized (stepIntoLock)
+		{
 			this.stepIntoState = true;
 		}
 		engine.stepInto();
 	}
 
-	public boolean isStepInto() {
-		synchronized (stepIntoLock) {
+	public boolean isStepInto()
+	{
+		synchronized (stepIntoLock)
+		{
 			return this.stepIntoState;
 		}
 	}
 
-	public void setStepInto(boolean state) {
-		synchronized (stepIntoLock) {
+	public void setStepInto(boolean state)
+	{
+		synchronized (stepIntoLock)
+		{
 			this.stepIntoState = state;
 		}
 	}
 
 	// StepOver
-	public boolean canStepOver() {
+	public boolean canStepOver()
+	{
 		return canStep();
 	}
 
-	public void endStepOver(DbgpException e, IDbgpStatus status) {
+	public void endStepOver(DbgpException e, IDbgpStatus status)
+	{
 		endStep(e, status);
 	}
 
-	public void stepOver() throws DebugException {
+	public void stepOver() throws DebugException
+	{
 		beginStep(DebugEvent.STEP_OVER);
 		engine.stepOver();
 	}
 
 	// StepReturn
-	public boolean canStepReturn() {
+	public boolean canStepReturn()
+	{
 		return canStep();
 	}
 
-	public void endStepReturn(DbgpException e, IDbgpStatus status) {
+	public void endStepReturn(DbgpException e, IDbgpStatus status)
+	{
 		endStep(e, status);
 	}
 
-	public void stepReturn() throws DebugException {
+	public void stepReturn() throws DebugException
+	{
 		beginStep(DebugEvent.STEP_RETURN);
 		engine.stepReturn();
 	}
 
 	// Suspend
-	public boolean isSuspended() {
+	public boolean isSuspended()
+	{
 		return suspended;
 	}
 
-	public boolean canSuspend() {
-		return false; //FIXME: I believe that the current debugger do not support any comminication while running //canSuspend && !terminated && !suspended;
+	public boolean canSuspend()
+	{
+		return false; // FIXME: I believe that the current debugger do not support any comminication while running
+						// //canSuspend && !terminated && !suspended;
 	}
 
-	public void endSuspend(DbgpException e, IDbgpStatus status) {
+	public void endSuspend(DbgpException e, IDbgpStatus status)
+	{
 		handleStatus(e, status, DebugEvent.CLIENT_REQUEST);
 	}
 
-	public void suspend() throws DebugException {
+	public void suspend() throws DebugException
+	{
 		engine.suspend();
 		setSuspended(true, DebugEvent.CLIENT_REQUEST);
 	}
 
-	public int getModificationsCount() {
+	public int getModificationsCount()
+	{
 		return modificationsCount;
 	}
 
 	// Resume
-	public boolean canResume() {
+	public boolean canResume()
+	{
 		return (!terminated && suspended) && !errorState;
 	}
 
-	public void endResume(DbgpException e, IDbgpStatus status) {
+	public void endResume(DbgpException e, IDbgpStatus status)
+	{
 		handleStatus(e, status, DebugEvent.BREAKPOINT);
 	}
 
-	public void resume() throws DebugException {
+	public void resume() throws DebugException
+	{
 		setSuspended(false, DebugEvent.CLIENT_REQUEST);
-		
+
 		engine.resume();
 	}
 
 	// Terminate
-	public boolean isTerminated() {
+	public boolean isTerminated()
+	{
 		return terminated;
 	}
 
-	public boolean canTerminate() {
+	public boolean canTerminate()
+	{
 		return !terminated;
 	}
 
-	public void endTerminate(DbgpException e, IDbgpStatus status) {
+	public void endTerminate(DbgpException e, IDbgpStatus status)
+	{
 		handleStatus(e, status, DebugEvent.CLIENT_REQUEST);
 	}
 
-	public void terminate() throws DebugException {
+	public void terminate() throws DebugException
+	{
 		engine.terminate();
 	}
 
-	public void notifyModified() {
+	public void notifyModified()
+	{
 		modificationsCount++;
 	}
 }

@@ -353,4 +353,4 @@
 //			return (IResource[]) fFiles.toArray(new IResource[fFiles.size()]);
 //		}
 //	}
-//}
+// }

@@ -38,15 +38,19 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmLineBreakpoint;
 
 public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
-		IVdmLineBreakpoint {
+		IVdmLineBreakpoint
+{
 
-	protected String getMarkerId() {
+	protected String getMarkerId()
+	{
 		return IDebugConstants.LINE_BREAKPOINT_MARKER_ID;
 	}
 
-	protected void addLineBreakpointAttributes(Map<String, Object> attributes, IPath path,
-			int lineNumber, int charStart, int charEnd) {
-		if (path != null) {
+	protected void addLineBreakpointAttributes(Map<String, Object> attributes,
+			IPath path, int lineNumber, int charStart, int charEnd)
+	{
+		if (path != null)
+		{
 			attributes.put(IMarker.LOCATION, path.toPortableString());
 		}
 		attributes.put(IMarker.LINE_NUMBER, new Integer(lineNumber));
@@ -54,27 +58,30 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 		attributes.put(IMarker.CHAR_END, new Integer(charEnd));
 	}
 
-	public VdmLineBreakpoint() {
+	public VdmLineBreakpoint()
+	{
 
 	}
 
 	public VdmLineBreakpoint(final String debugModelId,
 			final IResource resource, final IPath path, final int lineNumber,
 			final int charStart, final int charEnd, final boolean add)
-			throws DebugException {
+			throws DebugException
+	{
 
-		IWorkspaceRunnable wr = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
+		IWorkspaceRunnable wr = new IWorkspaceRunnable()
+		{
+			public void run(IProgressMonitor monitor) throws CoreException
+			{
 				// create the marker
 				IMarker marker = resource.createMarker(getMarkerId());
-				
-				setMarker(marker);//getMarkerId()));
+
+				setMarker(marker);// getMarkerId()));
 
 				// add attributes
-				final Map<String,Object> attributes = new HashMap<String, Object>();
+				final Map<String, Object> attributes = new HashMap<String, Object>();
 				addVdmBreakpointAttributes(attributes, debugModelId, true);
-				addLineBreakpointAttributes(attributes, path, lineNumber,
-						charStart, charEnd);
+				addLineBreakpointAttributes(attributes, path, lineNumber, charStart, charEnd);
 
 				// set attributes
 				ensureMarker().setAttributes(attributes);
@@ -87,74 +94,90 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 	}
 
 	// ILineBreakpoint
-	public int getLineNumber() throws CoreException {
+	public int getLineNumber() throws CoreException
+	{
 		return ensureMarker().getAttribute(IMarker.LINE_NUMBER, -1);
 	}
 
-	public int getCharStart() throws CoreException {
+	public int getCharStart() throws CoreException
+	{
 		return ensureMarker().getAttribute(IMarker.CHAR_START, -1);
 	}
 
-	public int getCharEnd() throws CoreException {
+	public int getCharEnd() throws CoreException
+	{
 		return ensureMarker().getAttribute(IMarker.CHAR_END, -1);
 
 	}
 
-	public String getResourceName() throws CoreException {
+	public String getResourceName() throws CoreException
+	{
 		IResource resource = ensureMarker().getResource();
 		if (!resource.equals(getWorkspaceRoot()))
 			return resource.getName();
 
 		// else
-		String portablePath = (String) ensureMarker().getAttribute(
-				IMarker.LOCATION);
-		if (portablePath != null) {
+		String portablePath = (String) ensureMarker().getAttribute(IMarker.LOCATION);
+		if (portablePath != null)
+		{
 			IPath path = Path.fromPortableString(portablePath);
 			return path.lastSegment();
-		} else {
+		} else
+		{
 			return null;
 		}
 	}
 
 	// IScriptLineBreakpoint
-	public IResource getResource() {
-		try {
+	public IResource getResource()
+	{
+		try
+		{
 			final IResource resource = ensureMarker().getResource();
-			if (!resource.equals(getWorkspaceRoot())) {
+			if (!resource.equals(getWorkspaceRoot()))
+			{
 				return resource;
 			}
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			VdmDebugPlugin.log(e);
 		}
 		return null;
 	}
 
-	private static IWorkspaceRoot getWorkspaceRoot() {
+	private static IWorkspaceRoot getWorkspaceRoot()
+	{
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
-	public IPath getResourcePath() {
-		try {
+	public IPath getResourcePath()
+	{
+		try
+		{
 			final IResource resource = ensureMarker().getResource();
 			if (!resource.equals(getWorkspaceRoot()))
 				return ensureMarker().getResource().getFullPath();
-			final String path = (String) ensureMarker().getAttribute(
-					IMarker.LOCATION);
-			if (path != null) {
+			final String path = (String) ensureMarker().getAttribute(IMarker.LOCATION);
+			if (path != null)
+			{
 				return Path.fromPortableString(path);
 			}
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			VdmDebugPlugin.log(e);
 		}
 		return null;
 	}
 
-	public URI getResourceURI() {
-		try {
+	public URI getResourceURI()
+	{
+		try
+		{
 			IResource resource = ensureMarker().getResource();
 			return resource.getLocationURI();
-			
-		} catch (DebugException e) {
+
+		} catch (DebugException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -164,11 +187,11 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 	private static final String[] UPDATABLE_ATTRS = new String[] {
 			IMarker.LINE_NUMBER, IBreakpoint.ENABLED,
 			AbstractVdmBreakpoint.HIT_CONDITION,
-			AbstractVdmBreakpoint.HIT_VALUE,
-			AbstractVdmBreakpoint.EXPRESSION,
+			AbstractVdmBreakpoint.HIT_VALUE, AbstractVdmBreakpoint.EXPRESSION,
 			AbstractVdmBreakpoint.EXPRESSION_STATE };
 
-	public String[] getUpdatableAttributes() {
+	public String[] getUpdatableAttributes()
+	{
 		return UPDATABLE_ATTRS;
 	}
 }
