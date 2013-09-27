@@ -653,7 +653,10 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!TypeComparator.isSubType(question.checkType(exp, node.getExpType()), type))
 			{
-				obligations.add(new SubTypeObligation(exp, type, node.getExpType(), question));
+				SubTypeObligation sto = SubTypeObligation.newInstance(exp, type, node.getExpType(), question);
+				if (sto != null){
+						obligations.add(sto);
+				}
 			}
 
 			return obligations;
