@@ -1,10 +1,5 @@
 package org.overture.typechecker.assistant.definition;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.ARenamedDefinition;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ARenamedDefinitionAssistantTC
@@ -24,12 +19,12 @@ public class ARenamedDefinitionAssistantTC
 //
 //	}
 
-	public static void typeResolve(ARenamedDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
-	}
+//	public static void typeResolve(ARenamedDefinition d,
+//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//		PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
+//	}
 
 	// public static boolean isUsed(ARenamedDefinition u) {
 	// return PDefinitionAssistantTC.isUsed(u.getDef());

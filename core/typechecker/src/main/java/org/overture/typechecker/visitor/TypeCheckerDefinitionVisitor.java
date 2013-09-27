@@ -1,9 +1,7 @@
 package org.overture.typechecker.visitor;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;

@@ -126,6 +126,7 @@ import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
 import org.overture.typechecker.utilities.ImplicitDefinitionFinder;
@@ -136,7 +137,10 @@ import org.overture.typechecker.utilities.PTypeFunctionChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeFinder.Newquestion;
+import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.TypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.TypeUtils;
+import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
@@ -1031,5 +1035,23 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getPTypeFunctionChecker()
 	{
 		return new PTypeFunctionChecker(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getUnusedChecker()
+	{
+		return new UnusedChecker(this);
+	}
+	
+	@Override
+	public IAnswer<PDefinition> getDereferer()
+	{
+		return new Dereferer(this);
+	}
+	
+	@Override
+	public IQuestion<NewQuestion> getTypeResolver()
+	{
+		return new TypeResolver(this);
 	}
 }

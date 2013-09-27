@@ -5,13 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
-import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -19,12 +15,8 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.FlatCheckedEnvironment;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AImplicitFunctionDefinitionAssistantTC
@@ -74,59 +66,59 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-	public static void typeResolve(AImplicitFunctionDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-
-		if (d.getTypeParams().size() > 0)
-		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
-			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers)));
-		} else
-		{
-			question.qualifiers = null;
-			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
-		}
-
-		if (d.getResult() != null)
-		{
-			APatternTypePairAssistant.typeResolve(d.getResult(), rootVisitor, question);
-		}
-
-		if (question.env.isVDMPP())
-		{
-			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(d);
-			d.getName().setTypeQualifier(fType.getParameters());
-
-			if (d.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				d.getClassDefinition().setIsAbstract(true);
-			}
-		}
-
-		if (d.getBody() instanceof ASubclassResponsibilityExp
-				|| d.getBody() instanceof ANotYetSpecifiedExp)
-		{
-			d.setIsUndefined(true);
-		}
-
-		if (d.getPrecondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-		}
-
-		for (APatternListTypePair pltp : d.getParamPatterns())
-		{
-			APatternListTypePairAssistantTC.typeResolve(pltp, rootVisitor, question);
-		}
-
-	}
+//	public static void typeResolve(AImplicitFunctionDefinition d,
+//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//
+//		if (d.getTypeParams().size() > 0)
+//		{
+//			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
+//			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers)));
+//		} else
+//		{
+//			question.qualifiers = null;
+//			d.setType(PTypeAssistantTC.typeResolve(af.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
+//		}
+//
+//		if (d.getResult() != null)
+//		{
+//			APatternTypePairAssistant.typeResolve(d.getResult(), rootVisitor, question);
+//		}
+//
+//		if (question.env.isVDMPP())
+//		{
+//			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(d);
+//			d.getName().setTypeQualifier(fType.getParameters());
+//
+//			if (d.getBody() instanceof ASubclassResponsibilityExp)
+//			{
+//				d.getClassDefinition().setIsAbstract(true);
+//			}
+//		}
+//
+//		if (d.getBody() instanceof ASubclassResponsibilityExp
+//				|| d.getBody() instanceof ANotYetSpecifiedExp)
+//		{
+//			d.setIsUndefined(true);
+//		}
+//
+//		if (d.getPrecondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+//		}
+//
+//		if (d.getPostcondition() != null)
+//		{
+//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+//		}
+//
+//		for (APatternListTypePair pltp : d.getParamPatterns())
+//		{
+//			APatternListTypePairAssistantTC.typeResolve(pltp, rootVisitor, question);
+//		}
+//
+//	}
 
 //	public static void implicitDefinitions(AImplicitFunctionDefinition d,
 //			Environment env)

@@ -124,6 +124,7 @@ import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
+import org.overture.typechecker.utilities.TypeResolver;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
@@ -406,4 +407,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getUsedChecker();
 	
 	IAnswer<Boolean> getPTypeFunctionChecker();
+	
+	AnalysisAdaptor getUnusedChecker();
+	
+	IAnswer<PDefinition> getDereferer();
+	
+	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
 }

@@ -34,8 +34,6 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseABracketType(ABracketType node) throws AnalysisException
 	{
-		//return ABracketTypeAssistantTC.isFunction(node);
-		//PTypeAssistantTC.isFunction(type.getType());
 		return node.getType().apply(this);
 	}
 	
