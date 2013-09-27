@@ -1,6 +1,13 @@
 module A
 definitions
 
+
+
+functions
+	donothing() r : set of nat
+	post r subset {ss | ss : nat & ss <10}
+
+
 types
   Command = Borrow | Renew | Return | Find;
   
@@ -11,7 +18,7 @@ types
   
   Book ::  
     title : String
-    author : String;
+    author : String ;
 
   User :: 
       name : String ;
@@ -23,7 +30,6 @@ types
   Renew ::
     copy : BookId
     user : UserId;
-    
   Return :: copy : BookId;
   Find :: string : String;
   
@@ -35,21 +41,6 @@ types
     dom bor subset dom us
     and dunion rng bor subset dom bs
     and (forall u1, u2 in set dom bor & u1 <> u2 => bor(u1) inter bor(u2) = {})
-    
-
-  
-  functions
-  
-  ExeFind: String * Library -> (set of BookId)
-  ExeFind(s,l) ==
-    {bid | bid in set dom l.books & s in set {l.books(bid).title, l.books(bid).author}}
-  pre card({bid | bid in set dom l.books & s in set {l.books(bid).title, l.books(bid).author}}) > 0
-    
- 
-
-
-
-
 
 
 end A
