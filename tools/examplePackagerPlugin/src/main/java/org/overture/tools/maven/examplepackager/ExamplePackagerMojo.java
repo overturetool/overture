@@ -137,7 +137,7 @@ public class ExamplePackagerMojo extends AbstractMojo {
     	}
     	
     	
-    	if(!controllers.isEmpty())
+    	if(outputWebFiles && !controllers.isEmpty())
     	{
     		controllers.iterator().next().createWebOverviewPage(controllers, zipFiles,overtureCSSWeb);
     	}
