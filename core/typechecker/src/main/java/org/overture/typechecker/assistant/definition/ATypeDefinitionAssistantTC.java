@@ -6,7 +6,6 @@ import java.util.Vector;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.PPattern;
@@ -26,18 +25,18 @@ public class ATypeDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(ATypeDefinition d)
-	{
-		List<PDefinition> defs = new Vector<PDefinition>();
-		defs.add(d);
-
-		if (d.getInvdef() != null)
-		{
-			defs.add(d.getInvdef());
-		}
-
-		return defs;
-	}
+//	public static List<PDefinition> getDefinitions(ATypeDefinition d)
+//	{
+//		List<PDefinition> defs = new Vector<PDefinition>();
+//		defs.add(d);
+//
+//		if (d.getInvdef() != null)
+//		{
+//			defs.add(d.getInvdef());
+//		}
+//
+//		return defs;
+//	}
 
 //	public static void typeResolve(ATypeDefinition d,
 //			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,

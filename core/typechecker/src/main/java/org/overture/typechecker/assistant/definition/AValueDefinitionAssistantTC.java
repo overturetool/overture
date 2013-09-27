@@ -39,10 +39,10 @@ public class AValueDefinitionAssistantTC
 //
 //	}
 
-	public static List<PDefinition> getDefinitions(AValueDefinition d)
-	{
-		return d.getDefs();
-	}
+//	public static List<PDefinition> getDefinitions(AValueDefinition d)
+//	{
+//		return d.getDefs();
+//	}
 
 //	public static void typeResolve(AValueDefinition d,
 //			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,

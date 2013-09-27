@@ -7,12 +7,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
-import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -23,12 +19,9 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
-import org.overture.typechecker.FlatCheckedEnvironment;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 

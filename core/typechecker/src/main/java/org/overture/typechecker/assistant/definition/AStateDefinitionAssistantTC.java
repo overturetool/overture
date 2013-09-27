@@ -6,7 +6,6 @@ import java.util.Vector;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -31,10 +30,10 @@ public class AStateDefinitionAssistantTC
 //		PDefinitionListAssistantTC.unusedCheck(d.getStateDefs());
 //	}
 
-	public static List<PDefinition> getDefinitions(AStateDefinition d)
-	{
-		return d.getStateDefs();
-	}
+//	public static List<PDefinition> getDefinitions(AStateDefinition d)
+//	{
+//		return d.getStateDefs();
+//	}
 //	public static void typeResolve(AStateDefinition d,
 //			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 //			TypeCheckInfo question) throws AnalysisException
