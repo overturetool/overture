@@ -63,11 +63,6 @@ public class BreakpointExpression extends PExpBase
 		return "hits " + cond + " " + arg;
 	}
 
-	@Override
-	public String kindPExp()
-	{
-		return null;
-	}
 
 	@Override
 	public PExp clone(Map<INode, INode> oldToNewMap)
