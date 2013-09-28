@@ -2,8 +2,8 @@
  * Conway's Game of Life
  *
  * The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells,
- * each of which is in one of two possible states, alive or dead. Every cell interacts with its eight
- * neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent.
+ * each of which is in one of two possible states, alive or dead. Every cell interacts with its 
+ * eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent.
  * At each step in time, the following transitions occur:
  *
  *   Any live cell with fewer than two live neighbours dies, as if caused by under-population.
@@ -11,18 +11,17 @@
  *   Any live cell with more than three live neighbours dies, as if by overcrowding.
  *   Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
  *
- * The initial pattern constitutes the seed of the system. The first generation is created by applying
- * the above rules simultaneously to every cell in the seed-births and deaths occur simultaneously,
- * and the discrete moment at which this happens is sometimes called a tick (in other words, each
- * generation is a pure function of the preceding one). The rules continue to be applied repeatedly
- * to create further generations.
+ * The initial pattern constitutes the seed of the system. The first generation is created by 
+ * applying the above rules simultaneously to every cell in the seed-births and deaths occur 
+ * simultaneously, and the discrete moment at which this happens is sometimes called a tick 
+ * (in other words, each generation is a pure function of the preceding one). The rules continue 
+ * to be applied repeatedly to create further generations.
  *
- * See http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life.
- * Modelled in VDM-SL by Nick Battle and Peter Gorm Larsen
+ * Modelled in VDM-SL by Nick Battle and Peter Gorm Larsen and animation made by 
+ * Claus Ballegaard Nielsen
  */
 
-module gui_Graphics
-
+module Conway 
 exports all
 
 definitions
@@ -38,10 +37,6 @@ types
 		
 	Population = set of Point;
 	
-	Configuration ::
-		gridSide : int
-		sleepTime : int
-		pop : Population;
 	
 functions
 	-- Generate the Points around a given Point
@@ -83,8 +78,6 @@ functions
 	-- Generate a sequence of N generations 
 	generations: nat1 * Population -> seq of Population
 	generations(n,pop) ==
-		let - = {newLivingCell(cell.x, cell.y)| cell in set pop} in
-		let - = newRound() in
 		let new_p = generation(pop)
 		in
 			if n = 1
@@ -95,21 +88,6 @@ functions
 	measureGenerations: nat1 * Population -> nat
 	measureGenerations(n,-) == n;
 	
-	generate: nat1 * Configuration -> seq of Population
-	generate(n,conf) == 
-		let - = initialise(conf.gridSide, conf.sleepTime) 
-		in
-		 generations(n, conf.pop);
-	
-	initialise: nat1 * nat1 -> int
-    initialise(gridSideCount, sleepTime)== is not yet specified;
-    
-    newLivingCell:  int * int -> int
-    newLivingCell(x,y)== is not yet specified;
-    
-   	newRound: () -> int
-    newRound()== is not yet specified;
-    
     -- Generate an offset of a Population (for testing gliders)
 	offset: Population * int * int -> Population
 	offset(pop, dx, dy) ==
@@ -151,16 +129,16 @@ functions
 	
 -- Test games from http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 values
-	BLOCK = mk_Configuration(6, 500, { mk_Point(0,0), mk_Point(-1,0), mk_Point(0,-1), mk_Point(-1,-1) });
+	BLOCK = { mk_Point(0,0), mk_Point(-1,0), mk_Point(0,-1), mk_Point(-1,-1)};
 
-	BLINKER = mk_Configuration(6, 500,{ mk_Point(-1,0), mk_Point(0,0), mk_Point(1,0) });
+	BLINKER = { mk_Point(-1,0), mk_Point(0,0), mk_Point(1,0) };
 	
-	TOAD = mk_Configuration(6, 500, BLINKER.pop union { mk_Point(0,-1), mk_Point(-1,-1), mk_Point(-2,-1) });
+	TOAD = BLINKER union { mk_Point(0,-1), mk_Point(-1,-1), mk_Point(-2,-1) };
 	
-	BEACON = mk_Configuration(8, 500, { mk_Point(-2,0), mk_Point(-2,1), mk_Point(-1,1), mk_Point(0,-2), 
-            mk_Point(1,-2), mk_Point(1,-1 )});
+	BEACON = { mk_Point(-2,0), mk_Point(-2,1), mk_Point(-1,1), mk_Point(0,-2),  
+	           mk_Point(1,-2), mk_Point(1,-1 )};
             
-	PULSAR =  mk_Configuration(18, 1000, let quadrant = { mk_Point(2,1), mk_Point(3,1), mk_Point(3,2),
+	PULSAR = let quadrant = { mk_Point(2,1), mk_Point(3,1), mk_Point(3,2),
                            mk_Point(1,2), mk_Point(1,3), mk_Point(2,3),
                            mk_Point(5,2), mk_Point(5,3), mk_Point(6,3), mk_Point(7,3),
                            mk_Point(2,5), mk_Point(3,5), mk_Point(3,6), mk_Point(3,7) }
@@ -168,37 +146,35 @@ values
 				quadrant union
 				{ mk_Point(-x, y)| mk_Point(x, y) in set quadrant } union
 				{ mk_Point(x, -y)| mk_Point(x, y) in set quadrant } union
-				{ mk_Point(-x, -y)| mk_Point(x, y) in set quadrant });
+				{ mk_Point(-x, -y)| mk_Point(x, y) in set quadrant };
 				
-    DIEHARD = mk_Configuration(34, 300, {mk_Point(0,1),mk_Point(1,1),mk_Point(1,0),
-             mk_Point(0,5),mk_Point(0,6),mk_Point(0,7),mk_Point(2,6)});
+  DIEHARD = {mk_Point(0,1),mk_Point(1,1),mk_Point(1,0),
+             mk_Point(0,5),mk_Point(0,6),mk_Point(0,7),mk_Point(2,6)};
       
-    GLIDER = mk_Configuration(40, 100, { mk_Point(1,0), mk_Point(2,0), mk_Point(3,0), mk_Point(3,1), mk_Point(2,2) });      
+  GLIDER = { mk_Point(1,0), mk_Point(2,0), mk_Point(3,0), mk_Point(3,1), mk_Point(2,2) };      
        
-    GOSPER_GLIDER_GUN =
-    	mk_Configuration(40, 50, {
-        mk_Point(2,0), mk_Point(2,1), mk_Point(2,2), mk_Point(3,0), mk_Point(3,1),
+  GOSPER_GLIDER_GUN = { mk_Point(2,0), mk_Point(2,1), mk_Point(2,2), mk_Point(3,0), mk_Point(3,1),
         mk_Point(3,2), mk_Point(4,-1), mk_Point(4,3), mk_Point(6,-2), mk_Point(6,-1),
         mk_Point(6,3), mk_Point(6,4), mk_Point(16,1), mk_Point(16,2), mk_Point(17,1),
         mk_Point(17,2), mk_Point(-1,-1), mk_Point(-2,-2), mk_Point(-2,-1), mk_Point(-2,0),
         mk_Point(-3,-3), mk_Point(-3,1), mk_Point(-4,-1), mk_Point(-5,-4), mk_Point(-5,2),
         mk_Point(-6,-4), mk_Point(-6,2), mk_Point(-7,-3), mk_Point(-7,1), mk_Point(-8,-2),
         mk_Point(-8,-1), mk_Point(-8,0), mk_Point(-17,-1), mk_Point(-17,0), mk_Point(-18,-1),
-        mk_Point(-18,0)});
+        mk_Point(-18,0)};
         
-   functions
+functions
 	tests: () -> seq of bool
 	tests() ==
 	[
-		periodNP(BLOCK.pop,		1),	-- ie. constant
-		periodNP(BLINKER.pop,	2),
-		periodNP(TOAD.pop,		2),
-		periodNP(BEACON.pop,	2),
-		periodNP(PULSAR.pop,	3),
-		gliderNP(GLIDER.pop,	4, 1),
-		disappearNP(DIEHARD.pop, 130)
+		periodNP(BLOCK,	1),	-- ie. constant
+		periodNP(BLINKER,2),
+		periodNP(TOAD,	2),
+		periodNP(BEACON, 2),
+		periodNP(PULSAR, 3),
+		gliderNP(GLIDER, 4, 1),
+		disappearNP(DIEHARD, 130)
 	];
 	          
              
-end gui_Graphics
+end Conway
     
