@@ -53,9 +53,11 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATuplePattern;
@@ -142,8 +144,9 @@ public class SubTypeObligation extends ProofObligation
 		return null;
 	}
 
-	public static SubTypeObligation newInstance(AExplicitOperationDefinition def,
-			PType actualResult, IPOContextStack ctxt)
+	public static SubTypeObligation newInstance(
+			AExplicitOperationDefinition def, PType actualResult,
+			IPOContextStack ctxt)
 	{
 		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
 		if (sto.getValueTree() != null)
@@ -154,8 +157,9 @@ public class SubTypeObligation extends ProofObligation
 		return null;
 	}
 
-	public static SubTypeObligation newInstance(AImplicitOperationDefinition def,
-			PType actualResult, IPOContextStack ctxt)
+	public static SubTypeObligation newInstance(
+			AImplicitOperationDefinition def, PType actualResult,
+			IPOContextStack ctxt)
 	{
 		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
 		if (sto.getValueTree() != null)
@@ -166,6 +170,27 @@ public class SubTypeObligation extends ProofObligation
 		return null;
 	}
 
+	/**
+	 * Help Constructor for the COMPASS Subtype POs <br>
+	 * <b> Do not use this constructor directly! </b> Use one of the factory 
+	 * methods instead
+	 * 
+	 * @param root The root node generating the PO
+	 * @param loc The location of the root node
+	 * @param resultexp The PExp identifying the result to be testes for subtyping
+	 * @param deftype The declared type
+	 * @param actualtype The actual type
+	 * @param ctxt Context Information
+	 */
+	protected SubTypeObligation(INode root, ILexLocation loc, PExp resultexp,
+			PType deftype, PType actualtype
+			, IPOContextStack ctxt)
+	{
+		super(root, POType.SUB_TYPE, ctxt, loc);
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, resultexp, deftype, actualtype)));
+
+	}
+	
 	private SubTypeObligation(PExp exp, PType etype, PType atype,
 			IPOContextStack ctxt)
 	{
