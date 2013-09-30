@@ -145,8 +145,10 @@ public class StopStatement extends Statement
 		{
 			if (th instanceof ObjectThread || th instanceof PeriodicThread)
 			{
-				th.stopThread();	// This may stop current thread at next reschedule
-				count++;
+				if (th.stopThread())	// This may stop current thread at next reschedule
+				{
+					count++;
+				}
 			}
 		}
 

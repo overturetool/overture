@@ -200,7 +200,7 @@ public class InitThread implements ISchedulableThread
 		throw new NotSupportedError();
 	}
 
-	public void stopThread()
+	public boolean stopThread()
 	{
 		throw new NotSupportedError();
 	}
