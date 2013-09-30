@@ -91,12 +91,16 @@ public class SubTypeObligation extends ProofObligation
 	private static final long serialVersionUID = 1108478780469068741L;
 
 	/**
-	 * Factory Method since we need to return null STOs (which should
-	 * be discarded
-	 * @param exp The expression to be checked
-	 * @param etype The expected type
-	 * @param atype The actual type
-	 * @param ctxt Context Information
+	 * Factory Method since we need to return null STOs (which should be discarded
+	 * 
+	 * @param exp
+	 *            The expression to be checked
+	 * @param etype
+	 *            The expected type
+	 * @param atype
+	 *            The actual type
+	 * @param ctxt
+	 *            Context Information
 	 * @return
 	 */
 	public static SubTypeObligation newInstance(PExp exp, PType etype,
@@ -112,7 +116,57 @@ public class SubTypeObligation extends ProofObligation
 		return null;
 	}
 
-	public SubTypeObligation(PExp exp, PType etype, PType atype,
+	public static SubTypeObligation newInstance(
+			AExplicitFunctionDefinition func, PType etype, PType atype,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(func, etype, atype, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(
+			AImplicitFunctionDefinition func, PType etype, PType atype,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(func, etype, atype, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(AExplicitOperationDefinition def,
+			PType actualResult, IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(AImplicitOperationDefinition def,
+			PType actualResult, IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	private SubTypeObligation(PExp exp, PType etype, PType atype,
 			IPOContextStack ctxt)
 	{
 		super(exp, POType.SUB_TYPE, ctxt, exp.getLocation());
@@ -129,7 +183,7 @@ public class SubTypeObligation extends ProofObligation
 		}
 	}
 
-	public SubTypeObligation(AExplicitFunctionDefinition func, PType etype,
+	private SubTypeObligation(AExplicitFunctionDefinition func, PType etype,
 			PType atype, IPOContextStack ctxt)
 	{
 		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
@@ -157,7 +211,7 @@ public class SubTypeObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	public SubTypeObligation(AImplicitFunctionDefinition func, PType etype,
+	private SubTypeObligation(AImplicitFunctionDefinition func, PType etype,
 			PType atype, IPOContextStack ctxt)
 	{
 		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
@@ -188,7 +242,7 @@ public class SubTypeObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	public SubTypeObligation(AExplicitOperationDefinition def,
+	private SubTypeObligation(AExplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
 		super(def, POType.SUB_TYPE, ctxt, def.getLocation());
@@ -199,7 +253,7 @@ public class SubTypeObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
-	public SubTypeObligation(AImplicitOperationDefinition def,
+	private SubTypeObligation(AImplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
 		super(def, POType.SUB_TYPE, ctxt, def.getLocation());
@@ -227,7 +281,7 @@ public class SubTypeObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
-	private PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
+	protected PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
 	{
 		if (atype != null && rec)
 		{
