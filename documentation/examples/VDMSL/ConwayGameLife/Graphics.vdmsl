@@ -22,7 +22,7 @@ functions
 	animate_step : seq of Conway`Population -> seq of Conway`Population
 	animate_step(pop) ==
 		if pop = [] 
-			then []
+		then []
 		else
 			let - = {newLivingCell(cell.x, cell.y)| cell in set hd pop} 
 			 in		
@@ -31,13 +31,13 @@ functions
 	 		    animate_step(tl pop) ;
 
 	initialise: nat1 * nat1 -> int
-    initialise(gridSideCount, sleepTime)== is not yet specified;
+  initialise(gridSideCount, sleepTime)== is not yet specified;
     
-    newLivingCell:  int * int -> int
-    newLivingCell(x,y)== is not yet specified;
+  newLivingCell:  int * int -> int
+  newLivingCell(x,y)== is not yet specified;
     
-   	newRound: () -> int
-    newRound()== is not yet specified;
+  newRound: () -> int
+  newRound()== is not yet specified;
 
 values
 	BLOCK = mk_Configuration(4, 500, Conway`BLOCK);
