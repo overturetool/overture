@@ -2,6 +2,7 @@ module gui_Graphics
 
 imports from Conway all
 
+exports all
 definitions
 
 types
@@ -28,7 +29,11 @@ functions
 			 in		
 			  let - = newRound() 
 			   in
-	 		    animate_step(tl pop) ;
+	 		    animate_step(tl pop) 
+	measure measure_animate_step;
+	
+	measure_animate_step: seq of Conway`Population -> nat
+	measure_animate_step(list) == len list;
 
 	initialise: nat1 * nat1 -> int
   initialise(gridSideCount, sleepTime)== is not yet specified;
