@@ -281,7 +281,7 @@ public class SubTypeObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
-	protected PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
+	private PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
 	{
 		if (atype != null && rec)
 		{
