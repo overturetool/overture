@@ -30,6 +30,9 @@ public class IVdmUiConstants {
 	public static final String OSX_LATEX_PATH_PREFERENCE = "__OSX_LATEX_PATH_PREFERENCE__";
 	
 	public static final String ENABLE_EDITOR_RECONFILER = "enable_editor_reconciler";
+	
+	public static final String EXTENSION_WORKBENCH_DISPLAY = "org.overture.ide.ui.workbenchDisplay";
+	
 }
 
 

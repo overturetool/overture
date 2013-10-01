@@ -37,47 +37,55 @@ import org.overture.ide.debug.core.model.IVdmDebugTarget;
 import org.overture.ide.debug.internal.ui.viewers.update.VdmModelProxyFactory;
 
 public abstract class VdmDebugElement extends PlatformObject implements
-		IVdmDebugElement {
+		IVdmDebugElement
+{
 
-	public IVdmDebugTarget getVdmDebugTarget() {
+	public IVdmDebugTarget getVdmDebugTarget()
+	{
 		return (IVdmDebugTarget) getDebugTarget();
 	}
 
-	public ILaunch getLaunch() {
+	public ILaunch getLaunch()
+	{
 		return getDebugTarget().getLaunch();
 	}
 
-	public String getModelIdentifier() {
+	public String getModelIdentifier()
+	{
 		return getDebugTarget().getModelIdentifier();
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		if (adapter == IDebugElement.class) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
+		if (adapter == IDebugElement.class)
+		{
 			return this;
 		}
 
 		/*
-		 * Not implemented currently
-		 * 
-		 * if (adapter == IStepFilters.class) { return getDebugTarget(); }
+		 * Not implemented currently if (adapter == IStepFilters.class) { return getDebugTarget(); }
 		 */
 
-		if (adapter == IDebugTarget.class) {
+		if (adapter == IDebugTarget.class)
+		{
 			return getDebugTarget();
 		}
 
-		if (adapter == ITerminate.class) {
+		if (adapter == ITerminate.class)
+		{
 			return getDebugTarget();
 		}
 
-		if (adapter == IVdmDebugTarget.class) {
+		if (adapter == IVdmDebugTarget.class)
+		{
 			return getVdmDebugTarget();
 		}
 
-		if (adapter == ILaunch.class) {
+		if (adapter == ILaunch.class)
+		{
 			return getLaunch();
 		}
-		if(adapter == IModelProxyFactory.class)
+		if (adapter == IModelProxyFactory.class)
 		{
 			return new VdmModelProxyFactory();
 		}
@@ -85,28 +93,24 @@ public abstract class VdmDebugElement extends PlatformObject implements
 		return super.getAdapter(adapter);
 	}
 
-	protected void abort(String message, Throwable e) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message,
-				e));
+	protected void abort(String message, Throwable e) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message, e));
 	}
 
 	protected DebugException makeNotSupported(String message, Throwable e)
-			throws DebugException {
-		return new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				message, e));
+			throws DebugException
+	{
+		return new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED, message, e));
 	}
 
-	protected DebugException wrapDbgpException(String message, DbgpException e) {
-		return new DebugException(new Status(IStatus.ERROR, DebugPlugin
-				.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message,
-				e));
+	protected DebugException wrapDbgpException(String message, DbgpException e)
+	{
+		return new DebugException(new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message, e));
 	}
 
-	protected DebugException wrapIOException(String message, IOException e) {
-		return new DebugException(new Status(IStatus.ERROR, DebugPlugin
-				.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message,
-				e));
+	protected DebugException wrapIOException(String message, IOException e)
+	{
+		return new DebugException(new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message, e));
 	}
 }

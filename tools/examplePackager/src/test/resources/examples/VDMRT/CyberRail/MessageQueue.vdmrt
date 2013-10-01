@@ -1,0 +1,53 @@
+\section{MessageQueue}
+
+\begin{vdm_al}
+class MessageQueue
+
+instance variables
+
+queue : seq of Message := [];
+size : nat := 0;
+
+
+types
+public String = seq of char;
+public FunctionType = <setInactive> | <setActive>; 
+public ParamType = nat | String;
+
+public Message::
+	funct : FunctionType
+	params : seq of ParamType
+
+operations
+
+--Constructor
+public MessageQueue : nat ==> MessageQueue
+MessageQueue(psize) ==
+	size := psize;
+
+
+public push: Message ==> ()
+push(message) ==
+	queue := queue ^ [message];
+
+public pop: () ==> Message
+pop() == (
+	let rtn_data = hd queue
+	in
+	(
+		queue := tl queue;
+		return rtn_data;
+	)
+);
+
+sync
+per push => #fin(push) - #fin(pop) < size; 	
+--ensure that there's space in the queue
+per pop => #fin(push) - #fin(pop) > 0;			
+--ensure that there's data in the queue
+mutex(pop,push);		
+--Only a single activation of pop at a time.
+--Have not testet if this sync is enough.	
+
+end MessageQueue
+\end{vdm_al}

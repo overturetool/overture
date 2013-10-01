@@ -14,7 +14,7 @@
 	<name>New Proof Obligation Generator</name>
 
 	<properties>
-		<astcreator.version>1.2.6</astcreator.version>
+		<astcreator.version>1.4.0</astcreator.version>
 	</properties>
 
 	<dependencies>
@@ -76,8 +76,8 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.overture.tools.maven</groupId>
-				<artifactId>ast-creator</artifactId>
+				<groupId>org.overture.maven.tools</groupId>
+				<artifactId>ast-creator-plugin</artifactId>
 				<version>${astcreator.version}</version>
 				<executions>
 					<execution>
@@ -134,8 +134,8 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>org.overture.tools.maven</groupId>
-										<artifactId>ast-creator</artifactId>
+										<groupId>org.overture.maven.tools</groupId>
+										<artifactId>ast-creator-plugin</artifactId>
 										<versionRange>${astcreator.version}</versionRange>
 										<goals>
 											<goal>generate</goal>

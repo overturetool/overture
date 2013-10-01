@@ -39,7 +39,7 @@ public class MapIterationObligation extends ProofObligation
 
 	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_ITERATION, ctxt);
+		super(exp, POType.MAP_ITERATION, ctxt, exp.getLocation());
 		
 		/**
 		 * The obligation for m ** e is:

@@ -1,0 +1,29 @@
+class Testing
+
+operations
+  public Test: () ==> ()
+  Test () ==
+  (
+    new World().RunScenario1();
+		start(self);
+    block();
+  );
+
+
+  private block : () ==> ()
+  block () == skip;
+
+  private op : () ==> ()
+  op () == skip;
+
+sync
+
+per block => time > 5000000
+
+
+thread
+
+  periodic(1000E6,0,0,0)(op)
+
+end Testing
+

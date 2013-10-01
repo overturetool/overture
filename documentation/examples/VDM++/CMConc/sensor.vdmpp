@@ -30,7 +30,3 @@ pre canObserve(pa, aperture, SENSOR_APERTURE)
 
 end Sensor
 \end{vdm_al}
-
-\begin{rtinfo}[Sensor`getAperture]
-{vdm.tc}[Sensor]
-\end{rtinfo}

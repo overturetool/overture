@@ -1,0 +1,27 @@
+\section{The Class Letter}
+
+The class models account statements posted to cardholders.
+
+\begin{vdm_al}
+class Letter
+
+instance variables
+  name : Cardholder`Name;
+  address : Cardholder`Address;
+  date : Clock`Date;
+  transactions : seq of Account`Transaction;
+  balance : nat
+
+operations
+  public Letter: Cardholder`Name * Cardholder`Address * Clock`Date * 
+          seq of Account`Transaction * nat ==> Letter
+  Letter(nm,addr,d,ts,b) ==
+    (name := nm;
+     address := addr;
+     date := d;
+     transactions := ts;
+     balance:= b)
+     
+end Letter
+\end{vdm_al}
+

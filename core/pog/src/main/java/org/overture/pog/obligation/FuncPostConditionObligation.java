@@ -52,7 +52,7 @@ public class FuncPostConditionObligation extends ProofObligation
 	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
 			IPOContextStack ctxt)
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
@@ -87,7 +87,7 @@ public class FuncPostConditionObligation extends ProofObligation
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt)
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 

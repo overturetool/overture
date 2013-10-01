@@ -1,0 +1,27 @@
+class Queue
+
+functions
+static public empty[@T] : () -> seq of @T
+empty() == [];
+
+static public isEmpty[@T] : seq of @T -> bool
+isEmpty(s) == s = [];
+	
+static public enQueue[@T] : @T * seq of @T -> seq of @T
+enQueue(anElem, aQueue) == aQueue ^ [anElem];
+
+static public deQueue[@T] : seq of @T -> seq of @T
+deQueue(aQueue) == 
+	if aQueue = [] then
+		[]
+	else
+		tl aQueue;
+
+static public top[@T] : seq of @T -> [@T]
+top(aQueue) == 
+	if aQueue = [] then
+		nil
+	else
+		hd aQueue;
+
+end Queue

@@ -32,21 +32,21 @@ public class Dereferer extends AnswerAdaptor<PDefinition>
 	public PDefinition caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
 	public PDefinition caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override

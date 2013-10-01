@@ -1,0 +1,112 @@
+\section{The Class LocalResource}
+
+A LocalResource acts as a virtually seamless interface for a Till to a Channel. 
+Thus it provides the same calling interface as a CentralResource, except that 
+its operations are able to return the value <Fail> to represent a communication 
+failure.
+
+\begin{vdm_al}
+class LocalResource
+\end{vdm_al}
+
+A LocalResource has only one instance variable: a reference to a Channel.
+
+\begin{vdm_al}
+instance variables
+  c : Channel := new Channel();
+
+operations
+\end{vdm_al}
+
+The Create operation is used to initialize the Channel.
+
+\begin{vdm_al}
+  public LocalResource : Channel ==> LocalResource
+  LocalResource(nc) ==
+    c := nc;
+\end{vdm_al}
+
+The operation GetBalance shadows the corresponding operation in CentralResource. 
+The argument received by the method is converted into a value of type Channel`ReqData, 
+and then a request is constructed. This is sent to the channel and then the Wait 
+operation is called.
+
+\begin{vdm_al}
+  public GetBalance : Account`AccountId ==> [nat]| <Fail>
+  GetBalance(accountId) ==
+    let req = mk_Channel`Request(<GetBalance>,
+                                 {mk_Channel`AccountId(accountId)}) in
+    (c.SendRequest(req);
+     Wait(<GetBalance>));
+\end{vdm_al}
+
+The Wait operation waits for a particular response from the channel. If the 
+response is nil or does not match the expected result, a failure is signalled 
+(corresponding to a timeout in the Channel). Otherwise the data value in the 
+response is returned.
+
+\begin{vdm_al}
+  Wait : Channel`Command ==> Channel`RespData | <Fail>
+  Wait(comm) ==
+    (c.Wait();
+     let resp = c.ReceiveResponse() in
+     if resp = nil
+     then return <Fail>
+     elseif resp.command <> comm
+     then return <Fail>
+     else return resp.data);
+\end{vdm_al}
+
+The remaining operations follow the same basic approach as that of GetBalance, 
+and need no further explanation.
+
+\begin{vdm_al}
+  public Withdrawal : Account`AccountId * Card`CardId * nat ==> bool | <Fail>
+  Withdrawal(accountId,cardId,amount) ==
+    let req = mk_Channel`Request(<Withdrawal>,
+                                 {mk_Channel`AccountId(accountId),
+                                  mk_Channel`CardId(cardId),
+                                  mk_Channel`Amount(amount)}) in
+    (c.SendRequest(req);
+     Wait(<Withdrawal>));
+
+  public PostStatement : Account`AccountId * Card`CardId ==> bool | <Fail>
+  PostStatement(accountId,cardId) ==
+    let req = mk_Channel`Request(<PostStmt>,
+                                 {mk_Channel`AccountId(accountId),
+                                  mk_Channel`CardId(cardId)}) in
+    (c.SendRequest(req);
+     Wait(<PostStmt>));
+
+  public IsLegalCard : Account`AccountId * Card`CardId ==> bool | <Fail>
+  IsLegalCard(accountId,cardId) ==
+    let req = mk_Channel`Request(<IsLegalCard>,
+                                 {mk_Channel`AccountId(accountId),
+                                  mk_Channel`CardId(cardId)}) in    
+    (c.SendRequest(req);
+     Wait(<IsLegalCard>));
+
+  public NumberOfTriesExceeded : Card`CardId ==> bool | <Fail>
+  NumberOfTriesExceeded(cardId) == 
+    let req = mk_Channel`Request(<TriesExceeded>,
+                                 {mk_Channel`CardId(cardId)}) in
+    (c.SendRequest(req);
+     Wait(<TriesExceeded>));
+
+  public ResetNumberOfTries : Card`CardId ==> [<Fail>]
+  ResetNumberOfTries(cardId) ==
+    let req = mk_Channel`Request(<ResetTries>,
+                                 {mk_Channel`CardId(cardId)}) in
+    (c.SendRequest(req);
+     Wait(<ResetTries>));
+
+  public IncrNumberOfTries : Card`CardId ==> [<Fail>]
+  IncrNumberOfTries(cardId) ==
+    let req = mk_Channel`Request(<IncTries>,
+                                 {mk_Channel`CardId(cardId)}) in
+    (c.SendRequest(req);
+     Wait(<IncTries>));
+
+end LocalResource
+\end{vdm_al}
+

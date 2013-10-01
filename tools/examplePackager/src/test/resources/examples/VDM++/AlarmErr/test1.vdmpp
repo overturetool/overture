@@ -1,0 +1,30 @@
+class Test1
+
+instance variables
+
+a1   : Alarm  := new Alarm(<Mech>,"Mechanical fault");
+a2   : Alarm  := new Alarm(<Chem>,"Tank overflow");
+ex1  : Expert := new Expert({<Mech>,<Bio>});
+ex2  : Expert := new Expert({<Elec>});
+ex3  : Expert := new Expert({<Chem>,<Bio>,<Mech>});
+ex4  : Expert := new Expert({<Elec>,<Chem>});
+plant: Plant  := new Plant({a1},{p1 |-> {ex1,ex4},
+                                 p2 |-> {ex2,ex3}});
+
+values
+
+p1: Plant`Period = mk_token("Monday day");
+p2: Plant`Period = mk_token("Monday night");
+p3: Plant`Period = mk_token("Tuesday day");
+p4: Plant`Period = mk_token("Tuesday night");
+
+operations
+
+public Run: () ==> set of Plant`Period * Expert
+Run() == 
+  let periods = plant.ExpertIsOnDuty(ex1),
+      expert  = plant.ExpertToPage(a1,p1)
+  in 
+    return mk_(periods,expert);
+
+end Test1

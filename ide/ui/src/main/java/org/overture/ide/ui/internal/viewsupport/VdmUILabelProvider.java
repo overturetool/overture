@@ -227,7 +227,7 @@ public class VdmUILabelProvider implements ILabelProvider, IColorProvider,
 		// if (string.length() == 0 && (element instanceof IStorage)) {
 		// string= new StyledString(fStorageLabelProvider.getText(element));
 		// }
-		String decorated = decorateText(string.getString(), element);
+		String decorated = (string!=null?decorateText(string.getString(), element):null);
 		if (decorated != null)
 		{
 			return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.DECORATIONS_STYLER, string);

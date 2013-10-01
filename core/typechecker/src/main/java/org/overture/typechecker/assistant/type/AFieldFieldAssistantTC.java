@@ -24,7 +24,7 @@ public class AFieldFieldAssistantTC {
 			TypeCheckInfo question) {
 		
 		// Recursion defence done by the type
-		f.setType(PTypeAssistantTC.typeResolve(f.getType(), root, rootVisitor, question));
+		f.setType(af.createPTypeAssistant().typeResolve(f.getType(), root, rootVisitor, question));
 
 		if (question.env.isVDMPP())
 		{

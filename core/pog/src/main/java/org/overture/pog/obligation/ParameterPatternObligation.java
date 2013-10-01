@@ -60,130 +60,136 @@ public class ParameterPatternObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 6831031423902894299L;
 
-	public ParameterPatternObligation(
-		AExplicitFunctionDefinition def, IPOContextStack ctxt) throws AnalysisException
+	public ParameterPatternObligation(AExplicitFunctionDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def, POType.FUNC_PATTERNS, ctxt);
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		// cannot clone getPredef as it can be null. We protect the ast in 
+		// the generate method where it's used
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitFunctionDefinition def, IPOContextStack ctxt) throws AnalysisException
+	public ParameterPatternObligation(AImplicitFunctionDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def, POType.FUNC_PATTERNS, ctxt);
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AExplicitOperationDefinition def, IPOContextStack ctxt) throws AnalysisException
+	public ParameterPatternObligation(AExplicitOperationDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def, POType.OPERATION_PATTERNS, ctxt);
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitOperationDefinition def, IPOContextStack ctxt) throws AnalysisException
+	public ParameterPatternObligation(AImplicitOperationDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def, POType.OPERATION_PATTERNS, ctxt);
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef().clone(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
-	private PExp generate(PDefinition predef, List<List<PPattern>> plist, List<PType> params, PType result) throws AnalysisException
+	private PExp generate(PDefinition predef, List<List<PPattern>> plist,
+			List<PType> params, PType result) throws AnalysisException
 	{
 		AForAllExp forallExp = new AForAllExp();
 		List<PMultipleBind> forallBindList = new Vector<PMultipleBind>();
 		List<PExp> arglist = new Vector<PExp>();
 		PExp forallPredicate = null;
 
-		for (List<PPattern> paramList: plist)
+		for (List<PPattern> paramList : plist)
 		{
 			Iterator<PType> titer = params.iterator();
-			
+
 			if (!paramList.isEmpty())
 			{
 				AExistsExp existsExp = new AExistsExp();
 				List<PMultipleBind> existsBindList = new Vector<PMultipleBind>();
 				PExp existsPredicate = null;
-				
+
 				Set<ILexNameToken> previousBindings = new HashSet<ILexNameToken>();
-	
-				for (PPattern param: paramList)
+
+				for (PPattern param : paramList)
 				{
 					ILexNameToken aname = getUnique("arg");
 					ILexNameToken bname = getUnique("bind");
-					
+
 					PType atype = titer.next();
 					PExp pmatch = patternToExp(param);
 					arglist.add(pmatch.clone());
-					
+
 					forallBindList.add(getMultipleTypeBind(atype, aname));
 					existsBindList.add(getMultipleTypeBind(atype, bname));
 
-					for (PDefinition def: PPatternAssistantTC.getDefinitions(param, atype, NameScope.LOCAL))
+					for (PDefinition def : PPatternAssistantTC.getDefinitions(param, atype, NameScope.LOCAL))
 					{
-						if (def.getName() != null && !previousBindings.contains(def.getName()))
+						if (def.getName() != null
+								&& !previousBindings.contains(def.getName()))
 						{
 							existsBindList.add(getMultipleTypeBind(def.getType(), def.getName()));
 							previousBindings.add(def.getName());
 						}
 					}
-	
+
 					AEqualsBinaryExp eq1 = getEqualsExp(getVarExp(aname), getVarExp(bname));
 					AEqualsBinaryExp eq2 = getEqualsExp(pmatch, getVarExp(bname));
 					existsPredicate = makeAnd(existsPredicate, makeAnd(eq1, eq2));
-				}			
+				}
 				existsExp.setBindList(existsBindList);
 				existsExp.setPredicate(existsPredicate);
-				
+
 				forallPredicate = makeAnd(forallPredicate, existsExp);
 			}
 
 			if (result instanceof AFunctionType)
 			{
-				AFunctionType ft = (AFunctionType)result;
+				AFunctionType ft = (AFunctionType) result;
 				result = ft.getResult();
 				params = ft.getParameters();
-			}
-			else
+			} else
 			{
 				break;
 			}
 		}
-		
+
 		forallExp.setBindList(forallBindList);
-		
+
 		if (predef != null)
 		{
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getApplyExp(getVarExp(predef.getName().clone()), arglist), forallPredicate);
 			forallExp.setPredicate(implies);
-		}
-		else
+		} else
 		{
 			forallExp.setPredicate(forallPredicate);
 		}
 
 		return forallExp;
 	}
-	
-	private List<List<PPattern>> cloneListPatternList(List<List<PPattern>> list){
+
+	private List<List<PPattern>> cloneListPatternList(List<List<PPattern>> list)
+	{
 		List<List<PPattern>> r = new LinkedList<List<PPattern>>();
-		for (List<PPattern> list2 : list){
+		for (List<PPattern> list2 : list)
+		{
 			r.add(cloneList(list2));
 		}
 		return r;
-		
+
 	}
-	
-	private List<PPattern> cloneList(List<PPattern> list){
+
+	private List<PPattern> cloneList(List<PPattern> list)
+	{
 		List<PPattern> r = new LinkedList<PPattern>();
-		for (PPattern p : list){
+		for (PPattern p : list)
+		{
 			r.add(p);
 		}
 		return r;
 	}
-	
+
 }

@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{overture}%vdmsl-2e}
+\usepackage{fullpage}
+
+\title{A Telephone Exchange Specification in VDM-SL}
+\author{Bernhard K. Aichernig}
+\date{November 1998}
+
+\begin{document}
+\maketitle
+The following example has been taken out of \cite{Abrial96} and has been 
+translated from the B-notation into VDM-SL\cite{Fitzgerald&98, Jones90}. It
+demonstrates how an event-based system may be modeled using the
+specification language of the Vienna Development Method. In the following, 
+operations specify the events which can be initiated either by  the system or 
+by a subscriber (user). An implicit style using pre- and post-conditions has 
+been chosen, in order to model the system's state transitions.
+
+The model of the telephone
+exchange is centred around a set of $subscribers$ who may be engaged in
+telephone conversations through a network controlled by an exchange.
+\section{Informal Specification}
+As the communication between two subscribers is not installed immediately,
+each subscriber navigates through a variety of statuses, which we study in
+detail in what follows.
+\begin{description}
+\item[Free Subscribers] A subscriber might be free ($FR$),
+meaning that he is not engaged in any telephone conversation or attempting to 
+do so.
+\item[Unavailable Subscribers] A subscriber who is temporarily unavailable
+($UN$). Subscribers may enter this status as a result of a spontaneous 
+decision on the part of the exchange. This happens when a subscriber has been
+attempting to call another subscriber unsuccessfully for too long a period of
+time. We may also enter this status at the end of some conversation between
+two subscribers.
+\item[Initiators or Recipients] Non-free and non-unavailable subscribers are
+either initiators or recipients of telephone calls. An initiator is the only
+one able to terminate a telephone conversation. By contrast, a recipient
+hanging up just suspends the conversation, which may be resumed as soon as 
+he again lifts his handset.
+\item[Attempting, Waiting or Speaking Initiators]
+An initiator may enter into various sub-states: he might be attempting ($AI$)
+to call somebody (e.g. dialing), or waiting $WI$ for somebody to answer 
+(connection established and the phone rings), or finally 
+speaking $SI$ to somebody.
+\item[Waiting or Speaking Recipients] A recipient might be speaking ($SR$) or
+waiting ($WR$), because his own telephone is ringing, or because he has 
+suspended an already engaged telephone conversation.   
+\end{description}
+
+\include{generated/latex/specification/telephone.vdmsl}
+
+\section{Typical Scenarios}
+Finally, some typical sequences of valid events are listed:\\ \\
+Lift $\longrightarrow$ ClearAttempt \\
+\\
+Lift $\longrightarrow$ MakeUn $\longrightarrow$ ClearUn \\
+\\
+Lift $\longrightarrow$ Connect $\longrightarrow$ ClearWait\\
+\\
+Lift $\longrightarrow$ Connect $\longrightarrow$ Answer $\longrightarrow$ ClearSpeak $\longrightarrow$ ClearUn\\
+\\
+Lift $\longrightarrow$ Connect $\longrightarrow$ Answer $\longrightarrow$ Suspend $\longrightarrow$ ClearWait
+\bibliographystyle{plain}
+\bibliography{telephone}
+\end{document}

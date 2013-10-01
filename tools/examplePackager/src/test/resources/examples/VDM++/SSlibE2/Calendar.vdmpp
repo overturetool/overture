@@ -1,0 +1,617 @@
+class CalendarDefinition
+values
+	public homedir = ".";
+types
+	public NameOfDayOfTheWeek = <Mon> | <Tue> | <Wed> | <Thu> | <Fri> | <Sat> | <Sun>;
+	public NumberOfDayOfTheWeek = nat
+	inv d == d <= 6;	--number of day of the week (Sunday=0, Saturday=6);
+	
+end CalendarDefinition
+--------------------------------------------------------------
+class Calendar is subclass of CalendarDefinition	-- Gregorio Calendar
+/*
+Responsibility
+	I am a Gregorio Calendar.
+Abstract
+	I calculate Gregorio Calendar by cooperating with Date class.
+	You can get the the vernal equinox and the autumnal equinox until year 2099.
+	My subclass has to define the set of holiday.
+	My calculation is based on GMT, so my subclass has to calculate the diofference to GMT.
+*/
+
+values
+	--difference of julianDate and modifiedJulianDate
+	private daysDifferenceOfModifiedJulianDate = 2400000.5;
+
+	private namesOfDayOfTheWeek = [<Sun>,<Mon>,<Tue>,<Wed>,<Thu>,<Fri>,<Sat>];
+
+	private daysInYear = 365.25;
+	protected monthsInYear = 12;
+	private correctedMonths = 14;
+	private daysInWeek = 7;
+	private averageDaysInMonth = 30.6001;
+	private yearInCentury = 100;
+	private calculationCoefficientOfDate = 122.1;
+	private calculationCoefficientOfYear = 4800;
+	private centuryCalculationCoefficient = 32044.9;
+	private theDayBeforeGregorioCalendarStarted  = 2299160.0;
+	private theFirstDayOfGregorioCalendar  = 1582.78;
+	
+	io = new IO();
+
+instance variables
+
+	protected differenceWithGMT : real := 0;
+	protected iToday : [Date] := nil;
+	protected Year2Holidays : map int to set of Date := { |-> };	-- { year |-> set of holidays }
+
+functions
+
+----Comparing magnitude functions
+
+public LT: Date * Date -> bool
+LT(date1, date2) == date1.getModifiedJulianDate() < date2.getModifiedJulianDate();
+
+public GT: Date * Date -> bool
+GT(date1,date2) == date1.getModifiedJulianDate() > date2.getModifiedJulianDate();
+
+public LE: Date * Date -> bool
+LE(date1,date2) == not GT(date1,date2);
+
+public GE: Date * Date -> bool
+GE(date1,date2) == not LT(date1,date2);
+
+-- Is date1 value equal date2 value?
+public EQ: Date * Date -> bool
+EQ(date1,date2) == date1.getModifiedJulianDate() = date2.getModifiedJulianDate();
+
+public min : Date -> Date -> Date
+min(date1)(date2) == if date1.LT(date2) then date1 else date2;
+
+public max : Date -> Date -> Date
+max(date1)(date2) == if date1.GT(date2) then date1 else date2;
+
+----Query
+
+public isDateString : 
+	seq of char	-- date string (yyyymmdd format)
+	->
+	bool		-- if correct date then true else false
+isDateString(yyyymmdd) == if getDateFromString(yyyymmdd) = false then false else true;
+
+-- is leap year?
+public isLeapYear: 
+	int	-- year
+	-> 
+	bool	-- leap year or not
+isLeapYear(year) == year mod 400 = 0 or (year mod yearInCentury <> 0 and year mod 4 = 0);
+
+public getNumberOfDayOfTheWeek: Date -> NumberOfDayOfTheWeek
+getNumberOfDayOfTheWeek(date) == 
+	let	modifiedJulianDate = floor(date.getModifiedJulianDate())
+	in	(modifiedJulianDate - 4) mod daysInWeek;
+
+public getYyyymmdd: Date -> int * int * int
+getYyyymmdd(date) == mk_(Year(date),Month(date),day(date));
+
+public getNameOfDayOfTheWeek : Date -> NameOfDayOfTheWeek
+getNameOfDayOfTheWeek(date) == namesOfDayOfTheWeek(getNumberOfDayOfTheWeek(date) + 1);
+
+public getNumberOfDayOfTheWeekFromName : NameOfDayOfTheWeek -> NumberOfDayOfTheWeek
+getNumberOfDayOfTheWeekFromName(nameOfDayOfTheWeek) == Sequence`Index[Calendar`NameOfDayOfTheWeek](nameOfDayOfTheWeek)(namesOfDayOfTheWeek) - 1;
+
+public firstDayOfTheWeekInMonth : int * int * NameOfDayOfTheWeek -> Date
+firstDayOfTheWeekInMonth(year, month,nameOfDayOfTheWeek) ==
+	let	numberOfDayOfTheWeek = getNumberOfDayOfTheWeekFromName(nameOfDayOfTheWeek),
+		firstDayOfMonth = getFirstDayOfMonth(year, month),
+		diff = numberOfDayOfTheWeek - getNumberOfDayOfTheWeek(firstDayOfMonth) in
+	cases true:
+		(diff = 0)	-> firstDayOfMonth,
+		(diff > 0)	-> firstDayOfMonth.plus(diff),
+		(diff < 0)	-> firstDayOfMonth.plus((daysInWeek + diff) mod daysInWeek)
+	end;
+
+-- Get the last date which has the specified name of day of the week
+-- My algorithm thinks "year Y, month 13" = "year y+1, month 1", so I can month + 1
+public lastDayOfTheWeekInMonth : int * int *	NameOfDayOfTheWeek -> Date
+lastDayOfTheWeekInMonth(year, month, nameOfDayOfTheWeek) == firstDayOfTheWeekInMonth(year,(month+1),nameOfDayOfTheWeek).minus(daysInWeek);
+
+-- Get the n-th day of the week of specified month
+public getNthDayOfTheWeek : int * int * int * NameOfDayOfTheWeek
+	->
+	Date | bool 	-- the date which has n-th  day of the week, if not exist then false
+getNthDayOfTheWeek(aYear, aMonth, n, nameOfDayOfTheWeek) ==
+	let	firstDayOfMonth = firstDayOfTheWeekInMonth(aYear,aMonth,nameOfDayOfTheWeek),
+		r = firstDayOfMonth.plus(daysInWeek * (n - 1)) in
+	cases Month(r):
+		(aMonth)	-> r,
+		others	-> false
+	end;
+
+--new Calendar().getFirstDayOfMonth(2001,7).get_yyyy_mm_dd() = mk_( 2001,7,1 )
+public getFirstDayOfMonth : int * int -> Date
+getFirstDayOfMonth(year, month) == getRegularDate(year, month, 1);
+
+--new Calendar().getLastDayOfMonth(2001,7).get_yyyy_mm_dd() = mk_( 2001,7,31 )
+public getLastDayOfMonth : int * int -> Date
+getLastDayOfMonth(year, month) == getRegularDate(year, month+1, 1).minus(1);
+	
+public isSunday : Date -> bool
+isSunday(date) == getNumberOfDayOfTheWeek(date) = 0;
+
+public isSaturday : Date -> bool
+isSaturday(date) == getNumberOfDayOfTheWeek(date) = 6;
+
+public isWeekday : Date -> bool
+isWeekday(date) == getNumberOfDayOfTheWeek(date) in set {1,...,5};
+
+public isNotDayOff : Date -> bool
+isNotDayOff(date) == not isSundayOrDayoff(date);
+
+public isWeekday : NameOfDayOfTheWeek -> bool
+isWeekday(nameOfDayOfTheWeek) == nameOfDayOfTheWeek not in set {<Sat>,<Sun>};
+
+-- Return how many days between date1 and date2 of nameOfDayOfTheWeek.  
+-- include date1 and date2 iff they have the nameOfDayOfTheWeek.
+public getNumberOfTheDayOfWeek: Date * Date * NameOfDayOfTheWeek -> int
+getNumberOfTheDayOfWeek(date1,date2,nameOfDayOfTheWeek) ==
+	let	numberOfDayOfTheWeek = getNumberOfDayOfTheWeekFromName(nameOfDayOfTheWeek),
+		startDate = min(date1)(date2),
+		endDate = max(date1)(date2),
+		numOfDays = diffOfDates(endDate,startDate) + 1,
+		quotient = numOfDays div daysInWeek,
+		remainder = numOfDays mod daysInWeek,
+		delta = if subtractDayOfTheWeek(numberOfDayOfTheWeek,getNumberOfDayOfTheWeek(startDate)) + 1 <= remainder then 1 else 0	in
+	quotient + delta
+/*
+post
+	let	startDate = min(date1)(date2),
+		endDate = max(date1)(date2)	in
+	let setOfTheDayOfTheWeek = {day | day : Date & nameOfDayOfTheWeek = getNameOfDayOfTheWeek(day )}  in
+	forall Date0, Date1  in set setOfTheDayOfTheWeek &
+		startDate.LE(Date0) and Date0.LE(Date1) and Date1.LE(endDate) =>
+			diffOfDates(Date1, Date0) mod 7 = 0 and 
+	exists1 日i  in set setOfTheDayOfTheWeek &
+		diffOfDates(日i, startDate) < 6 and
+		exists1 日j  in set setOfTheDayOfTheWeek &
+			diffOfDates(endDate, 日j) < 6 and
+			diffOfDates(日j, 日i) = 7 * ((card setOfTheDayOfTheWeek) - 1)
+*/
+		;
+/*
+Following Japanese statement are the refinement proof by Shin Sahara and Mr. Toshiharu Yamazaki.
+以下は、上記関数の山崎利治さんによる段階的洗練を佐原が「翻訳」した記述
+
+pre
+type R = {|rng [n → n / 7 | n∈Int]|} 	-- 7で割った商の集合
+f, t∈Int, w∈R, 0≦f≦t,
+h: Int → R 		--環準同型（ring homomorphism）
+
+post
+S = dom h(w) ∩ {f..t}・RESULT ≡ card(S) 	-- RESULTが答え （dom h(w)≡h-1(w)）
+
+--整数系を環（ring）と見て、その商環（quotient ring）への準同型写像があり、その代数系上で事後条件を満たすプログラムを作る
+I =｛f..t}
+d = t - f + 1 	-- = card(I)
+q = d / 7
+r = d \ 7 		--7で割った余り
+
+とすると、
+
+q ≦ A ≦ q+1
+
+が成り立つ。なぜなら、
+
+任意の連続する７日間には、必ずw曜日がちょうど１日存在する。
+card(I) = 7×q + r (0≦r＜7)であるから、Iには少なくともq個の連続する７日間が存在するが、q+1個は存在しない。
+余りのr日間にw曜日が存在するかも知れない。
+
+次に、
+
+x ++ y = (x + y) \ 7
+x ┴ y = max(x - y, 0)
+として、
+
+T = {h(f)..h(f) ++ (r ┴ 1)}
+を考える。Tは余りr日間の曜日に対応する（card(T) = r）。
+すると、
+
+A ≡ if w∈T then q + 1 els q end
+
+ここで、
+
+x minus y = if x ≧ y then x - y els x - y + 7 end
+とすれば、
+
+w∈T ⇔ (w minus h(f)) + 1 ≦ r
+である。なぜならば
+
+w∈T	⇔ {0..(r ┴ 1)}∋wﾕ = w minus h(f)
+	⇔ r ┴ 1 ≧ wﾕ
+	⇔ r ≧ (w minus h(f)) + 1
+
+従って、プログラムは以下のようになる。
+
+A(f, t w)≡
+	let
+		d ≡ t - f + 1
+		q ≡ d / 7
+		r ≡ d \ 7
+		delta ≡ if (w minus h(f)) + 1 ≦ r then 1 els 0 end
+		x minus y ≡ if x ≧ y then x - y els x - y + 7 end
+	in
+		q + delta
+	end
+*/
+
+private subtractDayOfTheWeek: int * int -> int
+subtractDayOfTheWeek(x,y) == if x >= y then x - y else x - y + daysInWeek;
+
+--dateから、そのdateの属するyearを求める。
+public Year: Date -> int
+Year(date) ==
+if monthAux(date) < correctedMonths then
+		yearAux(date) - calculationCoefficientOfYear
+	else
+		yearAux(date) - calculationCoefficientOfYear + 1;
+		
+--dateから、そのdateの属するmonthを求める。
+public Month: Date -> int
+Month(date) == if monthAux(date) < correctedMonths then
+		monthAux(date) - 1
+	else
+		monthAux(date) - 13;
+		
+--dateから、dayを求める。
+public day: Date -> int
+day(date) == daysFromTheBeginningOfTheMonth(date);
+
+--new Date().daysFromNewYear(getDateFrom_yyyy_mm_dd(2001,12,31)) = 365
+public daysFromNewYear: Date -> int
+daysFromNewYear(date) == 
+	let	firstDateOfYear = getDateFrom_yyyy_mm_dd(Year(date), 1, 0)
+	in	diffOfDates(date,firstDateOfYear);
+
+daysFromTheBeginningOfTheMonth: Date -> int
+daysFromTheBeginningOfTheMonth(date) == floor(daysFromTheBeginningOfTheMonthAsReal(date));
+
+daysFromTheBeginningOfTheMonthAsReal: Date -> real
+daysFromTheBeginningOfTheMonthAsReal(date) == yyyymmddModifyAux(date) + calculationCoefficientOfDate
+- floor(daysInYear * yearAux(date)) - floor(averageDaysInMonth * monthAux(date)); 
+
+monthAux: Date -> int
+monthAux(date) ==
+	floor((yyyymmddModifyAux(date) + calculationCoefficientOfDate - floor(daysInYear * yearAux(date))) / averageDaysInMonth);
+
+yyyymmddModifyAux: Date -> real
+yyyymmddModifyAux(date) == 
+	let	julianDate = mjd2Jd(date.getModifiedJulianDate()),
+		century =  floor((julianDate + centuryCalculationCoefficient) / 36524.25)
+	in	
+		if julianDate > theDayBeforeGregorioCalendarStarted then
+			julianDate + centuryCalculationCoefficient + century - century div 4 + 0.5
+		else
+			julianDate + 32082.9 + 0.5;
+
+yearAux: Date -> int
+yearAux(date) == floor (yyyymmddModifyAux(date) / daysInYear);
+
+public getVernalEquinoxOnGMT: int -> Date
+getVernalEquinoxOnGMT(year) ==
+	let	y = year / 1000.0	in
+	modifiedJulianDate2Date(
+		julianDate2ModifiedJulianDate(1721139.2855 + 365.2421376 * year + y * y *  (0.067919 - 0.0027879 * y)));
+	
+public getSummerSolsticeOnGMT: int -> Date
+getSummerSolsticeOnGMT(year) ==
+	let	y = year / 1000.0	in
+	modifiedJulianDate2Date(
+		julianDate2ModifiedJulianDate(1721233.2486 + 365.2417284 * year - y * y * (0.053018 - 0.009332 * y)));	
+	 
+public getAutumnalEquinoxOnGMT: int -> Date
+getAutumnalEquinoxOnGMT(year) ==
+	let	y = year / 1000.0	in
+	modifiedJulianDate2Date(
+		julianDate2ModifiedJulianDate (1721325.6978 + 365.2425055 * year - y * y * (0.126689 - 0.0019401 * y)));
+
+public getWinterSolsticeOnGMT: int -> Date
+getWinterSolsticeOnGMT(year) ==
+	let	y = year / 1000.0	in
+	modifiedJulianDate2Date(
+		julianDate2ModifiedJulianDate(1721414.392 + 365.2428898 * year - y * y * (0.010965 - 0.0084855 * y)));
+
+
+  public getVernalEquinox : int -> Date
+ getVernalEquinox(year) == getDateInStandardTime(getVernalEquinoxOnGMT(year));
+ 
+ public getSummerSolstice : int -> Date
+ getSummerSolstice(year) == getDateInStandardTime(getSummerSolsticeOnGMT(year));
+ 
+ public getAutumnalEquinox : int -> Date
+ getAutumnalEquinox(year) == getDateInStandardTime(getAutumnalEquinoxOnGMT(year));
+ 
+ -- Now, I can't get the right Winter Solstice in leap year
+ public getWinterSolstice : int -> Date
+ getWinterSolstice(year) == getDateInStandardTime(getWinterSolsticeOnGMT(year));
+
+
+----calculation
+
+public dateAdding: Date * int -> Date
+dateAdding(date,addNumOfDays) == date.plus(addNumOfDays);
+
+public diffOfDates: Date * Date -> int
+diffOfDates(date1,date2) == floor(date1.getModifiedJulianDate() - date2.getModifiedJulianDate());
+
+--dateからnumOfDaysを減算したdateを返す
+public dateSubtracting: Date * int -> Date
+dateSubtracting(date,subtractNumOfDays) == date.minus(subtractNumOfDays);
+
+----Conversion
+
+public mjd2Jd: real -> real
+mjd2Jd(modifiedJulianDate) == modifiedJulianDate + daysDifferenceOfModifiedJulianDate;
+
+public julianDate2ModifiedJulianDate: real -> real
+julianDate2ModifiedJulianDate(julianDate) == julianDate - daysDifferenceOfModifiedJulianDate;
+
+--yyyymmddを通常の値の範囲内に変換する。
+--new Calendar().getRegularDate(2003, 14, 29) = getDateFrom_yyyy_mm_dd(2004, 2, 29)
+public getRegularDate : int * int * int -> Date
+getRegularDate(candidateYear, candidateOfMonth, candidateDate) ==
+	let	mk_(year, month) = getRegularMonth(candidateYear, candidateOfMonth)
+	in
+	getDateFrom_yyyy_mm_dd(year, month, candidateDate);
+
+--年月を通常の値の範囲内に変換する。
+public getRegularMonth : int * int -> int * int
+getRegularMonth(candidateYear, candidateOfMonth) ==
+	let	year = 
+			if candidateOfMonth <= 0 then
+				candidateYear + (candidateOfMonth - 12) div monthsInYear
+			else
+				candidateYear + (candidateOfMonth - 1) div monthsInYear,
+		candidateOfMonth2 = candidateOfMonth mod monthsInYear,
+		month = 
+			if candidateOfMonth2 = 0 then
+				12
+			else
+				candidateOfMonth2
+	in
+	mk_(year, month);
+	
+	
+--（整数三つ組の）date2Year(2001,7,1) = 2001.5
+public date2Year:  int * int * int
+	-> 
+	real	--dateをYear(実数)に変換した値
+date2Year(year, month, day) == year + (month - 1) / monthsInYear + (day - 1.0) / daysInYear;
+
+public date2Str : Date +> seq of char
+date2Str(date) == date.date2Str();
+
+public convertDateFromString : seq of char +> [Date]
+convertDateFromString(dateStr) == 
+	let	date = getDateFromString(dateStr)
+   	in	if date = false then nil
+   		else date;
+
+--以下は、休日の考慮をした機能で、サブクラスで休日の集合を定義する必要がある。
+
+/* Query */
+--２つのdateの間の休日の集合を返す。日曜日である休日も含むが、休日でない日曜日は含まない。
+public getSetOfDayOffBetweenDates : Date * Date -> set of Date
+getSetOfDayOffBetweenDates(date1,date2) ==
+	let	Date1 = min(date1)(date2),
+		Date2 = max(date1)(date2),
+		setOfYear = {Year(Date1),...,Year(Date2)},
+		setOfDayOff = dunion {getSetOfDayOff(year) | year in set setOfYear}
+	in
+	{dayOff | dayOff in set setOfDayOff & date1.LE(dayOff) and dayOff.LE(date2)};
+
+--２つのdateの間の休日の数を返す。日曜日である休日も含むが、休日でない日dayOfWeekは含まない。
+public getDayOffsExceptSunday: Date * Date -> int
+getDayOffsExceptSunday(date1,date2) == card (getSetOfDayOffBetweenDates(date1,date2));
+
+--２つのdateの間の休日あるいは日曜日の数を返す（startDateを含む）
+public getTheNumberOfDayOff: Date * Date -> int
+getTheNumberOfDayOff(date1,date2) ==
+	let	Date1 = min(date1)(date2),
+		Date2 = max(date1)(date2),
+		numberOfSunday = getNumberOfTheDayOfWeek(Date1,Date2,<Sun>)	in
+	numberOfSunday + card getSetOfNotSundayDayOff(Date1,Date2);
+
+--２つのdateの間の休日あるいは日曜日の数を返す（startDateを含まない）
+public getTheNumberOfDayOffExceptStartDate: Date * Date -> int
+getTheNumberOfDayOffExceptStartDate(date1,date2) ==
+	let	Date1 = min(date1)(date2),
+		Date2 = max(date1)(date2)	in
+	getTheNumberOfDayOff(Date1.plus( 1), Date2);
+
+private getSetOfNotSundayDayOff : Date * Date -> set of Date
+getSetOfNotSundayDayOff(date1,date2) ==
+	let	setOfDayOff = getSetOfDayOffBetweenDates(date1,date2)	in
+	{dayOff | dayOff in set setOfDayOff & not isSunday(dayOff)};
+
+--日曜日である休日の集合を返す
+public getDayOffsAndSunday : Date * Date -> set of Date
+getDayOffsAndSunday(date1,date2) == 
+	let	setOfDayOff = getSetOfDayOffBetweenDates(date1,date2)	in
+	{dayOff | dayOff in set setOfDayOff & isSunday(dayOff)};
+
+/* Conversion */
+
+--休日でないdateを返す（未来へ向かって探索する）
+public getFutureWeekday : Date-> Date
+getFutureWeekday(date) ==
+	cases  isSundayOrDayoff(date) or isSaturday(date):
+		(true)	-> getFutureWeekday(date.plus( 1)),
+		others	-> date
+	end;
+
+--休日でないdateを返す（過去へ向かって探索する）
+public getPastWeekday : Date-> Date
+getPastWeekday(date) ==
+	cases   isSundayOrDayoff(date) or isSaturday(date):
+		(true)	-> getPastWeekday (date.minus(1)),
+		others	-> date
+	end
+	measure getPastWeekdaymeasure;
+
+getPastWeekdaymeasure : Date +> nat
+getPastWeekdaymeasure(d) == d.getModifiedJulianDate();
+
+--与えられた平日に、平日n日分を加算する
+public addWeekday : Date * int -> Date
+addWeekday(date,addNumOfDays) == addWeekdayAux(getFutureWeekday(date),addNumOfDays);
+
+public addWeekdayAux : Date * int -> Date
+addWeekdayAux(date,addNumOfDays) ==
+	cases isSundayOrDayoff(date) or isSaturday(date):
+		(true)	-> addWeekdayAux(date.plus(1),addNumOfDays),
+		others	->
+					if addNumOfDays <= 0 then
+						date
+					else
+						addWeekdayAux(date.plus(1), addNumOfDays-1)
+	end;
+
+--与えられた平日に、平日n日分を減算する
+public subtractWeekday : Date * int -> Date
+subtractWeekday(date,subtractNumOfDays) == subtractWeekdayAux(getPastWeekday(date),subtractNumOfDays);
+
+public subtractWeekdayAux : Date * int -> Date
+subtractWeekdayAux(date,subtractNumOfDays) ==
+	cases isSundayOrDayoff(date) or isSaturday(date):
+		(true)	-> subtractWeekdayAux(date.minus(1),subtractNumOfDays),
+		others	->
+					if subtractNumOfDays <= 0 then
+						date
+					else
+						subtractWeekdayAux(date.minus(1), subtractNumOfDays-1)
+	end;
+
+/* Query */
+
+public isDayOff : Date -> bool 
+isDayOff(date) == 
+	let	setOfDayOff = {d.getModifiedJulianDate() | d in set getSetOfDayOff(date.Year())}	in
+	date.getModifiedJulianDate() in set setOfDayOff;
+	
+public isSundayOrDayoff : Date -> bool
+isSundayOrDayoff(date) ==  isSunday(date) or isDayOff(date);
+
+public isInDateSet :  Date * set of Date -> bool
+isInDateSet(date, aNationalHolidaySet) == (
+	let holidaySetByModifiedJulianDate = {floor d.getModifiedJulianDate() | d in set aNationalHolidaySet}
+	in
+	date.getModifiedJulianDate() in set holidaySetByModifiedJulianDate
+  );
+
+operations
+
+public modifiedJulianDate2Date: real ==> Date
+modifiedJulianDate2Date(modifiedJulianDate) == 
+	return new Date(self,modifiedJulianDate);
+	
+public getDateFrom_yyyy_mm_dd: int * int * int  ==> Date
+getDateFrom_yyyy_mm_dd(year, month, day) ==
+	let	[y,m] = if (month > correctedMonths - monthsInYear) then
+			[year + calculationCoefficientOfYear , month + 1]
+		else
+			[year + calculationCoefficientOfYear - 1 , month + correctedMonths - 1],
+		century = y div yearInCentury,
+	 	centuryCoefficient =		if (date2Year(year, month, day) > theFirstDayOfGregorioCalendar) then
+						century div 4 - century - 32167.0
+					else
+						-32205.0,
+		haldDay = 0.5	
+	in
+	return 
+		modifiedJulianDate2Date(floor(daysInYear * y) + 
+		floor(averageDaysInMonth * m) + day + centuryCoefficient - haldDay - daysDifferenceOfModifiedJulianDate);
+
+public getDateFromString :
+	seq of char	--yyyymmdd
+	==>
+	Date | bool	-- if not date then false
+getDateFromString(yyyymmdd) ==
+	(if not String`isDigits(yyyymmdd) then
+		return false;
+	let	yyyymmddByInt = String`asInteger(yyyymmdd),
+		year = yyyymmddByInt div 10000,
+		mmddByInt = yyyymmddByInt mod 10000,
+		month =  mmddByInt div 100,
+		day =  mmddByInt mod 100
+	in
+		if getDateFrom_yyyy_mm_dd(year,month,day).date2Str() = yyyymmdd then
+			return getDateFrom_yyyy_mm_dd(year,month,day)
+		else
+			return false
+	);
+
+public getDateInStandardTime : Date ==> Date	
+getDateInStandardTime(date) == 
+	return modifiedJulianDate2Date (date.getModifiedJulianDate() + date.calendar().getDifferenceWithGMT());	
+
+public getDayOfTheWeekInYear : int * NameOfDayOfTheWeek ==> set of Date
+getDayOfTheWeekInYear(year,dayOfWeek) ==
+	(
+	dcl	aSetOfTheDayOfWeek : set of Date := {},
+		date : Date := self.getNthDayOfTheWeek(year,1,1,dayOfWeek);
+	while date.LE(self.lastDayOfTheWeekInMonth(year,12,dayOfWeek)) do (
+		 aSetOfTheDayOfWeek :=  aSetOfTheDayOfWeek union {date};
+		date := date.plus(7)
+	);
+	return aSetOfTheDayOfWeek
+	);
+
+public getDifferenceWithGMT : () ==> real
+getDifferenceWithGMT() == return differenceWithGMT;
+
+public setDifferenceWithGMT : (real) ==> ()
+setDifferenceWithGMT(diff) == differenceWithGMT := diff;
+
+public setTheSetOfDayOffs: int ==> ()
+setTheSetOfDayOffs(-) == is subclass responsibility;
+	
+public getSetOfDayOff: int ==> set of Date 
+getSetOfDayOff(aYear) == 
+	(
+	if not aYear in set dom Year2Holidays then
+		self.setTheSetOfDayOffs(aYear);
+	return self.Year2Holidays(aYear)
+	);
+	
+--read todayfrom a file
+public readToday : seq of char ==> [Date]
+readToday(fname) ==
+	let	mk_(r, mk_(y, m, d)) = io.freadval[int * int * int](fname)
+	in
+	if r then
+		return getDateFrom_yyyy_mm_dd(y,m,d)
+	else
+		let	- = io.echo("Can't read today's data file.")
+		in
+		return nil;
+
+--stub functions for getting today
+public today: () ==> Date
+today() == 
+	if iToday = nil then
+		return readToday(homedir ^ "/temp/Today.txt")	
+	else
+		return iToday;
+
+--todayのdateを指定したreadFromFile。
+public readFromFiletoday: seq of char ==> Date
+readFromFiletoday(fname) == 
+	if iToday = nil then
+		return readToday(fname)	
+	else
+		return iToday;
+
+public setToday : Date ==> ()
+setToday(date) == iToday := date;
+	
+end Calendar

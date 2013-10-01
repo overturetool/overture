@@ -1,0 +1,190 @@
+class DateT is subclass of TestDriver 
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ new DateT01(), new DateT02(), new DateT03(), 
+	new DateT04(),
+	new DateT05(), new DateT06(),new DateT07()
+	];
+end DateT
+
+class DateT01 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d = jc.getDateFrom_yyyy_mm_dd(2001,5,1)	,
+		d1 = jc.getDateFrom_yyyy_mm_dd(2001,4,29),
+		d2 = jc.getDateFrom_yyyy_mm_dd(2001,4,28)
+	in
+	return
+		d.getNumberOfDayOfTheWeek() = jc.getNumberOfDayOfTheWeekFromName(<Tue>) and
+		d.getNameOfDayOfTheWeek() = <Tue> and
+		d1.getNameOfDayOfTheWeek() = <Sun> and
+		d2.getNameOfDayOfTheWeek() = <Sat> and
+		d.isSunday() = false and
+		d.isSaturday() = false and
+		d.isWeekday() = true and
+		d.isDayOff() = false and 
+		d.isNotDayOff() = true and
+		d.isSundayOrDayoff()  = false
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "DateT01:\tCalculate the day of the week.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT01
+
+class DateT02 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d = jc.getDateFrom_yyyy_mm_dd(2001,5,1)		in
+	return
+		d.get_yyyy_mm_dd() = mk_(2001,5,1) and
+		d.date2Str() = "20010501" and
+		d.asString() = "20010501" and
+		d.print() = "Year=2001, Month=05, Day=01, "
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "DateT02:\tConvert date.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT02
+
+class DateT03 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d20000101 = jc.getDateFromString("20000101"),
+		d0301 = jc.getDateFromString("20010301"),
+		d0501 = jc.getDateFromString("20010501"),
+		d0711 = jc.getDateFrom_yyyy_mm_dd(2001,7,11)	in
+	return
+		d0301.getTheNumberOfDayOff(d0711)  = 24 and
+		d0501.getTheNumberOfDayOffExceptStartDate(d0711) = 13 and
+		d20000101.getTheNumberOfDayOff(d0711)  = 103
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "DateT03:\tgetTheNumberOfDayOff";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT03
+
+class DateT04 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d20001231 = jc.getDateFrom_yyyy_mm_dd(2000,12,31),
+		d1231 = jc.getDateFrom_yyyy_mm_dd(2001,12,31),
+		d0626 = jc.getDateFrom_yyyy_mm_dd(2001,6,26),
+		d0501 = jc.getDateFromString("20010501"),
+		d0505 = jc.getDateFromString("20010505"),
+		d0502 = jc.getDateFrom_yyyy_mm_dd(2001,5,2)		in
+	return
+		d0502.addWeekday(1).getFutureWeekday().date2Str() = "20010507" and
+		d0502.getPastWeekday().subtractWeekday(1).date2Str() = "20010501" and
+		d0501.getPastWeekday().subtractWeekday(1).date2Str() = "20010427" and
+		d0501.getFutureWeekday().date2Str() = "20010501" and
+		d0501.addWeekday(2).date2Str() = "20010507" and
+		d0502.subtractWeekday(2).date2Str() = "20010427" and
+		d1231.daysFromNewYear() = 365 and
+		d20001231.daysFromNewYear() = 366 and
+		d0501.getNumberOfTheDayOfWeek(d0626,<Tue>) = 9 and
+		jc.getFutureWeekday(d0505).date2Str() = "20010507" and
+		jc.getFutureWeekday(d0501).date2Str() = "20010501" and
+		jc.getPastWeekday(d0501).date2Str() = "20010501" and
+		jc.getPastWeekday(d0505).date2Str() = "20010502" 
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "DateT04:\tCalculate date.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT04
+
+class DateT05 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d0711 = jc.getDateFromString("20010711")	in
+	(
+	jc.setToday(jc.getDateFrom_yyyy_mm_dd(2001, 3, 1));
+	let	d0301 = jc.today()	in
+	return
+		d0711.EQ(jc.getDateFrom_yyyy_mm_dd(2001, 7, 11)) and
+		d0711.NE(jc.getDateFrom_yyyy_mm_dd(2001, 7, 12)) and
+		jc.EQ(d0711,jc.getDateFrom_yyyy_mm_dd(2001, 7, 11)) and
+		d0301.LT(d0711) and
+		jc.LT(d0301, d0711) and
+		d0711.GT(d0301) and
+		jc.GT(d0711,d0301) and
+		d0711.GE(d0711) and d0711.GE(d0301) and
+		jc.GE(d0711,d0711)  and jc.GE(d0711,d0301) and
+		d0711.LE(d0711) and d0301.LE(d0711) and
+		jc.LE(d0711,d0711) and jc.LE(d0301,d0711)
+	);
+protected setUp: () ==> ()
+setUp() == TestName := "DateT05:\tCompare date.date";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT05
+
+class DateT06 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar(),
+		d10010301 = jc.getDateFromString("10010301"),
+		d0711 = jc.getDateFromString("20010711")	in
+	(
+	jc.setToday(jc.getDateFrom_yyyy_mm_dd(2001, 3, 1));
+	let	d0301 = jc.today()		in
+	return
+		jc.firstDayOfTheWeekInMonth(2000,3,<Wed>).get_yyyy_mm_dd() = mk_( 2000,3,1 ) and
+		jc.firstDayOfTheWeekInMonth(2001,7,<Sun>).get_yyyy_mm_dd() = mk_( 2001,7,1 ) and
+		jc.lastDayOfTheWeekInMonth(2000,2,<Tue>).get_yyyy_mm_dd() = mk_( 2000,2,29 ) and
+		jc.lastDayOfTheWeekInMonth(2001,7,<Sun>).get_yyyy_mm_dd() = mk_( 2001,7,29 ) and
+		jc.getNthDayOfTheWeek(2001,7,5,<Sun>).get_yyyy_mm_dd() = mk_( 2001,7,29 ) and
+		jc.getNthDayOfTheWeek(2001,7,6,<Sun>) = false and
+		jc.getNumberOfTheDayOfWeek(d0711,d0301,<Sun>)  = 19 and
+		jc.getNumberOfTheDayOfWeek(d0711,d10010301,<Sun>)  = 52196	
+	);
+protected setUp: () ==> ()
+setUp() == TestName := "DateT06:\tGet the day of the week.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT06
+
+class DateT07 is subclass of TestCase, CalendarDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	jc = new JapaneseCalendar()	in
+	return
+		jc.isLeapYear(2000) = true and
+		jc.isLeapYear(2001) = false and
+		jc.isLeapYear(1996) = true and
+		jc.isLeapYear(1900) = false and
+		jc.isLeapYear(1600) = true and
+		jc.isDateString("sahara") = false and
+		jc.isDateString("20010723") = true and
+		jc.isDateString("20011232") = false and
+		jc.isWeekday(<Mon>) = true and
+		jc.isWeekday(<Tue>) = true and
+		jc.isWeekday(<Wed>) = true and
+		jc.isWeekday(<Thu>) = true and
+		jc.isWeekday(<Fri>) = true and
+		jc.isWeekday(<Sat>) = false and
+		jc.isWeekday(<Sun>) = false and
+		jc.date2Str(jc.getLastDayOfMonth(2000,2)) = "20000229" and
+		jc.date2Str(jc.getLastDayOfMonth(2001,2)) = "20010228"
+	;
+protected setUp: () ==> ()
+setUp() == TestName := "DateT07:\tQuery about date.date";
+protected tearDown: () ==> ()
+tearDown() == return;
+end DateT07

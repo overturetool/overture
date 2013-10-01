@@ -1,0 +1,36 @@
+\begin{vdm_al}
+class IIOSSTYPES
+
+types
+	public PigPosition::
+		id: nat1
+		pos: Position;
+
+	public Position::
+		posX: int
+		posY: int;
+	
+	public EventId = nat;
+	public PigId = nat;
+	public PigStyId = nat;
+	public Time = nat;
+
+	public EventType = <SHOW_PIG> | <PIG_MOVED> | <PIG_NEW> | <NEED_MEDIC> | <NONE>;
+	
+
+operations
+	static public DebugPrint: seq of char ==> ()
+	DebugPrint(text) ==
+	(
+		def file = new IO()
+		in
+		def - = file.writeval[seq of char](text) in skip;
+	);
+	
+end IIOSSTYPES
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[IIOSSTYPES]
+\end{rtinfo}

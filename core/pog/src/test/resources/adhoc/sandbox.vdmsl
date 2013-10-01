@@ -1,11 +1,32 @@
-module A
+module B
 definitions
 
+types 
+Percent = int
+inv p == p>0 and p <100;
 
-operations
-impF1 (p1 : nat, p2 : nat, p3 : bool) result : nat
-pre p3 => p1 / p2 > 0
-post result = p1 /p2;
+MeterID :: int
 	
-end A
+	values
+ AllMeterIDs : set of MeterID = {x | x :MeterID}
+	
+	
+functions
+	getRanID() r:MeterID
+	post r in set AllMeterIDs;
 
+
+
+state StateName of
+-- TODO Define state here
+end 
+
+types 
+-- TODO Define types here
+values 
+-- TODO Define values here
+functions 
+-- TODO Define functions here
+operations 
+-- TODO Define operations here
+end B

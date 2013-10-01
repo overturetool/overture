@@ -19,18 +19,6 @@ public class AThreadDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static List<PDefinition> getDefinitions(AThreadDefinition d)
-//	{
-//		List<PDefinition> result = new Vector<PDefinition>();
-//		result.add(d.getOperationDef());
-//		return result;
-//	}
-	
-//	public static void implicitDefinitions(AThreadDefinition d, Environment env)
-//	{
-//		d.setOperationDef(getThreadDefinition(d));
-//
-//	}
 
 	public AExplicitOperationDefinition getThreadDefinition(
 			AThreadDefinition d)

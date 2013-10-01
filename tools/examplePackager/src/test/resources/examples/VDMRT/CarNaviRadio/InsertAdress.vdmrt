@@ -1,0 +1,25 @@
+class InsertAddress
+  is subclass of EnvironmentTask
+
+operations
+  public InsertAddress: nat ==> InsertAddress
+  InsertAddress (pno) == max_stimuli := pno;
+
+  public HandleEvent: nat ==> ()
+  HandleEvent (pev) == logSysToEnv(pev)
+  post checkResponseTimes(e2s,s2e,24000000000);
+
+  public Run: () ==> ()
+  Run () == start(self); 
+
+  createSignal: () ==> ()
+  createSignal () ==
+    ( dcl num2 : nat := getNum();
+      logEnvToSys(num2);
+      RadNavSys`mmi.HandleKeyPress(2,num2) )
+
+thread
+  periodic (2000E6,100,1000,0) 
+    (createSignal)
+
+end InsertAddress

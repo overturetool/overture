@@ -42,7 +42,7 @@ public class APatternListTypePairAssistantTC {
 			TypeCheckInfo question) throws AnalysisException {
 		
 		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), rootVisitor, question);
-		PType type = PTypeAssistantTC.typeResolve(pltp.getType(),null,rootVisitor,question);
+		PType type = af.createPTypeAssistant().typeResolve(pltp.getType(),null,rootVisitor,question);
 		pltp.setType(type);
 		
 	}

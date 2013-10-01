@@ -43,7 +43,7 @@ public class MapInverseObligation extends ProofObligation
  */
 	public MapInverseObligation(AMapInverseUnaryExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_INVERSE, ctxt);
+		super(exp, POType.MAP_INVERSE, ctxt, exp.getLocation());
 		
 		AIsExp is_Exp = new AIsExp();
 		is_Exp.setTest(exp.getExp().clone());

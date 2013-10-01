@@ -50,8 +50,8 @@ import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.IVdmVariable;
 import org.overture.ide.debug.logging.LogItem;
 
-public class VdmStackFrame extends VdmDebugElement implements
-		IVdmStackFrame {
+public class VdmStackFrame extends VdmDebugElement implements IVdmStackFrame
+{
 
 	private final IVdmThread thread;
 	private IDbgpStackLevel level;
@@ -60,16 +60,15 @@ public class VdmStackFrame extends VdmDebugElement implements
 	private VdmVariableContainer variables = null;
 	private boolean needRefreshVariables = false;
 
-	protected static IVdmVariable[] readVariables(
-			VdmStackFrame parentFrame, int contextId,
-			IDbgpContextCommands commands) throws DbgpException {
+	protected static IVdmVariable[] readVariables(VdmStackFrame parentFrame,
+			int contextId, IDbgpContextCommands commands) throws DbgpException
+	{
 
-		try {
-			
-			IDbgpProperty[] properties = commands.getContextProperties(
-					parentFrame.getLevel(), contextId);
-			
-			
+		try
+		{
+
+			IDbgpProperty[] properties = commands.getContextProperties(parentFrame.getLevel(), contextId);
+
 			IVdmVariable[] variables = new IVdmVariable[properties.length];
 
 			// Workaround for bug 215215
@@ -77,131 +76,148 @@ public class VdmStackFrame extends VdmDebugElement implements
 			// Remove this code when Tcl active state debugger fixed
 			Set<String> duplicates = findDuplicateNames(properties);
 
-			for (int i = 0; i < properties.length; ++i) {
+			for (int i = 0; i < properties.length; ++i)
+			{
 				IDbgpProperty property = properties[i];
 				String name = property.getName();
-				if (duplicates.contains(name)) {
+				if (duplicates.contains(name))
+				{
 					name = property.getEvalName();
 				}
 				variables[i] = new VdmVariable(parentFrame, name, property);
 			}
 
 			return variables;
-		} catch (DbgpDebuggingEngineException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		} catch (DbgpDebuggingEngineException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
 			return new IVdmVariable[0];
 		}
 	}
 
-	private static Set<String> findDuplicateNames(IDbgpProperty[] properties) {
+	private static Set<String> findDuplicateNames(IDbgpProperty[] properties)
+	{
 		final Set<String> duplicates = new HashSet<String>();
 		final Set<String> alreadyExsisting = new HashSet<String>();
-		for (int i = 0; i < properties.length; ++i) {
+		for (int i = 0; i < properties.length; ++i)
+		{
 			final IDbgpProperty property = properties[i];
 			final String name = property.getName();
-			if (!alreadyExsisting.add(name)) {
+			if (!alreadyExsisting.add(name))
+			{
 				duplicates.add(name);
 			}
 		}
 		return duplicates;
 	}
 
-	protected VdmVariableContainer readAllVariables() throws DbgpException {
-		final IDbgpContextCommands commands = thread.getDbgpSession()
-				.getCoreCommands();
+	protected VdmVariableContainer readAllVariables() throws DbgpException
+	{
+		final IDbgpContextCommands commands = thread.getDbgpSession().getCoreCommands();
 
-		((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "REQUEST", true, "getContextNames"));
-		final Map<Integer,String> names = commands.getContextNames(getLevel());
-		((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "getContextNames"));
+		((VdmThread) this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread) this.thread).getDbgpSession().getInfo(), "REQUEST", true, "getContextNames"));
+		final Map<Integer, String> names = commands.getContextNames(getLevel());
+		((VdmThread) this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread) this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "getContextNames"));
 		final VdmVariableContainer result = new VdmVariableContainer();
 		if (thread.retrieveLocalVariables()
-				&& names.containsKey(new Integer(
-						IDbgpContextCommands.LOCAL_CONTEXT_ID))) {
-			result.locals = readVariables(this,
-					IDbgpContextCommands.LOCAL_CONTEXT_ID, commands);
-			((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read local variables"));
+				&& names.containsKey(new Integer(IDbgpContextCommands.LOCAL_CONTEXT_ID)))
+		{
+			result.locals = readVariables(this, IDbgpContextCommands.LOCAL_CONTEXT_ID, commands);
+			((VdmThread) this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread) this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read local variables"));
 		}
 		if (thread.retrieveGlobalVariables()
-				&& names.containsKey(new Integer(
-						IDbgpContextCommands.GLOBAL_CONTEXT_ID))) {
-			result.globals = readVariables(this,
-					IDbgpContextCommands.GLOBAL_CONTEXT_ID, commands);
-			((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read Global variables"));
+				&& names.containsKey(new Integer(IDbgpContextCommands.GLOBAL_CONTEXT_ID)))
+		{
+			result.globals = readVariables(this, IDbgpContextCommands.GLOBAL_CONTEXT_ID, commands);
+			((VdmThread) this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread) this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read Global variables"));
 		}
 		if (thread.retrieveClassVariables()
-				&& names.containsKey(new Integer(
-						IDbgpContextCommands.CLASS_CONTEXT_ID))) {
-			result.classes = readVariables(this,
-					IDbgpContextCommands.CLASS_CONTEXT_ID, commands);
-			((VdmThread)this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread)this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read Class variables"));
+				&& names.containsKey(new Integer(IDbgpContextCommands.CLASS_CONTEXT_ID)))
+		{
+			result.classes = readVariables(this, IDbgpContextCommands.CLASS_CONTEXT_ID, commands);
+			((VdmThread) this.thread).getVdmDebugTarget().printLog(new LogItem(((VdmThread) this.thread).getDbgpSession().getInfo(), "RESPONSE", false, "Read Class variables"));
 		}
 		return result;
 	}
 
-	private static class VdmVariableContainer {
+	private static class VdmVariableContainer
+	{
 		IVariable[] locals = null;
 		IVariable[] globals = null;
 		IVariable[] classes = null;
 		VdmVariableWrapper globalsWrapper = null;
 		VdmVariableWrapper classesWrapper = null;
 
-		VdmVariableContainer sort(IDebugTarget target) {
-			final Comparator<Object> variableComparator = VdmDebugManager
-					.getInstance().getVariableNameComparator();
-			if (locals != null) {
+		VdmVariableContainer sort(IDebugTarget target)
+		{
+			final Comparator<Object> variableComparator = VdmDebugManager.getInstance().getVariableNameComparator();
+			if (locals != null)
+			{
 				Arrays.sort(locals, variableComparator);
 			}
-			if (globals != null) {
+			if (globals != null)
+			{
 				Arrays.sort(globals, variableComparator);
 			}
-			if (classes != null) {
+			if (classes != null)
+			{
 				Arrays.sort(classes, variableComparator);
 			}
 			return this;
 		}
 
-		private int size() {
+		private int size()
+		{
 			int size = 0;
-			if (locals != null) {
+			if (locals != null)
+			{
 				size += locals.length;
 			}
-			if (globals != null && globals.length > 0) {
+			if (globals != null && globals.length > 0)
+			{
 				++size;
 			}
-			if (classes != null && classes.length > 0) {
+			if (classes != null && classes.length > 0)
+			{
 				++size;
 			}
 			return size;
 		}
 
-		IVdmVariable[] toArray(IDebugTarget target) {
+		IVdmVariable[] toArray(IDebugTarget target)
+		{
 			final int size = size();
 			final IVdmVariable[] result = new IVdmVariable[size];
-			if (size != 0) {
+			if (size != 0)
+			{
 				int index = 0;
-				if (globals != null && globals.length > 0) {
-					if (globalsWrapper == null) {
-						globalsWrapper = new VdmVariableWrapper(target,
-								"Global Variables",
-								globals);
-					} else {
+				if (globals != null && globals.length > 0)
+				{
+					if (globalsWrapper == null)
+					{
+						globalsWrapper = new VdmVariableWrapper(target, "Global Variables", globals);
+					} else
+					{
 						globalsWrapper.refreshValue(globals);
 					}
 					result[index++] = globalsWrapper;
 				}
-				if (classes != null && classes.length > 0) {
-					if (classesWrapper == null) {
-						classesWrapper = new VdmVariableWrapper(target,
-								"Instance Variables",
-								classes);
-					} else {
+				if (classes != null && classes.length > 0)
+				{
+					if (classesWrapper == null)
+					{
+						classesWrapper = new VdmVariableWrapper(target, "Instance Variables", classes);
+					} else
+					{
 						classesWrapper.refreshValue(classes);
 					}
 					result[index++] = classesWrapper;
 				}
-				if (locals != null) {
+				if (locals != null)
+				{
 					System.arraycopy(locals, 0, result, index, locals.length);
 					index += locals.length;
 				}
@@ -212,7 +228,8 @@ public class VdmStackFrame extends VdmDebugElement implements
 		/**
 		 * @return
 		 */
-		public boolean hasVariables() {
+		public boolean hasVariables()
+		{
 			return locals != null && locals.length != 0 || classes != null
 					|| globals != null;
 		}
@@ -222,16 +239,21 @@ public class VdmStackFrame extends VdmDebugElement implements
 		 * @return
 		 * @throws DebugException
 		 */
-		public IVariable findVariable(String varName) throws DebugException {
-			if (locals != null) {
+		public IVariable findVariable(String varName) throws DebugException
+		{
+			if (locals != null)
+			{
 				final IVariable variable = findVariable(varName, locals);
-				if (variable != null) {
+				if (variable != null)
+				{
 					return variable;
 				}
 			}
-			if (globals != null) {
+			if (globals != null)
+			{
 				final IVariable variable = findVariable(varName, globals);
-				if (variable != null) {
+				if (variable != null)
+				{
 					return variable;
 				}
 			}
@@ -239,10 +261,13 @@ public class VdmStackFrame extends VdmDebugElement implements
 		}
 
 		private static IVariable findVariable(String varName, IVariable[] vars)
-				throws DebugException {
-			for (int i = 0; i < vars.length; i++) {
+				throws DebugException
+		{
+			for (int i = 0; i < vars.length; i++)
+			{
 				final IVariable var = vars[i];
-				if (var.getName().equals(varName)) {
+				if (var.getName().equals(varName))
+				{
 					return var;
 				}
 			}
@@ -250,24 +275,29 @@ public class VdmStackFrame extends VdmDebugElement implements
 		}
 	}
 
-	public VdmStackFrame(IVdmStack stack, IDbgpStackLevel stackLevel) {
+	public VdmStackFrame(IVdmStack stack, IDbgpStackLevel stackLevel)
+	{
 
 		this.stack = stack;
 		this.thread = stack.getThread();
 		this.level = stackLevel;
 	}
 
-	public synchronized void updateVariables() {
+	public synchronized void updateVariables()
+	{
 		this.variables = null;
-		try {
+		try
+		{
 			checkVariablesAvailable();
-		} catch (DebugException e) {
+		} catch (DebugException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public IVdmStack getStack() {
+	public IVdmStack getStack()
+	{
 		return stack;
 	}
 
@@ -275,46 +305,54 @@ public class VdmStackFrame extends VdmDebugElement implements
 	 * @return
 	 * @deprecated use #getSourceURI()
 	 */
-	public URI getFileName() {
+	public URI getFileName()
+	{
 		return level.getFileURI();
 	}
 
 	private static final int MULTI_LINE_COUNT = 2;
 
-	public int getCharStart() throws DebugException {
+	public int getCharStart() throws DebugException
+	{
 		final int beginLine = level.getBeginLine();
-		if (beginLine > 0) {
+		if (beginLine > 0)
+		{
 			final int endLine = level.getEndLine();
-			if (endLine > 0 && endLine >= beginLine) {
-				final ISourceOffsetLookup offsetLookup = VdmDebugPlugin
-						.getSourceOffsetLookup();
-				if (offsetLookup != null) {
-					return offsetLookup.calculateOffset(this, beginLine, level
-							.getBeginColumn(), false);
+			if (endLine > 0 && endLine >= beginLine)
+			{
+				final ISourceOffsetLookup offsetLookup = VdmDebugPlugin.getSourceOffsetLookup();
+				if (offsetLookup != null)
+				{
+					return offsetLookup.calculateOffset(this, beginLine, level.getBeginColumn(), false);
 				}
 			}
 		}
 		return -1;
 	}
 
-	public int getCharEnd() throws DebugException {
+	public int getCharEnd() throws DebugException
+	{
 		final int endLine = level.getEndLine();
-		if (endLine > 0) {
+		if (endLine > 0)
+		{
 			final int beginLine = level.getBeginLine();
-			if (beginLine > 0 && endLine >= beginLine) {
-				final ISourceOffsetLookup offsetLookup = VdmDebugPlugin
-						.getSourceOffsetLookup();
-				if (offsetLookup != null) {
-					if (endLine < beginLine + MULTI_LINE_COUNT) {
-						final int offset = offsetLookup.calculateOffset(this,
-								endLine, level.getEndColumn(), true);
-						if (offset >= 0) {
+			if (beginLine > 0 && endLine >= beginLine)
+			{
+				final ISourceOffsetLookup offsetLookup = VdmDebugPlugin.getSourceOffsetLookup();
+				if (offsetLookup != null)
+				{
+					if (endLine < beginLine + MULTI_LINE_COUNT)
+					{
+						final int offset = offsetLookup.calculateOffset(this, endLine, level.getEndColumn(), true);
+						if (offset >= 0)
+						{
 							return offset + 1;
 						}
-					} else {
-						final int offset = offsetLookup.calculateOffset(this,
-								beginLine, -1, true);
-						if (offset >= 0) {
+					} else
+					{
+						final int offset = offsetLookup.calculateOffset(this, beginLine, -1, true);
+						if (offset >= 0)
+						{
 							return offset + 1;
 						}
 					}
@@ -324,86 +362,101 @@ public class VdmStackFrame extends VdmDebugElement implements
 		return -1;
 	}
 
-	public int getLineNumber() throws DebugException {
+	public int getLineNumber() throws DebugException
+	{
 		return level.getLineNumber();
 	}
 
-	public int getBeginLine() {
+	public int getBeginLine()
+	{
 		return level.getBeginLine();
 	}
 
-	public int getBeginColumn() {
+	public int getBeginColumn()
+	{
 		return level.getBeginColumn();
 	}
 
-	public int getEndLine() {
+	public int getEndLine()
+	{
 		return level.getEndLine();
 	}
 
-	public int getEndColumn() {
+	public int getEndColumn()
+	{
 		return level.getEndColumn();
 	}
 
-	public String getWhere() {
+	public String getWhere()
+	{
 		return level.getWhere().trim();
 	}
 
-	public String getName() throws DebugException {
-//		String name = level.getWhere().trim();
-//
-//		if (name == null || name.length() == 0) {
-//			name = toString();
-//		}
-//
-//		name += " (" + level.getFileURI().getPath() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-		
-			
-		
+	public String getName() throws DebugException
+	{
+		// String name = level.getWhere().trim();
+		//
+		// if (name == null || name.length() == 0) {
+		// name = toString();
+		// }
+		//
+		//		name += " (" + level.getFileURI().getPath() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+
 		return getOnlyFileName() + " line: " + getLineNumber();
 	}
-	
-	public String getOnlyFileName(){
+
+	public String getOnlyFileName()
+	{
 		URI uri = level.getFileURI();
-		String res = new File(uri).getName();//.toASCIIString();
-		
-		return res;//.substring(res.lastIndexOf('/') + 1);
+		String res = new File(uri).getName();// .toASCIIString();
+
+		return res;// .substring(res.lastIndexOf('/') + 1);
 	}
 
-	public boolean hasRegisterGroups() throws DebugException {
+	public boolean hasRegisterGroups() throws DebugException
+	{
 		return false;
 	}
 
-	public IRegisterGroup[] getRegisterGroups() throws DebugException {
+	public IRegisterGroup[] getRegisterGroups() throws DebugException
+	{
 		return new IRegisterGroup[0];
 	}
 
-	public IThread getThread() {
+	public IThread getThread()
+	{
 		return thread;
 	}
 
-	public synchronized boolean hasVariables() throws DebugException {
+	public synchronized boolean hasVariables() throws DebugException
+	{
 		checkVariablesAvailable();
 		return variables.hasVariables();
 	}
 
-	private synchronized void checkVariablesAvailable() throws DebugException {
-		try {
-			if (variables == null) {
+	private synchronized void checkVariablesAvailable() throws DebugException
+	{
+		try
+		{
+			if (variables == null)
+			{
 				variables = readAllVariables();
 
 				variables.sort(getDebugTarget());
-			} else if (needRefreshVariables) {
-				try {
+			} else if (needRefreshVariables)
+			{
+				try
+				{
 					refreshVariables();
-				} finally {
+				} finally
+				{
 					needRefreshVariables = false;
 				}
 			}
-		} catch (DbgpException e) {
+		} catch (DbgpException e)
+		{
 			variables = new VdmVariableContainer();
-			final Status status = new Status(IStatus.ERROR,
-					VdmDebugPlugin.PLUGIN_ID,
-					"Unable To Load Variables", e);
+			final Status status = new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, "Unable To Load Variables", e);
 			VdmDebugPlugin.log(status);
 			throw new DebugException(status);
 		}
@@ -413,7 +466,8 @@ public class VdmStackFrame extends VdmDebugElement implements
 	 * @throws DebugException
 	 * @throws DbgpException
 	 */
-	private void refreshVariables() throws DebugException, DbgpException {
+	private void refreshVariables() throws DebugException, DbgpException
+	{
 		final VdmVariableContainer newVars = readAllVariables();
 		newVars.sort(getDebugTarget());
 		variables.locals = refreshVariables(newVars.locals, variables.locals);
@@ -428,20 +482,26 @@ public class VdmStackFrame extends VdmDebugElement implements
 	 * @throws DebugException
 	 */
 	static IVariable[] refreshVariables(IVariable[] newVars, IVariable[] oldVars)
-			throws DebugException {
-		if (oldVars != null) {
+			throws DebugException
+	{
+		if (oldVars != null)
+		{
 			final Map<String, IVariable> map = new HashMap<String, IVariable>();
-			for (int i = 0; i < oldVars.length; ++i) {
+			for (int i = 0; i < oldVars.length; ++i)
+			{
 				final IVariable variable = oldVars[i];
-				if (variable instanceof IRefreshableVdmVariable) {
+				if (variable instanceof IRefreshableVdmVariable)
+				{
 					map.put(variable.getName(), variable);
 				}
 			}
-			for (int i = 0; i < newVars.length; ++i) {
+			for (int i = 0; i < newVars.length; ++i)
+			{
 				final IVariable variable = newVars[i];
 				final IRefreshableVdmVariable old;
 				old = (IRefreshableVdmVariable) map.get(variable.getName());
-				if (old != null) {
+				if (old != null)
+				{
 					newVars[i] = old.refreshVariable(variable);
 				}
 			}
@@ -449,103 +509,125 @@ public class VdmStackFrame extends VdmDebugElement implements
 		return newVars;
 	}
 
-	public synchronized IVariable[] getVariables() throws DebugException {		
+	public synchronized IVariable[] getVariables() throws DebugException
+	{
 		checkVariablesAvailable();
 		return variables.toArray(getDebugTarget());
 	}
 
 	// IStep
-	public boolean canStepInto() {
+	public boolean canStepInto()
+	{
 		return thread.canStepInto();
 	}
 
-	public boolean canStepOver() {
+	public boolean canStepOver()
+	{
 		return thread.canStepOver();
 	}
 
-	public boolean canStepReturn() {
+	public boolean canStepReturn()
+	{
 		return thread.canStepReturn();
 	}
 
-	public boolean isStepping() {
+	public boolean isStepping()
+	{
 		return thread.isStepping();
 	}
 
-	public void stepInto() throws DebugException {
+	public void stepInto() throws DebugException
+	{
 		thread.stepInto();
 	}
 
-	public void stepOver() throws DebugException {
+	public void stepOver() throws DebugException
+	{
 		thread.stepOver();
 	}
 
-	public void stepReturn() throws DebugException {
+	public void stepReturn() throws DebugException
+	{
 		thread.stepReturn();
 	}
 
 	// ISuspenResume
-	public boolean canResume() {
+	public boolean canResume()
+	{
 		return thread.canResume();
 	}
 
-	public boolean canSuspend() {
+	public boolean canSuspend()
+	{
 		return thread.canSuspend();
 	}
 
-	public boolean isSuspended() {
+	public boolean isSuspended()
+	{
 		return thread.isSuspended();
 	}
 
-	public void resume() throws DebugException {
+	public void resume() throws DebugException
+	{
 		thread.resume();
 	}
 
-	public void suspend() throws DebugException {
+	public void suspend() throws DebugException
+	{
 		thread.suspend();
 	}
 
 	// ITerminate
-	public boolean canTerminate() {
+	public boolean canTerminate()
+	{
 		return thread.canTerminate();
 	}
 
-	public boolean isTerminated() {
+	public boolean isTerminated()
+	{
 		return thread.isTerminated();
 	}
 
-	public void terminate() throws DebugException {
+	public void terminate() throws DebugException
+	{
 		thread.terminate();
 	}
 
 	// IDebugElement
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return thread.getDebugTarget();
 	}
 
 	public synchronized IVdmVariable findVariable(String varName)
-			throws DebugException {
+			throws DebugException
+	{
 		checkVariablesAvailable();
 		return (IVdmVariable) variables.findVariable(varName);
 	}
 
-	public int getLevel() {
+	public int getLevel()
+	{
 		return level.getLevel();
 	}
 
-	public String toString() {
-		return NLS.bind("stackFrame", new Integer(level
-				.getLevel()));
+	public String toString()
+	{
+		return NLS.bind("stackFrame", new Integer(level.getLevel()));
 	}
 
-	public String getSourceLine() {
+	public String getSourceLine()
+	{
 		return level.getWhere();
 	}
 
-	public URI getSourceURI() {
+	public URI getSourceURI()
+	{
 		return level.getFileURI();
 	}
 
-	public IVdmThread getVdmThread() {
+	public IVdmThread getVdmThread()
+	{
 		return (IVdmThread) getThread();
 	}
 
@@ -554,8 +636,10 @@ public class VdmStackFrame extends VdmDebugElement implements
 	 * @param depth
 	 * @return
 	 */
-	public VdmStackFrame bind(IDbgpStackLevel newLevel) {
-		if (level.isSameMethod(newLevel)) {
+	public VdmStackFrame bind(IDbgpStackLevel newLevel)
+	{
+		if (level.isSameMethod(newLevel))
+		{
 			level = newLevel;
 			needRefreshVariables = true;
 			return this;

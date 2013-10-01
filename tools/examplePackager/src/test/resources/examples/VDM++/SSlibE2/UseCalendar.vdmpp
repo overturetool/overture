@@ -1,0 +1,14 @@
+class UseCalendar
+
+instance variables
+sJC : JapaneseCalendar :=  new JapaneseCalendar();
+
+traces
+
+S1 : 
+	let y in set {2010,...,2012} in let m in set {1,...,12} in let d in set {1,...,31} in sJC.getDateFrom_yyyy_mm_dd(y, m, d).asString()
+
+S2:
+	let y in set {2010,...,2100} in sJC.getVernalEquinox(y).date2Str()
+
+end UseCalendar

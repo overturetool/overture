@@ -75,9 +75,13 @@ public class POForAllPredicateContext extends POForAllContext
 	{
 		AForAllExp forAll_exp = new AForAllExp();
 		
-		AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
-		
-		forAll_exp.setPredicate(implies_exp);
+		if (predicate !=null){
+			AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
+			forAll_exp.setPredicate(implies_exp);
+		}
+		else{
+			forAll_exp.setPredicate(stitch);
+		}
 		
 		return forAll_exp;
 	}

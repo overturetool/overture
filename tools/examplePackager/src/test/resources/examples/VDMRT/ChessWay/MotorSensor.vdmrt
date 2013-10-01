@@ -1,0 +1,38 @@
+% MotorSensor.vdmrt
+
+\subsubsection{Observing the wheel rotation -- the \texttt{MotorSensor} class}
+
+The \texttt{MotorSensor} class just retrieves the values of the three Hall sensors
+connected to each wheel and provides their state as a three-tuple of Boolean values.
+
+\begin{vdm_al}
+class MotorSensor
+  is subclass of ISensorReal
+
+instance variables
+
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public MotorSensor: Controller ==> MotorSensor
+  MotorSensor (pController) == mController := pController;
+
+  public GetValue: () ==> real
+  GetValue() == 
+    if mController.mName = "LEFT"
+    then mController.getValue("ACC")
+    else mController.getValue("VEL");
+
+  public getHallSensorData: () ==> bool * bool * bool
+  getHallSensorData () == 
+    duration (0)
+      ( -- retrieve the values from the environment
+        dcl h1 : real := mController.getValue("HALL1"), 
+            h2 : real := mController.getValue("HALL2"),
+            h3 : real := mController.getValue("HALL3");
+        -- map to Boolean values
+        return mk_ (h1 > 0, h2 > 0, h3 > 0) )
+
+end MotorSensor
+\end{vdm_al}

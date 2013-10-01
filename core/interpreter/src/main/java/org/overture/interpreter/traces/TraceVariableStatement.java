@@ -110,12 +110,6 @@ public class TraceVariableStatement extends PStmBase
 		return null;
 	}
 
-	@Override
-	public String kindPStm()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public PStm clone(Map<INode, INode> oldToNewMap)

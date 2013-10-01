@@ -24,60 +24,6 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void unusedCheck(AStateDefinition d)
-//	{
-//
-//		PDefinitionListAssistantTC.unusedCheck(d.getStateDefs());
-//	}
-
-//	public static List<PDefinition> getDefinitions(AStateDefinition d)
-//	{
-//		return d.getStateDefs();
-//	}
-//	public static void typeResolve(AStateDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question) throws AnalysisException
-//	{
-//
-//		for (AFieldField f : d.getFields())
-//		{
-//			try
-//			{
-//				AFieldFieldAssistantTC.typeResolve(f, null, rootVisitor, question);
-//			} catch (TypeCheckException e)
-//			{
-//				AFieldFieldAssistantTC.unResolve(f);
-//				throw e;
-//			}
-//		}
-//
-//		d.setRecordType(PTypeAssistantTC.typeResolve(d.getRecordType(), null, rootVisitor, question));
-//
-//		if (d.getInvPattern() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
-//		}
-//
-//		if (d.getInitPattern() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
-//		}
-//
-//	}
-
-//	public static void implicitDefinitions(AStateDefinition d, Environment env)
-//	{
-//		if (d.getInvPattern() != null)
-//		{
-//			d.setInvdef(getInvDefinition(d));
-//		}
-//
-//		if (d.getInitPattern() != null)
-//		{
-//			d.setInitdef(getInitDefinition(d));
-//		}
-//
-//	}
 
 	public static AExplicitFunctionDefinition getInitDefinition(
 			AStateDefinition d)

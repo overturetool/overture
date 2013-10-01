@@ -36,7 +36,7 @@ public class UsedMarker extends AnalysisAdaptor
 	{
 		
 		node.setUsed(true);
-		node.getState().apply(this);
+		node.getState().apply(THIS);
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class UsedMarker extends AnalysisAdaptor
 			throws AnalysisException
 	{
 		node.setUsed(true);
-		node.getDef().apply(this);
+		node.getDef().apply(THIS);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class UsedMarker extends AnalysisAdaptor
 			throws AnalysisException
 	{
 		node.setUsed(true);
-		node.getSuperdef().apply(this);
+		node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class UsedMarker extends AnalysisAdaptor
 	{
 		
 		node.setUsed(true);
-		node.getDef().apply(this);
+		node.getDef().apply(THIS);
 		node.setUsed(true);
 	}
 

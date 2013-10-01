@@ -50,14 +50,14 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
@@ -73,7 +73,7 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override

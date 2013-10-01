@@ -39,7 +39,3 @@ canObserve (pangle, pleft, psize) ==
 
 end GLOBAL
 \end{vdm_al}
-
-\begin{rtinfo}[GLOBAL`canObserve]
-{vdm.tc}[GLOBAL]
-\end{rtinfo}

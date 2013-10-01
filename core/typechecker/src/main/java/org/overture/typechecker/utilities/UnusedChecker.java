@@ -64,7 +64,7 @@ public class UnusedChecker extends AnalysisAdaptor
 			for (PDefinition def : node.getDefs())
 			{
 				//PDefinitionAssistantTC.unusedCheck(def);
-				def.apply(this);
+				def.apply(THIS);
 			}
 		}
 

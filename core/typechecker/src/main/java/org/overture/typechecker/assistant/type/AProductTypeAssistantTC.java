@@ -34,7 +34,7 @@ public class AProductTypeAssistantTC {
 
 			for (PType t: type.getTypes())
 			{
-				PType rt = PTypeAssistantTC.typeResolve(t, root, rootVisitor, question);
+				PType rt = af.createPTypeAssistant().typeResolve(t, root, rootVisitor, question);
 				fixed.add(rt);
 			}
 

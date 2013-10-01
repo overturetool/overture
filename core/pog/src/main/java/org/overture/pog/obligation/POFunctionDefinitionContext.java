@@ -77,6 +77,10 @@ public class POFunctionDefinitionContext extends POContext
 		AForAllExp forAllExp = new AForAllExp();
 		forAllExp.setBindList(makeBinds());
 		
+		if (deftype.getParameters().isEmpty()){
+			return stitch;
+		}
+		
 		if (addPrecond && precondition != null)
 		{
 			

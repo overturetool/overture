@@ -1,0 +1,10 @@
+class ISensorReal
+
+operations
+
+-- set actuator value
+public GetValue: () ==> real
+GetValue() ==
+	is subclass responsibility;
+
+end ISensorReal

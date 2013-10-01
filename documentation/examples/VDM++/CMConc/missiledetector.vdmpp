@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class MissileDetector is subclass of GLOBAL
+class MissileDetector is subclass of GLOBAL, BaseThread
 
 -- the primary task of the MissileDetector is to
 -- collect all sensor data and dispatch each event
@@ -19,6 +19,12 @@ threats : seq of (EventId * MissileType * Angle * Time) := [];
 busy : bool := false
 
 operations
+
+public MissileDetector: nat1 * bool ==> MissileDetector
+MissileDetector(p, isP)==
+ (period := p;
+  isPeriodic := isP;
+ );
 
 -- addController is only used to instantiate the model
 public addController: FlareController ==> ()
@@ -59,7 +65,15 @@ processSensor() ==
          then controllers(id).addThreat(evid,pmt,pa,pt);
    busy := len threats > 0);
  
+public Step: () ==> ()
+Step() ==
+  if len threats > 0
+  then processSensor();
+ 
 sync
+
+mutex(Step);
+mutex(processSensor);
 
 -- addThreat and getThreat modify the same instance variables
 -- therefore they need to be declared mutual exclusive
@@ -70,20 +84,6 @@ mutex (addThreat,getThreat);
 per getThreat => len threats > 0;
 per isFinished => not busy
 
-thread
-
--- the missile detector continuously processes sensor
--- events. getThread is automatically blocked if there
--- are no threats available
-while true do
-(
-  processSensor();
-  --World`timerRef.WaitRelative(World`timerRef.stepLength);
-);
 
 end MissileDetector
 \end{vdm_al}
-
-\begin{rtinfo}[MissileDetector`addController]
-{vdm.tc}[MissileDetector]
-\end{rtinfo}
