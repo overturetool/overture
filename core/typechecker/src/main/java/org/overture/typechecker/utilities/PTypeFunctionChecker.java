@@ -53,7 +53,7 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 				if (node.getOpaque()) return false;
 				return ((ANamedInvariantType) node).getType().apply(this); //PTypeAssistantTC.isFunction(type.getType());
 			}
-		//FIXME:Added code from gkanos in order to return a value;
+		//FIXME:Added code from gkanos in order to return a value; I returned the default one.
 		else
 		{
 			return false;
