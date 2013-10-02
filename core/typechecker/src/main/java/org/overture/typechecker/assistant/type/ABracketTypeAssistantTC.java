@@ -131,7 +131,7 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 	}
 	
 	public static SMapType getMap(ABracketType type){
-		return af.createPTypeAssistant().getMap(type.getType());
+		return PTypeAssistantTC.getMap(type.getType());
 	}
 
 	public static boolean isSet(ABracketType type) {
