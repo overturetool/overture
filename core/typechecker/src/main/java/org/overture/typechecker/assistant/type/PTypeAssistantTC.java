@@ -360,31 +360,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return null;
 		}
-		
-//		if (type instanceof ABracketType)
-//		{
-//			return ABracketTypeAssistantTC.getOperation((ABracketType) type);
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.getOperation((ANamedInvariantType) type);
-//			}
-//		} else if (type instanceof AOperationType)
-//		{
-//			return (AOperationType) type;
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.getOperation((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return AUnionTypeAssistantTC.getOperation((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.getOperation((AUnknownType) type);
-//		}
-//		assert false : "Can't getOperation of a non-operation";
-//		return null;
 
 	}
 

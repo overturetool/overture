@@ -8,7 +8,6 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -117,9 +116,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.isOperation(type.getType());
 	}
 	
-	public static AOperationType getOperation(ANamedInvariantType type) {		
-		return PTypeAssistantTC.getOperation(type.getType());
-	}
+//	public static AOperationType getOperation(ANamedInvariantType type) {		
+//		return PTypeAssistantTC.getOperation(type.getType());
+//	}
 
 //	public static boolean isSeq(ANamedInvariantType type) {
 //		if (type.getOpaque()) return false;

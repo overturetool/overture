@@ -2,14 +2,12 @@ package org.overture.typechecker.assistant.type;
 
 import java.util.Vector;
 
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -68,9 +66,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return true;
 	}
 	
-	public static AOperationType getOperation(AUnknownType type) {
-		return AstFactory.newAOperationType(type.getLocation(),new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));
-	}
+//	public static AOperationType getOperation(AUnknownType type) {
+//		return AstFactory.newAOperationType(type.getLocation(),new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));
+//	}
 
 //	public static boolean isSeq(AUnknownType type) {
 //		return true;
