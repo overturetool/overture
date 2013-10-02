@@ -11,6 +11,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 {
@@ -38,7 +39,8 @@ public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		if (type instanceof ANamedInvariantType)
 			{
-				return ANamedInvariantTypeAssistantTC.isSeq((ANamedInvariantType) type);
+				if (type.getOpaque()) return false;
+				return ((ANamedInvariantType) type).getType().apply(THIS);//PTypeAssistantTC.isSeq(type.getType());
 			}
 		else
 		{
@@ -49,12 +51,13 @@ public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isSeq(type);
+		return 	af.createAUnionTypeAssistant().getSeq(type) != null;
 	}
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-		return AUnknownTypeAssistantTC.isSeq(type);
+		//return AUnknownTypeAssistantTC.isSeq(type);
+		return true;
 	}
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException

@@ -73,9 +73,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return AstFactory.newAOperationType(type.getLocation(),new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
-	public static boolean isSeq(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isSeq(AUnknownType type) {
+//		return true;
+//	}
 	
 //	public static SSeqType getSeq(AUnknownType type)
 //	{

@@ -108,7 +108,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	}
 
 	
-	public static SSeqType getSeq(AUnionType type)
+	public SSeqType getSeq(AUnionType type)
 	{
 		if (!type.getSeqDone())
 		{
@@ -159,14 +159,14 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getSetType();
 	}
 
-	public static SMapType getMap(AUnionType type)
+	public SMapType getMap(AUnionType type)
 	{
 		ILexLocation location = type.getLocation();
 
 		if (!type.getMapDone())
 		{
 			type.setMapDone(true); // Mark early to avoid recursion.
-			type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
+			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location)));
 
 			PTypeSet from = new PTypeSet();
 			PTypeSet to = new PTypeSet();
@@ -175,8 +175,8 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			{
 				if (PTypeAssistantTC.isMap(t))
 				{
-					from.add(PTypeAssistantTC.getMap(t).getFrom());
-					to.add(PTypeAssistantTC.getMap(t).getTo());
+					from.add(af.createPTypeAssistant().getMap(t).getFrom());
+					to.add(af.createPTypeAssistant().getMap(t).getTo());
 				}
 			}
 
@@ -446,9 +446,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return (AOperationType) type.getOpType();
 	}
 
-	public static boolean isSeq(AUnionType type)
+	public boolean isSeq(AUnionType type)
 	{
-		return getSeq(type) != null;
+		return af.createAUnionTypeAssistant().getSeq(type) != null;
 	}
 
 	
@@ -467,9 +467,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		
 	
 
-	public static boolean isMap(AUnionType type)
+	public boolean isMap(AUnionType type)
 	{
-		return getMap(type) != null;
+		return af.createAUnionTypeAssistant().getMap(type) != null;
 	}
 
 	public static boolean isSet(AUnionType type)

@@ -134,7 +134,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 	
 	public static SMapType getMap(AOptionalType type) {
-		return PTypeAssistantTC.getMap(type.getType());
+		return af.createPTypeAssistant().getMap(type.getType());
 	}
 
 

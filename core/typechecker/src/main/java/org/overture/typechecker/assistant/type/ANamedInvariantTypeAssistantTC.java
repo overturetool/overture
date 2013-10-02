@@ -14,7 +14,6 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -122,10 +121,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getOperation(type.getType());
 	}
 
-	public static boolean isSeq(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isSeq(type.getType());
-	}
+//	public static boolean isSeq(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isSeq(type.getType());
+//	}
 	
 //	public static SSeqType getSeq(ANamedInvariantType type) {		
 //		return PTypeAssistantTC.getSeq(type.getType());
