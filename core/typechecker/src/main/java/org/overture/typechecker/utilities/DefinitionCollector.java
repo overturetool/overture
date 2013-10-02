@@ -30,7 +30,6 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
-import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
@@ -267,7 +266,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAThreadDefinition(AThreadDefinition node)
 			throws AnalysisException
 	{
-		
+
 		List<PDefinition> result = new Vector<PDefinition>();
 		result.add(node.getOperationDef());
 		return result;
@@ -277,7 +276,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
-		
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 		defs.add(node);
 
@@ -293,7 +292,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAUntypedDefinition(AUntypedDefinition node)
 			throws AnalysisException
 	{
-	
+
 		List<PDefinition> result = new Vector<PDefinition>();
 		result.add(node);
 		return result;
@@ -307,15 +306,14 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	}
 
 	@Override
-	public List<PDefinition> defaultINode(INode node) throws AnalysisException
+	public List<PDefinition> createNewReturnValue(INode node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;
 	}
 
 	@Override
-	public List<PDefinition> defaultIToken(IToken node)
-			throws AnalysisException
+	public List<PDefinition> createNewReturnValue(Object node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;

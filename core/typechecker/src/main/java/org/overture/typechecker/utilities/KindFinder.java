@@ -26,6 +26,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -209,6 +210,20 @@ public class KindFinder extends AnswerAdaptor<String>
 	@Override
 	public String defaultPDefinition(PDefinition node) throws AnalysisException
 	{
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
 		return null;
 	}
 

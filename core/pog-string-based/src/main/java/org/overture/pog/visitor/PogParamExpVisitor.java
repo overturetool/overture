@@ -15,6 +15,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -1660,6 +1661,20 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	@Override
 	public ProofObligationList defaultPExp(PExp node, POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
 	{
 		return new ProofObligationList();
 	}

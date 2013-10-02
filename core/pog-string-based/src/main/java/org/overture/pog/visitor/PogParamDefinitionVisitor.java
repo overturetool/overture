@@ -24,6 +24,7 @@ import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -664,6 +665,20 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 		{
 			throw new POException(node, e);
 		}
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
 	}
 
 }

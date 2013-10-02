@@ -11,7 +11,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
-import org.overture.ast.node.IToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -24,37 +23,38 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
  * 
  * @author kel
  */
-public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDefinition>
+public class TypeFinder extends
+		QuestionAnswerAdaptor<TypeFinder.Newquestion, PDefinition>
 {
 	public static class Newquestion
 	{
 		final ILexNameToken sought;
 		final String fromModule;
-		
-		public Newquestion(ILexNameToken sought,String fromModule)
+
+		public Newquestion(ILexNameToken sought, String fromModule)
 		{
 			this.fromModule = fromModule;
 			this.sought = sought;
 		}
 
-	} 
-	
+	}
+
 	/**
 	 * 
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public TypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
-	
+
 	@Override
-	public PDefinition defaultSClassDefinition(SClassDefinition node, Newquestion question) throws AnalysisException
+	public PDefinition defaultSClassDefinition(SClassDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		if ((!question.sought.getExplicit() && question.sought.getName().equals(node.getName().getName()))
 				|| question.sought.equals(node.getName().getClassName()))
@@ -80,9 +80,10 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 
 		return def;
 	}
-	
+
 	@Override
-	public PDefinition caseAImportedDefinition(AImportedDefinition node, Newquestion question) throws AnalysisException
+	public PDefinition caseAImportedDefinition(AImportedDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		// We can only find an import if it is being sought from the module that
 		// imports it.
@@ -102,8 +103,10 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 
 		return def;
 	}
+
 	@Override
-	public PDefinition caseAInheritedDefinition(AInheritedDefinition node, Newquestion question) throws AnalysisException
+	public PDefinition caseAInheritedDefinition(AInheritedDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		if (node.getSuperdef() instanceof ATypeDefinition
 				&& question.sought.equals(node.getName()))
@@ -113,8 +116,10 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 
 		return null;
 	}
+
 	@Override
-	public PDefinition caseARenamedDefinition(ARenamedDefinition node, Newquestion question) throws AnalysisException
+	public PDefinition caseARenamedDefinition(ARenamedDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		// We can only find an import if it is being sought from the module that
 		// imports it.
@@ -136,9 +141,10 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 			return PDefinitionAssistantTC.findType(node.getDef(), question.sought, question.fromModule);
 		}
 	}
+
 	@Override
-	public PDefinition caseAStateDefinition(AStateDefinition node, Newquestion question)
-			throws AnalysisException
+	public PDefinition caseAStateDefinition(AStateDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		if (PDefinitionAssistantTC.findName(node, question.sought, NameScope.STATE) != null)
 		{
@@ -147,10 +153,10 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 
 		return null;
 	}
-	
+
 	@Override
-	public PDefinition caseATypeDefinition(ATypeDefinition node, Newquestion question)
-			throws AnalysisException
+	public PDefinition caseATypeDefinition(ATypeDefinition node,
+			Newquestion question) throws AnalysisException
 	{
 		PType type = node.getType();
 
@@ -171,28 +177,26 @@ public class TypeFinder extends QuestionAnswerAdaptor<TypeFinder.Newquestion,PDe
 
 		return PDefinitionAssistantTC.findNameBaseCase(node, question.sought, NameScope.TYPENAME);
 	}
-	
-	
+
 	@Override
 	public PDefinition defaultPDefinition(PDefinition node, Newquestion question)
 			throws AnalysisException
 	{
 		return null;
 	}
+
 	@Override
-	public PDefinition defaultINode(INode node, Newquestion question) throws AnalysisException
+	public PDefinition createNewReturnValue(INode node, Newquestion question)
 	{
 		assert false : "default case should never happen in TypeFinder";
 		return null;
 	}
 
 	@Override
-	public PDefinition defaultIToken(IToken node, Newquestion question) throws AnalysisException
+	public PDefinition createNewReturnValue(Object node, Newquestion question)
 	{
 		assert false : "default case should never happen in TypeFinder";
 		return null;
 	}
-	
-	
 
 }

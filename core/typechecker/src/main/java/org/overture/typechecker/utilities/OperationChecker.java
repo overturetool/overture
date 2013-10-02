@@ -10,6 +10,7 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -86,6 +87,20 @@ public class OperationChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 
 }

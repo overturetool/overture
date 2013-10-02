@@ -29,7 +29,6 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
-import org.overture.ast.node.IToken;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
@@ -225,14 +224,14 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-	public PType defaultINode(INode node) throws AnalysisException
+	public PType createNewReturnValue(INode node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;
 	}
 
 	@Override
-	public PType defaultIToken(IToken node) throws AnalysisException
+	public PType createNewReturnValue(Object node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;

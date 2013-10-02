@@ -51,8 +51,7 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type)
-			throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
 	}
@@ -62,4 +61,5 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		return false;
 	}
+
 }

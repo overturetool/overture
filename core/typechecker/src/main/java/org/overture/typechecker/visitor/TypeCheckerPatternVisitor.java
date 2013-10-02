@@ -15,7 +15,7 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends
-		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
+AbstractTypeCheckVisitor {
 
 	/**
 	 * 

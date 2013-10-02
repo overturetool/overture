@@ -11,6 +11,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.prettyprinter.PrettyPrinterEnv;
 
 public class PrettyPrinterVisitorDefinitions extends
@@ -128,6 +129,24 @@ public class PrettyPrinterVisitorDefinitions extends
 		StringBuilder sb = new StringBuilder(question.getIdent());
 		sb.append(node.toString());
 		return sb.toString();
+	}
+
+
+
+	@Override
+	public String createNewReturnValue(INode node, PrettyPrinterEnv question)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String createNewReturnValue(Object node, PrettyPrinterEnv question)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

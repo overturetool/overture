@@ -93,7 +93,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 
 public class TypeCheckerDefinitionVisitor extends
-		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
+AbstractTypeCheckVisitor {
 
 	/**
 	 * 

@@ -2,6 +2,7 @@ package org.overture.typechecker.utilities;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -86,5 +87,19 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean defaultPType(PType node) throws AnalysisException
 	{
 		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 }
