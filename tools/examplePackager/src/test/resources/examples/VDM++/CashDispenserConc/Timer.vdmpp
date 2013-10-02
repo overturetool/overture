@@ -1,0 +1,52 @@
+\section{The Timer Class}
+
+The Timer class is a straightforward periodic timer which increments its 
+clock in its own thread. It provides operations for starting, and stopping 
+timing, and reading the current time. 
+
+\begin{vdm_al}
+class Timer
+\end{vdm_al}
+
+The Timer has two instance variables the current time and a flag indicating 
+whether the Timer is active or not (the current time is only incremented 
+if the Timer is active).
+
+\begin{vdm_al}
+instance variables
+  curTime : nat := 0;
+  active : bool := false;
+\end{vdm_al}
+
+The Timer provides straightforward operations which need no further explanation.
+
+\begin{vdm_al}
+operations
+  public Start : () ==> ()
+  Start() ==
+    (active := true;
+     curTime := 0);
+
+  public Stop : () ==> () 
+  Stop() ==
+    active := false;
+
+  public GetTime : () ==> nat
+  GetTime() ==
+    return curTime;
+
+  IncTime: () ==> ()
+  IncTime() ==
+    if active
+    then curTime := curTime + 100;
+\end{vdm_al}
+
+The Timer's thread ensures that the current time is incremented. We take one 
+time unit for our Timer to correspond to 10 system time units.
+
+\begin{vdm_al}
+thread
+  periodic(1000)(IncTime)
+
+end Timer
+\end{vdm_al}

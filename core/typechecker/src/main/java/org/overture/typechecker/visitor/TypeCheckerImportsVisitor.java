@@ -49,14 +49,14 @@ public class TypeCheckerImportsVisitor extends
 			PDefinition def = node.getDef();
 			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
-			def.setType((SInvariantType) PTypeAssistantTC.typeResolve(
+			def.setType((SInvariantType) question.assistantFactory.createPTypeAssistant().typeResolve(
 					question.assistantFactory.createPDefinitionAssistant().getType(def), null, rootVisitor,
 					question));
 			PDefinition expdef = PDefinitionListAssistantTC.findType(
 					from.getExportdefs(), name, null);
 
 			if (expdef != null) {
-				PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(),
+				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(),
 						null, rootVisitor, question);
 
 				if (!TypeComparator.compatible(def.getType(), exptype)) {
@@ -80,13 +80,13 @@ public class TypeCheckerImportsVisitor extends
 		ILexNameToken name = node.getName();
 
 		if (type != null && from != null) {
-			type = PTypeAssistantTC.typeResolve(type, null, rootVisitor,
+			type = question.assistantFactory.createPTypeAssistant().typeResolve(type, null, rootVisitor,
 					question);
 			PDefinition expdef = PDefinitionListAssistantTC.findName(
 					from.getExportdefs(), name, NameScope.NAMES);
 
 			if (expdef != null) {
-				PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(),
+				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(),
 						null, rootVisitor, question);
 
 				if (!TypeComparator.compatible(type, exptype)) {

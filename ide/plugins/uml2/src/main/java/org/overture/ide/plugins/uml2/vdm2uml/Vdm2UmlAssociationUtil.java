@@ -37,7 +37,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 
-@SuppressWarnings("deprecation")
 public class Vdm2UmlAssociationUtil
 {
 	public static class UnknownTypeDetector
@@ -186,13 +185,13 @@ public class Vdm2UmlAssociationUtil
 	{
 		if (type instanceof SSeqType) {
 			SSeqType seqType = (SSeqType) type;
-			if (seqType.getSeqof().kindPType().equals(SBasicType.kindPType))
+			if (seqType.getSeqof() instanceof SBasicType)
 			{
 				return true;
 			}
 		} else if (type instanceof ASetType) {
 			ASetType setType = (ASetType) type;
-			if (setType.getSetof().kindPType().equals(SBasicType.kindPType))
+			if (setType.getSetof() instanceof SBasicType)
 			{
 				return true;
 			}
@@ -356,7 +355,7 @@ public class Vdm2UmlAssociationUtil
 			Map<String, Class> classes, UmlTypeCreator utc)
 	{
 		PType qualifierType = unfoldSetSeqTypes(type);
-		if (qualifierType.kindPType().equals(SBasicType.kindPType))
+		if (qualifierType instanceof SBasicType)
 		{
 			utc.create(class_, qualifierType);
 			return utc.getUmlType(qualifierType);

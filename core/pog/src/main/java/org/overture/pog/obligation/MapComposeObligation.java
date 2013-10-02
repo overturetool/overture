@@ -36,7 +36,7 @@ public class MapComposeObligation extends ProofObligation
 
 	public MapComposeObligation(ACompBinaryExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_COMPOSE, ctxt);
+		super(exp, POType.MAP_COMPOSE, ctxt, exp.getLocation());
 		
 		/**
 		 * The obligation for m1 comp m2 is:  rng m2 subset dom m1

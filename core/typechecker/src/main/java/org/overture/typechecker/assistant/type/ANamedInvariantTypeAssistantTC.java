@@ -40,7 +40,7 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 
 		try
 		{
-			type.setType( PTypeAssistantTC.typeResolve(type.getType(),root, rootVisitor, question));
+			type.setType( af.createPTypeAssistant().typeResolve(type.getType(),root, rootVisitor, question));
 			return type;
 		}
 		catch (TypeCheckException e)

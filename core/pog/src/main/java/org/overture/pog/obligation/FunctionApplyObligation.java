@@ -37,7 +37,7 @@ public class FunctionApplyObligation extends ProofObligation
 
 	public FunctionApplyObligation(PExp root, List<PExp> args, ILexNameToken prename, IPOContextStack ctxt)
 	{
-		super(root, POType.FUNC_APPLY, ctxt);
+		super(root, POType.FUNC_APPLY, ctxt, root.getLocation());
 		
 		/**
 		 * If the root is an expression that evaluates to a function, we do not know

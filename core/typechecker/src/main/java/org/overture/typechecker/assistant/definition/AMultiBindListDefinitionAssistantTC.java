@@ -18,14 +18,6 @@ public class AMultiBindListDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void unusedCheck(AMultiBindListDefinition d)
-//	{
-//		if (d.getDefs() != null)
-//		{
-//			PDefinitionListAssistantTC.unusedCheck(d.getDefs());
-//		}
-//
-//	}
 
 	public static PType getType(AMultiBindListDefinition def)
 	{

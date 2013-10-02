@@ -34,7 +34,7 @@ public class WhileLoopObligation extends ProofObligation
 
 	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt)
 	{
-		super(stmt, POType.WHILE_LOOP, ctxt);
+		super(stmt, POType.WHILE_LOOP, ctxt, stmt.getLocation());
 		AWhileStm whileStmt = new AWhileStm();
 		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());

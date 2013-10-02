@@ -121,7 +121,7 @@ public class KindFinder extends AnswerAdaptor<String>
 	public String caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
@@ -169,7 +169,7 @@ public class KindFinder extends AnswerAdaptor<String>
 	public String caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	@Override
 	public String caseAStateDefinition(AStateDefinition node)

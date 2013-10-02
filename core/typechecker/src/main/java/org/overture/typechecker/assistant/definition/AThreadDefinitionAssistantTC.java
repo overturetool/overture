@@ -1,11 +1,9 @@
 package org.overture.typechecker.assistant.definition;
 
-import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
@@ -21,18 +19,6 @@ public class AThreadDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(AThreadDefinition d)
-	{
-		List<PDefinition> result = new Vector<PDefinition>();
-		result.add(d.getOperationDef());
-		return result;
-	}
-	
-//	public static void implicitDefinitions(AThreadDefinition d, Environment env)
-//	{
-//		d.setOperationDef(getThreadDefinition(d));
-//
-//	}
 
 	public AExplicitOperationDefinition getThreadDefinition(
 			AThreadDefinition d)

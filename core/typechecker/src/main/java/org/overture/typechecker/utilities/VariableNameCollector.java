@@ -103,7 +103,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-		return node.getState().apply(this); //TODO: Is this applicable?
+		return node.getState().apply(THIS); //TODO: Is this applicable?
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		//TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
 		AInheritedDefinitionAssistantTC.checkSuperDefinition(node);
 
-		for (ILexNameToken vn : node.getSuperdef().apply(this))
+		for (ILexNameToken vn : node.getSuperdef().apply(THIS))
 		{
 			names.add(vn.getModifiedName(node.getName().getModule()));
 		}

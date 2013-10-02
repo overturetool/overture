@@ -46,7 +46,7 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt)
 	{
-		super(ass, POType.STATE_INVARIANT, ctxt);
+		super(ass, POType.STATE_INVARIANT, ctxt, ass.getLocation());
 		
 		if (ass.getClassDefinition() != null)
 		{
@@ -73,7 +73,7 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AClassInvariantDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After instance variable initializers
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
@@ -81,7 +81,7 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AExplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After def.getName() constructor body
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
@@ -89,7 +89,7 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AImplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After def.getName() constructor body
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
 //    	valuetree.setContext(ctxt.getContextNodeList());

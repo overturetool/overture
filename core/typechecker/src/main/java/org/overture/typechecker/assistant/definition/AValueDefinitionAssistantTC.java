@@ -22,42 +22,6 @@ public class AValueDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void unusedCheck(AValueDefinition d)
-//	{
-//		if (d.getUsed()) // Indicates all definitions exported (used)
-//		{
-//			return;
-//		}
-//
-//		if (d.getDefs() != null)
-//		{
-//			for (PDefinition def : d.getDefs())
-//			{
-//				PDefinitionAssistantTC.unusedCheck(def);
-//			}
-//		}
-//
-//	}
-
-	public static List<PDefinition> getDefinitions(AValueDefinition d)
-	{
-		return d.getDefs();
-	}
-
-//	public static void typeResolve(AValueDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question) throws AnalysisException
-//	{
-//
-//		// d.setType(getType(d));
-//		if (d.getType() != null)
-//		{
-//			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-//			PPatternAssistantTC.typeResolve(d.getPattern(), rootVisitor, question);
-//			updateDefs(d, question);
-//		}
-//
-//	}
 
 	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
 	{

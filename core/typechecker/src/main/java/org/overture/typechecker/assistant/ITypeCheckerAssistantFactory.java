@@ -11,10 +11,10 @@ import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AClassInvariantDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -27,15 +27,10 @@ import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssista
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ANamedTraceDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.APerSyncDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ARenamedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -132,8 +127,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
-	AClassInvariantDefinitionAssistantTC createAClassInvariantDefinitionAssistant();
-
 	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
 
 	AEqualsDefinitionAssistantTC createAEqualsDefinitionAssistant();
@@ -158,14 +151,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AMultiBindListDefinitionAssistantTC createAMultiBindListDefinitionAssistant();
 
-	AMutexSyncDefinitionAssistantTC createAMutexSyncDefinitionAssistant();
-
-	ANamedTraceDefinitionAssistantTC createANamedTraceDefinitionAssistant();
-
-	APerSyncDefinitionAssistantTC createAPerSyncDefinitionAssistant();
-
-	ARenamedDefinitionAssistantTC createARenamedDefinitionAssistant();
-
 	AStateDefinitionAssistantTC createAStateDefinitionAssistant();
 
 	ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant();
@@ -173,8 +158,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
 
 	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
-
-	AUntypedDefinitionAssistantTC createAUntypedDefinitionAssistant();
 
 	AValueDefinitionAssistantTC createAValueDefinitionAssistant();
 
@@ -385,32 +368,34 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PDefinition> getSelfDefinitionFinder();
 
 	IAnswer<PTypeSet> getExitTypeCollector();
-	
-	IQuestionAnswer<TypeFinder.Newquestion,PDefinition> getTypeFinder();
-	
-	IQuestionAnswer<NameFinder.Newquestion,PDefinition> getNameFinder();
-	
+
+	IQuestionAnswer<TypeFinder.Newquestion, PDefinition> getTypeFinder();
+
+	IQuestionAnswer<NameFinder.Newquestion, PDefinition> getNameFinder();
+
 	AnswerAdaptor<Boolean> getFunctionChecker();
-	
+
 	IAnswer<Boolean> getOperationChecker();
-	
+
 	IAnswer<String> getKindFinder();
-	
+
 	IAnswer<Boolean> getUpdatableChecker();
-	
+
 	IAnswer<Boolean> getCallableOperationChecker();
-	
+
 	AnalysisAdaptor getUsedMarker();
-	
+
 	IQuestion<Environment> getImplicitDefinitionFinder();
-	
+
 	IAnswer<Boolean> getUsedChecker();
-	
+
 	IAnswer<Boolean> getPTypeFunctionChecker();
-	
+
 	AnalysisAdaptor getUnusedChecker();
-	
+
 	IAnswer<PDefinition> getDereferer();
-	
+
 	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
+
+	IAnswer<SMapType> getMapTypeFinder();
 }

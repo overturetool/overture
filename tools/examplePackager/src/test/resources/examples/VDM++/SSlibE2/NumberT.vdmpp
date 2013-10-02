@@ -1,0 +1,59 @@
+class NumberT is subclass of TestDriver 
+
+functions
+public tests : () -> seq of TestCase
+tests () == 
+	[ new NumberT01(),  new NumberT02(),  new NumberT03()
+	];
+end NumberT
+
+class NumberT01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		(Number`min[int](lambda x:int, y:int & x < y)(-3)(4) = -3 and
+		Number`min[int](lambda x:int, y:int & x < y)(4)(-3) = -3 and
+		Number`min[nat](lambda x:nat, y:nat & x < y)(2)(10) = 2 and
+		Number`min[int](lambda x:int, y:int & x < y)(0)(0) = 0 and
+		Number`max[real](lambda x:real, y:real & x < y)(0.001)( -0.001) = 0.001 and
+		Number`max[real](lambda x:real, y:real & x < y)(-0.001)( 0.001) = 0.001 and
+		Number`max[real](lambda x:real, y:real & x < y)(0.0)(0.0) = 0.0)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "NumberT01:\tSummary of integer.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end NumberT01
+
+class NumberT02 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		 Number`isComputable[char]('a') = false and
+		 Number`isComputable[int](-9) = true and
+		 Number`isComputable[nat](0) = true and
+		 Number`isComputable[nat1](1) = true and
+		 Number`isComputable[real](1.234) = true and
+		 Number`isComputable[rat](1.234) = true
+;
+protected setUp: () ==> ()
+setUp() == TestName := "NumberT02:\tIs computable?";
+protected tearDown: () ==> ()
+tearDown() == return;
+end NumberT02
+
+class NumberT03 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	return
+		 Number`min[seq of int](lambda s1: seq of int, s2 : seq of int & len s1 < len s2)([1,2])([1,2,3])  = [1, 2]  and
+		 Number`max[seq of int](lambda s1: seq of int, s2 : seq of int & len s1 < len s2)([1,2])([1,2,3])  = [1, 2, 3] 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "NumberT03:\tType is not computable, but...";
+protected tearDown: () ==> ()
+tearDown() == return;
+end NumberT03

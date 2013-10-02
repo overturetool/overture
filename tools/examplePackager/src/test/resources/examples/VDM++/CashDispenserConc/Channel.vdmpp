@@ -1,0 +1,228 @@
+\section{The Channel Class}
+
+The Channel class models communication between a client (a Local Resource) 
+and a server (a Local Till). It is a one place buffer which receives requests 
+from the client, which the server receives and processes. The server generates 
+a response to a given request which is sent to the channel, and this response 
+is then collected by the client. The communication channel is considered to 
+have failed if within some predefined timeout interval starting from the 
+moment a request was received, and response has not been received by the channel.
+
+\begin{vdm_al}
+class Channel
+\end{vdm_al}
+
+The channel has four instance variables: one each for storing incoming request 
+and responses, a reference to a Timer object for timing out communication, and 
+the a counter (curTime) which whenever a response is expected from the server, 
+counts the time since the request was received from the client.
+
+\begin{vdm_al}
+instance variables
+  req : [Request] := nil;
+  resp :[Response] := nil;
+  timer : Timer := new Timer();
+  curTime : nat := 0;
+\end{vdm_al}
+
+The constant value timeout is an arbitrary constant used to model the amount 
+of time we are prepared to wait before we conclude that the communication 
+channel has failed.
+
+\begin{vdm_al}
+values
+  timeout = 1500;
+\end{vdm_al}
+
+A number of types are defined which are used to represent the values that are 
+communicated through the channel.
+
+\begin{vdm_al}
+types
+\end{vdm_al}
+
+A request from a client consists of a command to the server, and any arguments 
+relating to that command.
+
+\begin{vdm_al}
+  public Request :: command : Command
+                    data : set of ReqData;
+\end{vdm_al}
+
+A command is a quote value, corresponding to the possible methods that may be 
+called in the CentralResource.
+
+\begin{vdm_al}
+  public Command = <TriesExceeded> | <ResetTries> | <IncTries> | 
+                   <GetBalance> | <Withdrawal> | <PostStmt> | 
+                  <IsLegalCard>;
+\end{vdm_al}
+
+An element of type ReqData represents a possible argument to a method in CentralResource.
+
+\begin{vdm_al}
+  public ReqData = CardId | AccountId | Amount;
+  public CardId :: val : Card`CardId;
+  public AccountId :: val : Account`AccountId;
+  public Amount :: val : nat;
+\end{vdm_al}
+
+A response consists of the command which is being responded to,  and the value 
+computed by the corresponding method in CentralResource.
+
+\begin{vdm_al}
+  public Response :: command : Command
+              data : RespData;
+  public RespData = [nat] | bool;
+\end{vdm_al}
+
+The operations available in this class represent the access operations on the 
+buffer, together with a couple of auxilliary operations.
+  
+\begin{vdm_al}
+operations
+\end{vdm_al}
+
+A client sends puts a request into the channel using SendRequest. This takes a 
+request and stores it in the appropriate instance variable,  then resets the 
+timer so that a timeout can be generated if necessary. As this is a one place 
+buffer, we can only accept a request if there is not already one in the buffer 
+(specified in the pre-condition).
+
+\begin{vdm_al}
+  public SendRequest : Request ==> ()
+  SendRequest(r) ==
+    (req := r;
+     timer.Start())
+  pre req = nil;
+\end{vdm_al}
+
+The server removes requests from the buffer using ReceiveRequest. This takes 
+the request from the buffer and resets the corresponding instance variable 
+to be nil.
+
+\begin{vdm_al}
+  public ReceiveRequest : () ==> Request
+  ReceiveRequest() ==
+    let r = req in
+    (req := nil;
+     return r);
+\end{vdm_al}
+
+The server sends a response to the buffer using SendResponse. The resp instance 
+variable is set to the value of the given response, and the timer is stopped as 
+the response has been received. Again, the pre-condition specifies that a response 
+can only be accepted if there is not already one waiting to be received by the client.
+
+\begin{vdm_al}
+  public SendResponse : Response ==> ()
+  SendResponse(r) ==
+    (resp := r;
+     timer.Stop())
+  pre resp = nil;
+\end{vdm_al}
+
+The client receives a response using ReceiveResponse. This delivers a response 
+(if one has been received), or the nil value (representing a timeout). 
+
+\begin{vdm_al}
+  public ReceiveResponse : () ==> [Response]
+  ReceiveResponse() ==
+    let r = resp in
+    (resp := nil;
+     return r);
+\end{vdm_al}
+
+The Wait operation is used for synchronization. Its meaning will become clear 
+when the synchronization constraints are described below.
+
+\begin{vdm_al}
+  public Wait: () ==> ()
+  Wait() == 
+    skip;
+\end{vdm_al}
+
+The operation CheckTime is executed periodically by the channel's thread, and 
+is used to update the curTime instance variable.
+
+\begin{vdm_al}
+  CheckTime: () ==> ()
+  CheckTime() ==
+    curTime := timer.GetTime()
+\end{vdm_al}
+
+A function is defined which is used to simplify expressions in the 
+synchronization constraints.The predicate AllReceived takes the number of 
+activations and completions of a send operation and the number of activations 
+and completions of a receive operation, and returns true if and only if all of 
+the send operations have completed, all of the receive operations have completed, 
+and there corresponds a send operation for each receive operation.
+
+\begin{vdm_al}
+functions
+
+  AllReceived : nat * nat * nat * nat -> bool
+  AllReceived(act_send, fin_send, act_rec, fin_rec) ==
+    act_send = fin_send and
+    act_rec = fin_rec and
+    (act_send + fin_send) = (act_send + fin_send);
+\end{vdm_al}
+
+Since a Channel object will be shared by both the client and the server, we 
+specify synchronization constraints to ensure that the integrity of the object 
+is preserved.
+
+A SendRequest can only be accepted if all previous SendRequests have been 
+received, all previous SendResponses have been received, and the number of 
+requests equals the number of responses. This ensures that no requests are 
+accepted while a response to a previous request is being processed.
+
+\end{vdm_al}
+sync
+  per SendRequest => 
+        AllReceived(#act(SendRequest), #fin(SendRequest),
+                    #act(ReceiveRequest), #fin(ReceiveRequest)) and
+        AllReceived(#act(SendResponse), #fin(SendResponse),
+                    #act(ReceiveResponse), #fin(ReceiveResponse)) and
+        #act(SendRequest) = #fin(ReceiveResponse);
+\end{vdm_al}
+
+The synchronization constraint on SendResponse is similar to SendRequest except 
+that the number of SendRequests previously received must be exactly one more 
+than the number of SendResponses previously received.
+
+\begin{vdm_al}
+sync
+  per SendResponse => 
+        AllReceived(#act(SendRequest), #fin(SendRequest),
+                    #act(ReceiveRequest), #fin(ReceiveRequest)) and
+        AllReceived(#act(SendResponse), #fin(SendResponse),
+                    #act(ReceiveResponse), #fin(ReceiveResponse)) and
+        #act(SendRequest) - #fin(SendResponse) = 1;
+\end{vdm_al}
+
+A request can only be received by the server if one has been placed in the 
+channel by the client. Until then a call to ReceiveRequest will block.
+
+\begin{vdm_al}
+  per ReceiveRequest => req <> nil;
+\end{vdm_al}
+
+The operation Wait is used by a client to check whether a response has been 
+received for a request. Thus it will be called by a client after sending a 
+request. This call will block until either a response has been received, or 
+the current time exceeds the timeout value.
+
+\begin{vdm_al}
+  per Wait => curTime > timeout or resp <> nil;
+\end{vdm_al}
+
+The only remaining part of the Channel class is its thread. This periodically 
+calls CheckTime to update the time counter. 
+
+\begin{vdm_al}
+thread
+  periodic(1000)(CheckTime)
+
+end Channel
+\end{vdm_al}

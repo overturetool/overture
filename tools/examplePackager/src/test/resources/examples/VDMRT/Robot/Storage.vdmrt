@@ -1,0 +1,171 @@
+class Storage
+ 
+types
+public  inDataType = nat * nat;
+ 
+values
+startIndex : nat = 1;
+destIndex : nat = 2;
+batCapIndex : nat = 3;
+instance variables
+ file : IO;
+  inputFileName : seq of char := "map.m";
+ inv inputFileName <> [];
+ outputFileName : seq of char;
+ inv outputFileName <> [];
+ inData : seq of inDataType := [];
+ public dest : Grid`Point;
+ public startingPoint : Grid`Point;
+ public battery : nat;
+ inv battery >= 0;
+ counter : nat;
+ public fields : nat; -- used as support in test
+ 
+inv startIndex > 0 and destIndex > 0 and batCapIndex > 0;
+operations
+ 
+ public Storage : () ==> Storage
+ Storage() ==
+ (
+   battery := 0;
+   file := new IO();
+   startingPoint := mk_Grid`Point(0,0);
+   outputFileName:= "TestRun.txt";
+   fields := 0;
+ );
+ 
+ 
+  public Load : seq of char ==> Grid
+ Load(newFileName) ==
+ (
+   inputFileName := newFileName;
+   file := new IO();
+   def mk_ (-,input) = file.freadval[seq of inDataType]( inputFileName) in
+   inData := input;
+        
+    return SetData(inData);
+ )
+ pre newFileName <> [];
+ 
+ private SetData : seq of inDataType ==> Grid
+ SetData(data) ==
+ (
+   def g = new Grid(mk_Grid`Point(0,0),mk_Grid`Point(100,100))
+   in
+   (
+   startingPoint := mk_Grid`Point(data(startIndex).#1, data(startIndex).#2);
+   dest := mk_Grid`Point(data(destIndex).#1,data(destIndex).#2);
+   battery := (inData(batCapIndex).#1);
+   fields := len data - 2; --just for test
+  let obsticales = { mk_Grid`Point(data(i).#1,inData(i).#2) |-> <Occupied> 
+                   | i in set {4, ...,len data}}      
+     in g.SetPointMP(obsticales);
+   return g;
+   )
+ 
+ )
+ pre startIndex in set inds (data) and 
+     destIndex in set inds (data) and 
+     batCapIndex in set inds (data);
+ 
+ public Save : Grid * seq of SteeringController`Route * Grid`Point * bool ==> ()
+ Save(g, routes,dest,b) ==
+ (
+   PrintLine("#--START--#");
+   PrintLine("#--Start Successfull Destination--#");
+   def - = file.fwriteval[bool * Grid`Point]
+                         (outputFileName,mk_(b, dest),<append>) 
+   in skip;   PrintLine("#--End Successfull Destination--#");
+   PrintLine("#--Start Grid--#");
+   for all x in set dom g.points
+   do
+   (
+           WriteMap(x,g.points(x));
+   );
+   PrintLine("#--End Grid--#");  
+    for all x in set inds routes
+   do
+   (
+     PrintLine("#--Start Route--#");  
+      PrintInt(x);
+     WriteRoute(routes(x));
+     PrintLine("#--End Reoute Grid--#");
+   );
+   PrintLine("#--END--#");
+ );
+ 
+private WriteMap: Grid`Point * Grid`PointAvalibility ==> ()
+WriteMap(g,p) ==
+(
+  file := new IO();
+  def - = file.fwriteval[Grid`Point * Grid`PointAvalibility]
+                        (outputFileName,mk_(g,p),<append>) in skip;
+);
+ 
+ 
+private WriteRoute: SteeringController`Route ==> ()
+WriteRoute(r) ==
+(
+  file := new IO();
+  for all x in set inds r
+  do(
+      def - = file.fwriteval[Grid`Point]( outputFileName,(r(x)),<append>) 
+      in skip;
+     );
+  
+ );
+ 
+private PrintInt: nat ==> ()
+PrintInt(i) ==
+(
+  file := new IO();
+  def - = file.fwriteval[nat]( outputFileName,i,<append>) in skip;
+);
+ 
+private PrintLine: seq of char  ==> ()
+PrintLine (line) ==
+(
+  file := new IO();
+  def - = file.fwriteval[seq of char]( outputFileName,line,<append>) in skip;
+);
+ 
+end Storage
+
+
+
+
+class StorageTest is subclass of TestCase
+ 
+instance variables
+private completeGrid : Grid;
+ 
+values
+ 
+operations
+
+ public StorageTest : seq of char ==> StorageTest
+ StorageTest(name) == TestCase(name);
+ 
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () ==
+    (
+      dcl tc : Storage:= new Storage();
+        completeGrid := tc.Load("testmap.txt");
+     AssertTrue(tc.fields = card dom completeGrid.points);
+      AssertTrue(tc.startingPoint = mk_Grid`Point(0,0));
+      AssertTrue(tc.dest = mk_Grid`Point(10,10));
+      
+      AssertTrue(<Occupied> = completeGrid.GetPointAvalibility(1,1));
+      AssertTrue(<Occupied> = completeGrid.GetPointAvalibility(2,2));
+      AssertTrue(<Occupied> = completeGrid.GetPointAvalibility(3,3));
+      AssertTrue(<Occupied> = completeGrid.GetPointAvalibility(4,4));
+   );
+    
+  
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end StorageTest

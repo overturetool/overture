@@ -1,0 +1,29 @@
+class TestCase
+
+instance variables
+
+	public TestName: seq of char := "** anonymous regression test **";
+
+operations
+public TestACase: () ==> bool
+TestACase() == 
+	(dcl	r: bool;
+	setUp();
+	r := test();
+	tearDown();
+	return r);
+	
+public getTestName: () ==> seq of char
+getTestName() == return TestName;
+
+protected test: () ==> bool
+test() == is subclass responsibility;
+
+protected setUp: () ==> ()
+setUp() == return;
+
+protected tearDown: () ==> ()
+tearDown() == return;
+
+end TestCase
+

@@ -7,10 +7,8 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.traces.SequenceTraceNode;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.typechecker.assistant.definition.ANamedTraceDefinitionAssistantTC;
 
-public class ANamedTraceDefinitionAssistantInterpreter extends
-		ANamedTraceDefinitionAssistantTC
+public class ANamedTraceDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -18,7 +16,6 @@ public class ANamedTraceDefinitionAssistantInterpreter extends
 	public ANamedTraceDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

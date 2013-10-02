@@ -9,7 +9,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class APatternTypePairAssistant
 {
@@ -38,7 +37,7 @@ public class APatternTypePairAssistant
 		{
 			result.setResolved(true);
 		}
-		result.setType(PTypeAssistantTC.typeResolve(result.getType(), null, rootVisitor, question));
+		result.setType(af.createPTypeAssistant().typeResolve(result.getType(), null, rootVisitor, question));
 
 	}
 

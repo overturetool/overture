@@ -44,7 +44,7 @@ public class OperationPostConditionObligation extends ProofObligation
 	public OperationPostConditionObligation(AExplicitOperationDefinition op,
 			IPOContextStack ctxt)
 	{
-		super(op, POType.FUNC_POST_CONDITION, ctxt);
+		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
 //		valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), null)));
 	}
@@ -52,7 +52,7 @@ public class OperationPostConditionObligation extends ProofObligation
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
 			IPOContextStack ctxt)
 	{
-		super(op, POType.FUNC_POST_CONDITION, ctxt);
+		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
 		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors())));
 	}
 

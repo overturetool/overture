@@ -43,11 +43,11 @@ public class AOperationTypeAssistantTC {
 
 			for (PType type: ot.getParameters())
 			{
-				fixed.add(PTypeAssistantTC.typeResolve(type, root, rootVisitor, question));
+				fixed.add(af.createPTypeAssistant().typeResolve(type, root, rootVisitor, question));
 			}
 
 			ot.setParameters(fixed);
-			ot.setResult(PTypeAssistantTC.typeResolve(ot.getResult(), root, rootVisitor, question));
+			ot.setResult(af.createPTypeAssistant().typeResolve(ot.getResult(), root, rootVisitor, question));
 			return ot;
 		}
 		catch (TypeCheckException e)

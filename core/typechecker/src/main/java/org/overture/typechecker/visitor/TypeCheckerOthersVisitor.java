@@ -83,7 +83,7 @@ public class TypeCheckerOthersVisitor extends
 		if (node.getBind() != null) {
 			if (node.getBind() instanceof ATypeBind) {
 				ATypeBind typebind = (ATypeBind) node.getBind();
-				typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+				typebind.setType(question.assistantFactory.createPTypeAssistant().typeResolve(typebind.getType(), null, rootVisitor, question));
 				
 				//resolve pattern such that it is resolved before it is cloned later in newAMultiBindListDefinition
 				if(node.getBind().getPattern()!=null)
@@ -410,7 +410,7 @@ public class TypeCheckerOthersVisitor extends
 
 		if (PTypeAssistantTC.isFunction(type)) {
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
-			PTypeAssistantTC.typeResolve(ft, null, rootVisitor,
+			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, rootVisitor,
 					new TypeCheckInfo(question.assistantFactory,question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,
 					ft, question.env, NameScope.NAMESANDSTATE, unique,
@@ -419,7 +419,7 @@ public class TypeCheckerOthersVisitor extends
 
 		if (PTypeAssistantTC.isOperation(type)) {
 			AOperationType ot = PTypeAssistantTC.getOperation(type);
-			PTypeAssistantTC.typeResolve(ot, null, rootVisitor,
+			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, rootVisitor,
 					new TypeCheckInfo(question.assistantFactory,question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node,
 					ot, question.env, NameScope.NAMESANDSTATE, unique,

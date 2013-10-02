@@ -187,7 +187,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	IProofObligationList obligations = defaultSUnaryExp(node, question);
 	PExp exp = node.getExp();
 
-	// TODO RWL This is a hack. The new ast LexNameToken's toString method
+	// RWL This is a hack. The new ast LexNameToken's toString method
 	// includes the module e.g. like Test`b for variables
 	// which the old one did not. Hence proof obligations with variable
 	// names are different as "Test`b" is just b with the old proof

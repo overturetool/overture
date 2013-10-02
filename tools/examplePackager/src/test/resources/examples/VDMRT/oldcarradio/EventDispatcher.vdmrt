@@ -1,0 +1,82 @@
+\begin{vdm_al}
+class EventDispatcher is subclass of Logger
+
+instance variables
+  queues : map seq of char to AbstractTask := {|->};
+  messages : seq of AbstractTaskEvent := [];
+  interrupts: seq of AbstractTaskEvent := []
+
+operations
+  -- Register is used to maintain a callback link to all the tasks in the 
+  -- system and the environment. the link is used by the SendNetwork and 
+  -- SendInterrupt operations and the event loop of the EventDispatcher 
+  -- (see thread)
+  public Register: AbstractTask ==> ()
+  Register (pat) ==
+    queues := queues munion { pat.getName() |-> pat }
+    pre pat.getName() not in set dom queues;
+
+  -- setEvent is used to maintain temporary queues for the event loop of
+  -- EventDispatcher. it is called by the SendNetwork and SendInterrupt 
+  -- operations which are in turn called from the other tasks in the 
+  -- system and the environment.
+  setEvent: AbstractTask * Event ==> ()
+  setEvent (pat, pe) == 
+    if isofclass(NetworkEvent,pe)
+    then messages := messages ^ [new AbstractTaskEvent(pat,pe)]
+    else interrupts := interrupts ^ [new AbstractTaskEvent(pat,pe)];
+
+  -- getEvent is used to retrieve events from the temporary event 
+  -- queues if they are available. otherwise getEvent is blocked 
+  -- (see sync) which will also block the event handler of 
+  -- EventDispatcher
+  getEvent: () ==> AbstractTask * Event
+  getEvent () ==
+    if len interrupts > 0
+    then ( dcl res : AbstractTaskEvent := hd interrupts;
+           interrupts := tl interrupts;
+           return res.getFields() )
+    else ( dcl res : AbstractTaskEvent := hd messages;
+           messages := tl messages;
+           return res.getFields() );
+
+  -- SendNetwork is typically called by a system or an environment
+  -- task. The event is logged for post analysis and it is added
+  -- to the temporary event queue for handling by the event loop
+  public SendNetwork: seq of char * seq of char * nat ==> ()
+  SendNetwork (psrc, pdest, pid) ==
+    duration (0)
+      ( dcl pbt: AbstractTask := queues(pdest);
+        printNetworkEvent(psrc, pdest, pid);
+        setEvent(pbt, new NetworkEvent(pid)) )
+    pre pdest in set dom queues;
+
+  -- SendInterrupt is typically called by a system or an environment
+  -- task. The event is logged for post analysis and it is added
+  -- to the temporary event queue for handling by the event loop
+  public SendInterrupt: seq of char * seq of char * nat ==> ()
+  SendInterrupt (psrc, pdest, pid) ==
+    duration (0)
+      ( dcl pbt: AbstractTask := queues(pdest);
+        printInterruptEvent(psrc, pdest, pid);
+        setEvent(pbt, new InterruptEvent(pid)) )
+    pre pdest in set dom queues;
+
+-- the event handler of EventDispatcher. note that we can simulate the overhead
+-- of the operating system, which is typically also running on our system,
+-- by changing the duration below. note that the while loop is blocked (and
+-- this thread will be suspended) if there are no events in either queue
+thread
+  duration (0)
+    while (true) do
+      def mk_ (pat,pe) = getEvent() in
+        pat.setEvent(pe)
+
+sync
+  -- setEvent and getEvent are mutually exclusive
+  mutex(setEvent, getEvent);
+  -- the thread shall be blocked until there is at least one message available
+  per getEvent => len messages > 0 or len interrupts > 0
+
+end EventDispatcher
+\end{vdm_al}

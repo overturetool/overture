@@ -129,7 +129,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return ((AImportedDefinition) node).getDef().apply(this);
+		return ((AImportedDefinition) node).getDef().apply(THIS);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return ((ARenamedDefinition) node).getDef().apply(this);
+		return ((ARenamedDefinition) node).getDef().apply(THIS);
 	}
 
 	@Override

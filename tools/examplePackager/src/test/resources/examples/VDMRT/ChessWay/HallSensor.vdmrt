@@ -1,0 +1,72 @@
+% HallSensor.vdmrt
+
+\subsubsection{Detecting wheel rotation -- the \texttt{HallSensor} class}
+
+Rotation of the wheel is implemented using so-called Hall sensors, which detect the presence
+of the permanent magnets inside the direct drive motors. Three of these sensors
+are available per wheel, which are equidistant spread among the circumference, one each
+every 120~degrees. This architecture implies that every 60~degrees of rotation, the
+status of at least one sensor will change. The \texttt{HallSensor} class captures
+the three sensors attached to a single \texttt{Wheel}.
+
+\begin{vdm_al}
+class HallSensor
+
+instance variables
+  -- the logical name of the wheel
+  mName : seq of char;
+
+  -- link to the environment
+  mEnvironment : Environment;
+
+  -- link to the motor
+  mWheel : Wheel
+
+functions
+  private convert: real -> nat
+  convert (prad) ==
+    -- convert radians into degrees modulo 360
+    let degrees = floor (prad * MATH`pi / 180) in degrees mod 360
+
+operations
+  public HallSensor: seq of char * Environment * Wheel
+    ==> HallSensor
+  HallSensor (pName, pEnvironment, pWheel) ==
+    ( mName := pName;
+      mEnvironment := pEnvironment;
+      mWheel := pWheel );
+
+  private setSensor: seq of char * bool ==> ()
+  setSensor (pSensor, pValue) ==
+    if pValue
+    then mEnvironment.setValue(pSensor, 1.0)
+    else mEnvironment.setValue(pSensor, 0.0);
+
+  public setSensors: bool * bool * bool ==> ()
+  setSensors (ph1, ph2, ph3) ==
+    ( setSensor(mName^"_HALL1", ph1);
+      setSensor(mName^"_HALL2", ph2);
+      setSensor(mName^"_HALL3", ph3) );
+
+  public evaluate: () ==> ()
+  evaluate () ==
+    -- retrieve and convert the current wheel position
+    def position = convert(mWheel.position) in
+      cases (position div 60):
+        0 -> setSensors(true,  false, true),
+        1 -> setSensors(true,  false, false),
+        2 -> setSensors(true,  true,  false),
+        3 -> setSensors(false, true,  false),
+        4 -> setSensors(false, true,  true),
+        5 -> setSensors(false, false, true),
+        others -> error
+      end
+
+end HallSensor
+\end{vdm_al}
+
+The \texttt{evaluate} operation is called by the \texttt{Environment}. The
+\texttt{HallSensor} will retrieve the current wheel angular position and
+calculates the new sensor values. These values are pushed back to the
+environment, using the cascaded \texttt{setSensors} and
+\texttt{setSensor} operations.

@@ -1,0 +1,228 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		20/4 - 2008
+-- Updated:
+-- Description: 	HostController is the central server
+-----------------------------------------------
+
+--
+-- class definition
+--
+class HostController
+
+values
+
+  private OVERSHOOT_CNT : nat = 2;
+
+--
+-- instance variables
+--
+instance variables
+
+  private finished    : bool := false;
+
+  private TargetTemp  : nat;
+  private Temp        : nat := 0;
+  private TargetHumid : nat;
+  private Humid       : nat := 0;
+  private NodeList    : map nat to NetworkTypes`nodeType := { |-> };
+  private Algo        : algType := <NONE>;
+
+  private incTempCnt  : nat := 0;
+  private decTempCnt  : nat := 0;
+  private decHumidCnt : nat := 0;
+
+--
+-- Types definition section
+--
+types   
+
+  public algType = <THTW> | <TTW> | <TT> | <TW> | <HW> | <NONE>;
+
+--
+-- Operations definition section
+--
+operations
+
+public HostController: nat * nat ==> HostController
+HostController(t, h) ==
+ (TargetTemp := t;
+  TargetHumid := h;
+ );
+
+public UpdateValues: () ==> ()
+UpdateValues() ==
+  --cycles(1E9)
+ (for all r in set rng NodeList 
+  do
+   (if (r = <HUMIDSENSOR>)
+    then Humid := HA`HumidNode.ReadValue();
+    if (r = <TEMPSENSOR>)
+    then Temp := HA`TempNode.ReadValue();
+   );
+ );
+
+public GetAlgo: () ==> algType
+GetAlgo() ==
+  return Algo;
+
+public GetTemp: () ==> nat
+GetTemp() ==
+  return Temp;
+
+public GetHumid: () ==> nat
+GetHumid() ==
+  return Humid;
+
+public Algorithm: () ==> ()
+Algorithm() ==
+  --cycles(1E11)
+ (if (Humid > TargetHumid)
+  then decHumidCnt := decHumidCnt + 1
+  elseif (Temp > TargetTemp)
+  then decTempCnt := decTempCnt + 1
+  elseif (Temp < TargetTemp)
+  then incTempCnt := incTempCnt + 1;
+
+  cases Algo:
+    <THTW> -> THTWAlgo(),
+    <TTW>  -> TTWAlgo(),
+    <TT>   -> TTAlgo(),
+    <TW>   -> TWAlgo(),
+    <HW>   -> HWAlgo(),
+    <NONE> -> return
+  end
+ );
+
+-- Avoid overshooting target values
+private THTWAlgo : () ==> ()
+THTWAlgo () == 
+ (if (incTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<INC>);
+        incTempCnt := 0;
+       )
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
+       )
+  else if (decHumidCnt >= OVERSHOOT_CNT)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        decHumidCnt := 0;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<NONE>);
+       );
+ );
+
+private TTWAlgo: () ==> ()
+TTWAlgo() ==
+ (if (incTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<INC>);
+        incTempCnt := 0;
+       )
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+        HA`ThermNode.SetCorrection(<NONE>);
+       );
+ );
+
+private TTAlgo: () ==> ()
+TTAlgo() ==
+ (if (incTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<INC>);
+        incTempCnt := 0;
+       )
+  else if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`ThermNode.SetCorrection(<DEC>);
+        decTempCnt := 0;
+       )
+  else (HA`ThermNode.SetCorrection(<NONE>);
+       );
+ );
+
+private TWAlgo: () ==> ()
+TWAlgo() ==
+ (if (decTempCnt >= OVERSHOOT_CNT)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        decTempCnt := 0;
+       )
+  else if (decHumidCnt >= OVERSHOOT_CNT)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        decHumidCnt := 0;
+       )
+  else (HA`WinNode.SetCorrection(<CLOSE>);
+       );
+ );
+
+private HWAlgo: () ==> ()
+HWAlgo() ==
+ (if (decHumidCnt >= OVERSHOOT_CNT)
+  then (HA`WinNode.SetCorrection(<OPEN>);
+        decHumidCnt := 0;
+       );
+ );
+
+private UpdateAlgorithm: () ==> ()
+UpdateAlgorithm() ==
+ (if (rng NodeList = {})
+  then Algo := <NONE>
+  elseif (rng NodeList = {<TEMPSENSOR>, <HUMIDSENSOR>, <THERMOSTAT>, <WINDOW>})
+  then Algo := <THTW>
+  elseif (rng NodeList = {<TEMPSENSOR>, <THERMOSTAT>, <WINDOW>})
+  then Algo := <TTW>
+  elseif (rng NodeList = {<TEMPSENSOR>, <THERMOSTAT>})
+  then Algo := <TT>
+  elseif (rng NodeList = {<TEMPSENSOR>, <WINDOW>})
+  then Algo := <TW>
+  elseif (rng NodeList = {<HUMIDSENSOR>, <WINDOW>})
+  then Algo := <HW>
+  else Algo := <NONE>;
+ );
+
+public AddNode: nat * NetworkTypes`nodeType ==> ()
+AddNode(id, type) ==
+ (NodeList := NodeList ++ {id |-> type};
+  UpdateAlgorithm();
+ )
+pre id not in set dom NodeList
+post card(dom NodeList) = card(dom NodeList~) + 1;
+
+public RemoveNode: nat * NetworkTypes`nodeType ==> ()
+RemoveNode(id, type) ==
+ (if (NodeList(id) = type)
+  then NodeList := {id} <-: NodeList;
+  UpdateAlgorithm();
+ )
+pre id in set dom NodeList
+post card(dom NodeList) = card(dom NodeList~) - 1;
+
+private PeriodicOp: () ==> ()
+PeriodicOp() ==
+ (UpdateValues();
+  Algorithm();
+ );
+
+public IsFinished: () ==> ()
+IsFinished() == 
+  skip;
+
+public Finish: () ==> ()
+Finish() == 
+  finished := true;
+
+sync
+  mutex(AddNode,RemoveNode);
+  per IsFinished => finished;
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (PeriodicOp)
+
+end HostController

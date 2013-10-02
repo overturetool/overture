@@ -15,21 +15,6 @@ public class AInstanceVariableDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void typeResolve(AInstanceVariableDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question)
-//	{
-//
-//		try
-//		{
-//			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-//		} catch (TypeCheckException e)
-//		{
-//			PTypeAssistantTC.unResolve(d.getType());
-//			throw e;
-//		}
-//
-//	}
 
 	public static void initializedCheck(AInstanceVariableDefinition ivd)
 	{

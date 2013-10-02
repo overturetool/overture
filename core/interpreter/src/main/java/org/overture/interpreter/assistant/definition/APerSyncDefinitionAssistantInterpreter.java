@@ -4,10 +4,8 @@ import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.definition.APerSyncDefinitionAssistantTC;
 
-public class APerSyncDefinitionAssistantInterpreter extends
-		APerSyncDefinitionAssistantTC
+public class APerSyncDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -15,7 +13,6 @@ public class APerSyncDefinitionAssistantInterpreter extends
 	public APerSyncDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

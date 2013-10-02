@@ -34,7 +34,7 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseABracketType(ABracketType node) throws AnalysisException
 	{
-		return node.getType().apply(this);
+		return node.getType().apply(THIS);
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 		if (node instanceof ANamedInvariantType)
 			{
 				if (node.getOpaque()) return false;
-				return ((ANamedInvariantType) node).getType().apply(this); //PTypeAssistantTC.isFunction(type.getType());
+				return ((ANamedInvariantType) node).getType().apply(THIS); //PTypeAssistantTC.isFunction(type.getType());
 			}
 		//FIXME:Added code from gkanos in order to return a value;
 		else
@@ -66,7 +66,7 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	{
 		
 		
-		return node.getType().apply(this);
+		return node.getType().apply(THIS);
 	}
 	
 	@Override

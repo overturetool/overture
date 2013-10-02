@@ -1,0 +1,99 @@
+class Test
+ 
+operations
+ public Run: TestResult ==> ()
+ Run (-) == is subclass responsibility
+ 
+end Test
+ 
+ 
+class TestCase
+ is subclass of Test
+ 
+instance variables
+ name : seq of char
+ 
+operations
+ public TestCase: seq of char ==> TestCase
+ TestCase(nm) == name := nm;
+ 
+ public GetName: () ==> seq of char
+ GetName () == return name;
+ 
+ protected AssertTrue: bool ==> ()
+ AssertTrue (pb) == if not pb then exit <FAILURE>;
+ 
+ protected AssertFalse: bool ==> ()
+ AssertFalse (pb) == if pb then exit <FAILURE>;
+ 
+ public Run: TestResult ==> ()
+ Run (ptr) ==
+   trap <FAILURE>
+     with
+        ptr.AddFailure(self)
+     in
+       (SetUp();
+       RunTest();
+       TearDown());
+ 
+ protected SetUp: () ==> ()
+ SetUp () == is subclass responsibility;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == is subclass responsibility;
+ 
+ protected TearDown: () ==> ()
+ TearDown () == is subclass responsibility
+ 
+end TestCase
+ 
+ 
+class TestSuite
+ is subclass of Test
+ 
+instance variables
+ tests : seq of Test := [];
+ 
+operations
+ public Run: () ==> ()
+ Run () ==
+   (dcl ntr : TestResult := new TestResult();
+    Run(ntr);
+    ntr.Show());
+ 
+ public Run: TestResult ==> ()
+ Run (result) ==
+   for test in tests do
+     test.Run(result);
+ 
+ public AddTest: Test ==> ()
+ AddTest(test) ==
+   tests := tests ^ [test];
+ 
+end TestSuite
+ 
+ 
+class TestResult
+ 
+instance variables
+ failures : seq of TestCase := []
+ 
+operations
+ public AddFailure: TestCase ==> ()
+ AddFailure (ptst) == failures := failures ^ [ptst];
+ 
+ public Print: seq of char ==> ()
+ Print (pstr) ==
+   -- include IO.vpp from the VDMTools distribution (stdlib directory)
+   -- if you are getting a type error while checking this specification
+   def - = new IO().echo(pstr ^ "\n") in skip;
+   
+  public Show: () ==> ()
+ Show () ==
+   if failures = [] then
+     Print ("No failures detected")
+   else
+     for failure in failures do
+       Print (failure.GetName() ^ " failed")
+ 
+end TestResult

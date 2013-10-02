@@ -1,0 +1,122 @@
+\section{AOO mode requirements}
+
+The AOO code states
+
+\begin{itemize}
+\item[A] Pace the Atria
+\item[O] Without sensing the chambers
+\item[O] Without response to sensing
+\end{itemize}
+
+\noindent meaning that the pacemaker must pace the atria chamber discarding any sensed data from the chambers just regarding the programmable parameters.
+
+\paragraph{Programmable parameters requirements}
+
+\begin{itemize}
+\item LRL\ref{sym:LRL} shall be 60 ppm
+\item URL\ref{sym:URL} shall be 120 ppm
+\end{itemize}
+
+\paragraph{Purpose and abstraction level}
+
+The purpose is to model and validate the requirements of the Pacemaker AOO mode.
+
+\begin{itemize}
+\item Atrial Amplitude, Atrial Pulse With and Sensitivity are discarded because they are not relevant for the propose and don't add any understanding of the mode of pacing.
+\item In this mode the paced/sensed chamber is always the atria so the other chambers are discarded in the model.
+\end{itemize}
+
+\subsection*{VDM-SL module}
+
+ The model of the requirements start by defining the value of the LRL.
+
+\begin{vdm_al}
+module PacemakerAOO
+
+definitions 
+
+values 
+LRL     : nat = 60;
+\end{vdm_al}
+
+The input is a sequence and each element of it corresponds to a time unit abstraction (in this case 1 millisecond).
+
+\begin{vdm_al}
+types 
+SenseTimeline = map Time to Sense;
+
+Sense = <NONE> | <PULSE>;
+
+Time = nat1;
+\end{vdm_al}
+
+The output will be a sequence of the reactions to the input that can be either do nothing or discharge a pulse on the Atria.
+
+\begin{vdm_al}
+ReactionTimeline = map Time to Reaction; 
+
+Reaction = <NONE> | <PULSE>;
+   
+functions
+\end{vdm_al}
+
+\subsubsection*{From LRL to ppm}
+
+Considering that the ppm rate is given by the following formula
+ 
+\begin{displaymath}
+ppm = \frac{numberOfPulses}{timeInMinutes}
+\end{displaymath}
+
+\noindent and converting it to the modelled time unit: (milliseconds)
+
+\begin{displaymath}
+ppm = \frac{60000}{ms}
+\end{displaymath}
+We get
+\begin{displaymath}
+ms = \frac{60000}{ppm} 
+\end{displaymath}
+
+The period of the LRL is
+
+\begin{displaymath}
+LRLperiod_{observed} = \frac{numberOfPulses}{numberOfElementsObserved} 
+\end{displaymath}
+
+To compare the observed value to the LRL expressed in ppm, we need to convert it to milliseconds:
+
+\begin{displaymath}
+LRLperiod_{expected} = \frac{60000}{LRL}
+\end{displaymath}
+
+And because LRL is defined as a minimum, the pacemaker it is modelled as an implicit function stating that the ppm rate is larger or equal the LRL\cite{www:PacemakerCycles}.
+
+\begin{displaymath}
+LRLperiod_{observed} <= LRLperiod_{expected}
+\end{displaymath}
+
+
+
+\begin{vdm_al}                         
+Pacemaker (inp : SenseTimeline) r : ReactionTimeline
+post let m = {i | i in set dom r & r(i) = <PULSE>}
+     in card dom r = card dom inp 
+        and
+        card dom inp > 1 => r(1) = <PULSE> 
+        and
+        forall x in set m & (
+           (exists y in set m & y > x) => 
+                 (exists y in set m & abs(x - y) <= 60000/LRL and x <> y));
+
+end PacemakerAOO
+\end{vdm_al}
+
+\paragraph{Requirements review}
+
+\begin{itemize}
+\item LRL \textbf{Modelled}
+\item URL is the maximum rate at which the paced ventricular rate will track sensed atrial events. The URL interval is the minimum time between a ventricular event and the next ventricular pace.\textbf{Not modelled}\footnote{We discovered this requirement is contradictory and its a minor error in a table from the specification.}
+\end{itemize}
+
+

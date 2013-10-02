@@ -32,11 +32,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.IToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
@@ -198,7 +193,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);// FIXME: should I do this or use af.getDefinitionCollector()
+		return node.getSuperdef().apply(THIS);
 	}
 
 	@Override
@@ -265,35 +260,50 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 	public List<PDefinition> caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
-		return AStateDefinitionAssistantTC.getDefinitions((AStateDefinition) node);
+		return node.getStateDefs();
 	}
 
 	@Override
 	public List<PDefinition> caseAThreadDefinition(AThreadDefinition node)
 			throws AnalysisException
 	{
-		return AThreadDefinitionAssistantTC.getDefinitions((AThreadDefinition) node);
+		
+		List<PDefinition> result = new Vector<PDefinition>();
+		result.add(node.getOperationDef());
+		return result;
 	}
 
 	@Override
 	public List<PDefinition> caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
-		return ATypeDefinitionAssistantTC.getDefinitions((ATypeDefinition) node);
+		
+		List<PDefinition> defs = new Vector<PDefinition>();
+		defs.add(node);
+
+		if (node.getInvdef() != null)
+		{
+			defs.add(node.getInvdef());
+		}
+
+		return defs;
 	}
 
 	@Override
 	public List<PDefinition> caseAUntypedDefinition(AUntypedDefinition node)
 			throws AnalysisException
 	{
-		return AUntypedDefinitionAssistantTC.getDefinitions((AUntypedDefinition) node);
+	
+		List<PDefinition> result = new Vector<PDefinition>();
+		result.add(node);
+		return result;
 	}
 
 	@Override
 	public List<PDefinition> caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		return AValueDefinitionAssistantTC.getDefinitions((AValueDefinition) node);
+		return node.getDefs();
 	}
 
 	@Override

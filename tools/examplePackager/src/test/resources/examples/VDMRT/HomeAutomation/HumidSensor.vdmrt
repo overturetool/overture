@@ -1,0 +1,53 @@
+-----------------------------------------------
+-- Author:		Sune Wolff - 20022462
+-- Created:		21/4 - 2008
+-- Updated:
+-- Description: 	Humiditor sensor class for HomeAutomation project
+-----------------------------------------------
+
+--
+-- class definition
+--
+class HumidSensor is subclass of Sensor
+
+--
+-- instance variables
+--
+instance variables
+
+  finished : bool := false;
+
+--
+-- Operations definition section
+--
+operations
+
+public HumidSensor: nat * NetworkTypes`nodeType * nat ==> HumidSensor
+HumidSensor (id, type, val) ==
+ (ID := id;
+  Type := type;
+  Value := val;
+ );
+
+public PeriodicOp: () ==> ()
+PeriodicOp () ==
+  --cycles(1E3)
+  Value := World`env.ReadHumid();
+
+public IsFinished: () ==> ()
+IsFinished() ==
+  skip;
+
+sync
+  --mutex(PeriodicOp);	-- ADDED
+  per IsFinished => finished;
+
+--
+-- Thread definition section
+--
+thread
+
+-- period of thread (period, jitter, delay, offset)
+periodic(1000E6,0,0,0) (PeriodicOp)
+
+end HumidSensor

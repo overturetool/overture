@@ -69,7 +69,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 				if (root != null)
 					root.setInfinite(false);
 
-				fixed.add(PTypeAssistantTC.typeResolve(t, root, rootVisitor, question));
+				fixed.add(af.createPTypeAssistant().typeResolve(t, root, rootVisitor, question));
 
 				if (root != null)
 					type.setInfinite(type.getInfinite() && root.getInfinite());
@@ -322,7 +322,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 //		return getFunction(type) != null;
 //	}
 
-	public static AFunctionType getFunction(AUnionType type)
+	public  AFunctionType getFunction(AUnionType type)
 	{
 		if (!type.getFuncDone())
 		{

@@ -1,0 +1,526 @@
+/*
+Test Group 
+	test of Hashtable
+*/
+----------------------------------------------------
+class StringObj is subclass of CommonDefinition
+
+instance variables
+public content : seq of char;
+
+functions
+public hashCode : () -> int
+hashCode() == 
+	let c = getContent() in
+	if  c <> nil then
+		len c mod 17
+	else
+		-1;
+
+public equals : Object -> bool
+equals(anObject) == if isofclass(StringObj, anObject)
+                   then self.getContent() = anObject.getContent()
+                   else false;
+
+operations
+public StringObj : seq of char ==> StringObj
+StringObj(aString) ==
+	(
+	content := aString;
+	return self
+	);
+
+public getContent : () ==> [seq of char]
+getContent() == 
+	if isofclass(StringObj, self) then 
+		return content
+	else 
+		return nil;
+
+end StringObj
+----------------------------------------------------
+class IntObj is subclass of CommonDefinition
+
+instance variables
+public content : int;
+
+functions
+public hashCode : () -> int
+hashCode() == 
+	let c = getContent() in
+	if c <> nil then
+		c mod 13
+	else
+		-1;
+
+public equals : Object -> bool
+equals(anObject) == if isofclass(IntObj, anObject)
+                   then self.getContent() = anObject.getContent()
+                   else false;
+
+operations
+public IntObj : int ==> IntObj
+IntObj(i) ==
+	(
+	content := i;
+	return self
+	);
+	
+public getContent : () ==> [int]
+getContent() == 
+	if isofclass(IntObj, self) then 
+		return content
+	else 
+		return nil;
+
+end IntObj
+----------------------------------------------------
+class HashtableT is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests() == 
+	[ 
+	new HashtableT52(), new HashtableT53(), new HashtableT54(),
+	new HashtableT55(), new HashtableT56(), new HashtableT57(),
+	new HashtableT01(), new HashtableT02(), new HashtableT03(),
+	new HashtableT04(), 
+	new HashtableT05(), new HashtableT06(),
+	new HashtableT07()
+	];
+end HashtableT
+----------------------------------------------------
+
+class HashtableT01 is subclass of TestCase, CommonDefinition
+operations 
+
+protected test: () ==> bool
+test() == 
+	let	h1 = new Hashtable(),
+		k1 = new IntObj(1),
+		k2 = new IntObj(2),
+		k3 = new IntObj(3),
+		h2 =
+			new Hashtable({
+				k1 |-> new StringObj("Shin Sahara"), 
+				k2 |-> new StringObj("Kei Sato"), 
+				k3 |-> new StringObj("Hiroshi Sakoh")
+			})
+	in
+	return 
+		h1.getBuckets() = { |-> } and
+		h2.get(k1).equals(new StringObj("Shin Sahara")) and
+		h2.get(k2).equals(new StringObj("Kei Sato")) and
+		h2.get(k3).equals(new StringObj("Hiroshi Sakoh")) and
+		h2.get(new IntObj(1)).equals(new StringObj("Shin Sahara")) and
+		h2.get(new IntObj(2)).equals(new StringObj("Kei Sato")) and
+		h2.get(new IntObj(3)).equals(new StringObj("Hiroshi Sakoh")) 
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT01:\tConstructor test.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT01
+---------------------------------------
+
+class HashtableT02 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	h1 = 
+			new Hashtable({
+				new IntObj(1) |-> new StringObj("Shin Sahara"), 
+				new IntObj(2) |->new StringObj("Kei Sato"), 
+				new IntObj(3) |-> new StringObj("Hiroshi Sakoh")
+			}),
+		h2 = 
+			new Hashtable({
+				new StringObj("a") |->new IntObj(1),  
+				new StringObj("b") |-> new IntObj(2), 
+				new StringObj("c") |-> new IntObj(3)
+			})
+	in
+	return 
+		h1.contains(new StringObj("Shin Sahara")) and
+		h1.contains(new StringObj("Kei Sato")) and
+		h1.contains(new StringObj("Shin Sakoh")) = false and
+		h1.containsKey(new IntObj(1)) and
+		h1.containsKey(new IntObj(4)) = false and
+		h2.contains(new IntObj(3)) and
+		h2.contains(new IntObj(7)) = false and
+		h2.containsKey(new StringObj("a")) and
+		h2.containsKey(new StringObj("d")) = false
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT02:\tsearch test.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT02
+---------------------------------------
+
+class HashtableT03 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	h1 =
+			new Hashtable({
+				new IntObj(1) |-> new StringObj("Shin Sahara"), 
+				new IntObj(2) |->new StringObj("Kei Sato"), 
+				new IntObj(3) |-> new StringObj("Hiroshi Sakoh")
+			}),
+		h2 = 
+			new Hashtable({
+				new StringObj("a") |->new IntObj(1),  
+				new StringObj("b") |-> new IntObj(2), 
+				new StringObj("c") |-> new IntObj(3)
+			}),
+		deleteObj = h2.remove(new StringObj("b"))
+	in
+	(
+	h1.clear();
+	return 
+		h1.getBuckets() = {|->} and
+		deleteObj.equals(new IntObj(2)) and
+		h2.get(new StringObj("b")) = nil and
+		h2.contains(new IntObj(2)) = false and
+		h2.containsKey(new StringObj("b")) = false and
+		h2.remove(new StringObj("d")) = nil
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT03:\tDelete test.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT03
+---------------------------------------
+
+class HashtableT04 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	--let	h1 = new Hashtable(),
+	--	h2 = new Hashtable()
+	--in
+	(
+	dcl h1 : Hashtable := new Hashtable();
+	dcl h2 : Hashtable := new Hashtable();
+	h1.putAll({
+			new IntObj(1) |-> new StringObj("Shin Sahara"), 
+			new IntObj(2) |->new StringObj("Kei Sato"), 
+			new IntObj(14) |-> new StringObj("Hiroshi Sakoh")
+	});
+	h2.put(new StringObj("a"), new IntObj(1));
+	h2.put(new StringObj("b"), new IntObj(2));
+	def c = new StringObj("c") in (
+		h2.put(c, new IntObj(4));
+		h2.put(c, new IntObj(3))
+	);
+	return
+		h1.get(new IntObj(1)).equals(new StringObj("Shin Sahara"))  and
+		h1.get(new IntObj(2)).equals(new StringObj("Kei Sato")) and
+		h1.get(new IntObj(14)).equals(new StringObj("Hiroshi Sakoh")) and
+		h1.get(new IntObj(4)) = nil and  
+		h2.get(new StringObj("a")).equals(new IntObj(1)) and
+		h2.get(new StringObj("b")).equals(new IntObj(2)) and
+		h2.get(new StringObj("c")).equals(new IntObj(3)) and 
+		h2.get(new StringObj("d")) = nil 
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT04:\tTest of put, get.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT04
+---------------------------------------
+
+class HashtableT05 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	h1 = new Hashtable(),
+		h2 = new Hashtable(),
+		h1k1 = new IntObj(1),
+		h1k2 = new IntObj(2),
+		h1k3 = new IntObj(14),
+		h1v1 = new StringObj("Shin Sahara"),
+		h1v2 = new StringObj("Kei Sato"),
+		h1v3 = new StringObj("Hiroshi Sakoh"),
+		h2k1 = new StringObj("a"),
+		h2k2 = new StringObj("b"),
+		h2k3 = new StringObj("c"),
+		h2v1 = new IntObj(1),
+		h2v2 = new IntObj(2),
+		h2v3 = new IntObj(18)
+		
+	in
+	(
+	h1.putAll({
+			h1k1 |-> h1v1, 
+			h1k2 |-> h1v2, 
+			h1k3 |-> h1v3
+	});
+	h2.put(h2k1, h2v1);
+	h2.put(h2k2, h2v2);
+	h2.put(h2k3, h2v3);
+	let	keySet1 = h1.keySet(),
+		valueSet1 = h1.valueSet(),
+		keySet2 = h2.keySet(),
+		valueSet2 = h2.valueSet()
+	in
+	return
+		keySet1 = {h1k1, h1k2, h1k3} and
+		valueSet1 = {h1v1, h1v2, h1v3} and
+		keySet2 = {h2k1, h2k2, h2k3} and
+		valueSet2 = {h2v1, h2v2, h2v3}
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT05:\tTest of getting keys and values.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT05
+---------------------------------------
+
+class HashtableT06 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	h1 = new Hashtable(),
+		h1k1 = new IntObj(1),
+		h1k2 = new IntObj(14),
+		h1k3 = new IntObj(16),
+		h1k4 = new IntObj(27),
+		h1v1 = new StringObj("a"),
+		h1v2 = new StringObj("b"),
+		h1v3 = new StringObj("c")
+	in
+	(
+	h1.putAll({
+			h1k1 |-> h1v1, 
+			h1k2 |-> h1v2, 
+			h1k3 |-> h1v3
+	});
+	let	- = h1.remove(new IntObj(14)) 
+	in
+	h1.put(h1k4, h1v3);
+	return
+		h1.keySet() = {h1k1, h1k3, h1k4} and
+		h1.valueSet() = {h1v1, h1v3, h1v3}
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT06:\tTest when hashCode overlaps.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT06
+---------------------------------------
+
+class HashtableT07 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	h1 = new Hashtable(),
+		h2 = new Hashtable(),
+		h1k1 = new IntObj(1),
+		h1k2 = new IntObj(14),
+		h1k3 = new IntObj(16),
+		h1v1 = new StringObj("a"),
+		h1v2 = new StringObj("b"),
+		h1v3 = new StringObj("c")
+	in
+	(
+	h1.putAll({
+			h1k1 |-> h1v1, 
+			h1k2 |-> h1v2, 
+			h1k3 |-> h1v3
+	});
+	h2.putAll({
+			h1k1 |-> h1v1, 
+			h1k2 |-> h1v2, 
+			h1k3 |-> h1v3
+	});
+	let	- = h1.remove(new IntObj(1)),
+		- = h1.remove(new IntObj(14)),
+		- = h1.remove(new IntObj(16)),
+		- = h2.remove(new IntObj(14))
+	in
+	return
+		h1.isEmpty() and
+		h1.size() = 0 and
+		h2.isEmpty() = false and
+		h2.size() = 2 
+		
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT07:\tTest of size.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT07
+---------------------------------------
+
+class HashtableT52 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode = lambda x : int & x mod 13,
+		p1 = Hashtable`PutAll[int, seq of char]({ |-> })(aHashCode)(
+				{1 |-> "Sahara", 2 |-> "Sato", 14 |-> "Sakoh"}
+			),
+		c1 = Hashtable`Contains[int, seq of char](p1)
+	in
+	return
+		c1("Sahara") and
+		c1("Sato") and
+		c1("Sakoh") and
+		c1("") = false
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT52:\tFunctional finding.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT52
+---------------------------------------
+
+class HashtableT53 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode1 = lambda x : int & x mod 13,
+		aHashCode2 = lambda x : seq of char & if x = "" then "" else Sequence`take[char](1)(x),
+		- = Hashtable`PutAll[int, seq of char]({ |-> })(aHashCode1)(
+				{1 |-> "Shin Sahara", 2 |-> "Kei Sato", 14 |-> "Hiroshi Sakoh"}
+			),
+		h2 = Hashtable`PutAll[seq of char, int]({ |-> })(aHashCode2)(
+				{"a" |-> 1, "b" |-> 2, "c" |-> 3}
+			),
+		h3 = Hashtable`Clear[int, seq of char](),
+		afterRemoveh2 = Hashtable`Remove[seq of char, int](h2)(aHashCode2)("b"),
+		c1 = Hashtable`Contains[seq of char, int](afterRemoveh2),
+		ck1 = Hashtable`ContainsKey[seq of char, int](afterRemoveh2)
+	in
+	(
+	return 
+		h3 = {|->} and
+		Hashtable`Get[seq of char, int](afterRemoveh2)(aHashCode2)("b") = nil and
+		c1(2) = false and
+		c1(1) and
+		c1(3) and
+		ck1("b") = false and 
+		ck1("a") and
+		ck1("c") 
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT53:\tTest of functional remove.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT53
+---------------------------------------
+
+class HashtableT54 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode = lambda x : int & x mod 13,
+		put = Hashtable`Put[int, seq of char],
+		p1 = put({ |-> })(aHashCode)(1)("Sahara"),
+		p2 = put(p1)(aHashCode)(2)("Bush"),
+		p3 = put(p2)(aHashCode)(2)("Sato"),
+		p4 = put(p3)(aHashCode)(14)("Sakoh"),
+		get = Hashtable`Get[int, seq of char](p4)
+	in
+	return
+		get(aHashCode)(1) = "Sahara" and
+		get(aHashCode)(2) = "Sato" and
+		get(aHashCode)(14) = "Sakoh" and
+		get(aHashCode)(99) = nil
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT54:\tFunctional Put and Get.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT54
+---------------------------------------
+
+class HashtableT55 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode = lambda x : int & x mod 13,
+		put = Hashtable`Put[int, seq of char],
+		p1 = put({ |-> })(aHashCode)(1)("Sahara"),
+		p2 = put(p1)(aHashCode)(2)("Bush"),
+		p3 = put(p2)(aHashCode)(2)("Sato"),
+		p4 = put(p3)(aHashCode)(14)("Sakoh"),
+		k = Hashtable`KeySet[int, seq of char],
+		v = Hashtable`ValueSet[int, seq of char]
+	in
+	return
+		k(p1) = {1} and
+		v(p1) = {"Sahara"} and
+		k(p2) = {1, 2} and
+		v(p2) = {"Sahara", "Bush"} and
+		k(p4) = {1,2,14} and
+		v(p4) = {"Sahara", "Sato", "Sakoh"}
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT55:\tFunctional getting information.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT55
+---------------------------------------
+
+class HashtableT56 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode1 = lambda x : int & x mod 13,
+		h1 = Hashtable`PutAll[int, seq of char]({ |-> })(aHashCode1)(
+				{1 |-> "Shin Sahara", 2 |-> "Kei Sato", 14 |-> "Hiroshi Sakoh", 27 |-> "Nishikawa"}
+			),
+		h2 = Hashtable`Remove[int, seq of char](h1)(aHashCode1)(14)
+	in
+	(
+	return
+		Hashtable`KeySet[int, seq of char](h2) = {1, 2, 27} and
+		Hashtable`ValueSet[int, seq of char](h2) = {"Shin Sahara",  "Kei Sato", "Nishikawa"}
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT56:\tWhen hashode overlapped.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT56
+---------------------------------------
+
+class HashtableT57 is subclass of TestCase, CommonDefinition
+operations 
+protected test: () ==> bool
+test() == 
+	let	aHashCode1 = lambda x : int & x mod 13,
+		remove = Hashtable`Remove[int, seq of char],
+		h1 = Hashtable`PutAll[int, seq of char]({ |-> })(aHashCode1)(
+				{1 |-> "Shin Sahara", 2 |-> "Kei Sato", 14 |-> "Hiroshi Sakoh"}
+			),
+		h2 = remove(h1)(aHashCode1)(1),
+		h3 = remove(h2)(aHashCode1)(2),
+		h4 = remove(h3)(aHashCode1)(14),
+		isempty = Hashtable`IsEmpty[int, seq of char],
+		size = Hashtable`Size[int, seq of char]
+	in
+	(
+	return
+		isempty(h4) and
+		size(h4) = 0 and
+		isempty(h3)  = false and
+		size(h3) = 1 and
+		size(h2) = 2 and
+		size(h1) = 3
+	)
+;
+protected setUp: () ==> ()
+setUp() == TestName := "HashtableT57:\tTest of functional Size.";
+protected tearDown: () ==> ()
+tearDown() == return;
+end HashtableT57
+---------------------------------------

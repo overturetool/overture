@@ -1,0 +1,72 @@
+\section{Logger class}
+
+\begin{vdm_al}
+
+class Logger
+
+types
+	public logType =  (CyberRail`String | TransportPlan | TP | Fnc | 
+	                   TransportPlan`DTO | seq of TransportPlan`Route | 
+	                   MessageTypes`MessageT | seq of TransportPlan | 
+	                   TokenDevice | seq of MessageTypes`MessageT | 
+	                   set of TransportPlan | nat | CyberRail`NavigationInput);
+
+	public TP::
+				depa:CyberRail`String
+				arri:CyberRail`String
+				route: seq of nat
+				tokenId: nat;
+
+	public Fnc::
+				methodName: CyberRail`String
+
+instance variables 
+	public static log : seq of logType := [];
+
+operations
+	public static writeTransportPlan : TransportPlan ==> ()
+	writeTransportPlan(o) ==
+	(
+		dcl list : seq of nat := [];
+		if len o.getRouteList() = 0 then
+			log := log ^ [mk_TP("NA","NA", [], o.getTokenId())] ^ ["\n"]
+		else
+		(
+ 			for r in o.getRouteList() do
+				list := list ^ [r.id_route];
+		log := log ^ [mk_TP( o.getRouteList()(1).departureLocation, 
+		                   (o.getRouteList())(len o.getRouteList()).
+		                       arrivalLocation, 
+		                   list, o.getTokenId())] ^ ["\n"];
+		) ;  
+	);
+
+	public static writeFnc : CyberRail`String ==> ()
+	writeFnc(fnc) ==
+	(
+		log := log ^ [mk_Fnc(fnc)]^  ["\n"];
+	);
+	
+	public static write : logType ==> () 
+	write(o)== 	( 
+		duration(0)(	
+		log := log ^ [o] ^ ["\n"];
+		Logger`flush();
+		);
+);
+
+	public static flush : () ==> ()
+	flush()== (
+	dcl io: IO := new IO();
+	 def - = io.fwriteval[seq of logType]("logger.log",log,<start>) in skip;
+	);
+
+	public static printLog : () ==> seq of logType	
+printLog() == return log;
+
+sync
+mutex(write);
+
+end Logger
+
+\end{vdm_al}
