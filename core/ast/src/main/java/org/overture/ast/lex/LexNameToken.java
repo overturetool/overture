@@ -216,7 +216,8 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 
 		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{
-			ClassLoader cls = ClassLoader.getSystemClassLoader(); 
+			//FIXME: How to call this code? We have no test cases that causes this to be execised and the class cannot load from Eclipse.
+			ClassLoader cls = this.getClass().getClassLoader();//ClassLoader.getSystemClassLoader(); 
 			try
 			{			
 				@SuppressWarnings("rawtypes")
@@ -228,9 +229,9 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 				return (Boolean) result;
 			} catch (Exception e)
 			{				
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
-			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
+//			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
 			
 			// if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
 			// {
