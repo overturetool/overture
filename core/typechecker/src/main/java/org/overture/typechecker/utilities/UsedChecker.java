@@ -5,6 +5,7 @@ import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
@@ -48,6 +49,20 @@ public class UsedChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return node.getUsed();
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 	
 //	if (d instanceof AExternalDefinition)

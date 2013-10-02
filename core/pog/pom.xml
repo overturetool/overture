@@ -14,7 +14,7 @@
 	<name>New Proof Obligation Generator</name>
 
 	<properties>
-		<astcreator.version>1.4.0</astcreator.version>
+		<astcreator.version>1.4.3</astcreator.version>
 	</properties>
 
 	<dependencies>

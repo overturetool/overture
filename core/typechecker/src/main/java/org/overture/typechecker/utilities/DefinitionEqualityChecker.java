@@ -10,6 +10,7 @@ import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -123,6 +124,18 @@ public class DefinitionEqualityChecker extends
 			return def.getName() != null && odef.getName() != null
 					&& def.getName().equals(odef.getName());
 		}
+		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node, Object question)
+	{
+		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node, Object question)
+	{
 		return false;
 	}
 }

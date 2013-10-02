@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ACallObjectStm;
@@ -246,6 +247,20 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet defaultPStm(PStm statement) throws AnalysisException
 	{
 		return new PTypeSet();
+	}
+
+	@Override
+	public PTypeSet createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public PTypeSet createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 
 }

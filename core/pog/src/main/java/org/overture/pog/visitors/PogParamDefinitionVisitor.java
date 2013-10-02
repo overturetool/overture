@@ -24,6 +24,7 @@ import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -688,6 +689,20 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		{
 			throw new POException(node, e.getMessage());
 		}
+	}
+
+	@Override
+	public IProofObligationList createNewReturnValue(INode node,
+			IPOContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public IProofObligationList createNewReturnValue(Object node,
+			IPOContextStack question)
+	{
+		return new ProofObligationList();
 	}
 
 }

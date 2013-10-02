@@ -16,6 +16,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
@@ -353,6 +354,20 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		return "undefined";
+	}
+
+	@Override
+	public String createNewReturnValue(INode arg0, PrettyPrinterEnv arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object arg0, PrettyPrinterEnv arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

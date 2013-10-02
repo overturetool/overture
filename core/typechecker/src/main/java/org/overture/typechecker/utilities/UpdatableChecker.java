@@ -10,6 +10,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -92,6 +93,20 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 
 }
