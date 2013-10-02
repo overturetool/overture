@@ -382,29 +382,37 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isSeq(PType type)
 	{
-		if (type instanceof SSeqType)
+		try
 		{
-			return true;
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getSeqBasisChecker());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.isSeq((ABracketType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isSeq((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isSeq((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isSeq((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.isSeq((AUnknownType) type);
+			return false;
 		}
-		return false;
+		
+//		if (type instanceof SSeqType)
+//		{
+//			return true;
+//		} else if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isSeq((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isSeq((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isSeq((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isSeq((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.isSeq((AUnknownType) type);
+//		}
+//		return false;
 	}
 
 	public static SSeqType getSeq(PType type)

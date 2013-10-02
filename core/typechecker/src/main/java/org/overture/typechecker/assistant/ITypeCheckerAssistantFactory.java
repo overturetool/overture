@@ -401,4 +401,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<SMapType> getMapTypeFinder();
 	
 	IAnswer<SSeqType> getSeqTypeFinder();
+	
+	AnswerAdaptor<Boolean> getSeqBasisChecker();
 }

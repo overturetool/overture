@@ -142,6 +142,7 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
+import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
@@ -1030,5 +1031,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<SSeqType> getSeqTypeFinder()
 	{
 		return new SeqTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getSeqBasisChecker()
+	{
+		return new SeqBasisChecker(this);
 	}
 }
