@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
@@ -141,6 +142,7 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
+import org.overture.typechecker.utilities.type.SeqTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1022,5 +1024,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<SMapType> getMapTypeFinder()
 	{
 		return new MapTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<SSeqType> getSeqTypeFinder()
+	{
+		return new SeqTypeFinder(this);
 	}
 }

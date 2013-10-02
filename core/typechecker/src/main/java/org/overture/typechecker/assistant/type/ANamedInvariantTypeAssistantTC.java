@@ -14,7 +14,6 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
@@ -136,14 +135,14 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 	
 	
 
-	public static boolean isMap(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isMap(type.getType());
-	}
+//	public static boolean isMap(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isMap(type.getType());
+//	}
 	
-	public static SMapType getMap(ANamedInvariantType type) {
-		return PTypeAssistantTC.getMap(type.getType());
-	}
+//	public static SMapType getMap(ANamedInvariantType type) {
+//		return PTypeAssistantTC.getMap(type.getType());
+//	}
 
 	public static boolean isSet(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;

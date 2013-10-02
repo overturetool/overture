@@ -409,31 +409,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static SSeqType getSeq(PType type)
 	{
-		if (type instanceof SSeqType)
+		try
 		{
-			return (SSeqType) type;
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getSeqTypeFinder());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.getSeq((ABracketType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getSeq((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getSeq((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getSeq((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getSeq((AUnknownType) type);
+			return null;
 		}
-		assert false : "cannot getSeq from non-seq";
-		return null;
-
 	}
 
 	public static boolean isMap(PType type)
@@ -445,29 +427,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return false;
 		}
-//		if (type instanceof SMapType)
-//		{
-//			return SMapTypeAssistantTC.isMap((SMapType) type);
-//		} else if (type instanceof ABracketType)
-//		{
-//			return ABracketTypeAssistantTC.isMap((ABracketType) type);
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.isMap((ANamedInvariantType) type);
-//			}
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.isMap((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return AUnionTypeAssistantTC.isMap((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
-//		}
-//		return false;
 	}
 
 	public static SMapType getMap(PType type)
@@ -479,30 +438,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return null;
 		}
-//		if (type instanceof SMapType)
-//		{
-//			return SMapTypeAssistantTC.getMap((SMapType) type);
-//		} else if (type instanceof ABracketType)
-//		{
-//			return ABracketTypeAssistantTC.getMap(((ABracketType) type));
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.getMap((ANamedInvariantType) type);
-//			}
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.getMap((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return AUnionTypeAssistantTC.getMap((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.getMap((AUnknownType) type);
-//		}
-//		assert false : "Can't getMap of a non-map";
-//		return null;
 	}
 
 	public static boolean isSet(PType type)

@@ -16,7 +16,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -85,13 +84,13 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 
 	
 
-	public static boolean isMap(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isMap(AUnknownType type) {
+//		return true;
+//	}
 
-	public static SMapType getMap(AUnknownType type) {
-		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
-	}
+//	public static SMapType getMap(AUnknownType type) {
+//		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
+//	}
 
 	public static boolean isSet(AUnknownType type) {
 		return true;
