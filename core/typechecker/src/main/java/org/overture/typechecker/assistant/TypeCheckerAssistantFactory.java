@@ -147,6 +147,7 @@ import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
+import org.overture.typechecker.utilities.type.SetBasisChecker;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1052,5 +1053,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnswerAdaptor<Boolean> getOperationBasisChecker()
 	{
 		return new OperationBasisChecker(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getSetBasisChecker()
+	{
+		return new SetBasisChecker(this);
 	}
 }
