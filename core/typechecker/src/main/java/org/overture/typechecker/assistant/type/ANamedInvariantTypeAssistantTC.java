@@ -127,9 +127,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.isSeq(type.getType());
 	}
 	
-	public static SSeqType getSeq(ANamedInvariantType type) {		
-		return PTypeAssistantTC.getSeq(type.getType());
-	}
+//	public static SSeqType getSeq(ANamedInvariantType type) {		
+//		return PTypeAssistantTC.getSeq(type.getType());
+//	}
 
 	
 	

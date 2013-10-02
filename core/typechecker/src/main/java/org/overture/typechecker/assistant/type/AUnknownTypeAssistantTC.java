@@ -77,10 +77,10 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return true;
 	}
 	
-	public static SSeqType getSeq(AUnknownType type)
-	{
-		return AstFactory.newASeqSeqType(type.getLocation()); // empty
-	}
+//	public static SSeqType getSeq(AUnknownType type)
+//	{
+//		return AstFactory.newASeqSeqType(type.getLocation()); // empty
+//	}
 
 	
 
