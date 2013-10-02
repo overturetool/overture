@@ -143,6 +143,7 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
+import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
@@ -1045,5 +1046,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<AOperationType> getOperationTypeFinder()
 	{
 		return new OperationTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getOperationBasisChecker()
+	{
+		return new OperationBasisChecker(this);
 	}
 }

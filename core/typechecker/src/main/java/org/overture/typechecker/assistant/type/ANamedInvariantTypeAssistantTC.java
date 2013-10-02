@@ -111,10 +111,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
-	public static boolean isOperation(ANamedInvariantType type) {
-		if(type.getOpaque()) return false;
-		return PTypeAssistantTC.isOperation(type.getType());
-	}
+//	public static boolean isOperation(ANamedInvariantType type) {
+//		if(type.getOpaque()) return false;
+//		return PTypeAssistantTC.isOperation(type.getType());
+//	}
 	
 //	public static AOperationType getOperation(ANamedInvariantType type) {		
 //		return PTypeAssistantTC.getOperation(type.getType());

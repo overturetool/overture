@@ -383,10 +383,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isOperation(AUnionType type)
 	{
-		return getOperation(type) != null;
+		return af.createAUnionTypeAssistant().getOperation(type) != null;
 	}
 
-	public static AOperationType getOperation(AUnionType type)
+	public AOperationType getOperation(AUnionType type)
 	{
 
 		if (!type.getOpDone())

@@ -62,9 +62,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
-	public static boolean isOperation(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isOperation(AUnknownType type) {
+//		return true;
+//	}
 	
 //	public static AOperationType getOperation(AUnknownType type) {
 //		return AstFactory.newAOperationType(type.getLocation(),new PTypeList(), AstFactory.newAUnknownType(type.getLocation()));

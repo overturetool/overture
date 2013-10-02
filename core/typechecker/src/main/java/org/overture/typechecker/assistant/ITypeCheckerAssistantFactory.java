@@ -406,4 +406,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AnswerAdaptor<Boolean> getSeqBasisChecker();
 	
 	IAnswer<AOperationType> getOperationTypeFinder();
+	
+	AnswerAdaptor<Boolean> getOperationBasisChecker();
 }
