@@ -404,30 +404,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static ASetType getSet(PType type)
 	{
-		if (type instanceof ASetType)
+		try
 		{
-			return ASetTypeAssistantTC.getSet((ASetType) type);
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getSetTypeFinder());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.getSet((ABracketType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getSet((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getSet((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getSet((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getSet((AUnknownType) type);
+			return null;
 		}
-		assert false : "Can't getSet of a non-set";
-		return null;
 	}
 
 	public static boolean isRecord(PType type)

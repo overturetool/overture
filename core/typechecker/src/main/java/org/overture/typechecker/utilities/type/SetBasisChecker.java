@@ -8,11 +8,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to determine if a type is a set type

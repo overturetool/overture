@@ -10,7 +10,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
@@ -93,9 +92,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return true;
 //	}
 
-	public static ASetType getSet(AUnknownType type) {
-		return AstFactory.newASetType(type.getLocation()); // empty
-	}
+//	public static ASetType getSet(AUnknownType type) {
+//		return AstFactory.newASetType(type.getLocation()); // empty
+//	}
 
 	public static boolean isClass(AUnknownType type) {
 		return true;

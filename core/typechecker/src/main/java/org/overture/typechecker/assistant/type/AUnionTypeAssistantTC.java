@@ -132,7 +132,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getSeqType();
 	}
 
-	public static ASetType getSet(AUnionType type)
+	public ASetType getSet(AUnionType type)
 	{
 
 		ILexLocation location = type.getLocation();

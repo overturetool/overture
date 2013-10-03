@@ -10,7 +10,6 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -147,9 +146,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.isSet(type.getType());
 //	}
 	
-	public static ASetType getSet(ANamedInvariantType type) {
-		return PTypeAssistantTC.getSet(type.getType());
-	}
+//	public static ASetType getSet(ANamedInvariantType type) {
+//		return PTypeAssistantTC.getSet(type.getType());
+//	}
 
 	public static boolean isRecord(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;

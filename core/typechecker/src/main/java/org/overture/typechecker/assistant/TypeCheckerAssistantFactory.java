@@ -11,6 +11,7 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -148,6 +149,7 @@ import org.overture.typechecker.utilities.type.OperationTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
+import org.overture.typechecker.utilities.type.SetTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1059,5 +1061,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnswerAdaptor<Boolean> getSetBasisChecker()
 	{
 		return new SetBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<ASetType> getSetTypeFinder()
+	{
+		return new SetTypeFinder(this);
 	}
 }

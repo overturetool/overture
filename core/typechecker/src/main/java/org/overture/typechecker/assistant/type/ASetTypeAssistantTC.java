@@ -65,9 +65,9 @@ public class ASetTypeAssistantTC {
 //		return true;
 //	}
 
-	public static ASetType getSet(ASetType type) {
-		return type;
-	}
+//	public static ASetType getSet(ASetType type) {
+//		return type;
+//	}
 
 	public static boolean narrowerThan(ASetType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {
