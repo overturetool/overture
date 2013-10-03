@@ -389,21 +389,24 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		IProofObligationList obligations = node.getTuple().apply(mainVisitor, question);
 
-		PType type = node.getType();
+		PType puType = node.getTuple().getType();
 
-		if (type instanceof AUnionType)
+		if (PTypeAssistantTC.isUnion(puType))
 		{
-			AUnionType utype = (AUnionType) type;
+			AUnionType utype = (AUnionType) PTypeAssistantTC.getUnion(puType);
+
 			for (PType t : utype.getTypes())
 			{
 				if (t instanceof AProductType)
 				{
 					AProductType aprodType = (AProductType) t;
-					if (aprodType.getTypes().size() < node.getField().getValue())
+					if (aprodType.getTypes().size() >= node.getField().getValue())
 					{
-						obligations.add(new TupleSelectObligation(node, aprodType, question));
+						// tuple selection is fine. do nothing and check the next one
+						continue;
 					}
 				}
+				obligations.add(new TupleSelectObligation(node.getTuple(), t, question));
 			}
 		}
 
