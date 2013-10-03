@@ -16,6 +16,6 @@
 
   <modules>
     <module>prettyprinter</module>
-    <module>prettyprintertest</module>	
+   
   </modules>
 </project>
