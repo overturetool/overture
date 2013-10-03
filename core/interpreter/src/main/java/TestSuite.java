@@ -1,11 +1,9 @@
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AOperationType;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;

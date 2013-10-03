@@ -64,9 +64,9 @@ public class SMapTypeAssistantTC {
 		return false;
 	}
 
-	public static boolean isMap(SMapType type) {		
-		return true;
-	}
+//	public static boolean isMap(SMapType type) {		
+//		return true;
+//	}
 	
 	public static SMapType getMap(SMapType type) {		
 		return type;
