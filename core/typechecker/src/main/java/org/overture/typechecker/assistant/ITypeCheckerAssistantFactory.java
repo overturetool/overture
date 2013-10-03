@@ -413,4 +413,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AnswerAdaptor<Boolean> getSetBasisChecker();
 	
 	IAnswer<ASetType> getSetTypeFinder();
+	
+	AnswerAdaptor<Boolean> getRecordTypeFinder();
+	
 }

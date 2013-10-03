@@ -146,6 +146,7 @@ import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.RecordTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
@@ -1067,5 +1068,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<ASetType> getSetTypeFinder()
 	{
 		return new SetTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getRecordTypeFinder()
+	{
+		return new RecordTypeFinder(this);
 	}
 }

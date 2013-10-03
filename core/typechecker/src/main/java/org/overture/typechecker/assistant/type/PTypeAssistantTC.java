@@ -415,26 +415,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isRecord(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.isRecord((ABracketType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getRecordTypeFinder());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isRecord((ANamedInvariantType) type);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.isRecord((ARecordInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isRecord((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isRecord((AUnionType) type);
+			return false;
 		}
-		return false;
 	}
 
 	public static ARecordInvariantType getRecord(PType type)
