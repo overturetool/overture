@@ -89,9 +89,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
 //	}
 
-	public static boolean isSet(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isSet(AUnknownType type) {
+//		return true;
+//	}
 
 	public static ASetType getSet(AUnknownType type) {
 		return AstFactory.newASetType(type.getLocation()); // empty

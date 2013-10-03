@@ -474,7 +474,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isSet(AUnionType type)
 	{
-		return getSet(type) != null;
+		return af.createAUnionTypeAssistant().getSet(type) != null;
 	}
 
 	public static boolean isRecord(AUnionType type)

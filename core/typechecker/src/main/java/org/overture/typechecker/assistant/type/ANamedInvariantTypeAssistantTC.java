@@ -142,10 +142,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.getMap(type.getType());
 //	}
 
-	public static boolean isSet(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isSet(type.getType());
-	}
+//	public static boolean isSet(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isSet(type.getType());
+//	}
 	
 	public static ASetType getSet(ANamedInvariantType type) {
 		return PTypeAssistantTC.getSet(type.getType());

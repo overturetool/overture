@@ -400,29 +400,6 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return false;
 		}
-//		if (type instanceof ASetType)
-//		{
-//			return ASetTypeAssistantTC.isSet((ASetType) type);
-//		} else if (type instanceof ABracketType)
-//		{
-//			return ABracketTypeAssistantTC.isSet((ABracketType) type);
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.isSet((ANamedInvariantType) type);
-//			}
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.isSet((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return AUnionTypeAssistantTC.isSet((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.isSet((AUnknownType) type);
-//		}
-//		return false;
 	}
 
 	public static ASetType getSet(PType type)

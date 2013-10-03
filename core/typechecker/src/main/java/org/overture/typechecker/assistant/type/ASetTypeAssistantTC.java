@@ -61,9 +61,9 @@ public class ASetTypeAssistantTC {
 		return false;
 	}
 
-	public static boolean isSet(ASetType type) {
-		return true;
-	}
+//	public static boolean isSet(ASetType type) {
+//		return true;
+//	}
 
 	public static ASetType getSet(ASetType type) {
 		return type;
