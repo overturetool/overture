@@ -1499,13 +1499,30 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		obligations.addAll(defaultSNumericBinaryExp((SNumericBinaryExp) node, question));
 
-		if (!(rExp instanceof AIntLiteralExp)
-				&& !(rExp instanceof ARealLiteralExp))
-		{
+		if (!neverZero(rExp)){
 			obligations.add(new NonZeroObligation(node.getLocation(), rExp, question));
 		}
 
 		return obligations;
+	}
+
+	private boolean neverZero(PExp exp)
+	{
+		if (exp instanceof AIntLiteralExp){
+			AIntLiteralExp il_Exp = (AIntLiteralExp) exp;
+			if (il_Exp.getValue().getValue()!=0)
+			{
+				return true;
+			}
+		}
+		if (exp instanceof ARealLiteralExp){
+			ARealLiteralExp rl_Exp = (ARealLiteralExp) exp;
+			if (rl_Exp.getValue().getValue()!=0)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
