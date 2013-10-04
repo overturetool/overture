@@ -191,7 +191,7 @@ public class SubTypeObligation extends ProofObligation
 
 	}
 	
-	private SubTypeObligation(PExp exp, PType etype, PType atype,
+	public SubTypeObligation(PExp exp, PType etype, PType atype,
 			IPOContextStack ctxt)
 	{
 		super(exp, POType.SUB_TYPE, ctxt, exp.getLocation());
