@@ -116,9 +116,9 @@ public class AClassTypeAssistantTC {
 		return false;
 	}
 
-	public static boolean isClass(AClassType type) {
-		return true;
-	}
+//	public static boolean isClass(AClassType type) {
+//		return true;
+//	}
 
 	public static SClassDefinition getClass(SClassDefinition type)
 	{

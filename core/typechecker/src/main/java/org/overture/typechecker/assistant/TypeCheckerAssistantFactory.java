@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -143,6 +144,8 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.type.ClassBasisChecker;
+import org.overture.typechecker.utilities.type.ClassTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
@@ -1082,5 +1085,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<ARecordInvariantType> getRecordTypeFinder()
 	{
 		return new RecordTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getClassBasisChecker()
+	{
+		return new ClassBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<AClassType> getClassTypeFinder()
+	{
+		return new ClassTypeFinder(this);
 	}
 }

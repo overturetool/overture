@@ -433,84 +433,53 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return null;
 		}
-//		if (type instanceof ABracketType)
-//		{
-//			return ABracketTypeAssistantTC.getRecord((ABracketType) type);
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.getRecord((ANamedInvariantType) type);
-//
-//			} else if (type instanceof ARecordInvariantType)
-//			{
-//				return ARecordInvariantTypeAssistantTC.getRecord((ARecordInvariantType) type);
-//			}
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return af.createAUnionTypeAssistant().getRecord((AUnionType) type);
-//			//return AUnionTypeAssistantTC.getRecord((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
-//		}
-//		assert false : "Can't getRecord of a non-record";
-//		return null;
 	}
 
 	public static boolean isClass(PType type)
 	{
-		if (type instanceof AClassType)
+		try
 		{
-			return AClassTypeAssistantTC.isClass((AClassType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getClassBasisChecker());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isClass((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isClass((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isClass((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.isClass((AUnknownType) type);
+			return false;
 		}
-		return false;
 	}
 
 	public static AClassType getClassType(PType type)
 	{
-		if (type instanceof AClassType)
+		try
 		{
-			if (type instanceof AClassType)
-			{
-				return (AClassType) type;
-			}
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getClassTypeFinder());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getClassType((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getClassType((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getClassType((AUnknownType) type);
+			return null;
 		}
-		assert false : "Can't getClass of a non-class";
-		return null;
+		
+//		if (type instanceof AClassType)
+//		{
+//			if (type instanceof AClassType)
+//			{
+//				return (AClassType) type;
+//			}
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.getClassType((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.getClassType((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.getClassType((AUnknownType) type);
+//		}
+//		assert false : "Can't getClass of a non-class";
+//		return null;
 
 	}
 

@@ -531,10 +531,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isClass(AUnionType type)
 	{
-		return getClassType(type) != null;
+		return af.createAUnionTypeAssistant().getClassType(type) != null;
 	}
 
-	public static AClassType getClassType(AUnionType type)
+	public AClassType getClassType(AUnionType type)
 	{
 		if (!type.getClassDone())
 		{

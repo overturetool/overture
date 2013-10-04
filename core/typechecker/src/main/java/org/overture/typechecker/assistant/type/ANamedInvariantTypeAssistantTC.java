@@ -9,7 +9,6 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -159,10 +158,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.getRecord(type.getType());
 //	}
 
-	public static boolean isClass(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isClass(type.getType());
-	}
+//	public static boolean isClass(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isClass(type.getType());
+//	}
 	
 	public static AClassType getClassType(ANamedInvariantType type) {
 		return PTypeAssistantTC.getClassType(type.getType());

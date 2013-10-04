@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -419,6 +420,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IAnswer<ARecordInvariantType> getRecordTypeFinder();
 	
+	AnswerAdaptor<Boolean> getClassBasisChecker();
 	
+	IAnswer<AClassType> getClassTypeFinder();
 	
 }
