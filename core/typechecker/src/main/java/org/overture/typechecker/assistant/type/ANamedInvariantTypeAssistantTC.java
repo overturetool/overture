@@ -150,10 +150,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.getSet(type.getType());
 //	}
 
-	public static boolean isRecord(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isRecord(type.getType());
-	}
+//	public static boolean isRecord(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isRecord(type.getType());
+//	}
 	
 	public static ARecordInvariantType getRecord(ANamedInvariantType type) {
 		return PTypeAssistantTC.getRecord(type.getType());

@@ -479,10 +479,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isRecord(AUnionType type)
 	{
-		return getRecord(type) != null;
+		return af.createAUnionTypeAssistant().getRecord(type) != null;
 	}
 
-	public static ARecordInvariantType getRecord(AUnionType type)
+	public ARecordInvariantType getRecord(AUnionType type)
 	{
 		if (!type.getRecDone())
 		{

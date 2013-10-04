@@ -7,9 +7,6 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 public class RecordTypeFinder extends TypeUnwrapper<Boolean>
 {
@@ -31,11 +28,13 @@ public class RecordTypeFinder extends TypeUnwrapper<Boolean>
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			return ANamedInvariantTypeAssistantTC.isRecord((ANamedInvariantType) type);
+			if (type.getOpaque()) return false;
+			return ((ANamedInvariantType) type).getType().apply(THIS);
 		} 
 		else if (type instanceof ARecordInvariantType)
 		{
-			return ARecordInvariantTypeAssistantTC.isRecord((ARecordInvariantType) type);
+			if (type.getOpaque()) return false;
+			return true;
 		}
 		else
 		{
@@ -45,7 +44,7 @@ public class RecordTypeFinder extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isRecord(type);
+		return af.createAUnionTypeAssistant().getRecord(type) != null;
 	}
 	
 	@Override

@@ -444,7 +444,8 @@ public class PTypeAssistantTC extends PTypeAssistant
 			return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
 		} else if (type instanceof AUnionType)
 		{
-			return AUnionTypeAssistantTC.getRecord((AUnionType) type);
+			return af.createAUnionTypeAssistant().getRecord((AUnionType) type);
+			//return AUnionTypeAssistantTC.getRecord((AUnionType) type);
 		} else if (type instanceof AUnknownType)
 		{
 			return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
