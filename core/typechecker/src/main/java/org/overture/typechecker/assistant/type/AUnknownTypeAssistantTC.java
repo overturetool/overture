@@ -1,15 +1,11 @@
 package org.overture.typechecker.assistant.type;
 
-import java.util.Vector;
-
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
@@ -109,8 +105,8 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return false;
 	}
 
-	public static ARecordInvariantType getRecord(AUnknownType type) {
-		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
-	}
+//	public static ARecordInvariantType getRecord(AUnknownType type) {
+//		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
+//	}
 	
 }

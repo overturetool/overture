@@ -11,6 +11,7 @@ import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -414,6 +415,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IAnswer<ASetType> getSetTypeFinder();
 	
-	AnswerAdaptor<Boolean> getRecordTypeFinder();
+	AnswerAdaptor<Boolean> getRecordBasisChecker();
+	
+	IAnswer<ARecordInvariantType> getRecordTypeFinder();
+	
+	
 	
 }

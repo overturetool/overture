@@ -417,7 +417,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getRecordTypeFinder());
+			return type.apply(af.getRecordBasisChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -426,32 +426,39 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static ARecordInvariantType getRecord(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.getRecord((ABracketType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getRecordTypeFinder());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getRecord((ANamedInvariantType) type);
-
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.getRecord((ARecordInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return af.createAUnionTypeAssistant().getRecord((AUnionType) type);
-			//return AUnionTypeAssistantTC.getRecord((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
+			return null;
 		}
-		assert false : "Can't getRecord of a non-record";
-		return null;
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.getRecord((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.getRecord((ANamedInvariantType) type);
+//
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				return ARecordInvariantTypeAssistantTC.getRecord((ARecordInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return af.createAUnionTypeAssistant().getRecord((AUnionType) type);
+//			//return AUnionTypeAssistantTC.getRecord((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
+//		}
+//		assert false : "Can't getRecord of a non-record";
+//		return null;
 	}
 
 	public static boolean isClass(PType type)

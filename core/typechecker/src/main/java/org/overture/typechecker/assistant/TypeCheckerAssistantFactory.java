@@ -11,6 +11,7 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -146,6 +147,7 @@ import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
@@ -1071,7 +1073,13 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 	
 	@Override
-	public AnswerAdaptor<Boolean> getRecordTypeFinder()
+	public AnswerAdaptor<Boolean> getRecordBasisChecker()
+	{
+		return new RecordBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<ARecordInvariantType> getRecordTypeFinder()
 	{
 		return new RecordTypeFinder(this);
 	}

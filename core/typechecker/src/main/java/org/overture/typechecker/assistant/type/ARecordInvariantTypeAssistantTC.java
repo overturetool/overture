@@ -108,9 +108,9 @@ public class ARecordInvariantTypeAssistantTC {
 //		return true;
 //	}
 	
-	public static ARecordInvariantType getRecord(ARecordInvariantType type) {		
-		return type;
-	}
+//	public static ARecordInvariantType getRecord(ARecordInvariantType type) {		
+//		return type;
+//	}
 
 	public static boolean narrowerThan(ARecordInvariantType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {		

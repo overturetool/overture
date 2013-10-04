@@ -155,9 +155,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.isRecord(type.getType());
 //	}
 	
-	public static ARecordInvariantType getRecord(ANamedInvariantType type) {
-		return PTypeAssistantTC.getRecord(type.getType());
-	}
+//	public static ARecordInvariantType getRecord(ANamedInvariantType type) {
+//		return PTypeAssistantTC.getRecord(type.getType());
+//	}
 
 	public static boolean isClass(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;
