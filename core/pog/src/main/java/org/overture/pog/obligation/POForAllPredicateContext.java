@@ -73,17 +73,18 @@ public class POForAllPredicateContext extends POForAllContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		AForAllExp forAll_exp = new AForAllExp();
+		
+		AForAllExp super_exp = super.getSuperContext(stitch);
 		
 		if (predicate !=null){
 			AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
-			forAll_exp.setPredicate(implies_exp);
+			super_exp.setPredicate(implies_exp);
 		}
 		else{
-			forAll_exp.setPredicate(stitch);
+			super_exp.setPredicate(stitch);
 		}
 		
-		return forAll_exp;
+		return super_exp;
 	}
 
 

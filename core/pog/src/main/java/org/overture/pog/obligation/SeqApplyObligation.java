@@ -49,11 +49,11 @@ public class SeqApplyObligation extends ProofObligation
 	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
 	{
 		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
-		AInSetBinaryExp inSetExp = new AInSetBinaryExp();
-		inSetExp.setLeft(arg.clone());
+		
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
 		indsExp.setExp(root.clone());
-		inSetExp.setRight(indsExp);
+	
+		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), indsExp);
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
 	

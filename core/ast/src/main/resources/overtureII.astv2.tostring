@@ -12,8 +12,8 @@ import org.overture.ast.util.ToStringUtil;
 %exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + "end)" 
 %exp->charLiteral =  "'" + $_value.getValue()$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
+%exp->exists = "(exists " + $Utils.listToString($[bindList]$)$+ " & " + [predicate] + ")"
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
-%exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
 %exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getFullName())$ + ")"
 %exp->fieldNumber = "(" + [tuple] + "." + [field] + ")"
 %exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
