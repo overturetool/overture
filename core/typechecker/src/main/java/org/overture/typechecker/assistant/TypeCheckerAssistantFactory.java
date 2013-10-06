@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
@@ -150,6 +151,8 @@ import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.ProductBasisChecker;
+import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
@@ -1097,5 +1100,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<AClassType> getClassTypeFinder()
 	{
 		return new ClassTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<AProductType> getProductTypeFinder()
+	{
+		return new ProductTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getProductBasisChecker()
+	{
+		return new ProductBasisChecker(this);
 	}
 }

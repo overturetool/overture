@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
@@ -423,5 +424,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AnswerAdaptor<Boolean> getClassBasisChecker();
 	
 	IAnswer<AClassType> getClassTypeFinder();
+	
+	IAnswer<AProductType> getProductTypeFinder();
+	
+	AnswerAdaptor<Boolean> getProductBasisChecker();
 	
 }

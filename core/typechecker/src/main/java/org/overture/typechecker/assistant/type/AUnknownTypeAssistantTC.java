@@ -3,7 +3,6 @@ package org.overture.typechecker.assistant.type;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
@@ -32,9 +31,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return AstFactory.newAProductType(type.getLocation(), tl);
 	}
 
-	public static AProductType getProduct(AUnknownType type) {
-		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
-	}
+//	public static AProductType getProduct(AUnknownType type) {
+//		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
+//	}
 
 	public static boolean isType(AUnknownType b,
 			Class<? extends PType> typeclass) {
@@ -92,13 +91,13 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return AstFactory.newASetType(type.getLocation()); // empty
 //	}
 
-	public static boolean isClass(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isClass(AUnknownType type) {
+//		return true;
+//	}
 	
-	public static AClassType getClassType(AUnknownType type){
-		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
-	}
+//	public static AClassType getClassType(AUnknownType type){
+//		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
+//	}
 
 	public static boolean narrowerThan(AUnknownType type,
 			PAccessSpecifier accessSpecifier) {		

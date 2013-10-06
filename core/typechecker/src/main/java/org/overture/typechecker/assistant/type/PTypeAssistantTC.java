@@ -455,87 +455,52 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return null;
 		}
-		
-//		if (type instanceof AClassType)
-//		{
-//			if (type instanceof AClassType)
-//			{
-//				return (AClassType) type;
-//			}
-//		} else if (type instanceof SInvariantType)
-//		{
-//			if (type instanceof ANamedInvariantType)
-//			{
-//				return ANamedInvariantTypeAssistantTC.getClassType((ANamedInvariantType) type);
-//			}
-//		} else if (type instanceof AOptionalType)
-//		{
-//			return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
-//		} else if (type instanceof AUnionType)
-//		{
-//			return AUnionTypeAssistantTC.getClassType((AUnionType) type);
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return AUnknownTypeAssistantTC.getClassType((AUnknownType) type);
-//		}
-//		assert false : "Can't getClass of a non-class";
-//		return null;
-
 	}
 
 	public static AProductType getProduct(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.getProduct((ABracketType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getProductTypeFinder());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getProduct((AOptionalType) type);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.getProduct((AProductType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getProduct((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type);
+			return null;
 		}
-		assert false : "cannot getProduct from non-product type";
-		return null;
+		
 	}
 
 	public static boolean isProduct(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.isProduct((ABracketType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getProductBasisChecker());
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.isProduct((AProductType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isProduct((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return true;
+			return false;
 		}
-		return false;
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isProduct((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.isProduct((AProductType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isProduct((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return true;
+//		}
+//		return false;
 	}
 
 	public static boolean narrowerThan(PType type,

@@ -81,9 +81,9 @@ public class AProductTypeAssistantTC {
 		return false;
 	}
 
-	public static AProductType getProduct(AProductType type) {
-		return type;
-	}
+//	public static AProductType getProduct(AProductType type) {
+//		return type;
+//	}
 
 	public static boolean isProduct(AProductType type) {
 		return true;
