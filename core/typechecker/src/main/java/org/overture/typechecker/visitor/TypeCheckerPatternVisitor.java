@@ -15,7 +15,7 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends
-		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
+AbstractTypeCheckVisitor {
 
 	/**
 	 * 
@@ -71,7 +71,7 @@ public class TypeCheckerPatternVisitor extends
 
 		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor,
 				question);
-		PType type = PTypeAssistantTC.typeResolve(node.getType(), null,
+		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null,
 				rootVisitor, question);
 		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(),
 				node.getLocation());

@@ -3,12 +3,9 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.PPattern;
@@ -16,14 +13,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.PType;
-import org.overture.ast.types.SInvariantType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
-import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ATypeDefinitionAssistantTC
 {
@@ -35,63 +25,6 @@ public class ATypeDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(ATypeDefinition d)
-	{
-		List<PDefinition> defs = new Vector<PDefinition>();
-		defs.add(d);
-
-		if (d.getInvdef() != null)
-		{
-			defs.add(d.getInvdef());
-		}
-
-		return defs;
-	}
-
-	public static void typeResolve(ATypeDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-		try
-		{
-			d.setInfinite(false);
-			d.setInvType((SInvariantType) PTypeAssistantTC.typeResolve((SInvariantType) d.getInvType(), d, rootVisitor, question));
-
-			if (d.getInfinite())
-			{
-				TypeCheckerErrors.report(3050, "Type '" + d.getName()
-						+ "' is infinite", d.getLocation(), d);
-			}
-
-			// set type before in case the invdef uses a type defined in this one
-			d.setType(d.getInvType());
-
-			if (d.getInvdef() != null)
-			{
-				PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
-				PPatternAssistantTC.typeResolve(d.getInvPattern(), rootVisitor, question);
-			}
-
-			d.setType(d.getInvType());
-		} catch (TypeCheckException e)
-		{
-			PTypeAssistantTC.unResolve(d.getInvType());
-			throw e;
-		}
-	}
-
-//	public static void implicitDefinitions(ATypeDefinition d, Environment env)
-//	{
-//		if (d.getInvPattern() != null)
-//		{
-//			d.setInvdef(getInvDefinition(d));
-//			d.getInvType().setInvDef(d.getInvdef());
-//		} else
-//		{
-//			d.setInvdef(null);
-//		}
-//
-//	}
 
 	public AExplicitFunctionDefinition getInvDefinition(
 			ATypeDefinition d)

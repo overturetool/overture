@@ -27,7 +27,7 @@ public class ASetTypeAssistantTC {
 
 		try
 		{
-			type.setSetof(PTypeAssistantTC.typeResolve(type.getSetof(), root, rootVisitor, question));
+			type.setSetof(af.createPTypeAssistant().typeResolve(type.getSetof(), root, rootVisitor, question));
 			if (root != null) root.setInfinite(false);	// Could be empty
 			return type;
 		}

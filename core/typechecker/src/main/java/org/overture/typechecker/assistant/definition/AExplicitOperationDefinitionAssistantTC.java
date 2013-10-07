@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -16,17 +14,14 @@ import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitOperationDefinitionAssistantTC
 {
@@ -54,59 +49,7 @@ public class AExplicitOperationDefinitionAssistantTC
 		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
 	}
 
-	public static void typeResolve(AExplicitOperationDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
 
-		d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-
-		if (question.env.isVDMPP())
-		{
-			d.getName().setTypeQualifier(((AOperationType) d.getType()).getParameters());
-
-			if (d.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				d.getClassDefinition().setIsAbstract(true);
-			}
-		}
-
-		if (d.getPrecondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-		}
-
-		for (PPattern p : d.getParameterPatterns())
-		{
-			PPatternAssistantTC.typeResolve(p, rootVisitor, question);
-		}
-
-	}
-
-//	public static void implicitDefinitions(AExplicitOperationDefinition d,
-//			Environment base)
-//	{
-//
-//		d.setState(base.findStateDefinition());
-//
-//		if (d.getPrecondition() != null)
-//		{
-//			d.setPredef(getPreDefinition(d, base));
-//			PDefinitionAssistantTC.markUsed(d.getPredef());
-//		}
-//
-//		if (d.getPostcondition() != null)
-//		{
-//			d.setPostdef(getPostDefinition(d, base));
-//			PDefinitionAssistantTC.markUsed(d.getPostdef());
-//		}
-//
-//	}
 
 	@SuppressWarnings("unchecked")
 	public static AExplicitFunctionDefinition getPostDefinition(

@@ -29,7 +29,6 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
-import org.overture.ast.node.IToken;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
@@ -129,7 +128,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return ((AImportedDefinition) node).getDef().apply(this);
+		return ((AImportedDefinition) node).getDef().apply(THIS);
 	}
 
 	@Override
@@ -186,7 +185,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return ((ARenamedDefinition) node).getDef().apply(this);
+		return ((ARenamedDefinition) node).getDef().apply(THIS);
 	}
 
 	@Override
@@ -225,14 +224,14 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-	public PType defaultINode(INode node) throws AnalysisException
+	public PType createNewReturnValue(INode node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;
 	}
 
 	@Override
-	public PType defaultIToken(IToken node) throws AnalysisException
+	public PType createNewReturnValue(Object node)
 	{
 		assert false : "getDefinitions should never hit the default case";
 		return null;

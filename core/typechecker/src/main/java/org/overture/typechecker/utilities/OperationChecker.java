@@ -10,6 +10,7 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -64,21 +65,21 @@ public class OperationChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
@@ -86,6 +87,20 @@ public class OperationChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 
 }

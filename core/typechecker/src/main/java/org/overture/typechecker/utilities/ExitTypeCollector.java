@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ACallObjectStm;
@@ -54,8 +55,8 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 			throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet();
-		types.addAll(statement.getBody().apply(this));
-		types.addAll(statement.getAlways().apply(this));
+		types.addAll(statement.getBody().apply(THIS));
+		types.addAll(statement.getAlways().apply(THIS));
 		return types;
 	}
 
@@ -89,7 +90,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 
 		for (ACaseAlternativeStm c : statement.getCases())
 		{
-			types.addAll(c.apply(this));
+			types.addAll(c.apply(THIS));
 		}
 
 		return types;
@@ -99,14 +100,14 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet caseACaseAlternativeStm(ACaseAlternativeStm statement)
 			throws AnalysisException
 	{
-		return statement.getResult().apply(this);
+		return statement.getResult().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet caseAElseIfStm(AElseIfStm statement)
 			throws AnalysisException
 	{
-		return statement.getThenStm().apply(this);
+		return statement.getThenStm().apply(THIS);
 	}
 
 	@Override
@@ -129,37 +130,37 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet caseAForAllStm(AForAllStm statement)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet caseAForIndexStm(AForIndexStm statement)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet caseAForPatternBindStm(AForPatternBindStm statement)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet caseAIfStm(AIfStm statement) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet();
-		types.addAll(statement.getThenStm().apply(this));
+		types.addAll(statement.getThenStm().apply(THIS));
 
 		for (AElseIfStm stmt : statement.getElseIf())
 		{
-			types.addAll(stmt.apply(this));
+			types.addAll(stmt.apply(THIS));
 		}
 
 		if (statement.getElseStm() != null)
 		{
-			types.addAll(statement.getElseStm().apply(this));
+			types.addAll(statement.getElseStm().apply(THIS));
 		}
 
 		return types;
@@ -169,14 +170,14 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet caseALetBeStStm(ALetBeStStm statement)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet defaultSLetDefStm(SLetDefStm statement)
 			throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
@@ -201,7 +202,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 
 		for (PStm stmt : statement.getStatements())
 		{
-			types.addAll(stmt.apply(this));
+			types.addAll(stmt.apply(THIS));
 		}
 
 		return types;
@@ -211,7 +212,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet caseATixeStm(ATixeStm statement) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet();
-		types.addAll(statement.getBody().apply(this));
+		types.addAll(statement.getBody().apply(THIS));
 
 		for (ATixeStmtAlternative tsa : statement.getTraps())
 		{
@@ -224,28 +225,42 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	private Collection<? extends PType> exitCheck(ATixeStmtAlternative tsa)
 			throws AnalysisException
 	{
-		return tsa.getStatement().apply(this);
+		return tsa.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet caseATrapStm(ATrapStm statement) throws AnalysisException
 	{
 		PTypeSet types = new PTypeSet();
-		types.addAll(statement.getBody().apply(this));
-		types.addAll(statement.getWith().apply(this));
+		types.addAll(statement.getBody().apply(THIS));
+		types.addAll(statement.getWith().apply(THIS));
 		return types;
 	}
 
 	@Override
 	public PTypeSet caseAWhileStm(AWhileStm statement) throws AnalysisException
 	{
-		return statement.getStatement().apply(this);
+		return statement.getStatement().apply(THIS);
 	}
 
 	@Override
 	public PTypeSet defaultPStm(PStm statement) throws AnalysisException
 	{
 		return new PTypeSet();
+	}
+
+	@Override
+	public PTypeSet createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public PTypeSet createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 
 }

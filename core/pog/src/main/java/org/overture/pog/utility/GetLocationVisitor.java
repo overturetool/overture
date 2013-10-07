@@ -18,6 +18,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PImport;
 import org.overture.ast.modules.SValueImport;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -238,6 +239,20 @@ class GetLocationVisitor extends AnswerAdaptor<ILexLocation>
 				throws AnalysisException
 		{
 			return node.getLocation();
+		}
+
+		@Override
+		public ILexLocation createNewReturnValue(INode node)
+		{
+			assert false : "Should not happen";
+			return null;
+		}
+
+		@Override
+		public ILexLocation createNewReturnValue(Object node)
+		{
+			assert false : "Should not happen";
+			return null;
 		}
 
 	}

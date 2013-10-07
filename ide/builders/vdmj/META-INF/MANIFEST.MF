@@ -22,6 +22,7 @@ Export-Package: org.overture.ast.factory,
  org.overture.typechecker.assistant.type,
  org.overture.typechecker.util,
  org.overture.typechecker.utilities,
+ org.overture.typechecker.utilities.type,
  org.overture.typechecker.visitor
 Bundle-Activator: org.overture.ide.builders.vdmj.Activator
 Bundle-ClassPath: .,

@@ -1,13 +1,8 @@
 package org.overture.typechecker.assistant.definition;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AInstanceVariableDefinitionAssistantTC
 {
@@ -20,21 +15,6 @@ public class AInstanceVariableDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void typeResolve(AInstanceVariableDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
-	{
-
-		try
-		{
-			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-		} catch (TypeCheckException e)
-		{
-			PTypeAssistantTC.unResolve(d.getType());
-			throw e;
-		}
-
-	}
 
 	public static void initializedCheck(AInstanceVariableDefinition ivd)
 	{

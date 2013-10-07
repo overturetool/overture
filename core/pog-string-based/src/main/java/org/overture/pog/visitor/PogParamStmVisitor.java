@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -621,6 +622,20 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 		{
 			throw new POException(node, e);
 		}
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
 	}
 
 }

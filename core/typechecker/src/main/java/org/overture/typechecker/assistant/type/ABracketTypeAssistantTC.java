@@ -42,11 +42,11 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		{
 			do
 			{
-				tmp=PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question);
+				tmp=af.createPTypeAssistant().typeResolve(type.getType(), root, rootVisitor, question);
 			}
 			while (tmp instanceof ABracketType);
 
-			tmp=PTypeAssistantTC.typeResolve(tmp, root, rootVisitor, question);
+			tmp=af.createPTypeAssistant().typeResolve(tmp, root, rootVisitor, question);
 			
 			tmp.parent(type.parent());//re-link tree after bracket removal
 			return tmp;

@@ -26,6 +26,7 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
@@ -121,7 +122,7 @@ public class KindFinder extends AnswerAdaptor<String>
 	public String caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
@@ -169,7 +170,7 @@ public class KindFinder extends AnswerAdaptor<String>
 	public String caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	@Override
 	public String caseAStateDefinition(AStateDefinition node)
@@ -209,6 +210,20 @@ public class KindFinder extends AnswerAdaptor<String>
 	@Override
 	public String defaultPDefinition(PDefinition node) throws AnalysisException
 	{
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
 		return null;
 	}
 

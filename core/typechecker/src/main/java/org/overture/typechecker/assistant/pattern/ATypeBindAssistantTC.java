@@ -12,7 +12,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ATypeBindAssistantTC
 {
@@ -29,7 +28,7 @@ public class ATypeBindAssistantTC
 			TypeCheckInfo question)
 	{
 
-		typebind.setType(PTypeAssistantTC.typeResolve(typebind.getType(), null, rootVisitor, question));
+		typebind.setType(af.createPTypeAssistant().typeResolve(typebind.getType(), null, rootVisitor, question));
 
 	}
 

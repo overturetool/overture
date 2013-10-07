@@ -2,8 +2,6 @@ package org.overture.typechecker.assistant.definition;
 
 import java.util.List;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -13,7 +11,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AValueDefinitionAssistantTC
 {
@@ -25,42 +22,6 @@ public class AValueDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void unusedCheck(AValueDefinition d)
-	{
-		if (d.getUsed()) // Indicates all definitions exported (used)
-		{
-			return;
-		}
-
-		if (d.getDefs() != null)
-		{
-			for (PDefinition def : d.getDefs())
-			{
-				PDefinitionAssistantTC.unusedCheck(def);
-			}
-		}
-
-	}
-
-	public static List<PDefinition> getDefinitions(AValueDefinition d)
-	{
-		return d.getDefs();
-	}
-
-	public static void typeResolve(AValueDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-
-		// d.setType(getType(d));
-		if (d.getType() != null)
-		{
-			d.setType(PTypeAssistantTC.typeResolve(d.getType(), null, rootVisitor, question));
-			PPatternAssistantTC.typeResolve(d.getPattern(), rootVisitor, question);
-			updateDefs(d, question);
-		}
-
-	}
 
 	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
 	{

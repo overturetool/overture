@@ -107,6 +107,14 @@ public class SafeBuilder extends Thread
 												//override any existing model and source units
 												workingModel.commit();
 											}
+											
+											if(!status.isOK())
+											{
+												if(status.getException()!=null)
+												{
+													handleException(status.getException());
+												}
+											}
 										} catch (Exception e)
 										{
 											workingModel.discard();

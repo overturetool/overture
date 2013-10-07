@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.AParameterType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -50,14 +51,14 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return node.getSuperdef().apply(this);
+		return node.getSuperdef().apply(THIS);
 	}
 	
 	@Override
@@ -66,14 +67,16 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	{
 		//TODO: HERE QUESTION ABOUY HANDLING THIS CODE!
 		return (node.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
-		: af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node));
+		:PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node)); 
+		//af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node)); 
+		//Non-static call works correctly but it give a warning for the static method.
 	}
 	
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		return node.getDef().apply(this);
+		return node.getDef().apply(THIS);
 	}
 	
 	@Override
@@ -81,5 +84,19 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return false;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 }
