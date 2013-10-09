@@ -16,6 +16,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -162,6 +163,7 @@ import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
 import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
+import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1127,5 +1129,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnswerAdaptor<Boolean> getUnionBasisChecker()
 	{
 		return new UnionBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<AUnionType> getUnionTypeFinder()
+	{
+		return new UnionTypeFinder(this);
 	}
 }

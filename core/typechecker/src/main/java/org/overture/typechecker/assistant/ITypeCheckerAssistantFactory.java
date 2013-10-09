@@ -16,6 +16,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -433,5 +434,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<AFunctionType> getFunctionTypeFinder();
 	
 	AnswerAdaptor<Boolean> getUnionBasisChecker();
+	
+	IAnswer<AUnionType> getUnionTypeFinder();
 	
 }

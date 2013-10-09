@@ -150,21 +150,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static AUnionType getUnion(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.getUnion((ABracketType) type);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getUnionTypeFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getUnion((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getUnion((AUnionType) type);
+			return null;
 		}
-		assert false : " cannot getUnion from non-union";
-		return null;
 	}
 
 	public static boolean isFunction(PType type)

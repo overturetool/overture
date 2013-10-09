@@ -631,10 +631,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 //		return true;
 //	}
 
-	public static AUnionType getUnion(AUnionType type)
-	{
-		return type;
-	}
+//	public static AUnionType getUnion(AUnionType type)
+//	{
+//		return type;
+//	}
 
 	public static boolean narrowerThan(AUnionType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
