@@ -85,9 +85,9 @@ public class AProductTypeAssistantTC {
 //		return type;
 //	}
 
-	public static boolean isProduct(AProductType type) {
-		return true;
-	}
+//	public static boolean isProduct(AProductType type) {
+//		return true;
+//	}
 
 	public static PType polymorph(AProductType type, ILexNameToken pname,
 			PType actualType) {

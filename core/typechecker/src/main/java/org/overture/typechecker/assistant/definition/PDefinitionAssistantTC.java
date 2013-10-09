@@ -212,7 +212,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isStatic(PDefinition fdef)
+	public boolean isStatic(PDefinition fdef)
 	{
 		return PAccessSpecifierAssistantTC.isStatic(fdef.getAccess());
 	}

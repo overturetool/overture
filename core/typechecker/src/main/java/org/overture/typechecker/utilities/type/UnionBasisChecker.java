@@ -2,19 +2,17 @@ package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
- * Used to determine if a type is a Product type
+ * Used to determine if a type is a Union type
  * 
  * @author kel
  */
-public class ProductBasisChecker extends TypeUnwrapper<Boolean>
+public class UnionBasisChecker extends TypeUnwrapper<Boolean>
 {
 
 	/**
@@ -23,7 +21,7 @@ public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
-	public ProductBasisChecker(ITypeCheckerAssistantFactory af)
+	public UnionBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -42,20 +40,8 @@ public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 			return false;
 		}
 	}
-	
-	@Override
-	public Boolean caseAProductType(AProductType type) throws AnalysisException
-	{
-		return true;
-	}
-	
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
-	{
-		return af.createAUnionTypeAssistant().getProduct(type) != null;
-	}
-	@Override
-	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
@@ -65,5 +51,5 @@ public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		return false;
 	}
-
+	
 }

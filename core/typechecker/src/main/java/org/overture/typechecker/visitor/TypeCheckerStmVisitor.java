@@ -405,7 +405,7 @@ public class TypeCheckerStmVisitor extends
 			// without
 			// a "return" statement.
 
-			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
+			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			ftype.apply(rootVisitor, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
 			ACallObjectStatementAssistantTC.checkArgTypes(type,
@@ -471,7 +471,7 @@ public class TypeCheckerStmVisitor extends
 			// without
 			// a "return" statement.
 
-			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
+			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ftype, null, rootVisitor, question);
 
 			// Reset the name's qualifier with the actual function type so

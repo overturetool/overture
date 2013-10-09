@@ -213,7 +213,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		for (PDefinition d : node.getDefinitions())
 		{
-			if (!PDefinitionAssistantInterpreter.isStatic(d)
+			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
@@ -224,7 +224,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		for (PDefinition d : node.getDefinitions())
 		{
-			if (!PDefinitionAssistantInterpreter.isStatic(d)
+			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& !PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
@@ -406,7 +406,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				if (PDefinitionAssistantInterpreter.isValueDefinition(d))
 				{
 					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt);
-				} else if (PDefinitionAssistantInterpreter.isStatic(d)
+				} else if (af.createPDefinitionAssistant().isStatic(d)
 						&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 				{
 					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
@@ -428,7 +428,7 @@ public class SClassDefinitionAssistantInterpreter extends
 					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
 				}
-			} else if (PDefinitionAssistantInterpreter.isStatic(d)
+			} else if (af.createPDefinitionAssistant().isStatic(d)
 					&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 			{
 				// Static instance variables are updatable
@@ -476,7 +476,7 @@ public class SClassDefinitionAssistantInterpreter extends
 	{
 		for (PDefinition d : defs)
 		{
-			if ((PDefinitionAssistantInterpreter.isStatic(d) && PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+			if ((af.createPDefinitionAssistant().isStatic(d) && PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
 					|| PDefinitionAssistantInterpreter.isTypeDefinition(d))
 			{
 				// Note function and operation values are not updatable.

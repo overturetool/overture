@@ -344,7 +344,7 @@ public class TypeCheckerOthersVisitor extends
 		if(PTypeAssistantTC.isFunction(rtype))
 		{
 			// Error case, but improves errors if we work out the return type
-			AFunctionType ftype = PTypeAssistantTC.getFunction(rtype);
+			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(rtype);
 			result.add(ftype.getResult());
 		}
 		
@@ -409,7 +409,7 @@ public class TypeCheckerOthersVisitor extends
 		}
 
 		if (PTypeAssistantTC.isFunction(type)) {
-			AFunctionType ft = PTypeAssistantTC.getFunction(type);
+			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, rootVisitor,
 					new TypeCheckInfo(question.assistantFactory,question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,

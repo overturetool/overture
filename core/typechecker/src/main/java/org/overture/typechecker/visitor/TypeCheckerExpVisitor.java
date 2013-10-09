@@ -163,7 +163,7 @@ public class TypeCheckerExpVisitor extends
 		PTypeSet results = new PTypeSet();
 
 		if (PTypeAssistantTC.isFunction(node.getType())) {
-			AFunctionType ft = PTypeAssistantTC.getFunction(node.getType());
+			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
 			AFunctionTypeAssistantTC.typeResolve(ft, null, rootVisitor,
 					question);
 			results.add(AApplyExpAssistantTC.functionApply(node, isSimple, ft));
@@ -259,9 +259,9 @@ public class TypeCheckerExpVisitor extends
 				node.setType(AstFactory.newAUnknownType(node.getLocation()));
 				return node.getType();
 			} else {
-				AFunctionType lf = PTypeAssistantTC.getFunction(node.getLeft()
+				AFunctionType lf = question.assistantFactory.createPTypeAssistant().getFunction(node.getLeft()
 						.getType());
-				AFunctionType rf = PTypeAssistantTC.getFunction(node.getRight()
+				AFunctionType rf = question.assistantFactory.createPTypeAssistant().getFunction(node.getRight()
 						.getType());
 
 				if (lf.getParameters().size() != 1) {
@@ -1188,7 +1188,7 @@ public class TypeCheckerExpVisitor extends
 				// to values as though they are fields of self in the CSK test
 				// suite, so commented out for now.
 
-				if (PDefinitionAssistantTC.isStatic(fdef))// && !env.isStatic())
+				if (question.assistantFactory.createPDefinitionAssistant().isStatic(fdef))// && !env.isStatic())
 				{
 					// warning(5005, "Should access member " + field +
 					// " from a static context");
@@ -1300,7 +1300,7 @@ public class TypeCheckerExpVisitor extends
 		}
 
 		if (PTypeAssistantTC.isFunction(ftype)) {
-			AFunctionType t = PTypeAssistantTC.getFunction(ftype);
+			AFunctionType t = question.assistantFactory.createPTypeAssistant().getFunction(ftype);
 			PTypeSet set = new PTypeSet();
 
 			if (t.getDefinitions().size() == 0) {

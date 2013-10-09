@@ -5,7 +5,6 @@ import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
@@ -57,10 +56,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getProduct(type.getType(),size);
 	}
 
-	public static boolean isProduct(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isProduct(type.getType());
-	}
+//	public static boolean isProduct(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isProduct(type.getType());
+//	}
 
 //	public static AProductType getProduct(ANamedInvariantType type) {
 //		return PTypeAssistantTC.getProduct(type.getType());
@@ -90,10 +89,10 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return false;
 	}
 
-	public static boolean isUnion(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isUnion(type.getType());
-	}
+//	public static boolean isUnion(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isUnion(type.getType());
+//	}
 	
 	public static AUnionType getUnion(ANamedInvariantType type) {		
 		return PTypeAssistantTC.getUnion(type.getType());
@@ -104,9 +103,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 //		return PTypeAssistantTC.isFunction(type.getType());
 //	}
 
-	public static AFunctionType getFunction(ANamedInvariantType type) {		
-		return PTypeAssistantTC.getFunction(type.getType());
-	}
+//	public static AFunctionType getFunction(ANamedInvariantType type) {		
+//		return PTypeAssistantTC.getFunction(type.getType());
+//	}
 
 //	public static boolean isOperation(ANamedInvariantType type) {
 //		if(type.getOpaque()) return false;
