@@ -29,7 +29,7 @@ import java.util.List;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
@@ -42,7 +42,8 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 
-public class POFunctionResultContext extends POContext {
+public class POFunctionResultContext extends POContext
+{
 	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final PExp precondition;
@@ -51,21 +52,20 @@ public class POFunctionResultContext extends POContext {
 	public final boolean implicit;
 	final PDefinition function;
 
-	public POFunctionResultContext(AExplicitFunctionDefinition definition) {
+	public POFunctionResultContext(AExplicitFunctionDefinition definition)
+	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = AstFactory.newAPatternTypePair(AstFactory
-				.newAIdentifierPattern(new LexNameToken(definition.getName()
-						.getModule(), "RESULT", definition.getLocation())),
-				((AFunctionType) definition.getType()).getResult().clone());
+		this.result = AstFactory.newAPatternTypePair(AstFactory.newAIdentifierPattern(new LexNameToken(definition.getName().getModule(), "RESULT", definition.getLocation())), ((AFunctionType) definition.getType()).getResult().clone());
 		this.function = definition.clone();
 		function.setLocation(null);
 	}
 
-	public POFunctionResultContext(AImplicitFunctionDefinition definition) {
+	public POFunctionResultContext(AImplicitFunctionDefinition definition)
+	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.precondition = definition.getPrecondition();
@@ -77,19 +77,26 @@ public class POFunctionResultContext extends POContext {
 	}
 
 	@Override
-	public PExp getContextNode(PExp stitch) {
-		if (precondition == null) {
-			return getContextNodeMain(stitch);
-		} else {
-			return AstExpressionFactory.newAImpliesBooleanBinaryExp(
-					precondition.clone(), stitch);
+	public PExp getContextNode(PExp stitch)
+	{
+
+		PExp stitched = getContextNodeMain(stitch);
+
+		if (precondition == null)
+		{
+			return stitched;
+		} else
+		{
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitched);
 		}
 
 	}
 
-	private PExp getContextNodeMain(PExp stitch) {
-		if (implicit) {
-			AForAllExp forAllExp = new AForAllExp();
+	private PExp getContextNodeMain(PExp stitch)
+	{
+		if (implicit)
+		{
+			AExistsExp exists_exp = new AExistsExp();
 			List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
 			ATypeMultipleBind tmBind = new ATypeMultipleBind();
 			List<PPattern> patternList = new LinkedList<PPattern>();
@@ -97,12 +104,13 @@ public class POFunctionResultContext extends POContext {
 			tmBind.setPlist(patternList);
 			tmBind.setType(result.getType().clone());
 			binds.add(tmBind);
-			forAllExp.setBindList(binds);
-			forAllExp.setPredicate(stitch);
-			return forAllExp;
+			exists_exp.setBindList(binds);
+			exists_exp.setPredicate(stitch);
+			return exists_exp;
 		}
 
-		else {
+		else
+		{
 			ALetDefExp letDefExp = new ALetDefExp();
 			letDefExp.setLocalDefs(result.getPattern().clone().getDefinitions());
 			letDefExp.setExpression(stitch);
@@ -112,19 +120,23 @@ public class POFunctionResultContext extends POContext {
 	}
 
 	@Override
-	public String getContext() {
+	public String getContext()
+	{
 		StringBuilder sb = new StringBuilder();
 
-		if (precondition != null) {
+		if (precondition != null)
+		{
 			sb.append(precondition);
 			sb.append(" => ");
 		}
 
-		if (implicit) {
+		if (implicit)
+		{
 			sb.append("forall ");
 			sb.append(result);
 			sb.append(" & ");
-		} else {
+		} else
+		{
 			sb.append("let ");
 			sb.append(result);
 			sb.append(" = ");
