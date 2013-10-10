@@ -3,6 +3,7 @@ package org.overture.constraintsolverconn.entry;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.constraintsolverconn.visitor.CscVisitor;
+import org.overture.constraintsolverconn.visitor.DemoVisitor;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -19,6 +20,7 @@ public class Csc {
 		}
 		
 		ParserResult<PExp> parseResult = null;
+		
 		try
 		{
 			parseResult = ParserUtil.parseExpression(exp);
@@ -52,7 +54,10 @@ public class Csc {
 		PExp typeCheckedExp = typeCheckResult.result;
 		CscVisitor visitor = new CscVisitor();
 		
-		return typeCheckedExp.apply(visitor, "Some information #0");		
+		//Example of applying analysis adapter:
+		//typeCheckedExp.apply(new DemoVisitor());
+		
+		return typeCheckedExp.apply(visitor, "Some information #0 in Csc.java");		
 	}
 	
 }

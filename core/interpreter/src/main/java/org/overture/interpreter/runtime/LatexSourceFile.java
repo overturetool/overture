@@ -85,7 +85,9 @@ public class LatexSourceFile extends SourceFile
 			out.println("\\usepackage[color]{vdmlisting}");
 			out.println("\\usepackage{fullpage}");
 			out.println("\\usepackage{hyperref}");
+			out.println("\\usepackage{fontspec}"); // added by his 2013/10/08
 			out.println("\\begin{document}");
+			out.println("\\fontspec{MS Mincho}");  // added by his 2013/10/08
 			out.println("\\title{}");
 			out.println("\\author{}");
 		}
@@ -209,7 +211,7 @@ public class LatexSourceFile extends SourceFile
 	{
 		if (list == null)
 		{
-			return line;
+			return utfIncludeCheck(line, true);
 		} else
 		{
 			StringBuilder sb = new StringBuilder();
@@ -223,16 +225,16 @@ public class LatexSourceFile extends SourceFile
 
 				if (start >= p) // Backtracker produces duplicate tokens
 				{
-					sb.append(line.substring(p, start));
+					sb.append(utfIncludeCheck(line.substring(p, start),true));  // modified by his
 					sb.append(LST_ESCAPE_BEGIN + "\\vdmnotcovered{");
-					sb.append(latexQuote(line.substring(start, end)));
+					sb.append(utfIncludeCheck(latexQuote(line.substring(start, end)), false));  // modified by his
 					sb.append("}" + LST_ESCAPE_END); // \u00A3");
 
 					p = end;
 				}
 			}
 
-			sb.append(line.substring(p));
+			sb.append(utfIncludeCheck(line.substring(p), true));  // modified by his
 			return sb.toString();
 		}
 	}
@@ -243,5 +245,33 @@ public class LatexSourceFile extends SourceFile
 
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
-
+	
+	// add by his 2013/10/08
+	private String utfIncludeCheck(String s, Boolean addatsign)
+	{
+		String checked=s;
+		try {
+			byte[] str = s.getBytes("UTF-8");
+			int flag=0;
+			for(int i=0;i<str.length;i++)
+			{
+				if(str[i]<33||str[i]>126)
+				{
+					flag=1;
+					break;
+				}
+			}
+			if(flag==1)
+			{
+				if(addatsign)
+					checked=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + s + LST_ESCAPE_END);
+				else 
+					checked=("\\fontspec{MS Gothic}" + s);
+			}
+			return checked;
+		} catch(IOException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+	}
 }
