@@ -294,28 +294,28 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return null;
 	}
 
-	public static boolean equals(AUnionType type, Object other)
-	{
-		other = PTypeAssistantTC.deBracket(other);
-		PTypeSet types = new PTypeSet(type.getTypes());
-
-		if (other instanceof AUnionType)
-		{
-			AUnionType uother = (AUnionType) other;
-
-			for (PType t : uother.getTypes())
-			{
-				if (!types.contains(t))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return types.contains(other);
-	}
+//	public static boolean equals(AUnionType type, Object other)
+//	{
+//		other = PTypeAssistantTC.deBracket(other);
+//		PTypeSet types = new PTypeSet(type.getTypes());
+//
+//		if (other instanceof AUnionType)
+//		{
+//			AUnionType uother = (AUnionType) other;
+//
+//			for (PType t : uother.getTypes())
+//			{
+//				if (!types.contains(t))
+//				{
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//
+//		return types.contains(other);
+//	}
 
 //	public static boolean isFunction(AUnionType type)
 //	{

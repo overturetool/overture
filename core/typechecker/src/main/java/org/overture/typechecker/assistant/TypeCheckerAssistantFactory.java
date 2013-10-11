@@ -162,6 +162,7 @@ import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
 import org.overture.typechecker.utilities.type.SetTypeFinder;
+import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
@@ -1135,5 +1136,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<AUnionType> getUnionTypeFinder()
 	{
 		return new UnionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Object, Boolean> getTypeEqualityChecker()
+	{
+		return new TypeEqualityChecker(this);
 	}
 }

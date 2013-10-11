@@ -48,18 +48,18 @@ public class ASetTypeAssistantTC {
 		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
 	}
 
-	public static boolean equals(ASetType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof ASetType)
-		{
-			ASetType os = (ASetType)other;
-			// NB empty set same type as any set
-			return type.getEmpty() || os.getEmpty() || PTypeAssistantTC.equals(type.getSetof(), os.getSetof());
-		}
-
-		return false;
-	}
+//	public static boolean equals(ASetType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof ASetType)
+//		{
+//			ASetType os = (ASetType)other;
+//			// NB empty set same type as any set
+//			return type.getEmpty() || os.getEmpty() || PTypeAssistantTC.equals(type.getSetof(), os.getSetof());
+//		}
+//
+//		return false;
+//	}
 
 //	public static boolean isSet(ASetType type) {
 //		return true;

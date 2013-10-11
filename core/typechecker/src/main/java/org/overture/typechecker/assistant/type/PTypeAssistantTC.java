@@ -511,67 +511,74 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean equals(PType type, Object other)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.equals((ABracketType) type, other);
-		} else if (type instanceof AClassType)
+			return type.apply(af.getTypeEqualityChecker(),other);
+		} catch (AnalysisException e)
 		{
-			return AClassTypeAssistantTC.equals((AClassType) type, other);
-		} else if (type instanceof AFunctionType)
-		{
-			return AFunctionTypeAssistantTC.equals((AFunctionType) type, other);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.equals((ANamedInvariantType) type, other);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.equals((ARecordInvariantType) type, other);
-			}
-		} else if (type instanceof SMapType)
-		{
-			return SMapTypeAssistantTC.equals((SMapType) type, other);
-		} else if (type instanceof AOperationType)
-		{
-			return AOperationTypeAssistantTC.equals((AOperationType) type, other);
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.equals((AOptionalType) type, other);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.equals((AProductType) type, other);
-		} else if (type instanceof AQuoteType)
-		{
-			return AQuoteTypeAssistantTC.equals((AQuoteType) type, other);
-		} else if (type instanceof SSeqType)
-		{
-			return SSeqTypeAssistantTC.equals((SSeqType) type, other);
-		} else if (type instanceof ASetType)
-		{
-			return ASetTypeAssistantTC.equals((ASetType) type, other);
-		} else if (type instanceof AUndefinedType)
-		{
-			return AUndefinedTypeAssistantTC.equals((AUndefinedType) type, other);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.equals((AUnionType) type, other);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.equals((AUnknownType) type, other);
-		} else if (type instanceof AUnresolvedType)
-		{
-			return AUnresolvedTypeAssistantTC.equals((AUnresolvedType) type, other);
-		} else if (type instanceof AVoidType)
-		{
-			return AVoidTypeAssistantTC.equals((AVoidType) type, other);
-		} else if (type instanceof AVoidReturnType)
-		{
-			return AVoidReturnTypeAssistantTC.equals((AVoidReturnType) type, other);
+			return false;
 		}
-
-		other = deBracket(other);
-		return type.getClass() == other.getClass();
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.equals((ABracketType) type, other);
+//		} else if (type instanceof AClassType)
+//		{
+//			return AClassTypeAssistantTC.equals((AClassType) type, other);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			return AFunctionTypeAssistantTC.equals((AFunctionType) type, other);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.equals((ANamedInvariantType) type, other);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				return ARecordInvariantTypeAssistantTC.equals((ARecordInvariantType) type, other);
+//			}
+//		} else if (type instanceof SMapType)
+//		{
+//			return SMapTypeAssistantTC.equals((SMapType) type, other);
+//		} else if (type instanceof AOperationType)
+//		{
+//			return AOperationTypeAssistantTC.equals((AOperationType) type, other);
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.equals((AOptionalType) type, other);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.equals((AProductType) type, other);
+//		} else if (type instanceof AQuoteType)
+//		{
+//			return AQuoteTypeAssistantTC.equals((AQuoteType) type, other);
+//		} else if (type instanceof SSeqType)
+//		{
+//			return SSeqTypeAssistantTC.equals((SSeqType) type, other);
+//		} else if (type instanceof ASetType)
+//		{
+//			return ASetTypeAssistantTC.equals((ASetType) type, other);
+//		} else if (type instanceof AUndefinedType)
+//		{
+//			return AUndefinedTypeAssistantTC.equals((AUndefinedType) type, other);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.equals((AUnionType) type, other);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.equals((AUnknownType) type, other);
+//		} else if (type instanceof AUnresolvedType)
+//		{
+//			return AUnresolvedTypeAssistantTC.equals((AUnresolvedType) type, other);
+//		} else if (type instanceof AVoidType)
+//		{
+//			return AVoidTypeAssistantTC.equals((AVoidType) type, other);
+//		} else if (type instanceof AVoidReturnType)
+//		{
+//			return AVoidReturnTypeAssistantTC.equals((AVoidReturnType) type, other);
+//		}
+//
+//		other = deBracket(other);
+//		return type.getClass() == other.getClass();
 
 	}
 

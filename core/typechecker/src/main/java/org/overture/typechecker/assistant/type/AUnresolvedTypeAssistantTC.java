@@ -14,7 +14,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
@@ -119,23 +118,23 @@ public class AUnresolvedTypeAssistantTC {
 		return exptype.getName().getFullName().equals(typename) ? exptype : null;
 	}
 
-	public static boolean equals(AUnresolvedType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof AUnresolvedType)
-		{
-			AUnresolvedType nother = (AUnresolvedType)other;
-			return type.getName().equals(nother.getName());
-		}
-
-		if (other instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nother = (ANamedInvariantType)other;
-			return type.getName().equals(nother.getName());
-		}
-
-		return false;
-	}
+//	public static boolean equals(AUnresolvedType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AUnresolvedType)
+//		{
+//			AUnresolvedType nother = (AUnresolvedType)other;
+//			return type.getName().equals(nother.getName());
+//		}
+//
+//		if (other instanceof ANamedInvariantType)
+//		{
+//			ANamedInvariantType nother = (ANamedInvariantType)other;
+//			return type.getName().equals(nother.getName());
+//		}
+//
+//		return false;
+//	}
 
 	
 

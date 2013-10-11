@@ -132,18 +132,18 @@ public class AOperationTypeAssistantTC {
 		return "(" + params + " ==> " + exptype.getResult() + ")";
 	}
 
-	public static boolean equals(AOperationType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (!(other instanceof AOperationType))
-		{
-			return false;
-		}
-
-		AOperationType oother = (AOperationType)other;
-		return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
-				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
-	}
+//	public static boolean equals(AOperationType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (!(other instanceof AOperationType))
+//		{
+//			return false;
+//		}
+//
+//		AOperationType oother = (AOperationType)other;
+//		return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
+//				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
+//	}
 
 	public static boolean narrowerThan(AOperationType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {

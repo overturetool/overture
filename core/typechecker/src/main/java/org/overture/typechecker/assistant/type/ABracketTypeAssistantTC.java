@@ -92,9 +92,9 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
-	public static boolean equals(ABracketType type, Object other) {
-		return PTypeAssistantTC.equals(type.getType(),other);
-	}
+//	public static boolean equals(ABracketType type, Object other) {
+//		return PTypeAssistantTC.equals(type.getType(),other);
+//	}
 
 	public static boolean isUnion(ABracketType type) {
 		return PTypeAssistantTC.isUnion(type.getType());

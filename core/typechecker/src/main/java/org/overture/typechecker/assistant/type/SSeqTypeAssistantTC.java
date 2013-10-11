@@ -43,18 +43,18 @@ public class SSeqTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(SSeqType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof SSeqType)
-		{
-			SSeqType os = (SSeqType)other;
-			// NB. Empty sequence is the same type as any sequence
-			return type.getEmpty() || os.getEmpty() ||	PTypeAssistantTC.equals(type.getSeqof(), os.getSeqof());
-		}
-
-		return false;
-	}
+//	public static boolean equals(SSeqType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof SSeqType)
+//		{
+//			SSeqType os = (SSeqType)other;
+//			// NB. Empty sequence is the same type as any sequence
+//			return type.getEmpty() || os.getEmpty() ||	PTypeAssistantTC.equals(type.getSeqof(), os.getSeqof());
+//		}
+//
+//		return false;
+//	}
 
 	public static boolean narrowerThan(SSeqType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {

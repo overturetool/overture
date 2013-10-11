@@ -43,9 +43,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return null;	// Isn't any particular type?
 	}
 
-	public static boolean equals(AUnknownType type, Object other) {
-		return true;
-	}
+//	public static boolean equals(AUnknownType type, Object other) {
+//		return true;
+//	}
 
 //	public static boolean isFunction(AUnknownType type) {
 //		return true;

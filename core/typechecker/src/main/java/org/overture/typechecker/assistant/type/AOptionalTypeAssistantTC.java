@@ -90,15 +90,15 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static boolean equals(AOptionalType type, Object other) {
-		if (other instanceof AOptionalType)
-		{
-			AOptionalType oo = (AOptionalType)other;
-			return  PTypeAssistantTC.equals(type.getType(),oo.getType());
-		}
-		
-		return false;
-	}
+//	public static boolean equals(AOptionalType type, Object other) {
+//		if (other instanceof AOptionalType)
+//		{
+//			AOptionalType oo = (AOptionalType)other;
+//			return  PTypeAssistantTC.equals(type.getType(),oo.getType());
+//		}
+//		
+//		return false;
+//	}
 
 
 //	public static boolean isFunction(AOptionalType type) {

@@ -124,19 +124,19 @@ public class AFunctionTypeAssistantTC {
 		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
 	}
 
-	public static boolean equals(AFunctionType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (!(other instanceof AFunctionType))
-		{
-			return false;
-		}
-
-		AFunctionType fo = (AFunctionType)other;
-		return (type.getPartial() == fo.getPartial() &&
-				PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
-				PTypeAssistantTC.equals(type.getParameters(),fo.getParameters()));
-	}
+//	public static boolean equals(AFunctionType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (!(other instanceof AFunctionType))
+//		{
+//			return false;
+//		}
+//
+//		AFunctionType fo = (AFunctionType)other;
+//		return (type.getPartial() == fo.getPartial() &&
+//				PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
+//				PTypeAssistantTC.equals(type.getParameters(),fo.getParameters()));
+//	}
 
 	public static boolean narrowerThan(AFunctionType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) {

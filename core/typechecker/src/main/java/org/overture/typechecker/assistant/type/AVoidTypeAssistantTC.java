@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.types.AVoidType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AVoidTypeAssistantTC {
@@ -11,10 +10,10 @@ public class AVoidTypeAssistantTC {
 	{
 		this.af = af;
 	}
-	public static boolean equals(AVoidType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		return (other instanceof AVoidType);
-	}
+//	public static boolean equals(AVoidType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		return (other instanceof AVoidType);
+//	}
 
 }

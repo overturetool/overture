@@ -91,17 +91,17 @@ public class ARecordInvariantTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(ARecordInvariantType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof ARecordInvariantType)
-		{
-			ARecordInvariantType rother = (ARecordInvariantType)other;
-			return type.getName().equals(rother.getName());	// NB. identical
-		}
-
-		return false;
-	}
+//	public static boolean equals(ARecordInvariantType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof ARecordInvariantType)
+//		{
+//			ARecordInvariantType rother = (ARecordInvariantType)other;
+//			return type.getName().equals(rother.getName());	// NB. identical
+//		}
+//
+//		return false;
+//	}
 
 //	public static boolean isRecord(ARecordInvariantType type) {
 //		if (type.getOpaque()) return false;

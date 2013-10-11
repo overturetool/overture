@@ -15,16 +15,16 @@ public class AQuoteTypeAssistantTC {
 		return "<" + exptype.getValue() + ">";
 	}
 
-	public static boolean equals(AQuoteType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof AQuoteType)
-		{
-			AQuoteType qother = (AQuoteType)other;
-			return type.getValue().getValue().equals(qother.getValue().getValue());
-		}
-
-		return false;
-	}
+//	public static boolean equals(AQuoteType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AQuoteType)
+//		{
+//			AQuoteType qother = (AQuoteType)other;
+//			return type.getValue().getValue().equals(qother.getValue().getValue());
+//		}
+//
+//		return false;
+//	}
 
 }

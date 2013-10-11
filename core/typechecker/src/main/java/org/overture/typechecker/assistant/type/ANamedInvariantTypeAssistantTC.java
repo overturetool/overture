@@ -76,17 +76,17 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
-	public static boolean equals(ANamedInvariantType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nother = (ANamedInvariantType)other;
-			return type.getName().equals(nother.getName());
-		}
-
-		return false;
-	}
+//	public static boolean equals(ANamedInvariantType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof ANamedInvariantType)
+//		{
+//			ANamedInvariantType nother = (ANamedInvariantType)other;
+//			return type.getName().equals(nother.getName());
+//		}
+//
+//		return false;
+//	}
 
 //	public static boolean isUnion(ANamedInvariantType type) {
 //		if (type.getOpaque()) return false;
