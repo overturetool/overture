@@ -44,9 +44,9 @@ public class ASetTypeAssistantTC {
 		
 	}
 
-	public static String toDisplay(ASetType exptype) {
-		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
-	}
+//	public static String toDisplay(ASetType exptype) {
+//		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
+//	}
 
 //	public static boolean equals(ASetType type, Object other) {
 //		other = PTypeAssistantTC.deBracket(other);

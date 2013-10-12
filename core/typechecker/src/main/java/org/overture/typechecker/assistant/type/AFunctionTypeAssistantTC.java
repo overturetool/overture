@@ -13,7 +13,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -117,12 +116,12 @@ public class AFunctionTypeAssistantTC {
 		return type;
 	}
 
-	public static String toDisplay(AFunctionType exptype) {
-		List<PType> parameters = exptype.getParameters();
-		String params = (parameters.isEmpty() ?
-				"()" : Utils.listToString(parameters, " * "));
-		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
-	}
+//	public static String toDisplay(AFunctionType exptype) {
+//		List<PType> parameters = exptype.getParameters();
+//		String params = (parameters.isEmpty() ?
+//				"()" : Utils.listToString(parameters, " * "));
+//		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
+//	}
 
 //	public static boolean equals(AFunctionType type, Object other) {
 //		other = PTypeAssistantTC.deBracket(other);

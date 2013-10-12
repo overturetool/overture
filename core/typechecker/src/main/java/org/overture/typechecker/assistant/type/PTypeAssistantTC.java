@@ -9,41 +9,25 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ABracketType;
-import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AInMapMapType;
-import org.overture.ast.types.AIntNumericBasicType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ANatNumericBasicType;
-import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.AQuoteType;
-import org.overture.ast.types.ARationalNumericBasicType;
-import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SInvariantTypeBase;
 import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -627,111 +611,118 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	private static String toDisplay(PType type)
 	{
-		if (type instanceof SBasicType)
+		try
 		{
-			if (type instanceof ABooleanBasicType)
-			{
-				return "bool";
-			} else if (type instanceof ACharBasicType)
-			{
-				return "char";
-			} else if (type instanceof SNumericBasicType)
-			{
-				if (type instanceof AIntNumericBasicType)
-				{
-					return "int";
-				} else if (type instanceof ANatNumericBasicType)
-				{
-					return "nat";
-				} else if (type instanceof ANatOneNumericBasicType)
-				{
-					return "nat1";
-				} else if (type instanceof ARationalNumericBasicType)
-				{
-					return "rat";
-				} else if (type instanceof ARealNumericBasicType)
-				{
-					return "real";
-				}
-			} else if (type instanceof ATokenBasicType)
-			{
-				return "token";
-			}
-		} else if (type instanceof ABracketType)
+			return type.apply(af.getTypeDisplayer());
+		} catch (AnalysisException e)
 		{
-			return ABracketTypeAssistantTC.toDisplay((ABracketType) type);
-		} else if (type instanceof AClassType)
-		{
-			return AClassTypeAssistantTC.toDisplay((AClassType) type);
-		} else if (type instanceof AFunctionType)
-		{
-			return AFunctionTypeAssistantTC.toDisplay((AFunctionType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.toDisplay((ANamedInvariantType) type);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.toDisplay((ARecordInvariantType) type);
-			}
-		} else if (type instanceof SMapType)
-		{
-			if (type instanceof AInMapMapType)
-			{
-				return AInMapMapTypeAssistantTC.toDisplay((AInMapMapType) type);
-			} else if (type instanceof AMapMapType)
-			{
-				return AMapMapTypeAssistantTC.toDisplay((AMapMapType) type);
-			}
-		} else if (type instanceof AOperationType)
-		{
-			return AOperationTypeAssistantTC.toDisplay((AOperationType) type);
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.toDisplay((AOptionalType) type);
-		} else if (type instanceof AParameterType)
-		{
-			return AParameterTypeAssistantTC.toDisplay((AParameterType) type);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.toDisplay((AProductType) type);
-		} else if (type instanceof AQuoteType)
-		{
-			return AQuoteTypeAssistantTC.toDisplay((AQuoteType) type);
-		} else if (type instanceof SSeqType)
-		{
-			if (type instanceof ASeqSeqType)
-			{
-				return ASeqSeqTypeAssistantTC.toDisplay((ASeqSeqType) type);
-			} else if (type instanceof ASeq1SeqType)
-			{
-				return ASeq1SeqTypeAssistantTC.toDisplay((ASeq1SeqType) type);
-			}
-		} else if (type instanceof ASetType)
-		{
-			return ASetTypeAssistantTC.toDisplay((ASetType) type);
-		} else if (type instanceof AUndefinedType)
-		{
-			return "(undefined)";
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.toDisplay((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return "?";
-		} else if (type instanceof AUnresolvedType)
-		{
-			return AUnresolvedTypeAssistantTC.toDisplay((AUnresolvedType) type);
-		} else if (type instanceof AVoidType)
-		{
-			return "()";
-		} else if (type instanceof AVoidReturnType)
-		{
-			return "(return)";
+			return null;
 		}
-		assert false : "PTypeAssistant.toDisplay should not hit this case";
-		return null;
+//		if (type instanceof SBasicType)
+//		{
+//			if (type instanceof ABooleanBasicType)
+//			{
+//				return "bool";
+//			} else if (type instanceof ACharBasicType)
+//			{
+//				return "char";
+//			} else if (type instanceof SNumericBasicType)
+//			{
+//				if (type instanceof AIntNumericBasicType)
+//				{
+//					return "int";
+//				} else if (type instanceof ANatNumericBasicType)
+//				{
+//					return "nat";
+//				} else if (type instanceof ANatOneNumericBasicType)
+//				{
+//					return "nat1";
+//				} else if (type instanceof ARationalNumericBasicType)
+//				{
+//					return "rat";
+//				} else if (type instanceof ARealNumericBasicType)
+//				{
+//					return "real";
+//				}
+//			} else if (type instanceof ATokenBasicType)
+//			{
+//				return "token";
+//			}
+//		} else if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.toDisplay((ABracketType) type);
+//		} else if (type instanceof AClassType)
+//		{
+//			return AClassTypeAssistantTC.toDisplay((AClassType) type);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			return AFunctionTypeAssistantTC.toDisplay((AFunctionType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.toDisplay((ANamedInvariantType) type);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				return ARecordInvariantTypeAssistantTC.toDisplay((ARecordInvariantType) type);
+//			}
+//		} else if (type instanceof SMapType)
+//		{
+//			if (type instanceof AInMapMapType)
+//			{
+//				return AInMapMapTypeAssistantTC.toDisplay((AInMapMapType) type);
+//			} else if (type instanceof AMapMapType)
+//			{
+//				return AMapMapTypeAssistantTC.toDisplay((AMapMapType) type);
+//			}
+//		} else if (type instanceof AOperationType)
+//		{
+//			return AOperationTypeAssistantTC.toDisplay((AOperationType) type);
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.toDisplay((AOptionalType) type);
+//		} else if (type instanceof AParameterType)
+//		{
+//			return AParameterTypeAssistantTC.toDisplay((AParameterType) type);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.toDisplay((AProductType) type);
+//		} else if (type instanceof AQuoteType)
+//		{
+//			return AQuoteTypeAssistantTC.toDisplay((AQuoteType) type);
+//		} else if (type instanceof SSeqType)
+//		{
+//			if (type instanceof ASeqSeqType)
+//			{
+//				return ASeqSeqTypeAssistantTC.toDisplay((ASeqSeqType) type);
+//			} else if (type instanceof ASeq1SeqType)
+//			{
+//				return ASeq1SeqTypeAssistantTC.toDisplay((ASeq1SeqType) type);
+//			}
+//		} else if (type instanceof ASetType)
+//		{
+//			return ASetTypeAssistantTC.toDisplay((ASetType) type);
+//		} else if (type instanceof AUndefinedType)
+//		{
+//			return "(undefined)";
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.toDisplay((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return "?";
+//		} else if (type instanceof AUnresolvedType)
+//		{
+//			return AUnresolvedTypeAssistantTC.toDisplay((AUnresolvedType) type);
+//		} else if (type instanceof AVoidType)
+//		{
+//			return "()";
+//		} else if (type instanceof AVoidReturnType)
+//		{
+//			return "(return)";
+//		}
+//		assert false : "PTypeAssistant.toDisplay should not hit this case";
+//		return null;
 	}
 
 	public static boolean isProduct(PType type, int size)

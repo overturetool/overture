@@ -439,4 +439,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
 	
+	IAnswer<String> getTypeDisplayer();
+		
 }

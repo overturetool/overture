@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.types.AQuoteType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AQuoteTypeAssistantTC {
@@ -11,9 +10,9 @@ public class AQuoteTypeAssistantTC {
 	{
 		this.af = af;
 	}
-	public static String toDisplay(AQuoteType exptype) {
-		return "<" + exptype.getValue() + ">";
-	}
+//	public static String toDisplay(AQuoteType exptype) {
+//		return "<" + exptype.getValue() + ">";
+//	}
 
 //	public static boolean equals(AQuoteType type, Object other) {
 //		other = PTypeAssistantTC.deBracket(other);

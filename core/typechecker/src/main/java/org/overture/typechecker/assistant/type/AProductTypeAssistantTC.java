@@ -57,9 +57,9 @@ public class AProductTypeAssistantTC {
 		}		
 	}
 
-	public static String toDisplay(AProductType exptype) {
-		return Utils.listToString("(", exptype.getTypes(), " * ", ")");
-	}
+//	public static String toDisplay(AProductType exptype) {
+//		return Utils.listToString("(", exptype.getTypes(), " * ", ")");
+//	}
 
 	public static boolean isProduct(AProductType type, int size) {
 		return size == 0 || type.getTypes().size() == size;

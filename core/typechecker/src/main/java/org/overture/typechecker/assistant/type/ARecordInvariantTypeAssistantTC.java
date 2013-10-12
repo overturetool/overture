@@ -73,9 +73,9 @@ public class ARecordInvariantTypeAssistantTC {
 		return type;
 	}
 
-	public static String toDisplay(ARecordInvariantType exptype) {
-		return exptype.getName().toString();
-	}
+//	public static String toDisplay(ARecordInvariantType exptype) {
+//		return exptype.getName().toString();
+//	}
 
 	public static PType isType(ARecordInvariantType exptype, String typename) {
 		if (exptype.getOpaque()) return null;

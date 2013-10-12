@@ -100,9 +100,9 @@ public class AClassTypeAssistantTC {
 		
 	}
 
-	public static String toDisplay(AClassType exptype) {
-		return exptype.getClassdef().getName().getName();
-	}
+//	public static String toDisplay(AClassType exptype) {
+//		return exptype.getClassdef().getName().getName();
+//	}
 
 //	public static boolean equals(AClassType type, Object other) {
 //		other = PTypeAssistantTC.deBracket(other);

@@ -48,9 +48,9 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static String toDisplay(AOptionalType exptype) {
-		return "[" + exptype.getType() + "]";
-	}
+//	public static String toDisplay(AOptionalType exptype) {
+//		return "[" + exptype.getType() + "]";
+//	}
 
 
 	public static boolean isProduct(AOptionalType type, int size) {

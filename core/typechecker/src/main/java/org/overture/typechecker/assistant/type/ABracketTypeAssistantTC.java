@@ -64,9 +64,9 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		
 	}
 
-	public static String toDisplay(ABracketType exptype) {
-		return "(" + exptype.getType() + ")";
-	}
+//	public static String toDisplay(ABracketType exptype) {
+//		return "(" + exptype.getType() + ")";
+//	}
 
 	public static boolean isProduct(ABracketType type, int size) {
 		return PTypeAssistantTC.isProduct(type.getType(), size);

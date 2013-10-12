@@ -187,18 +187,18 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getMapType();
 	}
 
-	public static String toDisplay(AUnionType exptype)
-	{
-		List<PType> types = exptype.getTypes();
-
-		if (types.size() == 1)
-		{
-			return types.iterator().next().toString();
-		} else
-		{
-			return Utils.setToString(new PTypeSet(types), " | ");
-		}
-	}
+//	public static String toDisplay(AUnionType exptype)
+//	{
+//		List<PType> types = exptype.getTypes();
+//
+//		if (types.size() == 1)
+//		{
+//			return types.iterator().next().toString();
+//		} else
+//		{
+//			return Utils.setToString(new PTypeSet(types), " | ");
+//		}
+//	}
 
 	public static boolean isProduct(AUnionType type, int size)
 	{

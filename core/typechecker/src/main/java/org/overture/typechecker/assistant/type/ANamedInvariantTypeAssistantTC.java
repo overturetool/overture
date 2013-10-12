@@ -42,9 +42,9 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		}
 	}
 
-	public static String toDisplay(ANamedInvariantType exptype) {
-		return exptype.getName().toString();
-	}
+//	public static String toDisplay(ANamedInvariantType exptype) {
+//		return exptype.getName().toString();
+//	}
 
 	public static boolean isProduct(ANamedInvariantType type, int size) {
 		if (type.getOpaque()) return false;
