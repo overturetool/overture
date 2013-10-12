@@ -227,52 +227,59 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static void unResolve(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			ABracketTypeAssistantTC.unResolve((ABracketType) type);
-		} else if (type instanceof AClassType)
+			type.apply(af.getTypeUnresolver());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			AClassTypeAssistantTC.unResolve((AClassType) type);
-		} else if (type instanceof AFunctionType)
-		{
-			AFunctionTypeAssistantTC.unResolve((AFunctionType) type);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				ANamedInvariantTypeAssistantTC.unResolve((ANamedInvariantType) type);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				ARecordInvariantTypeAssistantTC.unResolve((ARecordInvariantType) type);
-			}
-		} else if (type instanceof SMapType)
-		{
-			SMapTypeAssistantTC.unResolve((SMapType) type);
-		} else if (type instanceof AOperationType)
-		{
-			if (type instanceof AOperationType)
-			{
-				AOperationTypeAssistantTC.unResolve((AOperationType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			AOptionalTypeAssistantTC.unResolve((AOptionalType) type);
-		} else if (type instanceof AProductType)
-		{
-			AProductTypeAssistantTC.unResolve((AProductType) type);
-		} else if (type instanceof SSeqType)
-		{
-			SSeqTypeAssistantTC.unResolve((SSeqType) type);
-		} else if (type instanceof ASetType)
-		{
-			ASetTypeAssistantTC.unResolve((ASetType) type);
-		} else if (type instanceof AUnionType)
-		{
-			AUnionTypeAssistantTC.unResolve((AUnionType) type);
-		} else
-		{
-			type.setResolved(false);
+			
 		}
+//		if (type instanceof ABracketType)
+//		{
+//			ABracketTypeAssistantTC.unResolve((ABracketType) type);
+//		} else if (type instanceof AClassType)
+//		{
+//			AClassTypeAssistantTC.unResolve((AClassType) type);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			AFunctionTypeAssistantTC.unResolve((AFunctionType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				ANamedInvariantTypeAssistantTC.unResolve((ANamedInvariantType) type);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				ARecordInvariantTypeAssistantTC.unResolve((ARecordInvariantType) type);
+//			}
+//		} else if (type instanceof SMapType)
+//		{
+//			SMapTypeAssistantTC.unResolve((SMapType) type);
+//		} else if (type instanceof AOperationType)
+//		{
+//			if (type instanceof AOperationType)
+//			{
+//				AOperationTypeAssistantTC.unResolve((AOperationType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			AOptionalTypeAssistantTC.unResolve((AOptionalType) type);
+//		} else if (type instanceof AProductType)
+//		{
+//			AProductTypeAssistantTC.unResolve((AProductType) type);
+//		} else if (type instanceof SSeqType)
+//		{
+//			SSeqTypeAssistantTC.unResolve((SSeqType) type);
+//		} else if (type instanceof ASetType)
+//		{
+//			ASetTypeAssistantTC.unResolve((ASetType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			AUnionTypeAssistantTC.unResolve((AUnionType) type);
+//		} else
+//		{
+//			type.setResolved(false);
+//		}
 
 	}
 

@@ -164,6 +164,7 @@ import org.overture.typechecker.utilities.type.SetBasisChecker;
 import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
+import org.overture.typechecker.utilities.type.TypeUnresolver;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
@@ -1149,5 +1150,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<String> getTypeDisplayer()
 	{
 		return new TypeDisplayer(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getTypeUnresolver()
+	{
+		return new TypeUnresolver(this);
 	}
 }

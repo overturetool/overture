@@ -43,6 +43,11 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.ast.util.Utils;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * This class displays a string representation of the Type.
+ * 
+ * @author kel
+ */
 public class TypeDisplayer extends AnswerAdaptor<String>
 {
 
