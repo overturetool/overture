@@ -268,7 +268,8 @@ public class LatexSourceFile extends SourceFile
 						flag=1;
 						break;
 					}
-				}	
+				}
+				if(tkn[i].length()==0) checked+=" ";
 				if(flag==1)
 				{
 					if(addatsign) {
@@ -286,10 +287,7 @@ public class LatexSourceFile extends SourceFile
 					}
 				}
 				else {
-					if(tkn[i].equals(""))
-						checked+=" ";
-					else
-						checked+=(tkn[i]);
+					checked+=(tkn[i]);
 				}
 			} catch(IOException ex)
 			{
