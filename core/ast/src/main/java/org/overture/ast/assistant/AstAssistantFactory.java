@@ -13,7 +13,12 @@ import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
-
+//TODO Add assistant Javadoc
+/** 
+ * This is the main AST assistant factory. everyone ultimately inherits from here.
+ * @author ldc
+ *
+ */
 public class AstAssistantFactory implements IAstAssistantFactory
 {
 

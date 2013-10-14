@@ -27,6 +27,12 @@ import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
 
+//TODO Add assistant Javadoc
+/** Top-Level assistant. Will probably remain present
+ *	for conveniency's sake but the static access will be disallowed.
+ * @author ldc
+ *
+ */
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
 	protected static ITypeCheckerAssistantFactory af;

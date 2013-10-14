@@ -35,9 +35,11 @@ import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssista
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-
+//TODO Add assistant Javadoc
 /**
- * This class implements a way to collect variable names from a node in the AST
+ * A refactored assistant / functionality visitor.
+ * 
+ * This class implements a way to collect variable names from any node in the AST
  * 
  * @author kel
  */

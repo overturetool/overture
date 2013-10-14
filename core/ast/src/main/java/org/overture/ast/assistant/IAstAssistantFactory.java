@@ -12,6 +12,13 @@ import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 
+//TODO Add assistant Javadoc
+/**
+ * This is the main Assistant factory interface. Everyone will see this
+ * so it should be well documented.
+ * @author ldc
+ *
+ */
 public interface IAstAssistantFactory
 {
 	PAccessSpecifierAssistant createPAccessSpecifierAssistant();

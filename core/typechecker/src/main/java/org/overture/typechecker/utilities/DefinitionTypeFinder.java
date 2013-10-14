@@ -38,8 +38,10 @@ import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssista
 import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-
+//TODO Add assistant Javadoc
 /**
+ * A refactored assistant/ functionality visitor.
+ * 
  * This class implements a way to collect definitions from a node in the AST
  * <p>
  * Note that this class may be generalized to a TypeFinder class if this kind of functionality also exists for

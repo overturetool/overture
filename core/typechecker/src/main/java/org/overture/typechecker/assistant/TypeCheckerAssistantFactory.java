@@ -165,6 +165,13 @@ import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
+//TODO Add assistant Javadoc
+/**
+ * An assistant factory for the Overture Typecher. The methods supplied here
+ * only support pure VDM nodes. Override/extend as needed.
+ * @author ldc
+ *
+ */
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
 {

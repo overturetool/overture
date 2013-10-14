@@ -128,9 +128,17 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
-
+//TODO Add assistant Javadoc
+/** 
+ * The Interface specifying what is offered by the Overture TC assistant
+ * functionalities.
+ * @author ldc
+ *
+ */
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
+	// All this stuff will eventually be deleted
+	
 	// Definition
 	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
@@ -362,7 +370,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	SSeqTypeAssistantTC createSSeqTypeAssistant();
 
-	// visitors
+	// stuff to delete ends here
+	
+	
+	// visitor getters that we will actually keep
 	IAnswer<List<PDefinition>> getDefinitionCollector();
 
 	IAnswer<PType> getDefinitionTypeFinder();
