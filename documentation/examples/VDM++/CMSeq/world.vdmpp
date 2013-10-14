@@ -5,7 +5,7 @@ instance variables
   
 -- maintain a link to the environment
 public static env : [Environment] := nil;
-public static timerRef : Timer := new Timer();
+public static timerRef : Timer := Timer`GetInstance();
 
 operations
 
