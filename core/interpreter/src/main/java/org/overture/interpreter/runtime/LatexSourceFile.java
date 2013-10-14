@@ -272,7 +272,7 @@ public class LatexSourceFile extends SourceFile
 				if(flag==1)
 				{
 					if(addatsign) {
-						if(checked.substring(checked.length()-4,checked.length()-1).equals(LST_ESCAPE_END))
+						if(checked.length()>=4&&checked.substring(checked.length()-4,checked.length()-1).equals(LST_ESCAPE_END))
 						{
 							checked=(checked.substring(0, checked.length()-4)+" ");
 							checked+=(tkn[i]+LST_ESCAPE_END+" ");
