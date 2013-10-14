@@ -262,7 +262,7 @@ public class LatexSourceFile extends SourceFile
 				int flag=0;
 				for(int j=0;j<str.length;j++)
 				{
-					//if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
+					if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
 					if(str[j]<32||str[j]>126)
 					{
 						flag=1;
@@ -275,10 +275,10 @@ public class LatexSourceFile extends SourceFile
 						if(checked.length()>=4&&checked.substring(checked.length()-4,checked.length()-1).equals(LST_ESCAPE_END))
 						{
 							checked=(checked.substring(0, checked.length()-4)+" ");
-							checked+=(tkn[i]+LST_ESCAPE_END+" ");
+							checked+=(tkn[i]+LST_ESCAPE_END);
 						} else
 						{
-							checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END + " ");
+							checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END);
 						}
 					} else
 					{
@@ -286,7 +286,10 @@ public class LatexSourceFile extends SourceFile
 					}
 				}
 				else {
-					checked+=(tkn[i]+" ");
+					if(tkn[i].equals(""))
+						checked+=" ";
+					else
+						checked+=(tkn[i]);
 				}
 			} catch(IOException ex)
 			{
