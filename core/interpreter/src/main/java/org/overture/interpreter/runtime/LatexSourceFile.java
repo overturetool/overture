@@ -211,8 +211,8 @@ public class LatexSourceFile extends SourceFile
 	{
 		if (list == null)
 		{
-			return line + "%%%";
-			//return utfIncludeCheck(line, true);
+			//return line;
+			return utfIncludeCheck(line, true);
 		} else
 		{
 			StringBuilder sb = new StringBuilder();
@@ -226,7 +226,8 @@ public class LatexSourceFile extends SourceFile
 
 				if (start >= p) // Backtracker produces duplicate tokens
 				{
-					sb.append(line.substring(p, start));
+					//sb.append(line.substring(p, start));
+					sb.append(utfIncludeCheck(line.substring(p, start), true));
 					sb.append(LST_ESCAPE_BEGIN + "\\vdmnotcovered{");
 					sb.append(utfIncludeCheck(latexQuote(line.substring(start, end)), false));  // modified by his
 					sb.append("}" + LST_ESCAPE_END); // \u00A3");
@@ -235,8 +236,8 @@ public class LatexSourceFile extends SourceFile
 				}
 			}
 
-			sb.append(line.substring(p));
-			//sb.append(utfIncludeCheck(line.substring(p), true));
+			//sb.append(line.substring(p));
+			sb.append(utfIncludeCheck(line.substring(p), true));
 			return sb.toString();
 		}
 	}
