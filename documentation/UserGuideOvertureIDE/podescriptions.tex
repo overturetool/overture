@@ -1,0 +1,127 @@
+\begin{description}
+
+\item[cases exhaustive:] If a cases expression does not have an
+  \texttt{others} clause it is necessary to ensure that the
+  different case alternatives catch all values of the type of the
+  expression used in the case choice.
+
+\item[finite map:] If a type binding to a type that potentially has
+  infinitely many elements is used inside a map comprehension, this
+  proof obligation will be generated because all mappings in VDM must be finite.
+
+\item[finite set:] If a type binding to a type that potentially has
+  infinitely many elements is used inside a set comprehension, this
+  proof obligation will be generated because all sets in VDM must be finite.
+
+\item[function apply:] Whenever a function application is used you need to be
+  certain that the list of arguments to the function satisfies the
+  pre-condition of the function, assuming such a predicate is present.
+
+\item[function compose:] When using a function composition (f comp g), this ensures
+    that the precondition of g implies the precondition of f applied to the result
+    of g.
+
+\item[function iteration:] When using a function iteration, for the function we
+    are iterating with, this ensures that the precondition on an argument implies
+    the precondition on the result.
+
+\item[function parameter patterns:] When using a pattern as a function
+    parameter, this ensures that all values in the parameter type for the
+    function can match the pattern.
+
+\item[function satisfiability:] For all implicit function definitions
+  this proof obligation will be generated to ensure that it is
+  possible to find an implementation satisfying the post-conditions for all
+  arguments satisfying the pre-conditions.
+
+\item[let be st existence:] Whenever a let-be-such-that
+  expression/statement is used you need to be certain that at least one value
+  will match the such-that expression.
+
+\item[map apply:] Whenever a map application is made you need to be
+  certain that the argument is in the domain of the map.
+
+\item[map compose:] When composing 2 maps, ensures that the
+range of map2 is a subset of the domain of map1. 
+
+\item[map compatible:] Mappings in VDM represent a unique relationship
+  between the domain values and the corresponding range values. Proof
+  obligations in this category are meant to ensure that such a unique
+  relationship is guranteed.
+
+\item[map iteration:] When performing a map iteration, ensures the iteration
+    count expression is either 0 or 1 or if it's greather than 1 then the map's
+    range is a subset of its domain. 
+
+\item[map sequence compatible:] When defining a map with enumeration, ensures that
+    any two equal elements in the domain map to the same element in the range.
+
+\item[map set compatible:] When merging a set of maps, any two equal elements in
+    the domains of each map map to the same element in the range.
+
+\item[non-empty sequence:] This kind of proof obligation is used whenever
+  non-empty sequences are required (eg. taking the head of a sequence)
+
+\item[non-empty set:] This kind of proof obligation is used whenever
+  non-empty sets are required.
+
+\item[non-zero:] This kind of proof obligation is used whenever zero
+  cannot be used (e.g.\ in division).
+
+\item[operation parameter patterns:] When using a pattern as an operation
+    parameter, ensures that all values in the operation parameter type can
+    match the pattern.
+
+
+\item[operation post condition:] Whenever an explicit operation has a
+  post-condition there is an implicit proof obligation generated to
+  remind the user that you have to ensure that the explicit body
+  of the operation satisfies the post-condition for all possible inputs.
+
+\item[operation satifiability:] For all implicit operation definitions
+  this proof obligation will be generated to ensure that it is
+  possible to find an implementation satisfying the post-condition for all
+  arguments satisfying the pre-conditions.
+
+\item[post condition:] Whenever a function has a post condition this checks that 
+    the precondition of the function implies the post condition.
+
+\item[recursive function:] This proof obligation makes use of the
+  \texttt{measure} construct to ensure that a recursive function
+  will terminate.
+
+\item[sequence apply:] Whenever a sequence application is used you need to be
+  certain that the argument is within the indices of the sequence.
+
+\item[sequence modification:] Whenever a sequence modification is used, this
+    ebsures the domain of the modification map is a subset of the indices of the 
+    sequence.
+
+\item[state invariant:] If a state (including instance variables in
+  VDM++) has an invariant, this proof obligation will be generated
+  whenever an assignment is made to a part of the state.
+
+\item[subtype:] This proof obligation category is used whenever it is
+  not possible to statically detect that the given value
+  falls into the subtype required.
+
+\item[tuple selection:] This proof obligation category is used
+  whenever a tuple selection expression is used to
+  gurantee that the length of the tuple is at least as long as the
+  selector used.
+
+\item[type invariant:] Proof obligations from this category are used
+  to ensure that invariants for elements of a particular type are satisfied.
+
+\item[unique existence binding:] The \texttt{iota} expression
+  requires one unique binding to be present and that is guranteed by
+  proof obligations from this category.
+
+\item[value binding:] When binding a value to a pattern, ensures that the
+    resulting value matches the pattern.
+
+\item[while loop termination:] This kind of proof obligation is a
+  reminder to ensure that a while loop will terminate.
+
+\end{description}
+

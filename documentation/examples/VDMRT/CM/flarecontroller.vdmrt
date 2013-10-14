@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class FlareController is subclass of GLOBAL
+class FlareController is subclass of GLOBAL, BaseRTThread
 
 instance variables
 
@@ -19,8 +19,18 @@ busy : bool := false
 
 operations
 
-public FlareController: Angle ==> FlareController
-FlareController (papp) == aperture := papp;
+public FlareController: Angle * [ThreadDef] ==> FlareController  
+FlareController (papp, tDef) == 
+ (aperture := papp;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+  BaseRTThread(self);
+ );
 
 public addDispenser: FlareDispenser ==> ()
 addDispenser (pfldisp) ==
@@ -57,6 +67,18 @@ isFinished () ==
   for all id in set dom dispensers do
     dispensers(id).isFinished();
 
+Step: () ==> ()
+Step() ==
+  (if threats <> []
+   then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+         for all id in set dom ranges do
+           def mk_(papplhs, pappsize) = ranges(id) in
+             if canObserve(pa, papplhs, pappsize)
+             then dispensers(id).addThreat(evid,pmt,pt);
+         busy := len threats > 0; 
+        );
+   );
+
 sync
 
 -- addThreat and getThreat modify the same instance variables
@@ -67,23 +89,6 @@ mutex (addThreat,getThreat);
 -- thread of control of the missile detector
 per getThreat => len threats > 0;
 per isFinished => not busy
-
-thread
-
--- the flare controller continuously processes sensor
--- events. getThread is automatically blocked if there
--- are no threats available
-(-- first start the dispenser threads
- for all id in set dom dispensers do
-   start (dispensers(id));
- -- now enter the event handling loop
- while true do
-   (def mk_ (evid,pmt, pa, pt) = getThreat() in
-      for all id in set dom ranges do
-        def mk_(papplhs, pappsize) = ranges(id) in
-          if canObserve(pa, papplhs, pappsize)
-          then dispensers(id).addThreat(evid,pmt,pt);
-    busy := len threats > 0 ) )
 
 end FlareController
 \end{vdm_al}
