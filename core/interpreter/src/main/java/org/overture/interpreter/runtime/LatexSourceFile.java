@@ -271,14 +271,23 @@ public class LatexSourceFile extends SourceFile
 				}	
 				if(flag==1)
 				{
-					if(addatsign)
-						checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END + " ");
-					else 
+					if(addatsign) {
+						if(checked.substring(checked.length()-4,checked.length()-1).equals(LST_ESCAPE_END))
+						{
+							checked=(checked.substring(0, checked.length()-4)+" ");
+							checked+=(tkn[i]+LST_ESCAPE_END+" ");
+						} else
+						{
+							checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END + " ");
+						}
+					} else
+					{
 						checked+=("\\fontspec{MS Gothic}" + tkn[i]);
+					}
 				}
-				else
+				else {
 					checked+=(tkn[i]+" ");
-				
+				}
 			} catch(IOException ex)
 			{
 				throw new RuntimeException(ex);
