@@ -211,7 +211,8 @@ public class LatexSourceFile extends SourceFile
 	{
 		if (list == null)
 		{
-			return utfIncludeCheck(line, true);
+			return line + "\\%%";
+			//return utfIncludeCheck(line, true);
 		} else
 		{
 			StringBuilder sb = new StringBuilder();
@@ -225,7 +226,7 @@ public class LatexSourceFile extends SourceFile
 
 				if (start >= p) // Backtracker produces duplicate tokens
 				{
-					sb.append(utfIncludeCheck(line.substring(p, start),true));  // modified by his
+					sb.append(line.substring(p, start));
 					sb.append(LST_ESCAPE_BEGIN + "\\vdmnotcovered{");
 					sb.append(utfIncludeCheck(latexQuote(line.substring(start, end)), false));  // modified by his
 					sb.append("}" + LST_ESCAPE_END); // \u00A3");
@@ -234,11 +235,12 @@ public class LatexSourceFile extends SourceFile
 				}
 			}
 
-			sb.append(utfIncludeCheck(line.substring(p), true));  // modified by his
+			sb.append(line.substring(p));
 			return sb.toString();
 		}
 	}
 
+	
 	private String latexQuote(String s)
 	{
 		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
@@ -255,7 +257,8 @@ public class LatexSourceFile extends SourceFile
 			int flag=0;
 			for(int i=0;i<str.length;i++)
 			{
-				if(str[i]<33||str[i]>126)
+				if(str[i]=='\t') continue;
+				if(str[i]<32||str[i]>126)
 				{
 					flag=1;
 					break;
