@@ -257,7 +257,7 @@ public class LatexSourceFile extends SourceFile
 			int flag=0;
 			for(int i=0;i<str.length;i++)
 			{
-				if(str[i]=='\t') continue;
+				if(str[i]=='\t'||str[i]=='\n'||str[i]=='\r'||str[i]==' ') continue;
 				if(str[i]<32||str[i]>126)
 				{
 					flag=1;
