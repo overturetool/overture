@@ -236,6 +236,7 @@ public class LatexSourceFile extends SourceFile
 			}
 
 			sb.append(line.substring(p));
+			//sb.append(utfIncludeCheck(line.substring(p), true));
 			return sb.toString();
 		}
 	}
@@ -249,32 +250,39 @@ public class LatexSourceFile extends SourceFile
 	}
 	
 	// add by his 2013/10/08
-	private String utfIncludeCheck(String s, Boolean addatsign)
+	private String utfIncludeCheck(String in_str, Boolean addatsign)
 	{
-		String checked=s;
-		try {
-			byte[] str = s.getBytes("UTF-8");
-			int flag=0;
-			for(int i=0;i<str.length;i++)
-			{
-				if(str[i]=='\t'||str[i]=='\n'||str[i]=='\r'||str[i]==' ') continue;
-				if(str[i]<32||str[i]>126)
+		String checked="";
+		String[] tkn = in_str.split(" ");
+		
+		for(int i=0;i<tkn.length;i++) {		
+			try {
+				byte[] str = tkn[i].getBytes("UTF-8");
+				int flag=0;
+				for(int j=0;j<str.length;j++)
 				{
-					flag=1;
-					break;
+					if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
+					if(str[j]<32||str[j]>126)
+					{
+						flag=1;
+						break;
+					}
+				}	
+				if(flag==1)
+				{
+					if(addatsign)
+						checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END + " ");
+					else 
+						checked+=("\\fontspec{MS Gothic}" + tkn[i]);
 				}
-			}
-			if(flag==1)
+				else
+					checked+=(tkn[i]+" ");
+				
+			} catch(IOException ex)
 			{
-				if(addatsign)
-					checked=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + s + LST_ESCAPE_END);
-				else 
-					checked=("\\fontspec{MS Gothic}" + s);
+				throw new RuntimeException(ex);
 			}
-			return checked;
-		} catch(IOException ex)
-		{
-			throw new RuntimeException(ex);
 		}
+		return checked;
 	}
 }
