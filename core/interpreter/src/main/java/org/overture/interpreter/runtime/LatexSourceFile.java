@@ -211,7 +211,7 @@ public class LatexSourceFile extends SourceFile
 	{
 		if (list == null)
 		{
-			return line + "\\%%";
+			return line + "\\%%%";
 			//return utfIncludeCheck(line, true);
 		} else
 		{
