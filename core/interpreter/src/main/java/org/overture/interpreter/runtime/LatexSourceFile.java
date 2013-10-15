@@ -127,8 +127,15 @@ public class LatexSourceFile extends SourceFile
 
 			if (markCoverage)
 			{
+					//List<LexLocation> list = hits.get(lnum);
+					//out.println(markup(spaced, list));
+				if(!inVdmAlModelTag) {
+					//List<LexLocation> list = hits.get(lnum);
+					out.println(spaced);
+				} else {
 					List<LexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
+				}
 			} else
 			{
 				out.println(spaced);
@@ -229,9 +236,9 @@ public class LatexSourceFile extends SourceFile
 					//sb.append(line.substring(p, start));
 					sb.append(utfIncludeCheck(line.substring(p, start), true));
 					sb.append(LST_ESCAPE_BEGIN + "\\vdmnotcovered{");
-					String temp = utfIncludeCheck(latexQuote(line.substring(start, end)), false);
-					if(temp.charAt(temp.length()-1)==' ') temp=temp.substring(0, temp.length()-1);
-					sb.append(temp);  // modified by his
+					//String temp = utfIncludeCheck(latexQuote(line.substring(start, end)), false);
+					//if(temp.charAt(temp.length()-1)==' ') temp=temp.substring(0, temp.length()-1);
+					sb.append(utfIncludeCheck(latexQuote(line.substring(start, end)), false));  // modified by his
 					sb.append("}" + LST_ESCAPE_END); // \u00A3");
 
 					p = end;
