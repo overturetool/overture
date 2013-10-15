@@ -253,8 +253,19 @@ public class LatexSourceFile extends SourceFile
 	// add by his 2013/10/08
 	private String utfIncludeCheck(String in_str, Boolean addatsign)
 	{
+		int spaces = in_str.length();
+		int count=0;
 		String checked="";
 		String[] tkn = in_str.split(" ");
+
+		for(int i=0;i<spaces;i++) {
+			if(in_str.charAt(i)==' ') count++;
+			checked+=" ";
+		}
+		if(spaces==count)
+			return checked;
+		else
+			checked="";
 		
 		for(int i=0;i<tkn.length;i++)
 		{		
@@ -270,7 +281,6 @@ public class LatexSourceFile extends SourceFile
 						break;
 					}
 				}
-				if(tkn[i].length()==0) checked+=" ";
 				if(flag==1)
 				{
 					if(addatsign) {
@@ -284,7 +294,7 @@ public class LatexSourceFile extends SourceFile
 						}
 					} else
 					{
-						checked+=("\\fontspec{MS Gothic}" + tkn[i]);
+						checked+=("\\fontspec{MS Gothic}" + tkn[i] + " ");
 					}
 				}
 				else {
