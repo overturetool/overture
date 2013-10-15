@@ -127,12 +127,8 @@ public class LatexSourceFile extends SourceFile
 
 			if (markCoverage)
 			{
-				if(!inVdmAlModelTag) { // outside
-					out.println(spaced);
-				} else {
 					List<LexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
-				}
 			} else
 			{
 				out.println(spaced);
@@ -257,60 +253,51 @@ public class LatexSourceFile extends SourceFile
 	}
 	
 	// add by his 2013/10/08
-	private String utfIncludeCheck(String in_str, Boolean addatsign)
+	private String utfIncludeCheck(String line, Boolean addatsign)
 	{
-		int spaces = in_str.length();
-		int count=0;
 		String checked="";
-		String[] tkn = in_str.split(" ");
-
-		for(int i=0;i<spaces;i++) {
-			if(in_str.charAt(i)==' ') count++;
-			checked+=" ";
-		}
-		if(spaces==count)
-			return checked;
-		else
-			checked="";
+		boolean start=false;
 		
-		for(int i=0;i<tkn.length;i++)
-		{		
-			try {
-				byte[] str = tkn[i].getBytes("UTF-8");
-				int flag=0;
-				for(int j=0;j<str.length;j++)
-				{
-					if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
-					if(str[j]<32||str[j]>126)
-					{
-						flag=1;
-						break;
-					}
-				}
-				if(flag==1)
-				{
-					if(addatsign) {
-						if(checked.length()>=4&&checked.substring(checked.length()-4,checked.length()-1).equals(LST_ESCAPE_END))
-						{
-							checked=(checked.substring(0, checked.length()-4)+" ");
-							checked+=(tkn[i]+LST_ESCAPE_END+" ");
-						} else
-						{
-							checked+=(LST_ESCAPE_BEGIN + "\\fontspec{MS Gothic}" + tkn[i] + LST_ESCAPE_END+" ");
-						}
-					} else
-					{
-						checked+=("\\fontspec{MS Gothic}" + tkn[i] + " ");
-					}
-				}
-				else {
-					checked+=(tkn[i]+" ");
-				}
-			} catch(IOException ex)
-			{
-				throw new RuntimeException(ex);
-			}
-		}
+	    for(int i=0;i<line.length();i++)
+	    {
+	        if(isOneByte(line.substring(i, i+1)))
+	        {
+	        	if(start)
+	        	{
+	        		start=false;
+	        		checked+=((addatsign ? LST_ESCAPE_END : "") + line.substring(i, i+1));
+	        	} else
+	        	{
+	        		checked+=line.substring(i, i+1);
+	        	}
+	        } else
+	        {
+	        	if(!start)
+	        	{
+	        		checked+=((addatsign ? LST_ESCAPE_BEGIN : "")+ "\\fontspec{MS Gothic}" + line.substring(i, i+1));
+	        		start=true;
+	        	} else
+	        	{
+	        		checked+=line.substring(i, i+1);
+	        	}
+	        }
+	    }
+	    if(start) 
+   		{
+	    	checked+=(addatsign ? LST_ESCAPE_END : "");
+   		}
 		return checked;
+	}
+	
+	private boolean isOneByte(String a_String)
+	{
+		boolean result=false;
+		try {
+			byte[] code = a_String.getBytes("UTF-8");
+			result = (code.length == 1 ? true : false);
+		} catch(IOException ex) {
+		}
+		return result;
+	}
 	}
 }
