@@ -299,5 +299,4 @@ public class LatexSourceFile extends SourceFile
 		}
 		return result;
 	}
-	}
 }
