@@ -48,6 +48,14 @@ abstract public class TypeChecker
 	private static final int MAX = 100;
 	
 	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	
+	public static interface IStatusListner
+	{
+		void report(VDMError error);
+		void warning(VDMWarning warning);
+	}
+	
+	static List<IStatusListner> listners = new Vector<IStatusListner>();
 
 	public TypeChecker()
 	{
@@ -62,6 +70,11 @@ abstract public class TypeChecker
 		//System.out.println(error.toString());
 		errors.add(error);
 		lastMessage = error;
+		
+		for (IStatusListner listner : listners)
+		{
+			listner.report(error);
+		}
 
 		if (errors.size() >= MAX-1)
 		{
@@ -75,6 +88,11 @@ abstract public class TypeChecker
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);
 		lastMessage = warning;
+		
+		for (IStatusListner listner : listners)
+		{
+			listner.warning(warning);
+		}
 	}
 
 	public static void detail(String tag, Object obj)
@@ -131,5 +149,15 @@ abstract public class TypeChecker
 		{
 			out.println(w.toString());
 		}
+	}
+	
+	public static void addStatusListner(IStatusListner listner)
+	{
+		listners.add(listner);
+	}
+	
+	public static void removeStatusListner(IStatusListner listner)
+	{
+		listners.remove(listner);
 	}
 }
