@@ -56,10 +56,10 @@ public class SSeqTypeAssistantTC {
 //		return false;
 //	}
 
-	public static boolean narrowerThan(SSeqType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistantTC.narrowerThan(type.getSeqof(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(SSeqType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		return PTypeAssistantTC.narrowerThan(type.getSeqof(),accessSpecifier);
+//	}
 
 	public static PType polymorph(SSeqType type, ILexNameToken pname,
 			PType actualType) {

@@ -442,44 +442,51 @@ public class PTypeAssistantTC extends PTypeAssistant
 	public static boolean narrowerThan(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.narrowerThan((ABracketType) type, accessSpecifier);
-		} else if (type instanceof AFunctionType)
+			return type.apply(af.getNarrowerThanComparator(),accessSpecifier);
+		} catch (AnalysisException e)
 		{
-			return AFunctionTypeAssistantTC.narrowerThan((AFunctionType) type, accessSpecifier);
-		} else if (type instanceof AOperationType)
-		{
-			return AOperationTypeAssistantTC.narrowerThan((AOperationType) type, accessSpecifier);
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.narrowerThan((AOptionalType) type, accessSpecifier);
-		} else if (type instanceof SSeqType)
-		{
-			return SSeqTypeAssistantTC.narrowerThan((SSeqType) type, accessSpecifier);
-		} else if (type instanceof ASetType)
-		{
-			return ASetTypeAssistantTC.narrowerThan((ASetType) type, accessSpecifier);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
-		} else if (type instanceof SInvariantTypeBase)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) type, accessSpecifier);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) type, accessSpecifier);
-			}
-			return narrowerThanBaseCase(type, accessSpecifier);
-		} else
-		{
-			return narrowerThanBaseCase(type, accessSpecifier);
+			return false;
 		}
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.narrowerThan((ABracketType) type, accessSpecifier);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			return AFunctionTypeAssistantTC.narrowerThan((AFunctionType) type, accessSpecifier);
+//		} else if (type instanceof AOperationType)
+//		{
+//			return AOperationTypeAssistantTC.narrowerThan((AOperationType) type, accessSpecifier);
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.narrowerThan((AOptionalType) type, accessSpecifier);
+//		} else if (type instanceof SSeqType)
+//		{
+//			return SSeqTypeAssistantTC.narrowerThan((SSeqType) type, accessSpecifier);
+//		} else if (type instanceof ASetType)
+//		{
+//			return ASetTypeAssistantTC.narrowerThan((ASetType) type, accessSpecifier);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
+//		} else if (type instanceof SInvariantTypeBase)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) type, accessSpecifier);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) type, accessSpecifier);
+//			}
+//			return narrowerThanBaseCase(type, accessSpecifier);
+//		} else
+//		{
+//			return narrowerThanBaseCase(type, accessSpecifier);
+//		}
 	}
 
 	public static boolean narrowerThanBaseCase(PType type,

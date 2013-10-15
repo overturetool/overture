@@ -154,10 +154,10 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
-	public static boolean narrowerThan(ABracketType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
-	}
+//	public static boolean narrowerThan(ABracketType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
+//	}
 	
 	
 

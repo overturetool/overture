@@ -10,7 +10,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -137,19 +136,19 @@ public class AFunctionTypeAssistantTC {
 //				PTypeAssistantTC.equals(type.getParameters(),fo.getParameters()));
 //	}
 
-	public static boolean narrowerThan(AFunctionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		
-		for (PType t: type.getParameters())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return  PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(AFunctionType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		
+//		for (PType t: type.getParameters())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return  PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+//	}
 
 	public static PType polymorph(AFunctionType type, ILexNameToken pname,
 			PType actualType) {

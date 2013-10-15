@@ -10,7 +10,6 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
@@ -144,19 +143,19 @@ public class AOperationTypeAssistantTC {
 //				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
 //	}
 
-	public static boolean narrowerThan(AOperationType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		
-		for (PType t: type.getParameters())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(AOperationType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		
+//		for (PType t: type.getParameters())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+//	}
 
 	
 
