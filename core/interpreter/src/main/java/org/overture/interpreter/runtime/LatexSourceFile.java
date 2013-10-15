@@ -263,7 +263,7 @@ public class LatexSourceFile extends SourceFile
 				int flag=0;
 				for(int j=0;j<str.length;j++)
 				{
-					//if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
+					if(str[j]=='\t'||str[j]=='\n'||str[j]=='\r'||str[j]==' ') continue;
 					if(str[j]<32||str[j]>126)
 					{
 						flag=1;
@@ -288,7 +288,7 @@ public class LatexSourceFile extends SourceFile
 					}
 				}
 				else {
-					checked+=(tkn[i]);
+					checked+=(tkn[i]+" ");
 				}
 			} catch(IOException ex)
 			{
