@@ -322,9 +322,9 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				obligations.addAll(node.getBody().apply(rootVisitor, question));
 
 				if (node.getIsUndefined()
-						|| !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult()))
+						|| !TypeComparator.isSubType(node.getActualResult(),  node.getType().getResult()))
 				{
-					obligations.add(new SubTypeObligation(node, ((AOperationType) node.getType()).getResult(), node.getActualResult(), question));
+					obligations.add(new SubTypeObligation(node, node.getType().getResult(), node.getActualResult(), question));
 				}
 				
 				question.pop();
