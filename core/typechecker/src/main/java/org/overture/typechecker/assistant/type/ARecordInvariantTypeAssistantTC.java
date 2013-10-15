@@ -33,15 +33,15 @@ public class ARecordInvariantTypeAssistantTC {
 		return null;
 	}
 
-	public static void unResolve(ARecordInvariantType type) {
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-
-		for (AFieldField f: type.getFields())
-		{
-			AFieldFieldAssistantTC.unResolve(f);
-		}
-		
-	}
+//	public static void unResolve(ARecordInvariantType type) {
+//		if (!type.getResolved()) return; else { type.setResolved(false); }
+//
+//		for (AFieldField f: type.getFields())
+//		{
+//			AFieldFieldAssistantTC.unResolve(f);
+//		}
+//		
+//	}
 
 	public static PType typeResolve(ARecordInvariantType type,
 			ATypeDefinition root,
