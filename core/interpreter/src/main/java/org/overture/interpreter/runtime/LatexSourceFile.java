@@ -130,11 +130,11 @@ public class LatexSourceFile extends SourceFile
 					//List<LexLocation> list = hits.get(lnum);
 					//out.println(markup(spaced, list));
 				if(!inVdmAlModelTag) {
-					//List<LexLocation> list = hits.get(lnum);
-					out.println(spaced);
-				} else {
 					List<LexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
+				} else {
+					//List<LexLocation> list = hits.get(lnum);
+					out.println(spaced);
 				}
 			} else
 			{
