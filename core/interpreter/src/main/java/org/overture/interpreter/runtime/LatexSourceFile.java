@@ -284,7 +284,7 @@ public class LatexSourceFile extends SourceFile
 	        	if(start)
 	        	{
 	        		start=false;
-	        		checked+=((addatsign ? LST_ESCAPE_END : "") + line.substring(i, i+1));
+	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_END : "" ) : "") + line.substring(i, i+1));
 	        	} else
 	        	{
 	        		checked+=line.substring(i, i+1);
@@ -293,7 +293,7 @@ public class LatexSourceFile extends SourceFile
 	        {
 	        	if(!start)
 	        	{
-	        		checked+=((addatsign ? LST_ESCAPE_BEGIN : "")+ (useJPNFont ? "\\fontspec{MS Gothic}" : "") + line.substring(i, i+1));
+	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_BEGIN : "") : "")+ (useJPNFont ? "\\fontspec{MS Gothic}" : "") + line.substring(i, i+1));
 	        		start=true;
 	        	} else
 	        	{
@@ -303,7 +303,7 @@ public class LatexSourceFile extends SourceFile
 	    }
 	    if(start) 
    		{
-	    	checked+=(addatsign ? LST_ESCAPE_END : "");
+	    	checked+=(addatsign ? (useJPNFont ? LST_ESCAPE_END : "" ) : "");
    		}
 		return checked;
 	}
