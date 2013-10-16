@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -41,6 +42,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
@@ -51,8 +53,8 @@ public class SatisfiabilityObligation extends ProofObligation
 
 	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
 	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
-	private static final ILexNameToken STATE_ARG = new LexNameToken(null, "state", null);
-	private static final ILexNameToken SELF_ARG = new LexNameToken(null, "self", null);
+	private static final ILexNameToken NEW_STATE_ARG = new LexNameToken(null, "newstate", null);
+	private static final ILexNameToken NEW_SELF_ARG = new LexNameToken(null, "newself", null);
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt) throws AnalysisException
@@ -122,6 +124,15 @@ public class SatisfiabilityObligation extends ProofObligation
 		 * state~, state) The state argument is either a Sigma(SL) or self(PP).
 		 */
 
+		PExp predExp = buildPredicate(op, stateDefinition);
+
+		valuetree.setPredicate(ctxt.getPredWithContext(predExp));
+
+	}
+
+	PExp buildPredicate(AImplicitOperationDefinition op,
+			PDefinition stateDefinition) throws AnalysisException
+	{
 		List<PExp> arglist = new Vector<PExp>();
 
 		for (APatternListTypePair pltp : op.getParameterPatterns())
@@ -132,13 +143,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			}
 		}
 
-		if (stateDefinition instanceof AStateDefinition)
-		{
-			arglist.add(getVarExp(STATE_ARG));
-		} else
-		{
-			arglist.add(getVarExp(SELF_ARG));
-		}
+		stateInPre(arglist, stateDefinition);
 
 		AApplyExp preApply = null;
 
@@ -149,8 +154,10 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		PExp mainExp;
 
+		// Operation Has a Result. Add it in the post condition.
 		if (op.getResult() != null)
 		{
+
 			AExistsExp existsExp = new AExistsExp();
 			List<PExp> postArglist = new Vector<PExp>(arglist);
 
@@ -162,38 +169,79 @@ public class SatisfiabilityObligation extends ProofObligation
 				if (stateDefinition instanceof AStateDefinition)
 				{
 					postArglist.add(getVarExp(OLD_STATE_ARG));
-					postArglist.add(getVarExp(STATE_ARG));
+					postArglist.add(getVarExp(NEW_STATE_ARG));
 				} else
 				{
 					postArglist.add(getVarExp(OLD_SELF_ARG));
-					postArglist.add(getVarExp(SELF_ARG));
+					postArglist.add(getVarExp(NEW_SELF_ARG));
 				}
 
 				existsExp.setBindList(getMultipleTypeBindList(op.getResult().getType().clone(), ip.getName().clone()));
 			} else
 			{
-				throw new RuntimeException("Expecting identifier pattern in operation result");
+				throw new RuntimeException("Expecting single identifier pattern in operation result");
 			}
 
 			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
 			existsExp.setPredicate(postApply);
 			mainExp = existsExp;
-		} else
-		{
-			mainExp = getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(arglist));
 		}
+
+		// No Result. Just add new state to post condition
+		else
+		{
+
+			AExistsExp exists_exp = new AExistsExp();
+			List<PExp> postArglist = new Vector<PExp>(arglist);
+
+			List<PMultipleBind> exists_binds = new LinkedList<PMultipleBind>();
+			stateInPost(exists_binds, postArglist, stateDefinition);
+
+			exists_exp.setBindList(exists_binds);
+			exists_exp.setPredicate(getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(postArglist)));
+			mainExp = exists_exp;
+		}
+
 		if (preApply != null)
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
 			implies.setLeft(preApply);
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(mainExp);
-			valuetree.setPredicate(ctxt.getPredWithContext(implies));
+			return implies;
 		} else
 		{
-			valuetree.setPredicate(ctxt.getPredWithContext(mainExp));
+			return mainExp;
+		}
+	}
+
+	protected void stateInPre(List<PExp> args, PDefinition stateDefinition)
+	{
+
+		if (stateDefinition instanceof AStateDefinition)
+		{
+			args.add(getVarExp(OLD_STATE_ARG));
+		} else
+		{
+			args.add(getVarExp(OLD_SELF_ARG));
 		}
 
-		// valuetree.setContext(ctxt.getContextNodeList());
 	}
+
+	protected void stateInPost(List<PMultipleBind> exists_binds, List<PExp> postArglist,
+			PDefinition stateDefinition)
+	{
+
+		// replace with super call
+		if (stateDefinition instanceof AStateDefinition)
+		{
+			postArglist.add(getVarExp(NEW_STATE_ARG));
+			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_STATE_ARG);
+		} else
+		{
+			postArglist.add(getVarExp(NEW_SELF_ARG));
+			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_SELF_ARG);
+		}
+	}
+
 }

@@ -109,33 +109,32 @@ public class POOperationDefinitionContext extends POContext
 		return stitch;
 
 	}
-	
+
 	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
 	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
 
-	private List<? extends PMultipleBind> makeBinds()
+	private void addParameterBinds(LinkedList<PMultipleBind> r)
 	{
-		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
-		
 		Iterator<PType> types = deftype.getParameters().iterator();
-		for (PPattern p : paramPatternList){
+		for (PPattern p : paramPatternList)
+		{
 			ATypeMultipleBind tmBind = new ATypeMultipleBind();
 			List<PPattern> pats = new LinkedList<PPattern>();
-			
+
 			pats.add(p.clone());
 			tmBind.setType(types.next().clone());
 			tmBind.setPlist(pats);
 			r.add(tmBind);
 		}
-		
+	}
 
+	protected void addStateBinds(LinkedList<PMultipleBind> r)
+	{
 		if (stateDefinition != null)
 		{
 			ATypeMultipleBind tmBind2 = new ATypeMultipleBind();
 			AIdentifierPattern pattern = new AIdentifierPattern();
 
-			//TODO Fix state definition handling here
-			
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
@@ -153,8 +152,16 @@ public class POOperationDefinitionContext extends POContext
 			plist.add(pattern);
 			tmBind2.setPlist(plist);
 			r.add(tmBind2);
-
 		}
+	}
+
+	private List<? extends PMultipleBind> makeBinds()
+	{
+		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
+
+		addParameterBinds(r);
+
+		addStateBinds(r);
 
 		return r;
 
