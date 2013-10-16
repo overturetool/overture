@@ -98,7 +98,7 @@ public class LatexBuilder
 		}
 		String CHECKED = (checkFont("MS Mincho") ? "" : "%"); // added by his 2013/10/16
 		//document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
-		document = document.replace("JPNFONT",CHECKED).replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace(JPNFONT, CHECKED).replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
 	}

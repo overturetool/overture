@@ -33,7 +33,7 @@ public class LatexSourceFile extends SourceFile
 	public final String LST_ESCAPE_BEGIN = "(*@";
 	public final String LST_ESCAPE_END = "@*)";
 
-	private static final boolean useJPNFont = checkFont("MS Gothic");
+	public final boolean useJPNFont = checkFont("MS Gothic");
 	
 	public LatexSourceFile(SourceFile source) throws IOException
 	{
