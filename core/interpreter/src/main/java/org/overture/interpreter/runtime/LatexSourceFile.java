@@ -33,7 +33,7 @@ public class LatexSourceFile extends SourceFile
 	public final String LST_ESCAPE_BEGIN = "(*@";
 	public final String LST_ESCAPE_END = "@*)";
 
-	public boolean useJPNFont = checkFont("MS Gothic");
+	public boolean useJPNFont;
 	
 	public LatexSourceFile(SourceFile source) throws IOException
 	{
@@ -103,6 +103,7 @@ public class LatexSourceFile extends SourceFile
 
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
+		useJPNFont = checkFont("MS Gothic");
 		
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
@@ -133,7 +134,7 @@ public class LatexSourceFile extends SourceFile
 			{
 					//List<LexLocation> list = hits.get(lnum);
 					//out.println(markup(spaced, list));
-				if(!inVdmAlModelTag) {
+				if(inVdmAlModelTag) {
 					List<LexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
 				} else {
