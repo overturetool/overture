@@ -170,17 +170,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		boolean isSimple = !PTypeAssistantTC.isUnion(node.getType());
 		PTypeSet results = new PTypeSet();
 
-<<<<<<< HEAD
-		if (PTypeAssistantTC.isFunction(node.getType())) {
-			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
-			AFunctionTypeAssistantTC.typeResolve(ft, null, rootVisitor,
-					question);
-=======
+
 		if (PTypeAssistantTC.isFunction(node.getType()))
 		{
 			AFunctionType ft = PTypeAssistantTC.getFunction(node.getType());
 			AFunctionTypeAssistantTC.typeResolve(ft, null, rootVisitor, question);
->>>>>>> origin/kel/astv2
+
 			results.add(AApplyExpAssistantTC.functionApply(node, isSimple, ft));
 		}
 
@@ -272,18 +267,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.detail("Type", node.getRight().getType());
 				node.setType(AstFactory.newAUnknownType(node.getLocation()));
 				return node.getType();
-<<<<<<< HEAD
-			} else {
-				AFunctionType lf = question.assistantFactory.createPTypeAssistant().getFunction(node.getLeft()
-						.getType());
-				AFunctionType rf = question.assistantFactory.createPTypeAssistant().getFunction(node.getRight()
-						.getType());
 
-				if (lf.getParameters().size() != 1) {
-					TypeCheckerErrors.report(3071,
-							"Left hand function must have a single parameter",
-							node.getLocation(), node);
-=======
 			} else
 			{
 				AFunctionType lf = PTypeAssistantTC.getFunction(node.getLeft().getType());
@@ -292,7 +276,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				if (lf.getParameters().size() != 1)
 				{
 					TypeCheckerErrors.report(3071, "Left hand function must have a single parameter", node.getLocation(), node);
->>>>>>> origin/kel/astv2
+
 					TypeCheckerErrors.detail("Type", lf);
 				} else if (rf.getParameters().size() != 1)
 				{
@@ -1338,14 +1322,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return ftype;
 		}
 
-<<<<<<< HEAD
-		if (PTypeAssistantTC.isFunction(ftype)) {
-			AFunctionType t = question.assistantFactory.createPTypeAssistant().getFunction(ftype);
-=======
+
 		if (PTypeAssistantTC.isFunction(ftype))
 		{
 			AFunctionType t = PTypeAssistantTC.getFunction(ftype);
->>>>>>> origin/kel/astv2
 			PTypeSet set = new PTypeSet();
 
 			if (t.getDefinitions().size() == 0)

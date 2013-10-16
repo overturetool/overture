@@ -414,21 +414,12 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
 		}
 
-<<<<<<< HEAD
-		if (PTypeAssistantTC.isFunction(type)) {
-			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(type);
-			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, rootVisitor,
-					new TypeCheckInfo(question.assistantFactory,question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node,
-					ft, question.env, NameScope.NAMESANDSTATE, unique,
-					rootVisitor));
-=======
+
 		if (PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
 			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
->>>>>>> origin/kel/astv2
 		}
 
 		if (PTypeAssistantTC.isOperation(type))

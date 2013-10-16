@@ -3,6 +3,7 @@ package org.overture.typechecker.utilities.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AFieldField;
@@ -215,6 +216,22 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
 	{
 		return af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node,
+			AAccessSpecifierAccessSpecifier question) throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node,
+			AAccessSpecifierAccessSpecifier question) throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
