@@ -37,11 +37,15 @@ eventid        : [EventId];
 
 operations
 
-public FlareDispenser: Angle * nat1 * bool ==> FlareDispenser
-FlareDispenser(ang, p, isP) ==
+public FlareDispenser: Angle * [ThreadDef] ==> FlareDispenser
+FlareDispenser(ang, tDef) ==
  (aperture := ang;
-  period := p;
-  isPeriodic := isP;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
  );
 
 public GetAngle: () ==> nat
@@ -69,8 +73,8 @@ addThreat (evid, pmt, ptime) ==
 pre pmt in set dom missilePriority and
     pmt in set dom responseDB;
 
-private evalQueue: () ==> ()
-evalQueue () ==
+private Step: () ==> ()
+Step () ==
   (if len curplan > 0
    then (dcl curtime : Time := World`timerRef.GetTime(),
              done : bool := false;
@@ -94,19 +98,17 @@ releaseFlare (evid, pfltp, pt1, pt2) ==
 public isFinished: () ==> ()
 isFinished () == skip;
 
-public Step: () ==> ()
-Step() ==
-  evalQueue();
 
 sync
 
-mutex(Step);
-mutex(evalQueue);
-mutex (addThreat,evalQueue);
+mutex (Step);
+mutex (addThreat);
 per isFinished => not busy
-
+     
 end FlareDispenser
 \end{vdm_al}
 
-
+\begin{rtinfo}[FlareDispenser`FlareDispenser]
+{vdm.tc}[FlareDispenser]
+\end{rtinfo}
 
