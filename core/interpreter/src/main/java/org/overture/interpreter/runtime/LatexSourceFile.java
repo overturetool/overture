@@ -126,6 +126,11 @@ public class LatexSourceFile extends SourceFile
 				inVdmAlModelTag = true;
 			}
 
+			if (line.contains("\\subsection{")) // added by his 2013/10/16
+			{
+				inVdmAlModelTag = false;
+			}
+
 			if (hasVdm_al && modelOnly && !inVdmAlModelTag)
 			{
 				continue;
