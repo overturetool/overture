@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
@@ -31,6 +33,8 @@ public class LatexSourceFile extends SourceFile
 	public final String LST_ESCAPE_BEGIN = "(*@";
 	public final String LST_ESCAPE_END = "@*)";
 
+	private static final boolean useJPNFont = checkFont("MS Gothic");
+	
 	public LatexSourceFile(SourceFile source) throws IOException
 	{
 		this(source.filename, source.charset);
@@ -99,7 +103,7 @@ public class LatexSourceFile extends SourceFile
 
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
-
+		
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
 			String line = rawLines.get(lnum - 1);
@@ -281,7 +285,7 @@ public class LatexSourceFile extends SourceFile
 	        {
 	        	if(!start)
 	        	{
-	        		checked+=((addatsign ? LST_ESCAPE_BEGIN : "")+ "\\fontspec{MS Gothic}" + line.substring(i, i+1));
+	        		checked+=((addatsign ? LST_ESCAPE_BEGIN : "")+ (useJPNFont ? "\\fontspec{MS Gothic}" : "") + line.substring(i, i+1));
 	        		start=true;
 	        	} else
 	        	{
@@ -305,5 +309,22 @@ public class LatexSourceFile extends SourceFile
 		} catch(IOException ex) {
 		}
 		return result;
+	}
+	
+	public static boolean checkFont(String FontName)
+	{
+		boolean checked=false;
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		Font fonts[] = ge.getAllFonts();
+	      
+		for (int i = 0; i < fonts.length; i++ ) {
+			if(fonts[i].getName().toString().equals(FontName)) {
+				checked = true;
+				break;
+			}
+		}
+		return checked;
 	}
 }

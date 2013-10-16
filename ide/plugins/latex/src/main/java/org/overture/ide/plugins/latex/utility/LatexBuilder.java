@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
@@ -42,6 +44,7 @@ public class LatexBuilder
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
 	final String TITLE = "%TITLE";
+	final String JPNFONT = "%JPNFONT";
 	File outputFolder = null;
 	List<String> includes = new Vector<String>();
 
@@ -78,7 +81,7 @@ public class LatexBuilder
 			String tmp = includeName.replace('\\', '/');
 			includeName = tmp.substring(tmp.lastIndexOf('/') + 1);
 
-			sb.append("\n" + "\\section{" + utfIncludeCheck(latexQuote(includeName)) + "}"); // modified by his 2013/10/08
+			sb.append("\n" + "\\section{" + latexQuote(includeName) + "}");
 
 			if (path.contains(latexRoot.getAbsolutePath()))
 			{
@@ -93,7 +96,9 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		String CHECKED = (checkFont("MS Mincho") ? "" : "%"); // added by his 2013/10/16
+		//document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace("JPNFONT",CHECKED).replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
 	}
@@ -105,31 +110,6 @@ public class LatexBuilder
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
-	// add by his 2013/10/08
-	private String utfIncludeCheck(String s)
-	{
-		String checked=s;
-		try {
-			byte[] str = s.getBytes("UTF-8");
-			int flag=0;
-			for(int i=0;i<str.length;i++)
-			{
-				if(str[i]<33||str[i]>126)
-				{
-					flag=1;
-					break;
-				}
-			}
-			if(flag==1)
-			{
-				checked="(@*\\fontspec{MS Gothic}" + s + "*@)";
-			}
-			return checked;
-		} catch(IOException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-	}
 	
 	public void addInclude(String path)
 	{
@@ -211,5 +191,22 @@ public class LatexBuilder
 
 		return fullPathString;
 
+	}
+	
+	public static boolean checkFont(String FontName)
+	{
+		boolean checked=false;
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		Font fonts[] = ge.getAllFonts();
+	      
+		for (int i = 0; i < fonts.length; i++ ) {
+			if(fonts[i].getName().toString().equals(FontName)) {
+				checked = true;
+				break;
+			}
+		}
+		return checked;
 	}
 }
