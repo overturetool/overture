@@ -10,6 +10,7 @@ import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
@@ -63,6 +64,20 @@ public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>{
 		applyExp.setArgs(args);
 		
 		return applyExp;
+	}
+
+	@Override
+	public PExp createNewReturnValue(INode node)
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public PExp createNewReturnValue(Object node)
+	{
+		assert false : "Should not happen";
+		return null;
 	}
 
 

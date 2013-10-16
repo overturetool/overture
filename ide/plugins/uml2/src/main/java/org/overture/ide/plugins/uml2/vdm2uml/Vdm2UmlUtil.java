@@ -29,7 +29,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-@SuppressWarnings("deprecation")
 public class Vdm2UmlUtil
 {
 public final static ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
@@ -125,7 +124,7 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 
 		for (PDefinition def : sClass.getDefinitions())
 		{
-			if (AThreadDefinition.kindPDefinition.equals(def.kindPDefinition()))
+			if (def instanceof AThreadDefinition )
 				return true;
 		}
 		return false;
@@ -151,8 +150,7 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 		{
 			if (pDefinition instanceof AExplicitOperationDefinition)
 			{
-				return ASubclassResponsibilityStm.kindPStm
-						.equals(((AExplicitOperationDefinition)pDefinition).getBody().kindPStm());
+				return ((AExplicitOperationDefinition)pDefinition).getBody() instanceof ASubclassResponsibilityStm ;
 			} else if (pDefinition instanceof AImplicitOperationDefinition)
 			{
 				PStm body = ((AImplicitOperationDefinition) pDefinition).getBody();
@@ -162,7 +160,7 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 					return true;
 				} else
 				{
-					return ASubclassResponsibilityStm.kindPStm.equals(body.kindPStm());
+					return body instanceof ASubclassResponsibilityStm;
 				}
 			}
 		}

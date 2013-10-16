@@ -1,32 +1,47 @@
-module B
+module A
 definitions
 
-types 
-Percent = int
-inv p == p>0 and p <100;
 
-MeterID :: int
-	
-	values
- AllMeterIDs : set of MeterID = {x | x :MeterID}
-	
-	
+
 functions
-	getRanID() r:MeterID
-	post r in set AllMeterIDs;
+	donothing() r : set of nat
+	post r subset {ss | ss : nat & ss <10}
 
 
+types
+  Command = Borrow | Renew | Return | Find;
+  
+  String = seq of char;
+  BookId = token;
+  UserId = token;
+  BorrowMap = map UserId to set of BookId;
+  
+  Book ::  
+    title : String
+    author : String ;
 
-state StateName of
--- TODO Define state here
-end 
+  User :: 
+      name : String ;
+      
+  Borrow ::
+    copy : BookId
+    user : UserId;
+   
+  Renew ::
+    copy : BookId
+    user : UserId;
+  Return :: copy : BookId;
+  Find :: string : String;
+  
+  Library ::
+    books : map BookId to Book
+    users : map UserId to User
+    borrowed : BorrowMap
+  inv mk_Library(bs,us,bor) ==
+    dom bor subset dom us
+    and dunion rng bor subset dom bs
+    and (forall u1, u2 in set dom bor & u1 <> u2 => bor(u1) inter bor(u2) = {})
 
-types 
--- TODO Define types here
-values 
--- TODO Define values here
-functions 
--- TODO Define functions here
-operations 
--- TODO Define operations here
-end B
+
+end A
+

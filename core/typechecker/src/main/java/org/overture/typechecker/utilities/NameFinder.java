@@ -25,6 +25,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -463,5 +464,19 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			throws AnalysisException
 	{
 		return PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope);
+	}
+
+	@Override
+	public PDefinition createNewReturnValue(INode node, Newquestion question)
+	{
+		assert false : "should not happen";
+		return null;
+	}
+
+	@Override
+	public PDefinition createNewReturnValue(Object node, Newquestion question)
+	{
+		assert false : "should not happen";
+		return null;
 	}
 }

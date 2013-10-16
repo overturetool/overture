@@ -11,6 +11,7 @@ import org.overture.ast.modules.PExport;
 import org.overture.ast.modules.PExports;
 import org.overture.ast.modules.PImports;
 import org.overture.ast.modules.PModules;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -305,6 +306,20 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	@Override
 	public IProofObligationList defaultPCase(PCase node, IPOContextStack question) {
 
+		return new ProofObligationList();
+	}
+
+	@Override
+	public IProofObligationList createNewReturnValue(INode node,
+			IPOContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public IProofObligationList createNewReturnValue(Object node,
+			IPOContextStack question)
+	{
 		return new ProofObligationList();
 	}
 

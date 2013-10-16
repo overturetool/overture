@@ -92,6 +92,18 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 			Object[] children = this.contentProvider.getChildren(o);
 			if (children == null)
 			{
+				for (IOvertureWorkbenchAdapter ext : extensions)
+				{
+					children = ext.getChildren(o);
+					if (children != null)
+					{
+						break;
+					}
+				}
+				
+			}
+			if(children == null)
+			{
 				children = new Object[0];
 			}
 			return children;

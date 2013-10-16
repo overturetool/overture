@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.node.INode;
+import org.overture.ast.util.test.OutlineCompatabilityChecker;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
@@ -87,6 +89,15 @@ public final static boolean DEBUG = true;
 			
 			collectParserErrorsAndWarnings(reader, errors, warnings);
 			Result<R> resultFinal = new Result<R>(result, warnings, errors);
+			
+			if (result instanceof List || result instanceof INode)
+			{
+				OutlineCompatabilityChecker outlineCompatabilityChecker = new OutlineCompatabilityChecker();
+				if (!outlineCompatabilityChecker.check(resultFinal.result))
+				{
+					fail("Does not support outline failed on classes: "+ outlineCompatabilityChecker.getInvalidNodesDescription());
+				}
+			}
 			
 			compareResults(resultFinal, file.getAbsolutePath());
 			

@@ -24,6 +24,7 @@ import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -321,9 +322,9 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				obligations.addAll(node.getBody().apply(rootVisitor, question));
 
 				if (node.getIsUndefined()
-						|| !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult()))
+						|| !TypeComparator.isSubType(node.getActualResult(),  node.getType().getResult()))
 				{
-					obligations.add(new SubTypeObligation(node, ((AOperationType) node.getType()).getResult(), node.getActualResult(), question));
+					obligations.add(new SubTypeObligation(node, node.getType().getResult(), node.getActualResult(), question));
 				}
 				
 				question.pop();
@@ -423,6 +424,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 			if (node.getPostcondition() != null)
 			{
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				obligations.add(new OperationPostConditionObligation(node, question));
 			}
 
 			if (node.getBody() != null)
@@ -663,6 +665,20 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 		{
 			throw new POException(node, e);
 		}
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
 	}
 
 }

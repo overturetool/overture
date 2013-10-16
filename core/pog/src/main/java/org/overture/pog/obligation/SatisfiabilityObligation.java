@@ -94,7 +94,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		}
 
 		AApplyExp postApply = getApplyExp(getVarExp(func.getPostdef().getName()), postArglist);
-		existsExp.setPredicate(ctxt.getPredWithContext(postApply));
+		existsExp.setPredicate(postApply);
 
 		if (preApply != null)
 		{
@@ -157,7 +157,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			if (op.getResult().getPattern() instanceof AIdentifierPattern)
 			{
 				AIdentifierPattern ip = (AIdentifierPattern) op.getResult().getPattern();
-				postArglist.add(patternToExp(op.getResult().getPattern()));
+				postArglist.add(patternToExp(op.getResult().getPattern().clone()));
 
 				if (stateDefinition instanceof AStateDefinition)
 				{
@@ -176,7 +176,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			}
 
 			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
-			existsExp.setPredicate(ctxt.getPredWithContext(postApply));
+			existsExp.setPredicate(postApply);
 			mainExp = existsExp;
 		} else
 		{

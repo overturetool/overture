@@ -25,6 +25,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
 import org.overture.ast.patterns.AConcatenationPattern;
@@ -243,5 +244,19 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		union.setOp(new LexKeywordToken(VDMToken.MUNION, null));
 		union.setRight(node.getRight().apply(this).clone());
 		return union;
+	}
+
+	@Override
+	public PExp createNewReturnValue(INode node)
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public PExp createNewReturnValue(Object node)
+	{
+		assert false : "Should not happen";
+		return null;
 	}
 }
