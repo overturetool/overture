@@ -104,7 +104,7 @@ public class LatexSourceFile extends SourceFile
 		if (!hasVdm_al)
 		{
 			out.println(BEGIN + getListingEnvironment());
-			inVdmAlModelTag = true;
+			inVdmAlModelTag = true; // added
 		}
 
 		//boolean endDocFound = false;
@@ -161,6 +161,7 @@ public class LatexSourceFile extends SourceFile
 		if (!hasVdm_al)
 		{
 			out.println(END + getListingEnvironment());
+			inVdmAlModelTag = false; // added
 		}
 
 		if (includeCoverageTable)

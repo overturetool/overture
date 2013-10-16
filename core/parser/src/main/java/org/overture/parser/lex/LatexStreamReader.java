@@ -142,30 +142,4 @@ public class LatexStreamReader extends InputStreamReader
 		return pos;
 	}
 	
-	// add by his 2013/10/08
-	private String utfIncludeCheck(String s)
-	{
-		String checked=s;
-		try {
-			byte[] str = s.getBytes("UTF-8");
-			int flag=0;
-			for(int i=0;i<str.length;i++)
-			{
-				if(str[i]<33||str[i]>126)
-				{
-					flag=1;
-					break;
-				}
-			}
-			if(flag==1)
-			{
-				checked="(@*\\fontspec{MS Gothic}" + s + "*@)";
-			}
-			return checked;
-		} catch(IOException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-	}
-	
 }
