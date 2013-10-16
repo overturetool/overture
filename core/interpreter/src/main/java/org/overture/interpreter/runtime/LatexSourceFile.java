@@ -96,14 +96,20 @@ public class LatexSourceFile extends SourceFile
 			out.println("\\author{}");
 		}
 
-		if (!hasVdm_al)
-		{
-			out.println(BEGIN + getListingEnvironment());
-		}
-
+		// move here
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
 		useJPNFont = checkFont("MS Gothic");
+		
+		if (!hasVdm_al)
+		{
+			out.println(BEGIN + getListingEnvironment());
+			inVdmAlModelTag = true;
+		}
+
+		//boolean endDocFound = false;
+		//boolean inVdmAlModelTag = false;
+		//useJPNFont = checkFont("MS Gothic");
 		
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
@@ -134,7 +140,7 @@ public class LatexSourceFile extends SourceFile
 			{
 					//List<LexLocation> list = hits.get(lnum);
 					//out.println(markup(spaced, list));
-				if(!inVdmAlModelTag) {
+				if(inVdmAlModelTag) {
 					List<LexLocation> list = hits.get(lnum);
 					out.println(markup(spaced, list));
 				} else {
