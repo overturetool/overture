@@ -99,7 +99,7 @@ public class LatexSourceFile extends SourceFile
 		// move here
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
-		useJPNFont = checkFont("MS Gothi");
+		useJPNFont = checkFont("MS Gothic");
 		
 		if (!hasVdm_al)
 		{
