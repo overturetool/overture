@@ -42,6 +42,12 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 abstract public class TypeChecker
 {
+	public interface IStatusListener
+	{
+		void report(VDMError error);
+		void warning(VDMWarning warning);
+	}
+	
 	private static List<VDMError> errors = new Vector<VDMError>();
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
 	private static VDMMessage lastMessage = null;
@@ -49,13 +55,8 @@ abstract public class TypeChecker
 	
 	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 	
-	public static interface IStatusListner
-	{
-		void report(VDMError error);
-		void warning(VDMWarning warning);
-	}
 	
-	static List<IStatusListner> listners = new Vector<IStatusListner>();
+	static List<IStatusListener> listners = new Vector<IStatusListener>();
 
 	public TypeChecker()
 	{
@@ -71,7 +72,7 @@ abstract public class TypeChecker
 		errors.add(error);
 		lastMessage = error;
 		
-		for (IStatusListner listner : listners)
+		for (IStatusListener listner : listners)
 		{
 			listner.report(error);
 		}
@@ -89,7 +90,7 @@ abstract public class TypeChecker
 		warnings.add(warning);
 		lastMessage = warning;
 		
-		for (IStatusListner listner : listners)
+		for (IStatusListener listner : listners)
 		{
 			listner.warning(warning);
 		}
@@ -151,12 +152,12 @@ abstract public class TypeChecker
 		}
 	}
 	
-	public static void addStatusListner(IStatusListner listner)
+	public static void addStatusListner(IStatusListener listner)
 	{
 		listners.add(listner);
 	}
 	
-	public static void removeStatusListner(IStatusListner listner)
+	public static void removeStatusListner(IStatusListener listner)
 	{
 		listners.remove(listner);
 	}
