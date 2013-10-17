@@ -5,7 +5,6 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -43,9 +42,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return null;	// Isn't any particular type?
 	}
 
-	public static boolean equals(AUnknownType type, Object other) {
-		return true;
-	}
+//	public static boolean equals(AUnknownType type, Object other) {
+//		return true;
+//	}
 
 //	public static boolean isFunction(AUnknownType type) {
 //		return true;
@@ -98,10 +97,10 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
 //	}
 
-	public static boolean narrowerThan(AUnknownType type,
-			PAccessSpecifier accessSpecifier) {		
-		return false;
-	}
+//	public static boolean narrowerThan(AUnknownType type,
+//			PAccessSpecifier accessSpecifier) {		
+//		return false;
+//	}
 
 //	public static ARecordInvariantType getRecord(AUnknownType type) {
 //		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 

@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -152,6 +153,7 @@ import org.overture.typechecker.utilities.type.ClassTypeFinder;
 import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
+import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
@@ -162,6 +164,9 @@ import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
 import org.overture.typechecker.utilities.type.SetTypeFinder;
+import org.overture.typechecker.utilities.type.TypeDisplayer;
+import org.overture.typechecker.utilities.type.TypeEqualityChecker;
+import org.overture.typechecker.utilities.type.TypeUnresolver;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
@@ -1142,5 +1147,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<AUnionType> getUnionTypeFinder()
 	{
 		return new UnionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Object, Boolean> getTypeEqualityChecker()
+	{
+		return new TypeEqualityChecker(this);
+	}
+	
+	@Override
+	public IAnswer<String> getTypeDisplayer()
+	{
+		return new TypeDisplayer(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getTypeUnresolver()
+	{
+		return new TypeUnresolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
+	{
+		return new NarrowerThanComparator(this);
 	}
 }

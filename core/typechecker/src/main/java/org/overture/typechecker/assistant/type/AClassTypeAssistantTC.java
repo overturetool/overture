@@ -100,21 +100,21 @@ public class AClassTypeAssistantTC {
 		
 	}
 
-	public static String toDisplay(AClassType exptype) {
-		return exptype.getClassdef().getName().getName();
-	}
+//	public static String toDisplay(AClassType exptype) {
+//		return exptype.getClassdef().getName().getName();
+//	}
 
-	public static boolean equals(AClassType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof AClassType)
-		{
-			AClassType oc = (AClassType)other;
-			return type.getName().equals(oc.getName());		// NB. name only
-		}
-
-		return false;
-	}
+//	public static boolean equals(AClassType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AClassType)
+//		{
+//			AClassType oc = (AClassType)other;
+//			return type.getName().equals(oc.getName());		// NB. name only
+//		}
+//
+//		return false;
+//	}
 
 //	public static boolean isClass(AClassType type) {
 //		return true;

@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.types.ASeq1SeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASeq1SeqTypeAssistantTC {
@@ -11,8 +10,8 @@ public class ASeq1SeqTypeAssistantTC {
 	{
 		this.af = af;
 	}
-	public static String toDisplay(ASeq1SeqType exptype) {
-		return exptype.getEmpty() ? "[]" : "seq1 of (" + exptype.getSeqof() + ")";
-	}
+//	public static String toDisplay(ASeq1SeqType exptype) {
+//		return exptype.getEmpty() ? "[]" : "seq1 of (" + exptype.getSeqof() + ")";
+//	}
 
 }

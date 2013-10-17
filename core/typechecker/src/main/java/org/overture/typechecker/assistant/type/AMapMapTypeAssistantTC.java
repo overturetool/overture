@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.types.AMapMapType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AMapMapTypeAssistantTC {
@@ -11,8 +10,8 @@ public class AMapMapTypeAssistantTC {
 	{
 		this.af = af;
 	}
-	public static String toDisplay(AMapMapType exptype) {
-		return "map (" + exptype.getFrom() + ") to (" + exptype.getTo() + ")";
-	}
+//	public static String toDisplay(AMapMapType exptype) {
+//		return "map (" + exptype.getFrom() + ") to (" + exptype.getTo() + ")";
+//	}
 
 }

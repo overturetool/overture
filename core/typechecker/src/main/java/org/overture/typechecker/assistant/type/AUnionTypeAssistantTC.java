@@ -29,7 +29,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
-import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -187,18 +186,18 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getMapType();
 	}
 
-	public static String toDisplay(AUnionType exptype)
-	{
-		List<PType> types = exptype.getTypes();
-
-		if (types.size() == 1)
-		{
-			return types.iterator().next().toString();
-		} else
-		{
-			return Utils.setToString(new PTypeSet(types), " | ");
-		}
-	}
+//	public static String toDisplay(AUnionType exptype)
+//	{
+//		List<PType> types = exptype.getTypes();
+//
+//		if (types.size() == 1)
+//		{
+//			return types.iterator().next().toString();
+//		} else
+//		{
+//			return Utils.setToString(new PTypeSet(types), " | ");
+//		}
+//	}
 
 	public static boolean isProduct(AUnionType type, int size)
 	{
@@ -294,28 +293,28 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return null;
 	}
 
-	public static boolean equals(AUnionType type, Object other)
-	{
-		other = PTypeAssistantTC.deBracket(other);
-		PTypeSet types = new PTypeSet(type.getTypes());
-
-		if (other instanceof AUnionType)
-		{
-			AUnionType uother = (AUnionType) other;
-
-			for (PType t : uother.getTypes())
-			{
-				if (!types.contains(t))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return types.contains(other);
-	}
+//	public static boolean equals(AUnionType type, Object other)
+//	{
+//		other = PTypeAssistantTC.deBracket(other);
+//		PTypeSet types = new PTypeSet(type.getTypes());
+//
+//		if (other instanceof AUnionType)
+//		{
+//			AUnionType uother = (AUnionType) other;
+//
+//			for (PType t : uother.getTypes())
+//			{
+//				if (!types.contains(t))
+//				{
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//
+//		return types.contains(other);
+//	}
 
 //	public static boolean isFunction(AUnionType type)
 //	{
@@ -636,20 +635,20 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 //		return type;
 //	}
 
-	public static boolean narrowerThan(AUnionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier)
-	{
-
-		for (PType t : type.getTypes())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	public static boolean narrowerThan(AUnionType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier)
+//	{
+//
+//		for (PType t : type.getTypes())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	
 	public static boolean isVoid(AUnionType type)
