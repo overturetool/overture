@@ -3,8 +3,10 @@ package gui;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.overturetool.vdmj.debug.RemoteInterpreter;
-import org.overturetool.vdmj.values.Value;
+import org.overture.interpreter.debug.RemoteInterpreter;
+import org.overture.interpreter.values.Value;
+
+
 
 public class BuslinesControl implements IBuslinesControl {
 
@@ -12,7 +14,7 @@ public class BuslinesControl implements IBuslinesControl {
 	RemoteInterpreter interpreter;
 	public BuslinesControl(RemoteInterpreter intrprtr) {
 		interpreter = intrprtr; 
-		Controller.buslinesControl = this;
+		Controller.buslinesControl = this; 	
 	}
 	
 	public void init() {
@@ -27,7 +29,7 @@ public class BuslinesControl implements IBuslinesControl {
 	@Override
 	public void IncreaseInflow() {
 		try {
-			commandQueue.add("w.env.IncreaseInflow()");
+			commandQueue.add("w.env.IncreaseInflow()"); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,12 +100,12 @@ public class BuslinesControl implements IBuslinesControl {
 	
 	public void StartSimulation() {
 		try {
-				try {
-					execute("w.StartSimulation()");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
+			try {
+				execute("w.StartSimulation()");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			Thread commandRunner = new Thread(new Runnable(){
 				 public void run(){
 					String cmd = null;

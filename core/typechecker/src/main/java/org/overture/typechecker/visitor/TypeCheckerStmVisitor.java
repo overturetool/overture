@@ -111,6 +111,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public TypeCheckerStmVisitor(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
+		super(null);// FIXME
 		this.rootVisitor = typeCheckVisitor;
 
 	}

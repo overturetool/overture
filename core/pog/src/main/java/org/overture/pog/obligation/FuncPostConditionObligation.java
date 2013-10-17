@@ -135,7 +135,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		{
 			// pre(params) =>
 			AApplyExp applyExp = new AApplyExp();
-			applyExp.setArgs(params);
+			applyExp.setArgs(cloneListPExp(params));
 			AVariableExp varExp = getVarExp(predef.getName().clone());
 			applyExp.setRoot(varExp);
 			

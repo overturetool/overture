@@ -163,8 +163,8 @@
 %
 % any "\include{...}" statements go here
 %
-\include{ifad}
-\include{graphics}
+%\include{ifad}
+%\include{graphics}
 \usepackage{cite}
 \usepackage{alltt}
 %\usepackage{fancyhdr}
@@ -174,8 +174,8 @@
 \makeindex
 
 \begin{document}
-\title{Overture VDM-10 Tool Support: User Guide}
-\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen, Joey Coleman and Sune Wolff \\
+\title{Overture VDM-10 Tool Support: User Guide \\{\large Version 2.0.0}}
+\author{Peter Gorm Larsen, Kenneth Lausdahl, Peter J\o{}rgensen,\\ Joey Coleman, Sune Wolff and  Lu\'{i}s Diogo Couto \\
 Aarhus University, Department of Engineering\\
 Finlandsgade 22, DK-8000 \AA{}rhus C, Denmark\\[3mm]
 Nick Battle\\
@@ -199,14 +199,14 @@ March   & 2010 &         & 0.2   \\ \hline
 May     & 2010 & 1       & 0.2   \\ \hline
 February& 2011 & 2       & 1.0.0   \\ \hline
 June    & 2011 & 3       & 1.0.1   \\ \hline
-April   & 2013 & 4       & 2.0.0 \\ \hline
+August  & 2013 & 4       & 2.0.0 \\ \hline
 \end{tabular}
 
 \tableofcontents
 
 \begin{abstract}
 This document is the user manual for the Overture Integrated Development
-Environment (IDE) for
+Environment (IDE) version 2.0.0 for
 VDM. It serves as a reference for anybody wishing to make use of
 the tool with one of the VDM dialects (VDM-SL, VDM++ or VDM-RT).
 Overture tool support is built on top of the Eclipse platform. The
@@ -307,9 +307,9 @@ to~\ref{app:POcategories} give complete lists of possible errors,
 warnings and proof obligation categories. Appendix~\ref{chap:umlrules} provides
 an overview of the VDM++/VDM-RT to UML mapping rules. 
 Appendix~\ref{cha:VDMvalues} provides details about how to represent VDM 
-values in order to combine Java with VDM as described in Chapter~\ref{sec:linkToJava}.
-Finally, Appendix~\ref{sec:index} is an index of significant terms used in the
-user manual.
+values in order to combine Java with VDM as described in Chapter~\ref{sec:linkToJava}
+Finally, there is an \hyperref[sec:index]{index} of significant terms used in this
+manual.
 
 
 \chapter{Getting Hold of the Software}\label{sec:install}
@@ -332,22 +332,23 @@ go to:
     can be a risky process because of the dependencies on non-Overture
     components and so is not yet supported.}.
 
-\item[\textbf{Modelio:}] This is a tool that is both available in a commercial version as well as in an open source setting from a
-  company called Softeam. Just like Overture this tool is built on top of the Eclipse platform. The product can be
-  obtained from
+  \item[\textbf{Modelio:}]   In order to take advantage of the UML-VDM mapping,
+      a tool for UML modelling is needed. We recommend Modelio. This is a tool that
+      is both available in a commercial version as well as in an open source
+      setting from a company called Softeam. Just like Overture this tool is
+      built on top of the Eclipse platform. The product can be obtained from
 \begin{quote}
 \texttt{http://www.modelio.org/}.
 \end{quote}
 \end{description}
 
-For Overture you can use the \textit{Download Now} button to
-  automatically download pre-installed versions of Overture for your
-  operating system.  Supported systems are: Windows, Linux and
-  Mac.
-Simply extract the zip file downloaded and run the Overture executable
+For Overture, a link is offered at the top with the latest version (2.0.0) for
+your operating system.  Supported systems are: Windows, Linux and Mac. If you
+wish another version, simply browse the \texttt{Overture\_IDE} section.  Simply
+extract the zip file downloaded and run the Overture executable
 file at the top level to start the tool. Note that in order to be able
 to execute Overture you need to have Java Runtime Environment (minimum
-version~1.7) installed on your computer.
+version~1.6) installed on your computer.
 When you start Overture for the first time, it will request a workspace
 location. We recommend that you choose the default location proposed
 by Overture and tick the box for ``Use this as the default and do
@@ -375,16 +376,22 @@ and can be downloaded from SourceForge under the
 \begin{quote}
 \url{https://sourceforge.net/projects/overture/files/Examples/}
 \end{quote}
-Such existing projects can be imported into Overture as described in
-section~\ref{subsec:importproj}.
+
+Such existing projects can be downloaded and manually imported into Overture as
+described in section~\ref{subsec:importproj}. However, the examples are 
+also bundled with Overture and be automatically imported without the need for
+a download. See \autoref{ssec:importexamples} for more details.
 
 Finally, in order to make use of the
 test coverage feature described in Section~\ref{sec:testcoverage} it is
 necessary to have the text processing system called \LaTeX\ and its
 \texttt{pdflatex} feature. This can for example be obtained from:
-\begin{quote}
-\url{http://miktex.org/2.9/}
-\end{quote}
+
+\begin{itemize}
+    \item Windows: \url{http://miktex.org}
+    \item Mac: \url{http://tug.org/mactex/}
+    \item Linux: Most distributions offer \LaTeX\ packages
+\end{itemize}
 
 \chapter{Using the VDM Perspective}\label{sec:vdmsupport}
 
@@ -599,6 +606,28 @@ by \emph{General} $\rightarrow$ \emph{Existing Projects into
   Workspace}.  In this way the projects from \texttt{.zip} files
 mentioned in Chapter~\ref{sec:install} can be imported very
 easily.\index{project!import}
+
+\subsection{Importing Overture Examples}
+\label{ssec:importexamples}
+
+It is possible to automatically import the Overture examples mentioned in
+Chapter \ref{sec:install}. To do this, right click the Explorer view and select
+\emph{Import} $\rightarrow$ \emph{Overture} $\rightarrow$ \emph{Overture
+Examples}.  You can then select which VDM dialect you wish to import examples
+for. Finally, a selection screen with all examples will be shown\footnote{Note
+that any previously imported examples will be greyed out}. Simply pick the ones
+you wish to import. See Figure \ref{fig:example_import} for more
+details.\index{examples!import}
+
+
+\begin{figure}[!htb]
+	\begin{center}
+	  \includegraphics[width=0.9\textwidth]{figures/ImportExamples}
+	  \caption[Import VDM Examples]{Import VDM Examples}
+	  \label{fig:example_import}
+	\end{center}
+\end{figure}
+
 
 \section{Creating a New Overture Project}
 
@@ -919,7 +948,7 @@ that can be performed are:
 \begin{description}
 \item[Dynamic type checks:] This is an option for the interpreter (default on)
   to continuously type check  values during interpretation of a VDM model.
-  It is possible to switch off the check here\footnote{However a consequence of doing that can be that you may get internal Java errors (null pointer or class cast exceptions typically) rather than nice clean VDM type errors about mismatched types.}.
+  It is possible to switch off the check here\footnote{However a consequence of doing that is that you may get internal Java errors (null pointer or class cast exceptions typically) rather than nice clean VDM type errors about mismatched types.}.
 \item[Invariant checks:] This is an option for the interpreter (default on)
   to continuously check both state and type invariants.
   It is possible to switch off
@@ -1131,6 +1160,21 @@ text-parts outside these specification blocks are ignored by the VDM parser,
 though note that each source file must start with a recognizable \LaTeX\
 construct: a \verb+\documentclass, \section, \subsection+ or a \LaTeX\ comment.
 
+When using this functionality, it is possible to configure additional options
+for the PdfLatex generation in the project properties (see
+\autoref{fig:latexProperties}). For example, you can choose whether to use an
+auto generated main Tex file or a user provided one.  It is also possible to
+generate a pdf containing only the model (all text outside \texttt{vdm\_al}
+will be ignored).
+
+\begin{figure}[!htb]
+\begin{center}
+  \includegraphics[width=\textwidth]{screenDumps/latex_properties}
+  \caption{The \LaTeX\ project properties window}
+  \label{fig:latexProperties}
+\end{center}
+\end{figure}
+
 
 \chapter{Managing Proof Obligations}\label{sec:POmanagement}
 
@@ -1247,7 +1291,7 @@ of test cases for the trace definition name.\index{icon!skipped test case}
 \end{figure}
 
 In the CT Overview view, you can right-click on any individual
-test case and then execute it with the interpreter (see
+test case and then send it to the interpreter for execution (\see
 Figure~\ref{fig:SendToInterpreter}). This is particularly useful for
 failed test cases since the interpreter allows you to step through the
 evaluation to the place where it is failing. You can inspect the exact
@@ -1261,28 +1305,28 @@ variables in scope.
 \end{center}
 \end{figure}
 
+
+
+
+
+
 \chapter{Mapping VDM++ To and From UML}\label{sec:vdmuml}
 
-VDM++ and VDM-RT projects can be converted automatically back and forth between VDM
-and the corresponding UML model.
-%\footnote{In the current version of
-%Overture this feature is somewhat unstable.}.  Essentially, VDM and
-UML can be considered as different views of the same model. A UML
-model is typically used to give a graphical overview of the model
-using class diagrams.  The VDM model is typically used to define the
-implementation and constraints for each class and is therefore used
-for detailed semantic analysis. Note that state charts, activity
-diagrams, sequence diagrams, objects charts, package charts are not
-used in the UML mapping. It is essentially only the information used
-statically inside classes and their usage in class diagrams that is
-used.
+VDM++ and VDM-RT projects can be converted automatically back and forth between
+VDM and the corresponding UML model.  Essentially, VDM and UML can be
+considered as different views of the same model. A UML model is typically used
+to give a graphical overview of the model using class diagrams.  The VDM model
+is typically used to define the implementation and constraints for each class
+and is therefore used for detailed semantic analysis. Note that state charts,
+activity diagrams, sequence diagrams, objects charts, package charts are not
+used in the UML mapping. It is essentially only the information
+used statically inside classes and their usage in class diagrams that is used.
 
-To convert a UML class diagram model to a VDM++ model, you first need to export the UML
-model from Modelio to the Eclipse XMI\index{XMI} format, called UML using the EMF UML3.0.0 format
-At the moment,
-Modelio\index{Modelio} is the only UML tool
-%Enterprise Architect\index{Exterprise Architect} is the only UML tool
-supported. Export from Modelio is done as illustrated in Figure~\ref{fig:exportfromUML}.
+To convert a UML class diagram model to a VDM++ model, you first need to export
+the UML model from Modelio to the Eclipse XMI\index{XMI} format, called UML
+using the EMF UML3.0.0 format At the moment, Modelio\index{Modelio} is the only
+UML tool supported. Export from Modelio is done as illustrated in
+Figure~\ref{fig:exportfromUML}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -1292,15 +1336,21 @@ supported. Export from Modelio is done as illustrated in Figure~\ref{fig:exportf
 \end{figure}
 
 Importing and exporting a UML model is
-an option in the Overture \emph{Explorer} view, where right-clicking
-a VDM++ or VDM-RT project gives a submenu for
-\emph{UML Transformation}\index{UML transformation}. From here
-it is possible to 
-\emph{Convert to UML}\index{Convert to UML}. If the mouse is placed over
-a \texttt{.uml} file it is also possible to right-click and choose
-the submenu for
-\emph{UML Transformation}\index{UML transformation} and then select
-\emph{Convert to VDM}\index{Convert to VDM}. 
+an option in the Overture \emph{Explorer} view.
+\begin{description}
+    \item[Exporting:] Right-click a VDM++ or VDM-RT project to access a submenu
+        for \emph{UML Transformation}. From here it is possible to
+        \emph{Convert to UML}\index{Convert to UML}. The resulting \texttt{.uml} 
+        file will be saved to the \texttt{generated} folder of your project.
+    
+    \item[Importing:] To perform a UML import you must have the \texttt{.uml} 
+        file in the relevant project folder. You can either copy it manually or
+        use the Eclipse \emph{Import - File System} feature. Afterwards, it
+        is possible to right-click the \texttt{.uml} file and choose the
+        submenu for \emph{UML Transformation}\index{UML transformation} and
+        then select \emph{Convert to VDM}\index{Convert to VDM}. 
+
+\end{description}
 
 The mapping rules between VDM++/VDM-RT and UML models are further explained 
 in Appendix~\ref{chap:umlrules}. Note that the mapping depends on the settings
@@ -1337,7 +1387,8 @@ changed at all. So this is simply a quick and easy way to get to the
 starting point for a VDM-RT model. You would then manually create
 a {\textbf\texttt{system}} class with appropriate declarations of
 \texttt{CPU}s and \texttt{BUS}ses and proceed with the real time
-model development.
+model development. Also keep in mind that you may have some errors
+if your VDM++ model uses VDM-RT keywords as names.
 
 \chapter{Analysing Logs from VDM-RT Executions}\label{sec:showlog}
 
@@ -1385,12 +1436,12 @@ using the $
 \end{array}
 $ button or moving to the next time index using the $
 \begin{array}{l}
-\includegraphics{screenDumps/MoveNextIcon}
+\includegraphics{screenDumps/moveNextIcon}
 \end{array}
 $ button .\index{Go to time} Also, Overture enables you to move to the previous
 time index using the $
 \begin{array}{l}
-\includegraphics{screenDumps/MovePreviousIcon}
+\includegraphics{screenDumps/movePreviousIcon}
 \end{array}
 $ button. Finally, it is
 also possible to export all the generated views to JPEG formatted files
@@ -1438,7 +1489,7 @@ The concrete syntax for the timing invariants in VDM-RT is defined as:
 property(trigger,ending,interval);
 \end{lstlisting}
 
-The different kinds properties that can be used are called:
+The different kinds of properties that can be used are called:
 
 \begin{description}
 \item[\texttt{deadlineMet}:] A deadline by definition is a time by which something must be finished. In real-time embedded systems there is typically deadlines that must be respected from when an event happens to its response. In our terminology, it means that the ending event must happen within a certain timeframe from the trigger event.
@@ -1460,7 +1511,12 @@ $ button, Overture will list the violations as shown in Figure~\ref{fig:userguid
 \end{center}
 \end{figure}
 
-In addition, the RealTime Log viewer will show the violations graphically by marking the trigger and corresponding response in the model execution overview. Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations from Figure~\ref{fig:userguide:listedConjecturesViolated}, where the response and trigger of the first and second violation, respectively, occur at the same point in time. This explains why only tree markers, i.e. the circles, are visible in the figure.
+In addition, the RealTime Log viewer will show the violations graphically by
+marking the trigger and corresponding response in the model execution overview.
+Figure~\ref{fig:userguide:markedConjecturesViolated} shows the two violations
+from Figure~\ref{fig:userguide:listedConjecturesViolated}. Note that the trigger
+for the second violation occurs at the same time as the response for the first one,
+Therefore, they are both marked by the same red circle (the middle one).
 
 \begin{figure}[htp]
 \begin{center}
@@ -1469,6 +1525,11 @@ In addition, the RealTime Log viewer will show the violations graphically by mar
   \label{fig:userguide:markedConjecturesViolated}
 \end{center}
 \end{figure}
+
+
+
+
+
 
 \chapter{Expanding VDM Models Scope and Functionality by Linking Java and VDM} \label{sec:linkToJava}
 
@@ -1882,14 +1943,18 @@ terminal can use a different character set to the specification files.
 \item[\texttt{-remote}:] This enables remote control of the Overture executable.
 \end{description}
 
-Alternatively a script file is also made for the different platforms (script and bat files) wrapping this
-so one does not need to set up paths and call java directly.
+Alternatively, a script file will also be made for the different platforms
+(script and bat files) wrapping this functionality so one does not need to
+explicitly point to the Overture jar.  This script is planned for the next
+version version of the tool.
 
-Normally, a VDM model will be loaded by identifying all of the VDM source files to include. At least
-one source file must be specified unless the \texttt{-i} option is used, in which case the interpreter can be
-started with no specification. If a directory is specified rather than a file, then Overture will load
-all files in that directory with a suffix that matches the dialect (e.g.\ \texttt{*.vdmpp} files for VDM++).
-Multiple files and directory arguments can be mixed.
+Normally, a VDM model will be loaded by identifying all of the VDM source files
+to include. At least one source file must be specified unless the \texttt{-i}
+option is used, in which case the interpreter can be started with no
+specification. If a directory is specified rather than a file, then Overture
+will load all files in that directory with a suffix that matches the dialect
+(e.g.\ \texttt{*.vdmpp} files for VDM++).  Multiple files and directory
+arguments can be mixed.
 
 If no \texttt{-i} option is given, the tool will only parse and type check
 the VDM model files, giving any errors and warnings on
@@ -2476,7 +2541,7 @@ This appendix gives a list of the internal errors in Overture
 and the circumstances under which each internal error can be expected.
 Most of these errors should \emph{never} be seen, so if they appear
 please report the occurrence via the Overture bug reporting utility
-(\url{https://sourceforge.net/tracker/?group_id=141350&atid=749152}).
+(\url{https://sourceforge.net/p/overture/bugs/}).
 
 \input{MESSAGES_Internal}
 
@@ -2528,81 +2593,8 @@ This appendix provides a list of the different proof obligation
 categories generated by Overture, and an explanantion of the
 circumstances under which each category can be expected.
 
-\begin{description}
-\item[map apply:] Whenever a map application is made you need to be
-  certain that the argument is in the domain of the map.
-\item[function apply:] Whenever a function application is used you need to be
-  certain that the list of arguments to the function satisfies the
-  pre-condition of the function, assuming such a predicate is present.
-\item[sequence apply:] Whenever a sequence application is used you need to be
-  certain that the argument is within the indices of the sequence.
-\item[post condition:]
-\item[function satisfiability:] For all implicit function definitions
-  this proof obligation will be generated to ensure that it is
-  possible to find an implementation satisfying the post-conditions for all
-  arguments satisfying the pre-conditions.
-\item[function parameter patterns:]
-\item[let be st existence:] Whenever a let-be-such-that
-  expression/statement is used you need to be certain that at least one value
-  will match the such-that expression.
-\item[unique existence binding:] The \texttt{iota} expression
-  requires one unique binding to be present and that is guranteed by
-  proof obligations from this category.
-\item[function iteration:]
-\item[map iteration:]
-\item[function compose:]
-\item[map compose:]
-\item[non-empty set:] This kind of proof obligation is used whenever
-  non-empty sets are required.
-\item[non-empty sequence:] This kind of proof obligation is used whenever
-  non-empty sequences are required (eg. taking the head of a sequence)
-\item[non-zero:] This kind of proof obligation is used whenever zero
-  cannot be used (e.g.\ in division).
-\item[finite map:] If a type binding to a type that potentially has
-  infinitely many elements is used inside a map comprehension, this
-  proof obligation will be generated because all mappings in VDM must be finite.
-\item[finite set:] If a type binding to a type that potentially has
-  infinitely many elements is used inside a set comprehension, this
-  proof obligation will be generated because all sets in VDM must be finite.
-\item[map compatible:] Mappings in VDM represent a unique relationship
-  between the domain values and the corresponding range values. Proof
-  obligations in this category are meant to ensure that such a unique
-  relationship is guranteed.
-\item[map sequence compatible:]
-\item[map set compatible:]
-\item[sequence modification:]
-\item[tuple selection:] This proof obligation category is used
-  whenever a tuple selection expression is used to
-  gurantee that the length of the tuple is at least as long as the
-  selector used.
-\item[value binding:]
-\item[subtype:] This proof obligation category is used whenever it is
-  not possible to statically detect that the given value
-  falls into the subtype required.
-\item[cases exhaustive:] If a cases expression does not have an
-  \texttt{others} clause it is necessary to ensure that the
-  different case alternatives catch all values of the type of the
-  expression used in the case choice.
-\item[type invariant:] Proof obligations from this category are used
-  to ensure that invariants for elements of a particular type are satisfied.
-\item[recursive function:] This proof obligation makes use of the
-  \texttt{measure} construct to ensure that a recursive function
-  will terminate.
-\item[state invariant:] If a state (including instance variables in
-  VDM++) has an invariant, this proof obligation will be generated
-  whenever an assignment is made to a part of the state.
-\item[while loop termination:] This kind of proof obligation is a
-  reminder to ensure that a while loop will terminate.
-\item[operation post condition:] Whenever an explicit operation has a
-  post-condition there is an implicit proof obligation generated to
-  remind the user that you have to ensure that the explicit body
-  of the operation satisfies the post-condition for all possible inputs.
-\item[operation parameter patterns:]
-\item[operation satifiability:] For all implicit operation definitions
-  this proof obligation will be generated to ensure that it is
-  possible to find an implementation satisfying the post-condition for all
-  arguments satisfying the pre-conditions.
-\end{description}
+\input{podescriptions}
+
 
 \newpage
 \chapter{Mapping Rules between VDM++/VDM-RT and UML Models} \label{chap:umlrules}
@@ -2775,7 +2767,12 @@ This appendix describes the internal class hierarchy used by Overture to represe
 
 \section{The Value Class Hierarchy}
 
-All internal VDM values in Overture are held by instances of the \texttt{Value} class with the fully qualified name, \url{org.overture.interpreter.values.Value}. The \texttt{Value} class itself is abstract, but subclasses can be instantiated to represent any VDM value, such as a ``\kw{seq of char}'', ``\kw{nat1}'” or a value of an arbitrarily complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
+All internal VDM values in Overture are held by instances of the \texttt{Value}
+class with the fully qualified name,
+\texttt{org.overture.interpreter.values.Value}. The \texttt{Value} class itself
+is abstract, but subclasses can be instantiated to represent any VDM value,
+such as a ``\kw{seq of char}'', ``\kw{nat1}'” or a value of an arbitrarily
+complex type. The hierarchy is shown in Figure~\ref{fig:gui:JavaVDMhierarchy}.
 
 Generally, the name of the \texttt{Value} subclass for a VDM type is on the form \texttt{<\textit{name}>Value}, for example \texttt{BooleanValue} or \texttt{SeqValue}.
  
@@ -2990,10 +2987,12 @@ The \texttt{NamedType} is obtained in a similar way to the \texttt{RecordType} a
 
 Operations which do not return a value in VDM (i.e.\ \texttt{==> ()}) return an instance of \texttt{VoidValue} in Java. The constructor has no arguments.
 
-\addcontentsline{toc}{chapter}{Index}
+\newpage%\section{Index}
+\phantomsection
 \label{sec:index}
+\addcontentsline{toc}{chapter}{Index}
 \printindex
-\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
+%\addcontentsline{toc}{section}{\protect\numberline{}{Index}}
 
 
 

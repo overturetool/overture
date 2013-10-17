@@ -31,14 +31,17 @@ simtime : Time;
 
 operations
 
-public Environment: seq of char * nat1 * bool ==> Environment
-Environment (fname, p, isP) ==
+public Environment: seq of char * [ThreadDef] ==> Environment
+Environment (fname, tDef) ==
  (def mk_ (-,mk_(timeval,input)) = io.freadval[InputTP](fname) in
     (inlines := input;
      simtime := timeval);
      
-  period := p;
-  isPeriodic := isP;
+  if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
   );
 
 public addSensor: Sensor ==> ()
@@ -94,8 +97,10 @@ mutex (handleEvent);
 mutex (createSignal);
 per isFinished => not busy;
 
-
 end Environment
 \end{vdm_al}
 
+\begin{rtinfo}[Environment`createSignal]
+{vdm.tc}[Environment]
+\end{rtinfo}
 

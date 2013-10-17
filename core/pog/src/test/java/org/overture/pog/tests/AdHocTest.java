@@ -68,7 +68,7 @@ public class AdHocTest extends TestCase
 		for (IProofObligation po : polist)
 		{
 			
-				String pretty = po.getValueTree().toString();
+				String pretty = po.getKind() + " / " + po.getValueTree().toString();
 				System.out.println(pretty);
 				assertTrue(comparePOtoExp(result, po.getValueTree()));
 		}

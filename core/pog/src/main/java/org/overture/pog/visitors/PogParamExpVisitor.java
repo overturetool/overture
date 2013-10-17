@@ -390,21 +390,24 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		IProofObligationList obligations = node.getTuple().apply(mainVisitor, question);
 
-		PType type = node.getType();
+		PType puType = node.getTuple().getType();
 
-		if (type instanceof AUnionType)
+		if (PTypeAssistantTC.isUnion(puType))
 		{
-			AUnionType utype = (AUnionType) type;
+			AUnionType utype = (AUnionType) PTypeAssistantTC.getUnion(puType);
+
 			for (PType t : utype.getTypes())
 			{
 				if (t instanceof AProductType)
 				{
 					AProductType aprodType = (AProductType) t;
-					if (aprodType.getTypes().size() < node.getField().getValue())
+					if (aprodType.getTypes().size() >= node.getField().getValue())
 					{
-						obligations.add(new TupleSelectObligation(node, aprodType, question));
+						// tuple selection is fine. do nothing and check the next one
+						continue;
 					}
 				}
+				obligations.add(new TupleSelectObligation(node.getTuple(), t, question));
 			}
 		}
 
@@ -1497,13 +1500,30 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		obligations.addAll(defaultSNumericBinaryExp((SNumericBinaryExp) node, question));
 
-		if (!(rExp instanceof AIntLiteralExp)
-				&& !(rExp instanceof ARealLiteralExp))
-		{
+		if (!neverZero(rExp)){
 			obligations.add(new NonZeroObligation(node.getLocation(), rExp, question));
 		}
 
 		return obligations;
+	}
+
+	private boolean neverZero(PExp exp)
+	{
+		if (exp instanceof AIntLiteralExp){
+			AIntLiteralExp il_Exp = (AIntLiteralExp) exp;
+			if (il_Exp.getValue().getValue()!=0)
+			{
+				return true;
+			}
+		}
+		if (exp instanceof ARealLiteralExp){
+			ARealLiteralExp rl_Exp = (ARealLiteralExp) exp;
+			if (rl_Exp.getValue().getValue()!=0)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
