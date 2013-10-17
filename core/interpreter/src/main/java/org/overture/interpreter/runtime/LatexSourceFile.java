@@ -157,7 +157,8 @@ public class LatexSourceFile extends SourceFile
 				out.println(spaced);
 			}
 
-			if (line.contains(END + getListingEnvironment()))
+			//if (line.contains(END + getListingEnvironment()))
+			if (spaced.contains(END + getListingEnvironment()))
 			{
 				inVdmAlModelTag = false;
 			}
