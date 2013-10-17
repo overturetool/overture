@@ -148,4 +148,18 @@ public class TypePrettyPrinterVisitor extends
 	{
 		return "()";
 	}
+
+	@Override
+	public String createNewReturnValue(INode arg0, PrettyPrinterEnv arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object arg0, PrettyPrinterEnv arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

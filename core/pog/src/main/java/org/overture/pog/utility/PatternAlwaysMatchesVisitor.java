@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -62,5 +63,19 @@ public class PatternAlwaysMatchesVisitor extends AnswerAdaptor<Boolean>
 	public Boolean caseATuplePattern(ATuplePattern node) throws AnalysisException
 	{
 		return alwaysMatches(node.getPlist());
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node)
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node)
+	{
+		assert false : "Should not happen";
+		return null;
 	}
 }

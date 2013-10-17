@@ -53,9 +53,11 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.ATuplePattern;
@@ -90,23 +92,130 @@ public class SubTypeObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 1108478780469068741L;
 
-	public SubTypeObligation(PExp exp,
-			PType etype, PType atype, IPOContextStack ctxt)
+	/**
+	 * Factory Method since we need to return null STOs (which should be discarded
+	 * 
+	 * @param exp
+	 *            The expression to be checked
+	 * @param etype
+	 *            The expected type
+	 * @param atype
+	 *            The actual type
+	 * @param ctxt
+	 *            Context Information
+	 * @return
+	 */
+	public static SubTypeObligation newInstance(PExp exp, PType etype,
+			PType atype, IPOContextStack ctxt)
 	{
-		super(exp, POType.SUB_TYPE, ctxt, exp.getLocation());
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, exp.clone(), etype.clone(), atype.clone())));
+
+		SubTypeObligation sto = new SubTypeObligation(exp, etype, atype, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
 	}
 
-	public SubTypeObligation(AExplicitFunctionDefinition func,
-			PType etype, PType atype, IPOContextStack ctxt)
+	public static SubTypeObligation newInstance(
+			AExplicitFunctionDefinition func, PType etype, PType atype,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(func, etype, atype, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(
+			AImplicitFunctionDefinition func, PType etype, PType atype,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(func, etype, atype, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(
+			AExplicitOperationDefinition def, PType actualResult,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	public static SubTypeObligation newInstance(
+			AImplicitOperationDefinition def, PType actualResult,
+			IPOContextStack ctxt)
+	{
+		SubTypeObligation sto = new SubTypeObligation(def, actualResult, ctxt);
+		if (sto.getValueTree() != null)
+		{
+			return sto;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Help Constructor for the COMPASS Subtype POs <br>
+	 * <b> Do not use this constructor directly! </b> Use one of the factory 
+	 * methods instead
+	 * 
+	 * @param root The root node generating the PO
+	 * @param loc The location of the root node
+	 * @param resultexp The PExp identifying the result to be testes for subtyping
+	 * @param deftype The declared type
+	 * @param actualtype The actual type
+	 * @param ctxt Context Information
+	 */
+	protected SubTypeObligation(INode root, ILexLocation loc, PExp resultexp,
+			PType deftype, PType actualtype
+			, IPOContextStack ctxt)
+	{
+		super(root, POType.SUB_TYPE, ctxt, loc);
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, resultexp, deftype, actualtype)));
+
+	}
+	
+	private SubTypeObligation(PExp exp, PType etype, PType atype,
+			IPOContextStack ctxt)
+	{
+		super(exp, POType.SUB_TYPE, ctxt, exp.getLocation());
+
+		// valuetree.setContext(ctxt.getContextNodeList());
+		PExp onetype_exp = oneType(false, exp.clone(), etype.clone(), atype.clone());
+
+		if (onetype_exp == null)
+		{
+			valuetree = null;
+		} else
+		{
+			valuetree.setPredicate(ctxt.getPredWithContext(onetype_exp));
+		}
+	}
+
+	private SubTypeObligation(AExplicitFunctionDefinition func, PType etype,
+			PType atype, IPOContextStack ctxt)
 	{
 		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
 		PExp body = null;
 
-		if (func.getBody() instanceof ANotYetSpecifiedExp ||
-			func.getBody() instanceof ASubclassResponsibilityExp)
+		if (func.getBody() instanceof ANotYetSpecifiedExp
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
 			// We have to say "f(a)" because we have no body
 			PExp root = AstFactory.newAVariableExp(func.getName());
@@ -116,26 +225,25 @@ public class SubTypeObligation extends ProofObligation
 			{
 				args.add(PPatternAssistantTC.getMatchingExpression(p));
 			}
-			
+
 			body = AstFactory.newAApplyExp(root, args);
-		}
-		else
+		} else
 		{
 			body = func.getBody().clone();
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	public SubTypeObligation(AImplicitFunctionDefinition func,
-			PType etype, PType atype, IPOContextStack ctxt)
+	private SubTypeObligation(AImplicitFunctionDefinition func, PType etype,
+			PType atype, IPOContextStack ctxt)
 	{
 		super(func, POType.SUB_TYPE, ctxt, func.getLocation());
 		PExp body = null;
 
-		if (func.getBody() instanceof ANotYetSpecifiedExp ||
-			func.getBody() instanceof ASubclassResponsibilityExp)
+		if (func.getBody() instanceof ANotYetSpecifiedExp
+				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
 			// We have to say "f(a)" because we have no body
 			PExp root = AstFactory.newAVariableExp(func.getName());
@@ -150,30 +258,27 @@ public class SubTypeObligation extends ProofObligation
 			}
 
 			body = AstFactory.newAApplyExp(root, args);
-		}
-		else
+		} else
 		{
 			body = func.getBody().clone();
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	public SubTypeObligation(AExplicitOperationDefinition def,
+	private SubTypeObligation(AExplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
-		super(def, POType.SUB_TYPE, ctxt,def.getLocation());
+		super(def, POType.SUB_TYPE, ctxt, def.getLocation());
 
-		AVariableExp result = AstFactory.newAVariableExp(
-				new LexNameToken(def.getName().getModule(), "RESULT", def.getLocation()));
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(
-				oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
+		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT", def.getLocation()));
+
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
-	public SubTypeObligation(AImplicitOperationDefinition def,
+	private SubTypeObligation(AImplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt)
 	{
 		super(def, POType.SUB_TYPE, ctxt, def.getLocation());
@@ -183,8 +288,7 @@ public class SubTypeObligation extends ProofObligation
 		{
 			AIdentifierPattern ip = (AIdentifierPattern) def.getResult().getPattern();
 			result = AstFactory.newAVariableExp(ip.getName());
-		}
-		else
+		} else
 		{
 			ATuplePattern tp = (ATuplePattern) def.getResult().getPattern();
 			List<PExp> args = new ArrayList<PExp>();
@@ -198,9 +302,8 @@ public class SubTypeObligation extends ProofObligation
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(
-				oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
 	private PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
@@ -209,7 +312,7 @@ public class SubTypeObligation extends ProofObligation
 		{
 			if (TypeComparator.isSubType(atype, etype))
 			{
-				return null;	// Means a sub-comparison is OK without PO checks
+				return null; // Means a sub-comparison is OK without PO checks
 			}
 		}
 
@@ -230,7 +333,7 @@ public class SubTypeObligation extends ProofObligation
 			}
 
 			po = null;
-			
+
 			for (PType poss : possibles)
 			{
 				PExp s = oneType(true, exp, poss, null);
@@ -240,32 +343,31 @@ public class SubTypeObligation extends ProofObligation
 				{
 					e = makeAnd(e, s);
 				}
-				
+
 				po = makeOr(po, e);
 			}
-		}
-		else if (etype instanceof SInvariantType)
+		} else if (etype instanceof SInvariantType)
 		{
 			SInvariantType et = (SInvariantType) etype;
 			po = null;
 
 			if (et.getInvDef() != null)
 			{
-				AVariableExp root = getVarExp(et.getInvDef().getName());			
+				AVariableExp root = getVarExp(et.getInvDef().getName());
 
 				// This needs to be put back if/when we change the inv_R signature to take
 				// the record fields as arguments, rather than one R value.
 				//
 				// if (exp instanceof MkTypeExpression)
 				// {
-				//     MkTypeExpression mk = (MkTypeExpression)exp;
-				//     sb.append(Utils.listToString(mk.args));
+				// MkTypeExpression mk = (MkTypeExpression)exp;
+				// sb.append(Utils.listToString(mk.args));
 				// }
 				// else
 				// {
-				//     ab.append(exp);
+				// ab.append(exp);
 				// }
-				
+
 				po = getApplyExp(root, exp);
 			}
 
@@ -276,8 +378,7 @@ public class SubTypeObligation extends ProofObligation
 				if (atype instanceof ANamedInvariantType)
 				{
 					atype = ((ANamedInvariantType) atype).getType();
-				}
-				else
+				} else
 				{
 					atype = null;
 				}
@@ -288,8 +389,7 @@ public class SubTypeObligation extends ProofObligation
 				{
 					po = makeAnd(po, s);
 				}
-			}
-			else if (etype instanceof ARecordInvariantType)
+			} else if (etype instanceof ARecordInvariantType)
 			{
 				if (exp instanceof AMkTypeExp)
 				{
@@ -311,18 +411,15 @@ public class SubTypeObligation extends ProofObligation
 							}
 						}
 					}
-				}
-				else
+				} else
 				{
 					po = makeAnd(po, addIs(exp, etype));
 				}
-			}
-			else
+			} else
 			{
 				po = makeAnd(po, addIs(exp, etype));
 			}
-		}
-		else if (etype instanceof SSeqType)
+		} else if (etype instanceof SSeqType)
 		{
 			po = null;
 
@@ -350,8 +447,7 @@ public class SubTypeObligation extends ProofObligation
 						po = makeAnd(po, s);
 					}
 				}
-			}
-			else if (exp instanceof ASubseqExp)
+			} else if (exp instanceof ASubseqExp)
 			{
 				ASubseqExp subseq = (ASubseqExp) exp;
 				PType itype = AstFactory.newANatOneNumericBasicType(exp.getLocation());
@@ -377,13 +473,11 @@ public class SubTypeObligation extends ProofObligation
 				po = makeAnd(po, le);
 
 				po = makeAnd(po, addIs(exp, etype)); // Like set range does
-			}
-			else
+			} else
 			{
 				po = addIs(exp, etype); // remove any "x <> []"
 			}
-		}
-		else if (etype instanceof SMapType)
+		} else if (etype instanceof SMapType)
 		{
 			if (exp instanceof AMapEnumMapExp)
 			{
@@ -409,13 +503,11 @@ public class SubTypeObligation extends ProofObligation
 						po = makeAnd(po, s);
 					}
 				}
-			}
-			else
+			} else
 			{
 				po = addIs(exp, etype);
 			}
-		}
-		else if (etype instanceof ASetType)
+		} else if (etype instanceof ASetType)
 		{
 			po = null;
 
@@ -434,14 +526,13 @@ public class SubTypeObligation extends ProofObligation
 						po = makeAnd(po, s);
 					}
 				}
-			}
-			else if (exp instanceof ASetRangeSetExp)
+			} else if (exp instanceof ASetRangeSetExp)
 			{
 				ASetType stype = (ASetType) etype;
 				ASetRangeSetExp range = (ASetRangeSetExp) exp;
 				PType itype = AstFactory.newAIntNumericBasicType(exp.getLocation());
 
-				PExp s = oneType(true, range.getFirst(), itype,	range.getFtype());
+				PExp s = oneType(true, range.getFirst(), itype, range.getFtype());
 
 				if (s != null)
 				{
@@ -471,8 +562,7 @@ public class SubTypeObligation extends ProofObligation
 			}
 
 			po = makeAnd(po, addIs(exp, etype));
-		}
-		else if (etype instanceof AProductType)
+		} else if (etype instanceof AProductType)
 		{
 			if (exp instanceof ATupleExp)
 			{
@@ -491,13 +581,11 @@ public class SubTypeObligation extends ProofObligation
 						po = makeAnd(po, s);
 					}
 				}
-			}
-			else
+			} else
 			{
 				po = addIs(exp, etype);
 			}
-		}
-		else if (etype instanceof SBasicType)
+		} else if (etype instanceof SBasicType)
 		{
 			if (etype instanceof SNumericBasicType)
 			{
@@ -510,7 +598,7 @@ public class SubTypeObligation extends ProofObligation
 					if (SNumericBasicTypeAssistantTC.getWeight(ant) > SNumericBasicTypeAssistantTC.getWeight(ent))
 					{
 						boolean isWhole = SNumericBasicTypeAssistantTC.getWeight(ant) < 3;
-						
+
 						if (isWhole && ent instanceof ANatOneNumericBasicType)
 						{
 							AGreaterNumericBinaryExp gt = new AGreaterNumericBinaryExp();
@@ -518,16 +606,15 @@ public class SubTypeObligation extends ProofObligation
 							gt.setOp(new LexKeywordToken(VDMToken.GT, exp.getLocation()));
 							gt.setRight(getIntLiteral(0));
 							po = gt;
-						}
-						else if (isWhole && ent instanceof ANatNumericBasicType)
+						} else if (isWhole
+								&& ent instanceof ANatNumericBasicType)
 						{
 							AGreaterEqualNumericBinaryExp ge = new AGreaterEqualNumericBinaryExp();
 							ge.setLeft(exp);
 							ge.setOp(new LexKeywordToken(VDMToken.GE, exp.getLocation()));
 							ge.setRight(getIntLiteral(0));
 							po = ge;
-						}
-						else
+						} else
 						{
 							AIsExp isExp = new AIsExp();
 							isExp.setBasicType(ent);
@@ -536,8 +623,7 @@ public class SubTypeObligation extends ProofObligation
 							po = isExp;
 						}
 					}
-				}
-				else
+				} else
 				{
 					AIsExp isExp = new AIsExp();
 					isExp.setBasicType(ent);
@@ -545,27 +631,23 @@ public class SubTypeObligation extends ProofObligation
 					isExp.setTest(exp);
 					po = isExp;
 				}
-			}
-			else if (etype instanceof ABooleanBasicType)
+			} else if (etype instanceof ABooleanBasicType)
 			{
 				if (!(exp instanceof ABooleanConstExp))
 				{
 					po = addIs(exp, etype);
 				}
-			}
-			else if (etype instanceof ACharBasicType)
+			} else if (etype instanceof ACharBasicType)
 			{
 				if (!(exp instanceof ACharLiteralExp))
 				{
 					po = addIs(exp, etype);
 				}
-			}
-			else
+			} else
 			{
 				po = addIs(exp, etype);
 			}
-		}
-		else
+		} else
 		{
 			po = addIs(exp, etype);
 		}
@@ -574,7 +656,7 @@ public class SubTypeObligation extends ProofObligation
 	}
 
 	/**
-	 * Just produce one is_(<expression>, <type>) node. 
+	 * Just produce one is_(<expression>, <type>) node.
 	 */
 	private PExp addIs(PExp exp, PType type)
 	{

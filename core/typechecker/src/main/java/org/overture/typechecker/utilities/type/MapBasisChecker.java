@@ -49,8 +49,7 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	}
 
 	@Override
-	public Boolean caseAUnknownType(AUnknownType type)
-			throws AnalysisException
+	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
@@ -60,4 +59,5 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		return false;
 	}
+
 }

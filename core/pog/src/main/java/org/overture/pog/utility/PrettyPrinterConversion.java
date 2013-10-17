@@ -1,6 +1,7 @@
 package org.overture.pog.utility;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.node.INode;
 import org.overture.pof.AVdmPoTree;
 import org.overture.pof.PPoTree;
 import org.overture.pof.analysis.AnswerPOFAdaptor;
@@ -41,6 +42,20 @@ public class PrettyPrinterConversion extends AnswerPOFAdaptor<String>
 		sb.append(node.getPredicate().apply(overtureVisitor,question));
 		return sb.toString();
 		
+	}
+
+	@Override
+	public String createNewReturnValue(INode node)
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object node)
+	{
+		assert false : "Should not happen";
+		return null;
 	}
 	
 	

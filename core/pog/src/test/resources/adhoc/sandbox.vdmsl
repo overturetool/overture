@@ -1,32 +1,7 @@
-module B
-definitions
-
-types 
-Percent = int
-inv p == p>0 and p <100;
-
-MeterID :: int
-	
-	values
- AllMeterIDs : set of MeterID = {x | x :MeterID}
-	
-	
+types
+    A = (int*int*int) | (int*int);
+    B = A*A
+    
 functions
-	getRanID() r:MeterID
-	post r in set AllMeterIDs;
-
-
-
-state StateName of
--- TODO Define state here
-end 
-
-types 
--- TODO Define types here
-values 
--- TODO Define values here
-functions 
--- TODO Define functions here
-operations 
--- TODO Define operations here
-end B
+    picker : A -> int
+    picker (x) == x.#3

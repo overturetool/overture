@@ -2,6 +2,7 @@ package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -328,5 +329,21 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 		}
 
 		return other;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(INode node, Object question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean createNewReturnValue(Object node, Object question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

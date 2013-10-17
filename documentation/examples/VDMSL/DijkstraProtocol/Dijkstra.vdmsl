@@ -1,0 +1,131 @@
+module Dijkstra
+imports from MATH all
+
+exports all
+
+definitions
+
+values
+
+N : nat1 = 4;
+
+types
+
+Node ::
+  active : bool
+  colour : Colour;
+  
+Token ::
+  index : nat1
+  colour : Colour;
+  
+Colour = <Black> | <White>;
+
+state Sigma of
+  machines : seq of Node
+  tok      : Token
+  terminated : bool
+inv s == s.tok.index in set inds s.machines and
+      ((forall j in set {s.tok.index+1,...,N} & not s.machines(j).active) or
+       (exists j in set {1,...,s.tok.index} & s.machines(j).colour = <Black>) or
+       s.tok.colour = <Black>) 
+
+init s == s =  mk_Sigma(let nl in set AllPossibleInitValues(N) in nl,mk_Token(1,<Black>), false)
+end
+
+functions
+
+AllPossibleInitValues: nat -> set of seq of Node
+AllPossibleInitValues(n) ==
+  if n = 0
+  then {[]}
+  else let a : bool
+          in
+            let c : Colour
+            in {[mk_Node(a,c)] ^ rest | rest in set AllPossibleInitValues(n-1)}
+  
+operations
+
+Active2Passive: nat1 ==> ()
+Active2Passive(n) ==
+  machines(n).active := false
+pre n in set inds machines and machines(n).active;
+
+PassToken: () ==> ()
+PassToken() ==
+  atomic(
+    tok.colour := if machines(tok.index).colour = <Black> then <Black> else tok.colour;
+    machines(tok.index).colour := <White>;
+    tok.index := tok.index - 1;
+  )
+pre not machines(tok.index).active and tok.index <> 1;
+
+PassMasterToken: () ==> ()
+PassMasterToken() ==
+  atomic(
+    tok.colour := <White>;
+    machines(1).colour := <White>;
+    tok.index := N;
+  )
+pre (machines(tok.index).colour = <Black> or tok.colour = <Black>) and tok.index = 1;
+  
+SendMessage: nat1 ==> ()
+SendMessage(f) ==
+  let t in set inds machines
+  in
+    atomic (
+      machines(t).active := true;
+      machines(f).colour := if t > f then <Black> else machines(f).colour
+      )
+pre f in set inds machines and machines(f).active;
+
+Terminated: () ==> ()
+Terminated() ==
+  terminated := true
+pre (hd machines) = mk_Node(false,<White>) and tok = mk_Token(1,<White>);
+
+Main: () ==> nat
+Main() ==
+ (dcl iterations : nat := 0;
+ while not terminated
+  do (iterations := iterations + 1;
+     if pre_Terminated(mk_Sigma(machines,tok,terminated))
+     then Terminated()
+     elseif pre_PassToken(mk_Sigma(machines,tok,terminated))
+     then PassToken()
+     elseif pre_PassMasterToken(mk_Sigma(machines,tok,terminated))
+     then PassMasterToken()
+     elseif exists i in set inds machines & pre_Active2Passive(i,mk_Sigma(machines,tok,terminated))
+     then let i in set inds machines be st pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+          in
+            Active2Passive(i)
+     elseif exists i in set inds machines & pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+     then let i in set inds machines be st pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+          in
+            SendMessage(i));
+   return iterations);
+   
+Main2: () ==> nat
+Main2() ==
+ (dcl iterations : nat := 0;
+ while not terminated
+  do (iterations := iterations + 1;
+     cases MATH`rand(5):
+     0 -> if pre_Terminated(mk_Sigma(machines,tok,terminated))
+          then Terminated(),
+     1 -> if pre_PassToken(mk_Sigma(machines,tok,terminated))
+          then PassToken(),
+     2 -> if pre_PassMasterToken(mk_Sigma(machines,tok,terminated))
+          then PassMasterToken(),
+     3 -> if exists i in set inds machines & pre_Active2Passive(i,mk_Sigma(machines,tok,terminated))
+          then let i in set inds machines be st pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+               in
+                 Active2Passive(i),
+     4 -> if exists i in set inds machines & pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+          then let i in set inds machines be st pre_SendMessage(i,mk_Sigma(machines,tok,terminated))
+               in
+                 SendMessage(i)
+     end);
+   return iterations)
+   
+end Dijkstra            

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
@@ -297,6 +298,20 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	public String defaultPType(PType type) throws AnalysisException
 	{
 		assert false : "PType default method should not hit this case";
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(INode node) throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object node) throws AnalysisException
+	{
+		// TODO Auto-generated method stub
 		return null;
 	}
 

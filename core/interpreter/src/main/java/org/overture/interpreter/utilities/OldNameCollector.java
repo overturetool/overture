@@ -48,6 +48,7 @@ import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -592,6 +593,20 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	@Override
 	public LexNameList defaultPExp(PExp node) throws AnalysisException
 	{
+		return new LexNameList();
+	}
+
+	@Override
+	public LexNameList createNewReturnValue(INode node)
+	{
+		assert false : "Should not happen";
+		return new LexNameList();
+	}
+
+	@Override
+	public LexNameList createNewReturnValue(Object node)
+	{
+		assert false : "Should not happen";
 		return new LexNameList();
 	}
 }
