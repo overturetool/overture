@@ -133,7 +133,7 @@ public class LatexSourceFile extends SourceFile
 
 			if (hasVdm_al && modelOnly && !inVdmAlModelTag)
 			{
-				continue;
+				//continue;
 			}
 
 			String spaced = detab(line, Properties.parser_tabstop);
@@ -158,6 +158,9 @@ public class LatexSourceFile extends SourceFile
 			}
 
 			//if (line.contains(END + getListingEnvironment()))
+			//{
+			//	inVdmAlModelTag = false;
+			//}
 			if (spaced.contains(END + getListingEnvironment()))
 			{
 				inVdmAlModelTag = false;
