@@ -109,18 +109,31 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			// add all defined names from the function parameter list
 			AFunctionType ftype = (AFunctionType) node.getType();
-			Iterator<PType> typeIter = ftype.getParameters().iterator();
-			boolean alwaysMatches = false;
-			PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
+		
+			boolean alwaysMatches = true;
 
-			for (List<PPattern> patterns : node.getParamPatternList())
-				for (PPattern p : patterns)
-				{
-					for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
-						pids.add(def.getName());
+			for (List<PPattern> params : node.getParamPatternList())
+			{
+				alwaysMatches = params.isEmpty() && alwaysMatches;
+			}
 
-					alwaysMatches = alwaysMatches || p.apply(amVisitor);
-				}
+			if (alwaysMatches)
+			{
+				// no arguments. skip to next
+			} else
+			{
+
+				alwaysMatches = false;
+				PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
+				for (List<PPattern> patterns : node.getParamPatternList())
+					for (PPattern p : patterns)
+					{
+						for (PDefinition def : p.getDefinitions())
+							pids.add(def.getName());
+
+						alwaysMatches = alwaysMatches && p.apply(amVisitor);
+					}
+			}
 
 			// check for duplicates
 			if (pids.hasDuplicates() || !alwaysMatches)
@@ -310,7 +323,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					{
 						for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 							pids.add(def.getName());
-						alwaysMatches = alwaysMatches || p.apply(amVisitor);
+						alwaysMatches = alwaysMatches && p.apply(amVisitor);
 					}
 
 				}
@@ -397,7 +410,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					pids.add(def.getName());
 
-				alwaysMatches = alwaysMatches || p.apply(amVisitor);
+				alwaysMatches = alwaysMatches && p.apply(amVisitor);
 			}
 
 			if (pids.hasDuplicates() || !alwaysMatches)
@@ -464,7 +477,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 						pids.add(def.getName());
 
-					alwaysMatches = alwaysMatches || p.apply(amVisitor);
+					alwaysMatches = alwaysMatches && p.apply(amVisitor);
 				}
 			}
 
