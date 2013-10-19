@@ -1,7 +1,7 @@
 To update *all* of the version numbers in the pom.xml files all at
 once, use this command at the repository root:
 
-$ find . -name pom.xml | xargs -n1 sed -i '' -e 's/2.0.1-SHAPSHOT<!--Replaceable: Main Version-->/2.0.2<!--Replaceable: Main Version-->/'
+$ find . -name pom.xml | xargs -n1 sed -i '' -e 's/2.0.1-SNAPSHOT<!--Replaceable: Main Version-->/2.0.2<!--Replaceable: Main Version-->/'
 
 Make sure you leave the "<!--Replaceable: Main Version-->" portion of
 the string in place, otherwise this method will break and Joey will

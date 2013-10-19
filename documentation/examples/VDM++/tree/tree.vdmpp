@@ -72,7 +72,7 @@ class Tree
             in ( visited := visited^[curr_node.nval];
                  if not curr_node.lt.isEmpty()
                  then to_visit.Enqueue(curr_node.lt.gettree());
-                 if not curr_node.lt.isEmpty()
+                 if not curr_node.rt.isEmpty()
                  then to_visit.Enqueue(curr_node.rt.gettree());
                );
           return (visited));
