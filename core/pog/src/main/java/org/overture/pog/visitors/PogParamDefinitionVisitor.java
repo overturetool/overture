@@ -109,7 +109,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			// add all defined names from the function parameter list
 			AFunctionType ftype = (AFunctionType) node.getType();
-		
+
 			boolean alwaysMatches = true;
 
 			for (List<PPattern> params : node.getParamPatternList())
@@ -334,6 +334,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				obligations.add(new ParameterPatternObligation(node, question));
 			}
 
+			question.push(new POFunctionDefinitionContext(node, false));
+
 			if (node.getPrecondition() != null)
 			{
 				obligations.addAll(node.getPrecondition().apply(rootVisitor, question));
@@ -343,17 +345,13 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (node.getBody() != null) // else satisfiability, below
 				{
-					question.push(new POFunctionDefinitionContext(node, false));
 					obligations.add(new FuncPostConditionObligation(node, question));
-					question.pop();
 				}
 
 				question.push(new POFunctionResultContext(node));
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
 				question.pop();
 			}
-
-			question.push(new POFunctionDefinitionContext(node, false));
 
 			if (node.getBody() == null)
 			{
