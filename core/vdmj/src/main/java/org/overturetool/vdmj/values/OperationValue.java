@@ -61,6 +61,7 @@ import org.overturetool.vdmj.scheduler.CPUResource;
 import org.overturetool.vdmj.scheduler.Holder;
 import org.overturetool.vdmj.scheduler.ISchedulableThread;
 import org.overturetool.vdmj.scheduler.InitThread;
+import org.overturetool.vdmj.scheduler.Lock;
 import org.overturetool.vdmj.scheduler.MessageRequest;
 import org.overturetool.vdmj.scheduler.MessageResponse;
 import org.overturetool.vdmj.scheduler.ResourceScheduler;
@@ -428,6 +429,32 @@ public class OperationValue extends Value
 
 		return argContext;
 	}
+	
+	private Lock getGuardLock(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return cctxt.classdef.guardLock;
+		}
+		else
+		{
+			return self.guardLock;
+		}
+	}
+	
+	private Object getGuardObject(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return cctxt.classdef;
+		}
+		else
+		{
+			return self;
+		}
+	}
 
 	private void guard(Context ctxt) throws ValueException
 	{
@@ -437,11 +464,12 @@ public class OperationValue extends Value
 			return;		// Probably during initialization.
 		}
 
-		self.guardLock.lock(ctxt, guard.location);
+		Lock lock = getGuardLock(ctxt);
+		lock.lock(ctxt, guard.location);
 
 		while (true)
 		{
-			synchronized (self)		// So that test and act() are atomic
+			synchronized (getGuardObject(ctxt))		// So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
@@ -466,12 +494,12 @@ public class OperationValue extends Value
 
 			debug("guard WAIT");
 			ctxt.guardOp = this;
-			self.guardLock.block(ctxt, guard.location);
+			lock.block(ctxt, guard.location);
 			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
 
-		self.guardLock.unlock();
+		lock.unlock();
 	}
 
 	private void notifySelf()

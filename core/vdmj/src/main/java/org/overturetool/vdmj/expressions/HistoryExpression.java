@@ -29,6 +29,7 @@ import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
 import org.overturetool.vdmj.lex.Token;
+import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -68,11 +69,36 @@ public class HistoryExpression extends Expression
 			// own operation history counters...
 
 			ValueList operations = new ValueList();
-			ObjectValue self = ((ObjectContext)ctxt).self;
-
-			for (LexNameToken opname: opnames)
+			
+			if (ctxt instanceof ObjectContext)
 			{
-				operations.addAll(self.getOverloads(opname));
+				ObjectValue self = ((ObjectContext)ctxt).self;
+	
+				for (LexNameToken opname: opnames)
+				{
+					operations.addAll(self.getOverloads(opname));
+				}
+			}
+			else if (ctxt instanceof ClassContext)
+			{
+				ClassContext cctxt = (ClassContext)ctxt;
+				Context statics = cctxt.classdef.getStatics();
+				
+				for (LexNameToken opname: opnames)
+				{
+					for (LexNameToken sname: statics.keySet())
+					{
+						if (opname.matches(sname))
+						{
+							operations.add(ctxt.check(sname));
+						}
+					}
+				}
+			}
+			
+			if (operations.isEmpty())
+			{
+				abort(4011, "Illegal history operator: " + hop, ctxt);
 			}
 
 			int result = 0;

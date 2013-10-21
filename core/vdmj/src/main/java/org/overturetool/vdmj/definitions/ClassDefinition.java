@@ -23,6 +23,8 @@
 
 package org.overturetool.vdmj.definitions;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,7 @@ import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.StateContext;
 import org.overturetool.vdmj.runtime.ValueException;
+import org.overturetool.vdmj.scheduler.Lock;
 import org.overturetool.vdmj.statements.ClassInvariantStatement;
 import org.overturetool.vdmj.statements.Statement;
 import org.overturetool.vdmj.typechecker.Environment;
@@ -120,6 +123,9 @@ public class ClassDefinition extends Definition
 
 	/** A delegate Java object for any native methods. */
 	private Delegate delegate = null;
+	
+	/** A lock for static permission guards - see readObject() */
+	public transient Lock guardLock;
 
 	/**
 	 * Create a class definition with the given name, list of superclass names,
@@ -150,6 +156,7 @@ public class ClassDefinition extends Definition
 		this.definitions.setClassDefinition(this);
 
 		this.delegate = new Delegate(name.name, definitions);
+		this.guardLock = new Lock();
 	}
 
 	/**
@@ -1486,4 +1493,10 @@ public class ClassDefinition extends Definition
 	{
 		return delegate.invokeDelegate(null, ctxt);
 	}
+
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException
+    {
+		in.defaultReadObject();
+		guardLock = new Lock();
+    }
 }
