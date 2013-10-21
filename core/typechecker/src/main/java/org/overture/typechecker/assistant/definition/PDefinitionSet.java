@@ -22,32 +22,32 @@ public class PDefinitionSet extends HashSet<PDefinition>
 	{
 		this.af = af;
 	}
+
 	@Override
 	public boolean add(PDefinition e)
 	{
-		if(!contains(e))
+		if (!contains(e))
 		{
 			return super.add(e);
 		}
-		
+
 		return false;
 	}
-	
-	
+
 	@Override
 	public boolean contains(Object o)
 	{
 		for (PDefinition def : this)
 		{
-			if(af.createPDefinitionAssistant().equals(def, o))
+			if (af.createPDefinitionAssistant().equals(def, o))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public List<PDefinition> asList()
 	{
 		List<PDefinition> list = new Vector<PDefinition>();

@@ -1,0 +1,35 @@
+class Term
+
+values
+	Rcsid = "$Id: Term.vpp,v 1.1 2005/10/31 02:15:42 vdmtools Exp $";
+
+instance variables
+startTime : [Time];
+endTime : [Time];
+
+functions
+static public isInThePeriod : Time * Term -> bool
+isInThePeriod(aTime, aPeriod) ==
+	(aPeriod.getStartTime() = nil or aPeriod.getStartTime().LE(aTime)) and
+	(aPeriod.getEndTime() = nil or aPeriod.getEndTime().GE(aTime));
+
+public EQ : Term -> bool
+EQ(aPeriod) == 
+	self.getStartTime().EQ(aPeriod.getStartTime()) and self.getEndTime().EQ(aPeriod.getEndTime());
+
+operations
+public Term:[Time]*[Time] ==> Term
+Term(astartTime, aendTime) ==
+	(
+	startTime := astartTime;
+	endTime := aendTime;
+	return self
+	);
+
+public getStartTime : () ==> [Time]
+getStartTime() == return startTime;
+
+public getEndTime : () ==> [Time]
+getEndTime() == return endTime;
+	
+end  Term

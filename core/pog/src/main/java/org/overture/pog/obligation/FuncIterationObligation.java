@@ -23,47 +23,98 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class FuncIterationObligation extends ProofObligation
-{
+public class FuncIterationObligation extends ProofObligation {
 	/**
+	 * VDM Bits: f: nat -> nat1 f(a) == a + 1 pre a < 10;
 	 * 
+	 * g: nat -> nat g(n) == (f ** n)(0);
+	 * 
+	 * Generate PO: (forall n:nat & n > 1 => forall arg:nat & pre_f(arg) =>
+	 * pre_f(f(arg)))
 	 */
+
 	private static final long serialVersionUID = -6041213040266345023L;
 
-	public FuncIterationObligation(
-		AStarStarBinaryExp exp, String prename, POContextStack ctxt)
-	{
-		super(exp.getLocation(), POType.FUNC_ITERATION, ctxt);
-		StringBuilder sb = new StringBuilder();
+	public FuncIterationObligation(AStarStarBinaryExp exp,
+			ILexNameToken preName, IPOContextStack ctxt) {
+		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation());
 
-		sb.append(exp.getRight());
-		sb.append(" > 1 => forall arg:");
-		sb.append(PTypeAssistantTC.getNumeric(exp.getRight().getType()));
+		// n > 1
+		AGreaterNumericBinaryExp gTExp = AstExpressionFactory
+				.newAGreaterNumericBinaryExp(exp.getRight().clone(),
+						getIntLiteral(1));
 
-		if (prename != null)
-		{
-    		sb.append(" & ");
-    		sb.append(prename);
-    		sb.append("(arg) => ");
-    		sb.append(prename);
-    		sb.append("(");
-    		sb.append(exp.getLeft());
-    		sb.append("(arg))");
-		}
-		else
-		{
-    		sb.append(" & pre_(");
-    		sb.append(exp.getLeft());
-    		sb.append(", arg) => pre_(");
-    		sb.append(exp.getLeft());
-    		sb.append(", ");
-    		sb.append(exp.getLeft());
-    		sb.append("(arg))");
-		}
+		// forall n :T & P(X)
+		AForAllExp forAllExp = new AForAllExp();
+		ILexNameToken arg = getUnique("arg");
+		List<PMultipleBind> bindList = getMultipleTypeBindList(
+				(PTypeAssistantTC.getNumeric(exp.getRight().getType().clone())),
+				arg);
+		forAllExp.setBindList(bindList);
+		forAllExp.setPredicate(getPredicate(exp.clone(), preName.clone(), arg));
 
-		value = ctxt.getObligation(sb.toString());
+		// n > 1 => forall n :T & P(X)
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
+				.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
+
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
+
+	PExp getImplies(PExp preExp, PExp leftExp, ILexNameToken preName,
+			ILexNameToken arg) {
+		// pre_f(a)
+		AApplyExp pre_exp = getApplyExp(preExp, getVarExp(arg));
+
+		// f(a)
+		AApplyExp left_exp = getApplyExp(leftExp, getVarExp(arg));
+
+		// pre_f(f(a))
+		AApplyExp preleft_exp = getApplyExp(pre_exp, left_exp);
+
+		// pre_f(a) => pre_f(f(a))
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
+				.newAImpliesBooleanBinaryExp(pre_exp, preleft_exp);
+
+		return impliesExp;
+
+	}
+
+	private PExp getPredicate(AStarStarBinaryExp exp, ILexNameToken preName,
+			ILexNameToken arg) {
+		if (preName != null) {
+
+			return getImplies(getVarExp(preName), exp.getLeft(), preName, arg);
+
+		} else { // if no existing pre_f, build it
+			AApplyExp applyExp = new AApplyExp();
+
+			ILexNameToken prename = new LexNameToken("", "pre_", null);
+			applyExp.setRoot(getVarExp(prename));
+			List<PExp> argList = new LinkedList<PExp>();
+			argList.add(exp.getLeft());
+			applyExp.setArgs(argList);
+
+			return getImplies(applyExp, exp.getLeft(), prename, arg);
+
+		}
+	}
+
 }

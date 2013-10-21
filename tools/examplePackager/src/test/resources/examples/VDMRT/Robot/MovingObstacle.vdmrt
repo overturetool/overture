@@ -1,0 +1,82 @@
+class MovingObstacle
+types
+public MoveDirection = <North> | <South> | <East> | <West>;
+instance variables
+firstpos : Grid`Point;
+pos : Grid`Point;
+direction : MoveDirection;
+steps :int;
+busy: bool := true;
+operations
+ public MovingObstacle: Grid`Point * MoveDirection ==> MovingObstacle
+ MovingObstacle (p, dir) ==
+ (
+   firstpos:=p;
+   pos:= firstpos;
+   direction := dir;
+   steps :=0;
+ );
+ 
+ private Step : () ==> ()
+ Step() ==
+ duration(1000)
+ (
+   if steps = 10 then
+     (
+       SetPos(firstpos,0);
+     )
+   else
+     (
+        if direction = <North> then
+          SetPos(mk_Grid`Point(pos.X,pos.Y+1),steps+1);
+      
+        if direction = <South> then
+          SetPos(mk_Grid`Point(pos.X,pos.Y-1),steps+1);
+ 
+        if direction = <East> then
+          SetPos(mk_Grid`Point(pos.X+1,pos.Y),steps+1);
+ 
+        if direction = <West> then
+          SetPos(mk_Grid`Point(pos.X-1,pos.Y),steps+1);
+ 
+      );
+--Util`PrintDebug("Mobs");
+--Util`PrintValue(pos);
+ 
+ );
+ private SetPos: Grid`Point * int ==> ()
+ SetPos(p,s) == ( pos:= p; steps:= s;);
+ 
+ public GetPos: () ==> Grid`Point
+   GetPos() ==
+     return pos;
+ 
+ public Stop: () ==> ()
+ Stop() == busy:=false;
+thread
+periodic(1000E6,100, 100,0)(Step);
+ 
+sync
+ 
+mutex(SetPos, GetPos);
+mutex(SetPos);
+ 
+ 
+end MovingObstacle
+
+
+
+class MovingObstacleTest is subclass of TestCase
+values
+ 
+operations
+ protected SetUp: () ==> ()
+ SetUp () == skip;
+ 
+ protected RunTest: () ==> ()
+ RunTest () == skip;
+ 
+  protected TearDown: () ==> ()
+ TearDown () == skip
+ 
+end MovingObstacleTest

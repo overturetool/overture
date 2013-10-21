@@ -43,10 +43,10 @@ public class SafeBuilder extends Thread
 	final IProgressMonitor monitor;
 
 	public SafeBuilder(final IVdmProject currentProject,
-			 final IProgressMonitor monitor)
+			final IProgressMonitor monitor)
 	{
 		this.currentProject = currentProject;
-		
+
 		this.monitor = monitor;
 		this.setName("VDM Safe Builder");
 		this.setDaemon(true);
@@ -78,42 +78,53 @@ public class SafeBuilder extends Thread
 								AbstractVdmBuilder builder = (AbstractVdmBuilder) o;
 
 								final IVdmModel model = currentProject.getModel();
-//								SourceParserManager.parseMissingFiles(currentProject, model, monitor);
 
-								// if the project don't have parse errors
 								if (model != null)
 								{
 									clearProblemMarkers((IProject) currentProject.getAdapter(IProject.class));
+									//first fix source model
+									SourceParserManager.parseMissingFiles(currentProject, model, monitor);
+									//create working copy from source model to be checked
 									VdmModelWorkingCopy workingModel = model.getWorkingCopy();
-									SourceParserManager.parseMissingFiles(currentProject, workingModel, monitor);
-									// if the project don't have parse errors
+									
+									// if the project is parsed with no errors
 									if (model.isParseCorrect())
 									{
 										try
 										{
 											if (VdmCore.DEBUG)
 											{
-												System.out.println("Parse correct .. building("
-														+ currentProject.getName()
-														+ ")");
+												System.out.println("Type Checking: "
+														+ currentProject.getName());
 											}
 											monitor.subTask("Type checking: "
 													+ currentProject);
 											IStatus status = builder.buildModel(currentProject, workingModel);
 											// mark ast root as type checked
-											monitor.done();
 											if (workingModel != null)
 											{
 												workingModel.setTypeCheckedStatus(status.isOK());
+												//override any existing model and source units
 												workingModel.commit();
+											}
+											
+											if(!status.isOK())
+											{
+												if(status.getException()!=null)
+												{
+													handleException(status.getException());
+												}
 											}
 										} catch (Exception e)
 										{
 											workingModel.discard();
 											throw e;
+										} finally
+										{
+											monitor.done();
 										}
 										return;
-									}else
+									} else
 									{
 										workingModel.discard();
 									}
@@ -132,7 +143,7 @@ public class SafeBuilder extends Thread
 		}
 
 	}
-	
+
 	/***
 	 * This method removed all problem markers and its sub-types from the project. It is called before an instance of
 	 * the AbstractBuilder is created

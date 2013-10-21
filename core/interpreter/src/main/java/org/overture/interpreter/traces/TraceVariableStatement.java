@@ -82,7 +82,7 @@ public class TraceVariableStatement extends PStmBase
 		stmt.getLocation().hit();
 		Value val = stmt.var.value;
 
-		if (val.isType(ObjectValue.class))
+		if (stmt.var.clone)
 		{
 			val = (Value)stmt.var.value.clone();		// To allow updates to objects
 		}
@@ -110,12 +110,6 @@ public class TraceVariableStatement extends PStmBase
 		return null;
 	}
 
-	@Override
-	public String kindPStm()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public PStm clone(Map<INode, INode> oldToNewMap)

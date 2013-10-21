@@ -34,7 +34,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else { type.setResolved(true); }
-		type.setType(PTypeAssistantTC.typeResolve(type.getType(), root, rootVisitor, question));
+		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), root, rootVisitor, question));
 		
 		if (root != null)  root.setInfinite(false);	// Could be nil
 		return type;
@@ -101,9 +101,9 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static boolean isFunction(AOptionalType type) {
-		return PTypeAssistantTC.isFunction(type.getType());
-	}
+//	public static boolean isFunction(AOptionalType type) {
+//		return PTypeAssistantTC.isFunction(type.getType());
+//	}
 
 
 	public static AFunctionType getFunction(AOptionalType type) {

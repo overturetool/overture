@@ -23,7 +23,9 @@
 
 package org.overture.combinatorialtesting.vdmj.server.common;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 
 public class Utils
 {
@@ -37,8 +39,7 @@ public class Utils
 		try
 		{
 			Thread.sleep(millis);
-		}
-		catch (InterruptedException e)
+		} catch (InterruptedException e)
 		{
 			// ?
 		}
@@ -50,8 +51,7 @@ public class Utils
 		{
 			Integer.parseInt(s);
 			return true;
-		}
-		catch (NumberFormatException e)
+		} catch (NumberFormatException e)
 		{
 			return false;
 		}
@@ -62,37 +62,41 @@ public class Utils
 		try
 		{
 			return Integer.parseInt(s);
-		}
-		catch (NumberFormatException e)
+		} catch (NumberFormatException e)
 		{
 			return 0;
 		}
 	}
-	
+
 	/*
-	 * This  method intends to provide some of the functionality provided by 
-	 * ProcessBuilder.inheritIO(), which is Java7 specific.
-	 * This method is inspired by the question at Stackoverflow:
+	 * This method intends to provide some of the functionality provided by ProcessBuilder.inheritIO(), which is Java7
+	 * specific. This method is inspired by the question at Stackoverflow:
 	 * http://stackoverflow.com/questions/60302/starting-a-process-with-inherited-stdin-stdout-stderr-in-java-6
 	 */
 	public static void inheritOutput(Process process)
 	{
-	    pipe(process.getErrorStream(), System.err);
-	    pipe(process.getInputStream(), System.out);
+		pipe(process.getErrorStream(), System.err);
+		pipe(process.getInputStream(), System.out);
 	}
-	
-	private static void pipe(final InputStream src, final PrintStream dest) {
-	    new Thread(new Runnable() {
-	        public void run() {
-	            try {
-	                byte[] buffer = new byte[1024];
-	                for (int n = 0; n != -1; n = src.read(buffer)) {
-	                    dest.write(buffer, 0, n);
-	                }
-	            } catch (IOException e) { // just exit
-	            }
-	        }
-	    }).start();
-	} 
-	
+
+	private static void pipe(final InputStream src, final PrintStream dest)
+	{
+		new Thread(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					byte[] buffer = new byte[1024];
+					for (int n = 0; n != -1; n = src.read(buffer))
+					{
+						dest.write(buffer, 0, n);
+					}
+				} catch (IOException e)
+				{ // just exit
+				}
+			}
+		}).start();
+	}
+
 }

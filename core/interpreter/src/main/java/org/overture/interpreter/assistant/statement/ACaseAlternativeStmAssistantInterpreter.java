@@ -8,10 +8,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.statement.ACaseAlternativeStmAssistantTC;
 
-public class ACaseAlternativeStmAssistantInterpreter extends
-		ACaseAlternativeStmAssistantTC
+public class ACaseAlternativeStmAssistantInterpreter // extends
+// ACaseAlternativeStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -19,7 +18,7 @@ public class ACaseAlternativeStmAssistantInterpreter extends
 	public ACaseAlternativeStmAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

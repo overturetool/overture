@@ -4209,7 +4209,8 @@ an access modifier allowing access to it outside the defining class.
     }
 
   \Rule{map enumeration pattern}{
-    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
+    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}} \dsep
+    \Lit{\{}, \Lit{|->}, \Lit{\}}
     }
 
   \Rule{maplet pattern list}{
@@ -4377,9 +4378,10 @@ quicksort (l) ==
     [] -> [],
     [x] -> [x],
     [x,y] -> if x < y then [x,y] else [y,x],
-    -^[x]^- -> quicksort ([y | y in set elems l & y < x]) ^ 
-               [x] ^
-               quicksort ([y | y in set elems l & y > x])
+    -^[x]^- ->
+          quicksort([l(i) | i in set inds l & l(i) < x])
+                  ^ [l(i) | i in set inds l & l(i) = x] ^
+          quicksort([l(i) | i in set inds l & l(i) > x])
   end
 \end{lstlisting}
 Here, in the second cases clause a sequence concatenation pattern is
@@ -5505,9 +5507,26 @@ or in the context of a VDM++ instance variables
   All of the expressions or operation calls on the right hand sides
   are executed or evaluated, and then the results are bound to the
   corresponding state designators. The right-hand sides are executed
-  atomically with respect to invariant evaluation.  However in the
-  case of a multi-threaded concurrent VDM++ or VDM-RT model, execution
-  is not necessarily atomic with respect to task switching.
+  in the order given in the statement, and normal invariant processing
+  and thread switching and statement durations can occur. But once all
+  of the right-hand values have been obtained, they are assigned to the
+  left-hand variables in one atomic step, which occurs without invariant
+  checking, thread switching or extra duration. It is as if the
+  statement is as follows:
+  \begin{lstlisting}
+    let t1 = ec1,
+        ...
+        tN = ecN in
+    (
+        -- turn off invariants, threading and durations
+        sd1 := t1;
+        ...
+        sdN := tN;
+        -- turn on invariants, threading and durations
+        -- and check that invariants hold. 
+    );
+  \end{lstlisting}
+  
 
 \item[Examples:] The operation in the previous example (\texttt{Swap}) 
   illustrated normal assignment. The operation \texttt{Win\_sd}, a 
@@ -11343,9 +11362,9 @@ In VDM++ and VDM-RT a call statement looks like:
   \Ruleref{pattern}, \Lit{\char'136}, \Ruleref{pattern}
   }
 
-\Ruledef{map enumeration pattern}{
-    \Lit{\{}, [\Ruleref{maplet pattern list}], \Lit{\}}
-    }
+\Ruledef{map enumeration pattern}{ 
+\Lit{\{}, \Ruleref{maplet pattern list}, \Lit{\}} \dsep \Lit{\{}, \Lit{|->}, \Lit{\}}
+}
 
 \Ruledef{maplet pattern list}{
      \Ruleref{maplet pattern}, \SeqPt{\Lit{,}, \Ruleref{maplet pattern}}

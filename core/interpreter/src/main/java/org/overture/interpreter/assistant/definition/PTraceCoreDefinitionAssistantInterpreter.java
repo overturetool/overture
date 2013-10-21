@@ -21,17 +21,19 @@ public class PTraceCoreDefinitionAssistantInterpreter
 
 	public static TraceNode expand(PTraceCoreDefinition core, Context ctxt)
 	{
-		switch (core.kindPTraceCoreDefinition())
+		if (core instanceof AApplyExpressionTraceCoreDefinition)
 		{
-			case AApplyExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
-				return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
-			case ABracketedExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
-				return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
-			case AConcurrentExpressionTraceCoreDefinition.kindPTraceCoreDefinition:
-				return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
-			default:
-				assert false : "Should not happen";
-				return null;
+			return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
+		} else if (core instanceof ABracketedExpressionTraceCoreDefinition)
+		{
+			return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
+		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition)
+		{
+			return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
+		} else
+		{
+			assert false : "Should not happen";
+			return null;
 		}
 	}
 

@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class Environment is subclass of GLOBAL
+class Environment is subclass of GLOBAL, BaseThread
 
 types
 
@@ -31,11 +31,18 @@ simtime : Time;
 
 operations
 
-public Environment: seq of char ==> Environment
-Environment (fname) ==
-  def mk_ (-,mk_(timeval,input)) = io.freadval[InputTP](fname) in
+public Environment: seq of char * [ThreadDef] ==> Environment
+Environment (fname, tDef) ==
+ (def mk_ (-,mk_(timeval,input)) = io.freadval[InputTP](fname) in
     (inlines := input;
      simtime := timeval);
+     
+  if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
+  );
 
 public addSensor: Sensor ==> ()
 addSensor (psens) ==
@@ -77,20 +84,18 @@ showResult () ==
 public isFinished : () ==> ()
 isFinished () == skip;
 
+public Step : () ==> ()
+Step() ==
+ (if World`timerRef.GetTime() < simtime
+  then createSignal()
+  else busy := false;
+ );
+ 
 sync
 
 mutex (handleEvent);
 mutex (createSignal);
 per isFinished => not busy;
-
-thread
- (while World`timerRef.GetTime() < simtime do
-   (if busy
-    then createSignal();
-    World`timerRef.WaitRelative(1);
-   );
-  busy := false
- )
 
 end Environment
 \end{vdm_al}

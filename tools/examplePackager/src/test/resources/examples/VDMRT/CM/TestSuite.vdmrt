@@ -1,0 +1,27 @@
+\begin{vdm_al}
+class TestSuite
+  is subclass of Test
+
+instance variables
+  tests : seq of Test := [];
+\end{vdm_al}
+\begin{vdm_al}
+operations
+  public Run: () ==> ()
+  Run () ==
+    (dcl ntr : TestResult := new TestResult();
+     Run(ntr);
+     ntr.Show());
+\end{vdm_al}
+\begin{vdm_al}
+  public Run: TestResult ==> ()
+  Run (result) ==
+    for test in tests do
+      test.Run(result);
+
+  public AddTest: Test ==> ()
+  AddTest(test) ==
+    tests := tests ^ [test];
+
+end TestSuite
+\end{vdm_al}

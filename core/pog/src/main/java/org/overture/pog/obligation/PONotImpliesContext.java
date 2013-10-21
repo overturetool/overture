@@ -23,7 +23,10 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 
 public class PONotImpliesContext extends POContext
 {
@@ -33,6 +36,20 @@ public class PONotImpliesContext extends POContext
 	{
 		this.exp = exp;
 	}
+
+	
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		
+	
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.clone(), stitch);
+		ANotUnaryExp notExp = new ANotUnaryExp();
+		notExp.setExp(impliesExp);
+		
+		return notExp;
+	}
+
 
 	@Override
 	public String getContext()

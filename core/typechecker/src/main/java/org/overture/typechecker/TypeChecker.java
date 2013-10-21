@@ -42,12 +42,21 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 abstract public class TypeChecker
 {
+	public interface IStatusListener
+	{
+		void report(VDMError error);
+		void warning(VDMWarning warning);
+	}
+	
 	private static List<VDMError> errors = new Vector<VDMError>();
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
 	private static VDMMessage lastMessage = null;
 	private static final int MAX = 100;
 	
 	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	
+	
+	static List<IStatusListener> listners = new Vector<IStatusListener>();
 
 	public TypeChecker()
 	{
@@ -62,6 +71,11 @@ abstract public class TypeChecker
 		//System.out.println(error.toString());
 		errors.add(error);
 		lastMessage = error;
+		
+		for (IStatusListener listner : listners)
+		{
+			listner.report(error);
+		}
 
 		if (errors.size() >= MAX-1)
 		{
@@ -75,6 +89,11 @@ abstract public class TypeChecker
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);
 		lastMessage = warning;
+		
+		for (IStatusListener listner : listners)
+		{
+			listner.warning(warning);
+		}
 	}
 
 	public static void detail(String tag, Object obj)
@@ -131,5 +150,15 @@ abstract public class TypeChecker
 		{
 			out.println(w.toString());
 		}
+	}
+	
+	public static void addStatusListner(IStatusListener listner)
+	{
+		listners.add(listner);
+	}
+	
+	public static void removeStatusListner(IStatusListener listner)
+	{
+		listners.remove(listner);
 	}
 }

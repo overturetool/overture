@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameToken;
 
 public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 {
@@ -134,9 +133,9 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 
 	public boolean containsKey(Object key)
 	{
-		if(key instanceof LexNameToken)
+		if(key instanceof ILexNameToken)
 		{
-			return this.map.containsKey(new LexNameTokenWrapper((LexNameToken)key));
+			return this.map.containsKey(new LexNameTokenWrapper((ILexNameToken)key));
 		}
 		return false;
 	}
@@ -148,9 +147,9 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 
 	public V remove(Object key)
 	{
-		if(key instanceof LexNameToken)
+		if(key instanceof ILexNameToken)
 		{
-			return this.map.remove(new LexNameTokenWrapper((LexNameToken)key));
+			return this.map.remove(new LexNameTokenWrapper((ILexNameToken)key));
 		}
 		return null;
 	}

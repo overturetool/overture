@@ -8,14 +8,11 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
-import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -40,7 +37,7 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 
 		try
 		{
-			type.setType( PTypeAssistantTC.typeResolve(type.getType(),root, rootVisitor, question));
+			type.setType( af.createPTypeAssistant().typeResolve(type.getType(),root, rootVisitor, question));
 			return type;
 		}
 		catch (TypeCheckException e)
@@ -105,45 +102,45 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
-	public static boolean isFunction(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isFunction(type.getType());
-	}
+//	public static boolean isFunction(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isFunction(type.getType());
+//	}
 
 	public static AFunctionType getFunction(ANamedInvariantType type) {		
 		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
-	public static boolean isOperation(ANamedInvariantType type) {
-		if(type.getOpaque()) return false;
-		return PTypeAssistantTC.isOperation(type.getType());
-	}
+//	public static boolean isOperation(ANamedInvariantType type) {
+//		if(type.getOpaque()) return false;
+//		return PTypeAssistantTC.isOperation(type.getType());
+//	}
 	
-	public static AOperationType getOperation(ANamedInvariantType type) {		
-		return PTypeAssistantTC.getOperation(type.getType());
-	}
+//	public static AOperationType getOperation(ANamedInvariantType type) {		
+//		return PTypeAssistantTC.getOperation(type.getType());
+//	}
 
-	public static boolean isSeq(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isSeq(type.getType());
-	}
+//	public static boolean isSeq(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isSeq(type.getType());
+//	}
 	
-	public static SSeqType getSeq(ANamedInvariantType type) {		
-		return PTypeAssistantTC.getSeq(type.getType());
-	}
+//	public static SSeqType getSeq(ANamedInvariantType type) {		
+//		return PTypeAssistantTC.getSeq(type.getType());
+//	}
 
 	
 	
 	
 
-	public static boolean isMap(ANamedInvariantType type) {
-		if (type.getOpaque()) return false;
-		return PTypeAssistantTC.isMap(type.getType());
-	}
+//	public static boolean isMap(ANamedInvariantType type) {
+//		if (type.getOpaque()) return false;
+//		return PTypeAssistantTC.isMap(type.getType());
+//	}
 	
-	public static SMapType getMap(ANamedInvariantType type) {
-		return PTypeAssistantTC.getMap(type.getType());
-	}
+//	public static SMapType getMap(ANamedInvariantType type) {
+//		return PTypeAssistantTC.getMap(type.getType());
+//	}
 
 	public static boolean isSet(ANamedInvariantType type) {
 		if (type.getOpaque()) return false;

@@ -26,6 +26,7 @@ import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.SourceFile;
@@ -418,6 +419,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					{
 						PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
 						RTLogger.setLogfile(p);
+						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
@@ -457,7 +459,8 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 					
 
-					new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder,subset,reductionType,seed).startup();
+					TraceRunnerMain runner = new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder,subset,reductionType,seed);
+					runner.startup();
 
 					if (coverage != null)
 					{
@@ -465,6 +468,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
+					runner.progressTerminating();
 					System.exit(0);
 				} catch (ContextException e)
 				{
@@ -692,10 +696,21 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progressCompleted() throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"completed\" ");
 		sb.append("progress=\"" + 100 + "\" ");
+		sb.append("/>\n");
+
+		write(sb);
+
+	}
+	
+	
+	public void progressTerminating() throws IOException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("<response ");
+		sb.append("status=\"terminating\" ");
 		sb.append("/>\n");
 
 		write(sb);

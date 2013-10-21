@@ -1,0 +1,158 @@
+\section{VDM System}
+
+\begin{vdm_al}
+
+-----------------------------------------------
+-- Class:			VDM
+-- Description: 	VDM is the system class in the VDM project
+-----------------------------------------------
+
+--
+-- class definition
+--
+system VDM
+
+--
+-- instance variables
+--
+instance variables
+
+cpu0 : CPU := new CPU (<FP>,1E6);		-- changed for setPriority to work
+cpu1 : CPU := new CPU (<FCFS>,1E6);
+cpu2 : CPU := new CPU (<FCFS>,1E6);
+cpu3 : CPU := new CPU (<FCFS>,1E6);
+cpu4 : CPU := new CPU (<FCFS>,1E6);
+cpu5 : CPU := new CPU (<FCFS>,1E6);
+cpu6 : CPU := new CPU (<FCFS>,1E6);
+cpu7 : CPU := new CPU (<FCFS>,1E6);
+cpu8 : CPU := new CPU (<FCFS>,1E6);
+cpu9 : CPU := new CPU (<FCFS>,1E6);
+cpu10 : CPU := new CPU (<FCFS>,1E6);
+cpu11 : CPU := new CPU (<FCFS>,1E6);
+cpu12 : CPU := new CPU (<FCFS>,1E6);
+cpu13 : CPU := new CPU (<FCFS>,1E6);
+cpu14 : CPU := new CPU (<FCFS>,1E6);
+
+bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1, cpu2, cpu3, cpu4, cpu5, cpu6,
+				 	   cpu7, cpu8, cpu9, cpu10, cpu11, cpu12, cpu13, cpu14});
+--bus1 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu1});
+--bus2 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu2});
+--bus3 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu3});
+--bus4 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu4});
+--bus5 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu5});
+--bus6 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu6});
+--bus7 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu7});
+--bus8 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu8});
+--bus9 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu9});
+--bus10 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu10});
+--bus11 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu11});
+--bus12 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu12});
+--bus13 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu13});
+--bus14 : BUS := new BUS (<FCFS>,1E6,{cpu0,cpu14});
+
+-- Vehicles
+public static ctrl1 : Controller := new Controller(
+									new Vehicle(1, 
+									new Position(1, 1), 1, <NORTH>));
+
+public static ctrl2 : Controller := new Controller(
+									new Vehicle(2, 
+									new Position(1, 2), 1, <NORTH>));
+
+public static ctrl3 : Controller := new Controller(
+									new Vehicle(3, 
+									new Position(1, 3), 1, <NORTH>));
+
+public static ctrl4 : Controller := new Controller(
+									new Vehicle(4, 
+									new Position(1, 3), 1, <SOUTH>));
+
+public static ctrl5 : Controller := new Controller(
+									new Vehicle(5, 
+									new Position(1, 0), 1, <NORTH>));
+
+public static ctrl6 : Controller := new Controller(
+									new Vehicle(6, 
+									new Position(1, 0), 1, <NORTH>));
+
+public static ctrl7 : Controller := new Controller(
+									new Vehicle(7, 
+									new Position(1, -4), 1, <NORTH>));
+
+public static ctrl8 : Controller := new Controller(
+									new Vehicle(8, 
+									new Position(1, 5), 1, <SOUTH>));
+
+public static ctrl9 : Controller := new Controller(
+									new Vehicle(9, 
+									new Position(1, 6), 1, <SOUTH>));
+
+public static ctrl10 : Controller := new Controller(
+									 new Vehicle(10, 
+									 new Position(1, 8), 1, <SOUTH>));
+
+public static ctrl11 : Controller := new Controller(
+									 new Vehicle(11, 
+									 new Position(1, 5), 1, <EAST>));
+
+public static ctrl12 : Controller := new Controller(
+									  new Vehicle(12, 
+									  new Position(7, 5), 1, <WEST>));
+
+public static ctrl13 : Controller := new Controller(
+									 new Vehicle(13, 
+									 new Position(12, 5), 1, <WEST>));
+
+public static ctrl14 : Controller := new Controller(
+									 new Vehicle(14, 
+									 new Position(14, 5), 1, <WEST>));
+
+
+
+
+--traffic lights
+public static tl1 : TrafficLight := new TrafficLight(20 
+													,new Position(1, 1)
+													, 100);
+
+-- environment 
+public static vdmCtrl : VDMController := new VDMController();
+
+--
+-- Operations definition section
+--
+operations
+
+public VDM: () ==> VDM
+ VDM() ==
+ (
+ cpu1.deploy(ctrl1); 
+ cpu2.deploy(ctrl2);
+ cpu3.deploy(ctrl3);
+ cpu4.deploy(ctrl4);
+ cpu5.deploy(ctrl5);
+ cpu6.deploy(ctrl6);
+ cpu7.deploy(ctrl7);
+ cpu8.deploy(ctrl8);
+ cpu9.deploy(ctrl9);
+ cpu10.deploy(ctrl10);
+ cpu11.deploy(ctrl11);
+ cpu12.deploy(ctrl12);
+ cpu13.deploy(ctrl13);
+ cpu14.deploy(ctrl14);
+   
+  
+ cpu0.deploy(vdmCtrl);
+ cpu0.setPriority(VDMController`getController,500);
+ cpu0.setPriority(VDMController`CalculateInRange,100);
+ 
+ );
+
+end VDM
+
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[VDM]
+\end{rtinfo}

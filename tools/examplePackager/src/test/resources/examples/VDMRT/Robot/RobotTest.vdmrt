@@ -1,0 +1,16 @@
+class RobotTest
+ 
+operations
+ public Execute: () ==> ()
+ Execute () ==
+   (dcl ts : TestSuite := new TestSuite();
+    ts.AddTest(new GridTest("Grid"));
+    ts.AddTest(new StorageTest("Storage"));
+   -- ts.AddTest(new DataReaderTest("DataReader"));
+   -- ts.AddTest(new EnviromentTest("Enviroment "));
+   -- ts.AddTest(new ObstacleSensorTest("ObstacleSensor"));
+   -- ts.AddTest(new SteeringControllerTest("SteeringController "));
+   -- ts.AddTest(new StorageTest("Storage"));
+    ts.Run())
+    
+end RobotTest

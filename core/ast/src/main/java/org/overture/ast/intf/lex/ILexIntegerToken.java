@@ -5,4 +5,6 @@ public interface ILexIntegerToken extends ILexToken
 	public String toString();
 
 	public long getValue();
+	
+	ILexIntegerToken clone();
 }

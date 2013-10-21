@@ -88,6 +88,8 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
+		//FIXME: Here the SClassDefinitionAssistantTC is used so I can't delete the method from the assistant
+		//What is the strategy in this case?
 		PDefinition def = SClassDefinitionAssistantTC.findType(classdef,name, null);
 
 		if (def != null)

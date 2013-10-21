@@ -30,6 +30,8 @@ import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.VisibilityKind;
 import org.eclipse.uml2.uml.resource.UMLResource;
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.DepthFirstAnalysisAdaptorQuestion;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -51,7 +53,7 @@ import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-@SuppressWarnings("deprecation")
+
 public class Vdm2Uml
 {
 	private UmlConsole console = new UmlConsole();
@@ -73,13 +75,14 @@ public class Vdm2Uml
 	private boolean extendedAssociationMapping = false;
 	private boolean deployArtifactsOutsideNodes = false;
 
-	public Vdm2Uml(boolean preferAssociations,boolean deployArtifactsOutsideNodes)
+	public Vdm2Uml(boolean preferAssociations,
+			boolean deployArtifactsOutsideNodes)
 	{
 		extendedAssociationMapping = preferAssociations;
 		this.deployArtifactsOutsideNodes = deployArtifactsOutsideNodes;
 	}
-	
-	public  Model getModel()
+
+	public Model getModel()
 	{
 		return this.modelWorkingCopy;
 	}
@@ -114,7 +117,7 @@ public class Vdm2Uml
 		}
 		buildUml(onlyClasses);
 
-		new UmlDeploymentCreator(modelWorkingCopy, console,deployArtifactsOutsideNodes).buildDeployment(classes);
+		new UmlDeploymentCreator(modelWorkingCopy, console, deployArtifactsOutsideNodes,utc).buildDeployment(classes);
 
 		return modelWorkingCopy;
 	}
@@ -179,7 +182,8 @@ public class Vdm2Uml
 			for (ILexNameToken superToken : sClass.getSupernames())
 			{
 				console.out.println("Adding generalization between: "
-						+ thisClass.getName() + " -> " + superToken.getFullName());
+						+ thisClass.getName() + " -> "
+						+ superToken.getFullName());
 				Class superClass = this.classes.get(superToken.getName());
 				thisClass.createGeneralization(superClass);
 			}
@@ -211,18 +215,11 @@ public class Vdm2Uml
 				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
-
-			switch (def.kindPDefinition())
-			{
-				case ATypeDefinition.kindPDefinition:
-				{
-					PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
-					console.out.println("\tConverting type: " + type);
-					utc.create(class_, type);
-					break;
-				}
-				default:
-					break;
+			if (def instanceof ATypeDefinition) {
+				PType type = Vdm2UmlUtil.assistantFactory.createPDefinitionAssistant().getType(def);
+				console.out.println("\tConverting type: " + type);
+				utc.create(class_, type);
+			} else {
 			}
 		}
 
@@ -234,23 +231,15 @@ public class Vdm2Uml
 				+ sClass.getName().getName());
 		for (PDefinition def : sClass.getDefinitions())
 		{
-
-			switch (def.kindPDefinition())
-			{
-
-				case AInstanceVariableDefinition.kindPDefinition:
-					addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
-					break;
-				case AExplicitOperationDefinition.kindPDefinition:
-					addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
-					break;
-				case AExplicitFunctionDefinition.kindPDefinition:
-					addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
-					break;
-				case AValueDefinition.kindPDefinition:
-					addValueToClass(class_, (AValueDefinition) def);
-				default:
-					break;
+			if (def instanceof AInstanceVariableDefinition) {
+				addInstanceVariableToClass(class_, (AInstanceVariableDefinition) def);
+			} else if (def instanceof AExplicitOperationDefinition) {
+				addExplicitOperationToClass(class_, (AExplicitOperationDefinition) def);
+			} else if (def instanceof AExplicitFunctionDefinition) {
+				addExplicitFunctionToClass(class_, (AExplicitFunctionDefinition) def);
+			} else if (def instanceof AValueDefinition) {
+				addValueToClass(class_, (AValueDefinition) def);
+			} else {
 			}
 		}
 
@@ -263,12 +252,13 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)&&!(defType instanceof AUnknownType) && !extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType)
+				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for value: " + name);
 
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, true,utc);
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, true, utc);
 		} else
 		{
 			console.out.println("\tAdding property for value: " + name);
@@ -292,20 +282,94 @@ public class Vdm2Uml
 
 	private String getDefName(PDefinition def)
 	{
-		switch (def.kindPDefinition())
-		{
-			case AValueDefinition.kindPDefinition:
-				AValueDefinition valueDef = (AValueDefinition) def;
-				PPattern expression = valueDef.getPattern();
-				if (expression instanceof AIdentifierPattern)
-				{
-					return ((AIdentifierPattern) expression).getName().getName();
-				}
-				break;
-			default:
-				return def.getName().getName();
+		if (def instanceof AValueDefinition) {
+			AValueDefinition valueDef = (AValueDefinition) def;
+			PPattern expression = valueDef.getPattern();
+			if (expression instanceof AIdentifierPattern)
+			{
+				return ((AIdentifierPattern) expression).getName().getName();
+			}
+		} else {
+			return def.getName().getName();
 		}
 		return "null";
+	}
+
+	private static class TemplateParameterTypeCreator
+			extends
+			DepthFirstAnalysisAdaptorQuestion<TemplateParameterTypeCreator.OperationContext>
+	{
+		protected static class OperationContext
+		{
+			Class class_;
+			Operation operation;
+
+			public OperationContext(Class class_, Operation operation)
+			{
+				this.class_ = class_;
+				this.operation = operation;
+			}
+
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		TemplateSignature sig = null;
+		Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
+
+		@Override
+		public void caseAParameterType(AParameterType t,
+				OperationContext question) throws AnalysisException
+		{
+			if (sig == null)
+			{
+				sig = question.operation.createOwnedTemplateSignature(UMLPackage.Literals.TEMPLATE_SIGNATURE);
+			}
+
+			/*
+			 * Modelio doesnt support Classifier template parameters so the lines: <br/>TemplateParameter tp =
+			 * sig.createOwnedParameter(UMLPackage.Literals.CLASSIFIER_TEMPLATE_PARAMETER);<br/>Class sss = (Class)
+			 * tp.createOwnedParameteredElement(UMLPackage.Literals.CLASS);<br/>have been replaced with an alternative
+			 * solution that it can import.<br/>The lines:<br/>LiteralString literalStringDefault =(LiteralString)
+			 * tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+			 * literalStringDefault.setName(UmlTypeCreatorBase.getName(t));<br/>are also not needed but makes it look
+			 * better in ModelioThe proper solution is described here: http://www.eclipse.org/modeling/mdt/uml2/docs/
+			 * articles/Defining_Generics_with_UML_Templates/article.html
+			 */
+
+			String pName = UmlTypeCreatorBase.getName(t);
+
+			if (!templateParameters.containsKey(pName))
+			{
+				TemplateParameter tp = sig.createOwnedParameter(UMLPackage.Literals.TEMPLATE_PARAMETER);
+
+				LiteralString literalStringDefault = (LiteralString) tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+				literalStringDefault.setName(UmlTypeCreatorBase.getName(t));
+
+				Class sss = (Class) question.class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
+				sss.setName(pName);
+				templateParameters.put(pName, sss);
+			}
+			// else sorry we only support unique template parameter names
+		}
+
+		public Map<String, Classifier> apply(List<PType> nodes,
+				OperationContext question) throws AnalysisException
+		{
+			for (PType pType : nodes)
+			{
+				pType.apply(this, question);
+			}
+			return templateParameters;
+		}
+
+		public Map<String, Classifier> apply(PType node,
+				OperationContext question) throws AnalysisException
+		{
+			Vector<PType> nodes = new Vector<PType>();
+			nodes.add(node);
+			return apply(nodes, question);
+		}
 	}
 
 	private void addExplicitFunctionToClass(Class class_,
@@ -334,39 +398,54 @@ public class Vdm2Uml
 
 		Operation operation = class_.createOwnedOperation(def.getName().getName(), null, null, null);
 
-		Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
-		TemplateSignature sig = null;
-		for (PType t : type.getParameters())
+		// Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
+		// TemplateSignature sig = null;
+		// for (PType t : type.getParameters())
+		// {
+		// if (t instanceof AParameterType)
+		// {
+		// if (sig == null)
+		// {
+		// sig = operation.createOwnedTemplateSignature(UMLPackage.Literals.TEMPLATE_SIGNATURE);
+		// }
+		//
+		// /*
+		// * Modelio doesnt support Classifier template parameters so the lines:
+		// * <br/>TemplateParameter tp =
+		// * sig.createOwnedParameter(UMLPackage.Literals.CLASSIFIER_TEMPLATE_PARAMETER);<br/>Class sss = (Class)
+		// * tp.createOwnedParameteredElement(UMLPackage.Literals.CLASS);<br/>have been replaced with an alternative
+		// * solution that it can import.<br/>The lines:<br/>LiteralString literalStringDefault =(LiteralString)
+		// * tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+		// * literalStringDefault.setName(UmlTypeCreatorBase.getName(t));<br/>are also not needed but makes it look
+		// * better in ModelioThe proper solution is described here:
+		// * http://www.eclipse.org/modeling/mdt/uml2/docs/
+		// * articles/Defining_Generics_with_UML_Templates/article.html
+		// */
+		// TemplateParameter tp = sig.createOwnedParameter(UMLPackage.Literals.TEMPLATE_PARAMETER);
+		// String pName = UmlTypeCreatorBase.getName(t);
+		//
+		// LiteralString literalStringDefault = (LiteralString)
+		// tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
+		// literalStringDefault.setName(UmlTypeCreatorBase.getName(t));
+		//
+		// Class sss = (Class) class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
+		// sss.setName(pName);
+		// templateParameters.put(pName, sss);
+		// }
+		// }
+
+		Map<String, Classifier> templateParameters = null;
+		try
 		{
-			if (t instanceof AParameterType)
-			{
-				if (sig == null)
-				{
-					sig = operation.createOwnedTemplateSignature(UMLPackage.Literals.TEMPLATE_SIGNATURE);
-				}
-
-				/*
-				 * Modelio doesnt support Classifier template parameters so the lines:
-				 * <br/>TemplateParameter tp =
-				 * sig.createOwnedParameter(UMLPackage.Literals.CLASSIFIER_TEMPLATE_PARAMETER);<br/>Class sss = (Class)
-				 * tp.createOwnedParameteredElement(UMLPackage.Literals.CLASS);<br/>have been replaced with an alternative
-				 * solution that it can import.<br/>The lines:<br/>LiteralString literalStringDefault =(LiteralString)
-				 * tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
-				 * literalStringDefault.setName(UmlTypeCreatorBase.getName(t));<br/>are also not needed but makes it look
-				 * better in ModelioThe proper solution is described here:
-				 * http://www.eclipse.org/modeling/mdt/uml2/docs/
-				 * articles/Defining_Generics_with_UML_Templates/article.html
-				 */
-				TemplateParameter tp = sig.createOwnedParameter(UMLPackage.Literals.TEMPLATE_PARAMETER);
-				String pName = UmlTypeCreatorBase.getName(t);
-
-				LiteralString literalStringDefault = (LiteralString) tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
-				literalStringDefault.setName(UmlTypeCreatorBase.getName(t));
-
-				Class sss = (Class) class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
-				sss.setName(pName);
-				templateParameters.put(pName, sss);
-			}
+			TemplateParameterTypeCreator tpCreator = new TemplateParameterTypeCreator();
+			TemplateParameterTypeCreator.OperationContext oCtxt = new TemplateParameterTypeCreator.OperationContext(class_, operation);
+			templateParameters = tpCreator.apply(type.getParameters(), oCtxt);
+			templateParameters = tpCreator.apply(type.getResult(), oCtxt);
+		} catch (AnalysisException e)
+		{
+			console.err.println("An error occured during template parameter creation in: "
+					+ operation.getName());
+			e.printStackTrace(console.err);
 		}
 
 		utc.addTemplateTypes(templateParameters);
@@ -457,13 +536,14 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)&&!(defType instanceof AUnknownType) && !extendedAssociationMapping)
+		if ((PTypeAssistantInterpreter.isClass(defType)
+				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().getName());
 
-			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, false,utc);
+			Vdm2UmlAssociationUtil.createAssociation(name, defType, def.getAccess(), def.getExpression(), classes, class_, false, utc);
 
 		} else
 		{

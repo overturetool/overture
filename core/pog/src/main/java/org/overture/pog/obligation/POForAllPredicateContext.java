@@ -24,11 +24,14 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 
 public class POForAllPredicateContext extends POForAllContext
 {
@@ -63,6 +66,27 @@ public class POForAllPredicateContext extends POForAllContext
 		super(exp);
 		this.predicate = exp.getSuchThat();
 	}
+	
+	
+
+	
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		
+		AForAllExp super_exp = super.getSuperContext(stitch);
+		
+		if (predicate !=null){
+			AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
+			super_exp.setPredicate(implies_exp);
+		}
+		else{
+			super_exp.setPredicate(stitch);
+		}
+		
+		return super_exp;
+	}
+
 
 	@Override
 	public String getContext()

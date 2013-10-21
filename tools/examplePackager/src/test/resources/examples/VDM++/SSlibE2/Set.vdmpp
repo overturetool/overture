@@ -1,0 +1,45 @@
+class Set
+
+functions 
+-- Same as VDMUtil`set2seq which is implemented by C++
+static public asSequence[@T]: set of @T -> seq of @T
+asSequence(aSet) ==  
+	cases aSet :
+		{}		-> [],
+		{x} union xs	-> [x] ^ asSequence[@T](xs)
+	end
+post
+	hasSameElems[@T](RESULT, aSet)
+measure cardinality;
+
+static cardinality[@T]: set of @T +> nat
+cardinality(aSet) == card aSet;
+
+static public hasSameElems[@T] : (seq of @T) * (set of @T) -> bool
+hasSameElems(aSeq,aSet) == (elems aSeq = aSet) and (len aSeq = card aSet);
+
+static public Combinations[@T] : nat1 -> set of @T -> set of set of @T
+Combinations(n)(aSet) ==
+	{ aElem | aElem in set power aSet & card aElem = n};
+
+
+static public fmap[@T1,@T2]: (@T1 -> @T2) -> set of @T1 -> set of @T2
+fmap(f)(aSet) == {f(s) | s in set aSet};
+
+static public Sum[@T]: set of @T ->  @T
+Sum(aSet) == SumAux[@T](aSet)(0)
+pre
+	is_(aSet, set of int) or is_(aSet, set of nat) or is_(aSet, set of nat1) or
+ 	is_(aSet, set of real) or is_(aSet, set of rat);
+
+static SumAux[@T] : set of @T -> @T -> @T
+SumAux(aSet)(aSum) ==
+	cases aSet :
+	({})	-> aSum,
+	{e} union s->
+		SumAux[@T](s)(aSum + e)
+	end
+pre
+	pre_Sum[@T](aSet);
+
+end Set

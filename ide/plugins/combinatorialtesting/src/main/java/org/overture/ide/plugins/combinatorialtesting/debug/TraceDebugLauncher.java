@@ -28,7 +28,6 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
-
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.ui.launchconfigurations.LauncherMessages;
@@ -93,17 +92,17 @@ public class TraceDebugLauncher
 
 	private ILaunchConfigurationType getConfigurationType(Dialect dialect)
 	{
-		
+
 		switch (dialect)
 		{
 			case VDM_PP:
 				return getLaunchManager().getLaunchConfigurationType(IVdmPpDebugConstants.ATTR_VDM_PROGRAM);
 			case VDM_RT:
 				return getLaunchManager().getLaunchConfigurationType(IVdmRtDebugConstants.ATTR_VDM_PROGRAM);
-				
+
 			case VDM_SL:
 				return getLaunchManager().getLaunchConfigurationType(IVdmSlDebugConstants.ATTR_VDM_PROGRAM);
-				
+
 			default:
 				break;
 		}

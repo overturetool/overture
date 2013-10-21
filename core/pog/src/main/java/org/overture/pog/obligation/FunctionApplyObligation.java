@@ -25,35 +25,47 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
+import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.util.Utils;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class FunctionApplyObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7146271970744572457L;
 
-	public FunctionApplyObligation(PExp root, List<PExp> args, String prename, POContextStack ctxt)
+	public FunctionApplyObligation(PExp root, List<PExp> args, ILexNameToken prename, IPOContextStack ctxt)
 	{
-		super(root.getLocation(), POType.FUNC_APPLY, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(root, POType.FUNC_APPLY, ctxt, root.getLocation());
+		
+		/**
+		 * If the root is an expression that evaluates to a function, we do not know
+		 * which pre_f to call and prename is null. So we use the "pre_(root, args)" form.
+		 * 
+		 * If the prename is defined, like "pre_f" then we can use "pre_f(args)".
+		 * 
+		 * We should not attempt to create an obligation if there is no precondition - ie.
+		 * we should not be here if prename is "".
+		 */
 
-		if (prename == null)
+	
+		
+		if (prename == null)	// Root is an expression, so use pre_(root, args)
 		{
-			sb.append("pre_(");
-			sb.append(root);
-			sb.append(", ");
-			sb.append(Utils.listToString(args));
-			sb.append(")");
+			// pre_(root, args)
+			APreExp preExp = new APreExp();
+			preExp.setFunction(root.clone());
+			preExp.setArgs(cloneListPExp(args));
+			valuetree.setPredicate(ctxt.getPredWithContext(preExp));
 		}
 		else
 		{
-			sb.append(prename);
-			sb.append(Utils.listToString("(", args, ", ", ")"));
+			// pre_f(args)
+			valuetree.setPredicate(ctxt.getPredWithContext(getApplyExp(getVarExp(prename), cloneListPExp(args))));
 		}
-
-		value = ctxt.getObligation(sb.toString());
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
 	}
+	
 }

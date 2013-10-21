@@ -9,6 +9,8 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.runtime.CollectedContextException;
+import org.overture.interpreter.runtime.CollectedExceptions;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
@@ -69,7 +71,14 @@ public class ModuleListAssistantInterpreter
 				}
 			}
 
-			throw toThrow;
+			//throw toThrow;
+			if(toThrow instanceof ContextException)
+			{
+				throw new CollectedContextException((ContextException) toThrow,problems);
+			}else
+			{
+				throw new CollectedExceptions(problems);
+			}
 		}
 
 		return initialContext;

@@ -1,0 +1,151 @@
+\begin{vdm_al}
+class Environment is subclass of IIOSSTYPES
+
+types
+	
+	public InputTP   = Time * seq of inline;
+	
+	public outline = EventId * EventType * seq of char * nat; 
+	public inline = EventId * EventType * PigId * [Position] * PigStyId * Time;
+
+instance variables
+
+	-- access to the VDMTools stdio
+	io : IO := new IO();
+	-- the input file to process
+	inlines : seq of inline := [];
+	-- the output file to print
+	outlines : seq of outline := [];
+	-- maintain a link to all sensors
+	sensors : map nat to Sensor := {|->};
+	--inv dom ranges = dom sensors;
+	busy : bool := true;
+	
+	server : [Server] := nil;
+	
+	-- Amount of time we want to simulate
+	simtime : nat; -- Time;
+
+operations
+	
+	public Environment: seq of char ==> Environment
+	Environment (fname) ==
+	(
+		def mk_(-,mk_(timeval,input)) = io.freadval[Time * seq of inline](fname) 
+		in
+	    (
+			inlines := input;
+			simtime := timeval;
+	    );
+	);
+	
+	public addServer : Server ==> ()
+	addServer (pServer) == 
+	(
+		server := pServer;
+	);
+	
+	public addSensor: Sensor ==> ()
+	addSensor (psens) == 
+	(
+		dcl id : nat := card dom sensors + 1;
+	    sensors := sensors munion {id |-> psens}
+	);
+	
+	public getServer: () ==> Server
+	getServer() == return server
+	pre server <> nil;
+	
+	public getNoSensors: () ==> nat
+	getNoSensors() == return card dom sensors;        
+	
+	private createSignal: () ==> () 
+	createSignal () == 
+	duration(10)
+	(
+		if len inlines > 0  then 
+		(
+			dcl curtime : Time := time, done : bool := false;
+	        while not done do
+	        (
+	        	def mk_ (eventid, eventType, pigid, position, pigStyId, pt) = hd inlines in -- Next inline event
+	            if pt <= curtime then 
+	            (
+	             	 if (eventType = <PIG_NEW>) then
+	             	 (
+	             	 	sensors(pigStyId).trip(eventType, pigid, position);
+	             	 )
+	             	 elseif (eventType = <PIG_MOVED>) then
+	             	 (
+	             	 	sensors(pigStyId).trip(eventType, pigid, nil);
+	             	 )
+	             	 elseif (eventType = <SHOW_PIG>) then
+	             	 (
+	             	 	server.PointAtPig(eventid,pigid);
+	             	 );
+	                 inlines := tl inlines;
+	                 done := len inlines = 0;
+	                 return;
+	            ) 
+	            else 
+	            (	
+	             	done := true;
+	                return
+	            )
+	         )
+	    )
+		else 
+		(
+			busy := false;
+			return;
+		)
+	  )
+	  pre server <> nil and card dom sensors <> 0;
+	
+	
+	public handleEvent: EventId * EventType *  seq of char * Time ==> ()
+	handleEvent (eventID, eventType, text, eventTime) == 
+	(
+	   outlines := outlines ^ [mk_(eventID, eventType, text, eventTime)];
+	);
+	
+	public showResult: () ==> ()
+	showResult () ==
+	(
+		IIOSSTYPES`DebugPrint("---------------");
+		IIOSSTYPES`DebugPrint("ShowResult");
+		for outline in outlines do
+		(
+			IIOSSTYPES`DebugPrint(" "); 
+            IO`print(outline);
+		);		
+		IIOSSTYPES`DebugPrint("---------------");
+	);
+	
+	public isFinished : () ==> ()
+	isFinished () == skip;
+
+	public GetAndPurgeOutlines: () ==> seq of outline
+GetAndPurgeOutlines() ==
+  let res = outlines
+  in
+    (outlines := [];
+     return res);
+	
+sync
+	
+	mutex (handleEvent);
+	mutex(createSignal);
+	per isFinished => not busy;
+	
+thread
+	periodic (1000E6,10,900,0) (createSignal)
+
+
+end Environment
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Environment]
+\end{rtinfo}

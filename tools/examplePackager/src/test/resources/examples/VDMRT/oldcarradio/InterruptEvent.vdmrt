@@ -1,0 +1,9 @@
+\begin{vdm_al}
+class InterruptEvent is subclass of Event
+
+operations
+  public InterruptEvent: nat ==> InterruptEvent
+  InterruptEvent (pne) == Event(pne)
+
+end InterruptEvent
+\end{vdm_al}

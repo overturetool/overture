@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.module;
 
-
 import java.util.List;
 
 import org.overture.ast.definitions.PDefinition;
@@ -19,19 +18,18 @@ public class PImportAssistantTC {
 	{
 		this.af = af;
 	}
-	public static List<PDefinition> getDefinitions(PImport imp,
-			AModuleModules from) {
-		switch (imp.kindPImport()) {
-		case AAllImport.kindPImport:
-			return AAllImportAssistantTC.getDefinitions((AAllImport)imp,from);		
-		case ATypeImport.kindPImport:
+
+	public static List<PDefinition> getDefinitions(PImport imp, AModuleModules from)
+	{
+		if (imp instanceof AAllImport) {
+			return AAllImportAssistantTC.getDefinitions((AAllImport)imp,from);
+		} else if (imp instanceof ATypeImport) {
 			return ATypeImportAssistantTC.getDefinitions((ATypeImport)imp,from);
-		case SValueImport.kindPImport:
+		} else if (imp instanceof SValueImport) {
 			return SValueImportAssistantTC.getDefinitions((SValueImport)imp,from);
-		default:
+		} else {
 			assert false : "PImport.getDefinitions should never hit this case";
-			return null;			
+		return null;
 		}
 	}
-
 }

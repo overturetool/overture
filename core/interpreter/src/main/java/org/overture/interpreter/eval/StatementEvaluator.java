@@ -442,11 +442,16 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 		else
 		{
-			me.inOuterTimestep(true);
-			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),ctxt);
-			me.inOuterTimestep(false);
-			me.duration(node.getStep(), ctxt, node.getLocation());
-			return rv;
+			// We disable the swapping and time (RT) as duration evaluation should be "free".
+		    ctxt.threadState.setAtomic(true);
+		    long step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(),ctxt).intValue(ctxt);
+		    ctxt.threadState.setAtomic(false);
+
+		    me.inOuterTimestep(true);
+		    Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(),ctxt);
+		    me.inOuterTimestep(false);
+		    me.duration(step, ctxt, node.getLocation());
+		    return rv;
 		}
 	}
 	
@@ -729,9 +734,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st statement", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

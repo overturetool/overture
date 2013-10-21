@@ -23,21 +23,34 @@
 
 package org.overture.pog.obligation;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
@@ -45,129 +58,138 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class ParameterPatternObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6831031423902894299L;
-	private final PDefinition predef;
 
-	public ParameterPatternObligation(
-		AExplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitFunctionDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
-		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		// cannot clone getPredef as it can be null. We protect the ast in 
+		// the generate method where it's used
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitFunctionDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitFunctionDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
-		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AExplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AExplicitOperationDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
-		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
-	public ParameterPatternObligation(
-		AImplicitOperationDefinition def, POContextStack ctxt)
+	public ParameterPatternObligation(AImplicitOperationDefinition def,
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
-		this.predef = def.getPredef();
-		value = ctxt.getObligation(
-			generate( AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
-	private String generate(List<List<PPattern>> plist, List<PType> params, PType result)
+	private PExp generate(PDefinition predef, List<List<PPattern>> plist,
+			List<PType> params, PType result) throws AnalysisException
 	{
-		StringBuilder foralls = new StringBuilder();
-		StringBuilder argnames = new StringBuilder();
-		StringBuilder exists = new StringBuilder();
+		AForAllExp forallExp = new AForAllExp();
+		List<PMultipleBind> forallBindList = new Vector<PMultipleBind>();
+		List<PExp> arglist = new Vector<PExp>();
+		PExp forallPredicate = null;
 
-		foralls.append("forall ");
-		String fprefix = "";
-		String eprefix = "";
-		int argn = 1;
-
-		for (List<PPattern> pl: plist)
+		for (List<PPattern> paramList : plist)
 		{
 			Iterator<PType> titer = params.iterator();
 
-			for (PPattern p: pl)
+			if (!paramList.isEmpty())
 			{
-				String aname = "arg" + argn++;
-				PType atype = titer.next();
+				AExistsExp existsExp = new AExistsExp();
+				List<PMultipleBind> existsBindList = new Vector<PMultipleBind>();
+				PExp existsPredicate = null;
 
-				if (!(p instanceof AIgnorePattern) &&
-					!(p instanceof AIdentifierPattern))
+				Set<ILexNameToken> previousBindings = new HashSet<ILexNameToken>();
+
+				for (PPattern param : paramList)
 				{
-					foralls.append(fprefix);
-					foralls.append(aname);
-					foralls.append(":");
-					foralls.append(atype);
+					ILexNameToken aname = getUnique("arg");
+					ILexNameToken bname = getUnique("bind");
 
-					argnames.append(fprefix);
-					argnames.append(aname);
+					PType atype = titer.next();
+					PExp pmatch = patternToExp(param);
+					arglist.add(pmatch.clone());
 
-					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
-					exists.append(eprefix);
-					exists.append("(exists ");
-					exists.append(pmatch);
-					exists.append(":");
-					exists.append(atype);
-					exists.append(" & ");
-					exists.append(aname);
-					exists.append(" = ");
-					exists.append(pmatch);
-					exists.append(")");
+					forallBindList.add(getMultipleTypeBind(atype, aname));
+					existsBindList.add(getMultipleTypeBind(atype, bname));
 
-					fprefix = ", ";
-					eprefix = " and\n  ";
-
-					if (predef != null)
+					for (PDefinition def : PPatternAssistantTC.getDefinitions(param, atype, NameScope.LOCAL))
 					{
-						eprefix = eprefix + "  ";
+						if (def.getName() != null
+								&& !previousBindings.contains(def.getName()))
+						{
+							existsBindList.add(getMultipleTypeBind(def.getType(), def.getName()));
+							previousBindings.add(def.getName());
+						}
 					}
+
+					AEqualsBinaryExp eq1 = getEqualsExp(getVarExp(aname), getVarExp(bname));
+					AEqualsBinaryExp eq2 = getEqualsExp(pmatch, getVarExp(bname));
+					existsPredicate = makeAnd(existsPredicate, makeAnd(eq1, eq2));
 				}
+				existsExp.setBindList(existsBindList);
+				existsExp.setPredicate(existsPredicate);
+
+				forallPredicate = makeAnd(forallPredicate, existsExp);
 			}
 
 			if (result instanceof AFunctionType)
 			{
-				AFunctionType ft = (AFunctionType)result;
+				AFunctionType ft = (AFunctionType) result;
 				result = ft.getResult();
 				params = ft.getParameters();
-			}
-			else
+			} else
 			{
 				break;
 			}
 		}
 
-		foralls.append(" &\n");
+		forallExp.setBindList(forallBindList);
 
 		if (predef != null)
 		{
-			foralls.append("  ");
-			foralls.append(predef.getName().getName());
-			foralls.append("(");
-			foralls.append(argnames);
-			foralls.append(")");
-			foralls.append(" =>\n    ");
-		}
-		else
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getApplyExp(getVarExp(predef.getName().clone()), arglist), forallPredicate);
+			forallExp.setPredicate(implies);
+		} else
 		{
-			foralls.append("  ");
+			forallExp.setPredicate(forallPredicate);
 		}
 
-		return foralls.toString() + exists.toString();
+		return forallExp;
 	}
+
+	private List<List<PPattern>> cloneListPatternList(List<List<PPattern>> list)
+	{
+		List<List<PPattern>> r = new LinkedList<List<PPattern>>();
+		for (List<PPattern> list2 : list)
+		{
+			r.add(cloneList(list2));
+		}
+		return r;
+
+	}
+
+	private List<PPattern> cloneList(List<PPattern> list)
+	{
+		List<PPattern> r = new LinkedList<PPattern>();
+		for (PPattern p : list)
+		{
+			r.add(p);
+		}
+		return r;
+	}
+
 }

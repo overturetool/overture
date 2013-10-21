@@ -1,45 +1,62 @@
 \begin{vdm_al}
 class TimeStamp
 
-\end{vdm_al}
-Modified by Johanne U. Jensen to act as a thread barrier.
-
-Class used for concurrent VDM++ models. All threads should call the following operations:
-- WaitRelative(t): makes the thread periodic with t = the period
-- NotifyAll(): notified all threads sleeping in the wakeUpMap
-- Awake(): puts the thread to sleep - will wakeup when t time units has passed  
-
-TimeStamp(nat1 barrierCount);
-
-WaitRelative // blocks
-WaitAbsolute // blocks
-
-NotifyThread // Non blocking
-GetTime // Non blocking
-
-ThreadDone // Non Blocking
-
-\begin{vdm_al}
-
 values
 
-public stepLength : nat = 5;
+public stepLength : nat = 1;
 
 instance variables
 
 currentTime  : nat   := 0;
 wakeUpMap    : map nat to [nat] := {|->};
-barrierCount : nat1;
+barrierCount : nat := 0;
+registeredThreads : set of BaseThread := {};
+isInitialising : bool := true;
+-- singleton instance of class
+private static timeStamp : TimeStamp := new TimeStamp();
 
 operations
 
-public TimeStamp : nat1 ==> TimeStamp
-TimeStamp(count) ==
-	barrierCount := count;
+-- private constructor (singleton pattern)
+private TimeStamp : () ==> TimeStamp
+TimeStamp() ==
+	skip;
+
+-- public operation to get the singleton instance
+public static GetInstance: () ==> TimeStamp
+GetInstance() ==
+  return timeStamp;
+
+public RegisterThread : BaseThread ==> ()
+RegisterThread(t) ==
+ (barrierCount := barrierCount + 1;
+  registeredThreads := registeredThreads union {t};  
+ );
+ 
+public UnRegisterThread : BaseThread ==> ()
+UnRegisterThread(t) ==
+ (barrierCount := barrierCount - 1;
+  registeredThreads := registeredThreads \ {t};
+ );
+ 
+public IsInitialising: () ==> bool
+IsInitialising() ==
+  return isInitialising;
+ 
+public DoneInitialising: () ==> ()
+DoneInitialising() ==
+ (if isInitialising
+  then (isInitialising := false;
+        for all t in set registeredThreads 
+        do
+          start(t);
+       );
+ );
 
 public WaitRelative : nat ==> ()
 WaitRelative(val) ==
-  WaitAbsolute(currentTime + val);
+ (WaitAbsolute(currentTime + val);  
+ );
  
 public WaitAbsolute : nat ==> ()
 WaitAbsolute(val) == (
@@ -53,7 +70,7 @@ WaitAbsolute(val) == (
 BarrierReached : () ==> ()
 BarrierReached() == 
 (
-	while  (card dom wakeUpMap = barrierCount) do
+	while (card dom wakeUpMap = barrierCount) do
   	(
   		currentTime := currentTime + stepLength;
   		let threadSet : set of nat = {th | th in set dom wakeUpMap 
@@ -88,15 +105,17 @@ ThreadDone() ==
 sync
   per Awake => threadid not in set dom wakeUpMap;
 
-  -- Is this really needed?
-  mutex(AddToWakeUpMap);
-  mutex(NotifyThread);
-  mutex(BarrierReached);
+  mutex (IsInitialising);
+  mutex (DoneInitialising);
   
-  mutex(AddToWakeUpMap, NotifyThread);
-  mutex(AddToWakeUpMap, BarrierReached);
-  mutex(NotifyThread, BarrierReached);
+  mutex (AddToWakeUpMap);
+  mutex (NotifyThread);
+  mutex (BarrierReached);
   
-  mutex(AddToWakeUpMap, NotifyThread, BarrierReached);
+  mutex (AddToWakeUpMap, NotifyThread);
+  mutex (AddToWakeUpMap, BarrierReached);
+  mutex (NotifyThread, BarrierReached);
+  
+  mutex (AddToWakeUpMap, NotifyThread, BarrierReached);
 
 end TimeStamp

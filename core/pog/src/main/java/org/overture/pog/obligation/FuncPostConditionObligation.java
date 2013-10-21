@@ -23,121 +23,144 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.util.Utils;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
+
 public class FuncPostConditionObligation extends ProofObligation
 {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8970037457131290857L;
+	private static final long serialVersionUID = 1L;
 
 	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
-			POContextStack ctxt)
+			IPOContextStack ctxt)
 	{
-		super(func.getLocation(), POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
-		StringBuilder params = new StringBuilder();
-
+		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
-			String postfix = "";
-			for (PExp p : PPatternListAssistantTC.getMatchingExpressionList(pl))
-			{
-				params.append(postfix);
-				params.append(p);
-				postfix = ", ";
-			}
+			params.addAll(cloneListPExp(PPatternListAssistantTC.getMatchingExpressionList(pl)));
 		}
 
-		String body = null;
+		PExp body = null;
+		// String body = null;
 
 		if (func.getBody() instanceof ANotYetSpecifiedExp
 				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
+			AApplyExp applyExp = new AApplyExp();
+			applyExp.setArgs(params);
+			AVariableExp varExp = new AVariableExp();
+			varExp.setName(func.getName());
+			applyExp.setRoot(varExp);
 			// We have to say "f(a)" because we have no expression yet
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(func.getName().getName());
-			sb.append("(");
-			sb.append(params);
-			sb.append(")");
-			body = sb.toString();
+			// I suppose this still still holds true with ast pos
+			body = applyExp;
 		} else
+
 		{
-			body = func.getBody().toString();
+			body = func.getBody();
 		}
 
-		value = ctxt.getObligation(generate(func.getPredef(), func.getPostdef(), params, body));
+	//	valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef().clone(), func.getPostdef().clone(), params, body)));
 	}
 
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
-			POContextStack ctxt)
+			IPOContextStack ctxt)
 	{
-		super(func.getLocation(), POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
-		StringBuilder params = new StringBuilder();
+		List<PExp> params = new LinkedList<PExp>();
 
+		
 		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
 		{
-			params.append(Utils.listToString(PPatternListAssistantTC.getMatchingExpressionList(pl)));
+			params.addAll(PPatternListAssistantTC.getMatchingExpressionList(pl));
 		}
 
-		String body = null;
+		
+		PExp body = null;
 
+		// implicit body is apparently allowed
 		if (func.getBody() == null)
 		{
-			body = func.getResult().getPattern().toString();
+			List<PPattern> aux = new LinkedList<PPattern>();
+			aux.add(func.getResult().getPattern());
+			List<PExp> aux2 = PPatternListAssistantTC.getMatchingExpressionList(aux);
+			body = aux2.get(0);
+
 		} else if (func.getBody() instanceof ANotYetSpecifiedExp
 				|| func.getBody() instanceof ASubclassResponsibilityExp)
 		{
-			// We have to say "f(a)" because we have no expression yet
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(func.getName().getName());
-			sb.append("(");
-			sb.append(params);
-			sb.append(")");
-			body = sb.toString();
+			AApplyExp applyExp = new AApplyExp();
+			applyExp.setArgs(params);
+			AVariableExp varExp = new AVariableExp();
+			varExp.setName(func.getName().clone());
+			applyExp.setRoot(varExp);
+			body = applyExp;
 		} else
 		{
-			body = func.getBody().toString();
+			body = func.getBody().clone();
 		}
 
-		value = ctxt.getObligation(generate(func.getPredef(), func.getPostdef(), params, body));
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
+
 	}
 
-	private String generate(AExplicitFunctionDefinition predef,
-			AExplicitFunctionDefinition postdef, StringBuilder params,
-			String body)
+	private PExp generateWithPreCond(AExplicitFunctionDefinition predef,
+			AExplicitFunctionDefinition postdef, List<PExp> params, PExp body)
 	{
-		StringBuilder sb = new StringBuilder();
-
+		
 		if (predef != null)
 		{
-			sb.append(predef.getName().getName());
-			sb.append("(");
-			sb.append(params);
-			sb.append(") => ");
+			// pre(params) =>
+			AApplyExp applyExp = new AApplyExp();
+			applyExp.setArgs(cloneListPExp(params));
+			AVariableExp varExp = getVarExp(predef.getName().clone());
+			applyExp.setRoot(varExp);
+			
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(applyExp, generateBody(postdef, params, body));
+			
+	
 		}
+		return generateBody(postdef, params, body);
 
-		sb.append(postdef.getName().getName());
-		sb.append("(");
-		sb.append(params);
-		sb.append(", ");
-		sb.append(body);
-		sb.append(")");
-
-		return sb.toString();
 	}
+
+	private PExp generateBody(AExplicitFunctionDefinition postdef,
+			List<PExp> params, PExp body)
+	{
+		//post(params, body)
+		AApplyExp applyExp = new AApplyExp();
+		AVariableExp varExp = getVarExp(postdef.getName());
+		applyExp.setRoot(varExp);
+		List<PExp> args = params;
+		args.add(body.clone());
+		applyExp.setArgs(args);
+		return applyExp;
+	}
+
+	
+	
+
 }

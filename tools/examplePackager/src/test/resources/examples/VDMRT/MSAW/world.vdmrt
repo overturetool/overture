@@ -1,0 +1,32 @@
+class World
+  
+instance variables  
+  
+public static
+  env : [Environment] := nil;
+   
+operations
+
+public 
+  World : () ==> World
+  World() ==
+    ( env := new Environment("scenario.txt");
+      env.setAirSpace(MSAW`airspace);
+      MSAW`atc.addObstacle(MSAW`militaryZone);
+      MSAW`atc.addRadar(MSAW`radar1);
+      MSAW`atc.addRadar(MSAW`radar2);
+    );
+  
+public Run : () ==> ()
+Run() ==
+ (
+  start(env);
+  start(MSAW`atc);
+  start(MSAW`radar1);
+  start(MSAW`radar2);
+  env.isFinished();
+  MSAW`atc.isFinished();  
+  env.showResult()
+ )
+ 
+end World

@@ -1,5 +1,6 @@
 package org.overture.ide.ui.utility.ast;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,15 +8,19 @@ import java.util.Map.Entry;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.resources.IVdmSourceUnit;
 
 /**
  * Class used by an editor to search the editor text for source code node locations. Used to find nodes in the source
@@ -48,6 +53,11 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	 * The offset used when searching for nodes within this location of the source code
 	 */
 	private int offSet;
+	
+	/**
+	 * The source file to search
+	 */
+	private File sourceFile;
 
 	private static final AstLocationSearcher seacher = new AstLocationSearcher();
 
@@ -85,7 +95,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	 *            The offset to match a node to
 	 * @return The node closest to the offset or null
 	 */
-	public static INode search(List<INode> nodes, int offSet)
+	public static INode search(List<INode> nodes, int offSet, IVdmSourceUnit source)
 	{
 		synchronized (seacher)
 		{
@@ -95,6 +105,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			}
 			seacher.init();
 			seacher.offSet = offSet;
+			seacher.sourceFile = source.getSystemFile();
 			try
 			{
 				for (INode node : nodes)
@@ -200,6 +211,20 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	{
 		check(node, node.getLocation());
 	}
+	
+	@Override
+	public void caseAFieldField(AFieldField node) throws AnalysisException
+	{
+		check(node, node.getTagname().getLocation());
+	}
+	
+	@Override
+	public void defaultInPPattern(PPattern node) throws AnalysisException
+	{
+		check(node, node.getLocation());
+	}
+	
+	
 
 	@Override
 	public void caseAFunctionType(AFunctionType node)
@@ -208,8 +233,12 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseARecordInvariantType(ARecordInvariantType node)
+	public void caseARecordInvariantType(ARecordInvariantType node) throws AnalysisException
 	{
+		if(node.parent() instanceof ATypeDefinition)
+		{
+			super.caseARecordInvariantType(node);
+		}
 		// Skip
 	}
 
@@ -226,7 +255,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 			elementNodeCache.get(currentElement).put(location, node);
 		}
 		if (location.getStartOffset() - 1 <= this.offSet
-				&& location.getEndOffset() - 1 >= this.offSet)
+				&& location.getEndOffset() - 1 >= this.offSet && location.getFile().equals(sourceFile))
 		{
 			bestHit = node;
 			if (!indexing)
@@ -238,7 +267,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		// Store the last best match where best is closest with abs
 		if (bestAlternativeLocation == null
 				|| Math.abs(offSet - location.getStartOffset()) <= Math.abs(offSet
-						- bestAlternativeLocation.getStartOffset()))
+						- bestAlternativeLocation.getStartOffset())&& location.getFile().equals(sourceFile))
 		{
 			bestAlternativeLocation = location;
 			bestAlternativeHit = node;
@@ -252,7 +281,7 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		} else if (bestAlternativeLocation == null
 				|| (offSet - bestAlternativeLocation.getStartOffset() > 0)
 				&& Math.abs(offSet - location.getStartOffset()) > Math.abs(offSet
-						- bestAlternativeLocation.getStartOffset()))
+						- bestAlternativeLocation.getStartOffset())&& location.getFile().equals(sourceFile))
 		{
 			if (DEBUG_PRINT)
 			{
@@ -285,6 +314,9 @@ public final class AstLocationSearcher extends DepthFirstAnalysisAdaptor
 		} else if (node instanceof PStm)
 		{
 			return getNodeOffset(((PStm) node).getLocation());
+		} else if (node instanceof AFieldField)
+		{
+			return getNodeOffset(((AFieldField) node).getTagname().getLocation());
 		}
 		return new int[] { -1, -1 };
 	}

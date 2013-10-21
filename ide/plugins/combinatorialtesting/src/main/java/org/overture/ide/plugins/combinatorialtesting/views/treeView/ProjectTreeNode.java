@@ -24,58 +24,64 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.overture.ide.core.resources.IVdmProject;
 
-
-
-public 	class ProjectTreeNode implements IAdaptable,ITreeNode {
+public class ProjectTreeNode implements IAdaptable, ITreeNode
+{
 	private List<ITreeNode> children;
 	private ITreeNode parent;
 	final public IVdmProject project;
 
-	public ProjectTreeNode(IVdmProject project) {
+	public ProjectTreeNode(IVdmProject project)
+	{
 		this.project = project;
 		children = new ArrayList<ITreeNode>();
 	}
 
-	public void setParent(ITreeNode parent) {
+	public void setParent(ITreeNode parent)
+	{
 		this.parent = parent;
 	}
 
-	public ITreeNode getParent() {
+	public ITreeNode getParent()
+	{
 		return parent;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return getName();
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return project.getName();
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
 		return null;
 	}
 
-	public void addChild(ITreeNode child) {
+	public void addChild(ITreeNode child)
+	{
 		children.add(child);
 		child.setParent(this);
 	}
 
-//	public void removeChild(ClassTreeNode child) {
-//		children.remove(child);
-//		child.setParent(null);
-//	}
+	// public void removeChild(ClassTreeNode child) {
+	// children.remove(child);
+	// child.setParent(null);
+	// }
 
-	public List<ITreeNode> getChildren() {
+	public List<ITreeNode> getChildren()
+	{
 		return children;
 	}
 
-	public boolean hasChildren() {
+	public boolean hasChildren()
+	{
 		return children.size() > 0;
 	}
-
-	
 
 	public boolean hasChild(String name)
 	{

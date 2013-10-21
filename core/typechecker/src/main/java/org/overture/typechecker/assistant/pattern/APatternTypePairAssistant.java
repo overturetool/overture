@@ -9,10 +9,9 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class APatternTypePairAssistant {
+public class APatternTypePairAssistant
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -20,18 +19,26 @@ public class APatternTypePairAssistant {
 	{
 		this.af = af;
 	}
-	public static List<PDefinition> getDefinitions(APatternTypePair result) {
-		
-		return PPatternAssistantTC.getDefinitions(result.getPattern(), result.getType(),NameScope.LOCAL);
+
+	public static List<PDefinition> getDefinitions(APatternTypePair result)
+	{
+
+		return PPatternAssistantTC.getDefinitions(result.getPattern(), result.getType(), NameScope.LOCAL);
 	}
 
 	public static void typeResolve(APatternTypePair result,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
+			TypeCheckInfo question)
+	{
 
-		if (result.getResolved() ) return; else { result.setResolved(true); }
-		result.setType(PTypeAssistantTC.typeResolve(result.getType(),null,rootVisitor,question));
-		
+		if (result.getResolved())
+			return;
+		else
+		{
+			result.setResolved(true);
+		}
+		result.setType(af.createPTypeAssistant().typeResolve(result.getType(), null, rootVisitor, question));
+
 	}
 
 }

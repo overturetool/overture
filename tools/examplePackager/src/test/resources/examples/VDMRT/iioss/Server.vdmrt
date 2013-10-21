@@ -1,0 +1,101 @@
+\begin{vdm_al} 
+class Server is subclass of IIOSSTYPES
+
+types
+	private medicTime = EventId * PigId * Time;
+instance variables
+	private io : IO := new IO();
+	--mapper gateway til gris ID
+	private stables : map PigId to StableController := {|->}; --map pigId to controller
+
+	private medicTimes : seq of medicTime := [mk_(1,1,5000), mk_(2,5,8000)];
+	private busy : bool := false;
+
+operations
+
+	public GetNoPigs: () ==> nat
+	GetNoPigs() == return card dom stables;
+	
+	public PointAtPig: EventId * PigId ==> ()
+	PointAtPig(eventid, pigId) == 
+	(
+		if (pigId not in set dom stables) then
+		(
+			World`env.handleEvent(eventid, <SHOW_PIG>, 
+                                  " Pig " ^ VDMUtil`val2seq_of_char[nat](pigId) 
+                                  ^" not in stable: " , 
+                                  time);
+		)
+		else 
+		(
+			let stbCtrl = stables(pigId) in
+			(
+				stbCtrl.PointAtPig(eventid, pigId);
+			)
+		);
+	);
+
+	-- Add a Pig to 
+	async public AddPig: PigId * StableController ==> ()
+	AddPig(pigID, stableController) ==
+	(
+		stables := stables munion {pigID |-> stableController};
+	)
+	pre pigID not in set dom stables
+	post card dom stables = card dom stables~ + 1;
+	
+		-- Remove a Pig 
+	async public RemovePig: PigId ==> ()
+	RemovePig(pigID) ==
+	(
+		stables := {pigID} <-: stables;
+	)
+	pre pigID in set dom stables 
+	post card dom stables + 1 = card dom stables~;
+
+	public NeedMedic : () ==> ()
+	NeedMedic() ==
+	(	
+		if (not medicTimes = []) then
+		(  
+			def mk_(eventid, pigid, t) = hd medicTimes in 
+			if (time  > t) then
+			(
+				if (pigid in set dom stables) then
+				(
+					World`env.handleEvent(eventid, <NEED_MEDIC>, 
+                                          " " ^ VDMUtil`val2seq_of_char[nat](pigid), 
+                                          time);
+					
+				);
+				medicTimes := tl medicTimes;			
+			);
+		)
+		else
+		(
+			busy := false;
+		);
+	);
+	
+	public isFinished: () ==> ()
+	isFinished () == skip
+
+sync
+	mutex(AddPig);
+	mutex(RemovePig);
+	mutex(RemovePig,AddPig);
+    mutex(NeedMedic);
+
+	per PointAtPig => card rng stables > 0;
+	
+	per isFinished => not busy
+	
+thread
+	periodic (1000E6,0,0,0) (NeedMedic)
+end Server
+
+\end{vdm_al}
+
+\begin{rtinfo}
+[TotalxCoverage]{vdm.tc}[Server]
+\end{rtinfo}

@@ -23,28 +23,70 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AInSetBinaryExp;
+import org.overture.ast.expressions.AIndicesUnaryExp;
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALenUnaryExp;
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
+import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.statements.PStateDesignator;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
+import org.overture.pog.utility.StateDesignatorToExpVisitor;
 
 
 public class SeqApplyObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -4022111928534078511L;
 
-	public SeqApplyObligation(PExp root, PExp arg, POContextStack ctxt)
+	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
 	{
-		super(root.getLocation(), POType.SEQ_APPLY, ctxt);
-		value = ctxt.getObligation(arg + " in set inds " + root);
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
+		
+		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
+		indsExp.setExp(root.clone());
+	
+		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), indsExp);
+		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
+	
+
 
 	public SeqApplyObligation(PStateDesignator root,
-		PExp arg, POContextStack ctxt)
+		PExp arg, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(root.getLocation(), POType.SEQ_APPLY, ctxt);
-		value = ctxt.getObligation(
-			arg + " > 0 and " + arg + " <= len (" + root + ") + 1");
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
+		//arg >0
+		AIntLiteralExp zeroExp = new AIntLiteralExp();
+		zeroExp.setValue(new LexIntegerToken(0, null));
+		AGreaterNumericBinaryExp grExp = AstExpressionFactory.newAGreaterNumericBinaryExp(arg.clone(), zeroExp);
+		
+		
+		// len(root)
+		ALenUnaryExp lenExp = new ALenUnaryExp();
+		PExp stateExp = root.apply(new StateDesignatorToExpVisitor());
+		lenExp.setExp(stateExp.clone());
+		
+		// len(root)+1
+		AIntLiteralExp oneExp = new AIntLiteralExp();
+		oneExp.setValue(new LexIntegerToken(1, null));
+		APlusNumericBinaryExp plusExp = AstExpressionFactory.newAPlusNumericBinaryExp(lenExp, oneExp);
+		
+		//arg <= len(root) +1
+		ALessEqualNumericBinaryExp lteExp = AstExpressionFactory.newALessEqualNumericBinaryExp(arg.clone(), plusExp);
+		
+		//arg > 0 and arg <= len(root)+1
+		AAndBooleanBinaryExp andExp = AstExpressionFactory.newAAndBooleanBinaryExp(grExp, lteExp);
+
+
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(andExp));
 	}
 }

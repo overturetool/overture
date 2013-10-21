@@ -336,9 +336,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "exists", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
@@ -437,9 +437,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "forall", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
@@ -567,23 +567,23 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				switch (node.getHop().getType())
 				{
 					case ACT:
-						result += ov.hashAct;
+						result += ov.getHashAct();
 						break;
 
 					case FIN:
-						result += ov.hashFin;
+						result += ov.getHashFin();
 						break;
 
 					case REQ:
-						result += ov.hashReq;
+						result += ov.getHashReq();
 						break;
 
 					case ACTIVE:
-						result += ov.hashAct - ov.hashFin;
+						result += ov.getHashAct() - ov.getHashFin();
 						break;
 
 					case WAITING:
-						result += ov.hashReq - ov.hashAct;
+						result += ov.getHashReq() - ov.getHashAct();
 						break;
 
 					default:
@@ -755,9 +755,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, true);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st expression", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
@@ -853,9 +853,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "map comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
@@ -1506,9 +1506,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 			}
 
-			quantifiers.init();
+			quantifiers.init(ctxt, false);
 
-			while (quantifiers.hasNext(ctxt))
+			while (quantifiers.hasNext())
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "set comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();

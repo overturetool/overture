@@ -37,6 +37,7 @@ public class Main
 	static File output = new File(".");
 	static boolean zip = false;
 	static boolean web = false;
+	static boolean overtureCSSWeb = false;
 
 	/**
 	 * @param args
@@ -57,6 +58,7 @@ public class Main
 		Option helpOpt = new Option("?", "help", false, "print this message");
 
 		Option genWebOpt = new Option("w", "web", false, "generate website");
+		Option overtureCssWebOpt = new Option("c", "overture-css", false, "style website with overture style");
 		Option genZipbundleOpt = new Option("z", "zip", false, "generate zip bundles");
 
 		Option inputOpt = new Option("i", "input", true, "the path of the examples folder");
@@ -65,6 +67,7 @@ public class Main
 
 		options.addOption(helpOpt);
 		options.addOption(genWebOpt);
+		options.addOption(overtureCssWebOpt);
 		options.addOption(genZipbundleOpt);
 		options.addOption(inputOpt);
 		options.addOption(outputOpt);
@@ -98,6 +101,7 @@ public class Main
 		}
 
 		web = line.hasOption(genWebOpt.getOpt());
+		overtureCSSWeb= line.hasOption(overtureCssWebOpt.getOpt());
 		zip = line.hasOption(genZipbundleOpt.getOpt());
 
 		runCompleteTest(input);
@@ -122,7 +126,7 @@ public class Main
 		if (web)
 		{
 			controller.packExamples(tmpFolder, null, true);
-			controller.createWebSite();
+			controller.createWebSite(overtureCSSWeb);
 		}
 		return controller;
 	}
@@ -151,13 +155,13 @@ public class Main
 
 		if (web)
 		{
-			controller.createWebOverviewPage(controllers, zipFiles);
+			controller.createWebOverviewPage(controllers, zipFiles,overtureCSSWeb);
 		}
 		Controller.delete(tmpFolder);
 
 		System.out.println("Done.");
 
-		System.exit(0);
+//		System.exit(0);
 
 	}
 }

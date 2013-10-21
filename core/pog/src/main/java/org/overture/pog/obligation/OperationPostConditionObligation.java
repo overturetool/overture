@@ -27,8 +27,12 @@ import java.util.List;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AErrorCase;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class OperationPostConditionObligation extends ProofObligation
 {
@@ -38,50 +42,72 @@ public class OperationPostConditionObligation extends ProofObligation
 	private static final long serialVersionUID = 7717481924562707647L;
 
 	public OperationPostConditionObligation(AExplicitOperationDefinition op,
-			POContextStack ctxt)
+			IPOContextStack ctxt)
 	{
-		super(op.getLocation(), POType.OP_POST_CONDITION, ctxt);
-		value = ctxt.getObligation(getExp(op.getPrecondition(), op.getPostcondition(), null));
+		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), null)));
 	}
 
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
-			POContextStack ctxt)
+			IPOContextStack ctxt)
 	{
-		super(op.getLocation(), POType.OP_POST_CONDITION, ctxt);
-		value = ctxt.getObligation(getExp(op.getPrecondition(), op.getPostcondition(), op.getErrors()));
+		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors())));
 	}
 
-	private String getExp(PExp preexp, PExp postexp, List<AErrorCase> errs)
+	private PExp handlePrePost(PExp preexp, PExp postexp, List<AErrorCase> errs)
+	{
+		if (preexp != null)
+		{
+			// (preexp and postexp)
+			AAndBooleanBinaryExp andExp = new AAndBooleanBinaryExp();
+			andExp.setLeft(preexp.clone());
+			andExp.setRight(postexp);
+			return andExp;
+		} else
+		{
+			return postexp;
+		}
+	}
+
+	private PExp buildExp(PExp preexp, PExp postexp, List<AErrorCase> errs)
 	{
 		if (errs == null || errs.isEmpty())
 		{
-			return postexp.toString();
+			return postexp;
 		} else
-		{
-			StringBuilder sb = new StringBuilder();
+		{// handled prepost or errors
+			AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
+			orExp.setLeft(handlePrePost(preexp, postexp, errs));
+			PExp errorsExp = (buildErrsExp(errs));
+			orExp.setRight(errorsExp);
 
-			if (preexp != null)
-			{
-				sb.append("(");
-				sb.append(preexp);
-				sb.append(" and ");
-				sb.append(postexp);
-				sb.append(")");
-			} else
-			{
-				sb.append(postexp);
-			}
-
-			for (AErrorCase err : errs)
-			{
-				sb.append(" or (");
-				sb.append(err.getLeft());
-				sb.append(" and ");
-				sb.append(err.getRight());
-				sb.append(")");
-			}
-
-			return sb.toString();
+			return orExp;
 		}
 	}
+
+	private PExp handleErrorCase(AErrorCase err)
+	{
+		// (errlet and errright)
+		AAndBooleanBinaryExp andExp = new AAndBooleanBinaryExp();
+		andExp.setLeft(err.getLeft());
+		andExp.setRight(err.getRight());
+		return andExp;
+	}
+
+	private PExp buildErrsExp(List<AErrorCase> errs)
+	{
+		if (errs.size() == 1)
+		{ // termination case
+			return handleErrorCase(errs.get(0));
+		} else
+		{ // recurse on error list
+			AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
+			orExp.setLeft(handleErrorCase(errs.get(0)));
+			orExp.setRight(buildErrsExp(errs.subList(1, errs.size() - 1)));
+			return orExp;
+		}
+	}
+
 }

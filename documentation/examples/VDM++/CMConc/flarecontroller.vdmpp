@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class FlareController is subclass of GLOBAL
+class FlareController is subclass of GLOBAL, BaseThread
 
 instance variables
 
@@ -19,8 +19,16 @@ busy : bool := false
 
 operations
 
-public FlareController: Angle ==> FlareController
-FlareController (papp) == aperture := papp;
+public FlareController: Angle * [ThreadDef] ==> FlareController
+FlareController (papp, tDef) == 
+ (aperture := papp;
+ 
+  if tDef <> nil
+  then (period := tDef.p;
+        isPeriodic := tDef.isP;
+       );
+  BaseThread(self);
+ );
 
 public addDispenser: FlareDispenser ==> ()
 addDispenser (pfldisp) ==
@@ -31,7 +39,6 @@ addDispenser (pfldisp) ==
                  {id |-> mk_(angle, DISPENSER_APERTURE)};
        dispensers := dispensers munion {id |-> pfldisp}
       );
-     --start (pfldisp) 
      );
 
 -- get the left hand-side start point and opening angle
@@ -58,39 +65,28 @@ isFinished () ==
   for all id in set dom dispensers do
     dispensers(id).isFinished();
 
-processThreat: () ==> ()
-processThreat() ==
-  (def mk_ (evid,pmt, pa, pt) = getThreat() in
-      for all id in set dom ranges do
-        def mk_(papplhs, pappsize) = ranges(id) in
-          if canObserve(pa, papplhs, pappsize)
-          then dispensers(id).addThreat(evid,pmt,pt);
-    busy := len threats > 0 );
+Step: () ==> ()
+Step() ==
+  (if threats <> []
+  then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+         for all id in set dom ranges do
+           def mk_(papplhs, pappsize) = ranges(id) in
+             if canObserve(pa, papplhs, pappsize)
+             then dispensers(id).addThreat(evid,pmt,pt);
+        busy := len threats > 0 );
+       );
 
 sync
 
 -- addThreat and getThreat modify the same instance variables
 -- therefore they need to be declared mutual exclusive
 mutex (addThreat,getThreat);
+mutex (Step);
 
 -- getThreat is used as a 'blocking read' from the main
 -- thread of control of the missile detector
 per getThreat => len threats > 0;
 per isFinished => len threats = 0 --not busy
-
-thread
-
--- the flare controller continuously processes sensor
--- events. getThread is automatically blocked if there
--- are no threats available
-( -- first start the dispenser threads
- --for all id in set dom dispensers do
-   --start (dispensers(id));
- -- now enter the event handling loop
- while true do
-   processThreat();
-   --World`timerRef.WaitRelative(World`timerRef.stepLength);
-)
 
 end FlareController
 \end{vdm_al}

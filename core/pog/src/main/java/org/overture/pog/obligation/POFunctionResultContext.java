@@ -23,13 +23,23 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternTypePair;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 
 public class POFunctionResultContext extends POContext
@@ -40,6 +50,7 @@ public class POFunctionResultContext extends POContext
 	public final PExp body;
 	public final APatternTypePair result;
 	public final boolean implicit;
+	final PDefinition function;
 
 	public POFunctionResultContext(AExplicitFunctionDefinition definition)
 	{
@@ -48,14 +59,9 @@ public class POFunctionResultContext extends POContext
 		this.precondition = definition.getPrecondition();
 		this.body = definition.getBody();
 		this.implicit = false;
-		this.result = 
-				AstFactory.newAPatternTypePair(
-						AstFactory.newAIdentifierPattern(
-						new LexNameToken(
-					definition.getName().getModule(), "RESULT", definition.getLocation())),
-					((AFunctionType) definition.getType()).getResult().clone());
-				
-
+		this.result = AstFactory.newAPatternTypePair(AstFactory.newAIdentifierPattern(new LexNameToken(definition.getName().getModule(), "RESULT", definition.getLocation())), ((AFunctionType) definition.getType()).getResult().clone());
+		this.function = definition.clone();
+		function.setLocation(null);
 	}
 
 	public POFunctionResultContext(AImplicitFunctionDefinition definition)
@@ -66,6 +72,51 @@ public class POFunctionResultContext extends POContext
 		this.body = definition.getBody();
 		this.implicit = true;
 		this.result = definition.getResult();
+		this.function = definition;
+
+	}
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+
+		PExp stitched = getContextNodeMain(stitch);
+
+		if (precondition == null)
+		{
+			return stitched;
+		} else
+		{
+			return AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitched);
+		}
+
+	}
+
+	private PExp getContextNodeMain(PExp stitch)
+	{
+		if (implicit)
+		{
+			AExistsExp exists_exp = new AExistsExp();
+			List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
+			ATypeMultipleBind tmBind = new ATypeMultipleBind();
+			List<PPattern> patternList = new LinkedList<PPattern>();
+			patternList.add(result.getPattern().clone());
+			tmBind.setPlist(patternList);
+			tmBind.setType(result.getType().clone());
+			binds.add(tmBind);
+			exists_exp.setBindList(binds);
+			exists_exp.setPredicate(stitch);
+			return exists_exp;
+		}
+
+		else
+		{
+			ALetDefExp letDefExp = new ALetDefExp();
+			letDefExp.setLocalDefs(result.getPattern().clone().getDefinitions());
+			letDefExp.setExpression(stitch);
+			return letDefExp;
+		}
+
 	}
 
 	@Override

@@ -28,12 +28,19 @@ import java.util.Map;
 
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPOContext;
 
-abstract public class POContext
+abstract public class POContext implements IPOContext
 {
 	abstract public String getContext();
+	//abstract public List<INode> getContextNodes(int n);
+	abstract public PExp getContextNode(PExp stitch);
+	
 	private Map<PExp, PType> knownTypes = new HashMap<PExp, PType>();
 
+	
+	
+	
 	public String getName()
 	{
 		return "";		// Overridden in PONameContext
@@ -53,4 +60,6 @@ abstract public class POContext
 	{
 		return knownTypes.get(exp);
 	}
+	
+
 }

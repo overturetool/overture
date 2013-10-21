@@ -1,0 +1,34 @@
+class TestDriver
+--Super class of TestDriver
+
+functions
+
+--Return all TestCases
+public tests : () -> seq of TestCase
+tests() == is subclass responsibility;
+
+--Confirm test result
+public isOK: TestCase -> bool
+isOK(t) ==
+	if t.TestACase() then
+		new TestLogger().Succeeded(t)
+	else
+		new TestLogger().Failed(t);
+
+operations
+
+--Test a TestCase sequence.
+public run: () ==> bool
+run() ==
+	let	Message = "Test result of a testcase seaquence.",
+		TestcaseSeq = tests()	,
+		aResult = [isOK(TestcaseSeq(i)) | i in set inds TestcaseSeq]
+		--aResult = new Sequence().fmap[TestCase,bool](isOK)(TestcaseSeq)
+	in
+	if  forall i in set inds aResult & aResult(i) then
+		return new TestLogger().succeededInAllTestcases(Message)
+	else
+		return new TestLogger().notSucceededInAllTestcases(Message)
+	
+end TestDriver
+

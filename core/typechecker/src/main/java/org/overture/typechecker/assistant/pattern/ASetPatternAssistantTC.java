@@ -19,7 +19,8 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ASetPatternAssistantTC {
+public class ASetPatternAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -27,78 +28,87 @@ public class ASetPatternAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static void typeResolve(ASetPattern pattern,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException {
-		
-		if (pattern.getResolved()) return; else { pattern.setResolved(true); }
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		if (pattern.getResolved())
+			return;
+		else
+		{
+			pattern.setResolved(true);
+		}
 
 		try
 		{
 			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			unResolve(pattern);
 			throw e;
 		}
-		
+
 	}
 
-	public static void unResolve(ASetPattern pattern) {
+	public static void unResolve(ASetPattern pattern)
+	{
 		PPatternListAssistantTC.unResolve(pattern.getPlist());
 		pattern.setResolved(false);
-		
+
 	}
 
-//	public static LexNameList getVariableNames(ASetPattern pattern) {
-//		LexNameList list = new LexNameList();
-//
-//		for (PPattern p: pattern.getPlist())
-//		{
-//			list.addAll(PPatternTCAssistant.getVariableNames(p));
-//		}
-//
-//		return list;
-//	}
+	// public static LexNameList getVariableNames(ASetPattern pattern) {
+	// LexNameList list = new LexNameList();
+	//
+	// for (PPattern p: pattern.getPlist())
+	// {
+	// list.addAll(PPatternTCAssistant.getVariableNames(p));
+	// }
+	//
+	// return list;
+	// }
 
-	public static List<PDefinition> getAllDefinitions(ASetPattern rp, PType type,
-			NameScope scope) {
-		
+	public static List<PDefinition> getAllDefinitions(ASetPattern rp,
+			PType type, NameScope scope)
+	{
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		if (!PTypeAssistantTC.isSet(type))
 		{
-			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type",rp.getLocation(),rp);
+			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", rp.getLocation(), rp);
 			TypeCheckerErrors.detail("Actual type", type);
-		}
-		else
+		} else
 		{
 			ASetType set = PTypeAssistantTC.getSet(type);
 
 			if (!set.getEmpty())
 			{
-        		for (PPattern p: rp.getPlist())
-        		{
-        			defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
-        		}
+				for (PPattern p : rp.getPlist())
+				{
+					defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
+				}
 			}
 		}
 
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ASetPattern pattern) {
+	public static PType getPossibleTypes(ASetPattern pattern)
+	{
 		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
 
-	public static PExp getMatchingExpression(ASetPattern sp) {
+	public static PExp getMatchingExpression(ASetPattern sp)
+	{
 		return AstFactory.newASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
 	}
-	
+
 	public static boolean isSimple(ASetPattern p)
 	{
 		return PPatternListAssistantTC.isSimple(p.getPlist());
 	}
-	
+
 }

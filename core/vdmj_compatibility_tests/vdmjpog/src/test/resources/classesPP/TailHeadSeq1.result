@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="proof_obligation">
+<result>
+<po column="12" line="7" message="dummy0(seq1 of (nat)): non-empty sequence obligation in 'B' (TailHeadSeq1) at line 7:12&#10;(forall xs:seq1 of (nat) &amp;&#10;  xs &lt;&gt; [])&#10;" number="0" object="" resource="TailHeadSeq1" toString="dummy0(seq1 of (nat)): non-empty sequence obligation in 'B' (TailHeadSeq1) at line 7:12&#10;(forall xs:seq1 of (nat) &amp;&#10;  xs &lt;&gt; [])&#10;"/>
+<po column="12" line="11" message="dummy1(seq1 of (nat)): non-empty sequence obligation in 'B' (TailHeadSeq1) at line 11:12&#10;(forall xs:seq1 of (nat) &amp;&#10;  xs &lt;&gt; [])&#10;" number="0" object="" resource="TailHeadSeq1" toString="dummy1(seq1 of (nat)): non-empty sequence obligation in 'B' (TailHeadSeq1) at line 11:12&#10;(forall xs:seq1 of (nat) &amp;&#10;  xs &lt;&gt; [])&#10;"/>
+</result>
+</testResult>

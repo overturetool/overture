@@ -37,66 +37,43 @@ public class PTypeAssistant
 
 	public static boolean isNumeric(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				SBasicType bType = (SBasicType) type;
-				return SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType());
-			case ABracketType.kindPType:
-				return ABracketTypeAssistant.isNumeric((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistant.isNumeric((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistant.isNumeric((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistant.isNumeric((AUnknownType) type);
-			default:
-				break;
+		if (type instanceof SBasicType) {
+			SBasicType bType = (SBasicType) type;
+			return bType instanceof SNumericBasicType;
+		} else if (type instanceof ABracketType) {
+			return ABracketTypeAssistant.isNumeric((ABracketType) type);
+		} else if (type instanceof SInvariantType) {
+			if (type instanceof ANamedInvariantType) {
+				return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType) {
+			return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
+		} else if (type instanceof AUnionType) {
+			return AUnionTypeAssistant.isNumeric((AUnionType) type);
+		} else if (type instanceof AUnknownType) {
+			return AUnknownTypeAssistant.isNumeric((AUnknownType) type);
 		}
 		return false;
 	}
 
 	public static SNumericBasicType getNumeric(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case SBasicType.kindPType:
-				SBasicType bType = (SBasicType) type;
-				// FIXME doesn't the outer if imply the inner? -jwc/1Apr2013
-				if (SNumericBasicType.kindSBasicType.equals(bType.kindSBasicType()))
-				{
-					if (type instanceof SNumericBasicType)
-					{
-						return (SNumericBasicType) type;
-					}
-				}
-				break;
-			case ABracketType.kindPType:
-				return ABracketTypeAssistant.getNumeric((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistant.getNumeric((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistant.getNumeric((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistant.getNumeric((AUnknownType) type);
-			default:
-				break;
+		if (type instanceof SBasicType) {
+			if (type instanceof SNumericBasicType) {
+				return (SNumericBasicType) type;
+			}
+		} else if (type instanceof ABracketType) {
+			return ABracketTypeAssistant.getNumeric((ABracketType) type);
+		} else if (type instanceof SInvariantType) {
+			if (type instanceof ANamedInvariantType) {
+				return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType) {
+			return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
+		} else if (type instanceof AUnionType) {
+			return AUnionTypeAssistant.getNumeric((AUnionType) type);
+		} else if (type instanceof AUnknownType) {
+			return AUnknownTypeAssistant.getNumeric((AUnknownType) type);
 		}
 		assert false : "Can't getNumeric of a non-numeric";
 		return null;
@@ -104,66 +81,47 @@ public class PTypeAssistant
 
 	public static int hashCode(PType type)
 	{
-		switch (type.kindPType())
-		{
-			case ABracketType.kindPType:
-				return hashCode(((ABracketType) type).getType());
-			case AClassType.kindPType:
-				return ((AClassType) type).getName().hashCode();
-			case AFunctionType.kindPType:
-				AFunctionType ftype = (AFunctionType) type;
-				return hashCode(ftype.getParameters())
-						+ hashCode(ftype.getResult());
-			case SInvariantType.kindPType:
-			{
-				SInvariantType stype = (SInvariantType) type;
-				switch (stype.kindSInvariantType())
-				{
-					case ANamedInvariantType.kindSInvariantType:
-						return ((ANamedInvariantType) type).getName().hashCode();
-					case ARecordInvariantType.kindSInvariantType:
-						return ((ARecordInvariantType) type).getName().hashCode();
-				}
+		if (type instanceof ABracketType) {
+			return hashCode(((ABracketType) type).getType());
+		} else if (type instanceof AClassType) {
+			return ((AClassType) type).getName().hashCode();
+		} else if (type instanceof AFunctionType) {
+			AFunctionType ftype = (AFunctionType) type;
+			return hashCode(ftype.getParameters())
+					+ hashCode(ftype.getResult());
+		} else if (type instanceof SInvariantType) {
+			if (type instanceof ANamedInvariantType) {
+				return ((ANamedInvariantType) type).getName().hashCode();
+			} else if (type instanceof ARecordInvariantType) {
+				return ((ARecordInvariantType) type).getName().hashCode();
 			}
-			case SMapType.kindPType:
-			{
-				SMapType mtype = (SMapType) type;
-				return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
-			}
-			case AOperationType.kindPType:
-			{
-				AOperationType otype = (AOperationType) type;
-				return hashCode(otype.getParameters())
-						+ hashCode(otype.getResult());
-			}
-			case AOptionalType.kindPType:
-				return hashCode(((AOptionalType) type).getType());
-			case AParameterType.kindPType:
-				return ((AParameterType) type).getName().hashCode();
-			case AProductType.kindPType:
-				return hashCode(((AProductType) type).getTypes());
-			case AQuoteType.kindPType:
-				return ((AQuoteType) type).getValue().hashCode();
-			case SSeqType.kindPType:
-			{
-				SSeqType stype = (SSeqType) type;
-				return stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
-			}
-			case ASetType.kindPType:
-			{
-				ASetType stype = (ASetType) type;
-				return stype.getEmpty() ? 0 : hashCode(stype.getSetof());
-			}
-			case AUnionType.kindPType:
-			{
-				AUnionType utype = (AUnionType) type;
-				return hashCode(utype.getTypes());
-			}
-			case AUnresolvedType.kindPType:
-				return ((AUnresolvedType) type).getName().hashCode();
-			default:
-				return type.getClass().hashCode();
+		} else if (type instanceof SMapType) {
+			SMapType mtype = (SMapType) type;
+			return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
+		} else if (type instanceof AOperationType) {
+			AOperationType otype = (AOperationType) type;
+			return hashCode(otype.getParameters()) + hashCode(otype.getResult());
+		} else if (type instanceof AOptionalType) {
+			return hashCode(((AOptionalType) type).getType());
+		} else if (type instanceof AParameterType) {
+			return ((AParameterType) type).getName().hashCode();
+		} else if (type instanceof AProductType) {
+			return hashCode(((AProductType) type).getTypes());
+		} else if (type instanceof AQuoteType) {
+			return ((AQuoteType) type).getValue().hashCode();
+		} else if (type instanceof SSeqType) {
+			SSeqType stype = (SSeqType) type;
+			return stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
+		} else if (type instanceof ASetType) {
+			ASetType stype = (ASetType) type;
+			return stype.getEmpty() ? 0 : hashCode(stype.getSetof());
+		} else if (type instanceof AUnionType) {
+			AUnionType utype = (AUnionType) type;
+			return hashCode(utype.getTypes());
+		} else if (type instanceof AUnresolvedType) {
+			return ((AUnresolvedType) type).getName().hashCode();
 		}
+		return type.getClass().hashCode();
 	}
 
 	public static int hashCode(List<PType> list)

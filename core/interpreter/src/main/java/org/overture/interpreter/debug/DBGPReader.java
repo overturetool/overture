@@ -77,6 +77,7 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -478,6 +479,7 @@ public class DBGPReader
 		    			PrintWriter p = new PrintWriter(
 		    				new FileOutputStream(logfile, false));
 		    			RTLogger.setLogfile(p);
+		    			NextGenRTLogger.getInstance().setLogfile(new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
@@ -2439,6 +2441,7 @@ public class DBGPReader
 				}
 
 				RTLogger.setLogfile(null);
+				NextGenRTLogger.getInstance().setLogfile(null);
 				out.append("RT events now logged to the console");
 			}
 			else if (c.data.equals("off"))

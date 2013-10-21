@@ -24,6 +24,7 @@
 package org.overture.pog.obligation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -36,6 +37,7 @@ import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -92,14 +94,35 @@ public class POForAllContext extends POContext
 		{
 			List<PPattern> pl = new ArrayList<PPattern>();
 			pl.add(tb.getPattern().clone());
-			ATypeMultipleBind mtb =AstFactory.newATypeMultipleBind( pl, tb.getType().clone());
+			ATypeMultipleBind mtb = AstFactory.newATypeMultipleBind(pl, tb.getType().clone());
 			bindings.add(mtb);
 		}
 	}
 
 	public POForAllContext(ALetBeStExp exp)
 	{
-		this.bindings = PMultipleBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = cloneBinds(PMultipleBindAssistantTC.getMultipleBindList(exp.getBind()));
+	}
+
+	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList) {
+		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		for (PMultipleBind pmb : multipleBindList){
+			r.add(pmb.clone());
+		}
+		return r;
+	}
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		return getSuperContext(stitch);
+	}
+	
+	protected AForAllExp getSuperContext(PExp stitch){
+		AForAllExp forAllExp = new AForAllExp();
+		forAllExp.setBindList(cloneBinds(bindings));
+		forAllExp.setPredicate(stitch);
+		return forAllExp;
 	}
 
 	@Override

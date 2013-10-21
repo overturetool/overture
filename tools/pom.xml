@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>root</artifactId>
-    <version>2.0.0-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -17,8 +17,7 @@
   <name>Overture Maven tool plugins</name>
 
   <modules>
-    <module>astCreator</module>
-    <module>astCreatorPlugin</module>
+   
     <!--module>vdmt</module-->
     <module>overturetemplategen</module>
     <module>examplePackager</module>

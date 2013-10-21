@@ -1,0 +1,42 @@
+class ＵｎｉｑｕｅＮｕｍｂｅｒＴ is subclass of TestDriver
+functions
+public tests : () -> seq of TestCase
+tests () == 
+	[new ＵｎｉｑｕｅＮｕｍｂｅｒＴ01()
+	];
+end ＵｎｉｑｕｅＮｕｍｂｅｒＴ
+
+class ＵｎｉｑｕｅＮｕｍｂｅｒＴ01 is subclass of TestCase
+operations 
+protected test: () ==> bool
+test() == 
+	let	o = new ＵｎｉｑｕｅＮｕｍｂｅｒ()	in
+	return
+		(
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "1" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "2" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "3" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "4" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "5" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "6" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "7" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "8" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "9" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "1" and 
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(1) = "2" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "3" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "4" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "5" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "6" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "7" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "8" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "9" and
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "10" and 
+		o.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(2) = "11"
+		)
+;
+protected setUp: () ==> ()
+setUp() == TestName := " ＵｎｉｑｕｅＮｕｍｂｅｒＴ01:\t ＵｎｉｑｕｅＮｕｍｂｅｒＴ01 Unit test";
+protected tearDown: () ==> ()
+tearDown() == return;
+end ＵｎｉｑｕｅＮｕｍｂｅｒＴ01

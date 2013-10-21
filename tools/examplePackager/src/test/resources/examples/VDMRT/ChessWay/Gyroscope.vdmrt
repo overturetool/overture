@@ -1,0 +1,23 @@
+% Gyroscope.vdmrt
+
+\subsubsection{Observing y-axis rotation -- the \texttt{Gyroscope} class}
+
+The \texttt{Gyroscope} class obtains the yaw rate from the environment.
+
+\begin{vdm_al}
+class Gyroscope
+
+instance variables
+  -- link back to the controller managing this resource
+  private mController : Controller;
+
+operations
+  public Gyroscope: Controller ==> Gyroscope
+  Gyroscope (pController) == mController := pController;
+
+  public getYawRateData: () ==> real
+  getYawRateData () ==
+    duration (0) return mController.getValue("YAW_RATE")
+
+end Gyroscope
+\end{vdm_al}

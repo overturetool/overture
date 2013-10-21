@@ -53,18 +53,15 @@ public class FileUtility
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
 			{
-				if (
-						marker.getAttribute(IMarker.MESSAGE) != null
+				if (marker.getAttribute(IMarker.MESSAGE) != null
 						&& marker.getAttribute(IMarker.SEVERITY) != null
 						&& marker.getAttribute(IMarker.LINE_NUMBER) != null
 						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
 						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber)
-					)
+						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber))
 				{
 					return;
 				}
-					
 
 			}
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
@@ -95,7 +92,7 @@ public class FileUtility
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
 			{
-				if (	marker.getAttribute(IMarker.MESSAGE) != null
+				if (marker.getAttribute(IMarker.MESSAGE) != null
 						&& marker.getAttribute(IMarker.SEVERITY) != null
 						&& marker.getAttribute(IMarker.LINE_NUMBER) != null
 						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
@@ -139,18 +136,19 @@ public class FileUtility
 	{
 		if (file == null)
 			return;
-		
+
 		try
 		{
-			List<Character> content = getContent(file);//FIXME this should be improved converting a string 3 times is not good.
+			List<Character> content = getContent(file);// FIXME this should be improved converting a string 3 times is
+														// not good.
 			String tmp = new String(FileUtility.getCharContent(content));
-			addMarker(file,message,location,severity,sourceId,tmp);
+			addMarker(file, message, location, severity, sourceId, tmp);
 		} catch (CoreException e)
 		{
 			VdmCore.log("FileUtility addMarker", e);
 		}
 	}
-	
+
 	/**
 	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
 	 * exists at the specified location with the same message
@@ -171,10 +169,10 @@ public class FileUtility
 	{
 		if (file == null)
 			return;
-			
-		addInternalMarker(file,message,location,severity,sourceId,content);
+
+		addInternalMarker(file, message, location, severity, sourceId, content);
 	}
-	
+
 	/**
 	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
 	 * exists at the specified location with the same message
@@ -190,10 +188,10 @@ public class FileUtility
 	 * @param sourceId
 	 *            The source if of the plugin calling this function. The PLUGIN id.
 	 * @param content
-	 * 				The content used when calculating the char offset for the markers
+	 *            The content used when calculating the char offset for the markers
 	 */
 	protected static void addInternalMarker(IFile file, String message,
-			ILexLocation location, int severity, String sourceId,String content)
+			ILexLocation location, int severity, String sourceId, String content)
 	{
 		try
 		{
@@ -215,7 +213,8 @@ public class FileUtility
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, sourceId);
-			marker.setAttribute(IMarker.LOCATION, "line: " + location.getStartLine());
+			marker.setAttribute(IMarker.LOCATION, "line: "
+					+ location.getStartLine());
 			marker.setAttribute(IMarker.LINE_NUMBER, location.getStartLine());
 
 			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(location));
@@ -228,8 +227,8 @@ public class FileUtility
 
 	public static void addMarker(IFile file, String message, int startLine,
 			int startPos, int endLine, int endPos, int severity, String sourceId)
-	{//FIXME
-		addMarker(file, message, new LexLocation((File)null, "", startLine, startPos, endLine, endPos,-1, -1), severity, sourceId);
+	{// FIXME
+		addMarker(file, message, new LexLocation((File) null, "", startLine, startPos, endLine, endPos, -1, -1), severity, sourceId);
 	}
 
 	public static void deleteMarker(IFile file, String type, String sourceId)
@@ -243,7 +242,7 @@ public class FileUtility
 			for (IMarker marker : markers)
 			{
 				if (marker.getAttribute(IMarker.SOURCE_ID) != null
-						&& marker.getAttribute(IMarker.SOURCE_ID) != null 
+						&& marker.getAttribute(IMarker.SOURCE_ID) != null
 						&& marker.getAttribute(IMarker.SOURCE_ID).equals(sourceId))
 					marker.delete();
 			}
@@ -283,24 +282,25 @@ public class FileUtility
 	{
 		if (VdmProject.externalFileContentType.isAssociatedWith(file.getName()))
 		{
-		if (file.getName().endsWith("doc"))
-		{
-			return new DocStreamReader(new FileInputStream(file.getLocation().toFile()), file.getCharset());
-		} else if (file.getName().endsWith("docx"))
-		{
-			return new DocxStreamReader(new FileInputStream(file.getLocation().toFile()));
-		} else if (file.getName().endsWith("odt"))
-		{
-			return new ODFStreamReader(new FileInputStream(file.getLocation().toFile()));
-		}}else
+			if (file.getName().endsWith("doc"))
+			{
+				return new DocStreamReader(new FileInputStream(file.getLocation().toFile()), file.getCharset());
+			} else if (file.getName().endsWith("docx"))
+			{
+				return new DocxStreamReader(new FileInputStream(file.getLocation().toFile()));
+			} else if (file.getName().endsWith("odt"))
+			{
+				return new ODFStreamReader(new FileInputStream(file.getLocation().toFile()));
+			}
+		} else
 		{
 			return new InputStreamReader(file.getContents(), file.getCharset());
 		}
 
 		return null;
 	}
-	
-	public static List<Character> convert(String text,String encoding)
+
+	public static List<Character> convert(String text, String encoding)
 	{
 		InputStreamReader in = null;
 		List<Character> content = new Vector<Character>();
@@ -311,10 +311,10 @@ public class FileUtility
 			int c = -1;
 			while ((c = in.read()) != -1)
 				content.add((char) c);
-		}catch (IOException e)
+		} catch (IOException e)
 		{
 			VdmCore.log("FileUtility getContentDocxText", e);
-		}finally
+		} finally
 		{
 			try
 			{
@@ -329,26 +329,26 @@ public class FileUtility
 	public static String getContentExternalText(IFile file)
 	{
 		InputStreamReader in = null;
-		
+
 		StringBuffer fileData = new StringBuffer();
-		
+
 		try
 		{
 			long length = 0;
-			
+
 			in = getReader(file);
-			
-			if(in instanceof DocxStreamReader)
+
+			if (in instanceof DocxStreamReader)
 			{
-				length = ((DocxStreamReader)in).length();
-			}else if(in instanceof ODFStreamReader)
+				length = ((DocxStreamReader) in).length();
+			} else if (in instanceof ODFStreamReader)
 			{
-				length = ((ODFStreamReader)in).length();
-			}else
+				length = ((ODFStreamReader) in).length();
+			} else
 			{
 				length = file.getLocation().toFile().length();
 			}
-			
+
 			char[] buf = new char[(int) (length + 1)];
 			int numRead = 0;
 			// while((numRead=in.read(buf)) != -1){
@@ -357,7 +357,7 @@ public class FileUtility
 			fileData.append(readData);
 			// buf = new char[1024];
 			// }
-		return fileData.toString();
+			return fileData.toString();
 		} catch (IOException e)
 		{
 			VdmCore.log("FileUtility getContentDocxText", e);
@@ -410,12 +410,13 @@ public class FileUtility
 	public static String makeString(List<Character> content)
 	{
 		StringBuilder sb = new StringBuilder();
-		for (Character c : content) {
+		for (Character c : content)
+		{
 			sb.append(c);
 		}
 		return sb.toString();
 	}
-	
+
 	public static char[] getCharContent(List<Character> content)
 	{
 		char[] source = new char[content.size()];

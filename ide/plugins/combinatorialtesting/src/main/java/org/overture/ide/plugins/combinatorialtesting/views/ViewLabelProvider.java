@@ -55,7 +55,7 @@ public class ViewLabelProvider extends LabelProvider
 			String imageKey = IDE.SharedImages.IMG_OBJ_PROJECT;
 			return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
 		}
-		if (/*obj instanceof ClassTreeNode ||*/ obj instanceof SClassDefinition
+		if (/* obj instanceof ClassTreeNode || */obj instanceof SClassDefinition
 				|| obj instanceof AModuleModules)
 		{
 			return OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_CLASS).createImage();

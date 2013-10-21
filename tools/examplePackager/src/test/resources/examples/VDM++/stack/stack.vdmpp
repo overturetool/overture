@@ -1,0 +1,31 @@
+class Stack
+
+  instance variables
+    stack : seq of int := [];
+
+  operations
+
+    public
+    Reset : () ==> ()
+    Reset () ==
+      stack := [];
+
+    public
+    Pop : () ==> int
+    Pop() ==
+      def res = hd stack in
+        (stack := tl stack;
+         return res)
+    pre stack <> []
+    post stack~ = [RESULT]^stack;
+
+    public Push: int ==> ()
+    Push(elem) ==
+      stack := stack ^[elem];
+
+    public
+    Top : () ==> int
+    Top() ==
+      return (hd stack);
+
+end Stack

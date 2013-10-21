@@ -41,6 +41,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.overture.ide.plugins.rttraceviewer.TracefileViewerPlugin;
 import org.overture.ide.plugins.rttraceviewer.draw.TraceFigure;
 
 // Referenced classes of package org.overture.tracefile.viewer:
@@ -268,5 +269,10 @@ public class GenericTabItem
         theTabItem.dispose();
         if(theFont != null)
             theFont.dispose();
+    }
+    
+    public TabItem getTabItem()
+    {
+    	return theTabItem;
     }
 }

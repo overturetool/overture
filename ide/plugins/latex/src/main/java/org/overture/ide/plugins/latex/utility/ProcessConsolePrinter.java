@@ -27,8 +27,6 @@ import java.util.List;
 
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
-
-
 public class ProcessConsolePrinter extends Thread
 {
 	ConsoleWriter cw = null;
@@ -36,7 +34,9 @@ public class ProcessConsolePrinter extends Thread
 	List<String> fails = new ArrayList<String>();
 	PdfLatex pdfLatex = null;
 
-	public ProcessConsolePrinter(ConsoleWriter cw, InputStream inputStream, PdfLatex pdfLatex) {
+	public ProcessConsolePrinter(ConsoleWriter cw, InputStream inputStream,
+			PdfLatex pdfLatex)
+	{
 		this.cw = cw;
 		this.stream = inputStream;
 		this.pdfLatex = pdfLatex;
@@ -65,15 +65,18 @@ public class ProcessConsolePrinter extends Thread
 		}
 	}
 
-	public List<String> getFails(){
+	public List<String> getFails()
+	{
 		return this.fails;
 	}
-	
-	private void detectFail(String line) {
-		if(line.contains("Emergency stop") || line.contains("LaTeX Error")){
+
+	private void detectFail(String line)
+	{
+		if (line.contains("Emergency stop") || line.contains("LaTeX Error"))
+		{
 			fails.add(line);
 			pdfLatex.setLatexFail(true);
 		}
-		
+
 	}
 }

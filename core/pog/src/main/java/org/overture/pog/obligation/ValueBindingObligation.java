@@ -23,69 +23,60 @@
 
 package org.overture.pog.obligation;
 
+import java.util.List;
+import java.util.Vector;
+
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class ValueBindingObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7549866948129324892L;
 
-	public ValueBindingObligation(AValueDefinition def, POContextStack ctxt)
+	public ValueBindingObligation(AValueDefinition def, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.VALUE_BINDING, ctxt);
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("exists ");
-		sb.append(def.getPattern());
-		sb.append(":");
-		sb.append(def.getType());
-		sb.append(" & ");
-		sb.append(def.getPattern());
-		sb.append(" = ");
-		sb.append(def.getExpression());
-
-		value = ctxt.getObligation(sb.toString());
+		this(def.getPattern(), def.getType(), def.getExpression(), ctxt);
 	}
 
-	public ValueBindingObligation(AEqualsDefinition def, POContextStack ctxt)
+	public ValueBindingObligation(AEqualsDefinition def, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(def.getLocation(), POType.VALUE_BINDING, ctxt);
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("exists ");
-		sb.append(def.getPattern());
-		sb.append(":");
-		sb.append(def.getExpType());
-		sb.append(" & ");
-		sb.append(def.getPattern());
-		sb.append(" = ");
-		sb.append(def.getTest());
-
-		value = ctxt.getObligation(sb.toString());
+		this(def.getPattern(), def.getType(), def.getTest(), ctxt);
 	}
 
-	public ValueBindingObligation(
-		PPattern p, PType t, PExp e, POContextStack ctxt)
+	public ValueBindingObligation(PPattern pattern, PType type, PExp exp, IPOContextStack ctxt)
+		throws AnalysisException
 	{
-		super(p.getLocation(), POType.VALUE_BINDING, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(pattern, POType.VALUE_BINDING, ctxt, pattern.getLocation());
+		AExistsExp existsExp = new AExistsExp();
+		
+		List<PPattern> patternList = new Vector<PPattern>();
+		patternList.add(pattern);
+		ATypeMultipleBind typeBind = new ATypeMultipleBind();
+		typeBind.setPlist(patternList);
+		typeBind.setType(type.clone());
+		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
+		bindList.add(typeBind);
+		existsExp.setBindList(bindList);
+		
+		AEqualsBinaryExp equals = new AEqualsBinaryExp();
+		equals.setLeft(patternToExp(pattern.clone()));
+		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
+		equals.setRight(exp.clone());
 
-		sb.append("exists ");
-		sb.append(p);
-		sb.append(":");
-		sb.append(t);
-		sb.append(" & ");
-		sb.append(p);
-		sb.append(" = ");
-		sb.append(e);
-
-		value = ctxt.getObligation(sb.toString());
+		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
+//    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 }

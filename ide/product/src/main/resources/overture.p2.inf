@@ -1,0 +1,10 @@
+instructions.configure=\
+  copy(source:${basedir}/../../documentation/QuickOverviewVDMPPOperators/QuickOverviewofVDMOperators.pdf,target:${installFolder}/documentation/QuickOverviewofVDMOperators.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/VDM10LangMan/VDM10_lang_man.pdf,target:${installFolder}/documentation/VDM10_lang_man.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/UserGuideOvertureIDE/OvertureIDEUserGuide.pdf,target:${installFolder}/documentation/OvertureIDEUserGuide.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/tutorials/VDM++OvertureTutorial/VDMPPGuideToOverture.pdf,target:${installFolder}/documentation/VDMPPGuideToOverture.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/tutorials/VDMRTOvertureTutorial/VDMRTGuideToOverture.pdf,target:${installFolder}/documentation/VDMRTGuideToOverture.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/tutorials/VDMSLOvertureTutorial/VDMSLGuideToOverture.pdf,target:${installFolder}/documentation/VDMSLGuideToOverture.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/VDMRTProcess/VDMRTProcess.pdf,target:${installFolder}/documentation/VDMRTProcess.pdf,overwrite:true);
+instructions.configure.import=\
+  org.eclipse.equinox.p2.touchpoint.natives.copy

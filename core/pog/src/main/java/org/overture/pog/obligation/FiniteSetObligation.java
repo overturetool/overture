@@ -23,51 +23,104 @@
 
 package org.overture.pog.obligation;
 
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.types.ASetType;
+import java.util.List;
 
-public class FiniteSetObligation extends ProofObligation
-{
-	/**
-	 * 
-	 */
+import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.ASetCompSetExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ASetType;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
+
+public class FiniteSetObligation extends ProofObligation {
+
 	private static final long serialVersionUID = 4471304924561635823L;
 
-	public FiniteSetObligation(
-		ASetCompSetExp exp, ASetType settype, POContextStack ctxt)
-	{
-		super(exp.getLocation(), POType.FINITE_SET, ctxt);
-		StringBuilder sb = new StringBuilder();
+	/**
+	 * { f(a) | a:A & p(a) } yields exists m:map nat to map A to :f & forall a:A
+	 * & p(a) => exists idx in set dom m & m(idx) = f(a)
+	 */
+	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
+			IPOContextStack ctxt) {
+		super(exp, POType.FINITE_SET, ctxt, exp.getLocation());
 
-		String finmap = getVar("finmap");
-		String findex = getVar("findex");
+		ILexNameToken finmap = getUnique("finmap");
+		ILexNameToken findex = getUnique("findex");
 
-		sb.append("exists " + finmap + ":map nat to (");
-		sb.append(settype.getSetof());
-		sb.append(") &\n");
-		sb.append("  forall ");
-		String prefix = "";
+		AExistsExp existsExp = new AExistsExp();
 
-		for (PMultipleBind mb: exp.getBindings())
-		{
-			sb.append(prefix);
-			sb.append(mb);
-			prefix = ", ";
-		}
+		AMapMapType mapType = new AMapMapType();
+		mapType.setFrom(new ANatNumericBasicType());
+		mapType.setTo(settype.getSetof().clone());
 
-		sb.append(" &\n    ");
+		existsExp.setBindList(getMultipleTypeBindList(mapType, finmap));
+		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 
-		if (exp.getPredicate() != null)
-		{
-			sb.append(exp.getPredicate());
-			sb.append(" => ");
-		}
-
-		sb.append("exists " + findex + " in set dom " + finmap +
-			" & " + finmap + "(" + findex + ") = ");
-		sb.append(exp.getFirst());
-
-		value = ctxt.getObligation(sb.toString());
+		// valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
+
+	/**
+	 * forall a:A & p(a) => exists idx in set dom m & m(idx) = f(a)
+	 * 
+	 */
+	private PExp getForallExp(ASetCompSetExp exp, ILexNameToken finmap,
+			ILexNameToken findex) {
+		AForAllExp forallExp = new AForAllExp();
+		forallExp.setBindList(exp.clone().getBindings());
+		forallExp.setPredicate(getImpliesExpression(exp, finmap, findex));
+		return forallExp;
+	}
+
+	/**
+	 * p(a,b) => exists idx in set dom m & m(idx) = f(a)
+	 */
+	private PExp getImpliesExpression(ASetCompSetExp exp, ILexNameToken finmap,
+			ILexNameToken findex) {
+		if (exp.getPredicate() == null) // set comprehension has no predicate
+		{
+			return getImpliesExists(exp, finmap, findex);
+		} else {
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory
+					.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(),
+							getImpliesExists(exp.clone(), finmap, findex));
+			return implies;
+		}
+	}
+
+	/**
+	 * exists idx in set dom m & m(idx) =f(a)
+	 */
+	private PExp getImpliesExists(ASetCompSetExp exp, ILexNameToken finmap,
+			ILexNameToken findex) {
+		AExistsExp exists = new AExistsExp();
+
+		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
+		domExp.setExp(getVarExp(finmap));
+		List<PMultipleBind> bindList = getMultipleSetBindList(domExp, findex);
+		exists.setBindList(bindList);
+
+		exists.setPredicate(getExistsPredicate(exp, finmap, findex));
+		return exists;
+	}
+
+	/**
+	 * m(idx) = f(a)
+	 */
+	private PExp getExistsPredicate(ASetCompSetExp exp, ILexNameToken finmap,
+			ILexNameToken findex) {
+		AApplyExp apply = getApplyExp(getVarExp(finmap), getVarExp(findex));
+
+		return getEqualsExp(apply, exp.getFirst());
+	}
+
 }

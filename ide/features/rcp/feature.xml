@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.0.0.qualifier">
+      version="2.0.1.qualifier">
 
    <description>
       %description
@@ -25,6 +25,10 @@
          version="0.0.0"/>
 
    <includes
+         id="org.overture.ide.plugins.features.poviewer-string-based"
+         version="0.0.0"/>
+
+   <includes
          id="org.overture.ide.plugins.features.poviewer"
          version="0.0.0"/>
 
@@ -34,14 +38,6 @@
 
    <includes
          id="org.overture.ide.plugins.features.csk"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.equinox.p2.user.ui"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.platform"
          version="0.0.0"/>
 
    <includes
@@ -68,18 +64,11 @@
          id="org.overture.ide.plugins.features.developerutils"
          version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.ui.views.log"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ui.workbench.texteditor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <requires>
+      <import feature="org.eclipse.platform" version="4.2.1.v20130118-173121-9MF7GHYdG0B5kx4E_SkfZV-1mNjVATf67ZAb7"/>
+      <import feature="org.eclipse.equinox.p2.user.ui" version="2.2.0.v20121212-204731-62DG9JXTlTj-UXcQ2y3NLn6U4Z3H"/>
+      <import plugin="org.eclipse.ui.views.log"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+   </requires>
 
 </feature>

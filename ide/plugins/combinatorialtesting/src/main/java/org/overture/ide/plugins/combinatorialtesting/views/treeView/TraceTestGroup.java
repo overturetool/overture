@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.interpreter.traces.Verdict;
 import org.overture.ct.utils.TraceHelperNotInitializedException;
 import org.overture.ct.utils.TraceTestResult;
+import org.overture.interpreter.traces.Verdict;
 import org.xml.sax.SAXException;
 
 public class TraceTestGroup extends TraceTestTreeNode

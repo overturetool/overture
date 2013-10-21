@@ -1,5 +1,5 @@
 \begin{vdm_al}
-class MissileDetector is subclass of GLOBAL
+class MissileDetector is subclass of GLOBAL, BaseRTThread
 
 -- the primary task of the MissileDetector is to
 -- collect all sensor data and dispatch each event
@@ -20,6 +20,17 @@ busy : bool := false
 
 operations
 
+public MissileDetector: [ThreadDef] ==> MissileDetector
+MissileDetector(tDef)==
+ (if tDef <> nil
+  then (period := tDef.p;
+        jitter := tDef.j;
+        delay := tDef.d;
+        offset := tDef.o;
+       ); 
+  BaseRTThread(self);
+ );
+
 -- addController is only used to instantiate the model
 public addController: FlareController ==> ()
 addController (pctrl) ==
@@ -28,7 +39,7 @@ addController (pctrl) ==
     (ranges := ranges munion {nid |-> pctrl.getAperture()};
      controllers := controllers munion {nid |-> pctrl}
     );
-   start (pctrl) );
+   );
 
 -- addThreat is a helper operation to modify the event
 -- list. currently events are stored first come first served.
@@ -48,7 +59,18 @@ getThreat () ==
 public isFinished: () ==> ()
 isFinished () ==
   for all id in set dom controllers do
-    controllers(id).isFinished()
+    controllers(id).isFinished();
+
+Step: () ==> ()
+Step() ==
+ (if threats <> []
+  then (def mk_ (evid,pmt, pa, pt) = getThreat() in
+          for all id in set dom ranges do
+            def mk_(papplhs, pappsize) = ranges(id) in
+              if canObserve(pa, papplhs, pappsize)
+              then controllers(id).addThreat(evid,pmt,pa,pt);
+        busy := len threats > 0);
+ );
 
 sync
 
@@ -60,19 +82,6 @@ mutex (addThreat,getThreat);
 -- thread of control of the missile detector
 per getThreat => len threats > 0;
 per isFinished => not busy
-
-thread
-
--- the missile detector continuously processes sensor
--- events. getThread is automatically blocked if there
--- are no threats available
-while true do
-  (def mk_ (evid,pmt, pa, pt) = getThreat() in
-     for all id in set dom ranges do
-       def mk_(papplhs, pappsize) = ranges(id) in
-         if canObserve(pa, papplhs, pappsize)
-         then controllers(id).addThreat(evid,pmt,pa,pt);
-   busy := len threats > 0 )
 
 end MissileDetector
 \end{vdm_al}

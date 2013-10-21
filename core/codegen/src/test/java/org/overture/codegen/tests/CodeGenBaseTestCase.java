@@ -58,7 +58,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 				String newResult = generateActualOutput();
 				storeResult(resultFile, newResult);
 
-			} catch (FileNotFoundException | AnalysisException e)
+			} catch (Exception e)//FileNotFoundException | AnalysisException
 			{
 				Assert.fail("The produced results could not be stored: "
 						+ e.getMessage());

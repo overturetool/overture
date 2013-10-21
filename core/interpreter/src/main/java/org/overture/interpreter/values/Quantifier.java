@@ -23,43 +23,56 @@
 
 package org.overture.interpreter.values;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 
-
 public class Quantifier
 {
 	public final PPattern pattern;
 	public final ValueList values;
-	private NameValuePairList[] nvlist;
+	private List<NameValuePairList> nvlist;
 
 	public Quantifier(PPattern pattern, ValueList values)
 	{
 		this.pattern = pattern;
 		this.values = values;
-		this.nvlist = new NameValuePairList[values.size()];
+		this.nvlist = new Vector<NameValuePairList>(values.size());
 	}
 
-	public int size()
+	public int size(Context ctxt, boolean allPossibilities)
 	{
-		return nvlist.length;
+		for (Value value : values)
+		{
+			try
+			{
+				if (allPossibilities)
+				{
+					nvlist.addAll(PPatternAssistantInterpreter.getAllNamedValues(pattern, value, ctxt));
+				} else
+				{
+					nvlist.add(PPatternAssistantInterpreter.getNamedValues(pattern, value, ctxt));
+				}
+			} catch (PatternMatchException e)
+			{
+				// Should never happen
+			}
+		}
+
+		return nvlist.size();
 	}
 
-	public NameValuePairList get(int index, Context ctxt)
-		throws PatternMatchException
+	public NameValuePairList get(int index) throws PatternMatchException
 	{
-		if (index >= nvlist.length)		// no values
+		if (index >= nvlist.size()) // no values
 		{
 			return new NameValuePairList();
 		}
 
-		if (nvlist[index] == null)
-		{
-			nvlist[index] = PPatternAssistantInterpreter.getNamedValues(pattern, values.get(index), ctxt);
-		}
-
-		return nvlist[index];
+		return nvlist.get(index);
 	}
 }

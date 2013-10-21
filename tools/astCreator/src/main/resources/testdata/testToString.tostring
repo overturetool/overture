@@ -1,5 +1,0 @@
-To String Extensions
-
-%exp->binop="hje" [left] "fff[](){}" 
-
-%exp->apply= [root] "(" $Utils.listToString($ [args]$)$ ")"

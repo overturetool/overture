@@ -15,6 +15,8 @@
 <message column="12" line="152" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefsl.vdm.result"/>
 <message column="7" line="27" message="'in set' expression is always false" messageType="error" number="3319" resource="fundefsl.vdm.result"/>
 <message column="3" line="65" message="Too many curried parameters" messageType="error" number="3022" resource="fundefsl.vdm.result"/>
+<message column="6" line="67" message="Left hand of + is not numeric" messageType="error" number="3139" resource="fundefsl.vdm.result"/>
+<message column="6" line="67" message="Right hand of + is not numeric" messageType="error" number="3140" resource="fundefsl.vdm.result"/>
 <message column="5" line="73" message="Inappropriate type for argument 1" messageType="error" number="3061" resource="fundefsl.vdm.result"/>
 <message column="5" line="73" message="Type int cannot be applied" messageType="error" number="3054" resource="fundefsl.vdm.result"/>
 <message column="3" line="79" message="Precondition returns unexpected type" messageType="error" number="3018" resource="fundefsl.vdm.result"/>

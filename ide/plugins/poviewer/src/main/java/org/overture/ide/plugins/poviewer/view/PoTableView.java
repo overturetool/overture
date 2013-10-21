@@ -33,13 +33,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.pog.obligation.ProofObligation;
+import org.overture.pog.pub.IProofObligation;
 
 public class PoTableView extends ViewPart implements ISelectionListener
 {
-	private Text viewer;
-	final Display display = Display.getCurrent();
-	private Font font = null;
+	protected Text viewer;
+	protected final Display display = Display.getCurrent();
+	protected Font font = null;
 
 	/**
 	 * The constructor.
@@ -74,7 +74,7 @@ public class PoTableView extends ViewPart implements ISelectionListener
 	}
 
 	public void setDataList(final IVdmProject project,
-			final ProofObligation data)
+			final IProofObligation data)
 	{
 		display.asyncExec(new Runnable()
 		{

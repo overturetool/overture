@@ -1,0 +1,20 @@
+\begin{vdm_al}
+class MMIUpdateScreenAddress is subclass of BasicTask
+
+operations
+  public MMIUpdateScreenAddress: EventDispatcher ==> MMIUpdateScreenAddress
+  MMIUpdateScreenAddress (pde) == BasicTask("UpdateScreenAddress",pde);
+
+  public UpdateScreen: () ==> ()
+  UpdateScreen () == duration (500) skip;
+
+  -- we do not specify *what* the operation does
+  -- we only specify its execution time
+  protected handleEvent: Event ==> ()
+  handleEvent (pe) ==
+    ( UpdateScreen();
+	-- scenario finished. signal response back to the environment
+      raiseInterrupt("InsertAddress", pe.getEvent()) )
+
+end MMIUpdateScreenAddress
+\end{vdm_al}

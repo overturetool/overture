@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overture</groupId>
     <artifactId>root</artifactId>
-    <version>2.0.0-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -19,7 +19,7 @@
   <properties>
     <maven.test.skip>true</maven.test.skip>
     <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.16.0</tycho.version>
+    <tycho.version>0.18.1</tycho.version>
   </properties>
 
   <modules>
@@ -73,6 +73,16 @@
           <artifactId>tycho-p2-director-plugin</artifactId>
           <version>${tycho.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-packaging-plugin</artifactId>
+          <version>${tycho.version}</version>
+          <configuration>
+            <archive>
+              <addMavenDescriptor>false</addMavenDescriptor>
+            </archive>
+          </configuration>
+        </plugin>
 
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
@@ -124,10 +134,15 @@
   </build>
 
   <repositories>
+    <!-- <repository> -->
+    <!--   <id>eclipse-juno</id> -->
+    <!--   <layout>p2</layout> -->
+    <!--   <url>http://download.eclipse.org/releases/juno</url> -->
+    <!-- </repository> -->
     <repository>
-      <id>eclipse-juno</id>
+      <id>eclipse-kepler</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/juno</url>
+      <url>http://download.eclipse.org/releases/kepler</url>
     </repository>
   </repositories>
 

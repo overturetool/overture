@@ -74,7 +74,7 @@ public class AClassTypeAssistantTC {
 					}
 				}
 				question = new TypeCheckInfo(question.assistantFactory,self,question.scope,question.qualifiers);				
-				PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), root, rootVisitor, question);
+				af.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), root, rootVisitor, question);
 			}
 
 			return type;

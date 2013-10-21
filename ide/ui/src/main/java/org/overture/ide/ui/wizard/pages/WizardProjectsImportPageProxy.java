@@ -13,74 +13,77 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
 import org.overture.ide.ui.VdmUIPlugin;
 
 @SuppressWarnings("restriction")
-public class WizardProjectsImportPageProxy
-{
+public class WizardProjectsImportPageProxy {
 	String inputPath = "";
 	private IWizardPage mainPage = null;
 
-	public WizardProjectsImportPageProxy()
-	{
-		try
-		{
+	public WizardProjectsImportPageProxy() {
+		try {
 			@SuppressWarnings("rawtypes")
-			Class theClass = Class.forName("org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage");
+			Class theClass = Class
+					.forName("org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage");
 			mainPage = (IWizardPage) theClass.newInstance();
-		} catch (Exception e)
-		{
-			 VdmUIPlugin.logErrorMessage("Failed to create instance: org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage");
+		} catch (Exception e) {
+			VdmUIPlugin
+					.log("Failed to create instance: org.eclipse.ui.internal.wizards.datatransfer.WizardProjectsImportPage",
+							e);
 		}
 	}
 
-	public IWizardPage getPage()
-	{
+	public IWizardPage getPage() {
 		return this.mainPage;
 	}
 
-	public void performCancel()
-	{
-		try
-		{
+	public void performCancel() {
+		try {
 			invokeMainPageMethod("performCancel");
-		} catch (NoSuchMethodException | SecurityException
-				| IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e)
-		{
-			VdmUIPlugin.logErrorMessage("Failed to invoke performCancel on WizardProjectsImportPage");
+		} catch (NoSuchMethodException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (SecurityException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (IllegalAccessException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (IllegalArgumentException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
+		} catch (InvocationTargetException e) {
+			VdmUIPlugin.log("Failed to invoke performCancel on WizardProjectsImportPage", e);
 		}
 	}
-	
-	public void performFinish()
-	{
+
+	public void performFinish() {
 		this.createProjects();
 	}
 
-	public void createProjects()
-	{
-		try
-		{
+	public void createProjects() {
+		try {
 			invokeMainPageMethod("createProjects");
-		} catch (NoSuchMethodException | SecurityException
-				| IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e)
-		{
-			VdmUIPlugin.logErrorMessage("Failed to invoke createProjects on WizardProjectsImportPage");
+		} catch (NoSuchMethodException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (SecurityException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (IllegalAccessException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (IllegalArgumentException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
+		} catch (InvocationTargetException e) {
+			VdmUIPlugin.log("Failed to invoke createProjects on WizardProjectsImportPage", e);
 		}
 	}
 
 	/**
-	 * This initializes the page with the graphical selection and sets the input path. The input path must be set prior
-	 * to the call to this method
+	 * This initializes the page with the graphical selection and sets the input
+	 * path. The input path must be set prior to the call to this method
 	 */
-	public void createPageControlsPostconfig()
-	{
-		try
-		{
+	public void createPageControlsPostconfig() {
+		try {
 			getMainPageButton("projectFromArchiveRadio").setSelection(true);
 			getMainPageButton("projectFromArchiveRadio").setEnabled(false);
 			getMainPageButton("projectFromDirectoryRadio").setSelection(false);
@@ -91,40 +94,48 @@ public class WizardProjectsImportPageProxy
 
 			invokeMainPageMethod("archiveRadioSelected");
 
-			getMainPageText("archivePathField").setText(this.inputPath);
-			getMainPageText("archivePathField").setEnabled(false);
-		} catch (Exception e)
-		{
-			VdmUIPlugin.logErrorMessage("Failed to configure throug reflection WizardProjectsImportPage");
+			Control pathfield = getMainPageField("archivePathField");
+			if (pathfield instanceof Text) {
+				((Text) pathfield).setText(this.inputPath);
+			} else if (pathfield instanceof Combo) {
+				((Combo) pathfield).setText(this.inputPath);
+			}
+
+			pathfield.setEnabled(false);
+		} catch (Exception e) {
+			VdmUIPlugin
+					.log("Failed to configure throug reflection WizardProjectsImportPage",
+							e);
 		}
 	}
 
 	public void setBundleRelativeInputPath(String bundleId, String relativePath)
-			throws IOException
-	{
+			throws IOException {
 		URL examplesUrl = getResource(bundleId, relativePath);
 		this.inputPath = FileLocator.resolve(examplesUrl).getPath();
+		try
+		{
+			invokeMainPageMethod("updateProjectsList",this.inputPath);
+		} catch (Exception e)
+		{
+			VdmUIPlugin.log("Failed to update project list from path",	e);
+		}
 	}
 
-	public static URL getResource(String pluginId, String path)
-	{
+	public static URL getResource(String pluginId, String path) {
 		// if the bundle is not ready then there is no image
 		Bundle bundle = Platform.getBundle(pluginId);
-		if (!BundleUtility.isReady(bundle))
-		{
+		if (!BundleUtility.isReady(bundle)) {
 			return null;
 		}
 
 		// look for the image (this will check both the plugin and fragment
 		// folders
 		URL fullPathString = BundleUtility.find(bundle, path);
-		if (fullPathString == null)
-		{
-			try
-			{
+		if (fullPathString == null) {
+			try {
 				fullPathString = new URL(path);
-			} catch (MalformedURLException e)
-			{
+			} catch (MalformedURLException e) {
 				return null;
 			}
 		}
@@ -135,40 +146,48 @@ public class WizardProjectsImportPageProxy
 
 	// utils
 	private Button getMainPageButton(String field) throws NoSuchFieldException,
-			SecurityException, IllegalArgumentException, IllegalAccessException
-	{
+			SecurityException, IllegalArgumentException, IllegalAccessException {
 		Field f = mainPage.getClass().getDeclaredField(field);
 		f.setAccessible(true);
 		return (Button) f.get(mainPage);
 	}
 
-	private Text getMainPageText(String field) throws NoSuchFieldException,
-			SecurityException, IllegalArgumentException, IllegalAccessException
-	{
+	private Control getMainPageField(String field) throws NoSuchFieldException,
+			SecurityException, IllegalArgumentException, IllegalAccessException {
 		Field f = mainPage.getClass().getDeclaredField(field);
 		f.setAccessible(true);
-		return (Text) f.get(mainPage);
+		return (Control) f.get(mainPage);
 	}
 
 	private Object invokeMainPageMethod(String method, Object... args)
 			throws NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException
-	{
+			InvocationTargetException {
 		Method m = null;
 
-		if (args.length == 0)
-		{
+		if (args.length == 0) {
 			m = mainPage.getClass().getDeclaredMethod(method);
 			args = null;
-		} else
-		{
+		} else {
 			List<Class<?>> parameterTypes = new Vector<Class<?>>();
-			for (Object object : args)
-			{
+			for (Object object : args) {
+				if(object instanceof Boolean)
+				{
+					parameterTypes.add(boolean.class);
+				}else{
 				parameterTypes.add(object.getClass());
+				}
 			}
-			m = mainPage.getClass().getDeclaredMethod(method, parameterTypes.toArray(new Class<?>[] {}));
+			try{
+				m = mainPage.getClass().getMethod(method,
+						parameterTypes.toArray(new Class<?>[] {}));
+			}catch(NoSuchMethodException e)
+			{;}
+			if(m==null)
+			{
+			m = mainPage.getClass().getDeclaredMethod(method,
+					parameterTypes.toArray(new Class<?>[] {}));
+			}
 		}
 		m.setAccessible(true);
 		return m.invoke(mainPage, args);
@@ -177,8 +196,7 @@ public class WizardProjectsImportPageProxy
 	private Object invokeMainPageMethod(String method)
 			throws NoSuchMethodException, SecurityException,
 			IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException
-	{
+			InvocationTargetException {
 		return invokeMainPageMethod(method, new Object[] {});
 	}
 }

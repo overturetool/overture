@@ -24,13 +24,20 @@
 package org.overture.pog.obligation;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
+import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
@@ -44,8 +51,8 @@ public class POFunctionDefinitionContext extends POContext
 	public final boolean addPrecond;
 	public final PExp precondition;
 
-	public POFunctionDefinitionContext(
-		AExplicitFunctionDefinition definition, boolean precond)
+	public POFunctionDefinitionContext(AExplicitFunctionDefinition definition,
+			boolean precond)
 	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
@@ -54,8 +61,8 @@ public class POFunctionDefinitionContext extends POContext
 		this.precondition = definition.getPrecondition();
 	}
 
-	public POFunctionDefinitionContext(
-		AImplicitFunctionDefinition definition, boolean precond)
+	public POFunctionDefinitionContext(AImplicitFunctionDefinition definition,
+			boolean precond)
 	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
@@ -65,50 +72,98 @@ public class POFunctionDefinitionContext extends POContext
 	}
 
 	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		AForAllExp forAllExp = new AForAllExp();
+		forAllExp.setBindList(makeBinds());
+		
+		if (deftype.getParameters().isEmpty()){
+			return stitch;
+		}
+		
+		if (addPrecond && precondition != null)
+		{
+			
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
+			
+			forAllExp.setPredicate(implies);
+		}
+		else
+		{
+			forAllExp.setPredicate(stitch);
+		}
+
+		return forAllExp;
+	}
+
+	private List<PMultipleBind> makeBinds()
+	{
+		List<PMultipleBind> result = new LinkedList<PMultipleBind>();
+		AFunctionType ftype = deftype;
+
+		for (List<PPattern> params: paramPatternList)
+		{
+			Iterator<PType> types = ftype.getParameters().iterator();
+		
+			
+			for (PPattern param: params)
+			{
+				ATypeMultipleBind typeBind = new ATypeMultipleBind();
+				List<PPattern> one = new Vector<PPattern>();
+				one.add(param.clone());
+				typeBind.setPlist(one);
+				typeBind.setType(types.next().clone());
+				result.add(typeBind);
+			}
+		}
+	
+		return result;
+	}
+
+	@Override
 	public String getContext()
 	{
 		StringBuilder sb = new StringBuilder();
 
 		if (!deftype.getParameters().isEmpty())
 		{
-    		sb.append("forall ");
-    		String sep = "";
-    		AFunctionType ftype = deftype;
+			sb.append("forall ");
+			String sep = "";
+			AFunctionType ftype = deftype;
 
-    		for (List<PPattern> pl: paramPatternList)
-    		{
-    			Iterator<PType> types = ftype.getParameters().iterator();
+			for (List<PPattern> pl : paramPatternList)
+			{
+				Iterator<PType> types = ftype.getParameters().iterator();
 
-    			for (PPattern p: pl)
-    			{
-    				if (!(p instanceof AIgnorePattern))
-    				{
-    					sb.append(sep);
-    					sb.append(p.toString());
-    					sb.append(":");
-    					sb.append(types.next());
-    					sep = ", ";
-    				}
-    			}
+				for (PPattern p : pl)
+				{
+					if (!(p instanceof AIgnorePattern))
+					{
+						sb.append(sep);
+						sb.append(p.toString());
+						sb.append(":");
+						sb.append(types.next());
+						sep = ", ";
+					}
+				}
 
-    			if (ftype.getResult() instanceof AFunctionType)
-    			{
-    				ftype = (AFunctionType)ftype.getResult();
-    			}
-    			else
-    			{
-    				break;
-    			}
-    		}
+				if (ftype.getResult() instanceof AFunctionType)
+				{
+					ftype = (AFunctionType) ftype.getResult();
+				} else
+				{
+					break;
+				}
+			}
 
-    		sb.append(" &");
+			sb.append(" &");
 
-    		if (addPrecond && precondition != null)
-    		{
-    			sb.append(" ");
-    			sb.append(precondition);
-    			sb.append(" =>");
-    		}
+			if (addPrecond && precondition != null)
+			{
+				sb.append(" ");
+				sb.append(precondition);
+				sb.append(" =>");
+			}
 		}
 
 		return sb.toString();

@@ -23,171 +23,225 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.VDMToken;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
-import org.overture.ast.patterns.APatternTypePair;
-import org.overture.ast.util.Utils;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class SatisfiabilityObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8922392508326253099L;
-	private String separator = "";
+
+	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
+	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
+	private static final ILexNameToken NEW_STATE_ARG = new LexNameToken(null, "newstate", null);
+	private static final ILexNameToken NEW_SELF_ARG = new LexNameToken(null, "newself", null);
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
-			POContextStack ctxt)
+			IPOContextStack ctxt) throws AnalysisException
 	{
-		super(func.getLocation(), POType.FUNC_SATISFIABILITY, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation());
+
+		/**
+		 * f: A * B -> R [pre ...] post ... [pre_f(a, b) =>] exists r:R & post_f(a, b, r)
+		 */
+
+		List<PExp> arglist = new Vector<PExp>();
+
+		for (APatternListTypePair pltp : func.getParamPatterns())
+		{
+			for (PPattern pattern : pltp.getPatterns())
+			{
+				arglist.add(patternToExp(pattern));
+			}
+		}
+
+		AApplyExp preApply = null;
 
 		if (func.getPredef() != null)
 		{
-			sb.append(func.getPredef().getName().getName());
-			sb.append("(");
-			separator = "";
-			appendParamPatterns(sb, func.getParamPatterns());
-			sb.append(")");
-			sb.append(" => ");
+			preApply = getApplyExp(getVarExp(func.getPredef().getName()), arglist);
 		}
 
-		sb.append("exists ");
-		sb.append(func.getResult());
-		sb.append(" & ");
-		sb.append(func.getPostdef().getName().getName());
-		sb.append("(");
-		separator = "";
-		appendParamPatterns(sb, func.getParamPatterns());
-		sb.append(separator);
-		sb.append(func.getResult().getPattern());
-		sb.append(")");
+		AExistsExp existsExp = new AExistsExp();
+		List<PExp> postArglist = new Vector<PExp>(arglist);
 
-		value = ctxt.getObligation(sb.toString());
+		if (func.getResult().getPattern() instanceof AIdentifierPattern)
+		{
+			AIdentifierPattern ip = (AIdentifierPattern) func.getResult().getPattern().clone();
+			postArglist.add(patternToExp(func.getResult().getPattern()));
+			existsExp.setBindList(getMultipleTypeBindList(func.getResult().getType().clone(), ip.getName()));
+		} else
+		{
+			throw new RuntimeException("Expecting identifier pattern in function result");
+		}
+
+		AApplyExp postApply = getApplyExp(getVarExp(func.getPostdef().getName()), postArglist);
+		existsExp.setPredicate(postApply);
+
+		if (preApply != null)
+		{
+			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+			implies.setLeft(preApply);
+			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
+			implies.setRight(existsExp);
+			valuetree.setPredicate(ctxt.getPredWithContext(implies));
+		} else
+		{
+			valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
+		}
+
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public SatisfiabilityObligation(AImplicitOperationDefinition op,
-			PDefinition stateDefinition, POContextStack ctxt)
+			PDefinition stateDefinition, IPOContextStack ctxt)
+			throws AnalysisException
 	{
-		super(op.getLocation(), POType.OP_SATISFIABILITY, ctxt);
-		StringBuilder sb = new StringBuilder();
+		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation());
+
+		/**
+		 * op: A * B ==> R [pre ...] post ... [pre_op(a, b, state) =>] exists r:R, state:Sigma & post_op(a, b, r,
+		 * state~, state) The state argument is either a Sigma(SL) or self(PP).
+		 */
+
+		PExp predExp = buildPredicate(op, stateDefinition);
+
+		valuetree.setPredicate(ctxt.getPredWithContext(predExp));
+
+	}
+
+	PExp buildPredicate(AImplicitOperationDefinition op,
+			PDefinition stateDefinition) throws AnalysisException
+	{
+		List<PExp> arglist = new Vector<PExp>();
+
+		for (APatternListTypePair pltp : op.getParameterPatterns())
+		{
+			for (PPattern pattern : pltp.getPatterns())
+			{
+				arglist.add(patternToExp(pattern));
+			}
+		}
+
+		stateInPre(arglist, stateDefinition);
+
+		AApplyExp preApply = null;
 
 		if (op.getPredef() != null)
 		{
-			sb.append(op.getPredef().getName().getName());
-			sb.append("(");
-			separator = "";
-			appendParamPatterns(sb, op.getParameterPatterns());
-			appendStatePatterns(sb, stateDefinition, true, false);
-			sb.append(")");
-			sb.append(" =>\n");
+			preApply = getApplyExp(getVarExp(op.getPredef().getName()), arglist);
 		}
 
+		PExp mainExp;
+
+		// Operation Has a Result. Add it in the post condition.
 		if (op.getResult() != null)
 		{
-			sb.append("exists ");
-			separator = "";
-			appendResult(sb, op.getResult());
-			appendStatePatterns(sb, stateDefinition, false, true);
-			sb.append(" & ");
-		}
 
-		sb.append(op.getPostdef().getName().getName());
-		sb.append("(");
-		separator = "";
-		appendParamPatterns(sb, op.getParameterPatterns());
-		appendResultPattern(sb, op.getResult());
-		appendStatePatterns(sb, stateDefinition, true, false);
-		appendStatePatterns(sb, stateDefinition, false, false);
-		sb.append(")");
+			AExistsExp existsExp = new AExistsExp();
+			List<PExp> postArglist = new Vector<PExp>(arglist);
 
-		value = ctxt.getObligation(sb.toString());
-	}
-
-	private void appendResult(StringBuilder sb, APatternTypePair ptp)
-	{
-		if (ptp != null)
-		{
-			sb.append(separator);
-			sb.append(ptp);
-			separator = ", ";
-		}
-	}
-
-	private void appendResultPattern(StringBuilder sb, APatternTypePair ptp)
-	{
-		if (ptp != null)
-		{
-			sb.append(separator);
-			sb.append(ptp.getPattern());
-			separator = ", ";
-		}
-	}
-
-	private void appendStatePatterns(StringBuilder sb, PDefinition state,
-			boolean old, boolean typed)
-	{
-		if (state == null)
-		{
-			return;
-		} else if (state instanceof AStateDefinition)
-		{
-			if (old)
+			if (op.getResult().getPattern() instanceof AIdentifierPattern)
 			{
-				sb.append(separator);
-				sb.append("oldstate");
+				AIdentifierPattern ip = (AIdentifierPattern) op.getResult().getPattern();
+				postArglist.add(patternToExp(op.getResult().getPattern().clone()));
+
+				if (stateDefinition instanceof AStateDefinition)
+				{
+					postArglist.add(getVarExp(OLD_STATE_ARG));
+					postArglist.add(getVarExp(NEW_STATE_ARG));
+				} else
+				{
+					postArglist.add(getVarExp(OLD_SELF_ARG));
+					postArglist.add(getVarExp(NEW_SELF_ARG));
+				}
+
+				existsExp.setBindList(getMultipleTypeBindList(op.getResult().getType().clone(), ip.getName().clone()));
 			} else
 			{
-				sb.append(separator);
-				sb.append("newstate");
+				throw new RuntimeException("Expecting single identifier pattern in operation result");
 			}
 
-			if (typed)
-			{
-				AStateDefinition def = (AStateDefinition) state;
-				sb.append(":");
-				sb.append(def.getName().getName());
-			}
+			AApplyExp postApply = getApplyExp(getVarExp(op.getPostdef().getName()), postArglist);
+			existsExp.setPredicate(postApply);
+			mainExp = existsExp;
+		}
+
+		// No Result. Just add new state to post condition
+		else
+		{
+
+			AExistsExp exists_exp = new AExistsExp();
+			List<PExp> postArglist = new Vector<PExp>(arglist);
+
+			List<PMultipleBind> exists_binds = new LinkedList<PMultipleBind>();
+			stateInPost(exists_binds, postArglist, stateDefinition);
+
+			exists_exp.setBindList(exists_binds);
+			exists_exp.setPredicate(getApplyExp(getVarExp(op.getPostdef().getName()), new Vector<PExp>(postArglist)));
+			mainExp = exists_exp;
+		}
+
+		if (preApply != null)
+		{
+			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
+			implies.setLeft(preApply);
+			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
+			implies.setRight(mainExp);
+			return implies;
 		} else
 		{
-			if (old)
-			{
-				sb.append(separator);
-				sb.append("oldself");
-			} else
-			{
-				sb.append(separator);
-				sb.append("newself");
-			}
-
-			if (typed)
-			{
-				SClassDefinition def = (SClassDefinition) state;
-				sb.append(":");
-				sb.append(def.getName().getName());
-			}
+			return mainExp;
 		}
-
-		separator = ", ";
 	}
 
-	private void appendParamPatterns(StringBuilder sb,
-			List<APatternListTypePair> params)
+	protected void stateInPre(List<PExp> args, PDefinition stateDefinition)
 	{
-		for (APatternListTypePair pltp : params)
+
+		if (stateDefinition instanceof AStateDefinition)
 		{
-			List<PExp> expList = PPatternListAssistantTC.getMatchingExpressionList(pltp.getPatterns());
-			sb.append(separator);
-			sb.append(Utils.listToString(expList));
-			separator = ", ";
+			args.add(getVarExp(OLD_STATE_ARG));
+		} else
+		{
+			args.add(getVarExp(OLD_SELF_ARG));
+		}
+
+	}
+
+	protected void stateInPost(List<PMultipleBind> exists_binds, List<PExp> postArglist,
+			PDefinition stateDefinition)
+	{
+
+		// replace with super call
+		if (stateDefinition instanceof AStateDefinition)
+		{
+			postArglist.add(getVarExp(NEW_STATE_ARG));
+			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_STATE_ARG);
+		} else
+		{
+			postArglist.add(getVarExp(NEW_SELF_ARG));
+			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_SELF_ARG);
 		}
 	}
+
 }

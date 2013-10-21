@@ -1,0 +1,11 @@
+class UseUniqueNumber
+
+instance variables
+sUN : ＵｎｉｑｕｅＮｕｍｂｅｒ :=  new ＵｎｉｑｕｅＮｕｍｂｅｒ()
+
+traces
+
+S1 : 
+	let n in set {1,...,4} in sUN.ｇｅｔＵｎｉｑＮｕｍＳｔｒ(n){100}
+
+end UseUniqueNumber

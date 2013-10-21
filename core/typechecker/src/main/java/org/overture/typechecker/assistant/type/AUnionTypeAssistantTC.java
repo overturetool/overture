@@ -34,7 +34,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
@@ -69,7 +69,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 				if (root != null)
 					root.setInfinite(false);
 
-				fixed.add(PTypeAssistantTC.typeResolve(t, root, rootVisitor, question));
+				fixed.add(af.createPTypeAssistant().typeResolve(t, root, rootVisitor, question));
 
 				if (root != null)
 					type.setInfinite(type.getInfinite() && root.getInfinite());
@@ -108,7 +108,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	}
 
 	
-	public static SSeqType getSeq(AUnionType type)
+	public SSeqType getSeq(AUnionType type)
 	{
 		if (!type.getSeqDone())
 		{
@@ -159,14 +159,14 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getSetType();
 	}
 
-	public static SMapType getMap(AUnionType type)
+	public SMapType getMap(AUnionType type)
 	{
 		ILexLocation location = type.getLocation();
 
 		if (!type.getMapDone())
 		{
 			type.setMapDone(true); // Mark early to avoid recursion.
-			type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
+			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location)));
 
 			PTypeSet from = new PTypeSet();
 			PTypeSet to = new PTypeSet();
@@ -175,8 +175,8 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			{
 				if (PTypeAssistantTC.isMap(t))
 				{
-					from.add(PTypeAssistantTC.getMap(t).getFrom());
-					to.add(PTypeAssistantTC.getMap(t).getTo());
+					from.add(af.createPTypeAssistant().getMap(t).getFrom());
+					to.add(af.createPTypeAssistant().getMap(t).getTo());
 				}
 			}
 
@@ -317,12 +317,12 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return types.contains(other);
 	}
 
-	public static boolean isFunction(AUnionType type)
-	{
-		return getFunction(type) != null;
-	}
+//	public static boolean isFunction(AUnionType type)
+//	{
+//		return getFunction(type) != null;
+//	}
 
-	public static AFunctionType getFunction(AUnionType type)
+	public  AFunctionType getFunction(AUnionType type)
 	{
 		if (!type.getFuncDone())
 		{
@@ -383,10 +383,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isOperation(AUnionType type)
 	{
-		return getOperation(type) != null;
+		return af.createAUnionTypeAssistant().getOperation(type) != null;
 	}
 
-	public static AOperationType getOperation(AUnionType type)
+	public AOperationType getOperation(AUnionType type)
 	{
 
 		if (!type.getOpDone())
@@ -446,9 +446,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return (AOperationType) type.getOpType();
 	}
 
-	public static boolean isSeq(AUnionType type)
+	public boolean isSeq(AUnionType type)
 	{
-		return getSeq(type) != null;
+		return af.createAUnionTypeAssistant().getSeq(type) != null;
 	}
 
 	
@@ -467,9 +467,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		
 	
 
-	public static boolean isMap(AUnionType type)
+	public boolean isMap(AUnionType type)
 	{
-		return getMap(type) != null;
+		return af.createAUnionTypeAssistant().getMap(type) != null;
 	}
 
 	public static boolean isSet(AUnionType type)
@@ -560,7 +560,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 						classname = ct.getClassdef().getName();
 					}
 
-					for (PDefinition f : SClassDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
+					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());

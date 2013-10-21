@@ -23,13 +23,16 @@ import java.util.Comparator;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
-public class VariableNameComparator implements Comparator<Object> {
+public class VariableNameComparator implements Comparator<Object>
+{
 
-	public int compare(Object o1, Object o2) {
+	public int compare(Object o1, Object o2)
+	{
 		int result = 0;
 		IVariable v1 = (IVariable) o1;
 		IVariable v2 = (IVariable) o2;
-		try {
+		try
+		{
 			String v1Str = (v1 != null) ? v1.getName() : ""; //$NON-NLS-1$
 			v1Str = v1Str.replaceAll("\\[", "").replaceAll("\\]", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			int v1Int = 0;
@@ -39,40 +42,53 @@ public class VariableNameComparator implements Comparator<Object> {
 			int v2Int = 0;
 			boolean v2IsInt;
 
-			try {
+			try
+			{
 				v1Int = Integer.parseInt(v1Str);
 				v1IsInt = true;
-			} catch (NumberFormatException nxcn) {
+			} catch (NumberFormatException nxcn)
+			{
 				v1IsInt = false;
 			}
 
-			try {
+			try
+			{
 				v2Int = Integer.parseInt(v2Str);
 				v2IsInt = true;
-			} catch (NumberFormatException nxcn) {
+			} catch (NumberFormatException nxcn)
+			{
 				v2IsInt = false;
 			}
 
-			if ((v1IsInt == true) && (v2IsInt == true)) {
-				if (v1Int > v2Int) {
+			if ((v1IsInt == true) && (v2IsInt == true))
+			{
+				if (v1Int > v2Int)
+				{
 					result = 1;
-				} else if (v1Int < v2Int) {
+				} else if (v1Int < v2Int)
+				{
 					result = -1;
-				} else {
+				} else
+				{
 					result = 0;
 				}
-			} else {
+			} else
+			{
 				result = v1Str.compareTo(v2Str);
 
-				if (result > 0) {
+				if (result > 0)
+				{
 					result = 1;
-				} else if (result < 0) {
+				} else if (result < 0)
+				{
 					result = -1;
-				} else {
+				} else
+				{
 					result = 0;
 				}
 			}
-		} catch (DebugException e) {
+		} catch (DebugException e)
+		{
 		}
 
 		return result;

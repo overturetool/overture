@@ -40,11 +40,11 @@ public class AFunctionTypeAssistantTC {
 			List<PType> fixed = new ArrayList<PType>();
 
 			for (PType type : ft.getParameters()) {
-				fixed.add(PTypeAssistantTC.typeResolve(type, root,rootVisitor,question));
+				fixed.add(af.createPTypeAssistant().typeResolve(type, root,rootVisitor,question));
 			}
 
 			ft.setParameters(fixed);
-			ft.setResult(PTypeAssistantTC.typeResolve(ft.getResult(), root, rootVisitor, question));
+			ft.setResult(af.createPTypeAssistant().typeResolve(ft.getResult(), root, rootVisitor, question));
 			return ft;
 		} catch (TypeCheckException e) {
 			unResolve(ft);

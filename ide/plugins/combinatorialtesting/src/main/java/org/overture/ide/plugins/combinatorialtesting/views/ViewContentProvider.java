@@ -37,27 +37,27 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ct.utils.TraceHelperNotInitializedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.ITreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.NotYetReadyTreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.ProjectTreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.TraceTreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.TreeParent;
-import org.overture.ct.utils.TraceHelperNotInitializedException;
 import org.xml.sax.SAXException;
 
 public class ViewContentProvider implements IStructuredContentProvider,
 		ITreeContentProvider
 {
 	private TreeParent invisibleRoot;
-//	Map<String, ITracesHelper> traceHelpers;
-//	Map<INode, IVdmProject> nodeToProject = new HashMap<INode, IVdmProject>();
+	// Map<String, ITracesHelper> traceHelpers;
+	// Map<INode, IVdmProject> nodeToProject = new HashMap<INode, IVdmProject>();
 	ViewPart viewer;
 	Map<INode, List<TraceTreeNode>> containerNodes = new HashMap<INode, List<TraceTreeNode>>();
 
-	public ViewContentProvider( ViewPart p)
+	public ViewContentProvider(ViewPart p)
 	{
-//		this.traceHelpers = trs;
+		// this.traceHelpers = trs;
 		viewer = p;
 	}
 
@@ -65,7 +65,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 	{
 
 	}
-	
+
 	public void resetCache(IVdmProject project)
 	{
 		Set<INode> containers = TraceAstUtility.getTraceContainers(project);
@@ -170,10 +170,10 @@ public class ViewContentProvider implements IStructuredContentProvider,
 				{
 					return true;
 				}
-				
+
 			}
 			return false;
-			
+
 		} else if (parent instanceof NotYetReadyTreeNode)
 		{
 			return false;
@@ -204,7 +204,7 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			try
 			{
 				node.apply(this);
-			}  catch (Throwable e)
+			} catch (Throwable e)
 			{
 			}
 
@@ -212,7 +212,8 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void defaultSClassDefinition(SClassDefinition node) throws AnalysisException
+		public void defaultSClassDefinition(SClassDefinition node)
+				throws AnalysisException
 		{
 			for (PDefinition def : node.getDefinitions())
 			{
@@ -225,7 +226,8 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void caseAModuleModules(AModuleModules node) throws AnalysisException
+		public void caseAModuleModules(AModuleModules node)
+				throws AnalysisException
 		{
 			for (PDefinition def : node.getDefs())
 			{
@@ -269,7 +271,8 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void defaultSClassDefinition(SClassDefinition node) throws AnalysisException
+		public void defaultSClassDefinition(SClassDefinition node)
+				throws AnalysisException
 		{
 			for (PDefinition def : node.getDefinitions())
 			{
@@ -282,7 +285,8 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		}
 
 		@Override
-		public void caseAModuleModules(AModuleModules node) throws AnalysisException
+		public void caseAModuleModules(AModuleModules node)
+				throws AnalysisException
 		{
 			for (PDefinition def : node.getDefs())
 			{
@@ -403,7 +407,8 @@ public class ViewContentProvider implements IStructuredContentProvider,
 				{
 					projectTreeNode = new ProjectTreeNode(project);
 					invisibleRoot.addChild(projectTreeNode);
-				}	
+					break;
+				}
 			}
 		}
 

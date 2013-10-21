@@ -24,25 +24,33 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMapRangeUnaryExp;
+import org.overture.ast.expressions.ASubsetBinaryExp;
+import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class MapComposeObligation extends ProofObligation
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3501039332724576068L;
 
-	public MapComposeObligation(ACompBinaryExp exp, POContextStack ctxt)
+	public MapComposeObligation(ACompBinaryExp exp, IPOContextStack ctxt)
 	{
-		super(exp.getLocation(), POType.MAP_COMPOSE, ctxt);
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("rng(");
-		sb.append(exp.getRight());
-		sb.append(") subset dom(");
-		sb.append(exp.getLeft());
-		sb.append(")");
-
-		value = ctxt.getObligation(sb.toString());
+		super(exp, POType.MAP_COMPOSE, ctxt, exp.getLocation());
+		
+		/**
+		 * The obligation for m1 comp m2 is:  rng m2 subset dom m1
+		 */
+		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
+		rng.setExp(exp.getLeft().clone());
+		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
+		dom.setExp(exp.getRight().clone());
+		
+		ASubsetBinaryExp subset = new ASubsetBinaryExp();
+		subset.setLeft(rng);
+		subset.setRight(dom);
+		
+//		valuetree.setContext(ctxt.getContextNodeList());
+		valuetree.setPredicate(ctxt.getPredWithContext(subset));
 	}
 }

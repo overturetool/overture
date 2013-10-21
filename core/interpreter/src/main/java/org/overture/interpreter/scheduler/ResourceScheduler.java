@@ -23,12 +23,15 @@
 
 package org.overture.interpreter.scheduler;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 public class ResourceScheduler implements Serializable
 {
@@ -124,6 +127,9 @@ public class ResourceScheduler implements Serializable
     			{
    					Console.err.println("DEADLOCK detected");
 					BasicSchedulableThread.signalAll(Signal.DEADLOCKED);
+					
+					RTLogger.dump(true);
+					NextGenRTLogger.dump();
 
 					while (main.isAlive() && Settings.usingDBGP)
 					{

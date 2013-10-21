@@ -24,19 +24,21 @@ public class PTraceDefinitionAssistantInterpreter extends
 
 	public static TraceNode expand(PTraceDefinition term, Context ctxt)
 	{
-		switch (term.kindPTraceDefinition())
+		if (term instanceof AInstanceTraceDefinition)
 		{
-			case AInstanceTraceDefinition.kindPTraceDefinition:
-				assert false : "this one is not in Nicks tree";
-				return null;
-			case ALetBeStBindingTraceDefinition.kindPTraceDefinition:
-				return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition) term, ctxt);
-			case ALetDefBindingTraceDefinition.kindPTraceDefinition:
-				return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition) term, ctxt);
-			case ARepeatTraceDefinition.kindPTraceDefinition:
-				return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term, ctxt);
-			default:
-				break;
+			assert false : "this one is not in Nicks tree";
+			return null;
+		} else if (term instanceof ALetBeStBindingTraceDefinition)
+		{
+			return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition) term, ctxt);
+		} else if (term instanceof ALetDefBindingTraceDefinition)
+		{
+			return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition) term, ctxt);
+		} else if (term instanceof ARepeatTraceDefinition)
+		{
+			return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term, ctxt);
+		} else
+		{
 		}
 
 		return null;

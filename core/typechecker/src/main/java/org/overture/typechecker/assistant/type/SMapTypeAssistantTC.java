@@ -39,8 +39,8 @@ public class SMapTypeAssistantTC {
 		{
 			if (!type.getEmpty())
 			{
-				type.setFrom(PTypeAssistantTC.typeResolve(type.getFrom(), root, rootVisitor, question));
-				type.setTo(PTypeAssistantTC.typeResolve(type.getTo(), root, rootVisitor, question));
+				type.setFrom(af.createPTypeAssistant().typeResolve(type.getFrom(), root, rootVisitor, question));
+				type.setTo(af.createPTypeAssistant().typeResolve(type.getTo(), root, rootVisitor, question));
 			}
 
 			return type;
@@ -64,9 +64,9 @@ public class SMapTypeAssistantTC {
 		return false;
 	}
 
-	public static boolean isMap(SMapType type) {		
-		return true;
-	}
+//	public static boolean isMap(SMapType type) {		
+//		return true;
+//	}
 	
 	public static SMapType getMap(SMapType type) {		
 		return type;

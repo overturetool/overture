@@ -12,49 +12,48 @@ import java.util.Vector;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.core.utility.ClasspathUtils;
+import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.util.Base64;
-import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 
 public class TestEngineDelegate
 {
 	static int sessionId = 0;
 
-	public Process launch(TraceExecutionSetup texe, IPreferenceStore preferences,
-			 File traceFolder, 
-			Integer port) throws CoreException, IOException
+	public Process launch(TraceExecutionSetup texe,
+			IPreferenceStore preferences, File traceFolder, Integer port)
+			throws CoreException, IOException
 	{
-		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences,  traceFolder, port));
+		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences, traceFolder, port));
 
-		IProject project = (IProject)texe.project.getAdapter(IProject.class);
+		IProject project = (IProject) texe.project.getAdapter(IProject.class);
 
 		pb.directory(project.getLocation().toFile());
 
 		if (useRemoteDebug(preferences))
 		{
 			return null;
-		} 
-			
+		}
+
 		Process process = pb.start();
-		
-		//Redirect streams from the trace runner to the streams of this process. If not the trace runner dies on stream write.
-		Utils.inheritOutput(process); //Instead of pb.inheritIO() which is Java7 specific;
-		
-		
+
+		// Redirect streams from the trace runner to the streams of this process. If not the trace runner dies on stream
+		// write.
+		Utils.inheritOutput(process); // Instead of pb.inheritIO() which is Java7 specific;
+
 		return process;
 	}
 
 	private List<String> initializeLaunch(TraceExecutionSetup texe,
-			IPreferenceStore preferences,
-			File traceFolder, Integer port)
+			IPreferenceStore preferences, File traceFolder, Integer port)
 			throws CoreException, UnsupportedEncodingException
 	{
 		List<String> commandList = null;
 		Integer debugSessionId = new Integer(getSessionId());
-		if (useRemoteDebug(preferences) )//|| ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))// || ITracesConstants.DEBUG)
 		{
 			debugSessionId = 1;
 			// debugComm.removeSession(debugSessionId.toString());
@@ -62,7 +61,7 @@ public class TestEngineDelegate
 
 		commandList = new ArrayList<String>();
 
-		IProject project = (IProject)texe.project.getAdapter(IProject.class);
+		IProject project = (IProject) texe.project.getAdapter(IProject.class);
 
 		String charSet = project.getDefaultCharset();
 
@@ -106,28 +105,29 @@ public class TestEngineDelegate
 		commandList.add("-tracefolder");
 		commandList.add(traceFolder.toURI().toASCIIString());
 
-		if (texe.coverageFolder!= null)
+		if (texe.coverageFolder != null)
 		{
 			commandList.add("-coverage");
 			commandList.add(texe.coverageFolder.toURI().toASCIIString());
 		}
-		
-		if(texe.customReduction)
+
+		if (texe.customReduction)
 		{
 			commandList.add("-traceReduction");
-			commandList.add("{"+texe.subset+","+texe.reductionType.name()+","+texe.seed+"}");
+			commandList.add("{" + texe.subset + "," + texe.reductionType.name()
+					+ "," + texe.seed + "}");
 		}
 		// commandList.addAll(getExtendedCommands(vdmProject, configuration));
 
 		commandList.addAll(getSpecFiles(texe.project));
-		if (useRemoteDebug(preferences))//|| ITracesConstants.DEBUG)
+		if (useRemoteDebug(preferences))// || ITracesConstants.DEBUG)
 		{
 			System.out.println("Debugger Arguments:\n"
 					+ getArgumentString(commandList));
 		}
 		commandList.add(0, "java");
 
-		commandList.addAll(1, getClassPath(project));
+		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
@@ -136,7 +136,7 @@ public class TestEngineDelegate
 			System.out.println("Full Debugger Arguments:\n"
 					+ getArgumentString(commandList));
 		}
-		
+
 		return commandList;
 	}
 
@@ -157,12 +157,12 @@ public class TestEngineDelegate
 	{
 		return preferences.getBoolean(ITracesConstants.REMOTE_DEBUG_PREFERENCE);
 	}
-	
-//	private boolean useDebugInfo(IPreferenceStore preferences)
-//			throws CoreException
-//	{
-//		return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
-//	}
+
+	// private boolean useDebugInfo(IPreferenceStore preferences)
+	// throws CoreException
+	// {
+	// return preferences.getBoolean(ITracesConstants.ENABLE_DEBUGGING_INFO_PREFERENCE);
+	// }
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException
 	{
@@ -185,87 +185,6 @@ public class TestEngineDelegate
 		}
 		return executeString.trim();
 
-	}
-
-	private List<String> getClassPath(IProject project) throws CoreException
-	{
-		List<String> commandList = new Vector<String>();
-
-		// get the bundled class path of the debugger
-		List<String> entries = ClasspathUtils.collectJars(ITracesConstants.PLUGIN_ID);
-
-		// get the class path for all jars in the project lib folder
-		File lib = new File(project.getLocation().toFile(), "lib");
-		if (lib.exists() && lib.isDirectory())
-		{
-			for (File f : getAllFiles(lib))
-			{
-				if (f.getName().toLowerCase().endsWith(".jar"))
-				{
-					entries.add(toPlatformPath(f.getAbsolutePath()));
-				}
-			}
-		}
-
-		if (entries.size() > 0)
-		{
-			commandList.add("-cp");
-			StringBuilder classPath = new StringBuilder();
-			for (String cp : entries)
-			{
-				if (cp.toLowerCase().replace("\"", "").trim().endsWith(".jar"))
-				{
-					classPath.append(toPlatformPath(cp));
-					classPath.append(getCpSeperator());
-				}
-			}
-			if (classPath.length()>0)
-				commandList.add(classPath.toString());
-			else
-				commandList.add(" ");
-		}
-		return commandList;
-	}
-
-	private static List<File> getAllFiles(File file)
-	{
-		List<File> files = new Vector<File>();
-		if (file.isDirectory())
-		{
-			for (File f : file.listFiles())
-			{
-				files.addAll(getAllFiles(f));
-			}
-
-		} else
-		{
-			files.add(file);
-		}
-		return files;
-	}
-
-	private String getCpSeperator()
-	{
-		if (isWindowsPlatform())
-			return ";";
-		else
-			return ":";
-	}
-
-	public static boolean isWindowsPlatform()
-	{
-		return System.getProperty("os.name").toLowerCase().contains("win");
-	}
-
-	protected static String toPlatformPath(String path)
-	{
-		if (isWindowsPlatform())
-		{
-			return "\"" + path + "\"";
-		} else
-		{
-			return path.replace(" ", "\\ ");
-		}
 	}
 
 	/**

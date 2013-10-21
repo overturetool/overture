@@ -43,10 +43,10 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overture.pog.assistant.PogAssistantFactory;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.visitors.PogVisitor;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.visitor.PogVisitor;
 
 public class PoGeneratorUtil
 {
@@ -230,7 +230,7 @@ public class PoGeneratorUtil
 						continue;
 					else
 					{
-						ProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor, new POContextStack(new PogAssistantFactory()));
+						IProofObligationList tmp = ((AModuleModules) definition).apply(pogVisitor, new POContextStack());
 						tmp.trivialCheck();
 						obligations.addAll(tmp);
 					}
@@ -246,7 +246,7 @@ public class PoGeneratorUtil
 						continue;
 					else
 					{
-						ProofObligationList tmp = pogVisitor.defaultPDefinition((SClassDefinition) definition, new POContextStack(new PogAssistantFactory()));
+						IProofObligationList tmp = pogVisitor.defaultPDefinition((SClassDefinition) definition, new POContextStack());
 						tmp.trivialCheck();
 						obligations.addAll(tmp);
 					}

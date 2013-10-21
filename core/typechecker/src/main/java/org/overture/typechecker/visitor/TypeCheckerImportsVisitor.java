@@ -22,10 +22,9 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class TypeCheckerImportsVisitor extends
-		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
+public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
+{
 
 	/**
 	 * 
@@ -34,39 +33,40 @@ public class TypeCheckerImportsVisitor extends
 	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerImportsVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor) {
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+	{
+		super(null);// FIXME
 		this.rootVisitor = typeCheckVisitor;
 	}
 
 	@Override
-	public PType caseAAllImport(AAllImport node, TypeCheckInfo question) {
+	public PType caseAAllImport(AAllImport node, TypeCheckInfo question)
+	{
 		return null; // Implicitly OK.
 	}
 
 	@Override
-	public PType caseATypeImport(ATypeImport node, TypeCheckInfo question) {
-		if (node.getDef() != null && node.getFrom() != null) {
+	public PType caseATypeImport(ATypeImport node, TypeCheckInfo question)
+	{
+		if (node.getDef() != null && node.getFrom() != null)
+		{
 			PDefinition def = node.getDef();
 			ILexNameToken name = node.getName();
 			AModuleModules from = node.getFrom();
-			def.setType((SInvariantType) PTypeAssistantTC.typeResolve(
-					question.assistantFactory.createPDefinitionAssistant().getType(def), null, rootVisitor,
-					question));
-			PDefinition expdef = PDefinitionListAssistantTC.findType(
-					from.getExportdefs(), name, null);
+			def.setType((SInvariantType) question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(def), null, rootVisitor, question));
+			PDefinition expdef = PDefinitionListAssistantTC.findType(from.getExportdefs(), name, null);
 
-			if (expdef != null) {
-				PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(),
-						null, rootVisitor, question);
+			if (expdef != null)
+			{
+				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, rootVisitor, question);
 
-				if (!TypeComparator.compatible(def.getType(), exptype)) {
+				if (!TypeComparator.compatible(def.getType(), exptype))
+				{
 					TypeCheckerErrors.report(3192, "Type import of " + name
-							+ " does not match export from " + from.getName(),
-							node.getLocation(), node);
-					TypeCheckerErrors.detail2("Import", def.getType()
-							.toString() // TODO: .toDetailedString()
-							, "Export", exptype.toString()); // TODO:
-																// .toDetailedString());
+							+ " does not match export from " + from.getName(), node.getLocation(), node);
+					TypeCheckerErrors.detail2("Import", def.getType().toString() // TODO: .toDetailedString()
+					, "Export", exptype.toString()); // TODO:
+														// .toDetailedString());
 				}
 			}
 		}
@@ -74,27 +74,26 @@ public class TypeCheckerImportsVisitor extends
 	}
 
 	@Override
-	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question) {
+	public PType defaultSValueImport(SValueImport node, TypeCheckInfo question)
+	{
 		PType type = node.getImportType();
 		AModuleModules from = node.getFrom();
 		ILexNameToken name = node.getName();
 
-		if (type != null && from != null) {
-			type = PTypeAssistantTC.typeResolve(type, null, rootVisitor,
-					question);
-			PDefinition expdef = PDefinitionListAssistantTC.findName(
-					from.getExportdefs(), name, NameScope.NAMES);
+		if (type != null && from != null)
+		{
+			type = question.assistantFactory.createPTypeAssistant().typeResolve(type, null, rootVisitor, question);
+			PDefinition expdef = PDefinitionListAssistantTC.findName(from.getExportdefs(), name, NameScope.NAMES);
 
-			if (expdef != null) {
-				PType exptype = PTypeAssistantTC.typeResolve(expdef.getType(),
-						null, rootVisitor, question);
+			if (expdef != null)
+			{
+				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, rootVisitor, question);
 
-				if (!TypeComparator.compatible(type, exptype)) {
-					TypeCheckerErrors.report(
-							3194,
-							"Type of value import " + name
-									+ " does not match export from "
-									+ from.getName(), node.getLocation(), node);
+				if (!TypeComparator.compatible(type, exptype))
+				{
+					TypeCheckerErrors.report(3194, "Type of value import "
+							+ name + " does not match export from "
+							+ from.getName(), node.getLocation(), node);
 					TypeCheckerErrors.detail2("Import", type.toString(), // TODO:
 																			// .toDetailedString(),
 							"Export", exptype.toString()); // TODO:
@@ -107,35 +106,36 @@ public class TypeCheckerImportsVisitor extends
 
 	@Override
 	public PType caseAFunctionValueImport(AFunctionValueImport node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question)
+	{
 		// TODO: This might need to be made in another way
-		if (node.getTypeParams().size() == 0) {
+		if (node.getTypeParams().size() == 0)
+		{
 			defaultSValueImport(node, question);
-		} else {
+		} else
+		{
 			List<PDefinition> defs = new Vector<PDefinition>();
 
-			for (ILexNameToken pname : node.getTypeParams()) {
+			for (ILexNameToken pname : node.getTypeParams())
+			{
 				ILexNameToken pnameClone = pname.clone();
-				PDefinition p = AstFactory.newALocalDefinition(pname.getLocation(),
-						pnameClone, NameScope.NAMES,
-						AstFactory.newAParameterType(pnameClone));
+				PDefinition p = AstFactory.newALocalDefinition(pname.getLocation(), pnameClone, NameScope.NAMES, AstFactory.newAParameterType(pnameClone));
 
 				PDefinitionAssistantTC.markUsed(p);
 				defs.add(p);
 			}
 
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory,defs,
-					question.env, NameScope.NAMES);
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, NameScope.NAMES);
 
-			defaultSValueImport(node, new TypeCheckInfo(question.assistantFactory,params, question.scope,
-					question.qualifiers));
+			defaultSValueImport(node, new TypeCheckInfo(question.assistantFactory, params, question.scope, question.qualifiers));
 		}
 		return null;
 	}
 
 	@Override
 	public PType caseAOperationValueImport(AOperationValueImport node,
-			TypeCheckInfo question) {
+			TypeCheckInfo question)
+	{
 		return defaultSValueImport(node, question);
 	}
 }

@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.commands;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -34,6 +35,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 
 
@@ -132,6 +134,7 @@ public class ClassCommandReader extends CommandReader
 			}
 
 			RTLogger.setLogfile(null);
+			NextGenRTLogger.getInstance().setLogfile(null);
 			println("RT events now logged to the console");
 			return true;
 		}

@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.type;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -59,121 +60,115 @@ public class PTypeAssistantTC extends PTypeAssistant
 		super(af);
 		this.af = af;
 	}
+
 	public static boolean hasSupertype(AClassType cto, PType other)
 	{
 		return PDefinitionAssistantTC.hasSupertype(cto.getClassdef(), other);
 	}
 
-	public static boolean isType(PType b, Class<? extends PType> typeclass)
+	public static boolean isType(PType type, Class<? extends PType> typeclass)
 	{
-		switch (b.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isType((ABracketType) b, typeclass);
-			case SInvariantType.kindPType:
-				if (b instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) b, typeclass);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isType((AOptionalType) b, typeclass);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isType((AParameterType) b, typeclass);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isType((AUnionType) b, typeclass);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isType((AUnknownType) b, typeclass);
-			default:
-				break;
+			return ABracketTypeAssistantTC.isType((ABracketType) type, typeclass);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) type, typeclass);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isType((AOptionalType) type, typeclass);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isType((AUnionType) type, typeclass);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.isType((AUnknownType) type, typeclass);
 		}
-		return typeclass.isInstance(b);
+		return typeclass.isInstance(type);
 
 	}
 
 	public static PType polymorph(PType type, ILexNameToken pname,
 			PType actualType)
 	{
-		switch (type.kindPType())
+		if (type instanceof AParameterType)
 		{
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.polymorph((AParameterType) type, pname, actualType);
-
-			case AFunctionType.kindPType:
-				return AFunctionTypeAssistantTC.polymorph((AFunctionType) type, pname, actualType);
-
-			case SMapType.kindPType:
-				return SMapTypeAssistantTC.polymorph((SMapType)type,pname,actualType);
-
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.polymorph((AOptionalType)type,pname,actualType);
-				
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.polymorph((AProductType) type,pname,actualType);
-				
-			case SSeqType.kindPType:
-				return SSeqTypeAssistantTC.polymorph((SSeqType) type,pname,actualType);
-
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.polymorph((ASetType) type,pname,actualType);
-			
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.polymorph((AUnionType)type,pname,actualType);				
-			default:
-				return type;
+			return AParameterTypeAssistantTC.polymorph((AParameterType) type, pname, actualType);
+		} else if (type instanceof AFunctionType)
+		{
+			return AFunctionTypeAssistantTC.polymorph((AFunctionType) type, pname, actualType);
+		} else if (type instanceof SMapType)
+		{
+			return SMapTypeAssistantTC.polymorph((SMapType) type, pname, actualType);
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.polymorph((AOptionalType) type, pname, actualType);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.polymorph((AProductType) type, pname, actualType);
+		} else if (type instanceof SSeqType)
+		{
+			return SSeqTypeAssistantTC.polymorph((SSeqType) type, pname, actualType);
+		} else if (type instanceof ASetType)
+		{
+			return ASetTypeAssistantTC.polymorph((ASetType) type, pname, actualType);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.polymorph((AUnionType) type, pname, actualType);
+		} else
+		{
+			return type;
 		}
 
 	}
 
 	public static boolean isUnknown(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof AUnionType)
 		{
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isUnknown((AUnionType)type);
-			case AParameterType.kindPType:
-			case AUnknownType.kindPType:
-				return true;
+			return AUnionTypeAssistantTC.isUnknown((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean isUnion(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isUnion((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isUnion((ANamedInvariantType) type);
-				}
-				break;
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isUnion((AUnionType) type);
-			default:
-				break;
+			return ABracketTypeAssistantTC.isUnion((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isUnion((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isUnion((AUnionType) type);
 		}
 		return false;
 	}
 
 	public static AUnionType getUnion(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getUnion((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getUnion((ANamedInvariantType) type);
-				}
-				break;
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getUnion((AUnionType) type);
-			default:
-				break;
+			return ABracketTypeAssistantTC.getUnion((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getUnion((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getUnion((AUnionType) type);
 		}
 		assert false : " cannot getUnion from non-union";
 		return null;
@@ -181,404 +176,278 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isFunction(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isFunction((ABracketType) type);
-			case AFunctionType.kindPType:
-				return true;
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isFunction((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isFunction((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isFunction((AFunctionType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isFunction((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isFunction((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getPTypeFunctionChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
 	}
 
 	public static AFunctionType getFunction(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getFunction((ABracketType) type);
-			case AFunctionType.kindPType:
-				return (AFunctionType) type;
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getFunction((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getFunction((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
-			default:
-				break;
+			return ABracketTypeAssistantTC.getFunction((ABracketType) type);
+		} else if (type instanceof AFunctionType)
+		{
+			return (AFunctionType) type;
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getFunction((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return af.createAUnionTypeAssistant().getFunction((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
 		}
 		assert false : "Can't getFunction of a non-function";
 		return null;
 	}
 
-	public static PType typeResolve(PType type, ATypeDefinition root,
+	public  PType typeResolve(PType type, ATypeDefinition root,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
 
 		PType result = null;
 
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				result = ABracketTypeAssistantTC.typeResolve((ABracketType) type, root, rootVisitor, question);
-
-				break;
-			case AClassType.kindPType:
-				result = AClassTypeAssistantTC.typeResolve((AClassType) type, root, rootVisitor, question);
-				break;
-			case AFunctionType.kindPType:
-				result = AFunctionTypeAssistantTC.typeResolve((AFunctionType) type, root, rootVisitor, question);
-				break;
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					result = ANamedInvariantTypeAssistantTC.typeResolve((ANamedInvariantType) type, root, rootVisitor, question);
-				} else if (type instanceof ARecordInvariantType)
-				{
-					result = ARecordInvariantTypeAssistantTC.typeResolve((ARecordInvariantType) type, root, rootVisitor, question);
-				}
-				break;
-			case SMapType.kindPType:
-				result = SMapTypeAssistantTC.typeResolve((SMapType) type, root, rootVisitor, question);
-				break;
-			case AOperationType.kindPType:
-				result = AOperationTypeAssistantTC.typeResolve((AOperationType) type, root, rootVisitor, question);
-				break;
-			case AOptionalType.kindPType:
-				result = AOptionalTypeAssistantTC.typeResolve((AOptionalType) type, root, rootVisitor, question);
-				break;
-			case AParameterType.kindPType:
-				result = AParameterTypeAssistantTC.typeResolve((AParameterType) type, root, rootVisitor, question);
-
-				break;
-			case AProductType.kindPType:
-				result = AProductTypeAssistantTC.typeResolve((AProductType) type, root, rootVisitor, question);
-				break;
-
-			case SSeqType.kindPType:
-				result = SSeqTypeAssistantTC.typeResolve((SSeqType) type, root, rootVisitor, question);
-				break;
-			case ASetType.kindPType:
-				result = ASetTypeAssistantTC.typeResolve((ASetType) type, root, rootVisitor, question);
-				break;
-			case AUnionType.kindPType:
-				result = AUnionTypeAssistantTC.typeResolve((AUnionType) type, root, rootVisitor, question);
-				break;
-			case AUnresolvedType.kindPType:
-				result = AUnresolvedTypeAssistantTC.typeResolve((AUnresolvedType) type, root, rootVisitor, question);
-				break;
-			default:
-				type.setResolved(true);
-				result = type;
-				break;
+			result = ABracketTypeAssistantTC.typeResolve((ABracketType) type, root, rootVisitor, question);
+		} else if (type instanceof AClassType)
+		{
+			result = AClassTypeAssistantTC.typeResolve((AClassType) type, root, rootVisitor, question);
+		} else if (type instanceof AFunctionType)
+		{
+			result = AFunctionTypeAssistantTC.typeResolve((AFunctionType) type, root, rootVisitor, question);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				result = ANamedInvariantTypeAssistantTC.typeResolve((ANamedInvariantType) type, root, rootVisitor, question);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				result = ARecordInvariantTypeAssistantTC.typeResolve((ARecordInvariantType) type, root, rootVisitor, question);
+			}
+		} else if (type instanceof SMapType)
+		{
+			result = SMapTypeAssistantTC.typeResolve((SMapType) type, root, rootVisitor, question);
+		} else if (type instanceof AOperationType)
+		{
+			result = AOperationTypeAssistantTC.typeResolve((AOperationType) type, root, rootVisitor, question);
+		} else if (type instanceof AOptionalType)
+		{
+			result = AOptionalTypeAssistantTC.typeResolve((AOptionalType) type, root, rootVisitor, question);
+		} else if (type instanceof AParameterType)
+		{
+			result = AParameterTypeAssistantTC.typeResolve((AParameterType) type, root, rootVisitor, question);
+		} else if (type instanceof AProductType)
+		{
+			result = AProductTypeAssistantTC.typeResolve((AProductType) type, root, rootVisitor, question);
+		} else if (type instanceof SSeqType)
+		{
+			result = SSeqTypeAssistantTC.typeResolve((SSeqType) type, root, rootVisitor, question);
+		} else if (type instanceof ASetType)
+		{
+			result = ASetTypeAssistantTC.typeResolve((ASetType) type, root, rootVisitor, question);
+		} else if (type instanceof AUnionType)
+		{
+			result = AUnionTypeAssistantTC.typeResolve((AUnionType) type, root, rootVisitor, question);
+		} else if (type instanceof AUnresolvedType)
+		{
+			result = AUnresolvedTypeAssistantTC.typeResolve((AUnresolvedType) type, root, rootVisitor, question);
+		} else
+		{
+			type.setResolved(true);
+			result = type;
 		}
 		return result;
 	}
 
 	public static void unResolve(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				ABracketTypeAssistantTC.unResolve((ABracketType) type);
-				break;
-			case AClassType.kindPType:
-				AClassTypeAssistantTC.unResolve((AClassType) type);
-				break;
-			case AFunctionType.kindPType:
-				AFunctionTypeAssistantTC.unResolve((AFunctionType) type);
-				break;
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					ANamedInvariantTypeAssistantTC.unResolve((ANamedInvariantType) type);
-				} else if (type instanceof ARecordInvariantType)
-				{
-					ARecordInvariantTypeAssistantTC.unResolve((ARecordInvariantType) type);
-				}
-				break;
-			case SMapType.kindPType:
-				SMapTypeAssistantTC.unResolve((SMapType) type);
-				break;
-			case AOperationType.kindPType:
-				if (type instanceof AOperationType)
-				{
-					AOperationTypeAssistantTC.unResolve((AOperationType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				AOptionalTypeAssistantTC.unResolve((AOptionalType) type);
-				break;
-			case AProductType.kindPType:
-				AProductTypeAssistantTC.unResolve((AProductType) type);
-				break;
-			case SSeqType.kindPType:
-				SSeqTypeAssistantTC.unResolve((SSeqType) type);
-				break;
-			case ASetType.kindPType:
-				ASetTypeAssistantTC.unResolve((ASetType) type);
-				break;
-			case AUnionType.kindPType:
-				AUnionTypeAssistantTC.unResolve((AUnionType) type);
-				break;
-			default:
-				type.setResolved(false);
-				break;
+			ABracketTypeAssistantTC.unResolve((ABracketType) type);
+		} else if (type instanceof AClassType)
+		{
+			AClassTypeAssistantTC.unResolve((AClassType) type);
+		} else if (type instanceof AFunctionType)
+		{
+			AFunctionTypeAssistantTC.unResolve((AFunctionType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				ANamedInvariantTypeAssistantTC.unResolve((ANamedInvariantType) type);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				ARecordInvariantTypeAssistantTC.unResolve((ARecordInvariantType) type);
+			}
+		} else if (type instanceof SMapType)
+		{
+			SMapTypeAssistantTC.unResolve((SMapType) type);
+		} else if (type instanceof AOperationType)
+		{
+			if (type instanceof AOperationType)
+			{
+				AOperationTypeAssistantTC.unResolve((AOperationType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			AOptionalTypeAssistantTC.unResolve((AOptionalType) type);
+		} else if (type instanceof AProductType)
+		{
+			AProductTypeAssistantTC.unResolve((AProductType) type);
+		} else if (type instanceof SSeqType)
+		{
+			SSeqTypeAssistantTC.unResolve((SSeqType) type);
+		} else if (type instanceof ASetType)
+		{
+			ASetTypeAssistantTC.unResolve((ASetType) type);
+		} else if (type instanceof AUnionType)
+		{
+			AUnionTypeAssistantTC.unResolve((AUnionType) type);
+		} else
+		{
+			type.setResolved(false);
 		}
 
 	}
 
 	public static boolean isOperation(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isOperation((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isOperation((ANamedInvariantType) type);
-				}
-				break;
-			case AOperationType.kindPType:
-				return true;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isOperation((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isOperation((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isOperation((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isOperation((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getOperationBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
 	}
 
 	public static AOperationType getOperation(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getOperation((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getOperation((ANamedInvariantType) type);
-				}
-				break;
-			case AOperationType.kindPType:
-				return (AOperationType) type;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getOperation((AOptionalType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getOperation((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getOperation((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getOperationTypeFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
-		assert false : "Can't getOperation of a non-operation";
-		return null;
 
 	}
 
 	public static boolean isSeq(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case SSeqType.kindPType:
-				return true;
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isSeq((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isSeq((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isSeq((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isSeq((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isSeq((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isSeq((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getSeqBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
 	}
 
 	public static SSeqType getSeq(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case SSeqType.kindPType:
-				return (SSeqType) type;
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getSeq((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getSeq((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getSeq((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getSeq((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getSeq((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getSeq((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getSeqTypeFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
-		assert false : "cannot getSeq from non-seq";
-		return null;
-
 	}
-
-	
-
-	
 
 	public static boolean isMap(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case SMapType.kindPType:
-				return SMapTypeAssistantTC.isMap((SMapType) type);
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isMap((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isMap((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isMap((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isMap((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isMap((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getMapBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
 	}
 
 	public static SMapType getMap(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case SMapType.kindPType:
-				return SMapTypeAssistantTC.getMap((SMapType) type);
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getMap(((ABracketType) type));
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getMap((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getMap((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getMap((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getMap((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getMap((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getMapTypeFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
-		assert false : "Can't getMap of a non-map";
-		return null;
 	}
 
 	public static boolean isSet(PType type)
 	{
-		switch (type.kindPType())
+		try
 		{
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.isSet((ASetType) type);
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isSet((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isSet((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isSet((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isSet((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isSet((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isSet((AUnknownType) type);
-			default:
-				break;
+			return type.apply(af.getSetBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
+//		if (type instanceof ASetType)
+//		{
+//			return ASetTypeAssistantTC.isSet((ASetType) type);
+//		} else if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isSet((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isSet((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isSet((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isSet((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.isSet((AUnknownType) type);
+//		}
+//		return false;
 	}
 
 	public static ASetType getSet(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ASetType)
 		{
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.getSet((ASetType) type);
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getSet((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getSet((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getSet((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getSet((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getSet((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getSet((AUnknownType) type);
-			default:
-				break;
+			return ASetTypeAssistantTC.getSet((ASetType) type);
+		} else if (type instanceof ABracketType)
+		{
+			return ABracketTypeAssistantTC.getSet((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getSet((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getSet((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getSet((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getSet((AUnknownType) type);
 		}
 		assert false : "Can't getSet of a non-set";
 		return null;
@@ -586,58 +455,52 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isRecord(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isRecord((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isRecord((ANamedInvariantType) type);
-				} else if (type instanceof ARecordInvariantType)
-				{
-					return ARecordInvariantTypeAssistantTC.isRecord((ARecordInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isRecord((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isRecord((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isRecord((AUnionType) type);
-			default:
-				break;
+			return ABracketTypeAssistantTC.isRecord((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isRecord((ANamedInvariantType) type);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.isRecord((ARecordInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isRecord((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isRecord((AUnionType) type);
 		}
 		return false;
 	}
 
 	public static ARecordInvariantType getRecord(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
+			return ABracketTypeAssistantTC.getRecord((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getRecord((ANamedInvariantType) type);
 
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getRecord((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getRecord((ANamedInvariantType) type);
-
-				} else if (type instanceof ARecordInvariantType)
-				{
-					return ARecordInvariantTypeAssistantTC.getRecord((ARecordInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getRecord((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getRecord((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
-			default:
-				break;
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.getRecord((ARecordInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getRecord((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getRecord((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getRecord((AUnknownType) type);
 		}
 		assert false : "Can't getRecord of a non-record";
 		return null;
@@ -645,58 +508,51 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isClass(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof AClassType)
 		{
-
-			case AClassType.kindPType:
-				return AClassTypeAssistantTC.isClass((AClassType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isClass((ANamedInvariantType) type);
-
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isClass((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isClass((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isClass((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isClass((AUnknownType) type);
-			default:
-				break;
+			return AClassTypeAssistantTC.isClass((AClassType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isClass((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isClass((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isClass((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.isClass((AUnknownType) type);
 		}
 		return false;
 	}
 
 	public static AClassType getClassType(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof AClassType)
 		{
-			case AClassType.kindPType:
-				if (type instanceof AClassType)
-				{
-					return (AClassType) type;
-				}
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getClassType((ANamedInvariantType) type);
-
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getClassType((AParameterType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getClassType((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getClassType((AUnknownType) type);
-			default:
-				break;
+			if (type instanceof AClassType)
+			{
+				return (AClassType) type;
+			}
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getClassType((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getClassType((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getClassType((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getClassType((AUnknownType) type);
 		}
 		assert false : "Can't getClass of a non-class";
 		return null;
@@ -705,28 +561,27 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static AProductType getProduct(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getProduct((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getProduct((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getProduct((AProductType) type);
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.getProduct((AProductType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getProduct((AUnionType) type);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getProduct((AUnknownType) type);
-			default:
-				break;
+			return ABracketTypeAssistantTC.getProduct((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getProduct((AOptionalType) type);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.getProduct((AProductType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getProduct((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type);
 		}
 		assert false : "cannot getProduct from non-product type";
 		return null;
@@ -734,28 +589,27 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isProduct(PType type)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isProduct((ABracketType) type);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isProduct((AParameterType) type);
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.isProduct((AProductType) type);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isProduct((AUnionType) type);
-			case AUnknownType.kindPType:
-				return true;
-			default:
-				break;
+			return ABracketTypeAssistantTC.isProduct((ABracketType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.isProduct((AProductType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isProduct((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return true;
 		}
 		return false;
 	}
@@ -763,39 +617,43 @@ public class PTypeAssistantTC extends PTypeAssistant
 	public static boolean narrowerThan(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.narrowerThan((ABracketType) type, accessSpecifier);
-			case AFunctionType.kindPType:
-				return AFunctionTypeAssistantTC.narrowerThan((AFunctionType) type, accessSpecifier);
-			case AOperationType.kindPType:
-				return AOperationTypeAssistantTC.narrowerThan((AOperationType) type, accessSpecifier);
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.narrowerThan((AOptionalType) type, accessSpecifier);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.narrowerThan((AParameterType) type, accessSpecifier);
-			case SSeqType.kindPType:
-				return SSeqTypeAssistantTC.narrowerThan((SSeqType) type, accessSpecifier);
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.narrowerThan((ASetType) type, accessSpecifier);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
-			case SInvariantTypeBase.kindPType:
-				
-				SInvariantTypeBase invariantType = (SInvariantTypeBase) type;
-				switch(invariantType.kindSInvariantType())
-				{
-					case ANamedInvariantType.kindSInvariantType:
-						return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) invariantType, accessSpecifier);
-					case ARecordInvariantType.kindSInvariantType:
-						return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) invariantType, accessSpecifier);
-				}
-				
-			default:
-				return narrowerThanBaseCase(type, accessSpecifier);
+			return ABracketTypeAssistantTC.narrowerThan((ABracketType) type, accessSpecifier);
+		} else if (type instanceof AFunctionType)
+		{
+			return AFunctionTypeAssistantTC.narrowerThan((AFunctionType) type, accessSpecifier);
+		} else if (type instanceof AOperationType)
+		{
+			return AOperationTypeAssistantTC.narrowerThan((AOperationType) type, accessSpecifier);
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.narrowerThan((AOptionalType) type, accessSpecifier);
+		} else if (type instanceof SSeqType)
+		{
+			return SSeqTypeAssistantTC.narrowerThan((SSeqType) type, accessSpecifier);
+		} else if (type instanceof ASetType)
+		{
+			return ASetTypeAssistantTC.narrowerThan((ASetType) type, accessSpecifier);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.narrowerThan((AUnionType) type, accessSpecifier);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.narrowerThan((AUnknownType) type, accessSpecifier);
+		} else if (type instanceof SInvariantTypeBase)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.narrowerThan((ANamedInvariantType) type, accessSpecifier);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.narrowerThan((ARecordInvariantType) type, accessSpecifier);
+			}
+			return narrowerThanBaseCase(type, accessSpecifier);
+		} else
+		{
+			return narrowerThanBaseCase(type, accessSpecifier);
 		}
 	}
 
@@ -819,52 +677,63 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean equals(PType type, Object other)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.equals((ABracketType) type, other);
-			case AClassType.kindPType:
-				return AClassTypeAssistantTC.equals((AClassType) type, other);
-			case AFunctionType.kindPType:
-				return AFunctionTypeAssistantTC.equals((AFunctionType) type, other);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.equals((ANamedInvariantType) type, other);
-				} else if (type instanceof ARecordInvariantType)
-				{
-					return ARecordInvariantTypeAssistantTC.equals((ARecordInvariantType) type, other);
-				}
-			case SMapType.kindPType:
-				return SMapTypeAssistantTC.equals((SMapType) type, other);
-			case AOperationType.kindPType:
-				return AOperationTypeAssistantTC.equals((AOperationType) type, other);
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.equals((AOptionalType) type, other);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.equals((AParameterType) type, other);
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.equals((AProductType) type, other);
-			case AQuoteType.kindPType:
-				return AQuoteTypeAssistantTC.equals((AQuoteType) type, other);
-			case SSeqType.kindPType:
-				return SSeqTypeAssistantTC.equals((SSeqType) type, other);
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.equals((ASetType) type, other);
-			case AUndefinedType.kindPType:
-				return AUndefinedTypeAssistantTC.equals((AUndefinedType) type, other);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.equals((AUnionType) type, other);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.equals((AUnknownType) type, other);
-			case AUnresolvedType.kindPType:
-				return AUnresolvedTypeAssistantTC.equals((AUnresolvedType) type, other);
-			case AVoidType.kindPType:
-				return AVoidTypeAssistantTC.equals((AVoidType) type, other);
-			case AVoidReturnType.kindPType:
-				return AVoidReturnTypeAssistantTC.equals((AVoidReturnType) type, other);
-			default:
-				break;
+			return ABracketTypeAssistantTC.equals((ABracketType) type, other);
+		} else if (type instanceof AClassType)
+		{
+			return AClassTypeAssistantTC.equals((AClassType) type, other);
+		} else if (type instanceof AFunctionType)
+		{
+			return AFunctionTypeAssistantTC.equals((AFunctionType) type, other);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.equals((ANamedInvariantType) type, other);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.equals((ARecordInvariantType) type, other);
+			}
+		} else if (type instanceof SMapType)
+		{
+			return SMapTypeAssistantTC.equals((SMapType) type, other);
+		} else if (type instanceof AOperationType)
+		{
+			return AOperationTypeAssistantTC.equals((AOperationType) type, other);
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.equals((AOptionalType) type, other);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.equals((AProductType) type, other);
+		} else if (type instanceof AQuoteType)
+		{
+			return AQuoteTypeAssistantTC.equals((AQuoteType) type, other);
+		} else if (type instanceof SSeqType)
+		{
+			return SSeqTypeAssistantTC.equals((SSeqType) type, other);
+		} else if (type instanceof ASetType)
+		{
+			return ASetTypeAssistantTC.equals((ASetType) type, other);
+		} else if (type instanceof AUndefinedType)
+		{
+			return AUndefinedTypeAssistantTC.equals((AUndefinedType) type, other);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.equals((AUnionType) type, other);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.equals((AUnknownType) type, other);
+		} else if (type instanceof AUnresolvedType)
+		{
+			return AUnresolvedTypeAssistantTC.equals((AUnresolvedType) type, other);
+		} else if (type instanceof AVoidType)
+		{
+			return AVoidTypeAssistantTC.equals((AVoidType) type, other);
+		} else if (type instanceof AVoidReturnType)
+		{
+			return AVoidReturnTypeAssistantTC.equals((AVoidReturnType) type, other);
 		}
 
 		other = deBracket(other);
@@ -883,125 +752,142 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return other;
 	}
 
-	public static PType isType(PType exptype, String typename)
+	public static PType isType(PType type, String typename)
 	{
-		switch (exptype.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isType((ABracketType) exptype, typename);
-			case SInvariantType.kindPType:
-				if (exptype instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) exptype, typename);
-				} else if (exptype instanceof ARecordInvariantType)
-				{
-					return ARecordInvariantTypeAssistantTC.isType((ARecordInvariantType) exptype, typename);
-				}
-				break;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isType((AOptionalType) exptype, typename);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.isType((AParameterType) exptype, typename);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isType((AUnionType) exptype, typename);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.isType((AUnknownType) exptype, typename);
-			case AUnresolvedType.kindPType:
-				return AUnresolvedTypeAssistantTC.isType((AUnresolvedType) exptype, typename);
-			case AVoidType.kindPType:
-			case AVoidReturnType.kindPType:
-			default:
-				break;
+			return ABracketTypeAssistantTC.isType((ABracketType) type, typename);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) type, typename);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.isType((ARecordInvariantType) type, typename);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isType((AOptionalType) type, typename);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isType((AUnionType) type, typename);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.isType((AUnknownType) type, typename);
+		} else if (type instanceof AUnresolvedType)
+		{
+			return AUnresolvedTypeAssistantTC.isType((AUnresolvedType) type, typename);
 		}
 
-		return (PTypeAssistantTC.toDisplay(exptype).equals(typename)) ? exptype
+		return (PTypeAssistantTC.toDisplay(type).equals(typename)) ? type
 				: null;
 	}
 
-	private static String toDisplay(PType exptype)
+	private static String toDisplay(PType type)
 	{
-
-		switch (exptype.kindPType())
+		if (type instanceof SBasicType)
 		{
-			case SBasicType.kindPType:
-				switch (((SBasicType) exptype).kindSBasicType())
+			if (type instanceof ABooleanBasicType)
+			{
+				return "bool";
+			} else if (type instanceof ACharBasicType)
+			{
+				return "char";
+			} else if (type instanceof SNumericBasicType)
+			{
+				if (type instanceof AIntNumericBasicType)
 				{
-					case ABooleanBasicType.kindSBasicType:
-						return "bool";
-					case ACharBasicType.kindSBasicType:
-						return "char";
-					case SNumericBasicType.kindSBasicType:
-						switch (((SNumericBasicType) exptype).kindSNumericBasicType())
-						{
-							case AIntNumericBasicType.kindSNumericBasicType:
-								return "int";
-							case ANatNumericBasicType.kindSNumericBasicType:
-								return "nat";
-							case ANatOneNumericBasicType.kindSNumericBasicType:
-								return "nat1";
-							case ARationalNumericBasicType.kindSNumericBasicType:
-								return "rat";
-							case ARealNumericBasicType.kindSNumericBasicType:
-								return "real";
-						}
-					case ATokenBasicType.kindSBasicType:
-						return "token";
-				}
-				break;
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.toDisplay((ABracketType) exptype);
-			case AClassType.kindPType:
-				return AClassTypeAssistantTC.toDisplay((AClassType) exptype);
-			case AFunctionType.kindPType:
-				return AFunctionTypeAssistantTC.toDisplay((AFunctionType) exptype);
-			case SInvariantType.kindPType:
-				switch (((SInvariantType) exptype).kindSInvariantType())
+					return "int";
+				} else if (type instanceof ANatNumericBasicType)
 				{
-					case ANamedInvariantType.kindSInvariantType:
-						return ANamedInvariantTypeAssistantTC.toDisplay((ANamedInvariantType) exptype);
-					case ARecordInvariantType.kindSInvariantType:
-						return ARecordInvariantTypeAssistantTC.toDisplay((ARecordInvariantType) exptype);
-				}
-			case SMapType.kindPType:
-				switch (((SMapType) exptype).kindSMapType())
+					return "nat";
+				} else if (type instanceof ANatOneNumericBasicType)
 				{
-					case AInMapMapType.kindSMapType:
-						return AInMapMapTypeAssistantTC.toDisplay((AInMapMapType) exptype);
-					case AMapMapType.kindSMapType:
-						return AMapMapTypeAssistantTC.toDisplay((AMapMapType) exptype);
-				}
-			case AOperationType.kindPType:
-				return AOperationTypeAssistantTC.toDisplay((AOperationType) exptype);
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.toDisplay((AOptionalType) exptype);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.toDisplay((AParameterType) exptype);
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.toDisplay((AProductType) exptype);
-			case AQuoteType.kindPType:
-				return AQuoteTypeAssistantTC.toDisplay((AQuoteType) exptype);
-			case SSeqType.kindPType:
-				switch (((SSeqType) exptype).kindSSeqType())
+					return "nat1";
+				} else if (type instanceof ARationalNumericBasicType)
 				{
-					case ASeqSeqType.kindSSeqType:
-						return ASeqSeqTypeAssistantTC.toDisplay((ASeqSeqType) exptype);
-					case ASeq1SeqType.kindSSeqType:
-						return ASeq1SeqTypeAssistantTC.toDisplay((ASeq1SeqType) exptype);
+					return "rat";
+				} else if (type instanceof ARealNumericBasicType)
+				{
+					return "real";
 				}
-			case ASetType.kindPType:
-				return ASetTypeAssistantTC.toDisplay((ASetType) exptype);
-			case AUndefinedType.kindPType:
-				return "(undefined)";
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.toDisplay((AUnionType) exptype);
-			case AUnknownType.kindPType:
-				return "?";
-			case AUnresolvedType.kindPType:
-				return AUnresolvedTypeAssistantTC.toDisplay((AUnresolvedType) exptype);
-			case AVoidType.kindPType:
-				return "()";
-			case AVoidReturnType.kindPType:
-				return "(return)";
+			} else if (type instanceof ATokenBasicType)
+			{
+				return "token";
+			}
+		} else if (type instanceof ABracketType)
+		{
+			return ABracketTypeAssistantTC.toDisplay((ABracketType) type);
+		} else if (type instanceof AClassType)
+		{
+			return AClassTypeAssistantTC.toDisplay((AClassType) type);
+		} else if (type instanceof AFunctionType)
+		{
+			return AFunctionTypeAssistantTC.toDisplay((AFunctionType) type);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.toDisplay((ANamedInvariantType) type);
+			} else if (type instanceof ARecordInvariantType)
+			{
+				return ARecordInvariantTypeAssistantTC.toDisplay((ARecordInvariantType) type);
+			}
+		} else if (type instanceof SMapType)
+		{
+			if (type instanceof AInMapMapType)
+			{
+				return AInMapMapTypeAssistantTC.toDisplay((AInMapMapType) type);
+			} else if (type instanceof AMapMapType)
+			{
+				return AMapMapTypeAssistantTC.toDisplay((AMapMapType) type);
+			}
+		} else if (type instanceof AOperationType)
+		{
+			return AOperationTypeAssistantTC.toDisplay((AOperationType) type);
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.toDisplay((AOptionalType) type);
+		} else if (type instanceof AParameterType)
+		{
+			return AParameterTypeAssistantTC.toDisplay((AParameterType) type);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.toDisplay((AProductType) type);
+		} else if (type instanceof AQuoteType)
+		{
+			return AQuoteTypeAssistantTC.toDisplay((AQuoteType) type);
+		} else if (type instanceof SSeqType)
+		{
+			if (type instanceof ASeqSeqType)
+			{
+				return ASeqSeqTypeAssistantTC.toDisplay((ASeqSeqType) type);
+			} else if (type instanceof ASeq1SeqType)
+			{
+				return ASeq1SeqTypeAssistantTC.toDisplay((ASeq1SeqType) type);
+			}
+		} else if (type instanceof ASetType)
+		{
+			return ASetTypeAssistantTC.toDisplay((ASetType) type);
+		} else if (type instanceof AUndefinedType)
+		{
+			return "(undefined)";
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.toDisplay((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return "?";
+		} else if (type instanceof AUnresolvedType)
+		{
+			return AUnresolvedTypeAssistantTC.toDisplay((AUnresolvedType) type);
+		} else if (type instanceof AVoidType)
+		{
+			return "()";
+		} else if (type instanceof AVoidReturnType)
+		{
+			return "(return)";
 		}
 		assert false : "PTypeAssistant.toDisplay should not hit this case";
 		return null;
@@ -1009,59 +895,66 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isProduct(PType type, int size)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.isProduct((ABracketType) type, size);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type, size);
-				} else
-					return false;
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.isProduct((AOptionalType) type, size);
-			case AParameterType.kindPType:
-				return true;
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.isProduct((AProductType) type, size);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.isProduct((AUnionType) type, size);
-			case AUnknownType.kindPType:
-				return true;
-			default:
-				return false;
+			return ABracketTypeAssistantTC.isProduct((ABracketType) type, size);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type, size);
+			}
+			return false;
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type, size);
+		} else if (type instanceof AParameterType)
+		{
+			return true;
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.isProduct((AProductType) type, size);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isProduct((AUnionType) type, size);
+		} else if (type instanceof AUnknownType)
+		{
+			return true;
+		} else
+		{
+			return false;
 		}
 	}
 
 	public static AProductType getProduct(PType type, int size)
 	{
-		switch (type.kindPType())
+		if (type instanceof ABracketType)
 		{
-			case ABracketType.kindPType:
-				return ABracketTypeAssistantTC.getProduct((ABracketType) type, size);
-			case SInvariantType.kindPType:
-				if (type instanceof ANamedInvariantType)
-				{
-					return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type, size);
-				} else
-				{
-					assert false : "cannot getProduct from non-product type";
-					return null;
-				}
-			case AOptionalType.kindPType:
-				return AOptionalTypeAssistantTC.getProduct((AOptionalType) type, size);
-			case AParameterType.kindPType:
-				return AParameterTypeAssistantTC.getProduct((AProductType) type, size);
-			case AProductType.kindPType:
-				return AProductTypeAssistantTC.getProduct((AProductType) type, size);
-			case AUnionType.kindPType:
-				return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
-			case AUnknownType.kindPType:
-				return AUnknownTypeAssistantTC.getProduct((AUnknownType) type, size);
-			default:
-				assert false : "cannot getProduct from non-product type";
-				return null;
+			return ABracketTypeAssistantTC.getProduct((ABracketType) type, size);
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type, size);
+			}
+			assert false : "cannot getProduct from non-product type";
+			return null;
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getProduct((AOptionalType) type, size);
+		} else if (type instanceof AProductType)
+		{
+			return AProductTypeAssistantTC.getProduct((AProductType) type, size);
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type, size);
+		} else
+		{
+			assert false : "cannot getProduct from non-product type";
+			return null;
 		}
 	}
 
@@ -1083,39 +976,42 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return true;
 	}
 
-	public static boolean isVoid(PType type) {
-		switch (type.kindPType()) {
-		case AUnionType.kindPType:
+	public static boolean isVoid(PType type)
+	{
+		if (type instanceof AUnionType)
+		{
 			return AUnionTypeAssistantTC.isVoid((AUnionType) type);
-		case AVoidType.kindPType:
-		case AVoidReturnType.kindPType:
+		} else if (type instanceof AVoidType || type instanceof AVoidReturnType)
+		{
 			return true;
-		default:
+		} else
+		{
 			return false;
 		}
 	}
 
-	public static boolean hasVoid(PType type) {
-		switch (type.kindPType()) {
-		case AUnionType.kindPType:
+	public static boolean hasVoid(PType type)
+	{
+		if (type instanceof AUnionType)
+		{
 			return AUnionTypeAssistantTC.hasVoid((AUnionType) type);
-		case AVoidType.kindPType:
-		case AVoidReturnType.kindPType:
+		} else if (type instanceof AVoidType || type instanceof AVoidReturnType)
+		{
 			return true;
-		default:
+		} else
+		{
 			return false;
 		}
-
 	}
 
-	public static Object deBracket(Object other) {
+	public static Object deBracket(Object other)
+	{
 		while (other instanceof ABracketType)
 		{
-			other = ((ABracketType)other).getType();
+			other = ((ABracketType) other).getType();
 		}
 
 		return other;
 	}
 
-	
 }

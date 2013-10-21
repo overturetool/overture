@@ -24,20 +24,23 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 
-
-public class POImpliesContext extends POContext
-{
+public class POImpliesContext extends POContext {
 	public final PExp exp;
 
-	public POImpliesContext(PExp exp)
-	{
+	public POImpliesContext(PExp exp) {
 		this.exp = exp;
 	}
 
 	@Override
-	public String getContext()
-	{
+	public PExp getContextNode(PExp stitch) {
+		return AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.clone(),
+				stitch);
+	}
+
+	@Override
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(exp);

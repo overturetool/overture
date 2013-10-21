@@ -6,7 +6,7 @@
 
   <groupId>org.overture</groupId>
   <artifactId>root</artifactId>
-  <version>2.0.0-SNAPSHOT<!--Replaceable: Main Version--></version>
+  <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
 
   <modules>
@@ -35,6 +35,27 @@
     </dependency>
   </dependencies>
 
+  
+
+  <pluginRepositories>
+        <pluginRepository>
+          <id>overture-astcreator-github</id>
+      <name>Overture AST Creator Maven plugin</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </snapshots>
+         <url>https://github.com/overturetool/astcreator/raw/mvn-repo/release</url>
+          <layout>default</layout>
+        </pluginRepository>
+      </pluginRepositories>
+  
   <profiles>
     <profile>
       <id>With-IDE</id>
@@ -85,6 +106,9 @@
   </profiles>
 
   <repositories>
+  
+  
+	
     <!--repository>
       <id>overture.sf.net</id>
       <name>Overture SF Snapshots</name>
@@ -134,8 +158,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.6</source>
+            <target>1.6</target>
           </configuration>
         </plugin>
 
@@ -189,7 +213,7 @@
           <configuration>
             <testFailureIgnore>true</testFailureIgnore>
 			<!-- required for java7 to avoid verifier errors-->
-			<argLine>-XX:-UseSplitVerifier</argLine>
+			<argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
           </configuration>
         </plugin>
 
