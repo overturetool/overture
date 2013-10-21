@@ -30,3 +30,6 @@ operations
 end CMTestCase2
 \end{vdm_al}
 
+\begin{rtinfo}[GLOBAL`CMTestCase2]
+{vdm.tc}[CMTestCase2]
+\end{rtinfo}
