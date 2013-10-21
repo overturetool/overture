@@ -8,12 +8,12 @@ public class Utils
 
 	public static <T> List<T> seq()
 	{
-		return new Vector<>();
+		return new Vector<T>();
 	}
 	
 	public static <T> List<T> seq(T... elements)
 	{
-		Vector<T> vector = new Vector<>();
+		Vector<T> vector = new Vector<T>();
 		
 		for (T element : elements)
 		{
@@ -25,7 +25,7 @@ public class Utils
 	
 	public static <T> List<T> seqConc(List<T> left, List<T> right)
 	{
-		List<T> result = new Vector<>();
+		List<T> result = new Vector<T>();
 		
 		result.addAll(left);
 		result.addAll(right);

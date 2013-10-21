@@ -77,7 +77,7 @@ public class CodeGenUtil
 
 	public static List<GeneratedClass> generateOO(String[] args) throws AnalysisException
 	{		
-		List <GeneratedClass> allClasses = new ArrayList<>();
+		List <GeneratedClass> allClasses = new ArrayList<GeneratedClass>();
 		
 		for (int i = 1; i < args.length; i++)
 		{
@@ -100,7 +100,7 @@ public class CodeGenUtil
 		try
 		{
 			parseResult = ParserUtil.parseExpression(exp);
-		} catch (ParserException | LexException e)
+		} catch (Exception e)
 		{
 			throw new AnalysisException("Unable to parse expression: " + exp
 					+ ". Message: " + e.getMessage());
@@ -115,11 +115,13 @@ public class CodeGenUtil
 		try
 		{
 			typeCheckResult = TypeCheckerUtil.typeCheckExpression(exp);
-		} catch (ParserException | LexException e)
+		} catch (Exception e)
 		{
 			throw new AnalysisException("Unable to type check expression: "
 					+ exp + ". Message: " + e.getMessage());
 		}
+		
+		
 
 		if (typeCheckResult.errors.size() > 0)
 		{
@@ -151,4 +153,5 @@ public class CodeGenUtil
 		CodeGen vdmCodGen = new CodeGen();
 		vdmCodGen.generateCodeGenUtils();
 	}
+	
 }

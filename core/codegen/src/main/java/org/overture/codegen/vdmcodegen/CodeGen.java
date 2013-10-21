@@ -65,8 +65,8 @@ public class CodeGen
 	public List<GeneratedClass> generateCode(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
-		List<AClassTypeDeclCG> classes = new ArrayList<>();
-		List<GeneratedClass> generatedClasses = new ArrayList<>();
+		List<AClassTypeDeclCG> classes = new ArrayList<AClassTypeDeclCG>();
+		List<GeneratedClass> generatedClasses = new ArrayList<GeneratedClass>();
 		CodeGenerator generator = new CodeGenerator(log);
 
 		CodeFormatter codeFormatter = constructCodeFormatter();

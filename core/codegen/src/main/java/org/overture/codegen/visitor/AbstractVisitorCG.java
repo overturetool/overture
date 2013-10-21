@@ -24,5 +24,21 @@ public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> ex
 			
 		throw new AnalysisException("Code generation does not support the following VDM construct: " + node.toString());
 	}
+
+	@Override
+	public A createNewReturnValue(INode node, Q question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public A createNewReturnValue(Object node, Q question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
