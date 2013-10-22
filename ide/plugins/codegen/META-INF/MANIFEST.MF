@@ -17,5 +17,6 @@ Bundle-ClassPath: .,
  jars/codegen.jar,
  jars/velocity.jar,
  jars/commons-collections.jar,
- jars/commons-lang.jar
+ jars/commons-lang.jar,
+ jars/core.jar
 
