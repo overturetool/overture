@@ -957,6 +957,18 @@ public class ClassDefinition extends Definition
 
     		setStaticDefinitions(definitions, initCtxt);
     		setStaticDefinitions(localInheritedDefinitions, initCtxt);
+    		
+    		try
+    		{
+				NameValuePairMap members = new NameValuePairMap();
+				members.putAll(privateStaticValues);
+				members.putAll(publicStaticValues);
+				setPermissions(definitions, members, initCtxt);
+			}
+    		catch (ValueException e)
+    		{
+    			abort(e);
+			}
 		}
 	}
 
