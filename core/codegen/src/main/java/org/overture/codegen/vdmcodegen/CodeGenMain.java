@@ -11,6 +11,9 @@ public class CodeGenMain
 {
 	public static void main(String[] args)
 	{
+		
+		//TODO: Set release to VDM_10:
+		//Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 		
 		if (args.length <= 1)
