@@ -31,6 +31,7 @@ import org.overturetool.vdmj.pog.POContextStack;
 import org.overturetool.vdmj.pog.PONameContext;
 import org.overturetool.vdmj.pog.ProofObligationList;
 import org.overturetool.vdmj.typechecker.Environment;
+import org.overturetool.vdmj.typechecker.FlatCheckedEnvironment;
 import org.overturetool.vdmj.typechecker.FlatEnvironment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.Pass;
@@ -99,6 +100,7 @@ public class PerSyncDefinition extends Definition
 		ClassDefinition classdef = base.findClassDefinition();
 		int opfound = 0;
 		int perfound = 0;
+		Boolean isStatic = null;
 
 		for (Definition def: classdef.getDefinitions())
 		{
@@ -110,6 +112,13 @@ public class PerSyncDefinition extends Definition
 				{
 					opname.report(3042, opname + " is not an explicit operation");
 				}
+				
+				if (isStatic != null && isStatic != def.isStatic())
+				{
+					opname.report(3323, "Overloaded operation cannot mix static and non-static");
+				}
+				
+				isStatic = def.isStatic();
 			}
 
 			if (def instanceof PerSyncDefinition)
@@ -142,8 +151,14 @@ public class PerSyncDefinition extends Definition
 			opname.report(3045, "Cannot put guard on a constructor");
 		}
 
-		Environment local = new FlatEnvironment(this, base);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(this, base, scope);
 		local.setEnclosingDefinition(this);	// Prevent op calls
+		
+		if (isStatic != null)
+		{
+			local.setStatic(isStatic);
+		}
+		
 		Type rt = guard.typeCheck(local, null, NameScope.NAMESANDSTATE);
 
 		if (!rt.isType(BooleanType.class))
