@@ -58,8 +58,10 @@ public class CodeGen
 
 	private void initVelocity()
 	{
-		String propertyPath = CodeGenUtil.getVelocityPropertiesPath("velocity.properties");
-		Velocity.init(propertyPath);
+		
+		//String propertyPath = CodeGenUtil.getVelocityPropertiesPath("velocity.properties");
+		Velocity.init();
+		//Velocity.init(propertyPath);
 	}
 
 	public List<GeneratedClass> generateCode(
