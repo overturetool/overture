@@ -89,9 +89,9 @@ public class LatexSourceFile extends SourceFile
 			out.println("\\usepackage[color]{vdmlisting}");
 			out.println("\\usepackage{fullpage}");
 			out.println("\\usepackage{hyperref}");
-			out.println("\\usepackage{fontspec}"); // added by his 2013/10/08
+			out.println("%JPNFONT\\usepackage{fontspec}"); // added by his 2013/10/08
 			out.println("\\begin{document}");
-			out.println("\\fontspec{MS Mincho}");  // added by his 2013/10/08
+			out.println("%JPNFONT\\fontspec{MS Mincho}");  // added by his 2013/10/08
 			out.println("\\title{}");
 			out.println("\\author{}");
 		}
