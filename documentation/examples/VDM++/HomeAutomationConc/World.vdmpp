@@ -3,7 +3,7 @@ class World
 instance variables
 
 private env				: Environment;
-public static timerRef	: TimeStamp := new TimeStamp(); 
+public static timerRef	: TimeStamp := new TimeStamp(); --(6);
 private ha : HA;
 
 operations
