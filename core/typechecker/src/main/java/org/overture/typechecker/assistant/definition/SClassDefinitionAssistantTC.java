@@ -766,7 +766,7 @@ public class SClassDefinitionAssistantTC
 	}
 
 	public static void typeCheckPass(SClassDefinition c, Pass p,
-			Environment base, TypeCheckVisitor tc) throws AnalysisException
+			Environment base, QuestionAnswerAdaptor<TypeCheckInfo, PType> tc) throws AnalysisException
 	{
 		if (c.getTypeChecked())
 			return;
