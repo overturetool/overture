@@ -21,13 +21,11 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 	 * 
 	 */
 	private static final long serialVersionUID = -3210904929412698065L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerPatternVisitor(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null);// FIXME
-		this.rootVisitor = typeCheckVisitor;
+		super(null,typeCheckVisitor);// FIXME
 	}
 
 	@Override

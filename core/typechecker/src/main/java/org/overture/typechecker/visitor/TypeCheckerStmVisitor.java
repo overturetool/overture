@@ -106,13 +106,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	 * 
 	 */
 	private static final long serialVersionUID = -6418355785507933395L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerStmVisitor(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null);// FIXME
-		this.rootVisitor = typeCheckVisitor;
+		super(null,typeCheckVisitor);// FIXME
 
 	}
 
