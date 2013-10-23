@@ -55,7 +55,7 @@ public class GraphViz
 
 	public GraphViz(File dotPath)
 	{
-		this.dotPath = dotPath.getAbsolutePath();
+		this.dotPath = dotPath.getPath();
 	}
 
 	public static boolean isWindowsPlatform()
