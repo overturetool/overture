@@ -123,7 +123,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			} else
 			{
 
-				alwaysMatches = false;
+				alwaysMatches = true;
 				PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
 				for (List<PPattern> patterns : node.getParamPatternList())
 					for (PPattern p : patterns)
