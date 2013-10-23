@@ -452,6 +452,9 @@ public class AstFactory {
 		ATypeDefinition result = new ATypeDefinition();
 		initDefinition(result, Pass.TYPES, name.getLocation(), name, NameScope.TYPENAME);
 		
+		// Force all type defs (invs) to be static. There is no guarantee that this will say here but is should
+		result.getAccess().setStatic(new TStatic());
+		
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
