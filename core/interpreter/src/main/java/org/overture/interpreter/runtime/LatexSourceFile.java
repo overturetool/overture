@@ -32,6 +32,9 @@ public class LatexSourceFile extends SourceFile
 	// The argument to lstset is: escapeinside={(*@}{@*)}
 	public final String LST_ESCAPE_BEGIN = "(*@";
 	public final String LST_ESCAPE_END = "@*)";
+	private static final String sectionFont = "{\\jmsg{";
+	private static final String docFont = "{\\jmsm{";
+	private static final String fontEnd = "}}";
 
 	public boolean useJPNFont;
 	
@@ -90,8 +93,11 @@ public class LatexSourceFile extends SourceFile
 			out.println("\\usepackage{fullpage}");
 			out.println("\\usepackage{hyperref}");
 			out.println("%JPNFONT\\usepackage{fontspec}"); // added by his 2013/10/08
+			out.println("%JPNFONT\\setmainfont{Times New Roman}");  // added by his 2013/10/24
+			out.println("%JPNFONT\\setmonofont[Scale=0.9]{Courier New}");  // added by his 2013/10/24
+			out.println("%JPNFONT\\newfontfamily\\jmsm[Scale=0.92]{MS Mincho}");  // added by his 2013/10/24
+			out.println("%JPNFONT\\newfontfamily\\jmsg[Scale=0.92]{MS Gothic}");  // added by his 2013/10/24
 			out.println("\\begin{document}");
-			out.println("%JPNFONT\\fontspec{MS Mincho}");  // added by his 2013/10/08
 			out.println("\\title{}");
 			out.println("\\author{}");
 		}
@@ -152,6 +158,7 @@ public class LatexSourceFile extends SourceFile
 					//List<LexLocation> list = hits.get(lnum);
 					if(spaced.contains("\\subsection{") || spaced.contains("\\subsubsection{")) {
 						spaced = utfIncludeCheck(spaced, false);
+						spaced = spaced.replace(docFont, sectionFont);
 					}
 					out.println(spaced);
 				}
@@ -296,7 +303,7 @@ public class LatexSourceFile extends SourceFile
 	        	if(start)
 	        	{
 	        		start=false;
-	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_END : "" ) : "") + line.substring(i, i+1));
+	        		checked+=((addatsign ? (useJPNFont ? docFont + LST_ESCAPE_END : "" ) : "") + line.substring(i, i+1));
 	        	} else
 	        	{
 	        		checked+=line.substring(i, i+1);
@@ -305,7 +312,7 @@ public class LatexSourceFile extends SourceFile
 	        {
 	        	if(!start)
 	        	{
-	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_BEGIN : "") : "")+ (useJPNFont ? "\\fontspec{MS Gothic}" : "") + line.substring(i, i+1));
+	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_BEGIN : "") : "") + (useJPNFont ? docFont : "") + line.substring(i, i+1));
 	        		start=true;
 	        	} else
 	        	{
