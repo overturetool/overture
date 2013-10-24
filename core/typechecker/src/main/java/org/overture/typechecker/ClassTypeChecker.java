@@ -26,9 +26,11 @@ package org.overture.typechecker;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -96,7 +98,7 @@ public class ClassTypeChecker extends TypeChecker
 			return;
 		}
 
-		Environment allClasses = new PublicClassEnvironment(assistantFactory,classes,null);
+		Environment allClasses = getAllClassesEnvronment();
 
 		for (SClassDefinition c: classes)
 		{
@@ -133,7 +135,8 @@ public class ClassTypeChecker extends TypeChecker
 				SClassDefinitionAssistantTC.checkOver(c);
 			}
 		}
-		TypeCheckVisitor tc = new TypeCheckVisitor();
+		
+		QuestionAnswerAdaptor<TypeCheckInfo, PType> tc = getTypeCheckVisitor();
 	    for (Pass pass: Pass.values())
 		{
         	for (SClassDefinition c: classes)
@@ -165,5 +168,15 @@ public class ClassTypeChecker extends TypeChecker
 				PDefinitionAssistantTC.unusedCheck(c);
 			}
 		}
+	}
+
+	protected Environment getAllClassesEnvronment()
+	{
+		return new PublicClassEnvironment(assistantFactory,classes,null);
+	}
+
+	protected QuestionAnswerAdaptor<TypeCheckInfo, PType> getTypeCheckVisitor()
+	{
+		return new TypeCheckVisitor();
 	}
 }
