@@ -7,18 +7,24 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistant;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.OoAstConstants;
 
 public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
@@ -31,6 +37,88 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		this.declAssistant = new DeclAssistant();
 	}
 	
+	
+	@Override
+	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		String name = node.getName().getName();
+		LinkedList<AFieldField> fields = node.getFields();
+		
+		AClassDeclCG staticClass = new AClassDeclCG();
+		staticClass.setAbstract(false);
+		//Set this public for now but it must be corrected as the access is specified
+		//in the type definition instead:
+		//		types
+		//
+		//		public R ::
+		//		    x : nat
+		//		    y : nat;
+		staticClass.setAccess(OoAstConstants.PUBLIC);
+		
+		staticClass.setInnerClasses(null);
+		staticClass.setMethods(null);
+		staticClass.setName(name);
+		staticClass.setSuperName(null);
+		
+		LinkedList<AFieldDeclCG> staticClassFields = staticClass.getFields();
+		for (AFieldField aFieldField : fields)
+		{		
+			PDeclCG res = aFieldField.apply(question.getDeclVisitor(), question);
+			
+			if(res instanceof AFieldDeclCG)
+				staticClassFields.add((AFieldDeclCG) res);
+			else
+				throw new AnalysisException("Could not generate fields of record: " + name);
+		}
+		
+		return staticClass;
+	}
+	
+	@Override
+	public PDeclCG caseAFieldField(AFieldField node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		//Record fields are public
+		String access = OoAstConstants.PUBLIC;
+		String name = node.getTag();
+		boolean isStatic = false;
+		boolean isFinal = false;
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		PExpCG exp = null;
+		
+		return declAssistant.constructField(access, name, isStatic, isFinal, type, exp);
+	}
+	
+	@Override
+	public PDeclCG caseATypeDefinition(ATypeDefinition node,
+			CodeGenInfo question) throws AnalysisException
+	{
+//		System.out.println("*******");		
+//		System.out.println("Access: " + node.getAccess());
+//		System.out.println("Got a type definition: " + node.toString());
+//		System.out.println("Invariant type: " + node.getInvType().toString());
+//		System.out.println("Get type: " + node.getType());
+//		System.out.println("Name: " + node.getName().getName());
+//		System.out.println("Pattern: " + node.getInvPattern());
+//		
+//		System.out.println("Trying to apply type:");
+//		System.out.println("The typ: " + typ.getClass().getName());	
+//		System.out.println("*****");
+		
+		String access = node.getAccess().getAccess().toString();
+		
+		PDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
+		
+		if(dec instanceof AClassDeclCG)
+		{
+			AClassDeclCG staticClass = (AClassDeclCG) dec;
+			staticClass.setAccess(access);
+		}
+		
+		return dec;
+	}
+		
 	@Override
 	public PDeclCG caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, CodeGenInfo question)

@@ -1,4 +1,4 @@
-import java.util.List;
+##import java.util.List;
 
 #set( $abstract = "")
 #if ($node.getAbstract())
@@ -14,6 +14,10 @@ $CG.format($field)
 
 #foreach( $method in $node.getMethods() )
 $CG.format($method)
+#end
+
+#foreach( $innerClass in $node.getInnerClasses() )
+$CG.format($innerClass)
 #end
 
 }

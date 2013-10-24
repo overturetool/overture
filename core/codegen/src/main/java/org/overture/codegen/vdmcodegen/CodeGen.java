@@ -28,8 +28,8 @@ import org.eclipse.text.edits.TextEdit;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -67,7 +67,7 @@ public class CodeGen
 	public List<GeneratedClass> generateCode(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
-		List<AClassTypeDeclCG> classes = new ArrayList<AClassTypeDeclCG>();
+		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
 		List<GeneratedClass> generatedClasses = new ArrayList<GeneratedClass>();
 		CodeGenerator generator = new CodeGenerator(log);
 
@@ -81,14 +81,14 @@ public class CodeGen
 		MergeVisitor mergeVisitor = new MergeVisitor();
 
 		IDocument doc = null;
-		for (AClassTypeDeclCG classCg : classes)
+		for (AClassDeclCG classCg : classes)
 		{
 			try
 			{
 				StringWriter writer = new StringWriter();
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
-
+				
 				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
 				doc = new Document(code);
 				try

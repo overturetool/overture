@@ -10,8 +10,8 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
-import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -73,7 +73,7 @@ public class TemplateManager
 
 				
 		// Type declarations
-		nodeTemplateFileNames.put(AClassTypeDeclCG.class, IText.TYPE_DECLS_PATH
+		nodeTemplateFileNames.put(AClassDeclCG.class, IText.DECL_PATH
 				+ "Class");
 
 		// Declarations

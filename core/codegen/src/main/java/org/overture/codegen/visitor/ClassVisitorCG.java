@@ -6,12 +6,12 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
-import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 
-public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
 {
 	private static final long serialVersionUID = 81602965450922571L;
 	
@@ -20,7 +20,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDec
 	}
 	
 	@Override
-	public AClassTypeDeclCG caseAClassClassDefinition(AClassClassDefinition node, CodeGenInfo question) throws AnalysisException
+	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, CodeGenInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
@@ -29,7 +29,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDec
 		if(superNames.size() > 1)
 			throw new AnalysisException("Multiple inheritance not supported.");
 		
-		AClassTypeDeclCG classCg = new AClassTypeDeclCG();
+		AClassDeclCG classCg = new AClassDeclCG();
 		classCg.setName(name);
 		classCg.setAccess(access);
 		classCg.setAbstract(isAbstract);
@@ -40,9 +40,11 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDec
 		
 		LinkedList<AFieldDeclCG> fields = classCg.getFields();
 		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
+		LinkedList<AClassDeclCG> innerClasses = classCg.getInnerClasses();
 		
 		for (PDefinition def : defs)
 		{
+			
 			PDeclCG decl = def.apply(question.getDeclVisitor(), question);
 		
 			if(decl == null)
@@ -52,6 +54,8 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDec
 				fields.add((AFieldDeclCG) decl);
 			else if(decl instanceof AMethodDeclCG)
 				methods.add((AMethodDeclCG) decl);
+			else if(decl instanceof AClassDeclCG)
+				innerClasses.add((AClassDeclCG) decl);
 			else
 				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
 			//TODO:Remove prints
@@ -60,30 +64,4 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassTypeDec
 		return classCg;
 	}
 	
-//	@Override
-//	public void caseAValueDefinition(AValueDefinition node) throws AnalysisException
-//	{
-//		String access = node.getAccess().getAccess().toString();
-//		String name = node.getPattern().toString();
-//		boolean isStatic = true;
-//		boolean isFinal = true;
-//		String type = node.getType().apply(rootVisitor.getTypeVisitor(), null);
-//		String exp = "123";//node.getExpression().apply(rootVisitor.getExpVisitor(), question);
-//		
-//		AFieldCG field = new AFieldCG();//new AFieldCG(access_, name_, static_, final_, type_, initial_)
-//		field.setAccess(access);
-//		field.setName(name);
-//		field.setStatic(isStatic);
-//		field.setFinal(isFinal);
-//		field.setType(type);
-//		field.setInitial(exp);
-//		
-//		
-//		
-//		
-//		String className = node.getClassDefinition().getName().getName();
-//		AClassCG classCg = rootVisitor.getTree().getClass(className);
-//		classCg.getFields().add(field);
-//	}
-		
 }

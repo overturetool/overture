@@ -31,15 +31,6 @@ Abstract Syntax Tree
 /*
     Expressions
 */    
-typeDeclCG {-> package='org.overture.codegen.cgast.typedeclarations'}
-    =   {class}
-      	[access]:java_String
-      	[abstract]:java_Boolean 
-    	[name]:java_String
-    	[fields]:field*
-    	[methods]:declCG.method*
-    	[superName]:java_String
-    ;
     
 declCG {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method}
@@ -63,6 +54,24 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[type]:typeCG
     	[name]:java_String
     	[exp]:expCG
+   	|	{class}
+      	[access]:java_String
+      	[abstract]:java_Boolean 
+    	[name]:java_String
+    	[fields]:field*
+    	[methods]:declCG.method*
+    	[superName]:java_String
+    	[innerClasses]:declCG.class*
+//    |	{typDecl} //Consider removing this
+//    	[name]:java_String
+//    	[type]:typeCG
+//   	|	{recField}
+//   		[name]:java_String
+//   		[type]:typeCG
+//    |	{record}
+//    	[name]:java_String
+//    	[fields]:declCG.recField* 
+    	
 //    |	{constructor}
 //    	[access]:java_String
 //		[name]:java_String

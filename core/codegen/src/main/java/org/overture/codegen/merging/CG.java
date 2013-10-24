@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.typedeclarations.AClassTypeDeclCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -101,7 +101,7 @@ public class CG
 		return writer.toString();
 	}
 	
-	public static String formatSuperType(AClassTypeDeclCG classDecl)
+	public static String formatSuperType(AClassDeclCG classDecl)
 	{
 		if(classDecl.getSuperName() == null)
 			return "";
