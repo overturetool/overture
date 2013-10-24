@@ -36,7 +36,6 @@ import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.ACyclesStm;
-import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
@@ -48,6 +47,7 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
@@ -110,7 +110,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public TypeCheckerStmVisitor(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null,typeCheckVisitor);// FIXME
+		super(null, typeCheckVisitor);// FIXME
 
 	}
 
@@ -617,7 +617,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	// TODO: Missing the other DefStatement
 
 	@Override
-	public PType caseADefLetDefStm(ADefLetDefStm node, TypeCheckInfo question)
+	public PType caseALetStm(ALetStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
 

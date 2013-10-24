@@ -207,8 +207,9 @@ import org.overture.ast.util.ToStringUtil;
 %stm->if = ""+$ToStringUtil.getIfString(this)$
 %stm->letBeSt = "let " [bind] +
             $($[suchThat]$ == null ? "" : " be st " + $[suchThat]$)$ + " in " [statement]
-%stm->#LetDef = "let " [localDefs]  " in " [statement]
-%stm->#LetDef->def = "def " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
+//%stm->#LetDef = "let " [localDefs]  " in " [statement]
+//%stm->#LetDef->def = "def " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
+%stm->Let = "let " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
 %stm->notYetSpecified = "is not yet specified" 
 %stm->return = "return" + $($[expression]$ == null ? "" : " (" + $[expression]$ + ")")$
 %stm->#SimpleBlock = ""+$ToStringUtil.getSimpleBlockString(this)$ 

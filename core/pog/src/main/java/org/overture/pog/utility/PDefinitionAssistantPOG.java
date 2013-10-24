@@ -20,7 +20,7 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 	}
 
 	public IProofObligationList getProofObligations(
-			LinkedList<PDefinition> defs,
+			LinkedList<? extends PDefinition> defs,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> pogVisitor,
 			IPOContextStack ctxt) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
