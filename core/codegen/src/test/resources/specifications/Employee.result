@@ -1,11 +1,9 @@
-import java.util.List;
 
 abstract public class Employee {
 
 	public abstract double getSalary();
 
 }
-import java.util.List;
 
 public class HourlyPaidEmployee extends Employee {
 
@@ -43,7 +41,6 @@ public class HourlyPaidEmployee extends Employee {
 	}
 
 }
-import java.util.List;
 
 public class FixedSalaryEmployee extends Employee {
 
@@ -60,7 +57,7 @@ public class FixedSalaryEmployee extends Employee {
 	}
 
 }
-import java.util.List;
+import java.util.*;
 
 public class Company {
 
@@ -114,7 +111,6 @@ public class Company {
 	}
 
 }
-import java.util.List;
 
 public class World {
 
