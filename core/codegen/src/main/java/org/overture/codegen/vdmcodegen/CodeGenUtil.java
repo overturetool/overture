@@ -9,8 +9,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.utils.GeneratedClass;
-import org.overture.parser.lex.LexException;
-import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.typechecker.util.TypeCheckerUtil;

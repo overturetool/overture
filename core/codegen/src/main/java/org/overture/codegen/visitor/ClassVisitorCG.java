@@ -25,6 +25,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
 		boolean isAbstract = node.getIsAbstract();
+		boolean isStatic = false;
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
 		if(superNames.size() > 1)
 			throw new AnalysisException("Multiple inheritance not supported.");
@@ -33,6 +34,8 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 		classCg.setName(name);
 		classCg.setAccess(access);
 		classCg.setAbstract(isAbstract);
+		classCg.setStatic(isStatic);
+		classCg.setStatic(false);
 		if(superNames.size() == 1)
 			classCg.setSuperName(superNames.get(0).getName());
 		

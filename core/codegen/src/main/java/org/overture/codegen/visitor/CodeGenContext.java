@@ -1,8 +1,6 @@
 package org.overture.codegen.visitor;
 
 import org.apache.velocity.VelocityContext;
-import org.overture.codegen.cgast.INode;
-import org.overture.codegen.merging.CG;
 
 public class CodeGenContext
 {
@@ -13,14 +11,9 @@ public class CodeGenContext
 		context = new VelocityContext();
 	}
 	
-	public void put(String name, Class<CG> formatter)
+	public void put(String name, Object value)
 	{
-		context.put(name, formatter);
-	}
-	
-	public void put(String name, INode node)
-	{
-		context.put(name, node);
+		context.put(name, value);
 	}
 	
 	public VelocityContext getVelocityContext()

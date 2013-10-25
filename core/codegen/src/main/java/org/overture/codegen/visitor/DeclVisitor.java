@@ -47,6 +47,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		
 		AClassDeclCG staticClass = new AClassDeclCG();
 		staticClass.setAbstract(false);
+		staticClass.setStatic(true);
 		//Set this public for now but it must be corrected as the access is specified
 		//in the type definition instead:
 		//		types

@@ -6,6 +6,7 @@ import org.apache.velocity.Template;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.utils.DependencyAnalysis;
 import org.overture.codegen.visitor.CodeGenContext;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
@@ -31,7 +32,10 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	{
 		CodeGenContext context = new CodeGenContext();
 		context.put("node", node);
+		
+		//TODO: This should not be put for every node..
 		context.put("CG", CG.class);
+		context.put("DependencyAnalysis", DependencyAnalysis.class);
 		
 		Template template = templates.getTemplate(node.getClass());
 		

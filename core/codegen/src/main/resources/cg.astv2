@@ -56,7 +56,8 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[exp]:expCG
    	|	{class}
       	[access]:java_String
-      	[abstract]:java_Boolean 
+      	[abstract]:java_Boolean
+      	[static]:java_Boolean 
     	[name]:java_String
     	[fields]:field*
     	[methods]:declCG.method*

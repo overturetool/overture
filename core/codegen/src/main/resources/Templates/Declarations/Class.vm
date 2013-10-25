@@ -1,11 +1,22 @@
-##import java.util.List;
+#set( $listImport = "")
+#if ($DependencyAnalysis.usesSequences($node))
+	#set( $listImport = "import java.util.*;")
+#end
+
+$listImport
 
 #set( $abstract = "")
 #if ($node.getAbstract())
 	#set( $abstract = "abstract")
 #end
 ##
-$abstract $node.getAccess() class $node.getName() $CG.formatSuperType($node)
+
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+
+$abstract $node.getAccess() $static class $node.getName() $CG.formatSuperType($node)
 {
 
 #foreach( $field in $node.getFields() )
