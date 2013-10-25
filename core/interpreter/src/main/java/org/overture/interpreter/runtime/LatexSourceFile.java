@@ -303,7 +303,7 @@ public class LatexSourceFile extends SourceFile
 	        	if(start)
 	        	{
 	        		start=false;
-	        		checked+=((addatsign ? (useJPNFont ? docFont + LST_ESCAPE_END : "" ) : "") + line.substring(i, i+1));
+	        		checked+=((addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : "") + line.substring(i, i+1));
 	        	} else
 	        	{
 	        		checked+=line.substring(i, i+1);
@@ -322,7 +322,7 @@ public class LatexSourceFile extends SourceFile
 	    }
 	    if(start) 
    		{
-	    	checked+=(addatsign ? (useJPNFont ? LST_ESCAPE_END : "" ) : "");
+	    	checked+=(addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : "");
    		}
 		return checked;
 	}
