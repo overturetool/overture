@@ -379,7 +379,7 @@ public class AstFactory
 	}
 
 	public static AClassClassDefinition newAClassClassDefinition(
-			ILexNameToken className, LexNameList superclasses,
+			ILexNameToken className, List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 
@@ -390,7 +390,7 @@ public class AstFactory
 	}
 
 	protected static void initClassDefinition(SClassDefinition result,
-			ILexNameToken className, LexNameList superclasses,
+			ILexNameToken className, List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
@@ -1952,14 +1952,14 @@ public class AstFactory
 	}
 
 	public static ANewExp newANewExp(ILexLocation start,
-			LexIdentifierToken classname, List<PExp> args)
+			ILexIdentifierToken classname, List<PExp> args)
 	{
 		ANewExp result = new ANewExp();
 		initExpression(result, start);
 
 		result.setClassName(classname);
 		result.setArgs(args);
-		classname.location.executable(true);
+		classname.getLocation().executable(true);
 		return result;
 	}
 
