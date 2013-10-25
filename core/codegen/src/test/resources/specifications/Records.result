@@ -1,0 +1,17 @@
+
+public class A {
+
+	private static class Vector2D {
+
+		public int x;
+		public int y;
+
+	}
+
+	public static class Real {
+
+		public double r;
+
+	}
+
+}
