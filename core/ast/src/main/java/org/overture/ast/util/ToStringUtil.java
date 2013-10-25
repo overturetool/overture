@@ -142,7 +142,7 @@ public class ToStringUtil
 	}
 
 	public static String getDefinitionListString(
-			NodeList<PDefinition> _definitions)
+			NodeList<? extends PDefinition> _definitions)
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -153,7 +153,8 @@ public class ToStringUtil
 				sb.append(d.getAccess());
 				sb.append(" ");
 			}
-			sb.append(d.getClass().getName() + " " + getVariableNames(d) + ":" + d.getType());
+			//sb.append(d.getClass().getName() + " " + getVariableNames(d) + ":" + d.getType());
+			sb.append(d.toString());
 			sb.append("\n");
 		}
 
@@ -279,7 +280,7 @@ public class ToStringUtil
 			sb.append(stm.getOthers().toString());
 		}
 
-		sb.append("esac");
+		sb.append(" end");
 		return sb.toString();
 	}
 
