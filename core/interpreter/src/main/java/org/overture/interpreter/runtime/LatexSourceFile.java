@@ -229,7 +229,7 @@ public class LatexSourceFile extends SourceFile
 			long calls = LexLocation.getSpanCalls(name);
 			total += calls;
 
-			sb.append(latexQuote(name.toString()) + " & "
+			sb.append(utfIncludeCheck(latexQuote(name.toString()), false) + " & "
 					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");
@@ -322,7 +322,7 @@ public class LatexSourceFile extends SourceFile
 	    }
 	    if(start) 
    		{
-	    	checked+=(addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : "");
+	    	checked+=(addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : fontEnd);
    		}
 		return checked;
 	}
