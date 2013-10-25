@@ -537,7 +537,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void typeResolve(SClassDefinition d,
+	public  void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -765,7 +765,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void typeCheckPass(SClassDefinition c, Pass p,
+	public  void typeCheckPass(SClassDefinition c, Pass p,
 			Environment base, QuestionAnswerAdaptor<TypeCheckInfo, PType> tc) throws AnalysisException
 	{
 		if (c.getTypeChecked())

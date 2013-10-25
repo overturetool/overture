@@ -53,7 +53,7 @@ abstract public class TypeChecker
 	private static VDMMessage lastMessage = null;
 	private static final int MAX = 100;
 	
-	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	final protected ITypeCheckerAssistantFactory assistantFactory; 
 	
 	
 	static List<IStatusListener> listners = new Vector<IStatusListener>();
@@ -61,6 +61,13 @@ abstract public class TypeChecker
 	public TypeChecker()
 	{
 		clearErrors();
+		this.assistantFactory = new TypeCheckerAssistantFactory();
+	}
+	
+	public TypeChecker(ITypeCheckerAssistantFactory factory)
+	{
+		clearErrors();
+		this.assistantFactory = factory;
 	}
 
 	abstract public void typeCheck();

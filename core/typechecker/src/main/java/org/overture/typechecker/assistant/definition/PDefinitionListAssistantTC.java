@@ -107,7 +107,7 @@ public class PDefinitionListAssistantTC
 
 		for (PDefinition d : definitions)
 		{
-			all.addAll(PDefinitionAssistantTC.getDefinitions(d));
+			all.addAll(af.createPDefinitionAssistant().getDefinitions(d));
 		}
 
 		return all;
