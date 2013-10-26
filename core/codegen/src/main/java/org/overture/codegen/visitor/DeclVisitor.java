@@ -21,10 +21,17 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
+import org.overture.typechecker.ClassTypeChecker;
 
 public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
@@ -62,16 +69,58 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		staticClass.setName(name);
 		staticClass.setSuperName(null);
 		
+		AMethodDeclCG constructor = new AMethodDeclCG();
+		constructor.setAbstract(false);
+		constructor.setAccess(OoAstConstants.PUBLIC);
+		
+		ABlockStmCG body = new ABlockStmCG();
+		LinkedList<PStmCG> bodyStms = body.getStatements();
+		constructor.setBody(body); //TODO
+		
+		List<AFormalParamLocalDeclCG> formalParams = new LinkedList<AFormalParamLocalDeclCG>();
+		constructor.setFormalParams(formalParams);//TODO
+		
+		constructor.setName(name);
+		constructor.setReturnType(null);
+		constructor.setStatic(false);
+		
+		List<AMethodDeclCG> recordConstructors = new LinkedList<AMethodDeclCG>();
+		recordConstructors.add(constructor);
+		staticClass.setMethods(recordConstructors);
+		
 		LinkedList<AFieldDeclCG> staticClassFields = staticClass.getFields();
 		for (AFieldField aFieldField : fields)
 		{		
 			PDeclCG res = aFieldField.apply(question.getDeclVisitor(), question);
 			
 			if(res instanceof AFieldDeclCG)
-				staticClassFields.add((AFieldDeclCG) res);
+			{
+				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
+				staticClassFields.add(fieldDecl);
+				
+				String formalName = OoAstConstants.CONSTRUCTOR_FORMAL_PREFIX + fieldDecl.getName();
+				PTypeCG formalType = fieldDecl.getType();
+				
+				AFormalParamLocalDeclCG formal = new AFormalParamLocalDeclCG();
+				formal.setName(formalName);
+				formal.setType(formalType.clone());
+				formalParams.add(formal);
+				
+				AAssignmentStmCG assignment = new AAssignmentStmCG();
+				AIdentifierStateDesignatorCG field = new AIdentifierStateDesignatorCG();
+				field.setName(fieldDecl.getName());
+				assignment.setTarget(field);
+				AVariableExpCG varExp = new AVariableExpCG();
+				varExp.setOriginal(formalName);
+				varExp.setType(formalType.clone());
+				assignment.setExp(varExp);
+				bodyStms.add(assignment);
+			}
 			else
 				throw new AnalysisException("Could not generate fields of record: " + name);
 		}
+		
+		constructor.setFormalParams(formalParams);
 		
 		return staticClass;
 	}
