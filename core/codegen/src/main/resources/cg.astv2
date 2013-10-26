@@ -109,7 +109,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Binary
     |	{field} [object]:expCG [memberName]: java_String//[memberName]:LexNameToken [field]:LexIdentifierToken
     |	{apply} [root]:expCG [args]:expCG*// (argtypes):type* (recursive):definition
-	|	{new} [className]:java_String [args]:expCG*
+	|	{new} [enclosingClassName]:java_String [className]:java_String [args]:expCG*
 	|   {variable} [original]:java_String 
     |	{intLiteral} [value]:java_String
     |	{realLiteral} [value]:java_String
