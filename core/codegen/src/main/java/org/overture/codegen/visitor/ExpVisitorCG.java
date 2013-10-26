@@ -3,6 +3,7 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -15,6 +16,7 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -29,6 +31,7 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -78,6 +81,34 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
+	public PExpCG caseAMkTypeExp(AMkTypeExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		ARecordInvariantType recType = node.getRecordType();
+		if(recType == null)
+			throw new AnalysisException("mk_ only supported for record types!");
+		
+		String typeName = node.getTypeName().getName();
+		SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
+		String enclosingClassName = enclosingClass.getName().getName();		
+		ANewExpCG mkExp = new ANewExpCG();
+		mkExp.setEnclosingClassName(enclosingClassName);
+		
+		LinkedList<PExp> nodeArgs = node.getArgs();
+		
+		ANewExpCG newExp = new ANewExpCG();
+		newExp.setClassName(typeName);
+		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
+		
+		for (PExp arg : nodeArgs)
+		{
+			newExpArgs.add(arg.apply(question.getExpVisitor(), question));
+		}
+		
+		return newExp;
+	}
+	
+	@Override
 	public PExpCG caseASelfExp(ASelfExp node, CodeGenInfo question)
 			throws AnalysisException
 	{
@@ -96,6 +127,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
 			CodeGenInfo question) throws AnalysisException
 	{	
+		//TODO: For records, classes etc.
 		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question, typeLookup);
 	}
 	
