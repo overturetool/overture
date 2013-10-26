@@ -6,11 +6,24 @@ public class A {
 		public int x;
 		public int y;
 
+		public Vector2D(int _x, int _y) {
+
+			x = _x;
+			y = _y;
+
+		}
+
 	}
 
 	public static class Real {
 
 		public double r;
+
+		public Real(double _r) {
+
+			r = _r;
+
+		}
 
 	}
 

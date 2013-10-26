@@ -1,0 +1,25 @@
+
+public class Records {
+
+	private Vector2D v = new Vector2D(1, 1);
+
+	public Vector2D f() {
+
+		return new Vector2D(1, 2);
+	}
+
+	public static class Vector2D {
+
+		public int x;
+		public int y;
+
+		public Vector2D(int _x, int _y) {
+
+			x = _x;
+			y = _y;
+
+		}
+
+	}
+
+}
