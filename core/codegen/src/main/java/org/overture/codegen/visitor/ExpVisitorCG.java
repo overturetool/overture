@@ -209,7 +209,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 			throws AnalysisException
 	{
 		PExpCG object = node.getObject().apply(question.getExpVisitor(), question);
-		String memberName = node.getMemberName().getName();
+		
+		String memberName = "";
+		
+		if(node.getMemberName() != null)
+			memberName = node.getMemberName().getFullName();
+		else
+			memberName = node.getField().getName();
 		
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setObject(object);
