@@ -43,6 +43,7 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -123,6 +124,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AAssignmentStmCG.class, IText.STM_PATH + "Assignment");
 		
 		nodeTemplateFileNames.put(ABlockStmCG.class, IText.STM_PATH + "Block");
+		
+		nodeTemplateFileNames.put(ACallStmCG.class, IText.STM_PATH + "Call");
 		
 		// Expressions
 		

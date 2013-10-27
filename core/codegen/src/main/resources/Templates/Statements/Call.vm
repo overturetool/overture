@@ -1,0 +1,2 @@
+##Example: foo(1, 1)
+$node.getName()($CG.formatArgs($node.getArgs()));

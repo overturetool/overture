@@ -10,6 +10,7 @@ import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
@@ -21,6 +22,7 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
@@ -126,6 +128,26 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 		returnStm.setExp(exp);
 		
 		return returnStm;
+	}
+	
+	@Override
+	public PStmCG caseACallStm(ACallStm node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		String name = node.getName().getName();
+		
+		ACallStmCG call = new ACallStmCG();
+		call.setName(name);
+		
+		LinkedList<PExp> applyArgs = node.getArgs();
+		
+		for (int i = 0; i < applyArgs.size(); i++)
+		{
+			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
+			call.getArgs().add(arg);
+		}		
+		
+		return call;
 	}
 	
 	@Override
