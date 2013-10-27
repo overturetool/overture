@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
@@ -56,6 +57,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.constants.IText;
 
@@ -94,6 +96,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");
 		
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
+		
+		nodeTemplateFileNames.put(AStringTypeCG.class, IText.TYPE_PATH + "String");
 		
 		// Seq types
 		
@@ -197,6 +201,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACharLiteralExpCG.class, IText.EXPS_PATH
 				+ "CharLiteral");
 		
+		nodeTemplateFileNames.put(AStringLiteralExpCG.class, IText.EXPS_PATH
+				+ "StringLiteral");
 		
 		//Seq expressions
 		nodeTemplateFileNames.put(AEnumSeqExpCG.class, IText.SEQ_EXPS_PATH

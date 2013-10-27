@@ -115,6 +115,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{intLiteral} [value]:java_String
     |	{realLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
+    |	{stringLiteral} [value]:java_String
     |	{self}
     |	#Seq
     ;
@@ -159,6 +160,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{void}
     |	{class} [name]:java_String
+    |	{string}
     |	#seq
     ;
     

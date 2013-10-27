@@ -23,6 +23,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -56,6 +57,7 @@ import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
@@ -461,4 +463,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 		
 		return charLiteral;
 	}
+	
+	@Override
+	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+		stringLiteral.setType(typeLookup.getType(node.getType()));
+		stringLiteral.setValue(node.getValue().toString());
+		
+		return stringLiteral;
+	}
+	
 }

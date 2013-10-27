@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
@@ -54,6 +55,10 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 			throws AnalysisException
 	{
 		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
+		
+		//This is a special case since sequence of characters are strings
+		if(seqOf instanceof ACharBasicTypeCG)
+			return new AStringTypeCG();
 		
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOf);
