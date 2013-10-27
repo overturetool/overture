@@ -137,7 +137,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{plus} 
     |   {subtract}
     |	{rem}
-    |	{times}       
+    |	{times}
+    |	{power}       
     ;   
  
 #Unary {-> package='org.overture.codegen.cgast.expressions'}

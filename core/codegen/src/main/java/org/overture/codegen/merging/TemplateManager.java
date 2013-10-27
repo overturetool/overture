@@ -34,6 +34,7 @@ import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -191,6 +192,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
 				+ "Less");
+		
+		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+				+ "Power");
 
 		// Literal expressions
 
