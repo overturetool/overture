@@ -217,8 +217,8 @@ public class SClassDefinitionAssistantTC
 			ILexNameToken sought)
 	{
 
-		Set<PDefinition> set = PDefinitionListAssistantTC.findMatches(classdef.getDefinitions(), sought);
-		set.addAll(PDefinitionListAssistantTC.findMatches(classdef.getAllInheritedDefinitions(), sought));
+		Set<PDefinition> set = af.createPDefinitionListAssistant().findMatches(classdef.getDefinitions(), sought);
+		set.addAll(af.createPDefinitionListAssistant().findMatches(classdef.getAllInheritedDefinitions(), sought));
 		return set;
 	}
 

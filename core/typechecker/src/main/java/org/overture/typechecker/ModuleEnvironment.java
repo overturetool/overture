@@ -117,8 +117,8 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(module.getDefs(),name);
-		defs.addAll(PDefinitionListAssistantTC.findMatches(module.getImportdefs(),name));
+		Set<PDefinition> defs = af.createPDefinitionListAssistant().findMatches(module.getDefs(),name);
+		defs.addAll(af.createPDefinitionListAssistant().findMatches(module.getImportdefs(),name));
 		return defs;
 	}
 

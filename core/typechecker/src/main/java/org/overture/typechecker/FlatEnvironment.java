@@ -170,7 +170,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches( ILexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(definitions,name);
+		Set<PDefinition> defs = af.createPDefinitionListAssistant().findMatches(definitions,name);
 
 		if (outer != null)
 		{

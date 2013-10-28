@@ -44,7 +44,7 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class ClassTypeChecker extends TypeChecker
 {
 	/** The list of classes to check. */
-	private final List<SClassDefinition> classes;
+	protected final List<SClassDefinition> classes;
 
 	/**
 	 * Create a type checker with the list of classes passed.
@@ -131,7 +131,7 @@ public class ClassTypeChecker extends TypeChecker
 				try
 				{
 					Environment self = new PrivateClassEnvironment(assistantFactory, c, allClasses);
-					assistantFactory.createSClassDefinitionAssistant().typeResolve(c, null, new TypeCheckInfo(new TypeCheckerAssistantFactory(), self));
+					assistantFactory.createSClassDefinitionAssistant().typeResolve(c, null, new TypeCheckInfo(assistantFactory, self));
 				} catch (TypeCheckException te)
 				{
 					report(3427, te.getMessage(), te.location);
