@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -30,7 +31,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 		this.af = af;
 	}
 	public static PType typeResolve(AOptionalType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else { type.setResolved(true); }

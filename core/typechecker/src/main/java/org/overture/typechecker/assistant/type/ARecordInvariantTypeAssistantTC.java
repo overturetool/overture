@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -45,7 +46,7 @@ public class ARecordInvariantTypeAssistantTC {
 
 	public static PType typeResolve(ARecordInvariantType type,
 			ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (type.getResolved())

@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -26,7 +27,7 @@ public class SSeqTypeAssistantTC {
 	}
 
 	public static PType typeResolve(SSeqType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		if (type.getResolved()) return type; else { type.setResolved(true); }
 

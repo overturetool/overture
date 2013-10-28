@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -23,7 +24,7 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 		this.af = af;
 	}
 	public static PType typeResolve(AParameterType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else type.setResolved(true);

@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
@@ -20,7 +21,7 @@ public class AFieldFieldAssistantTC {
 	}
 
 	public static void typeResolve(AFieldField f, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		// Recursion defence done by the type

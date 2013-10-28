@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.ABracketTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -31,7 +32,7 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 	}
 
 	public static PType typeResolve(ABracketType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		
