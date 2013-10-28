@@ -156,9 +156,10 @@ public class LatexSourceFile extends SourceFile
 					out.println(markup(spaced, list));
 				} else {
 					//List<LexLocation> list = hits.get(lnum);
+					
 					if(spaced.contains("\\subsection{") || spaced.contains("\\subsubsection{")) {
 						spaced = utfIncludeCheck(spaced, false);
-						spaced = spaced.replace(docFont, sectionFont);
+						out.println(spaced.replace(docFont, sectionFont));
 					} else
 					{ 
 						out.println(utfIncludeCheck(spaced, false));
