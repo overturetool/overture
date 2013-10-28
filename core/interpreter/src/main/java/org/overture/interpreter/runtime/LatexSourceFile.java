@@ -160,7 +160,7 @@ public class LatexSourceFile extends SourceFile
 						spaced = utfIncludeCheck(spaced, false);
 						spaced = spaced.replace(docFont, sectionFont);
 					}
-					out.println(spaced);
+					out.println(utfIncludeCheck(spaced, true));
 				}
 			} else
 			{
