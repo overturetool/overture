@@ -159,8 +159,10 @@ public class LatexSourceFile extends SourceFile
 					if(spaced.contains("\\subsection{") || spaced.contains("\\subsubsection{")) {
 						spaced = utfIncludeCheck(spaced, false);
 						spaced = spaced.replace(docFont, sectionFont);
+					} else
+					{ 
+						out.println(utfIncludeCheck(spaced, false));
 					}
-					out.println(utfIncludeCheck(spaced, true));
 				}
 			} else
 			{
