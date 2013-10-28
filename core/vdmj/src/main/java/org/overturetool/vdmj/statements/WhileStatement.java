@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.expressions.BooleanLiteralExpression;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.pog.POContextStack;
@@ -34,6 +35,8 @@ import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.types.Type;
 import org.overturetool.vdmj.types.TypeSet;
+import org.overturetool.vdmj.types.UnionType;
+import org.overturetool.vdmj.types.VoidType;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.VoidValue;
 
@@ -66,7 +69,30 @@ public class WhileStatement extends Statement
 	public Type typeCheck(Environment env, NameScope scope)
 	{
 		exp.typeCheck(env, null, scope);
-		return statement.typeCheck(env, scope);
+		Type stype = statement.typeCheck(env, scope);
+		
+		if (exp instanceof BooleanLiteralExpression && stype instanceof UnionType)
+		{
+			BooleanLiteralExpression ble = (BooleanLiteralExpression)exp;
+			
+			if (ble.value.value)	// while true do...
+			{
+				TypeSet edited = new TypeSet();
+				UnionType original = (UnionType)stype;
+				
+				for (Type t: original.types)
+				{
+					if (!(t instanceof VoidType))
+					{
+						edited.add(t);
+					}
+				}
+				
+				stype = new UnionType(stype.location, edited);
+			}
+		}
+		
+		return stype;
 	}
 
 	@Override
