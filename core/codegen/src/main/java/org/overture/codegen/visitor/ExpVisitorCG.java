@@ -97,6 +97,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 		quoteLit.setValue(value);
 		quoteLit.setType(type);
 
+		question.registerQuoteValue(value);
+		
 		return quoteLit;
 	}
 	
