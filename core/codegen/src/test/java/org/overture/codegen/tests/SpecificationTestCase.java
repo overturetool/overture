@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.constants.IText;
-import org.overture.codegen.utils.GeneratedClass;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdmcodegen.CodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
@@ -25,11 +26,21 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 	protected String generateActualOutput() throws AnalysisException
 	{	
 		StringBuilder generatedCode = new StringBuilder();
-		List<GeneratedClass> classes = CodeGenUtil.generateOO(file);
+		GeneratedData data = new GeneratedData();
+		CodeGenUtil.generateOO(file, data);
+		List<GeneratedModule> classes = data.getClasses();
 		
-		for (GeneratedClass classCg : classes)
+		for (GeneratedModule classCg : classes)
 		{
 			generatedCode.append(classCg.getContent());
+			generatedCode.append(IText.NEW_LINE);
+		}
+		
+		GeneratedModule quoteData = data.getQuotes();
+		
+		if(quoteData != null)
+		{
+			generatedCode.append(quoteData.getContent());
 			generatedCode.append(IText.NEW_LINE);
 		}
 		

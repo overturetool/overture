@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.utils.GeneratedClass;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
 public class CodeGenMain
@@ -24,13 +25,24 @@ public class CodeGenMain
 		{
 			try
 			{
-				List<GeneratedClass> generatedClasses = CodeGenUtil.generateOO(args);
+				GeneratedData data = CodeGenUtil.generateOO(args);
+				List<GeneratedModule> generatedClasses = data.getClasses();
 				
-				for (GeneratedClass generatedClass : generatedClasses)
+				for (GeneratedModule generatedClass : generatedClasses)
 				{
 					System.out.println("**********");
 					System.out.println(generatedClass.getContent());
 				}
+				
+				GeneratedModule quotes = data.getQuotes();
+				if(quotes != null)
+				{
+					System.out.println("**********");
+					System.out.println(quotes.getContent());
+				}
+				else
+					System.out.println("NO QUOTES:::::");
+					
 				
 				CodeGenUtil.generateSourceFiles(generatedClasses);
 				

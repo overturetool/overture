@@ -13,6 +13,7 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -219,6 +220,8 @@ public class TemplateManager
 		//State designators
 		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Field");
 		nodeTemplateFileNames.put(AIdentifierStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Identifier");
+		
+		nodeTemplateFileNames.put(AInterfaceDeclCG.class, IText.DECL_PATH + "Interface");
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass)

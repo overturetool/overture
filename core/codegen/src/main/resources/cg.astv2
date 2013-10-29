@@ -63,6 +63,9 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[methods]:declCG.method*
     	[superName]:java_String
     	[innerClasses]:declCG.class*
+    |	{interface}
+    	[name]:java_String
+    	[fields]:field*
     |	{empty}
 //    |	{typDecl} //Consider removing this
 //    	[name]:java_String

@@ -1,10 +1,10 @@
 package org.overture.codegen.utils;
 
-public class GeneratedClass
+public class GeneratedModule
 {
 	private String name;
 	private String content;
-	public GeneratedClass(String name, String content)
+	public GeneratedModule(String name, String content)
 	{
 		super();
 		this.name = name;

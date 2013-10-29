@@ -29,11 +29,13 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.utils.GeneratedClass;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.visitor.CodeGenerator;
 
 public class CodeGen
@@ -64,11 +66,42 @@ public class CodeGen
 		//Velocity.init(propertyPath);
 	}
 
-	public List<GeneratedClass> generateCode(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException
+	public void generateQuotes(GeneratedData data)
+	{
+		try
+		{
+			CodeGenerator generator = new CodeGenerator(log);
+			MergeVisitor mergeVisitor = new MergeVisitor();
+			CodeFormatter codeFormatter = constructCodeFormatter();
+			StringWriter writer = new StringWriter();
+			
+			AInterfaceDeclCG quotesInterface = generator.getQuotes();
+			quotesInterface.apply(mergeVisitor, writer);
+			String code = writer.toString();
+			
+			TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
+			IDocument doc = new Document(code);
+			try
+			{
+				textEdit.apply(doc);
+				data.setQuoteValues(new GeneratedModule(quotesInterface.getName(), doc.get()));
+			} catch (MalformedTreeException e)
+			{
+				e.printStackTrace();
+			} catch (BadLocationException e)
+			{
+				e.printStackTrace();
+			}
+
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void generateCode(List<SClassDefinition> mergedParseLists, GeneratedData data) throws AnalysisException
 	{
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
-		List<GeneratedClass> generatedClasses = new ArrayList<GeneratedClass>();
 		CodeGenerator generator = new CodeGenerator(log);
 
 		CodeFormatter codeFormatter = constructCodeFormatter();
@@ -77,24 +110,23 @@ public class CodeGen
 		{
 			classes.add(generator.generateFrom(classDef));
 		}
-
+		
 		MergeVisitor mergeVisitor = new MergeVisitor();
+		StringWriter writer = new StringWriter();
 
-		IDocument doc = null;
 		for (AClassDeclCG classCg : classes)
 		{
 			try
 			{
-				StringWriter writer = new StringWriter();
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
 				
 				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
-				doc = new Document(code);
+				IDocument doc = new Document(code);
 				try
 				{
 					textEdit.apply(doc);
-					generatedClasses.add(new GeneratedClass(classCg.getName(), doc.get()));
+					data.addClass(new GeneratedModule(classCg.getName(), doc.get()));
 
 				} catch (MalformedTreeException e)
 				{
@@ -108,14 +140,14 @@ public class CodeGen
 			{
 				e.printStackTrace();
 			}
+			
+			writer = new StringWriter();
 		}
-
-		return generatedClasses;
 	}
 
-	public void generateSourceFiles(List<GeneratedClass> generatedClasses)
+	public void generateSourceFiles(List<GeneratedModule> generatedClasses)
 	{
-		for (GeneratedClass classCg : generatedClasses)
+		for (GeneratedModule classCg : generatedClasses)
 		{
 			saveClass(classCg.getName() + ".java", classCg.getContent());
 		}
@@ -176,7 +208,7 @@ public class CodeGen
 
 	}
 
-	public void saveClass(String javaFileName, String code)
+	private void saveClass(String javaFileName, String code)
 	{
 		try
 		{
@@ -193,7 +225,7 @@ public class CodeGen
 		}
 	}
 
-	public void replaceInFile(String filePath, String regex, String replacement)
+	private void replaceInFile(String filePath, String regex, String replacement)
 	{
 		try
 		{
@@ -216,7 +248,7 @@ public class CodeGen
 		}
 	}
 
-	public void copyDirectory(File sourceLocation, File targetLocation)
+	private void copyDirectory(File sourceLocation, File targetLocation)
 			throws IOException
 	{
 		if (sourceLocation.isDirectory())

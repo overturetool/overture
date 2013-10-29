@@ -8,7 +8,8 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.utils.GeneratedClass;
+import org.overture.codegen.utils.GeneratedData;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -16,7 +17,8 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class CodeGenUtil
 {
-	public static String getVelocityPropertiesPath(String relativePath)
+	//TODO: REMOVE NOT USED
+	private static String getVelocityPropertiesPath(String relativePath)
 	{
 		String path = null;
 
@@ -38,7 +40,7 @@ public class CodeGenUtil
 		return path;
 	}
 	
-	public static List<GeneratedClass> generateOO(File file) throws AnalysisException
+	public static void generateOO(File file, GeneratedData data) throws AnalysisException
 	{
 		if (!file.exists() || !file.isFile())
 		{
@@ -65,7 +67,8 @@ public class CodeGenUtil
 		CodeGen vdmCodGen = new CodeGen();
 		try
 		{
-			return vdmCodGen.generateCode(typeCheckResult.result);		
+			vdmCodGen.generateCode(typeCheckResult.result, data);
+			vdmCodGen.generateQuotes(data);
 		} catch (AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from specification. Exception message: "
@@ -73,18 +76,18 @@ public class CodeGenUtil
 		}
 	}
 
-	public static List<GeneratedClass> generateOO(String[] args) throws AnalysisException
+	public static GeneratedData generateOO(String[] args) throws AnalysisException
 	{		
-		List <GeneratedClass> allClasses = new ArrayList<GeneratedClass>();
+		GeneratedData data = new GeneratedData();
 		
 		for (int i = 1; i < args.length; i++)
 		{
 			String fileName = args[i];
 			File file = new File(fileName);
-			allClasses.addAll(generateOO(file));
+			generateOO(file, data);
 		}
 		
-		return allClasses;
+		return data;
 	}
 
 	public static String generateFromExp(String exp) throws AnalysisException
@@ -140,7 +143,7 @@ public class CodeGenUtil
 
 	}
 	
-	public static void generateSourceFiles(List<GeneratedClass> classes)
+	public static void generateSourceFiles(List<GeneratedModule> classes)
 	{
 		CodeGen vdmCodGen = new CodeGen();
 		vdmCodGen.generateSourceFiles(classes);
