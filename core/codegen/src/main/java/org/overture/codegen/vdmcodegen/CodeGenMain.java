@@ -41,9 +41,6 @@ public class CodeGenMain
 					System.out.println("**********");
 					System.out.println(quotes.getContent());
 				}
-				else
-					System.out.println("NO QUOTES:::::");
-					
 				
 				CodeGenUtil.generateSourceFiles(generatedClasses);
 				
