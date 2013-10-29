@@ -33,6 +33,7 @@ import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
@@ -171,6 +172,8 @@ public class TemplateManager
 		// Binary expressions
 		
 		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, IText.BINARY_EXPS_PATH + "Equals");
+		
+		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, IText.BINARY_EXPS_PATH + "NotEquals");
 		
 		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, IText.BINARY_EXPS_PATH + "SeqConcat");
 		

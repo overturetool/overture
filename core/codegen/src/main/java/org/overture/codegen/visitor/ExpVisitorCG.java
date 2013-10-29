@@ -19,6 +19,7 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
+import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -55,6 +56,7 @@ import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
@@ -161,6 +163,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	{	
 		//TODO: For records, classes etc.
 		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseANotEqualBinaryExp(ANotEqualBinaryExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		//TODO: For records, classes etc. (exactly same problems as for equals)
+		return expAssistant.handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override

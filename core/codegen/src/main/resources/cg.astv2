@@ -129,6 +129,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
     =   #Numeric 
     |	{equals}
+    |	{notEquals}
     |	{seqConcat}
     ;
  

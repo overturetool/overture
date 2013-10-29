@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -66,6 +67,12 @@ public class CG
 		//else if(..)
 		
 		return CG.format(node.getLeft()) + " == " + CG.format(node.getRight());
+	}
+	
+	public static String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
+	{
+		//FIXME: Same problems as for equals. In addition, this method lacks support for collections
+		return CG.format(node.getLeft()) + " != " + CG.format(node.getRight());
 	}
 	
 	private static boolean isEmptySeq(PExpCG exp)
