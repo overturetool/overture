@@ -774,7 +774,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 			: ( "max( " + root + "[ {" + args + "} ] )");
 		} else {
 		    answer = MyDebug ? (root + "*seq apply* " + args)
-			: ( "last( (" + root + ") /|\\ ("  + args + ") )");
+			: ( root + "("  + args + ")");
 		}
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1016,6 +1016,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		return answer;
 	}
 
+/*
 	@Override
 	public String caseAIfExp(AIfExp node, String question)
 			throws AnalysisException {
@@ -1036,6 +1037,28 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		answer = "IF " + ifpart + " THEN " + thenpart
 		    + (elseifpart.equals("")?"": elseifpart)
 		    + " ELSE " +  elsepart + " END";
+		return answer;
+	}
+*/
+	
+	@Override
+	public String caseAIfExp(AIfExp node, String question)
+			throws AnalysisException {
+	    //System.out.println("In caseAIfExp " + node.toString());
+	    //System.out.println("In caseAIfExp " + node.kindPExp());
+	        String answer="";
+		String elseifpart = "";
+	        String ifpart = node.getTest().apply(this,"test");
+	        String thenpart = node.getThen().apply(this,"then");
+		LinkedList<AElseIfExp> elselist= node.getElseList();
+
+		for(AElseIfExp subnode : elselist) {
+		    elseifpart += caseAElseIfExp(subnode, question);
+		}
+
+	        String elsepart = node.getElse().apply(this,"else");
+		//System.out.println("In caseAIfExp");
+		answer = "((" + ifpart + ") & (" + thenpart + ")) or ( not(" + ifpart + ") & (" + elsepart + "))";
 		return answer;
 	}
 
