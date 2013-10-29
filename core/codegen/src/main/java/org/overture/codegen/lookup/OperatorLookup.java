@@ -15,7 +15,6 @@ import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 
 public class OperatorLookup
 {
