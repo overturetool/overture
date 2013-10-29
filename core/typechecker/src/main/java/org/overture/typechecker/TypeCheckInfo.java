@@ -142,10 +142,28 @@ public class TypeCheckInfo
 	{
 		return "Scope: " + scope + "\n" + env;
 	}
+	
+	public TypeCheckInfo newScope(NameScope newScope)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env,newScope);
+		return info;
+	}
 
 	public TypeCheckInfo newScope(List<PDefinition> definitions)
 	{
 		return newScope(definitions, scope);
+	}
+	
+	public TypeCheckInfo newInfo(Environment newEnv)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv,scope);
+		return info;
+	}
+	
+	public TypeCheckInfo newInfo(Environment newEnv,NameScope newScope)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv,newScope);
+		return info;
 	}
 
 	public TypeCheckInfo newScope(List<PDefinition> definitions,
