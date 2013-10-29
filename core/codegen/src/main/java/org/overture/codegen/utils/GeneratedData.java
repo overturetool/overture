@@ -1,37 +1,26 @@
 package org.overture.codegen.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GeneratedData
 {
 	private List<GeneratedModule> classes;
-	
 	private GeneratedModule quoteValues;
 
-	public GeneratedData()
+	public GeneratedData(List<GeneratedModule> classes,
+			GeneratedModule quoteValues)
 	{
 		super();
-		this.classes = new ArrayList<GeneratedModule>();
-		this.quoteValues = null;
+		this.classes = classes;
+		this.quoteValues = quoteValues;
 	}
 	
-	public void addClass(GeneratedModule classCg)
-	{
-		this.classes.add(classCg);
-	}
-
 	public List<GeneratedModule> getClasses()
 	{
 		return classes;
 	}
 	
-	public void setQuoteValues(GeneratedModule quoteValues)
-	{
-		this.quoteValues = quoteValues;
-	}
-
-	public GeneratedModule getQuotes()
+	public GeneratedModule getQuoteValues()
 	{
 		return quoteValues;
 	}

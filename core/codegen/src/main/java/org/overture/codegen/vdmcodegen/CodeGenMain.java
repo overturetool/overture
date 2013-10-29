@@ -25,7 +25,7 @@ public class CodeGenMain
 		{
 			try
 			{
-				GeneratedData data = CodeGenUtil.generateOO(args);
+				GeneratedData data = CodeGenUtil.generateOoFromFiles(args);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -34,7 +34,8 @@ public class CodeGenMain
 					System.out.println(generatedClass.getContent());
 				}
 				
-				GeneratedModule quotes = data.getQuotes();
+				GeneratedModule quotes = data.getQuoteValues();
+				
 				if(quotes != null)
 				{
 					System.out.println("**********");

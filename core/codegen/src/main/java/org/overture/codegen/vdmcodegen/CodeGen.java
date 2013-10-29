@@ -34,7 +34,6 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.visitor.CodeGenerator;
 
@@ -66,7 +65,7 @@ public class CodeGen
 		//Velocity.init(propertyPath);
 	}
 
-	public void generateQuotes(GeneratedData data)
+	public GeneratedModule generateQuotes()
 	{
 		try
 		{
@@ -77,7 +76,7 @@ public class CodeGen
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
 			
 			if(quotesInterface.getFields().size() == 0)
-				return; //Nothing to generate
+				return null; //Nothing to generate
 			
 			quotesInterface.apply(mergeVisitor, writer);
 			String code = writer.toString();
@@ -87,7 +86,7 @@ public class CodeGen
 			try
 			{
 				textEdit.apply(doc);
-				data.setQuoteValues(new GeneratedModule(quotesInterface.getName(), doc.get()));
+				return new GeneratedModule(quotesInterface.getName(), doc.get());
 			} catch (MalformedTreeException e)
 			{
 				e.printStackTrace();
@@ -100,9 +99,11 @@ public class CodeGen
 		{
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
-	public void generateCode(List<SClassDefinition> mergedParseLists, GeneratedData data) throws AnalysisException
+	public List<GeneratedModule> generateCode(List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
 		CodeFormatter codeFormatter = constructCodeFormatter();
@@ -115,6 +116,7 @@ public class CodeGen
 		MergeVisitor mergeVisitor = new MergeVisitor();
 		StringWriter writer = new StringWriter();
 
+		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (AClassDeclCG classCg : classes)
 		{
 			try
@@ -127,7 +129,7 @@ public class CodeGen
 				try
 				{
 					textEdit.apply(doc);
-					data.addClass(new GeneratedModule(classCg.getName(), doc.get()));
+					generated.add(new GeneratedModule(classCg.getName(), doc.get()));
 
 				} catch (MalformedTreeException e)
 				{
@@ -144,6 +146,8 @@ public class CodeGen
 			
 			writer = new StringWriter();
 		}
+		
+		return generated;
 	}
 
 	public void generateSourceFiles(List<GeneratedModule> generatedClasses)

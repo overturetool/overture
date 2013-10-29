@@ -26,8 +26,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 	protected String generateActualOutput() throws AnalysisException
 	{	
 		StringBuilder generatedCode = new StringBuilder();
-		GeneratedData data = new GeneratedData();
-		CodeGenUtil.generateOO(file, data);
+		GeneratedData data = CodeGenUtil.generateOoFromFile(file);
 		List<GeneratedModule> classes = data.getClasses();
 		
 		for (GeneratedModule classCg : classes)
@@ -36,7 +35,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(IText.NEW_LINE);
 		}
 		
-		GeneratedModule quoteData = data.getQuotes();
+		GeneratedModule quoteData = data.getQuoteValues();
 		
 		if(quoteData != null)
 		{

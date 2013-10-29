@@ -1,7 +1,6 @@
 package org.overture.codegen.vdmcodegen;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,30 +16,12 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class CodeGenUtil
 {
-	//TODO: REMOVE NOT USED
-	private static String getVelocityPropertiesPath(String relativePath)
+	public static List<GeneratedModule> generateOO(File file) throws AnalysisException
 	{
-		String path = null;
-
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		URL url = classLoader.getResource(relativePath);
-
-		File file;
-		try
-		{
-			if (url != null)
-			{
-				file = new File(url.toURI());
-				path = file.getAbsolutePath();
-			}
-		} catch (Exception e)
-		{
-		}
-
-		return path;
+		return generateOO(file, new CodeGen());
 	}
 	
-	public static void generateOO(File file, GeneratedData data) throws AnalysisException
+	public static List<GeneratedModule> generateOO(File file, CodeGen vdmCodGen) throws AnalysisException
 	{
 		if (!file.exists() || !file.isFile())
 		{
@@ -64,11 +45,9 @@ public class CodeGenUtil
 					+ file.getName());
 		}
 
-		CodeGen vdmCodGen = new CodeGen();
 		try
 		{
-			vdmCodGen.generateCode(typeCheckResult.result, data);
-			vdmCodGen.generateQuotes(data);
+			return vdmCodGen.generateCode(typeCheckResult.result);
 		} catch (AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from specification. Exception message: "
@@ -76,18 +55,28 @@ public class CodeGenUtil
 		}
 	}
 
-	public static GeneratedData generateOO(String[] args) throws AnalysisException
+	public static GeneratedData generateOoFromFile(File file) throws AnalysisException
+	{
+		return generateOoFromFiles(new String[]{"", file.getAbsolutePath()});
+	}
+	
+	public static GeneratedData generateOoFromFiles(String[] args) throws AnalysisException
 	{		
-		GeneratedData data = new GeneratedData();
+		CodeGen vvdmCodGen = new CodeGen();
+		List<GeneratedModule> data = new ArrayList<GeneratedModule>();
 		
 		for (int i = 1; i < args.length; i++)
 		{
 			String fileName = args[i];
 			File file = new File(fileName);
-			generateOO(file, data);
+			data.addAll(generateOO(file, vvdmCodGen));
 		}
 		
-		return data;
+		GeneratedModule quoteValues = vvdmCodGen.generateQuotes();
+		
+		GeneratedData x = new GeneratedData(data, quoteValues);
+		
+		return x;
 	}
 
 	public static String generateFromExp(String exp) throws AnalysisException
