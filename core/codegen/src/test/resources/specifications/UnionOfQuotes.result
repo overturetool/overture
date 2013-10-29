@@ -1,0 +1,38 @@
+
+import quotes.*;
+
+public class A {
+
+	public void op(int v) {
+
+		if (v == Quotes.Red) {
+
+			//Skip;
+
+		}
+
+	}
+
+	public void op2(int v) {
+
+		if (v == Quotes.A) {
+
+			//Skip;
+
+		}
+
+	}
+
+	public int op3() {
+
+		return Quotes.Red;
+	}
+
+}
+
+package quotes;
+
+public interface Quotes {
+	public static int A = 1;
+	public static int Red = 2;
+}
