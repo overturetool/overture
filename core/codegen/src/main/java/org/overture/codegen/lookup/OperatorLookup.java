@@ -11,9 +11,11 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 
 public class OperatorLookup
 {
@@ -32,7 +34,10 @@ public class OperatorLookup
 	private static final int GREATER = 1;
 	private static final int LESS_EQUAL = 1;
 	private static final int LESS = 1;
-		
+	
+	//TODO: This is not the way to do it! Fix operator precedence!
+	private static final int POWER = 7;
+	
 	private HashMap<Class<? extends SBinaryExp>,OperatorInfo> lookup;
 
 	public OperatorInfo find(Class<? extends SBinaryExp> key)
@@ -55,6 +60,7 @@ public class OperatorLookup
 		lookup.put(ASubtractNumericBinaryExp.class, new OperatorInfo(SUB, "-"));
 		lookup.put(ARemNumericBinaryExp.class, new OperatorInfo(REM, "%")); 
 		lookup.put(ATimesNumericBinaryExp.class, new OperatorInfo(TIMES, "*"));
+		lookup.put(AStarStarBinaryExp.class, new OperatorInfo(POWER, "**"));
 		
 //		lookup.put(ADivNumericBinaryExpCG.class, new OperatorInfo(DIVIDE, "/"));
 //		lookup.put(ADivideNumericBinaryExpCG.class, new OperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
