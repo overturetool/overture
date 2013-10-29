@@ -35,6 +35,7 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -207,6 +208,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AStringLiteralExpCG.class, IText.EXPS_PATH
 				+ "StringLiteral");
+		
+		nodeTemplateFileNames.put(AQuoteLiteralExpCG.class, IText.EXPS_PATH
+				+ "QuoteLiteral");
 		
 		//Seq expressions
 		nodeTemplateFileNames.put(AEnumSeqExpCG.class, IText.SEQ_EXPS_PATH

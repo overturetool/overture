@@ -19,6 +19,7 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
+import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
@@ -56,6 +57,7 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -82,6 +84,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		String value = node.getValue().getValue();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+
+		AQuoteLiteralExpCG quoteLit = new AQuoteLiteralExpCG();
+		quoteLit.setValue(value);
+		quoteLit.setType(type);
+
+		return quoteLit;
 	}
 	
 	@Override

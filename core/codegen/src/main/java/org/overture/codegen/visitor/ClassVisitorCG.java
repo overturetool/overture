@@ -7,6 +7,7 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
@@ -47,7 +48,6 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 		
 		for (PDefinition def : defs)
 		{
-			
 			PDeclCG decl = def.apply(question.getDeclVisitor(), question);
 		
 			if(decl == null)
@@ -59,6 +59,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 				methods.add((AMethodDeclCG) decl);
 			else if(decl instanceof AClassDeclCG)
 				innerClasses.add((AClassDeclCG) decl);
+			else if(decl instanceof AEmptyDeclCG)
+			;//Empty declarations are used to indicate constructs that can be ignored during the
+			 //construction of the OO AST. 
 			else
 				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
 			//TODO:Remove prints

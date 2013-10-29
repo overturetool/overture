@@ -12,11 +12,14 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistant;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
@@ -25,13 +28,11 @@ import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
-import org.overture.typechecker.ClassTypeChecker;
+import org.overture.codegen.utils.VdmTransUtil;
 
 public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
@@ -43,7 +44,25 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	{
 		this.declAssistant = new DeclAssistant();
 	}
-	
+		
+	@Override
+	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		if(type instanceof AUnionType)
+		{
+			AUnionType unionType = (AUnionType) type;
+			
+			if(VdmTransUtil.isUnionOfQuotes(unionType))
+				//The VDM translation ignores named invariant types that are not
+				//union of quotes as they are represented as integers instead
+				return new AEmptyDeclCG();
+		}
+
+		return null; //Currently the code generator only supports the union of quotes case
+	}
 	
 	@Override
 	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,

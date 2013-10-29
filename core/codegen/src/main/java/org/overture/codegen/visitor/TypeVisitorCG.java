@@ -5,14 +5,19 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -22,6 +27,7 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.utils.VdmTransUtil;
 
 public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 {
@@ -36,6 +42,30 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 			throws AnalysisException
 	{
 		return null; //Indicates an unknown type
+	}
+	
+	@Override
+	public PTypeCG caseANamedInvariantType(ANamedInvariantType node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		if(type instanceof AUnionType)
+		{
+			AUnionType unionType = (AUnionType) type;
+			
+			if(VdmTransUtil.isUnionOfQuotes(unionType))
+				return new AIntNumericBasicTypeCG();
+		}
+
+		return null; //Currently the code generator only supports the union of quotes case
+	}
+	
+	@Override
+	public PTypeCG caseAQuoteType(AQuoteType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return new AIntNumericBasicTypeCG();
 	}
 	
 	@Override

@@ -3,7 +3,13 @@
 	#set( $listImport = "import java.util.*;")
 #end
 
+#set( $quoteImport = "")
+#if ($DependencyAnalysis.usesQuoteLiterals($node))
+	#set( $quoteImport = "import quotes.*;")
+#end
+
 $listImport
+$quoteImport
 
 #set( $abstract = "")
 #if ($node.getAbstract())

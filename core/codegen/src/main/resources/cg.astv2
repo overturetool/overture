@@ -63,6 +63,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[methods]:declCG.method*
     	[superName]:java_String
     	[innerClasses]:declCG.class*
+    |	{empty}
 //    |	{typDecl} //Consider removing this
 //    	[name]:java_String
 //    	[type]:typeCG
@@ -116,6 +117,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{realLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
     |	{stringLiteral} [value]:java_String
+    |	{quoteLiteral}	[value]:java_String
     |	{self}
     |	#Seq
     ;

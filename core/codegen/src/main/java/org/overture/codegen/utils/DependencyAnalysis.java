@@ -21,4 +21,20 @@ public class DependencyAnalysis
 		
 		return seqAnalysis.isFound();
 	}
+	
+	public static boolean usesQuoteLiterals(AClassDeclCG classDecl)
+	{
+		QuoteAnalysis quoteAnalysis = new QuoteAnalysis();
+		
+		try
+		{
+			classDecl.apply(quoteAnalysis);
+		}catch(AnalysisException e)
+		{
+			//If found an exception will be thrown to terminate
+			//the visitor analysis
+		}
+		
+		return quoteAnalysis.isFound();
+	}
 }
