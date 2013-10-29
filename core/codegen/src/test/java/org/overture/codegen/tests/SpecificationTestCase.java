@@ -39,6 +39,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		if(quoteData != null)
 		{
+			generatedCode.append(IText.NEW_LINE);
 			generatedCode.append(quoteData.getContent());
 			generatedCode.append(IText.NEW_LINE);
 		}
