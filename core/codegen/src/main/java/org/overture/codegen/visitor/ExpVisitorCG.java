@@ -18,6 +18,7 @@ import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -54,6 +55,7 @@ import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
@@ -84,6 +86,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	{
 		this.typeLookup = new TypeLookup();
 		this.expAssistant = new ExpAssistantCG(this);
+	}
+	
+	@Override
+	public PExpCG caseANilExp(ANilExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		//TODO: Why does nil have type OptionalType in VDM?
+		return new ANullExpCG();
 	}
 	
 	@Override

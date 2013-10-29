@@ -122,6 +122,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{stringLiteral} [value]:java_String
     |	{quoteLiteral}	[value]:java_String
     |	{self}
+    |	{null}
     |	#Seq
     ;
     
