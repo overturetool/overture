@@ -45,7 +45,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 abstract public class Environment
 {
-	protected final ITypeCheckerAssistantFactory af;
+	public final ITypeCheckerAssistantFactory af;
 	/** The extended search strategy */
 	protected final EnvironmentSearchStrategy searchStrategy;
 	
