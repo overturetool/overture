@@ -40,7 +40,7 @@ import org.overture.codegen.visitor.CodeGenerator;
 
 public class CodeGen
 {
-	private ILogger log;
+	private CodeGenerator generator;
 
 	public CodeGen()
 	{
@@ -55,7 +55,7 @@ public class CodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
-		this.log = log;
+		this.generator = new CodeGenerator(log);
 	}
 
 	private void initVelocity()
@@ -70,12 +70,15 @@ public class CodeGen
 	{
 		try
 		{
-			CodeGenerator generator = new CodeGenerator(log);
 			MergeVisitor mergeVisitor = new MergeVisitor();
 			CodeFormatter codeFormatter = constructCodeFormatter();
 			StringWriter writer = new StringWriter();
 			
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
+			
+			if(quotesInterface.getFields().size() == 0)
+				return; //Nothing to generate
+			
 			quotesInterface.apply(mergeVisitor, writer);
 			String code = writer.toString();
 			
@@ -102,8 +105,6 @@ public class CodeGen
 	public void generateCode(List<SClassDefinition> mergedParseLists, GeneratedData data) throws AnalysisException
 	{
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
-		CodeGenerator generator = new CodeGenerator(log);
-
 		CodeFormatter codeFormatter = constructCodeFormatter();
 
 		for (SClassDefinition classDef : mergedParseLists)
@@ -170,8 +171,6 @@ public class CodeGen
 
 	public String generateCode(PExp exp) throws AnalysisException
 	{
-		CodeGenerator generator = new CodeGenerator(log);
-
 		PExpCG expCg = generator.generateFrom(exp);
 
 		MergeVisitor mergeVisitor = new MergeVisitor();
@@ -280,42 +279,4 @@ public class CodeGen
 			out.close();
 		}
 	}
-
-	// public void save(CodeGenContextMap contextMap)
-	// {
-	//
-	// java.net.URI absolutePath = vdmProject.getModelBuildPath().getOutput().getLocationURI();//
-	// iFile.getLocationURI();
-	// URL url;
-	// try
-	// {
-	// url = FileLocator.toFileURL(absolutePath.toURL());
-	// File file = new File(url.toURI());
-	// } catch (IOException e)
-	// {
-	// e.printStackTrace();
-	// } catch (URISyntaxException e)
-	// {
-	// e.printStackTrace();
-	// }
-
-	// ********** COMMENT BELOW BACK IN:
-
-	// Set<String> set = contextMap.getContextKeys();
-	//
-	// Template template = Vdm2CppUtil.getTemplate("class.vm");
-	//
-	// if (template == null)
-	// {
-	// return;
-	// }
-	// PrintWriter out = new PrintWriter(System.out);
-	// for (String classDef : set)
-	// {
-	// template.merge(contextMap.getContext(classDef).getVelocityContext(), out);
-	// out.flush();
-	// out.println();
-	// }
-	// }
-
 }
