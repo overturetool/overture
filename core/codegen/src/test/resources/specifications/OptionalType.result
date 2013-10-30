@@ -1,0 +1,10 @@
+
+public class A {
+
+	private Integer b0 = null;
+	private Double b1 = null;
+	private Character b2 = null;
+	private Boolean b3 = null;
+	private A a = null;
+
+}
