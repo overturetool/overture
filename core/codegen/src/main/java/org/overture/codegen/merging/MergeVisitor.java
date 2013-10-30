@@ -23,11 +23,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		this.templates = new TemplateManager();
 	}
 
-	public TemplateManager getTemplateManager()
-	{
-		return templates;
-	}
-	
 	@Override
 	public void defaultINode(INode node, StringWriter question)
 			throws AnalysisException

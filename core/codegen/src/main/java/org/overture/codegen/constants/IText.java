@@ -6,11 +6,11 @@ public class IText
 {
 	public static final String NEW_LINE = System.getProperty("line.separator");
 	
-	public final static char SEPARATOR_CHAR = File.separatorChar;
+	public final static char SEPARATOR_CHAR = '/';
 	
 	public static final String TEMPLATE_FILE_EXTENSION = ".vm";
 
-	public static final String ROOT = "Templates" + SEPARATOR_CHAR;
+	public static final String ROOT = SEPARATOR_CHAR + "Templates" + SEPARATOR_CHAR;
 	
 	public static final String DECL_PATH = ROOT + "Declarations" + SEPARATOR_CHAR;
 	

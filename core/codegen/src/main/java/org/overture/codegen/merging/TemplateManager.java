@@ -298,8 +298,7 @@ public class TemplateManager
 
 	private StringBuffer readFromFile(String relativepath) throws IOException
 	{
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream(relativepath);
+		InputStream input = this.getClass().getResourceAsStream(relativepath);
 
 		if (input == null)
 			return null;

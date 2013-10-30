@@ -7,6 +7,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class VdmTransUtil
 {
+	//TODO: Copied from UML2VDM. Factor out in assistant
 	public static boolean isUnionOfQuotes(AUnionType type)
 	{
 		try
