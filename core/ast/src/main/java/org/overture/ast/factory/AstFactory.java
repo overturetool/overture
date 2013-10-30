@@ -2487,7 +2487,7 @@ public class AstFactory
 	}
 
 	public static ACallObjectStm newACallObjectStm(
-			PObjectDesignator designator, LexIdentifierToken fieldname,
+			PObjectDesignator designator, ILexIdentifierToken fieldname,
 			List<PExp> args)
 	{
 		ACallObjectStm result = new ACallObjectStm();
@@ -2503,7 +2503,7 @@ public class AstFactory
 	}
 
 	public static AFieldObjectDesignator newAFieldObjectDesignator(
-			PObjectDesignator object, LexIdentifierToken fieldname)
+			PObjectDesignator object, ILexIdentifierToken fieldname)
 	{
 		AFieldObjectDesignator result = new AFieldObjectDesignator();
 		result.setLocation(object.getLocation());
