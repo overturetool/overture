@@ -3,7 +3,7 @@ public class Records {
 
 	private Vector2D v = new Vector2D(1, 1);
 
-	public Vector2D f() {
+	public static Vector2D f() {
 
 		return new Vector2D(1, 2);
 	}
