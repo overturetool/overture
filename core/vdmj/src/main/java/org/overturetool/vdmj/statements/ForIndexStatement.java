@@ -129,8 +129,13 @@ public class ForIndexStatement extends Statement
 		if (found != null) return found;
 		found = to.findExpression(lineno);
 		if (found != null) return found;
-		found = by.findExpression(lineno);
-		if (found != null) return found;
+		
+		if (by != null)
+		{
+			found = by.findExpression(lineno);
+			if (found != null) return found;
+		}
+		
 		return statement.findExpression(lineno);
 	}
 
