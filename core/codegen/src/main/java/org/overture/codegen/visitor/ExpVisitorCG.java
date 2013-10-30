@@ -3,6 +3,9 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -36,6 +39,7 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -46,6 +50,7 @@ import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
@@ -71,6 +76,7 @@ import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -291,12 +297,36 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	public PExpCG caseAVariableExp(AVariableExp node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		String original = node.getOriginal();
+		String name = node.getName().getName();
+
+		PDefinition varDef = node.getVardef();
 		
-		AVariableExpCG varExp = new AVariableExpCG();
-		varExp.setOriginal(original);
+		if (varDef instanceof ALocalDefinition || 
+			varDef instanceof AInstanceVariableDefinition ||
+			!node.getName().getExplicit())
+		{
+			AVariableExpCG varExp = new AVariableExpCG();
+			varExp.setOriginal(name);
+			
+			return varExp;
+		}
+		else if(node.getName().getExplicit())
+		{
+			AExplicitVariableExpCG varExp = new AExplicitVariableExpCG();
+			
+			String className = node.getName().getModule();
+			
+			AClassTypeCG classType = new AClassTypeCG();
+			classType.setName(className);
+			
+			varExp.setClassType(classType);
+			varExp.setName(name);
+			
+			return varExp;
+		}
+		else
+			return null; 
 		
-		return varExp;
 	}
 	
 	@Override
