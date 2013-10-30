@@ -11,7 +11,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.constants.OoAstInfo;
 
 public class CodeGenInfo
 {
@@ -97,7 +97,7 @@ public class CodeGenInfo
 	{
 		AInterfaceDeclCG quotes = new AInterfaceDeclCG();
 		
-		quotes.setName(OoAstConstants.QUOTES_INTERFACE_NAME);
+		quotes.setName(OoAstInfo.QUOTES_INTERFACE_NAME);
 		
 		LinkedList<AFieldDeclCG> fields = quotes.getFields();
 		
@@ -107,7 +107,7 @@ public class CodeGenInfo
 		{
 			AFieldDeclCG fieldDecl = new AFieldDeclCG();
 			fieldDecl.setName(quoteValuesList.get(i));
-			fieldDecl.setAccess(OoAstConstants.PUBLIC);
+			fieldDecl.setAccess(OoAstInfo.PUBLIC);
 			fieldDecl.setFinal(false);
 			fieldDecl.setStatic(true);
 			fieldDecl.setType(new AIntNumericBasicTypeCG());
