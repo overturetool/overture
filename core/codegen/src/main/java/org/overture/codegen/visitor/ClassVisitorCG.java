@@ -61,7 +61,12 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 			if(decl instanceof AFieldDeclCG)
 				fields.add((AFieldDeclCG) decl);
 			else if(decl instanceof AMethodDeclCG)
-				methods.add((AMethodDeclCG) decl);
+			{
+				AMethodDeclCG method = (AMethodDeclCG) decl;
+				if(DeclAssistant.causesMethodOverloading(methods, method))
+					throw new AnalysisException("Operation/function name overload is not allowed. Caused by: " + name + "." + method.getName());
+				methods.add(method);
+			}
 			else if(decl instanceof AClassDeclCG)
 				innerClasses.add((AClassDeclCG) decl);
 			else if(decl instanceof AEmptyDeclCG)
