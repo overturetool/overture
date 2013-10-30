@@ -39,7 +39,6 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;

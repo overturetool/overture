@@ -1,7 +1,5 @@
 package org.overture.codegen.constants;
 
-import java.io.File;
-
 public class IText
 {
 	public static final String NEW_LINE = System.getProperty("line.separator");
