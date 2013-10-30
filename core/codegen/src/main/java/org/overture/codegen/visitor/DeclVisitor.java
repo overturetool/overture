@@ -34,6 +34,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstInfo;
 import org.overture.codegen.utils.VdmTransUtil;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
@@ -247,7 +248,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	{	
 		
 		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = false;
+		boolean isStatic = PDefinitionAssistantTC.isStatic(node);
 		String operationName = node.getName().getName();
 		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
 		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
