@@ -1,0 +1,14 @@
+
+public class A {
+
+	public void op() {
+
+		throw new UnsupportedOperationException();
+	}
+
+	public int f() {
+
+		throw new UnsupportedOperationException();
+	}
+
+}
