@@ -3,8 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AElseIfExp;
@@ -29,6 +27,7 @@ import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
+import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
@@ -49,13 +48,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	public PStmCG caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 			CodeGenInfo question) throws AnalysisException
 	{
-		System.out.println("NotYetSpecified opname: " + node.toString());
-		
-		AExplicitOperationDefinition x = node.getAncestor(AExplicitOperationDefinition.class);
-		
-		if(x != null) System.out.println(x.getName().getName()); else System.out.println("nothing!");
-		
-		return super.caseANotYetSpecifiedStm(node, question);
+		return new ANotImplementedStmCG();
 	}
 	
 	@Override

@@ -107,6 +107,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{assignment} [target]:stateDesignatorCG [exp]:expCG
            |	{block}	[statements]:stmCG*
            |	{call} [name]:java_String [args]:expCG*
+           |	{notImplemented}
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

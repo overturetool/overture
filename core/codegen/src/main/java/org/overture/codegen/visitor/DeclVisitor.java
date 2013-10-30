@@ -29,6 +29,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstInfo;
@@ -193,7 +194,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 			AExplicitFunctionDefinition node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		if(node.getIsCurried() || node.getIsUndefined() || node.getIsTypeInvariant())
+		if(node.getIsCurried()|| node.getIsTypeInvariant())
 			return null;
 		
 		String access = node.getAccess().getAccess().toString();
@@ -201,7 +202,13 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		String operationName = node.getName().getName();
 
 		PTypeCG returnType = ((AFunctionType) node.getType()).getResult().apply(question.getTypeVisitor(), question);
-		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
+		
+		PStmCG body = null;
+		if(node.getIsUndefined())
+		   body = new ANotImplementedStmCG();
+		else
+			body = node.getBody().apply(question.getStatementVisitor(), question);
+		
 		boolean isAbstract = body == null;
 		
 		AMethodDeclCG method = new AMethodDeclCG();

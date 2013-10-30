@@ -54,6 +54,7 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
+import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -154,6 +155,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ABlockStmCG.class, IText.STM_PATH + "Block");
 		
 		nodeTemplateFileNames.put(ACallStmCG.class, IText.STM_PATH + "Call");
+		
+		nodeTemplateFileNames.put(ANotImplementedStmCG.class, IText.STM_PATH + "NotImplemented");
 		
 		// Expressions
 		
