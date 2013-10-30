@@ -9,6 +9,8 @@ import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.utils.DependencyAnalysis;
 import org.overture.codegen.visitor.CodeGenContext;
 
+import org.overture.codegen.logging.Logger;
+
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {
 
@@ -40,8 +42,18 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		Template template = templates.getTemplate(node.getClass());
 		
 		if(template == null)
-			return;
+		{
+			String msg = "Template could not be found for node: " + node.getClass().getName();
+			Logger.getLog().printErrorln(msg);
+			throw new AnalysisException(msg);
+		}
 		
-		template.merge(context.getVelocityContext(), question);
+		try{
+			template.merge(context.getVelocityContext(), question);
+		}
+		catch(Exception e)
+		{
+			throw new AnalysisException("Could not merge template for node: " + node.getClass().getName());
+		}
 	}
 }

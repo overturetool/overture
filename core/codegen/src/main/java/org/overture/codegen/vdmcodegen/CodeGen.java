@@ -33,6 +33,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.visitor.CodeGenerator;
@@ -128,6 +129,12 @@ public class CodeGen
 				IDocument doc = new Document(code);
 				try
 				{
+					if(textEdit == null)
+					{
+						Logger.getLog().printErrorln("Could not format generated code for class: " + classCg.getName());
+						break;
+					}
+					
 					textEdit.apply(doc);
 					generated.add(new GeneratedModule(classCg.getName(), doc.get()));
 
@@ -141,7 +148,8 @@ public class CodeGen
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				e.printStackTrace();
+				Logger.getLog().printErrorln("Error when generating code for class: " + classCg.getName());
+				Logger.getLog().printErrorln("Skipping class..");
 			}
 			
 			writer = new StringWriter();
