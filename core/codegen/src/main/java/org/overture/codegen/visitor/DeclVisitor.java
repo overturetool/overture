@@ -198,7 +198,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 			return null;
 		
 		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = false;
+		boolean isStatic = true;
 		String operationName = node.getName().getName();
 
 		PTypeCG returnType = ((AFunctionType) node.getType()).getResult().apply(question.getTypeVisitor(), question);
