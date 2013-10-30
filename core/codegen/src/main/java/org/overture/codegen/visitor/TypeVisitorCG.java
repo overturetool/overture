@@ -18,7 +18,6 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
