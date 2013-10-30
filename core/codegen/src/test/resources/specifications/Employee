@@ -94,8 +94,8 @@ operations
 		else
 			return start_calc(sum + (hd emps).getSalary(), tl emps);
 	
-	private start_calc: real * nat1 * nat * char * bool ==> real
-	start_calc(r, n1, n, c, b) ==
+	private not_used: real * nat1 * nat * char * bool ==> real
+	not_used(r, n1, n, c, b) ==
 		return 2.1;
 	
 			

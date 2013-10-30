@@ -99,7 +99,7 @@ public class Company {
 
 	}
 
-	private double start_calc(double r, int n1, int n, char c, boolean b) {
+	private double not_used(double r, int n1, int n, char c, boolean b) {
 
 		return 2.1;
 	}
