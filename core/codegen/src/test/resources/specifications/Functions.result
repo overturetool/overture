@@ -1,7 +1,7 @@
 
 public class Functions {
 
-	public int f1() {
+	public static int f1() {
 
 		if (1 == 1) {
 
@@ -15,7 +15,7 @@ public class Functions {
 
 	}
 
-	public int f2() {
+	public static int f2() {
 
 		if (1 == 1) {
 
@@ -41,7 +41,7 @@ public class Functions {
 
 	}
 
-	public int f3() {
+	public static int f3() {
 
 		return 5;
 	}

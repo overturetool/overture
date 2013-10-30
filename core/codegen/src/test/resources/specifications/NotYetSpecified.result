@@ -6,7 +6,7 @@ public class A {
 		throw new UnsupportedOperationException();
 	}
 
-	public int f() {
+	public static int f() {
 
 		throw new UnsupportedOperationException();
 	}
