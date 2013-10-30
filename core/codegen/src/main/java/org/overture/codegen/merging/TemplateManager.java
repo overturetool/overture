@@ -57,9 +57,13 @@ import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
@@ -104,22 +108,37 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AStringTypeCG.class, IText.TYPE_PATH + "String");
 		
+		//Basic type wrappers
+		
+		nodeTemplateFileNames.put(AIntBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+				+ "Integer");
+
+		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+				+ "Real");
+
+		nodeTemplateFileNames.put(ABoolBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+				+ "Bool");
+		
+		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+				+ "Char");
+		
 		// Seq types
 		
 		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, IText.SEQ_TYPE_PATH + "Seq");
 		
 		// Basic types
+		
+		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
+				+ "Bool");
+
 		nodeTemplateFileNames.put(ACharBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Char");
-
+		
 		// Basic numeric types
 		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Integer");
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
 				+ "Real");
-
-		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
-				+ "Bool");
 
 		// Statements
 		nodeTemplateFileNames.put(AIfStmCG.class, IText.STM_PATH + "If");

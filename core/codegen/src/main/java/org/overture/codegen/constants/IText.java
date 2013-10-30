@@ -33,6 +33,8 @@ public class IText
 	//TODO: Name it basic instead of basic type
 	public static final String BASIC_TYPE_PATH = TYPE_PATH + "BasicType" + SEPARATOR_CHAR;
 	
+	public static final String BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicTypeWrappers" + SEPARATOR_CHAR;
+	
 	public static final String SEQ_TYPE_PATH = TYPE_PATH + "Seq" + SEPARATOR_CHAR;
 	
 	public static final String STATE_DESIGNATOR_PATH = ROOT + "StateDesignator" + SEPARATOR_CHAR; 

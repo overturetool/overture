@@ -170,7 +170,16 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{class} [name]:java_String
     |	{string}
     |	#seq
+    |	#basicTypeWrappers
     ;
+    
+#basicTypeWrappers {-> package='org.overture.codegen.cgast.types'}
+	= {Int}
+	| {Real}
+	| {Char}
+	| {Bool}
+	;
+  
     
 #seq {-> package='org.overture.codegen.cgast.types'}
     =   {seq} 
