@@ -115,28 +115,30 @@ public class TypeSet extends TreeSet<Type>
 		Iterator<Type> tit = this.iterator();
 		boolean optional = false;
 
-		while (tit.hasNext())
-		{
-			Type t = tit.next();
-
-			if (t instanceof OptionalType)
-			{
-				OptionalType ot = (OptionalType)t;
-
-				if (ot.type instanceof UnknownType)
-				{
-					if (this.size() > 1)
-    				{
-    					tit.remove();
-    					optional = true;
-    				}
-					else
-					{
-						optional = false;
-					}
-				}
-			}
-		}
+//		You get less confusing results without this, it seems...
+//
+//		while (tit.hasNext())
+//		{
+//			Type t = tit.next();
+//
+//			if (t instanceof OptionalType)
+//			{
+//				OptionalType ot = (OptionalType)t;
+//
+//				if (ot.type instanceof UnknownType)
+//				{
+//					if (this.size() > 1)
+//    				{
+//    					tit.remove();
+//    					optional = true;
+//    				}
+//					else
+//					{
+//						optional = false;
+//					}
+//				}
+//			}
+//		}
 
 		assert this.size() > 0 : "Getting type of empty TypeSet";
 		Type result = null;
