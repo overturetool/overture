@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.type;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
@@ -50,9 +51,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return true;
 //	}
 
-//	public static AFunctionType getFunction(AUnknownType type) {
-//		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
-//	}
+	public static AFunctionType getFunction(AUnknownType type) {
+		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
+	}
 
 //	public static boolean isOperation(AUnknownType type) {
 //		return true;

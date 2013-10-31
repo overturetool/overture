@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
-import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -432,19 +431,15 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<AProductType> getProductTypeFinder();
 	
 	AnswerAdaptor<Boolean> getProductBasisChecker();
-	
-	IAnswer<AFunctionType> getFunctionTypeFinder();
-	
-	AnswerAdaptor<Boolean> getUnionBasisChecker();
-	
+
+	IAnswer<String> getTypeDisplayer();
+
+	AnalysisAdaptor getTypeUnresolver();
+
+	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
+
 	IAnswer<AUnionType> getUnionTypeFinder();
-	
+
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
 	
-	IAnswer<String> getTypeDisplayer();
-	
-	AnalysisAdaptor getTypeUnresolver();
-	
-	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
-		
 }

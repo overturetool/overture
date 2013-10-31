@@ -123,13 +123,20 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isUnion(PType type)
 	{
-		try
+		if (type instanceof ABracketType)
 		{
-			return type.apply(af.getUnionBasisChecker());// FIXME: should we handle exceptions like this
-		} catch (AnalysisException e)
+			return ABracketTypeAssistantTC.isUnion((ABracketType) type);
+		} else if (type instanceof SInvariantType)
 		{
-			return false;
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.isUnion((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AUnionType)
+		{
+			return AUnionTypeAssistantTC.isUnion((AUnionType) type);
 		}
+		return false;
 	}
 
 	public static AUnionType getUnion(PType type)
@@ -156,13 +163,30 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static AFunctionType getFunction(PType type)
 	{
-		try
+		if (type instanceof ABracketType)
 		{
-			return type.apply(af.getFunctionTypeFinder());// FIXME: should we handle exceptions like this
-		} catch (AnalysisException e)
+			return ABracketTypeAssistantTC.getFunction((ABracketType) type);
+		} else if (type instanceof AFunctionType)
 		{
-			return null;
+			return (AFunctionType) type;
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
+				return ANamedInvariantTypeAssistantTC.getFunction((ANamedInvariantType) type);
+			}
+		} else if (type instanceof AOptionalType)
+		{
+			return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
+		} else if (type instanceof AUnionType)
+		{
+			return af.createAUnionTypeAssistant().getFunction((AUnionType) type);
+		} else if (type instanceof AUnknownType)
+		{
+			return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
 		}
+		assert false : "Can't getFunction of a non-function";
+		return null;
 	}
 
 	public  PType typeResolve(PType type, ATypeDefinition root,
@@ -437,6 +461,29 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return false;
 		}
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isProduct((ABracketType) type);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.isProduct((AProductType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isProduct((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return true;
+//		}
+//		return false;
 	}
 
 	public static boolean narrowerThan(PType type,
@@ -793,8 +840,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 			return AProductTypeAssistantTC.getProduct((AProductType) type, size);
 		} else if (type instanceof AUnionType)
 		{
-			//return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
-			return af.createAUnionTypeAssistant().getProduct((AUnionType) type, size);
+			return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
 		} else if (type instanceof AUnknownType)
 		{
 			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type, size);

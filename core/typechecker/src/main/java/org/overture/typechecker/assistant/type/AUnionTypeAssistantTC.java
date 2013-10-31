@@ -201,10 +201,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isProduct(AUnionType type, int size)
 	{
-		return af.createAUnionTypeAssistant().getProduct(type, size) != null;
+		return getProduct(type, size) != null;
 	}
 
-	public AProductType getProduct(AUnionType type, int n)
+	public static AProductType getProduct(AUnionType type, int n)
 	{
 
 		if (type.getProdCard() != n)
@@ -262,7 +262,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static AProductType getProduct(AUnionType type)
 	{
-		return af.createAUnionTypeAssistant().getProduct(type, 0);
+		return getProduct(type, 0);
 	}
 
 	public static boolean isType(AUnionType b, Class<? extends PType> typeclass)
@@ -326,7 +326,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		if (!type.getFuncDone())
 		{
 			type.setFuncDone(true);
-			type.setFuncType(af.createPTypeAssistant().getFunction(AstFactory.newAUnknownType(type.getLocation())));
+			type.setFuncType(PTypeAssistantTC.getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -338,7 +338,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 				{
 					if (t.getDefinitions() != null)
 						defs.addAll(t.getDefinitions());
-					AFunctionType f = af.createPTypeAssistant().getFunction(t);
+					AFunctionType f = PTypeAssistantTC.getFunction(t);
 					result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)
@@ -625,10 +625,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getClassType();
 	}
 
-//	public static boolean isUnion(AUnionType type)
-//	{
-//		return true;
-//	}
+	public static boolean isUnion(AUnionType type)
+	{
+		return true;
+	}
 
 //	public static AUnionType getUnion(AUnionType type)
 //	{

@@ -106,7 +106,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 
 
 	public static AFunctionType getFunction(AOptionalType type) {
-		return af.createPTypeAssistant().getFunction(type.getType());
+		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 

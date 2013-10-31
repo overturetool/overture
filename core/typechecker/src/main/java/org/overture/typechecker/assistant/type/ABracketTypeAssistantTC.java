@@ -105,7 +105,7 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 //	}
 
 	public static AFunctionType getFunction(ABracketType type) {
-		return af.createPTypeAssistant().getFunction(type.getType());
+		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 	public static boolean isOperation(ABracketType type) {

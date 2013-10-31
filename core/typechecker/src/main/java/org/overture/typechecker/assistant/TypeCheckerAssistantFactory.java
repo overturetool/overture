@@ -12,7 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -150,7 +149,6 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
-import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
@@ -167,7 +165,6 @@ import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
-import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
@@ -1124,17 +1121,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ProductBasisChecker(this);
 	}
 	
-	@Override
-	public IAnswer<AFunctionType> getFunctionTypeFinder()
-	{
-		return new FunctionTypeFinder(this);
-	}
-	
-	@Override
-	public AnswerAdaptor<Boolean> getUnionBasisChecker()
-	{
-		return new UnionBasisChecker(this);
-	}
 	
 	@Override
 	public IAnswer<AUnionType> getUnionTypeFinder()
