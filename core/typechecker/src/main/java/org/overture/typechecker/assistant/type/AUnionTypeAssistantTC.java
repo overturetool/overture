@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -29,7 +29,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
-import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -48,7 +47,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		this.af = af;
 	}
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
 
@@ -132,7 +131,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getSeqType();
 	}
 
-	public static ASetType getSet(AUnionType type)
+	public ASetType getSet(AUnionType type)
 	{
 
 		ILexLocation location = type.getLocation();
@@ -187,18 +186,18 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return type.getMapType();
 	}
 
-	public static String toDisplay(AUnionType exptype)
-	{
-		List<PType> types = exptype.getTypes();
-
-		if (types.size() == 1)
-		{
-			return types.iterator().next().toString();
-		} else
-		{
-			return Utils.setToString(new PTypeSet(types), " | ");
-		}
-	}
+//	public static String toDisplay(AUnionType exptype)
+//	{
+//		List<PType> types = exptype.getTypes();
+//
+//		if (types.size() == 1)
+//		{
+//			return types.iterator().next().toString();
+//		} else
+//		{
+//			return Utils.setToString(new PTypeSet(types), " | ");
+//		}
+//	}
 
 	public static boolean isProduct(AUnionType type, int size)
 	{
@@ -294,28 +293,28 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return null;
 	}
 
-	public static boolean equals(AUnionType type, Object other)
-	{
-		other = PTypeAssistantTC.deBracket(other);
-		PTypeSet types = new PTypeSet(type.getTypes());
-
-		if (other instanceof AUnionType)
-		{
-			AUnionType uother = (AUnionType) other;
-
-			for (PType t : uother.getTypes())
-			{
-				if (!types.contains(t))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return types.contains(other);
-	}
+//	public static boolean equals(AUnionType type, Object other)
+//	{
+//		other = PTypeAssistantTC.deBracket(other);
+//		PTypeSet types = new PTypeSet(type.getTypes());
+//
+//		if (other instanceof AUnionType)
+//		{
+//			AUnionType uother = (AUnionType) other;
+//
+//			for (PType t : uother.getTypes())
+//			{
+//				if (!types.contains(t))
+//				{
+//					return false;
+//				}
+//			}
+//
+//			return true;
+//		}
+//
+//		return types.contains(other);
+//	}
 
 //	public static boolean isFunction(AUnionType type)
 //	{
@@ -474,15 +473,15 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isSet(AUnionType type)
 	{
-		return getSet(type) != null;
+		return af.createAUnionTypeAssistant().getSet(type) != null;
 	}
 
 	public static boolean isRecord(AUnionType type)
 	{
-		return getRecord(type) != null;
+		return af.createAUnionTypeAssistant().getRecord(type) != null;
 	}
 
-	public static ARecordInvariantType getRecord(AUnionType type)
+	public ARecordInvariantType getRecord(AUnionType type)
 	{
 		if (!type.getRecDone())
 		{
@@ -531,10 +530,10 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean isClass(AUnionType type)
 	{
-		return getClassType(type) != null;
+		return af.createAUnionTypeAssistant().getClassType(type) != null;
 	}
 
-	public static AClassType getClassType(AUnionType type)
+	public AClassType getClassType(AUnionType type)
 	{
 		if (!type.getClassDone())
 		{
@@ -631,25 +630,25 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return true;
 	}
 
-	public static AUnionType getUnion(AUnionType type)
-	{
-		return type;
-	}
+//	public static AUnionType getUnion(AUnionType type)
+//	{
+//		return type;
+//	}
 
-	public static boolean narrowerThan(AUnionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier)
-	{
-
-		for (PType t : type.getTypes())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	public static boolean narrowerThan(AUnionType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier)
+//	{
+//
+//		for (PType t : type.getTypes())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	
 	public static boolean isVoid(AUnionType type)

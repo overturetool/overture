@@ -10,7 +10,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
- * Used to determine if a type is a map type
+ * Used to determine if a type is a seq type
  * 
  * @author kel
  */

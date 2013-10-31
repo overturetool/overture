@@ -3,7 +3,7 @@ package org.overture.typechecker.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
@@ -14,7 +14,6 @@ import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
@@ -33,7 +32,7 @@ public class AUnresolvedTypeAssistantTC {
 		this.af = af;
 	}
 	public static PType typeResolve(AUnresolvedType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 	
 		PType deref = dereference(type,question.env, root);
@@ -110,32 +109,32 @@ public class AUnresolvedTypeAssistantTC {
 		return r;
 	}
 
-	public static String toDisplay(AUnresolvedType exptype) {
-		return "(unresolved " + exptype.getName().getExplicit(true) + ")";
-		
-	}
+//	public static String toDisplay(AUnresolvedType exptype) {
+//		return "(unresolved " + exptype.getName().getExplicit(true) + ")";
+//		
+//	}
 
 	public static PType isType(AUnresolvedType exptype, String typename) {
 		return exptype.getName().getFullName().equals(typename) ? exptype : null;
 	}
 
-	public static boolean equals(AUnresolvedType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof AUnresolvedType)
-		{
-			AUnresolvedType nother = (AUnresolvedType)other;
-			return type.getName().equals(nother.getName());
-		}
-
-		if (other instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nother = (ANamedInvariantType)other;
-			return type.getName().equals(nother.getName());
-		}
-
-		return false;
-	}
+//	public static boolean equals(AUnresolvedType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AUnresolvedType)
+//		{
+//			AUnresolvedType nother = (AUnresolvedType)other;
+//			return type.getName().equals(nother.getName());
+//		}
+//
+//		if (other instanceof ANamedInvariantType)
+//		{
+//			ANamedInvariantType nother = (ANamedInvariantType)other;
+//			return type.getName().equals(nother.getName());
+//		}
+//
+//		return false;
+//	}
 
 	
 

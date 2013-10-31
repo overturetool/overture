@@ -10,7 +10,13 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -141,13 +147,25 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.type.ClassBasisChecker;
+import org.overture.typechecker.utilities.type.ClassTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
+import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.ProductBasisChecker;
+import org.overture.typechecker.utilities.type.ProductTypeFinder;
+import org.overture.typechecker.utilities.type.RecordBasisChecker;
+import org.overture.typechecker.utilities.type.RecordTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
+import org.overture.typechecker.utilities.type.SetTypeFinder;
+import org.overture.typechecker.utilities.type.TypeDisplayer;
+import org.overture.typechecker.utilities.type.TypeEqualityChecker;
+import org.overture.typechecker.utilities.type.TypeUnresolver;
+import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1059,5 +1077,78 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnswerAdaptor<Boolean> getSetBasisChecker()
 	{
 		return new SetBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<ASetType> getSetTypeFinder()
+	{
+		return new SetTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getRecordBasisChecker()
+	{
+		return new RecordBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<ARecordInvariantType> getRecordTypeFinder()
+	{
+		return new RecordTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getClassBasisChecker()
+	{
+		return new ClassBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<AClassType> getClassTypeFinder()
+	{
+		return new ClassTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<AProductType> getProductTypeFinder()
+	{
+		return new ProductTypeFinder(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getProductBasisChecker()
+	{
+		return new ProductBasisChecker(this);
+	}
+	
+	
+	@Override
+	public IAnswer<AUnionType> getUnionTypeFinder()
+	{
+		return new UnionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Object, Boolean> getTypeEqualityChecker()
+	{
+		return new TypeEqualityChecker(this);
+	}
+	
+	@Override
+	public IAnswer<String> getTypeDisplayer()
+	{
+		return new TypeDisplayer(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getTypeUnresolver()
+	{
+		return new TypeUnresolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
+	{
+		return new NarrowerThanComparator(this);
 	}
 }

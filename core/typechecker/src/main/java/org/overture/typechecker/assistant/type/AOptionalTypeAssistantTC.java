@@ -1,11 +1,10 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -30,7 +29,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 		this.af = af;
 	}
 	public static PType typeResolve(AOptionalType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else { type.setResolved(true); }
@@ -48,9 +47,9 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static String toDisplay(AOptionalType exptype) {
-		return "[" + exptype.getType() + "]";
-	}
+//	public static String toDisplay(AOptionalType exptype) {
+//		return "[" + exptype.getType() + "]";
+//	}
 
 
 	public static boolean isProduct(AOptionalType type, int size) {
@@ -90,15 +89,15 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static boolean equals(AOptionalType type, Object other) {
-		if (other instanceof AOptionalType)
-		{
-			AOptionalType oo = (AOptionalType)other;
-			return  PTypeAssistantTC.equals(type.getType(),oo.getType());
-		}
-		
-		return false;
-	}
+//	public static boolean equals(AOptionalType type, Object other) {
+//		if (other instanceof AOptionalType)
+//		{
+//			AOptionalType oo = (AOptionalType)other;
+//			return  PTypeAssistantTC.equals(type.getType(),oo.getType());
+//		}
+//		
+//		return false;
+//	}
 
 
 //	public static boolean isFunction(AOptionalType type) {
@@ -165,10 +164,10 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant {
 	}
 
 
-	public static boolean narrowerThan(AOptionalType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
-	}
+//	public static boolean narrowerThan(AOptionalType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
+//	}
 
 
 	public static PType polymorph(AOptionalType type, ILexNameToken pname,

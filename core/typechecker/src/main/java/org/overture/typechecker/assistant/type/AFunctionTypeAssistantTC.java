@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -28,7 +26,7 @@ public class AFunctionTypeAssistantTC {
 		this.af = af;
 	}
 	public static AFunctionType typeResolve(AFunctionType ft,
-			ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+			ATypeDefinition root, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 
 		if (ft.getResolved())
 			return ft;
@@ -117,40 +115,40 @@ public class AFunctionTypeAssistantTC {
 		return type;
 	}
 
-	public static String toDisplay(AFunctionType exptype) {
-		List<PType> parameters = exptype.getParameters();
-		String params = (parameters.isEmpty() ?
-				"()" : Utils.listToString(parameters, " * "));
-		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
-	}
+//	public static String toDisplay(AFunctionType exptype) {
+//		List<PType> parameters = exptype.getParameters();
+//		String params = (parameters.isEmpty() ?
+//				"()" : Utils.listToString(parameters, " * "));
+//		return "(" + params + (exptype.getPartial() ? " -> " : " +> ") + exptype.getResult() + ")";
+//	}
 
-	public static boolean equals(AFunctionType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(AFunctionType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (!(other instanceof AFunctionType))
+//		{
+//			return false;
+//		}
+//
+//		AFunctionType fo = (AFunctionType)other;
+//		return (type.getPartial() == fo.getPartial() &&
+//				PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
+//				PTypeAssistantTC.equals(type.getParameters(),fo.getParameters()));
+//	}
 
-		if (!(other instanceof AFunctionType))
-		{
-			return false;
-		}
-
-		AFunctionType fo = (AFunctionType)other;
-		return (type.getPartial() == fo.getPartial() &&
-				PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
-				PTypeAssistantTC.equals(type.getParameters(),fo.getParameters()));
-	}
-
-	public static boolean narrowerThan(AFunctionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		
-		for (PType t: type.getParameters())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return  PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(AFunctionType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		
+//		for (PType t: type.getParameters())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return  PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+//	}
 
 	public static PType polymorph(AFunctionType type, ILexNameToken pname,
 			PType actualType) {

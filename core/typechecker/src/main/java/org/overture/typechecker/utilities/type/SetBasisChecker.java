@@ -8,10 +8,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
 
 /**
  * Used to determine if a type is a set type
@@ -35,7 +31,7 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseASetType(ASetType type) throws AnalysisException
 	{
-		return ASetTypeAssistantTC.isSet(type);
+		return true;
 	}
 	
 	@Override
@@ -44,7 +40,8 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			return ANamedInvariantTypeAssistantTC.isSet((ANamedInvariantType) type);
+			if (type.getOpaque()) return false;
+			return ((ANamedInvariantType) type).getType().apply(THIS);
 		}
 		else
 		{
@@ -55,13 +52,13 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isSet(type);
+		return af.createAUnionTypeAssistant().getSet(type) != null;
 	}
 	
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-		return AUnknownTypeAssistantTC.isSet((AUnknownType) type);
+		return true;
 	}
 	
 	@Override

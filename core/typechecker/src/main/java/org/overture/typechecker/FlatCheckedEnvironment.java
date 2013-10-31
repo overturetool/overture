@@ -29,46 +29,42 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-
-
 /**
- * Define the type checking environment for a list of definitions, including
- * a check for duplicates and name hiding.
+ * Define the type checking environment for a list of definitions, including a check for duplicates and name hiding.
  */
 
 public class FlatCheckedEnvironment extends FlatEnvironment
 {
 	private boolean isStatic = false;
 
-	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
-		List<PDefinition> definitions, NameScope scope, EnvironmentSearchStrategy ess)
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af,
+			List<PDefinition> definitions, NameScope scope)
 	{
-		super(af,definitions,ess);
+		super(af, definitions);
 		dupHideCheck(definitions, scope);
 	}
 
-	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
-		List<PDefinition> definitions, Environment env, NameScope scope)
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af,
+			List<PDefinition> definitions, Environment env, NameScope scope)
 	{
-		super(af,definitions, env);
-		dupHideCheck(definitions, scope);
-		setStatic(env.isStatic());
-	}
-
-	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af, 
-		PDefinition one, Environment env, NameScope scope)
-	{
-		super(af,one,env);
+		super(af, definitions, env);
 		dupHideCheck(definitions, scope);
 		setStatic(env.isStatic());
 	}
 
-	
-	//TODO: AccessSpecifier not defined
-//	public void setStatic(AccessSpecifier access)
-//	{
-//		isStatic = access.isStatic;
-//	}
+	public FlatCheckedEnvironment(ITypeCheckerAssistantFactory af,
+			PDefinition one, Environment env, NameScope scope)
+	{
+		super(af, one, env);
+		dupHideCheck(definitions, scope);
+		setStatic(env.isStatic());
+	}
+
+	// TODO: AccessSpecifier not defined
+	// public void setStatic(AccessSpecifier access)
+	// {
+	// isStatic = access.isStatic;
+	// }
 
 	public void setStatic(boolean access)
 	{

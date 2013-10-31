@@ -1,6 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -43,7 +43,7 @@ public class AClassTypeAssistantTC {
 	}
 
 	public static PType typeResolve(AClassType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (type.getResolved()) return type; else type.setResolved(true);
@@ -100,25 +100,25 @@ public class AClassTypeAssistantTC {
 		
 	}
 
-	public static String toDisplay(AClassType exptype) {
-		return exptype.getClassdef().getName().getName();
-	}
+//	public static String toDisplay(AClassType exptype) {
+//		return exptype.getClassdef().getName().getName();
+//	}
 
-	public static boolean equals(AClassType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(AClassType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AClassType)
+//		{
+//			AClassType oc = (AClassType)other;
+//			return type.getName().equals(oc.getName());		// NB. name only
+//		}
+//
+//		return false;
+//	}
 
-		if (other instanceof AClassType)
-		{
-			AClassType oc = (AClassType)other;
-			return type.getName().equals(oc.getName());		// NB. name only
-		}
-
-		return false;
-	}
-
-	public static boolean isClass(AClassType type) {
-		return true;
-	}
+//	public static boolean isClass(AClassType type) {
+//		return true;
+//	}
 
 	public static SClassDefinition getClass(SClassDefinition type)
 	{

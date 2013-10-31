@@ -1,18 +1,11 @@
 package org.overture.typechecker.assistant.type;
 
-import java.util.Vector;
-
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.NodeList;
-import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -37,9 +30,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return AstFactory.newAProductType(type.getLocation(), tl);
 	}
 
-	public static AProductType getProduct(AUnknownType type) {
-		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
-	}
+//	public static AProductType getProduct(AUnknownType type) {
+//		return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
+//	}
 
 	public static boolean isType(AUnknownType b,
 			Class<? extends PType> typeclass) {
@@ -50,9 +43,9 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 		return null;	// Isn't any particular type?
 	}
 
-	public static boolean equals(AUnknownType type, Object other) {
-		return true;
-	}
+//	public static boolean equals(AUnknownType type, Object other) {
+//		return true;
+//	}
 
 //	public static boolean isFunction(AUnknownType type) {
 //		return true;
@@ -89,29 +82,29 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant {
 //		return AstFactory.newAMapMapType(type.getLocation()); // Unknown |-> Unknown
 //	}
 
-	public static boolean isSet(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isSet(AUnknownType type) {
+//		return true;
+//	}
 
-	public static ASetType getSet(AUnknownType type) {
-		return AstFactory.newASetType(type.getLocation()); // empty
-	}
+//	public static ASetType getSet(AUnknownType type) {
+//		return AstFactory.newASetType(type.getLocation()); // empty
+//	}
 
-	public static boolean isClass(AUnknownType type) {
-		return true;
-	}
+//	public static boolean isClass(AUnknownType type) {
+//		return true;
+//	}
 	
-	public static AClassType getClassType(AUnknownType type){
-		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
-	}
+//	public static AClassType getClassType(AUnknownType type){
+//		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
+//	}
 
-	public static boolean narrowerThan(AUnknownType type,
-			PAccessSpecifier accessSpecifier) {		
-		return false;
-	}
+//	public static boolean narrowerThan(AUnknownType type,
+//			PAccessSpecifier accessSpecifier) {		
+//		return false;
+//	}
 
-	public static ARecordInvariantType getRecord(AUnknownType type) {
-		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
-	}
+//	public static ARecordInvariantType getRecord(AUnknownType type) {
+//		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
+//	}
 	
 }

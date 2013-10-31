@@ -1,8 +1,8 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.SLetDefStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
@@ -18,7 +18,7 @@ public class SLetDefStmAssistantInterpreter// extends SLetDefStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(SLetDefStm stm, int lineno)
+	public static PExp findExpression(ALetStm stm, int lineno)
 	{
 		PExp found = PDefinitionListAssistantInterpreter.findExpression(stm.getLocalDefs(), lineno);
 		if (found != null)
@@ -27,7 +27,7 @@ public class SLetDefStmAssistantInterpreter// extends SLetDefStmAssistantTC
 		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 	}
 
-	public static PStm findStatement(SLetDefStm stm, int lineno)
+	public static PStm findStatement(ALetStm stm, int lineno)
 	{
 		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
 		if (found != null)

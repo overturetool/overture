@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -32,7 +30,7 @@ public class AOperationTypeAssistantTC {
 	}
 	public static AOperationType typeResolve(AOperationType ot,
 			ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 		
 		if (ot.getResolved()) return ot; else { ot.setResolved(true); }
@@ -125,39 +123,39 @@ public class AOperationTypeAssistantTC {
 		return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 	}
 
-	public static String toDisplay(AOperationType exptype) {
-		List<PType> parameters = exptype.getParameters();
-		String params = (parameters.isEmpty() ?
-				"()" : Utils.listToString(parameters, " * "));
-		return "(" + params + " ==> " + exptype.getResult() + ")";
-	}
+//	public static String toDisplay(AOperationType exptype) {
+//		List<PType> parameters = exptype.getParameters();
+//		String params = (parameters.isEmpty() ?
+//				"()" : Utils.listToString(parameters, " * "));
+//		return "(" + params + " ==> " + exptype.getResult() + ")";
+//	}
 
-	public static boolean equals(AOperationType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(AOperationType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (!(other instanceof AOperationType))
+//		{
+//			return false;
+//		}
+//
+//		AOperationType oother = (AOperationType)other;
+//		return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
+//				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
+//	}
 
-		if (!(other instanceof AOperationType))
-		{
-			return false;
-		}
-
-		AOperationType oother = (AOperationType)other;
-		return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
-				PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
-	}
-
-	public static boolean narrowerThan(AOperationType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		
-		for (PType t: type.getParameters())
-		{
-			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-			{
-				return true;
-			}
-		}
-
-		return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(AOperationType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		
+//		for (PType t: type.getParameters())
+//		{
+//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+//	}
 
 	
 
