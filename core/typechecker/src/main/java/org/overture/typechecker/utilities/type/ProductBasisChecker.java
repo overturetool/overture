@@ -2,19 +2,22 @@ package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
+import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
+import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 /**
- * Used to determine if a type is a set type
+ * Used to determine if a type is a Product type
  * 
  * @author kel
  */
-public class SetBasisChecker extends TypeUnwrapper<Boolean>
+public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 {
 
 	/**
@@ -23,15 +26,9 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
-	public SetBasisChecker(ITypeCheckerAssistantFactory af)
+	public ProductBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
-	}
-	
-	@Override
-	public Boolean caseASetType(ASetType type) throws AnalysisException
-	{
-		return true;
 	}
 	
 	@Override
@@ -40,8 +37,7 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque()) return false;
-			return ((ANamedInvariantType) type).getType().apply(THIS);
+			return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type);
 		}
 		else
 		{
@@ -50,11 +46,16 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	}
 	
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAProductType(AProductType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getSet(type) != null;
+		return AProductTypeAssistantTC.isProduct(type);
 	}
 	
+	@Override
+	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	{
+		return AUnionTypeAssistantTC.isProduct(type);
+	}
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
@@ -66,4 +67,5 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		return false;
 	}
+
 }

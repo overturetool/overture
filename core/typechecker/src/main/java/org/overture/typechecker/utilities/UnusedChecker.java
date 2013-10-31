@@ -9,7 +9,11 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-
+/**
+ * This class checks if a node is used.
+ * 
+ * @author kel
+ */
 public class UnusedChecker extends AnalysisAdaptor
 {
 

@@ -38,10 +38,10 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant {
 		return type;
 	}
 
-	public static String toDisplay(AParameterType exptype) {
-		
-		return "@" + exptype.getName();
-	}
+//	public static String toDisplay(AParameterType exptype) {
+//		
+//		return "@" + exptype.getName();
+//	}
 
 	public static PType polymorph(AParameterType type, ILexNameToken pname,
 			PType actualType) {
