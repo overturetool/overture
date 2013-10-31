@@ -142,10 +142,10 @@ public class TypeCheckInfo
 	{
 		return "Scope: " + scope + "\n" + env;
 	}
-	
+
 	public TypeCheckInfo newScope(NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env,newScope);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope);
 		return info;
 	}
 
@@ -153,16 +153,16 @@ public class TypeCheckInfo
 	{
 		return newScope(definitions, scope);
 	}
-	
+
 	public TypeCheckInfo newInfo(Environment newEnv)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv,scope);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope);
 		return info;
 	}
-	
-	public TypeCheckInfo newInfo(Environment newEnv,NameScope newScope)
+
+	public TypeCheckInfo newInfo(Environment newEnv, NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv,newScope);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope);
 		return info;
 	}
 
@@ -170,7 +170,7 @@ public class TypeCheckInfo
 			NameScope newScope)
 	{
 		Environment newEnv = new FlatCheckedEnvironment(assistantFactory, definitions, env, newScope);
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv,newScope);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope);
 		return info;
 	}
 }

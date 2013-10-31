@@ -32,7 +32,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
@@ -57,7 +56,7 @@ public class ClassTypeChecker extends TypeChecker
 		super();
 		this.classes = classes;
 	}
-	
+
 	/**
 	 * Create a type checker with the list of classes passed.
 	 * 
@@ -65,7 +64,8 @@ public class ClassTypeChecker extends TypeChecker
 	 * @param factory
 	 */
 
-	public ClassTypeChecker(List<SClassDefinition> classes,ITypeCheckerAssistantFactory factory)
+	public ClassTypeChecker(List<SClassDefinition> classes,
+			ITypeCheckerAssistantFactory factory)
 	{
 		super(factory);
 		this.classes = classes;

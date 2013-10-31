@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;

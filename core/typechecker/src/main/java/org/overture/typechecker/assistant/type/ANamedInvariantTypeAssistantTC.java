@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
