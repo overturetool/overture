@@ -3,7 +3,7 @@ package org.overture.typechecker.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
@@ -32,7 +32,7 @@ public class AUnresolvedTypeAssistantTC {
 		this.af = af;
 	}
 	public static PType typeResolve(AUnresolvedType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) {
 	
 		PType deref = dereference(type,question.env, root);

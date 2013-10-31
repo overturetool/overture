@@ -16,7 +16,6 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.AExitStm;
@@ -25,6 +24,7 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.AStartStm;
@@ -33,7 +33,6 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.PONameContext;
@@ -408,25 +407,26 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 	}
 
-	@Override
-	public IProofObligationList defaultSLetDefStm(SLetDefStm node,
-			IPOContextStack question) throws AnalysisException
-	{
-		try
-		{
-			IProofObligationList obligations = new ProofObligationList();
-			obligations.addAll(assistantFactory.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(), rootVisitor, question));
-
-			question.push(new POScopeContext());
-			obligations.addAll(node.getStatement().apply(mainVisitor, question));
-			question.pop();
-
-			return obligations;
-		} catch (Exception e)
-		{
-			throw new POException(node, e.getMessage());
-		}
-	}
+	// @Override
+	// public IProofObligationList caseALetStm(ALetStm node,
+	// IPOContextStack question) throws AnalysisException
+	// {
+	// try
+	// {
+	// IProofObligationList obligations = new ProofObligationList();
+	// obligations.addAll(assistantFactory.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(),
+	// rootVisitor, question));
+	//
+	// question.push(new POScopeContext());
+	// obligations.addAll(node.getStatement().apply(mainVisitor, question));
+	// question.pop();
+	//
+	// return obligations;
+	// } catch (Exception e)
+	// {
+	// throw new POException(node, e.getMessage());
+	// }
+	// }
 
 	@Override
 	public IProofObligationList caseAReturnStm(AReturnStm node,
@@ -578,7 +578,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 	}
 
 	@Override
-	public IProofObligationList caseADefLetDefStm(ADefLetDefStm node,
+	public IProofObligationList caseALetStm(ALetStm node,
 			IPOContextStack question) throws AnalysisException
 	{
 		try

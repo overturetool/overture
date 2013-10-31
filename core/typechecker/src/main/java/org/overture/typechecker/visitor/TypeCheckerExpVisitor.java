@@ -90,11 +90,11 @@ AbstractTypeCheckVisitor {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerExpVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor) {
-		this.rootVisitor = typeCheckVisitor;
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+	{
+		super(null,typeCheckVisitor);// FIXME
 	}
 
 	@Override

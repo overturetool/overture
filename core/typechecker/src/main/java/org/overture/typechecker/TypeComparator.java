@@ -51,7 +51,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
-
 /**
  * A class for static type checking comparisons.
  */
@@ -229,12 +228,12 @@ public class TypeComparator
 	{
 		if (to instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + to, to.getLocation(),to);
+			throw new TypeCheckException("Unknown type: " + to, to.getLocation(), to);
 		}
 
 		if (from instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + from, from.getLocation(),from);
+			throw new TypeCheckException("Unknown type: " + from, from.getLocation(), from);
 		}
 
 		if (PTypeAssistantTC.equals(to, from))
@@ -471,7 +470,8 @@ public class TypeComparator
 				}
 			} else
 			{
-				return PTypeAssistantTC.equals(to, from) ? Result.Yes : Result.No;
+				return PTypeAssistantTC.equals(to, from) ? Result.Yes
+						: Result.No;
 			}
 		}
 
@@ -571,12 +571,12 @@ public class TypeComparator
 	{
 		if (sub instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + sub, sub.getLocation(),sub);
+			throw new TypeCheckException("Unknown type: " + sub, sub.getLocation(), sub);
 		}
 
 		if (sup instanceof AUnresolvedType)
 		{
-			throw new TypeCheckException("Unknown type: " + sup, sup.getLocation(),sup);
+			throw new TypeCheckException("Unknown type: " + sup, sup.getLocation(), sup);
 		}
 
 		if (sub instanceof AUnknownType || sup instanceof AUnknownType)
@@ -730,29 +730,28 @@ public class TypeComparator
 
 				SMapType subm = (SMapType) sub;
 				SMapType supm = (SMapType) sup;
-				
-				if(subm.getEmpty() || supm.getEmpty())
+
+				if (subm.getEmpty() || supm.getEmpty())
 				{
 					return Result.Yes;
 				}
-				
-				if(searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes &&
-				   searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)
+
+				if (searchSubType(subm.getFrom(), supm.getFrom()) == Result.Yes
+						&& searchSubType(subm.getTo(), supm.getTo()) == Result.Yes)
 				{
-					
-					if(!(sub instanceof AInMapMapType) &&
-					    (sup instanceof AInMapMapType))
+
+					if (!(sub instanceof AInMapMapType)
+							&& (sup instanceof AInMapMapType))
 					{
 						return Result.No;
 					}
-					
+
 					return Result.Yes;
-				}
-				else
+				} else
 				{
 					return Result.No;
 				}
-				
+
 			} else if (sub instanceof ASetType)
 			{
 				if (!(sup instanceof ASetType))
@@ -775,7 +774,8 @@ public class TypeComparator
 				SSeqType subs = (SSeqType) sub;
 				SSeqType sups = (SSeqType) sup;
 
-				if ((subs.getEmpty() && !(sup instanceof ASeq1SeqType)) || sups.getEmpty())
+				if ((subs.getEmpty() && !(sup instanceof ASeq1SeqType))
+						|| sups.getEmpty())
 				{
 					return Result.Yes;
 				}
@@ -845,7 +845,8 @@ public class TypeComparator
 				}
 			} else
 			{
-				return PTypeAssistantTC.equals(sub, sup) ? Result.Yes : Result.No;
+				return PTypeAssistantTC.equals(sub, sup) ? Result.Yes
+						: Result.No;
 			}
 		}
 

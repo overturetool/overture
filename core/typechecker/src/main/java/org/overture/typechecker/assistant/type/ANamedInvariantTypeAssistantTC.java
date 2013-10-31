@@ -1,6 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -29,7 +29,7 @@ public class ANamedInvariantTypeAssistantTC extends ANamedInvariantTypeAssistant
 		PTypeAssistantTC.unResolve(type.getType());
 	}
 
-	public static PType typeResolve(ANamedInvariantType type, ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+	public static PType typeResolve(ANamedInvariantType type, ATypeDefinition root, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 		if (type.getResolved()) return type; else type.setResolved(true);
 
 		try
