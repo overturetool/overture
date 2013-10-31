@@ -1,0 +1,21 @@
+
+public class A {
+
+	public int op1() {
+
+		return 1;
+	}
+
+	public int op2() {
+
+		return new A().op1();
+	}
+
+	public int op4() {
+
+		A a = new A();
+
+		return a.op1();
+	}
+
+}
