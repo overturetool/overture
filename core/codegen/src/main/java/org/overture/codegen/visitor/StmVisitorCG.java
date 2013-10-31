@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
@@ -32,7 +33,9 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 
 public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
@@ -144,18 +147,29 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
+		AClassTypeCG classType = null;	
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		
+		if (node.getName().getExplicit())
+		{
+			String className = node.getName().getModule();
+			classType = new AClassTypeCG();
+			classType.setName(className);
+		}
 		
 		ACallStmCG call = new ACallStmCG();
+		call.setClassType(classType);
 		call.setName(name);
+		call.setType(type);
 		
 		LinkedList<PExp> applyArgs = node.getArgs();
-		
+
 		for (int i = 0; i < applyArgs.size(); i++)
 		{
 			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
 			call.getArgs().add(arg);
-		}		
-		
+		}
+
 		return call;
 	}
 	

@@ -16,6 +16,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 
@@ -135,6 +136,11 @@ public class CG
 	public static boolean isNull(INode node)
 	{
 		return node == null;
+	}
+	
+	public static boolean isVoidType(PTypeCG node)
+	{
+		return node instanceof AVoidTypeCG;
 	}
 	
 	public static String formatInitialExp(PExpCG exp) throws AnalysisException
