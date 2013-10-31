@@ -5,16 +5,15 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallStm;
-import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
@@ -35,7 +34,6 @@ import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 
 public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
@@ -98,7 +96,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseADefLetDefStm(ADefLetDefStm node, CodeGenInfo question)
+	public PStmCG caseALetStm(ALetStm node, CodeGenInfo question)
 			throws AnalysisException
 	{
 		ALetDefStmCG localDefStm = new ALetDefStmCG();
