@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
@@ -23,7 +24,7 @@ public class SBinaryExpAssistantTC
 
 	public static ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
 			ABooleanBasicType expected,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 

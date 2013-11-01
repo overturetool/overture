@@ -6,8 +6,8 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
@@ -43,11 +43,14 @@ public class SInvariantTypeAssistantInterpreter
 	public static ValueList getAllValues(SInvariantType type, Context ctxt)
 			throws ValueException
 	{
-		if (type instanceof ANamedInvariantType) {
+		if (type instanceof ANamedInvariantType)
+		{
 			return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
-		} else if (type instanceof ARecordInvariantType) {
+		} else if (type instanceof ARecordInvariantType)
+		{
 			return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
-		} else {
+		} else
+		{
 			throw new ValueException(4, "Cannot get bind values for type "
 					+ type, ctxt);
 		}

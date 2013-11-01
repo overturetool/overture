@@ -12,7 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -103,25 +102,17 @@ import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AInMapMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AMapMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AQuoteTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeq1SeqTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeqSeqTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUndefinedTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidReturnTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -317,10 +308,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AFunctionTypeAssistantTC createAFunctionTypeAssistant();
 
-	AInMapMapTypeAssistantTC createAInMapMapTypeAssistant();
-
-	AMapMapTypeAssistantTC createAMapMapTypeAssistant();
-
 	ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant();
 
 	AOperationTypeAssistantTC createAOperationTypeAssistant();
@@ -333,27 +320,15 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AProductTypeAssistantTC createAProductTypeAssistant();
 
-	AQuoteTypeAssistantTC createAQuoteTypeAssistant();
-
 	ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant();
 
-	ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistant();
-
-	ASeqSeqTypeAssistantTC createASeqSeqTypeAssistant();
-
 	ASetTypeAssistantTC createASetTypeAssistant();
-
-	AUndefinedTypeAssistantTC createAUndefinedTypeAssistant();
 
 	AUnionTypeAssistantTC createAUnionTypeAssistant();
 
 	AUnknownTypeAssistantTC createAUnknownTypeAssistant();
 
 	AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistant();
-
-	AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistant();
-
-	AVoidTypeAssistantTC createAVoidTypeAssistant();
 
 	PTypeAssistantTC createPTypeAssistant();
 
@@ -407,29 +382,29 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
 
 	IAnswer<SMapType> getMapTypeFinder();
-	
+
 	IAnswer<SSeqType> getSeqTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getSeqBasisChecker();
-	
+
 	IAnswer<AOperationType> getOperationTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getOperationBasisChecker();
-	
+
 	AnswerAdaptor<Boolean> getSetBasisChecker();
-	
+
 	IAnswer<ASetType> getSetTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getRecordBasisChecker();
-	
+
 	IAnswer<ARecordInvariantType> getRecordTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getClassBasisChecker();
-	
+
 	IAnswer<AClassType> getClassTypeFinder();
-	
+
 	IAnswer<AProductType> getProductTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getProductBasisChecker();
 
 	IAnswer<String> getTypeDisplayer();
@@ -441,5 +416,5 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<AUnionType> getUnionTypeFinder();
 
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
-	
+
 }

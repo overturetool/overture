@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.AApplyObjectDesignator;
@@ -19,7 +20,8 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AApplyObjectDesignatorAssistantTC {
+public class AApplyObjectDesignatorAssistantTC
+{
 
 	protected static ITypeCheckerAssistantFactory af;
 
@@ -29,40 +31,46 @@ public class AApplyObjectDesignatorAssistantTC {
 		this.af = af;
 	}
 
-	public static PType mapApply(AApplyObjectDesignator node, SMapType map, Environment env,
-			NameScope scope, boolean unique, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
+	public static PType mapApply(AApplyObjectDesignator node, SMapType map,
+			Environment env, NameScope scope, boolean unique,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
 
-		if (node.getArgs().size() != 1) {
-			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument",node.getLocation(),node);
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(unique, 3250, "Map application must have one argument", node.getLocation(), node);
 			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
-		PType argtype = node.getArgs().get(0).apply(rootVisitor,new TypeCheckInfo(af,env, scope));
+		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(af, env, scope));
 
-		if (!TypeComparator.compatible(map.getFrom(), argtype)) {
-			TypeCheckerErrors.concern(unique, 3251,
-					"Map application argument is incompatible type",node.getLocation(),node);
+		if (!TypeComparator.compatible(map.getFrom(), argtype))
+		{
+			TypeCheckerErrors.concern(unique, 3251, "Map application argument is incompatible type", node.getLocation(), node);
 			TypeCheckerErrors.detail2(unique, "Map domain", map.getFrom(), "Argument", argtype);
 		}
 
 		return map.getTo();
 	}
 
-	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq, Environment env,
-			NameScope scope, boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
-		
+	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq,
+			Environment env, NameScope scope, boolean unique,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
+
 		if (node.getArgs().size() != 1)
 		{
-			TypeCheckerErrors.concern(unique, 3252, "Sequence application must have one argument",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3252, "Sequence application must have one argument", node.getLocation(), node);
 			return AstFactory.newAUnknownType(node.getLocation());
 		}
 
-		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(af,env, scope));
+		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(af, env, scope));
 
 		if (!PTypeAssistantTC.isNumeric(argtype))
 		{
-			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric", node.getLocation(), node);
 			TypeCheckerErrors.detail(unique, "Type", argtype);
 		}
 
@@ -72,36 +80,39 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
-		
-		LinkedList<PType> ptypes =  ftype.getParameters();
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
+
+		LinkedList<PType> ptypes = ftype.getParameters();
 
 		if (node.getArgs().size() > ptypes.size())
 		{
-			TypeCheckerErrors.concern(unique, 3254, "Too many arguments",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3254, "Too many arguments", node.getLocation(), node);
 			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
 			return ftype.getResult();
-		}
-		else if (node.getArgs().size() < ptypes.size())
+		} else if (node.getArgs().size() < ptypes.size())
 		{
-			TypeCheckerErrors.concern(unique, 3255, "Too few arguments",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3255, "Too few arguments", node.getLocation(), node);
 			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
 			return ftype.getResult();
 		}
 
-		int i=0;
+		int i = 0;
 
-		for (PExp a: node.getArgs())
+		for (PExp a : node.getArgs())
 		{
-			PType at = a.apply(rootVisitor, new TypeCheckInfo(af,env,scope));
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(af, env, scope));
 			PType pt = ptypes.get(i++);
 
 			if (!TypeComparator.compatible(pt, at))
 			{
-				
-				//TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i +". (Expected: "+pt+" Actual: "+at+")" ,node.getLocation(),node);
-				TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i,node.getLocation(),node);
-			    TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
+
+				// TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument " + i
+				// +". (Expected: "+pt+" Actual: "+at+")" ,node.getLocation(),node);
+				TypeCheckerErrors.concern(unique, 3256, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
 			}
 		}
 
@@ -111,32 +122,34 @@ public class AApplyObjectDesignatorAssistantTC {
 	public static PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
 			boolean unique,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor) throws AnalysisException {
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			throws AnalysisException
+	{
 		LinkedList<PType> ptypes = optype.getParameters();
 
 		if (node.getArgs().size() > ptypes.size())
 		{
-			TypeCheckerErrors.concern(unique, 3257, "Too many arguments",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3257, "Too many arguments", node.getLocation(), node);
 			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
 			return optype.getResult();
-		}
-		else if (node.getArgs().size() < ptypes.size())
+		} else if (node.getArgs().size() < ptypes.size())
 		{
-			TypeCheckerErrors.concern(unique, 3258, "Too few arguments",node.getLocation(),node);
+			TypeCheckerErrors.concern(unique, 3258, "Too few arguments", node.getLocation(), node);
 			TypeCheckerErrors.detail2(unique, "Args", node.getArgs(), "Params", ptypes);
 			return optype.getResult();
 		}
 
-		int i=0;
+		int i = 0;
 
-		for (PExp a: node.getArgs())
+		for (PExp a : node.getArgs())
 		{
-			PType at = a.apply(rootVisitor, new TypeCheckInfo(af,env, scope));
+			PType at = a.apply(rootVisitor, new TypeCheckInfo(af, env, scope));
 			PType pt = ptypes.get(i++);
 
 			if (!TypeComparator.compatible(pt, at))
-			{ //+ ". (Expected: "+pt+" Actual: "+at+")"
-				TypeCheckerErrors.concern(unique, 3259, "Inappropriate type for argument " + i,node.getLocation(),node);
+			{ // + ". (Expected: "+pt+" Actual: "+at+")"
+				TypeCheckerErrors.concern(unique, 3259, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
 				TypeCheckerErrors.detail2(unique, "Expect", pt, "Actual", at);
 			}
 		}
