@@ -343,11 +343,13 @@
      <key
            commandId="org.overture.ide.ui.commands.toggleComment"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.textEditorScope"
            sequence="M1+7">
      </key>
       <key
            commandId="org.overture.ide.ui.editor.commandGoToDefinition"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.textEditorScope"
            sequence="F3">
      </key>
   </extension>
