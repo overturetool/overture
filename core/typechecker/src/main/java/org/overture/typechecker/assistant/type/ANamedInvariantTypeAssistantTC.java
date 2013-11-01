@@ -116,12 +116,12 @@ public class ANamedInvariantTypeAssistantTC extends
 		return false;
 	}
 
-	public static boolean isUnion(ANamedInvariantType type)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isUnion(type.getType());
-	}
+//	public static boolean isUnion(ANamedInvariantType type)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isUnion(type.getType());
+//	}
 
 	public static AUnionType getUnion(ANamedInvariantType type)
 	{

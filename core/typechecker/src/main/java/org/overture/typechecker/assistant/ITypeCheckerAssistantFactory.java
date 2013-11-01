@@ -416,5 +416,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<AUnionType> getUnionTypeFinder();
 
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
+	
+	AnswerAdaptor<Boolean> getUnionBasisChecker();
 
 }

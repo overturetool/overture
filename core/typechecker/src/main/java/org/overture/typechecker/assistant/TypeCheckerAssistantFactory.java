@@ -157,6 +157,7 @@ import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
+import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
@@ -1093,5 +1094,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
 	{
 		return new NarrowerThanComparator(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getUnionBasisChecker()
+	{
+		return new UnionBasisChecker(this);
 	}
 }
