@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -418,5 +419,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
 	
 	AnswerAdaptor<Boolean> getUnionBasisChecker();
+	
+	IAnswer<AFunctionType> getFunctionTypeFinder();
 
 }

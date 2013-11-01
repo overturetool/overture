@@ -169,30 +169,37 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static AFunctionType getFunction(PType type)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.getFunction((ABracketType) type);
-		} else if (type instanceof AFunctionType)
+			return type.apply(af.getFunctionTypeFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return (AFunctionType) type;
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getFunction((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
-		} else if (type instanceof AUnionType)
-		{
-			return af.createAUnionTypeAssistant().getFunction((AUnionType) type);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
+			return null;
 		}
-		assert false : "Can't getFunction of a non-function";
-		return null;
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.getFunction((ABracketType) type);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			return (AFunctionType) type;
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.getFunction((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.getFunction((AOptionalType) type);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return af.createAUnionTypeAssistant().getFunction((AUnionType) type);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.getFunction((AUnknownType) type);
+//		}
+//		assert false : "Can't getFunction of a non-function";
+//		return null;
 	}
 
 	public PType typeResolve(PType type, ATypeDefinition root,
