@@ -57,9 +57,9 @@ public class AProductTypeAssistantTC {
 		}		
 	}
 
-	public static String toDisplay(AProductType exptype) {
-		return Utils.listToString("(", exptype.getTypes(), " * ", ")");
-	}
+//	public static String toDisplay(AProductType exptype) {
+//		return Utils.listToString("(", exptype.getTypes(), " * ", ")");
+//	}
 
 	public static boolean isProduct(AProductType type, int size) {
 		return size == 0 || type.getTypes().size() == size;
@@ -69,21 +69,21 @@ public class AProductTypeAssistantTC {
 		return n == 0 || type.getTypes().size() == n ? type : null;
 	}
 
-	public static boolean equals(AProductType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(AProductType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof AProductType)
+//		{
+//			AProductType pother = (AProductType)other;
+//			return PTypeAssistantTC.equals(type.getTypes(),pother.getTypes());
+//		}
+//
+//		return false;
+//	}
 
-		if (other instanceof AProductType)
-		{
-			AProductType pother = (AProductType)other;
-			return PTypeAssistantTC.equals(type.getTypes(),pother.getTypes());
-		}
-
-		return false;
-	}
-
-	public static AProductType getProduct(AProductType type) {
-		return type;
-	}
+//	public static AProductType getProduct(AProductType type) {
+//		return type;
+//	}
 
 	public static boolean isProduct(AProductType type) {
 		return true;

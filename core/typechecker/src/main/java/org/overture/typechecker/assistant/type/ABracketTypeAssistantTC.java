@@ -64,9 +64,9 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		
 	}
 
-	public static String toDisplay(ABracketType exptype) {
-		return "(" + exptype.getType() + ")";
-	}
+//	public static String toDisplay(ABracketType exptype) {
+//		return "(" + exptype.getType() + ")";
+//	}
 
 	public static boolean isProduct(ABracketType type, int size) {
 		return PTypeAssistantTC.isProduct(type.getType(), size);
@@ -92,9 +92,9 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		return PTypeAssistantTC.isType(exptype.getType(), typename);
 	}
 
-	public static boolean equals(ABracketType type, Object other) {
-		return PTypeAssistantTC.equals(type.getType(),other);
-	}
+//	public static boolean equals(ABracketType type, Object other) {
+//		return PTypeAssistantTC.equals(type.getType(),other);
+//	}
 
 	public static boolean isUnion(ABracketType type) {
 		return PTypeAssistantTC.isUnion(type.getType());
@@ -154,10 +154,10 @@ public class ABracketTypeAssistantTC extends ABracketTypeAssistant{
 		return PTypeAssistantTC.getUnion(type.getType());
 	}
 
-	public static boolean narrowerThan(ABracketType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
-	}
+//	public static boolean narrowerThan(ABracketType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
+//	}
 	
 	
 

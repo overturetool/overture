@@ -10,8 +10,17 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
+import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
@@ -398,4 +407,39 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
 
 	IAnswer<SMapType> getMapTypeFinder();
+	
+	IAnswer<SSeqType> getSeqTypeFinder();
+	
+	AnswerAdaptor<Boolean> getSeqBasisChecker();
+	
+	IAnswer<AOperationType> getOperationTypeFinder();
+	
+	AnswerAdaptor<Boolean> getOperationBasisChecker();
+	
+	AnswerAdaptor<Boolean> getSetBasisChecker();
+	
+	IAnswer<ASetType> getSetTypeFinder();
+	
+	AnswerAdaptor<Boolean> getRecordBasisChecker();
+	
+	IAnswer<ARecordInvariantType> getRecordTypeFinder();
+	
+	AnswerAdaptor<Boolean> getClassBasisChecker();
+	
+	IAnswer<AClassType> getClassTypeFinder();
+	
+	IAnswer<AProductType> getProductTypeFinder();
+	
+	AnswerAdaptor<Boolean> getProductBasisChecker();
+
+	IAnswer<String> getTypeDisplayer();
+
+	AnalysisAdaptor getTypeUnresolver();
+
+	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
+
+	IAnswer<AUnionType> getUnionTypeFinder();
+
+	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
+	
 }

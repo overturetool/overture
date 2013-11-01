@@ -52,21 +52,21 @@ public class SMapTypeAssistantTC {
 		}
 	}
 
-	public static boolean equals(SMapType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(SMapType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other.getClass() == type.getClass())	// inmaps too
+//		{
+//			SMapType mt = (SMapType)other;
+//			return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(), mt.getTo());
+//		}
+//
+//		return false;
+//	}
 
-		if (other.getClass() == type.getClass())	// inmaps too
-		{
-			SMapType mt = (SMapType)other;
-			return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(), mt.getTo());
-		}
-
-		return false;
-	}
-
-	public static boolean isMap(SMapType type) {		
-		return true;
-	}
+//	public static boolean isMap(SMapType type) {		
+//		return true;
+//	}
 	
 	public static SMapType getMap(SMapType type) {		
 		return type;

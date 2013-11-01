@@ -4,7 +4,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -44,35 +43,35 @@ public class ASetTypeAssistantTC {
 		
 	}
 
-	public static String toDisplay(ASetType exptype) {
-		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
-	}
+//	public static String toDisplay(ASetType exptype) {
+//		return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
+//	}
 
-	public static boolean equals(ASetType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
+//	public static boolean equals(ASetType type, Object other) {
+//		other = PTypeAssistantTC.deBracket(other);
+//
+//		if (other instanceof ASetType)
+//		{
+//			ASetType os = (ASetType)other;
+//			// NB empty set same type as any set
+//			return type.getEmpty() || os.getEmpty() || PTypeAssistantTC.equals(type.getSetof(), os.getSetof());
+//		}
+//
+//		return false;
+//	}
 
-		if (other instanceof ASetType)
-		{
-			ASetType os = (ASetType)other;
-			// NB empty set same type as any set
-			return type.getEmpty() || os.getEmpty() || PTypeAssistantTC.equals(type.getSetof(), os.getSetof());
-		}
+//	public static boolean isSet(ASetType type) {
+//		return true;
+//	}
 
-		return false;
-	}
+//	public static ASetType getSet(ASetType type) {
+//		return type;
+//	}
 
-	public static boolean isSet(ASetType type) {
-		return true;
-	}
-
-	public static ASetType getSet(ASetType type) {
-		return type;
-	}
-
-	public static boolean narrowerThan(ASetType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) {
-		return PTypeAssistantTC.narrowerThan(type.getSetof(),accessSpecifier);
-	}
+//	public static boolean narrowerThan(ASetType type,
+//			AAccessSpecifierAccessSpecifier accessSpecifier) {
+//		return PTypeAssistantTC.narrowerThan(type.getSetof(),accessSpecifier);
+//	}
 
 	public static PType polymorph(ASetType type, ILexNameToken pname,
 			PType actualType) {

@@ -2,62 +2,68 @@ package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
- * Used to determine if the of the a type is a map type
+ * Used to determine if a type is a set type
  * 
  * @author kel
  */
-public class MapBasisChecker extends TypeUnwrapper<Boolean>
+public class SetBasisChecker extends TypeUnwrapper<Boolean>
 {
+
 	/**
-	 * Generated serial version
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
-	public MapBasisChecker(ITypeCheckerAssistantFactory af)
+	public SetBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-
+	
 	@Override
-	public Boolean defaultSMapType(SMapType type) throws AnalysisException
+	public Boolean caseASetType(ASetType type) throws AnalysisException
 	{
 		return true;
 	}
-
+	
 	@Override
-	public Boolean caseANamedInvariantType(ANamedInvariantType type)
+	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
-		if (type.getOpaque()) return false;
-		return type.getType().apply(THIS);
+		if (type instanceof ANamedInvariantType)
+		{
+			if (type.getOpaque()) return false;
+			return ((ANamedInvariantType) type).getType().apply(THIS);
+		}
+		else
+		{
+			return false;
+		}
 	}
-
+	
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		//return AUnionTypeAssistantTC.getMap(type) != null; //static call
-		return af.createAUnionTypeAssistant().getMap(type) != null;//non static call
+		return af.createAUnionTypeAssistant().getSet(type) != null;
 	}
-
+	
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
-
+	
 	@Override
-	public Boolean defaultPType(PType node) throws AnalysisException
+	public Boolean defaultPType(PType type) throws AnalysisException
 	{
 		return false;
 	}
-
 }
