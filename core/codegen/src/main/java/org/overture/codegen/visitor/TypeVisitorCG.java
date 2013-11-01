@@ -13,11 +13,13 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -106,16 +108,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	public PTypeCG caseASeqSeqType(ASeqSeqType node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
-
-		// This is a special case since sequence of characters are strings
-		if (seqOf instanceof ACharBasicTypeCG)
-			return new AStringTypeCG();
-
-		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
-		seqType.setSeqOf(seqOf);
-
-		return seqType;
+		return TypeAssistantCG.constructSeqType(node, question);
+	}
+	
+	@Override
+	public PTypeCG caseASeq1SeqType(ASeq1SeqType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		return TypeAssistantCG.constructSeqType(node, question);
 	}
 
 	@Override

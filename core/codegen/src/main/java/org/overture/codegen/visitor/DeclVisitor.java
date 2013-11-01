@@ -17,7 +17,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.DeclAssistant;
+import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -40,11 +40,11 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 {
 	private static final long serialVersionUID = -7968170190668212627L;
 	
-	private DeclAssistant declAssistant;
+	private DeclAssistantCG declAssistant;
 	
 	public DeclVisitor()
 	{
-		this.declAssistant = new DeclAssistant();
+		this.declAssistant = new DeclAssistantCG();
 	}
 		
 	@Override

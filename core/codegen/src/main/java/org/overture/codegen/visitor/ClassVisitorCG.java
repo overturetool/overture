@@ -6,7 +6,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.DeclAssistant;
+import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -25,8 +25,8 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, CodeGenInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
-		
-		if(!DeclAssistant.isValidName(name))
+
+		if(!DeclAssistantCG.isValidName(name))
 			throw new AnalysisException("Class name: " + name + " is reserved!");
 		
 		String access = node.getAccess().getAccess().toString();
@@ -63,7 +63,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 			else if(decl instanceof AMethodDeclCG)
 			{
 				AMethodDeclCG method = (AMethodDeclCG) decl;
-				if(DeclAssistant.causesMethodOverloading(methods, method))
+				if(DeclAssistantCG.causesMethodOverloading(methods, method))
 					throw new AnalysisException("Operation/function name overload is not allowed. Caused by: " + name + "." + method.getName());
 				methods.add(method);
 			}

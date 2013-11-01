@@ -8,10 +8,10 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstInfo;
 
-public class DeclAssistant
+public class DeclAssistantCG
 {
 
-	public DeclAssistant()
+	public DeclAssistantCG()
 	{	
 	}
 	
