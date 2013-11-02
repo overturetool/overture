@@ -1,0 +1,19 @@
+class A
+
+operations
+
+public op : () ==> nat
+op () == 
+	return let x = 1 in x;
+
+functions
+
+public static f: nat -> nat
+f(x) ==
+	let x1 = f(1),
+			x2 = f(2),
+			x3 = f(3)
+	in
+		x
+
+end A
