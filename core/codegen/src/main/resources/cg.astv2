@@ -125,6 +125,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{quoteLiteral}	[value]:java_String
     |	{self}
     |	{null}
+    |	{letDef} [localDefs]:declCG.localVar* [exp]:expCG
     |	#Seq
     ;
     

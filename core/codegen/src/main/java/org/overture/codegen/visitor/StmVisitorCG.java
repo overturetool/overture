@@ -3,8 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
@@ -19,7 +17,9 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.PStm;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.StmAssistantCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -56,12 +56,18 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	public PStmCG defaultPExp(PExp node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		AReturnStmCG returnStm = new AReturnStmCG();
 		
 		PExpCG exp =  node.apply(question.getExpVisitor(), question);
-		returnStm.setExp(exp);
 		
-		return returnStm;
+		if(exp instanceof ALetDefExpCG)
+			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
+		else
+		{
+			AReturnStmCG returnStm = new AReturnStmCG();
+			returnStm.setExp(exp);
+			
+			return returnStm;
+		}
 	}	
 	
 	@Override
@@ -101,26 +107,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	{
 		ALetDefStmCG localDefStm = new ALetDefStmCG();
 		
-		LinkedList<PDefinition> localNodeDefs = node.getLocalDefs();
-		
-		for (PDefinition def : localNodeDefs)
-		{
-			if(def instanceof AValueDefinition)
-			{
-				AValueDefinition valueDef = (AValueDefinition) def;
-				
-				PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
-				String name = valueDef.getPattern().toString();
-				PExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
-				
-				ALocalVarDeclCG localVarDecl = new ALocalVarDeclCG();
-				localVarDecl.setType(type);
-				localVarDecl.setName(name);
-				localVarDecl.setExp(exp);
-				
-				localDefStm.getLocalDefs().add(localVarDecl);
-			}
-		}
+		DeclAssistantCG.setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
 		
 		PStmCG stm = node.getStatement().apply(question.getStatementVisitor(), question);
 		localDefStm.setStm(stm);
@@ -133,6 +120,9 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 			throws AnalysisException
 	{
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		
+		if(exp instanceof ALetDefExpCG)
+			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		returnStm.setExp(exp);

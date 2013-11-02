@@ -19,6 +19,7 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
@@ -42,6 +43,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -58,6 +60,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -101,6 +104,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	{
 		//TODO: Why does nil have type OptionalType in VDM?
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseALetDefExp(ALetDefExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		ALetDefExpCG localDefExp = new ALetDefExpCG();
+	
+		DeclAssistantCG.setLocalDefs(node.getLocalDefs(), localDefExp.getLocalDefs(), question);
+		
+		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		localDefExp.setExp(exp);
+		
+		return localDefExp;
 	}
 	
 	@Override
