@@ -75,7 +75,6 @@ public class Company {
 		int x = employees.size();
 		List<Employee> y = employees;
 		Employee q = employees.get(0);
-
 		//Skip;
 	}
 
@@ -123,7 +122,6 @@ public class World {
 		HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100);
 		Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
 				.addEmp(emp4);
-
 		return company.calculateSalary();
 	}
 
