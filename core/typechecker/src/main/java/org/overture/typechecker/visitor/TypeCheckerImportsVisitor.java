@@ -30,12 +30,11 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 	 * 
 	 */
 	private static final long serialVersionUID = -6883311293059829368L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerImportsVisitor(
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		this.rootVisitor = typeCheckVisitor;
+		super(null,typeCheckVisitor);// FIXME
 	}
 
 	@Override

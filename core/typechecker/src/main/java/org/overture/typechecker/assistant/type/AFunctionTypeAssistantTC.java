@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -28,7 +28,7 @@ public class AFunctionTypeAssistantTC {
 		this.af = af;
 	}
 	public static AFunctionType typeResolve(AFunctionType ft,
-			ATypeDefinition root, QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
+			ATypeDefinition root, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor, TypeCheckInfo question) {
 
 		if (ft.getResolved())
 			return ft;

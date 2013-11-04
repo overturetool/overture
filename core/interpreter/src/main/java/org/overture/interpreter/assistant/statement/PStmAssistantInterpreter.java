@@ -16,13 +16,13 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
@@ -85,9 +85,9 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 		} else if (stm instanceof ALetBeStStm)
 		{
 			return ALetBeStStmAssistantInterpreter.findExpression((ALetBeStStm) stm, lineno);
-		} else if (stm instanceof SLetDefStm)
+		} else if (stm instanceof ALetStm)
 		{
-			return SLetDefStmAssistantInterpreter.findExpression((SLetDefStm) stm, lineno);
+			return SLetDefStmAssistantInterpreter.findExpression((ALetStm) stm, lineno);
 		} else if (stm instanceof AReturnStm)
 		{
 			return AReturnStmAssistantInterpreter.findExpression((AReturnStm) stm, lineno);
@@ -155,9 +155,9 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 		} else if (stm instanceof ALetBeStStm)
 		{
 			return ALetBeStStmAssistantInterpreter.findStatement((ALetBeStStm) stm, lineno);
-		} else if (stm instanceof SLetDefStm)
+		} else if (stm instanceof ALetStm)
 		{
-			return SLetDefStmAssistantInterpreter.findStatement((SLetDefStm) stm, lineno);
+			return SLetDefStmAssistantInterpreter.findStatement((ALetStm) stm, lineno);
 		} else if (stm instanceof SSimpleBlockStm)
 		{
 			return SSimpleBlockStmAssistantInterpreter.findStatement((SSimpleBlockStm) stm, lineno);

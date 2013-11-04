@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -48,7 +48,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		this.af = af;
 	}
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
 

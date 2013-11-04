@@ -31,17 +31,14 @@ import java.util.Vector;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
-
 /**
- * Define the type checking environment for a set of classes, as observed
- * from the outside.
+ * Define the type checking environment for a set of classes, as observed from the outside.
  */
 
 public class PublicClassEnvironment extends Environment
@@ -59,74 +56,68 @@ public class PublicClassEnvironment extends Environment
 		return res;
 	}
 
-
-	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition classes)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,
+			List<SClassDefinition> classes)
 	{
-		this(af,classes,null,null);
-	}
-
-	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,List<SClassDefinition> classes, EnvironmentSearchStrategy ess)
-	{
-		super(af,null,ess);
+		super(af, null);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,List<SClassDefinition> classes, Environment env, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,
+			List<SClassDefinition> classes, Environment env)
 	{
-		super(af,env,ess);
+		super(af, env);
 		this.classes = classes;
 	}
 
-	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition one, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,
+			SClassDefinition one)
 	{
-		super(af,null,ess);
+		super(af, null);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
 
-	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,SClassDefinition one, Environment env, EnvironmentSearchStrategy ess)
+	public PublicClassEnvironment(ITypeCheckerAssistantFactory af,
+			SClassDefinition one, Environment env)
 	{
-		super(af,env,ess);
+		super(af, env);
 		this.classes = new Vector<SClassDefinition>();
 		this.classes.add(one);
 	}
 
 	@Override
-	public PDefinition findName( ILexNameToken name, NameScope scope)
+	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = SClassDefinitionAssistantTC.findName(classes,name, scope);
+		PDefinition def = SClassDefinitionAssistantTC.findName(classes, name, scope);
 
-		if (def != null && PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
+		if (def != null
+				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
 		{
 			return def;
 		}
-
-		def = searchStrategy != null ? searchStrategy.findName(name, scope, null, outer, getDefinitions()) : null;
-		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findName(name, scope);
 	}
 
 	@Override
-	public PDefinition findType( ILexNameToken name, String fromModule)
+	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = SClassDefinitionAssistantTC.findType(classes,name);
+		PDefinition def = SClassDefinitionAssistantTC.findType(classes, name);
 
-		if (def != null && PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
+		if (def != null
+				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
 		{
 			return def;
 		}
-
-		def = searchStrategy != null ? searchStrategy.findType(name, fromModule, null, outer, getDefinitions()) : null;
-		if (def != null) return def;
 
 		return (outer == null) ? null : outer.findType(name, null);
 	}
 
 	@Override
-	public Set<PDefinition> findMatches( ILexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
-		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes,name);
+		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes, name);
 
 		if (outer != null)
 		{
@@ -157,7 +148,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public boolean isSystem()
 	{
-		return false;	// See PrivateClassEnvironment
+		return false; // See PrivateClassEnvironment
 	}
 
 	@Override
@@ -172,10 +163,4 @@ public class PublicClassEnvironment extends Environment
 		return false;
 	}
 
-	@Override
-	public PDefinition find(ILexIdentifierToken name) {
-		if (searchStrategy != null)
-			return searchStrategy.find(name, null, outer, getDefinitions());
-		return null;
-	}
 }
