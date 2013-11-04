@@ -5,6 +5,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -56,10 +57,10 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 {
 	public static class NewQuestion
 	{
-		final QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
+		final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
 		final TypeCheckInfo question;
 		
-		public NewQuestion(QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,TypeCheckInfo question)
+		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,TypeCheckInfo question)
 		{
 			this.rootVisitor = rootVisitor;
 			this.question = question;

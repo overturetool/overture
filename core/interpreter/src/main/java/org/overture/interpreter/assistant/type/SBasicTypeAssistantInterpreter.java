@@ -20,9 +20,11 @@ public class SBasicTypeAssistantInterpreter
 	public static ValueList getAllValues(SBasicType type, Context ctxt)
 			throws ValueException
 	{
-		if (type instanceof ABooleanBasicType) {
+		if (type instanceof ABooleanBasicType)
+		{
 			return ABooleanBasicTypeAssistantInterpreter.getAllValues((ABooleanBasicType) type, ctxt);
-		} else {
+		} else
+		{
 			throw new ValueException(4, "Cannot get bind values for type "
 					+ type, ctxt);
 		}

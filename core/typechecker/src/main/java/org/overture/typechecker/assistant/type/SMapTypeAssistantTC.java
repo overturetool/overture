@@ -10,8 +10,8 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-
-public class SMapTypeAssistantTC {
+public class SMapTypeAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -19,21 +19,34 @@ public class SMapTypeAssistantTC {
 	{
 		this.af = af;
 	}
-	public static void unResolve(SMapType type) {
-		if (!type.getResolved()) return; else { type.setResolved(false); }
+
+	public static void unResolve(SMapType type)
+	{
+		if (!type.getResolved())
+			return;
+		else
+		{
+			type.setResolved(false);
+		}
 
 		if (!type.getEmpty())
 		{
 			PTypeAssistantTC.unResolve(type.getFrom());
 			PTypeAssistantTC.unResolve(type.getTo());
 		}
-		
+
 	}
 
 	public static PType typeResolve(SMapType type, ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		if (type.getResolved()) return type; else { type.setResolved(true); }
+			TypeCheckInfo question)
+	{
+		if (type.getResolved())
+			return type;
+		else
+		{
+			type.setResolved(true);
+		}
 
 		try
 		{
@@ -44,40 +57,39 @@ public class SMapTypeAssistantTC {
 			}
 
 			return type;
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			unResolve(type);
 			throw e;
 		}
 	}
 
-//	public static boolean equals(SMapType type, Object other) {
-//		other = PTypeAssistantTC.deBracket(other);
-//
-//		if (other.getClass() == type.getClass())	// inmaps too
-//		{
-//			SMapType mt = (SMapType)other;
-//			return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(), mt.getTo());
-//		}
-//
-//		return false;
-//	}
+	// public static boolean equals(SMapType type, Object other) {
+	// other = PTypeAssistantTC.deBracket(other);
+	//
+	// if (other.getClass() == type.getClass()) // inmaps too
+	// {
+	// SMapType mt = (SMapType)other;
+	// return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(), mt.getTo());
+	// }
+	//
+	// return false;
+	// }
 
-//	public static boolean isMap(SMapType type) {		
-//		return true;
-//	}
-	
-	public static SMapType getMap(SMapType type) {		
+	// public static boolean isMap(SMapType type) {
+	// return true;
+	// }
+
+	public static SMapType getMap(SMapType type)
+	{
 		return type;
 	}
 
 	public static PType polymorph(SMapType type, ILexNameToken pname,
-			PType actualType) {
-		
-		return AstFactory.newAMapMapType(type.getLocation(), 
-				PTypeAssistantTC.polymorph(type.getFrom(), pname, actualType), 
-				PTypeAssistantTC.polymorph(type.getTo(), pname, actualType));
+			PType actualType)
+	{
+
+		return AstFactory.newAMapMapType(type.getLocation(), PTypeAssistantTC.polymorph(type.getFrom(), pname, actualType), PTypeAssistantTC.polymorph(type.getTo(), pname, actualType));
 	}
 
 }

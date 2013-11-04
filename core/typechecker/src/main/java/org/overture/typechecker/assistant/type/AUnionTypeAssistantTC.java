@@ -46,6 +46,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		super(af);
 		this.af = af;
 	}
+
 	public static PType typeResolve(AUnionType type, ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
@@ -106,7 +107,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	}
 
-	
 	public SSeqType getSeq(AUnionType type)
 	{
 		if (!type.getSeqDone())
@@ -123,7 +123,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 					set.add(PTypeAssistantTC.getSeq(t).getSeqof());
 				}
 			}
-			
+
 			type.setSeqType(set.isEmpty() ? null
 					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
 		}
@@ -180,24 +180,24 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 			}
 
 			type.setMapType(from.isEmpty() ? null
-					: AstFactory.newAMapMapType(location, from.getType(location), to.getType(location)) );
+					: AstFactory.newAMapMapType(location, from.getType(location), to.getType(location)));
 		}
 
 		return type.getMapType();
 	}
 
-//	public static String toDisplay(AUnionType exptype)
-//	{
-//		List<PType> types = exptype.getTypes();
-//
-//		if (types.size() == 1)
-//		{
-//			return types.iterator().next().toString();
-//		} else
-//		{
-//			return Utils.setToString(new PTypeSet(types), " | ");
-//		}
-//	}
+	// public static String toDisplay(AUnionType exptype)
+	// {
+	// List<PType> types = exptype.getTypes();
+	//
+	// if (types.size() == 1)
+	// {
+	// return types.iterator().next().toString();
+	// } else
+	// {
+	// return Utils.setToString(new PTypeSet(types), " | ");
+	// }
+	// }
 
 	public static boolean isProduct(AUnionType type, int size)
 	{
@@ -293,35 +293,35 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return null;
 	}
 
-//	public static boolean equals(AUnionType type, Object other)
-//	{
-//		other = PTypeAssistantTC.deBracket(other);
-//		PTypeSet types = new PTypeSet(type.getTypes());
-//
-//		if (other instanceof AUnionType)
-//		{
-//			AUnionType uother = (AUnionType) other;
-//
-//			for (PType t : uother.getTypes())
-//			{
-//				if (!types.contains(t))
-//				{
-//					return false;
-//				}
-//			}
-//
-//			return true;
-//		}
-//
-//		return types.contains(other);
-//	}
+	// public static boolean equals(AUnionType type, Object other)
+	// {
+	// other = PTypeAssistantTC.deBracket(other);
+	// PTypeSet types = new PTypeSet(type.getTypes());
+	//
+	// if (other instanceof AUnionType)
+	// {
+	// AUnionType uother = (AUnionType) other;
+	//
+	// for (PType t : uother.getTypes())
+	// {
+	// if (!types.contains(t))
+	// {
+	// return false;
+	// }
+	// }
+	//
+	// return true;
+	// }
+	//
+	// return types.contains(other);
+	// }
 
-//	public static boolean isFunction(AUnionType type)
-//	{
-//		return getFunction(type) != null;
-//	}
+	// public static boolean isFunction(AUnionType type)
+	// {
+	// return getFunction(type) != null;
+	// }
 
-	public  AFunctionType getFunction(AUnionType type)
+	public AFunctionType getFunction(AUnionType type)
 	{
 		if (!type.getFuncDone())
 		{
@@ -450,10 +450,9 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return af.createAUnionTypeAssistant().getSeq(type) != null;
 	}
 
-	
 	public static boolean isUnknown(AUnionType type)
 	{
-		for (PType t: type.getTypes())
+		for (PType t : type.getTypes())
 		{
 			if (PTypeAssistantTC.isUnknown(t))
 			{
@@ -463,8 +462,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		return false;
 	}
-		
-	
 
 	public boolean isMap(AUnionType type)
 	{
@@ -608,18 +605,15 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 			for (ILexNameToken synthname : common.keySet())
 			{
-				PDefinition def = 
-						AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
+				PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
 			}
 
-			type.setClassType((classname == null) ? null : AstFactory
-					.newAClassType(type.getLocation(), AstFactory
-							.newAClassClassDefinition(classname.clone(),
-									new LexNameList(), newdefs)));
-			
+			type.setClassType((classname == null) ? null
+					: AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition(classname.clone(), new LexNameList(), newdefs)));
+
 		}
 
 		return type.getClassType();
@@ -630,34 +624,33 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return true;
 	}
 
-//	public static AUnionType getUnion(AUnionType type)
-//	{
-//		return type;
-//	}
+	// public static AUnionType getUnion(AUnionType type)
+	// {
+	// return type;
+	// }
 
-//	public static boolean narrowerThan(AUnionType type,
-//			AAccessSpecifierAccessSpecifier accessSpecifier)
-//	{
-//
-//		for (PType t : type.getTypes())
-//		{
-//			if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-//			{
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
+	// public static boolean narrowerThan(AUnionType type,
+	// AAccessSpecifierAccessSpecifier accessSpecifier)
+	// {
+	//
+	// for (PType t : type.getTypes())
+	// {
+	// if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+	// {
+	// return true;
+	// }
+	// }
+	//
+	// return false;
+	// }
 
-	
 	public static boolean isVoid(AUnionType type)
 	{
-		for (PType t: type.getTypes())
+		for (PType t : type.getTypes())
 		{
 			if (!PTypeAssistantTC.isVoid(t))
 			{
-				return false;		// NB. Only true if ALL void, not ANY void (see hasVoid)
+				return false; // NB. Only true if ALL void, not ANY void (see hasVoid)
 			}
 		}
 
@@ -666,7 +659,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 	public static boolean hasVoid(AUnionType type)
 	{
-		for (PType t: type.getTypes())
+		for (PType t : type.getTypes())
 		{
 			if (PTypeAssistantTC.isVoid(t))
 			{
@@ -678,19 +671,20 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	}
 
 	public static PType polymorph(AUnionType type, ILexNameToken pname,
-			PType actualType) {
-		
+			PType actualType)
+	{
+
 		PTypeSet polytypes = new PTypeSet();
 
 		for (PType ptype : ((AUnionType) type).getTypes())
 		{
 			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
 		}
-		
-		//TODO: Types in unionType should be a SET
+
+		// TODO: Types in unionType should be a SET
 		PTypeList result = new PTypeList();
 		result.addAll(polytypes);
-		
+
 		return AstFactory.newAUnionType(type.getLocation(), result);
 	}
 
