@@ -1,0 +1,13 @@
+class A
+
+functions
+
+public static f[@T]:@T -> @T
+f(arg1) ==
+	nil;
+
+public static g[@T, @U]:@T * @U -> @T
+g(arg1, arg2) ==
+	nil;
+
+end A
