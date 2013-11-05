@@ -108,8 +108,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			LexNameList pids = new LexNameList();
 
 			// add all defined names from the function parameter list
-			AFunctionType ftype = (AFunctionType) node.getType();
-
 			boolean alwaysMatches = true;
 
 			for (List<PPattern> params : node.getParamPatternList())
