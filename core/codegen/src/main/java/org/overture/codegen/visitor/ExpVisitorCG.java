@@ -12,6 +12,7 @@ import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
@@ -61,6 +62,7 @@ import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -104,6 +106,29 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	{
 		//TODO: Why does nil have type OptionalType in VDM?
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		if(node.getImpdef() != null)
+			throw new AnalysisException("Implicit functions are not supported by the code generator");
+		
+		String name = node.getExpdef().getName().getName();
+		LinkedList<PType> actualTypes = node.getActualTypes();
+		
+		AMethodInstantiationExpCG methodInst = new AMethodInstantiationExpCG();
+		methodInst.setType(null);
+		methodInst.setName(name);
+		
+		for (PType type : actualTypes)
+		{
+			PTypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+			methodInst.getActualTypes().add(typeCG);
+		}
+		
+		return methodInst;
 	}
 	
 	@Override
