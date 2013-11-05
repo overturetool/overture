@@ -10,6 +10,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -29,6 +30,7 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.utils.VdmTransUtil;
@@ -46,6 +48,18 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 			throws AnalysisException
 	{
 		return null; // Indicates an unknown type
+	}
+	
+	@Override
+	public PTypeCG caseAParameterType(AParameterType node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		String name = node.getName().getName();
+		
+		ATemplateTypeCG templateType = new ATemplateTypeCG();
+		templateType.setName(name);
+		
+		return templateType;
 	}
 
 	@Override

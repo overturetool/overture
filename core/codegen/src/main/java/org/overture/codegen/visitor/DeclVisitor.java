@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstInfo;
 import org.overture.codegen.utils.VdmTransUtil;
@@ -235,6 +236,12 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 			param.setType(type);
 			param.setName(name);
 			
+			if(type instanceof ATemplateTypeCG)
+			{
+				ATemplateTypeCG templateType = (ATemplateTypeCG) type.clone();
+				method.getTemplateTypes().add(templateType);
+			}
+			
 			formalParameters.add(param);
 		}
 		
@@ -245,7 +252,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	public PDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, CodeGenInfo question)
 			throws AnalysisException
-	{	
+	{
 		
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = PDefinitionAssistantTC.isStatic(node);

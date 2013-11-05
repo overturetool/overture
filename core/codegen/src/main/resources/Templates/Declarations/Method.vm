@@ -12,4 +12,9 @@
 	#set( $abstract = "abstract")
 #end
 ##
-$node.getAccess() $abstract $static $returnType $node.getName()($CG.format($node.getFormalParams()))$CG.formatOperationBody($node.getBody())
+#set( $templateTypes = "")
+#if ($node.getTemplateTypes().size() > 0)
+	#set( $templateTypes = $CG.formatTemplateTypes($node.getTemplateTypes()))
+#end
+##
+$node.getAccess() $abstract $static $templateTypes $returnType $node.getName()($CG.format($node.getFormalParams()))$CG.formatOperationBody($node.getBody())

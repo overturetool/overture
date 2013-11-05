@@ -1,6 +1,7 @@
 package org.overture.codegen.merging;
 
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
@@ -16,6 +17,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
@@ -29,6 +31,25 @@ public class CG
 		field.apply(mergeVisitor, writer);
 
 		return writer.toString();
+	}
+	
+	public static String formatTemplateTypes(LinkedList<ATemplateTypeCG> templateTypes) throws AnalysisException
+	{
+		StringWriter writer = new StringWriter();
+		
+		if(templateTypes.size() <= 0)
+			return "";
+		
+		ATemplateTypeCG firstType = templateTypes.get(0);
+		writer.append(CG.format(firstType));
+		
+		for(int i = 1; i < templateTypes.size(); i++)
+		{
+			ATemplateTypeCG currentType = templateTypes.get(i);
+			writer.append(", " + CG.format(currentType));
+		}
+		
+		return "<" + writer.toString() + ">";
 	}
 	
 	public static String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException

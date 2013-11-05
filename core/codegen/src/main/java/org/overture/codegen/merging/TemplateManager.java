@@ -70,6 +70,7 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.constants.IText;
 
@@ -105,11 +106,13 @@ public class TemplateManager
 		// Local declarations
 
 		// Type
-		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");
+		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");//TODO: Rename to Class
 		
 		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
 		
 		nodeTemplateFileNames.put(AStringTypeCG.class, IText.TYPE_PATH + "String");
+		
+		nodeTemplateFileNames.put(ATemplateTypeCG.class, IText.TYPE_PATH + "Template");
 		
 		//Basic type wrappers
 		
