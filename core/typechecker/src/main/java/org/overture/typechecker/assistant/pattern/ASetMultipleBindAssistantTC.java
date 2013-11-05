@@ -19,5 +19,4 @@ public class ASetMultipleBindAssistantTC
 		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
 	}
 
-
 }

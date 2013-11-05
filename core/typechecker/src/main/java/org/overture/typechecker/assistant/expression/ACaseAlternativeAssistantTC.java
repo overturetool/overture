@@ -2,6 +2,7 @@ package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -27,7 +28,7 @@ public class ACaseAlternativeAssistantTC
 	}
 
 	public static PType typeCheck(ACaseAlternative c,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question, PType expType) throws AnalysisException
 	{
 

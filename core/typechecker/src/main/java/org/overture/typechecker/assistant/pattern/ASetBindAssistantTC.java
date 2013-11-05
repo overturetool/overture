@@ -30,5 +30,4 @@ public class ASetBindAssistantTC
 		return mblist;
 	}
 
-
 }

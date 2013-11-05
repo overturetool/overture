@@ -7,10 +7,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 
 /**
  * Used to determine if the of the a type is a map type
@@ -34,26 +30,28 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean defaultSMapType(SMapType type) throws AnalysisException
 	{
-		return SMapTypeAssistantTC.isMap((SMapType) type);
+		return true;
 	}
 
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		return ANamedInvariantTypeAssistantTC.isMap((ANamedInvariantType) type);
+		if (type.getOpaque()) return false;
+		return type.getType().apply(THIS);
 	}
 
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isMap((AUnionType) type);
+		//return AUnionTypeAssistantTC.getMap(type) != null; //static call
+		return af.createAUnionTypeAssistant().getMap(type) != null;//non static call
 	}
 
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-		return AUnknownTypeAssistantTC.isMap((AUnknownType) type);
+		return true;
 	}
 
 	@Override

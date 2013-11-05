@@ -9,7 +9,8 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AFieldFieldAssistantTC {
+public class AFieldFieldAssistantTC
+{
 
 	protected static ITypeCheckerAssistantFactory af;
 
@@ -21,8 +22,9 @@ public class AFieldFieldAssistantTC {
 
 	public static void typeResolve(AFieldField f, ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		
+			TypeCheckInfo question)
+	{
+
 		// Recursion defence done by the type
 		f.setType(af.createPTypeAssistant().typeResolve(f.getType(), root, rootVisitor, question));
 
@@ -30,19 +32,19 @@ public class AFieldFieldAssistantTC {
 		{
 			if (f.getType() instanceof AFunctionType)
 			{
-    			f.getTagname().setTypeQualifier(((AFunctionType)f.getType()).getParameters());
+				f.getTagname().setTypeQualifier(((AFunctionType) f.getType()).getParameters());
+			} else if (f.getType() instanceof AOperationType)
+			{
+				f.getTagname().setTypeQualifier(((AOperationType) f.getType()).getParameters());
 			}
-			else if (f.getType() instanceof AOperationType)
-    		{
-				f.getTagname().setTypeQualifier(((AOperationType)f.getType()).getParameters());
-    		}
 		}
-		
+
 	}
 
-	public static void unResolve(AFieldField f) {
+	public static void unResolve(AFieldField f)
+	{
 		PTypeAssistantTC.unResolve(f.getType());
-		
+
 	}
 
 }

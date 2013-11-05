@@ -18,7 +18,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
-public class AClassTypeAssistantTC {
+public class AClassTypeAssistantTC
+{
 
 	protected static ITypeCheckerAssistantFactory af;
 
@@ -29,24 +30,32 @@ public class AClassTypeAssistantTC {
 	}
 
 	public static LexNameToken getMemberName(AClassType cls,
-			ILexIdentifierToken id) {
+			ILexIdentifierToken id)
+	{
 		// Note: not explicit
 		return new LexNameToken(cls.getName().getName(), id.getName(), id.getLocation(), false, false);
 	}
 
-	public static PDefinition findName(AClassType cls, ILexNameToken tag, NameScope scope) {
-		return  SClassDefinitionAssistantTC.findName(cls.getClassdef(),tag, scope);
+	public static PDefinition findName(AClassType cls, ILexNameToken tag,
+			NameScope scope)
+	{
+		return SClassDefinitionAssistantTC.findName(cls.getClassdef(), tag, scope);
 	}
 
-	public static boolean hasSupertype(AClassType sclass, PType other) {
-		return SClassDefinitionAssistantTC.hasSupertype(sclass.getClassdef(),other);
+	public static boolean hasSupertype(AClassType sclass, PType other)
+	{
+		return SClassDefinitionAssistantTC.hasSupertype(sclass.getClassdef(), other);
 	}
 
 	public static PType typeResolve(AClassType type, ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) {
-		
-		if (type.getResolved()) return type; else type.setResolved(true);
+			TypeCheckInfo question)
+	{
+
+		if (type.getResolved())
+			return type;
+		else
+			type.setResolved(true);
 
 		try
 		{
@@ -55,9 +64,9 @@ public class AClassTypeAssistantTC {
 			// to this class. We need the private environment to see all
 			// the definitions that are available to us while resolving...
 
-			Environment self = new PrivateClassEnvironment(question.assistantFactory,type.getClassdef(), question.env);
+			Environment self = new PrivateClassEnvironment(question.assistantFactory, type.getClassdef(), question.env);
 
-			for (PDefinition d: type.getClassdef().getDefinitions())
+			for (PDefinition d : type.getClassdef().getDefinitions())
 			{
 				// There is a problem resolving ParameterTypes via a FunctionType
 				// when this is not being done via ExplicitFunctionDefinition
@@ -66,63 +75,63 @@ public class AClassTypeAssistantTC {
 
 				if (d instanceof AExplicitFunctionDefinition)
 				{
-					AExplicitFunctionDefinition fd = (AExplicitFunctionDefinition)d;
+					AExplicitFunctionDefinition fd = (AExplicitFunctionDefinition) d;
 
 					if (fd.getTypeParams() != null)
 					{
-						continue;	// Skip polymorphic functions
+						continue; // Skip polymorphic functions
 					}
 				}
-				question = new TypeCheckInfo(question.assistantFactory,self,question.scope,question.qualifiers);				
+				question = new TypeCheckInfo(question.assistantFactory, self, question.scope, question.qualifiers);
 				af.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), root, rootVisitor, question);
 			}
 
 			return type;
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			unResolve(type);
 			throw e;
 		}
-		
+
 	}
 
-	public static void unResolve(AClassType type) {
+	public static void unResolve(AClassType type)
+	{
 		if (type.getResolved())
 		{
-    		type.setResolved(false);
+			type.setResolved(false);
 
-    		for (PDefinition d: type.getClassdef().getDefinitions())
-    		{
-    			PTypeAssistantTC.unResolve(af.createPDefinitionAssistant().getType(d));
-    		}
-		}
-		
-	}
-
-	public static String toDisplay(AClassType exptype) {
-		return exptype.getClassdef().getName().getName();
-	}
-
-	public static boolean equals(AClassType type, Object other) {
-		other = PTypeAssistantTC.deBracket(other);
-
-		if (other instanceof AClassType)
-		{
-			AClassType oc = (AClassType)other;
-			return type.getName().equals(oc.getName());		// NB. name only
+			for (PDefinition d : type.getClassdef().getDefinitions())
+			{
+				PTypeAssistantTC.unResolve(af.createPDefinitionAssistant().getType(d));
+			}
 		}
 
-		return false;
 	}
 
-	public static boolean isClass(AClassType type) {
-		return true;
-	}
+	// public static String toDisplay(AClassType exptype) {
+	// return exptype.getClassdef().getName().getName();
+	// }
+
+	// public static boolean equals(AClassType type, Object other) {
+	// other = PTypeAssistantTC.deBracket(other);
+	//
+	// if (other instanceof AClassType)
+	// {
+	// AClassType oc = (AClassType)other;
+	// return type.getName().equals(oc.getName()); // NB. name only
+	// }
+	//
+	// return false;
+	// }
+
+	// public static boolean isClass(AClassType type) {
+	// return true;
+	// }
 
 	public static SClassDefinition getClass(SClassDefinition type)
 	{
 		return type;
 	}
-	
+
 }

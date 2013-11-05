@@ -2,6 +2,7 @@ package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -14,21 +15,16 @@ public class AbstractTypeCheckVisitor extends
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	final protected QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public AbstractTypeCheckVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> visitor,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+			IQuestionAnswer<TypeCheckInfo, PType> visitor)
 	{
 		super(visitor);
-		this.rootVisitor = typeCheckVisitor;
 	}
 
-	public AbstractTypeCheckVisitor(
-			)
+	public AbstractTypeCheckVisitor()
 	{
 		super();
-		this.rootVisitor = null;
 	}
 
 	@Override
@@ -42,12 +38,12 @@ public class AbstractTypeCheckVisitor extends
 	{
 		return null;
 	}
-	
+
 	@Override
 	public PType defaultINode(INode node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		return rootVisitor.defaultINode(node,question);
+		return THIS.defaultINode(node, question);
 	}
 
 }

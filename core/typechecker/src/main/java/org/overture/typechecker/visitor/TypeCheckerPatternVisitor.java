@@ -1,7 +1,7 @@
 package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -23,9 +23,9 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 	private static final long serialVersionUID = -3210904929412698065L;
 
 	public TypeCheckerPatternVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null,typeCheckVisitor);// FIXME
+		super(typeCheckVisitor);
 	}
 
 	@Override
@@ -33,9 +33,9 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
+		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
 		question.qualifiers = null;
-		PType type = node.getSet().apply(rootVisitor, question);
+		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
 		if (!PTypeAssistantTC.isSet(type))
@@ -70,8 +70,8 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor, question);
-		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, rootVisitor, question);
+		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
 		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
 
 		if (!TypeComparator.compatible(ptype, type))

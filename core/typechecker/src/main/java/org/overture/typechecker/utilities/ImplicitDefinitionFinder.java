@@ -118,7 +118,6 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			node.setPredef(AExplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
 			PDefinitionAssistantTC.markUsed(node.getPredef()); //ORIGINAL CODE
 			
-			//af.getUsedMarker().caseAExplicitOperationDefinition((AExplicitOperationDefinition)node.getPredef());
 		}
 
 		if (node.getPostcondition() != null)
@@ -150,7 +149,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		{
 			node.setPostdef(AImplicitFunctionDefinitionAssistantTC.getPostDefinition(node));
 			PDefinitionAssistantTC.markUsed(node.getPostdef());
-			//af.createPDefinitionAssistant().markUsed(node.getPostdef());
+			
 			
 		} else
 		{
@@ -168,14 +167,14 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		{
 			node.setPredef(AImplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
 			PDefinitionAssistantTC.markUsed(node.getPredef());
-			//af.createPDefinitionAssistant().markUsed(node.getPredef());
+			
 		}
 
 		if (node.getPostcondition() != null)
 		{
 			node.setPostdef(AImplicitOperationDefinitionAssistantTC.getPostDefinition(node, question));
 			PDefinitionAssistantTC.markUsed(node.getPostdef());
-			//af.createPDefinitionAssistant().markUsed(node.getPostdef());
+			
 		}
 	}
 	@Override
