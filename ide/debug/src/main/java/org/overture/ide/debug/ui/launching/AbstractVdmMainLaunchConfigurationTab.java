@@ -69,6 +69,7 @@ import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.utils.JarClassSelector;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 import org.overture.ide.ui.outline.DisplayNameCreator;
@@ -100,18 +101,20 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		public Object[] getElements(Object inputElement)
 		{
 			Object[] elems = super.getElements(inputElement);
-			if (elems.length > 0 && elems[0] instanceof AModuleModules
+			if (elems.length > 0
+					&& elems[0] instanceof AModuleModules
 					&& ((AModuleModules) elems[0]).getName().getName().equals("DEFAULT"))
 			{
 				Set<AModuleModules> set = new HashSet<AModuleModules>();
-				
-				for (Object aModuleModules : elems) {
-				
+
+				for (Object aModuleModules : elems)
+				{
+
 					set.add((AModuleModules) aModuleModules);
 				}
-				
+
 				CombinedDefaultModule comb = new CombinedDefaultModule(set);
-				
+
 				return new Object[] { comb };
 
 			}
@@ -149,6 +152,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private Text fModuleNameText;
 	private Text fOperationText;
 	private Text fRemoteControlClassText;
+	private Button fRemoteControlnButton;
 	private Button checkBoxGenerateLatexCoverage = null;
 
 	private Button radioLaunchModeConsole = null;
@@ -241,7 +245,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			return true;
 		}
 		//
-		//		
+		//
 		return false;
 
 	}
@@ -256,7 +260,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	 */
 	public static boolean isFullyQualifiedClassname(String classname)
 	{
-		if (classname == null)
+		if (classname == null || classname.endsWith("."))
 			return false;
 		String[] parts = classname.split("[\\.]");
 		if (parts.length == 0)
@@ -610,6 +614,38 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		fRemoteControlClassText.setLayoutData(gd);
 		fRemoteControlClassText.addModifyListener(fListener);
 		fRemoteControlClassText.setEnabled(true);
+
+		fRemoteControlnButton = createPushButton(group, "Brows...", null);
+		fRemoteControlnButton.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				try
+				{
+					chooseRemoteControlClass();
+				} catch (CoreException e1)
+				{
+					if (VdmDebugPlugin.DEBUG)
+					{
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+
+	protected void chooseRemoteControlClass() throws CoreException
+	{
+		final IProject project = getProject();
+		IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+
+		String selection = JarClassSelector.selectClass(getShell(), vdmProject.getModelBuildPath().getLibrary());
+
+		if (selection != null)
+		{
+			fRemoteControlClassText.setText(selection);
+		}
 	}
 
 	protected void createOtherOptions(Composite parent)
@@ -637,6 +673,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		if (radioLaunchModeConsole.getSelection())
 		{
 			fRemoteControlClassText.setEnabled(false);
+			fRemoteControlnButton.setEnabled(false);
 			fOperationText.setEnabled(false);
 			fModuleNameText.setEnabled(false);
 			fOperationButton.setEnabled(false);
@@ -645,6 +682,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		if (radioLaunchModeEntryPoint.getSelection())
 		{
 			fRemoteControlClassText.setEnabled(false);
+			fRemoteControlnButton.setEnabled(false);
 			fOperationText.setEnabled(true);
 			fModuleNameText.setEnabled(true);
 			fOperationButton.setEnabled(true);
@@ -652,6 +690,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		if (radioLaunchModeRemoteControl.getSelection())
 		{
 			fRemoteControlClassText.setEnabled(true);
+			fRemoteControlnButton.setEnabled(true);
 			fOperationText.setEnabled(false);
 			fModuleNameText.setEnabled(false);
 			fOperationButton.setEnabled(false);
@@ -706,15 +745,15 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			// dialog.setComparator(new
 			// ResourceComparator(ResourceComparator...NAME));
 			if (dialog.open() == IDialogConstants.OK_ID)
-			{				
-				if(dialog.getFirstResult() instanceof AModuleModules)
+			{
+				if (dialog.getFirstResult() instanceof AModuleModules)
 				{
 					AModuleModules m = (AModuleModules) dialog.getFirstResult();
 					defaultModule = m.getName().getName();
 					fModuleNameText.setText(DisplayNameCreator.getDisplayName(m));
 					return;
 				}
-				
+
 				PDefinition method = (PDefinition) dialog.getFirstResult();
 				INode module = null;
 
@@ -748,7 +787,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 						fModuleNameText.setText(DisplayNameCreator.getDisplayName(method.getClassDefinition()));
 					}
 				} else if (method.getLocation() != null
-						&& method.getLocation().getModule()  != null)
+						&& method.getLocation().getModule() != null)
 				{
 					defaultModule = method.getLocation().getModule();
 					fModuleNameText.setText(defaultModule);
@@ -830,15 +869,14 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 		// System.out.println("Expression: " + expression);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, expression);
-		
-		if (!fProjectText.getText().equals("")) {
-			IResource[] resources = new IResource[]{(IResource)ResourcesPlugin
-				.getWorkspace()
-				.getRoot()
-				.getProject(fProjectText.getText())};
-			
+
+		if (!fProjectText.getText().equals(""))
+		{
+			IResource[] resources = new IResource[] { (IResource) ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectText.getText()) };
+
 			configuration.setMappedResources(resources);
-		} else {
+		} else
+		{
 			configuration.setMappedResources(null);
 		}
 
@@ -877,7 +915,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 					// access is needed
 				}
 			}
-			
+
 			radioLaunchModeEntryPoint.setSelection(true);
 
 			if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OPERATION, "").length() > 0

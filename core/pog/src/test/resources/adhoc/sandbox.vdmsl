@@ -1,7 +1,4 @@
-types
-    A = (int*int*int) | (int*int);
-    B = A*A
-    
 functions
-    picker : A -> int
-    picker (x) == x.#3
+
+h : () -> int*int -> int
+h () (x, 0 ) == 0
