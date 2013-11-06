@@ -1113,14 +1113,14 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 	
 	@Override
-	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
-	{
-		return new PTypeResolver(this);
-	}
-	
-	@Override
 	public IQuestionAnswer<org.overture.typechecker.utilities.type.ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor()
 	{
 		return new ConcreateTypeImplementor(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
+	{
+		return new PTypeResolver(this);
 	}
 }

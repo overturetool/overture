@@ -217,67 +217,67 @@ public class PTypeAssistantTC extends PTypeAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
-//		try
-//		{
-//			return type.apply(af.getPTypeResolver(), new PTypeResolver.Newquestion(root, rootVisitor, question));
-//		} catch (AnalysisException e)
-//		{
-//			return null;
-//		}
-
-		PType result = null;
-
-		if (type instanceof ABracketType)
+		try
 		{
-			result = ABracketTypeAssistantTC.typeResolve((ABracketType) type, root, rootVisitor, question);
-		} else if (type instanceof AClassType)
+			return type.apply(af.getPTypeResolver(), new PTypeResolver.Newquestion(root, rootVisitor, question));
+		} catch (AnalysisException e)
 		{
-			result = AClassTypeAssistantTC.typeResolve((AClassType) type, root, rootVisitor, question);
-		} else if (type instanceof AFunctionType)
-		{
-			result = AFunctionTypeAssistantTC.typeResolve((AFunctionType) type, root, rootVisitor, question);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				result = ANamedInvariantTypeAssistantTC.typeResolve((ANamedInvariantType) type, root, rootVisitor, question);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				result = ARecordInvariantTypeAssistantTC.typeResolve((ARecordInvariantType) type, root, rootVisitor, question);
-			}
-		} else if (type instanceof SMapType)
-		{
-			result = SMapTypeAssistantTC.typeResolve((SMapType) type, root, rootVisitor, question);
-		} else if (type instanceof AOperationType)
-		{
-			result = AOperationTypeAssistantTC.typeResolve((AOperationType) type, root, rootVisitor, question);
-		} else if (type instanceof AOptionalType)
-		{
-			result = AOptionalTypeAssistantTC.typeResolve((AOptionalType) type, root, rootVisitor, question);
-		} else if (type instanceof AParameterType)
-		{
-			result = AParameterTypeAssistantTC.typeResolve((AParameterType) type, root, rootVisitor, question);
-		} else if (type instanceof AProductType)
-		{
-			result = AProductTypeAssistantTC.typeResolve((AProductType) type, root, rootVisitor, question);
-		} else if (type instanceof SSeqType)
-		{
-			result = SSeqTypeAssistantTC.typeResolve((SSeqType) type, root, rootVisitor, question);
-		} else if (type instanceof ASetType)
-		{
-			result = ASetTypeAssistantTC.typeResolve((ASetType) type, root, rootVisitor, question);
-		} else if (type instanceof AUnionType)
-		{
-			result = AUnionTypeAssistantTC.typeResolve((AUnionType) type, root, rootVisitor, question);
-		} else if (type instanceof AUnresolvedType)
-		{
-			result = AUnresolvedTypeAssistantTC.typeResolve((AUnresolvedType) type, root, rootVisitor, question);
-		} else
-		{
-			type.setResolved(true);
-			result = type;
+			return null;
 		}
-		return result;
+
+//		PType result = null;
+//
+//		if (type instanceof ABracketType)
+//		{
+//			result = ABracketTypeAssistantTC.typeResolve((ABracketType) type, root, rootVisitor, question);
+//		} else if (type instanceof AClassType)
+//		{
+//			result = AClassTypeAssistantTC.typeResolve((AClassType) type, root, rootVisitor, question);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			result = AFunctionTypeAssistantTC.typeResolve((AFunctionType) type, root, rootVisitor, question);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				result = ANamedInvariantTypeAssistantTC.typeResolve((ANamedInvariantType) type, root, rootVisitor, question);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				result = ARecordInvariantTypeAssistantTC.typeResolve((ARecordInvariantType) type, root, rootVisitor, question);
+//			}
+//		} else if (type instanceof SMapType)
+//		{
+//			result = SMapTypeAssistantTC.typeResolve((SMapType) type, root, rootVisitor, question);
+//		} else if (type instanceof AOperationType)
+//		{
+//			result = AOperationTypeAssistantTC.typeResolve((AOperationType) type, root, rootVisitor, question);
+//		} else if (type instanceof AOptionalType)
+//		{
+//			result = AOptionalTypeAssistantTC.typeResolve((AOptionalType) type, root, rootVisitor, question);
+//		} else if (type instanceof AParameterType)
+//		{
+//			result = AParameterTypeAssistantTC.typeResolve((AParameterType) type, root, rootVisitor, question);
+//		} else if (type instanceof AProductType)
+//		{
+//			result = AProductTypeAssistantTC.typeResolve((AProductType) type, root, rootVisitor, question);
+//		} else if (type instanceof SSeqType)
+//		{
+//			result = SSeqTypeAssistantTC.typeResolve((SSeqType) type, root, rootVisitor, question);
+//		} else if (type instanceof ASetType)
+//		{
+//			result = ASetTypeAssistantTC.typeResolve((ASetType) type, root, rootVisitor, question);
+//		} else if (type instanceof AUnionType)
+//		{
+//			result = AUnionTypeAssistantTC.typeResolve((AUnionType) type, root, rootVisitor, question);
+//		} else if (type instanceof AUnresolvedType)
+//		{
+//			result = AUnresolvedTypeAssistantTC.typeResolve((AUnresolvedType) type, root, rootVisitor, question);
+//		} else
+//		{
+//			type.setResolved(true);
+//			result = type;
+//		}
+//		return result;
 	}
 
 	public static void unResolve(PType type)
