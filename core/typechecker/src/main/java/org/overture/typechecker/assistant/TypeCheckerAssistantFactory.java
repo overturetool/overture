@@ -142,12 +142,14 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
@@ -1108,5 +1110,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<AFunctionType> getFunctionTypeFinder()
 	{
 		return new FunctionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
+	{
+		return new PTypeResolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor()
+	{
+		return new ConcreateTypeImplementor(this);
 	}
 }

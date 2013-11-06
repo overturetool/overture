@@ -32,6 +32,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public class PTypeAssistantTC extends PTypeAssistant
 {
@@ -77,34 +79,42 @@ public class PTypeAssistantTC extends PTypeAssistant
 	public static PType polymorph(PType type, ILexNameToken pname,
 			PType actualType)
 	{
-		if (type instanceof AParameterType)
+		try
 		{
-			return AParameterTypeAssistantTC.polymorph((AParameterType) type, pname, actualType);
-		} else if (type instanceof AFunctionType)
+			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AFunctionTypeAssistantTC.polymorph((AFunctionType) type, pname, actualType);
-		} else if (type instanceof SMapType)
-		{
-			return SMapTypeAssistantTC.polymorph((SMapType) type, pname, actualType);
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.polymorph((AOptionalType) type, pname, actualType);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.polymorph((AProductType) type, pname, actualType);
-		} else if (type instanceof SSeqType)
-		{
-			return SSeqTypeAssistantTC.polymorph((SSeqType) type, pname, actualType);
-		} else if (type instanceof ASetType)
-		{
-			return ASetTypeAssistantTC.polymorph((ASetType) type, pname, actualType);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.polymorph((AUnionType) type, pname, actualType);
-		} else
-		{
-			return type;
+			return null;
 		}
+		
+//		if (type instanceof AParameterType)
+//		{
+//			return AParameterTypeAssistantTC.polymorph((AParameterType) type, pname, actualType);
+//		} else if (type instanceof AFunctionType)
+//		{
+//			return AFunctionTypeAssistantTC.polymorph((AFunctionType) type, pname, actualType);
+//		} else if (type instanceof SMapType)
+//		{
+//			return SMapTypeAssistantTC.polymorph((SMapType) type, pname, actualType);
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.polymorph((AOptionalType) type, pname, actualType);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.polymorph((AProductType) type, pname, actualType);
+//		} else if (type instanceof SSeqType)
+//		{
+//			return SSeqTypeAssistantTC.polymorph((SSeqType) type, pname, actualType);
+//		} else if (type instanceof ASetType)
+//		{
+//			return ASetTypeAssistantTC.polymorph((ASetType) type, pname, actualType);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.polymorph((AUnionType) type, pname, actualType);
+//		} else
+//		{
+//			return type;
+//		}
 
 	}
 
@@ -202,10 +212,18 @@ public class PTypeAssistantTC extends PTypeAssistant
 //		return null;
 	}
 
-	public PType typeResolve(PType type, ATypeDefinition root,
+	public PType typeResolve(PType type, 
+			ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
+//		try
+//		{
+//			return type.apply(af.getPTypeResolver(), new PTypeResolver.Newquestion(root, rootVisitor, question));
+//		} catch (AnalysisException e)
+//		{
+//			return null;
+//		}
 
 		PType result = null;
 

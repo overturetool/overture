@@ -121,6 +121,8 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
@@ -421,5 +423,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	AnswerAdaptor<Boolean> getUnionBasisChecker();
 	
 	IAnswer<AFunctionType> getFunctionTypeFinder();
+	
+	IQuestionAnswer<PTypeResolver.Newquestion, PType> getPTypeResolver();
+	
+	IQuestionAnswer<ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor();
+	
 
 }
