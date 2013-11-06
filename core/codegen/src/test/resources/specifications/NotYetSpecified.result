@@ -1,14 +1,9 @@
-
 public class A {
+    public void op() {
+        throw new UnsupportedOperationException();
+    }
 
-	public void op() {
-
-		throw new UnsupportedOperationException();
-	}
-
-	public static int f() {
-
-		throw new UnsupportedOperationException();
-	}
-
+    public static int f() {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -1,46 +1,33 @@
-
 public class A {
+    public static int f(int x) {
+        return x;
+    }
 
-	public static int f(int x) {
+    public void q1() {
+        q2();
+    }
 
-		return x;
-	}
+    public void q2() {
+        //Skip;
+    }
 
-	public void q1() {
+    public void q3() {
+        q2();
+        q2();
+        q2();
+    }
 
-		q2();
-	}
+    public int op1() {
+        return f(1);
+    }
 
-	public void q2() {
-
-		//Skip;
-	}
-
-	public void q3() {
-
-		q2();
-		q2();
-		q2();
-
-	}
-
-	public int op1() {
-
-		return f(1);
-	}
-
-	public int op2() {
-
-		return B.f(1);
-	}
-
+    public int op2() {
+        return B.f(1);
+    }
 }
 
 public class B {
-
-	public static int f(int x) {
-
-		return x;
-	}
-
+    public static int f(int x) {
+        return x;
+    }
 }

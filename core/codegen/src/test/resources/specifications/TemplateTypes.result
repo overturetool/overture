@@ -1,14 +1,9 @@
-
 public class A {
+    public static <T> T f(T arg1) {
+        return null;
+    }
 
-	public static <T> T f(T arg1) {
-
-		return null;
-	}
-
-	public static <T, U> T g(T arg1, U arg2) {
-
-		return null;
-	}
-
+    public static <T, U> T g(T arg1, U arg2) {
+        return null;
+    }
 }

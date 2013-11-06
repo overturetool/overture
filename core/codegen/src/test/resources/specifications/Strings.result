@@ -1,16 +1,12 @@
-
 import java.util.*;
 
+
 public class A {
+    public static String f() {
+        return "";
+    }
 
-	public static String f() {
-
-		return "";
-	}
-
-	public static String g() {
-
-		return "";
-	}
-
+    public static String g() {
+        return "";
+    }
 }

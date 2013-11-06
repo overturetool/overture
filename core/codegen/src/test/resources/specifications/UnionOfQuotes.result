@@ -1,38 +1,27 @@
-
 import quotes.*;
 
+
 public class A {
+    public void op(int v) {
+        if (v == Quotes.Red) {
+            //Skip;
+        }
+    }
 
-	public void op(int v) {
+    public void op2(int v) {
+        if (v == Quotes.A) {
+            //Skip;
+        }
+    }
 
-		if (v == Quotes.Red) {
-
-			//Skip;
-
-		}
-
-	}
-
-	public void op2(int v) {
-
-		if (v == Quotes.A) {
-
-			//Skip;
-
-		}
-
-	}
-
-	public int op3() {
-
-		return Quotes.Red;
-	}
-
+    public int op3() {
+        return Quotes.Red;
+    }
 }
 
 package quotes;
 
 public interface Quotes {
-	public static int A = 1;
-	public static int Red = 2;
+    public static int A = 1;
+    public static int Red = 2;
 }

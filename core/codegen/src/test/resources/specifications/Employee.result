@@ -1,128 +1,94 @@
-
 abstract public class Employee {
-
-	public abstract double getSalary();
-
+    public abstract double getSalary();
 }
 
 public class HourlyPaidEmployee extends Employee {
+    public double hours;
+    private double rate;
 
-	public double hours;
-	private double rate;
+    public HourlyPaidEmployee(double pHours, double pRate) {
+        hours = pHours;
+        rate = pRate;
+    }
 
-	public HourlyPaidEmployee(double pHours, double pRate) {
+    public double getSalary() {
+        return hours * rate;
+    }
 
-		hours = pHours;
-		rate = pRate;
-
-	}
-
-	public double getSalary() {
-
-		return hours * rate;
-	}
-
-	public void SetRate(double pRate) {
-
-		if (pRate > 150) {
-
-			rate = 150;
-
-		} else if (pRate < 0) {
-
-			rate = 0;
-
-		} else {
-
-			rate = pRate;
-
-		}
-
-	}
-
+    public void SetRate(double pRate) {
+        if (pRate > 150) {
+            rate = 150;
+        } else if (pRate < 0) {
+            rate = 0;
+        } else {
+            rate = pRate;
+        }
+    }
 }
 
 public class FixedSalaryEmployee extends Employee {
+    private double fixedSalary;
 
-	private double fixedSalary;
+    public FixedSalaryEmployee(double pFixedSalary) {
+        fixedSalary = pFixedSalary;
+    }
 
-	public FixedSalaryEmployee(double pFixedSalary) {
-
-		fixedSalary = pFixedSalary;
-	}
-
-	public double getSalary() {
-
-		return fixedSalary;
-	}
-
+    public double getSalary() {
+        return fixedSalary;
+    }
 }
 
 import java.util.*;
 
+
 public class Company {
+    private List<Employee> employees;
 
-	private List<Employee> employees;
+    public Company() {
+        employees = Utils.seq();
+    }
 
-	public Company() {
+    public void op1() {
+        int x = employees.size();
+        List<Employee> y = employees;
+        Employee q = employees.get(0);
 
-		employees = Utils.seq();
+        //Skip;
+    }
 
-	}
+    public double calculateSalary() {
+        return start_calc(0, employees);
+    }
 
-	public void op1() {
+    private double start_calc(double sum, List<Employee> emps) {
+        if (emps.size() == 0) {
+            return sum;
+        } else {
+            return start_calc(sum + emps.get(0).getSalary(),
+                emps.subList(1, emps.size()));
+        }
+    }
 
-		int x = employees.size();
-		List<Employee> y = employees;
-		Employee q = employees.get(0);
-		//Skip;
-	}
+    private double not_used(double r, int n1, int n, char c, boolean b) {
+        return 2.1;
+    }
 
-	public double calculateSalary() {
+    public Company addEmp(Employee emp) {
+        employees = Utils.seqConc(employees, Utils.seq(emp));
 
-		return start_calc(0, employees);
-	}
-
-	private double start_calc(double sum, List<Employee> emps) {
-
-		if (emps.size() == 0) {
-
-			return sum;
-
-		} else {
-
-			return start_calc(sum + emps.get(0).getSalary(), emps.subList(1,
-					emps.size()));
-
-		}
-
-	}
-
-	private double not_used(double r, int n1, int n, char c, boolean b) {
-
-		return 2.1;
-	}
-
-	public Company addEmp(Employee emp) {
-
-		employees = Utils.seqConc(employees, Utils.seq(emp));
-		return this;
-
-	}
-
+        return this;
+    }
 }
 
 public class World {
+    public double run() {
+        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100);
+        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000);
+        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000);
+        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100);
+        Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
+                                       .addEmp(emp4);
 
-	public double run() {
-
-		HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100);
-		FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000);
-		FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000);
-		HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100);
-		Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
-				.addEmp(emp4);
-		return company.calculateSalary();
-	}
-
+        return company.calculateSalary();
+    }
 }

@@ -1,18 +1,15 @@
-
 public class A {
+    public int op() {
+        int x = 1;
 
-	public int op() {
+        return x;
+    }
 
-		int x = 1;
-		return x;
-	}
+    public static int f(int x) {
+        int x1 = f(1);
+        int x2 = f(2);
+        int x3 = f(3);
 
-	public static int f(int x) {
-
-		int x1 = f(1);
-		int x2 = f(2);
-		int x3 = f(3);
-		return x;
-	}
-
+        return x;
+    }
 }

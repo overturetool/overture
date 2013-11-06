@@ -1,14 +1,9 @@
-
 public class C {
+    public void op1(int arg) {
+        op2(arg);
+    }
 
-	public void op1(int arg) {
-
-		op2(arg);
-	}
-
-	public void op2(int arg) {
-
-		//Skip;
-	}
-
+    public void op2(int arg) {
+        //Skip;
+    }
 }

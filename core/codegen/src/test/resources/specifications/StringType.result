@@ -1,9 +1,5 @@
-
 public class StringType {
-
-	public String op1() {
-
-		return "kattebakke";
-	}
-
+    public String op1() {
+        return "kattebakke";
+    }
 }

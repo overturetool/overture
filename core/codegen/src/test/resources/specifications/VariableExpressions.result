@@ -1,36 +1,27 @@
-
 public class A {
+    private int n = 2;
 
-	private int n = 2;
+    public int getN() {
+        return n;
+    }
 
-	public int getN() {
+    public int o1() {
+        return A.f() + A.g(3) + h(1, 2) + op2(3) + A.op2(3);
+    }
 
-		return n;
-	}
+    public static int op2(int x) {
+        return 2 + x;
+    }
 
-	public int o1() {
+    public static int f() {
+        return 2;
+    }
 
-		return A.f() + A.g(3) + h(1, 2) + op2(3) + A.op2(3);
-	}
+    public static int g(int x) {
+        return x;
+    }
 
-	public static int op2(int x) {
-
-		return 2 + x;
-	}
-
-	public static int f() {
-
-		return 2;
-	}
-
-	public static int g(int x) {
-
-		return x;
-	}
-
-	public static int h(int x, int y) {
-
-		return x + y;
-	}
-
+    public static int h(int x, int y) {
+        return x + y;
+    }
 }

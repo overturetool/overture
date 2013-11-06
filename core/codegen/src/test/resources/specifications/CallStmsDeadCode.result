@@ -1,17 +1,13 @@
-
 public class A {
+    public int op1() {
+        return 1;
+    }
 
-	public int op1() {
+    public int q2() {
+        return op1();
 
-		return 1;
-	}
+        return op1();
 
-	public int q2() {
-
-		return op1();
-		return op1();
-		return op1();
-
-	}
-
+        return op1();
+    }
 }
