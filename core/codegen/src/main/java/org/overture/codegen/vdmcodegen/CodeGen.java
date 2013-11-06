@@ -13,18 +13,8 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.velocity.app.Velocity;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.ToolFactory;
-import org.eclipse.jdt.core.formatter.CodeFormatter;
-import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.TextEdit;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -37,6 +27,9 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.visitor.CodeGenerator;
+
+import de.hunsicker.io.FileFormat;
+import de.hunsicker.jalopy.Jalopy;
 
 public class CodeGen
 {
@@ -60,10 +53,7 @@ public class CodeGen
 
 	private void initVelocity()
 	{
-		
-		//String propertyPath = CodeGenUtil.getVelocityPropertiesPath("velocity.properties");
 		Velocity.init();
-		//Velocity.init(propertyPath);
 	}
 
 	public GeneratedModule generateQuotes()
@@ -71,90 +61,60 @@ public class CodeGen
 		try
 		{
 			MergeVisitor mergeVisitor = new MergeVisitor();
-			CodeFormatter codeFormatter = constructCodeFormatter();
 			StringWriter writer = new StringWriter();
-			
+
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
-			
-			if(quotesInterface.getFields().size() == 0)
-				return null; //Nothing to generate
-			
+
+			if (quotesInterface.getFields().size() == 0)
+				return null; // Nothing to generate
+
 			quotesInterface.apply(mergeVisitor, writer);
 			String code = writer.toString();
-			
-			TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
-			IDocument doc = new Document(code);
-			try
-			{
-				textEdit.apply(doc);
-				return new GeneratedModule(quotesInterface.getName(), doc.get());
-			} catch (MalformedTreeException e)
-			{
-				e.printStackTrace();
-			} catch (BadLocationException e)
-			{
-				e.printStackTrace();
-			}
+
+			return new GeneratedModule(quotesInterface.getName(), formatCode(code));
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
+			Logger.getLog().printErrorln("Error when formatting quotes: "
+					+ e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
-	public List<GeneratedModule> generateCode(List<SClassDefinition> mergedParseLists) throws AnalysisException
+
+	public List<GeneratedModule> generateCode(
+			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
-		CodeFormatter codeFormatter = constructCodeFormatter();
 
 		for (SClassDefinition classDef : mergedParseLists)
 		{
 			classes.add(generator.generateFrom(classDef));
 		}
-		
+
 		MergeVisitor mergeVisitor = new MergeVisitor();
-		StringWriter writer = new StringWriter();
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (AClassDeclCG classCg : classes)
 		{
+			StringWriter writer = new StringWriter();
 			try
 			{
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
-				
-				TextEdit textEdit = codeFormatter.format(CodeFormatter.K_UNKNOWN, code, 0, code.length(), 0, null);
-				IDocument doc = new Document(code);
-				try
-				{
-					if(textEdit == null)
-					{
-						Logger.getLog().printErrorln("Could not format generated code for class: " + classCg.getName());
-						break;
-					}
-					
-					textEdit.apply(doc);
-					generated.add(new GeneratedModule(classCg.getName(), doc.get()));
 
-				} catch (MalformedTreeException e)
-				{
-					e.printStackTrace();
-				} catch (BadLocationException e)
-				{
-					e.printStackTrace();
-				}
+				generated.add(new GeneratedModule(classCg.getName(), formatCode(code)));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
-				Logger.getLog().printErrorln("Error when generating code for class: " + classCg.getName());
+				Logger.getLog().printErrorln("Error when generating code for class "
+						+ classCg.getName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping class..");
+				e.printStackTrace();
 			}
-			
-			writer = new StringWriter();
 		}
-		
+
 		return generated;
 	}
 
@@ -176,6 +136,7 @@ public class CodeGen
 			copyDirectory(new File(utilsPath), new File(targetr));
 		} catch (IOException e)
 		{
+			Logger.getLog().printErrorln("Error when generating CG utils");
 			e.printStackTrace();
 		}
 		replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
@@ -196,27 +157,11 @@ public class CodeGen
 			return code;
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
+			Logger.getLog().printErrorln("Could not generate expression: "
+					+ exp);
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	public CodeFormatter constructCodeFormatter()
-	{
-		// take default Eclipse formatting options
-		@SuppressWarnings("unchecked")
-		Map<String, String> options = DefaultCodeFormatterConstants.getEclipseDefaultSettings();
-
-		// initialize the compiler settings to be able to format 1.5 code
-		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
-
-		// change the option to wrap each enum constant on a new line
-		options.put(DefaultCodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ENUM_CONSTANTS, DefaultCodeFormatterConstants.createAlignmentValue(true, DefaultCodeFormatterConstants.WRAP_ONE_PER_LINE, DefaultCodeFormatterConstants.INDENT_ON_COLUMN));
-
-		return ToolFactory.createCodeFormatter(options);
-
 	}
 
 	private void saveClass(String javaFileName, String code)
@@ -232,6 +177,8 @@ public class CodeGen
 
 		} catch (IOException e)
 		{
+			Logger.getLog().printErrorln("Error when saving class file: "
+					+ javaFileName);
 			e.printStackTrace();
 		}
 	}
@@ -255,8 +202,47 @@ public class CodeGen
 			writer.close();
 		} catch (IOException ioe)
 		{
+			Logger.getLog().printErrorln("Error replacing characters in file: "
+					+ filePath);
 			ioe.printStackTrace();
 		}
+	}
+
+	private String formatCode(String code)
+	{
+		StringBuffer b = new StringBuffer();
+		try
+		{
+			File tempFile = new File("temp.java");
+			FileWriter xwriter = new FileWriter(tempFile);
+			xwriter.write(code.toString());
+			xwriter.flush();
+
+			Jalopy jalopy = new Jalopy();
+			jalopy.setFileFormat(FileFormat.DEFAULT);
+			jalopy.setInput(tempFile);
+			jalopy.setOutput(b);
+			jalopy.format();
+
+			xwriter.close();
+			tempFile.delete();
+
+			if (jalopy.getState() == Jalopy.State.OK
+					|| jalopy.getState() == Jalopy.State.PARSED)
+				return b.toString();
+			else if (jalopy.getState() == Jalopy.State.WARN)
+				return null;// formatted with warnings
+			else if (jalopy.getState() == Jalopy.State.ERROR)
+				return null; // could not be formatted
+
+		} catch (Exception e)
+		{
+			Logger.getLog().printErrorln("Could not format code: "
+					+ e.toString());
+			e.printStackTrace();
+		}
+
+		return null;// could not be formatted
 	}
 
 	private void copyDirectory(File sourceLocation, File targetLocation)
