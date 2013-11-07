@@ -1,5 +1,7 @@
 package org.overture.codegen.visitor;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
@@ -11,6 +13,7 @@ import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -31,6 +34,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.utils.VdmTransUtil;
@@ -48,6 +52,24 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 			throws AnalysisException
 	{
 		return null; // Indicates an unknown type
+	}
+	
+	@Override
+	public PTypeCG caseAProductType(AProductType node, CodeGenInfo question)
+			throws AnalysisException
+	{	
+		ATupleTypeCG tuple = new ATupleTypeCG();
+		
+		LinkedList<PType> types = node.getTypes();
+		
+		for (PType type : types)
+		{
+			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			tuple.getTypes().add(typeCg);
+			
+		}
+		
+		return tuple;
 	}
 	
 	@Override

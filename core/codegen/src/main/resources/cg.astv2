@@ -128,6 +128,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{null}
     |	{letDef} [localDefs]:declCG.localVar* [exp]:expCG
     |	{methodInstantiation} [name]:java_String [actualTypes]:typeCG*
+    |	{tuple} [args]:expCG* [tupleType]:typeCG.tuple
     |	#Seq
     ;
     
@@ -175,6 +176,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{class} [name]:java_String
     |	{string}
     |	{template} [name]:java_String
+    |	{tuple} [types]:typeCG*
     |	#seq
     |	#basicTypeWrappers
     ;

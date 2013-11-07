@@ -37,6 +37,7 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
+import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -78,6 +79,7 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -104,8 +106,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	public PExpCG caseANilExp(ANilExp node, CodeGenInfo question)
 			throws AnalysisException
 	{
-		//TODO: Why does nil have type OptionalType in VDM?
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseATupleExp(ATupleExp node, CodeGenInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		LinkedList<PExp> args = node.getArgs();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ATupleExpCG tupleExp = new ATupleExpCG();
+		tupleExp.setType(typeCg);
+		
+		for (PExp exp : args)
+		{
+			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			tupleExp.getArgs().add(expCg);
+		}
+		
+		return tupleExp;
 	}
 	
 	@Override

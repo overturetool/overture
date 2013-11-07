@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -17,9 +18,10 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 
 public class CG
@@ -33,19 +35,75 @@ public class CG
 		return writer.toString();
 	}
 	
-	public static String formatTemplateTypes(LinkedList<ATemplateTypeCG> templateTypes) throws AnalysisException
+	private static String getTupleStr(ATupleTypeCG type) throws AnalysisException
+	{
+		String tuple = "";
+		
+		switch (type.getTypes().size())
+		{
+			case 1:
+				tuple = "Unit";
+				break;
+			case 2:
+				tuple = "Pair";
+				break;
+			case 3:
+				tuple = "Triplet";
+				break;
+			case 4:
+				tuple = "Quartet";
+				break;
+			case 5:
+				tuple = "Quintet";
+				break;
+			case 6:
+				tuple = "Sextet";
+				break;
+			case 7:
+				tuple = "Septet";
+				break;
+			case 8:
+				tuple = "Octet";
+				break;
+			case 9:
+				tuple = "Ennead";
+				break;
+			case 10:
+				tuple = "Decade";
+				break;
+			default:
+				throw new AnalysisException("Tuple types do not support more than 10 types!");
+		}
+	
+		return tuple;
+	}
+	
+	public static String formatTupleType(ATupleTypeCG type) throws AnalysisException
+	{
+		return getTupleStr(type) + CG.formatTemplateTypes(type.getTypes());
+	}
+	
+	public static String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
-		if(templateTypes.size() <= 0)
+		if(types.size() <= 0)
 			return "";
 		
-		ATemplateTypeCG firstType = templateTypes.get(0);
+		PTypeCG firstType = types.get(0);
+		
+		if(TypeAssistantCG.isBasicType(firstType))
+			firstType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) firstType);
+		
 		writer.append(CG.format(firstType));
 		
-		for(int i = 1; i < templateTypes.size(); i++)
+		for(int i = 1; i < types.size(); i++)
 		{
-			ATemplateTypeCG currentType = templateTypes.get(i);
+			PTypeCG currentType = types.get(i);
+			
+			if(TypeAssistantCG.isBasicType(currentType))
+				currentType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) currentType);
+			
 			writer.append(", " + CG.format(currentType));
 		}
 		
@@ -208,39 +266,4 @@ public class CG
 		
 		//TODO: Put in the others: What are they?
 	}
-	
-//	public static void makeImage(File dotPath, INode node, String type,
-//			File output) throws GraphVizException
-//	{
-//		DotGraphVisitor visitor = new DotGraphVisitor();
-//		try
-//		{
-//			node.apply(visitor, null);
-//		} catch (Throwable e)
-//		{
-//			// Ignore
-//		}
-//		GraphViz gv = new GraphViz();
-//		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
-//	}
-	
-//	public static String constructElseBody(AIfStmCG stm) throws AnalysisException
-//	{
-//		PStmCG elseStm = stm.getElseStm();
-//			
-//		if(elseStm == null)
-//			return "{\r\n}";
-//		
-//		String bodyFormatted = CG.format(elseBody);
-//		
-//		if(ommitCurlyBrackets(elseBody))
-//			return bodyFormatted;
-//		else
-//			return "{" + bodyFormatted + "}";
-//	}
-//	
-//	private static boolean ommitCurlyBrackets(INode node)
-//	{
-//		return node instanceof AIfThenStmCG || node instanceof AIfThenElseStmCG;
-//	}
 }

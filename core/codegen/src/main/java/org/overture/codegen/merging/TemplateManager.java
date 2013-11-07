@@ -49,6 +49,7 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -72,6 +73,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.constants.IText;
 
@@ -114,6 +116,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AStringTypeCG.class, IText.TYPE_PATH + "String");
 		
 		nodeTemplateFileNames.put(ATemplateTypeCG.class, IText.TYPE_PATH + "Template");
+		
+		nodeTemplateFileNames.put(ATupleTypeCG.class, IText.TYPE_PATH + "Tuple");
 		
 		//Basic type wrappers
 		
@@ -183,6 +187,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ALetDefExpCG.class, IText.EXPS_PATH + "LetDef");
 		
 		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, IText.EXPS_PATH + "MethodInstantiation");
+		
+		nodeTemplateFileNames.put(ATupleExpCG.class, IText.EXPS_PATH + "Tuple");
 		
 		// Unary expressions
 
