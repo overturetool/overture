@@ -2,10 +2,20 @@ package org.overture.codegen.assistant;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.types.SBasicTypeCGBase;
+import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CodeGenInfo;
 
 public class TypeAssistantCG
@@ -24,6 +34,32 @@ public class TypeAssistantCG
 		seqType.setSeqOf(seqOf);
 
 		return seqType;
+	}
+	
+	public static boolean isBasicType(PTypeCG type)
+	{
+		return type instanceof SBasicTypeCGBase;
+	}
+
+	public static SBasicTypeWrappersTypeCGBase getWrapperType(
+			SBasicTypeCGBase basicType)
+	{
+
+		if (basicType instanceof AIntNumericBasicTypeCG)
+			return new AIntBasicTypeWrappersTypeCG();
+		else if (basicType instanceof ARealNumericBasicTypeCG)
+			return new ARealBasicTypeWrappersTypeCG();
+		else if (basicType instanceof ACharBasicTypeCG)
+			return new ACharBasicTypeWrappersTypeCG();
+		else if (basicType instanceof ABoolBasicTypeCG)
+			return new ABoolBasicTypeWrappersTypeCG();
+		else
+		{
+			Logger.getLog().printErrorln("Unexpected basic type encountered in getWrapperType method: "
+					+ basicType);
+			return null;
+		}
+
 	}
 	
 }
