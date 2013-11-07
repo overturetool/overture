@@ -10,6 +10,6 @@ public interface ILogger
 	
 	public void printErrorln(String msg);
 	
-	public void printErrpr(String msg);
+	public void printError(String msg);
 	
 }

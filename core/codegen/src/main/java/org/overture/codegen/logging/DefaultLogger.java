@@ -55,7 +55,7 @@ public class DefaultLogger implements ILogger
 	}
 
 	@Override
-	public void printErrpr(String msg)
+	public void printError(String msg)
 	{
 		if(silent)
 			return;
