@@ -17,6 +17,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
@@ -250,6 +251,10 @@ public class TemplateManager
 				+ "IntLiteral");
 		nodeTemplateFileNames.put(ARealLiteralExpCG.class, IText.EXPS_PATH
 				+ "RealLiteral");
+		
+		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, IText.EXPS_PATH
+				+ "BoolLiteral");
+		
 		nodeTemplateFileNames.put(ACharLiteralExpCG.class, IText.EXPS_PATH
 				+ "CharLiteral");
 		

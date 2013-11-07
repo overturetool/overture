@@ -121,6 +121,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 	|	{explicitVariable} [classType]:typeCG.class [name]:java_String
     |	{intLiteral} [value]:java_String
     |	{realLiteral} [value]:java_String
+    |	{boolLiteral} [value]:java_String
     |	{charLiteral} [value]:java_String
     |	{stringLiteral} [value]:java_String
     |	{quoteLiteral}	[value]:java_String

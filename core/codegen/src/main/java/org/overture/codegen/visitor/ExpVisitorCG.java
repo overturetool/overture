@@ -8,6 +8,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -48,6 +49,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
@@ -565,6 +567,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 //	}
 //	
 //	//Literal EXP:
+	
+	@Override
+	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
+			CodeGenInfo question) throws AnalysisException
+	{
+		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
+		
+		boolLiteral.setType(typeLookup.getType(node.getType()));
+		boolLiteral.setValue(node.getValue().toString());
+		
+		return boolLiteral;
+	}
 	
 	@Override
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,

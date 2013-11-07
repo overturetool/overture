@@ -2,6 +2,7 @@ package org.overture.codegen.lookup;
 
 import java.util.HashMap;
 
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -11,6 +12,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -38,7 +40,7 @@ public class TypeLookup
 		typeMap.put(ASeq1SeqType.class, new AStringTypeCG());
 		
 		//Basic
-		//typeMap.put(ABooleanBasicType.class, value)
+		typeMap.put(ABooleanBasicType.class, new ABoolBasicTypeCG());
 		typeMap.put(ACharBasicType.class, new ACharBasicTypeCG());
 		
 		//Basic numeric
