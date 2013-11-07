@@ -10,7 +10,7 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.OoAstInfo;
+import org.overture.codegen.constants.OoAstConstants;
 import org.overture.codegen.visitor.CodeGenInfo;
 
 public class DeclAssistantCG
@@ -63,8 +63,8 @@ public class DeclAssistantCG
 	
 	public static boolean isValidName(String className)
 	{
-		for(int i = 0; i < OoAstInfo.RESERVED_CLASS_NAMES.length; i++)
-			if(OoAstInfo.RESERVED_CLASS_NAMES[i].equals(className))
+		for(int i = 0; i < OoAstConstants.RESERVED_CLASS_NAMES.length; i++)
+			if(OoAstConstants.RESERVED_CLASS_NAMES[i].equals(className))
 				return false;
 		
 		return true; 

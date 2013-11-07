@@ -33,7 +33,7 @@ import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.OoAstInfo;
+import org.overture.codegen.constants.OoAstConstants;
 import org.overture.codegen.utils.VdmTransUtil;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -84,7 +84,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		//		public R ::
 		//		    x : nat
 		//		    y : nat;
-		staticClass.setAccess(OoAstInfo.PUBLIC);
+		staticClass.setAccess(OoAstConstants.PUBLIC);
 		
 		staticClass.setInnerClasses(null);
 		staticClass.setMethods(null);
@@ -93,7 +93,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		
 		AMethodDeclCG constructor = new AMethodDeclCG();
 		constructor.setAbstract(false);
-		constructor.setAccess(OoAstInfo.PUBLIC);
+		constructor.setAccess(OoAstConstants.PUBLIC);
 		
 		ABlockStmCG body = new ABlockStmCG();
 		LinkedList<PStmCG> bodyStms = body.getStatements();
@@ -120,7 +120,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
 				staticClassFields.add(fieldDecl);
 				
-				String formalName = OoAstInfo.CONSTRUCTOR_FORMAL_PREFIX + fieldDecl.getName();
+				String formalName = OoAstConstants.CONSTRUCTOR_FORMAL_PREFIX + fieldDecl.getName();
 				PTypeCG formalType = fieldDecl.getType();
 				
 				AFormalParamLocalDeclCG formal = new AFormalParamLocalDeclCG();
@@ -152,7 +152,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 			throws AnalysisException
 	{
 		//Record fields are public
-		String access = OoAstInfo.PUBLIC;
+		String access = OoAstConstants.PUBLIC;
 		String name = node.getTag();
 		boolean isStatic = false;
 		boolean isFinal = false;

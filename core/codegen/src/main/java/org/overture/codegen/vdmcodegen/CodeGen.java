@@ -26,14 +26,14 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.visitor.CodeGenerator;
+import org.overture.codegen.visitor.OoAstGenerator;
 
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.Jalopy;
 
 public class CodeGen
 {
-	private CodeGenerator generator;
+	private OoAstGenerator generator;
 
 	public CodeGen()
 	{
@@ -48,7 +48,7 @@ public class CodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
-		this.generator = new CodeGenerator(log);
+		this.generator = new OoAstGenerator(log);
 	}
 
 	private void initVelocity()

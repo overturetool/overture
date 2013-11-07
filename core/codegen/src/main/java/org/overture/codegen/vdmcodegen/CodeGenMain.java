@@ -25,7 +25,7 @@ public class CodeGenMain
 		{
 			try
 			{
-				GeneratedData data = CodeGenUtil.generateOoFromFiles(args);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(args);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -42,9 +42,9 @@ public class CodeGenMain
 					System.out.println(quotes.getContent());
 				}
 				
-				CodeGenUtil.generateSourceFiles(generatedClasses);
+				JavaCodeGenUtil.generateJavaSourceFiles(generatedClasses);
 				
-				CodeGenUtil.generateCodeGenUtils();
+				JavaCodeGenUtil.generateJavaCodeGenUtils();
 				
 			} catch (AnalysisException e)
 			{
@@ -55,7 +55,7 @@ public class CodeGenMain
 		{
 			try
 			{
-				String generated = CodeGenUtil.generateFromExp(args[1]);
+				String generated = JavaCodeGenUtil.generateJavaFromExp(args[1]);
 				System.out.println(generated);
 			} catch (AnalysisException e)
 			{

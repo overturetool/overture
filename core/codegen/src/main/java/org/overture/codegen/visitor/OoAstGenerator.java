@@ -9,11 +9,11 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 
-public class CodeGenerator
+public class OoAstGenerator
 {
 	private CodeGenInfo codeGenInfo;
 	
-	public CodeGenerator(ILogger log)
+	public OoAstGenerator(ILogger log)
 	{
 		this.codeGenInfo = new CodeGenInfo(this);
 		Logger.setLog(log);

@@ -1,6 +1,6 @@
 package org.overture.codegen.constants;
 
-public class OoAstInfo
+public class OoAstConstants
 {
 	public static final String PRIVATE = "private";
 	public static final String PUBLIC = "public";
