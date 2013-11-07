@@ -5,9 +5,9 @@
 <extension
 	point="org.eclipse.ui.commands">
 	<command
-		defaultHandler="org.overture.ide.plugins.codegen.commands.Vdm2CppCommand"
-		id="org.overture.ide.plugins.codegen.vdm2cpp"
-		name="VDM to C++">
+		defaultHandler="org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand"
+		id="org.overture.ide.plugins.codegen.vdm2java"
+		name="VDM to Java">
 	</command>
 </extension>
 
@@ -20,8 +20,8 @@
 			id="org.overture.ide.plugins.codegen"
 			label="Code Generation">
 			<command
-				commandId="org.overture.ide.plugins.codegen.vdm2cpp"
-				label="Convert to C++"
+				commandId="org.overture.ide.plugins.codegen.vdm2java"
+				label="Convert to Java"
 				style="push">
 				<visibleWhen
 					checkEnabled="false">
@@ -49,7 +49,7 @@
  <extension
  	point="org.eclipse.ui.bindings">
 	<key
-		commandId="org.overture.ide.plugins.codegen.vdm2cpp"
+		commandId="org.overture.ide.plugins.codegen.vdm2java"
 		contextId="org.eclipse.ui.contexts.window"
 		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 		sequence="Ctrl+Alt+C">

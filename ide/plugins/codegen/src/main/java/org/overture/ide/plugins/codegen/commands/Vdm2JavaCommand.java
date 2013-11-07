@@ -12,17 +12,19 @@ import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
-import org.overture.ide.plugins.codegen.vdm2cpp.PluginVdm2CppUtil;
+import org.overture.ide.plugins.codegen.CodeGenConsole;
+import org.overture.ide.plugins.codegen.vdm2java.PluginVdm2JavaUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.interpreter.messages.Console;
+import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdmcodegen.CodeGen;
 
-public class Vdm2CppCommand extends AbstractHandler
+public class Vdm2JavaCommand extends AbstractHandler
 {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		IVdmProject vdmProject = PluginVdm2CppUtil.getVdmProject(event);
+		IVdmProject vdmProject = PluginVdm2JavaUtil.getVdmProject(event);
 
 		if (vdmProject == null)
 			return null;
@@ -36,17 +38,24 @@ public class Vdm2CppCommand extends AbstractHandler
 			VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);
 
 		if (!model.isTypeCorrect()
-				|| !PluginVdm2CppUtil.isSupportedVdmDialect(vdmProject))
+				|| !PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
 			return null;
 
-		final CodeGen vdm2cpp = new CodeGen();
+		final CodeGen vdm2java = new CodeGen();
 
 		try
 		{			
 			List<IVdmSourceUnit> sources = model.getSourceUnits();
-			List<SClassDefinition> mergedParseLists = PluginVdm2CppUtil.mergeParseLists(sources);
+			List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 						
-			vdm2cpp.generateCode(mergedParseLists);
+			List<GeneratedModule> res = vdm2java.generateCode(mergedParseLists);
+			
+			for (GeneratedModule generatedModule : res)
+			{
+				CodeGenConsole.GetInstance().println("*************");
+				CodeGenConsole.GetInstance().println(generatedModule.getContent());
+			}
+			
 
 		} catch (AnalysisException ex)
 		{
@@ -58,7 +67,7 @@ public class Vdm2CppCommand extends AbstractHandler
 			return null;
 		}
 		
-		//vdm2cpp.save(codeGenContextMap);
+		//vdm2java.save(codeGenContextMap);
 
 		return null;
 	}

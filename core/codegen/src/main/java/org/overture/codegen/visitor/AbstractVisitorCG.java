@@ -22,11 +22,8 @@ public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> ex
 			return null;
 		}
 			
-		//TODO: Comment exception being thrown back in
-		//throw new AnalysisException("Code generation does not support the following VDM construct: " + node.toString());
-		
-		Logger.getLog().printErrorln("Code generation does not support the following VDM construct: " + node.getClass().getName() + ": " + node.toString());
-		return null;
+		//Logger.getLog().printErrorln("Code generation does not support the following VDM construct: " + node.getClass().getName() + ": " + node.toString());
+		throw new AnalysisException("Code generation does not support the following VDM construct: " + node.getClass().getName() + ": " + node.toString());
 	}
 
 	@Override

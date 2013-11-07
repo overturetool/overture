@@ -1,4 +1,4 @@
-package org.overture.ide.plugins.codegen.vdm2cpp;
+package org.overture.ide.plugins.codegen.vdm2java;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 
-public class PluginVdm2CppUtil
+public class PluginVdm2JavaUtil
 {	
 	
-	private PluginVdm2CppUtil()
+	private PluginVdm2JavaUtil()
 	{
 		
 	}
@@ -133,7 +133,7 @@ public class PluginVdm2CppUtil
 //	}
 	
 //	private static StringBuffer readFromFile(String pFilename) throws IOException {  
-//        BufferedReader in = new BufferedReader(new FileReader(PluginVdm2CppUtil.getAbsolutePath(pFilename)));  
+//        BufferedReader in = new BufferedReader(new FileReader(PluginVdm2JavaUtil.getAbsolutePath(pFilename)));  
 //        StringBuffer data = new StringBuffer();  
 //        int c = 0;  
 //        while ((c = in.read()) != -1) {  

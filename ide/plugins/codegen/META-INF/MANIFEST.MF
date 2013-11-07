@@ -15,8 +15,10 @@ Bundle-Activator: org.overture.ide.plugins.codegen.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  jars/codegen.jar,
- jars/velocity.jar,
  jars/commons-collections.jar,
  jars/commons-lang.jar,
- jars/core.jar
+ jars/jalopy.jar,
+ jars/log4j.jar,
+ jars/velocity.jar
+ 
 
