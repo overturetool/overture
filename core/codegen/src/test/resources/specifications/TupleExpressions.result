@@ -1,0 +1,55 @@
+import org.javatuples.*;
+
+
+public class A {
+    public static int f1(int x) {
+        return 1;
+    }
+
+    public static Pair<Integer, Integer> f2(int x) {
+        return new Pair<Integer, Integer>(1, 2);
+    }
+
+    public static Triplet<Integer, Integer, Integer> f3(int x) {
+        return new Triplet<Integer, Integer, Integer>(1, 2, 3);
+    }
+
+    public static Quartet<Integer, Integer, Integer, Integer> f4(int x) {
+        return new Quartet<Integer, Integer, Integer, Integer>(1, 2, 3, 4);
+    }
+
+    public static Quintet<Integer, Integer, Integer, Integer, Integer> f5(int x) {
+        return new Quintet<Integer, Integer, Integer, Integer, Integer>(1, 2,
+            3, 4, 5);
+    }
+
+    public static Sextet<Integer, Integer, Integer, Integer, Integer, Integer> f6(
+        int x) {
+        return new Sextet<Integer, Integer, Integer, Integer, Integer, Integer>(1,
+            2, 3, 4, 5, 6);
+    }
+
+    public static Septet<Integer, Integer, Integer, Integer, Integer, Integer, Integer> f7(
+        int x) {
+        return new Septet<Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
+            2, 3, 4, 5, 6, 7);
+    }
+
+    public static Octet<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f8(
+        int x) {
+        return new Octet<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
+            2, 3, 4, 5, 6, 7, 8);
+    }
+
+    public static Ennead<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f9(
+        int x) {
+        return new Ennead<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
+            2, 3, 4, 5, 6, 7, 8, 9);
+    }
+
+    public static Decade<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f10(
+        int x) {
+        return new Decade<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
+            2, 3, 4, 5, 6, 7, 8, 9, 10);
+    }
+}
