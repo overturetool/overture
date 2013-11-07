@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
 
-public class CodeGenInfo
+public class OoAstInfo
 {
 	
 	//Visitors:
@@ -28,7 +28,7 @@ public class CodeGenInfo
 	//Quotes:
 	private HashSet<String> quoteVaues;
 	
-	public CodeGenInfo(OoAstGenerator rootVisitor)
+	public OoAstInfo(OoAstGenerator rootVisitor)
 	{
 		super();
 		this.rootVisitor = rootVisitor;

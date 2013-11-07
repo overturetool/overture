@@ -90,7 +90,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
 
-public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
+public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
 	private static final long serialVersionUID = -7481045116217669686L;
 	
@@ -105,14 +105,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseANilExp(ANilExp node, CodeGenInfo question)
+	public PExpCG caseANilExp(ANilExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new ANullExpCG();
 	}
 	
 	@Override
-	public PExpCG caseATupleExp(ATupleExp node, CodeGenInfo question)
+	public PExpCG caseATupleExp(ATupleExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -134,7 +134,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		if(node.getImpdef() != null)
 			throw new AnalysisException("Implicit functions are not supported by the code generator");
@@ -156,7 +156,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseALetDefExp(ALetDefExp node, CodeGenInfo question)
+	public PExpCG caseALetDefExp(ALetDefExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ALetDefExpCG localDefExp = new ALetDefExpCG();
@@ -171,7 +171,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		String value = node.getValue().getValue();
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
@@ -186,7 +186,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAMkTypeExp(AMkTypeExp node, CodeGenInfo question)
+	public PExpCG caseAMkTypeExp(AMkTypeExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ARecordInvariantType recType = node.getRecordType();
@@ -214,7 +214,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseASelfExp(ASelfExp node, CodeGenInfo question)
+	public PExpCG caseASelfExp(ASelfExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new ASelfExpCG();
@@ -222,7 +222,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		//Operator prec?
 		return expAssistant.handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question, typeLookup);
@@ -230,7 +230,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{	
 		//TODO: For records, classes etc.
 		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question, typeLookup);
@@ -238,14 +238,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		//TODO: For records, classes etc. (exactly same problems as for equals)
 		return expAssistant.handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
-	public PExpCG caseALenUnaryExp(ALenUnaryExp node, CodeGenInfo question)
+	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ALenUnaryExpCG lenExp = new ALenUnaryExpCG();
@@ -257,7 +257,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, CodeGenInfo question)
+	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		AHeadUnaryExpCG headExp = new AHeadUnaryExpCG();
@@ -269,7 +269,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseATailUnaryExp(ATailUnaryExp node, CodeGenInfo question)
+	public PExpCG caseATailUnaryExp(ATailUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ATailUnaryExpCG tailExp = new ATailUnaryExpCG();
@@ -281,7 +281,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, CodeGenInfo question)
+	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, OoAstInfo question)
 			throws AnalysisException
 	{	
 		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
@@ -311,14 +311,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseASubclassResponsibilityExp(
-			ASubclassResponsibilityExp node, CodeGenInfo question)
+			ASubclassResponsibilityExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return null;//Indicates an abstract body
 	}
 	
 	@Override
-	public PExpCG caseAFieldExp(AFieldExp node, CodeGenInfo question)
+	public PExpCG caseAFieldExp(AFieldExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PExpCG object = node.getObject().apply(question.getExpVisitor(), question);
@@ -338,7 +338,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAApplyExp(AApplyExp node, CodeGenInfo question)
+	public PExpCG caseAApplyExp(AApplyExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		
@@ -359,7 +359,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAVariableExp(AVariableExp node, CodeGenInfo question)
+	public PExpCG caseAVariableExp(AVariableExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -395,7 +395,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseANewExp(ANewExp node, CodeGenInfo question)
+	public PExpCG caseANewExp(ANewExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String className = node.getClassdef().getName().getName();
@@ -416,28 +416,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 		
 	@Override
 	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ATimesNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new APlusNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ASubtractNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, CodeGenInfo question)
+			AGreaterEqualNumericBinaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new AGreaterEqualNumericBinaryExpCG(), question, typeLookup);
@@ -445,14 +445,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new APowerNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
 		return expAssistant.handleBinaryExp(node, new AGreaterNumericBinaryExpCG(), question, typeLookup);
@@ -460,7 +460,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, CodeGenInfo question)
+			ALessEqualNumericBinaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ALessEqualNumericBinaryExpCG(), question, typeLookup);
@@ -469,14 +469,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseALessNumericBinaryExp(ALessNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ALessNumericBinaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		ADivideNumericBinaryExpCG divideExp = new ADivideNumericBinaryExpCG();
 		
@@ -505,7 +505,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	//Unary
 	
 	@Override
-	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, CodeGenInfo question) throws AnalysisException
+	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, OoAstInfo question) throws AnalysisException
 	{
 		APlusUnaryExpCG unaryPlus = new APlusUnaryExpCG();
 		
@@ -517,7 +517,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 
 	@Override
 	public PExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		AMinusUnaryExpCG unaryMinus = new AMinusUnaryExpCG();
 		
@@ -570,7 +570,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
 		
@@ -582,7 +582,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		//TODO: Optimize similar literal expressions
 		//Put the similar code in an assistant
@@ -596,7 +596,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
 		
@@ -607,7 +607,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseACharLiteralExp(ACharLiteralExp node, CodeGenInfo question)
+	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
@@ -620,7 +620,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<CodeGenInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
 		stringLiteral.setType(typeLookup.getType(node.getType()));

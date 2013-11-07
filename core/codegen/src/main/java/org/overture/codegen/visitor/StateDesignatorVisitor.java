@@ -7,7 +7,7 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 
-public class StateDesignatorVisitor extends AbstractVisitorCG<CodeGenInfo, PStateDesignatorCG>
+public class StateDesignatorVisitor extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
 {
 
 	private static final long serialVersionUID = 7252896277917207085L;
@@ -19,7 +19,7 @@ public class StateDesignatorVisitor extends AbstractVisitorCG<CodeGenInfo, PStat
 	
 	@Override
 	public PStateDesignatorCG caseAFieldStateDesignator(
-			AFieldStateDesignator node, CodeGenInfo question)
+			AFieldStateDesignator node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PStateDesignatorCG stateDesignator = node.getObject().apply(question.getStateDesignatorVisitor(), question);
@@ -34,7 +34,7 @@ public class StateDesignatorVisitor extends AbstractVisitorCG<CodeGenInfo, PStat
 
 	@Override
 	public PStateDesignatorCG caseAIdentifierStateDesignator(
-			AIdentifierStateDesignator node, CodeGenInfo question)
+			AIdentifierStateDesignator node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();

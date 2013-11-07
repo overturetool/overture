@@ -1,4 +1,4 @@
-package org.overture.codegen.utils;
+package org.overture.codegen.ooast.analysis;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;

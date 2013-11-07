@@ -1,6 +1,9 @@
 package org.overture.codegen.assistant;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -16,12 +19,13 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.CodeGenInfo;
+import org.overture.codegen.visitor.OoAstInfo;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeAssistantCG
 {
 
-	public static PTypeCG constructSeqType(SSeqTypeBase node, CodeGenInfo question)
+	public static PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
@@ -60,6 +64,26 @@ public class TypeAssistantCG
 			return null;
 		}
 
+	}
+	
+	//TODO: Copied from UML2VDM. Factor out in assistant
+	public static boolean isUnionOfQuotes(AUnionType type)
+	{
+		try
+		{
+			for (PType t : type.getTypes())
+			{
+				if (!PTypeAssistantTC.isType(t, AQuoteType.class))
+				{
+					return false;
+				}
+			}
+		} catch (Error t)//Hack for stackoverflowError
+		{
+			return false;
+		}
+
+		return true;
 	}
 	
 }

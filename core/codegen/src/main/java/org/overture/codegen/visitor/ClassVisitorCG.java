@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 
-public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
 {
 	private static final long serialVersionUID = 81602965450922571L;
 	
@@ -22,7 +22,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<CodeGenInfo, AClassDeclCG>
 	}
 	
 	@Override
-	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, CodeGenInfo question) throws AnalysisException
+	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, OoAstInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 

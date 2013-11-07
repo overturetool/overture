@@ -11,11 +11,11 @@ import org.overture.codegen.logging.Logger;
 
 public class OoAstGenerator
 {
-	private CodeGenInfo codeGenInfo;
+	private OoAstInfo codeGenInfo;
 	
 	public OoAstGenerator(ILogger log)
 	{
-		this.codeGenInfo = new CodeGenInfo(this);
+		this.codeGenInfo = new OoAstInfo(this);
 		Logger.setLog(log);
 	}
 			

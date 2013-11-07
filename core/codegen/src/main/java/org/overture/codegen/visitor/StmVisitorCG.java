@@ -36,7 +36,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 
-public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
+public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 {
 	
 	private static final long serialVersionUID = -602593891699169007L;
@@ -47,13 +47,13 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	
 	@Override
 	public PStmCG caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new ANotImplementedStmCG();
 	}
 	
 	@Override
-	public PStmCG defaultPExp(PExp node, CodeGenInfo question)
+	public PStmCG defaultPExp(PExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		
@@ -72,7 +72,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	
 	@Override
 	public PStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		
 		ABlockStmCG blockStm = new ABlockStmCG();
@@ -88,7 +88,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseAAssignmentStm(AAssignmentStm node, CodeGenInfo question)
+	public PStmCG caseAAssignmentStm(AAssignmentStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PStateDesignatorCG target = node.getTarget().apply(question.getStateDesignatorVisitor(), question);
@@ -102,7 +102,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseALetStm(ALetStm node, CodeGenInfo question)
+	public PStmCG caseALetStm(ALetStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		ALetDefStmCG localDefStm = new ALetDefStmCG();
@@ -116,7 +116,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 		
 	@Override
-	public PStmCG caseAReturnStm(AReturnStm node, CodeGenInfo question)
+	public PStmCG caseAReturnStm(AReturnStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
@@ -131,7 +131,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseACallStm(ACallStm node, CodeGenInfo question)
+	public PStmCG caseACallStm(ACallStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -162,7 +162,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseAElseIfStm(AElseIfStm node, CodeGenInfo question)
+	public PStmCG caseAElseIfStm(AElseIfStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		//Don't visit it but create it directly if needed in the ifStm in order to avoid casting
@@ -170,7 +170,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseAIfExp(AIfExp node, CodeGenInfo question)
+	public PStmCG caseAIfExp(AIfExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PExpCG ifExp = node.getTest().apply(question.getExpVisitor(), question);
@@ -204,7 +204,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	}
 	
 	@Override
-	public PStmCG caseAIfStm(AIfStm node, CodeGenInfo question)
+	public PStmCG caseAIfStm(AIfStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PExpCG ifExp = node.getIfExp().apply(question.getExpVisitor(), question);
@@ -243,7 +243,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	
 	
 	@Override
-	public PStmCG caseASkipStm(ASkipStm node, CodeGenInfo question)
+	public PStmCG caseASkipStm(ASkipStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new ASkipStmCG();
@@ -251,7 +251,7 @@ public class StmVisitorCG extends AbstractVisitorCG<CodeGenInfo, PStmCG>
 	
 	@Override
 	public PStmCG caseASubclassResponsibilityStm(
-			ASubclassResponsibilityStm node, CodeGenInfo question)
+			ASubclassResponsibilityStm node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return null;//Indicates an abstract body

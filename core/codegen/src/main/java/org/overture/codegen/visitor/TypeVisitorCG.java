@@ -37,9 +37,8 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.utils.VdmTransUtil;
 
-public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
+public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 {
 	private static final long serialVersionUID = 8845855407070139031L;
 
@@ -48,14 +47,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAUnknownType(AUnknownType node, CodeGenInfo question)
+	public PTypeCG caseAUnknownType(AUnknownType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return null; // Indicates an unknown type
 	}
 	
 	@Override
-	public PTypeCG caseAProductType(AProductType node, CodeGenInfo question)
+	public PTypeCG caseAProductType(AProductType node, OoAstInfo question)
 			throws AnalysisException
 	{	
 		ATupleTypeCG tuple = new ATupleTypeCG();
@@ -73,7 +72,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 	
 	@Override
-	public PTypeCG caseAParameterType(AParameterType node, CodeGenInfo question)
+	public PTypeCG caseAParameterType(AParameterType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -85,7 +84,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAOptionalType(AOptionalType node, CodeGenInfo question)
+	public PTypeCG caseAOptionalType(AOptionalType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
@@ -104,7 +103,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 
 	@Override
 	public PTypeCG caseANamedInvariantType(ANamedInvariantType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 
@@ -112,7 +111,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 
-			if (VdmTransUtil.isUnionOfQuotes(unionType))
+			if (TypeAssistantCG.isUnionOfQuotes(unionType))
 				return new AIntNumericBasicTypeCG();
 		}
 
@@ -120,7 +119,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAQuoteType(AQuoteType node, CodeGenInfo question)
+	public PTypeCG caseAQuoteType(AQuoteType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
@@ -128,7 +127,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 
 	@Override
 	public PTypeCG caseARecordInvariantType(ARecordInvariantType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		String typeName = node.getName().getName();
 
@@ -139,28 +138,28 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseASeqSeqType(ASeqSeqType node, CodeGenInfo question)
+	public PTypeCG caseASeqSeqType(ASeqSeqType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return TypeAssistantCG.constructSeqType(node, question);
 	}
 	
 	@Override
-	public PTypeCG caseASeq1SeqType(ASeq1SeqType node, CodeGenInfo question)
+	public PTypeCG caseASeq1SeqType(ASeq1SeqType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return TypeAssistantCG.constructSeqType(node, question);
 	}
 
 	@Override
-	public PTypeCG caseAOperationType(AOperationType node, CodeGenInfo question)
+	public PTypeCG caseAOperationType(AOperationType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return node.getResult().apply(question.getTypeVisitor(), question);
 	}
 
 	@Override
-	public PTypeCG caseAClassType(AClassType node, CodeGenInfo question)
+	public PTypeCG caseAClassType(AClassType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String typeName = node.getClassdef().getName().getName();
@@ -172,7 +171,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAVoidType(AVoidType node, CodeGenInfo question)
+	public PTypeCG caseAVoidType(AVoidType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new AVoidTypeCG();
@@ -180,34 +179,34 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 
 	@Override
 	public PTypeCG caseAIntNumericBasicType(AIntNumericBasicType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
 	public PTypeCG caseANatOneNumericBasicType(ANatOneNumericBasicType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
 	public PTypeCG caseANatNumericBasicType(ANatNumericBasicType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
 	public PTypeCG caseARealNumericBasicType(ARealNumericBasicType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new ARealNumericBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseACharBasicType(ACharBasicType node, CodeGenInfo question)
+	public PTypeCG caseACharBasicType(ACharBasicType node, OoAstInfo question)
 			throws AnalysisException
 	{
 		return new ACharBasicTypeCG();
@@ -215,7 +214,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<CodeGenInfo, PTypeCG>
 
 	@Override
 	public PTypeCG caseABooleanBasicType(ABooleanBasicType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		return new ABoolBasicTypeCG();
 	}

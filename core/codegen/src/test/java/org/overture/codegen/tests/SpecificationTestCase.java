@@ -7,7 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdmcodegen.JavaCodeGenUtil;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.constants.IText;
-import org.overture.codegen.vdmcodegen.JavaCodeGenUtil;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase
 {

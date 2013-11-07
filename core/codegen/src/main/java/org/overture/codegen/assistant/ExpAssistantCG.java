@@ -14,7 +14,7 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.lookup.OperatorInfo;
 import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
-import org.overture.codegen.visitor.CodeGenInfo;
+import org.overture.codegen.visitor.OoAstInfo;
 import org.overture.codegen.visitor.ExpVisitorCG;
 
 
@@ -27,7 +27,7 @@ public class ExpAssistantCG
 		this.opLookup = new OperatorLookup();
 	}
 	
-	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, CodeGenInfo question, TypeLookup typeLookup) throws AnalysisException
+	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
 	{	
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
 		
@@ -44,7 +44,7 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public PExpCG formatExp(SBinaryExp parent, PExp child, CodeGenInfo question) throws AnalysisException
+	public PExpCG formatExp(SBinaryExp parent, PExp child, OoAstInfo question) throws AnalysisException
 	{
 		
 		PExpCG exp = child.apply(question.getExpVisitor(), question);

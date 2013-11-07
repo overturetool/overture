@@ -18,6 +18,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -34,10 +35,9 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
-import org.overture.codegen.utils.VdmTransUtil;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
+public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
 	private static final long serialVersionUID = -7968170190668212627L;
 	
@@ -50,7 +50,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		
 	@Override
 	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 		
@@ -58,7 +58,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 			
-			if(VdmTransUtil.isUnionOfQuotes(unionType))
+			if(TypeAssistantCG.isUnionOfQuotes(unionType))
 				//The VDM translation ignores named invariant types that are not
 				//union of quotes as they are represented as integers instead
 				return new AEmptyDeclCG();
@@ -69,7 +69,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		LinkedList<AFieldField> fields = node.getFields();
@@ -148,7 +148,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAFieldField(AFieldField node, CodeGenInfo question)
+	public PDeclCG caseAFieldField(AFieldField node, OoAstInfo question)
 			throws AnalysisException
 	{
 		//Record fields are public
@@ -164,7 +164,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseATypeDefinition(ATypeDefinition node,
-			CodeGenInfo question) throws AnalysisException
+			OoAstInfo question) throws AnalysisException
 	{
 //		System.out.println("*******");		
 //		System.out.println("Access: " + node.getAccess());
@@ -193,7 +193,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 		
 	@Override
 	public PDeclCG caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, CodeGenInfo question)
+			AExplicitFunctionDefinition node, OoAstInfo question)
 			throws AnalysisException
 	{
 		if(node.getIsCurried()|| node.getIsTypeInvariant())
@@ -250,7 +250,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, CodeGenInfo question)
+			AExplicitOperationDefinition node, OoAstInfo question)
 			throws AnalysisException
 	{
 		
@@ -294,7 +294,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, CodeGenInfo question)
+			AInstanceVariableDefinition node, OoAstInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
@@ -309,7 +309,7 @@ public class DeclVisitor extends AbstractVisitorCG<CodeGenInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAValueDefinition(AValueDefinition node, CodeGenInfo question) throws AnalysisException
+	public PDeclCG caseAValueDefinition(AValueDefinition node, OoAstInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		String name = node.getPattern().toString();

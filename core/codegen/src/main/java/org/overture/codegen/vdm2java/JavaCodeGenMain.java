@@ -1,4 +1,4 @@
-package org.overture.codegen.vdmcodegen;
+package org.overture.codegen.vdm2java;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 
-public class CodeGenMain
+public class JavaCodeGenMain
 {
 	public static void main(String[] args)
 	{

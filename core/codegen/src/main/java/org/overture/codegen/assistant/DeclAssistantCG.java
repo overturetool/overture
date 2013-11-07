@@ -11,7 +11,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
-import org.overture.codegen.visitor.CodeGenInfo;
+import org.overture.codegen.visitor.OoAstInfo;
 
 public class DeclAssistantCG
 {
@@ -20,7 +20,7 @@ public class DeclAssistantCG
 	{	
 	}
 	
-	public static void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, CodeGenInfo question) throws AnalysisException
+	public static void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
@@ -32,7 +32,7 @@ public class DeclAssistantCG
 		}
 	}
 	
-	private static ALocalVarDeclCG constructLocalVarDecl(AValueDefinition valueDef, CodeGenInfo question) throws AnalysisException
+	private static ALocalVarDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
 	{
 		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		String name = valueDef.getPattern().toString();
