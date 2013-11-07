@@ -1,0 +1,18 @@
+class A
+
+functions
+
+public f1: nat -> (nat * nat)
+f1(x) == mk_(1,2);
+
+public f2: nat -> (char * char)
+f2(x) == mk_('a','b');
+
+public f3: nat -> (real * real)
+f3(x) == mk_(1.1,2.2);
+
+public f4: nat -> (bool * bool)
+f4(x) == mk_(true, false);
+
+
+end A
