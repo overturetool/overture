@@ -1,0 +1,35 @@
+class A
+
+functions
+
+public f1: (nat) -> nat
+f1(x) == 1;
+
+public f2: (nat * nat) -> nat
+f2(x) == 2;
+
+public f3: (nat * nat * nat) -> nat
+f3(x) == 3;
+
+public f4: (nat * nat * nat * nat) -> nat
+f4(x) == 4;
+
+public f5: (nat * nat * nat * nat * nat) -> nat
+f5(x) == 5;
+
+public f6: (nat * nat * nat * nat * nat * nat) -> nat
+f6(x) == 6;
+
+public f7: (nat * nat * nat * nat * nat * nat * nat) -> nat
+f7(x) == 7;
+
+public f8: (nat * nat * nat * nat * nat * nat * nat * nat) -> nat
+f8(x) == 8;
+	
+public f9: (nat * nat * nat * nat * nat * nat * nat * nat * nat) -> nat
+f9(x) == 9;
+
+public f10: (nat * nat * nat * nat * nat * nat * nat * nat * nat * nat) -> nat
+f10(x) == 10;
+	
+end A

@@ -1,0 +1,49 @@
+import org.javatuples.*;
+
+
+public class A {
+    public static int f1(int x) {
+        return 1;
+    }
+
+    public static int f2(Pair<Integer, Integer> x) {
+        return 2;
+    }
+
+    public static int f3(Triplet<Integer, Integer, Integer> x) {
+        return 3;
+    }
+
+    public static int f4(Quartet<Integer, Integer, Integer, Integer> x) {
+        return 4;
+    }
+
+    public static int f5(Quintet<Integer, Integer, Integer, Integer, Integer> x) {
+        return 5;
+    }
+
+    public static int f6(
+        Sextet<Integer, Integer, Integer, Integer, Integer, Integer> x) {
+        return 6;
+    }
+
+    public static int f7(
+        Septet<Integer, Integer, Integer, Integer, Integer, Integer, Integer> x) {
+        return 7;
+    }
+
+    public static int f8(
+        Octet<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> x) {
+        return 8;
+    }
+
+    public static int f9(
+        Ennead<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> x) {
+        return 9;
+    }
+
+    public static int f10(
+        Decade<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> x) {
+        return 10;
+    }
+}
