@@ -1,9 +1,12 @@
 package org.overture.constraintsolverconn.visitor;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.pattern.PPatternAssistant;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
@@ -37,6 +40,7 @@ import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
@@ -72,6 +76,8 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -80,10 +86,26 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.PType;
+
 //import org.overture.ast.patterns.ASetBind;
 
 public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 {
+	public static class UnsupportedConstruct extends AnalysisException
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public UnsupportedConstruct(String message)
+		{
+			super(message);
+		}
+	}
 
 	private static final long serialVersionUID = 8993841651356537402L;
 	// private static boolean MyDebug = true;
@@ -97,7 +119,30 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 		// System.out.println("Construct not supported: "
 		// + node.getClass().getName());
 
-		throw new AnalysisException( "_NOT-SUPPORTED(" + node.getClass().getSimpleName() + ")_");
+		throw new UnsupportedConstruct("_NOT-SUPPORTED("
+				+ node.getClass().getSimpleName() + ")_");
+	}
+
+	// --kel
+
+	@Override
+	public String caseALetBeStExp(ALetBeStExp node, String question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(node.getBind().apply(this, question));
+		if (node.getSuchThat() != null)
+		{
+			sb.append(" & ");
+			sb.append(node.getSuchThat().apply(this, question));
+		}
+
+		if (!(node.getValue() instanceof AVariableExp))
+		{
+			sb.append(" ");
+			sb.append(node.getValue().apply(this, question));
+		}
+		return sb.toString();
 	}
 
 	@Override
@@ -229,13 +274,13 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 			String question) throws AnalysisException
 	{
 
-		String right = node.getExp().apply(this, "Some information #2");
+		return node.getExp().apply(this, "Some information #2");
 
-		String answer = (MyDebug ? " u-plus " : " + ") + right;
-		if (MyDebug)
-			answer = "(" + answer + ")";
-
-		return answer;
+//		String answer = (MyDebug ? " u-plus " : " + ") + right;
+//		if (MyDebug)
+//			answer = "(" + answer + ")";
+//
+//		return answer;
 	}
 
 	@Override
@@ -735,8 +780,17 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 	{
 		// return set
 		// String var = node.getPlist().getFirst().apply(this, "var");
-		String answer = node.getSet().toString();
-		return answer;
+		StringBuilder sb = new StringBuilder();
+		for (PPattern p : node.getPlist())
+		{
+			sb.append(p.apply(this, question));
+			sb.append(" : ");
+			sb.append(node.getSet().apply(this, question));
+		}
+
+		// String answer = node.getSet().toString();
+		// return answer;
+		return sb.toString();
 	}
 
 	@Override
@@ -1278,18 +1332,55 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 	public String caseALetDefExp(ALetDefExp node, String question)
 			throws AnalysisException
 	{
-		LinkedList<PDefinition> localdefs = node.getLocalDefs();
-		for (PDefinition pdef : localdefs)
+		StringBuilder sb = new StringBuilder();
+
+		for (Iterator<PDefinition> itr = node.getLocalDefs().iterator(); itr.hasNext();)
 		{
-			System.out.println(pdef.toString());
-			System.out.println("\t" + pdef.getType().toString());
+			sb.append(itr.next().apply(this, question));
+			if (itr.hasNext())
+			{
+				sb.append(" &\n");
+			}
+			// System.out.println(pdef.toString());
+			// System.out.println("\t" + pdef.getType().toString());
 			// System.out.println("\t" + pdef.getPattern().toString());
 			// System.out.println("\t" + pdef.getName().toString());
 
 		}
-		String answer = node.getExpression().apply(this, "let");
 
-		return answer;
+		sb.append(" & \n\t");
+		sb.append(node.getExpression().apply(this, "let"));
+
+		return sb.toString();
+	}
+
+	@Override
+	public String caseAValueDefinition(AValueDefinition node, String question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+
+		LexNameList names = PPatternAssistant.getAllVariableNames(node.getPattern());
+		for (ILexNameToken name : names)
+		{
+			sb.append(name.getName());
+			sb.append(" = ");
+			sb.append(node.getExpression().apply(this, question));
+			sb.append(getTypeConstrain(name.getName(), node.getType()));
+		}
+		return sb.toString();
+	}
+
+	String getTypeConstrain(String name, PType type)
+	{
+		if (type instanceof ANatOneNumericBasicType)
+		{
+			return " & " + name + ":NAT & " + name + ">0";
+		} else if (type instanceof ANatNumericBasicType)
+		{
+			return " & " + name + ":NAT";
+		}
+		return "";
 	}
 
 	// @Override

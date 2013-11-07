@@ -1,5 +1,6 @@
+ let x in set {78,2,3} in x --= set of nat
  ( 1 + ( 2  - 3 ) * 4 ) / 5
- -(1 ** (5 mod 3) + 0 does not parse
+ -(1 ** (5 mod 3) + 0 )
  1+2
  1-2
  -3
@@ -38,7 +39,7 @@
  inds [1,2,3]
  elems [1,2,3]
  reverse ([1,2,3])
- {0,1,2,3} = set of nat
+ let x in set {0,1,2,3} in x --= set of nat
  {0,1,2,3} = set of nat1
  { x*y | x in set {1,2,3,4} , y in set {1,2} & x + y <= 3}
  { x+y | x in set {1,2,3,4} , y in set {-1,0,1} & x + y <= 3}  -- translated expression not interpreted?(10/23)
