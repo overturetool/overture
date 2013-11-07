@@ -615,7 +615,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		fRemoteControlClassText.addModifyListener(fListener);
 		fRemoteControlClassText.setEnabled(true);
 
-		fRemoteControlnButton = createPushButton(group, "Brows...", null);
+		fRemoteControlnButton = createPushButton(group, "Browse...", null);
 		fRemoteControlnButton.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
