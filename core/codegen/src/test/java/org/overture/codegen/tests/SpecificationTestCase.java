@@ -35,16 +35,20 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(IText.NEW_LINE);
 		}
 		
+		int lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
+		
+		if(lastIndex >= 0)
+			generatedCode.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
+		
 		GeneratedModule quoteData = data.getQuoteValues();
 		
 		if(quoteData != null)
 		{
 			generatedCode.append(IText.NEW_LINE);
 			generatedCode.append(quoteData.getContent());
-			generatedCode.append(IText.NEW_LINE);
 		}
 		
-		int lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
+		lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
 		
 		if(lastIndex >= 0)
 			generatedCode.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
