@@ -9,6 +9,9 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -26,6 +29,9 @@ import org.overture.ast.preview.GraphViz.GraphVizException;
 
 public class Main {
 
+	public static File dot=null;
+	
+public static Set<String> filterClassNames = new HashSet<String>();
 	// digraph ast
 	// {
 	// node [shape=record];
@@ -64,7 +70,7 @@ public class Main {
 	
 	public static void makeImage(INode node, String type,File output) throws GraphVizException
 	{
-		DotGraphVisitor visitor = new DotGraphVisitor();
+		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
 		try
 		{
 			node.apply(visitor, null);
@@ -72,12 +78,30 @@ public class Main {
 		{
 			//Ignore
 		}
-		GraphViz gv = new GraphViz();
+		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
+		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
+	}
+	
+	public static void makeImage(List<? extends INode> nodes, String type,File output) throws GraphVizException
+	{
+		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
+		try
+		{
+			for (INode node : nodes)
+			{
+				node.apply(visitor, null);
+			}
+			
+		} catch (Throwable e)
+		{
+			//Ignore
+		}
+		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
 		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
 	}
 	
 	public static void show(INode node,final boolean exitOnClose) throws GraphVizException{
-		DotGraphVisitor visitor = new DotGraphVisitor();
+		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
 		try
 		{
 			node.apply(visitor, null);
@@ -85,7 +109,7 @@ public class Main {
 		{
 			//Ignore
 		}
-		GraphViz gv = new GraphViz();
+		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
 		String type = "png";
 		final File out = new File("out." + type); // out.gif in this example
 		final File out1 = new File("out1." + type);

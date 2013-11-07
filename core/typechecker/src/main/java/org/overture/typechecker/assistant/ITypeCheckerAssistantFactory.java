@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
-import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -104,25 +103,17 @@ import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AInMapMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AMapMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AQuoteTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeq1SeqTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeqSeqTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUndefinedTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidReturnTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -130,6 +121,9 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.PTypeResolver;
+
 //TODO Add assistant Javadoc
 /** 
  * The Interface specifying what is offered by the Overture TC assistant
@@ -326,10 +320,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AFunctionTypeAssistantTC createAFunctionTypeAssistant();
 
-	AInMapMapTypeAssistantTC createAInMapMapTypeAssistant();
-
-	AMapMapTypeAssistantTC createAMapMapTypeAssistant();
-
 	ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant();
 
 	AOperationTypeAssistantTC createAOperationTypeAssistant();
@@ -342,27 +332,15 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AProductTypeAssistantTC createAProductTypeAssistant();
 
-	AQuoteTypeAssistantTC createAQuoteTypeAssistant();
-
 	ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant();
 
-	ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistant();
-
-	ASeqSeqTypeAssistantTC createASeqSeqTypeAssistant();
-
 	ASetTypeAssistantTC createASetTypeAssistant();
-
-	AUndefinedTypeAssistantTC createAUndefinedTypeAssistant();
 
 	AUnionTypeAssistantTC createAUnionTypeAssistant();
 
 	AUnknownTypeAssistantTC createAUnknownTypeAssistant();
 
 	AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistant();
-
-	AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistant();
-
-	AVoidTypeAssistantTC createAVoidTypeAssistant();
 
 	PTypeAssistantTC createPTypeAssistant();
 
@@ -419,43 +397,48 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
 
 	IAnswer<SMapType> getMapTypeFinder();
-	
+
 	IAnswer<SSeqType> getSeqTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getSeqBasisChecker();
-	
+
 	IAnswer<AOperationType> getOperationTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getOperationBasisChecker();
-	
+
 	AnswerAdaptor<Boolean> getSetBasisChecker();
-	
+
 	IAnswer<ASetType> getSetTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getRecordBasisChecker();
-	
+
 	IAnswer<ARecordInvariantType> getRecordTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getClassBasisChecker();
-	
+
 	IAnswer<AClassType> getClassTypeFinder();
-	
+
 	IAnswer<AProductType> getProductTypeFinder();
-	
+
 	AnswerAdaptor<Boolean> getProductBasisChecker();
-	
-	IAnswer<AFunctionType> getFunctionTypeFinder();
+
+	IAnswer<String> getTypeDisplayer();
+
+	AnalysisAdaptor getTypeUnresolver();
+
+	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
+
+	IAnswer<AUnionType> getUnionTypeFinder();
+
+	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
 	
 	AnswerAdaptor<Boolean> getUnionBasisChecker();
 	
-	IAnswer<AUnionType> getUnionTypeFinder();
+	IAnswer<AFunctionType> getFunctionTypeFinder();
 	
-	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
+	IQuestionAnswer<PTypeResolver.Newquestion, PType> getPTypeResolver();
 	
-	IAnswer<String> getTypeDisplayer();
+	IQuestionAnswer<ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor();
 	
-	AnalysisAdaptor getTypeUnresolver();
-	
-	IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator();
-		
+
 }

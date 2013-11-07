@@ -39,7 +39,6 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
-
 /**
  * A class to coordinate all module type checking processing.
  */
@@ -48,13 +47,13 @@ public class ModuleTypeChecker extends TypeChecker
 {
 	/** The list of modules to check. */
 	private final List<AModuleModules> modules;
-	
-//	private final List<AModuleModules> checkedModules = new Vector<AModuleModules>();
+
+	// private final List<AModuleModules> checkedModules = new Vector<AModuleModules>();
 
 	/**
-	 * Create a type checker with the list of modules passed. The warnings
-	 * flag indicates whether warnings should be printed or just counted.
-	 *
+	 * Create a type checker with the list of modules passed. The warnings flag indicates whether warnings should be
+	 * printed or just counted.
+	 * 
 	 * @param modules
 	 */
 
@@ -65,20 +64,15 @@ public class ModuleTypeChecker extends TypeChecker
 	}
 
 	/**
-	 * Perform the type checking for the set of modules. This is a complicated
-	 * process.
+	 * Perform the type checking for the set of modules. This is a complicated process.
 	 * <p>
-	 * First the module names are checked for uniqueness. Then each module
-	 * generates its implicit definitions (eg. for pre_ and post_ functions).
-	 * Then export definitions for each module are generated, and the import
-	 * definitions linked to them. Next all the definition in the set of
-	 * modules are type resolved by creating a list of all modules' definitions
-	 * and calling their typeResolve methods. Then the type checking of the
-	 * modules' definitions can proceed, covering the types, values and
-	 * remaining definitions in that order. Next, the declared types of the
-	 * imports for each module are compared with the (now determined) types of
-	 * the exports. Finally the usage of the imports and definitions for each
-	 * module are checked.
+	 * First the module names are checked for uniqueness. Then each module generates its implicit definitions (eg. for
+	 * pre_ and post_ functions). Then export definitions for each module are generated, and the import definitions
+	 * linked to them. Next all the definition in the set of modules are type resolved by creating a list of all
+	 * modules' definitions and calling their typeResolve methods. Then the type checking of the modules' definitions
+	 * can proceed, covering the types, values and remaining definitions in that order. Next, the declared types of the
+	 * imports for each module are compared with the (now determined) types of the exports. Finally the usage of the
+	 * imports and definitions for each module are checked.
 	 */
 
 	@Override
@@ -89,21 +83,21 @@ public class ModuleTypeChecker extends TypeChecker
 		boolean nothing = true;
 		boolean hasFlat = false;
 
-		for (AModuleModules m1: modules)
+		for (AModuleModules m1 : modules)
 		{
-			for (AModuleModules m2: modules)
+			for (AModuleModules m2 : modules)
 			{
 				if (m1 != m2 && m1.getName().equals(m2.getName()))
 				{
-					TypeChecker.report(3429, "Module " + m1.getName() + " duplicates " + m2.getName(), m1.getName().getLocation());
+					TypeChecker.report(3429, "Module " + m1.getName()
+							+ " duplicates " + m2.getName(), m1.getName().getLocation());
 				}
 			}
-			
+
 			if (m1.getIsFlat())
 			{
 				hasFlat = true;
-			}
-			else
+			} else
 			{
 				if (hasFlat && Settings.release == Release.CLASSIC)
 				{
@@ -111,7 +105,8 @@ public class ModuleTypeChecker extends TypeChecker
 				}
 			}
 
-			if (!m1.getTypeChecked()) nothing = false;
+			if (!m1.getTypeChecked())
+				nothing = false;
 		}
 
 		if (nothing)
@@ -121,33 +116,33 @@ public class ModuleTypeChecker extends TypeChecker
 
 		// Generate implicit definitions for pre_, post_, inv_ functions etc.
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (!m.getTypeChecked())
 			{
-				Environment env = new ModuleEnvironment(assistantFactory,m);
+				Environment env = new ModuleEnvironment(assistantFactory, m);
 				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
 			}
 		}
 
 		// Exports have to be identified before imports can be processed.
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processExports(m);			// Populate exportDefs
+				AModuleModulesAssistantTC.processExports(m); // Populate exportDefs
 			}
 		}
 
 		// Process the imports early because renamed imports create definitions
 		// which can affect type resolution.
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processImports(m,modules);	// Populate importDefs
+				AModuleModulesAssistantTC.processImports(m, modules); // Populate importDefs
 			}
 		}
 
@@ -157,76 +152,74 @@ public class ModuleTypeChecker extends TypeChecker
 		List<PDefinition> alldefs = new Vector<PDefinition>();
 		List<PDefinition> checkDefs = new Vector<PDefinition>();
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
-			for (PDefinition d: m.getImportdefs())
+			for (PDefinition d : m.getImportdefs())
 			{
 				alldefs.add(d);
-				if (!m.getTypeChecked())	checkDefs.add(d);
+				if (!m.getTypeChecked())
+					checkDefs.add(d);
 			}
 		}
-		
-		for(AModuleModules m: modules)
+
+		for (AModuleModules m : modules)
 		{
-			for (PDefinition d: m.getDefs())
+			for (PDefinition d : m.getDefs())
 			{
 				alldefs.add(d);
-				if (!m.getTypeChecked()) checkDefs.add(d);
+				if (!m.getTypeChecked())
+					checkDefs.add(d);
 			}
 		}
 
 		// Attempt type resolution of unchecked definitions from all modules.
-		Environment env =
-			new FlatCheckedEnvironment(assistantFactory,alldefs, NameScope.NAMESANDSTATE,null);
+		Environment env = new FlatCheckedEnvironment(assistantFactory, alldefs, NameScope.NAMESANDSTATE);
 		TypeCheckVisitor tc = new TypeCheckVisitor();
-		for (PDefinition d: checkDefs)
+		for (PDefinition d : checkDefs)
 		{
 			try
-			{	
-				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(),env));
-			}
-			catch (TypeCheckException te)
+			{
+				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
+			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
-			}catch (AnalysisException te)
+			} catch (AnalysisException te)
 			{
-				report(3431, te.getMessage(), null);//FIXME: internal error
+				report(3431, te.getMessage(), null);// FIXME: internal error
 			}
 		}
 
 		// Proceed to type check all definitions, considering types, values
 		// and remaining definitions, in that order.
 
-		for (Pass pass: Pass.values())
+		for (Pass pass : Pass.values())
 		{
-			for (AModuleModules m: modules)
+			for (AModuleModules m : modules)
 			{
 				if (!m.getTypeChecked())
 				{
-    				Environment e = new ModuleEnvironment(assistantFactory,m);
+					Environment e = new ModuleEnvironment(assistantFactory, m);
 
-    				for (PDefinition d: m.getDefs())
-    				{
-//    					System.out.println("Number of Defs: " + m.getDefs().size());
-//    					System.out.println("Def to typecheck: " + d.getName());
-    					if (d.getPass() == pass)
-    					{
-    						try
-    						{
-    							d.apply(tc,new TypeCheckInfo(assistantFactory,e,NameScope.NAMES));
-//    							System.out.println();
-    						}
-    						catch (TypeCheckException te)
-    						{
-    							report(3431, te.getMessage(), te.location);
-    						}
-    						catch (AnalysisException te)
-    						{
-    							report(3431, te.getMessage(), null);//FIXME: internal error
-    						}
-    					}
-//    					System.out.println("Number of Defs: " + m.getDefs().size());
-    				}
+					for (PDefinition d : m.getDefs())
+					{
+						// System.out.println("Number of Defs: " + m.getDefs().size());
+						// System.out.println("Def to typecheck: " + d.getName());
+						if (d.getPass() == pass)
+						{
+							try
+							{
+								d.apply(tc, new TypeCheckInfo(assistantFactory, e, NameScope.NAMES));
+								// System.out.println();
+							} catch (TypeCheckException te)
+							{
+								report(3431, te.getMessage(), te.location);
+							} catch (AnalysisException te)
+							{
+								report(3431, te.getMessage(), null);// FIXME: internal error
+							}
+						}
+						// System.out.println("Number of Defs: " + m.getDefs().size());
+					}
 				}
 			}
 		}
@@ -234,26 +227,24 @@ public class ModuleTypeChecker extends TypeChecker
 		// Report any discrepancies between the final checked types of
 		// definitions and their explicit imported types.
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (!m.getTypeChecked())
 			{
-				//TODO
-				AModuleModulesAssistantTC.processImports(m,modules); // Re-populate importDefs
+				// TODO
+				AModuleModulesAssistantTC.processImports(m, modules); // Re-populate importDefs
 
-    			try
-    			{
-    				//TODO
-    				AModuleModulesAssistantTC.typeCheckImports(m);
-//    				m.typeCheckImports();		// Imports compared to exports
-    			}
-    			catch (TypeCheckException te)
-    			{
-    				report(3432, te.getMessage(), te.location);
-    			}
-    			catch (AnalysisException te)
+				try
 				{
-					report(3431, te.getMessage(), null);//FIXME: internal error
+					// TODO
+					AModuleModulesAssistantTC.typeCheckImports(m);
+					// m.typeCheckImports(); // Imports compared to exports
+				} catch (TypeCheckException te)
+				{
+					report(3432, te.getMessage(), te.location);
+				} catch (AnalysisException te)
+				{
+					report(3431, te.getMessage(), null);// FIXME: internal error
 				}
 			}
 		}
@@ -261,7 +252,7 @@ public class ModuleTypeChecker extends TypeChecker
 		// Any names that have not been referenced or exported produce "unused"
 		// warnings.
 
-    	for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (!m.getTypeChecked())
 			{

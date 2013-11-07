@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -218,7 +219,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public boolean isStatic(PDefinition fdef)
+	public static boolean isStatic(PDefinition fdef)
 	{
 		return PAccessSpecifierAssistantTC.isStatic(fdef.getAccess());
 	}
@@ -272,7 +273,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	}
 
 	public static void typeResolve(PDefinition d,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		try

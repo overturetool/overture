@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -36,7 +36,6 @@ import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.statements.ACyclesStm;
-import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.ADurationStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
@@ -48,6 +47,7 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANonDeterministicSimpleBlockStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.APeriodicStm;
@@ -106,13 +106,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	 * 
 	 */
 	private static final long serialVersionUID = -6418355785507933395L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerStmVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null);// FIXME
-		this.rootVisitor = typeCheckVisitor;
+		super(typeCheckVisitor);
 
 	}
 
@@ -120,8 +118,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAlwaysStm(AAlwaysStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.getAlways().apply(rootVisitor, question);
-		node.setType(node.getBody().apply(rootVisitor, question));
+		node.getAlways().apply(THIS, question);
+		node.setType(node.getBody().apply(THIS, question));
 		return node.getType();
 	}
 
@@ -130,8 +128,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		node.setTargetType(node.getTarget().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env)));
-		node.setExpType(node.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope)));
+		node.setTargetType(node.getTarget().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env)));
+		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope)));
 
 		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
 		{
@@ -181,7 +179,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		for (AAssignmentStm stmt : node.getAssignments())
 		{
-			stmt.apply(rootVisitor, question);
+			stmt.apply(THIS, question);
 		}
 
 		node.setType(AstFactory.newAVoidType(node.getLocation()));
@@ -193,22 +191,22 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PType stype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+		PType stype = node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 		Environment local = question.env;
 
 		if (PTypeAssistantTC.isSeq(stype))
 		{
 			node.setSeqType(PTypeAssistantTC.getSeq(stype));
-			node.getPatternBind().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+			node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-			PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+			PDefinitionListAssistantTC.typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		} else
 		{
 			TypeCheckerErrors.report(3223, "Expecting sequence type after 'in'", node.getLocation(), node);
 		}
 
-		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		local.unusedCheck();
 		node.setType(rt);
 		return rt;
@@ -224,7 +222,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		for (PStm stmt : node.getStatements())
 		{
-			PType stype = stmt.apply(rootVisitor, question);
+			PType stype = stmt.apply(THIS, question);
 
 			if (notreached)
 			{
@@ -287,7 +285,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			PDefinitionAssistantTC.implicitDefinitions(d, local);
-			d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		}
 
 		// For type checking purposes, the definitions are treated as
@@ -304,7 +302,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACallObjectStm(ACallObjectStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PType dtype = node.getDesignator().apply(rootVisitor, question);
+		PType dtype = node.getDesignator().apply(THIS, question);
 
 		if (!PTypeAssistantTC.isClass(dtype))
 		{
@@ -340,7 +338,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.getField().getLocation().executable(true);
-		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), rootVisitor, question);
+		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
 
@@ -400,7 +398,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isOperation(type))
 		{
 			AOperationType optype = PTypeAssistantTC.getOperation(type);
-			optype.apply(rootVisitor, question);
+			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
 			ACallObjectStatementAssistantTC.checkArgTypes(type, optype.getParameters(), atypes); // Not necessary?
 			node.setType(optype.getResult());
@@ -411,8 +409,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			// without
 			// a "return" statement.
 
-			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
-			ftype.apply(rootVisitor, question);
+			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
+			ftype.apply(THIS, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
 			ACallObjectStatementAssistantTC.checkArgTypes(type, ftype.getParameters(), atypes); // Not necessary?
 			node.setType(ftype.getResult());
@@ -429,7 +427,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACallStm(ACallStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), rootVisitor, question);
+		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), THIS, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -462,7 +460,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			AOperationType optype = PTypeAssistantTC.getOperation(type);
 
-			question.assistantFactory.createPTypeAssistant().typeResolve(optype, null, rootVisitor, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(optype, null, THIS, question);
 			// Reset the name's qualifier with the actual operation type so
 			// that runtime search has a simple TypeComparator call.
 
@@ -480,8 +478,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			// without
 			// a "return" statement.
 
-			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
-			question.assistantFactory.createPTypeAssistant().typeResolve(ftype, null, rootVisitor, question);
+			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
+			question.assistantFactory.createPTypeAssistant().typeResolve(ftype, null, THIS, question);
 
 			// Reset the name's qualifier with the actual function type so
 			// that runtime search has a simple TypeComparator call.
@@ -511,13 +509,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getDefs().size() == 0)
 		{
 			node.setDefs(new LinkedList<PDefinition>());
-			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 
 			if (node.getPattern() instanceof AExpressionPattern)
 			{
 				// Only expression patterns need type checking...
 				AExpressionPattern ep = (AExpressionPattern) node.getPattern();
-				PType ptype = ep.getExp().apply(rootVisitor, question);
+				PType ptype = ep.getExp().apply(THIS, question);
 
 				if (!TypeComparator.compatible(ptype, node.getCtype()))
 				{
@@ -525,13 +523,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 
 			ACasesStm stm = (ACasesStm) node.parent();
 			node.getDefs().addAll(PPatternAssistantTC.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
 		}
 
-		PDefinitionListAssistantTC.typeCheck(node.getDefs(), rootVisitor, question);
+		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
 
 		if (!PPatternAssistantTC.matches(node.getPattern(), node.getCtype()))
 		{
@@ -539,7 +537,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDefs(), question.env, question.scope);
-		PType r = node.getResult().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType r = node.getResult().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		local.unusedCheck();
 
 		return r;
@@ -550,19 +548,19 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PType expType = node.getExp().apply(rootVisitor, question);
+		PType expType = node.getExp().apply(THIS, question);
 
 		PTypeSet rtypes = new PTypeSet();
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
 			c.setCtype(expType);
-			rtypes.add(c.apply(rootVisitor, question));
+			rtypes.add(c.apply(THIS, question));
 		}
 
 		if (node.getOthers() != null)
 		{
-			rtypes.add(node.getOthers().apply(rootVisitor, question));
+			rtypes.add(node.getOthers().apply(THIS, question));
 		} else
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
@@ -612,14 +610,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
 		}
 
-		node.setType(node.getStatement().apply(rootVisitor, question));
+		node.setType(node.getStatement().apply(THIS, question));
 		return node.getType();
 	}
 
 	// TODO: Missing the other DefStatement
 
 	@Override
-	public PType caseADefLetDefStm(ADefLetDefStm node, TypeCheckInfo question)
+	public PType caseALetStm(ALetStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
 
@@ -636,7 +634,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 				PDefinitionAssistantTC.implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, rootVisitor, new TypeCheckInfo(question.assistantFactory, local));
+				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
 
 				if (question.env.isVDMPP())
 				{
@@ -645,17 +643,17 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					d.setAccess(PAccessSpecifierAssistantTC.getStatic(d, true));
 				}
 
-				d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			} else
 			{
 				PDefinitionAssistantTC.implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, rootVisitor, question);
-				d.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				PDefinitionAssistantTC.typeResolve(d, THIS, question);
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
 		}
 
-		PType r = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -666,7 +664,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PType argType = node.getDuration().apply(rootVisitor, question);
+		PType argType = node.getDuration().apply(THIS, question);
 
 		if (!TypeComparator.compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
@@ -674,19 +672,19 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.detail("Actual", argType);
 		}
 
-		return node.getStatement().apply(rootVisitor, question);
+		return node.getStatement().apply(THIS, question);
 	}
 
 	@Override
 	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		if (!PTypeAssistantTC.isType(node.getElseIf().apply(rootVisitor, question), ABooleanBasicType.class))
+		if (!PTypeAssistantTC.isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
 		}
 
-		node.setType(node.getThenStm().apply(rootVisitor, question));
+		node.setType(node.getThenStm().apply(THIS, question));
 		return node.getType();
 	}
 
@@ -703,7 +701,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		if (node.getExpression() != null)
 		{
-			node.setExpType(node.getExpression().apply(rootVisitor, question));
+			node.setExpType(node.getExpression().apply(THIS, question));
 		}
 
 		// This is unknown because the statement doesn't actually return a
@@ -719,8 +717,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAForAllStm(AForAllStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setType(node.getSet().apply(rootVisitor, question));
-		PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+		node.setType(node.getSet().apply(THIS, question));
+		PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 
 		if (PTypeAssistantTC.isSet(node.getType()))
 		{
@@ -728,7 +726,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			List<PDefinition> defs = PPatternAssistantTC.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
-			PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			local.unusedCheck();
 			node.setType(rt);
 			return rt;
@@ -744,8 +742,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAForIndexStm(AForIndexStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PType ft = node.getFrom().apply(rootVisitor, question);
-		PType tt = node.getTo().apply(rootVisitor, question);
+		PType ft = node.getFrom().apply(THIS, question);
+		PType tt = node.getTo().apply(THIS, question);
 
 		if (!PTypeAssistantTC.isNumeric(ft))
 		{
@@ -759,7 +757,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getBy() != null)
 		{
-			PType bt = node.getBy().apply(rootVisitor, question);
+			PType bt = node.getBy().apply(THIS, question);
 
 			if (!PTypeAssistantTC.isNumeric(bt))
 			{
@@ -769,7 +767,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PDefinition vardef = AstFactory.newALocalDefinition(node.getVar().getLocation(), node.getVar(), NameScope.LOCAL, ft);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, vardef, question.env, question.scope);
-		PType rt = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		local.unusedCheck();
 		node.setType(rt);
 		return rt;
@@ -780,7 +778,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PType test = node.getIfExp().apply(rootVisitor, question);
+		PType test = node.getIfExp().apply(THIS, question);
 
 		if (!PTypeAssistantTC.isType(test, ABooleanBasicType.class))
 		{
@@ -788,19 +786,19 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PTypeSet rtypes = new PTypeSet();
-		rtypes.add(node.getThenStm().apply(rootVisitor, question));
+		rtypes.add(node.getThenStm().apply(THIS, question));
 
 		if (node.getElseIf() != null)
 		{
 			for (AElseIfStm stmt : node.getElseIf())
 			{
-				rtypes.add(stmt.apply(rootVisitor, question));
+				rtypes.add(stmt.apply(THIS, question));
 			}
 		}
 
 		if (node.getElseStm() != null)
 		{
-			rtypes.add(node.getElseStm().apply(rootVisitor, question));
+			rtypes.add(node.getElseStm().apply(THIS, question));
 		} else
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
@@ -816,16 +814,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 
 		node.setDef(AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));
-		node.getDef().apply(rootVisitor, question);
+		node.getDef().apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 
 		if (node.getSuchThat() != null
-				&& !PTypeAssistantTC.isType(node.getSuchThat().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+				&& !PTypeAssistantTC.isType(node.getSuchThat().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
 		}
 
-		PType r = node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		local.unusedCheck();
 		node.setType(r);
 		return r;
@@ -843,7 +841,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		for (PStm stmt : node.getStatements())
 		{
-			PType stype = stmt.apply(rootVisitor, question);
+			PType stype = stmt.apply(THIS, question);
 
 			if (PTypeAssistantTC.isType(stype, AUnionType.class))
 			{
@@ -892,7 +890,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		} else
 		{
-			node.setType(node.getExpression().apply(rootVisitor, question));
+			node.setType(node.getExpression().apply(THIS, question));
 			return node.getType();
 		}
 	}
@@ -937,8 +935,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			for (AErrorCase err : node.getErrors())
 			{
-				PType lt = err.getLeft().apply(rootVisitor, question);
-				PType rt = err.getRight().apply(rootVisitor, question);
+				PType lt = err.getLeft().apply(THIS, question);
+				PType rt = err.getRight().apply(THIS, question);
 
 				if (!PTypeAssistantTC.isType(lt, ABooleanBasicType.class))
 				{
@@ -952,19 +950,19 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
 		Environment local = new FlatEnvironment(question.assistantFactory, defs, question.env); // NB. No
 		// check
 		// //Unused
 
 		if (node.getPrecondition() != null
-				&& !PTypeAssistantTC.isType(node.getPrecondition().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)), ABooleanBasicType.class))
+				&& !PTypeAssistantTC.isType(node.getPrecondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3233, "Precondition is not a boolean expression", node.getPrecondition().getLocation(), node.getPrecondition());
 		}
 
 		if (node.getPostcondition() != null
-				&& !PTypeAssistantTC.isType(node.getPostcondition().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
+				&& !PTypeAssistantTC.isType(node.getPostcondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3234, "Postcondition is not a boolean expression", node.getPostcondition().getLocation(), node.getPostcondition());
 		}
@@ -981,7 +979,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PStm body = node.getBody();
 
-		PType bt = body.apply(rootVisitor, question);
+		PType bt = body.apply(THIS, question);
 		rtypes.add(bt);
 
 		PTypeSet extype = PStmAssistantTC.exitCheck(body);
@@ -996,12 +994,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			ptype = extype.getType(body.getLocation());
 		}
 		node.setType(ptype);
-		node.getPatternBind().apply(rootVisitor, question);
+		node.getPatternBind().apply(THIS, question);
 		// TODO: PatternBind stuff
 		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
-		rtypes.add(node.getWith().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
+		rtypes.add(node.getWith().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
 
 		node.setType(rtypes.getType(node.getLocation()));
 		return node.getType();
@@ -1012,8 +1010,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		question.qualifiers = null;
-		node.getExp().apply(rootVisitor, question);
-		node.setType(node.getStatement().apply(rootVisitor, question));
+		node.getExp().apply(THIS, question);
+		node.setType(node.getStatement().apply(THIS, question));
 		return node.getType();
 	}
 
@@ -1033,7 +1031,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			for (PExp arg : args)
 			{
-				PType type = arg.apply(rootVisitor, question);
+				PType type = arg.apply(THIS, question);
 
 				if (!PTypeAssistantTC.isNumeric(type))
 				{
@@ -1100,7 +1098,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PType type = node.getObj().apply(rootVisitor, question);
+		PType type = node.getObj().apply(THIS, question);
 
 		if (PTypeAssistantTC.isSet(type))
 		{
@@ -1151,7 +1149,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PType rt = node.getBody().apply(rootVisitor, question);
+		PType rt = node.getBody().apply(THIS, question);
 		PTypeSet extypes = PStmAssistantTC.exitCheck(node.getBody());
 
 		if (!extypes.isEmpty())
@@ -1161,7 +1159,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			for (ATixeStmtAlternative tsa : node.getTraps())
 			{
 				tsa.setExp(union);
-				tsa.apply(rootVisitor, question);
+				tsa.apply(THIS, question);
 			}
 		}
 		node.setType(rt);
@@ -1176,13 +1174,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// TODO fix
 		// patternBind.typeCheck(base, scope, ext)
 		// PPatternBindAssistant.typeCheck(node.getPatternBind(), null,
-		// rootVisitor, question);
+		// THIS, question);
 		// DefinitionList defs = patternBind.getDefinitions();
-		node.getPatternBind().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+		node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-		PDefinitionListAssistantTC.typeCheck(defs, rootVisitor, question);
+		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
-		node.getStatement().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+		node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 		local.unusedCheck();
 
 		return null;
@@ -1203,7 +1201,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			if (bind instanceof ATypeBind)
 			{
 				ATypeBind typebind = (ATypeBind) bind;
-				ATypeBindAssistantTC.typeResolve(typebind, rootVisitor, question);
+				ATypeBindAssistantTC.typeResolve(typebind, THIS, question);
 
 				if (!TypeComparator.compatible(typebind.getType(), type))
 				{
@@ -1213,7 +1211,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				ASetBind setbind = (ASetBind) bind;
-				ASetType settype = PTypeAssistantTC.getSet(setbind.getSet().apply(rootVisitor, question));
+				ASetType settype = PTypeAssistantTC.getSet(setbind.getSet().apply(THIS, question));
 
 				if (!TypeComparator.compatible(type, settype.getSetof()))
 				{
@@ -1224,7 +1222,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			PDefinition def = AstFactory.newAMultiBindListDefinition(bind.getLocation(), PBindAssistantTC.getMultipleBindList(bind));
 
-			def.apply(rootVisitor, question);
+			def.apply(THIS, question);
 			List<PDefinition> defs = new LinkedList<PDefinition>();
 			defs.add(def);
 			node.setDefs(defs);
@@ -1232,7 +1230,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			assert (type != null) : "Can't typecheck a pattern without a type";
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		return null;

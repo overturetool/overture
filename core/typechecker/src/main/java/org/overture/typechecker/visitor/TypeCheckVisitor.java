@@ -7,6 +7,7 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPatternBind;
 import org.overture.ast.statements.PAlternativeStm;
@@ -126,5 +127,12 @@ public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		return node.apply(tcDefinition, question);
+	}
+
+	@Override
+	public PType defaultINode(INode node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		return null;// we dont want an infinit loop
 	}
 }

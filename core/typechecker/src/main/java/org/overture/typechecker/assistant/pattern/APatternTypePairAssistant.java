@@ -3,6 +3,7 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.typechecker.NameScope;
@@ -27,7 +28,7 @@ public class APatternTypePairAssistant
 	}
 
 	public static void typeResolve(APatternTypePair result,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
 

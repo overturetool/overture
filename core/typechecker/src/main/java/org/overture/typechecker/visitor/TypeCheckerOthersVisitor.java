@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -57,13 +57,11 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	 * 
 	 */
 	private static final long serialVersionUID = 1883409865766439618L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
 
 	public TypeCheckerOthersVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor)
+			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
-		super(null);// FIXME
-		this.rootVisitor = typeCheckVisitor;
+		super(typeCheckVisitor);
 	}
 
 	@Override
@@ -91,12 +89,12 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			if (node.getBind() instanceof ATypeBind)
 			{
 				ATypeBind typebind = (ATypeBind) node.getBind();
-				typebind.setType(question.assistantFactory.createPTypeAssistant().typeResolve(typebind.getType(), null, rootVisitor, question));
+				typebind.setType(question.assistantFactory.createPTypeAssistant().typeResolve(typebind.getType(), null, THIS, question));
 
 				// resolve pattern such that it is resolved before it is cloned later in newAMultiBindListDefinition
 				if (node.getBind().getPattern() != null)
 				{
-					PPatternAssistantTC.typeResolve(node.getBind().getPattern(), rootVisitor, question);
+					PPatternAssistantTC.typeResolve(node.getBind().getPattern(), THIS, question);
 				}
 
 				if (!TypeComparator.compatible(typebind.getType(), type))
@@ -107,7 +105,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				ASetBind setbind = (ASetBind) node.getBind();
-				ASetType settype = PTypeAssistantTC.getSet(setbind.getSet().apply(rootVisitor, question));
+				ASetType settype = PTypeAssistantTC.getSet(setbind.getSet().apply(THIS, question));
 				if (!TypeComparator.compatible(type, settype.getSetof()))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
@@ -117,7 +115,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind()));
 
-			def.apply(rootVisitor, question);
+			def.apply(THIS, question);
 			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
 			defs.add(def);
 			node.setDefs(defs);
@@ -125,7 +123,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		{
 			assert (type != null) : "Can't typecheck a pattern without a type";
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), rootVisitor, question);
+			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 
@@ -137,7 +135,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PType type = node.getObject().apply(rootVisitor, question);
+		PType type = node.getObject().apply(THIS, question);
 		PTypeSet result = new PTypeSet();
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 		ILexIdentifierToken field = node.getField();
@@ -316,8 +314,8 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		PType etype = node.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
-		PType rtype = node.getMapseq().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+		PType etype = node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
+		PType rtype = node.getMapseq().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env));
 		PTypeSet result = new PTypeSet();
 
 		if (PTypeAssistantTC.isMap(rtype))
@@ -351,7 +349,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isFunction(rtype))
 		{
 			// Error case, but improves errors if we work out the return type
-			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(rtype);
+			AFunctionType ftype = PTypeAssistantTC.getFunction(rtype);
 			result.add(ftype.getResult());
 		}
 
@@ -396,38 +394,37 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		for (PExp a : node.getArgs())
 		{
-			argtypes.add(a.apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE)));
+			argtypes.add(a.apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE)));
 		}
 
-		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, null, argtypes));
+		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, argtypes));
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 		PTypeSet result = new PTypeSet();
 
 		if (PTypeAssistantTC.isMap(type))
 		{
 			SMapType map = PTypeAssistantTC.getMap(type);
-			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (PTypeAssistantTC.isSeq(type))
 		{
 			SSeqType seq = PTypeAssistantTC.getSeq(type);
-			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
+			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
-
 
 		if (PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
-			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
+			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
+			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (PTypeAssistantTC.isOperation(type))
 		{
 			AOperationType ot = PTypeAssistantTC.getOperation(type);
-			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, rootVisitor));
+			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
+			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (result.isEmpty())
@@ -444,7 +441,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	public PType caseANewObjectDesignator(ANewObjectDesignator node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
+		return node.getExpression().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 	}
 
 	@Override
@@ -452,7 +449,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			AIdentifierObjectDesignator node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		return node.getExpression().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
+		return node.getExpression().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 	}
 
 	@Override
@@ -460,7 +457,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PType type = node.getObject().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, null, question.qualifiers));
+		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, question.qualifiers));
 		PTypeSet result = new PTypeSet();
 		boolean unique = !PTypeAssistantTC.isUnion(type);
 

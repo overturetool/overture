@@ -103,25 +103,17 @@ import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AInMapMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AMapMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AQuoteTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeq1SeqTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASeqSeqTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUndefinedTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidReturnTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AVoidTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -150,12 +142,14 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
@@ -220,18 +214,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AInMapMapTypeAssistantTC createAInMapMapTypeAssistant()
-	{
-		return new AInMapMapTypeAssistantTC(this);
-	}
-
-	@Override
-	public AMapMapTypeAssistantTC createAMapMapTypeAssistant()
-	{
-		return new AMapMapTypeAssistantTC(this);
-	}
-
-	@Override
 	public ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant()
 	{
 		return new ANamedInvariantTypeAssistantTC(this);
@@ -268,39 +250,15 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public AQuoteTypeAssistantTC createAQuoteTypeAssistant()
-	{
-		return new AQuoteTypeAssistantTC(this);
-	}
-
-	@Override
 	public ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant()
 	{
 		return new ARecordInvariantTypeAssistantTC(this);
 	}
 
 	@Override
-	public ASeq1SeqTypeAssistantTC createASeq1SeqTypeAssistant()
-	{
-		return new ASeq1SeqTypeAssistantTC(this);
-	}
-
-	@Override
-	public ASeqSeqTypeAssistantTC createASeqSeqTypeAssistant()
-	{
-		return new ASeqSeqTypeAssistantTC(this);
-	}
-
-	@Override
 	public ASetTypeAssistantTC createASetTypeAssistant()
 	{
 		return new ASetTypeAssistantTC(this);
-	}
-
-	@Override
-	public AUndefinedTypeAssistantTC createAUndefinedTypeAssistant()
-	{
-		return new AUndefinedTypeAssistantTC(this);
 	}
 
 	@Override
@@ -319,18 +277,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AUnresolvedTypeAssistantTC createAUnresolvedTypeAssistant()
 	{
 		return new AUnresolvedTypeAssistantTC(this);
-	}
-
-	@Override
-	public AVoidReturnTypeAssistantTC createAVoidReturnTypeAssistant()
-	{
-		return new AVoidReturnTypeAssistantTC(this);
-	}
-
-	@Override
-	public AVoidTypeAssistantTC createAVoidTypeAssistant()
-	{
-		return new AVoidTypeAssistantTC(this);
 	}
 
 	@Override
@@ -1052,89 +998,113 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	{
 		return new MapBasisChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<SMapType> getMapTypeFinder()
 	{
 		return new MapTypeFinder(this);
 	}
-	
+
 	@Override
 	public IAnswer<SSeqType> getSeqTypeFinder()
 	{
 		return new SeqTypeFinder(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getSeqBasisChecker()
 	{
 		return new SeqBasisChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<AOperationType> getOperationTypeFinder()
 	{
 		return new OperationTypeFinder(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getOperationBasisChecker()
 	{
 		return new OperationBasisChecker(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getSetBasisChecker()
 	{
 		return new SetBasisChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<ASetType> getSetTypeFinder()
 	{
 		return new SetTypeFinder(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getRecordBasisChecker()
 	{
 		return new RecordBasisChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<ARecordInvariantType> getRecordTypeFinder()
 	{
 		return new RecordTypeFinder(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getClassBasisChecker()
 	{
 		return new ClassBasisChecker(this);
 	}
-	
+
 	@Override
 	public IAnswer<AClassType> getClassTypeFinder()
 	{
 		return new ClassTypeFinder(this);
 	}
-	
+
 	@Override
 	public IAnswer<AProductType> getProductTypeFinder()
 	{
 		return new ProductTypeFinder(this);
 	}
-	
+
 	@Override
 	public AnswerAdaptor<Boolean> getProductBasisChecker()
 	{
 		return new ProductBasisChecker(this);
 	}
-	
+
 	@Override
-	public IAnswer<AFunctionType> getFunctionTypeFinder()
+	public IAnswer<AUnionType> getUnionTypeFinder()
 	{
-		return new FunctionTypeFinder(this);
+		return new UnionTypeFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Object, Boolean> getTypeEqualityChecker()
+	{
+		return new TypeEqualityChecker(this);
+	}
+
+	@Override
+	public IAnswer<String> getTypeDisplayer()
+	{
+		return new TypeDisplayer(this);
+	}
+
+	@Override
+	public AnalysisAdaptor getTypeUnresolver()
+	{
+		return new TypeUnresolver(this);
+	}
+
+	@Override
+	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
+	{
+		return new NarrowerThanComparator(this);
 	}
 	
 	@Override
@@ -1144,32 +1114,20 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 	
 	@Override
-	public IAnswer<AUnionType> getUnionTypeFinder()
+	public IAnswer<AFunctionType> getFunctionTypeFinder()
 	{
-		return new UnionTypeFinder(this);
+		return new FunctionTypeFinder(this);
 	}
 	
 	@Override
-	public IQuestionAnswer<Object, Boolean> getTypeEqualityChecker()
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor()
 	{
-		return new TypeEqualityChecker(this);
+		return new ConcreateTypeImplementor(this);
 	}
 	
 	@Override
-	public IAnswer<String> getTypeDisplayer()
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
 	{
-		return new TypeDisplayer(this);
-	}
-	
-	@Override
-	public AnalysisAdaptor getTypeUnresolver()
-	{
-		return new TypeUnresolver(this);
-	}
-	
-	@Override
-	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
-	{
-		return new NarrowerThanComparator(this);
+		return new PTypeResolver(this);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.ATypeBind;
@@ -24,7 +25,7 @@ public class ATypeBindAssistantTC
 	}
 
 	public static void typeResolve(ATypeBind typebind,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
 

@@ -14,6 +14,7 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.node.INode;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -43,6 +44,12 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	{
 		this.af = af;
 	}
+	
+	protected AStateDefinition findStateDefinition(Environment question, INode node)
+	{
+		return question.findStateDefinition();
+	}
+	
 	
 	@Override
 	public void defaultSClassDefinition(SClassDefinition node,
@@ -104,7 +111,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			AExplicitOperationDefinition node, Environment question)
 			throws AnalysisException
 	{
-		node.setState(question.findStateDefinition());
+		node.setState(findStateDefinition(question,node));
 
 		if (node.getPrecondition() != null)
 		{
@@ -119,6 +126,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			PDefinitionAssistantTC.markUsed(node.getPostdef());
 		}
 	}
+
+	
 
 	@Override
 	public void caseAImplicitFunctionDefinition(
@@ -152,7 +161,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			AImplicitOperationDefinition node, Environment question)
 			throws AnalysisException
 	{
-		node.setState(question.findStateDefinition());
+		node.setState(findStateDefinition(question,node));
 
 		if (node.getPrecondition() != null)
 		{

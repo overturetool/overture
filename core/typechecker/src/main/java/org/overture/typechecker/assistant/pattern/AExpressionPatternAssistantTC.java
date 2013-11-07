@@ -1,7 +1,7 @@
 package org.overture.typechecker.assistant.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AExpressionPattern;
@@ -27,7 +27,7 @@ public class AExpressionPatternAssistantTC
 	}
 
 	public static void typeResolve(AExpressionPattern pattern,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		if (pattern.getResolved())

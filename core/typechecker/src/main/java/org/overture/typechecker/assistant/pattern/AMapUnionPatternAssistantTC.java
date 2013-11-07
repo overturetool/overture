@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -34,7 +34,7 @@ public class AMapUnionPatternAssistantTC
 	}
 
 	public static void typeResolve(AMapUnionPattern pattern,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 

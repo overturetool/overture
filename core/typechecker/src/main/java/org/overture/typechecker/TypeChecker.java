@@ -35,7 +35,6 @@ import org.overture.parser.messages.VDMWarning;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
-
 /**
  * The abstract root of all type checker classes.
  */
@@ -45,22 +44,29 @@ abstract public class TypeChecker
 	public interface IStatusListener
 	{
 		void report(VDMError error);
+
 		void warning(VDMWarning warning);
 	}
-	
+
 	private static List<VDMError> errors = new Vector<VDMError>();
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
 	private static VDMMessage lastMessage = null;
 	private static final int MAX = 100;
-	
-	protected ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
-	
-	
+
+	final protected ITypeCheckerAssistantFactory assistantFactory;
+
 	static List<IStatusListener> listners = new Vector<IStatusListener>();
 
 	public TypeChecker()
 	{
 		clearErrors();
+		this.assistantFactory = new TypeCheckerAssistantFactory();
+	}
+
+	public TypeChecker(ITypeCheckerAssistantFactory factory)
+	{
+		clearErrors();
+		this.assistantFactory = factory;
 	}
 
 	abstract public void typeCheck();
@@ -68,16 +74,16 @@ abstract public class TypeChecker
 	public static void report(int number, String problem, ILexLocation location)
 	{
 		VDMError error = new VDMError(number, problem, location);
-		//System.out.println(error.toString());
+		// System.out.println(error.toString());
 		errors.add(error);
 		lastMessage = error;
-		
+
 		for (IStatusListener listner : listners)
 		{
 			listner.report(error);
 		}
 
-		if (errors.size() >= MAX-1)
+		if (errors.size() >= MAX - 1)
 		{
 			errors.add(new VDMError(10, "Too many type checking errors", location));
 			throw new InternalException(10, "Too many type checking errors");
@@ -89,7 +95,7 @@ abstract public class TypeChecker
 		VDMWarning warning = new VDMWarning(number, problem, location);
 		warnings.add(warning);
 		lastMessage = warning;
-		
+
 		for (IStatusListener listner : listners)
 		{
 			listner.warning(warning);
@@ -104,7 +110,8 @@ abstract public class TypeChecker
 		}
 	}
 
-	public static void detail2(String tag1, Object obj1, String tag2, Object obj2)
+	public static void detail2(String tag1, Object obj1, String tag2,
+			Object obj2)
 	{
 		detail(tag1, obj1);
 		detail(tag2, obj2);
@@ -138,7 +145,7 @@ abstract public class TypeChecker
 
 	public static void printErrors(PrintWriter out)
 	{
-		for (VDMError e: errors)
+		for (VDMError e : errors)
 		{
 			out.println(e.toString());
 		}
@@ -146,17 +153,17 @@ abstract public class TypeChecker
 
 	public static void printWarnings(PrintWriter out)
 	{
-		for (VDMWarning w: warnings)
+		for (VDMWarning w : warnings)
 		{
 			out.println(w.toString());
 		}
 	}
-	
+
 	public static void addStatusListner(IStatusListener listner)
 	{
 		listners.add(listner);
 	}
-	
+
 	public static void removeStatusListner(IStatusListener listner)
 	{
 		listners.remove(listner);

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -82,7 +83,7 @@ public class PDefinitionListAssistantTC
 
 	}
 
-	public static Set<PDefinition> findMatches(List<PDefinition> definitions,
+	public  Set<PDefinition> findMatches(List<PDefinition> definitions,
 			ILexNameToken name)
 	{
 
@@ -107,7 +108,7 @@ public class PDefinitionListAssistantTC
 
 		for (PDefinition d : definitions)
 		{
-			all.addAll(PDefinitionAssistantTC.getDefinitions(d));
+			all.addAll(af.createPDefinitionAssistant().getDefinitions(d));
 		}
 
 		return all;
@@ -123,7 +124,7 @@ public class PDefinitionListAssistantTC
 	}
 
 	public static void typeCheck(List<PDefinition> defs,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		for (PDefinition d : defs)
@@ -156,7 +157,7 @@ public class PDefinitionListAssistantTC
 	}
 
 	public static void typeResolve(List<PDefinition> definitions,
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		for (PDefinition definition : definitions)
