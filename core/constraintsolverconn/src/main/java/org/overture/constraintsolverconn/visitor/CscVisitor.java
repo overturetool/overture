@@ -7,6 +7,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -19,7 +20,6 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.PExp;
-
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
@@ -49,9 +49,9 @@ import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AExists1Exp;
 //import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
-
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -76,13 +76,13 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
-
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AElseIfExp;
-
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AReturnStm;
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.ACasesExp;
 
 public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 
@@ -717,6 +717,23 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		return answer;
 	}
 	
+	
+	@Override
+	public String caseAExists1Exp(AExists1Exp node, String question)
+			throws AnalysisException {
+
+		String def = node.getDef().toString();
+		String bind = node.getBind().toString();
+
+		String pred = node.getPredicate().apply(this,"#43");
+
+		String answer = MyDebug ? ( def + "???" + bind + "*???*" + pred)
+		    : (def+"*" + bind + " => " + pred + ")");
+
+		if(MyDebug) answer = "(" + answer + ")";
+		return answer;
+	}
+
 	@Override
 	public String caseASeqEnumSeqExp(ASeqEnumSeqExp node, String question)
 			throws AnalysisException {
@@ -1093,7 +1110,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		    pdef+=(pd.apply(this,"") + " & ");
 		}
 		pdef = pdef.substring(0, pdef.length()-3);
-
+		pdef = pdef.replace("int", "INT").replace("nat", "NAT").replace("int1", "INT1");
 		exp = node.getExpression().apply(this, "");
 
 		answer = "%" + (ptns.indexOf(",")>0 ? "(" : "") + ptns + (ptns.indexOf(",")>0 ? ")":"") + ".( " + pdef + " | " + exp + " )";
@@ -1134,6 +1151,24 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 
 		return answer;
 	}
+
+
+	@Override
+	public String caseALetDefExp(ALetDefExp node, String question)
+			throws AnalysisException {
+			LinkedList<PDefinition> localdefs = node.getLocalDefs();
+		for(PDefinition pdef: localdefs) {
+			System.out.println(pdef.toString());
+			System.out.println("\t" + pdef.getType().toString());
+			//System.out.println("\t" + pdef.getPattern().toString());
+			//System.out.println("\t" + pdef.getName().toString());
+			
+		}
+	        String answer = node.getExpression().apply(this,"let");
+
+		return answer;
+	}
+
 
 	@Override
 	public String caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
