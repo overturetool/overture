@@ -92,7 +92,7 @@ public class CodeGenConsole implements ILogger
 	}
 
 	@Override
-	public void printErrpr(String msg)
+	public void printError(String msg)
 	{
 		err.print(msg);
 	}

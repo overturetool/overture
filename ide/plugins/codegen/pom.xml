@@ -32,9 +32,9 @@
 	  <version>2.4</version>
     </dependency>
 	<dependency>
-		<groupId>org.eclipse.jdt</groupId>
-		<artifactId>core</artifactId>
-		<version>3.3.0-v_771</version>
+		<groupId>jalopy</groupId>
+		<artifactId>jalopy</artifactId>
+		<version>1.5rc3</version>
 	</dependency>
   </dependencies>
 
@@ -78,9 +78,9 @@
 	              <version>2.4</version>
                 </artifactItem>
 				<artifactItem>
-                  <groupId>org.eclipse.jdt</groupId>
-	              <artifactId>core</artifactId>
-	              <version>3.3.0-v_771</version>
+					<groupId>jalopy</groupId>
+					<artifactId>jalopy</artifactId>
+					<version>1.5rc3</version>
                 </artifactItem>
               </artifactItems>
 	    </configuration>
