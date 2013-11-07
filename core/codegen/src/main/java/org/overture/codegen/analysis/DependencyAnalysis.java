@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast.analysis;
+package org.overture.codegen.analysis;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;

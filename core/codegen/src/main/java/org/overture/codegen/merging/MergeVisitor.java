@@ -3,12 +3,12 @@ package org.overture.codegen.merging;
 import java.io.StringWriter;
 
 import org.apache.velocity.Template;
+import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.visitor.CodeGenContext;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.analysis.DependencyAnalysis;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {

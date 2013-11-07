@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 
+//TODO: Factor out Java specific generation code and put in the appropriate package
 public class CG
 {
 	public static String format(INode field) throws AnalysisException

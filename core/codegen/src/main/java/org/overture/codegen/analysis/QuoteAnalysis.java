@@ -1,15 +1,14 @@
-package org.overture.codegen.ooast.analysis;
+package org.overture.codegen.analysis;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.expressions.ATupleExpCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 
-public class TupleAnalysis extends DepthFirstAnalysisAdaptor
+public class QuoteAnalysis extends DepthFirstAnalysisAdaptor
 {
 
-	private static final long serialVersionUID = -1777600236754158171L;
+	private static final long serialVersionUID = -8268052875734570861L;
 	
 	private boolean found = false;
 	
@@ -21,7 +20,7 @@ public class TupleAnalysis extends DepthFirstAnalysisAdaptor
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
-		if(node instanceof ATupleTypeCG || node instanceof ATupleExpCG)
+		if(node instanceof AQuoteLiteralExpCG)
 		{
 			found = true;
 			throw new AnalysisException();
