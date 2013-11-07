@@ -37,4 +37,20 @@ public class DependencyAnalysis
 		
 		return quoteAnalysis.isFound();
 	}
+	
+	public static boolean usesTuples(AClassDeclCG classDecl)
+	{
+		TupleAnalysis tupleAnalysis = new TupleAnalysis();
+		
+		try
+		{
+			classDecl.apply(tupleAnalysis);
+		}catch(AnalysisException e)
+		{
+			//If found an exception will be thrown to terminate
+			//the visitor analysis
+		}
+		
+		return tupleAnalysis.isFound();
+	}
 }
