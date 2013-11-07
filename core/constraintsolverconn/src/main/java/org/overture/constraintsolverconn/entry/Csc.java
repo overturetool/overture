@@ -3,24 +3,24 @@ package org.overture.constraintsolverconn.entry;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.constraintsolverconn.visitor.CscVisitor;
-import org.overture.constraintsolverconn.visitor.DemoVisitor;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-public class Csc {
+public class Csc
+{
 
 	public String visitExp(String exp) throws AnalysisException
 	{
-		
+
 		if (exp == null || exp.isEmpty())
 		{
 			throw new AnalysisException("No expression to generate from");
 		}
-		
+
 		ParserResult<PExp> parseResult = null;
-		
+
 		try
 		{
 			parseResult = ParserUtil.parseExpression(exp);
@@ -29,7 +29,7 @@ public class Csc {
 			throw new AnalysisException("Unable to parse expression: " + exp
 					+ ". Message: " + e.getMessage());
 		}
-		
+
 		if (parseResult.errors.size() > 0)
 		{
 			throw new AnalysisException("Unable to parse expression: " + exp);
@@ -53,11 +53,11 @@ public class Csc {
 
 		PExp typeCheckedExp = typeCheckResult.result;
 		CscVisitor visitor = new CscVisitor();
-		
-		//Example of applying analysis adapter:
-		//typeCheckedExp.apply(new DemoVisitor());
-		
-		return typeCheckedExp.apply(visitor, "Some information #0 in Csc.java");		
+
+		// Example of applying analysis adapter:
+		// typeCheckedExp.apply(new DemoVisitor());
+
+		return typeCheckedExp.apply(visitor, "Some information #0 in Csc.java");
 	}
-	
+
 }
