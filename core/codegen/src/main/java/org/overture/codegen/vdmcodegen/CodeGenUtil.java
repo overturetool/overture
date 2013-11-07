@@ -23,27 +23,7 @@ public class CodeGenUtil
 	
 	public static List<GeneratedModule> generateOO(File file, CodeGen vdmCodGen) throws AnalysisException
 	{
-		if (!file.exists() || !file.isFile())
-		{
-			throw new AnalysisException("Could not find file: "
-					+ file.getAbsolutePath());
-		}
-
-		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file);
-
-		if (parseResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not parse: "
-					+ file.getAbsolutePath());
-		}
-
-		TypeCheckResult<List<SClassDefinition>> typeCheckResult = TypeCheckerUtil.typeCheckPp(file);
-
-		if (typeCheckResult.errors.size() > 0)
-		{
-			throw new AnalysisException("File did not pass the type check: "
-					+ file.getName());
-		}
+		TypeCheckResult<List<SClassDefinition>> typeCheckResult = validateFile(file);
 
 		try
 		{
@@ -81,6 +61,70 @@ public class CodeGenUtil
 
 	public static String generateFromExp(String exp) throws AnalysisException
 	{
+		TypeCheckResult<PExp> typeCheckResult = validateExp(exp);
+		
+		if (typeCheckResult.errors.size() > 0)
+		{
+			throw new AnalysisException("Unable to type check expression: "
+					+ exp);
+		}
+
+		CodeGen vdmCodGen = new CodeGen();
+		try
+		{
+			return vdmCodGen.generateCode(typeCheckResult.result);
+
+		} catch (AnalysisException e)
+		{
+			throw new AnalysisException("Unable to generate code from expression: "
+					+ exp + ". Exception message: " + e.getMessage());
+		}
+
+	}
+	
+	public static void generateSourceFiles(List<GeneratedModule> classes)
+	{
+		CodeGen vdmCodGen = new CodeGen();
+		vdmCodGen.generateSourceFiles(classes);
+	}
+	
+	public static void generateCodeGenUtils()
+	{
+		CodeGen vdmCodGen = new CodeGen();
+		vdmCodGen.generateCodeGenUtils();
+	}
+	
+	private static TypeCheckResult<List<SClassDefinition>> validateFile(File file) throws AnalysisException
+	{
+		if (!file.exists() || !file.isFile())
+		{
+			throw new AnalysisException("Could not find file: "
+					+ file.getAbsolutePath());
+		}
+
+		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file);
+
+		if (parseResult.errors.size() > 0)
+		{
+			throw new AnalysisException("File did not parse: "
+					+ file.getAbsolutePath());
+		}
+
+		TypeCheckResult<List<SClassDefinition>> typeCheckResult = TypeCheckerUtil.typeCheckPp(file);
+
+		if (typeCheckResult.errors.size() > 0)
+		{
+			throw new AnalysisException("File did not pass the type check: "
+					+ file.getName());
+		}
+		
+		return typeCheckResult;
+
+	}
+	
+	
+	private static TypeCheckResult<PExp> validateExp(String exp) throws AnalysisException
+	{
 		if (exp == null || exp.isEmpty())
 		{
 			throw new AnalysisException("No expression to generate from");
@@ -111,37 +155,7 @@ public class CodeGenUtil
 					+ exp + ". Message: " + e.getMessage());
 		}
 		
-		
-
-		if (typeCheckResult.errors.size() > 0)
-		{
-			throw new AnalysisException("Unable to type check expression: "
-					+ exp);
-		}
-
-		CodeGen vdmCodGen = new CodeGen();
-		try
-		{
-			return vdmCodGen.generateCode(typeCheckResult.result);
-
-		} catch (AnalysisException e)
-		{
-			throw new AnalysisException("Unable to generate code from expression: "
-					+ exp + ". Exception message: " + e.getMessage());
-		}
-
-	}
-	
-	public static void generateSourceFiles(List<GeneratedModule> classes)
-	{
-		CodeGen vdmCodGen = new CodeGen();
-		vdmCodGen.generateSourceFiles(classes);
-	}
-	
-	public static void generateCodeGenUtils()
-	{
-		CodeGen vdmCodGen = new CodeGen();
-		vdmCodGen.generateCodeGenUtils();
+		return typeCheckResult;
 	}
 	
 }
