@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
@@ -42,6 +44,7 @@ public class LatexBuilder
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
 	final String TITLE = "%TITLE";
+	final String JPNFONT = "%JPNFONT";
 	File outputFolder = null;
 	List<String> includes = new Vector<String>();
 
@@ -93,7 +96,9 @@ public class LatexBuilder
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
 
 		}
-		document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		String CHECKED = (checkFont("MS Mincho") ? "" : "%"); // added by his 2013/10/16
+		//document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
+		document = document.replace(JPNFONT, CHECKED).replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
 
 		writeFile(outputFolder, documentFileName, document);
 	}
@@ -105,6 +110,7 @@ public class LatexBuilder
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
+	
 	public void addInclude(String path)
 	{
 		if (!includes.contains(path))
@@ -185,5 +191,22 @@ public class LatexBuilder
 
 		return fullPathString;
 
+	}
+	
+	public static boolean checkFont(String FontName)
+	{
+		boolean checked=false;
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		Font fonts[] = ge.getAllFonts();
+	      
+		for (int i = 0; i < fonts.length; i++ ) {
+			if(fonts[i].getName().toString().equals(FontName)) {
+				checked = true;
+				break;
+			}
+		}
+		return checked;
 	}
 }
