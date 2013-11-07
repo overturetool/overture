@@ -76,7 +76,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		File file = getResultFile(filename);
 
 		Assert.assertNotNull("Result file " + file.getName() + " was not found", file);
-		Assume.assumeTrue(file.exists());
+		Assert.assertTrue("The result files does not exist.",file.exists());
 		if(!file.exists())
 		{
 			//Assume doesn't always work.
