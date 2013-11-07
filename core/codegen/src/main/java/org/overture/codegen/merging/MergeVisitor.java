@@ -3,12 +3,11 @@ package org.overture.codegen.merging;
 import java.io.StringWriter;
 
 import org.apache.velocity.Template;
-import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
-import org.overture.codegen.visitor.CodeGenContext;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.visitor.CodeGenContext;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {
@@ -17,22 +16,30 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 	private TemplateManager templates;
 
-	public MergeVisitor()
+	private CodeGenContext context;
+	
+	public MergeVisitor(TemplateCallable[] templateCallables)
 	{
 		this.templates = new TemplateManager();
+		initCodeGenContext(templateCallables); 
+	}
+	
+	private void initCodeGenContext(TemplateCallable[] templateCallables)
+	{
+		this.context = new CodeGenContext();
+		
+		for (TemplateCallable callable : templateCallables)
+		{
+			this.context.put(callable.getKey(), callable.getCallable());
+		}
 	}
 
 	@Override
 	public void defaultINode(INode node, StringWriter question)
 			throws AnalysisException
 	{
-		CodeGenContext context = new CodeGenContext();
 		context.put("node", node);
-		
-		//TODO: This should not be put for every node..
-		context.put("CG", CG.class);
-		context.put("DependencyAnalysis", DependencyAnalysis.class);
-		
+
 		Template template = templates.getTemplate(node.getClass());
 		
 		if(template == null)

@@ -23,13 +23,14 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 
 //TODO: Factor out Java specific generation code and put in the appropriate package
 public class CG
 {
 	public static String format(INode field) throws AnalysisException
 	{		
-		MergeVisitor mergeVisitor = new MergeVisitor();
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 		field.apply(mergeVisitor, writer);
 

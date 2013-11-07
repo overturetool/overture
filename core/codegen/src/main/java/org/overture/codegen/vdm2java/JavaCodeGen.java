@@ -10,12 +10,15 @@ import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.merging.CG;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.visitor.OoAstGenerator;
@@ -23,7 +26,13 @@ import org.overture.codegen.visitor.OoAstGenerator;
 public class JavaCodeGen
 {
 	private OoAstGenerator generator;
-
+	
+	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
+	{
+			new TemplateCallable("CG", CG.class),
+			new TemplateCallable("DependencyAnalysis", DependencyAnalysis.class)
+	};
+	
 	public JavaCodeGen()
 	{
 		init(null);
@@ -50,7 +59,7 @@ public class JavaCodeGen
 	{
 		try
 		{
-			MergeVisitor mergeVisitor = new MergeVisitor();
+			MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
 			StringWriter writer = new StringWriter();
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
@@ -85,7 +94,7 @@ public class JavaCodeGen
 			classes.add(generator.generateFrom(classDef));
 		}
 
-		MergeVisitor mergeVisitor = new MergeVisitor();
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (AClassDeclCG classCg : classes)
@@ -140,7 +149,7 @@ public class JavaCodeGen
 	{
 		PExpCG expCg = generator.generateFrom(exp);
 
-		MergeVisitor mergeVisitor = new MergeVisitor();
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 
 		try
