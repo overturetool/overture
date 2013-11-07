@@ -1,1 +1,1 @@
-Utils.seqConc($CG.format($node.getLeft()), $CG.format($node.getRight()))
+Utils.seqConc($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))

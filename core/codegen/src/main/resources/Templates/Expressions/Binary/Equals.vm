@@ -1,2 +1,2 @@
 ##Only supports basic types
-$CG.formatEqualsBinaryExp($node)
+$JavaFormat.formatEqualsBinaryExp($node)

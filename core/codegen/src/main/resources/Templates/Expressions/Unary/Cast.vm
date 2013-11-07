@@ -1,1 +1,1 @@
-(($CG.format($node.getType())) $CG.format($node.getExp()))
+(($JavaFormat.format($node.getType())) $JavaFormat.format($node.getExp()))

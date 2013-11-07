@@ -1,1 +1,1 @@
-$CG.format($node.getType()) $node.getName() = $CG.format($node.getExp());
+$JavaFormat.format($node.getType()) $node.getName() = $JavaFormat.format($node.getExp());

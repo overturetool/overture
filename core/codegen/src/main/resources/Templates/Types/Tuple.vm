@@ -1,1 +1,1 @@
-$CG.formatTupleType($node)
+$JavaFormat.formatTupleType($node)

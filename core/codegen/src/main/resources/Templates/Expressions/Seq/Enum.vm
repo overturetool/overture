@@ -1,5 +1,5 @@
-##new Vector<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))
-##new Vector<$CG.formatTemplateParam($node.getType())>
+##new Vector<$JavaFormat.formatTemplateParam($node.getType())>($JavaFormat.formatArgs($node.getMembers()))
+##new Vector<$JavaFormat.formatTemplateParam($node.getType())>
 ##The template parameter can be determined using type inference
-##Utils.seq<$CG.formatTemplateParam($node.getType())>($CG.formatArgs($node.getMembers()))
-Utils.seq($CG.formatArgs($node.getMembers()))
+##Utils.seq<$JavaFormat.formatTemplateParam($node.getType())>($JavaFormat.formatArgs($node.getMembers()))
+Utils.seq($JavaFormat.formatArgs($node.getMembers()))

@@ -1,1 +1,1 @@
-$CG.format($node.getObject()).$node.getField()
+$JavaFormat.format($node.getObject()).$node.getField()

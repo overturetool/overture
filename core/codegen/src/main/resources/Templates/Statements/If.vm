@@ -1,22 +1,22 @@
-if ( $CG.format($node.getIfExp()) )
+if ( $JavaFormat.format($node.getIfExp()) )
 {
 
-	$CG.format($node.getThenStm())
+	$JavaFormat.format($node.getThenStm())
 	
 }
 #foreach( $stm in $node.getElseIf() )
-else if ( $CG.format($stm.getElseIf()) )
+else if ( $JavaFormat.format($stm.getElseIf()) )
 {
 
-	$CG.format($stm.getThenStm())
+	$JavaFormat.format($stm.getThenStm())
 	
 }
 #end
-#if ( !$CG.isNull($node.getElseStm()) )
+#if ( !$JavaFormat.isNull($node.getElseStm()) )
 else
 {
 
-	$CG.format($node.getElseStm())
+	$JavaFormat.format($node.getElseStm())
 	
 }
 #end

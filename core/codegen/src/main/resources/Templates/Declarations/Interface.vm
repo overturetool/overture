@@ -4,6 +4,6 @@ package quotes;
 public interface $node.getName()
 {
 #foreach( $field in $node.getFields() )
-$CG.format($field)
+$JavaFormat.format($field)
 #end
 }

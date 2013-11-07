@@ -1,15 +1,15 @@
 ##Example: A`foo(1, 1)
 ##
 #set( $prefix = "")
-#if (!$CG.isNull($node.getClassType()))
+#if (!$JavaFormat.isNull($node.getClassType()))
 	#set( $separator = ".")
-	#set( $classType = "$CG.format($node.getClassType())")
+	#set( $classType = "$JavaFormat.format($node.getClassType())")
 	#set( $prefix = "$classType$separator")
 #end
 ##
 #set( $x = "")
-#if (!$CG.isVoidType($node.getType()))
+#if (!$JavaFormat.isVoidType($node.getType()))
 	#set( $x = "return ")
 #end
 ##
-$x$prefix$node.getName()($CG.formatArgs($node.getArgs()));
+$x$prefix$node.getName()($JavaFormat.formatArgs($node.getArgs()));

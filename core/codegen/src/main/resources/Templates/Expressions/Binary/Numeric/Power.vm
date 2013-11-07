@@ -1,1 +1,1 @@
-Math.pow($CG.format($node.getLeft()), $CG.format($node.getRight()))
+Math.pow($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))

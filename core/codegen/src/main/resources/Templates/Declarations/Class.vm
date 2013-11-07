@@ -28,19 +28,19 @@ $tupleImport
 	#set( $static = "static")
 #end
 
-$abstract $node.getAccess() $static class $node.getName() $CG.formatSuperType($node)
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
 {
 
 #foreach( $field in $node.getFields() )
-$CG.format($field)
+$JavaFormat.format($field)
 #end
 
 #foreach( $method in $node.getMethods() )
-$CG.format($method)
+$JavaFormat.format($method)
 #end
 
 #foreach( $innerClass in $node.getInnerClasses() )
-$CG.format($innerClass)
+$JavaFormat.format($innerClass)
 #end
 
 }

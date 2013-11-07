@@ -1,1 +1,1 @@
-$CG.format($node.getTarget()) = $CG.format($node.getExp());
+$JavaFormat.format($node.getTarget()) = $JavaFormat.format($node.getExp());

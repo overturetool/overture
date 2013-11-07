@@ -1,2 +1,2 @@
 #set( $getCall = ".get(0)")
-$CG.format($node.getExp())$getCall
+$JavaFormat.format($node.getExp())$getCall

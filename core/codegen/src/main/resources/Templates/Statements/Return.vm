@@ -1,1 +1,1 @@
-return $CG.format($node.getExp());
+return $JavaFormat.format($node.getExp());

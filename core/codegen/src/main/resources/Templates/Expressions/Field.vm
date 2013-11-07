@@ -1,1 +1,1 @@
-$CG.format($node.getObject()).$node.getMemberName()
+$JavaFormat.format($node.getObject()).$node.getMemberName()
