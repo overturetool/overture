@@ -1,4 +1,4 @@
-package org.overture.codegen.merging;
+package org.overture.codegen.vdm2java;
 
 import java.io.StringWriter;
 import java.util.LinkedList;
@@ -23,10 +23,9 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
-import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.merging.MergeVisitor;
 
-//TODO: Factor out Java specific generation code and put in the appropriate package
-public class CG
+public class JavaFormat
 {
 	public static String format(INode field) throws AnalysisException
 	{		
@@ -82,7 +81,7 @@ public class CG
 	
 	public static String formatTupleType(ATupleTypeCG type) throws AnalysisException
 	{
-		return getTupleStr(type) + CG.formatTemplateTypes(type.getTypes());
+		return getTupleStr(type) + JavaFormat.formatTemplateTypes(type.getTypes());
 	}
 	
 	public static String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
@@ -97,7 +96,7 @@ public class CG
 		if(TypeAssistantCG.isBasicType(firstType))
 			firstType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) firstType);
 		
-		writer.append(CG.format(firstType));
+		writer.append(JavaFormat.format(firstType));
 		
 		for(int i = 1; i < types.size(); i++)
 		{
@@ -106,7 +105,7 @@ public class CG
 			if(TypeAssistantCG.isBasicType(currentType))
 				currentType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) currentType);
 			
-			writer.append(", " + CG.format(currentType));
+			writer.append(", " + JavaFormat.format(currentType));
 		}
 		
 		return "<" + writer.toString() + ">";
@@ -137,24 +136,24 @@ public class CG
 			
 			if(isEmptySeq(leftNode))
 			{
-				return CG.format(node.getRight()) + ".isEmpty()";
+				return JavaFormat.format(node.getRight()) + ".isEmpty()";
 			}
 			else if(isEmptySeq(rightNode))
 			{
-				return CG.format(node.getLeft()) + ".isEmpty()";
+				return JavaFormat.format(node.getLeft()) + ".isEmpty()";
 			}
 		
-			return "Utils.seqEquals(" + CG.format(node.getLeft()) + ", " + CG.format(node.getRight()) + ")";
+			return "Utils.seqEquals(" + JavaFormat.format(node.getLeft()) + ", " + JavaFormat.format(node.getRight()) + ")";
 		}
 		//else if(..)
 		
-		return CG.format(node.getLeft()) + " == " + CG.format(node.getRight());
+		return JavaFormat.format(node.getLeft()) + " == " + JavaFormat.format(node.getRight());
 	}
 	
 	public static String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
 	{
 		//FIXME: Same problems as for equals. In addition, this method lacks support for collections
-		return CG.format(node.getLeft()) + " != " + CG.format(node.getRight());
+		return JavaFormat.format(node.getLeft()) + " != " + JavaFormat.format(node.getRight());
 	}
 	
 	private static boolean isEmptySeq(PExpCG exp)
@@ -177,12 +176,12 @@ public class CG
 			return "";
 		
 		AFormalParamLocalDeclCG firstParam = params.get(0);
-		writer.append(CG.format(firstParam.getType()) + " " + firstParam.getName());
+		writer.append(JavaFormat.format(firstParam.getType()) + " " + firstParam.getName());
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
-			writer.append(", " + CG.format(param.getType()) + " " + param.getName());
+			writer.append(", " + JavaFormat.format(param.getType()) + " " + param.getName());
 		}
 		return writer.toString();
 	}
@@ -203,12 +202,12 @@ public class CG
 			return "";
 		
 		PExpCG firstExp = exps.get(0);
-		writer.append(CG.format(firstExp));
+		writer.append(JavaFormat.format(firstExp));
 		
 		for(int i = 1; i < exps.size(); i++)
 		{
 			PExpCG exp = exps.get(i);
-			writer.append(", " + CG.format(exp));
+			writer.append(", " + JavaFormat.format(exp));
 		}
 		
 		return writer.toString();
@@ -232,7 +231,7 @@ public class CG
 		if(exp == null)
 			return "";
 		else
-			return " = " + CG.format(exp).toString();
+			return " = " + JavaFormat.format(exp).toString();
 		
 	}
 	
@@ -244,7 +243,7 @@ public class CG
 		StringWriter generatedBody = new StringWriter();
 		
 		generatedBody.append("{\r\n\r\n");//TODO: USE PROPER CONSTANT
-		generatedBody.append(CG.format(body));
+		generatedBody.append(JavaFormat.format(body));
 		generatedBody.append("\r\n}");//TODO: USE PROPER CONSTANT
 		
 		return generatedBody.toString();
@@ -264,7 +263,7 @@ public class CG
 		else if(potentialBasicType instanceof ACharBasicTypeCG)
 			return "Character";
 		else
-			return CG.format(potentialBasicType);
+			return JavaFormat.format(potentialBasicType);
 		
 		//TODO: Put in the others: What are they?
 	}

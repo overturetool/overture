@@ -16,7 +16,6 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.merging.CG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -29,7 +28,7 @@ public class JavaCodeGen
 	
 	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
 	{
-			new TemplateCallable("CG", CG.class),
+			new TemplateCallable("JavaFormat", JavaFormat.class),
 			new TemplateCallable("DependencyAnalysis", DependencyAnalysis.class)
 	};
 	

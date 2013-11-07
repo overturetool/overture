@@ -59,9 +59,9 @@ public class JavaCodeGenUtil
 		
 		GeneratedModule quoteValues = vvdmCodGen.generateJavaFromVdmQuotes();
 		
-		GeneratedData x = new GeneratedData(data, quoteValues);
+		GeneratedData dataToReturn = new GeneratedData(data, quoteValues);
 		
-		return x;
+		return dataToReturn;
 	}
 
 	public static String generateJavaFromExp(String exp) throws AnalysisException
