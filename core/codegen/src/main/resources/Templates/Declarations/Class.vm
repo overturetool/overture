@@ -8,8 +8,14 @@
 	#set( $quoteImport = "import quotes.*;")
 #end
 
+#set( $tupleImport = "")
+#if ($DependencyAnalysis.usesTuples($node))
+	#set( $tupleImport = "import org.javatuples.*;")
+#end
+
 $listImport
 $quoteImport
+$tupleImport
 
 #set( $abstract = "")
 #if ($node.getAbstract())
