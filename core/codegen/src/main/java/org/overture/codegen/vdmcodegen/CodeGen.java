@@ -53,6 +53,7 @@ public class CodeGen
 
 	private void initVelocity()
 	{
+		Velocity.setProperty("runtime.log.logsystem.class" , "org.apache.velocity.runtime.log.NullLogSystem");
 		Velocity.init();
 	}
 
