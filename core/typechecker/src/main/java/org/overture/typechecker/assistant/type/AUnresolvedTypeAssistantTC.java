@@ -48,7 +48,7 @@ public class AUnresolvedTypeAssistantTC
 		return deref;
 	}
 
-	private static PType dereference(AUnresolvedType type, Environment env,
+	public static PType dereference(AUnresolvedType type, Environment env,
 			ATypeDefinition root)
 	{
 		PDefinition def = env.findType(type.getName(), type.getLocation().getModule());
