@@ -3,6 +3,7 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -19,6 +20,7 @@ import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
@@ -33,6 +35,7 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -51,6 +54,19 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 			throws AnalysisException
 	{
 		return null; // Indicates an unknown type
+	}
+	
+	@Override
+	public PTypeCG caseASetType(ASetType node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType setOf = node.getSetof();
+		PTypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
+		
+		ASetSetTypeCG setType = new ASetSetTypeCG();
+		setType.setSetOf(typeCg);
+
+		return setType;
 	}
 	
 	@Override

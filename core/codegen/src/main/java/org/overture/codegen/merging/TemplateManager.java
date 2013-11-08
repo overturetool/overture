@@ -72,6 +72,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -136,6 +137,10 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Char");
+		
+		// Seq types
+		
+		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.SET_TYPE_PATH + "Set");
 		
 		// Seq types
 		

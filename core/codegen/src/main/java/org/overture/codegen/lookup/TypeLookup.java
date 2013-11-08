@@ -16,7 +16,6 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ASeq1SeqTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -50,9 +49,10 @@ public class TypeLookup
 		typeMap.put(ARationalNumericBasicType.class, new ARealNumericBasicTypeCG());
 		typeMap.put(ARealNumericBasicType.class, new ARealNumericBasicTypeCG());
 		
+		//TODO: Used for something?
 		//Collections
 		typeMap.put(ASeqSeqType.class, new ASeqSeqTypeCG());
-		typeMap.put(ASeq1SeqType.class, new ASeq1SeqTypeCG());
+		typeMap.put(ASeq1SeqType.class, new ASeqSeqTypeCG());
 	}
 	
 	public PTypeCG getType(PType type)

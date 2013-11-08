@@ -178,6 +178,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*
+    |	#set
     |	#seq
     |	#basicTypeWrappers
     ;
@@ -188,11 +189,14 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
 	| {Char}
 	| {Bool}
 	;
+
+#set {-> package='org.overture.codegen.cgast.types'}
+    =   {set} 
+    ;
   
     
 #seq {-> package='org.overture.codegen.cgast.types'}
-    =   {seq} 
-    |   {seq1} 
+    =   {seq}
     ;
     
 #basic {-> package='org.overture.codegen.cgast.types'}
@@ -224,3 +228,6 @@ Aspect Declaration
     = [seqOf]:typeCG//(seqof):type [empty]:java_Boolean
     ;
 
+%typeCG->#set
+    = [setOf]:typeCG
+    ;

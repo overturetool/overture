@@ -1,6 +1,6 @@
-#set( $listImport = "")
-#if ($DependencyAnalysis.usesSequences($node))
-	#set( $listImport = "import java.util.*;")
+#set( $utilImport = "")
+#if ($DependencyAnalysis.usesSequences($node) || $DependencyAnalysis.usesSets($node))
+	#set( $utilImport = "import java.util.*;")
 #end
 
 #set( $quoteImport = "")
@@ -13,7 +13,7 @@
 	#set( $tupleImport = "import org.javatuples.*;")
 #end
 
-$listImport
+$utilImport
 $quoteImport
 $tupleImport
 

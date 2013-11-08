@@ -22,6 +22,7 @@ public class TemplateStructure
 	
 	public final String BASIC_TYPE_PATH;
 	public final String BASIC_TYPE_WRAPPERS_PATH;
+	public final String SET_TYPE_PATH;
 	public final String SEQ_TYPE_PATH;
 	public final String STATE_DESIGNATOR_PATH; 
 	
@@ -40,6 +41,7 @@ public class TemplateStructure
 		
 		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + SEPARATOR_CHAR;
 		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + SEPARATOR_CHAR;
+		SET_TYPE_PATH = TYPE_PATH + "Set" + SEPARATOR_CHAR;
 		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + SEPARATOR_CHAR;
 		STATE_DESIGNATOR_PATH = root + "StateDesignator" + SEPARATOR_CHAR; 
 	}
