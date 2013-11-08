@@ -1,2 +1,0 @@
-#set( $getCall = ".get(0)")
-$JavaFormat.format($node.getExp())$getCall

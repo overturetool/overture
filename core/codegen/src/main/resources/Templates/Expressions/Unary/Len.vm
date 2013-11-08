@@ -1,2 +1,0 @@
-#set( $sizeCall = ".size()")
-$JavaFormat.format($node.getExp())$sizeCall
