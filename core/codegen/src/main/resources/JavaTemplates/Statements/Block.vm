@@ -1,0 +1,3 @@
+#foreach( $stm in $node.getStatements() )
+$JavaFormat.format($stm)
+#end

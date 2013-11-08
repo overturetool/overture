@@ -25,7 +25,7 @@ import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen
 {
-	private static final String JAVA_TEMPLATES_ROOT_FOLDER = "Templates";
+	private static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 	
 	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 	

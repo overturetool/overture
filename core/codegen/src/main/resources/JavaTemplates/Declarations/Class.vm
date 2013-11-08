@@ -1,0 +1,46 @@
+#set( $listImport = "")
+#if ($DependencyAnalysis.usesSequences($node))
+	#set( $listImport = "import java.util.*;")
+#end
+
+#set( $quoteImport = "")
+#if ($DependencyAnalysis.usesQuoteLiterals($node))
+	#set( $quoteImport = "import quotes.*;")
+#end
+
+#set( $tupleImport = "")
+#if ($DependencyAnalysis.usesTuples($node))
+	#set( $tupleImport = "import org.javatuples.*;")
+#end
+
+$listImport
+$quoteImport
+$tupleImport
+
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+##
+
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
+{
+
+#foreach( $field in $node.getFields() )
+$JavaFormat.format($field)
+#end
+
+#foreach( $method in $node.getMethods() )
+$JavaFormat.format($method)
+#end
+
+#foreach( $innerClass in $node.getInnerClasses() )
+$JavaFormat.format($innerClass)
+#end
+
+}
