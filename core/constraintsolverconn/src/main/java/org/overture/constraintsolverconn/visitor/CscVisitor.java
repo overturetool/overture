@@ -8,6 +8,20 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+<<<<<<< 7028cc95b5a5eb06a8e82dcc2a3187cdac004bcb
+=======
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AStringLiteralExp;
+import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AUnaryMinusUnaryExp;
+import org.overture.ast.expressions.AUnaryPlusUnaryExp;
+>>>>>>> 4f2d8b9c5e62638d280b5c0d1f2b419943849632
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
@@ -85,12 +99,20 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AReturnStm;
+<<<<<<< 7028cc95b5a5eb06a8e82dcc2a3187cdac004bcb
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
 
 //import org.overture.ast.patterns.ASetBind;
+=======
+import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.ACasesExp;
+import org.overture.ast.expressions.ATupleExp;
+import org.overture.ast.expressions.AMkBasicExp;
+import org.overture.ast.patterns.ASetPattern;
+>>>>>>> 4f2d8b9c5e62638d280b5c0d1f2b419943849632
 
 public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 {
@@ -1383,6 +1405,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 		return "";
 	}
 
+<<<<<<< 7028cc95b5a5eb06a8e82dcc2a3187cdac004bcb
 	// @Override
 	// public String caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 	// String question) throws AnalysisException
@@ -1392,7 +1415,52 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>
 	//
 	// return "by caseANotYetSpecifiedStm";
 	// }
+=======
+	@Override
+	public String caseATupleExp(ATupleExp node, String question)
+			throws AnalysisException {
+		String answer="";
+		LinkedList<PExp> list = node.getArgs();
+		answer+=(list.get(0).apply(this,"arg") + "|->");
+		for(int i=1;i<list.size();i++) {
+			String temp = list.get(i).apply(this, "arg");
+			answer = "("+ answer + temp + ")|->";
+		}
 
+		answer = answer.substring(0,answer.length()-3);
+>>>>>>> 4f2d8b9c5e62638d280b5c0d1f2b419943849632
+
+		return answer;
+	}
+
+	@Override
+	public String caseAMkBasicExp(AMkBasicExp node, String question)
+			throws AnalysisException {
+		String answer=node.getArg().apply(this, "mk_token");
+		answer = "\"" + node.toString() + "\"";	
+		return answer;
+	}
+/*
+	@Override
+	public String caseACasesExp(ACasesExp node, String question)
+			throws AnalysisException {
+		//String answer = node.toString();
+		String answer="";
+		String exp = node.getExpression().apply(this, "cases exp");
+		LinkedList<ACaseAlternative> list = node.getCases();
+		for(int i=0;i<list.size();i++) {
+			String ptn = list.get(i).getPattern().apply(this, "cptn");
+			String cexp = list.get(i).getCexp().apply(this, "cexp");
+			System.out.println(exp + "&" + ptn +"&" + "csc_res=" + cexp);
+		}
+		//System.out.println("exp " + node.getExpression().toString());
+		//System.out.println("cas " + node.getCases().toString());
+		
+		System.out.println("oth " + node.getOthers().toString());
+		return answer;
+	}
+*/
+	
 	@Override
 	public String defaultPStm(PStm node, String question)
 			throws AnalysisException
