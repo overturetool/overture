@@ -76,14 +76,17 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.constants.IText;
+import org.overture.codegen.constants.TemplateStructure;
 
 public class TemplateManager
 {
 	private HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
 
-	public TemplateManager()
+	private TemplateStructure templateStructure;
+	
+	public TemplateManager(TemplateStructure templateStructure)
 	{
+		this.templateStructure = templateStructure;
 		initNodeTemplateFileNames();
 	}
 
@@ -93,186 +96,186 @@ public class TemplateManager
 
 				
 		// Type declarations
-		nodeTemplateFileNames.put(AClassDeclCG.class, IText.DECL_PATH
+		nodeTemplateFileNames.put(AClassDeclCG.class, templateStructure.DECL_PATH
 				+ "Class");
 
 		// Declarations
 		
-		nodeTemplateFileNames.put(AFieldDeclCG.class, IText.DECL_PATH + "Field");
+		nodeTemplateFileNames.put(AFieldDeclCG.class, templateStructure.DECL_PATH + "Field");
 		
-		nodeTemplateFileNames.put(AMethodDeclCG.class, IText.DECL_PATH
+		nodeTemplateFileNames.put(AMethodDeclCG.class, templateStructure.DECL_PATH
 				+ "Method");
 		
-		nodeTemplateFileNames.put(ALocalVarDeclCG.class, IText.DECL_PATH + "LocalVar");
+		nodeTemplateFileNames.put(ALocalVarDeclCG.class, templateStructure.DECL_PATH + "LocalVar");
 
 		//nodeTemplateFileNames.put(AConstructorDeclCG.class, IText.DECL_PATH + "Constructor");
 		
 		// Local declarations
 
 		// Type
-		nodeTemplateFileNames.put(AClassTypeCG.class, IText.TYPE_PATH + "ClassType");//TODO: Rename to Class
+		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "ClassType");//TODO: Rename to Class
 		
-		nodeTemplateFileNames.put(AVoidTypeCG.class, IText.TYPE_PATH + "Void");
+		nodeTemplateFileNames.put(AVoidTypeCG.class, templateStructure.TYPE_PATH + "Void");
 		
-		nodeTemplateFileNames.put(AStringTypeCG.class, IText.TYPE_PATH + "String");
+		nodeTemplateFileNames.put(AStringTypeCG.class, templateStructure.TYPE_PATH + "String");
 		
-		nodeTemplateFileNames.put(ATemplateTypeCG.class, IText.TYPE_PATH + "Template");
+		nodeTemplateFileNames.put(ATemplateTypeCG.class, templateStructure.TYPE_PATH + "Template");
 		
-		nodeTemplateFileNames.put(ATupleTypeCG.class, IText.TYPE_PATH + "Tuple");
+		nodeTemplateFileNames.put(ATupleTypeCG.class, templateStructure.TYPE_PATH + "Tuple");
 		
 		//Basic type wrappers
 		
-		nodeTemplateFileNames.put(AIntBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+		nodeTemplateFileNames.put(AIntBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Integer");
 
-		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Real");
 
-		nodeTemplateFileNames.put(ABoolBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+		nodeTemplateFileNames.put(ABoolBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Bool");
 		
-		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, IText.BASIC_TYPE_WRAPPERS_PATH
+		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Char");
 		
 		// Seq types
 		
-		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, IText.SEQ_TYPE_PATH + "Seq");
+		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, templateStructure.SEQ_TYPE_PATH + "Seq");
 		
 		// Basic types
 		
-		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, IText.BASIC_TYPE_PATH
+		nodeTemplateFileNames.put(ABoolBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Bool");
 
-		nodeTemplateFileNames.put(ACharBasicTypeCG.class, IText.BASIC_TYPE_PATH
+		nodeTemplateFileNames.put(ACharBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Char");
 		
 		// Basic numeric types
-		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
+		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Integer");
-		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, IText.BASIC_TYPE_PATH
+		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Real");
 
 		// Statements
-		nodeTemplateFileNames.put(AIfStmCG.class, IText.STM_PATH + "If");
+		nodeTemplateFileNames.put(AIfStmCG.class, templateStructure.STM_PATH + "If");
 
-		nodeTemplateFileNames.put(AReturnStmCG.class, IText.STM_PATH + "Return");
+		nodeTemplateFileNames.put(AReturnStmCG.class, templateStructure.STM_PATH + "Return");
 		
-		nodeTemplateFileNames.put(ASkipStmCG.class, IText.STM_PATH + "Skip");
+		nodeTemplateFileNames.put(ASkipStmCG.class, templateStructure.STM_PATH + "Skip");
 
-		nodeTemplateFileNames.put(ALetDefStmCG.class, IText.STM_PATH + "LetDef");
+		nodeTemplateFileNames.put(ALetDefStmCG.class, templateStructure.STM_PATH + "LetDef");
 		
-		nodeTemplateFileNames.put(AAssignmentStmCG.class, IText.STM_PATH + "Assignment");
+		nodeTemplateFileNames.put(AAssignmentStmCG.class, templateStructure.STM_PATH + "Assignment");
 		
-		nodeTemplateFileNames.put(ABlockStmCG.class, IText.STM_PATH + "Block");
+		nodeTemplateFileNames.put(ABlockStmCG.class, templateStructure.STM_PATH + "Block");
 		
-		nodeTemplateFileNames.put(ACallStmCG.class, IText.STM_PATH + "Call");
+		nodeTemplateFileNames.put(ACallStmCG.class, templateStructure.STM_PATH + "Call");
 		
-		nodeTemplateFileNames.put(ANotImplementedStmCG.class, IText.STM_PATH + "NotImplemented");
+		nodeTemplateFileNames.put(ANotImplementedStmCG.class, templateStructure.STM_PATH + "NotImplemented");
 		
 		// Expressions
 		
-		nodeTemplateFileNames.put(AApplyExpCG.class, IText.EXPS_PATH + "Apply");
+		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXPS_PATH + "Apply");
 		
-		nodeTemplateFileNames.put(AFieldExpCG.class, IText.EXPS_PATH + "Field");
+		nodeTemplateFileNames.put(AFieldExpCG.class, templateStructure.EXPS_PATH + "Field");
 		
-		nodeTemplateFileNames.put(ANewExpCG.class, IText.EXPS_PATH + "New");
+		nodeTemplateFileNames.put(ANewExpCG.class, templateStructure.EXPS_PATH + "New");
 		
-		nodeTemplateFileNames.put(AVariableExpCG.class, IText.EXPS_PATH + "Variable");
+		nodeTemplateFileNames.put(AVariableExpCG.class, templateStructure.EXPS_PATH + "Variable");
 		
-		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, IText.EXPS_PATH + "ExplicitVariable");
+		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, templateStructure.EXPS_PATH + "ExplicitVariable");
 		
-		nodeTemplateFileNames.put(ASelfExpCG.class, IText.EXPS_PATH + "Self");
+		nodeTemplateFileNames.put(ASelfExpCG.class, templateStructure.EXPS_PATH + "Self");
 		
-		nodeTemplateFileNames.put(ANullExpCG.class, IText.EXPS_PATH + "Null");
+		nodeTemplateFileNames.put(ANullExpCG.class, templateStructure.EXPS_PATH + "Null");
 		
-		nodeTemplateFileNames.put(ALetDefExpCG.class, IText.EXPS_PATH + "LetDef");
+		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXPS_PATH + "LetDef");
 		
-		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, IText.EXPS_PATH + "MethodInstantiation");
+		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXPS_PATH + "MethodInstantiation");
 		
-		nodeTemplateFileNames.put(ATupleExpCG.class, IText.EXPS_PATH + "Tuple");
+		nodeTemplateFileNames.put(ATupleExpCG.class, templateStructure.EXPS_PATH + "Tuple");
 		
 		// Unary expressions
 
-		nodeTemplateFileNames.put(APlusUnaryExpCG.class, IText.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
 				+ "Plus");
-		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, IText.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
 				+ "Minus");
 
-		nodeTemplateFileNames.put(ACastUnaryExpCG.class, IText.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(ACastUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
 				+ "Cast");
 
-		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, IText.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
 				+ "Isolation");
 		
-		nodeTemplateFileNames.put(ALenUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Len");
+		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Len");
 		
-		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Head");
+		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Head");
 		
-		nodeTemplateFileNames.put(ATailUnaryExpCG.class, IText.UNARY_EXPS_PATH + "Tail");
+		nodeTemplateFileNames.put(ATailUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Tail");
 
 		// Binary expressions
 		
-		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, IText.BINARY_EXPS_PATH + "Equals");
+		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "Equals");
 		
-		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, IText.BINARY_EXPS_PATH + "NotEquals");
+		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "NotEquals");
 		
-		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, IText.BINARY_EXPS_PATH + "SeqConcat");
+		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SeqConcat");
 		
 		// Numeric binary expressions
 
-		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Mul");
-		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Plus");
-		nodeTemplateFileNames.put(ASubtractNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ASubtractNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Minus");
 
-		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Divide");
 
-		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "GreaterEqual");
 
-		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Greater");
 
-		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "LessEqual");
 
-		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Less");
 		
-		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, IText.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
 				+ "Power");
 
 		// Literal expressions
 
-		nodeTemplateFileNames.put(AIntLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "IntLiteral");
-		nodeTemplateFileNames.put(ARealLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "RealLiteral");
 		
-		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "BoolLiteral");
 		
-		nodeTemplateFileNames.put(ACharLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "CharLiteral");
 		
-		nodeTemplateFileNames.put(AStringLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(AStringLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "StringLiteral");
 		
-		nodeTemplateFileNames.put(AQuoteLiteralExpCG.class, IText.EXPS_PATH
+		nodeTemplateFileNames.put(AQuoteLiteralExpCG.class, templateStructure.EXPS_PATH
 				+ "QuoteLiteral");
 		
 		//Seq expressions
-		nodeTemplateFileNames.put(AEnumSeqExpCG.class, IText.SEQ_EXPS_PATH
+		nodeTemplateFileNames.put(AEnumSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
 				+ "Enum");
 		
 		//State designators
-		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Field");
-		nodeTemplateFileNames.put(AIdentifierStateDesignatorCG.class, IText.STATE_DESIGNATOR_PATH + "Identifier");
+		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "Field");
+		nodeTemplateFileNames.put(AIdentifierStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "Identifier");
 		
-		nodeTemplateFileNames.put(AInterfaceDeclCG.class, IText.DECL_PATH + "Interface");
+		nodeTemplateFileNames.put(AInterfaceDeclCG.class, templateStructure.DECL_PATH + "Interface");
 	}
 
 	public Template getTemplate(Class<? extends INode> nodeClass)
@@ -316,7 +319,7 @@ public class TemplateManager
 	private String getTemplateFileRelativePath(Class<? extends INode> nodeClass)
 	{
 		return nodeTemplateFileNames.get(nodeClass)
-				+ IText.TEMPLATE_FILE_EXTENSION;
+				+ TemplateStructure.TEMPLATE_FILE_EXTENSION;
 	}
 
 	private StringBuffer readFromFile(String relativepath) throws IOException

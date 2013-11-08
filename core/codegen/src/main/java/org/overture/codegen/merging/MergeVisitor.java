@@ -6,6 +6,7 @@ import org.apache.velocity.Template;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.constants.TemplateStructure;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CodeGenContext;
 
@@ -18,9 +19,9 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 	private CodeGenContext context;
 	
-	public MergeVisitor(TemplateCallable[] templateCallables)
+	public MergeVisitor(TemplateStructure templateStructure, TemplateCallable[] templateCallables)
 	{
-		this.templates = new TemplateManager();
+		this.templates = new TemplateManager(templateStructure);
 		initCodeGenContext(templateCallables); 
 	}
 	

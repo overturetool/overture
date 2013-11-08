@@ -29,13 +29,14 @@ public class JavaFormat
 {
 	public static String format(INode field) throws AnalysisException
 	{		
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 		field.apply(mergeVisitor, writer);
 
 		return writer.toString();
 	}
 	
+	//FIXME: Unit should not be considered a case as tuples of one argument are not allowed
 	private static String getTupleStr(ATupleTypeCG type) throws AnalysisException
 	{
 		String tuple = "";

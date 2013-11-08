@@ -14,6 +14,7 @@ import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.constants.TemplateStructure;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -24,6 +25,10 @@ import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen
 {
+	private static final String JAVA_TEMPLATES_ROOT_FOLDER = "Templates";
+	
+	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+	
 	private OoAstGenerator generator;
 	
 	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
@@ -58,7 +63,7 @@ public class JavaCodeGen
 	{
 		try
 		{
-			MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
+			MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
 			StringWriter writer = new StringWriter();
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
@@ -93,7 +98,7 @@ public class JavaCodeGen
 			classes.add(generator.generateFrom(classDef));
 		}
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (AClassDeclCG classCg : classes)
@@ -148,7 +153,7 @@ public class JavaCodeGen
 	{
 		PExpCG expCg = generator.generateFrom(exp);
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 
 		try
