@@ -20,7 +20,7 @@ public class SequenceAnalysis extends DepthFirstAnalysisAdaptor
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
-		if(node instanceof ASeqSeqTypeCG || node instanceof ASeqSeqTypeCG)
+		if(node instanceof ASeqSeqTypeCG)
 		{
 			found = true;
 			throw new AnalysisException();
