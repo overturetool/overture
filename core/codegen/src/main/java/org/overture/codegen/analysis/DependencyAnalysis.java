@@ -5,6 +5,22 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
 public class DependencyAnalysis
 {
+
+	public static boolean usesSets(AClassDeclCG classDecl)
+	{
+		SetAnalysis setAnalysis = new SetAnalysis();
+		
+		try
+		{
+			classDecl.apply(setAnalysis);
+		}catch(AnalysisException e)
+		{
+			//If found an exception will be thrown to terminate
+			//the visitor analysis
+		}
+		
+		return setAnalysis.isFound();
+	}
 	
 	public static boolean usesSequences(AClassDeclCG classDecl)
 	{
