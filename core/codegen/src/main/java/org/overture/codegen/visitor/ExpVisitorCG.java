@@ -87,6 +87,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.TypeLookup;
 
@@ -623,7 +624,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
-		stringLiteral.setType(typeLookup.getType(node.getType()));
+		stringLiteral.setType(new AStringTypeCG());
 		stringLiteral.setValue(node.getValue().toString());
 		
 		return stringLiteral;
