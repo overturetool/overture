@@ -43,9 +43,6 @@ public class JavaFormat
 		
 		switch (type.getTypes().size())
 		{
-			case 1:
-				tuple = "Unit";
-				break;
 			case 2:
 				tuple = "Pair";
 				break;
@@ -74,7 +71,7 @@ public class JavaFormat
 				tuple = "Decade";
 				break;
 			default:
-				throw new AnalysisException("Tuple types do not support more than 10 types!");
+				throw new AnalysisException("Tuple types supports 2 to 10 types!");
 		}
 	
 		return tuple;

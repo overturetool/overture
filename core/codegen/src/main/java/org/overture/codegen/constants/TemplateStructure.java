@@ -20,7 +20,6 @@ public class TemplateStructure
 	public final String SEQ_EXPS_PATH;
 	public final String TYPE_PATH;
 	
-	//TODO: Name it basic instead of basic type
 	public final String BASIC_TYPE_PATH;
 	public final String BASIC_TYPE_WRAPPERS_PATH;
 	public final String SEQ_TYPE_PATH;
@@ -39,9 +38,8 @@ public class TemplateStructure
 		SEQ_EXPS_PATH = EXPS_PATH + "Seq" + SEPARATOR_CHAR;
 		TYPE_PATH = root + "Types" + SEPARATOR_CHAR;
 		
-		//TODO: Name it basic instead of basic type
-		BASIC_TYPE_PATH = TYPE_PATH + "BasicType" + SEPARATOR_CHAR;
-		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicTypeWrappers" + SEPARATOR_CHAR;
+		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + SEPARATOR_CHAR;
+		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + SEPARATOR_CHAR;
 		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + SEPARATOR_CHAR;
 		STATE_DESIGNATOR_PATH = root + "StateDesignator" + SEPARATOR_CHAR; 
 	}
