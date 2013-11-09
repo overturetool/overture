@@ -2,6 +2,7 @@ package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -625,7 +626,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
 		stringLiteral.setType(new AStringTypeCG());
-		stringLiteral.setValue(node.getValue().toString());
+		
+		String value = StringEscapeUtils.escapeJava(node.getValue().getValue());
+		stringLiteral.setValue(value);
 		
 		return stringLiteral;
 	}
