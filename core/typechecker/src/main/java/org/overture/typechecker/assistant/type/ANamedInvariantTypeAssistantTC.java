@@ -59,17 +59,17 @@ public class ANamedInvariantTypeAssistantTC extends
 		}
 	}
 
-	public static String toDisplay(ANamedInvariantType exptype)
-	{
-		return exptype.getName().toString();
-	}
+//	public static String toDisplay(ANamedInvariantType exptype)
+//	{
+//		return exptype.getName().toString();
+//	}
 
-	public static boolean isProduct(ANamedInvariantType type, int size)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isProduct(type.getType(), size);
-	}
+//	public static boolean isProduct(ANamedInvariantType type, int size)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isProduct(type.getType(), size);
+//	}
 
 	public static AProductType getProduct(ANamedInvariantType type, int size)
 	{
@@ -96,12 +96,12 @@ public class ANamedInvariantTypeAssistantTC extends
 
 	}
 
-	public static PType isType(ANamedInvariantType exptype, String typename)
-	{
-		if (exptype.getOpaque())
-			return null;
-		return PTypeAssistantTC.isType(exptype.getType(), typename);
-	}
+//	public static PType isType(ANamedInvariantType exptype, String typename)
+//	{
+//		if (exptype.getOpaque())
+//			return null;
+//		return PTypeAssistantTC.isType(exptype.getType(), typename);
+//	}
 
 	public static boolean equals(ANamedInvariantType type, Object other)
 	{

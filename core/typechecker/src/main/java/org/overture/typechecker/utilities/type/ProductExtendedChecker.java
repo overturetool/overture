@@ -13,10 +13,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 /**
@@ -42,14 +38,17 @@ public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boole
 	public Boolean caseABracketType(ABracketType type, Integer size)
 			throws AnalysisException
 	{
-		return ABracketTypeAssistantTC.isProduct(type, size);
+		return type.getType().apply(THIS, size);
 	}
 	
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Integer size) throws AnalysisException
 	{
-		return ANamedInvariantTypeAssistantTC.isProduct(type, size);
+		
+		if (type.getOpaque())
+			return false;
+		return type.getType().apply(THIS, size);
 	}
 	
 	@Override
@@ -62,7 +61,7 @@ public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boole
 	public Boolean caseAOptionalType(AOptionalType type, Integer size)
 			throws AnalysisException
 	{
-		return AOptionalTypeAssistantTC.isProduct(type, size);
+		return type.getType().apply(THIS,size);
 	}
 	
 	@Override
@@ -75,13 +74,13 @@ public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boole
 	public Boolean caseAProductType(AProductType type, Integer size)
 			throws AnalysisException
 	{
-		return AProductTypeAssistantTC.isProduct(type, size);
+		return size == 0 || type.getTypes().size() == size;
 	}
 	@Override
 	public Boolean caseAUnionType(AUnionType type, Integer size)
 			throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isProduct(type, size);
+		return AUnionTypeAssistantTC.getProduct(type, size) != null;
 	}
 	
 	@Override
