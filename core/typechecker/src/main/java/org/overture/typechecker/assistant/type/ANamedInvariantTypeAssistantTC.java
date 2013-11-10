@@ -76,12 +76,12 @@ public class ANamedInvariantTypeAssistantTC extends
 		return PTypeAssistantTC.getProduct(type.getType(), size);
 	}
 
-	public static boolean isProduct(ANamedInvariantType type)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isProduct(type.getType());
-	}
+//	public static boolean isProduct(ANamedInvariantType type)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isProduct(type.getType());
+//	}
 
 	// public static AProductType getProduct(ANamedInvariantType type) {
 	// return PTypeAssistantTC.getProduct(type.getType());

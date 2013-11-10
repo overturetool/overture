@@ -99,22 +99,22 @@ public class AProductTypeAssistantTC
 	// return type;
 	// }
 
-	public static boolean isProduct(AProductType type)
-	{
-		return true;
-	}
+//	public static boolean isProduct(AProductType type)
+//	{
+//		return true;
+//	}
 
-	public static PType polymorph(AProductType type, ILexNameToken pname,
-			PType actualType)
-	{
-		List<PType> polytypes = new Vector<PType>();
-
-		for (PType ptype : ((AProductType) type).getTypes())
-		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
-		}
-
-		return AstFactory.newAProductType(type.getLocation(), polytypes);
-	}
+//	public static PType polymorph(AProductType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//		List<PType> polytypes = new Vector<PType>();
+//
+//		for (PType ptype : ((AProductType) type).getTypes())
+//		{
+//			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
+//		}
+//
+//		return AstFactory.newAProductType(type.getLocation(), polytypes);
+//	}
 
 }
