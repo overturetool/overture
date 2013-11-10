@@ -50,6 +50,11 @@ import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
+/**
+ * This class implements a way to resolve types from general PType class.
+ * 
+ * @author kel
+ */
 public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquestion, PType>
 {
 	public static class Newquestion

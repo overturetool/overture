@@ -15,6 +15,12 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
+
+/**
+ * This class implements a way to find type of the general PType
+ * 
+ * @author kel
+ */
 public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 {
 

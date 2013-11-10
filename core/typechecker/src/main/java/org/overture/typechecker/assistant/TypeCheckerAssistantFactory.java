@@ -152,6 +152,7 @@ import org.overture.typechecker.utilities.type.OperationTypeFinder;
 import org.overture.typechecker.utilities.type.PTypeFinder;
 import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
+import org.overture.typechecker.utilities.type.ProductExtendedChecker;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
@@ -1129,5 +1130,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<String, PType> getPTypeFinder()
 	{
 		return new PTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, Boolean> getProductExtendedChecker()
+	{
+		return new ProductExtendedChecker(this);
 	}
 }

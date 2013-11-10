@@ -826,35 +826,42 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isProduct(PType type, int size)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.isProduct((ABracketType) type, size);
-		} else if (type instanceof SInvariantType)
-		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type, size);
-			}
-			return false;
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type, size);
-		} else if (type instanceof AParameterType)
-		{
-			return true;
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.isProduct((AProductType) type, size);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isProduct((AUnionType) type, size);
-		} else if (type instanceof AUnknownType)
-		{
-			return true;
-		} else
+			return type.apply(af.getProductExtendedChecker(),size);
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isProduct((ABracketType) type, size);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isProduct((ANamedInvariantType) type, size);
+//			}
+//			return false;
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isProduct((AOptionalType) type, size);
+//		} else if (type instanceof AParameterType)
+//		{
+//			return true;
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.isProduct((AProductType) type, size);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isProduct((AUnionType) type, size);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return true;
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static AProductType getProduct(PType type, int size)
