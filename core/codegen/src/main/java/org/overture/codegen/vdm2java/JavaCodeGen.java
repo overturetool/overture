@@ -10,6 +10,7 @@ import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -21,6 +22,11 @@ import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.NameViolation;
+import org.overture.codegen.utils.ReservedWordsComparison;
+import org.overture.codegen.utils.TypenameComparison;
+import org.overture.codegen.utils.VdmAstAnalysis;
 import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen
@@ -30,6 +36,25 @@ public class JavaCodeGen
 	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 	
 	private OoAstGenerator generator;
+	
+	public static final String[] RESERVED_WORDS = {
+		
+			//Java Keywords
+			"abstract", "continue", "for", "new",
+			"switch", "assert", "default", "goto", "package", "synchronized",
+			"boolean", "do", "if", "private", "this", "break", "double",
+			"implements", "protected", "throw", "byte", "else", "import",
+			"public", "throws", "case", "enum", "instanceof", "return",
+			"transient", "catch", "extends", "int", "short", "try", "char",
+			"final", "interface", "static", "void", "class", "finally", "long",
+			"strictfp", "volatile", "const", "float", "native", "super",
+			"while"
+	};
+	
+	public static final String[] RESERVED_TYPE_NAMES = {
+		//Classes used from the Java standard library
+		"Long", "Double", "Character", "String", "List", "Set"
+	};
 	
 	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
 	{
@@ -89,8 +114,10 @@ public class JavaCodeGen
 	}
 
 	public List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException
+			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
+		validateVdmModelNames(mergedParseLists);
+		
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
 
 		for (SClassDefinition classDef : mergedParseLists)
@@ -124,6 +151,30 @@ public class JavaCodeGen
 
 		return generated;
 	}
+	
+	public String generateJavaFromVdmExp(PExp exp) throws AnalysisException
+	{
+		//There is no name validation here.
+		
+		PExpCG expCg = generator.generateFrom(exp);
+
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		StringWriter writer = new StringWriter();
+
+		try
+		{
+			expCg.apply(mergeVisitor, writer);
+			String code = writer.toString();
+
+			return code;
+		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Could not generate expression: "
+					+ exp);
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	public void generateJavaSourceFiles(List<GeneratedModule> generatedClasses)
 	{
@@ -148,26 +199,13 @@ public class JavaCodeGen
 		}
 		GeneralCodeGenUtils.replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
 	}
-
-	public String generateJavaFromVdmExp(PExp exp) throws AnalysisException
+	
+	private static void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		PExpCG expCg = generator.generateFrom(exp);
-
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
-		StringWriter writer = new StringWriter();
-
-		try
-		{
-			expCg.apply(mergeVisitor, writer);
-			String code = writer.toString();
-
-			return code;
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-		{
-			Logger.getLog().printErrorln("Could not generate expression: "
-					+ exp);
-			e.printStackTrace();
-			return null;
-		}
+		List<NameViolation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
+		List<NameViolation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
+		
+		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty())
+			throw new InvalidNamesException("The model either uses words that are reserved by Java or declares VDM types that uses Java type names", reservedWordViolations, typenameViolations);
 	}
 }
