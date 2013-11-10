@@ -3,6 +3,7 @@ package org.overture.codegen.analysis;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
+//TODO: Change name to OO AST analysis or something like that (remember the tempaltes)
 public class DependencyAnalysis
 {
 
