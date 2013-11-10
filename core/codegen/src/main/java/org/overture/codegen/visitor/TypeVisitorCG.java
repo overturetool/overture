@@ -3,7 +3,6 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
