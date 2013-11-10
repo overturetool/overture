@@ -671,37 +671,44 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static PType isType(PType type, String typename)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.isType((ABracketType) type, typename);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getPTypeFinder(),typename);
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) type, typename);
-			} else if (type instanceof ARecordInvariantType)
-			{
-				return ARecordInvariantTypeAssistantTC.isType((ARecordInvariantType) type, typename);
-			}
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.isType((AOptionalType) type, typename);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.isType((AUnionType) type, typename);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.isType((AUnknownType) type, typename);
-		} else if (type instanceof AUnresolvedType)
-		{
-			return AUnresolvedTypeAssistantTC.isType((AUnresolvedType) type, typename);
+			return null;
 		}
-
-		return (PTypeAssistantTC.toDisplay(type).equals(typename)) ? type
-				: null;
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.isType((ABracketType) type, typename);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.isType((ANamedInvariantType) type, typename);
+//			} else if (type instanceof ARecordInvariantType)
+//			{
+//				return ARecordInvariantTypeAssistantTC.isType((ARecordInvariantType) type, typename);
+//			}
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.isType((AOptionalType) type, typename);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.isType((AUnionType) type, typename);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.isType((AUnknownType) type, typename);
+//		} else if (type instanceof AUnresolvedType)
+//		{
+//			return AUnresolvedTypeAssistantTC.isType((AUnresolvedType) type, typename);
+//		}
+//
+//		return (PTypeAssistantTC.toDisplay(type).equals(typename)) ? type
+//				: null;
 	}
 
-	private static String toDisplay(PType type)
+	public static String toDisplay(PType type)
 	{
 		try
 		{

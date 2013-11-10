@@ -428,5 +428,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IQuestionAnswer<ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor();
 	
+	IQuestionAnswer<String, PType> getPTypeFinder();
 
 }
