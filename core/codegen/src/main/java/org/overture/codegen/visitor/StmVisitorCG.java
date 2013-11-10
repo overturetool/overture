@@ -119,13 +119,18 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	public PStmCG caseAReturnStm(AReturnStm node, OoAstInfo question)
 			throws AnalysisException
 	{
-		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
-		
-		if(exp instanceof ALetDefExpCG)
-			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
+		PExp exp = node.getExpression();
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(exp);
+		
+		if(exp != null)
+		{
+			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			if(expCg instanceof ALetDefExpCG)
+				return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) expCg);
+			
+			returnStm.setExp(expCg);
+		}
 		
 		return returnStm;
 	}
