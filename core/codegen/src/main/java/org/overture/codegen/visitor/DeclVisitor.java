@@ -120,6 +120,7 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
 				staticClassFields.add(fieldDecl);
 				
+				//TODO: Improve this and other places where it is done
 				String formalName = OoAstConstants.CONSTRUCTOR_FORMAL_PREFIX + fieldDecl.getName();
 				PTypeCG formalType = fieldDecl.getType();
 				
