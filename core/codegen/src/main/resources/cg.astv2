@@ -223,7 +223,8 @@ Aspect Declaration
     
 %expCG->#Binary = [left]:expCG [right]:expCG
 	;
-	
+
+//TODO: Consider moving seq + set up to typeCG	
 %typeCG->#seq
     = [seqOf]:typeCG//(seqof):type [empty]:java_Boolean
     ;
