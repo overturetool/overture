@@ -27,11 +27,11 @@ import org.overture.codegen.merging.MergeVisitor;
 
 public class JavaFormat
 {
-	public static String format(INode field) throws AnalysisException
+	public static String format(INode node) throws AnalysisException
 	{		
 		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
-		field.apply(mergeVisitor, writer);
+		node.apply(mergeVisitor, writer);
 
 		return writer.toString();
 	}
