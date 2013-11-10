@@ -7,6 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.constants.TemplateStructure;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.InvalidNamesException;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
@@ -26,7 +27,17 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 	protected String generateActualOutput() throws AnalysisException
 	{	
 		StringBuilder generatedCode = new StringBuilder();
-		GeneratedData data = JavaCodeGenUtil.generateJavaFromFile(file);
+		
+		GeneratedData data = null;
+		
+		try
+		{
+			data = JavaCodeGenUtil.generateJavaFromFile(file);
+		} catch (InvalidNamesException e)
+		{
+			return JavaCodeGenUtil.constructNameViolationsString(e);
+		}
+		
 		List<GeneratedModule> classes = data.getClasses();
 		
 		for (GeneratedModule classCg : classes)
