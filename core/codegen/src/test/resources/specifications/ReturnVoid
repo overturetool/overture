@@ -1,0 +1,15 @@
+class A
+
+operations 
+
+public op : () ==> ()
+op () == 
+	if true then
+	(
+		return;
+	  op() 
+	) 
+	else
+			op()
+
+end A
