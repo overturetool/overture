@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.InvalidNamesException;
 import org.overture.config.Settings;
 
 public class JavaCodeGenMain
@@ -18,7 +20,7 @@ public class JavaCodeGenMain
 		Settings.dialect = Dialect.VDM_RT;
 		
 		if (args.length <= 1)
-			System.out.println("Wrong input!");
+			Logger.getLog().println("Wrong input!");
 		
 		String setting = args[0];
 		if(setting.toLowerCase().equals("oo"))
@@ -30,25 +32,29 @@ public class JavaCodeGenMain
 				
 				for (GeneratedModule generatedClass : generatedClasses)
 				{
-					System.out.println("**********");
-					System.out.println(generatedClass.getContent());
+					Logger.getLog().println("**********");
+					Logger.getLog().println(generatedClass.getContent());
 				}
 				
 				GeneratedModule quotes = data.getQuoteValues();
 				
 				if(quotes != null)
 				{
-					System.out.println("**********");
-					System.out.println(quotes.getContent());
+					Logger.getLog().println("**********");
+					Logger.getLog().println(quotes.getContent());
 				}
 				
 				JavaCodeGenUtil.generateJavaSourceFiles(generatedClasses);
-				
 				JavaCodeGenUtil.generateJavaCodeGenUtils();
 				
 			} catch (AnalysisException e)
 			{
-				System.out.println(e.getMessage());
+				Logger.getLog().println(e.getMessage());
+				
+			} catch (InvalidNamesException e)
+			{
+				Logger.getLog().println("Could not generate model: " + e.getMessage());
+				Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(e));
 			}
 		}
 		else if(setting.toLowerCase().equals("exp"))
@@ -56,10 +62,10 @@ public class JavaCodeGenMain
 			try
 			{
 				String generated = JavaCodeGenUtil.generateJavaFromExp(args[1]);
-				System.out.println(generated);
+				Logger.getLog().println(generated);
 			} catch (AnalysisException e)
 			{
-				System.out.println(e.getMessage());
+				Logger.getLog().println(e.getMessage());
 			}
 		}
 	}

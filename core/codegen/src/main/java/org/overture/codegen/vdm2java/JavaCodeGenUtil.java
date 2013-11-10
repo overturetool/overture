@@ -14,6 +14,8 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.NameViolation;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 import de.hunsicker.io.FileFormat;
@@ -21,12 +23,12 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
-	public static List<GeneratedModule> generateJava(File file) throws AnalysisException
+	public static List<GeneratedModule> generateJava(File file) throws AnalysisException, InvalidNamesException
 	{
 		return generateJava(file, new JavaCodeGen());
 	}
 	
-	public static List<GeneratedModule> generateJava(File file, JavaCodeGen vdmCodGen) throws AnalysisException
+	public static List<GeneratedModule> generateJava(File file, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException
 	{
 		TypeCheckResult<List<SClassDefinition>> typeCheckResult = GeneralCodeGenUtils.validateFile(file);
 
@@ -40,12 +42,12 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static GeneratedData generateJavaFromFile(File file) throws AnalysisException
+	public static GeneratedData generateJavaFromFile(File file) throws AnalysisException, InvalidNamesException
 	{
 		return generateJavaFromFiles(new String[]{"", file.getAbsolutePath()});
 	}
 	
-	public static GeneratedData generateJavaFromFiles(String[] args) throws AnalysisException
+	public static GeneratedData generateJavaFromFiles(String[] args) throws AnalysisException, InvalidNamesException
 	{		
 		JavaCodeGen vvdmCodGen = new JavaCodeGen();
 		List<GeneratedModule> data = new ArrayList<GeneratedModule>();
@@ -87,6 +89,32 @@ public class JavaCodeGenUtil
 
 	}
 	
+	public static String constructNameViolationsString(InvalidNamesException e)
+	{
+		StringBuffer buffer = new StringBuffer();
+		
+		List<NameViolation> reservedWordViolations = e.getReservedWordViolations();
+		List<NameViolation> typenameViolations = e.getTypenameViolations();
+		
+		if (!reservedWordViolations.isEmpty())
+		{	
+			for (NameViolation violation : reservedWordViolations)
+			{
+				buffer.append("Reserved name violation: " + violation + "\n");
+			}
+		}
+		
+		if (!typenameViolations.isEmpty())
+		{	
+			for (NameViolation violation : typenameViolations)
+			{
+				buffer.append("Type name violation: " + violation + "\n");
+			}
+		}
+		
+		return buffer.toString();
+	}
+	
 	public static void generateJavaSourceFiles(List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
@@ -122,9 +150,9 @@ public class JavaCodeGenUtil
 					|| jalopy.getState() == Jalopy.State.PARSED)
 				return b.toString();
 			else if (jalopy.getState() == Jalopy.State.WARN)
-				return null;// formatted with warnings
+				return code;// formatted with warnings
 			else if (jalopy.getState() == Jalopy.State.ERROR)
-				return null; // could not be formatted
+				return code; // could not be formatted
 
 		} catch (Exception e)
 		{
