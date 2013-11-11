@@ -864,34 +864,41 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static AProductType getProduct(PType type, int size)
 	{
-		if (type instanceof ABracketType)
+		try
 		{
-			return ABracketTypeAssistantTC.getProduct((ABracketType) type, size);
-		} else if (type instanceof SInvariantType)
+			return type.apply(af.getProductExtendedTypeFinder(),size);
+		} catch (AnalysisException e)
 		{
-			if (type instanceof ANamedInvariantType)
-			{
-				return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type, size);
-			}
-			assert false : "cannot getProduct from non-product type";
-			return null;
-		} else if (type instanceof AOptionalType)
-		{
-			return AOptionalTypeAssistantTC.getProduct((AOptionalType) type, size);
-		} else if (type instanceof AProductType)
-		{
-			return AProductTypeAssistantTC.getProduct((AProductType) type, size);
-		} else if (type instanceof AUnionType)
-		{
-			return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
-		} else if (type instanceof AUnknownType)
-		{
-			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type, size);
-		} else
-		{
-			assert false : "cannot getProduct from non-product type";
 			return null;
 		}
+//		if (type instanceof ABracketType)
+//		{
+//			return ABracketTypeAssistantTC.getProduct((ABracketType) type, size);
+//		} else if (type instanceof SInvariantType)
+//		{
+//			if (type instanceof ANamedInvariantType)
+//			{
+//				return ANamedInvariantTypeAssistantTC.getProduct((ANamedInvariantType) type, size);
+//			}
+//			assert false : "cannot getProduct from non-product type";
+//			return null;
+//		} else if (type instanceof AOptionalType)
+//		{
+//			return AOptionalTypeAssistantTC.getProduct((AOptionalType) type, size);
+//		} else if (type instanceof AProductType)
+//		{
+//			return AProductTypeAssistantTC.getProduct((AProductType) type, size);
+//		} else if (type instanceof AUnionType)
+//		{
+//			return AUnionTypeAssistantTC.getProduct((AUnionType) type, size);
+//		} else if (type instanceof AUnknownType)
+//		{
+//			return AUnknownTypeAssistantTC.getProduct((AUnknownType) type, size);
+//		} else
+//		{
+//			assert false : "cannot getProduct from non-product type";
+//			return null;
+//		}
 	}
 
 	public static boolean equals(LinkedList<PType> parameters,

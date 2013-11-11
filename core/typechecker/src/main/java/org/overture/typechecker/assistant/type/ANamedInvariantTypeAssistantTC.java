@@ -7,7 +7,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -70,11 +69,11 @@ public class ANamedInvariantTypeAssistantTC extends
 //			return false;
 //		return PTypeAssistantTC.isProduct(type.getType(), size);
 //	}
-
-	public static AProductType getProduct(ANamedInvariantType type, int size)
-	{
-		return PTypeAssistantTC.getProduct(type.getType(), size);
-	}
+//
+//	public static AProductType getProduct(ANamedInvariantType type, int size)
+//	{
+//		return PTypeAssistantTC.getProduct(type.getType(), size);
+//	}
 
 //	public static boolean isProduct(ANamedInvariantType type)
 //	{
