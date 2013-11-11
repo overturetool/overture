@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
@@ -52,7 +53,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	public PTypeCG caseAUnknownType(AUnknownType node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return null; // Indicates an unknown type
+		return new AObjectTypeCG(); // '?' Indicates an unknown type
 	}
 	
 	@Override
