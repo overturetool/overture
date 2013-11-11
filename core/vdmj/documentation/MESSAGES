@@ -848,6 +848,7 @@ as the expected and actual values.
 4158, "Period argument must be non-zero"
 4159, "Delay argument must be less than the period"
 4160, "Object <#n> is not running a thread to stop"
+4161, "Cannot stop object <#n> on CPU <name> from CPU <name>"
 
 5000, "Definition <name> not used"
 5001, "Instance variable is not initialized: <name>"

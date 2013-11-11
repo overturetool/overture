@@ -141,6 +141,15 @@ public class StopStatement extends Statement
 		List<ISchedulableThread> threads = BasicSchedulableThread.findThreads(target);
 		int count = 0;
 		
+		if (target.getCPU() != ctxt.threadState.CPU)
+		{
+			throw new ContextException(4161,
+					"Cannot stop object " + target.objectReference +
+					" on CPU " + target.getCPU().getName() +
+					" from CPU " + ctxt.threadState.CPU,
+					location, ctxt);
+		}
+		
 		for (ISchedulableThread th: threads)
 		{
 			if (th instanceof ObjectThread || th instanceof PeriodicThread)
