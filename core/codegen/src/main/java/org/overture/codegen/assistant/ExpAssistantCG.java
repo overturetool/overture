@@ -9,15 +9,14 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.lookup.OperatorInfo;
 import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
-import org.overture.codegen.visitor.OoAstInfo;
 import org.overture.codegen.visitor.ExpVisitorCG;
+import org.overture.codegen.visitor.OoAstInfo;
 
 
 public class ExpAssistantCG
