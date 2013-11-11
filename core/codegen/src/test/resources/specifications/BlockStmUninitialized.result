@@ -1,0 +1,12 @@
+public class A {
+    public int op() {
+        int n = 0;
+        boolean b = false;
+        double r = 0.0;
+        char c = '0';
+        String s = null;
+        A a = null;
+
+        return 0;
+    }
+}
