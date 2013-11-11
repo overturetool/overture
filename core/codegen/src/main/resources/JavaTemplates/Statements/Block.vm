@@ -1,3 +1,6 @@
+#foreach( $dec in $node.getLocalDefs() )
+$JavaFormat.format($dec)
+#end
 #foreach( $stm in $node.getStatements() )
 $JavaFormat.format($stm)
 #end

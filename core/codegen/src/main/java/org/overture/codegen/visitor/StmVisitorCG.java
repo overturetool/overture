@@ -3,8 +3,10 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -17,8 +19,10 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
+import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -74,8 +78,34 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	public PStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
 			OoAstInfo question) throws AnalysisException
 	{
-		
 		ABlockStmCG blockStm = new ABlockStmCG();
+
+		LinkedList<AAssignmentDefinition> assignmentDefs = node.getAssignmentDefs();
+		
+		for (AAssignmentDefinition def : assignmentDefs)
+		{
+			//FIXME: No protection against hidden definitions
+			// dcl s : real := 1
+			// dcl s : real := 2
+			PType type = def.getType();
+			String name = def.getName().getName();
+			PExp exp = def.getExpression();
+			
+			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			
+			ALocalVarDeclCG localDecl = new ALocalVarDeclCG();
+			localDecl.setType(typeCg);
+			localDecl.setName(name);
+			localDecl.setExp(expCg);
+			
+			if(exp instanceof AUndefinedExp)
+				DeclAssistantCG.setDefaultValue(localDecl, typeCg);
+			else
+				localDecl.setExp(def.getExpression().apply(question.getExpVisitor(), question));
+			
+			blockStm.getLocalDefs().add(localDecl);
+		}
 		
 		LinkedList<PStm> stms = node.getStatements();
 		
