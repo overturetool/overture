@@ -1,1 +1,7 @@
-"$node.getValue()"
+#set($Q = '"')
+#set( $value = "null")
+#if ($node.getInitialized())
+	#set( $value = "${Q}$node.getValue()${Q}")
+#end
+##
+$value
