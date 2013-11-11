@@ -173,6 +173,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 
 typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
+    |	{Object}
     |	{void}
     |	{class} [name]:java_String
     |	{string}
