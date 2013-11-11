@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -128,20 +129,7 @@ public class JavaFormat
 		
 		if(leftNodeType instanceof SSeqTypeCGBase)
 		{
-			//In VDM the types of the equals are compatible when the AST passes the type check
-			PExpCG leftNode = node.getLeft();
-			PExpCG rightNode = node.getRight();
-			
-			if(isEmptySeq(leftNode))
-			{
-				return JavaFormat.format(node.getRight()) + ".isEmpty()";
-			}
-			else if(isEmptySeq(rightNode))
-			{
-				return JavaFormat.format(node.getLeft()) + ".isEmpty()";
-			}
-		
-			return "Utils.seqEquals(" + JavaFormat.format(node.getLeft()) + ", " + JavaFormat.format(node.getRight()) + ")";
+			return handleSeqComparison(node, false);
 		}
 		//else if(..)
 		
@@ -151,7 +139,36 @@ public class JavaFormat
 	public static String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
 	{
 		//FIXME: Same problems as for equals. In addition, this method lacks support for collections
+		
+		PTypeCG leftNodeType = node.getLeft().getType();
+
+		if (leftNodeType instanceof SSeqTypeCGBase)
+		{
+			return handleSeqComparison(node, true);
+		}
+		
 		return JavaFormat.format(node.getLeft()) + " != " + JavaFormat.format(node.getRight());
+	}
+	
+	private static String handleSeqComparison(SBinaryExpCGBase node, boolean notEquals) throws AnalysisException
+	{
+		String prefix = notEquals ? "!" : "";
+		
+		//In VDM the types of the equals are compatible when the AST passes the type check
+		PExpCG leftNode = node.getLeft();
+		PExpCG rightNode = node.getRight();
+		
+		if(isEmptySeq(leftNode))
+		{
+			return prefix + JavaFormat.format(node.getRight()) + ".isEmpty()";
+		}
+		else if(isEmptySeq(rightNode))
+		{
+			return prefix + JavaFormat.format(node.getLeft()) + ".isEmpty()";
+		}
+	
+		return prefix + "Utils.seqEquals(" + JavaFormat.format(node.getLeft()) + ", " + JavaFormat.format(node.getRight()) + ")";
+
 	}
 	
 	private static boolean isEmptySeq(PExpCG exp)
