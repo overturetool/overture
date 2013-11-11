@@ -2,6 +2,7 @@ system SYS
 instance variables
 	static public obj1 : A := new A();
 	static public obj2 : A := new A();
+	static public obj3 : A := new A();
 	
 	cpu1:CPU := new CPU(<FP>, 1E6);
 	cpu2:CPU := new CPU(<FP>, 1E6);
@@ -14,6 +15,7 @@ operations
 	(
 		cpu1.deploy(obj1, "Test object one");
 		cpu2.deploy(obj2, "Test object two");
+		cpu2.deploy(obj3, "Test object three");
 	)
 	
 end SYS
@@ -53,17 +55,17 @@ operations
 	test() ==
 	(
 		SYS`obj1.run();
-		SYS`obj1.null();
 		SYS`obj1.kill();
 
-		SYS`obj1.run();
-		SYS`obj2.null();
-		SYS`obj2.kill(SYS`obj1);
+--		SYS`obj1.run();
+--		SYS`obj2.null();
+--		SYS`obj2.kill(SYS`obj1);	-- Error, wrong CPU
 
 		SYS`obj1.run();
 		SYS`obj2.run();
-		SYS`obj2.null();
-		SYS`obj2.kill({SYS`obj1, SYS`obj2});
+		SYS`obj3.run();
+		SYS`obj2.kill({SYS`obj2, SYS`obj3});
+		SYS`obj1.kill(SYS`obj1);
 	)
 	
 end Test

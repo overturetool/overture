@@ -62,7 +62,19 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		synchronized (threads)
 		{
-			threads.add(thread);
+			// The last thread is the one currently running, so insert ahead of this
+			// one so that the new thread is scheduled before the current one is
+			// next scheduled.
+			int count = threads.size();
+			
+			if (count == 0)
+			{
+				threads.add(thread);
+			}
+			else
+			{
+				threads.add(count - 1, thread);
+			}
 		}
 	}
 
