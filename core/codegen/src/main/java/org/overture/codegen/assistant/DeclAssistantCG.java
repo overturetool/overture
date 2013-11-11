@@ -71,7 +71,7 @@ public class DeclAssistantCG
 	public static AStringLiteralExpCG getDefaultStringlValue()
 	{
 		AStringLiteralExpCG lit = new AStringLiteralExpCG();
-		lit.setInitialized(false);
+		lit.setIsNull(false);
 		lit.setType(new AStringTypeCG());
 		lit.setValue("");
 		

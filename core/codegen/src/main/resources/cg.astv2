@@ -133,7 +133,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{bool}
     |	{char}
     |	{quote}
-    |	{string} [value]:java_String [initialized]:java_Boolean
+    |	{string} [value]:java_String [isNull]:java_Boolean
 	;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}

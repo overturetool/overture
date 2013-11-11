@@ -619,8 +619,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+
 		stringLiteral.setType(new AStringTypeCG());
-		
+		stringLiteral.setIsNull(true);
 		String value = StringEscapeUtils.escapeJava(node.getValue().getValue());
 		stringLiteral.setValue(value);
 		

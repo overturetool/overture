@@ -1,6 +1,6 @@
 #set($Q = '"')
 #set( $value = "null")
-#if ($node.getInitialized())
+#if ($node.getIsNull())
 	#set( $value = "${Q}$node.getValue()${Q}")
 #end
 ##
