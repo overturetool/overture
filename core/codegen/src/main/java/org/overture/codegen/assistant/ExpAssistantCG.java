@@ -1,6 +1,7 @@
 package org.overture.codegen.assistant;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
@@ -8,6 +9,7 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
@@ -32,8 +34,8 @@ public class ExpAssistantCG
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
 		
 		//Set the expressions
-		codeGenExp.setLeft(formatExp(vdmExp, vdmExp.getLeft(), question));
-		codeGenExp.setRight(formatExp(vdmExp, vdmExp.getRight(), question));
+		codeGenExp.setLeft(formatExp(vdmExp, vdmExp.getLeft(), true, question));
+		codeGenExp.setRight(formatExp(vdmExp, vdmExp.getRight(), false, question));
 		
 		//Set the expression types:
 		PType leftVdmType = vdmExp.getLeft().getType();
@@ -44,19 +46,32 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public PExpCG formatExp(SBinaryExp parent, PExp child, OoAstInfo question) throws AnalysisException
+	public PExpCG formatExp(SBinaryExp parent, PExp child, boolean leftChild, OoAstInfo question) throws AnalysisException
 	{
 		
 		PExpCG exp = child.apply(question.getExpVisitor(), question);
 		
-		boolean wrap = childExpHasLowerPrecedence(parent, child);
-
-		if(wrap)
+		if(child instanceof SBinaryExp)
 		{
-			AIsolationUnaryExpCG isolatioNExp = new AIsolationUnaryExpCG();
-			isolatioNExp.setType(exp.getType());
-			isolatioNExp.setExp(exp);
-			exp = isolatioNExp;
+			OperatorInfo parentOpInfo = opLookup.find(parent.getClass());
+			SBinaryExp binExpChild = (SBinaryExp) child;
+			OperatorInfo childInfo = opLookup.find(binExpChild.getClass());
+			
+			//Case 1: Protect against cases like 1 / (2*3*4)
+			//Don't care about left children, i.e. (2*3*4)/1 = 2*3*4/1
+			boolean case1 = !leftChild && parent instanceof ADivideNumericBinaryExp &&
+						 	parentOpInfo.getPrecedence() >= childInfo.getPrecedence();
+			
+		    //Case 2: Protect against case like 1 / (1+2+3)
+			boolean case2 = parentOpInfo.getPrecedence() > childInfo.getPrecedence(); 
+			
+			if	( case1 || case2 )
+			{
+				AIsolationUnaryExpCG isolatioNExp = new AIsolationUnaryExpCG();
+				isolatioNExp.setType(exp.getType());
+				isolatioNExp.setExp(exp);
+				exp = isolatioNExp;
+			}
 		}
 		
 		return exp;
@@ -74,17 +89,4 @@ public class ExpAssistantCG
 		//of type NatOneNumericBasicType
 	}
 	
-	
-	public boolean childExpHasLowerPrecedence(SBinaryExp parent, PExp child)
-	{				
-		if(!(child instanceof SBinaryExp))
-			return false;
-
-		OperatorInfo parentOpInfo = opLookup.find(parent.getClass());
-		
-		SBinaryExp binExpChild = (SBinaryExp) child;
-		OperatorInfo childInfo = opLookup.find(binExpChild.getClass());
-		
-		return childInfo.getPrecedence() < parentOpInfo.getPrecedence();
-	}
 }

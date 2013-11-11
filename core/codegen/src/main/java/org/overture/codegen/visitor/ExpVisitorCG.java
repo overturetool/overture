@@ -480,28 +480,22 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		ADivideNumericBinaryExpCG divideExp = new ADivideNumericBinaryExpCG();
-		
-		divideExp.setType(typeLookup.getType(node.getType()));
+		ADivideNumericBinaryExpCG divide = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question, typeLookup);
 		
 		PExp leftExp = node.getLeft();
 		PExp rightExp = node.getRight();
 		
-		PExpCG leftExpCG = leftExp.apply(this, question);
-		PExpCG rightExpCG = rightExp.apply(this, question);
+		PExpCG leftExpCG = divide.getLeft();
 		
 		if(expAssistant.isIntegerType(leftExp) && expAssistant.isIntegerType(rightExp))
 		{
 			ACastUnaryExpCG castExpr = new ACastUnaryExpCG();
 			castExpr.setType(new ARealNumericBasicTypeCG());
 			castExpr.setExp(leftExpCG);
-			leftExpCG = castExpr;
+			divide.setLeft(castExpr);
 		}
 		
-		divideExp.setLeft(leftExpCG);
-		divideExp.setRight(rightExpCG);
-		
-		return divideExp;
+		return divide;
 	}
 	
 	//Unary
