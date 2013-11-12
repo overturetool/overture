@@ -95,10 +95,10 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 		return PTypeAssistantTC.isType(b.getType(), typeclass);
 	}
 
-	public static PType isType(AOptionalType exptype, String typename)
-	{
-		return PTypeAssistantTC.isType(exptype.getType(), typename);
-	}
+//	public static PType isType(AOptionalType exptype, String typename)
+//	{
+//		return PTypeAssistantTC.isType(exptype.getType(), typename);
+//	}
 
 	// public static boolean equals(AOptionalType type, Object other) {
 	// if (other instanceof AOptionalType)

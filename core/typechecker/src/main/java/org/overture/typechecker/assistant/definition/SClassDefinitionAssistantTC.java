@@ -755,7 +755,7 @@ public class SClassDefinitionAssistantTC
 						{
 							TypeCheckerErrors.report(3017, "Duplicate definitions for "
 									+ def1.getName().getName(), def1.getName().getLocation(), def1);
-							TypeCheckerErrors.detail2(def1.getName().getName(), def1.getLocation(), def2.getName().getName(), def2.getLocation());
+							TypeCheckerErrors.detail2(def1.getName().getName(), def1.getLocation().getFile().getName()+" "+def1.getLocation().toShortString(), def2.getName().getName(), def2.getLocation().getFile().getName()+ " "+def2.getLocation().toShortString());
 							done.add(def1.getName().getName());
 						}
 					}
