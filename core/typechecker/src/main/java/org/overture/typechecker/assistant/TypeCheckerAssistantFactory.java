@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -141,12 +142,17 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
+import org.overture.typechecker.utilities.type.ProductExtendedChecker;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
@@ -157,6 +163,7 @@ import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
+import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
@@ -1093,5 +1100,41 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
 	{
 		return new NarrowerThanComparator(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getUnionBasisChecker()
+	{
+		return new UnionBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<AFunctionType> getFunctionTypeFinder()
+	{
+		return new FunctionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor()
+	{
+		return new ConcreateTypeImplementor(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
+	{
+		return new PTypeResolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<String, PType> getPTypeFinder()
+	{
+		return new PTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, Boolean> getProductExtendedChecker()
+	{
+		return new ProductExtendedChecker(this);
 	}
 }

@@ -12,6 +12,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -120,6 +121,8 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
@@ -416,5 +419,17 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<AUnionType> getUnionTypeFinder();
 
 	IQuestionAnswer<Object, Boolean> getTypeEqualityChecker();
+	
+	AnswerAdaptor<Boolean> getUnionBasisChecker();
+	
+	IAnswer<AFunctionType> getFunctionTypeFinder();
+	
+	IQuestionAnswer<PTypeResolver.Newquestion, PType> getPTypeResolver();
+	
+	IQuestionAnswer<ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor();
+	
+	IQuestionAnswer<String, PType> getPTypeFinder();
+	
+	IQuestionAnswer<Integer, Boolean> getProductExtendedChecker();
 
 }
