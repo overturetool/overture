@@ -21,6 +21,11 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
+/**
+ * Used to check if a type of some size is a product type
+ *  
+ * @author kel
+ */
 public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AProductType>
 {
 	

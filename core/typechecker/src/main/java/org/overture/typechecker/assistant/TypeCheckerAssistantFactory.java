@@ -149,6 +149,7 @@ import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeExtendedChecker;
 import org.overture.typechecker.utilities.type.PTypeFinder;
 import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
@@ -1143,5 +1144,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder()
 	{
 		return new ProductExtendedTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker()
+	{
+		return new PTypeExtendedChecker(this);
 	}
 }
