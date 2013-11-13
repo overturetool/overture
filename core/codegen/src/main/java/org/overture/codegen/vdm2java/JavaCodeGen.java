@@ -176,11 +176,11 @@ public class JavaCodeGen
 		}
 	}
 
-	public void generateJavaSourceFiles(List<GeneratedModule> generatedClasses)
+	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
 	{
 		for (GeneratedModule classCg : generatedClasses)
 		{
-			JavaCodeGenUtil.saveJavaClass(classCg.getName() + ".java", classCg.getContent());
+			JavaCodeGenUtil.saveJavaClass(file, classCg.getName() + ".java", classCg.getContent());
 		}
 	}
 

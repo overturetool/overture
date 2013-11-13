@@ -121,10 +121,10 @@ public class JavaCodeGenUtil
 		return buffer.toString();
 	}
 	
-	public static void generateJavaSourceFiles(List<GeneratedModule> classes)
+	public static void generateJavaSourceFiles(File file, List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFiles(classes);
+		vdmCodGen.generateJavaSourceFiles(file, classes);
 	}
 	
 	public static void generateJavaCodeGenUtils()
@@ -170,14 +170,15 @@ public class JavaCodeGenUtil
 		return null;// could not be formatted
 	}
 	
-	public static void saveJavaClass(String javaFileName, String code)
+	public static void saveJavaClass(File outputFolder, String javaFileName, String code)
 	{
 		try
 		{
-			new File("target\\sources\\").mkdirs();
-			String file_name = "target\\sources\\" + javaFileName;
-			FileWriter file = new FileWriter(file_name);
-			BufferedWriter out = new BufferedWriter(file);
+			File javaFile = new File(outputFolder, File.separator + javaFileName);
+			javaFile.getParentFile().mkdirs();
+			javaFile.createNewFile();
+			FileWriter writer = new FileWriter(javaFile);
+			BufferedWriter out = new BufferedWriter(writer);
 			out.write(code);
 			out.close();
 

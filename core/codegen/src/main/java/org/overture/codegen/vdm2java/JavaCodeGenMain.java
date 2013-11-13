@@ -1,5 +1,6 @@
 package org.overture.codegen.vdm2java;
 
+import java.io.File;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -44,7 +45,8 @@ public class JavaCodeGenMain
 					Logger.getLog().println(quotes.getContent());
 				}
 				
-				JavaCodeGenUtil.generateJavaSourceFiles(generatedClasses);
+				File file = new File("target" + File.separator + "sources" + File.separator);
+				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
 				JavaCodeGenUtil.generateJavaCodeGenUtils();
 				
 			} catch (AnalysisException e)
