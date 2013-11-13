@@ -9,9 +9,6 @@ import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 
 public class StateDesignatorVisitor extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
 {
-
-	private static final long serialVersionUID = 7252896277917207085L;
-
 	public StateDesignatorVisitor()
 	{
 		

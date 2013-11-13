@@ -42,9 +42,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 {
-	
-	private static final long serialVersionUID = -602593891699169007L;
-
 	public StmVisitorCG()
 	{
 	}

@@ -94,8 +94,6 @@ import org.overture.codegen.lookup.TypeLookup;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
-	private static final long serialVersionUID = -7481045116217669686L;
-	
 	private TypeLookup typeLookup;
 	
 	private ExpAssistantCG expAssistant;

@@ -15,8 +15,6 @@ import org.overture.codegen.cgast.declarations.PDeclCG;
 
 public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
 {
-	private static final long serialVersionUID = 81602965450922571L;
-	
 	public ClassVisitorCG()
 	{
 	}

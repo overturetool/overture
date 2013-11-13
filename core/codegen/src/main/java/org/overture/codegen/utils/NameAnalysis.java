@@ -11,9 +11,6 @@ import org.overture.ast.node.INode;
 
 public class NameAnalysis extends DepthFirstAnalysisAdaptor
 {
-
-	private static final long serialVersionUID = -2470709310930692461L;
-
 	private List<NameViolation> nameViolations; 
 	private NamingComparison comparison;
 	
