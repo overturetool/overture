@@ -86,14 +86,14 @@ public class ANamedInvariantTypeAssistantTC extends
 	// return PTypeAssistantTC.getProduct(type.getType());
 	// }
 
-	public static boolean isType(ANamedInvariantType b,
-			Class<? extends PType> typeclass)
-	{
-		if (b.getOpaque())
-			return false;
-		return PTypeAssistantTC.isType(b.getType(), typeclass);
-
-	}
+//	public static boolean isType(ANamedInvariantType b,
+//			Class<? extends PType> typeclass)
+//	{
+//		if (b.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isType(b.getType(), typeclass);
+//
+//	}
 
 //	public static PType isType(ANamedInvariantType exptype, String typename)
 //	{

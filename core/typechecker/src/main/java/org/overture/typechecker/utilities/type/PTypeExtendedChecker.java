@@ -8,19 +8,16 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  *Don't know yet what it does.
  * 
- * @author kel
+ * @author gkanos
  */
 public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends PType>, Boolean>
 {
@@ -36,14 +33,17 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 	public Boolean caseABracketType(ABracketType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		return ABracketTypeAssistantTC.isType(type, typeclass);
+		return type.getType().apply(THIS, typeclass);
 	}
 	
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		return ANamedInvariantTypeAssistantTC.isType(type, typeclass);
+		
+		if (type.getOpaque())
+			return false;
+		return type.getType().apply(THIS, typeclass);
 	}
 	
 	@Override
@@ -57,21 +57,35 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 	public Boolean caseAOptionalType(AOptionalType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		return AOptionalTypeAssistantTC.isType(type, typeclass);
+		if (typeclass.equals(AVoidType.class))
+		{
+			return false; // Optionals are never void
+		}
+
+		
+		return type.getType().apply(THIS, typeclass);
 	}
 	
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		return AUnknownTypeAssistantTC.isType(type, typeclass);
+		return true;
 	}
 	
 	@Override
 	public Boolean caseAUnionType(AUnionType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.isType(type, typeclass);
+		for (PType t : type.getTypes())
+		{
+			if (PTypeAssistantTC.isType(t, typeclass))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	@Override
@@ -86,7 +100,7 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 			Class<? extends PType> question) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
@@ -94,6 +108,6 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 			Class<? extends PType> question) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 }

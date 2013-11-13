@@ -1,8 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant
@@ -33,11 +31,11 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant
 	// return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
 	// }
 
-	public static boolean isType(AUnknownType b,
-			Class<? extends PType> typeclass)
-	{
-		return true;
-	}
+//	public static boolean isType(AUnknownType b,
+//			Class<? extends PType> typeclass)
+//	{
+//		return true;
+//	}
 
 //	public static PType isType(AUnknownType exptype, String typename)
 //	{
