@@ -1,0 +1,9 @@
+public class A {
+    public static int getM(Object arg) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static int getN(Object arg) {
+        throw new UnsupportedOperationException();
+    }
+}
