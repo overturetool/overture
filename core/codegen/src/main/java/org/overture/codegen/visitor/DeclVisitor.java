@@ -39,8 +39,6 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
-	private static final long serialVersionUID = -7968170190668212627L;
-	
 	private DeclAssistantCG declAssistant;
 	
 	public DeclVisitor()
@@ -228,7 +226,7 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
 		
-		for(int i = 0; i < paramPatterns.size(); i++)
+		for(int i = 0; i < ptypes.size(); i++)
 		{
 			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
@@ -278,7 +276,7 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
 		
-		for(int i = 0; i < paramPatterns.size(); i++)
+		for(int i = 0; i < ptypes.size(); i++)
 		{
 			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
