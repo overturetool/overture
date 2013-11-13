@@ -8,9 +8,6 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 
 public class TupleAnalysis extends DepthFirstAnalysisAdaptor
 {
-
-	private static final long serialVersionUID = -1777600236754158171L;
-	
 	private boolean found = false;
 	
 	public boolean isFound()

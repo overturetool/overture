@@ -7,9 +7,6 @@ import org.overture.codegen.cgast.types.ASetSetTypeCG;
 
 public class SetAnalysis extends DepthFirstAnalysisAdaptor
 {
-
-	private static final long serialVersionUID = -8268052875734570861L;
-	
 	private boolean found = false;
 	
 	public boolean isFound()

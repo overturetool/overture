@@ -12,9 +12,6 @@ import org.overture.codegen.visitor.CodeGenContext;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {
-
-	private static final long serialVersionUID = 1356835559835525016L;
-
 	private TemplateManager templates;
 
 	private CodeGenContext context;
