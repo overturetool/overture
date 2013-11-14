@@ -1141,8 +1141,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				// If the opname was defined in a superclass of "self", we have
 				// to discover the subobject to populate its state variables.
-
+				
 				ObjectValue subself = APostOpExpAssistantInterpreter.findObject(node, node.getOpname().getModule(), self);
+				
+				if(self.superobjects.size() == 0)
+					subself = self;
+					
 
 				if (subself == null)
 				{
