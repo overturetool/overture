@@ -47,6 +47,7 @@ import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
@@ -108,7 +109,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return tmp;
 		} catch (TypeCheckException e)
 		{
-			ABracketTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}
