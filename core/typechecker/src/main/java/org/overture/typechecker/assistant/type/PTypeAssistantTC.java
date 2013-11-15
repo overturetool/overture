@@ -18,8 +18,6 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.AVoidReturnType;
-import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -425,13 +423,10 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean isVoid(PType type)
 	{
-		if (type instanceof AUnionType)
+		try
 		{
-			return AUnionTypeAssistantTC.isVoid((AUnionType) type);
-		} else if (type instanceof AVoidType || type instanceof AVoidReturnType)
-		{
-			return true;
-		} else
+			return type.apply(af.getVoidBasisChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}

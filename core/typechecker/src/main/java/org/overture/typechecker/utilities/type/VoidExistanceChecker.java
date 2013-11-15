@@ -1,4 +1,4 @@
-package org.overture.typechecker.assistant.type;
+package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -8,6 +8,7 @@ import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to determine if a type has void type in it!

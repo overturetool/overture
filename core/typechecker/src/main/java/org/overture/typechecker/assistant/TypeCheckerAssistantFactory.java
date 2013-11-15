@@ -118,7 +118,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
-import org.overture.typechecker.assistant.type.VoidExistanceChecker;
 import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
@@ -168,6 +167,8 @@ import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
 import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
+import org.overture.typechecker.utilities.type.VoidBasisChecker;
+import org.overture.typechecker.utilities.type.VoidExistanceChecker;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -1157,5 +1158,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getVoidExistanceChecker()
 	{
 		return new VoidExistanceChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getVoidBasisChecker()
+	{
+		return new VoidBasisChecker(this);
 	}
 }
