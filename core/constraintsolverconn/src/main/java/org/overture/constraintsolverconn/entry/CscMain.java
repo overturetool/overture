@@ -1,5 +1,9 @@
 package org.overture.constraintsolverconn.entry;
 
+// added by his
+import java.io.Reader;
+import java.io.StringWriter;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,26 +14,17 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
-<<<<<<< 398f8f2ca1757f9b3a3eb608fdd2b594d22e6d4b
-public class CscMain
-{
 
-	public static void main(String[] args) throws AnalysisException
-	{
-=======
-// added by his
-import java.io.Reader;
-import java.io.StringWriter;
 
 public class CscMain {
->>>>>>> a1082541b986672b3363953499d7b4b6b5ec508a
+	public static void main(String[] args) throws AnalysisException
+	{
 
 		Settings.dialect = Dialect.VDM_RT;
 		Settings.release = Release.VDM_10; // clearing to display "VDM classic"
 
 		Csc csc = new Csc();
 		String result;
-<<<<<<< 398f8f2ca1757f9b3a3eb608fdd2b594d22e6d4b
 
 		try
 		{
@@ -40,7 +35,6 @@ public class CscMain {
 			{
 				if (!line.substring(0, 2).equals("--"))
 				{
-=======
 		
 		try {
 			BufferedReader br = new BufferedReader(
@@ -51,7 +45,6 @@ public class CscMain {
 			ProcessBuilder pb;
 			while((line=br.readLine()) != null) {
 				if(!line.substring(0,2).equals("--")) {
->>>>>>> a1082541b986672b3363953499d7b4b6b5ec508a
 					result = csc.visitExp(line);
 					// System.out.println(result);
 
@@ -80,52 +73,6 @@ public class CscMain {
 		} catch(InterruptedException e) {
 			System.out.println("IOException: " + e);
 		}
-<<<<<<< 398f8f2ca1757f9b3a3eb608fdd2b594d22e6d4b
-		// Csc csc = new Csc();
-		// String result;
-		// String result = csc.visitExp("( 1 + ( 2  - 3 ) * 4 ) / 5");
-		// String result = csc.visitExp("- (1 ** (5 mod 3) + true)");
-
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("1+2+3");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("{1} \\ {2,3}");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("dom {1|->2, 3|->3}");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("rng {1|->2, 3|->3}");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("{1|->2, 3|->3} = {1|->2, 3|->3}");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("{1|->2, 3|->3} <> {1|->2, 3|->3}");
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("reverse [1,2,3]");
-		// unable to parse expression
-		// reverse not available in VDM classic
-		// System.out.println("Result is: " + result);
-
-		// result = csc.visitExp("len [1,2,3] ^ [2,4]");
-		// unable to type check expression
-		// System.out.println("Result is: " + result);
-
-		/*
-		 * result = csc.visitExp("{}"); System.out.println("Result is: " + result); result = csc.visitExp("{1, 2, 3}");
-		 * System.out.println("Result is: " + result); result = csc.visitExp("{x | x in set nat1 & x <= 3}");
-		 * System.out.println("Result is: " + result);
-		 */
-
-		System.out.println("... Done.");
-	}
-
-}
-=======
 
 		System.out.println("... Done.");
 	}
@@ -173,4 +120,3 @@ class Catcher extends Thread {
 	System.out.print(ans);
     }
 }
->>>>>>> a1082541b986672b3363953499d7b4b6b5ec508a
