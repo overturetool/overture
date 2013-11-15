@@ -475,11 +475,15 @@ public class ExplicitOperationDefinition extends Definition
 			plist.add(new IdentifierPattern(state.name.getOldName()));
 			plist.add(new IdentifierPattern(state.name));
 		}
-		else if (base.isVDMPP() && !accessSpecifier.isStatic)
+		else if (base.isVDMPP())
 		{
 			// Two arguments called "self~" and "self"
 			plist.add(new IdentifierPattern(name.getSelfName().getOldName()));
-			plist.add(new IdentifierPattern(name.getSelfName()));
+			
+			if (!accessSpecifier.isStatic)
+			{
+				plist.add(new IdentifierPattern(name.getSelfName()));
+			}
 		}
 
 		parameters.add(plist);

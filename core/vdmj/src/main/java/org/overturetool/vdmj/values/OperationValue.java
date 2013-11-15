@@ -322,12 +322,16 @@ public class OperationValue extends Value
 				Value sigma = argContext.lookup(stateName);
 				originalSigma = (Value)sigma.clone();
 			}
-
-			if (self != null)
+			else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = postcondition.body.getOldNames();
 				originalValues = self.getOldValues(oldnames);
+			}
+			else if (classdef != null)
+			{
+				LexNameList oldnames = postcondition.body.getOldNames();
+				originalValues = classdef.getOldValues(oldnames);
 			}
 		}
 
@@ -389,7 +393,11 @@ public class OperationValue extends Value
     			else if (self != null)
     			{
     				postArgs.add(originalValues);
-    				postArgs.add(self);
+   					postArgs.add(self);
+    			}
+    			else if (classdef != null)
+    			{
+    				postArgs.add(originalValues);
     			}
 
     			// We disable the swapping and time (RT) as postcondition checks should be "free".

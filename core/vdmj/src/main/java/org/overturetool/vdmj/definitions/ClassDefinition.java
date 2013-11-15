@@ -61,13 +61,16 @@ import org.overturetool.vdmj.types.TypeList;
 import org.overturetool.vdmj.util.Delegate;
 import org.overturetool.vdmj.values.CPUValue;
 import org.overturetool.vdmj.values.ClassInvariantListener;
+import org.overturetool.vdmj.values.MapValue;
 import org.overturetool.vdmj.values.NameValuePairList;
 import org.overturetool.vdmj.values.NameValuePairMap;
 import org.overturetool.vdmj.values.ObjectValue;
 import org.overturetool.vdmj.values.OperationValue;
+import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueMap;
 
 /**
  * A class to represent a VDM++ class definition.
@@ -1130,6 +1133,29 @@ public class ClassDefinition extends Definition
 		ctxt.putAll(publicStaticValues);
 		ctxt.putAll(privateStaticValues);
 		return ctxt;
+	}
+
+	public MapValue getOldValues(LexNameList oldnames)
+	{
+		ValueMap values = new ValueMap();
+
+		for (LexNameToken name: oldnames)
+		{
+			Value mv = getStatic(name.getNewName()).deref();
+			SeqValue sname = new SeqValue(name.name);
+
+			if (mv instanceof ObjectValue)
+			{
+				ObjectValue om = (ObjectValue)mv;
+				values.put(sname, om.deepCopy());
+			}
+			else
+			{
+				values.put(sname, (Value)mv.clone());
+			}
+		}
+
+		return new MapValue(values);
 	}
 
 	/**

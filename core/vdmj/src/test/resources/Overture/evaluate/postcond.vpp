@@ -1,6 +1,7 @@
 class A
 instance variables
 	protected iv:nat := 123;
+	static siv:nat := 0;
 
 operations	
 	public pop: nat ==> nat
@@ -10,17 +11,31 @@ operations
 		return n
 	)
 	post iv~ < iv;
-
+	
+	public static sop: () ==> nat
+	sop() == return siv + 1
+	pre siv = 0
+	post RESULT > siv~;
+	
 end A
 
 class Test is subclass of A
+instance variables
+	iv2:nat := 0
+	
 functions
 	public f: () -> seq of bool
 	f() ==
 	[
 		post_pop(1, 1, {"iv" |-> 1}, new A()),
-		post_pop(1, 1, {"iv" |-> 999}, new A())
+		post_pop(1, 1, {"iv" |-> 999}, new A()),
+		post_sop(2, {"siv" |-> 1}),
+		post_sop(1, {"siv" |-> 999})
 	];
+
+operations
+	public iop() r:bool == return true
+	post iv2~ < iv~ and iv2 < iv and r
 
 end Test
 

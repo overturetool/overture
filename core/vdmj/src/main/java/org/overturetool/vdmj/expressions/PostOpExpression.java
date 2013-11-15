@@ -29,6 +29,7 @@ import org.overturetool.vdmj.definitions.StateDefinition;
 import org.overturetool.vdmj.lex.LexLocation;
 import org.overturetool.vdmj.lex.LexNameList;
 import org.overturetool.vdmj.lex.LexNameToken;
+import org.overturetool.vdmj.runtime.ClassContext;
 import org.overturetool.vdmj.runtime.Context;
 import org.overturetool.vdmj.runtime.ObjectContext;
 import org.overturetool.vdmj.runtime.ValueException;
@@ -131,7 +132,13 @@ public class PostOpExpression extends Expression
 
     			populate(ctxt, subself.type.name.name, oldvalues);		// To add old "~" values
     		}
-
+    		else if (ctxt instanceof ClassContext)
+    		{
+    			LexNameToken selfname = opname.getSelfName();
+    			LexNameToken oldselfname = selfname.getOldName();
+    			ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
+    			populate(ctxt, opname.module, oldvalues);
+    		}
 
     		// If there are errs clauses, and there is a precondition defined, then
     		// we evaluate that as well as the postcondition.
