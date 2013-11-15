@@ -435,5 +435,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder();
 	
 	IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker();
+	
+	IAnswer<Boolean> getVoidExistanceChecker();
 
 }

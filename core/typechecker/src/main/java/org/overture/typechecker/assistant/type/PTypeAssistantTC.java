@@ -439,13 +439,10 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean hasVoid(PType type)
 	{
-		if (type instanceof AUnionType)
+		try
 		{
-			return AUnionTypeAssistantTC.hasVoid((AUnionType) type);
-		} else if (type instanceof AVoidType || type instanceof AVoidReturnType)
-		{
-			return true;
-		} else
+			return type.apply(af.getVoidExistanceChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}

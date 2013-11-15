@@ -657,18 +657,18 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return true;
 	}
 
-	public static boolean hasVoid(AUnionType type)
-	{
-		for (PType t : type.getTypes())
-		{
-			if (PTypeAssistantTC.isVoid(t))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	public static boolean hasVoid(AUnionType type)
+//	{
+//		for (PType t : type.getTypes())
+//		{
+//			if (PTypeAssistantTC.isVoid(t))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	public static PType polymorph(AUnionType type, ILexNameToken pname,
 			PType actualType)
