@@ -26,20 +26,10 @@ public class CscMain {
 		Csc csc = new Csc();
 		String result;
 
-		try
-		{
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp".replace('/', '\\')), "UTF-8"));
-			String line;
-
-			while ((line = br.readLine()) != null)
-			{
-				if (!line.substring(0, 2).equals("--"))
-				{
-		
 		try {
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(
-							      new FileInputStream("c:/users/ishihiro/csccode/core/constraintsolverconn/src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp"), "UTF-8"));
+					      new FileInputStream("c:/users/ishihiro/csccode/core/constraintsolverconn/src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp"), "UTF-8"));
 			
 			String line;
 			ProcessBuilder pb;
