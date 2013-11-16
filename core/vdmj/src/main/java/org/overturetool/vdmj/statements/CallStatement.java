@@ -23,6 +23,7 @@
 
 package org.overturetool.vdmj.statements;
 
+import org.overturetool.vdmj.definitions.ClassDefinition;
 import org.overturetool.vdmj.definitions.Definition;
 import org.overturetool.vdmj.expressions.Expression;
 import org.overturetool.vdmj.expressions.ExpressionList;
@@ -34,6 +35,7 @@ import org.overturetool.vdmj.runtime.ValueException;
 import org.overturetool.vdmj.typechecker.Environment;
 import org.overturetool.vdmj.typechecker.NameScope;
 import org.overturetool.vdmj.typechecker.TypeComparator;
+import org.overturetool.vdmj.types.ClassType;
 import org.overturetool.vdmj.types.FunctionType;
 import org.overturetool.vdmj.types.OperationType;
 import org.overturetool.vdmj.types.Type;
@@ -88,6 +90,21 @@ public class CallStatement extends Statement
 			report(3213, "Operation " + name + " is not in scope");
 			env.listAlternatives(name);
 			return new UnknownType(location);
+		}
+
+		if (env.isVDMPP() && name.explicit)
+		{
+			// A call like X`op() is local if X is in our hierarchy
+			// else it's a static call of a different class.
+			
+			ClassDefinition self = env.findClassDefinition();
+			Type ctype = opdef.classDefinition.getType();
+			
+			if (!self.hasSupertype(ctype) && !opdef.isStatic())
+			{
+				report(3324, "Operation " + name + " is not static");
+				return new UnknownType(location);				
+			}
 		}
 
 		if (!opdef.isStatic() && env.isStatic())

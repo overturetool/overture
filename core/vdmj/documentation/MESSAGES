@@ -690,6 +690,7 @@ as the expected and actual values.
 3321, "Type component visibility less than type's definition"
 3322, "Duplicate patterns bind to different types"
 3323, "Overloaded operation cannot mix static and non-static"
+3324, "Operation <name> is not static"
 
 
 4000, "Cannot instantiate abstract class <class>"
