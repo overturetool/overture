@@ -1,5 +1,3 @@
-package org.overture.codegen.generated.collections;
-
 import java.util.List;
 import java.util.Vector;
 

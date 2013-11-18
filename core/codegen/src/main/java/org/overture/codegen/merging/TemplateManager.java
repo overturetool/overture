@@ -1,7 +1,6 @@
 package org.overture.codegen.merging;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.HashMap;
 
@@ -78,7 +77,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.constants.TemplateStructure;
+import org.overture.codegen.utils.GeneralUtils;
 
 public class TemplateManager
 {
@@ -290,7 +289,7 @@ public class TemplateManager
 	{
 		try
 		{
-			StringBuffer buffer = readFromFile(getTemplateFileRelativePath(nodeClass));
+			StringBuffer buffer = GeneralUtils.readFromFile(getTemplateFileRelativePath(nodeClass));
 
 			if (buffer == null)
 				return null;
@@ -328,23 +327,5 @@ public class TemplateManager
 	{
 		return nodeTemplateFileNames.get(nodeClass)
 				+ TemplateStructure.TEMPLATE_FILE_EXTENSION;
-	}
-
-	private StringBuffer readFromFile(String relativepath) throws IOException
-	{
-		InputStream input = this.getClass().getResourceAsStream(relativepath);
-
-		if (input == null)
-			return null;
-
-		StringBuffer data = new StringBuffer();
-		int c = 0;
-		while ((c = input.read()) != -1)
-		{
-			data.append((char) c);
-		}
-		input.close();
-
-		return data;
 	}
 }

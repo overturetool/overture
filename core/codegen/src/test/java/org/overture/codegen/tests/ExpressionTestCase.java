@@ -3,7 +3,7 @@ package org.overture.codegen.tests;
 import java.io.File;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.constants.TemplateStructure;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase

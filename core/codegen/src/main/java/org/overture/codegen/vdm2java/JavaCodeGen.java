@@ -15,12 +15,13 @@ import org.overture.codegen.analysis.DependencyAnalysis;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.constants.TemplateStructure;
+import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
 import org.overture.codegen.utils.NameViolation;
@@ -31,9 +32,7 @@ import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen
 {
-	private static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
-	
-	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(IJavaCodeGenConstants.JAVA_TEMPLATES_ROOT_FOLDER);
 	
 	private OoAstGenerator generator;
 	
@@ -112,6 +111,16 @@ public class JavaCodeGen
 
 		return null;
 	}
+	
+	public GeneratedModule generateJavaUtils() throws IOException
+	{
+		StringBuffer buf = GeneralUtils.readFromFile(IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER
+				+ IText.SEPARATOR_CHAR + IJavaCodeGenConstants.UTILS_FILE + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+		if (buf != null)
+			return new GeneratedModule(IJavaCodeGenConstants.UTILS_FILE, buf.toString());
+		
+		return null;
+	}
 
 	public List<GeneratedModule> generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
@@ -176,28 +185,17 @@ public class JavaCodeGen
 		}
 	}
 
+	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
+	{
+		JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+	}
+	
 	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
 	{
 		for (GeneratedModule classCg : generatedClasses)
 		{
-			JavaCodeGenUtil.saveJavaClass(file, classCg.getName() + ".java", classCg.getContent());
+			generateJavaSourceFile(file, classCg);
 		}
-	}
-
-	public void generateJavaCodeGenUtils()
-	{
-		String utilsPath = "src\\main\\java\\org\\overture\\codegen\\generated\\collections";
-		String targetr = "target\\sources";
-
-		try
-		{
-			GeneralCodeGenUtils.copyDirectory(new File(utilsPath), new File(targetr));
-		} catch (IOException e)
-		{
-			Logger.getLog().printErrorln("Error when generating CG utils");
-			e.printStackTrace();
-		}
-		GeneralCodeGenUtils.replaceInFile(targetr + "\\Utils.java", "package org.overture.codegen.generated.collections;", "");
 	}
 	
 	private static void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException

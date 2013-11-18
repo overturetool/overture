@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.constants.TemplateStructure;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;

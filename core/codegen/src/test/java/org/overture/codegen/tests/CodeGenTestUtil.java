@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.overture.codegen.constants.TemplateStructure;
+import org.overture.codegen.merging.TemplateStructure;
 
 public class CodeGenTestUtil
 {

@@ -10,8 +10,8 @@ import junit.framework.Assert;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.constants.TemplateStructure;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;

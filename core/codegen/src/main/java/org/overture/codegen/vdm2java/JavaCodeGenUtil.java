@@ -10,8 +10,8 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.constants.TemplateStructure;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -127,10 +127,16 @@ public class JavaCodeGenUtil
 		vdmCodGen.generateJavaSourceFiles(file, classes);
 	}
 	
-	public static void generateJavaCodeGenUtils()
+	public static void generateJavaSourceFile(File file, GeneratedModule module)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaCodeGenUtils();
+		vdmCodGen.generateJavaSourceFile(file, module);
+	}
+	
+	public static GeneratedModule generateJavaCodeGenUtils() throws IOException
+	{
+		JavaCodeGen vdmCodeGen = new JavaCodeGen();
+		return vdmCodeGen.generateJavaUtils();
 	}
 	
 	public static String formatJavaCode(String code)

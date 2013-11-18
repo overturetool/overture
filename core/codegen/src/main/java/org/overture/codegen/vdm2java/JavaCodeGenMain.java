@@ -1,10 +1,12 @@
 package org.overture.codegen.vdm2java;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -15,7 +17,6 @@ public class JavaCodeGenMain
 {
 	public static void main(String[] args)
 	{
-		
 		//TODO: Set release to VDM_10:
 		//Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
@@ -44,10 +45,14 @@ public class JavaCodeGenMain
 					Logger.getLog().println("**********");
 					Logger.getLog().println(quotes.getContent());
 				}
-				
-				File file = new File("target" + File.separator + "sources" + File.separator);
+
+				File file = new File("target" + IText.SEPARATOR_CHAR + "sources"
+						+ IText.SEPARATOR_CHAR);
+
 				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
-				JavaCodeGenUtil.generateJavaCodeGenUtils();
+				
+				GeneratedModule utils = JavaCodeGenUtil.generateJavaCodeGenUtils();
+				JavaCodeGenUtil.generateJavaSourceFile(file, utils);
 				
 			} catch (AnalysisException e)
 			{
@@ -57,6 +62,9 @@ public class JavaCodeGenMain
 			{
 				Logger.getLog().println("Could not generate model: " + e.getMessage());
 				Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(e));
+			} catch (IOException e)
+			{
+				Logger.getLog().println("Could not generate utils: " + e.getMessage());
 			}
 		}
 		else if(setting.toLowerCase().equals("exp"))
