@@ -155,7 +155,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AClassTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}

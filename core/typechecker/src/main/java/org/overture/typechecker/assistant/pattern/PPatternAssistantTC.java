@@ -182,59 +182,66 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static PType getPossibleType(PPattern pattern)
 	{
-		if (pattern instanceof ABooleanPattern)
+		try
 		{
-			return ABooleanPatternAssistantTC.getPossibleType((ABooleanPattern) pattern);
-		} else if (pattern instanceof ACharacterPattern)
+			return pattern.apply(af.getPossibleTypeFinder());
+		} catch (AnalysisException e)
 		{
-			return ACharacterPatternAssistantTC.getPossibleType((ACharacterPattern) pattern);
-		} else if (pattern instanceof AConcatenationPattern)
-		{
-			return AConcatenationPatternAssistantTC.getPossibleType((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AExpressionPattern)
-		{
-			return AExpressionPatternAssistantTC.getPossibleTypes((AExpressionPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
-		{
-			return AIdentifierPatternAssistantTC.getPossibleTypes((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AIgnorePattern)
-		{
-			return AIgnorePatternAssistantTC.getPossibleTypes((AIgnorePattern) pattern);
-		} else if (pattern instanceof AIntegerPattern)
-		{
-			return AIntegerPatternAssistantTC.getPossibleTypes((AIntegerPattern) pattern);
-		} else if (pattern instanceof ANilPattern)
-		{
-			return ANilPatternAssistantTC.getPossibleTypes((ANilPattern) pattern);
-		} else if (pattern instanceof AQuotePattern)
-		{
-			return AQuotePatternAssistantTC.getPossibleTypes((AQuotePattern) pattern);
-		} else if (pattern instanceof ARealPattern)
-		{
-			return ARealPatternAssistantTC.getPossibleTypes((ARealPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantTC.getPossibleTypes((ARecordPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantTC.getPossibleTypes((ASetPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantTC.getPossibleTypes((ASeqPattern) pattern);
-		} else if (pattern instanceof AStringPattern)
-		{
-			return AStringPatternAssistantTC.getPossibleTypes((AStringPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantTC.getPossibleTypes((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantTC.getPossibleTypes((AUnionPattern) pattern);
-		} else
-		{
-			assert false : "Should not happen";
+			return null;
 		}
-		return null;
+//		if (pattern instanceof ABooleanPattern)
+//		{
+//			return ABooleanPatternAssistantTC.getPossibleType((ABooleanPattern) pattern);
+//		} else if (pattern instanceof ACharacterPattern)
+//		{
+//			return ACharacterPatternAssistantTC.getPossibleType((ACharacterPattern) pattern);
+//		} else if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantTC.getPossibleType((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AExpressionPattern)
+//		{
+//			return AExpressionPatternAssistantTC.getPossibleTypes((AExpressionPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantTC.getPossibleTypes((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AIgnorePattern)
+//		{
+//			return AIgnorePatternAssistantTC.getPossibleTypes((AIgnorePattern) pattern);
+//		} else if (pattern instanceof AIntegerPattern)
+//		{
+//			return AIntegerPatternAssistantTC.getPossibleTypes((AIntegerPattern) pattern);
+//		} else if (pattern instanceof ANilPattern)
+//		{
+//			return ANilPatternAssistantTC.getPossibleTypes((ANilPattern) pattern);
+//		} else if (pattern instanceof AQuotePattern)
+//		{
+//			return AQuotePatternAssistantTC.getPossibleTypes((AQuotePattern) pattern);
+//		} else if (pattern instanceof ARealPattern)
+//		{
+//			return ARealPatternAssistantTC.getPossibleTypes((ARealPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantTC.getPossibleTypes((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantTC.getPossibleTypes((ASetPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantTC.getPossibleTypes((ASeqPattern) pattern);
+//		} else if (pattern instanceof AStringPattern)
+//		{
+//			return AStringPatternAssistantTC.getPossibleTypes((AStringPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantTC.getPossibleTypes((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantTC.getPossibleTypes((AUnionPattern) pattern);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//		}
+//		return null;
 	}
 
 	public static boolean matches(PPattern pattern, PType expType)

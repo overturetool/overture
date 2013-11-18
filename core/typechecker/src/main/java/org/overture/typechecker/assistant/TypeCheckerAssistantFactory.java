@@ -140,6 +140,7 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.pattern.PossibleTypeFinder;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
@@ -1164,5 +1165,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<Boolean> getVoidBasisChecker()
 	{
 		return new VoidBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<PType> getPossibleTypeFinder()
+	{
+		return new PossibleTypeFinder(this);
 	}
 }
