@@ -64,15 +64,21 @@ public class Vdm2JavaCommand extends AbstractHandler
 					List<IVdmSourceUnit> sources = model.getSourceUnits();
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 
-					List<GeneratedModule> res = vdm2java.generateJavaFromVdm(mergedParseLists);
-
-					File folder = Util.getOutputFolder(vdmProject);
-					vdm2java.generateJavaSourceFiles(folder, res);
-					// vdm2java.generateJavaCodeGenUtils();
-
+					List<GeneratedModule> userspecifiedClasses = vdm2java.generateJavaFromVdm(mergedParseLists);
+					File outputFolder = Util.getOutputFolder(vdmProject);
+					vdm2java.generateJavaSourceFiles(outputFolder, userspecifiedClasses);
+					
+					//TODO: Put quotes and utils in the right folder
+					GeneratedModule quotes = vdm2java.generateJavaFromVdmQuotes();
+					if(quotes != null)
+						vdm2java.generateJavaSourceFile(outputFolder, quotes);
+					
+					GeneratedModule utils = vdm2java.generateJavaUtils();
+					vdm2java.generateJavaSourceFile(outputFolder, utils);
+					
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
-					for (GeneratedModule generatedModule : res)
+					for (GeneratedModule generatedModule : userspecifiedClasses)
 					{
 						CodeGenConsole.GetInstance().println("*************");
 						CodeGenConsole.GetInstance().println(generatedModule.getContent());
