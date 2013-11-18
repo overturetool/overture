@@ -112,12 +112,20 @@ public class JavaCodeGen
 		return null;
 	}
 	
-	public GeneratedModule generateJavaUtils() throws IOException
+	public GeneratedModule generateJavaCodeGenUtils() throws IOException
 	{
-		StringBuffer buf = GeneralUtils.readFromFile(IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER
+		StringBuffer utilsContent = GeneralUtils.readFromFile(IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER
 				+ IText.SEPARATOR_CHAR + IJavaCodeGenConstants.UTILS_FILE + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-		if (buf != null)
-			return new GeneratedModule(IJavaCodeGenConstants.UTILS_FILE, buf.toString());
+		
+		if (utilsContent != null)
+		{
+			StringBuffer utilsGenerated = new StringBuffer();
+			utilsGenerated.append(IJavaCodeGenConstants.UTILS_PACKAGE + IText.NEW_LINE + IText.NEW_LINE);
+			
+			utilsGenerated.append(utilsContent);
+			
+			return new GeneratedModule(IJavaCodeGenConstants.UTILS_FILE, utilsGenerated.toString());
+		}
 		
 		return null;
 	}

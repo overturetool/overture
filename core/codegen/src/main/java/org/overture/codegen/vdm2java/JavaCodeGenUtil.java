@@ -136,7 +136,7 @@ public class JavaCodeGenUtil
 	public static GeneratedModule generateJavaCodeGenUtils() throws IOException
 	{
 		JavaCodeGen vdmCodeGen = new JavaCodeGen();
-		return vdmCodeGen.generateJavaUtils();
+		return vdmCodeGen.generateJavaCodeGenUtils();
 	}
 	
 	public static String formatJavaCode(String code)
