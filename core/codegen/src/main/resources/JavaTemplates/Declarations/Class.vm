@@ -1,11 +1,12 @@
-#set( $utilImport = "")
-#if ($DependencyAnalysis.usesSequences($node) || $DependencyAnalysis.usesSets($node))
-	#set( $utilImport = "import java.util.*;")
-#end
-
 #set( $quoteImport = "")
 #if ($DependencyAnalysis.usesQuoteLiterals($node))
 	#set( $quoteImport = "import quotes.*;")
+#end
+
+#set( $utilImport = "")
+#if ($DependencyAnalysis.usesSequences($node) || $DependencyAnalysis.usesSets($node))
+	#set($utilImport = "import utils;
+						import java.util.*;")
 #end
 
 #set( $tupleImport = "")
