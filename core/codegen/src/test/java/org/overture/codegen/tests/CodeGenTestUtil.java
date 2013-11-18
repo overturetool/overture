@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.constants.IText;
 
 public class CodeGenTestUtil
 {
@@ -20,7 +20,7 @@ public class CodeGenTestUtil
 			String line = "";
 			while ((line = reader.readLine()) != null)
 			{								
-				content.append(line + TemplateStructure.NEW_LINE);
+				content.append(line + IText.NEW_LINE);
 			}
 			reader.close();
 			
@@ -29,10 +29,10 @@ public class CodeGenTestUtil
 			return null;
 		}
 		
-		int lastIndex = content.lastIndexOf(TemplateStructure.NEW_LINE);
+		int lastIndex = content.lastIndexOf(IText.NEW_LINE);
 		
 		if(lastIndex >= 0)
-			content.replace(lastIndex, lastIndex + TemplateStructure.NEW_LINE.length(), "");
+			content.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
 		
 		return content.toString();
 	}

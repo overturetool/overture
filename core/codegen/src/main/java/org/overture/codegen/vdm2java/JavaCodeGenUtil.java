@@ -10,8 +10,8 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -101,7 +101,7 @@ public class JavaCodeGenUtil
 		{	
 			for (NameViolation violation : reservedWordViolations)
 			{
-				buffer.append("Reserved name violation: " + violation + TemplateStructure.NEW_LINE);
+				buffer.append("Reserved name violation: " + violation + IText.NEW_LINE);
 			}
 		}
 		
@@ -109,14 +109,14 @@ public class JavaCodeGenUtil
 		{	
 			for (NameViolation violation : typenameViolations)
 			{
-				buffer.append("Type name violation: " + violation + TemplateStructure.NEW_LINE);
+				buffer.append("Type name violation: " + violation + IText.NEW_LINE);
 			}
 		}
 		
-		int lastIndex = buffer.lastIndexOf(TemplateStructure.NEW_LINE);
+		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);
 		
 		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + TemplateStructure.NEW_LINE.length(), "");
+			buffer.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
 		
 		return buffer.toString();
 	}
