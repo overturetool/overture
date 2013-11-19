@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
@@ -165,18 +166,6 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	public PDeclCG caseATypeDefinition(ATypeDefinition node,
 			OoAstInfo question) throws AnalysisException
 	{
-//		System.out.println("*******");		
-//		System.out.println("Access: " + node.getAccess());
-//		System.out.println("Got a type definition: " + node.toString());
-//		System.out.println("Invariant type: " + node.getInvType().toString());
-//		System.out.println("Get type: " + node.getType());
-//		System.out.println("Name: " + node.getName().getName());
-//		System.out.println("Pattern: " + node.getInvPattern());
-//		
-//		System.out.println("Trying to apply type:");
-//		System.out.println("The typ: " + typ.getClass().getName());	
-//		System.out.println("*****");
-		
 		String access = node.getAccess().getAccess().toString();
 		
 		PDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
@@ -235,13 +224,18 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			param.setType(type);
 			param.setName(name);
 			
-			if(type instanceof ATemplateTypeCG)
-			{
-				ATemplateTypeCG templateType = (ATemplateTypeCG) type.clone();
-				method.getTemplateTypes().add(templateType);
-			}
-			
 			formalParameters.add(param);
+		}
+		
+		//If the function uses any type parameters they will be
+		//registered as part of the method declaration
+		LinkedList<ILexNameToken> typeParams = node.getTypeParams();
+		for(int i = 0; i < typeParams.size(); i++)
+		{
+			ILexNameToken typeParam = typeParams.get(i);
+			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			templateType.setName(typeParam.getName());
+			method.getTemplateTypes().add(templateType);
 		}
 		
 		return method;
