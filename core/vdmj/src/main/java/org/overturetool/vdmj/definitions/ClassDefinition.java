@@ -70,6 +70,7 @@ import org.overturetool.vdmj.values.SeqValue;
 import org.overturetool.vdmj.values.UpdatableValue;
 import org.overturetool.vdmj.values.Value;
 import org.overturetool.vdmj.values.ValueList;
+import org.overturetool.vdmj.values.ValueListener;
 import org.overturetool.vdmj.values.ValueMap;
 
 /**
@@ -1350,7 +1351,32 @@ public class ClassDefinition extends Definition
 				for (Value v: inv.expression.getValues(initCtxt))
 				{
 					UpdatableValue uv = (UpdatableValue) v;
-					uv.addListener(listener);
+					
+					// If the variable is static, it may already have a listener from a
+					// previous constructor call.
+					boolean exists = false;
+					
+					if (uv.listeners != null)
+					{
+						for (ValueListener vl: uv.listeners)
+						{
+							if (vl instanceof ClassInvariantListener)
+							{
+								ClassInvariantListener cil = (ClassInvariantListener)vl;
+								
+								if (cil.invopvalue.name.equals(invop.name))
+								{
+									exists = true;
+									break;
+								}
+							}
+						}
+					}
+					
+					if (!exists)
+					{
+						uv.addListener(listener);
+					}
 				}
 			}
 			

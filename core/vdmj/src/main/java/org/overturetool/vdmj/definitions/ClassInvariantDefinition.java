@@ -57,6 +57,12 @@ public class ClassInvariantDefinition extends Definition
 	}
 
 	@Override
+	public Expression findExpression(int lineno)
+	{
+		return expression.findExpression(lineno);
+	}
+
+	@Override
 	public DefinitionList getDefinitions()
 	{
 		return new DefinitionList();
