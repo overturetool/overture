@@ -38,7 +38,7 @@ public class FixedSalaryEmployee extends Employee {
     }
 }
 
-import utils;
+import utils.*;
 
 import java.util.*;
 
