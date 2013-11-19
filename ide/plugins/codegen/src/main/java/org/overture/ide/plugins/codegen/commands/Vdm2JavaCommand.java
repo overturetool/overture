@@ -21,8 +21,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
-import org.overture.ide.plugins.codegen.util.Util;
-import org.overture.ide.plugins.codegen.vdm2java.PluginVdm2JavaUtil;
+import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
 public class Vdm2JavaCommand extends AbstractHandler
@@ -65,16 +64,20 @@ public class Vdm2JavaCommand extends AbstractHandler
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 
 					List<GeneratedModule> userspecifiedClasses = vdm2java.generateJavaFromVdm(mergedParseLists);
-					File outputFolder = Util.getOutputFolder(vdmProject);
+					File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
 					vdm2java.generateJavaSourceFiles(outputFolder, userspecifiedClasses);
 					
-					//TODO: Put quotes and utils in the right folder
 					GeneratedModule quotes = vdm2java.generateJavaFromVdmQuotes();
 					if(quotes != null)
-						vdm2java.generateJavaSourceFile(outputFolder, quotes);
+					{
+						File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
+						vdm2java.generateJavaSourceFile(quotesFolder, quotes);
+					}
 					
-					GeneratedModule utils = vdm2java.generateJavaUtils();
-					vdm2java.generateJavaSourceFile(outputFolder, utils);
+					GeneratedModule utils = vdm2java.generateJavaCodeGenUtils();
+
+					File utilsFolder = PluginVdm2JavaUtil.getUtilsFolder(vdmProject);
+					vdm2java.generateJavaSourceFile(utilsFolder, utils);
 					
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
