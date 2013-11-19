@@ -1,9 +1,9 @@
 public class A {
-    public static int getM(Object arg) {
+    public static long getM(Object arg) {
         throw new UnsupportedOperationException();
     }
 
-    public static int getN(Object arg) {
+    public static long getN(Object arg) {
         throw new UnsupportedOperationException();
     }
 }

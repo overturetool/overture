@@ -1,15 +1,15 @@
 public class Records {
-    private Vector2D v = new Vector2D(1, 1);
+    private Vector2D v = new Vector2D(1L, 1L);
 
     public static Vector2D f() {
-        return new Vector2D(1, 2);
+        return new Vector2D(1L, 2L);
     }
 
     public static class Vector2D {
-        public int x;
-        public int y;
+        public long x;
+        public long y;
 
-        public Vector2D(int _x, int _y) {
+        public Vector2D(long _x, long _y) {
             x = _x;
             y = _y;
         }

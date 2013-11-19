@@ -1,14 +1,14 @@
 public class A {
-    public int op() {
-        int x = 1;
+    public long op() {
+        long x = 1L;
 
         return x;
     }
 
-    public static int f(int x) {
-        int x1 = f(1);
-        int x2 = f(2);
-        int x3 = f(3);
+    public static long f(long x) {
+        long x1 = f(1L);
+        long x2 = f(2L);
+        long x3 = f(3L);
 
         return x;
     }

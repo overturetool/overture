@@ -1,27 +1,27 @@
 public class A {
-    private int n = 2;
+    private long n = 2L;
 
-    public int getN() {
+    public long getN() {
         return n;
     }
 
-    public int o1() {
-        return A.f() + A.g(3) + h(1, 2) + op2(3) + A.op2(3);
+    public long o1() {
+        return A.f() + A.g(3L) + h(1L, 2L) + op2(3L) + A.op2(3L);
     }
 
-    public static int op2(int x) {
-        return 2 + x;
+    public static long op2(long x) {
+        return 2L + x;
     }
 
-    public static int f() {
-        return 2;
+    public static long f() {
+        return 2L;
     }
 
-    public static int g(int x) {
+    public static long g(long x) {
         return x;
     }
 
-    public static int h(int x, int y) {
+    public static long h(long x, long y) {
         return x + y;
     }
 }

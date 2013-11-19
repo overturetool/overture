@@ -2,54 +2,51 @@ import org.javatuples.*;
 
 
 public class A {
-    public static int f1(int x) {
-        return 1;
+    public static long f1(long x) {
+        return 1L;
     }
 
-    public static Pair<Integer, Integer> f2(int x) {
-        return new Pair<Integer, Integer>(1, 2);
+    public static Pair<Long, Long> f2(long x) {
+        return new Pair<Long, Long>(1L, 2L);
     }
 
-    public static Triplet<Integer, Integer, Integer> f3(int x) {
-        return new Triplet<Integer, Integer, Integer>(1, 2, 3);
+    public static Triplet<Long, Long, Long> f3(long x) {
+        return new Triplet<Long, Long, Long>(1L, 2L, 3L);
     }
 
-    public static Quartet<Integer, Integer, Integer, Integer> f4(int x) {
-        return new Quartet<Integer, Integer, Integer, Integer>(1, 2, 3, 4);
+    public static Quartet<Long, Long, Long, Long> f4(long x) {
+        return new Quartet<Long, Long, Long, Long>(1L, 2L, 3L, 4L);
     }
 
-    public static Quintet<Integer, Integer, Integer, Integer, Integer> f5(int x) {
-        return new Quintet<Integer, Integer, Integer, Integer, Integer>(1, 2,
-            3, 4, 5);
+    public static Quintet<Long, Long, Long, Long, Long> f5(long x) {
+        return new Quintet<Long, Long, Long, Long, Long>(1L, 2L, 3L, 4L, 5L);
     }
 
-    public static Sextet<Integer, Integer, Integer, Integer, Integer, Integer> f6(
-        int x) {
-        return new Sextet<Integer, Integer, Integer, Integer, Integer, Integer>(1,
-            2, 3, 4, 5, 6);
+    public static Sextet<Long, Long, Long, Long, Long, Long> f6(long x) {
+        return new Sextet<Long, Long, Long, Long, Long, Long>(1L, 2L, 3L, 4L,
+            5L, 6L);
     }
 
-    public static Septet<Integer, Integer, Integer, Integer, Integer, Integer, Integer> f7(
-        int x) {
-        return new Septet<Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
-            2, 3, 4, 5, 6, 7);
+    public static Septet<Long, Long, Long, Long, Long, Long, Long> f7(long x) {
+        return new Septet<Long, Long, Long, Long, Long, Long, Long>(1L, 2L, 3L,
+            4L, 5L, 6L, 7L);
     }
 
-    public static Octet<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f8(
-        int x) {
-        return new Octet<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
-            2, 3, 4, 5, 6, 7, 8);
+    public static Octet<Long, Long, Long, Long, Long, Long, Long, Long> f8(
+        long x) {
+        return new Octet<Long, Long, Long, Long, Long, Long, Long, Long>(1L,
+            2L, 3L, 4L, 5L, 6L, 7L, 8L);
     }
 
-    public static Ennead<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f9(
-        int x) {
-        return new Ennead<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
-            2, 3, 4, 5, 6, 7, 8, 9);
+    public static Ennead<Long, Long, Long, Long, Long, Long, Long, Long, Long> f9(
+        long x) {
+        return new Ennead<Long, Long, Long, Long, Long, Long, Long, Long, Long>(1L,
+            2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
     }
 
-    public static Decade<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> f10(
-        int x) {
-        return new Decade<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>(1,
-            2, 3, 4, 5, 6, 7, 8, 9, 10);
+    public static Decade<Long, Long, Long, Long, Long, Long, Long, Long, Long, Long> f10(
+        long x) {
+        return new Decade<Long, Long, Long, Long, Long, Long, Long, Long, Long, Long>(1L,
+            2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
     }
 }

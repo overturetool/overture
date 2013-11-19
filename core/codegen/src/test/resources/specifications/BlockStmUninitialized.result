@@ -1,12 +1,12 @@
 public class A {
-    public int op() {
-        int n = 0;
+    public long op() {
+        long n = 0L;
         boolean b = false;
         double r = 0.0;
         char c = '0';
         String s = null;
         A a = null;
 
-        return 0;
+        return 0L;
     }
 }

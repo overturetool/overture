@@ -1,27 +1,27 @@
 public class Functions {
-    public static int f1() {
-        if (1 == 1) {
-            return 1;
+    public static long f1() {
+        if (1L == 1L) {
+            return 1L;
         } else {
-            return 2;
+            return 2L;
         }
     }
 
-    public static int f2() {
-        if (1 == 1) {
-            if (2 == 2) {
-                return 3;
-            } else if (3 == 3) {
-                return 4;
+    public static long f2() {
+        if (1L == 1L) {
+            if (2L == 2L) {
+                return 3L;
+            } else if (3L == 3L) {
+                return 4L;
             } else {
-                return 5;
+                return 5L;
             }
         } else {
-            return 6;
+            return 6L;
         }
     }
 
-    public static int f3() {
-        return 5;
+    public static long f3() {
+        return 5L;
     }
 }

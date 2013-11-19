@@ -1,5 +1,5 @@
 public class A {
-    public static int f(int x) {
+    public static long f(long x) {
         return x;
     }
 
@@ -17,17 +17,17 @@ public class A {
         q2();
     }
 
-    public int op1() {
-        return f(1);
+    public long op1() {
+        return f(1L);
     }
 
-    public int op2() {
-        return B.f(1);
+    public long op2() {
+        return B.f(1L);
     }
 }
 
 public class B {
-    public static int f(int x) {
+    public static long f(long x) {
         return x;
     }
 }

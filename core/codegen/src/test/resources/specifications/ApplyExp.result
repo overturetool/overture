@@ -1,13 +1,13 @@
 public class A {
-    public int op1() {
-        return 1;
+    public long op1() {
+        return 1L;
     }
 
-    public int op2() {
+    public long op2() {
         return new A().op1();
     }
 
-    public int op4() {
+    public long op4() {
         A a = new A();
 
         return a.op1();

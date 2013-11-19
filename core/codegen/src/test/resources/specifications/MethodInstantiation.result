@@ -1,10 +1,10 @@
 public class A {
-    public static int f1() {
-        return g(1, 2);
+    public static long f1() {
+        return g(1L, 2L);
     }
 
     public static A f2() {
-        return g(new A(), 2);
+        return g(new A(), 2L);
     }
 
     public static <T, U> T g(T arg1, U arg2) {

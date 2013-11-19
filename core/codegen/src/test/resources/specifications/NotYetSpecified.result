@@ -3,7 +3,7 @@ public class A {
         throw new UnsupportedOperationException();
     }
 
-    public static int f() {
+    public static long f() {
         throw new UnsupportedOperationException();
     }
 }

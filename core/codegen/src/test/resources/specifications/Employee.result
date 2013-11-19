@@ -16,10 +16,10 @@ public class HourlyPaidEmployee extends Employee {
     }
 
     public void SetRate(double pRate) {
-        if (pRate > 150) {
-            rate = 150;
-        } else if (pRate < 0) {
-            rate = 0;
+        if (pRate > 150L) {
+            rate = 150L;
+        } else if (pRate < 0L) {
+            rate = 0L;
         } else {
             rate = pRate;
         }
@@ -51,7 +51,7 @@ public class Company {
     }
 
     public void op1() {
-        int x = employees.size();
+        long x = employees.size();
         List<Employee> y = employees;
         Employee q = employees.get(0);
 
@@ -59,11 +59,11 @@ public class Company {
     }
 
     public double calculateSalary() {
-        return start_calc(0, employees);
+        return start_calc(0L, employees);
     }
 
     private double start_calc(double sum, List<Employee> emps) {
-        if (emps.size() == 0) {
+        if (emps.size() == 0L) {
             return sum;
         } else {
             return start_calc(sum + emps.get(0).getSalary(),
@@ -71,7 +71,7 @@ public class Company {
         }
     }
 
-    private double not_used(double r, int n1, int n, char c, boolean b) {
+    private double not_used(double r, long n1, long n, char c, boolean b) {
         return 2.1;
     }
 
@@ -84,10 +84,10 @@ public class Company {
 
 public class World {
     public double run() {
-        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100);
-        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000);
-        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000);
-        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100);
+        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
+        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
+        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
+        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100L);
         Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
                                        .addEmp(emp4);
 

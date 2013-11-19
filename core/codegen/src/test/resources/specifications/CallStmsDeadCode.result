@@ -1,9 +1,9 @@
 public class A {
-    public int op1() {
-        return 1;
+    public long op1() {
+        return 1L;
     }
 
-    public int q2() {
+    public long q2() {
         return op1();
 
         return op1();
