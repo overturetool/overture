@@ -21,10 +21,10 @@ public class AIdentifierPatternAssistantTC
 		this.af = af;
 	}
 
-	public static PType getPossibleTypes(AIdentifierPattern pattern)
-	{
-		return AstFactory.newAUnknownType(pattern.getLocation());
-	}
+//	public static PType getPossibleTypes(AIdentifierPattern pattern)
+//	{
+//		return AstFactory.newAUnknownType(pattern.getLocation());
+//	}
 
 	public static List<PDefinition> getAllDefinitions(AIdentifierPattern rp,
 			PType ptype, NameScope scope)

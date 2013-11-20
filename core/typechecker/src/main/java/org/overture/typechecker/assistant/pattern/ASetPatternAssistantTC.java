@@ -96,10 +96,10 @@ public class ASetPatternAssistantTC
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ASetPattern pattern)
-	{
-		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-	}
+//	public static PType getPossibleTypes(ASetPattern pattern)
+//	{
+//		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+//	}
 
 	public static PExp getMatchingExpression(ASetPattern sp)
 	{

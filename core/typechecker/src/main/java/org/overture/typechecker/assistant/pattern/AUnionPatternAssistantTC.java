@@ -14,7 +14,6 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
-import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -80,18 +79,18 @@ public class AUnionPatternAssistantTC
 		return defs;
 	}
 
-	public static PType getPossibleTypes(AUnionPattern unionPattern)
-	{
-		PTypeSet set = new PTypeSet();
-
-		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getLeft()));
-		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getRight()));
-
-		PType s = set.getType(unionPattern.getLocation());
-
-		return PTypeAssistantTC.isUnknown(s) ? AstFactory.newASetType(unionPattern.getLocation(), AstFactory.newAUnknownType(unionPattern.getLocation()))
-				: s;
-	}
+//	public static PType getPossibleTypes(AUnionPattern unionPattern)
+//	{
+//		PTypeSet set = new PTypeSet();
+//
+//		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getLeft()));
+//		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getRight()));
+//
+//		PType s = set.getType(unionPattern.getLocation());
+//
+//		return PTypeAssistantTC.isUnknown(s) ? AstFactory.newASetType(unionPattern.getLocation(), AstFactory.newAUnknownType(unionPattern.getLocation()))
+//				: s;
+//	}
 
 	public static PExp getMatchingExpression(AUnionPattern up)
 	{

@@ -92,10 +92,10 @@ public class ASeqPatternAssistantTC
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ASeqPattern pattern)
-	{
-		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-	}
+//	public static PType getPossibleTypes(ASeqPattern pattern)
+//	{
+//		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+//	}
 
 	public static PExp getMatchingExpression(ASeqPattern seqp)
 	{

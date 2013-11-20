@@ -4,7 +4,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AIgnorePatternAssistantTC
@@ -19,10 +18,10 @@ public class AIgnorePatternAssistantTC
 		this.af = af;
 	}
 
-	public static PType getPossibleTypes(AIgnorePattern pattern)
-	{
-		return AstFactory.newAUnknownType(pattern.getLocation());
-	}
+//	public static PType getPossibleTypes(AIgnorePattern pattern)
+//	{
+//		return AstFactory.newAUnknownType(pattern.getLocation());
+//	}
 
 	public static PExp getMatchingExpression(AIgnorePattern iptrn)
 	{

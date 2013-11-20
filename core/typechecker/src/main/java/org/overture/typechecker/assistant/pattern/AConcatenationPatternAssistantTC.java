@@ -68,10 +68,10 @@ public class AConcatenationPatternAssistantTC
 
 	}
 
-	public static PType getPossibleType(AConcatenationPattern pattern)
-	{
-		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-	}
+//	public static PType getPossibleType(AConcatenationPattern pattern)
+//	{
+//		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
+//	}
 
 	public static PExp getMatchingExpression(AConcatenationPattern ccp)
 	{

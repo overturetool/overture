@@ -3,7 +3,6 @@ package org.overture.typechecker.assistant.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -21,10 +20,10 @@ public class AExpressionPatternAssistantTC
 		this.af = af;
 	}
 
-	public static PType getPossibleTypes(AExpressionPattern pattern)
-	{
-		return AstFactory.newAUnknownType(pattern.getLocation());
-	}
+//	public static PType getPossibleTypes(AExpressionPattern pattern)
+//	{
+//		return AstFactory.newAUnknownType(pattern.getLocation());
+//	}
 
 	public static void typeResolve(AExpressionPattern pattern,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
