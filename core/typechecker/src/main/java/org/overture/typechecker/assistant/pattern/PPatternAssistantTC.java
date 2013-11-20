@@ -251,59 +251,66 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static PExp getMatchingExpression(PPattern pattern)
 	{
-		if (pattern instanceof ABooleanPattern)
+		try
 		{
-			return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) pattern);
-		} else if (pattern instanceof ACharacterPattern)
+			return pattern.apply(af.getMatchingExpressionFinder());
+		} catch (AnalysisException e)
 		{
-			return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern) pattern);
-		} else if (pattern instanceof AConcatenationPattern)
-		{
-			return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AExpressionPattern)
-		{
-			return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
-		{
-			return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AIgnorePattern)
-		{
-			return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) pattern);
-		} else if (pattern instanceof AIntegerPattern)
-		{
-			return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) pattern);
-		} else if (pattern instanceof ANilPattern)
-		{
-			return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) pattern);
-		} else if (pattern instanceof AQuotePattern)
-		{
-			return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) pattern);
-		} else if (pattern instanceof ARealPattern)
-		{
-			return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) pattern);
-		} else if (pattern instanceof AStringPattern)
-		{
-			return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) pattern);
-		} else
-		{
-			assert false : "Should not happen";
 			return null;
 		}
+//		if (pattern instanceof ABooleanPattern)
+//		{
+//			return ABooleanPatternAssistantTC.getMatchingExpression((ABooleanPattern) pattern);
+//		} else if (pattern instanceof ACharacterPattern)
+//		{
+//			return ACharacterPatternAssistantTC.getMatchingExpression((ACharacterPattern) pattern);
+//		} else if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantTC.getMatchingExpression((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AExpressionPattern)
+//		{
+//			return AExpressionPatternAssistantTC.getMatchingExpression((AExpressionPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantTC.getMatchingExpression((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AIgnorePattern)
+//		{
+//			return AIgnorePatternAssistantTC.getMatchingExpression((AIgnorePattern) pattern);
+//		} else if (pattern instanceof AIntegerPattern)
+//		{
+//			return AIntegerPatternAssistantTC.getMatchingExpression((AIntegerPattern) pattern);
+//		} else if (pattern instanceof ANilPattern)
+//		{
+//			return ANilPatternAssistantTC.getMatchingExpression((ANilPattern) pattern);
+//		} else if (pattern instanceof AQuotePattern)
+//		{
+//			return AQuotePatternAssistantTC.getMatchingExpression((AQuotePattern) pattern);
+//		} else if (pattern instanceof ARealPattern)
+//		{
+//			return ARealPatternAssistantTC.getMatchingExpression((ARealPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantTC.getMatchingExpression((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantTC.getMatchingExpression((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantTC.getMatchingExpression((ASetPattern) pattern);
+//		} else if (pattern instanceof AStringPattern)
+//		{
+//			return AStringPatternAssistantTC.getMatchingExpression((AStringPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantTC.getMatchingExpression((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantTC.getMatchingExpression((AUnionPattern) pattern);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//			return null;
+//		}
 	}
 
 	public static boolean isSimple(PPattern pattern)
