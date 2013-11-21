@@ -12,7 +12,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.DependencyAnalysis;
+import org.overture.codegen.analysis.OoAstAnalysis;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -59,7 +59,7 @@ public class JavaCodeGen
 	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
 	{
 			new TemplateCallable("JavaFormat", JavaFormat.class),
-			new TemplateCallable("DependencyAnalysis", DependencyAnalysis.class)
+			new TemplateCallable("OoAstAnalysis", OoAstAnalysis.class)
 	};
 	
 	public JavaCodeGen()
