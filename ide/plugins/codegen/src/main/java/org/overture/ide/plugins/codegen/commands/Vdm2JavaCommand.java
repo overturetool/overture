@@ -74,10 +74,10 @@ public class Vdm2JavaCommand extends AbstractHandler
 						vdm2java.generateJavaSourceFile(quotesFolder, quotes);
 					}
 					
-					GeneratedModule utils = vdm2java.generateJavaCodeGenUtils();
+					List<GeneratedModule> utils = vdm2java.generateJavaCodeGenUtils();
 
 					File utilsFolder = PluginVdm2JavaUtil.getUtilsFolder(vdmProject);
-					vdm2java.generateJavaSourceFile(utilsFolder, utils);
+					vdm2java.generateJavaSourceFiles(utilsFolder, utils);
 					
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
