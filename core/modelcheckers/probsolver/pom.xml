@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.overture.core</groupId>
+		<artifactId>modelcheckers</artifactId>
+		<version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.overture.core.modelcheckers</groupId>
+	<artifactId>probsolver</artifactId>
+	<name>Integration of the ProB Solver for VDM</name>
+
+
+	<repositories>
+		<repository>
+			<id>prob-cobra</id>
+			<name>prob-cobra</name>
+			<url>http://cobra.cs.uni-duesseldorf.de/artifactory/repo</url>
+		</repository>
+
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overture.core</groupId>
+			<artifactId>ast</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overture.core</groupId>
+			<artifactId>typechecker</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overture.core</groupId>
+			<artifactId>pog-string-based</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overture.core</groupId>
+			<artifactId>testframework</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.prob</groupId>
+			<artifactId>de.prob.core.kernel</artifactId>
+			<version>2.0.0-milestone-13-SNAPSHOT</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<!-- the tests use std out a lot so we dont want that in the console -->
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Test?.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
