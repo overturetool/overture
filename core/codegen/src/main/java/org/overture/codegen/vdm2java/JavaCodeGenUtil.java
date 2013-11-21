@@ -133,7 +133,7 @@ public class JavaCodeGenUtil
 		vdmCodGen.generateJavaSourceFile(file, module);
 	}
 	
-	public static GeneratedModule generateJavaCodeGenUtils() throws IOException
+	public static List<GeneratedModule> generateJavaCodeGenUtils() throws IOException
 	{
 		JavaCodeGen vdmCodeGen = new JavaCodeGen();
 		return vdmCodeGen.generateJavaCodeGenUtils();

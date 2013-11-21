@@ -124,7 +124,7 @@ public class DeclAssistantCG
 		return field;
 	}
 	
-	public static boolean isValidName(String className)
+	public static boolean isValidClassName(String className)
 	{
 		for(int i = 0; i < OoAstConstants.RESERVED_CLASS_NAMES.length; i++)
 			if(OoAstConstants.RESERVED_CLASS_NAMES[i].equals(className))

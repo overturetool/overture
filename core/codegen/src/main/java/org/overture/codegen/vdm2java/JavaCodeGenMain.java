@@ -51,8 +51,8 @@ public class JavaCodeGenMain
 
 				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
 				
-				GeneratedModule utils = JavaCodeGenUtil.generateJavaCodeGenUtils();
-				JavaCodeGenUtil.generateJavaSourceFile(file, utils);
+				List<GeneratedModule> utils = JavaCodeGenUtil.generateJavaCodeGenUtils();
+				JavaCodeGenUtil.generateJavaSourceFiles(file, utils);
 				
 			} catch (AnalysisException e)
 			{

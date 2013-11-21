@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.velocity.app.Velocity;
@@ -112,24 +113,39 @@ public class JavaCodeGen
 		return null;
 	}
 	
-	public GeneratedModule generateJavaCodeGenUtils() throws IOException
+	public List<GeneratedModule> generateJavaCodeGenUtils() throws IOException
 	{
-		StringBuffer utilsContent = GeneralUtils.readFromFile(IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER
-				+ IText.SEPARATOR_CHAR + IJavaCodeGenConstants.UTILS_FILE + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+		List<GeneratedModule> utils = new LinkedList<GeneratedModule>();
 		
-		if (utilsContent != null)
+		String utilsRoot = IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER + IText.SEPARATOR_CHAR;
+		String fileExt = IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
+		
+		String utilPath = utilsRoot + IJavaCodeGenConstants.UTILS_FILE + fileExt;
+		String mathPath = utilsRoot + IJavaCodeGenConstants.MATH_FILE + fileExt;
+		String ioPath = utilsRoot + IJavaCodeGenConstants.IO_FILE + fileExt;
+		
+		String[] paths = {utilPath, mathPath, ioPath};
+		String[] filenames = {IJavaCodeGenConstants.UTILS_FILE, IJavaCodeGenConstants.MATH_FILE, IJavaCodeGenConstants.IO_FILE};
+		
+		for (int i = 0; i < paths.length; i++)
 		{
-			StringBuffer utilsGenerated = new StringBuffer();
-			utilsGenerated.append(IJavaCodeGenConstants.UTILS_PACKAGE + IText.NEW_LINE + IText.NEW_LINE);
-			
-			utilsGenerated.append(utilsContent);
-			
-			return new GeneratedModule(IJavaCodeGenConstants.UTILS_FILE, utilsGenerated.toString());
+			StringBuffer fileContent = GeneralUtils.readFromFile(paths[i]);
+
+			if (fileContent != null)
+			{
+				StringBuffer generated = new StringBuffer();
+				generated.append(IJavaCodeGenConstants.UTILS_PACKAGE
+						+ IText.NEW_LINE + IText.NEW_LINE);
+
+				generated.append(fileContent);
+
+				utils.add(new GeneratedModule(filenames[i], generated.toString()));
+			}
 		}
 		
-		return null;
+		return utils;
 	}
-
+	
 	public List<GeneratedModule> generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
@@ -139,6 +155,11 @@ public class JavaCodeGen
 
 		for (SClassDefinition classDef : mergedParseLists)
 		{
+			String className = classDef.getName().getName();
+			
+			if(!shouldBeGenerated(className))
+				continue;
+			
 			classes.add(generator.generateFrom(classDef));
 		}
 
@@ -214,4 +235,15 @@ public class JavaCodeGen
 		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty())
 			throw new InvalidNamesException("The model either uses words that are reserved by Java or declares VDM types that uses Java type names", reservedWordViolations, typenameViolations);
 	}
+	
+	private static boolean shouldBeGenerated(String className)
+	{
+		for(int i = 0; i < IJavaCodeGenConstants.CLASSES_NOT_TO_BE_GENERATED.length; i++)
+			if(IJavaCodeGenConstants.CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+				return false;
+		
+		return true;
+	}
+	
+	
 }

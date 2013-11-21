@@ -24,7 +24,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//
 	{
 		String name = node.getName().getName();
 
-		if(!DeclAssistantCG.isValidName(name))
+		if(!DeclAssistantCG.isValidClassName(name))
 			throw new AnalysisException("Class name: " + name + " is reserved!");
 		
 		String access = node.getAccess().getAccess().toString();
