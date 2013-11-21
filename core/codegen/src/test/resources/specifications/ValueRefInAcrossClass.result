@@ -1,0 +1,9 @@
+public class C {
+    public double op() {
+        return Q.pi;
+    }
+}
+
+public class Q {
+    public static final double pi = 3.14;
+}
