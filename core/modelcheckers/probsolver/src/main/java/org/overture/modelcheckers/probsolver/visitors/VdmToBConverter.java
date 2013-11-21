@@ -66,11 +66,29 @@ import de.be4.classicalb.core.parser.node.TIntegerLiteral;
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
 	public static final String TOKEN_SET = "TOKEN";
-	// private static final String STATE_ID_OLD = "aaaaOld";
-	// private static final String STATE_ID = "aaaa";
+
+	/**
+	 * future use
+	 */
 	private final List<PPredicate> constraints = new ArrayList<PPredicate>();
 
+	/**
+	 * The console which should be used for printing
+	 */
 	private SolverConsole console;
+
+	/**
+	 * Set used to collect the names of all non supported classes
+	 */
+	public Set<String> unsupportedConstructs = new HashSet<String>();
+
+	/**
+	 * A map that holds substitution rules.
+	 * <p>
+	 * This may be a mapping from an old state s~ to the old state name with that field e.g. $s's
+	 * </p>
+	 */
+	Map<String, String> nameSubstitution = new HashMap<String, String>();
 
 	public VdmToBConverter()
 	{
@@ -84,6 +102,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		this.console = console;
 	}
 
+	/**
+	 * reserved for future use
+	 * 
+	 * @param n
+	 * @return
+	 */
 	public Node addCollectedConstraints(PPredicate n)
 	{
 		PPredicate res = n;
@@ -94,11 +118,25 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return res;
 	}
 
+	/**
+	 * Utility method to translate to an expression
+	 * 
+	 * @param n
+	 * @return
+	 * @throws AnalysisException
+	 */
 	public PExpression exp(INode n) throws AnalysisException
 	{
 		return (PExpression) n.apply(this);
 	}
 
+	/**
+	 * Utility method to translate to a predicate
+	 * 
+	 * @param n
+	 * @return
+	 * @throws AnalysisException
+	 */
 	private PPredicate pred(INode n) throws AnalysisException
 	{
 		return (PPredicate) n.apply(this);
@@ -179,6 +217,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return getIdentifier(node.getName());
 	}
 
+	/**
+	 * Future use: Utility method to add type invariants
+	 * 
+	 * @param name
+	 * @param type
+	 */
 	private void addTypeConstraint(ILexNameToken name, PType type)
 	{
 		if (type instanceof ASetType
@@ -204,6 +248,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return null;
 	}
 
+	/**
+	 * Create an identifier based on a lex name. This method handles old correctly
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private PExpression getIdentifier(ILexNameToken name)
 	{
 		String n = name.getName();
@@ -214,6 +264,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return getIdentifier(n);
 	}
 
+	/**
+	 * Construct an identifier from a string using the recorded substitution rules
+	 * 
+	 * @param n
+	 * @return
+	 */
 	private PExpression getIdentifier(String n)
 	{
 		while (nameSubstitution.containsKey(n))
@@ -224,6 +280,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return createIdentifier(n);
 	}
 
+	/**
+	 * Creates either an identifier or a field expression if the string contains a quote
+	 * 
+	 * @param n
+	 * @return
+	 */
 	public static PExpression createIdentifier(String n)
 	{
 		if (n.contains("\'"))
@@ -238,8 +300,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new AIdentifierExpression(ident);
 	}
 
-	Map<String, String> nameSubstitution = new HashMap<String, String>();
-
+	/**
+	 * Creates state names
+	 * 
+	 * @param node
+	 * @param old
+	 * @return
+	 */
 	public static String getStateId(AStateDefinition node, boolean old)
 	{
 		String name = "$" + node.getName().getName().toLowerCase();
@@ -400,19 +467,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	}
 
 	@Override
-	public Node mergeReturns(Node original, Node new_)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Node createNewReturnValue(INode node) throws AnalysisException
 	{
 
 		String name = "_Not-tranclated:" + node.getClass().getSimpleName()
 				+ "_";
 		console.err.println(name + " " + node);
+		unsupportedConstructs.add(node.getClass().getSimpleName());
 
 		List<TIdentifierLiteral> ident = new ArrayList<TIdentifierLiteral>();
 		ident.add(new TIdentifierLiteral(name));
@@ -423,7 +484,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node createNewReturnValue(Object node) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Node mergeReturns(Node original, Node new_)
+	{
 		return null;
 	}
 
