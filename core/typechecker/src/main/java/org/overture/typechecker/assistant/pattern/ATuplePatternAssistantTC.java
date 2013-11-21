@@ -109,10 +109,10 @@ public class ATuplePatternAssistantTC
 //		return list.getType(tupplePattern.getLocation());
 //	}
 
-	public static PExp getMatchingExpression(ATuplePattern tp)
-	{
-		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));
-	}
+//	public static PExp getMatchingExpression(ATuplePattern tp)
+//	{
+//		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));
+//	}
 
 	public static boolean isSimple(ATuplePattern p)
 	{

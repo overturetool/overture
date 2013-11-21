@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -34,10 +33,10 @@ public class AIdentifierPatternAssistantTC
 		return defs;
 	}
 
-	public static PExp getMatchingExpression(AIdentifierPattern idp)
-	{
-		return AstFactory.newAVariableExp(idp.getName().clone());
-	}
+//	public static PExp getMatchingExpression(AIdentifierPattern idp)
+//	{
+//		return AstFactory.newAVariableExp(idp.getName().clone());
+//	}
 
 	public static boolean isSimple(AIdentifierPattern p)
 	{

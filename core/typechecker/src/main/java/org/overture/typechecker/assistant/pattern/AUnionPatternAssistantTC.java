@@ -92,11 +92,11 @@ public class AUnionPatternAssistantTC
 //				: s;
 //	}
 
-	public static PExp getMatchingExpression(AUnionPattern up)
-	{
-		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
-		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
-	}
+//	public static PExp getMatchingExpression(AUnionPattern up)
+//	{
+//		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
+//		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
+//	}
 
 	public static boolean isSimple(AUnionPattern p)
 	{

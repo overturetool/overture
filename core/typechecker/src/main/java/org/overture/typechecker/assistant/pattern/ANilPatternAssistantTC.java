@@ -1,8 +1,5 @@
 package org.overture.typechecker.assistant.pattern;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.patterns.ANilPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ANilPatternAssistantTC
@@ -20,9 +17,9 @@ public class ANilPatternAssistantTC
 //		return AstFactory.newAOptionalType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 //	}
 
-	public static PExp getMatchingExpression(ANilPattern np)
-	{
-		return AstFactory.newANilExp(np.getLocation());
-	}
+//	public static PExp getMatchingExpression(ANilPattern np)
+//	{
+//		return AstFactory.newANilExp(np.getLocation());
+//	}
 
 }

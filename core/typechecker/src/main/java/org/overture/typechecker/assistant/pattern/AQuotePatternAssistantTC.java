@@ -1,9 +1,5 @@
 package org.overture.typechecker.assistant.pattern;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexQuoteToken;
-import org.overture.ast.patterns.AQuotePattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AQuotePatternAssistantTC
@@ -21,10 +17,10 @@ public class AQuotePatternAssistantTC
 //		return AstFactory.newAQuoteType(((AQuotePattern) pattern).getValue().clone());
 //	}
 
-	public static PExp getMatchingExpression(AQuotePattern qp)
-	{
-		ILexQuoteToken v = qp.getValue();
-		return AstFactory.newAQuoteLiteralExp(v.clone());
-	}
+//	public static PExp getMatchingExpression(AQuotePattern qp)
+//	{
+//		ILexQuoteToken v = qp.getValue();
+//		return AstFactory.newAQuoteLiteralExp(v.clone());
+//	}
 
 }

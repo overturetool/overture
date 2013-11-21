@@ -1,8 +1,27 @@
 package org.overture.typechecker.utilities.pattern;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexBooleanToken;
+import org.overture.ast.intf.lex.ILexCharacterToken;
+import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexQuoteToken;
+import org.overture.ast.intf.lex.ILexRealToken;
+import org.overture.ast.intf.lex.ILexStringToken;
+import org.overture.ast.lex.LexBooleanToken;
+import org.overture.ast.lex.LexCharacterToken;
+import org.overture.ast.lex.LexIntegerToken;
+import org.overture.ast.lex.LexKeywordToken;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.lex.LexRealToken;
+import org.overture.ast.lex.LexToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
@@ -20,23 +39,10 @@ import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.ABooleanPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ACharacterPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AIdentifierPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AIgnorePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AIntegerPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ANilPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AQuotePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ARealPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AStringPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 /**
  * Used to get Matching expressions out of a pattern.
@@ -57,105 +63,132 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 	public PExp caseABooleanPattern(ABooleanPattern pattern)
 			throws AnalysisException
 	{
-		return ABooleanPatternAssistantTC.getMatchingExpression(pattern);
+		ILexBooleanToken tok = pattern.getValue();
+		ABooleanConstExp res = AstFactory.newABooleanConstExp((LexBooleanToken) tok.clone());
+		return res;
 	}
 	
 	@Override
 	public PExp caseACharacterPattern(ACharacterPattern pattern)
 			throws AnalysisException
 	{
-		return ACharacterPatternAssistantTC.getMatchingExpression(pattern);
+		ILexCharacterToken v = pattern.getValue();
+		return AstFactory.newACharLiteralExp((LexCharacterToken) v.clone());
 	}
 	
 	@Override
 	public PExp caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
-		return AConcatenationPatternAssistantTC.getMatchingExpression(pattern);
+		LexToken op = new LexKeywordToken(VDMToken.CONCATENATE, pattern.getLocation());
+		PExp le = PPatternAssistantTC.getMatchingExpression(pattern.getLeft());
+		PExp re = PPatternAssistantTC.getMatchingExpression(pattern.getRight());
+		return AstFactory.newASeqConcatBinaryExp(le, op, re);
 	}
 	
 	@Override
 	public PExp caseAExpressionPattern(AExpressionPattern pattern)
 			throws AnalysisException
 	{
-		return AExpressionPatternAssistantTC.getMatchingExpression(pattern);
+		return pattern.getExp();
 	}
 	
 	@Override
 	public PExp caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
-		return AIdentifierPatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newAVariableExp(pattern.getName().clone());
 	}
 	
 	@Override
 	public PExp caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
-		return AIgnorePatternAssistantTC.getMatchingExpression(pattern);
+		 int var = 1; //This was a private static global variable in the assistant AIgnorePatternAssistantTC.
+		// Generate a new "any" name for use during PO generation. The name
+		// must be unique for the pattern instance.
+
+		if (pattern.getAnyName() == null)
+		{
+			pattern.setAnyName(new LexNameToken("", "any" + var++, pattern.getLocation()));
+		}
+
+		return AstFactory.newAVariableExp(pattern.getAnyName());
 	}
 	
 	@Override
 	public PExp caseAIntegerPattern(AIntegerPattern pattern)
 			throws AnalysisException
 	{
-		return AIntegerPatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newAIntLiteralExp((LexIntegerToken) pattern.getValue().clone());
 	}
 	
 	@Override
 	public PExp caseANilPattern(ANilPattern pattern) throws AnalysisException
 	{
-		return ANilPatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newANilExp(pattern.getLocation());
 	}
 	
 	@Override
 	public PExp caseAQuotePattern(AQuotePattern pattern) throws AnalysisException
 	{
-		return AQuotePatternAssistantTC.getMatchingExpression(pattern);
+		ILexQuoteToken v = pattern.getValue();
+		return AstFactory.newAQuoteLiteralExp(v.clone());
 	}
 	
 	@Override
 	public PExp caseARealPattern(ARealPattern pattern) throws AnalysisException
 	{
-		return ARealPatternAssistantTC.getMatchingExpression(pattern);
+		ILexRealToken v = pattern.getValue();
+		return AstFactory.newARealLiteralExp((LexRealToken) v.clone());
 	}
 	
 	@Override
 	public PExp caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		return ARecordPatternAssistantTC.getMatchingExpression(pattern);
+		List<PExp> list = new LinkedList<PExp>();
+
+		for (PPattern p : pattern.getPlist())
+		{
+			list.add(PPatternAssistantTC.getMatchingExpression(p));
+		}
+
+		ILexNameToken tpName = pattern.getTypename();
+		return AstFactory.newAMkTypeExp(tpName.clone(), list);
 	}
 	
 	@Override
 	public PExp caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		return ASeqPatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newASeqEnumSeqExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
 	
 	@Override
 	public PExp caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		return ASetPatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newASetEnumSetExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
 	
 	@Override
 	public PExp caseAStringPattern(AStringPattern pattern)
 			throws AnalysisException
 	{
-		return AStringPatternAssistantTC.getMatchingExpression(pattern);
+		ILexStringToken v = pattern.getValue();
+		return AstFactory.newAStringLiteralExp((ILexStringToken) v.clone());
 	}
 	
 	@Override
 	public PExp caseATuplePattern(ATuplePattern pattern) throws AnalysisException
 	{
-		return ATuplePatternAssistantTC.getMatchingExpression(pattern);
+		return AstFactory.newATupleExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
 	
 	@Override
 	public PExp caseAUnionPattern(AUnionPattern pattern) throws AnalysisException
 	{
-		return AUnionPatternAssistantTC.getMatchingExpression(pattern);
+		LexToken op = new LexKeywordToken(VDMToken.UNION, pattern.getLocation());
+		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(pattern.getLeft()), op, PPatternAssistantTC.getMatchingExpression(pattern.getRight()));
 	}
 	
 	@Override

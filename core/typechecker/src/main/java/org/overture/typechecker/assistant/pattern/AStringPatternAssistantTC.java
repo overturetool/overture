@@ -22,10 +22,10 @@ public class AStringPatternAssistantTC
 //		return t;
 //	}
 
-	public static PExp getMatchingExpression(AStringPattern sp)
-	{
-		ILexStringToken v = sp.getValue();
-		return AstFactory.newAStringLiteralExp((ILexStringToken) v.clone());
-	}
+//	public static PExp getMatchingExpression(AStringPattern sp)
+//	{
+//		ILexStringToken v = sp.getValue();
+//		return AstFactory.newAStringLiteralExp((ILexStringToken) v.clone());
+//	}
 
 }
