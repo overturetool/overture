@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -366,9 +367,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		PDefinition varDef = node.getVardef();
 		
-		if (varDef instanceof ALocalDefinition || 
-			varDef instanceof AInstanceVariableDefinition ||
-			!node.getName().getExplicit())
+		SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
+		SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
+
+		boolean inOwningClass = owningClass == nodeParentClass;
+		
+		boolean isLocalDef = varDef instanceof ALocalDefinition;
+		boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
+		boolean isAssignmentDef = varDef instanceof AAssignmentDefinition;
+		
+		boolean isDefInOwningClass = inOwningClass && (isLocalDef || isInstanceVarDef || isAssignmentDef);
+
+		boolean isImplicit = !node.getName().getExplicit();
+		
+		if (isDefInOwningClass || isImplicit)
 		{
 			AVariableExpCG varExp = new AVariableExpCG();
 			varExp.setOriginal(name);
@@ -391,7 +403,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		else
 			return null; 
-		
 	}
 	
 	@Override
