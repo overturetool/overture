@@ -379,11 +379,6 @@ public class TypeReader extends SyntaxReader
 				checkFor(Token.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
 				break;
 
-			case NIL:
-				type = new VoidType(location);
-				nextToken();
-				break;
-
 			case IDENTIFIER:
 				LexIdentifierToken id = (LexIdentifierToken)token;
 				type = new UnresolvedType(idToName(id));
