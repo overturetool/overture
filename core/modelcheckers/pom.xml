@@ -17,5 +17,6 @@
 
   <modules>
     <module>probsolver</module>
+	<module>probsolverintegration</module>
   </modules>
 </project>

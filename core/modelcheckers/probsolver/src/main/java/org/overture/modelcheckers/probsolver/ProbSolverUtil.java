@@ -53,7 +53,7 @@ import de.prob.animator.domainobjects.EvalResult;
 import de.prob.animator.domainobjects.IEvalResult;
 import de.prob.webconsole.ServletContextListener;
 
-public class ProbSolverUtil
+public class ProbSolverUtil 
 {
 	public static class SolverException extends Exception
 	{

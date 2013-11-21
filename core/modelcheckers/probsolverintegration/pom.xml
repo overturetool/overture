@@ -10,42 +10,23 @@
 	</parent>
 
 	<groupId>org.overture.core.modelcheckers</groupId>
-	<artifactId>probsolver</artifactId>
-	<name>Integration of the ProB Solver for VDM</name>
+	<artifactId>probsolverintegration</artifactId>
+	<name>Integration of the ProB Solver for the VDM Interpreter</name>
 
 
-	<repositories>
-		<repository>
-			<id>prob-cobra</id>
-			<name>prob-cobra</name>
-			<url>http://cobra.cs.uni-duesseldorf.de/artifactory/repo</url>
-		</repository>
-
-	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.overture.core</groupId>
-			<artifactId>ast</artifactId>
+			<artifactId>interpreter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overture.core</groupId>
-			<artifactId>typechecker</artifactId>
+			<groupId>org.overture.core.modelcheckers</groupId>
+			<artifactId>probsolver</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.prob</groupId>
-			<artifactId>de.prob.core.kernel</artifactId>
-			<version>2.0.0-milestone-13-SNAPSHOT</version>
-		</dependency>
 
 
 	</dependencies>
