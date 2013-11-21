@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
@@ -55,7 +56,7 @@ public class AstTestConverter
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
-
+try{
 		setLoggingLevel(Level.OFF);
 		animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
 		AbstractCommand[] init = {
@@ -67,7 +68,13 @@ public class AstTestConverter
 				new SetPreferenceCommand("MININT", "-128"),
 				new SetPreferenceCommand("TIME_OUT", "500"),
 				new StartAnimationCommand() };
+		
+		
 		animator.execute(init);
+		}catch(Exception e)
+		{
+			animator = null;
+		}
 
 	}
 
@@ -141,6 +148,11 @@ public class AstTestConverter
 	public void solve(SOperationDefinition opDef, AStateDefinition state)
 			throws IOException
 	{
+		if(animator==null)
+		{
+			Assume.assumeNotNull(animator);
+			return;
+		}
 		try
 		{
 			VdmToBConverter translator = new VdmToBConverter();
@@ -175,8 +187,12 @@ public class AstTestConverter
 			// http://nightly.cobra.cs.uni-duesseldorf.de/cli/
 			IEvalResult solverResult = null;
 			String message = "";
+			
+		
+			
 			try
 			{
+				
 				animator.execute(command);
 				solverResult = command.getValue();
 			} catch (Exception e)
