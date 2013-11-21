@@ -3,10 +3,11 @@
 	#set( $quoteImport = "import quotes.*;")
 #end
 
+#set( $javaUtilImport = "")
 #set( $utilImport = "")
 #if ($OoAstAnalysis.usesSequences($node) || $OoAstAnalysis.usesSets($node))
-	#set($utilImport = "import utils.*;
-						import java.util.*;")
+	#set($javaUtilImport = "import java.util.*;")
+	#set($utilImport = "import utils.*;")
 #end
 
 #set( $tupleImport = "")
@@ -14,6 +15,11 @@
 	#set( $tupleImport = "import org.javatuples.*;")
 #end
 
+#if ($OoAstAnalysis.usesUtils($node))
+	#set( $utilImport = "import utils.*;")
+#end
+
+$javaUtilImport
 $utilImport
 $quoteImport
 $tupleImport

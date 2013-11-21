@@ -13,6 +13,8 @@ public class OoAstConstants
 	public static final String MATH_CLASS_NAME = "MATH";
 	public static final String UTIL_CLASS_NAME = "VDMUtil";
 	
+	public static final String[] UTIL_NAMES = {IO_CLASS_NAME, MATH_CLASS_NAME, UTIL_CLASS_NAME};
+	
 	public static final String[] RESERVED_CLASS_NAMES = {
 			QUOTES_INTERFACE_NAME, IO_CLASS_NAME, MATH_CLASS_NAME,
 			UTIL_CLASS_NAME };

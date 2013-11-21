@@ -5,68 +5,42 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
 public class OoAstAnalysis
 {
-
 	public static boolean usesSets(AClassDeclCG classDecl)
 	{
-		SetAnalysis setAnalysis = new SetAnalysis();
-		
-		try
-		{
-			classDecl.apply(setAnalysis);
-		}catch(AnalysisException e)
-		{
-			//If found an exception will be thrown to terminate
-			//the visitor analysis
-		}
-		
-		return setAnalysis.isFound();
+		return hasDependency(classDecl, new SetAnalysis());
 	}
 	
 	public static boolean usesSequences(AClassDeclCG classDecl)
 	{
-		SequenceAnalysis seqAnalysis = new SequenceAnalysis();
-		
-		try
-		{
-			classDecl.apply(seqAnalysis);
-		}catch(AnalysisException e)
-		{
-			//If found an exception will be thrown to terminate
-			//the visitor analysis
-		}
-		
-		return seqAnalysis.isFound();
+		return hasDependency(classDecl, new SequenceAnalysis());
 	}
 	
 	public static boolean usesQuoteLiterals(AClassDeclCG classDecl)
 	{
-		QuoteAnalysis quoteAnalysis = new QuoteAnalysis();
-		
-		try
-		{
-			classDecl.apply(quoteAnalysis);
-		}catch(AnalysisException e)
-		{
-			//If found an exception will be thrown to terminate
-			//the visitor analysis
-		}
-		
-		return quoteAnalysis.isFound();
+		return hasDependency(classDecl, new QuoteAnalysis());
 	}
 	
 	public static boolean usesTuples(AClassDeclCG classDecl)
 	{
-		TupleAnalysis tupleAnalysis = new TupleAnalysis();
-		
+		return hasDependency(classDecl, new TupleAnalysis());
+	}
+	
+	public static boolean usesUtils(AClassDeclCG classDecl)
+	{
+		return hasDependency(classDecl, new UtilAnalysis());
+	}
+	
+	private static boolean hasDependency(AClassDeclCG classDecl, AbstractAnalysis analysis)
+	{
 		try
 		{
-			classDecl.apply(tupleAnalysis);
+			classDecl.apply(analysis);
 		}catch(AnalysisException e)
 		{
 			//If found an exception will be thrown to terminate
 			//the visitor analysis
 		}
 		
-		return tupleAnalysis.isFound();
+		return analysis.isFound();
 	}
 }
