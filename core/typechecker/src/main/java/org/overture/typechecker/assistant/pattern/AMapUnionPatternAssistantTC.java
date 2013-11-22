@@ -74,10 +74,10 @@ public class AMapUnionPatternAssistantTC
 		return defs;
 	}
 
-	public static boolean isSimple(AMapUnionPattern p)
-	{
-		return PPatternAssistantTC.isSimple(p.getLeft())
-				&& PPatternAssistantTC.isSimple(p.getRight());
-	}
+//	public static boolean isSimple(AMapUnionPattern p)
+//	{
+//		return PPatternAssistantTC.isSimple(p.getLeft())
+//				&& PPatternAssistantTC.isSimple(p.getRight());
+//	}
 
 }

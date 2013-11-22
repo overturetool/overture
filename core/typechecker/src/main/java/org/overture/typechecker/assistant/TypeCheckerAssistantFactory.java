@@ -143,6 +143,7 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.PossibleTypeFinder;
+import org.overture.typechecker.utilities.pattern.SimplePatternChecker;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
@@ -1179,5 +1180,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<PExp> getMatchingExpressionFinder()
 	{
 		return new MatchingExpressionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getSimplePatternChecker()
+	{
+		return new SimplePatternChecker(this);
 	}
 }

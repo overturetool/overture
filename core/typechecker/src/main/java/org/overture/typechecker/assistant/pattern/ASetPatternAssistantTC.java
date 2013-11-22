@@ -104,9 +104,9 @@ public class ASetPatternAssistantTC
 //		return AstFactory.newASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
 //	}
 
-	public static boolean isSimple(ASetPattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
-	}
+//	public static boolean isSimple(ASetPattern p)
+//	{
+//		return PPatternListAssistantTC.isSimple(p.getPlist());
+//	}
 
 }

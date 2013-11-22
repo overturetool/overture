@@ -38,9 +38,9 @@ public class AIdentifierPatternAssistantTC
 //		return AstFactory.newAVariableExp(idp.getName().clone());
 //	}
 
-	public static boolean isSimple(AIdentifierPattern p)
-	{
-		return false;
-	}
+//	public static boolean isSimple(AIdentifierPattern p)
+//	{
+//		return false;
+//	}
 
 }

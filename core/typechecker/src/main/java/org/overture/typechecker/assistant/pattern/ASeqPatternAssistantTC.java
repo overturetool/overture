@@ -100,9 +100,9 @@ public class ASeqPatternAssistantTC
 //		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
 //	}
 
-	public static boolean isSimple(ASeqPattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
-	}
+//	public static boolean isSimple(ASeqPattern p)
+//	{
+//		return PPatternListAssistantTC.isSimple(p.getPlist());
+//	}
 
 }

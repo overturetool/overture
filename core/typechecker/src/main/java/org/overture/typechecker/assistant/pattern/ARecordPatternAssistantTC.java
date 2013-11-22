@@ -133,9 +133,9 @@ public class ARecordPatternAssistantTC
 //		return AstFactory.newAMkTypeExp(tpName.clone(), list);
 //	}
 
-	public static boolean isSimple(ARecordPattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
-	}
+//	public static boolean isSimple(ARecordPattern p)
+//	{
+//		return PPatternListAssistantTC.isSimple(p.getPlist());
+//	}
 
 }

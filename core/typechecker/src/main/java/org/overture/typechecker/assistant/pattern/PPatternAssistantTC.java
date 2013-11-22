@@ -315,44 +315,51 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static boolean isSimple(PPattern pattern)
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
+			return pattern.apply(af.getSimplePatternChecker());
+		} catch (AnalysisException e)
 		{
-			return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AIgnorePattern)
-		{
-			return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) pattern);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantTC.isSimple((ARecordPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantTC.isSimple((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantTC.isSimple((ASetPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantTC.isSimple((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantTC.isSimple((AUnionPattern) pattern);
-		} else if (pattern instanceof AMapPattern)
-		{
-			return AMapPatternAssistantTC.isSimple((AMapPattern) pattern);
-		} else
-		{
-			/*
-			 * True if the pattern is a simple value that can match only one value for certain. Most pattern types are
-			 * like this, but any that include variables or ignore patterns are not.
-			 */
-			return true;
+			return false;
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantTC.isSimple((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantTC.isSimple((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AIgnorePattern)
+//		{
+//			return AIgnorePatternAssistantTC.isSimple((AIgnorePattern) pattern);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			return AMapUnionPatternAssistantTC.isSimple((AMapUnionPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantTC.isSimple((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantTC.isSimple((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantTC.isSimple((ASetPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantTC.isSimple((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantTC.isSimple((AUnionPattern) pattern);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			return AMapPatternAssistantTC.isSimple((AMapPattern) pattern);
+//		} else
+//		{
+//			/*
+//			 * True if the pattern is a simple value that can match only one value for certain. Most pattern types are
+//			 * like this, but any that include variables or ignore patterns are not.
+//			 */
+//			return true;
+//		}
 	}
 
 	public static boolean alwaysMatches(PPattern pattern)

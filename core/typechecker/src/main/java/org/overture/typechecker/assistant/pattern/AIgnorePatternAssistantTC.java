@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.pattern;
 
-import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AIgnorePatternAssistantTC
@@ -34,9 +33,9 @@ public class AIgnorePatternAssistantTC
 //		return AstFactory.newAVariableExp(iptrn.getAnyName());
 //	}
 
-	public static boolean isSimple(AIgnorePattern p)
-	{
-		return false;
-	}
+//	public static boolean isSimple(AIgnorePattern p)
+//	{
+//		return false;
+//	}
 
 }

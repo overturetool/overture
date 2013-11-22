@@ -76,10 +76,10 @@ public class AConcatenationPatternAssistantTC
 //		return AstFactory.newASeqConcatBinaryExp(le, op, re);
 //	}
 
-	public static boolean isSimple(AConcatenationPattern p)
-	{
-		return PPatternAssistantTC.isSimple(p.getLeft())
-				&& PPatternAssistantTC.isSimple(p.getRight());
-	}
+//	public static boolean isSimple(AConcatenationPattern p)
+//	{
+//		return PPatternAssistantTC.isSimple(p.getLeft())
+//				&& PPatternAssistantTC.isSimple(p.getRight());
+//	}
 
 }

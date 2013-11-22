@@ -6,11 +6,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexKeywordToken;
-import org.overture.ast.lex.LexToken;
-import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -98,10 +93,10 @@ public class AUnionPatternAssistantTC
 //		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
 //	}
 
-	public static boolean isSimple(AUnionPattern p)
-	{
-		return PPatternAssistantTC.isSimple(p.getLeft())
-				&& PPatternAssistantTC.isSimple(p.getRight());
-	}
+//	public static boolean isSimple(AUnionPattern p)
+//	{
+//		return PPatternAssistantTC.isSimple(p.getLeft())
+//				&& PPatternAssistantTC.isSimple(p.getRight());
+//	}
 
 }

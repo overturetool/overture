@@ -445,5 +445,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IAnswer<PExp> getMatchingExpressionFinder();
 	
+	IAnswer<Boolean> getSimplePatternChecker();
+	
 
 }
