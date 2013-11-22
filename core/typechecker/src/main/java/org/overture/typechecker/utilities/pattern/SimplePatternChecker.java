@@ -101,7 +101,8 @@ public class SimplePatternChecker extends AnswerAdaptor<Boolean>
 		for (AMapletPatternMaplet mp : pattern.getMaplets())
 		{
 
-			if (!AMapletPatternMapletAssistantTC.isSimple(mp))
+			//if (!AMapletPatternMapletAssistantTC.isSimple(mp)) // Original code.
+			if(!mp.apply(THIS))
 				return false;
 
 		}
