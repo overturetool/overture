@@ -364,18 +364,25 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static boolean alwaysMatches(PPattern pattern)
 	{
-		if (pattern instanceof ARecordPattern)
-			return PPatternListAssistantTC.alwaysMatches(((ARecordPattern) pattern).getPlist());
-		else if (pattern instanceof AIgnorePattern)
-			return true;
-		else if (pattern instanceof AIdentifierPattern)
-			return true;
-		else if (pattern instanceof ATuplePattern)
-			return PPatternListAssistantTC.alwaysMatches(((ATuplePattern) pattern).getPlist());
-		else
+		try
+		{
+			return pattern.apply(af.getAlwaysMatchingPatternChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (pattern instanceof ARecordPattern)
+//			return PPatternListAssistantTC.alwaysMatches(((ARecordPattern) pattern).getPlist());
+//		else if (pattern instanceof AIgnorePattern)
+//			return true;
+//		else if (pattern instanceof AIdentifierPattern)
+//			return true;
+//		else if (pattern instanceof ATuplePattern)
+//			return PPatternListAssistantTC.alwaysMatches(((ATuplePattern) pattern).getPlist());
+//		else
+//		{
+//			return false;
+//		}
 	}
 
 }

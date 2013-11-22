@@ -447,5 +447,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IAnswer<Boolean> getSimplePatternChecker();
 	
+	IAnswer<Boolean> getAlwaysMatchingPatternChecker();
+	
 
 }
