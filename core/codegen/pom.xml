@@ -35,6 +35,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overture.core</groupId>
+			<artifactId>interpreter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overture.core</groupId>
 			<artifactId>testframework</artifactId>
 			<version>${project.version}</version>
 		</dependency>
