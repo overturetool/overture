@@ -149,11 +149,17 @@ public class JavaCodeGen
 	public List<GeneratedModule> generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		validateVdmModelNames(mergedParseLists);
+		
+		List<SClassDefinition> toBeGenerated = new LinkedList<SClassDefinition>();
+		for (SClassDefinition classDef : mergedParseLists)
+			if(shouldBeGenerated(classDef.getName().getName()))
+				toBeGenerated.add(classDef);
+		
+		validateVdmModelNames(toBeGenerated);
 		
 		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
 
-		for (SClassDefinition classDef : mergedParseLists)
+		for (SClassDefinition classDef : toBeGenerated)
 		{
 			String className = classDef.getName().getName();
 			
