@@ -7,6 +7,11 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to get a Union type from a type
+ * 
+ * @author kel
+ */
 public class UnionTypeFinder extends TypeUnwrapper<AUnionType>
 {
 

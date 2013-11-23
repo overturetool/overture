@@ -22,6 +22,11 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
+/**
+ * Implement the concreate type of a given type.
+ * 
+ * @author kel
+ */
 public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTypeImplementor.Newquestion, PType>
 {
 	public static class Newquestion

@@ -15,7 +15,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
- *Don't know yet what it does.
+ *Checks if a type extending class element is of a specific PType.
  * 
  * @author gkanos
  */

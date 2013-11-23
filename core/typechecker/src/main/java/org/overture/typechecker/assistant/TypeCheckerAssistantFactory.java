@@ -100,7 +100,6 @@ import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlock
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
@@ -193,11 +192,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AApplyObjectDesignatorAssistantTC(this);
 	}
 
-	@Override
-	public ABracketTypeAssistantTC createABracketTypeAssistant()
-	{
-		return new ABracketTypeAssistantTC(this);
-	}
+//	@Override
+//	public ABracketTypeAssistantTC createABracketTypeAssistant()
+//	{
+//		return new ABracketTypeAssistantTC(this);
+//	}
 
 	@Override
 	public AClassTypeAssistantTC createAClassTypeAssistant()

@@ -11,7 +11,7 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
- * Used to determine if a type has void type in it!
+ * Used to determine if a type has void type in it.
  * 
  * @author kel
  */

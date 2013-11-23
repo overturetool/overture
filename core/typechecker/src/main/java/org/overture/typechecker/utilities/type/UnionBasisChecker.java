@@ -9,14 +9,15 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to determine if a type is a Union type
+ * 
+ * @author kel
+ */
 public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 {
 
-	/**
-	 * Used to determine if a type is a Union type
-	 * 
-	 * @author kel
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 

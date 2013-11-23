@@ -37,8 +37,6 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
