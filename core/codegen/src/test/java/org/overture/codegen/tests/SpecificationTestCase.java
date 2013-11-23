@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.constants.IText;
+import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
@@ -30,9 +32,13 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		GeneratedData data = null;
 		
+		File folder = new File(file.getParentFile().getParentFile(), OoAstConstants.UTIL_RESOURCE_FOLDER); 
+		List<File> files = GeneralUtils.getFiles(folder);
+		files.add(file);
+		
 		try
 		{
-			data = JavaCodeGenUtil.generateJavaFromFile(file);
+			data = JavaCodeGenUtil.generateJavaFromFiles(files);
 		} catch (InvalidNamesException e)
 		{
 			return JavaCodeGenUtil.constructNameViolationsString(e);
