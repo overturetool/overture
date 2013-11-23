@@ -1,6 +1,7 @@
 package org.overture.codegen.vdm2java;
 
 import org.overture.codegen.constants.IText;
+import org.overture.codegen.constants.OoAstConstants;
 
 public interface IJavaCodeGenConstants
 {
@@ -15,5 +16,5 @@ public interface IJavaCodeGenConstants
 	public static final String IO_FILE = "IO";
 	public static final String VDM_UTIL_FILE = "VDMUtil";
 	
-	public static final String[] CLASSES_NOT_TO_BE_GENERATED = {VDM_UTIL_FILE, MATH_FILE, IO_FILE};
+	public static final String[] CLASSES_NOT_TO_BE_GENERATED = OoAstConstants.CLASS_NAMES_USED_IN_VDM;
 }

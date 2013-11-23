@@ -1,5 +1,7 @@
 package org.overture.codegen.constants;
 
+import org.apache.commons.lang.ArrayUtils;
+
 public class OoAstConstants
 {
 	public static final String PRIVATE = "private";
@@ -13,9 +15,28 @@ public class OoAstConstants
 	public static final String MATH_CLASS_NAME = "MATH";
 	public static final String UTIL_CLASS_NAME = "VDMUtil";
 	
-	public static final String[] UTIL_NAMES = {IO_CLASS_NAME, MATH_CLASS_NAME, UTIL_CLASS_NAME};
+	public static final String UTIL_RESOURCE_FOLDER = "lib";
 	
-	public static final String[] RESERVED_CLASS_NAMES = {
-			QUOTES_INTERFACE_NAME, IO_CLASS_NAME, MATH_CLASS_NAME,
-			UTIL_CLASS_NAME };
+	public static final String[] UTIL_NAMES = {IO_CLASS_NAME, MATH_CLASS_NAME, UTIL_CLASS_NAME};
+
+	public static final String[] CLASS_NAMES_USED_IN_VDM = {
+		"CSV",
+		"IO",
+		"MATH",
+		"Throwable",
+		"Error",
+		"AssertionFailedError",
+		"Assert",
+		"Test",
+		"TestCase",
+		"TestSuite",
+		"TestListener",
+		"TestResult",
+		"TestRunner",
+		"VDMUtil",
+		"CPU",
+		"BUS"};
+	
+	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[]{QUOTES_INTERFACE_NAME}, CLASS_NAMES_USED_IN_VDM);
+	
 }
