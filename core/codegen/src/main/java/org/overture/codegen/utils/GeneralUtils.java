@@ -1,7 +1,10 @@
 package org.overture.codegen.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GeneralUtils
 {
@@ -21,5 +24,18 @@ public class GeneralUtils
 		input.close();
 
 		return data;
+	}
+	
+	public static List<File> getFiles(File folder)
+	{
+		File[] listOfFiles = folder.listFiles();
+		
+		List<File> fileList = new LinkedList<File>();
+
+		for (File file : listOfFiles)
+			if (file.isFile())
+				fileList.add(file);
+		
+		return fileList;
 	}
 }
