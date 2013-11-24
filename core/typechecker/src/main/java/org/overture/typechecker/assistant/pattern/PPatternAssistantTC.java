@@ -149,35 +149,42 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static void unResolve(PPattern pattern)
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			AConcatenationPatternAssistantTC.unResolve((AConcatenationPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
+			pattern.apply(af.getPatternUnresolver());
+		} catch (AnalysisException e)
 		{
-			ARecordPatternAssistantTC.unResolve((ARecordPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			ASeqPatternAssistantTC.unResolve((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			ASetPatternAssistantTC.unResolve((ASetPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			ATuplePatternAssistantTC.unResolve((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			AUnionPatternAssistantTC.unResolve((AUnionPattern) pattern);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			AMapUnionPatternAssistantTC.unResolve((AMapUnionPattern) pattern);
-		} else if (pattern instanceof AMapPattern)
-		{
-			AMapPatternAssistantTC.unResolve((AMapPattern) pattern);
-			pattern.setResolved(false);
-		} else
-		{
-			pattern.setResolved(false);
+			
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			AConcatenationPatternAssistantTC.unResolve((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			ARecordPatternAssistantTC.unResolve((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			ASeqPatternAssistantTC.unResolve((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			ASetPatternAssistantTC.unResolve((ASetPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			ATuplePatternAssistantTC.unResolve((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			AUnionPatternAssistantTC.unResolve((AUnionPattern) pattern);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			AMapUnionPatternAssistantTC.unResolve((AMapUnionPattern) pattern);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			AMapPatternAssistantTC.unResolve((AMapPattern) pattern);
+//			pattern.setResolved(false);
+//		} else
+//		{
+//			pattern.setResolved(false);
+//		}
 	}
 
 	public static PType getPossibleType(PPattern pattern)
