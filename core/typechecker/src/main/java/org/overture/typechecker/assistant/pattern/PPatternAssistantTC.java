@@ -33,6 +33,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
+import org.overture.typechecker.utilities.pattern.PatternResolver;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public class PPatternAssistantTC extends PPatternAssistant
 {
@@ -114,37 +116,44 @@ public class PPatternAssistantTC extends PPatternAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			AConcatenationPatternAssistantTC.typeResolve((AConcatenationPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof AExpressionPattern)
+			pattern.apply(af.getPatternResolver(), new PatternResolver.NewQuestion(rootVisitor, question));
+		} catch (AnalysisException e)
 		{
-			AExpressionPatternAssistantTC.typeResolve((AExpressionPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			ARecordPatternAssistantTC.typeResolve((ARecordPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			ASeqPatternAssistantTC.typeResolve((ASeqPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof ASetPattern)
-		{
-			ASetPatternAssistantTC.typeResolve((ASetPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			ATuplePatternAssistantTC.typeResolve((ATuplePattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			AUnionPatternAssistantTC.typeResolve((AUnionPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof AMapPattern)
-		{
-			AMapPatternAssistantTC.typeResolve((AMapPattern) pattern, rootVisitor, question);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern, rootVisitor, question);
-		} else
-		{
-			pattern.setResolved(true);
+			
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			AConcatenationPatternAssistantTC.typeResolve((AConcatenationPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof AExpressionPattern)
+//		{
+//			AExpressionPatternAssistantTC.typeResolve((AExpressionPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			ARecordPatternAssistantTC.typeResolve((ARecordPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			ASeqPatternAssistantTC.typeResolve((ASeqPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			ASetPatternAssistantTC.typeResolve((ASetPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			ATuplePatternAssistantTC.typeResolve((ATuplePattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			AUnionPatternAssistantTC.typeResolve((AUnionPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			AMapPatternAssistantTC.typeResolve((AMapPattern) pattern, rootVisitor, question);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			AMapUnionPatternAssistantTC.typeResolve((AMapUnionPattern) pattern, rootVisitor, question);
+//		} else
+//		{
+//			pattern.setResolved(true);
+//		}
 	}
 
 	public static void unResolve(PPattern pattern)

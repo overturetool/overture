@@ -142,6 +142,7 @@ import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
+import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
 import org.overture.typechecker.utilities.pattern.PossibleTypeFinder;
 import org.overture.typechecker.utilities.pattern.SimplePatternChecker;
@@ -1199,5 +1200,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnalysisAdaptor getPatternUnresolver()
 	{
 		return new PatternUnresolver(this);
+	}
+	
+	@Override
+	public IQuestion<org.overture.typechecker.utilities.pattern.PatternResolver.NewQuestion> getPatternResolver()
+	{
+		return new PatternResolver(this);
 	}
 }

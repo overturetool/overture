@@ -121,6 +121,7 @@ import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.TypeFinder;
 import org.overture.typechecker.utilities.TypeResolver;
+import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
 
@@ -449,6 +450,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<Boolean> getAlwaysMatchingPatternChecker();
 	
 	AnalysisAdaptor getPatternUnresolver();
+	
+	IQuestion<PatternResolver.NewQuestion> getPatternResolver();
 	
 
 }

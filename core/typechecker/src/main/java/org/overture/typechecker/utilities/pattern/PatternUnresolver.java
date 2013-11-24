@@ -33,6 +33,7 @@ public class PatternUnresolver extends AnalysisAdaptor
 	{
 		this.af = af;
 	}
+	
 	@Override
 	public void caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
