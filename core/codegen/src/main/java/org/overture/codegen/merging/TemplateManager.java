@@ -48,6 +48,7 @@ import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -200,6 +201,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXPS_PATH + "MethodInstantiation");
 		
 		nodeTemplateFileNames.put(ATupleExpCG.class, templateStructure.EXPS_PATH + "Tuple");
+		
+		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXPS_PATH + "TernaryIf");
 		
 		// Unary expressions
 

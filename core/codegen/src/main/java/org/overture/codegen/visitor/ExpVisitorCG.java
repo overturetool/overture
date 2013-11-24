@@ -13,12 +13,14 @@ import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
@@ -45,6 +47,7 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -63,6 +66,7 @@ import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
@@ -82,6 +86,7 @@ import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -110,6 +115,55 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseAIfExp(AIfExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PExpCG testExp = node.getTest().apply(question.getExpVisitor(), question);
+		PExpCG thenExp = node.getThen().apply(question.getExpVisitor(), question);
+		PTypeCG expectedType = node.getType().apply(question.getTypeVisitor(), question);
+		
+		ATernaryIfExpCG ternaryIf = new ATernaryIfExpCG();
+		
+		ternaryIf.setCondition(testExp);
+		ternaryIf.setTrueValue(thenExp);
+		ternaryIf.setType(expectedType);
+		
+		LinkedList<AElseIfExp> elseExpList = node.getElseList();
+		
+		ATernaryIfExpCG nextTernaryIf = ternaryIf;
+		
+		for (AElseIfExp currentElseExp : elseExpList)
+		{
+			ATernaryIfExpCG tmp = new ATernaryIfExpCG();
+			
+			testExp = currentElseExp.getElseIf().apply(question.getExpVisitor(), question);
+			thenExp = currentElseExp.getThen().apply(question.getExpVisitor(), question);
+			expectedType = currentElseExp.getType().apply(question.getTypeVisitor(), question);
+			
+			tmp.setCondition(testExp);
+			tmp.setTrueValue(thenExp);
+			tmp.setType(expectedType);
+			
+			nextTernaryIf.setFalseValue(tmp);
+			nextTernaryIf = tmp;
+			
+		}
+		
+		PExpCG elseExp = node.getElse().apply(question.getExpVisitor(), question);
+		nextTernaryIf.setFalseValue(elseExp);
+		
+		if(node.parent() instanceof SBinaryExp)
+		{
+			AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
+			isolationExp.setExp(ternaryIf);
+			isolationExp.setType(ternaryIf.getType());
+			return isolationExp;
+		}
+		
+		return ternaryIf;
 	}
 	
 	@Override
