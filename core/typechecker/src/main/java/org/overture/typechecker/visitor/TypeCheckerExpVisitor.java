@@ -2583,6 +2583,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				if (vardef.getClassDefinition() != null)
 				{
+					SClassDefinition sd = vardef.getClassDefinition();
+					if(sd != null && node.getName().getModule().equals(""))
+					{
+						node.setName(name.getModifiedName(sd.getName().getName()));
+					}
+					
 					if (!SClassDefinitionAssistantTC.isAccessible(env, vardef, true))
 					{
 						TypeCheckerErrors.report(3180, "Inaccessible member "
@@ -2599,6 +2605,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					}
+					//FIXME AKM: a little test
+//					if(vardef.getClassDefinition().getName().getName().startsWith("$actionClass"))
+//						node.setName(name.getModifiedName(vardef.getClassDefinition().getName().getName()));
 				}
 			} else if (question.qualifiers != null)
 			{

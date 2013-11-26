@@ -174,6 +174,13 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	public String getName() {
 		return name;
 	}
+	
+	
+
+	@Override
+	public String getKindString() {
+		return kind.toString();
+	}
 
 	@Override
 	public POStatus getStatus() {
