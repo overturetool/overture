@@ -284,7 +284,6 @@ public class FieldExpression extends Expression
 			
 			ctxt.threadState.setAtomic(true);
 			Value r = evaluate(ctxt);
-			ctxt.threadState.setAtomic(false);
 
 			if (r instanceof UpdatableValue)
 			{
@@ -308,6 +307,10 @@ public class FieldExpression extends Expression
 		{
 			abort(e);
 			return null;
+		}
+		finally
+		{
+			ctxt.threadState.setAtomic(false);
 		}
 	}
 

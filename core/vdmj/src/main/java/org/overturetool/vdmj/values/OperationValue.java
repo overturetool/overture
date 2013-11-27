@@ -357,11 +357,17 @@ public class OperationValue extends Value
 
     			// We disable the swapping and time (RT) as precondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-    			ctxt.setPrepost(4071, "Precondition failure: ");
-    			precondition.eval(from, preArgs, ctxt);
-    			ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
+    			try
+    			{
+    				ctxt.threadState.setAtomic(true);
+    				ctxt.setPrepost(4071, "Precondition failure: ");
+    				precondition.eval(from, preArgs, ctxt);
+    			}
+    			finally
+    			{
+    				ctxt.setPrepost(0, null);
+    				ctxt.threadState.setAtomic(false);
+    			}
     		}
 
     		rv = body.eval(argContext);
@@ -483,17 +489,23 @@ public class OperationValue extends Value
 				// else we will reschedule another CPU thread while
 				// having self locked, and that locks up everything!
 
-				debug("guard TEST");
-				ctxt.threadState.setAtomic(true);
-    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
-    			ctxt.threadState.setAtomic(false);
-
-    			if (ok)
-    			{
-    				debug("guard OK");
-    				act();
-    				break;	// Out of while loop
-    			}
+				try
+				{
+					debug("guard TEST");
+					ctxt.threadState.setAtomic(true);
+	    			boolean ok = guard.eval(ctxt).boolValue(ctxt);
+	
+	    			if (ok)
+	    			{
+	    				debug("guard OK");
+	    				act();
+	    				break;	// Out of while loop
+	    			}
+				}
+				finally
+				{
+	    			ctxt.threadState.setAtomic(false);
+				}
 			}
 
 			// The guardLock list is signalled by the GuardValueListener

@@ -355,11 +355,17 @@ public class FunctionValue extends Value
 				// variables, if any. We disable the swapping and time (RT)
 				// as precondition checks should be "free".
 
-				evalContext.threadState.setAtomic(true);
-				evalContext.setPrepost(4055, "Precondition failure: ");
-				precondition.eval(from, argValues, evalContext);
-				evalContext.setPrepost(0, null);
-				evalContext.threadState.setAtomic(false);
+				try
+				{
+					evalContext.threadState.setAtomic(true);
+					evalContext.setPrepost(4055, "Precondition failure: ");
+					precondition.eval(from, argValues, evalContext);
+				}
+				finally
+				{
+					evalContext.setPrepost(0, null);
+					evalContext.threadState.setAtomic(false);
+				}
 			}
 
 			Long tid = Thread.currentThread().getId();

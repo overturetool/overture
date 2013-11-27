@@ -54,13 +54,19 @@ public class InvariantValue extends ReferenceValue
 			// so we set the atomic flag around the conversion. This also stops
 			// VDM-RT from performing "time step" calculations.
 
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
+			try
 			{
-				abort(4060, "Type invariant violated for " + type.typename, ctxt);
+				ctxt.threadState.setAtomic(true);
+				boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
+
+				if (!inv)
+				{
+					abort(4060, "Type invariant violated for " + type.typename, ctxt);
+				}
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
 			}
 		}
 	}

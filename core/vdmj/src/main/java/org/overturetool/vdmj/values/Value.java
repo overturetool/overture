@@ -163,11 +163,15 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			// so we set the atomic flag around the conversion. This also stops
 			// VDM-RT from performing "time step" calculations.
 
-			ctxt.threadState.setAtomic(true);
-			Value converted = convertValueTo(to, ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			return converted;
+			try
+			{
+				ctxt.threadState.setAtomic(true);
+				return convertValueTo(to, ctxt);
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
 		}
 		else
 		{

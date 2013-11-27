@@ -94,9 +94,17 @@ public class DurationStatement extends Statement
 			try
 			{
 				// We disable the swapping and time (RT) as duration evaluation should be "free".
-				ctxt.threadState.setAtomic(true);
-				long step = duration.eval(ctxt).intValue(ctxt);
-				ctxt.threadState.setAtomic(false);
+				long step;
+				
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					step = duration.eval(ctxt).intValue(ctxt);
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
 
 				me.inOuterTimestep(true);
 				Value rv = statement.eval(ctxt);

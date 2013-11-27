@@ -143,29 +143,35 @@ public class AtomicStatement extends Statement
 		// Finally, we re-enable the thread swapping and time stepping, before returning
 		// a void value.
 		
-		ctxt.threadState.setAtomic(true);
-		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
-
-		for (int i = 0; i < size; i++)
+		try
 		{
-			UpdatableValue target = (UpdatableValue) targets.get(i);
-			listenerLists.add(target.listeners);
-			target.listeners = null;
-			target.set(location, values.get(i), ctxt);	// No invariant listeners
-			target.listeners = listenerLists.get(i);
-		}
-		
-		for (int i = 0; i < size; i++)
-		{
-			ValueListenerList listeners = listenerLists.get(i);
-			
-			if (listeners != null)
+			ctxt.threadState.setAtomic(true);
+			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+	
+			for (int i = 0; i < size; i++)
 			{
-				listeners.changedValue(location, values.get(i), ctxt);
+				UpdatableValue target = (UpdatableValue) targets.get(i);
+				listenerLists.add(target.listeners);
+				target.listeners = null;
+				target.set(location, values.get(i), ctxt);	// No invariant listeners
+				target.listeners = listenerLists.get(i);
+			}
+			
+			for (int i = 0; i < size; i++)
+			{
+				ValueListenerList listeners = listenerLists.get(i);
+				
+				if (listeners != null)
+				{
+					listeners.changedValue(location, values.get(i), ctxt);
+				}
 			}
 		}
-
-		ctxt.threadState.setAtomic(false);
+		finally
+		{
+			ctxt.threadState.setAtomic(false);
+		}
+		
 		return new VoidValue();
 	}
 

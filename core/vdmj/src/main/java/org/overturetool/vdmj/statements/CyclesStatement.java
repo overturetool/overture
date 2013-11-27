@@ -91,11 +91,20 @@ public class CyclesStatement extends Statement
 		}
 		else
 		{
-			try {
+			try
+			{
 				// We disable the swapping and time (RT) as cycles evaluation should be "free".
-				ctxt.threadState.setAtomic(true);
-				long value = cycles.eval(ctxt).intValue(ctxt);
-				ctxt.threadState.setAtomic(false);
+				long value;
+				
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					value = cycles.eval(ctxt).intValue(ctxt);
+				}
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
 
 				me.inOuterTimestep(true);
 				Value rv = statement.eval(ctxt);
