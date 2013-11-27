@@ -29,20 +29,17 @@ import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
+/**
+ * This class set a pattern to resolved.
+ * 
+ * @author kel
+ */
 
 public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion>
 {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	protected ITypeCheckerAssistantFactory af;
-
-	public PatternResolver(ITypeCheckerAssistantFactory af)
-	{
-		this.af = af;
-	}
-	
 	public static class NewQuestion
 	{
 		IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
@@ -55,6 +52,16 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			this.question = question;
 		}
 	}
+	
+	private static final long serialVersionUID = 1L;
+	protected ITypeCheckerAssistantFactory af;
+
+	public PatternResolver(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	
+	
 	
 	@Override
 	public void caseAConcatenationPattern(AConcatenationPattern pattern,

@@ -140,6 +140,7 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
@@ -1206,5 +1207,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestion<org.overture.typechecker.utilities.pattern.PatternResolver.NewQuestion> getPatternResolver()
 	{
 		return new PatternResolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.pattern.AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator()
+	{
+		return new AllDefinitionLocator(this);
 	}
 }

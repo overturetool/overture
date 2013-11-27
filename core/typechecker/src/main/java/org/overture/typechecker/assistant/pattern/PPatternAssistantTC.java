@@ -8,24 +8,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.ABooleanPattern;
-import org.overture.ast.patterns.ACharacterPattern;
-import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.AExpressionPattern;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.ast.patterns.AIntegerPattern;
-import org.overture.ast.patterns.AMapPattern;
-import org.overture.ast.patterns.AMapUnionPattern;
-import org.overture.ast.patterns.ANilPattern;
-import org.overture.ast.patterns.AQuotePattern;
-import org.overture.ast.patterns.ARealPattern;
-import org.overture.ast.patterns.ARecordPattern;
-import org.overture.ast.patterns.ASeqPattern;
-import org.overture.ast.patterns.ASetPattern;
-import org.overture.ast.patterns.AStringPattern;
-import org.overture.ast.patterns.ATuplePattern;
-import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -33,8 +15,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
+import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
-import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public class PPatternAssistantTC extends PPatternAssistant
 {
@@ -66,49 +48,56 @@ public class PPatternAssistantTC extends PPatternAssistant
 	private static List<PDefinition> getAllDefinitions(PPattern pattern,
 			PType ptype, NameScope scope)
 	{
-		if (pattern instanceof AIdentifierPattern)
+		try
 		{
-			return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) pattern, ptype, scope);
-		} else if (pattern instanceof ABooleanPattern
-				|| pattern instanceof ACharacterPattern
-				|| pattern instanceof AExpressionPattern
-				|| pattern instanceof AIgnorePattern
-				|| pattern instanceof AIntegerPattern
-				|| pattern instanceof ANilPattern
-				|| pattern instanceof AQuotePattern
-				|| pattern instanceof ARealPattern
-				|| pattern instanceof AStringPattern)
+			return pattern.apply(af.getAllDefinitionLocator(),new AllDefinitionLocator.NewQuestion(ptype, scope));
+		} catch (AnalysisException e)
 		{
-			return new Vector<PDefinition>();
-		} else if (pattern instanceof AConcatenationPattern)
-		{
-			return AConcatenationPatternAssistantTC.getAllDefinitions((AConcatenationPattern) pattern, ptype, scope);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantTC.getAllDefinitions((ARecordPattern) pattern, ptype, scope);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantTC.getAllDefinitions((ASeqPattern) pattern, ptype, scope);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantTC.getAllDefinitions((ASetPattern) pattern, ptype, scope);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantTC.getAllDefinitions((ATuplePattern) pattern, ptype, scope);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantTC.getAllDefinitions((AUnionPattern) pattern, ptype, scope);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern) pattern, ptype, scope);
-		} else if (pattern instanceof AMapPattern)
-		{
-			return AMapPatternAssistantTC.getAllDefinitions((AMapPattern) pattern, ptype, scope);
-		} else
-		{
-			assert false : "PPatternAssistant.getDefinitions - should not hit this case";
 			return null;
 		}
+//		if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantTC.getAllDefinitions((AIdentifierPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof ABooleanPattern
+//				|| pattern instanceof ACharacterPattern
+//				|| pattern instanceof AExpressionPattern
+//				|| pattern instanceof AIgnorePattern
+//				|| pattern instanceof AIntegerPattern
+//				|| pattern instanceof ANilPattern
+//				|| pattern instanceof AQuotePattern
+//				|| pattern instanceof ARealPattern
+//				|| pattern instanceof AStringPattern)
+//		{
+//			return new Vector<PDefinition>();
+//		} else if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantTC.getAllDefinitions((AConcatenationPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantTC.getAllDefinitions((ARecordPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantTC.getAllDefinitions((ASeqPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantTC.getAllDefinitions((ASetPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantTC.getAllDefinitions((ATuplePattern) pattern, ptype, scope);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantTC.getAllDefinitions((AUnionPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			return AMapUnionPatternAssistantTC.getAllDefinitions((AMapUnionPattern) pattern, ptype, scope);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			return AMapPatternAssistantTC.getAllDefinitions((AMapPattern) pattern, ptype, scope);
+//		} else
+//		{
+//			assert false : "PPatternAssistant.getDefinitions - should not hit this case";
+//			return null;
+//		}
 
 	}
 
