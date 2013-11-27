@@ -67,7 +67,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseAConcatenationPattern(AConcatenationPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		//AConcatenationPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
+		
 
 		if (pattern.getResolved())
 			return;
@@ -78,8 +78,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			//PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
-			//PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
 			pattern.getLeft().apply(THIS, question);
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
@@ -102,7 +100,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseARecordPattern(ARecordPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//ARecordPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -124,7 +121,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseASeqPattern(ASeqPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//ASeqPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -146,7 +142,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseASetPattern(ASetPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//ASetPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -168,7 +163,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseATuplePattern(ATuplePattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//ATuplePatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -190,7 +184,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseAUnionPattern(AUnionPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//AUnionPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -200,8 +193,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			//PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
-			//PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
 			pattern.getLeft().apply(THIS, question);
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
@@ -215,7 +206,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseAMapPattern(AMapPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//AMapPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -240,7 +230,6 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseAMapUnionPattern(AMapUnionPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		//AMapUnionPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
 		if (pattern.getResolved())
 			return;
 		else
@@ -249,10 +238,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 		}
 
 		try
-		{
-			//PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
-			//PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
-			
+		{			
 			pattern.getLeft().apply(THIS, question);
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
