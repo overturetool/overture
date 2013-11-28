@@ -5,6 +5,7 @@ import static org.overture.ast.assistant.InvocationAssistant.invokePreciseMethod
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.InvocationAssistantNotFoundException;
@@ -29,6 +30,17 @@ public class PPatternAssistant
 	{
 		this.af = af;
 	}
+
+//	public static LexNameList getAllVariableNames(PPattern pattern)
+//	{
+//		try
+//		{
+//			return pattern.apply(af.getAllVariableNameLocator());
+//		} catch (AnalysisException e)
+//		{
+//			return null;
+//		}
+//	}
 
 	public static LexNameList getAllVariableNames(AConcatenationPattern pattern)
 			throws InvocationAssistantException
@@ -143,7 +155,7 @@ public class PPatternAssistant
 		return getVariableNamesBaseCase(pattern);
 	}
 
-	private static LexNameList getVariableNamesBaseCase(PPattern pattern)
+	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
 			throws InvocationAssistantException
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
