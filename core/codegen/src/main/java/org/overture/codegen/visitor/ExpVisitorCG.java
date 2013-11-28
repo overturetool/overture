@@ -66,7 +66,6 @@ import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
@@ -156,12 +155,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		nextTernaryIf.setFalseValue(elseExp);
 		
 		if(node.parent() instanceof SBinaryExp)
-		{
-			AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
-			isolationExp.setExp(ternaryIf);
-			isolationExp.setType(ternaryIf.getType());
-			return isolationExp;
-		}
+			return ExpAssistantCG.isolateExpression(ternaryIf);
 		
 		return ternaryIf;
 	}
@@ -582,6 +576,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		unaryMinus.setType(typeLookup.getType(node.getType()));
 		unaryMinus.setExp(node.getExp().apply(this, question));
+		
+		if(node.getExp() instanceof SBinaryExp)
+		{
+			PExpCG isolatedExp = ExpAssistantCG.isolateExpression(unaryMinus.getExp());
+			unaryMinus.setExp(isolatedExp);
+		}
 		
 		return unaryMinus;
 	}
