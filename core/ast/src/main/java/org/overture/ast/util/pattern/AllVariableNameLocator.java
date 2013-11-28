@@ -155,10 +155,10 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 //	}
 //	@Override
-//	public LexNameList defaultPPattern(PPattern pattern) throws AnalysisException
-//	{
-//		return PPatternAssistant.getVariableNamesBaseCase(pattern);
-//	}
+	public LexNameList defaultPPattern(PPattern pattern) throws AnalysisException
+	{
+		return new LexNameList();
+	}
 //	public static LexNameList getVariableNames(PPattern pattern)
 //			throws InvocationAssistantException
 //	{
