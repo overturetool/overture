@@ -34,6 +34,7 @@ import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
@@ -569,6 +570,38 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question, typeLookup);
 		
 		return div;
+	}
+	
+	@Override
+	public PExpCG caseARemNumericBinaryExp(ARemNumericBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		
+		//VDM Language Reference Manual:
+		//x rem y = x - y * (x div y)
+		
+		PExp leftExp = node.getLeft();
+		PExp rightExp = node.getRight();
+		
+		if(!expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp))
+			throw new AnalysisException("Operands must be guaranteed to be integers in 'div' expression");
+
+		
+		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question, typeLookup);
+		
+		PExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
+		PExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
+		
+		
+		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
+		times.setLeft(rightExpCg);
+		times.setRight(ExpAssistantCG.isolateExpression(div));
+		
+		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
+		sub.setLeft(leftExpCg);
+		sub.setRight(times);
+		
+		return (node.parent() instanceof SBinaryExp) ? ExpAssistantCG.isolateExpression(sub) : sub;
 	}
 	
 	//Unary
