@@ -28,6 +28,14 @@ public class ExpAssistantCG
 		this.opLookup = new OperatorLookup();
 	}
 	
+	public static PExpCG isolateExpression(PExpCG exp)
+	{
+		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
+		isolationExp.setExp(exp);
+		isolationExp.setType(exp.getType());
+		return isolationExp;
+	}
+	
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
 	{	
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
