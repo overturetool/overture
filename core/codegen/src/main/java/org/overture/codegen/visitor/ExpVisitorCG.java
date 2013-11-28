@@ -12,6 +12,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
+import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -553,6 +554,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		
 		return divide;
+	}
+	
+	@Override
+	public PExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		PExp leftExp = node.getLeft();
+		PExp rightExp = node.getRight();
+		
+		if(!expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp))
+			throw new AnalysisException("Operands must be guaranteed to be integers in 'div' expression");
+
+		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question, typeLookup);
+		
+		return div;
 	}
 	
 	//Unary
