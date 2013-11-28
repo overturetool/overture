@@ -14,7 +14,12 @@ import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
-
+/**
+ * Locates all variable names in a pattern and add them to a list.
+ * 
+ * @author gkanos
+ * 
+ */
 public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 {
 	/**
@@ -63,24 +68,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-//	public static LexNameList getAllVariableNames(AConcatenationPattern pattern)
-//			throws InvocationAssistantException
-//	{
-
-//	}
-//
-//	public static LexNameList getAllVariableNames(AIdentifierPattern pattern)
-//	{
-
-//	}
-//
-//	public static LexNameList getAllVariableNames(ARecordPattern pattern)
-//			throws InvocationAssistantException
-//	{
-
-//
-//	}
-//
+	
 	@Override
 	public LexNameList caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
@@ -94,12 +82,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-//	public static LexNameList getAllVariableNames(ASeqPattern pattern)
-//			throws InvocationAssistantException
-//	{
 
-//	}
-//
 	@Override
 	public LexNameList caseASetPattern(ASetPattern pattern)
 			throws AnalysisException
@@ -113,12 +96,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-//	public static LexNameList getAllVariableNames(ASetPattern pattern)
-//			throws InvocationAssistantException
-//	{
 
-//	}
-//
 	@Override
 	public LexNameList caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
@@ -132,12 +110,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-//	public static LexNameList getAllVariableNames(ATuplePattern pattern)
-//			throws InvocationAssistantException
-//	{
 
-//	}
-//
 	@Override
 	public LexNameList caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
@@ -149,21 +122,13 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-//	public static LexNameList getAllVariableNames(AUnionPattern pattern)
-//			throws InvocationAssistantException
-//	{
 
-//	}
-//	@Override
+	@Override
 	public LexNameList defaultPPattern(PPattern pattern) throws AnalysisException
 	{
 		return new LexNameList();
 	}
-//	public static LexNameList getVariableNames(PPattern pattern)
-//			throws InvocationAssistantException
-//	{
-//		
-//	}
+
 	
 	@Override
 	public LexNameList createNewReturnValue(INode node)

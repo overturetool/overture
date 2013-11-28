@@ -1,23 +1,13 @@
 package org.overture.ast.assistant.pattern;
 
-import static org.overture.ast.assistant.InvocationAssistant.invokePreciseMethod;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
-import org.overture.ast.assistant.InvocationAssistantNotFoundException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
-import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.ARecordPattern;
-import org.overture.ast.patterns.ASeqPattern;
-import org.overture.ast.patterns.ASetPattern;
-import org.overture.ast.patterns.ATuplePattern;
-import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 
 public class PPatternAssistant
