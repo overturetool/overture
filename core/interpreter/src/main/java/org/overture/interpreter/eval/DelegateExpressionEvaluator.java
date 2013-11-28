@@ -32,10 +32,6 @@ import org.overture.interpreter.values.ValueList;
 
 public class DelegateExpressionEvaluator extends ExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 4591747505913606307L;
 
 	@Override
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
