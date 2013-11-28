@@ -3,6 +3,7 @@ package org.overture.codegen.assistant;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.types.AIntNumericBasicType;
@@ -64,9 +65,15 @@ public class ExpAssistantCG
 			SBinaryExp binExpChild = (SBinaryExp) child;
 			OperatorInfo childInfo = opLookup.find(binExpChild.getClass());
 			
-			//Case 1: Protect against cases like 1 / (2*3*4)
-			//Don't care about left children, i.e. (2*3*4)/1 = 2*3*4/1
-			boolean case1 = !leftChild && parent instanceof ADivideNumericBinaryExp &&
+			//Case 1: Protect against cases like "1 / (2*3*4)"
+			//Don't care about left children, i.e. "(2*3*4)/1 = 2*3*4/1"
+			
+			//Similar for subtract: "1 - (1+2+3)" and "1+2+3-3"
+			
+			//TODO: Consider other operators
+			boolean case1 = !leftChild && 
+							(parent instanceof ADivideNumericBinaryExp ||
+						     parent instanceof ASubtractNumericBinaryExp) &&
 						 	parentOpInfo.getPrecedence() >= childInfo.getPrecedence();
 			
 		    //Case 2: Protect against case like 1 / (1+2+3)
