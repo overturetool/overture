@@ -54,14 +54,14 @@ public class AConcatenationPatternAssistantTC
 
 	}
 
-	public static List<PDefinition> getAllDefinitions(AConcatenationPattern rp,
-			PType ptype, NameScope scope)
-	{
-		List<PDefinition> list = PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope);
-		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
-		return list;
-
-	}
+//	public static List<PDefinition> getAllDefinitions(AConcatenationPattern rp,
+//			PType ptype, NameScope scope)
+//	{
+//		List<PDefinition> list = PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope);
+//		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
+//		return list;
+//
+//	}
 
 //	public static PType getPossibleType(AConcatenationPattern pattern)
 //	{
