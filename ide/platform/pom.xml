@@ -48,7 +48,7 @@
             <skip>false</skip>
             <always>false</always>
             <abbrev>7</abbrev>
-            <dirty>-dirty</dirty>
+            <dirty></dirty>
             <forceLongFormat>false</forceLongFormat>
           </gitDescribe>
         </configuration>
