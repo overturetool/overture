@@ -9,6 +9,7 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -24,6 +25,7 @@ import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -222,6 +224,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Head");
 		
 		nodeTemplateFileNames.put(ATailUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Tail");
+		
+		nodeTemplateFileNames.put(AFloorUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Floor");
 
 		// Binary expressions
 		

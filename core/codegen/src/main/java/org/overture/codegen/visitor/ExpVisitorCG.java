@@ -17,6 +17,7 @@ import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -64,6 +65,7 @@ import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -738,6 +740,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		stringLiteral.setValue(value);
 		
 		return stringLiteral;
+	}
+	
+	@Override
+	public PExpCG caseAFloorUnaryExp(AFloorUnaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PExpCG expCg = node.getExp().apply(question.getExpVisitor(), question);
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		AFloorUnaryExpCG floorExp = new AFloorUnaryExpCG();
+		floorExp.setType(typeCg);
+		floorExp.setExp(expCg);
+		
+		return floorExp;
 	}
 	
 }
