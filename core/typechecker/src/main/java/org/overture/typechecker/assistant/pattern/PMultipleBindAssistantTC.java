@@ -52,17 +52,6 @@ public class PMultipleBindAssistantTC
 		{
 			return null;
 		}
-//		if (mb instanceof ASetMultipleBind)
-//		{
-//			return ASetMultipleBindAssistantTC.getPossibleType((ASetMultipleBind) mb);
-//		} else if (mb instanceof ATypeMultipleBind)
-//		{
-//			return ATypeMultipleBindAssistantTC.getPossibleType((ATypeMultipleBind) mb);
-//		} else
-//		{
-//			assert false : "Should not happen";
-//			return null;
-//		}
 
 	}
 

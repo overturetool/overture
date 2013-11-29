@@ -11,6 +11,7 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -143,6 +144,7 @@ import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
+import org.overture.typechecker.utilities.pattern.MultipleBindLister;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
 import org.overture.typechecker.utilities.pattern.PossibleBindTypeFinder;
@@ -1220,5 +1222,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<PType> getPossibleBindTypeFinder()
 	{
 		return new PossibleBindTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<List<PMultipleBind>> getMultipleBindLister()
+	{
+		return new MultipleBindLister(this);
 	}
 }

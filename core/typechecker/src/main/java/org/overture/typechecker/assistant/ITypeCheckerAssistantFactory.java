@@ -11,6 +11,7 @@ import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -457,6 +458,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator();
 	
 	IAnswer<PType> getPossibleBindTypeFinder();
+	
+	IAnswer<List<PMultipleBind>> getMultipleBindLister();
 	
 
 }
