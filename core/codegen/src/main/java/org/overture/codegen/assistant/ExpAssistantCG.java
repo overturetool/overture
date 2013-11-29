@@ -70,7 +70,8 @@ public class ExpAssistantCG
 			
 			//Similar for subtract: "1 - (1+2+3)" and "1+2+3-3"
 			
-			//TODO: Consider other operators
+			//We don't need to consider 'mod' and 'rem' operators since these are constructed
+			//using other operators and isolated if needed using the isolation expression
 			boolean case1 = !leftChild && 
 							(parent instanceof ADivideNumericBinaryExp ||
 						     parent instanceof ASubtractNumericBinaryExp) &&
