@@ -4,9 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.patterns.ASetMultipleBind;
-import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
@@ -46,17 +45,24 @@ public class PMultipleBindAssistantTC
 
 	public static PType getPossibleType(PMultipleBind mb)
 	{
-		if (mb instanceof ASetMultipleBind)
+		try
 		{
-			return ASetMultipleBindAssistantTC.getPossibleType((ASetMultipleBind) mb);
-		} else if (mb instanceof ATypeMultipleBind)
+			return mb.apply(af.getPossibleBindTypeFinder());
+		} catch (AnalysisException e)
 		{
-			return ATypeMultipleBindAssistantTC.getPossibleType((ATypeMultipleBind) mb);
-		} else
-		{
-			assert false : "Should not happen";
 			return null;
 		}
+//		if (mb instanceof ASetMultipleBind)
+//		{
+//			return ASetMultipleBindAssistantTC.getPossibleType((ASetMultipleBind) mb);
+//		} else if (mb instanceof ATypeMultipleBind)
+//		{
+//			return ATypeMultipleBindAssistantTC.getPossibleType((ATypeMultipleBind) mb);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//			return null;
+//		}
 
 	}
 

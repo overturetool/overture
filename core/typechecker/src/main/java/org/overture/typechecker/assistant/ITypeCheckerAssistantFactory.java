@@ -456,5 +456,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IQuestionAnswer<AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator();
 	
+	IAnswer<PType> getPossibleBindTypeFinder();
+	
 
 }

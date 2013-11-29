@@ -145,6 +145,7 @@ import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.pattern.PatternUnresolver;
+import org.overture.typechecker.utilities.pattern.PossibleBindTypeFinder;
 import org.overture.typechecker.utilities.pattern.PossibleTypeFinder;
 import org.overture.typechecker.utilities.pattern.SimplePatternChecker;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
@@ -1213,5 +1214,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<org.overture.typechecker.utilities.pattern.AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator()
 	{
 		return new AllDefinitionLocator(this);
+	}
+	
+	@Override
+	public IAnswer<PType> getPossibleBindTypeFinder()
+	{
+		return new PossibleBindTypeFinder(this);
 	}
 }
