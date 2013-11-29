@@ -167,7 +167,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{len}
     |	{head}
     |	{tail}
-    |	{floor}      
+    |	{floor}    
+    |	{abs}  
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

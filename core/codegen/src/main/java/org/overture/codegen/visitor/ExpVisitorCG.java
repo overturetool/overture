@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -57,6 +58,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
+import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -787,5 +789,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		return floorExp;
 	}
+	
+	@Override
+	public PExpCG caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		PExpCG expCg = node.getExp().apply(question.getExpVisitor(), question);
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		AAbsUnaryExpCG absExp = new AAbsUnaryExpCG();
+		absExp.setExp(expCg);
+		absExp.setType(typeCg);
+		
+		return absExp;
+	}
+	
 	
 }
