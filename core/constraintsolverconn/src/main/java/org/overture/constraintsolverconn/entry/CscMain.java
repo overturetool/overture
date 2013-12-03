@@ -15,57 +15,57 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 
 
-
 public class CscMain {
-	public static void main(String[] args) throws AnalysisException
-	{
+    public static void main(String[] args) throws AnalysisException
+    {
 
-		Settings.dialect = Dialect.VDM_RT;
-		Settings.release = Release.VDM_10; // clearing to display "VDM classic"
+	Settings.dialect = Dialect.VDM_RT;
+	Settings.release = Release.VDM_10; // clearing to display "VDM classic"
 
-		Csc csc = new Csc();
-		String result;
+	Csc csc = new Csc();
+	String result;
 
-		try {
-			BufferedReader br = new BufferedReader(
-					new InputStreamReader(
-					      new FileInputStream("c:/users/ishihiro/csccode/core/constraintsolverconn/src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp"), "UTF-8"));
+	try {
+	    BufferedReader br = new BufferedReader(
+						   new InputStreamReader(
+									 // new FileInputStream("c:/users/ishihiro/csccode/core/constraintsolverconn/src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp"), "UTF-8"));
+									 new FileInputStream("src/main/java/org/overture/constraintsolverconn/visitor/Sample.vpp"), "UTF-8"));
 			
-			String line;
-			ProcessBuilder pb;
-			while((line=br.readLine()) != null) {
-				if(!line.substring(0,2).equals("--")) {
-					result = csc.visitExp(line);
-					// System.out.println(result);
+	    String line;
+	    ProcessBuilder pb;
+	    while((line=br.readLine()) != null) {
+		if(!line.substring(0,2).equals("--")) {
+		    result = csc.visitExp(line);
+		    // System.out.println(result);
 
-					// the next line is not required if the output is evaluated 
-					// by using ProB interpreter on Web
-					result=result.replaceAll("\"", "\\\\\"");
-					//System.out.println(result);
-					pb = new ProcessBuilder("C:/Users/ishihiro/Desktop/ProB/probcli", "-eval", result);
-					Process p = pb.start();
-					BufferedReader brProB = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					Catcher c = new Catcher(brProB);
-					c.start();
-					p.waitFor();
-					p.destroy();
-					//Exp val/Sol and Eval val
-
-					c.showResultFromProB(c.out.toString());
-					//Input and Output
-					System.out.printf("\tInput: %s\tOutput: %s\n", line, result);
-				}
-			}
-			br.close();
-		} catch (IOException e)
-		{
-			System.out.println("IOException: " + e);
-		} catch(InterruptedException e) {
-			System.out.println("IOException: " + e);
+		    // the next line is not required if the output is evaluated 
+		    // by using ProB interpreter on Web
+		    result=result.replaceAll("\"", "\\\\\"");
+		    //System.out.println(result);
+		    pb = new ProcessBuilder("C:/Users/ishihiro/Desktop/ProB/probcli", "-eval", result);
+		    Process p = pb.start();
+		    BufferedReader brProB = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		    Catcher c = new Catcher(brProB);
+		    c.start();
+		    p.waitFor();
+		    p.destroy();
+		    //Exp val/Sol and Eval val
+		    
+		    c.showResultFromProB(c.out.toString());
+		    //Input and Output
+		    System.out.printf("\tInput: %s\tOutput: %s\n", line, result);
 		}
-
-		System.out.println("... Done.");
+	    }
+	    br.close();
+	} catch (IOException e)
+	    {
+		System.out.println("IOException: " + e);
+	    } catch(InterruptedException e) {
+	    System.out.println("IOException: " + e);
 	}
+	
+	System.out.println("... Done.");
+    }
 	
 }
 
