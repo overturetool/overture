@@ -1,6 +1,8 @@
 package org.overture.constraintsolverconn.visitor;
 
 import java.util.LinkedList;
+import java.util.LinkedHashSet;
+import java.util.Map;
 
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PPattern;
@@ -62,6 +64,7 @@ import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
@@ -459,7 +462,8 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 	    for(PExp mem : memList) {
 		answer += (mem.apply(this, "") + ", ");
 	    }
-	    answer = answer.substring(0, answer.length()-2);
+	    if(answer.length()>=2)
+		answer = answer.substring(0, answer.length()-2);
 	    answer+="}";
 		if(MyDebug) answer = "(" + answer + ")";
 		
@@ -627,34 +631,128 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
 	}
-	
+
 	// under construction
+
+	private void getVars(PExp node, LinkedHashSet<String> vars) {
+	  if(node instanceof APlusNumericBinaryExp) {
+	    Object temp = ((APlusNumericBinaryExp)node).getLeft().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((APlusNumericBinaryExp)node).getLeft().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((APlusNumericBinaryExp)node).getLeft().getChildren(true).get("_right"), vars);
+            }
+	    temp = ((APlusNumericBinaryExp)node).getRight().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((APlusNumericBinaryExp)node).getRight().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((APlusNumericBinaryExp)node).getRight().getChildren(true).get("_right"), vars);
+            }
+	  } else if(node instanceof ASubtractNumericBinaryExp) {
+	    Object temp = ((ASubtractNumericBinaryExp)node).getLeft().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ASubtractNumericBinaryExp)node).getLeft().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ASubtractNumericBinaryExp)node).getLeft().getChildren(true).get("_right"), vars);
+            }
+	    temp = ((ASubtractNumericBinaryExp)node).getRight().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ASubtractNumericBinaryExp)node).getRight().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ASubtractNumericBinaryExp)node).getRight().getChildren(true).get("_right"), vars);
+            }
+	  } else if(node instanceof ATimesNumericBinaryExp) {
+	    Object temp = ((ATimesNumericBinaryExp)node).getLeft().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ATimesNumericBinaryExp)node).getLeft().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ATimesNumericBinaryExp)node).getLeft().getChildren(true).get("_right"), vars);
+            }
+	    temp = ((ATimesNumericBinaryExp)node).getRight().getChildren(true).get("_original");
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ATimesNumericBinaryExp)node).getRight().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ATimesNumericBinaryExp)node).getRight().getChildren(true).get("_right"), vars);
+            }
+	  } else if(node instanceof ADivideNumericBinaryExp) {
+	    Object temp = ((ADivideNumericBinaryExp)node).getLeft().getChildren(true).get("_original");
+	    //System.out.println(((ADivideNumericBinaryExp)node).getLeft().getChildren(true).get("_original"));
+	    //System.out.println(((ADivideNumericBinaryExp)node).getLeft().getChildren(true));
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ADivideNumericBinaryExp)node).getLeft().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ADivideNumericBinaryExp)node).getLeft().getChildren(true).get("_right"), vars);
+            }
+	    temp = ((ADivideNumericBinaryExp)node).getRight().getChildren(true).get("_original");
+	    //System.out.println(((ADivideNumericBinaryExp)node).getRight().getChildren(true).get("_original"));
+	    //System.out.println(((ADivideNumericBinaryExp)node).getRight().getChildren(true));
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((ADivideNumericBinaryExp)node).getRight().getChildren(true).get("_left"), vars);
+	      getVars((PExp)((ADivideNumericBinaryExp)node).getRight().getChildren(true).get("_right"), vars);
+            }
+	  } else if(node instanceof AUnaryMinusUnaryExp) {
+	    Object temp = ((AUnaryMinusUnaryExp)node).getExp().getChildren(true).get("_original");
+	    //System.out.println(((AUnaryMinusUnaryExp)node).getExp().getChildren(true));
+	    if(temp!=null) {
+	      vars.add(temp.toString());
+	    } else {
+	      getVars((PExp)((AUnaryMinusUnaryExp)node).getExp(), vars);
+            }
+	  } else if(node instanceof AVariableExp) {
+	    vars.add(((AVariableExp)node).getName().toString());
+	  }
+	}
+
 	@Override
 	public String caseASetCompSetExp(ASetCompSetExp node, String question)
 			throws AnalysisException {
-		
+
+	  LinkedHashSet<String> vars = new LinkedHashSet<String>();
+	  PExp fst = node.getFirst();
+	  getVars(fst, vars);
+	    String doms="";
+	    String ends="";
+	    String varList="";
+	    String first="";
+
+	    varList="target,";
+	    first = " & target = " + node.getFirst().toString();
+	    for(String mem : vars) {
+	      doms+="dom(";
+	      ends+=")";
+	      varList+=(mem+", ");
+	    }
+
+	    varList=varList.substring(0, varList.length()-2);
+	
 	    LinkedList<PMultipleBind> blist = node.getBindings();
 
-		String bind="";
-		for(int i=0;i<blist.size();i++) {
-		    String temp = blist.get(i).apply(this, "compset");
-		    for(int j=0;j<blist.get(i).getPlist().size();j++) {
-			bind+=(blist.get(i).getPlist().get(j).toString() + " : " + temp + " & ");
-		    }
+	    String bind="";
+	    for(int i=0;i<blist.size();i++) {
+		String temp = blist.get(i).apply(this, "compset");
+		for(int j=0;j<blist.get(i).getPlist().size();j++) {
+		    bind+=(blist.get(i).getPlist().get(j).toString() + " : " + temp + " & ");
 		}
-		bind = bind.substring(0, bind.length()-3);
-		//APlusNumericBinaryExp pexp = (APlusNumericBinaryExp)node.getFirst();
-		//System.out.println(pexp.getLeft().apply(this,""));
-		//System.out.println(pexp.getRight().apply(this,""));
-		String first = node.getFirst().apply(this,"#41");
+	    }
+
+	    bind = bind.substring(0, bind.length()-3);
 		
-		String pred = node.getPredicate().apply(this,"#42");
+	    String pred = node.getPredicate().apply(this,"#42");
 
-		String answer = MyDebug ? ( "{ " + first + " | " + bind + " & " + pred + " }")
-				: ( "{ " + first + " | " + bind + " & " + pred + " }");
+	    String answer = doms + "{" + varList + " | " + bind + " & " + pred + first + "}" + ends;
+	    
+	    if(MyDebug) answer = "(" + answer + ")";
 
-		if(MyDebug) answer = "(" + answer + ")";
-		return answer;
+	    return answer;
 	}
 
 	/*
@@ -668,17 +766,19 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 	}
 	*/
 
-	/*
+
 	@Override
 	public String caseASetMultipleBind(ASetMultipleBind node, String question)
 			throws AnalysisException {
 	    // return set
 	    //String var = node.getPlist().getFirst().apply(this, "var");
-	    String answer=node.getSet().toString();
+	    //String answer=node.getSet().toString();
+	    String answer=node.getSet().apply(this,"");
 	    return answer;
 	}
-	*/
 
+
+	// not yet check
 	@Override
 	public String caseAForAllExp(AForAllExp node, String question)
 			throws AnalysisException {
@@ -694,6 +794,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 			    bindings+=(blist.get(i).getPlist().get(j).toString() + " : " + temp + " & ");
 			}
 		}
+
 		vars = vars.substring(0, vars.length()-2);
 		vars = "!" + (vars.indexOf(",")>0 ?("(" + vars + ")") :vars) + ".(";
 		bindings = bindings.substring(0,bindings.length()-3);
@@ -707,6 +808,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		return answer;
 	}
 
+	// not yet check
 	@Override
 	public String caseAExistsExp(AExistsExp node, String question)
 			throws AnalysisException {
@@ -723,33 +825,32 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 			}
 		}
 		vars = vars.substring(0, vars.length()-2);
-		vars = "#" + (vars.indexOf(",")>0 ?("(" + vars + ")") :vars) + ".(";
+		vars = "target={"  + vars + "|";
 		bindings = bindings.substring(0,bindings.length()-3);
 
 		String pred = node.getPredicate().apply(this,"#43");
 
 		String answer = MyDebug ? ( vars + "???" + bindings + "*???*" + pred)
-		    : (vars + bindings + " => " + pred + ")");
+		    : (vars + bindings + " & " + pred + "} & card(target)>0");
 
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
 	}
 	
 	
+	// not yet check
 	@Override
 	public String caseAExists1Exp(AExists1Exp node, String question)
 			throws AnalysisException {
 
-		String def = node.getDef().toString();
-		String bind = node.getBind().toString();
+	    String answer = "";
+	    String var = node.getBind().getPattern().toString();
+	    String bind = node.getBind().toString().replace("in set", " : ");
+	    String pred = node.getPredicate().apply(this,"");
 
-		String pred = node.getPredicate().apply(this,"#43");
+	    answer = "target={" + var + " | " + bind + " & " + pred + "} & card(target)=1";
 
-		String answer = MyDebug ? ( def + "???" + bind + "*???*" + pred)
-		    : (def+"*" + bind + " => " + pred + ")");
-
-		if(MyDebug) answer = "(" + answer + ")";
-		return answer;
+	    return answer;
 	}
 
 	/*
@@ -816,16 +917,17 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		LinkedList<PExp> argList = node.getArgs();
 		String args="";
 		String answer="";
-		//System.out.println("Type: " + node.getRoot().getType());
 
-		for(int i=0;i<argList.size();i++) {
-		    args+=(argList.get(i).apply(this,"#apply").toString()+", ");
+		//System.out.println("!!!Type: " + node.getRoot().getType());
+
+		for(PExp elem : argList) {
+		    args+=(elem.apply(this,"#apply")+", ");
 		}
 		args = args.substring(0, args.length()-2);
 
 		if(node.getRoot().getType().toString().indexOf("map") == 0) {
 		    answer = MyDebug ? (root + "*map apply* " + args)
-			: ( "max( " + root + "[ {" + args + "} ] )");
+			: ( "{ target } = " + root + "[ {" + args + "} ] "); // tricky
 		} else {
 		    answer = MyDebug ? (root + "*seq apply* " + args)
 			: ( root + "("  + args + ")");
@@ -895,17 +997,35 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#49");
 		
 		String answer = MyDebug ? ( left + "*^* " + right)
-				: (left + " ^ " + right);
+		    : ("("+left+")" + " ^ " + "("+right+")");
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
 	}
 
 	@Override
-	public String caseAMapEnumMapExp(AMapEnumMapExp node, String question)
+	public String caseADistConcatUnaryExp(ADistConcatUnaryExp node, String question)
 			throws AnalysisException {
 
+	    String answer="";
+	    //System.out.println("DistConcatU getExp: " + node.getExp());
+	    LinkedList<PExp> aseq = ((ASeqEnumSeqExp)node.getExp()).getMembers();
+	    answer = aseq.get(0).toString();
+	    for(int i=1;i<aseq.size();i++) {
+		if(answer.indexOf(aseq.get(i).apply(this,""))==-1) {
+		    answer+=(", " + aseq.get(i).toString());
+		}
+	    }
+	    //answer = "target = conc( [" + answer + "]) & " + aseq.toString() + " = [" + answer + "]";
+	    answer = "conc( [" + answer + "])";
+	    return answer;
+	}
+
+	@Override
+	public String caseAMapEnumMapExp(AMapEnumMapExp node, String question)
+			throws AnalysisException {
 		String answer = node.toString();
+		//System.out.println("!!! map enum map: " + answer);
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
 	}
@@ -944,7 +1064,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-2");
 		
 		String answer = MyDebug ? (left + "*munion* " + right)
-				: (left + " \\/ " + right );
+		    : ("("+left+")" + " \\/ " + "("+right+")");
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -970,16 +1090,17 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 	        String left = node.getLeft().apply(this,"#51-3");
 		String right = node.getRight().apply(this,"#51-3");
 		String answer="";
+
 		//System.out.println("Type: " + node.getLeft().getType());
 
 		// map ++ map
 		if(node.getLeft().getType().toString().indexOf("map") == 0) {
 		    answer = MyDebug ? (left + "*++* " + right)
-			: (left +  " <+ " + right);
+			: ("("+left+")" +  " <+ " + "("+right+")");
 		} else {
                 // seq ++ map
 		    answer = MyDebug ? (left + "*++* " + right)
-			: ( left + " <+ " + right );
+			: ( "("+left+")" + " <+ " + "("+right+")" );
 		    
 		}
 		
@@ -995,7 +1116,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-6");
 		
 		String answer = MyDebug ? (left + "*<:* " + right)
-				: ( left + " <| " + right );
+				: ("("+ left +")"+ " <| " + "("+right+")" );
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1009,7 +1130,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-6");
 		
 		String answer = MyDebug ? (left + "*<-:* " + right)
-				: ( left + " <<| " + right );
+				: ( "("+left +")"+ " <<| " + "("+right+")" );
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1023,7 +1144,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-6");
 		
 		String answer = MyDebug ? (left + "*:>* " + right)
-				: ( left + " |> " + right );
+				: ( "("+left +")"+ " |> " + "("+right+")" );
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1037,7 +1158,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-6");
 		
 		String answer = MyDebug ? (left + "*:->* " + right)
-				: ( left + " |>> " + right );
+				: ( "("+left +")"+ " |>> " + "("+right+")" );
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1051,7 +1172,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String right = node.getRight().apply(this,"#51-8");
 		
 		String answer = MyDebug ? (left + "*comp* " + right)
-				: ( "( " + right + " ; " + left + " )");
+		    : ( "( " + "("+right +")"+ " ; " + "("+left+")" + " )");
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1064,7 +1185,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		String map = node.getExp().apply(this,"#51-9");
 		
 		String answer = MyDebug ? ("*inverse* " + map)
-				: ( map + "~");
+				: ( "("+map + ")~");
 		
 		if(MyDebug) answer = "(" + answer + ")";
 		return answer;
@@ -1101,9 +1222,15 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 	    //System.out.println("In caseAIfExp " + node.toString());
 	    //System.out.println("In caseAIfExp " + node.kindPExp());
 	        String answer="";
+		String elsepart="";
 		String elseifpart = "";
 	        String ifpart = node.getTest().apply(this,"test");
 	        String thenpart = node.getThen().apply(this,"then");
+		if(!node.getThen().getType().equals("bool")) {
+		    thenpart = "target="+thenpart;  //tricky
+		}
+
+		//System.out.println("Type of then part: " + node.getThen().getType().toString());
 		LinkedList<AElseIfExp> elselist= node.getElseList();
 
 		int countElseIf=0;
@@ -1112,7 +1239,11 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		    countElseIf++;
 		}
 
-	        String elsepart = node.getElse().apply(this,"else");
+	        //System.out.println("Type of else part: " + node.getElse().getType());
+		if(!node.getElse().getType().toString().equals("bool")) {
+		    elsepart = "target=";    //tricky
+		}
+	        elsepart += node.getElse().apply(this,"else");
 		//System.out.println("In caseAIfExp");
 		answer = "((" + ifpart + ") & (" + thenpart + ")) or ((not(" + ifpart + ")) & (" + elseifpart;
 		answer+=((elseifpart.equals("") ? "" : "(") + elsepart + (elseifpart.equals("") ? "" : ")" ) + "))");
@@ -1126,9 +1257,14 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 	public String caseAElseIfExp(AElseIfExp node, String question)
 			throws AnalysisException {
 	        String answer="";
+		String thenpart="";
 	        //String ifpart = node.getTest().apply(this,"test");
 	        String elseifpart = node.getElseIf().apply(this,"else");
-	        String thenpart = node.getThen().apply(this,"then");
+
+		if(!node.getThen().getType().equals("bool")) {
+		    thenpart = "target=";    //tricky
+		}
+	        thenpart += node.getThen().apply(this,"then");
 		//System.out.println("In caseAIfExp");
 		answer = "((" + elseifpart + ") & (" + thenpart + ")) or ((not(" + elseifpart + ")) & ";
 		return answer;
@@ -1260,7 +1396,7 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		    }
 		    answer+=("{" + tuple + "}" + end);
 		}
-		answer = "{target} = " + answer;
+		answer = "{target} = " + answer; // tricky
 
 		return answer;
 	}

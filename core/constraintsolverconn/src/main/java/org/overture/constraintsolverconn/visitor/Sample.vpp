@@ -68,10 +68,15 @@
 -- { x+y | x in set {1,2,3,4} , y in set {-1,0,1} & x + y <= 3}
 -- -- should be translated to dom(dom({z,x,y | z:NATURAL & x:1..4 & y : {-1, 0, 1} & x + y = z & z <= 3 }))
 -- --                      or ran(%(x,y).( x:1..4 & y : {-1, 0, 1} | x + y)) /\ {x|x<=3}
+-- { x | x in set {-1,0,1,2,3} & x*x = 1 }
 { x | x in set {-1,0,1,2,3} & x*x = 1 }
+{ -x | x in set {-1,0,1,2,3} & x*x = 1 }
 { 2*x | x in set {-1,0,1,2,3} & x*x = 1 }
+{ x*y/z | x in set {1,2,3,4,5} , y in set {1,2,3,4,5} , z in set {1,2,3,4,5} &  x*y/z<15 }
 { x+y | x in set {1,2,3,4} , y in set {1,2} & x + y <= 3}
-{ x+y-z | x in set {1,2,3,4} , y in set {1,2} & x + y <= 3}
+{ -(x+y) | x in set {1,2,3,4} , y in set {1,2} & x + y <= 3}
+{ x+y-2*z+x | x in set {1,2,3,4} , y in set {1,2} , z in set {1,2} & x + y -z <= 3}
+-- { abs(x+y-2*z+1) | x in set {1,2,3,4} , y in set {1,2} , z in set {1,2} & x + y -z <= 3}
 -- { x | x in set {1,2,3} & x = 1 }
 -- { x | x in set {1,2,3,4,5} & x*x <= 10 }
 -- forall a,b in set {1,2,3} &  a+b > 2
@@ -204,3 +209,6 @@
 -- mu
 -- seq comprehension
 -- unable to type check expression
+-- elems [3,1,4,1,5,9,2]
+-- conc [[1,2],[1,2,2+1],[1,1+1],[3]]
+-- conc [[1,2],[1,2,2+1],[3]]
