@@ -17,10 +17,6 @@ import org.overture.ast.node.NodeList;
 public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 {
 
-	/**
-	 * generated serial version
-	 */
-	private static final long serialVersionUID = 637147601437624885L;
 
 	public static class DotPair
 	{
