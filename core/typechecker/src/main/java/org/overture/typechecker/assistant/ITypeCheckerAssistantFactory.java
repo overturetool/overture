@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -460,6 +461,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PType> getPossibleBindTypeFinder();
 	
 	IAnswer<List<PMultipleBind>> getMultipleBindLister();
+	
+	IAnswer<ILexNameToken> getPreNameFinder();
 	
 
 }

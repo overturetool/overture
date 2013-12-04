@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
@@ -141,6 +142,7 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
@@ -1228,5 +1230,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<List<PMultipleBind>> getMultipleBindLister()
 	{
 		return new MultipleBindLister(this);
+	}
+	
+	@Override
+	public IAnswer<ILexNameToken> getPreNameFinder()
+	{
+		return new PreNameFinder(this);
 	}
 }
