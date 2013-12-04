@@ -32,4 +32,14 @@ sync
 	
   per IsFinished => finished;
 
+--thread
+-- (--World`timerRef.RegisterThread();
+ 
+--  while true 
+--  do
+--   (Value := Env.ReadTemp();
+--    World`timerRef.WaitRelative(3);--World`timerRef.stepLength);
+--   )
+-- )
+
 end TemperatureSensor

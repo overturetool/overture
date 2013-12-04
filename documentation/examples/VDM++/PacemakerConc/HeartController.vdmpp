@@ -162,6 +162,17 @@ Step() ==
 
 The changes in this class are the Step function that is transformed to a thread
 
+\begin{vdm_al}
+--thread
+
+-- (while true do
+--    (      
+--      pace();
+--      World`timerRef.WaitRelative(interval);
+--    );
+-- );
+\end{vdm_al}
+
 And the introduction of syncronization primitives. A mutex to the functions that access and write the sensed variable and isFinished.
 
 \begin{vdm_al}   
