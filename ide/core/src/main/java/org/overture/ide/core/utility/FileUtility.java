@@ -19,7 +19,6 @@
 package org.overture.ide.core.utility;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.lex.LexLocation;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.resources.VdmProject;
 import org.overture.parser.lex.DocStreamReader;
@@ -48,7 +46,9 @@ public class FileUtility
 		try
 		{
 			if (file == null)
+			{
 				return;
+			}
 			lineNumber -= 1;
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
@@ -81,41 +81,6 @@ public class FileUtility
 		}
 	}
 
-	public static void addMarker(IFile file, String message, int lineNumber,
-			int columnNumber, int severity, String sourceId)
-	{
-		try
-		{
-			if (file == null)
-				return;
-			lineNumber -= 1;
-			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
-			for (IMarker marker : markers)
-			{
-				if (marker.getAttribute(IMarker.MESSAGE) != null
-						&& marker.getAttribute(IMarker.SEVERITY) != null
-						&& marker.getAttribute(IMarker.LINE_NUMBER) != null
-						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
-						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
-						&& marker.getAttribute(IMarker.LINE_NUMBER).equals(lineNumber))
-					return;
-
-			}
-			IMarker marker = file.createMarker(IMarker.PROBLEM);
-			marker.setAttribute(IMarker.MESSAGE, message);
-			marker.setAttribute(IMarker.SEVERITY, severity);
-			marker.setAttribute(IMarker.SOURCE_ID, sourceId);// ICoreConstants.PLUGIN_ID);
-			marker.setAttribute(IMarker.LOCATION, "line: " + lineNumber);
-
-			SourceLocationConverter converter = new SourceLocationConverter(FileUtility.makeString(getContent(file)));
-			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(lineNumber, columnNumber));
-			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(lineNumber, columnNumber));
-		} catch (CoreException e)
-		{
-			VdmCore.log("FileUtility addMarker", e);
-		}
-	}
-
 	/**
 	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
 	 * exists at the specified location with the same message
@@ -134,19 +99,10 @@ public class FileUtility
 	public static void addMarker(IFile file, String message,
 			ILexLocation location, int severity, String sourceId)
 	{
-		if (file == null)
-			return;
+		int startOffset = location.getStartOffset();
+		int endOffset = location.getEndOffset();
 
-		try
-		{
-			List<Character> content = getContent(file);// FIXME this should be improved converting a string 3 times is
-														// not good.
-			String tmp = new String(FileUtility.getCharContent(content));
-			addMarker(file, message, location, severity, sourceId, tmp);
-		} catch (CoreException e)
-		{
-			VdmCore.log("FileUtility addMarker", e);
-		}
+		addMarker(file, message, location.getStartLine(), startOffset, location.getEndLine(), endOffset, severity, sourceId);
 	}
 
 	/**
@@ -163,72 +119,67 @@ public class FileUtility
 	 *            The severity, e.g: IMarker.SEVERITY_ERROR or IMarker.SEVERITY_ERROR
 	 * @param sourceId
 	 *            The source if of the plugin calling this function. The PLUGIN id.
+	 * @param offsetAdjustment
+	 *            an adjustment added to the offsets
 	 */
 	public static void addMarker(IFile file, String message,
-			ILexLocation location, int severity, String sourceId, String content)
+			ILexLocation location, int severity, String sourceId,
+			int offsetAdjustment)
 	{
-		if (file == null)
-			return;
+		int startOffset = location.getStartOffset();
+		if (startOffset > 0)
+		{
+			startOffset += offsetAdjustment;
+		}
 
-		addInternalMarker(file, message, location, severity, sourceId, content);
+		int endOffset = location.getEndOffset();
+		if (endOffset > 0)
+		{
+			endOffset += offsetAdjustment;
+		}
+
+		addMarker(file, message, location.getStartLine(), startOffset, location.getEndLine(), endOffset, severity, sourceId);
 	}
 
-	/**
-	 * Add markers to ifile. This is used to mark a problem by e.g. builder and parser. Important: If a marker already
-	 * exists at the specified location with the same message
-	 * 
-	 * @param file
-	 *            The IFile which is the source where the marker should be set
-	 * @param message
-	 *            The message of the marker
-	 * @param location
-	 *            The lex location where the marker should be set
-	 * @param severity
-	 *            The severity, e.g: IMarker.SEVERITY_ERROR or IMarker.SEVERITY_ERROR
-	 * @param sourceId
-	 *            The source if of the plugin calling this function. The PLUGIN id.
-	 * @param content
-	 *            The content used when calculating the char offset for the markers
-	 */
-	protected static void addInternalMarker(IFile file, String message,
-			ILexLocation location, int severity, String sourceId, String content)
+	public static void addMarker(IFile file, String message, int startLine,
+			int startPos, int endLine, int endPos, int severity, String sourceId)
 	{
 		try
 		{
 			if (file == null)
+			{
 				return;
-			SourceLocationConverter converter = new SourceLocationConverter(content);
+			}
 			// lineNumber -= 1;
 			IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
 			{
-				if ((marker.getAttribute(IMarker.MESSAGE) != null && marker.getAttribute(IMarker.MESSAGE).equals(message))
-						&& (marker.getAttribute(IMarker.SEVERITY) != null && marker.getAttribute(IMarker.SEVERITY).equals(severity))
-						&& (marker.getAttribute(IMarker.CHAR_START) != null && marker.getAttribute(IMarker.CHAR_START).equals(converter.getStartPos(location)))
-						&& (marker.getAttribute(IMarker.CHAR_END) != null && marker.getAttribute(IMarker.CHAR_END).equals(converter.getEndPos(location))))
+				if (marker.getAttribute(IMarker.MESSAGE) != null
+						&& marker.getAttribute(IMarker.MESSAGE).equals(message)
+						&& marker.getAttribute(IMarker.SEVERITY) != null
+						&& marker.getAttribute(IMarker.SEVERITY).equals(severity)
+						&& marker.getAttribute(IMarker.CHAR_START) != null
+						&& marker.getAttribute(IMarker.CHAR_START).equals(startPos)
+						&& marker.getAttribute(IMarker.CHAR_END) != null
+						&& marker.getAttribute(IMarker.CHAR_END).equals(endPos))
+				{
 					return;
+				}
 
 			}
 			IMarker marker = file.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, message);
 			marker.setAttribute(IMarker.SEVERITY, severity);
 			marker.setAttribute(IMarker.SOURCE_ID, sourceId);
-			marker.setAttribute(IMarker.LOCATION, "line: "
-					+ location.getStartLine());
-			marker.setAttribute(IMarker.LINE_NUMBER, location.getStartLine());
+			marker.setAttribute(IMarker.LOCATION, "line: " + startLine);
+			marker.setAttribute(IMarker.LINE_NUMBER, startLine);
 
-			marker.setAttribute(IMarker.CHAR_START, converter.getStartPos(location));
-			marker.setAttribute(IMarker.CHAR_END, converter.getEndPos(location));
+			marker.setAttribute(IMarker.CHAR_START, startPos);
+			marker.setAttribute(IMarker.CHAR_END, endPos);
 		} catch (CoreException e)
 		{
 			VdmCore.log("FileUtility addMarker", e);
 		}
-	}
-
-	public static void addMarker(IFile file, String message, int startLine,
-			int startPos, int endLine, int endPos, int severity, String sourceId)
-	{// FIXME
-		addMarker(file, message, new LexLocation((File) null, "", startLine, startPos, endLine, endPos, -1, -1), severity, sourceId);
 	}
 
 	public static void deleteMarker(IFile file, String type, String sourceId)
@@ -236,7 +187,9 @@ public class FileUtility
 		try
 		{
 			if (file == null)
+			{
 				return;
+			}
 
 			IMarker[] markers = file.findMarkers(type, true, IResource.DEPTH_INFINITE);
 			for (IMarker marker : markers)
@@ -244,7 +197,9 @@ public class FileUtility
 				if (marker.getAttribute(IMarker.SOURCE_ID) != null
 						&& marker.getAttribute(IMarker.SOURCE_ID) != null
 						&& marker.getAttribute(IMarker.SOURCE_ID).equals(sourceId))
+				{
 					marker.delete();
+				}
 			}
 		} catch (CoreException e)
 		{
@@ -310,7 +265,9 @@ public class FileUtility
 
 			int c = -1;
 			while ((c = in.read()) != -1)
+			{
 				content.add((char) c);
+			}
 		} catch (IOException e)
 		{
 			VdmCore.log("FileUtility getContentDocxText", e);
@@ -388,7 +345,9 @@ public class FileUtility
 
 			int c = -1;
 			while ((c = in.read()) != -1)
+			{
 				content.add((char) c);
+			}
 
 		} catch (Exception e)
 		{
@@ -396,12 +355,14 @@ public class FileUtility
 		} finally
 		{
 			if (in != null)
+			{
 				try
 				{
 					in.close();
 				} catch (IOException e)
 				{
 				}
+			}
 		}
 
 		return content;
@@ -417,13 +378,4 @@ public class FileUtility
 		return sb.toString();
 	}
 
-	public static char[] getCharContent(List<Character> content)
-	{
-		char[] source = new char[content.size()];
-		for (int i = 0; i < content.size(); i++)
-		{
-			source[i] = content.get(i);
-		}
-		return source;
-	}
 }
