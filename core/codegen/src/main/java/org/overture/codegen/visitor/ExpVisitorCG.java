@@ -647,38 +647,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		return (node.parent() instanceof SBinaryExp) ? ExpAssistantCG.isolateExpression(sub) : sub;
 	}
-	
-	//Unary
-	
-	@Override
-	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, OoAstInfo question) throws AnalysisException
-	{
-		APlusUnaryExpCG unaryPlus = new APlusUnaryExpCG();
-		
-		unaryPlus.setType(typeLookup.getType(node.getType()));
-		unaryPlus.setExp(node.getExp().apply(this, question));
-		
-		return unaryPlus;
-	}
-
-	@Override
-	public PExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		AMinusUnaryExpCG unaryMinus = new AMinusUnaryExpCG();
-		
-		unaryMinus.setType(typeLookup.getType(node.getType()));
-		unaryMinus.setExp(node.getExp().apply(this, question));
-		
-		if(node.getExp() instanceof SBinaryExp)
-		{
-			PExpCG isolatedExp = ExpAssistantCG.isolateExpression(unaryMinus.getExp());
-			unaryMinus.setExp(isolatedExp);
-		}
-		
-		return unaryMinus;
-	}
-		
+			
 	@Override
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
 			OoAstInfo question) throws AnalysisException
@@ -743,47 +712,40 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return stringLiteral;
 	}
 	
+	//Unary
+	
+	@Override
+	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleUnaryExp(node, new APlusUnaryExpCG(), question, typeLookup);
+	}
+
+	@Override
+	public PExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleUnaryExp(node, new AMinusUnaryExpCG(), question, typeLookup);
+	}
+	
 	@Override
 	public PExpCG caseAFloorUnaryExp(AFloorUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		PExpCG expCg = node.getExp().apply(question.getExpVisitor(), question);
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
-		AFloorUnaryExpCG floorExp = new AFloorUnaryExpCG();
-		floorExp.setType(typeCg);
-		floorExp.setExp(expCg);
-		
-		return floorExp;
+		return expAssistant.handleUnaryExp(node, new AFloorUnaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		PExpCG expCg = node.getExp().apply(question.getExpVisitor(), question);
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
-		AAbsUnaryExpCG absExp = new AAbsUnaryExpCG();
-		absExp.setExp(expCg);
-		absExp.setType(typeCg);
-		
-		return absExp;
+		return expAssistant.handleUnaryExp(node, new AAbsUnaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
 	public PExpCG caseANotUnaryExp(ANotUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		//TODO: FIX REPEATS FOR UNARIES
-		PExpCG expCg = expAssistant.formatExp(node.getExp(), question);
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
-		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
-		notExp.setExp(expCg);
-		notExp.setType(typeCg);
-		
-		return notExp;
+		return expAssistant.handleUnaryExp(node, new ANotUnaryExpCG(), question, typeLookup);
 	}
 	
 	@Override

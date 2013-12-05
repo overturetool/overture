@@ -6,6 +6,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -14,6 +15,8 @@ import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.OperatorInfo;
 import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
@@ -36,6 +39,19 @@ public class ExpAssistantCG
 		isolationExp.setExp(exp);
 		isolationExp.setType(exp.getType());
 		return isolationExp;
+	}
+	
+	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
+	{
+		PExpCG expCg = formatExp(vdmExp.getExp(), question);
+		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
+		
+		codeGenExp.setType(typeCg);
+
+		boolean isolate = vdmExp.getExp() instanceof SBinaryExp;
+		codeGenExp.setExp(isolate ? isolateExpression(expCg) : expCg);
+		
+		return codeGenExp;
 	}
 	
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
@@ -144,7 +160,6 @@ public class ExpAssistantCG
 		return case2;
 	}
 	
-	
 	public boolean isIntegerType(PExp exp)
 	{	
 		PType type = exp.getType();
@@ -156,5 +171,4 @@ public class ExpAssistantCG
 		//Expressions like 1.0 are considered real literal expressions
 		//of type NatOneNumericBasicType
 	}
-	
 }
