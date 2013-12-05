@@ -6,10 +6,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -98,26 +95,26 @@ public class ATuplePatternAssistantTC
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ATuplePattern tupplePattern)
-	{
-		PTypeList list = new PTypeList();
+//	public static PType getPossibleTypes(ATuplePattern tupplePattern)
+//	{
+//		PTypeList list = new PTypeList();
+//
+//		for (PPattern p : tupplePattern.getPlist())
+//		{
+//			list.add(PPatternAssistantTC.getPossibleType(p));
+//		}
+//
+//		return list.getType(tupplePattern.getLocation());
+//	}
 
-		for (PPattern p : tupplePattern.getPlist())
-		{
-			list.add(PPatternAssistantTC.getPossibleType(p));
-		}
+//	public static PExp getMatchingExpression(ATuplePattern tp)
+//	{
+//		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));
+//	}
 
-		return list.getType(tupplePattern.getLocation());
-	}
-
-	public static PExp getMatchingExpression(ATuplePattern tp)
-	{
-		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));
-	}
-
-	public static boolean isSimple(ATuplePattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
-	}
+//	public static boolean isSimple(ATuplePattern p)
+//	{
+//		return PPatternListAssistantTC.isSimple(p.getPlist());
+//	}
 
 }

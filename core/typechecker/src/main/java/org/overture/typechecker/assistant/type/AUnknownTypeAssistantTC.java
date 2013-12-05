@@ -1,12 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.node.NodeList;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant
@@ -20,33 +14,33 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant
 		this.af = af;
 	}
 
-	public static AProductType getProduct(AUnknownType type, int n)
-	{
-
-		NodeList<PType> tl = new NodeList<PType>(null);
-
-		for (int i = 0; i < n; i++)
-		{
-			tl.add(AstFactory.newAUnknownType(type.getLocation()));
-		}
-
-		return AstFactory.newAProductType(type.getLocation(), tl);
-	}
+//	public static AProductType getProduct(AUnknownType type, int n)
+//	{
+//
+//		NodeList<PType> tl = new NodeList<PType>(null);
+//
+//		for (int i = 0; i < n; i++)
+//		{
+//			tl.add(AstFactory.newAUnknownType(type.getLocation()));
+//		}
+//
+//		return AstFactory.newAProductType(type.getLocation(), tl);
+//	}
 
 	// public static AProductType getProduct(AUnknownType type) {
 	// return AstFactory.newAProductType(type.getLocation(), new NodeList<PType>(null));
 	// }
 
-	public static boolean isType(AUnknownType b,
-			Class<? extends PType> typeclass)
-	{
-		return true;
-	}
+//	public static boolean isType(AUnknownType b,
+//			Class<? extends PType> typeclass)
+//	{
+//		return true;
+//	}
 
-	public static PType isType(AUnknownType exptype, String typename)
-	{
-		return null; // Isn't any particular type?
-	}
+//	public static PType isType(AUnknownType exptype, String typename)
+//	{
+//		return null; // Isn't any particular type?
+//	}
 
 	// public static boolean equals(AUnknownType type, Object other) {
 	// return true;
@@ -56,10 +50,10 @@ public class AUnknownTypeAssistantTC extends AUnknownTypeAssistant
 	// return true;
 	// }
 
-	public static AFunctionType getFunction(AUnknownType type)
-	{
-		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
-	}
+//	public static AFunctionType getFunction(AUnknownType type)
+//	{
+//		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
+//	}
 
 	// public static boolean isOperation(AUnknownType type) {
 	// return true;

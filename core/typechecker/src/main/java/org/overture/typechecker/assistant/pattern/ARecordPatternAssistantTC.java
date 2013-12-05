@@ -1,16 +1,12 @@
 package org.overture.typechecker.assistant.pattern;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -119,27 +115,27 @@ public class ARecordPatternAssistantTC
 		return defs;
 	}
 
-	public static PType getPossibleTypes(ARecordPattern pattern)
-	{
-		return pattern.getType();
-	}
+//	public static PType getPossibleTypes(ARecordPattern pattern)
+//	{
+//		return pattern.getType();
+//	}
 
-	public static PExp getMatchingExpression(ARecordPattern ptrn)
-	{
-		List<PExp> list = new LinkedList<PExp>();
+//	public static PExp getMatchingExpression(ARecordPattern ptrn)
+//	{
+//		List<PExp> list = new LinkedList<PExp>();
+//
+//		for (PPattern p : ptrn.getPlist())
+//		{
+//			list.add(PPatternAssistantTC.getMatchingExpression(p));
+//		}
+//
+//		ILexNameToken tpName = ptrn.getTypename();
+//		return AstFactory.newAMkTypeExp(tpName.clone(), list);
+//	}
 
-		for (PPattern p : ptrn.getPlist())
-		{
-			list.add(PPatternAssistantTC.getMatchingExpression(p));
-		}
-
-		ILexNameToken tpName = ptrn.getTypename();
-		return AstFactory.newAMkTypeExp(tpName.clone(), list);
-	}
-
-	public static boolean isSimple(ARecordPattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
-	}
+//	public static boolean isSimple(ARecordPattern p)
+//	{
+//		return PPatternListAssistantTC.isSimple(p.getPlist());
+//	}
 
 }

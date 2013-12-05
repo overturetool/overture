@@ -12,6 +12,11 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to get a Set type from a type
+ * 
+ * @author kel
+ */
 public class SetTypeFinder extends TypeUnwrapper<ASetType>
 {
 

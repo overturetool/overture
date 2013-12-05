@@ -50,10 +50,10 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant
 	// return "@" + exptype.getName();
 	// }
 
-	public static PType polymorph(AParameterType type, ILexNameToken pname,
-			PType actualType)
-	{
-		return (type.getName().equals(pname)) ? actualType : type;
-	}
+//	public static PType polymorph(AParameterType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//		return (type.getName().equals(pname)) ? actualType : type;
+//	}
 
 }

@@ -57,27 +57,27 @@ public class AMapUnionPatternAssistantTC
 
 	}
 
-	public static List<PDefinition> getAllDefinitions(AMapUnionPattern rp,
-			PType ptype, NameScope scope)
-	{
+//	public static List<PDefinition> getAllDefinitions(AMapUnionPattern rp,
+//			PType ptype, NameScope scope)
+//	{
+//
+//		List<PDefinition> defs = new Vector<PDefinition>();
+//
+//		if (!PTypeAssistantTC.isMap(ptype))
+//		{
+//			TypeCheckerErrors.report(3315, "Matching expression is not a map type", rp.getLocation(), rp);
+//		}
+//
+//		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope));
+//		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
+//
+//		return defs;
+//	}
 
-		List<PDefinition> defs = new Vector<PDefinition>();
-
-		if (!PTypeAssistantTC.isMap(ptype))
-		{
-			TypeCheckerErrors.report(3315, "Matching expression is not a map type", rp.getLocation(), rp);
-		}
-
-		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope));
-		defs.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
-
-		return defs;
-	}
-
-	public static boolean isSimple(AMapUnionPattern p)
-	{
-		return PPatternAssistantTC.isSimple(p.getLeft())
-				&& PPatternAssistantTC.isSimple(p.getRight());
-	}
+//	public static boolean isSimple(AMapUnionPattern p)
+//	{
+//		return PPatternAssistantTC.isSimple(p.getLeft())
+//				&& PPatternAssistantTC.isSimple(p.getRight());
+//	}
 
 }
