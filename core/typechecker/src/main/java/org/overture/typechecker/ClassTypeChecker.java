@@ -85,6 +85,7 @@ public class ClassTypeChecker extends TypeChecker
 
 		for (SClassDefinition c1 : classes)
 		{
+			c1.setType(SClassDefinitionAssistantTC.getType(c1));
 			for (SClassDefinition c2 : classes)
 			{
 				if (c1 != c2 && c1.getName().equals(c2.getName()))
