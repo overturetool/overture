@@ -38,10 +38,6 @@ public class OutlineCompatabilityChecker extends
 		return tmp;
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3010570853639454889L;
 
 	public static boolean isNotNull(Object o)
 	{

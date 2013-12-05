@@ -146,7 +146,10 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	}
 	
 	
-
+	public String getIsaName(){
+		return  getName().replaceAll("\\(.*\\)", "")+getNumber();		
+	}
+	
 	@Override
 	public String getUniqueName() {
 		return getName()+getNumber();
@@ -170,6 +173,13 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	
+
+	@Override
+	public String getKindString() {
+		return kind.toString();
 	}
 
 	@Override

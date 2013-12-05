@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant;
 
+import java.io.Serializable;
+
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
@@ -156,8 +158,13 @@ import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
-		implements IInterpreterAssistantFactory
+		implements IInterpreterAssistantFactory, Serializable
 {
+	/**
+	 * serial id
+	 */
+	private static final long serialVersionUID = 9172962921215037477L;
+
 	static
 	{
 		// FIXME: remove this when conversion to factory obtained assistants are completed.

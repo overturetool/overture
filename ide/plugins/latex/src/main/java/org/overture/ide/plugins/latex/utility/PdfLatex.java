@@ -89,7 +89,8 @@ public class PdfLatex extends Thread
 				documentName = getRelativePath(new File(documentName), outputFolder);
 			}
 
-			String argument = "pdflatex " + documentName;
+			//String argument = "pdflatex " + documentName;
+			String argument = "xelatex " + documentName;  // modified by his 2013/10/08
 			cw.println("Starting: " + argument + "\nIn: "
 					+ outputFolder.getAbsolutePath());
 			ProcessBuilder pb = new ProcessBuilder(argument);
@@ -98,15 +99,18 @@ public class PdfLatex extends Thread
 				String osxpath = VdmUIPlugin.getDefault().getPreferenceStore().getString(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE);
 				if (osxpath.equals(""))
 				{
-					pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+					//pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+					pb.command("/usr/texbin/xelatex", "-interaction=nonstopmode", documentName);  // modified by his 2013/10/08
 				} else
 				{
 					pb.command(osxpath, "-interaction=nonstopmode", documentName);
 				}
 			} else
 			{
-				pb.command("pdflatex", "-interaction=nonstopmode", "\""
-						+ documentName + "\"");
+				//pb.command("pdflatex", "-interaction=nonstopmode", "\""
+				//		+ documentName + "\"");
+				pb.command("xelatex", "-interaction=nonstopmode", "\""
+						+ documentName + "\"");  // modified by his 2013/10/08
 			}
 
 			pb.directory(outputFolder);
