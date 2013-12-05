@@ -94,19 +94,6 @@ public class ExportDefinitionListFinder extends AnswerAdaptor<Collection<? exten
 		}
 		return list;
 	}
-//	if (exp instanceof AAllExport) {
-//		
-//	} else if (exp instanceof AFunctionExport) {
-
-//	} else if (exp instanceof AOperationExport) {
-
-//	} else if (exp instanceof ATypeExport) {
-//		
-//	} else if (exp instanceof AValueExport) {
-
-//	}
-//	
-//	return null;
 
 	@Override
 	public Collection<? extends PDefinition> createNewReturnValue(INode node)
