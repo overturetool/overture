@@ -2,19 +2,24 @@ package org.overture.codegen.lookup;
 
 import java.util.HashMap;
 
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
-import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.PExp;
 
 public class OperatorLookup
 {
@@ -36,17 +41,23 @@ public class OperatorLookup
 	
 	//TODO: This is not the way to do it! Fix operator precedence!
 	private static final int POWER = 7;
-	
-	private HashMap<Class<? extends SBinaryExp>,OperatorInfo> lookup;
 
-	public OperatorInfo find(Class<? extends SBinaryExp> key)
+	private static final int IMPLIES = 8;
+	private static final int EQUIVALENCE = 9;
+	private static final int OR = 10;
+	private static final int AND = 11;
+	private static final int NOT = 12;
+	
+	private HashMap<Class<? extends PExp>,OperatorInfo> lookup;
+
+	public OperatorInfo find(Class<? extends PExp> key)
 	{
 		return lookup.get(key);
 	}
 	
 	public OperatorLookup()
 	{
-		lookup = new HashMap<Class<? extends SBinaryExp>, OperatorInfo>();
+		lookup = new HashMap<Class<? extends PExp>, OperatorInfo>();
 
 		lookup.put(ADivNumericBinaryExp.class, new OperatorInfo(DIVIDE, "/"));
 		lookup.put(ADivideNumericBinaryExp.class, new OperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
@@ -60,30 +71,14 @@ public class OperatorLookup
 		lookup.put(ARemNumericBinaryExp.class, new OperatorInfo(REM, "%")); 
 		lookup.put(ATimesNumericBinaryExp.class, new OperatorInfo(TIMES, "*"));
 		lookup.put(AStarStarBinaryExp.class, new OperatorInfo(POWER, "**"));
+		lookup.put(AImpliesBooleanBinaryExp.class, new OperatorInfo(IMPLIES, "=>"));
+		lookup.put(AEquivalentBooleanBinaryExp.class, new OperatorInfo(EQUIVALENCE, "<=>"));
+		lookup.put(AOrBooleanBinaryExp.class, new OperatorInfo(OR, "or"));
+		lookup.put(AAndBooleanBinaryExp.class, new OperatorInfo(AND, "and"));
+		lookup.put(ANotUnaryExp.class, new OperatorInfo(NOT, "not"));
 		
-//		lookup.put(ADivNumericBinaryExpCG.class, new OperatorInfo(DIVIDE, "/"));
-//		lookup.put(ADivideNumericBinaryExpCG.class, new OperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
-//		lookup.put(AGreaterEqualNumericBinaryExpCG.class, new OperatorInfo(GREATER_EQUAL, ">="));
-//		lookup.put(AGreaterNumericBinaryExpCG.class, new OperatorInfo(GREATER, ">"));
-//		lookup.put(ALessEqualNumericBinaryExpCG.class, new OperatorInfo(LESS_EQUAL, "<="));
-//		lookup.put(ALessNumericBinaryExpCG.class, new OperatorInfo(LESS, "<"));
-//		lookup.put(AModNumericBinaryExpCG.class, new OperatorInfo(MOD, "%")); //FIXME: Mod is special
-//		lookup.put(APlusNumericBinaryExpCG.class, new OperatorInfo(PLUS, "+"));
-//		lookup.put(ASubtractNumericBinaryExpCG.class, new OperatorInfo(SUB, "-"));
-//		lookup.put(ARemNumericBinaryExpCG.class, new OperatorInfo(REM, "%")); 
-//		lookup.put(ATimesNumericBinaryExpCG.class, new OperatorInfo(TIMES, "*"));
-		
-//		lookup.put(ADivNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(DIVIDE, "/"));
-//		lookup.put(ADivideNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
-//		lookup.put(AGreaterEqualNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(GREATER_EQUAL, ">="));
-//		lookup.put(AGreaterNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(GREATER, ">"));
-//		lookup.put(ALessEqualNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(LESS_EQUAL, "<="));
-//		lookup.put(ALessNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(LESS, "<"));
-//		lookup.put(AModNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(MOD, "%")); //FIXME: Mod is special
-//		lookup.put(APlusNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(PLUS, "+"));
-//		lookup.put(ASubtractNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(SUB, "-"));
-//		lookup.put(ARemNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(REM, "%")); 
-//		lookup.put(ATimesNumericBinaryExp.kindSNumericBinaryExp, new OperatorInfo(TIMES, "*"));
+		//All VDM operators must be listed otherwise checks for operator precedence can fail
+		//since this is currently based on nodes in the VDM AST
 	}
 	
 }

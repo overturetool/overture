@@ -138,7 +138,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 	;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
-    =   #Numeric 
+    =   #Numeric
+    |	#Bool 
     |	{equals}
     |	{notEquals}
     |	{seqConcat}
@@ -158,6 +159,12 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{times}
     |	{power}       
     ;   
+
+#Bool {-> package='org.overture.codegen.cgast.expressions'}
+    =	{or}
+    |	{and}
+    |	{xor}
+	;
  
 #Unary {-> package='org.overture.codegen.cgast.expressions'}
     =   {plus} 
@@ -168,7 +175,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{head}
     |	{tail}
     |	{floor}    
-    |	{abs}  
+    |	{abs}
+    |	{not}  
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

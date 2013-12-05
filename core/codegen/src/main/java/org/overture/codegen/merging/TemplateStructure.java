@@ -14,6 +14,7 @@ public class TemplateStructure
 	public final String EXPS_PATH;
 	public final String BINARY_EXPS_PATH;
 	public final String NUMERIC_BINARY_EXPS_PATH;
+	public final String BOOL_BINARY_EXPS_PATH;
 	public final String UNARY_EXPS_PATH;
 	public final String SEQ_EXPS_PATH;
 	public final String TYPE_PATH;
@@ -33,6 +34,7 @@ public class TemplateStructure
 		EXPS_PATH = root + "Expressions" + IText.SEPARATOR_CHAR;
 		BINARY_EXPS_PATH = EXPS_PATH + "Binary" + IText.SEPARATOR_CHAR;
 		NUMERIC_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Numeric" + IText.SEPARATOR_CHAR;
+		BOOL_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Bool" + IText.SEPARATOR_CHAR;
 		UNARY_EXPS_PATH = EXPS_PATH + "Unary" + IText.SEPARATOR_CHAR;
 		SEQ_EXPS_PATH = EXPS_PATH + "Seq" + IText.SEPARATOR_CHAR;
 		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;

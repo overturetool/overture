@@ -6,6 +6,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -42,8 +43,8 @@ public class ExpAssistantCG
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
 		
 		//Set the expressions
-		codeGenExp.setLeft(formatExp(vdmExp, vdmExp.getLeft(), true, question));
-		codeGenExp.setRight(formatExp(vdmExp, vdmExp.getRight(), false, question));
+		codeGenExp.setLeft(formatExp(vdmExp.getLeft(), true, question));
+		codeGenExp.setRight(formatExp(vdmExp.getRight(), false, question));
 		
 		//Set the expression types:
 		PType leftVdmType = vdmExp.getLeft().getType();
@@ -54,43 +55,95 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public PExpCG formatExp(SBinaryExp parent, PExp child, boolean leftChild, OoAstInfo question) throws AnalysisException
+	public PExpCG formatExp(PExp exp, OoAstInfo question) throws AnalysisException
 	{
-		
-		PExpCG exp = child.apply(question.getExpVisitor(), question);
-		
-		if(child instanceof SBinaryExp)
-		{
-			OperatorInfo parentOpInfo = opLookup.find(parent.getClass());
-			SBinaryExp binExpChild = (SBinaryExp) child;
-			OperatorInfo childInfo = opLookup.find(binExpChild.getClass());
-			
-			//Case 1: Protect against cases like "1 / (2*3*4)"
-			//Don't care about left children, i.e. "(2*3*4)/1 = 2*3*4/1"
-			
-			//Similar for subtract: "1 - (1+2+3)" and "1+2+3-3"
-			
-			//We don't need to consider 'mod' and 'rem' operators since these are constructed
-			//using other operators and isolated if needed using the isolation expression
-			boolean case1 = !leftChild && 
-							(parent instanceof ADivideNumericBinaryExp ||
-						     parent instanceof ASubtractNumericBinaryExp) &&
-						 	parentOpInfo.getPrecedence() >= childInfo.getPrecedence();
-			
-		    //Case 2: Protect against case like 1 / (1+2+3)
-			boolean case2 = parentOpInfo.getPrecedence() > childInfo.getPrecedence(); 
-			
-			if	( case1 || case2 )
-			{
-				AIsolationUnaryExpCG isolatioNExp = new AIsolationUnaryExpCG();
-				isolatioNExp.setType(exp.getType());
-				isolatioNExp.setExp(exp);
-				exp = isolatioNExp;
-			}
-		}
-		
-		return exp;
+		return formatExp(exp, false, question);
 	}
+	
+	public PExpCG formatExp(PExp exp, boolean leftChild, OoAstInfo question) throws AnalysisException
+	{
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		INode parentNode = exp.parent();
+
+		if(!(parentNode instanceof PExp))
+			return expCg;
+		
+		PExp parent = (PExp) parentNode;
+		
+		if (mustIsolate(parent, exp, leftChild))
+			return isolateExpression(expCg);
+		
+		return expCg;
+	}
+	
+	//Should only be called by expressions that are constructed using different abstract syntax
+	//constructs like the implies expression
+	public boolean mustIsolate(PExp exp)
+	{
+		INode parentNode = exp.parent();
+
+		if(!(parentNode instanceof PExp))
+			return false;
+		
+		PExp parentExp = (PExp) parentNode;
+
+		//If the parent has precedence then isolate
+		return opLookup.find(parentExp.getClass()) != null;
+	}
+	
+	public boolean isolateOnOpPrecedence(INode parent, Class<? extends PExp> child)
+	{
+		if(!(parent instanceof PExp))
+			return false;
+		
+		PExp parentExp = (PExp) parent;
+		
+		OperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
+
+		if (parentOpInfo == null)
+			return false;
+
+		OperatorInfo expOpInfo = opLookup.find(child);
+
+		if (expOpInfo == null)
+			return false;
+		
+		return parentOpInfo.getPrecedence() >= expOpInfo.getPrecedence();
+	}
+	
+	public boolean mustIsolate(PExp parentExp, PExp exp, boolean leftChild)
+	{
+		OperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
+
+		if (parentOpInfo == null)
+			return false;
+
+		OperatorInfo expOpInfo = opLookup.find(exp.getClass());
+
+		if (expOpInfo == null)
+			return false;
+
+		// Case 1: Protect against cases like "1 / (2*3*4)"
+		// Don't care about left children, i.e. "(2*3*4)/1 = 2*3*4/1"
+
+		// Similar for subtract: "1 - (1+2+3)" and "1+2+3-3"
+
+		// We don't need to consider 'mod' and 'rem' operators since these are constructed
+		// using other operators and isolated if needed using the isolation expression
+		boolean case1 = !leftChild
+				&& (parentExp instanceof ADivideNumericBinaryExp || parentExp instanceof ASubtractNumericBinaryExp)
+				&& parentOpInfo.getPrecedence() >= expOpInfo.getPrecedence();
+
+		if(case1)
+			return true;
+				
+		// Case 2: Protect against case like 1 / (1+2+3)
+		boolean case2 = parentOpInfo.getPrecedence() > expOpInfo.getPrecedence();
+		
+		return case2;
+	}
+	
 	
 	public boolean isIntegerType(PExp exp)
 	{	

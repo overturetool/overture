@@ -10,6 +10,7 @@ import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
@@ -17,6 +18,7 @@ import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
@@ -24,6 +26,7 @@ import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
@@ -34,6 +37,8 @@ import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -59,6 +64,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -81,7 +87,9 @@ import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
@@ -96,6 +104,7 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
+import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -520,7 +529,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return expAssistant.handleBinaryExp(node, new AGreaterNumericBinaryExpCG(), question, typeLookup);
 	}
 	
@@ -670,48 +678,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		return unaryMinus;
 	}
-	
-//
-//	//Numeric binary
-//	@Override
-//	public String caseAModNumericBinaryExp(AModNumericBinaryExp node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-//	}
-//	
-//	@Override
-//	public String caseADivNumericBinaryExp(ADivNumericBinaryExp node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		throw new AnalysisException(IMessages.NOT_SUPPORTED_MSG + node.toString());
-//	}		
-//		return super.caseADivideNumericBinaryExp(node, question);
-//	}
-//	
-//	@Override
-//	public String caseARemNumericBinaryExp(ARemNumericBinaryExp node,
-//			CodeGenContextMap question) throws AnalysisException
-//	{
-//		PExp leftNode = node.getLeft();
-//		PExp rightNode = node.getRight();
-//		
-//		String left = expAssistant.formatExp(node, leftNode, question);
-//		String operator = opLookup.find(node.getClass()).getMapping();
-//		String right = expAssistant.formatExp(node, rightNode, question);
-//		
-//		
-//		if(!expAssistant.isIntegerType(leftNode))
-//			left = "new Double(" + leftNode + ").intValue()";
-//		
-//		if(!expAssistant.isIntegerType(rightNode))
-//			right = "new Double(" + rightNode + ").intValue()";
-//			
-//		return left + " " + operator + " " + right;
-//	}
-//	
-//	//Literal EXP:
-	
+		
 	@Override
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
 			OoAstInfo question) throws AnalysisException
@@ -804,5 +771,77 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return absExp;
 	}
 	
+	@Override
+	public PExpCG caseANotUnaryExp(ANotUnaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		//TODO: FIX REPEATS FOR UNARIES
+		PExpCG expCg = expAssistant.formatExp(node.getExp(), question);
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		notExp.setExp(expCg);
+		notExp.setType(typeCg);
+		
+		return notExp;
+	}
 	
+	@Override
+	public PExpCG caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node,  new AOrBoolBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node,  new AAndBoolBinaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		//A => B is constructed as !A || B
+		
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		PExpCG leftExpCg = expAssistant.formatExp(node.getLeft(), question);
+		PExpCG rightExpCg = expAssistant.formatExp(node.getRight(), question);
+		
+		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		notExp.setType(typeCg);
+		notExp.setExp(leftExpCg);
+		
+		AOrBoolBinaryExpCG orExp = new AOrBoolBinaryExpCG();
+		orExp.setType(typeCg);
+		orExp.setLeft(notExp);
+		orExp.setRight(rightExpCg);
+		
+		return orExp;
+	}
+	
+	@Override
+	public PExpCG caseAEquivalentBooleanBinaryExp(
+			AEquivalentBooleanBinaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		//A <=> B is constructed as !(A ^ B)
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		//In fact these two isolations are not necessarily needed. It can result in expressions like: !((true) ^ (false))
+		PExpCG leftExpCg = ExpAssistantCG.isolateExpression(node.getLeft().apply(question.getExpVisitor(), question));
+		PExpCG rightExpCg = ExpAssistantCG.isolateExpression(node.getRight().apply(question.getExpVisitor(), question));
+
+		AXorBoolBinaryExpCG xorExp = new AXorBoolBinaryExpCG();
+		xorExp.setType(typeCg);
+		xorExp.setLeft(leftExpCg);
+		xorExp.setRight(rightExpCg);
+		
+		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		notExp.setType(typeCg);
+		notExp.setExp(ExpAssistantCG.isolateExpression(xorExp));
+
+		return expAssistant.isolateOnOpPrecedence(node.parent(), ANotUnaryExp.class) ? ExpAssistantCG.isolateExpression(notExp) : notExp;
+	}
 }
