@@ -145,6 +145,7 @@ import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
 import org.overture.typechecker.utilities.expression.ExportDefinitionFinder;
+import org.overture.typechecker.utilities.expression.ExportDefinitionListFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
@@ -1245,5 +1246,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder()
 	{
 		return new ExportDefinitionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Collection<? extends PDefinition>> getExportDefinitionListFinder()
+	{
+		return new ExportDefinitionListFinder(this);
 	}
 }

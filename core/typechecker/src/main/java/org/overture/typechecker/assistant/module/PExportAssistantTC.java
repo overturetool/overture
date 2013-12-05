@@ -188,43 +188,50 @@ public class PExportAssistantTC
 
 	public static Collection<? extends PDefinition> getDefinition(PExport exp)
 	{
-		if (exp instanceof AAllExport) {
-			return new LinkedList<PDefinition>(); // Nothing <shrug>
-		} else if (exp instanceof AFunctionExport) {
-			List<PDefinition> list = new Vector<PDefinition>();
-			// AAccessSpecifierAccessSpecifier
-			for (ILexNameToken name : ((AFunctionExport) exp).getNameList())
-			{
-				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AFunctionExport) exp).getExportType()));
-				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-				// ((AFunctionExport)exp).getExportType(),false,name.clone()));
-			}
-			return list;
-		} else if (exp instanceof AOperationExport) {
-			List<PDefinition> list = new Vector<PDefinition>();
-			for (ILexNameToken name : ((AOperationExport) exp).getNameList())
-			{
-				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AOperationExport) exp).getExportType()));
-				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-				// ((AOperationExport)exp).getExportType(),false,name.clone()));
-			}
-			return list;
-		} else if (exp instanceof ATypeExport) {
-			return new LinkedList<PDefinition>();
-		} else if (exp instanceof AValueExport) {
-			List<PDefinition> list = new Vector<PDefinition>();
-			for (ILexNameToken name : ((AValueExport) exp).getNameList())
-			{
-				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AValueExport) exp).getExportType()));
-				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
-				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
-				// ((AValueExport)exp).getExportType(),true,name.clone()));
-			}
-			return list;
+		try
+		{
+			return exp.apply(af.getExportDefinitionListFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
-		assert false;// "No match in switch";
-		return null;
+//		if (exp instanceof AAllExport) {
+//			return new LinkedList<PDefinition>(); // Nothing <shrug>
+//		} else if (exp instanceof AFunctionExport) {
+//			List<PDefinition> list = new Vector<PDefinition>();
+//			// AAccessSpecifierAccessSpecifier
+//			for (ILexNameToken name : ((AFunctionExport) exp).getNameList())
+//			{
+//				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AFunctionExport) exp).getExportType()));
+//				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//				// ((AFunctionExport)exp).getExportType(),false,name.clone()));
+//			}
+//			return list;
+//		} else if (exp instanceof AOperationExport) {
+//			List<PDefinition> list = new Vector<PDefinition>();
+//			for (ILexNameToken name : ((AOperationExport) exp).getNameList())
+//			{
+//				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AOperationExport) exp).getExportType()));
+//				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//				// ((AOperationExport)exp).getExportType(),false,name.clone()));
+//			}
+//			return list;
+//		} else if (exp instanceof ATypeExport) {
+//			return new LinkedList<PDefinition>();
+//		} else if (exp instanceof AValueExport) {
+//			List<PDefinition> list = new Vector<PDefinition>();
+//			for (ILexNameToken name : ((AValueExport) exp).getNameList())
+//			{
+//				list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, ((AValueExport) exp).getExportType()));
+//				// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
+//				// new AAccessSpecifierAccessSpecifier(new APublicAccess(),new TStatic(),null),
+//				// ((AValueExport)exp).getExportType(),true,name.clone()));
+//			}
+//			return list;
+//		}
+//		assert false;// "No match in switch";
+//		return null;
 	}
 }

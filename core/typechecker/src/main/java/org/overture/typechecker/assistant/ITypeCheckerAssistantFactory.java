@@ -468,5 +468,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	
 	IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder();
 	
+	IAnswer<Collection<? extends PDefinition>> getExportDefinitionListFinder();
 
 }

@@ -28,12 +28,16 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
+/**
+ * Used to find the definition of an exported expression from its actualType.
+ *  
+ * @author kel
+ */
 public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDefinition>, Collection<? extends PDefinition>>
 {
 	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	// A LexNameToken to indicate that a function has no precondition name, rather than
-	// that it is not a pure function (indicated by null).
+	
 	public ExportDefinitionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
