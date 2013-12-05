@@ -2,30 +2,11 @@ package org.overture.typechecker.assistant.module;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.modules.AAllExport;
-import org.overture.ast.modules.AFunctionExport;
-import org.overture.ast.modules.AOperationExport;
-import org.overture.ast.modules.ATypeExport;
-import org.overture.ast.modules.AValueExport;
 import org.overture.ast.modules.PExport;
-import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.PType;
-import org.overture.ast.types.SInvariantType;
-import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PExportAssistantTC
 {

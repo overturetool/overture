@@ -14,6 +14,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
@@ -469,5 +470,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder();
 	
 	IAnswer<Collection<? extends PDefinition>> getExportDefinitionListFinder();
+	
+	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
 }
