@@ -8,6 +8,11 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to check if a given type is a Record type.
+ * 
+ * @author kel
+ */
 public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 {
 

@@ -3,56 +3,62 @@ package org.overture.typechecker.utilities.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
-import org.overture.ast.types.ABracketType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.AVoidReturnType;
+import org.overture.ast.types.AVoidType;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
- * Used to determine if a type is a Union type
+ * Used to determine if a type has void type in it.
  * 
  * @author kel
  */
-public class UnionBasisChecker extends AnswerAdaptor<Boolean>
-{
 
-	
+public class VoidExistanceChecker extends AnswerAdaptor<Boolean>
+{
 	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
-	public UnionBasisChecker(ITypeCheckerAssistantFactory af)
+	public VoidExistanceChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 	
 	@Override
-	public Boolean caseABracketType(ABracketType type) throws AnalysisException
+	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return type.getType().apply(THIS);
-	}
-	
-	@Override
-	public Boolean caseANamedInvariantType(ANamedInvariantType type)
-			throws AnalysisException
-	{
-		if (type.getOpaque())
-			return false;
-		return type.getType().apply(THIS);
-	}
-	@Override
-	public Boolean defaultSInvariantType(SInvariantType node)
-			throws AnalysisException
-	{
+		for (PType t : type.getTypes())
+		{
+			if (PTypeAssistantTC.isVoid(t))
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 	
 	@Override
-	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
+	public Boolean caseAVoidType(AVoidType type) throws AnalysisException
 	{
 		return true;
 	}
 	
+	@Override
+	public Boolean caseAVoidReturnType(AVoidReturnType type)
+			throws AnalysisException
+	{
+		return true;
+	}
+	
+	@Override
+	public Boolean defaultPType(PType type) throws AnalysisException
+	{
+		return false;
+	}
+
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
@@ -66,5 +72,7 @@ public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
 
 }

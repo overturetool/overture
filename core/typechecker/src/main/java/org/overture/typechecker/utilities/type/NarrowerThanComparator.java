@@ -22,6 +22,12 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
+
+/**
+ * Checks if a type is smaller than a specifier type.
+ * 
+ * @author kel
+ */
 public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifierAccessSpecifier, Boolean>
 {
 

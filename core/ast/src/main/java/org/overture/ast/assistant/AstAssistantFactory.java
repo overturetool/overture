@@ -2,6 +2,7 @@ package org.overture.ast.assistant;
 
 import java.lang.reflect.Method;
 
+import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
@@ -13,6 +14,8 @@ import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
+import org.overture.ast.lex.LexNameList;
+import org.overture.ast.util.pattern.AllVariableNameLocator;
 
 public class AstAssistantFactory implements IAstAssistantFactory
 {
@@ -109,6 +112,13 @@ public class AstAssistantFactory implements IAstAssistantFactory
 		return new SNumericBasicTypeAssistant(this);
 	}
 
+	//visitors
+	
+	@Override
+	public IAnswer<LexNameList> getAllVariableNameLocator()
+	{
+		return new AllVariableNameLocator(this);
+	}
 	
 
 }

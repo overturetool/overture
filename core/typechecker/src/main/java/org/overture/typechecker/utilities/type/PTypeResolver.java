@@ -37,8 +37,6 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
@@ -47,6 +45,7 @@ import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
@@ -108,7 +107,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return tmp;
 		} catch (TypeCheckException e)
 		{
-			ABracketTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}
@@ -154,7 +153,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AClassTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}
