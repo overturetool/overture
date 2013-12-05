@@ -1,16 +1,10 @@
 package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PExpAssistantTC
 {

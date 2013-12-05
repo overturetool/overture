@@ -1,5 +1,7 @@
 package org.overture.typechecker.assistant;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
@@ -463,6 +465,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<List<PMultipleBind>> getMultipleBindLister();
 	
 	IAnswer<ILexNameToken> getPreNameFinder();
+	
+	IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder();
 	
 
 }

@@ -1,5 +1,7 @@
 package org.overture.typechecker.assistant;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
@@ -142,6 +144,7 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.expression.ExportDefinitionFinder;
 import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
@@ -1236,5 +1239,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<ILexNameToken> getPreNameFinder()
 	{
 		return new PreNameFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder()
+	{
+		return new ExportDefinitionFinder(this);
 	}
 }
