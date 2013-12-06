@@ -603,8 +603,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		//A => B is constructed as !A || B
 		
 		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		PExpCG leftExpCg = expAssistant.formatExp(node.getLeft(), question);
-		PExpCG rightExpCg = expAssistant.formatExp(node.getRight(), question);
+		PExpCG leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
+		PExpCG rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
 		
 		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
 		notExp.setType(typeCg);
@@ -625,9 +625,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		//A <=> B is constructed as !(A ^ B)
 		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		//In fact these two isolations are not necessarily needed. It can result in expressions like: !((true) ^ (false))
-		PExpCG leftExpCg = ExpAssistantCG.isolateExpression(node.getLeft().apply(question.getExpVisitor(), question));
-		PExpCG rightExpCg = ExpAssistantCG.isolateExpression(node.getRight().apply(question.getExpVisitor(), question));
+		PExpCG leftExpCg = node.getLeft().apply(question.getExpVisitor(), question);
+		PExpCG rightExpCg = node.getRight().apply(question.getExpVisitor(), question);
 
 		AXorBoolBinaryExpCG xorExp = new AXorBoolBinaryExpCG();
 		xorExp.setType(typeCg);
@@ -638,7 +637,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		notExp.setType(typeCg);
 		notExp.setExp(ExpAssistantCG.isolateExpression(xorExp));
 
-		return expAssistant.isolateOnOpPrecedence(node.parent(), ANotUnaryExp.class) ? ExpAssistantCG.isolateExpression(notExp) : notExp;
+		return notExp;
 	}
 	
 	//Unary
@@ -691,7 +690,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return expAssistant.handleBinaryExp(node,  new AAndBoolBinaryExpCG(), question);
 	}
 	
-	
 	@Override
 	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
 			throws AnalysisException
@@ -712,7 +710,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		return expAssistant.handleUnaryExp(node, new ATailUnaryExpCG(), question);
 	}
-	
 	
 	//Literals
 	//NOTE: The methods for handling of literals/constants look very similar and ideally should be
