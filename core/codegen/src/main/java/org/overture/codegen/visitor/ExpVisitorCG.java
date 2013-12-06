@@ -310,42 +310,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
-			throws AnalysisException
-	{
-		ALenUnaryExpCG lenExp = new ALenUnaryExpCG();
-		
-		lenExp.setType(new AIntNumericBasicTypeCG());
-		lenExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
-		
-		return lenExp;
-	}
-	
-	@Override
-	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, OoAstInfo question)
-			throws AnalysisException
-	{
-		AHeadUnaryExpCG headExp = new AHeadUnaryExpCG();
-		
-		headExp.setType(node.getType().apply(question.getTypeVisitor(), question));
-		headExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
-		
-		return headExp;
-	}
-	
-	@Override
-	public PExpCG caseATailUnaryExp(ATailUnaryExp node, OoAstInfo question)
-			throws AnalysisException
-	{
-		ATailUnaryExpCG tailExp = new ATailUnaryExpCG();
-		
-		tailExp.setType(node.getType().apply(question.getTypeVisitor(), question));
-		tailExp.setExp(node.getExp().apply(question.getExpVisitor(), question));
-		
-		return tailExp;
-	}
-	
-	@Override
 	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, OoAstInfo question)
 			throws AnalysisException
 	{	
@@ -712,6 +676,51 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return stringLiteral;
 	}
 	
+	@Override
+	public PExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		//A => B is constructed as !A || B
+		
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		PExpCG leftExpCg = expAssistant.formatExp(node.getLeft(), question);
+		PExpCG rightExpCg = expAssistant.formatExp(node.getRight(), question);
+		
+		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		notExp.setType(typeCg);
+		notExp.setExp(leftExpCg);
+		
+		AOrBoolBinaryExpCG orExp = new AOrBoolBinaryExpCG();
+		orExp.setType(typeCg);
+		orExp.setLeft(notExp);
+		orExp.setRight(rightExpCg);
+		
+		return orExp;
+	}
+	
+	@Override
+	public PExpCG caseAEquivalentBooleanBinaryExp(
+			AEquivalentBooleanBinaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		//A <=> B is constructed as !(A ^ B)
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		//In fact these two isolations are not necessarily needed. It can result in expressions like: !((true) ^ (false))
+		PExpCG leftExpCg = ExpAssistantCG.isolateExpression(node.getLeft().apply(question.getExpVisitor(), question));
+		PExpCG rightExpCg = ExpAssistantCG.isolateExpression(node.getRight().apply(question.getExpVisitor(), question));
+
+		AXorBoolBinaryExpCG xorExp = new AXorBoolBinaryExpCG();
+		xorExp.setType(typeCg);
+		xorExp.setLeft(leftExpCg);
+		xorExp.setRight(rightExpCg);
+		
+		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
+		notExp.setType(typeCg);
+		notExp.setExp(ExpAssistantCG.isolateExpression(xorExp));
+
+		return expAssistant.isolateOnOpPrecedence(node.parent(), ANotUnaryExp.class) ? ExpAssistantCG.isolateExpression(notExp) : notExp;
+	}
+	
 	//Unary
 	
 	@Override
@@ -762,48 +771,25 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return expAssistant.handleBinaryExp(node,  new AAndBoolBinaryExpCG(), question, typeLookup);
 	}
 	
+	
 	@Override
-	public PExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
+			throws AnalysisException
 	{
-		//A => B is constructed as !A || B
-		
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		PExpCG leftExpCg = expAssistant.formatExp(node.getLeft(), question);
-		PExpCG rightExpCg = expAssistant.formatExp(node.getRight(), question);
-		
-		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
-		notExp.setType(typeCg);
-		notExp.setExp(leftExpCg);
-		
-		AOrBoolBinaryExpCG orExp = new AOrBoolBinaryExpCG();
-		orExp.setType(typeCg);
-		orExp.setLeft(notExp);
-		orExp.setRight(rightExpCg);
-		
-		return orExp;
+		return expAssistant.handleUnaryExp(node, new ALenUnaryExpCG(), question, typeLookup);
 	}
 	
 	@Override
-	public PExpCG caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, OoAstInfo question)
+	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		//A <=> B is constructed as !(A ^ B)
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		//In fact these two isolations are not necessarily needed. It can result in expressions like: !((true) ^ (false))
-		PExpCG leftExpCg = ExpAssistantCG.isolateExpression(node.getLeft().apply(question.getExpVisitor(), question));
-		PExpCG rightExpCg = ExpAssistantCG.isolateExpression(node.getRight().apply(question.getExpVisitor(), question));
-
-		AXorBoolBinaryExpCG xorExp = new AXorBoolBinaryExpCG();
-		xorExp.setType(typeCg);
-		xorExp.setLeft(leftExpCg);
-		xorExp.setRight(rightExpCg);
-		
-		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
-		notExp.setType(typeCg);
-		notExp.setExp(ExpAssistantCG.isolateExpression(xorExp));
-
-		return expAssistant.isolateOnOpPrecedence(node.parent(), ANotUnaryExp.class) ? ExpAssistantCG.isolateExpression(notExp) : notExp;
+		return expAssistant.handleUnaryExp(node, new AHeadUnaryExpCG(), question, typeLookup);
+	}
+	
+	@Override
+	public PExpCG caseATailUnaryExp(ATailUnaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		return expAssistant.handleUnaryExp(node, new ATailUnaryExpCG(), question, typeLookup);
 	}
 }
