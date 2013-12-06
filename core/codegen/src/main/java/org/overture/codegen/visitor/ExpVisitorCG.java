@@ -232,22 +232,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		return localDefExp;
 	}
-	
-	@Override
-	public PExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		String value = node.getValue().getValue();
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
-		AQuoteLiteralExpCG quoteLit = new AQuoteLiteralExpCG();
-		quoteLit.setValue(value);
-		quoteLit.setType(type);
-
-		question.registerQuoteValue(value);
-		
-		return quoteLit;
-	}
 	
 	@Override
 	public PExpCG caseAMkTypeExp(AMkTypeExp node, OoAstInfo question)
@@ -610,71 +595,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		return (node.parent() instanceof SBinaryExp) ? ExpAssistantCG.isolateExpression(sub) : sub;
 	}
-			
-	@Override
-	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
-		
-		boolLiteral.setType(typeLookup.getType(node.getType()));
-		boolLiteral.setValue(node.getValue().toString());
-		
-		return boolLiteral;
-	}
-	
-	@Override
-	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		//TODO: Optimize similar literal expressions
-		//Put the similar code in an assistant
-		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
-		
-		realLiteral.setType(typeLookup.getType(node.getType()));
-		realLiteral.setValue(node.getValue().toString());
-		
-		return realLiteral;
-	}
-	
-	@Override
-	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
-		
-		intLiteral.setType(typeLookup.getType(node.getType()));
-		intLiteral.setValue(node.getValue().toString());
-		
-		return intLiteral;
-	}
-	
-	@Override
-	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
-			throws AnalysisException
-	{
-		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
-		
-		charLiteral.setType(typeLookup.getType(node.getType()));
-		charLiteral.setValue(node.getValue().getValue() + "");
-		
-		return charLiteral;
-	}
-	
-	@Override
-	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
-			OoAstInfo question) throws AnalysisException
-	{
-		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
-
-		stringLiteral.setType(new AStringTypeCG());
-		stringLiteral.setIsNull(true);
-		String value = StringEscapeUtils.escapeJava(node.getValue().getValue());
-		stringLiteral.setValue(value);
-		
-		return stringLiteral;
-	}
-	
+				
 	@Override
 	public PExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
 			OoAstInfo question) throws AnalysisException
@@ -790,5 +711,89 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return expAssistant.handleUnaryExp(node, new ATailUnaryExpCG(), question);
+	}
+	
+	
+	//Literals
+	//NOTE: The methods for handling of literals/constants look very similar and ideally should be
+	//generalized in a method. However the nodes in the VDM AST don't share a parent with method
+	//setValue at the current time of writing.
+	
+	@Override
+	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
+		
+		boolLiteral.setType(typeLookup.getType(node.getType()));
+		boolLiteral.setValue(node.getValue().toString());
+		
+		return boolLiteral;
+	}
+	
+	@Override
+	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
+		
+		realLiteral.setType(typeLookup.getType(node.getType()));
+		realLiteral.setValue(node.getValue().toString());
+		
+		return realLiteral;
+	}
+	
+	@Override
+	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
+		
+		intLiteral.setType(typeLookup.getType(node.getType()));
+		intLiteral.setValue(node.getValue().toString());
+		
+		return intLiteral;
+	}
+	
+	@Override
+	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
+		
+		charLiteral.setType(typeLookup.getType(node.getType()));
+		charLiteral.setValue(node.getValue().getValue() + "");
+		
+		return charLiteral;
+	}
+	
+	@Override
+	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+
+		stringLiteral.setType(new AStringTypeCG());
+		stringLiteral.setIsNull(true);
+		String value = StringEscapeUtils.escapeJava(node.getValue().getValue());
+		stringLiteral.setValue(value);
+		
+		return stringLiteral;
+	}
+	
+	@Override
+	public PExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		String value = node.getValue().getValue();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+
+		AQuoteLiteralExpCG quoteLit = new AQuoteLiteralExpCG();
+		quoteLit.setValue(value);
+		quoteLit.setType(type);
+
+		question.registerQuoteValue(value);
+		
+		return quoteLit;
 	}
 }
