@@ -37,6 +37,31 @@ public class JavaFormat
 		return writer.toString();
 	}
 	
+	public static String format(PExpCG exp, boolean leftChild) throws AnalysisException
+	{
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		StringWriter writer = new StringWriter();
+
+		exp.apply(mergeVisitor, writer);
+		String formattedExp = writer.toString();
+		
+		JavaPrecedence precedence = new JavaPrecedence();
+		
+		INode parent = exp.parent();
+		
+		if(!(parent instanceof PExpCG))
+			return formattedExp;
+		
+		boolean isolate = precedence.mustIsolate((PExpCG) parent, exp, leftChild);
+		
+		return isolate ? "(" + formattedExp + ")" : formattedExp;
+	}
+	
+	public static String formatUnary(PExpCG exp) throws AnalysisException
+	{
+		return format(exp, false);
+	}
+	
 	//FIXME: Unit should not be considered a case as tuples of one argument are not allowed
 	private static String getTupleStr(ATupleTypeCG type) throws AnalysisException
 	{
