@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ct.utils.TraceTestResult;
 import org.overture.ide.core.resources.IVdmProject;
@@ -30,10 +32,7 @@ public class StorageManager
 	}
 
 	public static File getCtOutputFolder(IVdmProject project)
-	{// project.getLocation().getModelBuildPath().getOutput().
-
-		// IProject p = (IProject) project.getAdapter(IProject.class);
-		// return new File(p.getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
+	{
 		return new File(project.getModelBuildPath().getOutput().getLocation().toFile().getAbsolutePath(), CT_OUTPUT_DIRECTORY);
 	}
 
@@ -45,24 +44,20 @@ public class StorageManager
 		{
 			try
 			{
-				reader = new TracesXmlStoreReader(classTraceXmlFile, traceDef.getName().getModule());
+				IProject p = (IProject) project.getAdapter(IProject.class);
+				reader = new TracesXmlStoreReader(classTraceXmlFile, traceDef.getName().getModule(), p.getDefaultCharset());
 			} catch (SAXException e)
 			{
 				// e.printStackTrace();
 				// TODO could not parse file. Posible not found
+			} catch (CoreException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}
 	}
-
-	// public TracesXmlStoreReader getReader() throws IOException
-	// {
-	// if(reader == null)
-	// {
-	// initialize();
-	// }
-	// return reader;
-	// }
 
 	public int getSkippedCount(String traceName)
 	{

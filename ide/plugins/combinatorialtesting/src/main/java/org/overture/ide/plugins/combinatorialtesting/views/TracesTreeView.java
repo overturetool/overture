@@ -145,42 +145,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 		init();
 
-		// new IResourceChangeListener()
-		// {
-		// public void resourceChanged(IResourceChangeEvent event)
-		// {
-		// try
-		// {
-		// switch (event.getType())
-		// {
-		// case IResourceChangeEvent.POST_CHANGE:
-		//
-		// IResourceDelta[] delta = event.getDelta().getAffectedChildren();
-		//
-		// for (IResourceDelta resourceDelta : delta)
-		// {
-		//
-		// if (resourceDelta.getResource() instanceof IProject
-		// && isValidProject(((IProject) resourceDelta.getResource())))
-		// {
-		//
-		// if (isFileChange(resourceDelta)
-		// || (resourceDelta.getKind() & IResourceDelta.ADDED) == IResourceDelta.ADDED)
-		// {
-		// projectToUpdate = ((IProject) resourceDelta.getResource());
-		// expandTraces(0);
-		// }
-		// }
-		// }
-		// break;
-		// }
-		// } catch (Exception e)
-		// {
-		// OvertureTracesPlugin.log(e);
-		// }
-		// }
-		//
-		// };
 	}
 
 	private void hookContextMenu()
@@ -230,10 +194,12 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			manager.add(actionRunSelectedAdvanced);
 		}
 		if (obj instanceof TraceTestTreeNode)
+		{
 			if (((TraceTestTreeNode) obj).getStatus() != null)
 			{
 				manager.add(actionSendToInterpreter);
 			}
+		}
 
 		manager.add(new Separator());
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -255,7 +221,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		ImageDescriptor theDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin("org.overture.ide.plugins.combinatorialtesting", path);
 		Image theImage = null;
 		if (theDescriptor != null)
+		{
 			theImage = theDescriptor.createImage();
+		}
 		return theImage;
 	}
 
@@ -331,8 +299,8 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				d.pack();
 				dialog.pack();
 				Point pt = display.getCursorLocation();
-				dialog.setLocation(pt.x - (d.getSize().x / 2), pt.y
-						- (d.getSize().y / 2));
+				dialog.setLocation(pt.x - d.getSize().x / 2, pt.y
+						- d.getSize().y / 2);
 				dialog.open();
 				while (!dialog.isDisposed())
 				{
@@ -517,6 +485,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 							OvertureTracesPlugin.log(e);
 						}
 					} else
+					{
 						try
 						{
 							IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ITracesConstants.TRACES_TEST_ID);
@@ -530,6 +499,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 						{
 							OvertureTracesPlugin.log(e);
 						}
+					}
 
 				}
 			}

@@ -79,7 +79,9 @@ public class TraceTestTreeNode implements IAdaptable, ITreeNode
 	{
 		String tmp = result.getNumber().toString();
 		while (tmp.length() < 6)
+		{
 			tmp = "0" + tmp;
+		}
 		return "Test " + tmp;
 	}
 
@@ -105,34 +107,23 @@ public class TraceTestTreeNode implements IAdaptable, ITreeNode
 
 	public void addChild(ITreeNode child)
 	{
-		// TODO Auto-generated method stub
 
 	}
 
 	public List<ITreeNode> getChildren()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean hasChild(String name)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean hasChildren()
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	// public boolean equals(Object obj)
-	// {
-	// if(obj instanceof TraceTestCaseTreeNode)
-	// return this.name.equals(((TraceTestCaseTreeNode)obj).getName());
-	// else
-	// return false;
-	// }
 
 }

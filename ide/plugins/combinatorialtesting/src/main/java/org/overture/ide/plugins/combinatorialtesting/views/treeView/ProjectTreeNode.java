@@ -68,10 +68,6 @@ public class ProjectTreeNode implements IAdaptable, ITreeNode
 		child.setParent(this);
 	}
 
-	// public void removeChild(ClassTreeNode child) {
-	// children.remove(child);
-	// child.setParent(null);
-	// }
 
 	public List<ITreeNode> getChildren()
 	{
@@ -85,7 +81,6 @@ public class ProjectTreeNode implements IAdaptable, ITreeNode
 
 	public boolean hasChild(String name)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 

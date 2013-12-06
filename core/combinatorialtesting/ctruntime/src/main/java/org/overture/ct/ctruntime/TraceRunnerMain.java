@@ -100,6 +100,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		boolean quiet = false;
 		String logfile = null;
 		boolean expBase64 = false;
+		boolean traceNameBase64 = false;
 		File coverage = null;
 		String defaultName = null;
 		String traceName = null;
@@ -276,6 +277,16 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					usage("-t option requires a Trace Name");
 				}
+			}else if (arg.equals("-t64"))
+			{
+				if (i.hasNext())
+				{
+					traceName = i.next();
+					traceNameBase64 = true;
+				} else
+				{
+					usage("-t option requires a Trace Name");
+				}
 			} else if (arg.equals("-tracefolder"))
 			{
 				if (i.hasNext())
@@ -377,6 +388,17 @@ public class TraceRunnerMain implements IProgressMonitor
 			} catch (Exception e)
 			{
 				usage("Malformed -e64 base64 expression");
+			}
+		}
+		if (traceNameBase64)
+		{
+			try
+			{
+				byte[] bytes = Base64.decode(traceName);
+				traceName = new String(bytes, VDMJ.filecharset);
+			} catch (Exception e)
+			{
+				usage("Malformed -t64 base64 trace name");
 			}
 		}
 
@@ -649,7 +671,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		StringBuilder sb = new StringBuilder();
 //		interpreter.init(null);
 		sb.append("<init ");
-		sb.append("module=\"" + moduleName + "\" ");
+		sb.append("module=\"" + new String(moduleName.getBytes(VDMJ.filecharset),"UTF-8") + "\" ");
 		sb.append("/>\n");
 
 		write(sb);
