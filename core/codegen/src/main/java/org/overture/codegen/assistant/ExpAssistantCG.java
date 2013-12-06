@@ -20,17 +20,18 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.lookup.OperatorInfo;
 import org.overture.codegen.lookup.OperatorLookup;
 import org.overture.codegen.lookup.TypeLookup;
-import org.overture.codegen.visitor.ExpVisitorCG;
 import org.overture.codegen.visitor.OoAstInfo;
 
 
 public class ExpAssistantCG
 {	
 	private OperatorLookup opLookup;
+	private TypeLookup typeLookup;
 	
-	public ExpAssistantCG(ExpVisitorCG expVisitor)
+	public ExpAssistantCG(TypeLookup typeLookup)
 	{
 		this.opLookup = new OperatorLookup();
+		this.typeLookup = typeLookup;
 	}
 	
 	public static PExpCG isolateExpression(PExpCG exp)
@@ -41,7 +42,7 @@ public class ExpAssistantCG
 		return isolationExp;
 	}
 	
-	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
+	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
 	{
 		PExpCG expCg = formatExp(vdmExp.getExp(), question);
 		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
@@ -54,7 +55,7 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question, TypeLookup typeLookup) throws AnalysisException
+	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
 	{	
 		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
 		
