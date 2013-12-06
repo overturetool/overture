@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
+//TODO: Can this class be removed?
 public class TypeLookup
 {
 	private HashMap<Class<? extends PType>, PTypeCG> typeMap;
@@ -31,11 +32,9 @@ public class TypeLookup
 	
 	private void initTypeMap()
 	{
-	
 		typeMap = new HashMap<Class<? extends PType>, PTypeCG>();
 		
 		//VDM strings are sequences of characters
-		typeMap.put(ASeq1SeqType.class, new AStringTypeCG());
 		typeMap.put(ASeq1SeqType.class, new AStringTypeCG());
 		
 		//Basic
