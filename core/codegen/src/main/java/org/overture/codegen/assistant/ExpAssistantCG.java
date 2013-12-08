@@ -14,18 +14,10 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.lookup.TypeLookup;
 import org.overture.codegen.visitor.OoAstInfo;
 
 public class ExpAssistantCG
 {
-	private TypeLookup typeLookup;
-	
-	public ExpAssistantCG(TypeLookup typeLookup)
-	{
-		this.typeLookup = typeLookup;
-	}
-	
 	public static PExpCG isolateExpression(PExpCG exp)
 	{
 		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
@@ -47,15 +39,22 @@ public class ExpAssistantCG
 	
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
 	{	
-		codeGenExp.setType(typeLookup.getType(vdmExp.getType()));
+		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
+		codeGenExp.setType(typeCg);
 		
-		codeGenExp.setLeft(vdmExp.getLeft().apply(question.getExpVisitor(), question));
-		codeGenExp.setRight(vdmExp.getRight().apply(question.getExpVisitor(), question));
+		PExp vdmExpLeft = vdmExp.getLeft();
+		PExp vdmExpRight = vdmExp.getRight();
+		
+		PExpCG leftExpCg = vdmExpLeft.apply(question.getExpVisitor(), question);
+		PExpCG rightExpCg = vdmExpRight.apply(question.getExpVisitor(), question);
+		
+		codeGenExp.setLeft(leftExpCg);
+		codeGenExp.setRight(rightExpCg);
 
-		PType leftVdmType = vdmExp.getLeft().getType();
-		codeGenExp.getLeft().setType(typeLookup.getType(leftVdmType));
-		PType rightVdmType = vdmExp.getRight().getType();
-		codeGenExp.getRight().setType(typeLookup.getType(rightVdmType));
+		PTypeCG leftTypeCg = vdmExpLeft.getType().apply(question.getTypeVisitor(), question);
+		codeGenExp.getLeft().setType(leftTypeCg);
+		PTypeCG rightTypeCg = vdmExpRight.getType().apply(question.getTypeVisitor(), question);
+		codeGenExp.getRight().setType(rightTypeCg);
 		
 		return codeGenExp;
 	}

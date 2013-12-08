@@ -110,18 +110,14 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.lookup.TypeLookup;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
-	private TypeLookup typeLookup;
-	
 	private ExpAssistantCG expAssistant;
 	
 	public ExpVisitorCG()
 	{
-		this.typeLookup = new TypeLookup();
-		this.expAssistant = new ExpAssistantCG(this.typeLookup);
+		this.expAssistant = new ExpAssistantCG();
 	}
 	
 	@Override
@@ -721,8 +717,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
-		boolLiteral.setType(typeLookup.getType(node.getType()));
+		boolLiteral.setType(type);
 		boolLiteral.setValue(node.getValue().toString());
 		
 		return boolLiteral;
@@ -733,8 +730,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
-		realLiteral.setType(typeLookup.getType(node.getType()));
+		realLiteral.setType(type);
 		realLiteral.setValue(node.getValue().toString());
 		
 		return realLiteral;
@@ -745,8 +743,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
-		intLiteral.setType(typeLookup.getType(node.getType()));
+		intLiteral.setType(type);
 		intLiteral.setValue(node.getValue().toString());
 		
 		return intLiteral;
@@ -757,8 +756,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
-		charLiteral.setType(typeLookup.getType(node.getType()));
+		charLiteral.setType(type);
 		charLiteral.setValue(node.getValue().getValue() + "");
 		
 		return charLiteral;
