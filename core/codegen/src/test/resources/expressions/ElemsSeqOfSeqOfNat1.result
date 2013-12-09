@@ -1,0 +1,1 @@
+new HashSet<List<Long>>(Utils.seq(Utils.seq(1L, 2L, 3L)))
