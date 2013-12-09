@@ -671,7 +671,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		StringBuilder sb = new StringBuilder();
 //		interpreter.init(null);
 		sb.append("<init ");
-		sb.append("module=\"" + new String(moduleName.getBytes(VDMJ.filecharset),"UTF-8") + "\" ");
+		sb.append("module=\"" + moduleName + "\" ");
 		sb.append("/>\n");
 
 		write(sb);
