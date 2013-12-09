@@ -1,0 +1,15 @@
+import utils.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final List<Object> x0 = Utils.seq();
+    private static final Set<Object> a = new HashSet<Object>(x0);
+    private static final List<Long> x1 = Utils.seq(1L, 2L, 3L);
+    private static final Set<Long> b = new HashSet<Long>(x1);
+    private static final Set<List<Long>> c = new HashSet<List<Long>>(Utils.seq(
+                x1));
+    private static final Set<List<List<Long>>> d = new HashSet<List<List<Long>>>(Utils.seq(
+                Utils.seq(x1)));
+}
