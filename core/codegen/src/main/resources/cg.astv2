@@ -172,6 +172,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{cast}
     |	{isolation}
     |	{len}
+    |	{elems}
     |	{head}
     |	{tail}
     |	{floor}    

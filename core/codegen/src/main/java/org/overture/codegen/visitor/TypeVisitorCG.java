@@ -6,6 +6,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -43,10 +44,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 {
-	public TypeVisitorCG()
-	{
-	}
-
 	@Override
 	public PTypeCG caseAUnknownType(AUnknownType node, OoAstInfo question)
 			throws AnalysisException
@@ -172,6 +169,13 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 		return node.getResult().apply(question.getTypeVisitor(), question);
 	}
 
+	@Override
+	public PTypeCG caseAFunctionType(AFunctionType node, OoAstInfo question)
+			throws AnalysisException
+	{
+		return node.getResult().apply(question.getTypeVisitor(), question);
+	}
+	
 	@Override
 	public PTypeCG caseAClassType(AClassType node, OoAstInfo question)
 			throws AnalysisException

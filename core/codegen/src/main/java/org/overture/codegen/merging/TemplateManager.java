@@ -22,6 +22,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
@@ -147,7 +148,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Char");
 		
-		// Seq types
+		// Set types
 		
 		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.SET_TYPE_PATH + "Set");
 		
@@ -224,6 +225,8 @@ public class TemplateManager
 				+ "Isolation");
 		
 		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Len");
+		
+		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Elems");
 		
 		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Head");
 		

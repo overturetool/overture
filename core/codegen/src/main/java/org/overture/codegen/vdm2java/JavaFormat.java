@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -19,10 +20,12 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 import org.overture.codegen.merging.MergeVisitor;
 
@@ -60,6 +63,19 @@ public class JavaFormat
 	public static String formatUnary(PExpCG exp) throws AnalysisException
 	{
 		return format(exp, false);
+	}
+	
+	public static String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
+	{
+		PTypeCG type = exp.getType();
+		
+		if(type instanceof ASetSetTypeCG)
+		{
+			ASetSetTypeCG seqType = (ASetSetTypeCG) type;
+			return formatTemplateParam(seqType.getSetOf());
+		}
+		
+		throw new AnalysisException("Type was not a sequence type!");
 	}
 	
 	//FIXME: Unit should not be considered a case as tuples of one argument are not allowed
@@ -295,7 +311,7 @@ public class JavaFormat
 			return "";
 		
 		if(potentialBasicType instanceof AIntNumericBasicTypeCG)
-			return "Integer";
+			return "Long";
 		else if(potentialBasicType instanceof ARealNumericBasicTypeCG)
 			return "Double";
 		else if(potentialBasicType instanceof ABoolBasicTypeCG)
