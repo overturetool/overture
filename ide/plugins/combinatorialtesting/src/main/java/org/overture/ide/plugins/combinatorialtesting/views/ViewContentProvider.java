@@ -50,8 +50,6 @@ public class ViewContentProvider implements IStructuredContentProvider,
 		ITreeContentProvider
 {
 	private TreeParent invisibleRoot;
-	// Map<String, ITracesHelper> traceHelpers;
-	// Map<INode, IVdmProject> nodeToProject = new HashMap<INode, IVdmProject>();
 	ViewPart viewer;
 	Map<INode, List<TraceTreeNode>> containerNodes = new HashMap<INode, List<TraceTreeNode>>();
 
@@ -191,10 +189,6 @@ public class ViewContentProvider implements IStructuredContentProvider,
 
 	static class HasTraceAnalysis extends AnalysisAdaptor
 	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 		boolean hasTrace = false;
 
 		public boolean hasTrace(INode node)
@@ -239,20 +233,10 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			}
 		}
 
-		// @Override
-		// public void caseANamedTraceDefinition(ANamedTraceDefinition node)
-		// {
-		// hasTrace = true;
-		// throw new UndeclaredThrowableException(new Exception("stop search"));
-		// }
 	}
 
 	static class TraceContainerSearch extends AnalysisAdaptor
 	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 		Set<INode> containers = new HashSet<INode>();
 
 		public Set<INode> getTraceContainers(INode node)
@@ -298,32 +282,10 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			}
 		}
 
-		// @Override
-		// public void caseANamedTraceDefinition(ANamedTraceDefinition node)
-		// {
-		// INode ancestor = null;
-		// ancestor = node.getAncestor(SClassDefinition.class);
-		// if (ancestor != null)
-		// {
-		// containers.add(ancestor);
-		// return;
-		// }
-		// ancestor = node.getAncestor(AModuleModules.class);
-		// if (ancestor != null)
-		// {
-		// containers.add(ancestor);
-		// return;
-		// }
-		//
-		// }
 	}
 
 	static class TraceSearch extends AnalysisAdaptor
 	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 		List<ANamedTraceDefinition> containers = new Vector<ANamedTraceDefinition>();
 
 		public List<ANamedTraceDefinition> getTraces(INode node)
@@ -365,24 +327,6 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			}
 		}
 
-		// @Override
-		// public void caseANamedTraceDefinition(ANamedTraceDefinition node)
-		// {
-		// INode ancestor = null;
-		// ancestor = node.getAncestor(SClassDefinition.class);
-		// if (ancestor != null)
-		// {
-		// containers.add(ancestor);
-		// return;
-		// }
-		// ancestor = node.getAncestor(AModuleModules.class);
-		// if (ancestor != null)
-		// {
-		// containers.add(ancestor);
-		// return;
-		// }
-		//
-		// }
 	}
 
 	/*
@@ -392,9 +336,6 @@ public class ViewContentProvider implements IStructuredContentProvider,
 	private void initialize()
 	{
 		invisibleRoot = new TreeParent("");
-		// IWorkspaceRoot iworkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		// IProject[] iprojects = iworkspaceRoot.getProjects();
-		// ArrayList<String> fileNameList = new ArrayList<String>();
 
 		ProjectTreeNode projectTreeNode;
 
@@ -412,53 +353,5 @@ public class ViewContentProvider implements IStructuredContentProvider,
 			}
 		}
 
-		// ArrayList<TreeParent> projectTree = new ArrayList<TreeParent>();
-		// for (int j = 0; j < iprojects.length; j++)
-		// {
-		//
-		// try
-		// {
-		// IVdmProject vdmProject = (IVdmProject) iprojects[j].getAdapter(IVdmProject.class);
-		//
-		// if (vdmProject != null)
-		// {
-		// projectTreeNode = new ProjectTreeNode(vdmProject);
-		// invisibleRoot.addChild(projectTreeNode);
-		// }
-		// // if the project is a overture project
-		// // if (TracesTreeView.isValidProject(iprojects[j]))
-		// // {
-		// //
-		// // // create project node
-		// // projectTreeNode = new ProjectTreeNode(iprojects[j]);
-		// //
-		// // ITracesHelper tr = traceHelpers.get(iprojects[j].getName());
-		// // if (tr == null)
-		// // continue;
-		// //
-		// // List<String> classes = tr.getClassNamesWithTraces();
-		// // boolean isTraceProject = false;
-		// // for (String className : classes)
-		// // {
-		// // if (className != null)
-		// // {
-		// // isTraceProject = true;
-		// // ClassTreeNode classTreeNode = new ClassTreeNode(className);
-		// //
-		// // // // add to project and root
-		// // projectTreeNode.addChild(classTreeNode);
-		// // }
-		// // }
-		// // if (isTraceProject && classes.size() > 0)
-		// // {
-		// // invisibleRoot.addChild(projectTreeNode);
-		// // }
-		// // }
-		// } catch (Exception e1)
-		// {
-		// System.out.println("Exception: " + e1.getMessage());
-		// e1.printStackTrace();
-		// }
-		// }
 	}
 }

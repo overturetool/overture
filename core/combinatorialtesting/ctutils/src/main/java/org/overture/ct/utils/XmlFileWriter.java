@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 public class XmlFileWriter
 {
 
-	FileWriter outputFileReader;
+//	FileWriter outputFileReader;
 	PrintWriter outputStream;
 	int level = 0;
 	Boolean inElement = false;
@@ -17,8 +17,8 @@ public class XmlFileWriter
 	public void StartDocument(File name, String root) throws IOException
 	{
 
-		outputFileReader = new FileWriter(name);
-		outputStream = new PrintWriter(outputFileReader);
+//		outputFileReader = new FileWriter(name);
+		outputStream = new PrintWriter(name,"UTF-8");//outputFileReader);
 		rootName = root;
 		StartElement(rootName);
 
@@ -29,7 +29,7 @@ public class XmlFileWriter
 
 		StopElement(rootName);
 		outputStream.close();
-		outputFileReader.close();
+//		outputFileReader.close();
 
 	}
 

@@ -77,14 +77,11 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory
 		factory.addActionSet("org.eclipse.debug.ui.launchActionSet"); // NON-NLS-1
 		factory.addActionSet("org.eclipse.debug.ui.debugActionSet"); // NON-NLS-1
 		factory.addActionSet("org.eclipse.debug.ui.profileActionSet"); // NON-NLS-1
-		// factory.addActionSet(JavaUI.ID_ACTION_SET);
-		// factory.addActionSet(JavaUI.ID_ELEMENT_CREATION_ACTION_SET);
 		factory.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET); // NON-NLS-1
 	}
 
 	private void addPerspectiveShortcuts()
 	{
-		// factory.addPerspectiveShortcut("org.overture.eclipse.ui.OverturePerspective"); //NON-NLS-1
 	}
 
 	private void addNewWizardShortcuts()
@@ -96,8 +93,6 @@ public class CombinatorialTestingPerspective implements IPerspectiveFactory
 	private void addViewShortcuts()
 	{
 		factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-		// factory.addShowViewShortcut(JavaUI.ID_PACKAGES);
-		// factory.addShowViewShortcut(IPageLayout.ID_RES_NAV);
 		factory.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
 		factory.addShowViewShortcut(IPageLayout.ID_OUTLINE);
 	}

@@ -52,7 +52,9 @@ public class VdmjTracesHelper
 				+ dateFormat.format(new Date()));
 
 		if (!coverageDir.exists())
+		{
 			coverageDir.mkdirs();
+		}
 
 		return coverageDir;
 	}
@@ -106,8 +108,12 @@ public class VdmjTracesHelper
 		IConsoleManager conMan = plugin.getConsoleManager();
 		IConsole[] existing = conMan.getConsoles();
 		for (int i = 0; i < existing.length; i++)
+		{
 			if (name.equals(existing[i].getName()))
+			{
 				return (MessageConsole) existing[i];
+			}
+		}
 		// no console found, so create a new one
 		MessageConsole myConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[] { myConsole });
@@ -176,8 +182,11 @@ public class VdmjTracesHelper
 	private void execute(IProgressMonitor monitor, ITracesDisplay display,
 			List<TraceExecutionSetup> texe) throws IOException, CoreException
 	{
+		IProject p = (IProject) project.getAdapter(IProject.class);
+
 		MessageConsole myConsole = findConsole("TracesConsole");
 		MessageConsoleStream out = myConsole.newMessageStream();
+		out.setEncoding(p.getDefaultCharset());
 
 		for (TraceExecutionSetup traceExecutionSetup : texe)
 		{
@@ -187,7 +196,6 @@ public class VdmjTracesHelper
 
 		try
 		{
-			IProject p = (IProject) project.getAdapter(IProject.class);
 			p.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e)
 		{
