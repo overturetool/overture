@@ -37,7 +37,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
-import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class SClassDefinitionAssistantTC
 {
