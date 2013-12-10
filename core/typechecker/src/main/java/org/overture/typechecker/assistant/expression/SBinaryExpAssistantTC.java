@@ -1,7 +1,6 @@
 package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.SBooleanBinaryExp;
 import org.overture.ast.types.ABooleanBasicType;

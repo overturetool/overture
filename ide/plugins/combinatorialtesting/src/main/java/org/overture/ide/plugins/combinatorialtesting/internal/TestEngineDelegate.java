@@ -99,8 +99,8 @@ public class TestEngineDelegate
 		commandList.add("-consoleName");
 		commandList.add("LaunchConfigurationExpression");
 
-		commandList.add("-t");
-		commandList.add(texe.traceName);
+		commandList.add("-t64");
+		commandList.add(Base64.encode(texe.traceName.getBytes(charSet)).toString());
 
 		commandList.add("-tracefolder");
 		commandList.add(traceFolder.toURI().toASCIIString());
@@ -149,7 +149,7 @@ public class TestEngineDelegate
 	private synchronized int getSessionId()
 	{
 
-		return (sessionId++);
+		return sessionId++;
 	}
 
 	private boolean useRemoteDebug(IPreferenceStore preferences)

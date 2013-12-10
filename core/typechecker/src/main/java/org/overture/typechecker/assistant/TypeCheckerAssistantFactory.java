@@ -1,5 +1,7 @@
 package org.overture.typechecker.assistant;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
@@ -10,7 +12,9 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
@@ -141,6 +145,10 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.expression.ExportDefinitionFinder;
+import org.overture.typechecker.utilities.expression.ExportDefinitionListFinder;
+import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
+import org.overture.typechecker.utilities.expression.PreNameFinder;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
 import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
@@ -1228,5 +1236,29 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<List<PMultipleBind>> getMultipleBindLister()
 	{
 		return new MultipleBindLister(this);
+	}
+	
+	@Override
+	public IAnswer<ILexNameToken> getPreNameFinder()
+	{
+		return new PreNameFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder()
+	{
+		return new ExportDefinitionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Collection<? extends PDefinition>> getExportDefinitionListFinder()
+	{
+		return new ExportDefinitionListFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder()
+	{
+		return new ImportDefinitionFinder(this);
 	}
 }

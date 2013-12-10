@@ -24,13 +24,11 @@ import org.overture.ct.utils.TraceTestResult;
 public class NotYetReadyTreeNode extends TraceTestTreeNode implements
 		IAdaptable
 {
-	// private NamedTraceDefinition traceDefinition;
 	private ITreeNode parent;
 
 	public NotYetReadyTreeNode()
 	{
 		super(new TraceTestResult());
-		// traceDefinition = traceDef;
 
 	}
 
@@ -40,9 +38,6 @@ public class NotYetReadyTreeNode extends TraceTestTreeNode implements
 		return parent;
 	}
 
-	// public NamedTraceDefinition GetTraceDefinition() {
-	// return traceDefinition;
-	// }
 
 	@Override
 	public String toString()
