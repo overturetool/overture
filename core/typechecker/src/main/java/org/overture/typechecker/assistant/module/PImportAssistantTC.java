@@ -26,15 +26,5 @@ public class PImportAssistantTC {
 		{
 			return null;
 		}
-//		if (imp instanceof AAllImport) {
-//			return AAllImportAssistantTC.getDefinitions((AAllImport)imp,from);
-//		} else if (imp instanceof ATypeImport) {
-//			return ATypeImportAssistantTC.getDefinitions((ATypeImport)imp,from);
-//		} else if (imp instanceof SValueImport) {
-//			return SValueImportAssistantTC.getDefinitions((SValueImport)imp,from);
-//		} else {
-//			assert false : "PImport.getDefinitions should never hit this case";
-//			return null;
-//		}
 	}
 }
