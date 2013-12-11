@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -43,7 +42,6 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -59,27 +57,22 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	{
 		final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
 		final TypeCheckInfo question;
-		
-		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,TypeCheckInfo question)
+
+		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+				TypeCheckInfo question)
 		{
 			this.rootVisitor = rootVisitor;
 			this.question = question;
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	
 	protected ITypeCheckerAssistantFactory af;
 
 	public TypeResolver(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public void defaultSClassDefinition(SClassDefinition node,
 			NewQuestion question) throws AnalysisException
@@ -87,7 +80,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		Environment cenv = new FlatEnvironment(question.question.assistantFactory, node.getDefinitions(), question.question.env);
 		PDefinitionListAssistantTC.typeResolve(node.getDefinitions(), question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, cenv));
 	}
-	
+
 	@Override
 	public void caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, NewQuestion question)
@@ -102,8 +95,25 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			node.setType(af.createPTypeAssistant().typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, newQuestion));
 		} else
 		{
-			//node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node), null, question.rootVisitor, question));
-			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); //FIXME: my way to rewrite the above line. Test shows that it is ok <- George Kanakis
+			// node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node),
+			// null, question.rootVisitor, question));
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); // FIXME:
+																																// my
+																																// way
+																																// to
+																																// rewrite
+																																// the
+																																// above
+																																// line.
+																																// Test
+																																// shows
+																																// that
+																																// it
+																																// is
+																																// ok
+																																// <-
+																																// George
+																																// Kanakis
 		}
 
 		if (question.question.env.isVDMPP())
@@ -125,13 +135,13 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPredef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(node.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPostdef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(node.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -141,7 +151,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		}
 
 	}
-	
+
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, NewQuestion question)
@@ -161,13 +171,13 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPredef(), question.rootVisitor, question.question);
+			// PDefinitionAssistantTC.typeResolve(node.getPredef(), question.rootVisitor, question.question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPostdef(), question.rootVisitor, question.question);
+			// PDefinitionAssistantTC.typeResolve(node.getPostdef(), question.rootVisitor, question.question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -176,7 +186,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			PPatternAssistantTC.typeResolve(p, question.rootVisitor, question.question);
 		}
 	}
-	
+
 	@Override
 	public void caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, NewQuestion question)
@@ -216,13 +226,13 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -231,7 +241,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			APatternListTypePairAssistantTC.typeResolve(pltp, question.rootVisitor, question.question);
 		}
 	}
-	
+
 	@Override
 	public void caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, NewQuestion question)
@@ -256,13 +266,13 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -271,7 +281,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			APatternListTypePairAssistantTC.typeResolve(ptp, question.rootVisitor, question.question);
 		}
 	}
-	
+
 	@Override
 	public void caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node, NewQuestion question)
@@ -287,7 +297,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public void caseALocalDefinition(ALocalDefinition node, NewQuestion question)
 			throws AnalysisException
@@ -298,12 +308,12 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		}
 
 	}
-	
+
 	@Override
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		//PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
+		// PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
 		node.getDef().apply(this, question);
 	}
 
@@ -315,10 +325,10 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		{
 			try
 			{
-				AFieldFieldAssistantTC.typeResolve(f, null, question.rootVisitor, question.question);
+				f.apply(THIS,new NewQuestion(question.rootVisitor, question.question));
 			} catch (TypeCheckException e)
 			{
-				AFieldFieldAssistantTC.unResolve(f);
+				question.question.assistantFactory.createPTypeAssistant().unResolve(f.getType());
 				throw e;
 			}
 		}
@@ -327,18 +337,18 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getInvPattern() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getInvdef(), question.rootVisitor, question.question);
+			// PDefinitionAssistantTC.typeResolve(node.getInvdef(), question.rootVisitor, question.question);
 			node.getInvdef().apply(this, question);
 		}
 
 		if (node.getInitPattern() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
+			// PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
 			node.getInitdef().apply(this, question);
 		}
 
 	}
-	
+
 	@Override
 	public void caseATypeDefinition(ATypeDefinition node, NewQuestion question)
 			throws AnalysisException
@@ -359,7 +369,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 			if (node.getInvdef() != null)
 			{
-				//PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
+				// PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
 				node.getInvdef().apply(this, question);
 				PPatternAssistantTC.typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
@@ -371,6 +381,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			throw e;
 		}
 	}
+
 	@Override
 	public void caseAValueDefinition(AValueDefinition node, NewQuestion question)
 			throws AnalysisException
@@ -383,6 +394,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			AValueDefinitionAssistantTC.updateDefs(node, question.question);
 		}
 	}
+
 	@Override
 	public void defaultPDefinition(PDefinition node, NewQuestion question)
 			throws AnalysisException

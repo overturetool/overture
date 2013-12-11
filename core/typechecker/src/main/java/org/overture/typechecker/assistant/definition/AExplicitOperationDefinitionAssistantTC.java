@@ -49,8 +49,6 @@ public class AExplicitOperationDefinitionAssistantTC
 		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
 	}
 
-
-
 	@SuppressWarnings("unchecked")
 	public static AExplicitFunctionDefinition getPostDefinition(
 			AExplicitOperationDefinition d, Environment base)
@@ -85,16 +83,6 @@ public class AExplicitOperationDefinitionAssistantTC
 
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, postop, null, null, false, null);
 
-		// new AExplicitFunctionDefinition(d.getLocation(),
-		// d.getName().getPostName(d.getPostcondition().getLocation()),
-		// NameScope.GLOBAL, false,
-		// null, PAccessSpecifierAssistant.getDefault(),
-		// null, parameters,
-		// AOperationTypeAssistantTC.getPostType(d.getType(),state, d.getClassDefinition(),
-		// PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-		// postop, null, null, null, null, null, null,
-		// null, false, false, null, null, null, null, parameters.size() > 1, null);
-
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
@@ -127,15 +115,6 @@ public class AExplicitOperationDefinitionAssistantTC
 		APreOpExp preop = AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(), null, d.getState());
 
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, preop, null, null, false, null);
-		// new AExplicitFunctionDefinition(d.getPrecondition().getLocation(),
-		// d.getName().getPreName(d.getPrecondition().getLocation()),
-		// NameScope.GLOBAL, false, null, PAccessSpecifierAssistant.getDefault(),
-		// null, parameters, AOperationTypeAssistantTC.getPreType(d.getType(),d.getState(), d.getClassDefinition(),
-		// PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-		// preop, null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1,
-		// null);
-
-		// ;
 
 		// Operation precondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even

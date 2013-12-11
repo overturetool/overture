@@ -46,19 +46,18 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 /**
  * Used to get Matching expressions out of a pattern.
- *  
+ * 
  * @author kel
  */
 public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public MatchingExpressionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PExp caseABooleanPattern(ABooleanPattern pattern)
 			throws AnalysisException
@@ -67,7 +66,7 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 		ABooleanConstExp res = AstFactory.newABooleanConstExp((LexBooleanToken) tok.clone());
 		return res;
 	}
-	
+
 	@Override
 	public PExp caseACharacterPattern(ACharacterPattern pattern)
 			throws AnalysisException
@@ -75,7 +74,7 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 		ILexCharacterToken v = pattern.getValue();
 		return AstFactory.newACharLiteralExp((LexCharacterToken) v.clone());
 	}
-	
+
 	@Override
 	public PExp caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
@@ -85,26 +84,26 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 		PExp re = PPatternAssistantTC.getMatchingExpression(pattern.getRight());
 		return AstFactory.newASeqConcatBinaryExp(le, op, re);
 	}
-	
+
 	@Override
 	public PExp caseAExpressionPattern(AExpressionPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getExp();
 	}
-	
+
 	@Override
 	public PExp caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newAVariableExp(pattern.getName().clone());
 	}
-	
+
 	@Override
 	public PExp caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
-		 int var = 1; //This was a private static global variable in the assistant AIgnorePatternAssistantTC.
+		int var = 1; // This was a private static global variable in the assistant AIgnorePatternAssistantTC.
 		// Generate a new "any" name for use during PO generation. The name
 		// must be unique for the pattern instance.
 
@@ -115,34 +114,35 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 
 		return AstFactory.newAVariableExp(pattern.getAnyName());
 	}
-	
+
 	@Override
 	public PExp caseAIntegerPattern(AIntegerPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newAIntLiteralExp((LexIntegerToken) pattern.getValue().clone());
 	}
-	
+
 	@Override
 	public PExp caseANilPattern(ANilPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newANilExp(pattern.getLocation());
 	}
-	
+
 	@Override
-	public PExp caseAQuotePattern(AQuotePattern pattern) throws AnalysisException
+	public PExp caseAQuotePattern(AQuotePattern pattern)
+			throws AnalysisException
 	{
 		ILexQuoteToken v = pattern.getValue();
 		return AstFactory.newAQuoteLiteralExp(v.clone());
 	}
-	
+
 	@Override
 	public PExp caseARealPattern(ARealPattern pattern) throws AnalysisException
 	{
 		ILexRealToken v = pattern.getValue();
 		return AstFactory.newARealLiteralExp((LexRealToken) v.clone());
 	}
-	
+
 	@Override
 	public PExp caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
@@ -157,19 +157,19 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 		ILexNameToken tpName = pattern.getTypename();
 		return AstFactory.newAMkTypeExp(tpName.clone(), list);
 	}
-	
+
 	@Override
 	public PExp caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newASeqEnumSeqExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
-	
+
 	@Override
 	public PExp caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newASetEnumSetExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
-	
+
 	@Override
 	public PExp caseAStringPattern(AStringPattern pattern)
 			throws AnalysisException
@@ -177,20 +177,22 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 		ILexStringToken v = pattern.getValue();
 		return AstFactory.newAStringLiteralExp((ILexStringToken) v.clone());
 	}
-	
+
 	@Override
-	public PExp caseATuplePattern(ATuplePattern pattern) throws AnalysisException
+	public PExp caseATuplePattern(ATuplePattern pattern)
+			throws AnalysisException
 	{
 		return AstFactory.newATupleExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
 	}
-	
+
 	@Override
-	public PExp caseAUnionPattern(AUnionPattern pattern) throws AnalysisException
+	public PExp caseAUnionPattern(AUnionPattern pattern)
+			throws AnalysisException
 	{
 		LexToken op = new LexKeywordToken(VDMToken.UNION, pattern.getLocation());
 		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(pattern.getLeft()), op, PPatternAssistantTC.getMatchingExpression(pattern.getRight()));
 	}
-	
+
 	@Override
 	public PExp createNewReturnValue(INode pattern) throws AnalysisException
 	{

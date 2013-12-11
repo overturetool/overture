@@ -39,12 +39,6 @@ public class TypeFinder extends
 
 	}
 
-	/**
-	 * 
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public TypeFinder(ITypeCheckerAssistantFactory af)
@@ -56,7 +50,8 @@ public class TypeFinder extends
 	public PDefinition defaultSClassDefinition(SClassDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		if ((!question.sought.getExplicit() && question.sought.getName().equals(node.getName().getName()))
+		if (!question.sought.getExplicit()
+				&& question.sought.getName().equals(node.getName().getName())
 				|| question.sought.equals(node.getName().getClassName()))
 		{
 			return node; // Class referred to as "A" or "CLASS`A"

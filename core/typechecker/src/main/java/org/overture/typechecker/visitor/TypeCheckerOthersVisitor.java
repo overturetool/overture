@@ -53,11 +53,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1883409865766439618L;
-
 	public TypeCheckerOthersVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
@@ -121,7 +116,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			node.setDefs(defs);
 		} else
 		{
-			assert (type != null) : "Can't typecheck a pattern without a type";
+			assert type != null : "Can't typecheck a pattern without a type";
 
 			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
@@ -320,7 +315,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		if (PTypeAssistantTC.isMap(rtype))
 		{
-			node.setMapType(PTypeAssistantTC.getMap(rtype));
+			node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(rtype));
 
 			if (!TypeComparator.compatible(node.getMapType().getFrom(), etype))
 			{
@@ -403,7 +398,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		if (PTypeAssistantTC.isMap(type))
 		{
-			SMapType map = PTypeAssistantTC.getMap(type);
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(type);
 			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
@@ -490,7 +485,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		if (PTypeAssistantTC.isRecord(type))
 		{
-			String sname = (node.getFieldName() != null) ? node.getFieldName().getName()
+			String sname = node.getFieldName() != null ? node.getFieldName().getName()
 					: node.getClassName().toString();
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
 			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, sname);

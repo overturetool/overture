@@ -19,18 +19,14 @@ public class AExpressionPatternAssistantTC
 		this.af = af;
 	}
 
-//	public static PType getPossibleTypes(AExpressionPattern pattern)
-//	{
-//		return AstFactory.newAUnknownType(pattern.getLocation());
-//	}
-
 	public static void typeResolve(AExpressionPattern pattern,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -48,8 +44,4 @@ public class AExpressionPatternAssistantTC
 
 	}
 
-//	public static PExp getMatchingExpression(AExpressionPattern p)
-//	{
-//		return p.getExp();
-//	}
 }

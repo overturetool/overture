@@ -75,7 +75,7 @@ public class PrivateClassEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findName(sought, scope);
+		return outer == null ? null : outer.findName(sought, scope);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class PrivateClassEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name, null);
+		return outer == null ? null : outer.findType(name, null);
 	}
 
 	@Override
@@ -127,8 +127,9 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public boolean isSystem()
 	{
-		return (classdef instanceof ASystemClassDefinition
-				|| classdef instanceof ACpuClassDefinition || classdef instanceof ABusClassDefinition);
+		return classdef instanceof ASystemClassDefinition
+				|| classdef instanceof ACpuClassDefinition
+				|| classdef instanceof ABusClassDefinition;
 	}
 
 	@Override

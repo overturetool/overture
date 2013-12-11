@@ -19,7 +19,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 
 /**
  * This class set a type to unresolved.
@@ -29,20 +28,23 @@ import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 public class TypeUnresolver extends AnalysisAdaptor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public TypeUnresolver(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public void caseABracketType(ABracketType type) throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
 		type.apply(THIS);
 	}
 
@@ -51,135 +53,197 @@ public class TypeUnresolver extends AnalysisAdaptor
 	{
 		if (type.getResolved())
 		{
-    		type.setResolved(false);
+			type.setResolved(false);
 
-    		for (PDefinition d: type.getClassdef().getDefinitions())
-    		{
-    			//PTypeAssistantTC.unResolve(af.createPDefinitionAssistant().getType(d));
-    			af.createPTypeAssistant().unResolve(af.createPDefinitionAssistant().getType(d));
-    		}
+			for (PDefinition d : type.getClassdef().getDefinitions())
+			{
+				// PTypeAssistantTC.unResolve(af.createPDefinitionAssistant().getType(d));
+				af.createPTypeAssistant().unResolve(af.createPDefinitionAssistant().getType(d));
+			}
 		}
 	}
 
 	@Override
 	public void caseAFunctionType(AFunctionType type) throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-
-		for (PType ft: type.getParameters())
+		if (!type.getResolved())
 		{
-			//PTypeAssistantTC.unResolve(ft);
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+
+		for (PType ft : type.getParameters())
+		{
+			// PTypeAssistantTC.unResolve(ft);
 			ft.apply(THIS);
 		}
 
-		//PTypeAssistantTC.unResolve(type.getResult());
+		// PTypeAssistantTC.unResolve(type.getResult());
 		type.getResult().apply(THIS);
 	}
+
 	@Override
 	public void caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getType());
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+		// PTypeAssistantTC.unResolve(type.getType());
 		type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public void caseARecordInvariantType(ARecordInvariantType type)
 			throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-
-		for (AFieldField f: type.getFields())
+		if (!type.getResolved())
 		{
-			AFieldFieldAssistantTC.unResolve(f);
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+
+		for (AFieldField f : type.getFields())
+		{
+			af.createPTypeAssistant().unResolve(f.getType());
 		}
 	}
+
 	@Override
 	public void defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		type.setResolved(false);
 	}
-	
+
 	@Override
 	public void defaultSMapType(SMapType type) throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
 
 		if (!type.getEmpty())
 		{
-			//PTypeAssistantTC.unResolve(type.getFrom());
+			// PTypeAssistantTC.unResolve(type.getFrom());
 			type.getFrom().apply(THIS);
-			//PTypeAssistantTC.unResolve(type.getTo());
+			// PTypeAssistantTC.unResolve(type.getTo());
 			type.getTo().apply(THIS);
 		}
 	}
-	
+
 	@Override
 	public void caseAOperationType(AOperationType type)
 			throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-
-		for (PType ot: type.getParameters())
+		if (!type.getResolved())
 		{
-			//PTypeAssistantTC.unResolve(ot);
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+
+		for (PType ot : type.getParameters())
+		{
+			// PTypeAssistantTC.unResolve(ot);
 			ot.apply(THIS);
 		}
 
-		//PTypeAssistantTC.unResolve(type.getResult());
+		// PTypeAssistantTC.unResolve(type.getResult());
 		type.getResult().apply(THIS);
 	}
+
 	@Override
 	public void caseAOptionalType(AOptionalType type) throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getType());
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+		// PTypeAssistantTC.unResolve(type.getType());
 		type.getType().apply(THIS);
 	}
+
 	@Override
 	public void caseAProductType(AProductType type) throws AnalysisException
 	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-
-		for (PType t: type.getTypes())
-		{
-			//PTypeAssistantTC.unResolve(t);
-			t.apply(THIS);
-		}
-	}
-	@Override
-	public void defaultSSeqType(SSeqType type) throws AnalysisException
-	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getSeqof());
-		type.getSeqof().apply(THIS);
-	}
-	@Override
-	public void caseASetType(ASetType type) throws AnalysisException
-	{
-		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getSetof()) ;
-		type.getSetof().apply(THIS);
-	}
-	
-	@Override
-	public void caseAUnionType(AUnionType type) throws AnalysisException
-	{
 		if (!type.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			type.setResolved(false);
 		}
 
 		for (PType t : type.getTypes())
 		{
-			//PTypeAssistantTC.unResolve(t);
+			// PTypeAssistantTC.unResolve(t);
 			t.apply(THIS);
 		}
 	}
+
+	@Override
+	public void defaultSSeqType(SSeqType type) throws AnalysisException
+	{
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+		// PTypeAssistantTC.unResolve(type.getSeqof());
+		type.getSeqof().apply(THIS);
+	}
+
+	@Override
+	public void caseASetType(ASetType type) throws AnalysisException
+	{
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+		// PTypeAssistantTC.unResolve(type.getSetof()) ;
+		type.getSetof().apply(THIS);
+	}
+
+	@Override
+	public void caseAUnionType(AUnionType type) throws AnalysisException
+	{
+		if (!type.getResolved())
+		{
+			return;
+		} else
+		{
+			type.setResolved(false);
+		}
+
+		for (PType t : type.getTypes())
+		{
+			// PTypeAssistantTC.unResolve(t);
+			t.apply(THIS);
+		}
+	}
+
 	@Override
 	public void defaultPType(PType type) throws AnalysisException
 	{

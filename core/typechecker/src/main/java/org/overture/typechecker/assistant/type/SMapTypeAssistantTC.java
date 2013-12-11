@@ -23,8 +23,9 @@ public class SMapTypeAssistantTC
 	public static void unResolve(SMapType type)
 	{
 		if (!type.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			type.setResolved(false);
 		}
@@ -42,8 +43,9 @@ public class SMapTypeAssistantTC
 			TypeCheckInfo question)
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}

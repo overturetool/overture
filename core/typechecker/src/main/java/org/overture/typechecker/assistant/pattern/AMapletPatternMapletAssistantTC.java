@@ -38,8 +38,9 @@ public class AMapletPatternMapletAssistantTC
 			TypeCheckInfo question) throws AnalysisException
 	{
 		if (mp.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			mp.setResolved(true);
 		}

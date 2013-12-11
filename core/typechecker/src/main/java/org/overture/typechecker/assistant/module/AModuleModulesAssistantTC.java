@@ -18,53 +18,57 @@ public class AModuleModulesAssistantTC
 	{
 		this.af = af;
 	}
+
 	/**
-	 * Generate the exportdefs list of definitions. The exports list of
-	 * export declarations is processed by searching the defs list of
-	 * locally defined objects. The exportdefs field is populated with
-	 * the result.
+	 * Generate the exportdefs list of definitions. The exports list of export declarations is processed by searching
+	 * the defs list of locally defined objects. The exportdefs field is populated with the result.
 	 */
 	public static void processExports(AModuleModules m)
 	{
 		if (m.getExports() != null)
 		{
 			if (!m.getIsDLModule())
-				m.getExportdefs().addAll(AModuleExportsAssistantTC.getDefinitions(m.getExports(),m.getDefs()));
-			else
+			{
+				m.getExportdefs().addAll(AModuleExportsAssistantTC.getDefinitions(m.getExports(), m.getDefs()));
+			} else
+			{
 				m.getExportdefs().addAll(AModuleExportsAssistantTC.getDefinitions(m.getExports()));
+			}
 		}
 	}
 
 	public static void processImports(AModuleModules m,
-			List<AModuleModules> allModules) {
-		
+			List<AModuleModules> allModules)
+	{
+
 		if (m.getImports() != null)
 		{
-			List<PDefinition> updated = AModuleImportsAssistantTC.getDefinitions(m.getImports(),allModules);
+			List<PDefinition> updated = AModuleImportsAssistantTC.getDefinitions(m.getImports(), allModules);
 
-			D: for (PDefinition u: updated)
+			D: for (PDefinition u : updated)
 			{
-				for (PDefinition tc: m.getImportdefs())
+				for (PDefinition tc : m.getImportdefs())
 				{
-					if (tc.getName() != null && u.getName() != null && tc.getName().matches(u.getName()))
+					if (tc.getName() != null && u.getName() != null
+							&& tc.getName().matches(u.getName()))
 					{
-						u.setUsed(tc.getUsed());	// Copy usage from TC phase
+						u.setUsed(tc.getUsed()); // Copy usage from TC phase
 						continue D;
 					}
 				}
 			}
-			
-			
+
 			m.getImportdefs().clear();
 			m.getImportdefs().addAll(updated);
 		}
-		
+
 	}
 
 	public static AModuleModules findModule(List<AModuleModules> allModules,
-			ILexIdentifierToken sought) {
-		
-		for (AModuleModules m: allModules)
+			ILexIdentifierToken sought)
+	{
+
+		for (AModuleModules m : allModules)
 		{
 			if (m.getName().equals(sought))
 			{
@@ -72,15 +76,17 @@ public class AModuleModulesAssistantTC
 			}
 		}
 
-   		return null;
+		return null;
 	}
 
-	public static void typeCheckImports(AModuleModules m) throws AnalysisException {
+	public static void typeCheckImports(AModuleModules m)
+			throws AnalysisException
+	{
 		if (m.getImports() != null)
 		{
-			AModuleImportsAssistantTC.typeCheck(m.getImports(),new ModuleEnvironment(af,m));	
+			AModuleImportsAssistantTC.typeCheck(m.getImports(), new ModuleEnvironment(af, m));
 		}
-		
+
 	}
 
 }

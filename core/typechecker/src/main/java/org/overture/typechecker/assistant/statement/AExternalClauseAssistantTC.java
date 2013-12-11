@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.statement;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.types.PType;

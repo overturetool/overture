@@ -49,30 +49,30 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  * @author gkanos
  */
 
-public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLocator.NewQuestion, List<PDefinition>>
+public class AllDefinitionLocator
+		extends
+		QuestionAnswerAdaptor<AllDefinitionLocator.NewQuestion, List<PDefinition>>
 {
 
 	public static class NewQuestion
 	{
 		PType ptype;
 		NameScope scope;
-		
-		public NewQuestion(PType ptype,
-				NameScope scope)
+
+		public NewQuestion(PType ptype, NameScope scope)
 		{
 			this.ptype = ptype;
 			this.scope = scope;
 		}
 	}
-	
-	private static final long serialVersionUID = 1L;
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public AllDefinitionLocator(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAIdentifierPattern(AIdentifierPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -81,14 +81,14 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 		defs.add(AstFactory.newALocalDefinition(pattern.getLocation(), pattern.getName().clone(), question.scope, question.ptype));
 		return defs;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseABooleanPattern(ABooleanPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseACharacterPattern(ACharacterPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -102,14 +102,14 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAIgnorePattern(AIgnorePattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAIntegerPattern(AIntegerPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -123,14 +123,14 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAQuotePattern(AQuotePattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseARealPattern(ARealPattern node,
 			NewQuestion question) throws AnalysisException
@@ -144,7 +144,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		return new Vector<PDefinition>();
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAConcatenationPattern(
 			AConcatenationPattern pattern, NewQuestion question)
@@ -154,7 +154,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 		list.addAll(PPatternAssistantTC.getDefinitions(pattern.getRight(), question.ptype, question.scope));
 		return list;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseARecordPattern(ARecordPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -199,7 +199,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 
 		return defs;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseASeqPattern(ASeqPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -229,7 +229,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
 	}
-	
+
 	@Override
 	public List<PDefinition> caseATuplePattern(ATuplePattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -254,7 +254,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 
 		return defs;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAUnionPattern(AUnionPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -271,7 +271,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 
 		return defs;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAMapUnionPattern(AMapUnionPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -288,7 +288,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 
 		return defs;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAMapPattern(AMapPattern pattern,
 			NewQuestion question) throws AnalysisException
@@ -301,7 +301,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 			TypeCheckerErrors.detail("Actual type", question.ptype);
 		} else
 		{
-			SMapType map = PTypeAssistantTC.getMap(question.ptype);
+			SMapType map = af.createPTypeAssistant().getMap(question.ptype);
 
 			if (!map.getEmpty())
 			{

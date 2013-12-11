@@ -22,7 +22,6 @@ public class AValueDefinitionAssistantTC
 		this.af = af;
 	}
 
-
 	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
 	{
 		PType type = node.getType();
@@ -63,13 +62,8 @@ public class AValueDefinitionAssistantTC
 	public static PType getType(AValueDefinition def)
 	{
 		return def.getType() != null ? def.getType()
-				: (def.getExpType() != null ? def.getExpType()
-						: AstFactory.newAUnknownType(def.getLocation()));
+				: def.getExpType() != null ? def.getExpType()
+						: AstFactory.newAUnknownType(def.getLocation());
 	}
-
-	// public static LexNameList getOldNames(AValueDefinition def)
-	// {
-	// return PExpAssistantTC.getOldNames(def.getExpression());
-	// }
 
 }

@@ -36,8 +36,9 @@ public class AOperationTypeAssistantTC
 	{
 
 		if (ot.getResolved())
+		{
 			return ot;
-		else
+		} else
 		{
 			ot.setResolved(true);
 		}
@@ -64,8 +65,9 @@ public class AOperationTypeAssistantTC
 	public static void unResolve(AOperationType ot)
 	{
 		if (!ot.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			ot.setResolved(false);
 		}
@@ -126,39 +128,5 @@ public class AOperationTypeAssistantTC
 
 		return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 	}
-
-	// public static String toDisplay(AOperationType exptype) {
-	// List<PType> parameters = exptype.getParameters();
-	// String params = (parameters.isEmpty() ?
-	// "()" : Utils.listToString(parameters, " * "));
-	// return "(" + params + " ==> " + exptype.getResult() + ")";
-	// }
-
-	// public static boolean equals(AOperationType type, Object other) {
-	// other = PTypeAssistantTC.deBracket(other);
-	//
-	// if (!(other instanceof AOperationType))
-	// {
-	// return false;
-	// }
-	//
-	// AOperationType oother = (AOperationType)other;
-	// return (PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
-	// PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
-	// }
-
-	// public static boolean narrowerThan(AOperationType type,
-	// AAccessSpecifierAccessSpecifier accessSpecifier) {
-	//
-	// for (PType t: type.getParameters())
-	// {
-	// if (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
-	// {
-	// return true;
-	// }
-	// }
-	//
-	// return PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
-	// }
 
 }

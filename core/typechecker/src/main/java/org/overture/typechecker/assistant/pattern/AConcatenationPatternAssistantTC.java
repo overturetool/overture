@@ -1,12 +1,8 @@
 package org.overture.typechecker.assistant.pattern;
 
-import java.util.List;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
@@ -28,8 +24,9 @@ public class AConcatenationPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -53,33 +50,5 @@ public class AConcatenationPatternAssistantTC
 		pattern.setResolved(false);
 
 	}
-
-//	public static List<PDefinition> getAllDefinitions(AConcatenationPattern rp,
-//			PType ptype, NameScope scope)
-//	{
-//		List<PDefinition> list = PPatternAssistantTC.getDefinitions(rp.getLeft(), ptype, scope);
-//		list.addAll(PPatternAssistantTC.getDefinitions(rp.getRight(), ptype, scope));
-//		return list;
-//
-//	}
-
-//	public static PType getPossibleType(AConcatenationPattern pattern)
-//	{
-//		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-//	}
-
-//	public static PExp getMatchingExpression(AConcatenationPattern ccp)
-//	{
-//		LexToken op = new LexKeywordToken(VDMToken.CONCATENATE, ccp.getLocation());
-//		PExp le = PPatternAssistantTC.getMatchingExpression(ccp.getLeft());
-//		PExp re = PPatternAssistantTC.getMatchingExpression(ccp.getRight());
-//		return AstFactory.newASeqConcatBinaryExp(le, op, re);
-//	}
-
-//	public static boolean isSimple(AConcatenationPattern p)
-//	{
-//		return PPatternAssistantTC.isSimple(p.getLeft())
-//				&& PPatternAssistantTC.isSimple(p.getRight());
-//	}
 
 }

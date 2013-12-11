@@ -36,32 +36,32 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 	{
 
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
 		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), root, rootVisitor, question));
 
 		if (root != null)
+		{
 			root.setInfinite(false); // Could be nil
+		}
 		return type;
 	}
 
 	public static void unResolve(AOptionalType type)
 	{
 		if (!type.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			type.setResolved(false);
 		}
 		PTypeAssistantTC.unResolve(type.getType());
 	}
-
-	// public static String toDisplay(AOptionalType exptype) {
-	// return "[" + exptype.getType() + "]";
-	// }
 
 	public static boolean isProduct(AOptionalType type, int size)
 	{
@@ -78,10 +78,10 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 		return PTypeAssistantTC.isProduct(type.getType());
 	}
 
-	public static AProductType getProduct(AOptionalType type)
-	{
-		return PTypeAssistantTC.getProduct(type.getType());
-	}
+	// public static AProductType getProduct(AOptionalType type)
+	// {
+	// return PTypeAssistantTC.getProduct(type.getType());
+	// }
 
 	public static boolean isType(AOptionalType b,
 			Class<? extends PType> typeclass)
@@ -94,25 +94,6 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 
 		return PTypeAssistantTC.isType(b.getType(), typeclass);
 	}
-
-//	public static PType isType(AOptionalType exptype, String typename)
-//	{
-//		return PTypeAssistantTC.isType(exptype.getType(), typename);
-//	}
-
-	// public static boolean equals(AOptionalType type, Object other) {
-	// if (other instanceof AOptionalType)
-	// {
-	// AOptionalType oo = (AOptionalType)other;
-	// return PTypeAssistantTC.equals(type.getType(),oo.getType());
-	// }
-	//
-	// return false;
-	// }
-
-	// public static boolean isFunction(AOptionalType type) {
-	// return PTypeAssistantTC.isFunction(type.getType());
-	// }
 
 	public static AFunctionType getFunction(AOptionalType type)
 	{
@@ -146,7 +127,7 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 
 	public static SMapType getMap(AOptionalType type)
 	{
-		return PTypeAssistantTC.getMap(type.getType());
+		return af.createPTypeAssistant().getMap(type.getType());
 	}
 
 	public static boolean isSet(AOptionalType type)
@@ -178,11 +159,6 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 	{
 		return PTypeAssistantTC.getClassType(type.getType());
 	}
-
-	// public static boolean narrowerThan(AOptionalType type,
-	// AAccessSpecifierAccessSpecifier accessSpecifier) {
-	// return PTypeAssistantTC.narrowerThan(type.getType(), accessSpecifier);
-	// }
 
 	public static PType polymorph(AOptionalType type, ILexNameToken pname,
 			PType actualType)

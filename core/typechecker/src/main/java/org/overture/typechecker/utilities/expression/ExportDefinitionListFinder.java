@@ -20,35 +20,34 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
- * Used to find the definitions of an exported expression 
- * and return a linked list with them.
- *  
+ * Used to find the definitions of an exported expression and return a linked list with them.
+ * 
  * @author kel
  */
-public class ExportDefinitionListFinder extends AnswerAdaptor<Collection<? extends PDefinition>>
+public class ExportDefinitionListFinder extends
+		AnswerAdaptor<Collection<? extends PDefinition>>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public ExportDefinitionListFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAAllExport(AAllExport exp)
 			throws AnalysisException
 	{
 		return new LinkedList<PDefinition>(); // Nothing <shrug>
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAFunctionExport(
 			AFunctionExport exp) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
 		// AAccessSpecifierAccessSpecifier
-		for (ILexNameToken name :  exp.getNameList())
+		for (ILexNameToken name : exp.getNameList())
 		{
 			list.add(AstFactory.newALocalDefinition(name.getLocation(), name.clone(), NameScope.GLOBAL, exp.getExportType()));
 			// new ALocalDefinition(name.location, NameScope.GLOBAL,true,null,
@@ -57,7 +56,7 @@ public class ExportDefinitionListFinder extends AnswerAdaptor<Collection<? exten
 		}
 		return list;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAOperationExport(
 			AOperationExport exp) throws AnalysisException
@@ -72,14 +71,14 @@ public class ExportDefinitionListFinder extends AnswerAdaptor<Collection<? exten
 		}
 		return list;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseATypeExport(ATypeExport exp)
 			throws AnalysisException
 	{
 		return new LinkedList<PDefinition>();
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAValueExport(AValueExport exp)
 			throws AnalysisException

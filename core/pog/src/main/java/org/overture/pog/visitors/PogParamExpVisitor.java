@@ -118,7 +118,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType type = root.getType();
 		if (PTypeAssistantTC.isMap(type))
 		{
-			SMapType mapType = PTypeAssistantTC.getMap(type);
+			SMapType mapType = assistantFactory.createPTypeAssistant().getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
 

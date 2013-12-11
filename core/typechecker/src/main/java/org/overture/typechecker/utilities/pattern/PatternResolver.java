@@ -29,13 +29,15 @@ import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
+
 /**
  * This class set a pattern to resolved.
  * 
  * @author kel
  */
 
-public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion>
+public class PatternResolver extends
+		QuestionAdaptor<PatternResolver.NewQuestion>
 {
 	/**
 	 * 
@@ -44,7 +46,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	{
 		IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
 		TypeCheckInfo question;
-		
+
 		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 				TypeCheckInfo question)
 		{
@@ -52,26 +54,23 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			this.question = question;
 		}
 	}
-	
-	private static final long serialVersionUID = 1L;
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public PatternResolver(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
-	
-	
+
 	@Override
 	public void caseAConcatenationPattern(AConcatenationPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -86,23 +85,24 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
+
 	@Override
 	public void caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
 		AExpressionPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
-		//Have to ask how is it done.
+		// Have to ask how is it done.
 
-		
 	}
-	
+
 	@Override
 	public void caseARecordPattern(ARecordPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -117,13 +117,15 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
+
 	@Override
 	public void caseASeqPattern(ASeqPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -137,14 +139,15 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public void caseASetPattern(ASetPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -164,8 +167,9 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -179,14 +183,15 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public void caseAUnionPattern(AUnionPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -201,14 +206,15 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public void caseAMapPattern(AMapPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -225,20 +231,21 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
-	
+
 	@Override
-	public void caseAMapUnionPattern(AMapUnionPattern pattern, NewQuestion question)
-			throws AnalysisException
+	public void caseAMapUnionPattern(AMapUnionPattern pattern,
+			NewQuestion question) throws AnalysisException
 	{
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
 
 		try
-		{			
+		{
 			pattern.getLeft().apply(THIS, question);
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
@@ -247,7 +254,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public void defaultPPattern(PPattern pattern, NewQuestion question)
 			throws AnalysisException

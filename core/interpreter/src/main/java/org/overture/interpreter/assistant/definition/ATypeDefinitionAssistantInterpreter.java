@@ -41,7 +41,9 @@ public class ATypeDefinitionAssistantInterpreter extends
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getInvdef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		return null;

@@ -23,8 +23,9 @@ public class SSeqTypeAssistantTC
 	public static void unResolve(SSeqType type)
 	{
 		if (!type.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			type.setResolved(false);
 		}
@@ -37,8 +38,9 @@ public class SSeqTypeAssistantTC
 			TypeCheckInfo question)
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -47,7 +49,9 @@ public class SSeqTypeAssistantTC
 		{
 			type.setSeqof(af.createPTypeAssistant().typeResolve(type.getSeqof(), root, rootVisitor, question));
 			if (root != null)
+			{
 				root.setInfinite(false); // Could be empty
+			}
 			return type;
 		} catch (TypeCheckException e)
 		{

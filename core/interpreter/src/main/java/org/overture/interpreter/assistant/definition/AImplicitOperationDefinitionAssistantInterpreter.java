@@ -33,10 +33,10 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
-		FunctionValue prefunc = (d.getPredef() == null) ? null
+		FunctionValue prefunc = d.getPredef() == null ? null
 				: new FunctionValue(d.getPredef(), null, null, null);
 
-		FunctionValue postfunc = (d.getPostdef() == null) ? null
+		FunctionValue postfunc = d.getPostdef() == null ? null
 				: new FunctionValue(d.getPostdef(), null, null, null);
 
 		// Note, body may be null if it is really implicit. This is caught
@@ -69,14 +69,18 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		if (d.getPostdef() != null)
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		if (d.getErrors() != null)
@@ -85,7 +89,9 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 			{
 				PExp found = AErrorCaseAssistantInterpreter.findExpression(err, lineno);
 				if (found != null)
+				{
 					return found;
+				}
 			}
 		}
 

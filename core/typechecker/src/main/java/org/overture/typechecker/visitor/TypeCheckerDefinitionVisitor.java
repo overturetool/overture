@@ -95,11 +95,6 @@ import org.overture.typechecker.util.HelpLexNameToken;
 public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4115263650076333819L;
-
 	public TypeCheckerDefinitionVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
@@ -347,7 +342,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		} else if (node.getMeasure() != null)
 		{
 			if (question.env.isVDMPP())
+			{
 				node.getMeasure().setTypeQualifier(AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
+			}
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
 			if (node.getMeasureDef() == null)
@@ -527,7 +524,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		} else if (node.getMeasure() != null)
 		{
 			if (question.env.isVDMPP())
+			{
 				node.getMeasure().setTypeQualifier(((AFunctionType) node.getType()).getParameters());
+			}
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
 			if (node.getBody() == null)
@@ -710,9 +709,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		node.setActualResult(actualResult);
 		boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
 
-		if ((node.getIsConstructor()
-				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
-				|| (!node.getIsConstructor() && !compatible))
+		if (node.getIsConstructor()
+				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class)
+				&& !compatible || !node.getIsConstructor() && !compatible)
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
@@ -819,7 +818,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 							// effectively
 							// initialize the instance variable concerned.
 
-							if ((clause.getMode().getType() == VDMToken.WRITE)
+							if (clause.getMode().getType() == VDMToken.WRITE
 									&& sdef instanceof AInstanceVariableDefinition
 									&& node.getName().getName().equals(node.getClassDefinition().getName().getName()))
 							{
@@ -887,9 +886,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
 
-			if ((node.getIsConstructor()
-					&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
-					|| (!node.getIsConstructor() && !compatible))
+			if (node.getIsConstructor()
+					&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class)
+					&& !compatible || !node.getIsConstructor() && !compatible)
 			{
 				TypeCheckerErrors.report(3035, "Operation returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());

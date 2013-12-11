@@ -61,7 +61,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));// FIXME: should we handle exceptions like this
+			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));// FIXME:
+																																// should
+																																// we
+																																// handle
+																																// exceptions
+																																// like
+																																// this
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -125,8 +131,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public PType typeResolve(PType type, 
-			ATypeDefinition root,
+	public PType typeResolve(PType type, ATypeDefinition root,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
@@ -206,7 +211,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static SMapType getMap(PType type)
+	public  SMapType getMap(PType type)
 	{
 		try
 		{
@@ -363,7 +368,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeFinder(),typename);
+			return type.apply(af.getPTypeFinder(), typename);
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -385,7 +390,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getProductExtendedChecker(),size);
+			return type.apply(af.getProductExtendedChecker(), size);
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -396,7 +401,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getProductExtendedTypeFinder(),size);
+			return type.apply(af.getProductExtendedTypeFinder(), size);
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -415,7 +420,9 @@ public class PTypeAssistantTC extends PTypeAssistant
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			if (!equals(parameters.get(i), other.get(i)))
+			{
 				return false;
+			}
 		}
 
 		return true;

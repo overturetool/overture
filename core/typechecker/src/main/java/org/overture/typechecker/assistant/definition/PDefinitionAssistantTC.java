@@ -100,7 +100,9 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			return d.apply(af.getTypeFinder(),new TypeFinder.Newquestion(sought, fromModule));// FIXME: should we handle exceptions like this
+			return d.apply(af.getTypeFinder(), new TypeFinder.Newquestion(sought, fromModule));// FIXME: should we
+																								// handle exceptions
+																								// like this
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -110,15 +112,16 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	public static PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope)
 	{
-		
+
 		try
 		{
-			return d.apply(af.getNameFinder(),new NameFinder.Newquestion(sought, scope));// FIXME: should we handle exceptions like this
+			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope));// FIXME: should we handle
+																							// exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null;
 		}
-		
+
 	}
 
 	public static PDefinition findNameBaseCase(PDefinition d,
@@ -126,8 +129,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		if (HelpLexNameToken.isEqual(d.getName(), sought))
 		{
-			if ((d.getNameScope() == NameScope.STATE && !scope.matches(NameScope.STATE))
-					|| (d.getNameScope() == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE)))
+			if (d.getNameScope() == NameScope.STATE
+					&& !scope.matches(NameScope.STATE)
+					|| d.getNameScope() == NameScope.OLDSTATE
+					&& !scope.matches(NameScope.OLDSTATE))
 			{
 
 				TypeChecker.report(3302, "State variable '"
@@ -147,10 +152,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			 d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 
@@ -158,10 +163,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			 d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 
@@ -257,10 +262,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			 d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
+			d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 
 	}
@@ -271,10 +276,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we handle exceptions like this
+			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we
+																								// handle exceptions
+																								// like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 
 	}
@@ -312,7 +319,6 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			return null;
 		}
 
-
 	}
 
 	public static boolean isFunction(PDefinition d)
@@ -326,7 +332,6 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	
 	public static boolean isOperation(PDefinition d)
 	{
 		try
@@ -337,7 +342,6 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			return false;
 		}
 	}
-
 
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.
