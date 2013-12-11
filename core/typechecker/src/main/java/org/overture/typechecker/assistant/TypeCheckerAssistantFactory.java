@@ -67,7 +67,6 @@ import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
 import org.overture.typechecker.assistant.module.SValueImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.ABooleanPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ACharacterPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
@@ -562,11 +561,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	// pattern
 
-	@Override
-	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
-	{
-		return new ABooleanPatternAssistantTC(this);
-	}
+//	@Override
+//	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
+//	{
+//		return new ABooleanPatternAssistantTC(this);
+//	}
 
 	@Override
 	public ACharacterPatternAssistantTC createACharacterPatternAssistant()
