@@ -10,9 +10,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnknownTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**

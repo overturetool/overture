@@ -5,8 +5,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -73,15 +71,15 @@ public class AProductTypeAssistantTC
 	// return Utils.listToString("(", exptype.getTypes(), " * ", ")");
 	// }
 
-	public static boolean isProduct(AProductType type, int size)
-	{
-		return size == 0 || type.getTypes().size() == size;
-	}
+//	public static boolean isProduct(AProductType type, int size)
+//	{
+//		return size == 0 || type.getTypes().size() == size;
+//	}
 
-	public static AProductType getProduct(AProductType type, int n)
-	{
-		return n == 0 || type.getTypes().size() == n ? type : null;
-	}
+//	public static AProductType getProduct(AProductType type, int n)
+//	{
+//		return n == 0 || type.getTypes().size() == n ? type : null;
+//	}
 
 	// public static boolean equals(AProductType type, Object other) {
 	// other = PTypeAssistantTC.deBracket(other);
@@ -99,22 +97,22 @@ public class AProductTypeAssistantTC
 	// return type;
 	// }
 
-	public static boolean isProduct(AProductType type)
-	{
-		return true;
-	}
+//	public static boolean isProduct(AProductType type)
+//	{
+//		return true;
+//	}
 
-	public static PType polymorph(AProductType type, ILexNameToken pname,
-			PType actualType)
-	{
-		List<PType> polytypes = new Vector<PType>();
-
-		for (PType ptype : ((AProductType) type).getTypes())
-		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
-		}
-
-		return AstFactory.newAProductType(type.getLocation(), polytypes);
-	}
+//	public static PType polymorph(AProductType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//		List<PType> polytypes = new Vector<PType>();
+//
+//		for (PType ptype : ((AProductType) type).getTypes())
+//		{
+//			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
+//		}
+//
+//		return AstFactory.newAProductType(type.getLocation(), polytypes);
+//	}
 
 }

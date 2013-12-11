@@ -1,5 +1,7 @@
 package org.overture.typechecker.assistant;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
@@ -9,9 +11,14 @@ import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -98,7 +105,6 @@ import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlock
 import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
@@ -139,14 +145,34 @@ import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
 import org.overture.typechecker.utilities.UsedMarker;
 import org.overture.typechecker.utilities.VariableNameCollector;
+import org.overture.typechecker.utilities.expression.ExportDefinitionFinder;
+import org.overture.typechecker.utilities.expression.ExportDefinitionListFinder;
+import org.overture.typechecker.utilities.expression.ImportDefinitionFinder;
+import org.overture.typechecker.utilities.expression.PreNameFinder;
+import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
+import org.overture.typechecker.utilities.pattern.AlwaysMatchingPatternChecker;
+import org.overture.typechecker.utilities.pattern.MatchingExpressionFinder;
+import org.overture.typechecker.utilities.pattern.MultipleBindLister;
+import org.overture.typechecker.utilities.pattern.PatternResolver;
+import org.overture.typechecker.utilities.pattern.PatternUnresolver;
+import org.overture.typechecker.utilities.pattern.PossibleBindTypeFinder;
+import org.overture.typechecker.utilities.pattern.PossibleTypeFinder;
+import org.overture.typechecker.utilities.pattern.SimplePatternChecker;
 import org.overture.typechecker.utilities.type.ClassBasisChecker;
 import org.overture.typechecker.utilities.type.ClassTypeFinder;
+import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
+import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 import org.overture.typechecker.utilities.type.MapBasisChecker;
 import org.overture.typechecker.utilities.type.MapTypeFinder;
 import org.overture.typechecker.utilities.type.NarrowerThanComparator;
 import org.overture.typechecker.utilities.type.OperationBasisChecker;
 import org.overture.typechecker.utilities.type.OperationTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeExtendedChecker;
+import org.overture.typechecker.utilities.type.PTypeFinder;
+import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.ProductBasisChecker;
+import org.overture.typechecker.utilities.type.ProductExtendedChecker;
+import org.overture.typechecker.utilities.type.ProductExtendedTypeFinder;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
@@ -157,7 +183,10 @@ import org.overture.typechecker.utilities.type.SetTypeFinder;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
+import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
+import org.overture.typechecker.utilities.type.VoidBasisChecker;
+import org.overture.typechecker.utilities.type.VoidExistanceChecker;
 
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
@@ -177,11 +206,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AApplyObjectDesignatorAssistantTC(this);
 	}
 
-	@Override
-	public ABracketTypeAssistantTC createABracketTypeAssistant()
-	{
-		return new ABracketTypeAssistantTC(this);
-	}
+//	@Override
+//	public ABracketTypeAssistantTC createABracketTypeAssistant()
+//	{
+//		return new ABracketTypeAssistantTC(this);
+//	}
 
 	@Override
 	public AClassTypeAssistantTC createAClassTypeAssistant()
@@ -1093,5 +1122,143 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<AAccessSpecifierAccessSpecifier, Boolean> getNarrowerThanComparator()
 	{
 		return new NarrowerThanComparator(this);
+	}
+	
+	@Override
+	public AnswerAdaptor<Boolean> getUnionBasisChecker()
+	{
+		return new UnionBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<AFunctionType> getFunctionTypeFinder()
+	{
+		return new FunctionTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.ConcreateTypeImplementor.Newquestion, PType> getConcreateTypeImplementor()
+	{
+		return new ConcreateTypeImplementor(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.type.PTypeResolver.Newquestion, PType> getPTypeResolver()
+	{
+		return new PTypeResolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<String, PType> getPTypeFinder()
+	{
+		return new PTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, Boolean> getProductExtendedChecker()
+	{
+		return new ProductExtendedChecker(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, AProductType> getProductExtendedTypeFinder()
+	{
+		return new ProductExtendedTypeFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Class<? extends PType>, Boolean> getPTypeExtendedChecker()
+	{
+		return new PTypeExtendedChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getVoidExistanceChecker()
+	{
+		return new VoidExistanceChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getVoidBasisChecker()
+	{
+		return new VoidBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<PType> getPossibleTypeFinder()
+	{
+		return new PossibleTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<PExp> getMatchingExpressionFinder()
+	{
+		return new MatchingExpressionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getSimplePatternChecker()
+	{
+		return new SimplePatternChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getAlwaysMatchingPatternChecker()
+	{
+		return new AlwaysMatchingPatternChecker(this);
+	}
+	
+	@Override
+	public AnalysisAdaptor getPatternUnresolver()
+	{
+		return new PatternUnresolver(this);
+	}
+	
+	@Override
+	public IQuestion<org.overture.typechecker.utilities.pattern.PatternResolver.NewQuestion> getPatternResolver()
+	{
+		return new PatternResolver(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<org.overture.typechecker.utilities.pattern.AllDefinitionLocator.NewQuestion, List<PDefinition>> getAllDefinitionLocator()
+	{
+		return new AllDefinitionLocator(this);
+	}
+	
+	@Override
+	public IAnswer<PType> getPossibleBindTypeFinder()
+	{
+		return new PossibleBindTypeFinder(this);
+	}
+	
+	@Override
+	public IAnswer<List<PMultipleBind>> getMultipleBindLister()
+	{
+		return new MultipleBindLister(this);
+	}
+	
+	@Override
+	public IAnswer<ILexNameToken> getPreNameFinder()
+	{
+		return new PreNameFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<LinkedList<PDefinition>, Collection<? extends PDefinition>> getExportDefinitionFinder()
+	{
+		return new ExportDefinitionFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Collection<? extends PDefinition>> getExportDefinitionListFinder()
+	{
+		return new ExportDefinitionListFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder()
+	{
+		return new ImportDefinitionFinder(this);
 	}
 }

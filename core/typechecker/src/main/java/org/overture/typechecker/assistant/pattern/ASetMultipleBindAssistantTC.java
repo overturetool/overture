@@ -1,7 +1,5 @@
 package org.overture.typechecker.assistant.pattern;
 
-import org.overture.ast.patterns.ASetMultipleBind;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASetMultipleBindAssistantTC
@@ -14,9 +12,9 @@ public class ASetMultipleBindAssistantTC
 		this.af = af;
 	}
 
-	public static PType getPossibleType(ASetMultipleBind mb)
-	{
-		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
-	}
+//	public static PType getPossibleType(ASetMultipleBind mb)
+//	{
+//		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
+//	}
 
 }

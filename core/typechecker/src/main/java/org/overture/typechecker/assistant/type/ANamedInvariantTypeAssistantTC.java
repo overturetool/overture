@@ -7,7 +7,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
@@ -59,49 +58,49 @@ public class ANamedInvariantTypeAssistantTC extends
 		}
 	}
 
-	public static String toDisplay(ANamedInvariantType exptype)
-	{
-		return exptype.getName().toString();
-	}
+//	public static String toDisplay(ANamedInvariantType exptype)
+//	{
+//		return exptype.getName().toString();
+//	}
 
-	public static boolean isProduct(ANamedInvariantType type, int size)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isProduct(type.getType(), size);
-	}
+//	public static boolean isProduct(ANamedInvariantType type, int size)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isProduct(type.getType(), size);
+//	}
+//
+//	public static AProductType getProduct(ANamedInvariantType type, int size)
+//	{
+//		return PTypeAssistantTC.getProduct(type.getType(), size);
+//	}
 
-	public static AProductType getProduct(ANamedInvariantType type, int size)
-	{
-		return PTypeAssistantTC.getProduct(type.getType(), size);
-	}
-
-	public static boolean isProduct(ANamedInvariantType type)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isProduct(type.getType());
-	}
+//	public static boolean isProduct(ANamedInvariantType type)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isProduct(type.getType());
+//	}
 
 	// public static AProductType getProduct(ANamedInvariantType type) {
 	// return PTypeAssistantTC.getProduct(type.getType());
 	// }
 
-	public static boolean isType(ANamedInvariantType b,
-			Class<? extends PType> typeclass)
-	{
-		if (b.getOpaque())
-			return false;
-		return PTypeAssistantTC.isType(b.getType(), typeclass);
+//	public static boolean isType(ANamedInvariantType b,
+//			Class<? extends PType> typeclass)
+//	{
+//		if (b.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isType(b.getType(), typeclass);
+//
+//	}
 
-	}
-
-	public static PType isType(ANamedInvariantType exptype, String typename)
-	{
-		if (exptype.getOpaque())
-			return null;
-		return PTypeAssistantTC.isType(exptype.getType(), typename);
-	}
+//	public static PType isType(ANamedInvariantType exptype, String typename)
+//	{
+//		if (exptype.getOpaque())
+//			return null;
+//		return PTypeAssistantTC.isType(exptype.getType(), typename);
+//	}
 
 	public static boolean equals(ANamedInvariantType type, Object other)
 	{
@@ -116,12 +115,12 @@ public class ANamedInvariantTypeAssistantTC extends
 		return false;
 	}
 
-	public static boolean isUnion(ANamedInvariantType type)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistantTC.isUnion(type.getType());
-	}
+//	public static boolean isUnion(ANamedInvariantType type)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistantTC.isUnion(type.getType());
+//	}
 
 	public static AUnionType getUnion(ANamedInvariantType type)
 	{
