@@ -23,9 +23,9 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.DefinitionFinder;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
-import org.overture.typechecker.utilities.TypeFinder;
-import org.overture.typechecker.utilities.TypeResolver;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -100,9 +100,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			return d.apply(af.getTypeFinder(), new TypeFinder.Newquestion(sought, fromModule));// FIXME: should we
-																								// handle exceptions
-																								// like this
+			return d.apply(af.getDefinitionFinder(), new DefinitionFinder.Newquestion(sought, fromModule));// FIXME:
+																											// should we
+			// handle exceptions
+			// like this
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -276,9 +277,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		try
 		{
-			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we
-																								// handle exceptions
-																								// like this
+			d.apply(af.getDefinitionTypeResolver(), new DefinitionTypeResolver.NewQuestion(rootVisitor, question));// FIXME:
+																													// should
+																													// we
+			// handle exceptions
+			// like this
 		} catch (AnalysisException e)
 		{
 

@@ -5,19 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
@@ -29,12 +22,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.util.LexNameTokenMap;
 
 public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 {
@@ -46,7 +34,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		super(af);
 		this.af = af;
 	}
-
 
 	public SSeqType getSeq(AUnionType type)
 	{
@@ -126,7 +113,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		return type.getMapType();
 	}
-
 
 	public static boolean isProduct(AUnionType type, int size)
 	{
@@ -221,7 +207,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		return null;
 	}
-
 
 	public AFunctionType getFunction(AUnionType type)
 	{
@@ -429,124 +414,6 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		}
 
 		return type.getRecType();
-	}
-
-	public static boolean isClass(AUnionType type)
-	{
-		return af.createAUnionTypeAssistant().getClassType(type) != null;
-	}
-
-	public AClassType getClassType(AUnionType type)
-	{
-		if (!type.getClassDone())
-		{
-			type.setClassDone(true); // Mark early to avoid recursion.
-			type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
-
-			// Build a class type with the common fields of the contained
-			// class types, making the field types the union of the original
-			// fields' types...
-
-			Map<ILexNameToken, PTypeSet> common = new HashMap<ILexNameToken, PTypeSet>();
-			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
-			ILexNameToken classname = null;
-
-			for (PType t : type.getTypes())
-			{
-				if (PTypeAssistantTC.isClass(t))
-				{
-					AClassType ct = PTypeAssistantTC.getClassType(t);
-
-					if (classname == null)
-					{
-						classname = ct.getClassdef().getName();
-					}
-
-					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
-					{
-						// TypeSet current = common.get(f.name);
-						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());
-						PTypeSet current = null;
-
-						for (ILexNameToken n : common.keySet())
-						{
-							if (n.getName().equals(synthname.getName()))
-							{
-								current = common.get(n);
-								break;
-							}
-						}
-
-						PType ftype = af.createPDefinitionAssistant().getType(f);
-
-						if (current == null)
-						{
-							common.put(synthname, new PTypeSet(ftype));
-						} else
-						{
-							current.add(ftype);
-						}
-
-						AAccessSpecifierAccessSpecifier curracc = access.get(synthname);
-
-						if (curracc == null)
-						{
-							access.put(synthname, f.getAccess());
-						} else
-						{
-							if (PAccessSpecifierAssistantTC.narrowerThan(curracc, f.getAccess()))
-							{
-								access.put(synthname, f.getAccess());
-							}
-						}
-					}
-				}
-			}
-
-			List<PDefinition> newdefs = new Vector<PDefinition>();
-
-			// Note that the pseudo-class is named after one arbitrary
-			// member of the union, even though it has all the distinct
-			// fields of the set of classes within the union.
-
-			for (ILexNameToken synthname : common.keySet())
-			{
-				PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
-
-				def.setAccess(access.get(synthname).clone());
-				newdefs.add(def);
-			}
-
-			type.setClassType(classname == null ? null
-					: AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition(classname.clone(), new LexNameList(), newdefs)));
-
-		}
-
-		return type.getClassType();
-	}
-
-	public static boolean isUnion(AUnionType type)
-	{
-		return true;
-	}
-
-
-	public static PType polymorph(AUnionType type, ILexNameToken pname,
-			PType actualType)
-	{
-
-		PTypeSet polytypes = new PTypeSet();
-
-		for (PType ptype : ((AUnionType) type).getTypes())
-		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
-		}
-
-		// TODO: Types in unionType should be a SET
-		PTypeList result = new PTypeList();
-		result.addAll(polytypes);
-
-		return AstFactory.newAUnionType(type.getLocation(), result);
 	}
 
 }

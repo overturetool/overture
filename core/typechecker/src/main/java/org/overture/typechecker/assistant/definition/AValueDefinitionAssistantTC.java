@@ -1,16 +1,9 @@
 package org.overture.typechecker.assistant.definition;
 
-import java.util.List;
-
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class AValueDefinitionAssistantTC
 {
@@ -22,42 +15,42 @@ public class AValueDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
-	{
-		PType type = node.getType();
-		PPattern pattern = node.getPattern();
-
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
-
-		// The untyped definitions may have had "used" markers, so we copy
-		// those into the new typed definitions, lest we get warnings. We
-		// also mark the local definitions as "ValueDefintions" (proxies),
-		// so that classes can be constructed correctly (values are statics).
-
-		for (PDefinition d : newdefs)
-		{
-			for (PDefinition u : node.getDefs())
-			{
-				if (u.getName().equals(d.getName()))
-				{
-					if (PDefinitionAssistantTC.isUsed(u))
-					{
-						PDefinitionAssistantTC.markUsed(d);
-					}
-
-					break;
-				}
-			}
-
-			ALocalDefinition ld = (ALocalDefinition) d;
-			ALocalDefinitionAssistantTC.setValueDefinition(ld);
-		}
-
-		node.setDefs(newdefs);
-		List<PDefinition> defs = node.getDefs();
-		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
-		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
-	}
+	// public static void updateDefs(AValueDefinition node, TypeCheckInfo question)
+	// {
+	// PType type = node.getType();
+	// PPattern pattern = node.getPattern();
+	//
+	// List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
+	//
+	// // The untyped definitions may have had "used" markers, so we copy
+	// // those into the new typed definitions, lest we get warnings. We
+	// // also mark the local definitions as "ValueDefintions" (proxies),
+	// // so that classes can be constructed correctly (values are statics).
+	//
+	// for (PDefinition d : newdefs)
+	// {
+	// for (PDefinition u : node.getDefs())
+	// {
+	// if (u.getName().equals(d.getName()))
+	// {
+	// if (PDefinitionAssistantTC.isUsed(u))
+	// {
+	// PDefinitionAssistantTC.markUsed(d);
+	// }
+	//
+	// break;
+	// }
+	// }
+	//
+	// ALocalDefinition ld = (ALocalDefinition) d;
+	// ALocalDefinitionAssistantTC.setValueDefinition(ld);
+	// }
+	//
+	// node.setDefs(newdefs);
+	// List<PDefinition> defs = node.getDefs();
+	// PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
+	// PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
+	// }
 
 	public static PType getType(AValueDefinition def)
 	{

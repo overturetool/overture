@@ -50,7 +50,7 @@ public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getClassType(type) != null;
+		return af.createPTypeAssistant().getClassType(type) != null;
 	}
 
 	@Override

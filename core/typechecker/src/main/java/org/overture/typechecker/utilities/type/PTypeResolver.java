@@ -44,10 +44,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
 /**
  * This class implements a way to resolve types from general PType class.
@@ -302,7 +299,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SMapTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
@@ -333,7 +330,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AOperationTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
@@ -435,7 +432,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SSeqTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}

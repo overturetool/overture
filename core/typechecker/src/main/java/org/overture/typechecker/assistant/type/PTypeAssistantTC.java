@@ -211,7 +211,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public  SMapType getMap(PType type)
+	public SMapType getMap(PType type)
 	{
 		try
 		{

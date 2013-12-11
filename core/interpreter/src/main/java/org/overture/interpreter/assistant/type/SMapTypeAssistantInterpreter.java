@@ -13,16 +13,14 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 
-public class SMapTypeAssistantInterpreter extends SMapTypeAssistantTC
+public class SMapTypeAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public SMapTypeAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

@@ -95,15 +95,12 @@ import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.utilities.DefinitionFinder;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
-import org.overture.typechecker.utilities.TypeFinder;
-import org.overture.typechecker.utilities.TypeResolver;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
@@ -272,17 +269,11 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ARecordInvariantTypeAssistantTC createARecordInvariantTypeAssistant();
 
-	ASetTypeAssistantTC createASetTypeAssistant();
-
 	AUnionTypeAssistantTC createAUnionTypeAssistant();
 
 	PTypeAssistantTC createPTypeAssistant();
 
-	SMapTypeAssistantTC createSMapTypeAssistant();
-
 	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
-
-	SSeqTypeAssistantTC createSSeqTypeAssistant();
 
 	// visitors
 	IAnswer<List<PDefinition>> getDefinitionCollector();
@@ -299,7 +290,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<PTypeSet> getExitTypeCollector();
 
-	IQuestionAnswer<TypeFinder.Newquestion, PDefinition> getTypeFinder();
+	IQuestionAnswer<DefinitionFinder.Newquestion, PDefinition> getDefinitionFinder();
 
 	IQuestionAnswer<NameFinder.Newquestion, PDefinition> getNameFinder();
 
@@ -325,7 +316,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IAnswer<PDefinition> getDereferer();
 
-	IQuestion<TypeResolver.NewQuestion> getTypeResolver();
+	IQuestion<DefinitionTypeResolver.NewQuestion> getDefinitionTypeResolver();
 
 	IAnswer<SMapType> getMapTypeFinder();
 

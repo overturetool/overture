@@ -37,12 +37,11 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
@@ -51,7 +50,8 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  * @author kel
  */
 
-public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
+public class DefinitionTypeResolver extends
+		QuestionAdaptor<DefinitionTypeResolver.NewQuestion>
 {
 	public static class NewQuestion
 	{
@@ -68,7 +68,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 	protected ITypeCheckerAssistantFactory af;
 
-	public TypeResolver(ITypeCheckerAssistantFactory af)
+	public DefinitionTypeResolver(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -238,7 +238,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		for (APatternListTypePair pltp : node.getParamPatterns())
 		{
-			APatternListTypePairAssistantTC.typeResolve(pltp, question.rootVisitor, question.question);
+			pltp.apply(THIS, question);
 		}
 	}
 
@@ -278,7 +278,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		for (APatternListTypePair ptp : node.getParameterPatterns())
 		{
-			APatternListTypePairAssistantTC.typeResolve(ptp, question.rootVisitor, question.question);
+			ptp.apply(THIS, question);
 		}
 	}
 
@@ -325,7 +325,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		{
 			try
 			{
-				f.apply(THIS,new NewQuestion(question.rootVisitor, question.question));
+				f.apply(THIS, new NewQuestion(question.rootVisitor, question.question));
 			} catch (TypeCheckException e)
 			{
 				question.question.assistantFactory.createPTypeAssistant().unResolve(f.getType());
@@ -386,13 +386,58 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	public void caseAValueDefinition(AValueDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
-		// d.setType(getType(d));
 		if (node.getType() != null)
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 			PPatternAssistantTC.typeResolve(node.getPattern(), question.rootVisitor, question.question);
-			AValueDefinitionAssistantTC.updateDefs(node, question.question);
+			updateDefs(node, question.question);
 		}
+	}
+
+	public void updateDefs(AValueDefinition node, TypeCheckInfo question)
+	{
+		PType type = node.getType();
+		PPattern pattern = node.getPattern();
+
+		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
+
+		// The untyped definitions may have had "used" markers, so we copy
+		// those into the new typed definitions, lest we get warnings. We
+		// also mark the local definitions as "ValueDefintions" (proxies),
+		// so that classes can be constructed correctly (values are statics).
+
+		for (PDefinition d : newdefs)
+		{
+			for (PDefinition u : node.getDefs())
+			{
+				if (u.getName().equals(d.getName()))
+				{
+					if (af.createPDefinitionAssistant().isUsed(u))
+					{
+						af.createPDefinitionAssistant().markUsed(d);
+					}
+
+					break;
+				}
+			}
+
+			ALocalDefinition ld = (ALocalDefinition) d;
+			ALocalDefinitionAssistantTC.setValueDefinition(ld);
+		}
+
+		node.setDefs(newdefs);
+		List<PDefinition> defs = node.getDefs();
+		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
+		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
+	}
+
+	@Override
+	public void caseAPatternListTypePair(APatternListTypePair pltp,
+			NewQuestion question) throws AnalysisException
+	{
+		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), question.rootVisitor, question.question);
+		PType type = af.createPTypeAssistant().typeResolve(pltp.getType(), null, question.rootVisitor, question.question);
+		pltp.setType(type);
 	}
 
 	@Override

@@ -1,16 +1,9 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
@@ -26,7 +19,6 @@ public class ANamedInvariantTypeAssistantTC extends
 		this.af = af;
 	}
 
-
 	public static boolean equals(ANamedInvariantType type, Object other)
 	{
 		other = PTypeAssistantTC.deBracket(other);
@@ -38,16 +30,6 @@ public class ANamedInvariantTypeAssistantTC extends
 		}
 
 		return false;
-	}
-
-	public static AUnionType getUnion(ANamedInvariantType type)
-	{
-		return PTypeAssistantTC.getUnion(type.getType());
-	}
-
-	public static AFunctionType getFunction(ANamedInvariantType type)
-	{
-		return PTypeAssistantTC.getFunction(type.getType());
 	}
 
 	public static boolean narrowerThan(ANamedInvariantType type,

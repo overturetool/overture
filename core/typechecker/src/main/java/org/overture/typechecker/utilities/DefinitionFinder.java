@@ -23,8 +23,8 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
  * 
  * @author kel
  */
-public class TypeFinder extends
-		QuestionAnswerAdaptor<TypeFinder.Newquestion, PDefinition>
+public class DefinitionFinder extends
+		QuestionAnswerAdaptor<DefinitionFinder.Newquestion, PDefinition>
 {
 	public static class Newquestion
 	{
@@ -41,7 +41,7 @@ public class TypeFinder extends
 
 	protected ITypeCheckerAssistantFactory af;
 
-	public TypeFinder(ITypeCheckerAssistantFactory af)
+	public DefinitionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}

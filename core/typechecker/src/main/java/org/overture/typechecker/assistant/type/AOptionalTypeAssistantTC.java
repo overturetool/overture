@@ -1,22 +1,13 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
@@ -29,59 +20,6 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 		super(af);
 		this.af = af;
 	}
-
-	public static PType typeResolve(AOptionalType type, ATypeDefinition root,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
-	{
-
-		if (type.getResolved())
-		{
-			return type;
-		} else
-		{
-			type.setResolved(true);
-		}
-		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), root, rootVisitor, question));
-
-		if (root != null)
-		{
-			root.setInfinite(false); // Could be nil
-		}
-		return type;
-	}
-
-	public static void unResolve(AOptionalType type)
-	{
-		if (!type.getResolved())
-		{
-			return;
-		} else
-		{
-			type.setResolved(false);
-		}
-		PTypeAssistantTC.unResolve(type.getType());
-	}
-
-	public static boolean isProduct(AOptionalType type, int size)
-	{
-		return PTypeAssistantTC.isProduct(type.getType(), size);
-	}
-
-	public static AProductType getProduct(AOptionalType type, int size)
-	{
-		return PTypeAssistantTC.getProduct(type.getType(), size);
-	}
-
-	public static boolean isProduct(AOptionalType type)
-	{
-		return PTypeAssistantTC.isProduct(type.getType());
-	}
-
-	// public static AProductType getProduct(AOptionalType type)
-	// {
-	// return PTypeAssistantTC.getProduct(type.getType());
-	// }
 
 	public static boolean isType(AOptionalType b,
 			Class<? extends PType> typeclass)
@@ -128,42 +66,6 @@ public class AOptionalTypeAssistantTC extends AOptionalTypeAssistant
 	public static SMapType getMap(AOptionalType type)
 	{
 		return af.createPTypeAssistant().getMap(type.getType());
-	}
-
-	public static boolean isSet(AOptionalType type)
-	{
-		return PTypeAssistantTC.isSet(type.getType());
-	}
-
-	public static ASetType getSet(AOptionalType type)
-	{
-		return PTypeAssistantTC.getSet(type.getType());
-	}
-
-	public static boolean isRecord(AOptionalType type)
-	{
-		return PTypeAssistantTC.isRecord(type.getType());
-	}
-
-	public static ARecordInvariantType getRecord(AOptionalType type)
-	{
-		return PTypeAssistantTC.getRecord(type.getType());
-	}
-
-	public static boolean isClass(AOptionalType type)
-	{
-		return PTypeAssistantTC.isClass(type.getType());
-	}
-
-	public static AClassType getClassType(AOptionalType type)
-	{
-		return PTypeAssistantTC.getClassType(type.getType());
-	}
-
-	public static PType polymorph(AOptionalType type, ILexNameToken pname,
-			PType actualType)
-	{
-		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(), pname, actualType));
 	}
 
 }

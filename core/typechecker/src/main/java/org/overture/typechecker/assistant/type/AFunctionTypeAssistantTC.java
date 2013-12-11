@@ -1,20 +1,12 @@
 package org.overture.typechecker.assistant.type;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.pattern.PTypeList;
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AFunctionTypeAssistantTC
@@ -26,7 +18,6 @@ public class AFunctionTypeAssistantTC
 	{
 		this.af = af;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public static AFunctionType getCurriedPreType(AFunctionType t,
@@ -77,24 +68,6 @@ public class AFunctionTypeAssistantTC
 		AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, params, AstFactory.newABooleanBasicType(t.getLocation()));
 		type.setDefinitions(t.getDefinitions());
 		return type;
-	}
-
-	public static PType polymorph(AFunctionType type, ILexNameToken pname,
-			PType actualType)
-	{
-
-		List<PType> polyparams = new Vector<PType>();
-
-		for (PType ptype : type.getParameters())
-		{
-			polyparams.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
-		}
-
-		PType polyresult = PTypeAssistantTC.polymorph(type.getResult(), pname, actualType);
-		AFunctionType ftype = AstFactory.newAFunctionType(type.getLocation(), false, polyparams, polyresult);
-		ftype.setDefinitions(type.getDefinitions());
-		return ftype;
-
 	}
 
 	public static int hashCode(AFunctionType type)

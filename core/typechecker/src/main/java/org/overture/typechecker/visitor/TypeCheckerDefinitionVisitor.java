@@ -91,6 +91,7 @@ import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
 
 public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 {
@@ -1356,8 +1357,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PPattern pattern = node.getPattern();
-		PPatternAssistantTC.typeResolve(pattern, THIS, question);
-		AValueDefinitionAssistantTC.updateDefs(node, question);
+		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
+//		PPatternAssistantTC.typeResolve(pattern, THIS, question);
+//		question.assistantFactory.getTypeResolver().updateDefs(node, question);
 		question.qualifiers = null;
 		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
 		return node.getType();

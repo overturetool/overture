@@ -95,16 +95,17 @@ import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
+import org.overture.typechecker.utilities.DefinitionFinder;
+import org.overture.typechecker.utilities.DefinitionFinder.Newquestion;
 import org.overture.typechecker.utilities.DefinitionTypeFinder;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.DefinitionTypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.Dereferer;
 import org.overture.typechecker.utilities.ExitTypeCollector;
 import org.overture.typechecker.utilities.FunctionChecker;
@@ -114,10 +115,6 @@ import org.overture.typechecker.utilities.NameFinder;
 import org.overture.typechecker.utilities.OperationChecker;
 import org.overture.typechecker.utilities.PTypeFunctionChecker;
 import org.overture.typechecker.utilities.SelfDefinitionFinder;
-import org.overture.typechecker.utilities.TypeFinder;
-import org.overture.typechecker.utilities.TypeFinder.Newquestion;
-import org.overture.typechecker.utilities.TypeResolver;
-import org.overture.typechecker.utilities.TypeResolver.NewQuestion;
 import org.overture.typechecker.utilities.UnusedChecker;
 import org.overture.typechecker.utilities.UpdatableChecker;
 import org.overture.typechecker.utilities.UsedChecker;
@@ -239,12 +236,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public ASetTypeAssistantTC createASetTypeAssistant()
-	{
-		return new ASetTypeAssistantTC(this);
-	}
-
-	@Override
 	public AUnionTypeAssistantTC createAUnionTypeAssistant()
 	{
 		return new AUnionTypeAssistantTC(this);
@@ -257,21 +248,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public SMapTypeAssistantTC createSMapTypeAssistant()
-	{
-		return new SMapTypeAssistantTC(this);
-	}
-
-	@Override
 	public SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant()
 	{
 		return new SNumericBasicTypeAssistantTC(this);
-	}
-
-	@Override
-	public SSeqTypeAssistantTC createSSeqTypeAssistant()
-	{
-		return new SSeqTypeAssistantTC(this);
 	}
 
 	// definition
@@ -773,9 +752,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public IQuestionAnswer<Newquestion, PDefinition> getTypeFinder()
+	public IQuestionAnswer<Newquestion, PDefinition> getDefinitionFinder()
 	{
-		return new TypeFinder(this);
+		return new DefinitionFinder(this);
 	}
 
 	@Override
@@ -851,9 +830,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public IQuestion<NewQuestion> getTypeResolver()
+	public IQuestion<NewQuestion> getDefinitionTypeResolver()
 	{
-		return new TypeResolver(this);
+		return new DefinitionTypeResolver(this);
 	}
 
 	@Override

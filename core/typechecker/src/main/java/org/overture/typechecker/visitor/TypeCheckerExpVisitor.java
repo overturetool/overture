@@ -175,7 +175,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isOperation(node.getType()))
 		{
 			AOperationType ot = PTypeAssistantTC.getOperation(node.getType());
-			AOperationTypeAssistantTC.typeResolve(ot, null, THIS, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, question);
 
 			if (inFunction && Settings.release == Release.VDM_10)
 			{
