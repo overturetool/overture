@@ -1,46 +1,28 @@
 package org.overture.interpreter.tests.external;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.overture.ast.lex.Dialect;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.test.framework.BaseTestSuite;
-
-public class ExternalModulesSlInterpreterTestSuite extends BaseTestSuite
+@RunWith(value = Parameterized.class)
+public class ExternalModulesSlInterpreterTestSuite extends
+		ExternalInterpreterTestBase
 {
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public ExternalModulesSlInterpreterTestSuite(Dialect dialect,
+			String suiteName, File testSuiteRoot, File file,
+			String storeLocationPart)
 	{
-		LexLocation.absoluteToStringLocation = false;
-		org.overture.test.framework.Properties.recordTestResults = false;
-		String name = "Interpreter_SL_Modules_TestSuite_External";
-		File root = getBasePath("sltest/cgip");
-		TestSuite test = null;
-		if (root != null && root.exists())
-		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), ExternalStringInterpreterSlTestCase.class,"vdm");
-		} else
-		{
-			test = new TestSuite("Empty Skipped Test Suite");
-		}
-		return test;
+		super(dialect, suiteName, testSuiteRoot, file, storeLocationPart);
 	}
-	
-	public static File getBasePath(String string)
+
+	@Parameters(name = "{1}")
+	public static Collection<Object[]> getData()
 	{
-		String path = System.getProperty("externalTestsPath"); 
-		if(path != null)
-		{	
-			File f = new File(new File(path), string);			
-			return f;
-		}
-		else
-		{
-			System.out.println("ExternalTestsPath not found");
-			return null;
-		}
+		return getData("Interpreter_SL_Modules_TestSuite_External", "sltest/cgip", Dialect.VDM_SL, "vdm");
 	}
 }
