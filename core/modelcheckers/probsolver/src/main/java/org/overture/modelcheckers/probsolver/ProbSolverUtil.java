@@ -128,8 +128,8 @@ public class ProbSolverUtil
 			console.out.println("Solver running for operation: " + name);
 
 			VdmContext context = translate(state, opDef, arguments, stateConstraints);
-
 			PStm val = solve(context);
+
 			return val;
 		} catch (AnalysisException e)
 		{
@@ -196,7 +196,7 @@ public class ProbSolverUtil
 		{
 			formula = new ClassicalB(s);
 			console.out.println("Solver input:\n\t\t\t"
-					+ formula.getCode().replace("&", " & \n\t\t\t"));
+					    + formula.getCode().replace("&", " & \n\t\t\t"));
 		} catch (Exception e)
 		{
 			throw new SolverException("Syntax error in: " + post, e);

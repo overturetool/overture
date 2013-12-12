@@ -21,6 +21,7 @@ import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -159,7 +160,28 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 		return set;
 	}
+	/*
+	@Override
+	public Node caseASetCompSetExp(ASeCompSetExp node)
+			throws AnalysisException
+	{
+	    node.getFirst();// target, variables
+	    node.getBindings(); //blist = for(PExp m : node.getBindings() ) { blist+=(exp(m) + "&")
+	    node.getPredicate(); // pred = exp(node.getPredicate()) + "target = exp(node.getFirst()));
+		if (node.getMembers().isEmpty())
+		{
+			return new AEmptySetExpression();
+		}
 
+		ASetExtensionExpression set = new ASetExtensionExpression();
+		for (PExp m : node.getMembers())
+		{
+			set.getExpressions().add(exp(m));
+		}
+
+		return set;
+	}
+	*/
 	@Override
 	public Node caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node)
 			throws AnalysisException
@@ -214,6 +236,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 
 		addTypeConstraint(node.getName(), node.getType());
+		//System.out.println("result of getIdentifier " + getIdentifier(node.getName()));//added by his
 		return getIdentifier(node.getName());
 	}
 
