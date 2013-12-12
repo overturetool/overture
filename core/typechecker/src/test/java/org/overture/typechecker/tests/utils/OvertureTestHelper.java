@@ -1,12 +1,11 @@
-package org.overture.typechecker.tests;
+package org.overture.typechecker.tests.utils;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
@@ -14,11 +13,11 @@ import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.parser.syntax.ParserException;
-import org.overture.typechecker.util.TypeCheckerUtil;
-import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
+import org.overture.typechecker.util.TypeCheckerUtil;
+import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 public class OvertureTestHelper
 {

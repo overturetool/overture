@@ -1,4 +1,4 @@
-package org.overture.typechecker.tests;
+package org.overture.typechecker.tests.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,22 +10,17 @@ import org.overture.ast.node.INode;
 public class TypeSetAnalysis extends DepthFirstAnalysisAdaptor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1926773815836561059L;
-
-	
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
 		try
 		{
-			Method m =node.getClass().getMethod("getType");
-			
-			if(m.invoke(node)==null)
+			Method m = node.getClass().getMethod("getType");
+
+			if (m.invoke(node) == null)
 			{
-				throw new AnalysisException("Type not set for type: "+node.getClass().getSimpleName());
+				throw new AnalysisException("Type not set for type: "
+						+ node.getClass().getSimpleName());
 			}
 		} catch (SecurityException e)
 		{

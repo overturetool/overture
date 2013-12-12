@@ -1,34 +1,32 @@
 package org.overture.typechecker.tests.external;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.overture.ast.lex.Dialect;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.test.framework.BaseTestSuite;
-import org.overture.test.framework.Properties;
-
-public class ExternalClassesRtTypeCheckTest extends BaseTestSuite
+@RunWith(value = Parameterized.class)
+public class ExternalClassesRtTypeCheckTest extends AbstractExternalTest
 {
-	public static Test suite() throws IllegalArgumentException,
-			SecurityException, InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, IOException
+
+	public ExternalClassesRtTypeCheckTest(Dialect dialect, String suiteName,
+			File testSuiteRoot, File file, String storeLocationPart)
 	{
-		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = false;
-		String name = "Type_Check_RT_Classes_TestSuite_External";
-		File root = ExternalTestSettings.getBasePath("rttest/tc");
-		TestSuite test = null;
-		if (root != null && root.exists())
-		{
-			test = createTestCompleteFile(name, root.getAbsolutePath(), NewClassRtTestCase.class,"vpp");
-		} else
-		{
-			test = new TestSuite("Empty Skipped Test Suite");
-		}
-		return test;
+		super(dialect, suiteName, testSuiteRoot, file, storeLocationPart);
+	}
+
+	@Parameters(name = "{1}")
+	public static Collection<Object[]> getData()
+	{
+		return getData("Type_Check_RT_Classes_TestSuite_External", "rttest/tc", Dialect.VDM_RT, "vpp");
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "external.class.rt";
 	}
 }
