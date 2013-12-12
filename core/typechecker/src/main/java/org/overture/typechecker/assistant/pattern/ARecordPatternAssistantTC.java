@@ -29,34 +29,34 @@ public class ARecordPatternAssistantTC
 		this.af = af;
 	}
 
-	public static void typeResolve(ARecordPattern pattern,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-		if (pattern.getResolved())
-			return;
-		else
-		{
-			pattern.setResolved(true);
-		}
+//	public static void typeResolve(ARecordPattern pattern,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//		if (pattern.getResolved())
+//			return;
+//		else
+//		{
+//			pattern.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
+//			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(pattern);
+//			throw e;
+//		}
+//
+//	}
 
-		try
-		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
-			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
-		} catch (TypeCheckException e)
-		{
-			unResolve(pattern);
-			throw e;
-		}
-
-	}
-
-	public static void unResolve(ARecordPattern pattern)
-	{
-		PTypeAssistantTC.unResolve(pattern.getType());
-		pattern.setResolved(false);
-	}
+//	public static void unResolve(ARecordPattern pattern)
+//	{
+//		PTypeAssistantTC.unResolve(pattern.getType());
+//		pattern.setResolved(false);
+//	}
 
 	// public static LexNameList getVariableNames(ARecordPattern pattern) {
 	// LexNameList list = new LexNameList();

@@ -82,7 +82,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			AConcatenationPatternAssistantTC.unResolve(pattern);
+			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -90,7 +90,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 	public void caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		AExpressionPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
+		af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
 		//Have to ask how is it done.
 
 		
@@ -113,7 +113,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
-			ARecordPatternAssistantTC.unResolve(pattern);
+			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
