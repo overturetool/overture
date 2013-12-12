@@ -34,11 +34,11 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -150,8 +150,8 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 			AConcatenationPattern pattern, NewQuestion question)
 			throws AnalysisException
 	{
-		List<PDefinition> list = PPatternAssistantTC.getDefinitions(pattern.getLeft(), question.ptype, question.scope);
-		list.addAll(PPatternAssistantTC.getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		List<PDefinition> list = af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope);
+		list.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
 		return list;
 	}
 	
@@ -163,15 +163,15 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 
 		PType type = pattern.getType();
 
-		if (!PTypeAssistantTC.isRecord(type))
+		if (!af.createPTypeAssistant().isRecord(type))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Type", type);
 			return defs;
 		}
 
-		ARecordInvariantType pattype = PTypeAssistantTC.getRecord(type);
-		PType using = PTypeAssistantTC.isType(question.ptype, pattype.getName().getFullName());
+		ARecordInvariantType pattype = af.createPTypeAssistant().getRecord(type);
+		PType using = af.createPTypeAssistant().isType(question.ptype, pattype.getName().getFullName());
 
 		if (using == null || !(using instanceof ARecordInvariantType))
 		{
@@ -193,7 +193,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 			{
 				AFieldField pf = patfi.next();
 				// defs.addAll(p.getDefinitions(usingrec.findField(pf.tag).type, scope));
-				defs.addAll(PPatternAssistantTC.getDefinitions(p, pf.getType(), question.scope));
+				defs.addAll(af.createPPatternAssistant().getDefinitions(p, pf.getType(), question.scope));
 			}
 		}
 
@@ -206,17 +206,17 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistantTC.isSeq(question.ptype))
+		if (!af.createPTypeAssistant().isSeq(question.ptype))
 		{
 			TypeCheckerErrors.report(3203, "Sequence pattern is matched against "
 					+ question.ptype, pattern.getLocation(), pattern);
 		} else
 		{
-			PType elem = PTypeAssistantTC.getSeq(question.ptype).getSeqof();
+			PType elem = af.createPTypeAssistant().getSeq(question.ptype).getSeqof();
 
 			for (PPattern p : pattern.getPlist())
 			{
-				defs.addAll(PPatternAssistantTC.getDefinitions(p, elem, question.scope));
+				defs.addAll(af.createPPatternAssistant().getDefinitions(p, elem, question.scope));
 			}
 		}
 
@@ -227,7 +227,27 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	public List<PDefinition> caseASetPattern(ASetPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
+		//return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		if (!af.createPTypeAssistant().isSet(question.ptype))
+		{
+			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", pattern.getLocation(), pattern);
+			TypeCheckerErrors.detail("Actual type", question.ptype);
+		} else
+		{
+			ASetType set = af.createPTypeAssistant().getSet(question.ptype);
+
+			if (!set.getEmpty())
+			{
+				for (PPattern p : pattern.getPlist())
+				{
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, set.getSetof(), question.scope));
+				}
+			}
+		}
+
+		return defs;
 	}
 	
 	@Override
@@ -236,7 +256,7 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistantTC.isProduct(question.ptype, pattern.getPlist().size()))
+		if (!af.createPTypeAssistant().isProduct(question.ptype, pattern.getPlist().size()))
 		{
 			TypeCheckerErrors.report(3205, "Matching expression is not a product of cardinality "
 					+ pattern.getPlist().size(), pattern.getLocation(), pattern);
@@ -244,12 +264,12 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 			return defs;
 		}
 
-		AProductType product = PTypeAssistantTC.getProduct(question.ptype, pattern.getPlist().size());
+		AProductType product = af.createPTypeAssistant().getProduct(question.ptype, pattern.getPlist().size());
 		Iterator<PType> ti = product.getTypes().iterator();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p, ti.next(), question.scope));
+			defs.addAll(af.createPPatternAssistant().getDefinitions(p, ti.next(), question.scope));
 		}
 
 		return defs;
@@ -261,13 +281,13 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistantTC.isSet(question.ptype))
+		if (!af.createPTypeAssistant().isSet(question.ptype))
 		{
 			TypeCheckerErrors.report(3206, "Matching expression is not a set type", pattern.getLocation(), pattern);
 		}
 
-		defs.addAll(PPatternAssistantTC.getDefinitions(pattern.getLeft(), question.ptype, question.scope));
-		defs.addAll(PPatternAssistantTC.getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
 
 		return defs;
 	}
@@ -278,13 +298,13 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistantTC.isMap(question.ptype))
+		if (!af.createPTypeAssistant().isMap(question.ptype))
 		{
 			TypeCheckerErrors.report(3315, "Matching expression is not a map type", pattern.getLocation(), pattern);
 		}
 
-		defs.addAll(PPatternAssistantTC.getDefinitions(pattern.getLeft(), question.ptype, question.scope));
-		defs.addAll(PPatternAssistantTC.getDefinitions(pattern.getRight(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getLeft(), question.ptype, question.scope));
+		defs.addAll(af.createPPatternAssistant().getDefinitions(pattern.getRight(), question.ptype, question.scope));
 
 		return defs;
 	}
@@ -295,19 +315,19 @@ public class AllDefinitionLocator extends QuestionAnswerAdaptor<AllDefinitionLoc
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		if (!PTypeAssistantTC.isMap(question.ptype))
+		if (!af.createPTypeAssistant().isMap(question.ptype))
 		{
 			TypeCheckerErrors.report(3314, "Map pattern is not matched against map type", pattern.getLocation(), pattern);
 			TypeCheckerErrors.detail("Actual type", question.ptype);
 		} else
 		{
-			SMapType map = PTypeAssistantTC.getMap(question.ptype);
+			SMapType map = af.createPTypeAssistant().getMap(question.ptype);
 
 			if (!map.getEmpty())
 			{
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					defs.addAll(AMapletPatternMapletAssistantTC.getDefinitions(p, map, question.scope));
+					defs.addAll(af.createAMapletPatternMapletAssistant().getDefinitions(p, map, question.scope));
 				}
 			}
 		}

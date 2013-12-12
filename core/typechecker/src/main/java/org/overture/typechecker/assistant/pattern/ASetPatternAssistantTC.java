@@ -1,21 +1,12 @@
 package org.overture.typechecker.assistant.pattern;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.ASetPattern;
-import org.overture.ast.patterns.PPattern;
-import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ASetPatternAssistantTC
 {
@@ -68,31 +59,31 @@ public class ASetPatternAssistantTC
 	// return list;
 	// }
 
-	public static List<PDefinition> getAllDefinitions(ASetPattern rp,
-			PType type, NameScope scope)
-	{
-
-		List<PDefinition> defs = new Vector<PDefinition>();
-
-		if (!PTypeAssistantTC.isSet(type))
-		{
-			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", rp.getLocation(), rp);
-			TypeCheckerErrors.detail("Actual type", type);
-		} else
-		{
-			ASetType set = PTypeAssistantTC.getSet(type);
-
-			if (!set.getEmpty())
-			{
-				for (PPattern p : rp.getPlist())
-				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
-				}
-			}
-		}
-
-		return defs;
-	}
+//	public static List<PDefinition> getAllDefinitions(ASetPattern rp,
+//			PType type, NameScope scope)
+//	{
+//
+//		List<PDefinition> defs = new Vector<PDefinition>();
+//
+//		if (!PTypeAssistantTC.isSet(type))
+//		{
+//			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", rp.getLocation(), rp);
+//			TypeCheckerErrors.detail("Actual type", type);
+//		} else
+//		{
+//			ASetType set = PTypeAssistantTC.getSet(type);
+//
+//			if (!set.getEmpty())
+//			{
+//				for (PPattern p : rp.getPlist())
+//				{
+//					defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
+//				}
+//			}
+//		}
+//
+//		return defs;
+//	}
 
 //	public static PType getPossibleTypes(ASetPattern pattern)
 //	{
