@@ -39,9 +39,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Get a complete list of all definitions, including duplicates. This method should only be used only by PP

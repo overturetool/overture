@@ -18,12 +18,9 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
-import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
@@ -109,7 +106,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
@@ -130,10 +127,10 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			ASeqPatternAssistantTC.unResolve(pattern);
+			af.createASeqPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -151,10 +148,10 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			ASetPatternAssistantTC.unResolve(pattern);
+			af.createASetPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -172,10 +169,10 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 
 		try
 		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pattern.getPlist(), question.rootVisitor, question.question);
 		} catch (TypeCheckException e)
 		{
-			ATuplePatternAssistantTC.unResolve(pattern);
+			af.createATuplePatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -197,7 +194,8 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			AUnionPatternAssistantTC.unResolve(pattern);
+			//AUnionPatternAssistantTC.unResolve(pattern);
+			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -217,11 +215,11 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 		{
 			for (AMapletPatternMaplet mp : pattern.getMaplets())
 			{
-				AMapletPatternMapletAssistantTC.typeResolve(mp, question.rootVisitor, question.question);
+				af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
 			}
 		} catch (TypeCheckException e)
 		{
-			AMapPatternAssistantTC.unResolve(pattern);
+			af.createAMapPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
@@ -243,7 +241,7 @@ public class PatternResolver extends QuestionAdaptor<PatternResolver.NewQuestion
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			AMapUnionPatternAssistantTC.unResolve(pattern);
+			af.createAMapUnionPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
