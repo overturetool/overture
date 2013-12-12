@@ -22,10 +22,6 @@ import org.overture.interpreter.values.Value;
 
 public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -9092856001136845731L;
 
 	@Override
 	public Value caseAIntLiteralExp(AIntLiteralExp node, Context ctxt)

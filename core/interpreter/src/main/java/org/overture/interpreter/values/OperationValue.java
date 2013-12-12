@@ -32,7 +32,6 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -356,7 +355,6 @@ public class OperationValue extends Value
 
 		Value rv = null;
 
-		boolean evalFailed = false;
 		try
 		{
 			if (precondition != null && Settings.prechecks)

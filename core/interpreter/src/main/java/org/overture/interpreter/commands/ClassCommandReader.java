@@ -23,7 +23,6 @@
 
 package org.overture.interpreter.commands;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -37,8 +36,6 @@ import org.overture.config.Settings;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
-
-
 
 /**
  * A class to read and perform class related commands from standard input.
@@ -54,8 +51,9 @@ public class ClassCommandReader extends CommandReader
 		super(interpreter, prompt);
 		cinterpreter = interpreter;
 	}
-	
-	public ClassCommandReader(ClassInterpreter interpreter, String prompt, boolean singlePass)
+
+	public ClassCommandReader(ClassInterpreter interpreter, String prompt,
+			boolean singlePass)
 	{
 		super(interpreter, prompt, singlePass);
 		cinterpreter = interpreter;
@@ -82,13 +80,12 @@ public class ClassCommandReader extends CommandReader
 		String def = cinterpreter.getDefaultName();
 		ClassList classes = cinterpreter.getClasses();
 
-		for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
 			if (c.getName().getName().equals(def))
 			{
 				println(c.getName().getName() + " (default)");
-			}
-			else
+			} else
 			{
 				println(c.getName().getName());
 			}
@@ -109,8 +106,7 @@ public class ClassCommandReader extends CommandReader
 			String exp = m.group(2);
 
 			cinterpreter.create(var, exp);
-		}
-		else
+		} else
 		{
 			throw new Exception("Usage: create <id> := <value>");
 		}
@@ -144,21 +140,18 @@ public class ClassCommandReader extends CommandReader
 		if (parts.length != 2 || !parts[0].equals("log"))
 		{
 			println("Usage: log [<file> | off]");
-		}
-		else if (parts[1].equals("off"))
+		} else if (parts[1].equals("off"))
 		{
 			RTLogger.enable(false);
 			println("RT event logging disabled");
-		}
-		else
+		} else
 		{
 			try
 			{
 				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], false));
 				RTLogger.setLogfile(p);
 				println("RT events now logged to " + parts[1]);
-			}
-			catch (FileNotFoundException e)
+			} catch (FileNotFoundException e)
 			{
 				println("Cannot create RT event log: " + e.getMessage());
 			}
