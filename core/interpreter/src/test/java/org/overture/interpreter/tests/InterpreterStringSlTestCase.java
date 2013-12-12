@@ -28,7 +28,8 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 @Ignore
-public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
+public abstract class InterpreterStringSlTestCase extends
+		InterpreterStringBaseTestCase
 {
 	private Dialect dialect;
 
@@ -49,43 +50,50 @@ public class InterpreterStringSlTestCase extends InterpreterStringBaseTestCase
 	@Test
 	public void test() throws Exception
 	{
-		Result<String> result = null;
-		@SuppressWarnings("rawtypes")
-		TypeCheckResult tcResult = typeCheck();
-		if (!tcResult.parserResult.errors.isEmpty()
-				|| !tcResult.errors.isEmpty())
-		{
-			// Assert.fail("Model did not pass type check!."+ tcResult.errors);
-			Assume.assumeTrue("Specification does not type check", false);
-			return;
-			// fail("Model did not pass type check!."+ tcResult.errors);
-		}
-		String entry = "1+1";
-		if (getEntryFile() == null || !getEntryFile().exists())
-		{
-			entry = createEntryFile();
-			if (entry == null)
-			{
-				if (getEntryFile() == null || !getEntryFile().exists())
-				{
-					Assert.fail("No entry for model (" + getEntryFile() + ")");
-				}
-			}
-		} else
-		{
-			entry = getEntries().get(0);
-		}
+		configureResultGeneration();
 		try
 		{
-			Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
-			result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
-			System.out.println(file.getName() + " -> " + val);
-		} catch (Exception e)
+			Result<String> result = null;
+			@SuppressWarnings("rawtypes")
+			TypeCheckResult tcResult = typeCheck();
+			if (!tcResult.parserResult.errors.isEmpty()
+					|| !tcResult.errors.isEmpty())
+			{
+				// Assert.fail("Model did not pass type check!."+ tcResult.errors);
+				Assume.assumeTrue("Specification does not type check", false);
+				return;
+				// fail("Model did not pass type check!."+ tcResult.errors);
+			}
+			String entry = "1+1";
+			if (getEntryFile() == null || !getEntryFile().exists())
+			{
+				entry = createEntryFile();
+				if (entry == null)
+				{
+					if (getEntryFile() == null || !getEntryFile().exists())
+					{
+						Assert.fail("No entry for model (" + getEntryFile()
+								+ ")");
+					}
+				}
+			} else
+			{
+				entry = getEntries().get(0);
+			}
+			try
+			{
+				Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
+				result = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
+				System.out.println(file.getName() + " -> " + val);
+			} catch (Exception e)
+			{
+				result = ExecutionToResultTranslator.wrap(e);
+			}
+			compareResults(result, file.getName() + ".result");
+		} finally
 		{
-			result = ExecutionToResultTranslator.wrap(e);
+			unconfigureResultGeneration();
 		}
-		compareResults(result, file.getName() + ".result");
-
 	}
 
 	@SuppressWarnings("rawtypes")

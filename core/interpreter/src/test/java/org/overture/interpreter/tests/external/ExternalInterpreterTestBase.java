@@ -9,13 +9,13 @@ import java.util.LinkedList;
 
 import org.junit.Ignore;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.tests.InterpreterStringSlTestCase;
 import org.overture.interpreter.tests.utils.TestSourceFinder;
 
 @Ignore
 // @RunWith(value = Parameterized.class)
-public class ExternalInterpreterTestBase extends InterpreterStringSlTestCase
+public abstract class ExternalInterpreterTestBase extends
+		InterpreterStringSlTestCase
 {
 
 	private String storeLocationPart;
@@ -39,11 +39,6 @@ public class ExternalInterpreterTestBase extends InterpreterStringSlTestCase
 	public static Collection<Object[]> getData(String externalSuiteName,
 			String inputRelativePathPart, Dialect dialect, String extension)
 	{
-		LexLocation.absoluteToStringLocation = false;
-		org.overture.test.framework.Properties.recordTestResults = false;
-
-		LexLocation.absoluteToStringLocation = false;
-		org.overture.test.framework.Properties.recordTestResults = false;
 		String name = externalSuiteName;
 		File root = getBasePath(inputRelativePathPart);
 

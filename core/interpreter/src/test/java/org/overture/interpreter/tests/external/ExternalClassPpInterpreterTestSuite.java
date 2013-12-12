@@ -26,4 +26,10 @@ public class ExternalClassPpInterpreterTestSuite extends
 		return getData("Interpreter_PP_Classes_TestSuite_External", "pptest/cgip", Dialect.VDM_PP, "vpp");
 	}
 
+	@Override
+	protected String getPropertyId()
+	{
+		return "external.class.pp";
+	}
+
 }

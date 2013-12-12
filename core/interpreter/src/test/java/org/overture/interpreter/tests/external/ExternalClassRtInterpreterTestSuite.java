@@ -27,4 +27,9 @@ extends ExternalInterpreterTestBase
 		return getData("Interpreter_RT_Classes_TestSuite_External", "rttest/cgip", Dialect.VDM_RT, "vpp");
 	}
 
+	@Override
+	protected String getPropertyId()
+	{
+		return "external.class.rt";
+	}
 }

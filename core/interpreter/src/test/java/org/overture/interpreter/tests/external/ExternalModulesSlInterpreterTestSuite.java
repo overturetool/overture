@@ -25,4 +25,10 @@ public class ExternalModulesSlInterpreterTestSuite extends
 	{
 		return getData("Interpreter_SL_Modules_TestSuite_External", "sltest/cgip", Dialect.VDM_SL, "vdm");
 	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "external.module.sl";
+	}
 }
