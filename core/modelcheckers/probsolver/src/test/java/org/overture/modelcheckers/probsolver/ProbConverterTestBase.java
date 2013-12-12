@@ -38,7 +38,8 @@ public class ProbConverterTestBase
 		Settings.release = Release.VDM_10;
 	}
 
-	protected void testMethod(String name) throws IOException
+	protected void testMethod(String name) throws IOException,
+			AnalysisException, SolverException
 	{
 		try
 		{
@@ -48,12 +49,15 @@ public class ProbConverterTestBase
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
 			ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
 
-		} catch (AnalysisException e)
-		{
 		} catch (SolverException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (e.getCause() instanceof UnsupportedTranslationException)
+			{
+				Assert.fail(e.getCause().getMessage());
+			} else
+			{
+				throw e;
+			}
 		}
 	}
 
@@ -67,7 +71,7 @@ public class ProbConverterTestBase
 		{
 			List<AModuleModules> modules = parseSL(file);
 			defs = modules.get(0).getDefs();
-		}else
+		} else
 		{
 			defs = parsePP(file).get(0).getDefinitions();
 		}

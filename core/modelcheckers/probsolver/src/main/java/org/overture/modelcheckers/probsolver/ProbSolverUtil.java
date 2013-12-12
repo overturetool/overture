@@ -371,6 +371,11 @@ public class ProbSolverUtil
 			}
 
 		}
+		
+		if(!translator.unsupportedConstructs.isEmpty())
+		{
+			throw new UnsupportedTranslationException(translator.unsupportedConstructs);
+		}
 
 		if (stateDef != null)
 		{

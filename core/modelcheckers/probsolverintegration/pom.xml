@@ -16,6 +16,13 @@
 
 
 	<dependencies>
+	
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+	
 		<dependency>
 			<groupId>org.overture.core</groupId>
 			<artifactId>interpreter</artifactId>
@@ -27,7 +34,7 @@
 			<version>${project.version}</version>
 		</dependency>
 
-
+	
 
 	</dependencies>
 

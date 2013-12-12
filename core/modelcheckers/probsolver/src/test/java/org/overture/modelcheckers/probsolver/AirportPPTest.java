@@ -5,9 +5,11 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
@@ -27,31 +29,31 @@ public class AirportPPTest extends ProbConverterTestBase
 	}
 
 	@Test
-	public void testInit() throws IOException
+	public void testInit() throws IOException, AnalysisException, SolverException
 	{
 		testMethod("Init");
 	}
 
 	@Test
-	public void testGivePermission() throws IOException
+	public void testGivePermission() throws IOException, AnalysisException, SolverException
 	{
 		testMethod("GivePermission");
 	}
 
 	@Test
-	public void testRecordLanding() throws IOException
+	public void testRecordLanding() throws IOException, AnalysisException, SolverException
 	{
 		testMethod("RecordLanding");
 	}
 
 	@Test
-	public void testRecordTakeOff() throws IOException
+	public void testRecordTakeOff() throws IOException, AnalysisException, SolverException
 	{
 		testMethod("RecordTakeOff");
 	}
 
 	@Test
-	public void testNumberWaiting() throws IOException
+	public void testNumberWaiting() throws IOException, AnalysisException, SolverException
 	{
 		testMethod("NumberWaiting");
 	}
