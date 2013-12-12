@@ -10,11 +10,11 @@ import org.overture.ast.lex.Dialect;
 import org.overture.interpreter.tests.utils.TestSourceFinder;
 
 @RunWith(value = Parameterized.class)
-public class ClassesPpInterpreterTestSuite extends InterpreterStringSlTestCase
+public class ClassesRtTest extends CommonInterpreterTest
 {
 
-	public ClassesPpInterpreterTestSuite(Dialect dialect, String suiteName,
-			File testSuiteRoot, File file)
+	public ClassesRtTest(Dialect dialect, String suiteName, File testSuiteRoot,
+			File file)
 	{
 		super(dialect, file, suiteName, testSuiteRoot);
 	}
@@ -22,17 +22,17 @@ public class ClassesPpInterpreterTestSuite extends InterpreterStringSlTestCase
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		String name = "Interpreter Class PP TestSuite";
-		String root = "src\\test\\resources\\classes";
+		String name = "Interpreter Class RT TestSuite";
+		String root = "src\\test\\resources\\classesRT";
 
-		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_PP, name, root, "vpp", "");
+		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_RT, name, root, "vpp", "");
 		return tests;
 	}
 
 	@Override
 	protected String getPropertyId()
 	{
-		return "class.pp";
+		return "class.rt";
 	}
 
 }

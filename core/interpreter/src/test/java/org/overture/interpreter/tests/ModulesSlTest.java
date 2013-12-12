@@ -10,11 +10,11 @@ import org.overture.ast.lex.Dialect;
 import org.overture.interpreter.tests.utils.TestSourceFinder;
 
 @RunWith(value = Parameterized.class)
-public class ModulesSlInterpreterTestSuite extends InterpreterStringSlTestCase
+public class ModulesSlTest extends CommonInterpreterTest
 {
 
-	public ModulesSlInterpreterTestSuite(Dialect dialect, String suiteName,
-			File testSuiteRoot, File file)
+	public ModulesSlTest(Dialect dialect, String suiteName, File testSuiteRoot,
+			File file)
 	{
 		super(dialect, file, suiteName, testSuiteRoot);
 	}

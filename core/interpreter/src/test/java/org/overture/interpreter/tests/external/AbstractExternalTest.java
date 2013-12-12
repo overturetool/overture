@@ -7,20 +7,16 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.junit.Ignore;
 import org.overture.ast.lex.Dialect;
-import org.overture.interpreter.tests.InterpreterStringSlTestCase;
+import org.overture.interpreter.tests.CommonInterpreterTest;
 import org.overture.interpreter.tests.utils.TestSourceFinder;
 
-@Ignore
-// @RunWith(value = Parameterized.class)
-public abstract class ExternalInterpreterTestBase extends
-		InterpreterStringSlTestCase
+public abstract class AbstractExternalTest extends CommonInterpreterTest
 {
 
 	private String storeLocationPart;
 
-	public ExternalInterpreterTestBase(Dialect dialect, String suiteName,
+	public AbstractExternalTest(Dialect dialect, String suiteName,
 			File testSuiteRoot, File file, String storeLocationPart)
 	{
 		super(dialect, file, suiteName, testSuiteRoot);

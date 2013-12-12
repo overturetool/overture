@@ -9,14 +9,11 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 
 @RunWith(value = Parameterized.class)
-public class ExternalClassRtInterpreterTestSuite
-
-extends ExternalInterpreterTestBase
+public class ExternalClassesRtTest extends AbstractExternalTest
 {
 
-	public ExternalClassRtInterpreterTestSuite(Dialect dialect,
-			String suiteName, File testSuiteRoot, File file,
-			String storeLocationPart)
+	public ExternalClassesRtTest(Dialect dialect, String suiteName,
+			File testSuiteRoot, File file, String storeLocationPart)
 	{
 		super(dialect, suiteName, testSuiteRoot, file, storeLocationPart);
 	}

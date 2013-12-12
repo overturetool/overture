@@ -12,7 +12,6 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -27,14 +26,12 @@ import org.overture.test.framework.results.Result;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-@Ignore
-public abstract class InterpreterStringSlTestCase extends
-		InterpreterStringBaseTestCase
+public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 {
 	private Dialect dialect;
 
-	public InterpreterStringSlTestCase(Dialect dialect, File file,
-			String suiteName, File testSuiteRoot)
+	public CommonInterpreterTest(Dialect dialect, File file, String suiteName,
+			File testSuiteRoot)
 	{
 		super(file, suiteName, testSuiteRoot);
 		this.dialect = dialect;

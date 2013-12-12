@@ -11,13 +11,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public abstract class InterpreterStringBaseTestCase extends
+public abstract class StringBasedInterpreterTest extends
 		TestResourcesResultTestCase4<String>
 {
 
 	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.tc.override.";
 
-	public InterpreterStringBaseTestCase(File file, String suiteName,
+	public StringBasedInterpreterTest(File file, String suiteName,
 			File testSuiteRoot)
 	{
 		super(file, suiteName, testSuiteRoot);

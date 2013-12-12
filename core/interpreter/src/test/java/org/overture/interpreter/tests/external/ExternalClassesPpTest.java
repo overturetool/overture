@@ -9,13 +9,12 @@ import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
 
 @RunWith(value = Parameterized.class)
-public class ExternalModulesSlInterpreterTestSuite extends
-		ExternalInterpreterTestBase
+public class ExternalClassesPpTest extends AbstractExternalTest
+
 {
 
-	public ExternalModulesSlInterpreterTestSuite(Dialect dialect,
-			String suiteName, File testSuiteRoot, File file,
-			String storeLocationPart)
+	public ExternalClassesPpTest(Dialect dialect, String suiteName,
+			File testSuiteRoot, File file, String storeLocationPart)
 	{
 		super(dialect, suiteName, testSuiteRoot, file, storeLocationPart);
 	}
@@ -23,12 +22,13 @@ public class ExternalModulesSlInterpreterTestSuite extends
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Interpreter_SL_Modules_TestSuite_External", "sltest/cgip", Dialect.VDM_SL, "vdm");
+		return getData("Interpreter_PP_Classes_TestSuite_External", "pptest/cgip", Dialect.VDM_PP, "vpp");
 	}
 
 	@Override
 	protected String getPropertyId()
 	{
-		return "external.module.sl";
+		return "external.class.pp";
 	}
+
 }
