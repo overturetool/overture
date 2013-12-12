@@ -54,21 +54,21 @@ public class PatternUnresolver extends AnalysisAdaptor
 	@Override
 	public void caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		PPatternListAssistantTC.unResolve(pattern.getPlist());
+		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
 	
 	@Override
 	public void caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		PPatternListAssistantTC.unResolve(pattern.getPlist());
+		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
 	
 	@Override
 	public void caseATuplePattern(ATuplePattern pattern) throws AnalysisException
 	{
-		PPatternListAssistantTC.unResolve(pattern.getPlist());
+		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
 	
@@ -94,10 +94,9 @@ public class PatternUnresolver extends AnalysisAdaptor
 	{
 		for (AMapletPatternMaplet mp : pattern.getMaplets())
 		{
-			AMapletPatternMapletAssistantTC.unResolve(mp);
+			af.createAMapletPatternMapletAssistant().unResolve(mp);
 		}
-
-		//pattern.setResolved(false);
+		
 		pattern.setResolved(false);
 	}
 	

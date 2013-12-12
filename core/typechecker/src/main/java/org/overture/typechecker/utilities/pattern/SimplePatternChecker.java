@@ -65,26 +65,26 @@ public class SimplePatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.isSimple(pattern.getPlist());
+		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
 	
 	@Override
 	public Boolean caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		return PPatternListAssistantTC.isSimple(pattern.getPlist());
+		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
 	
 	@Override
 	public Boolean caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		return PPatternListAssistantTC.isSimple(pattern.getPlist());
+		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
 	
 	@Override
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.isSimple(pattern.getPlist());
+		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
 	
 	@Override
