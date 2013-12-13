@@ -78,7 +78,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 		if (!type.getFuncDone())
 		{
 			type.setFuncDone(true);
-			type.setFuncType(PTypeAssistantTC.getFunction(AstFactory.newAUnknownType(type.getLocation())));
+			type.setFuncType(af.createPTypeAssistant().getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -86,11 +86,11 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistantTC.isFunction(t))
+				if (af.createPTypeAssistant().isFunction(t))
 				{
 					if (t.getDefinitions() != null)
 						defs.addAll(t.getDefinitions());
-					AFunctionType f = PTypeAssistantTC.getFunction(t);
+					AFunctionType f = af.createPTypeAssistant().getFunction(t);
 					result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)

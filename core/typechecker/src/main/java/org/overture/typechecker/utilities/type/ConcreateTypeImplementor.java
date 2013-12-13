@@ -66,7 +66,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 
 		for (PType ptype : type.getParameters())
 		{
-			polyparams.add(PTypeAssistantTC.polymorph(ptype, question.pname, question.actualType));
+			polyparams.add(af.createPTypeAssistant().polymorph(ptype, question.pname, question.actualType));
 		}
 
 		//PType polyresult = PTypeAssistantTC.polymorph(type.getResult(), question.pname, question.actualType);
@@ -81,7 +81,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 			throws AnalysisException
 	{
 		
-		return AstFactory.newAMapMapType(type.getLocation(), PTypeAssistantTC.polymorph(type.getFrom(), question.pname, question.actualType), PTypeAssistantTC.polymorph(type.getTo(), question.pname, question.actualType));
+		return AstFactory.newAMapMapType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getFrom(), question.pname, question.actualType), af.createPTypeAssistant().polymorph(type.getTo(), question.pname, question.actualType));
 	}
 	
 	@Override
@@ -89,7 +89,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 			throws AnalysisException
 	{
 		
-		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(), question.pname, question.actualType));
+		return AstFactory.newAOptionalType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getType(), question.pname, question.actualType));
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 
 		for (PType ptype : ((AProductType) type).getTypes())
 		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, question.pname, question.actualType));
+			polytypes.add(af.createPTypeAssistant().polymorph(ptype, question.pname, question.actualType));
 		}
 
 		return AstFactory.newAProductType(type.getLocation(), polytypes);
@@ -110,7 +110,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 			throws AnalysisException
 	{
 	
-		return AstFactory.newASeqSeqType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSeqof(), question.pname, question.actualType));
+		return AstFactory.newASeqSeqType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSeqof(), question.pname, question.actualType));
 	}
 	
 	@Override
@@ -118,7 +118,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 			throws AnalysisException
 	{
 		//return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
-		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), question.pname, question.actualType));
+		return AstFactory.newASetType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSetof(), question.pname, question.actualType));
 	}
 	@Override
 	public PType caseAUnionType(AUnionType type, Newquestion question)
@@ -129,7 +129,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 
 		for (PType ptype : ((AUnionType) type).getTypes())
 		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, question.pname, question.actualType));
+			polytypes.add(af.createPTypeAssistant().polymorph(ptype, question.pname, question.actualType));
 		}
 
 		// TODO: Types in unionType should be a SET

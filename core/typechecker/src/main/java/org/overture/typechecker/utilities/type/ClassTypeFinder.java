@@ -90,7 +90,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 						classname = ct.getClassdef().getName();
 					}
 
-					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
+					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());

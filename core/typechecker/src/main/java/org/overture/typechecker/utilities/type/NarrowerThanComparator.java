@@ -139,7 +139,7 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 		{
 			for (PDefinition d: type.getDefinitions())
 			{
-				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				if (af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 				{
 					result = true;
 					break;
@@ -148,13 +148,13 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 		}
 		else if(type.getType().getDefinitions().size() == 0)
 		{
-			result = type.apply(this, accessSpecifier) || PTypeAssistantTC.narrowerThanBaseCase(type, accessSpecifier);//PTypeAssistantTC.narrowerThan(type, accessSpecifier)
+			result = type.apply(this, accessSpecifier) || af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);//PTypeAssistantTC.narrowerThan(type, accessSpecifier)
 		}
 		else
 		{
 			for (PDefinition d : type.getType().getDefinitions())
 			{
-				if(PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				if(af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 				{
 					result = true;
 					break;
@@ -186,7 +186,7 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 		{
 			for (PDefinition d: type.getDefinitions())
 			{
-				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+				if (af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 				{
 					result = true;
 					break;
@@ -209,7 +209,6 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 		return result;
 	}
 	
-	//FIXME: IN PTypeAssistantTC the SInvariatType is SInvariantTypeBase. ASK
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException

@@ -61,7 +61,7 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistantTC.isMap(t))
+				if (af.createPTypeAssistant().isMap(t))
 				{
 					//from.add(PTypeAssistantTC.getMap(t).getFrom()); //Original Code
 					from.add(t.apply(THIS).getFrom()); //My change George.
