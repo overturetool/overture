@@ -1,14 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import java.util.List;
-import java.util.Vector;
-
-import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AProductTypeAssistantTC
@@ -21,51 +12,51 @@ public class AProductTypeAssistantTC
 		this.af = af;
 	}
 
-	public static PType typeResolve(AProductType type, ATypeDefinition root,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
-	{
-
-		if (type.getResolved())
-			return type;
-		else
-		{
-			type.setResolved(true);
-		}
-
-		try
-		{
-			List<PType> fixed = new Vector<PType>();
-
-			for (PType t : type.getTypes())
-			{
-				PType rt = af.createPTypeAssistant().typeResolve(t, root, rootVisitor, question);
-				fixed.add(rt);
-			}
-
-			type.setTypes(fixed);
-			return type;
-		} catch (TypeCheckException e)
-		{
-			unResolve(type);
-			throw e;
-		}
-	}
-
-	public static void unResolve(AProductType type)
-	{
-		if (!type.getResolved())
-			return;
-		else
-		{
-			type.setResolved(false);
-		}
-
-		for (PType t : type.getTypes())
-		{
-			PTypeAssistantTC.unResolve(t);
-		}
-	}
+//	public static PType typeResolve(AProductType type, ATypeDefinition root,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question)
+//	{
+//
+//		if (type.getResolved())
+//			return type;
+//		else
+//		{
+//			type.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			List<PType> fixed = new Vector<PType>();
+//
+//			for (PType t : type.getTypes())
+//			{
+//				PType rt = af.createPTypeAssistant().typeResolve(t, root, rootVisitor, question);
+//				fixed.add(rt);
+//			}
+//
+//			type.setTypes(fixed);
+//			return type;
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(type);
+//			throw e;
+//		}
+//	}
+//
+//	public static void unResolve(AProductType type)
+//	{
+//		if (!type.getResolved())
+//			return;
+//		else
+//		{
+//			type.setResolved(false);
+//		}
+//
+//		for (PType t : type.getTypes())
+//		{
+//			PTypeAssistantTC.unResolve(t);
+//		}
+//	}
 
 	// public static String toDisplay(AProductType exptype) {
 	// return Utils.listToString("(", exptype.getTypes(), " * ", ")");

@@ -8,7 +8,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 /**
  * Used to determine if a type is a Product type
@@ -55,7 +54,7 @@ public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.getProduct(type) != null;
+		return af.createAUnionTypeAssistant().getProduct(type) != null;
 	}
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException

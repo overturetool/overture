@@ -20,41 +20,41 @@ public class SSeqTypeAssistantTC
 		this.af = af;
 	}
 
-	public static void unResolve(SSeqType type)
-	{
-		if (!type.getResolved())
-			return;
-		else
-		{
-			type.setResolved(false);
-		}
-		PTypeAssistantTC.unResolve(type.getSeqof());
-
-	}
-
-	public static PType typeResolve(SSeqType type, ATypeDefinition root,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
-	{
-		if (type.getResolved())
-			return type;
-		else
-		{
-			type.setResolved(true);
-		}
-
-		try
-		{
-			type.setSeqof(af.createPTypeAssistant().typeResolve(type.getSeqof(), root, rootVisitor, question));
-			if (root != null)
-				root.setInfinite(false); // Could be empty
-			return type;
-		} catch (TypeCheckException e)
-		{
-			unResolve(type);
-			throw e;
-		}
-	}
+//	public static void unResolve(SSeqType type)
+//	{
+//		if (!type.getResolved())
+//			return;
+//		else
+//		{
+//			type.setResolved(false);
+//		}
+//		PTypeAssistantTC.unResolve(type.getSeqof());
+//
+//	}
+//
+//	public static PType typeResolve(SSeqType type, ATypeDefinition root,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question)
+//	{
+//		if (type.getResolved())
+//			return type;
+//		else
+//		{
+//			type.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			type.setSeqof(af.createPTypeAssistant().typeResolve(type.getSeqof(), root, rootVisitor, question));
+//			if (root != null)
+//				root.setInfinite(false); // Could be empty
+//			return type;
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(type);
+//			throw e;
+//		}
+//	}
 
 	// public static boolean equals(SSeqType type, Object other) {
 	// other = PTypeAssistantTC.deBracket(other);
@@ -74,10 +74,10 @@ public class SSeqTypeAssistantTC
 	// return PTypeAssistantTC.narrowerThan(type.getSeqof(),accessSpecifier);
 	// }
 
-	public static PType polymorph(SSeqType type, ILexNameToken pname,
-			PType actualType)
-	{
-		return AstFactory.newASeqSeqType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSeqof(), pname, actualType));
-	}
+//	public static PType polymorph(SSeqType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//		return AstFactory.newASeqSeqType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSeqof(), pname, actualType));
+//	}
 
 }

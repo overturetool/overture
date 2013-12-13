@@ -79,7 +79,7 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 	{
 		for (PType t : type.getTypes())
 		{
-			if (PTypeAssistantTC.isType(t, typeclass))
+			if (af.createPTypeAssistant().isType(t, typeclass))
 			{
 				return true;
 			}

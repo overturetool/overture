@@ -107,7 +107,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return tmp;
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -153,7 +153,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -183,7 +183,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AFunctionTypeAssistantTC.unResolve(type);
+			af.createAFunctionTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -202,7 +202,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			ANamedInvariantTypeAssistantTC.unResolve(type);
+			af.createANamedInvariantTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -224,7 +224,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			if (question.root != null)
 				question.root.setInfinite(false);
 
-			AFieldFieldAssistantTC.typeResolve(f, question.root, question.rootVisitor, question.question);
+			af.createAFieldFieldAssistant().typeResolve(f, question.root, question.rootVisitor, question.question);
 
 			if (question.root != null)
 				type.setInfinite(type.getInfinite() || question.root.getInfinite());
@@ -263,7 +263,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SMapTypeAssistantTC.unResolve(type);
+			af.createSMapTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -293,7 +293,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AOperationTypeAssistantTC.unResolve(type);
+			af.createAOperationTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -361,7 +361,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AProductTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -385,7 +385,8 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SSeqTypeAssistantTC.unResolve(type);
+			//SSeqTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}

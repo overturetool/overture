@@ -88,7 +88,7 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	{
 		for (PType t : type.getTypes())
 		{
-			PType rt = PTypeAssistantTC.isType(t, typename);
+			PType rt = af.createPTypeAssistant().isType(t, typename);
 
 			if (rt != null)
 			{
@@ -115,7 +115,7 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	public PType defaultPType(PType type, String typename)
 			throws AnalysisException
 	{
-		return (PTypeAssistantTC.toDisplay(type).equals(typename)) ? type
+		return (af.createPTypeAssistant().toDisplay(type).equals(typename)) ? type
 				: null;
 	}
 
