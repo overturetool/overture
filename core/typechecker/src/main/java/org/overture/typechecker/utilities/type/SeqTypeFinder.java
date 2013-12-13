@@ -66,7 +66,7 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistantTC.isSeq(t))
+				if (af.createPTypeAssistant().isSeq(t))
 				{
 					set.add(t.apply(THIS).getSeqof());
 				}
@@ -83,7 +83,6 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 	public SSeqType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		//return AUnknownTypeAssistantTC.getSeq(type);
 		return AstFactory.newASeqSeqType(type.getLocation()); // empty
 	}
 	

@@ -68,11 +68,11 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType ft: type.getParameters())
 		{
-			//PTypeAssistantTC.unResolve(ft);
+			
 			ft.apply(THIS);
 		}
 
-		//PTypeAssistantTC.unResolve(type.getResult());
+		
 		type.getResult().apply(THIS);
 	}
 	@Override
@@ -80,7 +80,7 @@ public class TypeUnresolver extends AnalysisAdaptor
 			throws AnalysisException
 	{
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getType());
+		
 		type.getType().apply(THIS);
 	}
 	
@@ -92,7 +92,7 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (AFieldField f: type.getFields())
 		{
-			AFieldFieldAssistantTC.unResolve(f);
+			af.createAFieldFieldAssistant().unResolve(f);
 		}
 	}
 	@Override
@@ -109,9 +109,8 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		if (!type.getEmpty())
 		{
-			//PTypeAssistantTC.unResolve(type.getFrom());
+			
 			type.getFrom().apply(THIS);
-			//PTypeAssistantTC.unResolve(type.getTo());
 			type.getTo().apply(THIS);
 		}
 	}
@@ -124,18 +123,15 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType ot: type.getParameters())
 		{
-			//PTypeAssistantTC.unResolve(ot);
 			ot.apply(THIS);
 		}
-
-		//PTypeAssistantTC.unResolve(type.getResult());
+		
 		type.getResult().apply(THIS);
 	}
 	@Override
 	public void caseAOptionalType(AOptionalType type) throws AnalysisException
 	{
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getType());
 		type.getType().apply(THIS);
 	}
 	@Override
@@ -145,7 +141,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType t: type.getTypes())
 		{
-			//PTypeAssistantTC.unResolve(t);
 			t.apply(THIS);
 		}
 	}
@@ -153,14 +148,12 @@ public class TypeUnresolver extends AnalysisAdaptor
 	public void defaultSSeqType(SSeqType type) throws AnalysisException
 	{
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getSeqof());
 		type.getSeqof().apply(THIS);
 	}
 	@Override
 	public void caseASetType(ASetType type) throws AnalysisException
 	{
 		if (!type.getResolved()) return; else { type.setResolved(false); }
-		//PTypeAssistantTC.unResolve(type.getSetof()) ;
 		type.getSetof().apply(THIS);
 	}
 	
@@ -176,7 +169,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType t : type.getTypes())
 		{
-			//PTypeAssistantTC.unResolve(t);
 			t.apply(THIS);
 		}
 	}

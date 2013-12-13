@@ -8,7 +8,6 @@ import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to determine if a type is void.
@@ -30,7 +29,7 @@ public class VoidBasisChecker extends AnswerAdaptor<Boolean>
 	{
 		for (PType t : type.getTypes())
 		{
-			if (!PTypeAssistantTC.isVoid(t))
+			if (!af.createPTypeAssistant().isVoid(t))
 			{
 				return false; // NB. Only true if ALL void, not ANY void (see hasVoid)
 			}

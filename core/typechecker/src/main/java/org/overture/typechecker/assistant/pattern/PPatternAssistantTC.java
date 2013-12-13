@@ -37,7 +37,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			NameScope scope)
 	{
 		PDefinitionSet set = af.createPDefinitionSet();
-		set.addAll(getAllDefinitions(rp, ptype, scope));
+		set.addAll(af.createPPatternAssistant().getAllDefinitions(rp, ptype, scope));
 		List<PDefinition> result = new Vector<PDefinition>(set);
 		return result;
 	}
@@ -45,7 +45,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	/**
 	 * Get a complete list of all definitions, including duplicates. This method should only be used only by PP
 	 */
-	private static List<PDefinition> getAllDefinitions(PPattern pattern,
+	private List<PDefinition> getAllDefinitions(PPattern pattern,
 			PType ptype, NameScope scope)
 	{
 		try

@@ -7,7 +7,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -37,17 +36,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
 
 /**
  * This class implements a way to resolve types from general PType class.
@@ -385,7 +374,6 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			//SSeqTypeAssistantTC.unResolve(type);
 			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
@@ -410,7 +398,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			ASetTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -419,7 +407,6 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 	public PType caseAUnionType(AUnionType type, Newquestion question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		//return AUnionTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
 		if (type.getResolved())
 		{
@@ -450,12 +437,12 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 
 			// Resolved types may be unions, so force a re-expand
 			type.setExpanded(false);
-			AUnionTypeAssistant.expand(type);
+			af.createAUnionTypeAssistant().expand(type);
 
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AUnionTypeAssistantTC.unResolve(type);
+			af.createAUnionTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -464,9 +451,8 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 	public PType caseAUnresolvedType(AUnresolvedType type, Newquestion question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
-		PType deref = AUnresolvedTypeAssistantTC.dereference(type, question.question.env, question.root);
+		PType deref = af.createAUnresolvedTypeAssistant().dereference(type, question.question.env, question.root);
 
 		if (!(deref instanceof AClassType))
 		{
@@ -484,8 +470,6 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		type.setResolved(true);
 		return type;
 	}
-//	PType result = null;
-//	return result;
 	
 	@Override
 	public PType createNewReturnValue(INode node, Newquestion question)

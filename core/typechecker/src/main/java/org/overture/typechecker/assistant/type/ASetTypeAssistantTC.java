@@ -1,13 +1,5 @@
 package org.overture.typechecker.assistant.type;
 
-import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.ASetType;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckException;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASetTypeAssistantTC
@@ -20,42 +12,42 @@ public class ASetTypeAssistantTC
 		this.af = af;
 	}
 
-	public static PType typeResolve(ASetType type, ATypeDefinition root,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
-	{
-
-		if (type.getResolved())
-			return type;
-		else
-		{
-			type.setResolved(true);
-		}
-
-		try
-		{
-			type.setSetof(af.createPTypeAssistant().typeResolve(type.getSetof(), root, rootVisitor, question));
-			if (root != null)
-				root.setInfinite(false); // Could be empty
-			return type;
-		} catch (TypeCheckException e)
-		{
-			unResolve(type);
-			throw e;
-		}
-	}
-
-	public static void unResolve(ASetType type)
-	{
-		if (!type.getResolved())
-			return;
-		else
-		{
-			type.setResolved(false);
-		}
-		PTypeAssistantTC.unResolve(type.getSetof());
-
-	}
+//	public static PType typeResolve(ASetType type, ATypeDefinition root,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question)
+//	{
+//
+//		if (type.getResolved())
+//			return type;
+//		else
+//		{
+//			type.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			type.setSetof(af.createPTypeAssistant().typeResolve(type.getSetof(), root, rootVisitor, question));
+//			if (root != null)
+//				root.setInfinite(false); // Could be empty
+//			return type;
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(type);
+//			throw e;
+//		}
+//	}
+//
+//	public static void unResolve(ASetType type)
+//	{
+//		if (!type.getResolved())
+//			return;
+//		else
+//		{
+//			type.setResolved(false);
+//		}
+//		PTypeAssistantTC.unResolve(type.getSetof());
+//
+//	}
 
 	// public static String toDisplay(ASetType exptype) {
 	// return exptype.getEmpty() ? "{}" : "set of (" + exptype.getSetof() + ")";
@@ -87,10 +79,10 @@ public class ASetTypeAssistantTC
 	// return PTypeAssistantTC.narrowerThan(type.getSetof(),accessSpecifier);
 	// }
 
-	public static PType polymorph(ASetType type, ILexNameToken pname,
-			PType actualType)
-	{
-		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), pname, actualType));
-	}
+//	public static PType polymorph(ASetType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), pname, actualType));
+//	}
 
 }
