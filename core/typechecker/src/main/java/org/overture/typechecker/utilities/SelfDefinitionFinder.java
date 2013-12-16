@@ -31,7 +31,7 @@ public class SelfDefinitionFinder extends AnswerAdaptor<PDefinition>
 	public PDefinition defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantTC.getSelfDefinition((SClassDefinition) node);
+		return af.createSClassDefinitionAssistant().getSelfDefinition((SClassDefinition) node);
 	}
 
 	@Override

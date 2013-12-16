@@ -78,7 +78,7 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 		//TODO: Here is the same problem with the FunctioChecker
 		
 		return  node.getNameScope().matches(NameScope.STATE) 
-				|| PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(node));
+				|| af.createPTypeAssistant().isClass(af.createPDefinitionAssistant().getType(node));
 	}
 
 	@Override

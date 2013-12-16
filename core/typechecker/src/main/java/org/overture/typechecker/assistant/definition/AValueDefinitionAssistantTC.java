@@ -5,7 +5,6 @@ import java.util.List;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
@@ -60,12 +59,12 @@ public class AValueDefinitionAssistantTC
 		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
 	}
 
-	public static PType getType(AValueDefinition def)
-	{
-		return def.getType() != null ? def.getType()
-				: (def.getExpType() != null ? def.getExpType()
-						: AstFactory.newAUnknownType(def.getLocation()));
-	}
+//	public static PType getType(AValueDefinition def)
+//	{
+//		return def.getType() != null ? def.getType()
+//				: (def.getExpType() != null ? def.getExpType()
+//						: AstFactory.newAUnknownType(def.getLocation()));
+//	}
 
 	// public static LexNameList getOldNames(AValueDefinition def)
 	// {

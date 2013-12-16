@@ -8,7 +8,6 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 /**
  * This class checks if a node is used.
  * 
@@ -33,7 +32,7 @@ public class UnusedChecker extends AnalysisAdaptor
 	{
 		if (node.getDefs() != null)
 		{
-			PDefinitionListAssistantTC.unusedCheck(node.getDefs());
+			af.createPDefinitionListAssistant().unusedCheck(node.getDefs());
 		}
 	}
 	
@@ -43,7 +42,7 @@ public class UnusedChecker extends AnalysisAdaptor
 	{
 		if (node.getDefs() != null)
 		{
-			PDefinitionListAssistantTC.unusedCheck(node.getDefs());
+			af.createPDefinitionListAssistant().unusedCheck(node.getDefs());
 		}
 	}
 	
@@ -51,7 +50,7 @@ public class UnusedChecker extends AnalysisAdaptor
 	public void caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
-		PDefinitionListAssistantTC.unusedCheck(node.getStateDefs());
+		af.createPDefinitionListAssistant().unusedCheck(node.getStateDefs());
 	}
 	
 	@Override

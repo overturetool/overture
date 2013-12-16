@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAdaptor;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -36,16 +35,6 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
-import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to resolve types from a node in the AST
@@ -85,7 +74,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			NewQuestion question) throws AnalysisException
 	{
 		Environment cenv = new FlatEnvironment(question.question.assistantFactory, node.getDefinitions(), question.question.env);
-		PDefinitionListAssistantTC.typeResolve(node.getDefinitions(), question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, cenv));
+		af.createPDefinitionListAssistant().typeResolve(node.getDefinitions(), question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, cenv));
 	}
 	
 	@Override
@@ -95,7 +84,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	{
 		if (node.getTypeParams().size() != 0)
 		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.question.assistantFactory, af.createAExplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
 
 			TypeCheckInfo newQuestion = new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope);
 
@@ -137,7 +126,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		for (List<PPattern> pp : node.getParamPatternList())
 		{
-			PPatternListAssistantTC.typeResolve(pp, question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pp, question.rootVisitor, question.question);
 		}
 
 	}
@@ -161,19 +150,17 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPredef(), question.rootVisitor, question.question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getPostdef(), question.rootVisitor, question.question);
 			node.getPostdef().apply(this, question);
 		}
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			PPatternAssistantTC.typeResolve(p, question.rootVisitor, question.question);
+			af.createPPatternAssistant().typeResolve(p, question.rootVisitor, question.question);
 		}
 	}
 	
@@ -184,7 +171,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	{
 		if (node.getTypeParams().size() > 0)
 		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, af.createAImplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
 			node.setType(af.createPTypeAssistant().typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope, question.question.qualifiers)));
 		} else
 		{
@@ -194,7 +181,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getResult() != null)
 		{
-			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
 		}
 
 		if (question.question.env.isVDMPP())
@@ -216,19 +203,17 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
 		for (APatternListTypePair pltp : node.getParamPatterns())
 		{
-			APatternListTypePairAssistantTC.typeResolve(pltp, question.rootVisitor, question.question);
+			af.createAPatternListTypePairAssistant().typeResolve(pltp, question.rootVisitor, question.question);
 		}
 	}
 	
@@ -241,7 +226,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getResult() != null)
 		{
-			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
 		}
 
 		if (question.question.env.isVDMPP())
@@ -256,19 +241,17 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getPrecondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
 		for (APatternListTypePair ptp : node.getParameterPatterns())
 		{
-			APatternListTypePairAssistantTC.typeResolve(ptp, question.rootVisitor, question.question);
+			af.createAPatternListTypePairAssistant().typeResolve(ptp, question.rootVisitor, question.question);
 		}
 	}
 	
@@ -283,7 +266,7 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(node.getType());
+			af.createPTypeAssistant().unResolve(node.getType());
 			throw e;
 		}
 	}
@@ -303,7 +286,6 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		//PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
 		node.getDef().apply(this, question);
 	}
 
@@ -315,10 +297,10 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		{
 			try
 			{
-				AFieldFieldAssistantTC.typeResolve(f, null, question.rootVisitor, question.question);
+				af.createAFieldFieldAssistant().typeResolve(f, null, question.rootVisitor, question.question);
 			} catch (TypeCheckException e)
 			{
-				AFieldFieldAssistantTC.unResolve(f);
+				af.createAFieldFieldAssistant().unResolve(f);
 				throw e;
 			}
 		}
@@ -327,13 +309,11 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 		if (node.getInvPattern() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(node.getInvdef(), question.rootVisitor, question.question);
 			node.getInvdef().apply(this, question);
 		}
 
 		if (node.getInitPattern() != null)
 		{
-			//PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
 			node.getInitdef().apply(this, question);
 		}
 
@@ -359,15 +339,14 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 
 			if (node.getInvdef() != null)
 			{
-				//PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
 				node.getInvdef().apply(this, question);
-				PPatternAssistantTC.typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
 
 			node.setType(node.getInvType());
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(node.getInvType());
+			af.createPTypeAssistant().unResolve(node.getInvType());
 			throw e;
 		}
 	}
@@ -379,8 +358,8 @@ public class TypeResolver extends QuestionAdaptor<TypeResolver.NewQuestion>
 		if (node.getType() != null)
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
-			PPatternAssistantTC.typeResolve(node.getPattern(), question.rootVisitor, question.question);
-			AValueDefinitionAssistantTC.updateDefs(node, question.question);
+			af.createPPatternAssistant().typeResolve(node.getPattern(), question.rootVisitor, question.question);
+			af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 		}
 	}
 	@Override

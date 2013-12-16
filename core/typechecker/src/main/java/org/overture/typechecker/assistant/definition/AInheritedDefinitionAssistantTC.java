@@ -38,9 +38,9 @@ public class AInheritedDefinitionAssistantTC
 //		return af.createPDefinitionAssistant().getType(def.getSuperdef());
 //	}
 
-	public static boolean isUsed(AInheritedDefinition u)
-	{
-		return PDefinitionAssistantTC.isUsed(u.getSuperdef());
-	}
+//	public static boolean isUsed(AInheritedDefinition u)
+//	{
+//		return PDefinitionAssistantTC.isUsed(u.getSuperdef());
+//	}
 
 }

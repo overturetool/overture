@@ -34,12 +34,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 /**
  * This class implements a way to collect definitions from a node in the AST
@@ -162,7 +156,6 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node)
 			throws AnalysisException
 	{
-		//return AMultiBindListDefinitionAssistantTC.getType((AMultiBindListDefinition) node);
 		PTypeList types = new PTypeList();
 
 		for (PDefinition definition : node.getDefs())
@@ -235,7 +228,10 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
+		//return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
+		return node.getType() != null ? node.getType()
+				: (node.getExpType() != null ? node.getExpType()
+						: AstFactory.newAUnknownType(node.getLocation()));
 	}
 
 	@Override

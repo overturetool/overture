@@ -1,6 +1,5 @@
 package org.overture.typechecker.assistant.definition;
 
-import org.overture.ast.definitions.AExternalDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AExternalDefinitionAssistantTC
@@ -19,10 +18,10 @@ public class AExternalDefinitionAssistantTC
 //		return af.createPDefinitionAssistant().getType(def.getState());
 //	}
 
-	public static boolean isUsed(AExternalDefinition u)
-	{
-		return PDefinitionAssistantTC.isUsed(u.getState());
-
-	}
+//	public static boolean isUsed(AExternalDefinition u)
+//	{
+//		return PDefinitionAssistantTC.isUsed(u.getState());
+//
+//	}
 
 }
