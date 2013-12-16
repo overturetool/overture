@@ -27,8 +27,8 @@ public class AMapletPatternMapletAssistantTC
 
 	public static void unResolve(AMapletPatternMaplet mp)
 	{
-		PPatternAssistantTC.unResolve(mp.getFrom());
-		PPatternAssistantTC.unResolve(mp.getTo());
+		af.createPPatternAssistant().unResolve(mp.getFrom());
+		af.createPPatternAssistant().unResolve(mp.getTo());
 		mp.setResolved(false);
 
 	}

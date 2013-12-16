@@ -32,7 +32,7 @@ public class PatternListTC extends Vector<PPattern>
 
 		for (PPattern pPattern : this)
 		{
-			PPatternAssistantTC.typeResolve(pPattern, rootVisitor, question);
+			af.createPPatternAssistant().typeResolve(pPattern, rootVisitor, question);
 		}
 	}
 
@@ -41,7 +41,7 @@ public class PatternListTC extends Vector<PPattern>
 
 		for (PPattern pPattern : this)
 		{
-			PPatternAssistantTC.unResolve(pPattern);
+			af.createPPatternAssistant().unResolve(pPattern);
 		}
 	}
 

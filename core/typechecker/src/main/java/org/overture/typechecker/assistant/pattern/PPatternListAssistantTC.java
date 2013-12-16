@@ -42,7 +42,7 @@ public class PPatternListAssistantTC
 
 		for (PPattern pPattern : pp)
 		{
-			PPatternAssistantTC.unResolve(pPattern);
+			af.createPPatternAssistant().unResolve(pPattern);
 		}
 	}
 
@@ -56,14 +56,14 @@ public class PPatternListAssistantTC
 				return AstFactory.newAUnknownType(location);
 
 			case 1:
-				return PPatternAssistantTC.getPossibleType(plist.get(0));
+				return af.createPPatternAssistant().getPossibleType(plist.get(0));
 
 			default:
 				PTypeSet list = new PTypeSet();
 
 				for (PPattern p : plist)
 				{
-					list.add(PPatternAssistantTC.getPossibleType(p));
+					list.add(af.createPPatternAssistant().getPossibleType(p));
 				}
 
 				return list.getType(location); // NB. a union of types
@@ -77,7 +77,7 @@ public class PPatternListAssistantTC
 
 		for (PPattern p : pl)
 		{
-			list.add(PPatternAssistantTC.getMatchingExpression(p));
+			list.add(af.createPPatternAssistant().getMatchingExpression(p));
 		}
 
 		return list;
@@ -87,7 +87,7 @@ public class PPatternListAssistantTC
 	{
 		for (PPattern pattern : p)
 		{
-			if (!PPatternAssistantTC.isSimple(pattern))
+			if (!af.createPPatternAssistant().isSimple(pattern))
 				return false; // NB. AND
 		}
 
@@ -98,7 +98,7 @@ public class PPatternListAssistantTC
 	{
 		for (PPattern p : pl)
 		{
-			if (!PPatternAssistantTC.alwaysMatches(p))
+			if (!af.createPPatternAssistant().alwaysMatches(p))
 				return false; // NB. AND
 		}
 

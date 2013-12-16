@@ -71,7 +71,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 		}
 	}
 
-	public static void unResolve(PPattern pattern)
+	public void unResolve(PPattern pattern)
 	{
 		try
 		{
@@ -95,7 +95,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static boolean matches(PPattern pattern, PType expType)
 	{
-		return TypeComparator.compatible(getPossibleType(pattern), expType);
+		return TypeComparator.compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
 	}
 
 	public static PExp getMatchingExpression(PPattern pattern)
