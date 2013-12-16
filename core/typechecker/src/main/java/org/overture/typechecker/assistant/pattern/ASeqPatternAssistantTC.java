@@ -32,8 +32,9 @@ public class ASeqPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -55,17 +56,6 @@ public class ASeqPatternAssistantTC
 		pattern.setResolved(false);
 
 	}
-
-	// public static LexNameList getVariableNames(ASeqPattern pattern) {
-	// LexNameList list = new LexNameList();
-	//
-	// for (PPattern p: pattern.getPlist())
-	// {
-	// list.addAll(PPatternTCAssistant.getVariableNames(p));
-	// }
-	//
-	// return list;
-	// }
 
 	public static List<PDefinition> getAllDefinitions(ASeqPattern rp,
 			PType type, NameScope scope)
@@ -89,20 +79,5 @@ public class ASeqPatternAssistantTC
 
 		return defs;
 	}
-
-//	public static PType getPossibleTypes(ASeqPattern pattern)
-//	{
-//		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-//	}
-
-//	public static PExp getMatchingExpression(ASeqPattern seqp)
-//	{
-//		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
-//	}
-
-//	public static boolean isSimple(ASeqPattern p)
-//	{
-//		return PPatternListAssistantTC.isSimple(p.getPlist());
-//	}
 
 }

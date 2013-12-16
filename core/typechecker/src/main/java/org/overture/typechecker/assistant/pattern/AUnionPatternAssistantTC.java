@@ -31,8 +31,9 @@ public class AUnionPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -73,30 +74,5 @@ public class AUnionPatternAssistantTC
 
 		return defs;
 	}
-
-//	public static PType getPossibleTypes(AUnionPattern unionPattern)
-//	{
-//		PTypeSet set = new PTypeSet();
-//
-//		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getLeft()));
-//		set.add(PPatternAssistantTC.getPossibleType(unionPattern.getRight()));
-//
-//		PType s = set.getType(unionPattern.getLocation());
-//
-//		return PTypeAssistantTC.isUnknown(s) ? AstFactory.newASetType(unionPattern.getLocation(), AstFactory.newAUnknownType(unionPattern.getLocation()))
-//				: s;
-//	}
-
-//	public static PExp getMatchingExpression(AUnionPattern up)
-//	{
-//		LexToken op = new LexKeywordToken(VDMToken.UNION, up.getLocation());
-//		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(up.getLeft()), op, PPatternAssistantTC.getMatchingExpression(up.getRight()));
-//	}
-
-//	public static boolean isSimple(AUnionPattern p)
-//	{
-//		return PPatternAssistantTC.isSimple(p.getLeft())
-//				&& PPatternAssistantTC.isSimple(p.getRight());
-//	}
 
 }

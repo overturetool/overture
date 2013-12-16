@@ -20,16 +20,16 @@ public class PExportAssistantTC
 
 	public static Collection<? extends PDefinition> getDefinition(PExport exp,
 			LinkedList<PDefinition> actualDefs)
-			{
+	{
 		try
 		{
-			return exp.apply(af.getExportDefinitionFinder(),actualDefs);// FIXME: should we handle exceptions like this
+			return exp.apply(af.getExportDefinitionFinder(), actualDefs);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null;
 		}
 
-			}
+	}
 
 	public static Collection<? extends PDefinition> getDefinition(PExport exp)
 	{

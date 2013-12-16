@@ -67,7 +67,7 @@ public class SClassDefinitionAssistantInterpreter extends
 	public static Value getStatic(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
-		ILexNameToken local = (sought.getExplicit()) ? sought
+		ILexNameToken local = sought.getExplicit() ? sought
 				: sought.getModifiedName(classdef.getName().getName());
 
 		Value v = VdmRuntime.getNodeState(classdef).privateStaticValues.get(local);
@@ -476,7 +476,8 @@ public class SClassDefinitionAssistantInterpreter extends
 	{
 		for (PDefinition d : defs)
 		{
-			if ((PDefinitionAssistantInterpreter.isStatic(d) && PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+			if (PDefinitionAssistantInterpreter.isStatic(d)
+					&& PDefinitionAssistantInterpreter.isFunctionOrOperation(d)
 					|| PDefinitionAssistantInterpreter.isTypeDefinition(d))
 			{
 				// Note function and operation values are not updatable.

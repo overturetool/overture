@@ -32,10 +32,10 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
-		FunctionValue prefunc = (d.getPredef() == null) ? null
+		FunctionValue prefunc = d.getPredef() == null ? null
 				: new FunctionValue(d.getPredef(), null, null, null);
 
-		FunctionValue postfunc = (d.getPostdef() == null) ? null
+		FunctionValue postfunc = d.getPostdef() == null ? null
 				: new FunctionValue(d.getPostdef(), null, null, null);
 
 		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState());
@@ -64,14 +64,18 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		if (d.getPostdef() != null)
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		return PStmAssistantInterpreter.findExpression(d.getBody(), lineno);

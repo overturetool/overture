@@ -17,7 +17,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  */
 public class VoidBasisChecker extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public VoidBasisChecker(ITypeCheckerAssistantFactory af)
@@ -38,20 +37,20 @@ public class VoidBasisChecker extends AnswerAdaptor<Boolean>
 
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAVoidType(AVoidType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAVoidReturnType(AVoidReturnType type)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException
 	{

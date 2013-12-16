@@ -101,10 +101,6 @@ import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -8502928171757367740L;
 
 	@Override
 	public Value caseAAlwaysStm(AAlwaysStm node, Context ctxt)

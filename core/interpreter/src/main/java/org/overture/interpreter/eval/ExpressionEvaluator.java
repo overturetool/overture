@@ -123,10 +123,6 @@ import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3877784873512750134L;
 
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)

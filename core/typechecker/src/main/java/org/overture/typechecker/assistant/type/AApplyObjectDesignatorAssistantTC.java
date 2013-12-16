@@ -78,8 +78,7 @@ public class AApplyObjectDesignatorAssistantTC
 
 	public static PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
-			boolean unique,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
 	{
 
@@ -120,8 +119,7 @@ public class AApplyObjectDesignatorAssistantTC
 
 	public static PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
-			boolean unique,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
 	{
 		LinkedList<PType> ptypes = optype.getParameters();

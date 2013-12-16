@@ -96,7 +96,9 @@ public class ClassTypeChecker extends TypeChecker
 			}
 
 			if (!c1.getTypeChecked())
+			{
 				nothing = false;
+			}
 
 			if (c1 instanceof ASystemClassDefinition)
 			{

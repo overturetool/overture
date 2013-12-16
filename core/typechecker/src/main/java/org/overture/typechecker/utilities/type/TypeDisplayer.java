@@ -52,90 +52,88 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class TypeDisplayer extends AnswerAdaptor<String>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public TypeDisplayer(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public String caseABooleanBasicType(ABooleanBasicType type)
 			throws AnalysisException
 	{
 		return "bool";
 	}
-	
+
 	@Override
 	public String caseACharBasicType(ACharBasicType type)
 			throws AnalysisException
 	{
 		return "char";
 	}
-	
+
 	@Override
 	public String caseAIntNumericBasicType(AIntNumericBasicType type)
 			throws AnalysisException
 	{
 		return "int";
 	}
-	
+
 	@Override
 	public String caseANatNumericBasicType(ANatNumericBasicType type)
 			throws AnalysisException
 	{
 		return "nat";
 	}
-	
+
 	@Override
 	public String caseANatOneNumericBasicType(ANatOneNumericBasicType node)
 			throws AnalysisException
 	{
 		return "nat1";
 	}
-	
+
 	@Override
 	public String caseARationalNumericBasicType(ARationalNumericBasicType type)
 			throws AnalysisException
 	{
 		return "rat";
 	}
+
 	@Override
 	public String caseARealNumericBasicType(ARealNumericBasicType node)
 			throws AnalysisException
 	{
 		return "real";
 	}
+
 	@Override
 	public String defaultSNumericBasicType(SNumericBasicType type)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String caseATokenBasicType(ATokenBasicType type)
 			throws AnalysisException
 	{
 		return "token";
 	}
-	
+
 	@Override
 	public String defaultSBasicType(SBasicType node) throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String caseABracketType(ABracketType type) throws AnalysisException
 	{
 		return "(" + type.getType() + ")";
 	}
-	
+
 	@Override
 	public String caseAClassType(AClassType type) throws AnalysisException
 	{
@@ -147,10 +145,12 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 			throws AnalysisException
 	{
 		List<PType> parameters = type.getParameters();
-		String params = (parameters.isEmpty() ?
-				"()" : Utils.listToString(parameters, " * "));
-		return "(" + params + (type.getPartial() ? " -> " : " +> ") + type.getResult() + ")";
+		String params = parameters.isEmpty() ? "()"
+				: Utils.listToString(parameters, " * ");
+		return "(" + params + (type.getPartial() ? " -> " : " +> ")
+				+ type.getResult() + ")";
 	}
+
 	@Override
 	public String caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
@@ -164,71 +164,75 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	{
 		return type.getName().toString();
 	}
-	
+
 	@Override
 	public String defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String caseAInMapMapType(AInMapMapType type)
 			throws AnalysisException
 	{
 		return "inmap of (" + type.getFrom() + ") to (" + type.getTo() + ")";
 	}
-	
+
 	@Override
 	public String caseAMapMapType(AMapMapType type) throws AnalysisException
 	{
 		return "map (" + type.getFrom() + ") to (" + type.getTo() + ")";
 	}
-	
+
 	@Override
 	public String defaultSMapType(SMapType type) throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String caseAOperationType(AOperationType type)
 			throws AnalysisException
 	{
 		List<PType> parameters = type.getParameters();
-		String params = (parameters.isEmpty() ?
-				"()" : Utils.listToString(parameters, " * "));
+		String params = parameters.isEmpty() ? "()"
+				: Utils.listToString(parameters, " * ");
 		return "(" + params + " ==> " + type.getResult() + ")";
 	}
+
 	@Override
 	public String caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
 		return "[" + type.getType() + "]";
 	}
+
 	@Override
 	public String caseAParameterType(AParameterType type)
 			throws AnalysisException
 	{
 		return "@" + type.getName();
 	}
+
 	@Override
 	public String caseAProductType(AProductType type) throws AnalysisException
 	{
 		return Utils.listToString("(", type.getTypes(), " * ", ")");
 	}
-	
+
 	@Override
 	public String caseAQuoteType(AQuoteType type) throws AnalysisException
 	{
 		return "<" + type.getValue() + ">";
 	}
-	
+
 	@Override
 	public String caseASeqSeqType(ASeqSeqType type) throws AnalysisException
 	{
 		return type.getEmpty() ? "[]" : "seq of (" + type.getSeqof() + ")";
 	}
+
 	@Override
 	public String caseASeq1SeqType(ASeq1SeqType type) throws AnalysisException
 	{
@@ -240,7 +244,7 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String caseASetType(ASetType type) throws AnalysisException
 	{
@@ -253,7 +257,7 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	{
 		return "(undefined)";
 	}
-	
+
 	@Override
 	public String caseAUnionType(AUnionType type) throws AnalysisException
 	{
@@ -273,27 +277,27 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 	{
 		return "?";
 	}
-	
+
 	@Override
 	public String caseAUnresolvedType(AUnresolvedType type)
 			throws AnalysisException
 	{
 		return "(unresolved " + type.getName().getExplicit(true) + ")";
 	}
-	
+
 	@Override
 	public String caseAVoidType(AVoidType type) throws AnalysisException
 	{
 		return "()";
 	}
-	
+
 	@Override
 	public String caseAVoidReturnType(AVoidReturnType type)
 			throws AnalysisException
 	{
 		return "(return)";
 	}
-	
+
 	@Override
 	public String defaultPType(PType type) throws AnalysisException
 	{

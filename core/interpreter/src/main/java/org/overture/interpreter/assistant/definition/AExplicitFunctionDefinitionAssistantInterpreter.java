@@ -40,27 +40,27 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		NameValuePairList nvl = new NameValuePairList();
 		Context free = initialContext.getVisibleVariables();
 
-		FunctionValue prefunc = (d.getPredef() == null) ? null
+		FunctionValue prefunc = d.getPredef() == null ? null
 				: new FunctionValue(d.getPredef(), null, null, free);
 
-		FunctionValue postfunc = (d.getPostdef() == null) ? null
+		FunctionValue postfunc = d.getPostdef() == null ? null
 				: new FunctionValue(d.getPostdef(), null, null, free);
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
 		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
-		func.uninstantiated = (!d.getTypeParams().isEmpty());
+		func.uninstantiated = !d.getTypeParams().isEmpty();
 		nvl.add(new NameValuePair(d.getName(), func));
 
 		if (d.getPredef() != null)
 		{
 			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
-			prefunc.uninstantiated = (!d.getTypeParams().isEmpty());
+			prefunc.uninstantiated = !d.getTypeParams().isEmpty();
 		}
 
 		if (d.getPostdef() != null)
 		{
 			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
-			postfunc.uninstantiated = (!d.getTypeParams().isEmpty());
+			postfunc.uninstantiated = !d.getTypeParams().isEmpty();
 		}
 
 		if (Settings.dialect == Dialect.VDM_SL)
@@ -126,14 +126,18 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		if (d.getPostdef() != null)
 		{
 			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		return PExpAssistantInterpreter.findExpression(d.getBody(), lineno);

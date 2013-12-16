@@ -55,9 +55,8 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * This class implements a way collect the old names from expressions
@@ -66,14 +65,10 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class OldNameCollector extends AnswerAdaptor<LexNameList>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
-	protected ITypeCheckerAssistantFactory af;
+	protected IInterpreterAssistantFactory af;
 
-	public OldNameCollector(ITypeCheckerAssistantFactory af)
+	public OldNameCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -81,23 +76,23 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAApplyExp(AApplyExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getArgs());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getRoot()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getArgs());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getRoot()));
 		return list;
 	}
 
 	public LexNameList defaultSBinaryExp(SBinaryExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getLeft());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getRight()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getLeft());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getRight()));
 		return list;
 	}
 
 	public LexNameList caseACasesExp(ACasesExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getExpression());
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getExpression());
 
 		for (ACaseAlternative c : expression.getCases())
 		{
@@ -106,7 +101,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		if (expression.getOthers() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getOthers()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getOthers()));
 		}
 
 		return list;
@@ -115,8 +110,8 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAElseIfExp(AElseIfExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getElseIf());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getThen()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getElseIf());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getThen()));
 		return list;
 	}
 
@@ -130,7 +125,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			list.addAll(mb.apply(this));
 		}
 
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		return list;
 	}
 
@@ -138,20 +133,20 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			throws org.overture.ast.analysis.AnalysisException
 	{
 		LexNameList list = expression.getBind().apply(this);
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		return list;
 	}
 
 	public LexNameList caseAFieldExp(AFieldExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getObject());
+		return af.createPExpAssistant().getOldNames(expression.getObject());
 	}
 
 	public LexNameList caseAFieldNumberExp(AFieldNumberExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getTuple());
+		return af.createPExpAssistant().getOldNames(expression.getTuple());
 	}
 
 	public LexNameList caseAForAllExp(AForAllExp expression)
@@ -164,30 +159,30 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			list.addAll(mb.apply(this));
 		}
 
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		return list;
 	}
 
 	public LexNameList caseAFuncInstatiationExp(AFuncInstatiationExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getFunction());
+		return af.createPExpAssistant().getOldNames(expression.getFunction());
 	}
 
 	public LexNameList caseAIfExp(AIfExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getTest());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getThen()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getTest());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getThen()));
 
 		for (AElseIfExp elif : expression.getElseList())
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(elif));
+			list.addAll(af.createPExpAssistant().getOldNames(elif));
 		}
 
 		if (expression.getElse() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getElse()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getElse()));
 		}
 
 		return list;
@@ -197,32 +192,32 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			throws org.overture.ast.analysis.AnalysisException
 	{
 		LexNameList list = expression.getBind().apply(this);
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		return list;
 	}
 
 	public LexNameList caseAIsExp(AIsExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getTest());
+		return af.createPExpAssistant().getOldNames(expression.getTest());
 	}
 
 	public LexNameList caseAIsOfBaseClassExp(AIsOfBaseClassExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getExp());
+		return af.createPExpAssistant().getOldNames(expression.getExp());
 	}
 
 	public LexNameList caseAIsOfClassExp(AIsOfClassExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getExp());
+		return af.createPExpAssistant().getOldNames(expression.getExp());
 	}
 
 	public LexNameList caseALambdaExp(ALambdaExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getExpression());
+		return af.createPExpAssistant().getOldNames(expression.getExpression());
 	}
 
 	public LexNameList caseALetBeStExp(ALetBeStExp expression)
@@ -232,10 +227,10 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		if (expression.getSuchThat() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getSuchThat()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getSuchThat()));
 		}
 
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getValue()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getValue()));
 		return list;
 	}
 
@@ -243,7 +238,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			throws org.overture.ast.analysis.AnalysisException
 	{
 		LexNameList list = PDefinitionListAssistantInterpreter.getOldNames(expression.getLocalDefs());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getExpression()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getExpression()));
 		return list;
 	}
 
@@ -266,27 +261,27 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAMapletExp(AMapletExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getLeft());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getRight()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getLeft());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getRight()));
 		return list;
 	}
 
 	public LexNameList caseAMkBasicExp(AMkBasicExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getArg());
+		return af.createPExpAssistant().getOldNames(expression.getArg());
 	}
 
 	public LexNameList caseAMkTypeExp(AMkTypeExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getArgs());
+		return af.createPExpAssistant().getOldNames(expression.getArgs());
 	}
 
 	public LexNameList caseAMuExp(AMuExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getRecord());
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getRecord());
 
 		for (ARecordModifier rm : expression.getModifiers())
 		{
@@ -299,34 +294,34 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseANarrowExp(ANarrowExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getTest());
+		return af.createPExpAssistant().getOldNames(expression.getTest());
 	}
 
 	public LexNameList caseANewExp(ANewExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getArgs());
+		return af.createPExpAssistant().getOldNames(expression.getArgs());
 	}
 
 	public LexNameList caseAPostOpExp(APostOpExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getPostexpression());
+		return af.createPExpAssistant().getOldNames(expression.getPostexpression());
 	}
 
 	public LexNameList caseASameBaseClassExp(ASameBaseClassExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getLeft());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getRight()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getLeft());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getRight()));
 		return list;
 	}
 
 	public LexNameList caseASameClassExp(ASameClassExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getLeft());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getRight()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getLeft());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getRight()));
 		return list;
 	}
 
@@ -361,16 +356,16 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseASubseqExp(ASubseqExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getSeq());
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getFrom()));
-		list.addAll(PExpAssistantInterpreter.getOldNames(expression.getTo()));
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getSeq());
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getFrom()));
+		list.addAll(af.createPExpAssistant().getOldNames(expression.getTo()));
 		return list;
 	}
 
 	public LexNameList caseATupleExp(ATupleExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getArgs());
+		return af.createPExpAssistant().getOldNames(expression.getArgs());
 	}
 
 	public LexNameList defaultSUnaryExp(SUnaryExp expression)
@@ -381,7 +376,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 			return  expression.apply(this);
 		} else
 		{
-			return PExpAssistantInterpreter.getOldNames(expression.getExp());
+			return af.createPExpAssistant().getOldNames(expression.getExp());
 		}
 	}
 	
@@ -389,14 +384,14 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAElementsUnaryExp(AElementsUnaryExp expression)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getExp());
+		return af.createPExpAssistant().getOldNames(expression.getExp());
 	}
 	
 	@Override
 	public LexNameList caseAMapCompMapExp(AMapCompMapExp expression)
 			throws AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getFirst());
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getFirst());
 
 		for (PMultipleBind mb : expression.getBindings())
 		{
@@ -405,7 +400,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		if (expression.getPredicate() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		}
 
 		return list;
@@ -419,7 +414,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		for (AMapletExp maplet : expression.getMembers())
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(maplet));
+			list.addAll(af.createPExpAssistant().getOldNames(maplet));
 		}
 
 		return list;
@@ -429,12 +424,12 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseASeqCompSeqExp(ASeqCompSeqExp expression)
 			throws AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getFirst());
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getFirst());
 		list.addAll(expression.getSetBind().apply(this));
 
 		if (expression.getPredicate() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		}
 
 		return list;
@@ -444,7 +439,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseASetCompSetExp(ASetCompSetExp expression)
 			throws AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(expression.getFirst());
+		LexNameList list = af.createPExpAssistant().getOldNames(expression.getFirst());
 
 		for (PMultipleBind mb : expression.getBindings())
 		{
@@ -453,7 +448,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		if (expression.getPredicate() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getOldNames(expression.getPredicate()));
+			list.addAll(af.createPExpAssistant().getOldNames(expression.getPredicate()));
 		}
 
 		return list;
@@ -463,14 +458,14 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseASetEnumSetExp(ASetEnumSetExp expression)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getMembers());
+		return af.createPExpAssistant().getOldNames(expression.getMembers());
 	}
 	
 	@Override
 	public LexNameList caseASeqEnumSeqExp(ASeqEnumSeqExp expression)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(expression.getMembers());
+		return af.createPExpAssistant().getOldNames(expression.getMembers());
 	}
 	
 	/**
@@ -480,7 +475,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseACaseAlternative(ACaseAlternative c)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(c.getResult());
+		return af.createPExpAssistant().getOldNames(c.getResult());
 	}
 	
 	/**
@@ -490,20 +485,20 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseARecordModifier(ARecordModifier rm)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(rm.getValue());
+		return af.createPExpAssistant().getOldNames(rm.getValue());
 	}
 	
 	@Override
 	public LexNameList caseASetBind(ASetBind bind) throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(bind.getSet());
+		return af.createPExpAssistant().getOldNames(bind.getSet());
 	}
 	
 	@Override
 	public LexNameList caseASetMultipleBind(ASetMultipleBind mb)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(mb.getSet());
+		return af.createPExpAssistant().getOldNames(mb.getSet());
 	}
 	
 	@Override
@@ -537,7 +532,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAEqualsDefinition(AEqualsDefinition def)
 			throws AnalysisException
 	{
-		LexNameList list = PExpAssistantInterpreter.getOldNames(def.getTest());
+		LexNameList list = af.createPExpAssistant().getOldNames(def.getTest());
 
 		if (def.getSetbind() != null)
 		{
@@ -558,7 +553,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAValueDefinition(AValueDefinition def)
 			throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getOldNames(def.getExpression());
+		return af.createPExpAssistant().getOldNames(def.getExpression());
 	}
 	
 	@Override

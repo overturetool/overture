@@ -11,16 +11,14 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.ANilPatternAssistantTC;
 
-public class ANilPatternAssistantInterpreter extends ANilPatternAssistantTC
+public class ANilPatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ANilPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

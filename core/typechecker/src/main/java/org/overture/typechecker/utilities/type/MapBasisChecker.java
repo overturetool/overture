@@ -15,10 +15,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class MapBasisChecker extends TypeUnwrapper<Boolean>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -37,15 +33,18 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		if (type.getOpaque()) return false;
+		if (type.getOpaque())
+		{
+			return false;
+		}
 		return type.getType().apply(THIS);
 	}
 
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		//return AUnionTypeAssistantTC.getMap(type) != null; //static call
-		return af.createAUnionTypeAssistant().getMap(type) != null;//non static call
+		// return AUnionTypeAssistantTC.getMap(type) != null; //static call
+		return af.createAUnionTypeAssistant().getMap(type) != null;// non static call
 	}
 
 	@Override

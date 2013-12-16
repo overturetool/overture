@@ -15,7 +15,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-
 /**
  * This class implements a way to find type of the general PType
  * 
@@ -24,64 +23,65 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 {
 
-	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public PTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PType caseABracketType(ABracketType type, String typename)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS, typename);
 	}
-	
+
 	@Override
 	public PType caseANamedInvariantType(ANamedInvariantType type,
 			String typename) throws AnalysisException
 	{
-		
+
 		if (type.getOpaque())
+		{
 			return null;
+		}
 		return type.getType().apply(THIS, typename);
 	}
-	
+
 	@Override
 	public PType caseARecordInvariantType(ARecordInvariantType type,
 			String typename) throws AnalysisException
 	{
 		if (type.getOpaque())
+		{
 			return null;
+		}
 
 		if (typename.indexOf('`') > 0)
 		{
-			return (type.getName().getFullName().equals(typename)) ? type
-					: null;
+			return type.getName().getFullName().equals(typename) ? type : null;
 		} else
 		{
 			// Local typenames aren't qualified with the local module name
-			return (type.getName().getName().equals(typename)) ? type
-					: null;
+			return type.getName().getName().equals(typename) ? type : null;
 		}
 	}
-	
+
 	@Override
 	public PType defaultSInvariantType(SInvariantType type, String typename)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public PType caseAOptionalType(AOptionalType type, String typename)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS, typename);
 	}
+
 	@Override
 	public PType caseAUnionType(AUnionType type, String typename)
 			throws AnalysisException
@@ -98,25 +98,26 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 
 		return null;
 	}
+
 	@Override
 	public PType caseAUnknownType(AUnknownType type, String typename)
 			throws AnalysisException
 	{
 		return null;// Isn't any particular type? comment from original source
 	}
+
 	@Override
 	public PType caseAUnresolvedType(AUnresolvedType type, String typename)
 			throws AnalysisException
 	{
-		return type.getName().getFullName().equals(typename) ? type
-				: null;
+		return type.getName().getFullName().equals(typename) ? type : null;
 	}
+
 	@Override
 	public PType defaultPType(PType type, String typename)
 			throws AnalysisException
 	{
-		return (PTypeAssistantTC.toDisplay(type).equals(typename)) ? type
-				: null;
+		return PTypeAssistantTC.toDisplay(type).equals(typename) ? type : null;
 	}
 
 	@Override

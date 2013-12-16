@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -21,6 +22,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -56,22 +58,22 @@ public class AstTestConverter
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
-try{
-		setLoggingLevel(Level.OFF);
-		animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
-		AbstractCommand[] init = {
-				new LoadBProjectFromStringCommand("MACHINE tmp1 SETS TOKEN END"),
-				// new LoadBProjectFromStringCommand("MACHINE empty END"),
-				new SetPreferenceCommand("CLPFD", "TRUE"),
-				new SetPreferenceCommand("BOOL_AS_PREDICATE", "TRUE"),
-				new SetPreferenceCommand("MAXINT", "127"),
-				new SetPreferenceCommand("MININT", "-128"),
-				new SetPreferenceCommand("TIME_OUT", "500"),
-				new StartAnimationCommand() };
-		
-		
-		animator.execute(init);
-		}catch(Exception e)
+		try
+		{
+			setLoggingLevel(Level.OFF);
+			animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
+			AbstractCommand[] init = {
+					new LoadBProjectFromStringCommand("MACHINE tmp1 SETS TOKEN END"),
+					// new LoadBProjectFromStringCommand("MACHINE empty END"),
+					new SetPreferenceCommand("CLPFD", "TRUE"),
+					new SetPreferenceCommand("BOOL_AS_PREDICATE", "TRUE"),
+					new SetPreferenceCommand("MAXINT", "127"),
+					new SetPreferenceCommand("MININT", "-128"),
+					new SetPreferenceCommand("TIME_OUT", "500"),
+					new StartAnimationCommand() };
+
+			animator.execute(init);
+		} catch (Exception e)
 		{
 			animator = null;
 		}
@@ -123,32 +125,41 @@ try{
 			File f = new File("src/test/resources/modules/AirportNat.vdmsl".replace('/', File.separatorChar));
 			List<AModuleModules> modules = parse(f);
 
-			SOperationDefinition postExp = null;
-			AStateDefinition state = null;
+//			SOperationDefinition postExp = null;
+//			AStateDefinition state = null;
+			AImplicitOperationDefinition opDef = null;
 			for (PDefinition d : modules.get(0).getDefs())
 			{
 				if (d instanceof AImplicitOperationDefinition
 						&& d.getName().getName().equals(name))
 				{
-					postExp = ((AImplicitOperationDefinition) d);
+//					postExp = (AImplicitOperationDefinition) d;
+					opDef = (AImplicitOperationDefinition) d;
 					break;
 				} else if (d instanceof AStateDefinition)
 				{
-					state = (AStateDefinition) d;
+//					state = (AStateDefinition) d;
 				}
 			}
 
-			solve(postExp, state);
+			// solve(postExp, state);
+
+			HashMap<String, String> emptyMap = new HashMap<String, String>();
+			ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
 
 		} catch (AnalysisException e)
 		{
+		} catch (SolverException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	public void solve(SOperationDefinition opDef, AStateDefinition state)
 			throws IOException
 	{
-		if(animator==null)
+		if (animator == null)
 		{
 			Assume.assumeNotNull(animator);
 			return;
@@ -187,12 +198,10 @@ try{
 			// http://nightly.cobra.cs.uni-duesseldorf.de/cli/
 			IEvalResult solverResult = null;
 			String message = "";
-			
-		
-			
+
 			try
 			{
-				
+
 				animator.execute(command);
 				solverResult = command.getValue();
 			} catch (Exception e)

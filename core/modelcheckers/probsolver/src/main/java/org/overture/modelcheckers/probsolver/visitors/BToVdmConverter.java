@@ -11,6 +11,7 @@ import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
@@ -87,6 +88,20 @@ public class BToVdmConverter extends DepthFirstAdapter
 			assignments.add(assign);
 		}
 
+		return getAtomicBlock(assignments);
+	}
+
+	public static AAssignmentStm getAssignment(ILexNameToken id, PExp exp)
+	{
+		AAssignmentStm assignment = AstFactory.newAAssignmentStm(loc, AstFactory.newAIdentifierStateDesignator(id), exp);
+		assignment.setType(AstFactory.newAVoidType(loc));
+		assignment.setTargetType(AstFactory.newAUnknownType(loc));
+
+		return assignment;
+	}
+
+	public static PStm getAtomicBlock(List<AAssignmentStm> assignments)
+	{
 		return AstFactory.newAAtomicStm(loc, assignments);
 	}
 
@@ -100,6 +115,18 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public static PStm getReturnStatement(PType resultType, PExp exp)
 	{
 		return AstFactory.newAReturnStm(loc, exp);
+	}
+
+	/**
+	 * Creates a new return tuple with the approbate return expressions
+	 * 
+	 * @param resultType
+	 * @param exp
+	 * @return
+	 */
+	public static PStm getReturnStatement(PType resultType, List<PExp> exps)
+	{
+		return AstFactory.newAReturnStm(loc, AstFactory.newATupleExp(loc, exps));
 	}
 
 	@Override

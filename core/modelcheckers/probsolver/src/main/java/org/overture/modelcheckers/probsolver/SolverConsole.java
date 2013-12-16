@@ -15,6 +15,6 @@ public class SolverConsole
 
 	public SolverConsole()
 	{
-		this(new PrintWriter(System.out), new PrintWriter(System.err));
+		this(new PrintWriter(System.out,true), new PrintWriter(System.err,true));
 	}
 }

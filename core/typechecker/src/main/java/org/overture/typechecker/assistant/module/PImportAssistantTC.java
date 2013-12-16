@@ -8,7 +8,8 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PImportAssistantTC {
+public class PImportAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -17,11 +18,12 @@ public class PImportAssistantTC {
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(PImport imp, AModuleModules from)
+	public static List<PDefinition> getDefinitions(PImport imp,
+			AModuleModules from)
 	{
 		try
 		{
-			return imp.apply(af.getImportDefinitionFinder(),from);// FIXME: should we handle exceptions like this
+			return imp.apply(af.getImportDefinitionFinder(), from);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null;

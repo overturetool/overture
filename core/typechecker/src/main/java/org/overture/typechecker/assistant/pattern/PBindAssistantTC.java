@@ -26,26 +26,15 @@ public class PBindAssistantTC
 		{
 			return null;
 		}
-//		if (bind instanceof ASetBind)
-//		{
-//			return ASetBindAssistantTC.getMultipleBindList((ASetBind) bind);
-//		} else if (bind instanceof ATypeBind)
-//		{
-//			return ATypeBindAssistantTC.getMultipleBindList((ATypeBind) bind);
-//		}
-//		return null;
+		// if (bind instanceof ASetBind)
+		// {
+		// return ASetBindAssistantTC.getMultipleBindList((ASetBind) bind);
+		// } else if (bind instanceof ATypeBind)
+		// {
+		// return ATypeBindAssistantTC.getMultipleBindList((ATypeBind) bind);
+		// }
+		// return null;
 
 	}
 
-	// public static LexNameList getOldNames(PBind bind)
-	// {
-	// if (bind instanceof ASetBind) {
-	// return ASetBindAssistantTC.getOldNames((ASetBind)bind);
-	// } else if (bind instanceof ATypeBind) {
-	// return ATypeBindAssistantTC.getOldNames((ATypeBind)bind);
-	// } else {
-	// assert false : "Should not happen";
-	// return null;
-	// }
-	// }
 }

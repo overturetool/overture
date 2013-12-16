@@ -259,10 +259,10 @@ public class OperationValue extends Value
 	public Value localEval(ILexLocation from, ValueList argValues,
 			Context ctxt, boolean logreq) throws ValueException
 	{
-//		 if (body == null)
-//		 {
-//		 abort(4066, "Cannot call implicit operation: " + name, ctxt);
-//		 }
+		// if (body == null)
+		// {
+		// abort(4066, "Cannot call implicit operation: " + name, ctxt);
+		// }
 
 		if (state != null && stateName == null)
 		{
@@ -355,7 +355,6 @@ public class OperationValue extends Value
 
 		Value rv = null;
 
-		boolean evalFailed = false;
 		try
 		{
 			if (precondition != null && Settings.prechecks)
@@ -465,15 +464,33 @@ public class OperationValue extends Value
 			}
 
 			Map<String, String> stateExps = new HashMap<String, String>();
-			for (Entry<ILexNameToken, Value> argVal : stateContext.entrySet())
+
+			if (stateContext != null)
 			{
-				if (argVal.getKey().parent() instanceof AFieldField)
+				for (Entry<ILexNameToken, Value> argVal : stateContext.entrySet())
 				{
-					stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+					if (argVal.getKey().parent() instanceof AFieldField)
+					{
+						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+					}
+				}
+			} else
+			{
+				// TODO
+				for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
+				{
+					if(argVal.getValue() instanceof FunctionValue|| argVal.getValue() instanceof  OperationValue)
+					{
+						continue;
+					}
+					if (argVal.getValue() instanceof UpdatableValue)
+					{
+						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+					}
 				}
 			}
 
-			PStm res = solver.solve(name, this.impldef, stateExps, argExps, Console.out,Console.err);
+			PStm res = solver.solve(name, this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)

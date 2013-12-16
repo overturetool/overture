@@ -7,20 +7,18 @@ import org.overture.ast.patterns.AQuotePattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AQuotePatternAssistantTC;
 
-public class AQuotePatternAssistantInterpreter extends AQuotePatternAssistantTC
+public class AQuotePatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AQuotePatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

@@ -28,10 +28,10 @@ types
         wr landed
     post permission = {} and landed = {};
     
-     Init2()
-    ext wr permission
-        wr landed
-     post mk_Airport({},{})=mk_Airport(permission , landed );
+  --   Init2()
+  --  ext wr permission
+  --      wr landed
+  --   post mk_Airport({},{})=mk_Airport(permission , landed );
 
 	 test:() ==> ()
 	 test() == GivePermission(mk_token("kl"));

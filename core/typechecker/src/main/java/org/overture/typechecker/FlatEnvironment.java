@@ -111,7 +111,7 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name, fromModule);
+		return outer == null ? null : outer.findType(name, fromModule);
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findStateDefinition();
+		return outer == null ? null : outer.findStateDefinition();
 	}
 
 	@Override

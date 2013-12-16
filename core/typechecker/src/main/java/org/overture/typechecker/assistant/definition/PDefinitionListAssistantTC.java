@@ -82,7 +82,7 @@ public class PDefinitionListAssistantTC
 
 	}
 
-	public  Set<PDefinition> findMatches(List<PDefinition> definitions,
+	public Set<PDefinition> findMatches(List<PDefinition> definitions,
 			ILexNameToken name)
 	{
 
@@ -193,8 +193,6 @@ public class PDefinitionListAssistantTC
 			}
 		}
 	}
-
-
 
 	public static void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)

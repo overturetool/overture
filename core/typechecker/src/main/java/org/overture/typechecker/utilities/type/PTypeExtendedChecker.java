@@ -15,44 +15,46 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
- *Checks if a type extending class element is of a specific PType.
+ * Checks if a type extending class element is of a specific PType.
  * 
  * @author gkanos
  */
-public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends PType>, Boolean>
+public class PTypeExtendedChecker extends
+		QuestionAnswerAdaptor<Class<? extends PType>, Boolean>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public PTypeExtendedChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
 		return type.getType().apply(THIS, typeclass);
 	}
-	
+
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
-		
+
 		if (type.getOpaque())
+		{
 			return false;
+		}
 		return type.getType().apply(THIS, typeclass);
 	}
-	
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
 		return typeclass.isInstance(type);
 	}
-	
+
 	@Override
 	public Boolean caseAOptionalType(AOptionalType type,
 			Class<? extends PType> typeclass) throws AnalysisException
@@ -62,17 +64,16 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 			return false; // Optionals are never void
 		}
 
-		
 		return type.getType().apply(THIS, typeclass);
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type,
 			Class<? extends PType> typeclass) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type,
 			Class<? extends PType> typeclass) throws AnalysisException
@@ -87,7 +88,7 @@ public class PTypeExtendedChecker extends QuestionAnswerAdaptor<Class<? extends 
 
 		return false;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type, Class<? extends PType> typeclass)
 			throws AnalysisException

@@ -88,7 +88,9 @@ public class PPatternListAssistantTC
 		for (PPattern pattern : p)
 		{
 			if (!PPatternAssistantTC.isSimple(pattern))
+			{
 				return false; // NB. AND
+			}
 		}
 
 		return true;
@@ -99,7 +101,9 @@ public class PPatternListAssistantTC
 		for (PPattern p : pl)
 		{
 			if (!PPatternAssistantTC.alwaysMatches(p))
+			{
 				return false; // NB. AND
+			}
 		}
 
 		return true;

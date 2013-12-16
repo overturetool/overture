@@ -34,8 +34,9 @@ public class ATuplePatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -58,17 +59,6 @@ public class ATuplePatternAssistantTC
 		pattern.setResolved(false);
 
 	}
-
-	// public static LexNameList getVariableNames(ATuplePattern pattern) {
-	// LexNameList list = new LexNameList();
-	//
-	// for (PPattern p: pattern.getPlist())
-	// {
-	// list.addAll(PPatternTCAssistant.getVariableNames(p));
-	// }
-	//
-	// return list;
-	// }
 
 	public static List<PDefinition> getAllDefinitions(ATuplePattern rp,
 			PType type, NameScope scope)
@@ -94,27 +84,5 @@ public class ATuplePatternAssistantTC
 
 		return defs;
 	}
-
-//	public static PType getPossibleTypes(ATuplePattern tupplePattern)
-//	{
-//		PTypeList list = new PTypeList();
-//
-//		for (PPattern p : tupplePattern.getPlist())
-//		{
-//			list.add(PPatternAssistantTC.getPossibleType(p));
-//		}
-//
-//		return list.getType(tupplePattern.getLocation());
-//	}
-
-//	public static PExp getMatchingExpression(ATuplePattern tp)
-//	{
-//		return AstFactory.newATupleExp(tp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(tp.getPlist()));
-//	}
-
-//	public static boolean isSimple(ATuplePattern p)
-//	{
-//		return PPatternListAssistantTC.isSimple(p.getPlist());
-//	}
 
 }

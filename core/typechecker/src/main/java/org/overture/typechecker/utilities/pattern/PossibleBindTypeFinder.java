@@ -11,21 +11,20 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class PossibleBindTypeFinder extends AnswerAdaptor<PType>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public PossibleBindTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PType caseASetMultipleBind(ASetMultipleBind mb)
 			throws AnalysisException
 	{
 		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
 	}
-	
+
 	@Override
 	public PType caseATypeMultipleBind(ATypeMultipleBind mb)
 			throws AnalysisException
@@ -39,6 +38,7 @@ public class PossibleBindTypeFinder extends AnswerAdaptor<PType>
 		assert false : "Should not happen";
 		return null;
 	}
+
 	@Override
 	public PType createNewReturnValue(Object node) throws AnalysisException
 	{

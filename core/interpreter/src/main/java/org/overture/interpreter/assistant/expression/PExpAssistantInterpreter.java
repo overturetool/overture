@@ -349,7 +349,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		return null;
 	}
 
-	public static  LexNameList getOldNames(PExp expression)
+	public   LexNameList getOldNames(PExp expression)
 	{
 		try
 		{
@@ -360,7 +360,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		}
 	}
 
-	public static LexNameList getOldNames(LinkedList<PExp> args)
+	public  LexNameList getOldNames(LinkedList<PExp> args)
 	{
 		LexNameList list = new LexNameList();
 

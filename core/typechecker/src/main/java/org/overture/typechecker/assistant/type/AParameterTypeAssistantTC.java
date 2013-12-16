@@ -4,7 +4,6 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.PType;
@@ -29,9 +28,12 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant
 	{
 
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
+		{
 			type.setResolved(true);
+		}
 
 		PDefinition p = question.env.findName(type.getName(), NameScope.NAMES);
 
@@ -44,16 +46,5 @@ public class AParameterTypeAssistantTC extends AParameterTypeAssistant
 
 		return type;
 	}
-
-	// public static String toDisplay(AParameterType exptype) {
-	//
-	// return "@" + exptype.getName();
-	// }
-
-//	public static PType polymorph(AParameterType type, ILexNameToken pname,
-//			PType actualType)
-//	{
-//		return (type.getName().equals(pname)) ? actualType : type;
-//	}
 
 }

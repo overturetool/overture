@@ -19,10 +19,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  */
 public class MapTypeFinder extends TypeUnwrapper<SMapType>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -34,7 +30,7 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 	@Override
 	public SMapType defaultSMapType(SMapType type) throws AnalysisException
 	{
-		
+
 		return type;
 	}
 
@@ -53,8 +49,8 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 		if (!type.getMapDone())
 		{
 			type.setMapDone(true); // Mark early to avoid recursion.
-			//type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
-			//Rewritten in an none static form.
+			// type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
+			// Rewritten in an none static form.
 			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location)));
 			PTypeSet from = new PTypeSet();
 			PTypeSet to = new PTypeSet();
@@ -63,15 +59,15 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 			{
 				if (PTypeAssistantTC.isMap(t))
 				{
-					//from.add(PTypeAssistantTC.getMap(t).getFrom()); //Original Code
-					from.add(t.apply(THIS).getFrom()); //My change George.
-					//to.add(PTypeAssistantTC.getMap(t).getTo());//Original code.
-					to.add(t.apply(THIS).getTo());//My change George.
+					// from.add(PTypeAssistantTC.getMap(t).getFrom()); //Original Code
+					from.add(t.apply(THIS).getFrom()); // My change George.
+					// to.add(PTypeAssistantTC.getMap(t).getTo());//Original code.
+					to.add(t.apply(THIS).getTo());// My change George.
 				}
 			}
 
 			type.setMapType(from.isEmpty() ? null
-					: AstFactory.newAMapMapType(location, from.getType(location), to.getType(location)) );
+					: AstFactory.newAMapMapType(location, from.getType(location), to.getType(location)));
 		}
 
 		return type.getMapType();
