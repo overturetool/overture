@@ -49,7 +49,7 @@ public class PreNameFinder extends AnswerAdaptor<ILexNameToken>
 		ILexNameToken result = null;
 		
 		AVariableExp var = AVariableExp.class.cast(expression);
-		PDefinition def = PDefinitionAssistantTC.deref(var.getVardef());
+		PDefinition def = af.createPDefinitionAssistant().deref(var.getVardef());
 		if (def instanceof AExplicitFunctionDefinition)
 		{
 			AExplicitFunctionDefinition ex = AExplicitFunctionDefinition.class.cast(def);

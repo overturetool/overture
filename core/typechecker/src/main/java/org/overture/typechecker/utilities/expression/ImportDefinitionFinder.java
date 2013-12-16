@@ -16,8 +16,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
  * Used to find the definitions of an imported object from a module.
@@ -52,7 +50,7 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 		{
 			PDefinition id = AstFactory.newAImportedDefinition(
 					imp.getLocation(), d);
-			PDefinitionAssistantTC.markUsed(id); // So imports all is quiet
+			af.createPDefinitionAssistant().markUsed(id); // So imports all is quiet
 			imported.add(id);
 
 		}
@@ -66,7 +64,7 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
-		PDefinition expdef = PDefinitionListAssistantTC.findType(imp.getFrom().getExportdefs(),imp.getName(), null);
+		PDefinition expdef = af.createPDefinitionListAssistant().findType(imp.getFrom().getExportdefs(),imp.getName(), null);
 
 		if (expdef == null)
 		{
@@ -97,7 +95,7 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
 		
-		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(),name, NameScope.NAMES);
+		PDefinition expdef = af.createPDefinitionListAssistant().findName(module.getExportdefs(),name, NameScope.NAMES);
 
 		if (expdef == null)
 		{

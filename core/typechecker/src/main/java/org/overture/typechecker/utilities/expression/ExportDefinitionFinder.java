@@ -25,8 +25,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to find the definition of an exported expression from its actualType.
@@ -58,7 +56,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		List<PDefinition> list = new Vector<PDefinition>();
 		for (ILexNameToken name : ((AFunctionExport) exp).getNameList())
 		{
-			PDefinition def = PDefinitionListAssistantTC.findName(actualDefs, name, NameScope.NAMES);
+			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 
 			if (def == null)
 			{
@@ -69,7 +67,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 				PType act = af.createPDefinitionAssistant().getType(def);
 				PType type = ((AFunctionExport) exp).getExportType();
 
-				if (act != null && !PTypeAssistantTC.equals(act, type))
+				if (act != null && !af.createPTypeAssistant().equals(act, type))
 				{
 					TypeCheckerErrors.report(3184, "Exported " + name
 							+ " function type incorrect", name.getLocation(), exp);
@@ -90,7 +88,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		List<PDefinition> list = new Vector<PDefinition>();
 		for (ILexNameToken name : ((AOperationExport) exp).getNameList())
 		{
-			PDefinition def = PDefinitionListAssistantTC.findName(actualDefs, name, NameScope.NAMES);
+			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 
 			if (def == null)
 			{
@@ -101,7 +99,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 				PType act = def.getType();
 				PType type = ((AOperationExport) exp).getExportType();
 
-				if (act != null && !PTypeAssistantTC.equals(act, type))
+				if (act != null && !af.createPTypeAssistant().equals(act, type))
 				{
 					TypeCheckerErrors.report(3186, "Exported operation type does not match actual type", name.getLocation(), exp);
 					TypeCheckerErrors.detail2("Exported", type, "Actual", act);
@@ -119,7 +117,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 	{
 		ILexNameToken name = ((ATypeExport) exp).getName();
 		List<PDefinition> list = new Vector<PDefinition>();
-		PDefinition def = PDefinitionListAssistantTC.findType(actualDefs, name, name.getModule());
+		PDefinition def = af.createPDefinitionListAssistant().findType(actualDefs, name, name.getModule());
 		if (def == null)
 		{
 			TypeCheckerErrors.report(3187, "Exported type " + name
@@ -176,7 +174,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		List<PDefinition> list = new Vector<PDefinition>();
 		for (ILexNameToken name : ((AValueExport) exp).getNameList())
 		{
-			PDefinition def = PDefinitionListAssistantTC.findName(actualDefs, name, NameScope.NAMES);
+			PDefinition def = af.createPDefinitionListAssistant().findName(actualDefs, name, NameScope.NAMES);
 			PType type = ((AValueExport) exp).getExportType().clone();
 
 			if (def == null)
@@ -204,22 +202,6 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		}
 		return list;
 	}
-//	@Override
-//	public Collection<? extends PDefinition> defaultPExport(PExport exp,
-//			LinkedList<PDefinition> actualDefs) throws AnalysisException
-//	{
-//		// TODO Auto-generated method stub
-//		return super.defaultPExport(node, question);
-//	}
-//	} else if (exp instanceof AOperationExport) {
-
-//	} else if (exp instanceof ATypeExport) {
-
-//	} else if (exp instanceof AValueExport) {
-
-//	}
-//	
-//	return null;
 	
 	@Override
 	public Collection<? extends PDefinition> createNewReturnValue(INode node,

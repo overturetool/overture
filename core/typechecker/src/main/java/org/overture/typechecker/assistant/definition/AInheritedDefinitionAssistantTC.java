@@ -2,7 +2,6 @@ package org.overture.typechecker.assistant.definition;
 
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AInheritedDefinitionAssistantTC
@@ -33,11 +32,11 @@ public class AInheritedDefinitionAssistantTC
 		}
 	}
 
-	public static PType getType(AInheritedDefinition def)
-	{
-		checkSuperDefinition(def);
-		return af.createPDefinitionAssistant().getType(def.getSuperdef());
-	}
+//	public static PType getType(AInheritedDefinition def)
+//	{
+//		checkSuperDefinition(def);
+//		return af.createPDefinitionAssistant().getType(def.getSuperdef());
+//	}
 
 	public static boolean isUsed(AInheritedDefinition u)
 	{
