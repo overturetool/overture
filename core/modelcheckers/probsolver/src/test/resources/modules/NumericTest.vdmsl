@@ -1,6 +1,9 @@
 operations
+--    complessthan() r : bool
+--      post 1<2 = r
+
 --    add() r : nat
---    post 4 + 1 = r;
+--    post r = 4 + 1
 
 --    sub() r : nat
 --    post 4 - 1 = r;
@@ -19,9 +22,9 @@ operations
 --    post -1 = r;
 --    post -(-1) = r;
 
-    comp()
-    post 1<2
---    post 2<1 = r;
+-- -- under construction
+--    complessthan() r : bool
+--    post true = r;
 --    post 1<=2 = r;
 --    post 2<=2 = r;
 
@@ -33,3 +36,9 @@ operations
 -- -- operator ** for MapExp and NumericExp
 --  ite() m : map nat to nat
 --  post {1|->3, 2|->1, 3|->2} ** 2 = r;
+
+--  noteq() r : nat
+--    post 1<>2 => r=2
+
+--  noteq() r : nat
+--    post 1<>1 => r=2
