@@ -30,17 +30,27 @@ import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;        //added -> ADisjunctPredicate
-import org.overture.ast.expressions.ANotUnaryExp;               //added -> ANegationPredicate
-import org.overture.ast.expressions.ABooleanConstExp;           //added -> ABoolean[True|False]Expression
-import org.overture.ast.expressions.APlusNumericBinaryExp;      //added -> AAddExpression
-import org.overture.ast.expressions.ASubtractNumericBinaryExp;  //added -> AMinusExpression
-import org.overture.ast.expressions.ATimesNumericBinaryExp;     //added -> AMultiplicationExpression
-import org.overture.ast.expressions.ADivideNumericBinaryExp;    //added -> ADivExpression
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;        //added -> AUnaryMinusExpression
-import org.overture.ast.expressions.AStarStarBinaryExp;         //added -> A[PowerOf|Iteration]Expression
-import org.overture.ast.expressions.ALessNumericBinaryExp;      //added -> ALessPredicate
-import org.overture.ast.expressions.ALessEqualNumericBinaryExp; //added -> ALessEqualPredicate
+import org.overture.ast.expressions.AOrBooleanBinaryExp;           //added -> ADisjunctPredicate
+import org.overture.ast.expressions.ANotUnaryExp;                  //added -> ANegationPredicate
+import org.overture.ast.expressions.ABooleanConstExp;              //added -> A[Trueth|Falsity]Predicate
+import org.overture.ast.expressions.APlusNumericBinaryExp;         //added -> AAddExpression
+import org.overture.ast.expressions.ASubtractNumericBinaryExp;     //added -> AMinusExpression
+import org.overture.ast.expressions.ATimesNumericBinaryExp;        //added -> AMultiplicationExpression
+import org.overture.ast.expressions.ADivideNumericBinaryExp;       //added -> ADivExpression
+import org.overture.ast.expressions.AUnaryMinusUnaryExp;           //added -> AUnaryMinusExpression
+import org.overture.ast.expressions.AStarStarBinaryExp;            //added -> A[PowerOf|Iteration]Expression
+import org.overture.ast.expressions.ALessNumericBinaryExp;         //added -> ALessPredicate
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp;    //added -> ALessEqualPredicate
+import org.overture.ast.expressions.AGreaterNumericBinaryExp;      //added -> AGreaterPredicate
+import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp; //added -> AGreaterEqualPredicate
+import org.overture.ast.expressions.ASetIntersectBinaryExp;        //added -> AIntersectionExpression
+import org.overture.ast.expressions.ADistUnionUnaryExp;            //added -> AGeneralUnionExpression
+import org.overture.ast.expressions.ADistIntersectUnaryExp;        //added -> AGeneralIntersectionExpression
+import org.overture.ast.expressions.APowerSetUnaryExp;             //added -> APowSubsetExpression
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;      //added -> AImplicationPredicate
+import org.overture.ast.expressions.ANotInSetBinaryExp;            //added -> ANotMemberPredicate
+import org.overture.ast.expressions.AProperSubsetBinaryExp;        //added -> ASubsetStrictPredicate
+import org.overture.ast.expressions.ANotEqualBinaryExp;            //added -> ANotEqualPredicate
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -81,8 +91,8 @@ import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
 import de.be4.classicalb.core.parser.node.ADisjunctPredicate;//added
 import de.be4.classicalb.core.parser.node.ANegationPredicate;//added
-import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;//added
-import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;//added
+import de.be4.classicalb.core.parser.node.ATruthPredicate;//addedimport de.be4.classicalb.core.parser.node.ATruthPredicate;//added
+import de.be4.classicalb.core.parser.node.AFalsityPredicate;//addedimport de.be4.classicalb.core.parser.node.AFalsityPredicate;//added
 import de.be4.classicalb.core.parser.node.AAddExpression;//added
 import de.be4.classicalb.core.parser.node.AMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AMultiplicationExpression;//added
@@ -92,6 +102,17 @@ import de.be4.classicalb.core.parser.node.APowerOfExpression;//added
 import de.be4.classicalb.core.parser.node.AIterationExpression;//added
 import de.be4.classicalb.core.parser.node.ALessPredicate;//added
 import de.be4.classicalb.core.parser.node.ALessEqualPredicate;//added
+import de.be4.classicalb.core.parser.node.AGreaterPredicate;//added
+import de.be4.classicalb.core.parser.node.AGreaterEqualPredicate;//added
+import de.be4.classicalb.core.parser.node.AIntersectionExpression; //added
+import de.be4.classicalb.core.parser.node.AGeneralUnionExpression; //added
+import de.be4.classicalb.core.parser.node.AGeneralIntersectionExpression; //added
+//import de.be4.classicalb.core.parser.node.APowSubsetExpression; //added
+import de.be4.classicalb.core.parser.node.AImplicationPredicate; //added
+import de.be4.classicalb.core.parser.node.ANotMemberPredicate; //added
+import de.be4.classicalb.core.parser.node.ASubsetStrictPredicate; //added
+import de.be4.classicalb.core.parser.node.ANotEqualPredicate; //added
+
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -400,11 +421,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseABooleanConstExp(ABooleanConstExp node)// not yet check
 			throws AnalysisException
 	{
-
+	    //System.out.println("In booleanConst: " + node.getValue().getValue());
+	    System.out.println("new class: " + node.getValue());
 	    if(node.getValue().getValue()) {
-		return new ABooleanTrueExpression();
+		return new ATruthPredicate();
 	    } else {
-		return new ABooleanFalseExpression();
+		return new AFalsityPredicate();
 	    }
 	}
 
@@ -473,6 +495,79 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 	    return new ALessEqualPredicate(exp(node.getLeft()), exp(node.getRight()));
 	}
+
+
+	@Override
+	public Node caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AGreaterPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseAGreaterEqualNumericBinaryExp(AGreaterEqualNumericBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AGreaterEqualPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseASetIntersectBinaryExp(ASetIntersectBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AIntersectionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseADistUnionUnaryExp(ADistUnionUnaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AGeneralUnionExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseADistIntersectUnaryExp(ADistIntersectUnaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AGeneralIntersectionExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseAPowerSetUnaryExp(APowerSetUnaryExp node)// generate node POW({1,2,3}, but not evaluate
+			throws AnalysisException
+	{
+	    return new APowSubsetExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AImplicationPredicate(pred(node.getLeft()), pred(node.getRight()));
+	}
+
+	@Override
+	public Node caseANotInSetBinaryExp(ANotInSetBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ANotMemberPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ASubsetStrictPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseANotEqualBinaryExp(ANotEqualBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ANotEqualPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+
 
 	//StateDefinition
 	@Override
