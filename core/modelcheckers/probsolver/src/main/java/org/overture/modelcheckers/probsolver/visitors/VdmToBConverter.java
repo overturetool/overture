@@ -51,6 +51,10 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;      //added -> AI
 import org.overture.ast.expressions.ANotInSetBinaryExp;            //added -> ANotMemberPredicate
 import org.overture.ast.expressions.AProperSubsetBinaryExp;        //added -> ASubsetStrictPredicate
 import org.overture.ast.expressions.ANotEqualBinaryExp;            //added -> ANotEqualPredicate
+import org.overture.ast.expressions.ASeqEnumSeqExp;                //added -> ASeqExpression, ASeq1Expression,
+                                                                   //         AEmptySequenceExpression,ASequenceExtensionExpression
+import org.overture.ast.expressions.AHeadUnaryExp;                 //added -> AFirstExpression
+import org.overture.ast.expressions.ATailUnaryExp;                 //added -> ATailExpression
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -112,6 +116,12 @@ import de.be4.classicalb.core.parser.node.AImplicationPredicate; //added
 import de.be4.classicalb.core.parser.node.ANotMemberPredicate; //added
 import de.be4.classicalb.core.parser.node.ASubsetStrictPredicate; //added
 import de.be4.classicalb.core.parser.node.ANotEqualPredicate; //added
+import de.be4.classicalb.core.parser.node.ASeqExpression; //added
+import de.be4.classicalb.core.parser.node.ASeq1Expression; //added
+import de.be4.classicalb.core.parser.node.AEmptySequenceExpression; //added
+import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression; //added
+import de.be4.classicalb.core.parser.node.AFirstExpression; //added
+import de.be4.classicalb.core.parser.node.ATailExpression; //added
 
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
@@ -210,6 +220,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 		return set;
 	}
+
 	/*
 	@Override
 	public Node caseASetCompSetExp(ASeCompSetExp node)
@@ -565,6 +576,37 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			throws AnalysisException
 	{
 	    return new ANotEqualPredicate(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseASeqEnumSeqExp(ASeqEnumSeqExp node)
+			throws AnalysisException
+	{
+		if (node.getMembers().isEmpty())
+		{
+			return new AEmptySequenceExpression();
+		}
+
+		ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
+		for(PExp m : node.getMembers()) {
+		    seq.getExpression().add(exp(m));
+		}
+		return seq;
+	}
+
+	@Override
+	public Node caseAHeadUnaryExp(AHeadUnaryExp node)// added
+			throws AnalysisException
+	{
+	    return new AFirstExpression(exp(node.getExp()));
+	}
+
+
+	@Override
+	public Node caseATailUnaryExp(ATailUnaryExp node)// added
+			throws AnalysisException
+	{
+	    return new ATailExpression(exp(node.getExp()));
 	}
 
 
