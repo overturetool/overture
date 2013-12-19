@@ -1,1 +1,1 @@
-asdfghjk
+$JavaFormat.format($node.getType()) $node.getName()

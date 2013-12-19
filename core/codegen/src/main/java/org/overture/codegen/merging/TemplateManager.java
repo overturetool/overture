@@ -12,9 +12,11 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -104,11 +106,12 @@ public class TemplateManager
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
 				
-		// Type declarations
+		// Declarations
 		nodeTemplateFileNames.put(AClassDeclCG.class, templateStructure.DECL_PATH
 				+ "Class");
-
-		// Declarations
+		
+		nodeTemplateFileNames.put(ARecordDeclCG.class, templateStructure.DECL_PATH
+				+ "Record");
 		
 		nodeTemplateFileNames.put(AFieldDeclCG.class, templateStructure.DECL_PATH + "Field");
 		
@@ -116,11 +119,11 @@ public class TemplateManager
 				+ "Method");
 		
 		nodeTemplateFileNames.put(ALocalVarDeclCG.class, templateStructure.DECL_PATH + "LocalVar");
-
-		//nodeTemplateFileNames.put(AConstructorDeclCG.class, IText.DECL_PATH + "Constructor");
 		
 		// Local declarations
 
+		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, templateStructure.LOCAL_DECLS_PATH + "FormalParam");
+		
 		// Type
 		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "ClassType");//TODO: Rename to Class
 		

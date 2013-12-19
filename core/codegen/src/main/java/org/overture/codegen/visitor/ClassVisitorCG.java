@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 
 public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
@@ -47,7 +48,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//
 		
 		LinkedList<AFieldDeclCG> fields = classCg.getFields();
 		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
-		LinkedList<AClassDeclCG> innerClasses = classCg.getInnerClasses();
+		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
 		
 		for (PDefinition def : defs)
 		{
@@ -65,14 +66,13 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//
 					throw new AnalysisException("Operation/function name overload is not allowed. Caused by: " + name + "." + method.getName());
 				methods.add(method);
 			}
-			else if(decl instanceof AClassDeclCG)
-				innerClasses.add((AClassDeclCG) decl);
+			else if(decl instanceof ARecordDeclCG)
+				innerClasses.add((ARecordDeclCG) decl);
 			else if(decl instanceof AEmptyDeclCG)
 			;//Empty declarations are used to indicate constructs that can be ignored during the
 			 //construction of the OO AST. 
 			else
-				System.out.println("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
-			//TODO:Remove prints
+				throw new AnalysisException("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
 		}
 		
 		return classCg;

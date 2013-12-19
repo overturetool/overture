@@ -63,8 +63,12 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[fields]:field*
     	[methods]:declCG.method*
     	[superName]:java_String
-    	[innerClasses]:declCG.class*
+    	[records]:declCG.record*
     |	{interface}
+    	[name]:java_String
+    	[fields]:field*
+    |	{record}
+    	[access]:java_String
     	[name]:java_String
     	[fields]:field*
     |	{empty}

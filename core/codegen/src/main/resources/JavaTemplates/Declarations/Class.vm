@@ -46,7 +46,7 @@ $JavaFormat.format($field)
 $JavaFormat.format($method)
 #end
 
-#foreach( $innerClass in $node.getInnerClasses() )
+#foreach( $innerClass in $node.getRecords() )
 $JavaFormat.format($innerClass)
 #end
 

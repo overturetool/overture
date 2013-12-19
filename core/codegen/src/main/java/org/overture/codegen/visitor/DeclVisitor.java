@@ -20,17 +20,13 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -73,9 +69,7 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		String name = node.getName().getName();
 		LinkedList<AFieldField> fields = node.getFields();
 		
-		AClassDeclCG staticClass = new AClassDeclCG();
-		staticClass.setAbstract(false);
-		staticClass.setStatic(true);
+		ARecordDeclCG record = new ARecordDeclCG();
 		//Set this public for now but it must be corrected as the access is specified
 		//in the type definition instead:
 		//		types
@@ -83,33 +77,10 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		//		public R ::
 		//		    x : nat
 		//		    y : nat;
-		staticClass.setAccess(OoAstConstants.PUBLIC);
+		record.setAccess(OoAstConstants.PUBLIC);
+		record.setName(name);
 		
-		staticClass.setInnerClasses(null);
-		staticClass.setMethods(null);
-		staticClass.setName(name);
-		staticClass.setSuperName(null);
-		
-		AMethodDeclCG constructor = new AMethodDeclCG();
-		constructor.setAbstract(false);
-		constructor.setAccess(OoAstConstants.PUBLIC);
-		
-		ABlockStmCG body = new ABlockStmCG();
-		LinkedList<PStmCG> bodyStms = body.getStatements();
-		constructor.setBody(body); //TODO
-		
-		List<AFormalParamLocalDeclCG> formalParams = new LinkedList<AFormalParamLocalDeclCG>();
-		constructor.setFormalParams(formalParams);//TODO
-		
-		constructor.setName(name);
-		constructor.setReturnType(null);
-		constructor.setStatic(false);
-		
-		List<AMethodDeclCG> recordConstructors = new LinkedList<AMethodDeclCG>();
-		recordConstructors.add(constructor);
-		staticClass.setMethods(recordConstructors);
-		
-		LinkedList<AFieldDeclCG> staticClassFields = staticClass.getFields();
+		LinkedList<AFieldDeclCG> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
 		{		
 			PDeclCG res = aFieldField.apply(question.getDeclVisitor(), question);
@@ -117,34 +88,13 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			if(res instanceof AFieldDeclCG)
 			{
 				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
-				staticClassFields.add(fieldDecl);
-				
-				//TODO: Improve this and other places where it is done
-				String formalName = OoAstConstants.CONSTRUCTOR_FORMAL_PREFIX + fieldDecl.getName();
-				PTypeCG formalType = fieldDecl.getType();
-				
-				AFormalParamLocalDeclCG formal = new AFormalParamLocalDeclCG();
-				formal.setName(formalName);
-				formal.setType(formalType.clone());
-				formalParams.add(formal);
-				
-				AAssignmentStmCG assignment = new AAssignmentStmCG();
-				AIdentifierStateDesignatorCG field = new AIdentifierStateDesignatorCG();
-				field.setName(fieldDecl.getName());
-				assignment.setTarget(field);
-				AVariableExpCG varExp = new AVariableExpCG();
-				varExp.setOriginal(formalName);
-				varExp.setType(formalType.clone());
-				assignment.setExp(varExp);
-				bodyStms.add(assignment);
+				recordFields.add(fieldDecl);
 			}
 			else
 				throw new AnalysisException("Could not generate fields of record: " + name);
 		}
 		
-		constructor.setFormalParams(formalParams);
-		
-		return staticClass;
+		return record;
 	}
 	
 	@Override
@@ -170,10 +120,10 @@ public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		PDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
 		
-		if(dec instanceof AClassDeclCG)
+		if(dec instanceof ARecordDeclCG)
 		{
-			AClassDeclCG staticClass = (AClassDeclCG) dec;
-			staticClass.setAccess(access);
+			ARecordDeclCG record = (ARecordDeclCG) dec;
+			record.setAccess(access);
 		}
 		
 		return dec;

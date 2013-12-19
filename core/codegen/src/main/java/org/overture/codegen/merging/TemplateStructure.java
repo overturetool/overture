@@ -29,7 +29,7 @@ public class TemplateStructure
 	{
 		root = rootFolder + IText.SEPARATOR_CHAR;
 		DECL_PATH = root + "Declarations" + IText.SEPARATOR_CHAR;
-		LOCAL_DECLS_PATH = "LocalDecls" + IText.SEPARATOR_CHAR;
+		LOCAL_DECLS_PATH = root + "LocalDecls" + IText.SEPARATOR_CHAR;
 		STM_PATH = root + "Statements" + IText.SEPARATOR_CHAR;
 		EXPS_PATH = root + "Expressions" + IText.SEPARATOR_CHAR;
 		BINARY_EXPS_PATH = EXPS_PATH + "Binary" + IText.SEPARATOR_CHAR;

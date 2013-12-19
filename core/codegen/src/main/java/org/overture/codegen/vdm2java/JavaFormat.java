@@ -8,13 +8,20 @@ import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -25,7 +32,6 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
-import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 import org.overture.codegen.merging.MergeVisitor;
 
@@ -76,6 +82,54 @@ public class JavaFormat
 		}
 		
 		throw new AnalysisException("Type was not a sequence type!");
+	}
+	
+	public static String formatRecordConstructor(ARecordDeclCG record) throws AnalysisException
+	{
+		LinkedList<AFieldDeclCG> fields = record.getFields();
+		
+		AMethodDeclCG constructor = new AMethodDeclCG();
+		//Since Java does not have records but the OO AST does a record is generated as a Java class.
+		//To make sure that the record can be instantiated we must explicitly add a constructor.
+		constructor.setAccess("public");
+		constructor.setIsConstructor(true);
+		constructor.setName(record.getName()); //TODO: Should rather be a reference for the class instead
+		LinkedList<AFormalParamLocalDeclCG> formalParams = constructor.getFormalParams();
+	
+		ABlockStmCG body = new ABlockStmCG();
+		LinkedList<PStmCG> bodyStms = body.getStatements();
+		constructor.setBody(body); 
+		
+		for (AFieldDeclCG field : fields)
+		{
+			String name = field.getName();
+			PTypeCG type = field.getType();
+			
+			String paramName = "_" + name;
+
+			//Construct formal parameter of the constructor
+			AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+			formalParam.setName(paramName);
+			formalParam.setType(type);
+			formalParams.add(formalParam);
+			
+			//Construct the initialization of the record field using the
+			//corresponding formal parameter.
+			AAssignmentStmCG assignment = new AAssignmentStmCG();
+			AIdentifierStateDesignatorCG id = new AIdentifierStateDesignatorCG();
+			id.setName(name);
+			
+			AVariableExpCG varExp = new AVariableExpCG();
+			varExp.setType(field.getType());
+			varExp.setOriginal(paramName);
+			
+			assignment.setTarget(id);
+			assignment.setExp(varExp);
+			
+			bodyStms.add(assignment);
+		}
+		
+		return format(constructor);
 	}
 	
 	//FIXME: Unit should not be considered a case as tuples of one argument are not allowed
@@ -232,12 +286,12 @@ public class JavaFormat
 			return "";
 		
 		AFormalParamLocalDeclCG firstParam = params.get(0);
-		writer.append(JavaFormat.format(firstParam.getType()) + " " + firstParam.getName());
+		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
-			writer.append(", " + JavaFormat.format(param.getType()) + " " + param.getName());
+			writer.append(", " + format(param));
 		}
 		return writer.toString();
 	}
