@@ -19,7 +19,7 @@ public class OoAstInfo
 	//Visitors:
 	private OoAstGenerator rootVisitor;
 	private ClassVisitorCG classVisitor;
-	private DeclVisitor declVisitor;
+	private DeclVisitorCG declVisitor;
 	private ExpVisitorCG expVisitor;
 	private TypeVisitorCG typeVisitor;
 	private StmVisitorCG stmVisitor;
@@ -33,7 +33,7 @@ public class OoAstInfo
 		super();
 		this.rootVisitor = rootVisitor;
 		this.classVisitor = new ClassVisitorCG();
-		this.declVisitor = new DeclVisitor();
+		this.declVisitor = new DeclVisitorCG();
 		this.expVisitor = new ExpVisitorCG();
 		this.typeVisitor = new TypeVisitorCG();
 		this.stmVisitor = new StmVisitorCG();
@@ -52,7 +52,7 @@ public class OoAstInfo
 		return classVisitor;
 	}
 	
-	public DeclVisitor getDeclVisitor()
+	public DeclVisitorCG getDeclVisitor()
 	{
 		return declVisitor;
 	}

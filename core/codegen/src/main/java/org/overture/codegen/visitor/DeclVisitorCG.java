@@ -34,11 +34,11 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class DeclVisitor extends AbstractVisitorCG<OoAstInfo, PDeclCG>
+public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
 	private DeclAssistantCG declAssistant;
 	
-	public DeclVisitor()
+	public DeclVisitorCG()
 	{
 		this.declAssistant = new DeclAssistantCG();
 	}
