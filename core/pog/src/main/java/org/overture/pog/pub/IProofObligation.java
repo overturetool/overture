@@ -26,6 +26,8 @@ public interface IProofObligation extends Comparable<IProofObligation>
 	
 	POStatus getStatus();
 	
+	String getKindString();
+	
 	void setStatus(POStatus status);
 	
 	POTrivialProof getTrivialProof();

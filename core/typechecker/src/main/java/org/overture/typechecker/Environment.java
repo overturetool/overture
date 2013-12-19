@@ -105,7 +105,9 @@ abstract public class Environment
 				// TODO: RWL: This is not sound, however the behaviour below is not sound
 				// in case def.getNameScope is null.
 				if (def != null && def.getNameScope() == null)
+				{
 					def.setNameScope(NameScope.GLOBAL);
+				}
 
 				if (def != null && def.getLocation() != n1.getLocation()
 						&& def.getNameScope().matches(scope))

@@ -45,8 +45,6 @@ public class TraceOptionsDialog extends Composite
 	private Label label1 = null;
 	private Label label2 = null;
 	private Label label3 = null;
-	// private Text textSeed = null;
-	// private Combo comboSubset = null;
 	private Spinner subsetSpinner = null;
 	private Spinner seedSpinner = null;
 	private static TraceOptionsDisplayState displayState = null;
@@ -70,16 +68,9 @@ public class TraceOptionsDialog extends Composite
 		setSize(new Point(421, 224));
 		label2 = new Label(this, SWT.NONE);
 		label2.setText("Trace filtering seed:");
-		// textSeed = new Text(this, SWT.BORDER);
-		// textSeed.setText(new Long(seed).toString());
-		// textSeed.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		// textSeed.setText(readSeedPref() + "");
 		createSeedSpinner();
 		label3 = new Label(this, SWT.NONE);
 		label3.setText("Subset limitation (%):");
-		// comboSubset = new Text(this, SWT.BORDER);
-		// comboSubset.setText("1.00000000000");
-		// createComboSubset();
 		createSubsetSpinner();
 		buttonCancel = new Button(this, SWT.NONE);
 		buttonCancel.setText("Cancel");
@@ -222,27 +213,6 @@ public class TraceOptionsDialog extends Composite
 		subsetSpinner.setSelection(readSubsetPref());
 	}
 
-	// private void createComboSubset()
-	// {
-	//
-	// comboSubset = new Combo(this, SWT.READ_ONLY);
-	//
-	// final Integer division = 1;
-	// final Integer total = 100;
-	//
-	// String[] reductions = new String[total/division];
-	//
-	// for (int i = 0; i < total/division; i++)
-	// {
-	// reductions[i] = new Long(division*(i+1)).toString()+" %";
-	// }
-	//
-	// comboSubset.setItems(reductions);
-	// if (reductions.length > 0)
-	// comboSubset.select(reductions.length-1);
-	// comboSubset.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	// }
-
 	private float subset = -1;
 	private long seed = -1;
 	private TraceReductionType reductionType;
@@ -285,4 +255,4 @@ public class TraceOptionsDialog extends Composite
 			}
 		}
 	}
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

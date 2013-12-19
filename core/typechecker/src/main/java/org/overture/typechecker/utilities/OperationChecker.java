@@ -21,67 +21,62 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class OperationChecker extends AnswerAdaptor<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 503412973733485828L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public OperationChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseANamedTraceDefinition(ANamedTraceDefinition node)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAThreadDefinition(AThreadDefinition node)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean defaultPDefinition(PDefinition node)
 			throws AnalysisException

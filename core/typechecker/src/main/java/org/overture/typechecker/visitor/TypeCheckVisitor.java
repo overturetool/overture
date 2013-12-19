@@ -22,10 +22,6 @@ import org.overture.typechecker.TypeCheckerErrors;
 public class TypeCheckVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7872917857726484626L;
 	private AbstractTypeCheckVisitor tcStm = new TypeCheckerStmVisitor(this);
 	private AbstractTypeCheckVisitor tcExp = new TypeCheckerExpVisitor(this);
 	private AbstractTypeCheckVisitor tcDefinition = new TypeCheckerDefinitionVisitor(this);

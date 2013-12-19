@@ -19,7 +19,9 @@ public class AErrorCaseAssistantInterpreter
 	{
 		PExp found = PExpAssistantInterpreter.findExpression(err.getLeft(), lineno);
 		if (found != null)
+		{
 			return found;
+		}
 		return PExpAssistantInterpreter.findExpression(err.getRight(), lineno);
 	}
 

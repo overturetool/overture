@@ -13,7 +13,8 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
-public class AValueValueImportAssistantTC {
+public class AValueValueImportAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -21,26 +22,27 @@ public class AValueValueImportAssistantTC {
 	{
 		this.af = af;
 	}
+
 	public static List<PDefinition> getDefinitions(AValueValueImport imp,
-			AModuleModules module) {
-		
+			AModuleModules module)
+	{
+
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
-		
-		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(),name, NameScope.NAMES);
+
+		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(), name, NameScope.NAMES);
 
 		if (expdef == null)
 		{
-			TypeCheckerErrors.report(3193, "No export declared for import of value " + name + " from " + module.getName(),imp.getLocation(),imp);
-		}
-		else
+			TypeCheckerErrors.report(3193, "No export declared for import of value "
+					+ name + " from " + module.getName(), imp.getLocation(), imp);
+		} else
 		{
 			if (imp.getRenamed() != null)
 			{
 				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(), expdef);
-			}
-			else
+			} else
 			{
 				expdef = AstFactory.newAImportedDefinition(imp.getName().getLocation(), expdef);
 			}

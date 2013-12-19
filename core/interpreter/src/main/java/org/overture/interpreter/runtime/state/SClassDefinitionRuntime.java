@@ -22,7 +22,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	public boolean staticValuesInit = false;
 
 	/** A delegate Java object for any native methods. */
-	private Delegate delegate = null;
+	protected Delegate delegate = null;
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{

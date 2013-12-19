@@ -102,11 +102,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6418355785507933395L;
-
 	public TypeCheckerStmVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
@@ -849,12 +844,16 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				for (PType t : ust.getTypes())
 				{
 					if (ANonDeterministicSimpleBlockStmAssistantTC.addOne(rtypes, t))
+					{
 						rcount++;
+					}
 				}
 			} else
 			{
 				if (ANonDeterministicSimpleBlockStmAssistantTC.addOne(rtypes, stype))
+				{
 					rcount++;
+				}
 			}
 		}
 
@@ -1019,7 +1018,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		int nargs = (Settings.dialect == Dialect.VDM_RT) ? 4 : 1;
+		int nargs = Settings.dialect == Dialect.VDM_RT ? 4 : 1;
 		List<PExp> args = node.getArgs();
 
 		if (args.size() != nargs)
@@ -1228,7 +1227,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.setDefs(defs);
 		} else
 		{
-			assert (type != null) : "Can't typecheck a pattern without a type";
+			assert type != null : "Can't typecheck a pattern without a type";
 
 			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
 			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));

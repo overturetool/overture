@@ -11,8 +11,12 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptorAnswer;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
@@ -330,7 +334,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 * @param old
 	 * @return
 	 */
-	public static String getStateId(AStateDefinition node, boolean old)
+	public static String getStateId(PDefinition node, boolean old)
 	{
 		String name = "$" + node.getName().getName().toLowerCase();
 		if (old)
@@ -338,6 +342,17 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			name += "~";
 		}
 		return name;
+
+	}
+
+	public static LexNameToken getStateIdToken(PDefinition node, boolean old)
+	{
+		String name = "$" + node.getName().getName().toLowerCase();
+		if (old)
+		{
+			name += "~";
+		}
+		return new LexNameToken("", name, node.getLocation());
 
 	}
 
@@ -391,6 +406,48 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		}
 
 		return p;
+	}
+
+	@Override
+	public Node caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
+			throws AnalysisException
+	{
+		String name = getStateId(node, false).replace('$', ' ').trim();
+		String nameOld = getStateId(node, true).replace('$', ' ').trim();
+
+		PPredicate before = new AMemberPredicate(getIdentifier(nameOld), exp(node.getType()));
+		PPredicate after = new AMemberPredicate(getIdentifier(name), exp(node.getType()));
+		PPredicate p = new AConjunctPredicate(before, after);
+
+		return p;
+	}
+
+	@Override
+	public Node caseAClassInvariantDefinition(AClassInvariantDefinition node)
+			throws AnalysisException
+	{
+
+		SClassDefinition classDef = node.getAncestor(SClassDefinition.class);
+
+		Map<String, String> newToOldNamesReplace = new HashMap<String, String>();
+
+		for (PDefinition def : classDef.getDefinitions())
+		{
+			if (def instanceof AInstanceVariableDefinition)
+			{
+				newToOldNamesReplace.put(getStateId(def, false).replace('$', ' ').trim(), getStateId(def, true).replace('$', ' ').trim());
+			}
+		}
+
+		nameSubstitution.putAll(newToOldNamesReplace);
+		PPredicate old = pred(node.getExpression());
+
+		for (String key : newToOldNamesReplace.keySet())
+		{
+			nameSubstitution.remove(key);
+		}
+
+		return new AConjunctPredicate(old, pred(node.getExpression()));
 	}
 
 	@Override

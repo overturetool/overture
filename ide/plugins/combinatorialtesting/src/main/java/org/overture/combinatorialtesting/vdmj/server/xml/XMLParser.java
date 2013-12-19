@@ -30,6 +30,7 @@ import java.util.Vector;
 
 public class XMLParser
 {
+	private static final String STREAM_ENCODING = "UTF-8";
 	private StringBuilder buffer;
 	private int end;
 	private int pos;
@@ -61,7 +62,7 @@ public class XMLParser
 	{
 		if (xml[0] == '<' && xml[1] == '?')
 		{
-			String ascii = new String(xml, "ASCII"); // header is ASCII
+			String ascii = new String(xml, STREAM_ENCODING); // header is ASCII
 			buffer = new StringBuilder(ascii);
 			end = ascii.length();
 			pos = 0;
@@ -91,7 +92,7 @@ public class XMLParser
 
 			// Re-encode the remainder using the header encoding
 
-			String body = new String(ascii.substring(pos - 2).getBytes("ASCII"), encoding);
+			String body = new String(ascii.substring(pos - 2).getBytes(STREAM_ENCODING), encoding);
 			buffer = new StringBuilder(body);
 			end = body.length();
 			pos = 0;
@@ -146,7 +147,7 @@ public class XMLParser
 
 	private boolean isStart(char c)
 	{
-		return (Character.isLetter(c) || c == '_');
+		return Character.isLetter(c) || c == '_';
 	}
 
 	private String rdTag()
@@ -271,7 +272,9 @@ public class XMLParser
 		}
 
 		if (rdch)
+		{
 			rdCh();
+		}
 		return token;
 	}
 
@@ -412,7 +415,7 @@ public class XMLParser
 
 	public static void main(String[] args) throws IOException
 	{
-		XMLParser p = new XMLParser(("<![CDATA[]]]>").getBytes());
+		XMLParser p = new XMLParser("<![CDATA[]]]>".getBytes());
 		System.out.println(p.readNode());
 	}
 }

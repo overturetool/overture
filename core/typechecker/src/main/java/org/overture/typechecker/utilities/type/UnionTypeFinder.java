@@ -7,32 +7,34 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to get a Union type from a type
+ * 
+ * @author kel
+ */
 public class UnionTypeFinder extends TypeUnwrapper<AUnionType>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public UnionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public AUnionType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			return 	((ANamedInvariantType) type).getType().apply(THIS);
-		}
-		else
+			return ((ANamedInvariantType) type).getType().apply(THIS);
+		} else
 		{
 			return null;
 		}
 	}
+
 	@Override
 	public AUnionType caseAUnionType(AUnionType type) throws AnalysisException
 	{

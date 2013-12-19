@@ -44,8 +44,9 @@ public class AMapPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -76,7 +77,7 @@ public class AMapPatternAssistantTC
 			TypeCheckerErrors.detail("Actual type", ptype);
 		} else
 		{
-			SMapType map = PTypeAssistantTC.getMap(ptype);
+			SMapType map = af.createPTypeAssistant().getMap(ptype);
 
 			if (!map.getEmpty())
 			{
@@ -96,7 +97,9 @@ public class AMapPatternAssistantTC
 		{
 
 			if (!AMapletPatternMapletAssistantTC.isSimple(mp))
+			{
 				return false;
+			}
 
 		}
 		return true;

@@ -66,7 +66,6 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-
 	public static AExplicitFunctionDefinition getPostDefinition(
 			AImplicitFunctionDefinition d)
 	{
@@ -76,13 +75,6 @@ public class AImplicitFunctionDefinitionAssistantTC
 
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getPostType((AFunctionType) d.getType()), parameters, d.getPostcondition(), null, null, false, null);
-
-		// new AExplicitFunctionDefinition(d.getPostcondition().getLocation(),
-		// d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, false,
-		// null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>)d.getTypeParams().clone(),
-		// parameters, AFunctionTypeAssistantTC.getPostType(d.getType()),
-		// d.getPostcondition(), null, null, null, null, null, null,
-		// null, false, false, null, null, null, null, parameters.size() > 1, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
@@ -95,12 +87,6 @@ public class AImplicitFunctionDefinitionAssistantTC
 
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getPreType((AFunctionType) d.getType()), getParamPatternList(d), d.getPrecondition(), null, null, false, null);
-
-		// new AExplicitFunctionDefinition(d.getPrecondition().getLocation(),
-		// d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false,
-		// null, PAccessSpecifierAssistant.getDefault(), (List<LexNameToken>) d.getTypeParams().clone(),
-		// parameters, AFunctionTypeAssistantTC.getPreType(d.getType()), d.getPrecondition(),
-		// null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

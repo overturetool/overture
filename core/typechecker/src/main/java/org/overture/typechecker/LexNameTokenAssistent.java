@@ -20,8 +20,10 @@ public class LexNameTokenAssistent
 			{
 				return false;
 			}
-		} else if ((token.getTypeQualifier() != null && lother.getTypeQualifier() == null)
-				|| (token.getTypeQualifier() == null && lother.getTypeQualifier() != null))
+		} else if (token.getTypeQualifier() != null
+				&& lother.getTypeQualifier() == null
+				|| token.getTypeQualifier() == null
+				&& lother.getTypeQualifier() != null)
 		{
 			return false;
 		}

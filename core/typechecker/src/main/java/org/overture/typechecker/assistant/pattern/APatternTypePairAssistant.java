@@ -2,7 +2,6 @@ package org.overture.typechecker.assistant.pattern;
 
 import java.util.List;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternTypePair;
@@ -33,8 +32,9 @@ public class APatternTypePairAssistant
 	{
 
 		if (result.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			result.setResolved(true);
 		}

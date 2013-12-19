@@ -27,7 +27,7 @@ public class PPatternBindAssistantTC
 
 	public static List<PDefinition> getDefinitions(ADefPatternBind patternBind)
 	{
-		assert (patternBind.getDefs() != null) : "PatternBind must be type checked before getDefinitions";
+		assert patternBind.getDefs() != null : "PatternBind must be type checked before getDefinitions";
 
 		return patternBind.getDefs();
 	}

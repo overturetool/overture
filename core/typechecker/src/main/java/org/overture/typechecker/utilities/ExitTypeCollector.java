@@ -38,10 +38,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -174,8 +170,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	}
 
 	@Override
-	public PTypeSet caseALetStm(ALetStm statement)
-			throws AnalysisException
+	public PTypeSet caseALetStm(ALetStm statement) throws AnalysisException
 	{
 		return statement.getStatement().apply(THIS);
 	}

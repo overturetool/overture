@@ -30,7 +30,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -41,10 +40,6 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
  */
 public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -131,7 +126,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		// return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
 		LexNameList names = new LexNameList();
 		// TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
-		AInheritedDefinitionAssistantTC.checkSuperDefinition(node);
+		DefinitionTypeFinder.checkSuperDefinition(node);
 
 		for (ILexNameToken vn : node.getSuperdef().apply(THIS))
 		{
