@@ -6,7 +6,8 @@ init a == a= mk_Airport({},{})
 end
 
 types
-  Aircraft = nat
+  Aircraft = nat;
+  Flag = bool
   
  functions  
     permitted: Aircraft * set of Aircraft -> bool
@@ -26,7 +27,7 @@ types
     Init()
     ext wr permission
         wr landed
-    post permission = {} and landed = {};
+       post permission = {} and landed = {};
     
 	 test:() ==> Airport
 	 test() == let plane1 = 7 in

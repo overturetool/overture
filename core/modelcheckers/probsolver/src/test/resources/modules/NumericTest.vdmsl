@@ -1,0 +1,35 @@
+operations
+--    add() r : nat
+--    post 4 + 1 = r;
+
+--    sub() r : nat
+--    post 4 - 1 = r;
+
+--    times() r : nat
+--    post 3*2 = r;
+
+--    div() r : nat
+--    post 5/3=r;
+
+--     calc() r : nat
+--    post (1+2)*3/4 = r;
+--    post 1+2*3/4 = r;
+
+--    rev() r : nat
+--    post -1 = r;
+--    post -(-1) = r;
+
+    comp()
+    post 1<2
+--    post 2<1 = r;
+--    post 1<=2 = r;
+--    post 2<=2 = r;
+
+-- -- operator ** for NumericExps
+--  pow() r : nat
+--  post 2 ** 3 = r;
+
+-- -- underconstruction: unable type check
+-- -- operator ** for MapExp and NumericExp
+--  ite() m : map nat to nat
+--  post {1|->3, 2|->1, 3|->2} ** 2 = r;
