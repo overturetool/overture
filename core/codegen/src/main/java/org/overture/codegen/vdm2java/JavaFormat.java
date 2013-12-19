@@ -15,6 +15,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -22,9 +23,11 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
@@ -82,6 +85,39 @@ public class JavaFormat
 		}
 		
 		throw new AnalysisException("Type was not a sequence type!");
+	}
+	
+	public static String generateCloneMethod(ARecordDeclCG record) throws AnalysisException
+	{
+		AMethodDeclCG method = new AMethodDeclCG();
+		method.setAccess("public");
+
+		AClassTypeCG returnType = new AClassTypeCG();
+		returnType.setName(record.getName());
+		method.setReturnType(returnType);
+		
+		method.setName("clone");
+		
+		ANewExpCG newExp = new ANewExpCG();
+		newExp.setClassName(record.getName());
+		LinkedList<PExpCG> args = newExp.getArgs();
+		
+		
+		LinkedList<AFieldDeclCG> fields = record.getFields();
+		for (AFieldDeclCG field : fields)
+		{
+			String name = field.getName();
+			
+			AVariableExpCG varExp = new AVariableExpCG();
+			varExp.setOriginal(name);
+			args.add(varExp);
+		}
+		
+		AReturnStmCG body = new AReturnStmCG();
+		body.setExp(newExp);
+		method.setBody(body);
+		
+		return format(method);
 	}
 	
 	public static String formatRecordConstructor(ARecordDeclCG record) throws AnalysisException
