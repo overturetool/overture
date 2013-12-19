@@ -1,5 +1,8 @@
+import utils.*;
+
+
 public class A {
-    private static class Vector2D {
+    private static class Vector2D implements Record {
         public long x;
         public long y;
 
@@ -7,13 +10,21 @@ public class A {
             x = _x;
             y = _y;
         }
+
+        public Vector2D clone() {
+            return new Vector2D(x, y);
+        }
     }
 
-    public static class Real {
+    public static class Real implements Record {
         public double r;
 
         public Real(double _r) {
             r = _r;
+        }
+
+        public Real clone() {
+            return new Real(r);
         }
     }
 }
