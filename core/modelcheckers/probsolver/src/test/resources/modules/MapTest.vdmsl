@@ -1,0 +1,11 @@
+--
+-- MapTest.vdmsl
+--
+operations
+
+maptest() m : map nat to nat
+  post m = { 1|->2, 2|->2, 3|->1};
+
+maptest() m : set of nat
+  post m = dom { 1|->2, 2|->2, 3|->1}
+

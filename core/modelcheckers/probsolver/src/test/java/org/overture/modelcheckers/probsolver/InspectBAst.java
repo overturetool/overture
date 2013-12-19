@@ -20,7 +20,7 @@ public class InspectBAst {
 		
 		//f = new ClassicalB("{x,y | x:1..5 & y:1..6}");
 		//System.out.println(f.getAst());
-		ClassicalB f = new ClassicalB("TRUE");
+		ClassicalB f = new ClassicalB("3|->2");
 		System.out.println(f.getAst());
 		f.getAst().apply(new ASTPrinter(System.out));
 	}

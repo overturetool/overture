@@ -55,6 +55,12 @@ import org.overture.ast.expressions.ASeqEnumSeqExp;                //added -> AS
                                                                    //         AEmptySequenceExpression,ASequenceExtensionExpression
 import org.overture.ast.expressions.AHeadUnaryExp;                 //added -> AFirstExpression
 import org.overture.ast.expressions.ATailUnaryExp;                 //added -> ATailExpression
+import org.overture.ast.expressions.ALenUnaryExp;                  //added -> ASizeExpression
+import org.overture.ast.expressions.AReverseUnaryExp;              //added -> AReverseExpression
+import org.overture.ast.expressions.ASeqConcatBinaryExp;           //added -> AConcatExpression
+import org.overture.ast.expressions.AMapEnumMapExp;                //added
+import org.overture.ast.expressions.AMapletExp;                    //added -> ACoupleExpression
+import org.overture.ast.expressions.AMapDomainUnaryExp;            //added -> ADomainExpression
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -70,6 +76,7 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.modelcheckers.probsolver.SolverConsole;
+import org.overture.ast.types.AMapMapType;  //added
 
 import de.be4.classicalb.core.parser.node.ACardExpression;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
@@ -122,7 +129,11 @@ import de.be4.classicalb.core.parser.node.AEmptySequenceExpression; //added
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression; //added
 import de.be4.classicalb.core.parser.node.AFirstExpression; //added
 import de.be4.classicalb.core.parser.node.ATailExpression; //added
-
+import de.be4.classicalb.core.parser.node.ASizeExpression; //added
+import de.be4.classicalb.core.parser.node.AReverseExpression; //added
+import de.be4.classicalb.core.parser.node.AConcatExpression; //added
+import de.be4.classicalb.core.parser.node.ACoupleExpression; //added
+import de.be4.classicalb.core.parser.node.ADomainExpression; //added
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -607,6 +618,72 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			throws AnalysisException
 	{
 	    return new ATailExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseALenUnaryExp(ALenUnaryExp node)// added
+			throws AnalysisException
+	{
+	    return new ASizeExpression(exp(node.getExp()));
+	}
+
+	//elems
+	//inds
+
+	@Override
+	public Node caseAReverseUnaryExp(AReverseUnaryExp node)// added not yet checked
+			throws AnalysisException
+	{
+	    return new AReverseExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseASeqConcatBinaryExp(ASeqConcatBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AConcatExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	//conc
+	//++
+	//apply
+
+	//method for map
+	@Override
+	public Node caseAMapletExp(AMapletExp node)//added
+			throws AnalysisException
+	{
+	    ACoupleExpression cpl = new ACoupleExpression();
+	    cpl.getList().add(exp(node.getLeft()));
+	    cpl.getList().add(exp(node.getRight()));
+	    return cpl;
+	}
+
+	@Override
+	public Node caseAMapEnumMapExp(AMapEnumMapExp node)//added
+			throws AnalysisException
+	{
+	    if (node.getMembers().isEmpty())
+		{
+			return new AEmptySetExpression();
+		}
+
+	    ASetExtensionExpression map = new ASetExtensionExpression();
+	    for (AMapletExp m : node.getMembers())
+		{
+
+		    map.getExpressions().add((PExpression)caseAMapletExp(m));
+		}
+
+	    return map;
+	}
+
+
+	@Override
+	public Node caseAMapDomainUnaryExp(AMapDomainUnaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ADomainExpression(exp(node.getExp()));
 	}
 
 
