@@ -20,8 +20,14 @@ public class InspectBAst {
 		
 		//f = new ClassicalB("{x,y | x:1..5 & y:1..6}");
 		//System.out.println(f.getAst());
-		ClassicalB f = new ClassicalB("3|->2");
+		ClassicalB f = new ClassicalB("1|->2");
 		System.out.println(f.getAst());
+		f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
+		f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("[1,2,3,4,5](3)");
 		f.getAst().apply(new ASTPrinter(System.out));
 	}
 }

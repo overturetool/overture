@@ -61,6 +61,14 @@ import org.overture.ast.expressions.ASeqConcatBinaryExp;           //added -> AC
 import org.overture.ast.expressions.AMapEnumMapExp;                //added
 import org.overture.ast.expressions.AMapletExp;                    //added -> ACoupleExpression
 import org.overture.ast.expressions.AMapDomainUnaryExp;            //added -> ADomainExpression
+import org.overture.ast.expressions.AMapRangeUnaryExp;		   //added -> ARrangeExpression
+import org.overture.ast.expressions.AMapUnionBinaryExp;            //used  -> AUnionExpression
+import org.overture.ast.expressions.APlusPlusBinaryExp;            //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
+import org.overture.ast.expressions.ADomainResToBinaryExp;         //added -> ADomainRestrictionExpression
+import org.overture.ast.expressions.ADomainResByBinaryExp;         //added -> ADomainSubtractionExpression
+import org.overture.ast.expressions.ARangeResToBinaryExp;          //added -> ARangeRestrictionExpression
+import org.overture.ast.expressions.ARangeResByBinaryExp;          //added -> ARangeSubtractionExpression
+import org.overture.ast.expressions.AApplyExp;                     //added -> AFunctionExpression(for seq(nat)), AImageExpression(for map(nat)), 
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -134,6 +142,15 @@ import de.be4.classicalb.core.parser.node.AReverseExpression; //added
 import de.be4.classicalb.core.parser.node.AConcatExpression; //added
 import de.be4.classicalb.core.parser.node.ACoupleExpression; //added
 import de.be4.classicalb.core.parser.node.ADomainExpression; //added
+import de.be4.classicalb.core.parser.node.ARangeExpression; //added
+import de.be4.classicalb.core.parser.node.AOverwriteExpression; //added
+import de.be4.classicalb.core.parser.node.ADomainRestrictionExpression; //added
+import de.be4.classicalb.core.parser.node.ADomainSubtractionExpression; //added
+import de.be4.classicalb.core.parser.node.ARangeRestrictionExpression; //added
+import de.be4.classicalb.core.parser.node.ARangeSubtractionExpression; //added
+import de.be4.classicalb.core.parser.node.AImageExpression; //added
+import de.be4.classicalb.core.parser.node.AFunctionExpression; //added
+
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -683,9 +700,103 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAMapDomainUnaryExp(AMapDomainUnaryExp node)//added
 			throws AnalysisException
 	{
+	 //console.out.println("in MapDomainU: " + node.getExp());
 	    return new ADomainExpression(exp(node.getExp()));
 	}
 
+	@Override
+	public Node caseAMapRangeUnaryExp(AMapRangeUnaryExp node)//added
+			throws AnalysisException
+	{
+	    //console.out.println("in MapDomainU: " + node.getExp());
+	    return new ARangeExpression(exp(node.getExp()));
+	}
+
+	@Override
+	public Node caseAMapUnionBinaryExp(AMapUnionBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new AUnionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseAPlusPlusBinaryExp(APlusPlusBinaryExp node)//added
+			throws AnalysisException
+	{
+	    // seq ++ map
+	    // map ++ map
+	    return new AOverwriteExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseADomainResToBinaryExp(ADomainResToBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ADomainRestrictionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseADomainResByBinaryExp(ADomainResByBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ADomainSubtractionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+
+	@Override
+	public Node caseARangeResToBinaryExp(ARangeResToBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ARangeRestrictionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseARangeResByBinaryExp(ARangeResByBinaryExp node)//added
+			throws AnalysisException
+	{
+	    return new ARangeSubtractionExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+	/*
+	@Override
+	public Node caseAApplyExp(AApplyExp node)//added
+			throws AnalysisException
+	{
+		AFunctionExpression fun = new AFunctionExpression();
+		fun.setIdentifier(exp(node.getRoot()));
+		
+		for(PExp m : node.getArgs()) {
+		    fun.getParameters().add(exp(m));
+		}
+		return fun;
+
+	    //if(node.getType().equals("map")) {
+	//	ASetExtensionExpression mono = new ASetExtensionExpression();
+	//	for(PExp m : node.getArgs()) {
+	//	    mono.getExpressions().add(exp(m));
+	//	}
+	//	return (Node)new AImageExpression(exp(node.getRoot()), mono);
+	 //   } else if(node.getType().equals("seq")) {
+	//	AFunctionExpression fun = new AFunctionExpression();
+	//	fun.setIdentifier(exp(node.getRoot()));
+	//	
+	//	for(PExp m : node.getArgs()) {
+	//	    fun.getParameters().add(exp(m));
+	//	}
+	//	return (Node)fun;
+	  //  }
+	}
+*/
+	@Override
+	public Node caseAApplyExp(AApplyExp node)//added
+			throws AnalysisException
+	{
+		ASetExtensionExpression mono = new ASetExtensionExpression();
+		for(PExp m : node.getArgs()) {
+		    mono.getExpressions().add(exp(m));
+		}
+		return new AImageExpression(exp(node.getRoot()), mono);
+
+	}
 
 
 	//StateDefinition
