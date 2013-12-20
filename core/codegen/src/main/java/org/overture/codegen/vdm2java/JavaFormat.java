@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -110,6 +111,7 @@ public class JavaFormat
 			
 			AVariableExpCG varExp = new AVariableExpCG();
 			varExp.setOriginal(name);
+			varExp.setType(field.getType().clone());
 			args.add(varExp);
 		}
 		
@@ -139,7 +141,7 @@ public class JavaFormat
 		for (AFieldDeclCG field : fields)
 		{
 			String name = field.getName();
-			PTypeCG type = field.getType();
+			PTypeCG type = field.getType().clone();
 			
 			String paramName = "_" + name;
 
@@ -412,5 +414,10 @@ public class JavaFormat
 			return JavaFormat.format(potentialBasicType);
 		
 		//TODO: Put in the others: What are they?
+	}
+	
+	public static boolean isRecord(AVariableExpCG exp)
+	{
+		return exp.getType() instanceof ARecordTypeCG;
 	}
 }

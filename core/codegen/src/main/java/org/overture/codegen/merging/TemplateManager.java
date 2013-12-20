@@ -81,6 +81,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
@@ -126,6 +127,8 @@ public class TemplateManager
 		
 		// Type
 		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "ClassType");//TODO: Rename to Class
+		
+		nodeTemplateFileNames.put(ARecordTypeCG.class, templateStructure.TYPE_PATH + "Record");
 		
 		nodeTemplateFileNames.put(AObjectTypeCG.class, templateStructure.TYPE_PATH + "Object");
 		

@@ -36,6 +36,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -142,10 +143,10 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	{
 		String typeName = node.getName().getName();
 
-		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(typeName);
+		ARecordTypeCG recordType = new ARecordTypeCG();
+		recordType.setName(typeName);
 
-		return classType;
+		return recordType;
 	}
 
 	@Override
