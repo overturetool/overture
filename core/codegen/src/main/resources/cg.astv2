@@ -195,7 +195,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{Object}
     |	{void}
     |	{class} [name]:java_String
-    |	{record} [name]:java_String
+    |	{record} [recDecl]:declCG.record
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*
