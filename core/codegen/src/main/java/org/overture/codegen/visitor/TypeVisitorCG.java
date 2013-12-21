@@ -26,6 +26,8 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -141,11 +143,11 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	public PTypeCG caseARecordInvariantType(ARecordInvariantType node,
 			OoAstInfo question) throws AnalysisException
 	{
-		String typeName = node.getName().getName();
-
+		PDeclCG recDecl = node.apply(question.getDeclVisitor(), question);
+		
 		ARecordTypeCG recordType = new ARecordTypeCG();
-		recordType.setName(typeName);
-
+		recordType.setRecDecl((ARecordDeclCG) recDecl);
+		
 		return recordType;
 	}
 
