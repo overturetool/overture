@@ -333,6 +333,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		PExpCG object = node.getObject().apply(question.getExpVisitor(), question);
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
 		String memberName = "";
 		
@@ -344,6 +345,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setObject(object);
 		fieldExp.setMemberName(memberName);
+		fieldExp.setType(type);
 		
 		return fieldExp;
 	}
