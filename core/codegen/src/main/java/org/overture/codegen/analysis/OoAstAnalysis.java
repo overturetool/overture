@@ -19,12 +19,7 @@ public class OoAstAnalysis
 	{
 		return hasDependency(classDecl, new QuoteAnalysis());
 	}
-	
-	public static boolean usesTuples(AClassDeclCG classDecl)
-	{
-		return hasDependency(classDecl, new TupleAnalysis());
-	}
-	
+
 	public static boolean usesUtils(AClassDeclCG classDecl)
 	{
 		return hasDependency(classDecl, new UtilAnalysis());
