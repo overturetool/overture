@@ -33,7 +33,6 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
-import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
@@ -169,52 +168,6 @@ public class JavaFormat
 		}
 		
 		return format(constructor);
-	}
-	
-	//FIXME: Unit should not be considered a case as tuples of one argument are not allowed
-	private static String getTupleStr(ATupleTypeCG type) throws AnalysisException
-	{
-		String tuple = "";
-		
-		switch (type.getTypes().size())
-		{
-			case 2:
-				tuple = "Pair";
-				break;
-			case 3:
-				tuple = "Triplet";
-				break;
-			case 4:
-				tuple = "Quartet";
-				break;
-			case 5:
-				tuple = "Quintet";
-				break;
-			case 6:
-				tuple = "Sextet";
-				break;
-			case 7:
-				tuple = "Septet";
-				break;
-			case 8:
-				tuple = "Octet";
-				break;
-			case 9:
-				tuple = "Ennead";
-				break;
-			case 10:
-				tuple = "Decade";
-				break;
-			default:
-				throw new AnalysisException("Tuple types supports 2 to 10 types!");
-		}
-	
-		return tuple;
-	}
-	
-	public static String formatTupleType(ATupleTypeCG type) throws AnalysisException
-	{
-		return getTupleStr(type) + JavaFormat.formatTemplateTypes(type.getTypes());
 	}
 	
 	public static String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
