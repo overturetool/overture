@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
@@ -416,8 +417,11 @@ public class JavaFormat
 		//TODO: Put in the others: What are they?
 	}
 	
-	public static boolean isRecord(AVariableExpCG exp)
+	public static boolean shouldClone(AVariableExpCG exp)
 	{
-		return exp.getType() instanceof ARecordTypeCG;
+		return exp.getType() instanceof ARecordTypeCG &&
+				(exp.getAncestor(AAssignmentStmCG.class) != null ||
+				exp.getAncestor(AFieldDeclCG.class) != null ||
+				 exp.getAncestor(ALocalVarDeclCG.class) != null) ;
 	}
 }

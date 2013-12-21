@@ -1,5 +1,5 @@
 #set( $clone = "")
-#if ($JavaFormat.isRecord($node))
+#if ($JavaFormat.shouldClone($node))
 	#set( $clone = ".clone()")
 #end
 ##

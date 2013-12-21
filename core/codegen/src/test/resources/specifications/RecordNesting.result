@@ -25,7 +25,7 @@ public class A {
         }
 
         public R2 clone() {
-            return new R2(r.clone());
+            return new R2(r);
         }
     }
 
@@ -39,7 +39,7 @@ public class A {
         }
 
         public R3 clone() {
-            return new R3(x, r.clone());
+            return new R3(x, r);
         }
     }
 }
