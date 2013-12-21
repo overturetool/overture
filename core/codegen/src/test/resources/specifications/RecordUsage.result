@@ -1,0 +1,70 @@
+import utils.*;
+
+
+public class A {
+    private static final R2 a = new R2(new R1(2L), 3L);
+    private static final R2 b = a.clone();
+    private static final R1 c = a.r1.clone();
+    private static final long d = a.r1.x;
+
+    public long op1() {
+        R1 r = new R1(2L);
+        r.x = 3L;
+
+        return r.x;
+    }
+
+    public long op2() {
+        R1 a = new R1(5L);
+        R1 b = a.clone();
+
+        return b.x;
+    }
+
+    public long op3() {
+        R2 a = new R2(new R1(2L), 3L);
+        R1 b = a.r1.clone();
+        a.x = 1L;
+        a.r1.x = 2L;
+
+        return a.r1.x;
+    }
+
+    public R2 op4() {
+        R2 a = new R2(new R1(2L), 3L);
+
+        return a.clone();
+    }
+
+    public R1 op5() {
+        R2 a = new R2(new R1(2L), 3L);
+
+        return a.r1.clone();
+    }
+
+    public static class R1 implements Record {
+        public long x;
+
+        public R1(long _x) {
+            x = _x;
+        }
+
+        public R1 clone() {
+            return new R1(x);
+        }
+    }
+
+    public static class R2 implements Record {
+        public R1 r1;
+        public long x;
+
+        public R2(R1 _r1, long _x) {
+            r1 = _r1.clone();
+            x = _x;
+        }
+
+        public R2 clone() {
+            return new R2(r1, x);
+        }
+    }
+}
