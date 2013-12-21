@@ -1,1 +1,1 @@
-$node.getName()
+$node.getRecDecl().getName()
