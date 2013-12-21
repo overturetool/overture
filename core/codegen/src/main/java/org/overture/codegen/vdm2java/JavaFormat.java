@@ -10,12 +10,12 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -28,11 +28,11 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
@@ -93,13 +93,14 @@ public class JavaFormat
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setAccess("public");
 
-		AClassTypeCG returnType = new AClassTypeCG();
-		returnType.setName(record.getName());
+		ARecordTypeCG returnType = new ARecordTypeCG();
+		returnType.setRecDecl(record.clone());
 		method.setReturnType(returnType);
 		
 		method.setName("clone");
 		
 		ANewExpCG newExp = new ANewExpCG();
+		newExp.setType(new ARecordTypeCG());
 		newExp.setClassName(record.getName());
 		LinkedList<PExpCG> args = newExp.getArgs();
 		
@@ -370,11 +371,70 @@ public class JavaFormat
 		//TODO: Put in the others: What are they?
 	}
 	
+	public static boolean cloneMember(AFieldExpCG exp)
+	{
+		//TODO: ACOUNT FOR TUPLE TYPES
+		
+		if(exp.parent() instanceof AFieldExpCG)
+			return false;
+		
+		PTypeCG type = exp.getObject().getType();
+		
+		if(type instanceof ARecordTypeCG)
+		{
+			ARecordTypeCG recordType = (ARecordTypeCG) type;
+			
+			String memberName = exp.getMemberName();
+			
+			LinkedList<AFieldDeclCG> recFields = recordType.getRecDecl().getFields();
+			
+			AFieldDeclCG memberField = null;
+			for (AFieldDeclCG field : recFields)
+			{
+				if(field.getName().equals(memberName))
+				{
+					memberField = field;
+					break;
+				}
+			}
+			
+			if(memberField != null)
+			{
+				if(memberField.getType() instanceof ARecordTypeCG) //TODO: OR tuple type
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public static boolean shouldClone(AVariableExpCG exp)
 	{
-		return exp.getType() instanceof ARecordTypeCG &&
-				(exp.getAncestor(AAssignmentStmCG.class) != null ||
-				exp.getAncestor(AFieldDeclCG.class) != null ||
-				 exp.getAncestor(ALocalVarDeclCG.class) != null) ;
+		INode parent = exp.parent();
+		if(parent instanceof AFieldExpCG)
+		{
+			return false;
+		}
+		
+		PTypeCG type = exp.getType();
+		if(type instanceof ARecordTypeCG || type instanceof ATupleTypeCG)
+		{
+			if(parent instanceof AFieldExpCG)
+			{
+				return false;
+			}
+			else if(parent instanceof ANewExpCG)
+			{
+				ANewExpCG newExp = (ANewExpCG) parent;
+				PTypeCG newExpType = newExp.getType();
+				
+				if(newExpType instanceof ARecordTypeCG)
+					return false;
+			}
+			
+			return true;
+		}
+		
+		return false;
 	}
 }
