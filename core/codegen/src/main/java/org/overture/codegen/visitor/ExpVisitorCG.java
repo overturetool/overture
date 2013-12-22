@@ -21,6 +21,7 @@ import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
@@ -76,6 +77,7 @@ import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
@@ -192,6 +194,25 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		
 		return tupleExp;
+	}
+	
+	@Override
+	public PExpCG caseAFieldNumberExp(AFieldNumberExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		long fieldCg = node.getField().getValue();
+		PType type = node.getType();
+		PExp tuple = node.getTuple();
+
+		AFieldNumberExpCG fieldNoExp = new AFieldNumberExpCG();
+		PExpCG tupleCg = tuple.apply(question.getExpVisitor(), question);
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		fieldNoExp.setField(fieldCg);
+		fieldNoExp.setType(typeCg);
+		fieldNoExp.setTuple(tupleCg);
+		
+		return fieldNoExp;
 	}
 	
 	@Override

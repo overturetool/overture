@@ -16,6 +16,7 @@ import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -367,14 +368,35 @@ public class JavaFormat
 			return "Character";
 		else
 			return JavaFormat.format(potentialBasicType);
+	}
+
+	public static boolean cloneMember(AFieldNumberExpCG exp)
+	{
+		//Generally tuples need to be cloned, for example, if they
+		//contain a record field (that must be cloned)
 		
-		//TODO: Put in the others: What are they?
+		if(exp.parent() instanceof AFieldNumberExpCG)
+			return false;
+		
+		PTypeCG type = exp.getTuple().getType();
+		
+		if(type instanceof ATupleTypeCG)
+		{
+			
+			ATupleTypeCG tupleType = (ATupleTypeCG) type;
+			
+			long field = exp.getField();
+			PTypeCG fieldType = tupleType.getTypes().get((int) (field - 1));
+			
+			if(usesStructuralEquivalence(fieldType))
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public static boolean cloneMember(AFieldExpCG exp)
 	{
-		//TODO: ACOUNT FOR TUPLE TYPES
-		
 		if(exp.parent() instanceof AFieldExpCG)
 			return false;
 		
@@ -400,7 +422,7 @@ public class JavaFormat
 			
 			if(memberField != null)
 			{
-				if(memberField.getType() instanceof ARecordTypeCG) //TODO: OR tuple type
+				if(usesStructuralEquivalence(memberField.getType()))
 					return true;
 			}
 		}
@@ -411,24 +433,20 @@ public class JavaFormat
 	public static boolean shouldClone(AVariableExpCG exp)
 	{
 		INode parent = exp.parent();
-		if(parent instanceof AFieldExpCG)
+		if(parent instanceof AFieldExpCG || parent instanceof AFieldNumberExpCG)
 		{
 			return false;
 		}
 		
 		PTypeCG type = exp.getType();
-		if(type instanceof ARecordTypeCG || type instanceof ATupleTypeCG)
+		if(usesStructuralEquivalence(type))
 		{
-			if(parent instanceof AFieldExpCG)
-			{
-				return false;
-			}
-			else if(parent instanceof ANewExpCG)
+			if(parent instanceof ANewExpCG)
 			{
 				ANewExpCG newExp = (ANewExpCG) parent;
 				PTypeCG newExpType = newExp.getType();
 				
-				if(newExpType instanceof ARecordTypeCG)
+				if(usesStructuralEquivalence(newExpType))
 					return false;
 			}
 			
@@ -436,5 +454,10 @@ public class JavaFormat
 		}
 		
 		return false;
+	}
+	
+	private static boolean usesStructuralEquivalence(PTypeCG type)
+	{
+		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
 	}
 }
