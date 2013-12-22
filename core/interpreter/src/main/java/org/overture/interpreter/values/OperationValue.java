@@ -77,6 +77,7 @@ import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.Holder;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
@@ -519,6 +520,32 @@ public class OperationValue extends Value
 		return argContext;
 	}
 
+	private Lock getGuardLock(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return VdmRuntime.getNodeState(cctxt.classdef).guardLock;
+		}
+		else
+		{
+			return self.guardLock;
+		}
+	}
+	
+	private Object getGuardObject(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return cctxt.classdef;
+		}
+		else
+		{
+			return self;
+		}
+	}
+
 	private void guard(Context ctxt) throws ValueException
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
@@ -528,11 +555,12 @@ public class OperationValue extends Value
 			return; // Probably during initialization.
 		}
 
-		self.guardLock.lock(ctxt, guard.getLocation());
+		Lock lock = getGuardLock(ctxt);
+		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
 		{
-			synchronized (self) // So that test and act() are atomic
+			synchronized (getGuardObject(ctxt))		// So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
@@ -544,7 +572,8 @@ public class OperationValue extends Value
 				try
 				{
 					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-				} catch (AnalysisException e)
+				}
+				catch (AnalysisException e)
 				{
 					if (e instanceof ValueException)
 					{
@@ -568,12 +597,12 @@ public class OperationValue extends Value
 
 			debug("guard WAIT");
 			ctxt.guardOp = this;
-			self.guardLock.block(ctxt, guard.getLocation());
+			lock.block(ctxt, guard.getLocation());
 			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
 
-		self.guardLock.unlock();
+		lock.unlock();
 	}
 
 	private void notifySelf()

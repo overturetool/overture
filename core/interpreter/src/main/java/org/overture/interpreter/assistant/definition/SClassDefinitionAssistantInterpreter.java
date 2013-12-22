@@ -468,6 +468,18 @@ public class SClassDefinitionAssistantInterpreter extends
 
 			setStaticDefinitions(node, node.getDefinitions(), initCtxt);
 			setStaticDefinitions(node, node.getLocalInheritedDefinitions(), initCtxt);
+
+			try
+			{
+				NameValuePairMap members = new NameValuePairMap();
+				members.putAll(VdmRuntime.getNodeState(node).privateStaticValues);
+				members.putAll(VdmRuntime.getNodeState(node).publicStaticValues);
+				setPermissions(node, node.getDefinitions(), members, initCtxt);
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), e);
+			}
 		}
 	}
 
