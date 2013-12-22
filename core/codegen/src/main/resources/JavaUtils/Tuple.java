@@ -49,7 +49,7 @@ public class Tuple
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getNthValue(int i)
+	public <T> T get(int i)
 	{
 		return (T) values[i];
 	}
@@ -73,8 +73,8 @@ public class Tuple
 		final int size = size();
 		for (int i = 0; i < size; i++)
 		{
-			final Object thisNthValue = getNthValue(i);
-			final Object otherNthValue = other.getNthValue(i);
+			final Object thisNthValue = get(i);
+			final Object otherNthValue = other.get(i);
 			if ((thisNthValue == null && otherNthValue != null)
 					|| (thisNthValue != null && !thisNthValue.equals(otherNthValue)))
 			{
