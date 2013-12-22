@@ -1,13 +1,13 @@
-#set( $tuple = $JavaFormat.format($node.getTuple()) )
-#set( $methodStart = ".get(" )
+#set( $type = $JavaFormat.formatTemplateParam($node.getType()) )
 #set( $index = $node.getField() - 1 )
-#set( $methodEnd = ")" )
+##
+#set( $tuple = $JavaFormat.format($node.getTuple()) )
+#set( $method = ".<$type>get($index)" )
+##
 #set( $clone = "")
 ##
 #if ($JavaFormat.cloneMember($node))
 	#set( $clone = ".clone()")
 #end
-#set($fieldNumberExp = "$tuple$methodStart$index$methodEnd$clone")
-##
-$fieldNumberExp
+$tuple$method$clone
   
