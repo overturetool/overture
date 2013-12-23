@@ -30,6 +30,7 @@ import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
@@ -60,6 +61,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -82,6 +84,7 @@ import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
@@ -129,6 +132,32 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseAIsOfClassExp(AIsOfClassExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		AClassType classType = node.getClassType();
+		PExp objRef = node.getExp();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PTypeCG classTypeCg = classType.apply(question.getTypeVisitor(), question);
+
+		if (!(classTypeCg instanceof AClassTypeCG))
+			throw new AnalysisException("Unexpected clas type encountered for "
+					+ AIsOfClassExp.class.getName() + ". Expected class type: "
+					+ AClassTypeCG.class.getName() + ". Got: " + typeCg.getClass().getName());
+
+		PExpCG objRefCg = objRef.apply(question.getExpVisitor(), question);
+
+		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
+		instanceOfExp.setType(typeCg);
+		instanceOfExp.setClassType((AClassTypeCG) classTypeCg);
+		instanceOfExp.setObjRef(objRefCg);
+		
+		return instanceOfExp;
 	}
 	
 	@Override

@@ -123,6 +123,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 	|	{new} [enclosingClassName]:java_String [className]:java_String [args]:expCG*
 	|   {variable} [original]:java_String //Change original to name...
 	|	{explicitVariable} [classType]:typeCG.class [name]:java_String
+	|	{instanceof} [classType]:typeCG.class [objRef]:expCG
     |	#Literal
     |	{self}
     |	{null}

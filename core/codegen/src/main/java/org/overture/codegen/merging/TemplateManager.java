@@ -34,6 +34,7 @@ import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
@@ -205,6 +206,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AVariableExpCG.class, templateStructure.EXPS_PATH + "Variable");
 		
 		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, templateStructure.EXPS_PATH + "ExplicitVariable");
+		
+		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXPS_PATH + "InstanceOf");
 		
 		nodeTemplateFileNames.put(ASelfExpCG.class, templateStructure.EXPS_PATH + "Self");
 		
