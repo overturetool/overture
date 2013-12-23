@@ -1,0 +1,7 @@
+public class A {
+    public boolean op() {
+        Object a = null;
+
+        return a instanceof A;
+    }
+}
