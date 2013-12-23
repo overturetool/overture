@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -19,17 +20,20 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
@@ -459,5 +463,58 @@ public class JavaFormat
 	private static boolean usesStructuralEquivalence(PTypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
+	}
+	
+	public static String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException
+	{
+		//Construct equals method to be used for comparing records using
+		//"structural" equivalence
+		AMethodDeclCG equalsMethod = new AMethodDeclCG();
+		equalsMethod.setAccess("public");
+		equalsMethod.setName("equals");
+		equalsMethod.setReturnType(new ABoolBasicTypeCG());
+		
+		//Add the formal parameter "Object obj" to the method
+		AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+		String paramName = "obj";
+		formalParam.setName(paramName);
+		AObjectTypeCG paramType = new AObjectTypeCG();
+		formalParam.setType(paramType);
+		equalsMethod.getFormalParams().add(formalParam);
+		
+		//Construct the initial check:
+		//if ((!obj instanceof RecordType))
+		//	return false;
+		AIfStmCG ifStm = new AIfStmCG();
+		ANotUnaryExpCG negated = new ANotUnaryExpCG();
+		negated.setType(new ABoolBasicTypeCG());
+		negated.setExp(JavaFormatAssistant.constructInstanceOf(record, paramName));
+		//FIXME: Should be handled by the "not" template
+		ifStm.setIfExp(ExpAssistantCG.isolateExpression(negated));
+		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
+		returnIncompatibleTypes.setExp(JavaFormatAssistant.constructBoolLiteral(false));
+		ifStm.setThenStm(returnIncompatibleTypes);
+		
+		//Next compare the fields of the instance with the fields of the formal parameter "obj":
+		//return (field1 == obj.field1) && (field2 == obj.field2)...
+		LinkedList<AFieldDeclCG> fields = record.getFields();
+		PExpCG previousComparisons = JavaFormatAssistant.constructFieldComparison(record, fields.get(0), paramName); 
+
+		for (int i = 1; i < fields.size(); i++)
+		{
+			previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, paramName);
+		}
+
+		AReturnStmCG fieldsComparison = new AReturnStmCG();
+		fieldsComparison.setExp(previousComparisons);
+
+		//Finally add the constructed statements to the equals method body
+		ABlockStmCG equalsMethodBody = new ABlockStmCG();
+		LinkedList<PStmCG> equalsStms = equalsMethodBody.getStatements();
+		equalsStms.add(ifStm);
+		equalsStms.add(fieldsComparison);
+		equalsMethod.setBody(equalsMethodBody);
+		
+		return format(equalsMethod);
 	}
 }
