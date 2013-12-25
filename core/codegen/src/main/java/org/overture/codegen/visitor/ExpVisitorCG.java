@@ -113,8 +113,10 @@ import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
@@ -290,16 +292,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		if(recType == null)
 			throw new AnalysisException("mk_ only supported for record types!");
 		
-		String typeName = node.getTypeName().getName();
-		SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
-		String enclosingClassName = enclosingClass.getName().getName();		
-		ANewExpCG mkExp = new ANewExpCG();
-		mkExp.setEnclosingClassName(enclosingClassName);
+		
+		PTypeCG typeCg = recType.apply(question.getTypeVisitor(), question);
+		
+		if(!(typeCg instanceof ARecordTypeCG))
+			throw new AnalysisException("Expected type: " + ARecordTypeCG.class.getName() + ". Got: " + typeCg.getClass().getName());
+		
+		
+		ARecordTypeCG recordTypeCg = (ARecordTypeCG) typeCg;
 		
 		LinkedList<PExp> nodeArgs = node.getArgs();
 		
 		ANewExpCG newExp = new ANewExpCG();
-		newExp.setClassName(typeName);
+		newExp.setName(recordTypeCg.getRecDecl().getName().clone());
+
 		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
 		
 		for (PExp arg : nodeArgs)
@@ -479,7 +485,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		LinkedList<PExp> nodeArgs = node.getArgs();
 		
 		ANewExpCG newExp = new ANewExpCG();
-		newExp.setClassName(className);
+		
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(null);
+		typeName.setName(className);
+		
+		newExp.setName(typeName);
 		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
 		
 		for (PExp arg : nodeArgs)

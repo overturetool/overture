@@ -27,6 +27,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -66,7 +67,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,
 			OoAstInfo question) throws AnalysisException
 	{
-		String name = node.getName().getName();
+		ILexNameToken name = node.getName();
 		LinkedList<AFieldField> fields = node.getFields();
 		
 		ARecordDeclCG record = new ARecordDeclCG();
@@ -78,7 +79,10 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		//		    x : nat
 		//		    y : nat;
 		record.setAccess(OoAstConstants.PUBLIC);
-		record.setName(name);
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setName(name.getName());
+		typeName.setDefiningClass(name.getModule());
+		record.setName(typeName);
 		
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)

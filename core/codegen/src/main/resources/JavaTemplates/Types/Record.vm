@@ -1,1 +1,1 @@
-$node.getRecDecl().getName()
+$JavaFormat.formatName($node.getRecDecl())

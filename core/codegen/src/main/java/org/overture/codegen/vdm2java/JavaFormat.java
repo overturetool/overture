@@ -4,7 +4,6 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -13,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -21,9 +21,11 @@ import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
@@ -55,6 +57,37 @@ public class JavaFormat
 		return writer.toString();
 	}
 	
+	public static String formatName(INode node) throws AnalysisException
+	{
+		if(node instanceof ANewExpCG)
+		{
+			ANewExpCG newExp = (ANewExpCG) node;
+		
+			return formatTypeName(node, newExp.getName());
+		}
+		else if(node instanceof ARecordDeclCG)
+		{
+			ARecordDeclCG record = (ARecordDeclCG) node;
+			
+			return formatTypeName(node, record.getName());
+		}
+		
+		throw new AnalysisException("Unexpected node in formatName: " + node.getClass().getName());
+	}
+	
+	public static String formatTypeName(INode node, ATypeNameCG typeName)
+	{
+		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
+		
+		String definingClass = typeName.getDefiningClass() != null &&
+							   (classDef != null && !classDef.getName().equals(typeName.getDefiningClass())) ? 
+									   typeName.getDefiningClass() + "." : "";
+		String name = typeName.getName();
+		
+		return definingClass + name;
+
+	}
+	
 	public static String format(PExpCG exp, boolean leftChild) throws AnalysisException
 	{
 		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
@@ -78,6 +111,16 @@ public class JavaFormat
 	public static String formatUnary(PExpCG exp) throws AnalysisException
 	{
 		return format(exp, false);
+	}
+	
+	public static String formatNotUnary(PExpCG exp) throws AnalysisException
+	{
+		String formattedExp = format(exp, false);
+
+		boolean doNotWrap = exp instanceof ABoolLiteralExpCG
+				|| (formattedExp.startsWith("(") && formattedExp.endsWith(")"));
+
+		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
 	public static String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
@@ -106,7 +149,7 @@ public class JavaFormat
 		
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(new ARecordTypeCG());
-		newExp.setClassName(record.getName());
+		newExp.setName(record.getName().clone());
 		LinkedList<PExpCG> args = newExp.getArgs();
 		
 		
@@ -137,7 +180,7 @@ public class JavaFormat
 		//To make sure that the record can be instantiated we must explicitly add a constructor.
 		constructor.setAccess("public");
 		constructor.setIsConstructor(true);
-		constructor.setName(record.getName()); //TODO: Should rather be a reference for the class instead
+		constructor.setName(record.getName().getName());
 		LinkedList<AFormalParamLocalDeclCG> formalParams = constructor.getFormalParams();
 	
 		ABlockStmCG body = new ABlockStmCG();
@@ -224,9 +267,17 @@ public class JavaFormat
 		{
 			return handleSeqComparison(node, false);
 		}
-		//else if(..)
+		else if(leftNodeType instanceof ARecordTypeCG)
+		{
+			return handleRecordComparison(node);
+		}
 		
 		return JavaFormat.format(node.getLeft()) + " == " + JavaFormat.format(node.getRight());
+	}
+	
+	public static String handleRecordComparison(AEqualsBinaryExpCG recordComparison) throws AnalysisException
+	{
+		return format(recordComparison.getLeft()) + ".equals(" + format(recordComparison.getRight()) + ")";
 	}
 	
 	public static String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
@@ -401,7 +452,10 @@ public class JavaFormat
 	
 	public static boolean cloneMember(AFieldExpCG exp)
 	{
-		if(exp.parent() instanceof AFieldExpCG)
+		INode parent = exp.parent();
+		if (parent instanceof AFieldExpCG
+				|| parent instanceof AEqualsBinaryExpCG
+				|| parent instanceof ANotEqualsBinaryExpCG)
 			return false;
 		
 		PTypeCG type = exp.getObject().getType();
@@ -437,7 +491,10 @@ public class JavaFormat
 	public static boolean shouldClone(AVariableExpCG exp)
 	{
 		INode parent = exp.parent();
-		if(parent instanceof AFieldExpCG || parent instanceof AFieldNumberExpCG)
+		if (parent instanceof AFieldExpCG
+				|| parent instanceof AFieldNumberExpCG
+				|| parent instanceof AEqualsBinaryExpCG
+				|| parent instanceof ANotEqualsBinaryExpCG)
 		{
 			return false;
 		}
@@ -489,20 +546,25 @@ public class JavaFormat
 		ANotUnaryExpCG negated = new ANotUnaryExpCG();
 		negated.setType(new ABoolBasicTypeCG());
 		negated.setExp(JavaFormatAssistant.constructInstanceOf(record, paramName));
-		//FIXME: Should be handled by the "not" template
-		ifStm.setIfExp(ExpAssistantCG.isolateExpression(negated));
+		ifStm.setIfExp(negated);
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
 		returnIncompatibleTypes.setExp(JavaFormatAssistant.constructBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
 		
+		
+		//If the inital check is passed we can safely cast the formal parameter
+		//To the record type: RecordType other = ((RecordType) obj);
+		String localVarName = "other";
+		ABlockStmCG formalParamCasted = JavaFormatAssistant.constructVarDeclInStm(record, paramName, localVarName);
+		
 		//Next compare the fields of the instance with the fields of the formal parameter "obj":
-		//return (field1 == obj.field1) && (field2 == obj.field2)...
+		//return (field1 == obj.field1) && (field2 == other.field2)...
 		LinkedList<AFieldDeclCG> fields = record.getFields();
-		PExpCG previousComparisons = JavaFormatAssistant.constructFieldComparison(record, fields.get(0), paramName); 
+		PExpCG previousComparisons = JavaFormatAssistant.constructFieldComparison(record, fields.get(0), localVarName); 
 
 		for (int i = 1; i < fields.size(); i++)
 		{
-			previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, paramName);
+			previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
 		}
 
 		AReturnStmCG fieldsComparison = new AReturnStmCG();
@@ -512,9 +574,39 @@ public class JavaFormat
 		ABlockStmCG equalsMethodBody = new ABlockStmCG();
 		LinkedList<PStmCG> equalsStms = equalsMethodBody.getStatements();
 		equalsStms.add(ifStm);
+		equalsStms.add(formalParamCasted);
 		equalsStms.add(fieldsComparison);
 		equalsMethod.setBody(equalsMethodBody);
 		
 		return format(equalsMethod);
+	}
+	
+	public static String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
+	{
+		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
+		hashcodeMethod.setAccess("public");
+		hashcodeMethod.setName("hashcode");
+		hashcodeMethod.setReturnType(new ABoolBasicTypeCG());
+		
+		
+		AReturnStmCG returnStm = new AReturnStmCG();
+		
+		
+		
+		APlusNumericBinaryExpCG plusBinary = new APlusNumericBinaryExpCG();
+		plusBinary.setType(new AIntNumericBasicTypeCG());
+		plusBinary.setLeft(JavaFormatAssistant.constructIntLiteral(123));
+		plusBinary.setRight(JavaFormatAssistant.constructIntLiteral(456));
+		
+		
+//		ATernaryIfExpCG ternary = new ATernaryIfExpCG();
+//		ternary.setType(new AIntNumericBasicTypeCG());
+//		ternary.setCondition(value);
+//		ternary.setFalseValue(value);
+//		ternary.setTrueValue(value);
+		
+		hashcodeMethod.setBody(returnStm);
+		
+		return format(hashcodeMethod);
 	}
 }

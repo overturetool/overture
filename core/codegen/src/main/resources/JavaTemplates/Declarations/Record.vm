@@ -1,4 +1,4 @@
-$node.getAccess() static class $node.getName() implements Record
+$node.getAccess() static class $JavaFormat.formatName($node) implements Record
 {
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
@@ -6,5 +6,7 @@ $node.getAccess() static class $node.getName() implements Record
 	
 	$JavaFormat.formatRecordConstructor($node)
 	
+	##$JavaFormat.generateEqualsMethod($node)
+	##$JavaFormat.generateHashcodeMethod($node)
 	$JavaFormat.generateCloneMethod($node)
 }
