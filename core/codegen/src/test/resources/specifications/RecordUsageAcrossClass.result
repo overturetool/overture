@@ -1,0 +1,36 @@
+import utils.*;
+
+
+public class A {
+    private static final B.RecB x = new B.RecB(1L);
+    private static final RecA y = new RecA(new B.RecB(2L));
+
+    public static class RecA implements Record {
+        public B.RecB b;
+
+        public RecA(B.RecB _b) {
+            b = _b.clone();
+        }
+
+        public RecA clone() {
+            return new RecA(b);
+        }
+    }
+}
+
+import utils.*;
+
+
+public class B {
+    public static class RecB implements Record {
+        public long b;
+
+        public RecB(long _b) {
+            b = _b;
+        }
+
+        public RecB clone() {
+            return new RecB(b);
+        }
+    }
+}
