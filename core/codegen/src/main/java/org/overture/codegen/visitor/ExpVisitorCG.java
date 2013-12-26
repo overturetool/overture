@@ -304,7 +304,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		LinkedList<PExp> nodeArgs = node.getArgs();
 		
 		ANewExpCG newExp = new ANewExpCG();
-		newExp.setName(recordTypeCg.getRecDecl().getName().clone());
+		newExp.setName(recordTypeCg.getName().clone());
 
 		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
 		

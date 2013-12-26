@@ -73,8 +73,8 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[name]:java_String
     	[fields]:field*
     |	{record}
+    	[name]:java_String
     	[access]:java_String
-    	[name]:nameCG.type
     	[fields]:field*
     |	{empty}
 //    |	{typDecl} //Consider removing this
@@ -202,7 +202,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{Object}
     |	{void}
     |	{class} [name]:java_String
-    |	{record} [recDecl]:declCG.record
+    |	{record} [name]:nameCG.type
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*

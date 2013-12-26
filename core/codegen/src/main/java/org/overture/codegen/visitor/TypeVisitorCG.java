@@ -3,6 +3,7 @@ package org.overture.codegen.visitor;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
@@ -26,8 +27,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.TypeAssistantCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -143,10 +143,16 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	public PTypeCG caseARecordInvariantType(ARecordInvariantType node,
 			OoAstInfo question) throws AnalysisException
 	{
-		PDeclCG recDecl = node.apply(question.getDeclVisitor(), question);
+		ILexNameToken name = node.getName();
 		
 		ARecordTypeCG recordType = new ARecordTypeCG();
-		recordType.setRecDecl((ARecordDeclCG) recDecl);
+		
+		//TODO: Could consider doing this using a visitor at some point..
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setName(name.getName());
+		typeName.setDefiningClass(name.getModule());
+
+		recordType.setName(typeName);
 		
 		return recordType;
 	}
