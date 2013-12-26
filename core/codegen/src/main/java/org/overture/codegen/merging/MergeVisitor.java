@@ -51,7 +51,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		}
 		catch(Exception e)
 		{
-			throw new AnalysisException("Could not merge template for node: " + node.getClass().getName());
+			e.printStackTrace();
 		}
 	}
 }
