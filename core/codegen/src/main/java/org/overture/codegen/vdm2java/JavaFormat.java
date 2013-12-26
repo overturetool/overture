@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.analysis.OoAstAnalysis;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -48,49 +49,62 @@ import org.overture.codegen.merging.MergeVisitor;
 
 public class JavaFormat
 {
-	public static String format(INode node) throws AnalysisException
+	private List<AClassDeclCG> classes;
+	
+	public JavaFormat(List<AClassDeclCG> classes)
+	{
+		this.classes = classes;
+	}
+	
+	public JavaFormat()
+	{
+	}
+	
+	public String format(INode node) throws AnalysisException
 	{		
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class));
+		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
 		return writer.toString();
 	}
 	
-	public static String formatName(INode node) throws AnalysisException
+	public String formatName(INode node) throws AnalysisException
 	{
 		if(node instanceof ANewExpCG)
 		{
 			ANewExpCG newExp = (ANewExpCG) node;
-		
+			
 			return formatTypeName(node, newExp.getName());
 		}
-		else if(node instanceof ARecordDeclCG)
+		else if(node instanceof ARecordTypeCG)
 		{
-			ARecordDeclCG record = (ARecordDeclCG) node;
+			ARecordTypeCG record = (ARecordTypeCG) node;
+			ATypeNameCG typeName = record.getName();
 			
-			return formatTypeName(node, record.getName());
+			return formatTypeName(node, typeName);
 		}
 		
 		throw new AnalysisException("Unexpected node in formatName: " + node.getClass().getName());
 	}
 	
-	public static String formatTypeName(INode node, ATypeNameCG typeName)
+	public String formatTypeName(INode node, ATypeNameCG typeName)
 	{
 		AClassDeclCG classDef = node.getAncestor(AClassDeclCG.class);
 		
 		String definingClass = typeName.getDefiningClass() != null &&
 							   (classDef != null && !classDef.getName().equals(typeName.getDefiningClass())) ? 
 									   typeName.getDefiningClass() + "." : "";
+		
 		String name = typeName.getName();
 		
 		return definingClass + name;
-
 	}
 	
-	public static String format(PExpCG exp, boolean leftChild) throws AnalysisException
+	public String format(PExpCG exp, boolean leftChild) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class));
 		StringWriter writer = new StringWriter();
 
 		exp.apply(mergeVisitor, writer);
@@ -108,12 +122,12 @@ public class JavaFormat
 		return isolate ? "(" + formattedExp + ")" : formattedExp;
 	}
 	
-	public static String formatUnary(PExpCG exp) throws AnalysisException
+	public String formatUnary(PExpCG exp) throws AnalysisException
 	{
 		return format(exp, false);
 	}
 	
-	public static String formatNotUnary(PExpCG exp) throws AnalysisException
+	public String formatNotUnary(PExpCG exp) throws AnalysisException
 	{
 		String formattedExp = format(exp, false);
 
@@ -123,7 +137,7 @@ public class JavaFormat
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
-	public static String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
+	public String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
 	{
 		PTypeCG type = exp.getType();
 		
@@ -136,22 +150,26 @@ public class JavaFormat
 		throw new AnalysisException("Type was not a sequence type!");
 	}
 	
-	public static String generateCloneMethod(ARecordDeclCG record) throws AnalysisException
+	public String generateCloneMethod(ARecordDeclCG record) throws AnalysisException
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
-		method.setAccess("public");
 
-		ARecordTypeCG returnType = new ARecordTypeCG();
-		returnType.setRecDecl(record.clone());
-		method.setReturnType(returnType);
-		
+		method.parent(record);
+		method.setAccess("public");
 		method.setName("clone");
 		
-		ANewExpCG newExp = new ANewExpCG();
-		newExp.setType(new ARecordTypeCG());
-		newExp.setName(record.getName().clone());
-		LinkedList<PExpCG> args = newExp.getArgs();
+		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(defClass.getName());
+		typeName.setName(record.getName());
+		ARecordTypeCG returnType = new ARecordTypeCG();
+		returnType.setName(typeName);
+		method.setReturnType(returnType);
 		
+		ANewExpCG newExp = new ANewExpCG();
+		newExp.setType(returnType.clone());
+		newExp.setName(typeName.clone());
+		LinkedList<PExpCG> args = newExp.getArgs();
 		
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		for (AFieldDeclCG field : fields)
@@ -171,16 +189,17 @@ public class JavaFormat
 		return format(method);
 	}
 	
-	public static String formatRecordConstructor(ARecordDeclCG record) throws AnalysisException
+	public String formatRecordConstructor(ARecordDeclCG record) throws AnalysisException
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
 		AMethodDeclCG constructor = new AMethodDeclCG();
 		//Since Java does not have records but the OO AST does a record is generated as a Java class.
 		//To make sure that the record can be instantiated we must explicitly add a constructor.
+		constructor.parent(record);
 		constructor.setAccess("public");
 		constructor.setIsConstructor(true);
-		constructor.setName(record.getName().getName());
+		constructor.setName(record.getName());
 		LinkedList<AFormalParamLocalDeclCG> formalParams = constructor.getFormalParams();
 	
 		ABlockStmCG body = new ABlockStmCG();
@@ -207,7 +226,7 @@ public class JavaFormat
 			id.setName(name);
 			
 			AVariableExpCG varExp = new AVariableExpCG();
-			varExp.setType(field.getType());
+			varExp.setType(field.getType().clone());
 			varExp.setOriginal(paramName);
 			
 			assignment.setTarget(id);
@@ -219,7 +238,7 @@ public class JavaFormat
 		return format(constructor);
 	}
 	
-	public static String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
+	public String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
@@ -231,7 +250,7 @@ public class JavaFormat
 		if(TypeAssistantCG.isBasicType(firstType))
 			firstType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) firstType);
 		
-		writer.append(JavaFormat.format(firstType));
+		writer.append(format(firstType));
 		
 		for(int i = 1; i < types.size(); i++)
 		{
@@ -240,13 +259,13 @@ public class JavaFormat
 			if(TypeAssistantCG.isBasicType(currentType))
 				currentType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) currentType);
 			
-			writer.append(", " + JavaFormat.format(currentType));
+			writer.append(", " + format(currentType));
 		}
 		
 		return "<" + writer.toString() + ">";
 	}
 	
-	public static String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
+	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
 	{
 		//FIXME: Only works for simple types, i.e. not references
 		//Operator pec?
@@ -272,18 +291,17 @@ public class JavaFormat
 			return handleRecordComparison(node);
 		}
 		
-		return JavaFormat.format(node.getLeft()) + " == " + JavaFormat.format(node.getRight());
+		return format(node.getLeft()) + " == " + format(node.getRight());
 	}
 	
-	public static String handleRecordComparison(AEqualsBinaryExpCG recordComparison) throws AnalysisException
+	public String handleRecordComparison(AEqualsBinaryExpCG recordComparison) throws AnalysisException
 	{
 		return format(recordComparison.getLeft()) + ".equals(" + format(recordComparison.getRight()) + ")";
 	}
 	
-	public static String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
+	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
 	{
 		//FIXME: Same problems as for equals. In addition, this method lacks support for collections
-		
 		PTypeCG leftNodeType = node.getLeft().getType();
 
 		if (leftNodeType instanceof SSeqTypeCGBase)
@@ -291,10 +309,10 @@ public class JavaFormat
 			return handleSeqComparison(node, true);
 		}
 		
-		return JavaFormat.format(node.getLeft()) + " != " + JavaFormat.format(node.getRight());
+		return format(node.getLeft()) + " != " + format(node.getRight());
 	}
 	
-	private static String handleSeqComparison(SBinaryExpCGBase node, boolean notEquals) throws AnalysisException
+	private String handleSeqComparison(SBinaryExpCGBase node, boolean notEquals) throws AnalysisException
 	{
 		String prefix = notEquals ? "!" : "";
 		
@@ -304,18 +322,18 @@ public class JavaFormat
 		
 		if(isEmptySeq(leftNode))
 		{
-			return prefix + JavaFormat.format(node.getRight()) + ".isEmpty()";
+			return prefix + format(node.getRight()) + ".isEmpty()";
 		}
 		else if(isEmptySeq(rightNode))
 		{
-			return prefix + JavaFormat.format(node.getLeft()) + ".isEmpty()";
+			return prefix + format(node.getLeft()) + ".isEmpty()";
 		}
 	
-		return prefix + "Utils.seqEquals(" + JavaFormat.format(node.getLeft()) + ", " + JavaFormat.format(node.getRight()) + ")";
+		return prefix + "Utils.seqEquals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
 
 	}
 	
-	private static boolean isEmptySeq(PExpCG exp)
+	private boolean isEmptySeq(PExpCG exp)
 	{
 		if(exp instanceof AEnumSeqExpCG)
 		{
@@ -327,7 +345,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public static String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
+	public String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
@@ -345,15 +363,12 @@ public class JavaFormat
 		return writer.toString();
 	}
 	
-	public static String formatSuperType(AClassDeclCG classDecl)
+	public String formatSuperType(AClassDeclCG classDecl)
 	{
-		if(classDecl.getSuperName() == null)
-			return "";
-		else
-			return "extends " + classDecl.getSuperName();
+		return classDecl.getSuperName() == null ? "" : "extends " + classDecl.getSuperName(); 
 	}
 	
-	public static String formatArgs(List<PExpCG> exps) throws AnalysisException
+	public String formatArgs(List<PExpCG> exps) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
@@ -361,40 +376,36 @@ public class JavaFormat
 			return "";
 		
 		PExpCG firstExp = exps.get(0);
-		writer.append(JavaFormat.format(firstExp));
+		writer.append(format(firstExp));
 		
 		for(int i = 1; i < exps.size(); i++)
 		{
 			PExpCG exp = exps.get(i);
-			writer.append(", " + JavaFormat.format(exp));
+			writer.append(", " + format(exp));
 		}
 		
 		return writer.toString();
 	}
 	
-	public static boolean isNull(INode node)
+	public boolean isNull(INode node)
 	{
 		return node == null;
 	}
 	
-	public static boolean isVoidType(PTypeCG node)
+	public boolean isVoidType(PTypeCG node)
 	{
 		return node instanceof AVoidTypeCG;
 	}
 	
-	public static String formatInitialExp(PExpCG exp) throws AnalysisException
+	public String formatInitialExp(PExpCG exp) throws AnalysisException
 	{
 		//private int a = 2; (when exp != null)
 		//private int a; (when exp == null)
 		
-		if(exp == null)
-			return "";
-		else
-			return " = " + JavaFormat.format(exp).toString();
-		
+		return exp == null ? "" : " = " + format(exp);
 	}
 	
-	public static String formatOperationBody(PStmCG body) throws AnalysisException
+	public String formatOperationBody(PStmCG body) throws AnalysisException
 	{
 		if(body == null)
 			return ";";
@@ -402,13 +413,13 @@ public class JavaFormat
 		StringWriter generatedBody = new StringWriter();
 		
 		generatedBody.append("{\r\n\r\n");//TODO: USE PROPER CONSTANT
-		generatedBody.append(JavaFormat.format(body));
+		generatedBody.append(format(body));
 		generatedBody.append("\r\n}");//TODO: USE PROPER CONSTANT
 		
 		return generatedBody.toString();
 	}
 	
-	public static String formatTemplateParam(INode potentialBasicType) throws AnalysisException
+	public String formatTemplateParam(INode potentialBasicType) throws AnalysisException
 	{
 		if(potentialBasicType == null)
 			return "";
@@ -422,10 +433,10 @@ public class JavaFormat
 		else if(potentialBasicType instanceof ACharBasicTypeCG)
 			return "Character";
 		else
-			return JavaFormat.format(potentialBasicType);
+			return format(potentialBasicType);
 	}
 
-	public static boolean cloneMember(AFieldNumberExpCG exp)
+	public boolean cloneMember(AFieldNumberExpCG exp)
 	{
 		//Generally tuples need to be cloned, for example, if they
 		//contain a record field (that must be cloned)
@@ -450,7 +461,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public static boolean cloneMember(AFieldExpCG exp)
+	public boolean cloneMember(AFieldExpCG exp) throws AnalysisException
 	{
 		INode parent = exp.parent();
 		if (parent instanceof AFieldExpCG
@@ -466,29 +477,16 @@ public class JavaFormat
 			
 			String memberName = exp.getMemberName();
 			
-			LinkedList<AFieldDeclCG> recFields = recordType.getRecDecl().getFields();
+			AFieldDeclCG memberField = JavaFormatAssistant.getFieldDecl(classes, recordType, memberName);
 			
-			AFieldDeclCG memberField = null;
-			for (AFieldDeclCG field : recFields)
-			{
-				if(field.getName().equals(memberName))
-				{
-					memberField = field;
-					break;
-				}
-			}
-			
-			if(memberField != null)
-			{
-				if(usesStructuralEquivalence(memberField.getType()))
-					return true;
-			}
+			if (memberField != null && usesStructuralEquivalence(memberField.getType()))
+				return true;
 		}
 		
 		return false;
 	}
 	
-	public static boolean shouldClone(AVariableExpCG exp)
+	public boolean shouldClone(AVariableExpCG exp)
 	{
 		INode parent = exp.parent();
 		if (parent instanceof AFieldExpCG
@@ -517,16 +515,18 @@ public class JavaFormat
 		return false;
 	}
 	
-	private static boolean usesStructuralEquivalence(PTypeCG type)
+	private boolean usesStructuralEquivalence(PTypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
 	}
 	
-	public static String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException
+	public String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException
 	{
 		//Construct equals method to be used for comparing records using
 		//"structural" equivalence
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
+		
+		equalsMethod.parent(record);
 		equalsMethod.setAccess("public");
 		equalsMethod.setName("equals");
 		equalsMethod.setReturnType(new ABoolBasicTypeCG());
@@ -581,9 +581,11 @@ public class JavaFormat
 		return format(equalsMethod);
 	}
 	
-	public static String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
+	public String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
 	{
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
+		
+		hashcodeMethod.parent(record);
 		hashcodeMethod.setAccess("public");
 		hashcodeMethod.setName("hashcode");
 		hashcodeMethod.setReturnType(new ABoolBasicTypeCG());
