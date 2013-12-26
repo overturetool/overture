@@ -56,11 +56,19 @@ public class JavaCodeGen
 		"Long", "Double", "Character", "String", "List", "Set"
 	};
 	
-	public final static TemplateCallable[] TEMPLATE_CALLABLES = new TemplateCallable[]
+	private static final String JAVA_FORMAT_KEY = "JavaFormat";
+	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
+	
+	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = new TemplateCallable[]
 	{
-			new TemplateCallable("JavaFormat", JavaFormat.class),
-			new TemplateCallable("OoAstAnalysis", OoAstAnalysis.class)
+			new TemplateCallable(JAVA_FORMAT_KEY, new JavaFormat()),
+			new TemplateCallable(OO_AST_ANALYSIS_KEY, new OoAstAnalysis())
 	};
+	
+	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis)
+	{
+		return new TemplateCallable[]{new TemplateCallable("JavaFormat", javaFormat), new TemplateCallable("OoAstAnalysis", ooAstAnalysis)};
+	}
 	
 	public JavaCodeGen()
 	{
@@ -88,7 +96,7 @@ public class JavaCodeGen
 	{
 		try
 		{
-			MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+			MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, DEFAULT_TEMPLATE_CALLABLES);
 			StringWriter writer = new StringWriter();
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
@@ -169,7 +177,7 @@ public class JavaCodeGen
 			classes.add(generator.generateFrom(classDef));
 		}
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(new JavaFormat(classes), new OoAstAnalysis()));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (AClassDeclCG classCg : classes)
@@ -202,7 +210,7 @@ public class JavaCodeGen
 		
 		PExpCG expCg = generator.generateFrom(exp);
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.TEMPLATE_CALLABLES);
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, DEFAULT_TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 
 		try
