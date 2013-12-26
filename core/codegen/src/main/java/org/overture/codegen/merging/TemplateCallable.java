@@ -3,9 +3,9 @@ package org.overture.codegen.merging;
 public class TemplateCallable
 {
 	private String key;
-	private Class<?> callable;
+	private Object callable;
 	
-	public TemplateCallable(String key, Class<?> callable)
+	public TemplateCallable(String key, Object callable)
 	{
 		this.key = key;
 		this.callable = callable;
@@ -15,7 +15,7 @@ public class TemplateCallable
 	{
 		return key;
 	}
-	public Class<?> getCallable()
+	public Object getCallable()
 	{
 		return callable;
 	}
