@@ -53,7 +53,7 @@ public class JavaCodeGen
 	
 	public static final String[] RESERVED_TYPE_NAMES = {
 		//Classes used from the Java standard library
-		"Utils", "Records","Long", "Double", "Character", "String", "List", "Set"
+		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
 	};
 	
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
