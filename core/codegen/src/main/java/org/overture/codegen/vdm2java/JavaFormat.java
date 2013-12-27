@@ -429,14 +429,15 @@ public class JavaFormat
 	
 	public String formatOperationBody(PStmCG body) throws AnalysisException
 	{
+		String NEWLINE = "\r\n";
 		if(body == null)
 			return ";";
 		
 		StringWriter generatedBody = new StringWriter();
 		
-		generatedBody.append("{\r\n\r\n");//TODO: USE PROPER CONSTANT
+		generatedBody.append("{" + NEWLINE + NEWLINE);
 		generatedBody.append(format(body));
-		generatedBody.append("\r\n}");//TODO: USE PROPER CONSTANT
+		generatedBody.append(NEWLINE + "}");
 		
 		return generatedBody.toString();
 	}
@@ -628,7 +629,6 @@ public class JavaFormat
 	
 	public String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
 	{
-		//TODO: Put override annotations in record method overrides?
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
 		
 		hashcodeMethod.parent(record);
