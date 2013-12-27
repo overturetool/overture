@@ -31,7 +31,7 @@ public class Utils
 		return result;
 	}
 	
-	public static int hashcode(Object... fields)
+	public static int hashCode(Object... fields)
 	{
 		int hashcode = 0;
 		
