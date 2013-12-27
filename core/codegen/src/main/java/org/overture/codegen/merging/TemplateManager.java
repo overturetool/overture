@@ -80,6 +80,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
@@ -131,6 +132,8 @@ public class TemplateManager
 		
 		// Type
 		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "ClassType");//TODO: Rename to Class
+		
+		nodeTemplateFileNames.put(AExternalTypeCG.class, templateStructure.TYPE_PATH + "External");
 		
 		nodeTemplateFileNames.put(ARecordTypeCG.class, templateStructure.TYPE_PATH + "Record");
 		

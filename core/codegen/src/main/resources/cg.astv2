@@ -208,6 +208,10 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{Object}
     |	{void}
     |	{class} [name]:java_String
+    	//When generating code using the abstract syntax of this tree structure "external" 
+    	//is used for refering to types of the target environment (e.g. that of Java) 
+    	//that are not directly mapped to by the code generator.
+    |	{external} [name]:java_String
     |	{record} [name]:nameCG.type
     |	{string}
     |	{template} [name]:java_String
