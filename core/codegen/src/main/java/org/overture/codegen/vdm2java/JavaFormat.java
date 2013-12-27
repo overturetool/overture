@@ -633,7 +633,7 @@ public class JavaFormat
 		
 		hashcodeMethod.parent(record);
 		hashcodeMethod.setAccess("public");
-		hashcodeMethod.setName("hashcode");
+		hashcodeMethod.setName("hashCode");
 
 		String intTypeName = "int";
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
@@ -649,7 +649,7 @@ public class JavaFormat
 		AClassTypeCG classType = new AClassTypeCG();
 		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
 		hashCodeMember.setClassType(classType);
-		hashCodeMember.setName("hashcode");
+		hashCodeMember.setName("hashCode");
 		AApplyExpCG hashcodeCall = new AApplyExpCG();
 		hashcodeCall.setType(intBasicType.clone());
 		hashcodeCall.setRoot(hashCodeMember);
