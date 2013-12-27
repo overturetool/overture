@@ -16,17 +16,18 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -40,6 +41,8 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -529,14 +532,33 @@ public class JavaFormat
 		return false;
 	}
 	
-	private boolean cloneNotNeeded(INode parent)
+	private boolean cloneNotNeeded(INode node)
 	{
-		return 	   parent instanceof AFieldExpCG
-				|| parent instanceof AFieldNumberExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG
-				|| parent instanceof AAddrEqualsBinaryExpCG
-				|| parent instanceof AAddrNotEqualsBinaryExpCG;
+		return 	   node instanceof AFieldExpCG
+				|| node instanceof AFieldNumberExpCG
+				|| node instanceof AEqualsBinaryExpCG
+				|| node instanceof ANotEqualsBinaryExpCG
+				|| node instanceof AAddrEqualsBinaryExpCG
+				|| node instanceof AAddrNotEqualsBinaryExpCG
+				|| isCallToUtil(node);
+	}
+	
+	private boolean isCallToUtil(INode node)
+	{
+		if(!(node instanceof AApplyExpCG))
+			return false;
+		
+		AApplyExpCG applyExp = (AApplyExpCG) node;
+		PExpCG root = applyExp.getRoot();
+		
+		if(!(root instanceof AExplicitVariableExpCG))
+			return false;
+		
+		AExplicitVariableExpCG explicitVar = (AExplicitVariableExpCG) root;
+		
+		AClassTypeCG classType = explicitVar.getClassType();
+		
+		return classType != null && classType.getName().equals(IJavaCodeGenConstants.UTILS_FILE);
 	}
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
@@ -606,29 +628,42 @@ public class JavaFormat
 	
 	public String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
 	{
+		//TODO: Put override annotations in record method overrides?
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
 		
 		hashcodeMethod.parent(record);
 		hashcodeMethod.setAccess("public");
 		hashcodeMethod.setName("hashcode");
-		hashcodeMethod.setReturnType(new ABoolBasicTypeCG());
-		
+
+		String intTypeName = "int";
+		AExternalTypeCG intBasicType = new AExternalTypeCG();
+		intBasicType.setName(intTypeName);
+		hashcodeMethod.setReturnType(intBasicType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		
+		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
+		AExplicitVariableExpCG hashCodeMember = new AExplicitVariableExpCG();
+		hashCodeMember.setType(intBasicType.clone());
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		hashCodeMember.setClassType(classType);
+		hashCodeMember.setName("hashcode");
+		AApplyExpCG hashcodeCall = new AApplyExpCG();
+		hashcodeCall.setType(intBasicType.clone());
+		hashcodeCall.setRoot(hashCodeMember);
+		LinkedList<PExpCG> args = hashcodeCall.getArgs();
+
+		for (AFieldDeclCG field : fields)
+		{
+			AVariableExpCG nextArg = new AVariableExpCG();
+			nextArg.setOriginal(field.getName());
+			nextArg.setType(field.getType().clone());
+			args.add(nextArg);
+		}
 		
-		APlusNumericBinaryExpCG plusBinary = new APlusNumericBinaryExpCG();
-		plusBinary.setType(new AIntNumericBasicTypeCG());
-		plusBinary.setLeft(JavaFormatAssistant.consIntLiteral(123));
-		plusBinary.setRight(JavaFormatAssistant.consIntLiteral(456));
-		
-		
-//		ATernaryIfExpCG ternary = new ATernaryIfExpCG();
-//		ternary.setType(new AIntNumericBasicTypeCG());
-//		ternary.setCondition(value);
-//		ternary.setFalseValue(value);
-//		ternary.setTrueValue(value);
+		returnStm.setExp(hashcodeCall);
 		
 		hashcodeMethod.setBody(returnStm);
 		
