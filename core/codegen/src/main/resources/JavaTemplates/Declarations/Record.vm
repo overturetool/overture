@@ -6,7 +6,7 @@ $node.getAccess() static class $node.getName() implements Record
 	
 	$JavaFormat.formatRecordConstructor($node)
 	
-	##$JavaFormat.generateEqualsMethod($node)
-	##$JavaFormat.generateHashcodeMethod($node)
+	$JavaFormat.generateEqualsMethod($node)
+	$JavaFormat.generateHashcodeMethod($node)
 	$JavaFormat.generateCloneMethod($node)
 }
