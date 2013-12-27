@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.analysis.OoAstAnalysis;
+import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -240,7 +241,7 @@ public class JavaFormat
 				//Example: b = (_b != null) ? _b.clone() : null;
 				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
 				checkedAssignment.setType(new ABoolBasicTypeCG());
-				checkedAssignment.setCondition(JavaFormatAssistant.constructParamNullComparison(varExp));
+				checkedAssignment.setCondition(JavaFormatAssistant.consParamNotNullComp(varExp));
 				checkedAssignment.setTrueValue(varExp);
 				checkedAssignment.setFalseValue(new ANullExpCG());
 				assignment.setExp(checkedAssignment);
@@ -479,7 +480,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public boolean cloneMember(AFieldExpCG exp) throws AnalysisException
+	public boolean cloneMember(AFieldExpCG exp)
 	{
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
@@ -493,7 +494,7 @@ public class JavaFormat
 			
 			String memberName = exp.getMemberName();
 			
-			AFieldDeclCG memberField = JavaFormatAssistant.getFieldDecl(classes, recordType, memberName);
+			AFieldDeclCG memberField = DeclAssistantCG.getFieldDecl(classes, recordType, memberName);
 			
 			if (memberField != null && usesStructuralEquivalence(memberField.getType()))
 				return true;
@@ -568,21 +569,21 @@ public class JavaFormat
 		AIfStmCG ifStm = new AIfStmCG();
 		ANotUnaryExpCG negated = new ANotUnaryExpCG();
 		negated.setType(new ABoolBasicTypeCG());
-		negated.setExp(JavaFormatAssistant.constructInstanceOf(record, paramName));
+		negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
 		ifStm.setIfExp(negated);
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
-		returnIncompatibleTypes.setExp(JavaFormatAssistant.constructBoolLiteral(false));
+		returnIncompatibleTypes.setExp(JavaFormatAssistant.consBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
 		
 		//If the inital check is passed we can safely cast the formal parameter
 		//To the record type: RecordType other = ((RecordType) obj);
 		String localVarName = "other";
-		ABlockStmCG formalParamCasted = JavaFormatAssistant.constructVarDeclInStm(record, paramName, localVarName);
+		ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
 		
 		//Next compare the fields of the instance with the fields of the formal parameter "obj":
 		//return (field1 == obj.field1) && (field2 == other.field2)...
 		LinkedList<AFieldDeclCG> fields = record.getFields();
-		PExpCG previousComparisons = JavaFormatAssistant.constructFieldComparison(record, fields.get(0), localVarName); 
+		PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName); 
 
 		for (int i = 1; i < fields.size(); i++)
 		{
@@ -619,8 +620,8 @@ public class JavaFormat
 		
 		APlusNumericBinaryExpCG plusBinary = new APlusNumericBinaryExpCG();
 		plusBinary.setType(new AIntNumericBasicTypeCG());
-		plusBinary.setLeft(JavaFormatAssistant.constructIntLiteral(123));
-		plusBinary.setRight(JavaFormatAssistant.constructIntLiteral(456));
+		plusBinary.setLeft(JavaFormatAssistant.consIntLiteral(123));
+		plusBinary.setRight(JavaFormatAssistant.consIntLiteral(456));
 		
 		
 //		ATernaryIfExpCG ternary = new ATernaryIfExpCG();
