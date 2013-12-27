@@ -41,7 +41,7 @@ public class DeclAssistantCG
 	{
 		AIntLiteralExpCG lit = new AIntLiteralExpCG();
 		lit.setType(new AIntNumericBasicTypeCG());
-		lit.setValue("0");
+		lit.setValue(0L);
 		
 		return lit;
 	}
@@ -50,7 +50,7 @@ public class DeclAssistantCG
 	{
 		ARealLiteralExpCG lit = new ARealLiteralExpCG();
 		lit.setType(new ARealNumericBasicTypeCG());
-		lit.setValue("0.0");
+		lit.setValue(0.0);
 		
 		return lit;
 	}
@@ -59,7 +59,7 @@ public class DeclAssistantCG
 	{
 		ABoolLiteralExpCG lit = new ABoolLiteralExpCG();
 		lit.setType(new ABoolBasicTypeCG());
-		lit.setValue("false");
+		lit.setValue(false);
 		
 		return lit;
 	}
@@ -68,7 +68,7 @@ public class DeclAssistantCG
 	{
 		ACharLiteralExpCG lit = new ACharLiteralExpCG();
 		lit.setType(new ACharBasicTypeCG());
-		lit.setValue("0");
+		lit.setValue('0');
 		
 		return lit;
 	}

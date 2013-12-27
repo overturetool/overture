@@ -114,7 +114,7 @@ public class OoAstInfo
 			
 			AIntLiteralExpCG initial = new AIntLiteralExpCG();
 			initial.setType(new AIntNumericBasicTypeCG());
-			initial.setValue((1 + i) + "");
+			initial.setValue(1L + i);
 			
 			fieldDecl.setInitial(initial);
 			

@@ -795,7 +795,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
 		boolLiteral.setType(type);
-		boolLiteral.setValue(node.getValue().toString());
+		boolLiteral.setValue(node.getValue().getValue());
 		
 		return boolLiteral;
 	}
@@ -808,7 +808,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
 		realLiteral.setType(type);
-		realLiteral.setValue(node.getValue().toString());
+		realLiteral.setValue(node.getValue().getValue());
 		
 		return realLiteral;
 	}
@@ -821,7 +821,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
 		intLiteral.setType(type);
-		intLiteral.setValue(node.getValue().toString());
+		intLiteral.setValue(node.getValue().getValue());
 		
 		return intLiteral;
 	}
@@ -834,7 +834,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
 		charLiteral.setType(type);
-		charLiteral.setValue(node.getValue().getValue() + "");
+		charLiteral.setValue(node.getValue().getValue());
 		
 		return charLiteral;
 	}

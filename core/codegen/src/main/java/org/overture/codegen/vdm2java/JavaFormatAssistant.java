@@ -88,7 +88,7 @@ public class JavaFormatAssistant
 	{
 		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
 		boolLiteral.setType(new ABoolBasicTypeCG());
-		boolLiteral.setValue(val + "");
+		boolLiteral.setValue(val);
 		
 		return boolLiteral;
 	}
@@ -97,7 +97,7 @@ public class JavaFormatAssistant
 	{
 		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
 		intLiteral.setType(new AIntNumericBasicTypeCG());
-		intLiteral.setValue(value + "");
+		intLiteral.setValue(value);
 		
 		return intLiteral;
 	}

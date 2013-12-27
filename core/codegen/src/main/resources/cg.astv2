@@ -15,9 +15,12 @@ Tokens
   
   //Java
   java_Boolean = 'java:java.lang.Boolean';
-  java_Integer = 'java:java.lang.Integer';
-  java_String = 'java:java.lang.String';
   java_Long = 'java:java.lang.Long';
+  java_Integer = 'java:java.lang.Integer';
+  java_Double = 'java:java.lang.Double';
+  java_Character = 'java:java.lang.Character';
+  java_String = 'java:java.lang.String';
+  
      
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classes
@@ -140,11 +143,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Seq
     ;
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
-    =	{int}
-    |	{real}
-    |	{bool}
-    |	{char}
-    |	{quote}
+    =	{int} [value]:java_Long
+    |	{real} [value]:java_Double
+    |	{bool} [value]:java_Boolean
+    |	{char} [value]:java_Character
+    |	{quote} [value]:java_String
     |	{string} [value]:java_String [isNull]:java_Boolean
 	;
     
@@ -260,9 +263,6 @@ Aspect Declaration
     ;
     
 %expCG->#Binary = [left]:expCG [right]:expCG
-	;
-	
-%expCG->#Literal = [value]:java_String
 	;
 	
 //TODO: Consider moving seq + set up to typeCG	
