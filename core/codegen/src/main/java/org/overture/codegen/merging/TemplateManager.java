@@ -131,7 +131,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, templateStructure.LOCAL_DECLS_PATH + "FormalParam");
 		
 		// Type
-		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "ClassType");//TODO: Rename to Class
+		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "Class");
 		
 		nodeTemplateFileNames.put(AExternalTypeCG.class, templateStructure.TYPE_PATH + "External");
 		
