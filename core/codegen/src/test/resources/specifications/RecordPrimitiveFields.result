@@ -6,19 +6,21 @@ public class A {
         public long i;
         public char c;
         public double r;
+        public double q;
         public long n;
         public long n1;
 
-        public RecA(long _i, char _c, double _r, long _n, long _n1) {
+        public RecA(long _i, char _c, double _r, double _q, long _n, long _n1) {
             i = _i;
             c = _c;
             r = _r;
+            q = _q;
             n = _n;
             n1 = _n1;
         }
 
         public RecA clone() {
-            return new RecA(i, c, r, n, n1);
+            return new RecA(i, c, r, q, n, n1);
         }
     }
 }
