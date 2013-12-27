@@ -1,0 +1,12 @@
+class A
+
+types
+
+public RecA ::
+	i : int
+	c : char
+	r : real
+	n : nat
+	n1 : nat1
+	
+end A

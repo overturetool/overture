@@ -1,0 +1,24 @@
+import utils.*;
+
+
+public class A {
+    public static class RecA implements Record {
+        public long i;
+        public char c;
+        public double r;
+        public long n;
+        public long n1;
+
+        public RecA(long _i, char _c, double _r, long _n, long _n1) {
+            i = _i;
+            c = _c;
+            r = _r;
+            n = _n;
+            n1 = _n1;
+        }
+
+        public RecA clone() {
+            return new RecA(i, c, r, n, n1);
+        }
+    }
+}
