@@ -17,6 +17,20 @@ public class Records {
             y = _y;
         }
 
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Vector2D)) {
+                return false;
+            }
+
+            Vector2D other = ((Vector2D) obj);
+
+            return (x == other.x) && (y == other.y);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, y);
+        }
+
         public Vector2D clone() {
             return new Vector2D(x, y);
         }

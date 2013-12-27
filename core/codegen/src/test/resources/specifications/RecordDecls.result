@@ -11,6 +11,20 @@ public class A {
             y = _y;
         }
 
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Vector2D)) {
+                return false;
+            }
+
+            Vector2D other = ((Vector2D) obj);
+
+            return (x == other.x) && (y == other.y);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, y);
+        }
+
         public Vector2D clone() {
             return new Vector2D(x, y);
         }
@@ -21,6 +35,20 @@ public class A {
 
         public Real(double _r) {
             r = _r;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Real)) {
+                return false;
+            }
+
+            Real other = ((Real) obj);
+
+            return r == other.r;
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(r);
         }
 
         public Real clone() {

@@ -49,6 +49,20 @@ public class A {
             x = _x;
         }
 
+        public boolean equals(Object obj) {
+            if (!(obj instanceof R1)) {
+                return false;
+            }
+
+            R1 other = ((R1) obj);
+
+            return x == other.x;
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
         public R1 clone() {
             return new R1(x);
         }
@@ -61,6 +75,20 @@ public class A {
         public R2(R1 _r1, long _x) {
             r1 = (_r1 != null) ? _r1.clone() : null;
             x = _x;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof R2)) {
+                return false;
+            }
+
+            R2 other = ((R2) obj);
+
+            return (r1.equals(other.r1)) && (x == other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(r1, x);
         }
 
         public R2 clone() {
