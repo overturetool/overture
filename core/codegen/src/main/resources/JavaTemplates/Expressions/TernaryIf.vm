@@ -1,1 +1,1 @@
-$JavaFormat.format($node.getCondition()) ? $JavaFormat.format($node.getTrueValue()) : $JavaFormat.format($node.getFalseValue())
+$JavaFormat.format($node.getCondition(), false) ? $JavaFormat.format($node.getTrueValue(), false) : $JavaFormat.format($node.getFalseValue(), false)
