@@ -18,6 +18,8 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
@@ -251,6 +253,10 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANotUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Not");
 
 		// Binary expressions
+		
+		nodeTemplateFileNames.put(AAddrEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "AddrEquals");
+
+		nodeTemplateFileNames.put(AAddrNotEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "AddrNotEquals");
 		
 		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "Equals");
 		
