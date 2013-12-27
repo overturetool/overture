@@ -21,7 +21,7 @@ public class A {
         public R1 r;
 
         public R2(R1 _r) {
-            r = _r.clone();
+            r = (_r != null) ? _r.clone() : null;
         }
 
         public R2 clone() {
@@ -35,7 +35,7 @@ public class A {
 
         public R3(long _x, R2 _r) {
             x = _x;
-            r = _r.clone();
+            r = (_r != null) ? _r.clone() : null;
         }
 
         public R3 clone() {

@@ -9,7 +9,7 @@ public class A {
         public B.RecB b;
 
         public RecA(B.RecB _b) {
-            b = _b.clone();
+            b = (_b != null) ? _b.clone() : null;
         }
 
         public RecA clone() {

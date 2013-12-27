@@ -6,7 +6,7 @@ public class A {
         public B.RecB b;
 
         public RecA(B.RecB _b) {
-            b = _b.clone();
+            b = (_b != null) ? _b.clone() : null;
         }
 
         public RecA clone() {
@@ -23,7 +23,7 @@ public class B {
         public A.RecA a;
 
         public RecB(A.RecA _a) {
-            a = _a.clone();
+            a = (_a != null) ? _a.clone() : null;
         }
 
         public RecB clone() {

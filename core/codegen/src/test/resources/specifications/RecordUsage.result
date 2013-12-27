@@ -59,7 +59,7 @@ public class A {
         public long x;
 
         public R2(R1 _r1, long _x) {
-            r1 = _r1.clone();
+            r1 = (_r1 != null) ? _r1.clone() : null;
             x = _x;
         }
 
