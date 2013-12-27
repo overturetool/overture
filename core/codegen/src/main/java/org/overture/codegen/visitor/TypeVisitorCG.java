@@ -17,6 +17,7 @@ import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
+import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -228,6 +229,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	@Override
 	public PTypeCG caseARealNumericBasicType(ARealNumericBasicType node,
 			OoAstInfo question) throws AnalysisException
+	{
+		return new ARealNumericBasicTypeCG();
+	}
+	
+	@Override
+	public PTypeCG caseARationalNumericBasicType(
+			ARationalNumericBasicType node, OoAstInfo question)
+			throws AnalysisException
 	{
 		return new ARealNumericBasicTypeCG();
 	}
