@@ -812,7 +812,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return ExpAssistantCG.consStringLiteral(node.getValue().getValue());
+		return ExpAssistantCG.consStringLiteral(node.getValue().getValue(), false);
 	}
 	
 	@Override

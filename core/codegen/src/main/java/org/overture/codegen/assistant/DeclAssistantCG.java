@@ -11,12 +11,6 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -35,57 +29,6 @@ public class DeclAssistantCG
 
 	public DeclAssistantCG()
 	{	
-	}
-	
-	public static AIntLiteralExpCG getDefaultIntValue()
-	{
-		AIntLiteralExpCG lit = new AIntLiteralExpCG();
-		lit.setType(new AIntNumericBasicTypeCG());
-		lit.setValue(0L);
-		
-		return lit;
-	}
-	
-	public static ARealLiteralExpCG getDefaultRealValue()
-	{
-		ARealLiteralExpCG lit = new ARealLiteralExpCG();
-		lit.setType(new ARealNumericBasicTypeCG());
-		lit.setValue(0.0);
-		
-		return lit;
-	}
-	
-	public static ABoolLiteralExpCG getDefaultBoolValue()
-	{
-		ABoolLiteralExpCG lit = new ABoolLiteralExpCG();
-		lit.setType(new ABoolBasicTypeCG());
-		lit.setValue(false);
-		
-		return lit;
-	}
-	
-	public static ACharLiteralExpCG getDefaultCharlValue()
-	{
-		ACharLiteralExpCG lit = new ACharLiteralExpCG();
-		lit.setType(new ACharBasicTypeCG());
-		lit.setValue('0');
-		
-		return lit;
-	}
-	
-	public static AStringLiteralExpCG getDefaultStringlValue()
-	{
-		AStringLiteralExpCG lit = new AStringLiteralExpCG();
-		lit.setIsNull(false);
-		lit.setType(new AStringTypeCG());
-		lit.setValue("");
-		
-		return lit;
-	}
-	
-	public static ANullExpCG getDefaultClassValue()
-	{
-		return new ANullExpCG();
 	}
 	
 	public static void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
@@ -152,27 +95,27 @@ public class DeclAssistantCG
 		//Set initial value
 		if(typeCg instanceof AStringTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultStringlValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultStringlValue());
 		}
 		else if(typeCg instanceof ACharBasicTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultCharlValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultCharlValue());
 		}
 		else if(typeCg instanceof AIntNumericBasicTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultIntValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultIntValue());
 		}
 		else if(typeCg instanceof ARealNumericBasicTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultRealValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultRealValue());
 		}
 		else if(typeCg instanceof ABoolBasicTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultBoolValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultBoolValue());
 		}
 		else if(typeCg instanceof AClassTypeCG)
 		{
-			localDecl.setExp(DeclAssistantCG.getDefaultClassValue());
+			localDecl.setExp(ExpAssistantCG.getDefaultClassValue());
 		}
 		else
 		{

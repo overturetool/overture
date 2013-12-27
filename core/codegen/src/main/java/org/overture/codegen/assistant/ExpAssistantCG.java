@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -119,14 +120,44 @@ public class ExpAssistantCG
 		return charLiteral;
 	}
 	
-	public static AStringLiteralExpCG consStringLiteral(String value)
+	public static AStringLiteralExpCG consStringLiteral(String value, boolean isNull)
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
 
 		stringLiteral.setType(new AStringTypeCG());
-		stringLiteral.setIsNull(true);
+		stringLiteral.setIsNull(isNull);
 		stringLiteral.setValue(StringEscapeUtils.escapeJava(value));
 		
 		return stringLiteral;
+	}
+	
+	public static AIntLiteralExpCG getDefaultIntValue()
+	{
+		return consIntLiteral(0L);
+	}
+	
+	public static ARealLiteralExpCG getDefaultRealValue()
+	{
+		return consRealLiteral(0.0);
+	}
+	
+	public static ABoolLiteralExpCG getDefaultBoolValue()
+	{
+		return consBoolLiteral(false);
+	}
+	
+	public static ACharLiteralExpCG getDefaultCharlValue()
+	{
+		return consCharLiteral('0');
+	}
+	
+	public static AStringLiteralExpCG getDefaultStringlValue()
+	{
+		return consStringLiteral("", true);
+	}
+	
+	public static ANullExpCG getDefaultClassValue()
+	{
+		return new ANullExpCG();
 	}
 }
