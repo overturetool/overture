@@ -2,7 +2,6 @@ package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -70,9 +69,7 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -85,7 +82,6 @@ import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
@@ -101,10 +97,8 @@ import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -117,7 +111,6 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
@@ -791,66 +784,35 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		boolLiteral.setType(type);
-		boolLiteral.setValue(node.getValue().getValue());
-		
-		return boolLiteral;
+		return ExpAssistantCG.consBoolLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		realLiteral.setType(type);
-		realLiteral.setValue(node.getValue().getValue());
-		
-		return realLiteral;
+		return ExpAssistantCG.consRealLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		intLiteral.setType(type);
-		intLiteral.setValue(node.getValue().getValue());
-		
-		return intLiteral;
+		return ExpAssistantCG.consIntLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		charLiteral.setType(type);
-		charLiteral.setValue(node.getValue().getValue());
-		
-		return charLiteral;
+		return ExpAssistantCG.consCharLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
-
-		stringLiteral.setType(new AStringTypeCG());
-		stringLiteral.setIsNull(true);
-		String value = StringEscapeUtils.escapeJava(node.getValue().getValue());
-		stringLiteral.setValue(value);
-		
-		return stringLiteral;
+		return ExpAssistantCG.consStringLiteral(node.getValue().getValue());
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package org.overture.codegen.assistant;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
@@ -9,10 +10,20 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.visitor.OoAstInfo;
 
@@ -70,5 +81,52 @@ public class ExpAssistantCG
 				|| type instanceof ANatNumericBasicType
 				|| type instanceof AIntNumericBasicType) 
 				&& !(exp instanceof ARealLiteralExp);
+	}
+	
+	public static ABoolLiteralExpCG consBoolLiteral(boolean val)
+	{
+		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
+		boolLiteral.setType(new ABoolBasicTypeCG());
+		boolLiteral.setValue(val);
+		
+		return boolLiteral;
+	}
+	
+	public static AIntLiteralExpCG consIntLiteral(long value)
+	{
+		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
+		intLiteral.setType(new AIntNumericBasicTypeCG());
+		intLiteral.setValue(value);
+		
+		return intLiteral;
+	}
+	
+	public static ARealLiteralExpCG consRealLiteral(double value)
+	{
+		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
+		realLiteral.setType(new ARealNumericBasicTypeCG());
+		realLiteral.setValue(value);
+		
+		return realLiteral;
+	}
+	
+	public static ACharLiteralExpCG consCharLiteral(char value)
+	{
+		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
+		charLiteral.setType(new ACharBasicTypeCG());
+		charLiteral.setValue(value);
+		
+		return charLiteral;
+	}
+	
+	public static AStringLiteralExpCG consStringLiteral(String value)
+	{
+		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+
+		stringLiteral.setType(new AStringTypeCG());
+		stringLiteral.setIsNull(true);
+		stringLiteral.setValue(StringEscapeUtils.escapeJava(value));
+		
+		return stringLiteral;
 	}
 }

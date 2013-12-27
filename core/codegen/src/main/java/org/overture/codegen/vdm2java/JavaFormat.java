@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.overture.codegen.analysis.OoAstAnalysis;
 import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -595,7 +596,7 @@ public class JavaFormat
 		negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
 		ifStm.setIfExp(negated);
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
-		returnIncompatibleTypes.setExp(JavaFormatAssistant.consBoolLiteral(false));
+		returnIncompatibleTypes.setExp(ExpAssistantCG.consBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
 		
 		//If the inital check is passed we can safely cast the formal parameter

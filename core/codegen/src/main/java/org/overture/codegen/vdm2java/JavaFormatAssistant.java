@@ -7,12 +7,10 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -21,7 +19,6 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 
@@ -80,26 +77,6 @@ public class JavaFormatAssistant
 		nextAnd.setLeft(previous);
 		nextAnd.setRight(consFieldComparison(record, field, paramName));
 		return nextAnd;
-	}
-	
-	//TODO: Can these literal constructors be moved somewhere else?
-	//Why is the value of int a string? Look for similar cases for literals
-	public static ABoolLiteralExpCG consBoolLiteral(boolean val)
-	{
-		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
-		boolLiteral.setType(new ABoolBasicTypeCG());
-		boolLiteral.setValue(val);
-		
-		return boolLiteral;
-	}
-	
-	public static AIntLiteralExpCG consIntLiteral(long value)
-	{
-		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
-		intLiteral.setType(new AIntNumericBasicTypeCG());
-		intLiteral.setValue(value);
-		
-		return intLiteral;
 	}
 	
 	public static AInstanceofExpCG consInstanceOf(ARecordDeclCG record, String formalParamName)
