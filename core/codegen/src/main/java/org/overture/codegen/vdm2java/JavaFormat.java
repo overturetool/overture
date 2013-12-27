@@ -13,6 +13,8 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -22,7 +24,9 @@ import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
@@ -228,9 +232,23 @@ public class JavaFormat
 			AVariableExpCG varExp = new AVariableExpCG();
 			varExp.setType(field.getType().clone());
 			varExp.setOriginal(paramName);
-			
+
 			assignment.setTarget(id);
-			assignment.setExp(varExp);
+			
+			if (!TypeAssistantCG.isBasicType(varExp.getType()))
+			{
+				//Example: b = (_b != null) ? _b.clone() : null;
+				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
+				checkedAssignment.setType(new ABoolBasicTypeCG());
+				checkedAssignment.setCondition(JavaFormatAssistant.constructParamNullComparison(varExp));
+				checkedAssignment.setTrueValue(varExp);
+				checkedAssignment.setFalseValue(new ANullExpCG());
+				assignment.setExp(checkedAssignment);
+			}
+			else
+			{
+				assignment.setExp(varExp);
+			}
 			
 			bodyStms.add(assignment);
 		}
@@ -464,9 +482,7 @@ public class JavaFormat
 	public boolean cloneMember(AFieldExpCG exp) throws AnalysisException
 	{
 		INode parent = exp.parent();
-		if (parent instanceof AFieldExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG)
+		if (cloneNotNeeded(parent))
 			return false;
 		
 		PTypeCG type = exp.getObject().getType();
@@ -489,10 +505,7 @@ public class JavaFormat
 	public boolean shouldClone(AVariableExpCG exp)
 	{
 		INode parent = exp.parent();
-		if (parent instanceof AFieldExpCG
-				|| parent instanceof AFieldNumberExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG)
+		if (cloneNotNeeded(parent))
 		{
 			return false;
 		}
@@ -513,6 +526,16 @@ public class JavaFormat
 		}
 		
 		return false;
+	}
+	
+	private boolean cloneNotNeeded(INode parent)
+	{
+		return 	   parent instanceof AFieldExpCG
+				|| parent instanceof AFieldNumberExpCG
+				|| parent instanceof AEqualsBinaryExpCG
+				|| parent instanceof ANotEqualsBinaryExpCG
+				|| parent instanceof AAddrEqualsBinaryExpCG
+				|| parent instanceof AAddrNotEqualsBinaryExpCG;
 	}
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
@@ -550,7 +573,6 @@ public class JavaFormat
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
 		returnIncompatibleTypes.setExp(JavaFormatAssistant.constructBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
-		
 		
 		//If the inital check is passed we can safely cast the formal parameter
 		//To the record type: RecordType other = ((RecordType) obj);
