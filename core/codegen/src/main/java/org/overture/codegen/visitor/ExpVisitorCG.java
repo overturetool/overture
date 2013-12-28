@@ -328,7 +328,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{	
-		//TODO: For records, classes etc.
 		return expAssistant.handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
 	}
 	
@@ -336,7 +335,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseANotEqualBinaryExp(ANotEqualBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		//TODO: For records, classes etc. (exactly same problems as for equals)
 		return expAssistant.handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question);
 	}
 	

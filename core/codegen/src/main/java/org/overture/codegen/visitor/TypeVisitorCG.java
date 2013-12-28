@@ -148,7 +148,6 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 		
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		
-		//TODO: Could consider doing this using a visitor at some point..
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setName(name.getName());
 		typeName.setDefiningClass(name.getModule());

@@ -1,4 +1,3 @@
-//TODO1: maybe generate classes with the Comparable interface 
 Packages
 base org.overture.codegen.cgast;
 analysis org.overture.codegen.cgast.analysis;
@@ -99,7 +98,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 	;
 	
 stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
-	= {identifier} [name]:java_String //TODO: not supported
+	= {identifier} [name]:java_String
 	| {field} [object]:stateDesignatorCG [field]:java_String
 	;
 //    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
@@ -115,7 +114,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
            | 	{skip}
            |	{return} [exp]:expCG
-           |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG //TODO: Idea: Consider replace with {block}?
+           |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG
            |	{abstractBody}
            |	{assignment} [target]:stateDesignatorCG [exp]:expCG
            |	{block}	[localDefs]:declCG.localVar* [statements]:stmCG*

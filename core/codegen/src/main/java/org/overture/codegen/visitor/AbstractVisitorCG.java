@@ -28,7 +28,6 @@ public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> ex
 	public A createNewReturnValue(INode node, Q question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -36,7 +35,6 @@ public class AbstractVisitorCG<Q, A extends org.overture.codegen.cgast.INode> ex
 	public A createNewReturnValue(Object node, Q question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

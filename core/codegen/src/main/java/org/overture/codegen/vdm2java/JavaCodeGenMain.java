@@ -11,14 +11,14 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.config.Release;
 import org.overture.config.Settings;
 
 public class JavaCodeGenMain
 {
 	public static void main(String[] args)
 	{
-		//TODO: Set release to VDM_10:
-		//Settings.release = Release.VDM_10;
+		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 		
 		if (args.length <= 1)
