@@ -295,49 +295,65 @@ public class JavaFormat
 	
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
 	{
-		//FIXME: Only works for simple types, i.e. not references
-		//Operator pec?
-		
-		/*
-		 * Things to consider:
-		 * 
-		 * Collections: sets, sequences and maps
-		 * Classes: Maps to == 
-		 * Type defs: Not supported anyway
-		 * Records: Not supported anyway
-		 * Primitive types: Maps to == 
-		 * 
-		 */
 		PTypeCG leftNodeType = node.getLeft().getType();
 		
 		if(leftNodeType instanceof SSeqTypeCGBase)
 		{
 			return handleSeqComparison(node, false);
 		}
-		else if(leftNodeType instanceof ARecordTypeCG)
+		else if(isValueType(leftNodeType))
 		{
-			return handleRecordComparison(node);
+			return handleValueTypeEquality(node);
 		}
 		
 		return format(node.getLeft()) + " == " + format(node.getRight());
 	}
 	
-	public String handleRecordComparison(AEqualsBinaryExpCG recordComparison) throws AnalysisException
-	{
-		return format(recordComparison.getLeft()) + ".equals(" + format(recordComparison.getRight()) + ")";
-	}
-	
 	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
 	{
-		//FIXME: Same problems as for equals. In addition, this method lacks support for collections
 		PTypeCG leftNodeType = node.getLeft().getType();
 
 		if (leftNodeType instanceof SSeqTypeCGBase)
 		{
 			return handleSeqComparison(node, true);
 		}
+		else if(isValueType(leftNodeType))
+		{
+			ANotUnaryExpCG transformed = transNotEquals(node);
+			return formatNotUnary(transformed.getExp());
+		}
 		
 		return format(node.getLeft()) + " != " + format(node.getRight());
+	}
+	
+	private static boolean isValueType(PTypeCG type)
+	{
+		return type instanceof ARecordTypeCG || 
+				type instanceof ATupleTypeCG;
+	}
+	
+	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
+	{
+		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
+		notUnary.setType(new ABoolBasicTypeCG());
+		
+		AEqualsBinaryExpCG equal = new AEqualsBinaryExpCG();
+		equal.setType(new ABoolBasicTypeCG());
+		equal.setLeft(notEqual.getLeft());
+		equal.setRight(notEqual.getRight());
+		
+		notUnary.setExp(equal);
+		
+		//Replace the "notEqual" expression with the transformed expression
+		notUnary.parent(notEqual.parent());
+		notEqual.parent(null);
+		
+		return notUnary;
+	}
+	
+	private String handleValueTypeEquality(AEqualsBinaryExpCG valueType) throws AnalysisException
+	{
+		return format(valueType.getLeft()) + ".equals(" + format(valueType.getRight()) + ")";
 	}
 	
 	private String handleSeqComparison(SBinaryExpCGBase node, boolean notEquals) throws AnalysisException
