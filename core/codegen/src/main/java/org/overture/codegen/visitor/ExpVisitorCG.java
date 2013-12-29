@@ -61,7 +61,6 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -130,15 +129,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return new ANullExpCG();
-	}
-	
-	@Override
-	public PExpCG caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
-			OoAstInfo question) throws AnalysisException
-	{
-		System.out.println("kittens!");
-		// TODO Auto-generated method stub
-		return super.caseAMapSeqStateDesignator(node, question);
 	}
 	
 	@Override
