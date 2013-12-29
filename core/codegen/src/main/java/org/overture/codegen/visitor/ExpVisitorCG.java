@@ -45,6 +45,7 @@ import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
@@ -97,6 +98,7 @@ import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
@@ -317,6 +319,31 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
+	public PExpCG caseAReverseUnaryExp(AReverseUnaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PExp exp = node.getExp();
+		PType type = node.getType();
+		
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		AReverseUnaryExpCG reverse = new AReverseUnaryExpCG();
+		reverse.setExp(expCg);
+		
+		if(type instanceof SSeqType)
+		{
+			PTypeCG seqType = ((SSeqType) type).getSeqof().apply(question.getTypeVisitor(), question);
+			reverse.setType(seqType);
+		}
+		else
+		{
+			throw new AnalysisException("Unexpected seq type for reverse unary expression: " + type);
+		}
+
+		return reverse;
+	}
+	
+	@Override
 	public PExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
@@ -352,7 +379,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		else
 		{
-			throw new AnalysisException("Unexpected seq type");
+			throw new AnalysisException("Unexpected seq type for sequence enumeration expression: " + type);
 		}
 		
 		//TODO: For the empty sequence [] the type is the unknown type

@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -56,18 +57,25 @@ public class Utils
 		return true;
 	}
 	
-//	public static <T extends Object> List<T> reverse(List<T> list)
-//	{
-//		LinkedList<T> reversed = new LinkedList<T>();
-//		
-//		for(int i = list.size() - 1; i >= 0; i--)
-//		{
-//			T currentElement = list.get(i);
-//			
-//			
-//		}
-//		
-//		return null;
-//			
-//	}
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> reverse(List<T> list)
+	{
+		Vector<T> reversed = new Vector<T>();
+		
+		for(int i = list.size() - 1; i >= 0; i--)
+		{
+			T current = list.get(i);
+			
+			if(current instanceof ValueType)
+			{
+				ValueType valueType = ((ValueType) current).clone();
+				reversed.add((T) valueType);
+			}
+			else
+				reversed.add(current);
+				
+		}
+		
+		return reversed;
+	}
 }
