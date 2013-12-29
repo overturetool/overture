@@ -1,4 +1,3 @@
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,6 +54,22 @@ public class Utils
 				return false;
 				
 		return true;
+	}
+	
+	public static int index(long value)
+	{
+		if(value < 1)
+			throw new IllegalArgumentException("VDM subscripts must be >= 1");
+		
+		return toInt(value) - 1;
+	}
+	
+	private static int toInt(long value) {
+	    if (value < Integer.MIN_VALUE || value > Integer.MAX_VALUE) {
+	        throw new IllegalArgumentException
+	            (value + " Casting long will change its value.");
+	    }
+	    return (int) value;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -29,6 +29,7 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -669,6 +670,16 @@ public class JavaFormat
 		hashcodeMethod.setBody(returnStm);
 		
 		return format(hashcodeMethod);
+	}
+
+	public boolean isStringLiteral(PExpCG exp)
+	{
+		return exp instanceof AStringLiteralExpCG;
+	}
+	
+	public boolean isSeqEnum(PExpCG exp)
+	{
+		return exp instanceof AEnumSeqExpCG;
 	}
 	
 	public boolean isCharType(PTypeCG type)
