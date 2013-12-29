@@ -29,6 +29,10 @@ public class A {
         public R1 clone() {
             return new R1(x);
         }
+
+        public String toString() {
+            return Utils.recordToString(this, x);
+        }
     }
 
     public static class R2 implements Record {
@@ -54,6 +58,10 @@ public class A {
 
         public R2 clone() {
             return new R2(r);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, r);
         }
     }
 
@@ -82,6 +90,10 @@ public class A {
 
         public R3 clone() {
             return new R3(x, r);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x, r);
         }
     }
 }

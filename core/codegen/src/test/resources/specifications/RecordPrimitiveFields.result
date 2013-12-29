@@ -37,5 +37,9 @@ public class A {
         public RecA clone() {
             return new RecA(i, c, r, q, n, n1);
         }
+
+        public String toString() {
+            return Utils.recordToString(this, i, c, r, q, n, n1);
+        }
     }
 }

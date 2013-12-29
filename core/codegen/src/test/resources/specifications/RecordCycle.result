@@ -26,6 +26,10 @@ public class A {
         public RecA clone() {
             return new RecA(b);
         }
+
+        public String toString() {
+            return Utils.recordToString(this, b);
+        }
     }
 }
 
@@ -56,6 +60,10 @@ public class B {
 
         public RecB clone() {
             return new RecB(a);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, a);
         }
     }
 }
