@@ -670,4 +670,30 @@ public class JavaFormat
 		
 		return format(hashcodeMethod);
 	}
+	
+	public boolean isCharType(PTypeCG type)
+	{
+		return type instanceof ACharBasicTypeCG; 
+	}
+	
+	public String buildString(List<PExpCG> exps) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("new String(new char[]{");
+		
+		if(exps.size() > 0)
+		{
+			sb.append(format(exps.get(0)));
+			
+			for (int i = 1; i < exps.size(); i++)
+			{
+				sb.append(", " + format(exps.get(i)));
+			}
+		}
+		
+		sb.append("})");
+		
+		return sb.toString();
+	}
 }
