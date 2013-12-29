@@ -9,4 +9,5 @@ $node.getAccess() static class $node.getName() implements Record
 	$JavaFormat.generateEqualsMethod($node)
 	$JavaFormat.generateHashcodeMethod($node)
 	$JavaFormat.generateCloneMethod($node)
+	$JavaFormat.generateToStringMethod($node)
 }

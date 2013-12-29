@@ -1,5 +1,7 @@
 package org.overture.codegen.vdm2java;
 
+import java.util.LinkedList;
+
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -7,11 +9,14 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
@@ -21,6 +26,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 
 public class JavaFormatAssistant
 {
@@ -165,5 +171,45 @@ public class JavaFormatAssistant
 		fieldComparison.setRight(formalParamField);
 		
 		return fieldComparison;
+	}
+	
+	public static AApplyExpCG consRecToStringCall(ARecordDeclCG record, PTypeCG returnType, String memberName) throws AnalysisException
+	{
+		AApplyExpCG call = consUtilCallUsingRecFields(record, returnType, memberName);
+
+		ARecordTypeCG recordType = new ARecordTypeCG();
+		recordType.setName(consTypeName(record));
+		ASelfExpCG selfExp = new ASelfExpCG();
+		selfExp.setType(recordType);
+		
+		call.getArgs().add(0, selfExp);
+		
+		return call;
+	}
+	
+	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record, PTypeCG returnType, String memberName)
+	{
+		LinkedList<AFieldDeclCG> fields = record.getFields();
+		
+		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
+		member.setType(returnType.clone());
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		member.setClassType(classType);
+		member.setName(memberName);
+		AApplyExpCG call = new AApplyExpCG();
+		call.setType(returnType.clone());
+		call.setRoot(member);
+		LinkedList<PExpCG> args = call.getArgs();
+
+		for (AFieldDeclCG field : fields)
+		{
+			AVariableExpCG nextArg = new AVariableExpCG();
+			nextArg.setOriginal(field.getName());
+			nextArg.setType(field.getType().clone());
+			args.add(nextArg);
+		}
+		
+		return call;
 	}
 }

@@ -93,4 +93,18 @@ public class Utils
 		
 		return reversed;
 	}
+	
+	public static String recordToString(Record record, Object... fields)
+	{
+		StringBuilder str = new StringBuilder();
+
+		str.append(fields[0]);
+
+		for (int i = 1; i < fields.length; i++)
+		{
+			str.append(", " + fields[i]);
+		}
+
+		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
+	}
 }

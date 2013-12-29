@@ -50,6 +50,7 @@ import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -59,6 +60,9 @@ import org.overture.codegen.merging.MergeVisitor;
 
 public class JavaFormat
 {
+	private static final String JAVA_PUBLIC = "public";
+	private static final String JAVA_INT = "int";
+	
 	private List<AClassDeclCG> classes;
 	
 	public JavaFormat(List<AClassDeclCG> classes)
@@ -165,7 +169,7 @@ public class JavaFormat
 		AMethodDeclCG method = new AMethodDeclCG();
 
 		method.parent(record);
-		method.setAccess("public");
+		method.setAccess(JAVA_PUBLIC);
 		method.setName("clone");
 		
 		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
@@ -207,7 +211,7 @@ public class JavaFormat
 		//Since Java does not have records but the OO AST does a record is generated as a Java class.
 		//To make sure that the record can be instantiated we must explicitly add a constructor.
 		constructor.parent(record);
-		constructor.setAccess("public");
+		constructor.setAccess(JAVA_PUBLIC);
 		constructor.setIsConstructor(true);
 		constructor.setName(record.getName());
 		LinkedList<AFormalParamLocalDeclCG> formalParams = constructor.getFormalParams();
@@ -576,7 +580,7 @@ public class JavaFormat
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
 		
 		equalsMethod.parent(record);
-		equalsMethod.setAccess("public");
+		equalsMethod.setAccess(JAVA_PUBLIC);
 		equalsMethod.setName("equals");
 		equalsMethod.setReturnType(new ABoolBasicTypeCG());
 		
@@ -631,45 +635,45 @@ public class JavaFormat
 	
 	public String generateHashcodeMethod(ARecordDeclCG record) throws AnalysisException
 	{
+		String hashCode = "hashCode";
+		
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
 		
 		hashcodeMethod.parent(record);
-		hashcodeMethod.setAccess("public");
-		hashcodeMethod.setName("hashCode");
+		hashcodeMethod.setAccess(JAVA_PUBLIC);
+		hashcodeMethod.setName(hashCode);
 
-		String intTypeName = "int";
+		String intTypeName = JAVA_INT;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		intBasicType.setName(intTypeName);
 		hashcodeMethod.setReturnType(intBasicType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
-		
-		LinkedList<AFieldDeclCG> fields = record.getFields();
-		
-		AExplicitVariableExpCG hashCodeMember = new AExplicitVariableExpCG();
-		hashCodeMember.setType(intBasicType.clone());
-		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
-		hashCodeMember.setClassType(classType);
-		hashCodeMember.setName("hashCode");
-		AApplyExpCG hashcodeCall = new AApplyExpCG();
-		hashcodeCall.setType(intBasicType.clone());
-		hashcodeCall.setRoot(hashCodeMember);
-		LinkedList<PExpCG> args = hashcodeCall.getArgs();
-
-		for (AFieldDeclCG field : fields)
-		{
-			AVariableExpCG nextArg = new AVariableExpCG();
-			nextArg.setOriginal(field.getName());
-			nextArg.setType(field.getType().clone());
-			args.add(nextArg);
-		}
-		
-		returnStm.setExp(hashcodeCall);
+		returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
 		
 		hashcodeMethod.setBody(returnStm);
 		
 		return format(hashcodeMethod);
+	}
+	
+	public String generateToStringMethod(ARecordDeclCG record) throws AnalysisException
+	{
+		AMethodDeclCG toStringMethod = new AMethodDeclCG();
+		
+		toStringMethod.parent(record);
+		toStringMethod.setAccess(JAVA_PUBLIC);
+		toStringMethod.setName("toString");
+
+		AStringTypeCG returnType = new AStringTypeCG();
+		toStringMethod.setReturnType(returnType);
+		
+		AReturnStmCG returnStm = new AReturnStmCG();
+		
+		returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+		
+		toStringMethod.setBody(returnStm);
+		
+		return format(toStringMethod);
 	}
 
 	public boolean isStringLiteral(PExpCG exp)
