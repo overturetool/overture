@@ -2,7 +2,7 @@
  * The source of inspiration for the implementation of this class:
  * https://github.com/ripper234/Basic/tree/master/java/src/main/java/org/basic/datastructures/tuple
  */
-public class Tuple
+public class Tuple implements ValueType
 {
 	private final Object[] values;
 
@@ -30,12 +30,9 @@ public class Tuple
 		{
 			Object currentValue = initvalues[i];
 
-			if (currentValue instanceof Tuple)
+			if (currentValue instanceof ValueType)
 			{
-				this.values[i] = ((Tuple) currentValue).clone();
-			} else if (currentValue instanceof Record)
-			{
-				this.values[i] = ((Record) currentValue).clone();
+				this.values[i] = ((ValueType) currentValue).clone();
 			} else
 			{
 				this.values[i] = currentValue;
