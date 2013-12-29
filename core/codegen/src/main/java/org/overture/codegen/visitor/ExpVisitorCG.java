@@ -61,6 +61,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -129,6 +130,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseAMapSeqStateDesignator(AMapSeqStateDesignator node,
+			OoAstInfo question) throws AnalysisException
+	{
+		System.out.println("kittens!");
+		// TODO Auto-generated method stub
+		return super.caseAMapSeqStateDesignator(node, question);
 	}
 	
 	@Override
@@ -428,20 +438,24 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAApplyExp(AApplyExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		
-		PExpCG root = node.getRoot().apply(question.getExpVisitor(), question);
-		
-		AApplyExpCG applyExp = new AApplyExpCG();		
-		applyExp.setRoot(root);
-		
+		PType type = node.getType();
+		PExp root = node.getRoot();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG rootCg = root.apply(question.getExpVisitor(), question);
+
+		AApplyExpCG applyExp = new AApplyExpCG();
+		applyExp.setType(typeCg);
+		applyExp.setRoot(rootCg);
+
 		LinkedList<PExp> applyArgs = node.getArgs();
-		
+
 		for (int i = 0; i < applyArgs.size(); i++)
 		{
 			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
 			applyExp.getArgs().add(arg);
 		}
-		
+
 		return applyExp;
 	}
 	
