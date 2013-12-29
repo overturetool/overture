@@ -1,0 +1,37 @@
+import utils.*;
+
+
+public class A {
+    public static final boolean a = new R(1L).equals(new R(2L));
+    public static final boolean b = !(new R(1L).equals(new R(2L)));
+
+    public static class R implements Record {
+        public long x;
+
+        public R(long _x) {
+            x = _x;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof R)) {
+                return false;
+            }
+
+            R other = ((R) obj);
+
+            return x == other.x;
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public R clone() {
+            return new R(x);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x);
+        }
+    }
+}

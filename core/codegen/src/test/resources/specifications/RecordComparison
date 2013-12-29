@@ -1,0 +1,11 @@
+class A
+
+values
+public a = mk_R(1) = mk_R(2);
+public b = mk_R(1) <> mk_R(2);
+
+types
+
+public R :: x : int
+
+end A
