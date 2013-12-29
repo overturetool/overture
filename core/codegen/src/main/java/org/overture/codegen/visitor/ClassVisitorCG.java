@@ -14,7 +14,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 
-public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>//QuestionAnswerAdaptor<CodeGenInfo, AClassTypeDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 {
 	public ClassVisitorCG()
 	{
