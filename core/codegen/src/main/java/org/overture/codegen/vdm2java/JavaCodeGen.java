@@ -22,7 +22,10 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.utils.ClassDeclStatus;
+import org.overture.codegen.utils.ExpStatus;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
 import org.overture.codegen.utils.NameViolation;
@@ -155,47 +158,52 @@ public class JavaCodeGen
 	}
 	
 	public List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
+			List<SClassDefinition> mergedParseLists) throws AnalysisException,
+			InvalidNamesException
 	{
-		
 		List<SClassDefinition> toBeGenerated = new LinkedList<SClassDefinition>();
 		for (SClassDefinition classDef : mergedParseLists)
-			if(shouldBeGenerated(classDef.getName().getName()))
+			if (shouldBeGenerated(classDef.getName().getName()))
 				toBeGenerated.add(classDef);
-		
+
 		validateVdmModelNames(toBeGenerated);
-		
-		List<AClassDeclCG> classes = new ArrayList<AClassDeclCG>();
+
+		List<ClassDeclStatus> statuses = new ArrayList<ClassDeclStatus>();
 
 		for (SClassDefinition classDef : toBeGenerated)
 		{
 			String className = classDef.getName().getName();
-			
-			if(!shouldBeGenerated(className))
+
+			if (!shouldBeGenerated(className))
 				continue;
-			
-			classes.add(generator.generateFrom(classDef));
+
+			statuses.add(generator.generateFrom(classDef));
 		}
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(new JavaFormat(classes), new OoAstAnalysis()));
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(new JavaFormat(getClassDecls(statuses)), new OoAstAnalysis()));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
-		for (AClassDeclCG classCg : classes)
+		for (ClassDeclStatus status : statuses)
 		{
 			StringWriter writer = new StringWriter();
 			try
 			{
+				AClassDeclCG classCg = status.getClassCg();
+
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
 
-				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
-				
-				generated.add(new GeneratedModule(classCg.getName(), formattedJavaCode));
+				String formattedJavaCode = "";
+
+				if (status.canBeGenerated())
+					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
+
+				generated.add(new GeneratedModule(classCg.getName(), formattedJavaCode, status.getUnsupportedNodes()));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for class "
-						+ classCg.getName() + ": " + e.getMessage());
+						+ status.getClassCg().getName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping class..");
 				e.printStackTrace();
 			}
@@ -203,22 +211,44 @@ public class JavaCodeGen
 
 		return generated;
 	}
-	
-	public String generateJavaFromVdmExp(PExp exp) throws AnalysisException
+
+	private List<AClassDeclCG> getClassDecls(List<ClassDeclStatus> statuses)
 	{
-		//There is no name validation here.
-		
-		PExpCG expCg = generator.generateFrom(exp);
+		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
+
+		for (ClassDeclStatus status : statuses)
+		{
+			classDecls.add(status.getClassCg());
+		}
+
+		return classDecls;
+	}
+
+	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException
+	{
+		// There is no name validation here.
+
+		ExpStatus expStatus = generator.generateFrom(exp);
 
 		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, DEFAULT_TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 
 		try
 		{
-			expCg.apply(mergeVisitor, writer);
-			String code = writer.toString();
+			PExpCG expCg = expStatus.getExpCg();
 
-			return code;
+			if (expCg != null)
+			{
+				expCg.apply(mergeVisitor, writer);
+				String code = writer.toString();
+
+				return new Generated(code, expStatus.getUnsupportedNodes());
+			} else
+			{
+
+				return new Generated("", expStatus.getUnsupportedNodes());
+			}
+
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Could not generate expression: "
@@ -258,6 +288,4 @@ public class JavaCodeGen
 		
 		return true;
 	}
-	
-	
 }

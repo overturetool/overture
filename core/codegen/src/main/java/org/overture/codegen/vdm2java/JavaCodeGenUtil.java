@@ -14,6 +14,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
@@ -125,7 +126,7 @@ public class JavaCodeGenUtil
 		return dataToReturn;
 	}
 
-	public static String generateJavaFromExp(String exp) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp) throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 		
