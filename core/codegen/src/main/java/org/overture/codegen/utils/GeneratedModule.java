@@ -1,21 +1,27 @@
 package org.overture.codegen.utils;
 
-public class GeneratedModule
+import java.util.HashSet;
+import java.util.Set;
+
+import org.overture.ast.node.INode;
+
+public class GeneratedModule extends Generated
 {
 	private String name;
-	private String content;
+	
+	public GeneratedModule(String name, String content, Set<INode> unsupportedNodes)
+	{
+		super(content, unsupportedNodes);
+		this.name = name;
+	}
+	
 	public GeneratedModule(String name, String content)
 	{
-		super();
-		this.name = name;
-		this.content = content;
+		this(name, content, new HashSet<INode>());
 	}
+	
 	public String getName()
 	{
 		return name;
-	}
-	public String getContent()
-	{
-		return content;
 	}
 }
