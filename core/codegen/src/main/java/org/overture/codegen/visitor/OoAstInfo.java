@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -24,9 +26,12 @@ public class OoAstInfo
 	private TypeVisitorCG typeVisitor;
 	private StmVisitorCG stmVisitor;
 	private StateDesignatorVisitor stateDesignatorVisitor;
-
+	
 	//Quotes:
-	private HashSet<String> quoteVaues;
+	private Set<String> quoteVaues;
+
+	//Unsupported VDM nodes
+	private Set<INode> unsupportedNodes;
 	
 	public OoAstInfo(OoAstGenerator rootVisitor)
 	{
@@ -40,6 +45,8 @@ public class OoAstInfo
 		this.stateDesignatorVisitor = new StateDesignatorVisitor();
 		
 		this.quoteVaues = new HashSet<String>();
+		
+		this.unsupportedNodes = new HashSet<INode>();
 	}
 
 	public OoAstGenerator getRootVisitor()
@@ -120,10 +127,22 @@ public class OoAstInfo
 			
 			fields.add(fieldDecl);
 		}
-		
-		
-		
+
 		return quotes;
 	}
 	
+	public void clearNodes()
+	{
+		unsupportedNodes.clear();
+	}
+	
+	public void addUnsupportedNode(INode node)
+	{
+		unsupportedNodes.add(node);
+	}
+	
+	public Set<INode> getUnsupportedNodes()
+	{
+		return unsupportedNodes;
+	}
 }
