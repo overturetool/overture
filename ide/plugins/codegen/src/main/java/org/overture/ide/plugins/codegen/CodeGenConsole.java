@@ -25,6 +25,8 @@ public class CodeGenConsole implements ILogger
 
 	private static CodeGenConsole Instance;
 
+	private MessageConsole codeGenConsole;
+	
 	public static CodeGenConsole GetInstance()
 	{
 		if (Instance == null)
@@ -35,7 +37,7 @@ public class CodeGenConsole implements ILogger
 
 	private CodeGenConsole()
 	{
-		MessageConsole codeGenConsole = findConsole(ICodeGenConstants.CONSOLE_NAME);
+		codeGenConsole = findConsole(ICodeGenConstants.CONSOLE_NAME);
 		if (codeGenConsole != null)
 		{
 			out = new PrintWriter(codeGenConsole.newMessageStream(), true);
@@ -95,6 +97,12 @@ public class CodeGenConsole implements ILogger
 	public void printError(String msg)
 	{
 		err.print(msg);
+	}
+	
+	public void clearConsole()
+	{
+		if(codeGenConsole != null)
+			codeGenConsole.clearConsole();
 	}
 
 	public void show()
