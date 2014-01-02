@@ -9,7 +9,6 @@
 <message column="12" line="2170" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="12" line="2180" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="12" line="2197" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
-<message column="9" line="2247" message="Operation returns void value" messageType="error" number="3313" resource="CodegenPP.result"/>
 <message column="9" line="2338" message="Operation '(e.hasDeflt)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="5" line="2356" message="Operation '(letExp.getDefs)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>
 <message column="41" line="2388" message="Operation '(selif.getTest)' cannot be called from a function" messageType="error" number="3300" resource="CodegenPP.result"/>

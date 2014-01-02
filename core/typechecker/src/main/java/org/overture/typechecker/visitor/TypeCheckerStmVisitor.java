@@ -12,6 +12,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -1010,8 +1011,30 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		question.qualifiers = null;
 		node.getExp().apply(THIS, question);
-		node.setType(node.getStatement().apply(THIS, question));
-		return node.getType();
+		PType stype = node.getStatement().apply(THIS, question);
+		
+		if (node.getExp() instanceof ABooleanConstExp && stype instanceof AUnionType)
+		{
+			ABooleanConstExp boolLiteral = (ABooleanConstExp)node.getExp();
+			
+			if (boolLiteral.getValue().getValue())	// while true do...
+			{
+				List<PType> edited = new Vector<PType>();
+				AUnionType original = (AUnionType)stype;
+				
+				for (PType t: original.getTypes())
+				{
+					if (!(t instanceof AVoidType))
+					{
+						edited.add(t);
+					}
+				}
+				
+				stype = AstFactory.newAUnionType(node.getLocation(), edited);
+			}
+		}
+		
+		return stype;
 	}
 
 	@Override
