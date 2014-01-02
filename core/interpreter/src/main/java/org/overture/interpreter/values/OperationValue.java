@@ -54,6 +54,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
@@ -342,12 +343,17 @@ public class OperationValue extends Value
 				Value sigma = argContext.lookup(stateName);
 				originalSigma = (Value) sigma.clone();
 			}
-
-			if (self != null)
+			else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
+			}
+			else if (classdef != null)
+			{
+				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
+				SClassDefinitionAssistantInterpreter assistant = ctxt.assistantFactory.createSClassDefinitionAssistant();
+				originalValues = assistant.getOldValues(classdef, oldnames);
 			}
 		}
 
@@ -421,11 +427,16 @@ public class OperationValue extends Value
 					postArgs.add(originalSigma);
 					Value sigma = argContext.lookup(stateName);
 					postArgs.add(sigma);
-				} else if (self != null)
+				}
+				else if (self != null)
 				{
 					postArgs.add(originalValues);
 					postArgs.add(self);
 				}
+    			else if (classdef != null)
+    			{
+    				postArgs.add(originalValues);
+    			}
 
 				// We disable the swapping and time (RT) as postcondition checks should be "free".
 

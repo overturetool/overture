@@ -41,13 +41,16 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ClassInvariantListener;
+import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
+import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
+import org.overture.interpreter.values.ValueMap;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -99,6 +102,29 @@ public class SClassDefinitionAssistantInterpreter extends
 		ctxt.putAll(VdmRuntime.getNodeState(classdef).publicStaticValues);
 		ctxt.putAll(VdmRuntime.getNodeState(classdef).privateStaticValues);
 		return ctxt;
+	}
+
+	public MapValue getOldValues(SClassDefinition classdef, LexNameList oldnames)
+	{
+		ValueMap values = new ValueMap();
+
+		for (ILexNameToken name: oldnames)
+		{
+			Value mv = getStatic(classdef, name.getNewName()).deref();
+			SeqValue sname = new SeqValue(name.getName());
+
+			if (mv instanceof ObjectValue)
+			{
+				ObjectValue om = (ObjectValue)mv;
+				values.put(sname, om.deepCopy());
+			}
+			else
+			{
+				values.put(sname, (Value)mv.clone());
+			}
+		}
+
+		return new MapValue(values);
 	}
 
 	public static ObjectValue newInstance(SClassDefinition node,

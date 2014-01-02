@@ -1191,6 +1191,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				APostOpExpAssistantInterpreter.populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To add old "~"
 																									// values
 			}
+    		else if (ctxt instanceof ClassContext)
+    		{
+    			ILexNameToken selfname = node.getOpname().getSelfName();
+    			ILexNameToken oldselfname = selfname.getOldName();
+    			ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
+    			APostOpExpAssistantInterpreter.populate(node, ctxt, node.getOpname().getModule(), oldvalues);
+    		}
 
 			// If there are errs clauses, and there is a precondition defined, then
 			// we evaluate that as well as the postcondition.
