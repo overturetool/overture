@@ -132,8 +132,9 @@ public class ResourceScheduler implements Serializable
 					{
 						try
 						{
-							Thread.sleep(500);
-						} catch (InterruptedException e)
+							Thread.sleep(100);
+						}
+						catch (InterruptedException e)
 						{
 							// ?
 						}

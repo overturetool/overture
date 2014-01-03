@@ -162,16 +162,19 @@ public class CTMainThread extends MainThread
 		}
 		catch (Throwable e)
 		{
-			if (!getExceptions().isEmpty())
+			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
-				result.addAll(getExceptions());
+				if (!getExceptions().isEmpty())
+				{
+					result.addAll(getExceptions());
+				}
+				else
+				{
+					result.add(e.getMessage());
+				}
+	
+				result.add(Verdict.FAILED);
 			}
-			else
-			{
-				result.add(e.getMessage());
-			}
-
-			result.add(Verdict.FAILED);
 		}
 	}
 
