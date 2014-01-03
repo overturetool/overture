@@ -162,11 +162,15 @@ public class CTMainThread extends MainThread
 		}
 		catch (Throwable e)
 		{
-			if(e instanceof ThreadDeath)
+			if (!getExceptions().isEmpty())
 			{
-				throw (ThreadDeath)e;
+				result.addAll(getExceptions());
 			}
-			result.add(e.getMessage());
+			else
+			{
+				result.add(e.getMessage());
+			}
+
 			result.add(Verdict.FAILED);
 		}
 	}
