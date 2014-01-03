@@ -36,9 +36,15 @@ public class AStartStmAssistantInterpreter
 			APeriodicStm ps = (APeriodicStm) op.body;
 
 			// We disable the swapping and time (RT) as periodic evaluation should be "free".
-			pctxt.threadState.setAtomic(true);
-			ps.apply(VdmRuntime.getStatementEvaluator(), pctxt); // Ignore return value
-			pctxt.threadState.setAtomic(false);
+			try
+			{
+				pctxt.threadState.setAtomic(true);
+				ps.apply(VdmRuntime.getStatementEvaluator(), pctxt); // Ignore return value
+			}
+			finally
+			{
+				pctxt.threadState.setAtomic(false);
+			}
 
 			OperationValue pop = pctxt.lookup(ps.getOpname()).operationValue(pctxt);
 

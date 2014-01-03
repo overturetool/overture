@@ -130,13 +130,19 @@ public class RecordValue extends Value
 			// conversion. This also stops VDM-RT from performing "time step"
 			// calculations.
 
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
+			try
 			{
-				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+				ctxt.threadState.setAtomic(true);
+				boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
+
+				if (!inv)
+				{
+					abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+				}
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
 			}
 		}
 	}
