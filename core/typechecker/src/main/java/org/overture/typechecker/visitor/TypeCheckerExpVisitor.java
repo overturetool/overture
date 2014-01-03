@@ -1653,6 +1653,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		def.apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
 		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope);
+		local.setEnclosingDefinition(def); 	// Prevent recursive checks
 
 		PType result = node.getExpression().apply(THIS, newInfo);
 		local.unusedCheck();
