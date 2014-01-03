@@ -378,11 +378,17 @@ public class OperationValue extends Value
 
 				// We disable the swapping and time (RT) as precondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-				ctxt.setPrepost(4071, "Precondition failure: ");
-				precondition.eval(from, preArgs, ctxt);
-				ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4071, "Precondition failure: ");
+					precondition.eval(from, preArgs, ctxt);
+				}
+				finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
 			}
 
 			if (body == null)
@@ -440,11 +446,17 @@ public class OperationValue extends Value
 
 				// We disable the swapping and time (RT) as postcondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-				ctxt.setPrepost(4072, "Postcondition failure: ");
-				postcondition.eval(from, postArgs, ctxt);
-				ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4072, "Postcondition failure: ");
+					postcondition.eval(from, postArgs, ctxt);
+				}
+				finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
 			}
 
 		} catch (AnalysisException e)
@@ -576,23 +588,30 @@ public class OperationValue extends Value
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
 				// having self locked, and that locks up everything!
-
-				debug("guard TEST");
-				ctxt.threadState.setAtomic(true);
 				boolean ok = false;
+
 				try
 				{
-					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-				}
-				catch (AnalysisException e)
-				{
-					if (e instanceof ValueException)
+					debug("guard TEST");
+					ctxt.threadState.setAtomic(true);
+					
+					try
 					{
-						throw (ValueException) e;
+						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
 					}
-					e.printStackTrace();
+					catch (AnalysisException e)
+					{
+						if (e instanceof ValueException)
+						{
+							throw (ValueException) e;
+						}
+						e.printStackTrace();
+					}
 				}
-				ctxt.threadState.setAtomic(false);
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
 
 				if (ok)
 				{

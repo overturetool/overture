@@ -255,6 +255,17 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
+	public static boolean isTag(PType type)
+	{
+		try
+		{
+			return type.apply(af.getTagBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return false;
+		}
+	}
+
 	public static ARecordInvariantType getRecord(PType type)
 	{
 		try

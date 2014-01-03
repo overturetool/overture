@@ -382,11 +382,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					+ " is not in scope", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
-		} else if (question.assistantFactory.createPDefinitionAssistant().isStatic(fdef)
-				&& !question.env.isStatic())
-		{
-			// warning(5005, "Should invoke member " + field +
-			// " from a static context");
+		} else {
+			question.assistantFactory.createPDefinitionAssistant();
+			if (PDefinitionAssistantTC.isStatic(fdef)
+					&& !question.env.isStatic())
+			{
+				// warning(5005, "Should invoke member " + field +
+				// " from a static context");
+			}
 		}
 
 		PType type = question.assistantFactory.createPDefinitionAssistant().getType(fdef);
@@ -441,8 +444,23 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef)
-				&& question.env.isStatic())
+		if (question.env.isVDMPP() && node.getName().getExplicit())
+		{
+			// A call like X`op() is local if X is in our hierarchy
+			// else it's a static call of a different class.
+			
+			SClassDefinition self = question.env.findClassDefinition();
+			PType ctype = opdef.getClassDefinition().getType();
+			
+			if (!PDefinitionAssistantTC.hasSupertype(self, ctype) && opdef.getAccess().getStatic() == null)
+			{
+				TypeCheckerErrors.report(3324, "Operation " + node.getName() + " is not static", node.getLocation(), node);
+				node.setType(AstFactory.newAUnknownType(node.getLocation()));
+				return node.getType();
+			}
+		}
+		
+		if (!PDefinitionAssistantTC.isStatic(opdef) && question.env.isStatic())
 		{
 			TypeCheckerErrors.report(3214, "Cannot call " + node.getName()
 					+ " from static context", node.getLocation(), node);

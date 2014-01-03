@@ -72,6 +72,16 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			}
 
 		}
+		
+		@Override
+		protected void afterExecute(Runnable r, Throwable t)
+		{
+			if (r instanceof SchedulablePoolThread)
+			{
+				SchedulablePoolThread spt = (SchedulablePoolThread) r;
+				spt.setThread(null);
+			}
+		}
 
 		/**
 		 * Prints an error message if a execution is rejected

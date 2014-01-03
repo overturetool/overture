@@ -229,29 +229,34 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		// Finally, we re-enable the thread swapping and time stepping, before returning
 		// a void value.
 
-		ctxt.threadState.setAtomic(true);
-		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
-
-		for (int i = 0; i < size; i++)
+		try
 		{
-			UpdatableValue target = (UpdatableValue) targets.get(i);
-			listenerLists.add(target.listeners);
-			target.listeners = null;
-			target.set(node.getLocation(), values.get(i), ctxt); // No invariant listeners
-			target.listeners = listenerLists.get(i);
-		}
-
-		for (int i = 0; i < size; i++)
-		{
-			ValueListenerList listeners = listenerLists.get(i);
-
-			if (listeners != null)
+			ctxt.threadState.setAtomic(true);
+			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+	
+			for (int i = 0; i < size; i++)
 			{
-				listeners.changedValue(node.getLocation(), values.get(i), ctxt);
+				UpdatableValue target = (UpdatableValue) targets.get(i);
+				listenerLists.add(target.listeners);
+				target.listeners = null;
+				target.set(node.getLocation(), values.get(i), ctxt); // No invariant listeners
+				target.listeners = listenerLists.get(i);
+			}
+	
+			for (int i = 0; i < size; i++)
+			{
+				ValueListenerList listeners = listenerLists.get(i);
+	
+				if (listeners != null)
+				{
+					listeners.changedValue(node.getLocation(), values.get(i), ctxt);
+				}
 			}
 		}
-
-		ctxt.threadState.setAtomic(false);
+		finally
+		{
+			ctxt.threadState.setAtomic(false);
+		}
 
 		return new VoidValue();
 	}
@@ -410,12 +415,26 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		} else
+		}
+		else
 		{
+			// We disable the swapping and time (RT) as cycles evaluation should be "free".
+			Long value;
+			
+			try
+			{
+				ctxt.threadState.setAtomic(true);
+				value = node.getValue();
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
+			
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
 			me.inOuterTimestep(false);
-			me.duration(ctxt.threadState.CPU.getDuration(node.getValue()), ctxt, node.getLocation());
+			me.duration(ctxt.threadState.CPU.getDuration(value), ctxt, node.getLocation());
 			return rv;
 		}
 	}
@@ -433,12 +452,21 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		} else
+		}
+		else
 		{
 			// We disable the swapping and time (RT) as duration evaluation should be "free".
-			ctxt.threadState.setAtomic(true);
-			long step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
-			ctxt.threadState.setAtomic(false);
+			long step;
+			
+			try
+			{
+				ctxt.threadState.setAtomic(true);
+				step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
 
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
