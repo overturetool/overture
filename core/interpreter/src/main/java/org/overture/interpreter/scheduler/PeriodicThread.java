@@ -231,6 +231,11 @@ public class PeriodicThread extends SchedulablePoolThread
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
 		}
+		catch (ThreadDeath e)
+		{
+			ctxt.threadState.dbgp.complete(DBGPReason.ABORTED, null);
+			throw e;
+		}
 		finally
 		{
 			TransactionValue.commitAll();
