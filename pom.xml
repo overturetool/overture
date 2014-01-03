@@ -38,7 +38,7 @@
   <pluginRepositories>
     <pluginRepository>
       <id>overture-astcreator-github</id>
-      <name>Overture AST Creator Maven plugin</name>
+      <name>Overture AstCreator maven development repo on GitHub</name>
       <releases>
         <enabled>true</enabled>
         <updatePolicy>daily</updatePolicy>
