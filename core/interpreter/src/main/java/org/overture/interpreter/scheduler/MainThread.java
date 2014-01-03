@@ -53,7 +53,7 @@ public class MainThread extends SchedulablePoolThread
 	public final PExp expression;
 
 	private Value result = new UndefinedValue();
-	private Vector<Exception> exception = new Vector<Exception>();
+	protected Vector<Exception> exception = new Vector<Exception>();
 
 	public MainThread(PExp expr, Context ctxt)
 	{

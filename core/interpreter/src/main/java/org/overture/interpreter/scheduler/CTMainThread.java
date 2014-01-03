@@ -191,4 +191,10 @@ public class CTMainThread extends MainThread
 	{
 		return result;
 	}
+
+	public void setException(Exception e)
+	{
+		// Don't print out the error for CT
+		exception.add(e);
+	}
 }
