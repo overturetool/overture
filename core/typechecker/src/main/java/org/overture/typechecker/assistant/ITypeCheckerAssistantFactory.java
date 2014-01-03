@@ -334,6 +334,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AnswerAdaptor<Boolean> getRecordBasisChecker();
 
+	AnswerAdaptor<Boolean> getTagBasisChecker();
+
 	IAnswer<ARecordInvariantType> getRecordTypeFinder();
 
 	AnswerAdaptor<Boolean> getClassBasisChecker();

@@ -1882,19 +1882,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType rec = null;
 		if (typeDef instanceof ATypeDefinition)
 		{
-			rec = ((ATypeDefinition) typeDef).getInvType();
+			rec = ((ATypeDefinition) typeDef).getType();
 		} else if (typeDef instanceof AStateDefinition)
 		{
 			rec = ((AStateDefinition) typeDef).getRecordType();
 		} else
 		{
 			rec = question.assistantFactory.createPDefinitionAssistant().getType(typeDef);
-		}
-
-		while (rec instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nrec = (ANamedInvariantType) rec;
-			rec = nrec.getType();
 		}
 
 		if (!(rec instanceof ARecordInvariantType))
@@ -2444,7 +2438,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				question.qualifiers = null;
 				PType rhs = ee.getRight().apply(THIS, question);
 
-				if (PTypeAssistantTC.isRecord(rhs))
+				if (PTypeAssistantTC.isTag(rhs))
 				{
 					ARecordInvariantType rt = PTypeAssistantTC.getRecord(rhs);
 					canBeExecuted = rt.getName().getName().equals(node.getState().getName().getName());

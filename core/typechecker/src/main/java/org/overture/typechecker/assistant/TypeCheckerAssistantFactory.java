@@ -155,6 +155,7 @@ import org.overture.typechecker.utilities.type.SeqBasisChecker;
 import org.overture.typechecker.utilities.type.SeqTypeFinder;
 import org.overture.typechecker.utilities.type.SetBasisChecker;
 import org.overture.typechecker.utilities.type.SetTypeFinder;
+import org.overture.typechecker.utilities.type.TagBasisChecker;
 import org.overture.typechecker.utilities.type.TypeDisplayer;
 import org.overture.typechecker.utilities.type.TypeEqualityChecker;
 import org.overture.typechecker.utilities.type.TypeUnresolver;
@@ -887,6 +888,12 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public AnswerAdaptor<Boolean> getRecordBasisChecker()
 	{
 		return new RecordBasisChecker(this);
+	}
+
+	@Override
+	public AnswerAdaptor<Boolean> getTagBasisChecker()
+	{
+		return new TagBasisChecker(this);
 	}
 
 	@Override
