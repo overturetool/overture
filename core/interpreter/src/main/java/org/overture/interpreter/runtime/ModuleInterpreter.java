@@ -40,6 +40,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
@@ -333,7 +334,13 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
-		return initialContext;
+		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
+				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
+
+		mainContext.putAll(initialContext);
+		mainContext.setThreadState(null, CPUValue.vCPU);
+
+		return mainContext;
 	}
 
 
