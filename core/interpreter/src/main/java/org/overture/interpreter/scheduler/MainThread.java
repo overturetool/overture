@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.expressions.PExp;
@@ -170,6 +171,11 @@ public class MainThread extends SchedulablePoolThread
 		}
 
 		return result;
+	}
+	
+	public List<Exception> getExceptions()
+	{
+		return exception;
 	}
 
 	public void setException(Exception e)
