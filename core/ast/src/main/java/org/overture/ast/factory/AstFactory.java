@@ -907,13 +907,13 @@ public class AstFactory
 		PStm statement;
 		
 		// We only have the number of args to distinguish periodics from sporadics.
-		if (args.size() == 4)
-		{
-			statement = AstFactory.newAPeriodicStm(opname, args);
-		}
-		else
+		if (args.size() == 3)
 		{
 			statement = AstFactory.newASporadicStm(opname, args);
+		}
+		else	// Periodics have 1 or 4 args
+		{
+			statement = AstFactory.newAPeriodicStm(opname, args);
 		}
 
 		return newAThreadDefinition(statement);
