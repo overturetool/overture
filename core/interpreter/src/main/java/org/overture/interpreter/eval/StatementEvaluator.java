@@ -49,6 +49,7 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
@@ -1068,12 +1069,13 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			PExp arg = node.getArgs().get(i);
 			long value = -1;
+			Value argval = null;
 
 			try
 			{
-
 				arg.getLocation().hit();
-				value = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				value = argval.intValue(ctxt);
 
 				if (value < 0)
 				{
@@ -1089,10 +1091,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					node.setDelay(value);
 				else if (i == OFFSET)
 					node.setOffset(value);
-			} catch (ValueException e)
+			}
+			catch (ValueException e)
 			{
 				VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in periodic argument "
-						+ (i + 1) + ", was " + value, ctxt);
+						+ (i + 1) + ", was " + argval, ctxt);
 			}
 		}
 
@@ -1115,6 +1118,55 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		return null; // Not actually used - see StartStatement
 	}
+	
+	@Override
+	public Value caseASporadicStm(ASporadicStm node, Context ctxt) throws AnalysisException
+	{
+		final int MINDELAY = 0;
+		final int MAXDELAY = 1;
+		final int OFFSET = 2;
+
+		node.setMinDelay(0L);
+		node.setMaxDelay(0L);
+		node.setOffset(0L);
+
+		int i = 0;
+		
+		for (PExp arg: node.getArgs())
+		{
+			Value argval = null;
+			
+			try
+			{
+				arg.getLocation().hit();
+				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				long value = argval.intValue(ctxt);
+
+				if (value < 0)
+				{
+					VdmRuntimeError.abort(node.getLocation(), 4157,
+						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + value, ctxt);
+				}
+				
+				if (i == MINDELAY)
+					node.setMinDelay(value);
+				else if (i == MAXDELAY)
+					node.setMaxDelay(value);
+				else if (i == OFFSET)
+					node.setOffset(value);
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4157,
+						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + argval, ctxt);
+			}
+
+			i++;
+		}
+
+		return null;	// Not actually used - see StartStatement
+	}
+
 
 	@Override
 	public Value caseAIdentifierStateDesignator(

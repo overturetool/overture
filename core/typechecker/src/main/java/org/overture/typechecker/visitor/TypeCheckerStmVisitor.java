@@ -55,6 +55,7 @@ import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
@@ -1133,6 +1134,81 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		return node.getType();
 	}
 
+
+	@Override
+	public PType caseASporadicStm(ASporadicStm node, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		List<PExp> args = node.getArgs();
+
+		if (args.size() != 3)
+		{
+			TypeCheckerErrors.report(3287, "Sporadic thread must have 3 arguments", node.getLocation(), node);
+		}
+		else
+		{
+			for (PExp arg: args)
+			{
+				PType type = arg.apply(THIS, question);
+
+				if (!PTypeAssistantTC.isNumeric(type))
+				{
+					TypeCheckerErrors.report(3316, "Expecting number in sporadic argument", arg.getLocation(), node);
+				}
+			}
+		}
+		
+		ILexNameToken opname = node.getOpname();
+		opname.setTypeQualifier(new LinkedList<PType>());
+		opname.getLocation().hit();
+		PDefinition opdef = question.env.findName(opname, NameScope.NAMES);
+
+		if (opdef == null)
+		{
+			TypeCheckerErrors.report(3228, opname + " is not in scope", node.getLocation(), node);
+			node.setType(AstFactory.newAUnknownType(node.getLocation()));
+			return node.getType();
+		}
+
+		// Operation must be "() ==> ()"
+
+		AOperationType expected = AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));
+		opdef = PDefinitionAssistantTC.deref(opdef);
+
+		if (opdef instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition def = (AExplicitOperationDefinition)opdef;
+
+			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			{
+				TypeCheckerErrors.report(3229, opname + " should have no parameters or return type", node.getLocation(), node);
+				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+		}
+		else if (opdef instanceof AImplicitOperationDefinition)
+		{
+			AImplicitOperationDefinition def = (AImplicitOperationDefinition)opdef;
+
+			if (def.getBody() == null)
+			{
+				TypeCheckerErrors.report(3230, opname + " is implicit", node.getLocation(), node);
+			}
+
+			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			{
+				TypeCheckerErrors.report(3231, opname + " should have no parameters or return type", node.getLocation(), node);
+				TypeCheckerErrors.detail("Actual", def.getType());
+			}
+		}
+		else
+		{
+			TypeCheckerErrors.report(3232, opname + " is not an operation name", node.getLocation(), node);
+		}
+
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
+		return node.getType();
+	}
+	
 	@Override
 	public PType caseAStartStm(AStartStm node, TypeCheckInfo question)
 			throws AnalysisException

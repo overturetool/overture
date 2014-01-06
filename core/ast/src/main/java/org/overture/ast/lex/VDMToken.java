@@ -244,6 +244,7 @@ public enum VDMToken implements Serializable
 	SAMECLASS("sameclass", "sameclass", VDM_PP, VDM_RT),
 	THREADID("threadid", "threadid", VDM_PP, VDM_RT),
 	PERIODIC("periodic", "periodic", VDM_PP, VDM_RT),
+	SPORADIC("sporadic", "sporadic", VDM_PP, VDM_RT),
 	PER("per", "per", VDM_PP, VDM_RT),
 	MUTEX("mutex", "mutex", VDM_PP, VDM_RT),
 	REQ("#req", "#req", VDM_PP, VDM_RT),

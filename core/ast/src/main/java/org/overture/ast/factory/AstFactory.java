@@ -152,6 +152,7 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
@@ -903,9 +904,32 @@ public class AstFactory
 	public static AThreadDefinition newAThreadDefinition(ILexNameToken opname,
 			List<PExp> args)
 	{
+		PStm statement;
+		
+		// We only have the number of args to distinguish periodics from sporadics.
+		if (args.size() == 4)
+		{
+			statement = AstFactory.newAPeriodicStm(opname, args);
+		}
+		else
+		{
+			statement = AstFactory.newASporadicStm(opname, args);
+		}
 
-		APeriodicStm periodicStatement = AstFactory.newAPeriodicStm(opname, args);
-		return newAThreadDefinition(periodicStatement);
+		return newAThreadDefinition(statement);
+	}
+
+	private static PStm newASporadicStm(ILexNameToken opname, List<PExp> args)
+	{
+		ASporadicStm result = new ASporadicStm();
+
+		// Statement initialization
+		initStatement(result, opname.getLocation());
+
+		result.setOpname(opname);
+		result.setArgs(args);
+
+		return result;
 	}
 
 	private static APeriodicStm newAPeriodicStm(ILexNameToken opname,
