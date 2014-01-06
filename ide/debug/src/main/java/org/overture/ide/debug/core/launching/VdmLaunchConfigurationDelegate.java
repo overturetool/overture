@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -256,7 +257,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add(0, "java");
 
 		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
-		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(getProject(configuration), IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS, vdmjPropertiesFile));
+		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
@@ -303,6 +304,17 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 		}
 		return commandList;
+	}
+
+	private String[] getDebugEngineBundleIds()
+	{
+		List<String> ids = new ArrayList<String>(Arrays.asList(IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS));
+		
+		if(VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
+		{
+			ids.add("org.overture.ide.plugins.probruntime");
+		}
+		return ids.toArray(new String[]{});
 	}
 
 	private File prepareCustomDebuggerProperties(IVdmProject vdmProject,
