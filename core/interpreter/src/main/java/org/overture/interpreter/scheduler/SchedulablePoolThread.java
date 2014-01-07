@@ -432,14 +432,23 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		BasicSchedulableThread.signalAll(sig);
 	}
 
-	public synchronized void stopThread()
+	public synchronized boolean stopThread()
 	{
-		stopCalled = true;
-		timestep = Long.MAX_VALUE;			// Don't take part in time step
-		
-		if (Thread.currentThread() != this.getThread())
+		if (!stopCalled)
 		{
-			setState(RunState.RUNNABLE);	// So that thread is rescheduled
+			stopCalled = true;
+			timestep = Long.MAX_VALUE;			// Don't take part in time step
+			
+			if (Thread.currentThread() != this.getThread())
+			{
+				setState(RunState.RUNNABLE);	// So that thread is rescheduled
+			}
+			
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 	

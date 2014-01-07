@@ -58,7 +58,7 @@ public interface ISchedulableThread
 
 	public abstract void suspendOthers();
 
-	public abstract void stopThread();
+	public abstract boolean stopThread();
 	
 	public abstract void reschedule(Context ctxt, ILexLocation location);
 
