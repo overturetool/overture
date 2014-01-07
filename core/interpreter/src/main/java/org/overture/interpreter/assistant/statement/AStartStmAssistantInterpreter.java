@@ -5,6 +5,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -97,4 +98,8 @@ public class AStartStmAssistantInterpreter
 		return PExpAssistantInterpreter.findExpression(stm.getObj(), lineno);
 	}
 
+	public static PExp findExpression(AStopStm stm, int lineno)
+	{
+		return PExpAssistantInterpreter.findExpression(stm.getObj(), lineno);
+	}
 }

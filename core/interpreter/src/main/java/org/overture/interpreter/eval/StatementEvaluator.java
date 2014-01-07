@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import javax.xml.soap.Node;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ASetBind;
@@ -51,6 +54,7 @@ import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
@@ -68,6 +72,7 @@ import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -75,6 +80,8 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.ObjectThread;
+import org.overture.interpreter.scheduler.PeriodicThread;
 import org.overture.interpreter.scheduler.SharedStateListner;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.FunctionValue;
@@ -916,6 +923,65 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
+	}
+	
+	@Override
+	public Value caseAStopStm(AStopStm node, Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		try
+		{
+			Value value = node.getObj().apply(VdmRuntime.getStatementEvaluator(), ctxt);
+
+			if (value.isType(SetValue.class))
+			{
+				ValueSet set = value.setValue(ctxt);
+
+				for (Value v: set)
+				{
+					ObjectValue target = v.objectValue(ctxt);
+					stop(target, node.getLocation(), ctxt);
+				}
+			}
+			else
+			{
+				ObjectValue target = value.objectValue(ctxt);
+				stop(target, node.getLocation(), ctxt);
+			}
+
+			// Cause a reschedule so that this thread is stopped, if necessary
+			ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
+			th.reschedule(ctxt, node.getLocation());
+			
+			return new VoidValue();
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
+	}
+	
+	private void stop(ObjectValue target, ILexLocation location, Context ctxt) throws ValueException
+	{
+		List<ISchedulableThread> threads = BasicSchedulableThread.findThreads(target);
+		int count = 0;
+		
+		for (ISchedulableThread th: threads)
+		{
+			if (th instanceof ObjectThread || th instanceof PeriodicThread)
+			{
+				th.stopThread();	// This may stop current thread at next reschedule
+				count++;
+			}
+		}
+
+		if (count == 0)
+		{
+			throw new ContextException(4160,
+				"Object #" + target.objectReference + " is not running a thread to stop", location, ctxt);
 		}
 	}
 

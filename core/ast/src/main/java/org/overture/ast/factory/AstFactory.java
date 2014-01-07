@@ -154,6 +154,7 @@ import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
@@ -206,7 +207,6 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-
 	static
 	{
 		new AstAssistantFactory();// FIXME: remove when asssistant conversion is finished
@@ -2794,6 +2794,15 @@ public class AstFactory
 	public static AStartStm newAStartStm(ILexLocation location, PExp obj)
 	{
 		AStartStm result = new AStartStm();
+		initStatement(result, location);
+
+		result.setObj(obj);
+		return result;
+	}
+
+	public static AStopStm newAStopStm(ILexLocation location, PExp obj)
+	{
+		AStopStm result = new AStopStm();
 		initStatement(result, location);
 
 		result.setObj(obj);

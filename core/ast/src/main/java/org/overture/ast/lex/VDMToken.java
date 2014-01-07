@@ -254,6 +254,8 @@ public enum VDMToken implements Serializable
 	WAITING("#waiting", "#waiting", VDM_PP, VDM_RT),
 	START("start", "start", VDM_PP, VDM_RT),
 	STARTLIST("startlist", "startlist", VDM_PP, VDM_RT),
+	STOP("stop", "stop", VDM_PP, VDM_RT),
+	STOPLIST("stoplist", "stoplist", VDM_PP, VDM_RT),
 
 	// VICE extra tokens
 	TIME("time", "time", VDM_RT),

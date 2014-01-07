@@ -57,6 +57,7 @@ import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
@@ -1214,6 +1215,46 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
+		PType type = node.getObj().apply(THIS, question);
+
+		if (PTypeAssistantTC.isSet(type))
+		{
+			ASetType set = PTypeAssistantTC.getSet(type);
+
+			if (!PTypeAssistantTC.isClass(set.getSetof()))
+			{
+				TypeCheckerErrors.report(3235, "Expression is not a set of object references", node.getObj().getLocation(), node.getObj());
+			} else
+			{
+				AClassType ctype = PTypeAssistantTC.getClassType(set.getSetof());
+
+				if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+				{
+					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
+				}
+			}
+		} else if (PTypeAssistantTC.isClass(type))
+		{
+			AClassType ctype = PTypeAssistantTC.getClassType(type);
+
+			if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+			{
+				TypeCheckerErrors.report(3237, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
+			}
+		} else
+		{
+			TypeCheckerErrors.report(3238, "Expression is not an object reference or set of object references", node.getObj().getLocation(), node.getObj());
+		}
+
+		node.setType(AstFactory.newAVoidType(node.getLocation()));
+		return node.getType();
+	}
+
+	
+	@Override
+	public PType caseAStopStm(AStopStm node, TypeCheckInfo question)
+			throws AnalysisException
+	{
 		PType type = node.getObj().apply(THIS, question);
 
 		if (PTypeAssistantTC.isSet(type))

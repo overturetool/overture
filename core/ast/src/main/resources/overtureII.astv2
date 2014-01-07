@@ -576,6 +576,7 @@ stm {-> package='org.overture.ast.statements'
     |   {skip}
     |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
     |   {start} [obj]:exp
+    |   {stop} [obj]:exp
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
