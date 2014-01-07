@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import javax.xml.soap.Node;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -968,6 +966,15 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		List<ISchedulableThread> threads = BasicSchedulableThread.findThreads(target);
 		int count = 0;
+		
+		if (target.getCPU() != ctxt.threadState.CPU)
+		{
+			throw new ContextException(4161,
+					"Cannot stop object " + target.objectReference +
+					" on CPU " + target.getCPU().getName() +
+					" from CPU " + ctxt.threadState.CPU,
+					location, ctxt);
+		}
 		
 		for (ISchedulableThread th: threads)
 		{
