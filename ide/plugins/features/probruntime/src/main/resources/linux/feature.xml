@@ -25,27 +25,12 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.overture.ide.plugins.probruntime.win32.win32"
-       
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
-         id="org.overture.ide.plugins.probruntime.macosx.x86_64"
-       
-        
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
+  
 
    <plugin
          id="org.overture.ide.plugins.probruntime.linux.x86_64"
-       
-        
+         os="linux"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -53,8 +38,8 @@
 
    <plugin
          id="org.overture.ide.plugins.probruntime.linux.x86"
-       
-        
+         os="linux"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"

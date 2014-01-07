@@ -3,7 +3,6 @@ package org.overture.ide.plugins.probruntime;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-
 public class Activator extends Plugin
 {
 
@@ -52,5 +51,4 @@ public class Activator extends Plugin
 		return plugin;
 	}
 
-	
 }
