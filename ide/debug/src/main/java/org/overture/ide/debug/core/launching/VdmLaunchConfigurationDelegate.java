@@ -68,7 +68,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 {
 
-	private static final String ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME = "org.overture.ide.plugins.probruntime";
+	private static final String ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME = "org.overture.ide.plugins.probruntime.core";
 	static int sessionId = 0;;
 
 	public void launch(ILaunchConfiguration configuration, String mode,
