@@ -1247,7 +1247,7 @@ public class DefinitionReader extends SyntaxReader
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
 			checkFor(VDMToken.KET, 2115, "Expecting (name) after periodic(...)");
 			//PStm statement = AstFactory.newAPeriodicStm(token.location, name, args);
-			return AstFactory.newAThreadDefinition(name,args);
+			return AstFactory.newPeriodicAThreadDefinition(name,args);
 		}
 		else if (token.is(VDMToken.SPORADIC))
 		{
@@ -1258,7 +1258,7 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.BRA, 2314, "Expecting '(' after sporadic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after sporadic(...)");
 			checkFor(VDMToken.KET, 2315, "Expecting (name) after sporadic(...)");
-			return AstFactory.newAThreadDefinition(name,args);
+			return AstFactory.newSporadicAThreadDefinition(name,args);
 		}
 		else
 		{

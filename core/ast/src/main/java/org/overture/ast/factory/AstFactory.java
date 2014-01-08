@@ -901,22 +901,16 @@ public class AstFactory
 		return result;
 	}
 
-	public static AThreadDefinition newAThreadDefinition(ILexNameToken opname,
+	public static AThreadDefinition newPeriodicAThreadDefinition(ILexNameToken opname,
 			List<PExp> args)
 	{
-		PStm statement;
-		
-		// We only have the number of args to distinguish periodics from sporadics.
-		if (args.size() == 3)
-		{
-			statement = AstFactory.newASporadicStm(opname, args);
-		}
-		else	// Periodics have 1 or 4 args
-		{
-			statement = AstFactory.newAPeriodicStm(opname, args);
-		}
+		return newAThreadDefinition(AstFactory.newAPeriodicStm(opname, args));
+	}
 
-		return newAThreadDefinition(statement);
+	public static AThreadDefinition newSporadicAThreadDefinition(ILexNameToken opname,
+			List<PExp> args)
+	{
+		return newAThreadDefinition(AstFactory.newASporadicStm(opname, args));
 	}
 
 	private static PStm newASporadicStm(ILexNameToken opname, List<PExp> args)
