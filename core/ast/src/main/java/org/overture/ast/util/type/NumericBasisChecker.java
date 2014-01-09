@@ -3,11 +3,9 @@ package org.overture.ast.util.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.type.ABracketTypeAssistant;
-import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
-import org.overture.ast.assistant.type.AOptionalTypeAssistant;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
+import org.overture.ast.assistant.type.PTypeAssistant;
+import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -52,14 +50,14 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 	public SNumericBasicType caseABracketType(ABracketType type)
 			throws AnalysisException
 	{
-		return ABracketTypeAssistant.getNumeric(type);
+		return type.getType().apply(THIS);
 	}
 	
 	@Override
 	public SNumericBasicType caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
-		return ANamedInvariantTypeAssistant.getNumeric(type);
+		return type.getType().apply(THIS);
 	}
 	@Override
 	public SNumericBasicType defaultSInvariantType(SInvariantType type)
@@ -72,21 +70,46 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 	public SNumericBasicType caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
-		return AOptionalTypeAssistant.getNumeric(type);
+		return type.getType().apply(THIS);
 	}
 	
 	@Override
 	public SNumericBasicType caseAUnionType(AUnionType type)
 			throws AnalysisException
 	{
-		return AUnionTypeAssistant.getNumeric(type);
+		if (!type.getNumDone())
+		{
+			type.setNumDone(true);
+			type.setNumType(AstFactory.newANatNumericBasicType(type.getLocation())); // lightest default
+			boolean found = false;
+
+			for (PType t : type.getTypes())
+			{
+				if (PTypeAssistant.isNumeric(t))
+				{
+					SNumericBasicType nt = PTypeAssistant.getNumeric(t);
+
+					if (SNumericBasicTypeAssistant.getWeight(nt) > SNumericBasicTypeAssistant.getWeight(type.getNumType()))
+					{
+						type.setNumType(nt);
+					}
+
+					found = true;
+				}
+			}
+
+			if (!found)
+				type.setNumType(null);
+		}
+
+		return type.getNumType();
 	}
 	
 	@Override
 	public SNumericBasicType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		return AUnknownTypeAssistant.getNumeric(type);
+		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
 	
 	@Override

@@ -21,9 +21,9 @@ public class AUnknownTypeAssistant
 //		return true;
 //	}
 
-	public static ARealNumericBasicType getNumeric(AUnknownType type)
-	{
-		return AstFactory.newARealNumericBasicType(type.getLocation());
-	}
+//	public static ARealNumericBasicType getNumeric(AUnknownType type)
+//	{
+//		return AstFactory.newARealNumericBasicType(type.getLocation());
+//	}
 
 }
