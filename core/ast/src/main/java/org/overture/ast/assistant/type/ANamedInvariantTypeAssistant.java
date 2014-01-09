@@ -15,12 +15,12 @@ public class ANamedInvariantTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(ANamedInvariantType type)
-	{
-		if (type.getOpaque())
-			return false;
-		return PTypeAssistant.isNumeric(type.getType());
-	}
+//	public static boolean isNumeric(ANamedInvariantType type)
+//	{
+//		if (type.getOpaque())
+//			return false;
+//		return PTypeAssistant.isNumeric(type.getType());
+//	}
 
 	public static SNumericBasicType getNumeric(ANamedInvariantType type)
 	{

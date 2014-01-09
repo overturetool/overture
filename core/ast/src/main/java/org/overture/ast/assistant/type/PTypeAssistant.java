@@ -2,6 +2,7 @@ package org.overture.ast.assistant.type;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -37,23 +38,30 @@ public class PTypeAssistant
 
 	public static boolean isNumeric(PType type)
 	{
-		if (type instanceof SBasicType) {
-			SBasicType bType = (SBasicType) type;
-			return bType instanceof SNumericBasicType;
-		} else if (type instanceof ABracketType) {
-			return ABracketTypeAssistant.isNumeric((ABracketType) type);
-		} else if (type instanceof SInvariantType) {
-			if (type instanceof ANamedInvariantType) {
-				return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType) {
-			return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
-		} else if (type instanceof AUnionType) {
-			return AUnionTypeAssistant.isNumeric((AUnionType) type);
-		} else if (type instanceof AUnknownType) {
-			return AUnknownTypeAssistant.isNumeric((AUnknownType) type);
+		try
+		{
+			return type.apply(af.getNumericFinder());
+		} catch (AnalysisException e)
+		{
+			return false;
 		}
-		return false;
+//		if (type instanceof SBasicType) {
+//			SBasicType bType = (SBasicType) type;
+//			return bType instanceof SNumericBasicType;
+//		} else if (type instanceof ABracketType) {
+//			return ABracketTypeAssistant.isNumeric((ABracketType) type);
+//		} else if (type instanceof SInvariantType) {
+//			if (type instanceof ANamedInvariantType) {
+//				return ANamedInvariantTypeAssistant.isNumeric((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType) {
+//			return AOptionalTypeAssistant.isNumeric((AOptionalType) type);
+//		} else if (type instanceof AUnionType) {
+//			return AUnionTypeAssistant.isNumeric((AUnionType) type);
+//		} else if (type instanceof AUnknownType) {
+//			return AUnknownTypeAssistant.isNumeric((AUnknownType) type);
+//		}
+//		return false;
 	}
 
 	public static SNumericBasicType getNumeric(PType type)

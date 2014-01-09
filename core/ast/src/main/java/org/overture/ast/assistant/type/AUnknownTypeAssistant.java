@@ -16,10 +16,10 @@ public class AUnknownTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(AUnknownType type)
-	{
-		return true;
-	}
+//	public static boolean isNumeric(AUnknownType type)
+//	{
+//		return true;
+//	}
 
 	public static ARealNumericBasicType getNumeric(AUnknownType type)
 	{

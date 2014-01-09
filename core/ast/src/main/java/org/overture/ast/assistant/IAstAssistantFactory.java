@@ -33,4 +33,5 @@ public interface IAstAssistantFactory
 	
 	//visitors
 	IAnswer<LexNameList> getAllVariableNameLocator();
+	IAnswer<Boolean> getNumericFinder();
 }

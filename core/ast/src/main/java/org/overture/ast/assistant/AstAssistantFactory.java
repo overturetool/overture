@@ -16,6 +16,7 @@ import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.util.pattern.AllVariableNameLocator;
+import org.overture.ast.util.type.NumericFinder;
 
 public class AstAssistantFactory implements IAstAssistantFactory
 {
@@ -118,6 +119,12 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	public IAnswer<LexNameList> getAllVariableNameLocator()
 	{
 		return new AllVariableNameLocator(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getNumericFinder()
+	{
+		return new NumericFinder(this);
 	}
 	
 

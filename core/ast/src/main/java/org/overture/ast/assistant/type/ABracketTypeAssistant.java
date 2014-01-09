@@ -15,10 +15,10 @@ public class ABracketTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(ABracketType type)
-	{
-		return PTypeAssistant.isNumeric(type.getType());
-	}
+//	public static boolean isNumeric(ABracketType type)
+//	{
+//		return PTypeAssistant.isNumeric(type.getType());
+//	}
 
 	public static SNumericBasicType getNumeric(ABracketType type)
 	{

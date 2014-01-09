@@ -15,10 +15,10 @@ public class AOptionalTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(AOptionalType type)
-	{
-		return PTypeAssistant.isNumeric(type.getType());
-	}
+//	public static boolean isNumeric(AOptionalType type)
+//	{
+//		return PTypeAssistant.isNumeric(type.getType());
+//	}
 
 	public static SNumericBasicType getNumeric(AOptionalType type)
 	{
