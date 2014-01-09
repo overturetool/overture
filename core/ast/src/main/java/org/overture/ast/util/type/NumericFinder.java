@@ -3,12 +3,6 @@ package org.overture.ast.util.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.type.ABracketTypeAssistant;
-import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
-import org.overture.ast.assistant.type.AOptionalTypeAssistant;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
-import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -19,6 +13,12 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SNumericBasicType;
+
+/**
+ * Used to find if a type is Numeric.
+ * 
+ * @author gkanos
+ */
 
 public class NumericFinder extends AnswerAdaptor<Boolean>
 {

@@ -66,25 +66,33 @@ public class PTypeAssistant
 
 	public static SNumericBasicType getNumeric(PType type)
 	{
-		if (type instanceof SBasicType) {
-			if (type instanceof SNumericBasicType) {
-				return (SNumericBasicType) type;
-			}
-		} else if (type instanceof ABracketType) {
-			return ABracketTypeAssistant.getNumeric((ABracketType) type);
-		} else if (type instanceof SInvariantType) {
-			if (type instanceof ANamedInvariantType) {
-				return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);
-			}
-		} else if (type instanceof AOptionalType) {
-			return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
-		} else if (type instanceof AUnionType) {
-			return AUnionTypeAssistant.getNumeric((AUnionType) type);
-		} else if (type instanceof AUnknownType) {
-			return AUnknownTypeAssistant.getNumeric((AUnknownType) type);
+		try
+		{
+			return type.apply(af.getNumericBasisChecker());
+		} catch (AnalysisException e)
+		{
+			return null;
 		}
-		assert false : "Can't getNumeric of a non-numeric";
-		return null;
+		
+//		if (type instanceof SBasicType) {
+//			if (type instanceof SNumericBasicType) {
+//				return (SNumericBasicType) type;
+//			}
+//		} else if (type instanceof ABracketType) {
+//			return ABracketTypeAssistant.getNumeric((ABracketType) type);
+//		} else if (type instanceof SInvariantType) {
+//			if (type instanceof ANamedInvariantType) {
+//				return ANamedInvariantTypeAssistant.getNumeric((ANamedInvariantType) type);
+//			}
+//		} else if (type instanceof AOptionalType) {
+//			return AOptionalTypeAssistant.getNumeric((AOptionalType) type);
+//		} else if (type instanceof AUnionType) {
+//			return AUnionTypeAssistant.getNumeric((AUnionType) type);
+//		} else if (type instanceof AUnknownType) {
+//			return AUnknownTypeAssistant.getNumeric((AUnknownType) type);
+//		}
+//		assert false : "Can't getNumeric of a non-numeric";
+//		return null;
 	}
 
 	public static int hashCode(PType type)
