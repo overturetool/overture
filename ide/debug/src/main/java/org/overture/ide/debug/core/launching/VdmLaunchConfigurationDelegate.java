@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -56,6 +55,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
+import org.overture.ide.debug.utils.ClassPathCollector;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
@@ -68,7 +68,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 {
 
-	private static final String ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME = "org.overture.ide.plugins.probruntime.core";
+	public static final String ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME = "org.overture.ide.plugins.probruntime.core";
 	static int sessionId = 0;;
 
 	public void launch(ILaunchConfiguration configuration, String mode,
@@ -401,7 +401,16 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 						if (buildInfofileUrl != null)
 						{
 							File file = new File(buildInfofileUrl.getFile());
-							options.add("-Dprob.home=\""+file.getParentFile().getPath()+"\"");
+
+							if (ClassPathCollector.isWindowsPlatform())
+							{
+								options.add("-Dprob.home=\""
+										+ file.getParentFile().getPath() + "\"");
+							} else
+							{
+								options.add("-Dprob.home="
+										+ file.getParentFile().getPath());
+							}
 						}
 
 					}
