@@ -21,6 +21,9 @@ public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 	
 	public void addViolation(Violation violation)
 	{
+		if(nameViolations.contains(violation))
+			return;
+		
 		nameViolations.add(violation);
 	}
 }
