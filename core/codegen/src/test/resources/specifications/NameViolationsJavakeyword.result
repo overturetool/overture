@@ -1,3 +1,3 @@
-Reserved name violation: [Name violation: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]
-Reserved name violation: [Name violation: 'double'. Location: line 10 at position: 7 in NameViolationsJavakeyword]
-Reserved name violation: [Name violation: 'double'. Location: line 13 at position: 13 in NameViolationsJavakeyword]
+Reserved name violation: [Violation: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]
+Reserved name violation: [Violation: 'double'. Location: line 10 at position: 7 in NameViolationsJavakeyword]
+Reserved name violation: [Violation: 'double'. Location: line 13 at position: 13 in NameViolationsJavakeyword]
