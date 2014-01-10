@@ -5,11 +5,11 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 
-public class NameAnalysis extends ViolationAnalysis
+public class NameViolationAnalysis extends ViolationAnalysis
 {
 	private NamingComparison comparison;
 	
-	public NameAnalysis(NamingComparison comparison)
+	public NameViolationAnalysis(NamingComparison comparison)
 	{
 		this.comparison = comparison;
 	}

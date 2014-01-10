@@ -26,7 +26,7 @@ public class VdmAstAnalysis
 	
 	public static List<Violation> usesIllegalName(INode node, NamingComparison comparison) throws AnalysisException
 	{
-		NameAnalysis nameAnalysis = new NameAnalysis(comparison);
+		NameViolationAnalysis nameAnalysis = new NameViolationAnalysis(comparison);
 		try
 		{
 			node.apply(nameAnalysis);
