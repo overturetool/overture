@@ -1,1 +1,0 @@
-[ mk_(mk_CyberRail`NavigationInput("A","D",<Cheapest>,1),1,nil,500)]

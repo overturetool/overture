@@ -52,6 +52,22 @@
       <url>https://github.com/overturetool/astcreator/raw/mvn-dev-repo</url>
       <layout>default</layout>
     </pluginRepository>
+    <pluginRepository>
+      <id>overture-example-packager-github</id>
+      <name>Overture Example Packager maven development repo on GitHub</name>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <url>https://github.com/overturetool/example-packager/raw/mvn-dev-repo</url>
+      <layout>default</layout>
+    </pluginRepository>
   </pluginRepositories>
   
   <profiles>
