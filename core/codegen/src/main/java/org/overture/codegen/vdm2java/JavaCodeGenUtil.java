@@ -18,7 +18,7 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
-import org.overture.codegen.utils.NameViolation;
+import org.overture.codegen.utils.Violation;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
@@ -153,12 +153,12 @@ public class JavaCodeGenUtil
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		List<NameViolation> reservedWordViolations = e.getReservedWordViolations();
-		List<NameViolation> typenameViolations = e.getTypenameViolations();
+		List<Violation> reservedWordViolations = e.getReservedWordViolations();
+		List<Violation> typenameViolations = e.getTypenameViolations();
 		
 		if (!reservedWordViolations.isEmpty())
 		{	
-			for (NameViolation violation : reservedWordViolations)
+			for (Violation violation : reservedWordViolations)
 			{
 				buffer.append("Reserved name violation: " + violation + IText.NEW_LINE);
 			}
@@ -166,7 +166,7 @@ public class JavaCodeGenUtil
 		
 		if (!typenameViolations.isEmpty())
 		{	
-			for (NameViolation violation : typenameViolations)
+			for (Violation violation : typenameViolations)
 			{
 				buffer.append("Type name violation: " + violation + IText.NEW_LINE);
 			}

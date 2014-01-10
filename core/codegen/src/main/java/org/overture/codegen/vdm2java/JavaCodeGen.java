@@ -28,7 +28,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
-import org.overture.codegen.utils.NameViolation;
+import org.overture.codegen.utils.Violation;
 import org.overture.codegen.utils.ReservedWordsComparison;
 import org.overture.codegen.utils.TypenameComparison;
 import org.overture.codegen.utils.VdmAstAnalysis;
@@ -273,8 +273,8 @@ public class JavaCodeGen
 	
 	private static void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		List<NameViolation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
-		List<NameViolation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
+		List<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
+		List<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
 		
 		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty())
 			throw new InvalidNamesException("The model either uses words that are reserved by Java or declares VDM types that uses Java type names", reservedWordViolations, typenameViolations);
