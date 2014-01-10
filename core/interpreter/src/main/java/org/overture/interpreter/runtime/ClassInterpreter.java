@@ -58,6 +58,7 @@ import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.scheduler.RunState;
 import org.overture.interpreter.scheduler.Signal;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.traces.CallSequence;
@@ -470,6 +471,18 @@ public class ClassInterpreter extends Interpreter
 
 		//Ensures all threads are terminated for next trace run
 		BasicSchedulableThread.signalAll(Signal.TERMINATE);
+
+		while (main.getRunState() != RunState.COMPLETE)
+		{
+			try
+            {
+                Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+		}
 
 		return main.getList();
 	}

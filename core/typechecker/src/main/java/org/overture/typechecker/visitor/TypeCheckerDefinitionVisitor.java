@@ -1136,6 +1136,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		SClassDefinition classdef = base.findClassDefinition();
 		int opfound = 0;
 		int perfound = 0;
+		Boolean isStatic = null;
 
 		for (PDefinition def : classdef.getDefinitions())
 		{
@@ -1149,6 +1150,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3042, node.getOpname()
 							+ " is not an explicit operation", node.getOpname().getLocation(), node.getOpname());
 				}
+
+				if (isStatic != null && isStatic != PDefinitionAssistantTC.isStatic(def))
+				{
+					TypeCheckerErrors.report(3323, "Overloaded operation cannot mix static and non-static",
+							node.getLocation(), node.getOpname());
+				}
+				
+				isStatic = PDefinitionAssistantTC.isStatic(def);
 			}
 
 			if (def instanceof APerSyncDefinition)
@@ -1167,7 +1176,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (opfound == 0)
 		{
 			TypeCheckerErrors.report(3043, opname + " is not in scope", opname.getLocation(), opname);
-		} else if (opfound > 1)
+		}
+		else if (opfound > 1)
 		{
 			TypeCheckerErrors.warning(5003, "Permission guard of overloaded operation", opname.getLocation(), opname);
 		}
@@ -1183,8 +1193,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3045, "Cannot put guard on a constructor", opname.getLocation(), opname);
 		}
 
-		Environment local = new FlatEnvironment(question.assistantFactory, node, base);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node, base, NameScope.NAMESANDSTATE);
 		local.setEnclosingDefinition(node); // Prevent op calls
+
+		if (isStatic != null)
+		{
+			local.setStatic(isStatic);
+		}
+	
 		PType rt = node.getGuard().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE));
 
 		if (!PTypeAssistantTC.isType(rt, ABooleanBasicType.class))

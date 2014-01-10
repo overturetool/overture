@@ -2,6 +2,7 @@ class Environment is subclass of BaseThread
 
 instance variables
 
+--private ha       : HA;
 private io       : IO := new IO();
 private inlines	 : seq of inline := [];
 private simtime	 : nat := 1E9;
@@ -67,5 +68,20 @@ sync
 
   per IsFinished => finished;
 
+--thread
+-- (--World`timerRef.RegisterThread();
+--  --start(new ClockTick(threadid));
+--  while World`timerRef.GetTime() < simtime 
+--  do
+--   (--if(World`timerRef.GetTime() = 100)
+--    --then (testT := new TestThread(77, true);
+--    --     );
+--    if not finished
+--    then CreateSignal();
+		
+--    World`timerRef.WaitRelative(1);
+--   );
+--  finished := true;
+-- )
 
 end Environment

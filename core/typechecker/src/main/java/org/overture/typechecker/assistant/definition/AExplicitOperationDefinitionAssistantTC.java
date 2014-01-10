@@ -70,12 +70,16 @@ public class AExplicitOperationDefinitionAssistantTC
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().getOldName()));
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
-		} else if (base.isVDMPP()
-				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+		}
+		else if (base.isVDMPP())
 		{
 			// Two arguments called "self~" and "self"
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName().getOldName()));
-			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
+			
+			if (!PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+			{
+				plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
+			}
 		}
 
 		parameters.add(plist);

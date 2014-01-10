@@ -17,6 +17,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to get a Record type from a type
@@ -58,8 +59,9 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
+			af.createPTypeAssistant();
 			// type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
-			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
 			// fields' types...
@@ -68,7 +70,8 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isRecord(t))// PTypeAssistantTC.isRecord(t))
+				af.createPTypeAssistant();
+				if (PTypeAssistantTC.isRecord(t))// PTypeAssistantTC.isRecord(t))
 				{
 					for (AFieldField f : t.apply(THIS).getFields())// ;PTypeAssistantTC.getRecord(t).getFields())
 					{

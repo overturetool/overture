@@ -63,11 +63,16 @@ public class AOperationTypeAssistantTC
 		{
 			params.add(AstFactory.newAUnresolvedType(state.getName()));
 			params.add(AstFactory.newAUnresolvedType(state.getName()));
-		} else if (classname != null && !isStatic)
+		}
+		else if (classname != null)
 		{
 			AMapMapType map = AstFactory.newAMapMapType(type.getLocation(), AstFactory.newASeqSeqType(type.getLocation(), AstFactory.newACharBasicType(type.getLocation())), AstFactory.newAUnknownType(type.getLocation()));
 			params.add(map);
-			params.add(AstFactory.newAUnresolvedType(classname.getName()));
+			
+			if (!isStatic)
+			{
+				params.add(AstFactory.newAUnresolvedType(classname.getName()));
+			}
 		}
 
 		return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));

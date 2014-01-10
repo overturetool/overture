@@ -67,7 +67,7 @@ public class ARecordPatternAssistantTC
 
 		PType type = rp.getType();
 
-		if (!PTypeAssistantTC.isRecord(type))
+		if (!PTypeAssistantTC.isTag(type))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type", rp.getLocation(), rp);
 			TypeCheckerErrors.detail("Type", type);

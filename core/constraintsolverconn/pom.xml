@@ -10,15 +10,30 @@
   </parent>
 
   <groupId>org.overture.core</groupId>
-  <artifactId>latex</artifactId>
-  <name>LaTeX support</name>
+  <artifactId>constraintsolverconn</artifactId>
+  <name>Constraint Solver Connection</name>
 
   <dependencies>
     <dependency>
       <groupId>org.overture.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+	  <groupId>org.overture.core</groupId>
       <artifactId>interpreter</artifactId>
       <version>${project.version}</version>
-    </dependency>		
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>pog-string-based</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.overture.core</groupId>
       <artifactId>testframework</artifactId>
@@ -32,7 +47,9 @@
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-surefire-plugin</artifactId>
 	<configuration>
-	  <testFailureIgnore>true</testFailureIgnore>
+	  <testFailureIgnore>false</testFailureIgnore>
+	   <!-- the tests use std out a lot so we dont want that in the console -->
+	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
 	  <includes>
 	    <include>**/*Test.java</include>
 	    <include>**/*Test?.java</include>

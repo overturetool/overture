@@ -54,6 +54,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
@@ -77,6 +78,7 @@ import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.Holder;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
@@ -341,12 +343,17 @@ public class OperationValue extends Value
 				Value sigma = argContext.lookup(stateName);
 				originalSigma = (Value) sigma.clone();
 			}
-
-			if (self != null)
+			else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
+			}
+			else if (classdef != null)
+			{
+				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
+				SClassDefinitionAssistantInterpreter assistant = ctxt.assistantFactory.createSClassDefinitionAssistant();
+				originalValues = assistant.getOldValues(classdef, oldnames);
 			}
 		}
 
@@ -371,11 +378,17 @@ public class OperationValue extends Value
 
 				// We disable the swapping and time (RT) as precondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-				ctxt.setPrepost(4071, "Precondition failure: ");
-				precondition.eval(from, preArgs, ctxt);
-				ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4071, "Precondition failure: ");
+					precondition.eval(from, preArgs, ctxt);
+				}
+				finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
 			}
 
 			if (body == null)
@@ -420,19 +433,30 @@ public class OperationValue extends Value
 					postArgs.add(originalSigma);
 					Value sigma = argContext.lookup(stateName);
 					postArgs.add(sigma);
-				} else if (self != null)
+				}
+				else if (self != null)
 				{
 					postArgs.add(originalValues);
 					postArgs.add(self);
 				}
+    			else if (classdef != null)
+    			{
+    				postArgs.add(originalValues);
+    			}
 
 				// We disable the swapping and time (RT) as postcondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-				ctxt.setPrepost(4072, "Postcondition failure: ");
-				postcondition.eval(from, postArgs, ctxt);
-				ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4072, "Postcondition failure: ");
+					postcondition.eval(from, postArgs, ctxt);
+				}
+				finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
 			}
 
 		} catch (AnalysisException e)
@@ -519,6 +543,32 @@ public class OperationValue extends Value
 		return argContext;
 	}
 
+	private Lock getGuardLock(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return VdmRuntime.getNodeState(cctxt.classdef).guardLock;
+		}
+		else
+		{
+			return self.guardLock;
+		}
+	}
+	
+	private Object getGuardObject(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext)ctxt;
+			return cctxt.classdef;
+		}
+		else
+		{
+			return self;
+		}
+	}
+
 	private void guard(Context ctxt) throws ValueException
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
@@ -528,31 +578,40 @@ public class OperationValue extends Value
 			return; // Probably during initialization.
 		}
 
-		self.guardLock.lock(ctxt, guard.getLocation());
+		Lock lock = getGuardLock(ctxt);
+		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
 		{
-			synchronized (self) // So that test and act() are atomic
+			synchronized (getGuardObject(ctxt))		// So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
 				// having self locked, and that locks up everything!
-
-				debug("guard TEST");
-				ctxt.threadState.setAtomic(true);
 				boolean ok = false;
+
 				try
 				{
-					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-				} catch (AnalysisException e)
-				{
-					if (e instanceof ValueException)
+					debug("guard TEST");
+					ctxt.threadState.setAtomic(true);
+					
+					try
 					{
-						throw (ValueException) e;
+						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
 					}
-					e.printStackTrace();
+					catch (AnalysisException e)
+					{
+						if (e instanceof ValueException)
+						{
+							throw (ValueException) e;
+						}
+						e.printStackTrace();
+					}
 				}
-				ctxt.threadState.setAtomic(false);
+				finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
 
 				if (ok)
 				{
@@ -568,12 +627,12 @@ public class OperationValue extends Value
 
 			debug("guard WAIT");
 			ctxt.guardOp = this;
-			self.guardLock.block(ctxt, guard.getLocation());
+			lock.block(ctxt, guard.getLocation());
 			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
 
-		self.guardLock.unlock();
+		lock.unlock();
 	}
 
 	private void notifySelf()

@@ -576,12 +576,14 @@ stm {-> package='org.overture.ast.statements'
     |   {skip}
     |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
     |   {start} [obj]:exp
+    |   {stop} [obj]:exp
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind.def [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
     |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long
+    |   {sporadic} [opname]:LexNameToken [args]:exp* (minDelay):java_Long (maxDelay):java_Long (offset):java_Long
     ; 
     
 #SimpleBlock {-> package='org.overture.ast.statements'
