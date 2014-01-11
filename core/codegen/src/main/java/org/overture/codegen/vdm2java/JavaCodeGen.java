@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
@@ -28,6 +29,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.UnsupportedModelingException;
 import org.overture.codegen.utils.Violation;
 import org.overture.codegen.utils.ReservedWordsComparison;
 import org.overture.codegen.utils.TypenameComparison;
@@ -159,7 +161,7 @@ public class JavaCodeGen
 	
 	public List<GeneratedModule> generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException,
-			InvalidNamesException
+			InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> toBeGenerated = new LinkedList<SClassDefinition>();
 		for (SClassDefinition classDef : mergedParseLists)
@@ -167,6 +169,8 @@ public class JavaCodeGen
 				toBeGenerated.add(classDef);
 
 		validateVdmModelNames(toBeGenerated);
+		
+		validateVdmModelingConstructs(toBeGenerated);
 
 		List<ClassDeclStatus> statuses = new ArrayList<ClassDeclStatus>();
 
@@ -273,11 +277,19 @@ public class JavaCodeGen
 	
 	private static void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		List<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
-		List<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
+		Set<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
+		Set<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
 		
 		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty())
 			throw new InvalidNamesException("The model either uses words that are reserved by Java or declares VDM types that uses Java type names", reservedWordViolations, typenameViolations);
+	}
+	
+	private static void validateVdmModelingConstructs(List<? extends INode> mergedParseLists) throws AnalysisException, UnsupportedModelingException
+	{
+		Set<Violation> violations = VdmAstAnalysis.usesUnsupportedModelingConstructs(mergedParseLists);
+		
+		if(!violations.isEmpty())
+			throw new UnsupportedModelingException("The model uses modeling constructs that are not supported for Java code Generation", violations);
 	}
 	
 	private static boolean shouldBeGenerated(String className)

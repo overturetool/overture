@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
@@ -18,6 +20,7 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.UnsupportedModelingException;
 import org.overture.codegen.utils.Violation;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
@@ -29,12 +32,12 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
-	public static List<GeneratedModule> generateJava(File file) throws AnalysisException, InvalidNamesException
+	public static List<GeneratedModule> generateJava(File file) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		return generateJava(file, new JavaCodeGen());
 	}
 	
-	public static List<GeneratedModule> generateJava(File file, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException
+	public static List<GeneratedModule> generateJava(File file, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		TypeCheckResult<List<SClassDefinition>> typeCheckResult = GeneralCodeGenUtils.validateFile(file);
 
@@ -48,7 +51,7 @@ public class JavaCodeGenUtil
 		}
 	}
 	
-	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException
+	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		VDMRT vdmrt = new VDMRT();
 		
@@ -88,7 +91,7 @@ public class JavaCodeGenUtil
 	}
 
 	public static List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException
+			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
@@ -96,18 +99,18 @@ public class JavaCodeGenUtil
 	
 	
 	public static List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException
+			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
 	
-	public static GeneratedData generateJavaFromFile(File file) throws AnalysisException, InvalidNamesException
+	public static GeneratedData generateJavaFromFile(File file) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		return generateJavaFromFiles(new String[]{"", file.getAbsolutePath()});
 	}
 	
-	public static GeneratedData generateJavaFromFiles(String[] args) throws AnalysisException, InvalidNamesException
+	public static GeneratedData generateJavaFromFiles(String[] args) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{		
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		List<GeneratedModule> data = new ArrayList<GeneratedModule>();
@@ -153,23 +156,41 @@ public class JavaCodeGenUtil
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		List<Violation> reservedWordViolations = e.getReservedWordViolations();
-		List<Violation> typenameViolations = e.getTypenameViolations();
+		List<Violation> reservedWordViolations = new LinkedList<Violation>(e.getReservedWordViolations());
+		Collections.sort(reservedWordViolations);
 		
-		if (!reservedWordViolations.isEmpty())
-		{	
-			for (Violation violation : reservedWordViolations)
-			{
-				buffer.append("Reserved name violation: " + violation + IText.NEW_LINE);
-			}
+		List<Violation> typenameViolations = new LinkedList<Violation>(e.getTypenameViolations());
+		Collections.sort(typenameViolations);
+		
+		for (Violation violation : reservedWordViolations)
+		{
+			buffer.append("Reserved name violation: " + violation
+					+ IText.NEW_LINE);
+		}
+
+		for (Violation violation : typenameViolations)
+		{
+			buffer.append("Type name violation: " + violation + IText.NEW_LINE);
 		}
 		
-		if (!typenameViolations.isEmpty())
-		{	
-			for (Violation violation : typenameViolations)
-			{
-				buffer.append("Type name violation: " + violation + IText.NEW_LINE);
-			}
+		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);
+		
+		if(lastIndex >= 0)
+			buffer.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
+		
+		return buffer.toString();
+	}
+	
+	public static String constructUnsupportedModelingString(UnsupportedModelingException e)
+	{
+		StringBuffer buffer = new StringBuffer();
+		
+		List<Violation> violations = new LinkedList<Violation>(e.getViolations());
+		Collections.sort(violations);
+		
+		for (Violation violation : violations)
+		{
+			buffer.append(violation + IText.NEW_LINE);
 		}
 		
 		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);

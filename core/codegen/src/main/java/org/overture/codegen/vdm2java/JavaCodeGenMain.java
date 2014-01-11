@@ -16,6 +16,7 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.UnsupportedModelingException;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -90,14 +91,21 @@ public class JavaCodeGenMain
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().println(e.getMessage());
-				
+
 			} catch (InvalidNamesException e)
 			{
-				Logger.getLog().println("Could not generate model: " + e.getMessage());
+				Logger.getLog().println("Could not generate model: "
+						+ e.getMessage());
 				Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(e));
+			} catch (UnsupportedModelingException e)
+			{
+				Logger.getLog().println("Could not generate model: "
+						+ e.getMessage());
+				Logger.getLog().println(JavaCodeGenUtil.constructUnsupportedModelingString(e));
 			} catch (IOException e)
 			{
-				Logger.getLog().println("Could not generate utils: " + e.getMessage());
+				Logger.getLog().println("Could not generate utils: "
+						+ e.getMessage());
 			}
 		}
 		else if(setting.toLowerCase().equals("exp"))

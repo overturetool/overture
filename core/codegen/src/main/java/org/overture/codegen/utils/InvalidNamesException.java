@@ -1,28 +1,28 @@
 package org.overture.codegen.utils;
 
-import java.util.List;
+import java.util.Set;
 
 public class InvalidNamesException extends Exception
 {
 	private static final long serialVersionUID = -8370037325877588512L;
 	
-	private List<Violation> reservedWordViolations;
-	private List<Violation> typenameViolations;
+	private Set<Violation> reservedWordViolations;
+	private Set<Violation> typenameViolations;
 	
-	public InvalidNamesException(String message, List<Violation> reservedWordViolations,
-			List<Violation> typenameViolations)
+	public InvalidNamesException(String message, Set<Violation> reservedWordViolations,
+			Set<Violation> typenameViolations)
 	{
 		super(message);
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
 	}
 
-	public List<Violation> getReservedWordViolations()
+	public Set<Violation> getReservedWordViolations()
 	{
 		return reservedWordViolations;
 	}
 
-	public List<Violation> getTypenameViolations()
+	public Set<Violation> getTypenameViolations()
 	{
 		return typenameViolations;
 	}

@@ -1,14 +1,15 @@
 package org.overture.codegen.utils;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 
 public class VdmAstAnalysis
 {
-	public static List<Violation> usesIllegalNames(List<? extends INode> nodes, NamingComparison comparison) throws AnalysisException
+	public static Set<Violation> usesIllegalNames(List<? extends INode> nodes, NamingComparison comparison) throws AnalysisException
 	{
 		NameViolationAnalysis namingAnalysis = new NameViolationAnalysis(comparison);
 		ViolationAnalysisApplication application = new ViolationAnalysisApplication(namingAnalysis);
@@ -16,9 +17,17 @@ public class VdmAstAnalysis
 		return findViolations(nodes, application);
 	}
 	
-	private static List<Violation> findViolations(List<? extends INode> nodes, ViolationAnalysisApplication application) throws AnalysisException
+	public static Set<Violation> usesUnsupportedModelingConstructs(List<? extends INode> nodes) throws AnalysisException
 	{
-		List<Violation> allViolations = new LinkedList<Violation>();
+		ModelingViolationAnalysis modelingAnalysis = new ModelingViolationAnalysis();
+		ViolationAnalysisApplication application = new ViolationAnalysisApplication(modelingAnalysis);
+		
+		return findViolations(nodes, application);
+	}
+	
+	private static Set<Violation> findViolations(List<? extends INode> nodes, ViolationAnalysisApplication application) throws AnalysisException
+	{
+		Set<Violation> allViolations = new HashSet<Violation>();
 		
 		for (INode currentNode : nodes)
 		{

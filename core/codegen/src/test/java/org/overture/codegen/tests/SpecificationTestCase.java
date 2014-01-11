@@ -10,6 +10,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.InvalidNamesException;
+import org.overture.codegen.utils.UnsupportedModelingException;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
@@ -42,6 +43,9 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		} catch (InvalidNamesException e)
 		{
 			return JavaCodeGenUtil.constructNameViolationsString(e);
+		} catch (UnsupportedModelingException e)
+		{
+			return JavaCodeGenUtil.constructUnsupportedModelingString(e);
 		}
 		
 		List<GeneratedModule> classes = data.getClasses();
