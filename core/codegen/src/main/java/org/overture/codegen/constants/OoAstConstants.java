@@ -23,6 +23,7 @@ public class OoAstConstants
 		"CSV",
 		"IO",
 		"MATH",
+		"VDMUnit",
 		"Throwable",
 		"Error",
 		"AssertionFailedError",
