@@ -17,6 +17,7 @@ import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.util.pattern.AllVariableNameLocator;
+import org.overture.ast.util.type.HashChecker;
 import org.overture.ast.util.type.NumericBasisChecker;
 import org.overture.ast.util.type.NumericFinder;
 
@@ -133,6 +134,12 @@ public class AstAssistantFactory implements IAstAssistantFactory
 	public IAnswer<SNumericBasicType> getNumericBasisChecker()
 	{
 		return new NumericBasisChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Integer> getHashChecker()
+	{
+		return new HashChecker(this);
 	}
 	
 

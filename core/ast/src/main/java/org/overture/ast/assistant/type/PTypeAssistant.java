@@ -4,26 +4,8 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.types.ABracketType;
-import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AFunctionType;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AOptionalType;
-import org.overture.ast.types.AParameterType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.AQuoteType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AUnionType;
-import org.overture.ast.types.AUnknownType;
-import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SBasicType;
-import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
-import org.overture.ast.types.SSeqType;
 
 public class PTypeAssistant
 {
@@ -97,47 +79,54 @@ public class PTypeAssistant
 
 	public static int hashCode(PType type)
 	{
-		if (type instanceof ABracketType) {
-			return hashCode(((ABracketType) type).getType());
-		} else if (type instanceof AClassType) {
-			return ((AClassType) type).getName().hashCode();
-		} else if (type instanceof AFunctionType) {
-			AFunctionType ftype = (AFunctionType) type;
-			return hashCode(ftype.getParameters())
-					+ hashCode(ftype.getResult());
-		} else if (type instanceof SInvariantType) {
-			if (type instanceof ANamedInvariantType) {
-				return ((ANamedInvariantType) type).getName().hashCode();
-			} else if (type instanceof ARecordInvariantType) {
-				return ((ARecordInvariantType) type).getName().hashCode();
-			}
-		} else if (type instanceof SMapType) {
-			SMapType mtype = (SMapType) type;
-			return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
-		} else if (type instanceof AOperationType) {
-			AOperationType otype = (AOperationType) type;
-			return hashCode(otype.getParameters()) + hashCode(otype.getResult());
-		} else if (type instanceof AOptionalType) {
-			return hashCode(((AOptionalType) type).getType());
-		} else if (type instanceof AParameterType) {
-			return ((AParameterType) type).getName().hashCode();
-		} else if (type instanceof AProductType) {
-			return hashCode(((AProductType) type).getTypes());
-		} else if (type instanceof AQuoteType) {
-			return ((AQuoteType) type).getValue().hashCode();
-		} else if (type instanceof SSeqType) {
-			SSeqType stype = (SSeqType) type;
-			return stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
-		} else if (type instanceof ASetType) {
-			ASetType stype = (ASetType) type;
-			return stype.getEmpty() ? 0 : hashCode(stype.getSetof());
-		} else if (type instanceof AUnionType) {
-			AUnionType utype = (AUnionType) type;
-			return hashCode(utype.getTypes());
-		} else if (type instanceof AUnresolvedType) {
-			return ((AUnresolvedType) type).getName().hashCode();
+		try
+		{
+			return type.apply(af.getHashChecker());
+		} catch (AnalysisException e)
+		{
+			return type.getClass().hashCode();
 		}
-		return type.getClass().hashCode();
+//		if (type instanceof ABracketType) {
+//			return hashCode(((ABracketType) type).getType());
+//		} else if (type instanceof AClassType) {
+//			return ((AClassType) type).getName().hashCode();
+//		} else if (type instanceof AFunctionType) {
+//			AFunctionType ftype = (AFunctionType) type;
+//			return hashCode(ftype.getParameters())
+//					+ hashCode(ftype.getResult());
+//		} else if (type instanceof SInvariantType) {
+//			if (type instanceof ANamedInvariantType) {
+//				return ((ANamedInvariantType) type).getName().hashCode();
+//			} else if (type instanceof ARecordInvariantType) {
+//				return ((ARecordInvariantType) type).getName().hashCode();
+//			}
+//		} else if (type instanceof SMapType) {
+//			SMapType mtype = (SMapType) type;
+//			return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
+//		} else if (type instanceof AOperationType) {
+//			AOperationType otype = (AOperationType) type;
+//			return hashCode(otype.getParameters()) + hashCode(otype.getResult());
+//		} else if (type instanceof AOptionalType) {
+//			return hashCode(((AOptionalType) type).getType());
+//		} else if (type instanceof AParameterType) {
+//			return ((AParameterType) type).getName().hashCode();
+//		} else if (type instanceof AProductType) {
+//			return hashCode(((AProductType) type).getTypes());
+//		} else if (type instanceof AQuoteType) {
+//			return ((AQuoteType) type).getValue().hashCode();
+//		} else if (type instanceof SSeqType) {
+//			SSeqType stype = (SSeqType) type;
+//			return stype.getEmpty() ? 0 : hashCode(stype.getSeqof());
+//		} else if (type instanceof ASetType) {
+//			ASetType stype = (ASetType) type;
+//			return stype.getEmpty() ? 0 : hashCode(stype.getSetof());
+//		} else if (type instanceof AUnionType) {
+//			AUnionType utype = (AUnionType) type;
+//			return hashCode(utype.getTypes());
+//		} else if (type instanceof AUnresolvedType) {
+//			return ((AUnresolvedType) type).getName().hashCode();
+//		}
+//		return type.getClass().hashCode();
 	}
 
 	public static int hashCode(List<PType> list)

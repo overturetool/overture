@@ -36,4 +36,5 @@ public interface IAstAssistantFactory
 	IAnswer<LexNameList> getAllVariableNameLocator();
 	IAnswer<Boolean> getNumericFinder();
 	IAnswer<SNumericBasicType> getNumericBasisChecker();
+	IAnswer<Integer> getHashChecker();
 }
