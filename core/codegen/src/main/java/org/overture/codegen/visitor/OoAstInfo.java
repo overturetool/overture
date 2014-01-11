@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class OoAstInfo
 {
@@ -87,7 +88,7 @@ public class OoAstInfo
 	public void registerQuoteValue(String value) throws AnalysisException
 	{
 		if(value == null || value.isEmpty())
-			throw new AnalysisException("Tried to register invalid qoute value");
+			throw new AnalysisExceptionCG("Tried to register invalid qoute value");
 		
 		quoteVaues.add(value);
 	}

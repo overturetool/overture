@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
@@ -91,7 +92,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 				recordFields.add(fieldDecl);
 			}
 			else
-				throw new AnalysisException("Could not generate fields of record: " + name);
+				throw new AnalysisExceptionCG("Could not generate fields of record: " + name, node.getLocation());
 		}
 		
 		return record;

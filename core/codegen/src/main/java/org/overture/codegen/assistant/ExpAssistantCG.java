@@ -71,7 +71,7 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public boolean isIntegerType(PExp exp)
+	public static boolean isIntegerType(PExp exp)
 	{	
 		PType type = exp.getType();
 

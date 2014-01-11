@@ -6,13 +6,13 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 {
@@ -24,16 +24,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, OoAstInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
-
-		if(!DeclAssistantCG.isValidClassName(name))
-			throw new AnalysisException("Class name: " + name + " is reserved!");
-		
 		String access = node.getAccess().getAccess().toString();
 		boolean isAbstract = node.getIsAbstract();
 		boolean isStatic = false;
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
-		if(superNames.size() > 1)
-			throw new AnalysisException("Multiple inheritance not supported.");
 		
 		AClassDeclCG classCg = new AClassDeclCG();
 		classCg.setName(name);
@@ -55,24 +49,28 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 			PDeclCG decl = def.apply(question.getDeclVisitor(), question);
 		
 			if(decl == null)
+			{
 				continue;//Unspported stuff returns null by default
-			
+			}
 			if(decl instanceof AFieldDeclCG)
+			{
 				fields.add((AFieldDeclCG) decl);
+			}
 			else if(decl instanceof AMethodDeclCG)
 			{
-				AMethodDeclCG method = (AMethodDeclCG) decl;
-				if(DeclAssistantCG.causesMethodOverloading(methods, method))
-					throw new AnalysisException("Operation/function name overload is not allowed. Caused by: " + name + "." + method.getName());
-				methods.add(method);
+				methods.add((AMethodDeclCG) decl);
 			}
 			else if(decl instanceof ARecordDeclCG)
+			{
 				innerClasses.add((ARecordDeclCG) decl);
+			}
 			else if(decl instanceof AEmptyDeclCG)
 			;//Empty declarations are used to indicate constructs that can be ignored during the
 			 //construction of the OO AST. 
 			else
-				throw new AnalysisException("Unexpected def in ClassClassDefinition: " + decl.getClass().getSimpleName() + ", " + decl.toString());
+			{
+				throw new AnalysisExceptionCG("Unexpected definition in class: " + name + ": " + def.getName().getName(), def.getLocation());
+			}
 		}
 		
 		return classCg;

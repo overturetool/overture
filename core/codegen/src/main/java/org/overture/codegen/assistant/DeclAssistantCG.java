@@ -1,15 +1,20 @@
 package org.overture.codegen.assistant;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
@@ -21,7 +26,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.utils.LexNameTokenWrapper;
 import org.overture.codegen.visitor.OoAstInfo;
 
 public class DeclAssistantCG
@@ -55,7 +60,6 @@ public class DeclAssistantCG
 		localVarDecl.setExp(exp);
 		
 		return localVarDecl;
-		
 	}
 	
 	public AFieldDeclCG constructField(String access, String name, boolean isStatic, boolean isFinal, PTypeCG type, PExpCG exp)
@@ -72,27 +76,55 @@ public class DeclAssistantCG
 		return field;
 	}
 	
-	public static boolean isValidClassName(String className)
+	public static Set<ILexNameToken> getOverloadedMethodNames(AClassClassDefinition classDef)
 	{
-		for(int i = 0; i < OoAstConstants.RESERVED_CLASS_NAMES.length; i++)
-			if(OoAstConstants.RESERVED_CLASS_NAMES[i].equals(className))
-				return false;
+		List<LexNameTokenWrapper> methodNames = getMethodNames(classDef);
+		Set<LexNameTokenWrapper> duplicates = findDuplicates(methodNames);
+
+		Set<ILexNameToken> overloadedMethodNames = new HashSet<ILexNameToken>();
 		
-		return true; 
+		for (LexNameTokenWrapper wrapper : methodNames)
+		{
+			if(duplicates.contains(wrapper))
+				overloadedMethodNames.add(wrapper.getName());
+		}
+		
+		return overloadedMethodNames; 
 	}
 	
-	public static boolean causesMethodOverloading(LinkedList<AMethodDeclCG> methods, AMethodDeclCG method)
+	private static Set<LexNameTokenWrapper> findDuplicates(List<LexNameTokenWrapper> nameWrappers)
 	{
-		for (AMethodDeclCG aMethodDeclCG : methods)
-			if(aMethodDeclCG.getName().equals(method.getName()))
-				return true;
-		
-		return false;
-	}
+		Set<LexNameTokenWrapper> duplicates = new HashSet<LexNameTokenWrapper>();
+		Set<LexNameTokenWrapper> temp = new HashSet<LexNameTokenWrapper>();
 
+		for (LexNameTokenWrapper wrapper : nameWrappers)
+		{
+			if (!temp.add(wrapper))
+			{
+				duplicates.add(wrapper);
+			}
+		}
+		
+		return duplicates;
+	}
+	
+	private static List<LexNameTokenWrapper> getMethodNames(AClassClassDefinition classDef)
+	{
+		List<LexNameTokenWrapper> methodNames = new LinkedList<LexNameTokenWrapper>();
+
+		LinkedList<PDefinition> defs = classDef.getDefinitions();
+		
+		for (PDefinition def : defs)
+		{
+			if(def instanceof SOperationDefinition || def instanceof SFunctionDefinition)
+				methodNames.add(new LexNameTokenWrapper(def.getName()));
+		}
+		
+		return methodNames;
+	}
+	
 	public static void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
 	{
-		//Set initial value
 		if(typeCg instanceof AStringTypeCG)
 		{
 			localDecl.setExp(ExpAssistantCG.getDefaultStringlValue());

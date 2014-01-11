@@ -114,6 +114,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
@@ -143,9 +144,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG classTypeCg = classType.apply(question.getTypeVisitor(), question);
 
 		if (!(classTypeCg instanceof AClassTypeCG))
-			throw new AnalysisException("Unexpected clas type encountered for "
+			throw new AnalysisExceptionCG("Unexpected class type encountered for "
 					+ AIsOfClassExp.class.getName() + ". Expected class type: "
-					+ AClassTypeCG.class.getName() + ". Got: " + typeCg.getClass().getName());
+					+ AClassTypeCG.class.getName() + ". Got: " + typeCg.getClass().getName(), node.getLocation());
 
 		PExpCG objRefCg = objRef.apply(question.getExpVisitor(), question);
 
@@ -245,9 +246,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		if(node.getImpdef() != null)
-			throw new AnalysisException("Implicit functions are not supported by the code generator");
-		
 		String name = node.getExpdef().getName().getName();
 		LinkedList<PType> actualTypes = node.getActualTypes();
 		
@@ -284,15 +282,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		ARecordInvariantType recType = node.getRecordType();
-		if(recType == null)
-			throw new AnalysisException("mk_ only supported for record types!");
 		
+		if(recType == null)
+			throw new AnalysisExceptionCG("Expected record type for mk_<type> expression.", node.getLocation());
 		
 		PTypeCG typeCg = recType.apply(question.getTypeVisitor(), question);
 		
 		if(!(typeCg instanceof ARecordTypeCG))
-			throw new AnalysisException("Expected type: " + ARecordTypeCG.class.getName() + ". Got: " + typeCg.getClass().getName());
-		
+			throw new AnalysisExceptionCG("Expected record type but got: " + typeCg.getClass().getName() + " in 'mk_' expression", node.getLocation());
 		
 		ARecordTypeCG recordTypeCg = (ARecordTypeCG) typeCg;
 		
@@ -337,7 +334,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		else
 		{
-			throw new AnalysisException("Unexpected seq type for reverse unary expression: " + type);
+			throw new AnalysisExceptionCG("Unexpected sequence type for reverse unary expression: " + type.getClass().getName(), node.getLocation());
 		}
 
 		return reverse;
@@ -379,7 +376,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		}
 		else
 		{
-			throw new AnalysisException("Unexpected seq type for sequence enumeration expression: " + type);
+			throw new AnalysisExceptionCG("Unexpected sequence type for sequence enumeration expression: " + type.getClass().getName(), node.getLocation());
 		}
 		
 		//TODO: For the empty sequence [] the type is the unknown type
@@ -593,7 +590,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		PExpCG leftExpCG = divide.getLeft();
 		
-		if(expAssistant.isIntegerType(leftExp) && expAssistant.isIntegerType(rightExp))
+		if(ExpAssistantCG.isIntegerType(leftExp) && ExpAssistantCG.isIntegerType(rightExp))
 		{
 			ACastUnaryExpCG castExpr = new ACastUnaryExpCG();
 			castExpr.setType(new ARealNumericBasicTypeCG());
@@ -608,15 +605,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		PExp leftExp = node.getLeft();
-		PExp rightExp = node.getRight();
-		
-		if(!expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp))
-			throw new AnalysisException("Operands must be guaranteed to be integers in 'div' expression");
-
-		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
-		
-		return div;
+		return (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 	}
 	
 	@Override
@@ -628,9 +617,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		PExp leftExp = node.getLeft();
 		PExp rightExp = node.getRight();
-		
-		if(!expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp))
-			throw new AnalysisException("Operands must be guaranteed to be integers in 'div' expression");
 		
 		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 		AFloorUnaryExpCG floor = new AFloorUnaryExpCG();
@@ -654,22 +640,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseARemNumericBinaryExp(ARemNumericBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		
 		//VDM Language Reference Manual:
 		//x rem y = x - y * (x div y)
 		
 		PExp leftExp = node.getLeft();
 		PExp rightExp = node.getRight();
 		
-		if(!expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp))
-			throw new AnalysisException("Operands must be guaranteed to be integers in 'div' expression");
-
-		
 		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) expAssistant.handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 		
 		PExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
 		PExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
-		
 		
 		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
 		times.setLeft(rightExpCg);
