@@ -8,33 +8,54 @@ import org.overture.ast.node.INode;
 
 public class VdmAstAnalysis
 {
-
 	public static List<Violation> usesIllegalNames(List<? extends INode> nodes, NamingComparison comparison) throws AnalysisException
 	{
-		List<Violation> allIllegals = new LinkedList<Violation>();
+		NameViolationAnalysis namingAnalysis = new NameViolationAnalysis(comparison);
+		ViolationAnalysisApplication application = new ViolationAnalysisApplication(namingAnalysis);
+		
+		return findViolations(nodes, application);
+	}
+	
+	private static List<Violation> findViolations(List<? extends INode> nodes, ViolationAnalysisApplication application) throws AnalysisException
+	{
+		List<Violation> allViolations = new LinkedList<Violation>();
 		
 		for (INode currentNode : nodes)
 		{
-			List<Violation> currentIllegals = usesIllegalName(currentNode, comparison);
+			List<Violation> currentViolations = application.execute(currentNode);
 			
-			if(!currentIllegals.isEmpty())
-				allIllegals.addAll(currentIllegals);
+			if(!currentViolations.isEmpty())
+				allViolations.addAll(currentViolations);
 		}
 		
-		return allIllegals;
+		return allViolations;
 	}
 	
-	public static List<Violation> usesIllegalName(INode node, NamingComparison comparison) throws AnalysisException
+	private static class ViolationAnalysisApplication
 	{
-		NameViolationAnalysis nameAnalysis = new NameViolationAnalysis(comparison);
-		try
+		private ViolationAnalysis violationAnalysis;
+		
+		public ViolationAnalysisApplication(ViolationAnalysis violationAnalysis)
 		{
-			node.apply(nameAnalysis);
-		} catch (AnalysisException e)
-		{
-			throw e;
+			this.violationAnalysis = violationAnalysis;
 		}
-
-		return nameAnalysis.getNameViolations();
+		
+		public List<Violation> execute(INode node) throws AnalysisException
+		{
+			return applyViolationVisitor(node, violationAnalysis);
+		}
+		
+		private static List<Violation> applyViolationVisitor(INode node, ViolationAnalysis analysis) throws AnalysisException
+		{
+			try
+			{
+				node.apply(analysis);
+			} catch (AnalysisException e)
+			{
+				throw e;
+			}
+			
+			return analysis.getViolations();
+		}
 	}
 }
