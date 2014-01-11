@@ -7,23 +7,23 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 
 public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 {
-	private List<Violation> nameViolations;
+	private List<Violation> violations;
 	
 	public ViolationAnalysis()
 	{
-		this.nameViolations = new LinkedList<Violation>();
+		this.violations = new LinkedList<Violation>();
 	}
 	
-	public List<Violation> getNameViolations()
+	public List<Violation> getViolations()
 	{
-		return nameViolations;
+		return violations;
 	}
 	
 	public void addViolation(Violation violation)
 	{
-		if(nameViolations.contains(violation))
+		if(violations.contains(violation))
 			return;
 		
-		nameViolations.add(violation);
+		violations.add(violation);
 	}
 }
