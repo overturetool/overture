@@ -29,6 +29,30 @@ public class LocationAssistantCG
 		return null;
 	}
 	
+	public static int compareLocations(ILexLocation firstLoc, ILexLocation secondLoc)
+	{
+		String firstModule = firstLoc.getModule();
+		String secondModule = secondLoc.getModule();
+		
+		if(!firstModule.equals(secondModule))
+				return firstModule.compareTo(secondModule);
+		
+		int firstLine = firstLoc.getStartLine();
+		int secondLine = secondLoc.getStartLine();
+		
+		if(firstLine == secondLine)
+		{
+			int firstPos = firstLoc.getStartPos();
+			int secondPos = secondLoc.getStartPos();
+			
+			return firstPos - secondPos;
+		}
+		else
+		{
+			return firstLine - secondLine;
+		}
+	}
+	
 	public static List<INode> getNodeLocationsSorted(Set<INode> nodes)
 	{
 		List<INode> list = new LinkedList<INode>(nodes);
@@ -48,20 +72,8 @@ public class LocationAssistantCG
 				if(secondLoc == null)
 					return 1;
 				
-				int firstLine = firstLoc.getStartLine();
-				int secondLine = secondLoc.getStartLine();
-				
-				if(firstLine == secondLine)
-				{
-					int firstPos = firstLoc.getStartPos();
-					int secondPos = secondLoc.getStartPos();
-					
-					return firstPos - secondPos;
-				}
-				else
-				{
-					return firstLine - secondLine;
-				}
+
+				return compareLocations(firstLoc, secondLoc);
 			}
 		});
 		
