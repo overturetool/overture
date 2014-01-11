@@ -55,8 +55,6 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		AFunctionType ftype = type;
 		return af.createPTypeAssistant().hashCode(ftype.getParameters()) + af.createPTypeAssistant().hashCode(ftype.getResult());
-	//	return hashCode(ftype.getParameters())
-	//			+ hashCode(ftype.getResult());
 	//		AFunctionType ftype = (AFunctionType) type;
 	//		return hashCode(ftype.getParameters())
 	//				+ hashCode(ftype.getResult());

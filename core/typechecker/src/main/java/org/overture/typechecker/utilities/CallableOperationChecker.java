@@ -19,11 +19,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class CallableOperationChecker extends AnswerAdaptor<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1679012585019723923L;
-	
 	protected ITypeCheckerAssistantFactory af;
 
 	public CallableOperationChecker(ITypeCheckerAssistantFactory af)

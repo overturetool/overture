@@ -40,11 +40,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 {
 
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public DefinitionCollector(ITypeCheckerAssistantFactory af)

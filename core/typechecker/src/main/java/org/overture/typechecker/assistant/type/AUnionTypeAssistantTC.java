@@ -454,7 +454,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 	{
 		for (PType t : type.getTypes())
 		{
-			if (PTypeAssistantTC.isUnknown(t))
+			if (af.createPTypeAssistant().isUnknown(t))
 			{
 				return true;
 			}

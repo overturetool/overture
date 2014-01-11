@@ -21,11 +21,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class DefinitionEqualityChecker extends
 		QuestionAnswerAdaptor<Object, Boolean>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public DefinitionEqualityChecker(ITypeCheckerAssistantFactory af)
