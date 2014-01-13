@@ -36,6 +36,7 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
@@ -82,16 +83,38 @@ public class TypeReader extends SyntaxReader
 	private PType readUnionType()
 		throws ParserException, LexException
 	{
-		PType type = readComposeType();
+		PType type = readProductType();
 
 		while (lastToken().type == VDMToken.PIPE)
 		{
 			LexToken token = lastToken();
 			nextToken();
-			type = AstFactory.newAUnionType(token.location, type, readComposeType());
+			type = AstFactory.newAUnionType(token.location, type, readProductType());
 		}
 
 		return type;
+	}
+
+	private PType readProductType()
+		throws ParserException, LexException
+	{
+		LexToken token = lastToken();
+		PType type = readComposeType();
+		List<PType> productList = new Vector<PType>();
+		productList.add(type);
+	
+		while (lastToken().type == VDMToken.TIMES)
+		{
+			nextToken();
+			productList.add(readComposeType());
+		}
+	
+		if (productList.size() == 1)
+		{
+			return type;
+		}
+	
+		return AstFactory.newAProductType(token.location, productList);
 	}
 
 	private PType readComposeType()
@@ -104,12 +127,14 @@ public class TypeReader extends SyntaxReader
 			nextToken();
 			LexIdentifierToken id = readIdToken("Compose not followed by record identifier");
 			checkFor(VDMToken.OF, 2249, "Missing 'of' in compose type");
-			type = AstFactory.newARecordInvariantType(idToName(id), readFieldList());
+			ARecordInvariantType rtype = AstFactory.newARecordInvariantType(idToName(id), readFieldList());
+			rtype.setComposed(true);
 			checkFor(VDMToken.END, 2250, "Missing 'end' in compose type");
+			type = rtype;
 		}
 		else
 		{
-			type = readProductType();
+			type = readMapType();
 		}
 
 		return type;
@@ -201,28 +226,6 @@ public class TypeReader extends SyntaxReader
 		return list;
 	}
 
-	private PType readProductType()
-		throws ParserException, LexException
-	{
-		LexToken token = lastToken();
-		PType type = readMapType();
-		List<PType> productList = new Vector<PType>();
-		productList.add(type);
-
-		while (lastToken().type == VDMToken.TIMES)
-		{
-			nextToken();
-			productList.add(readMapType());
-		}
-
-		if (productList.size() == 1)
-		{
-			return type;
-		}
-
-		return AstFactory.newAProductType(token.location, productList);
-	}
-
 	private PType readMapType()
 		throws ParserException, LexException
 	{
@@ -235,14 +238,14 @@ public class TypeReader extends SyntaxReader
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2251, "Expecting 'to' in map type");
-				type = AstFactory.newAMapMapType(token.location, type, readMapType());
+				type = AstFactory.newAMapMapType(token.location, type, readComposeType());
 				break;
 
 			case INMAP:
 				nextToken();
 				type = readType();	// Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2252, "Expecting 'to' in inmap type");
-				type = AstFactory.newAInMapMapType(token.location, type, readMapType());
+				type = AstFactory.newAInMapMapType(token.location, type, readComposeType());
 				break;
 
 			default:
@@ -264,19 +267,19 @@ public class TypeReader extends SyntaxReader
 			case SET:
 				nextToken();
 				checkFor(VDMToken.OF, 2253, "Expecting 'of' after set");
-				type = AstFactory.newASetType(token.location, readMapType());
+				type = AstFactory.newASetType(token.location, readComposeType());
 				break;
 
 			case SEQ:
 				nextToken();
 				checkFor(VDMToken.OF, 2254, "Expecting 'of' after seq");
-				type = AstFactory.newASeqSeqType(token.location, readMapType());
+				type = AstFactory.newASeqSeqType(token.location, readComposeType());
 				break;
 
 			case SEQ1:
 				nextToken();
 				checkFor(VDMToken.OF, 2255, "Expecting 'of' after seq1");
-				type = AstFactory.newASeq1SeqType(token.location, readMapType());
+				type = AstFactory.newASeq1SeqType(token.location, readComposeType());
 				break;
 
 			default:

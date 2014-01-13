@@ -1381,7 +1381,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 							}
 						}
 
-						fixed.add(question.assistantFactory.createPTypeAssistant().typeResolve(ptype, null, THIS, question));
+						ptype = question.assistantFactory.createPTypeAssistant().typeResolve(ptype, null, THIS, question);
+						fixed.add(ptype);
+						TypeComparator.checkComposeTypes(ptype, question.env, false);
 					}
 
 					node.setActualTypes(fixed);
@@ -1549,6 +1551,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (basictype != null)
 		{
 			basictype = question.assistantFactory.createPTypeAssistant().typeResolve(basictype, null, THIS, question);
+			TypeComparator.checkComposeTypes(basictype, question.env, false);
 		}
 
 		ILexNameToken typename = node.getTypeName();
@@ -2018,6 +2021,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 			node.setBasicType(question.assistantFactory.createPTypeAssistant().typeResolve(node.getBasicType(), null, THIS, question));
 			result = node.getBasicType();
+			TypeComparator.checkComposeTypes(result, question.env, false);
 		} else
 		{
 			node.setTypedef(question.env.findType(node.getTypeName(), node.getLocation().getModule()));

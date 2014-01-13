@@ -16,12 +16,9 @@
   <artifactId>tools</artifactId>
   <name>Overture Maven tool plugins</name>
 
-  <modules>
-   
+  <modules>   
     <!--module>vdmt</module-->
     <module>overturetemplategen</module>
-    <module>examplePackager</module>
-    <module>examplePackagerPlugin</module>
     <!--module>packworkspace</module-->
   </modules>
 </project>

@@ -461,6 +461,7 @@ public class AstFactory
 
 		result.setName(name);
 		result.setFields(fields);
+		result.setComposed(false);
 
 		return result;
 	}
@@ -478,6 +479,8 @@ public class AstFactory
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
+		
+		result.setType(type);
 
 		if (type != null)
 		{
@@ -485,10 +488,11 @@ public class AstFactory
 			{
 				type.setDefinitions(new LinkedList<PDefinition>());
 			}
+			
 			type.getDefinitions().add(result);
 		}
+		
 		return result;
-
 	}
 
 	public static AExplicitFunctionDefinition newAExplicitFunctionDefinition(
