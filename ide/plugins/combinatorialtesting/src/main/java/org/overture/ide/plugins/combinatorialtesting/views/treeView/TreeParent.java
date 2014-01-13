@@ -74,19 +74,16 @@ public class TreeParent implements IAdaptable, ITreeNode
 
 	public ITreeNode getParent()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean hasChild(String name)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void setParent(ITreeNode parent)
 	{
-		// TODO Auto-generated method stub
 
 	}
 }

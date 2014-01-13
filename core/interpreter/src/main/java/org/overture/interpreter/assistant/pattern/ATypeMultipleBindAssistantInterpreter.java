@@ -7,17 +7,14 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.pattern.ATypeMultipleBindAssistantTC;
 
-public class ATypeMultipleBindAssistantInterpreter extends
-		ATypeMultipleBindAssistantTC
+public class ATypeMultipleBindAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ATypeMultipleBindAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

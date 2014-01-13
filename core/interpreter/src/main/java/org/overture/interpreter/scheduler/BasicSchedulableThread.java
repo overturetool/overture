@@ -26,11 +26,13 @@ package org.overture.interpreter.scheduler;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.values.ObjectValue;
 
 
 public class BasicSchedulableThread implements Serializable
@@ -191,6 +193,24 @@ public class BasicSchedulableThread implements Serializable
 			{
 				th.setSignal(sig);
 			}
+		}
+	}
+
+	public static List<ISchedulableThread> findThreads(ObjectValue target)
+	{
+		synchronized (allThreads)
+		{
+			List<ISchedulableThread> list = new Vector<ISchedulableThread>();
+			
+    		for (ISchedulableThread th: allThreads)
+    		{
+   				if (th.getObject() == target)
+   				{
+   					list.add(th);
+   				}
+    		}
+    		
+    		return list;
 		}
 	}
 

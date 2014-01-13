@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -83,7 +82,7 @@ public class PDefinitionListAssistantTC
 
 	}
 
-	public  Set<PDefinition> findMatches(List<PDefinition> definitions,
+	public Set<PDefinition> findMatches(List<PDefinition> definitions,
 			ILexNameToken name)
 	{
 
@@ -194,8 +193,6 @@ public class PDefinitionListAssistantTC
 			}
 		}
 	}
-
-
 
 	public static void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)

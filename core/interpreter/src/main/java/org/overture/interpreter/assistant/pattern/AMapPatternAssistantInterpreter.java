@@ -2,8 +2,8 @@ package org.overture.interpreter.assistant.pattern;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapPattern;
@@ -11,8 +11,8 @@ import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -148,7 +148,9 @@ public class AMapPatternAssistantInterpreter extends AMapPatternAssistantTC
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
 			if (AMapPatternMapletAssistantInterpreter.isConstrained(p))
+			{
 				return true;
+			}
 		}
 
 		return false;

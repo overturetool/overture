@@ -18,38 +18,34 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class Dereferer extends AnswerAdaptor<PDefinition>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public Dereferer(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PDefinition caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public PDefinition caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public PDefinition defaultPDefinition(PDefinition node)
 			throws AnalysisException

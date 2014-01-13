@@ -1,8 +1,8 @@
 package org.overture.interpreter.assistant.pattern;
 
 import java.util.List;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
@@ -34,7 +34,8 @@ public class AMapPatternMapletAssistantInterpreter extends
 			return true;
 		}
 
-		return (PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom())) || PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo())));
+		return PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom()))
+				|| PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo()));
 	}
 
 	public static List<NameValuePairList> getAllNamedValues(

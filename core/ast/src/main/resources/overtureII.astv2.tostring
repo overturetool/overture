@@ -89,6 +89,9 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#Set->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
 %exp->#Set->setRange = "{" [first] ", ... ," + [last] "}"
  
+//field
+%field->field=[tagname] + $(($[equalityAbstraction]$ ? " :- " : " : "))$ + [type]
+ 
 //  Types
 %type->#basic->boolean = "bool"
 %type->#basic->char="char"
@@ -222,12 +225,14 @@ import org.overture.ast.util.ToStringUtil;
             ($[postcondition]$ == null ? "" : "\n\tpost " + $[postcondition]$) +
             ($[errors]$.isEmpty() ? "" : "\n\terrs " + $[errors]$)$ + "]" 
 %stm->start = "start (" [obj] ")"
+%stm->stop = "stop (" [obj] ")"
 %stm->subclassResponsibility = "is subclass responsibility"
 %stm->tixe = "tixe {" [traps] "} in " [body]
 //%stm->traceVariable = 
 %stm->trap = "trap " [patternBind] " with " [with] " in " [body]
 %stm->while = "while " [exp]  " do " [statement]
 %stm->periodic = "periodic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
+%stm->sporadic = "sporadic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
 
 
 %alternativeStm->case = [pattern] " -> " [result]

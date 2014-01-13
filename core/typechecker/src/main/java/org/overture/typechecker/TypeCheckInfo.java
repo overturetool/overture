@@ -41,7 +41,9 @@ public class TypeCheckInfo
 			{
 				Object first = list.get(0);
 				if (first != null && clz.isInstance(first))
-					return ((Stack<T>) list);
+				{
+					return (Stack<T>) list;
+				}
 			}
 		}
 		return null;
@@ -58,7 +60,9 @@ public class TypeCheckInfo
 		{
 			Stack<T> contextStack = lookupListForType(key);
 			if (contextStack != null)
+			{
 				return contextStack.peek();
+			}
 
 		}
 		return null;
@@ -145,7 +149,7 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newScope(NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope,qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers);
 		return info;
 	}
 
@@ -156,13 +160,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newInfo(Environment newEnv)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope,qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers);
 		return info;
 	}
 
 	public TypeCheckInfo newInfo(Environment newEnv, NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope,qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers);
 		return info;
 	}
 

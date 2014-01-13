@@ -1,2 +1,0 @@
-create wd := new World()
-debug wd.Run()

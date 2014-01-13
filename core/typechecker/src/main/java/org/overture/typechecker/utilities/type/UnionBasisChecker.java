@@ -9,49 +9,51 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+/**
+ * Used to determine if a type is a Union type
+ * 
+ * @author kel
+ */
 public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 {
 
-	/**
-	 * Used to determine if a type is a Union type
-	 * 
-	 * @author kel
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public UnionBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType type) throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		if (type.getOpaque())
+		{
 			return false;
+		}
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType node)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{

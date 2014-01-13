@@ -23,7 +23,6 @@
 
 package org.overture.interpreter.scheduler;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 public class ResourceScheduler implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	public String name = "scheduler";
 	protected List<Resource> resources = new LinkedList<Resource>();
@@ -50,7 +49,7 @@ public class ResourceScheduler implements Serializable
 
 	public void reset()
 	{
-		for (Resource r: resources)
+		for (Resource r : resources)
 		{
 			r.reset();
 		}
@@ -76,7 +75,7 @@ public class ResourceScheduler implements Serializable
 	public void start(MainThread main)
 	{
 		mainThread = main;
-		// BUSValue.start();	// Start BUS threads first...
+		// BUSValue.start(); // Start BUS threads first...
 
 		boolean idle = true;
 		stopping = false;
@@ -86,13 +85,12 @@ public class ResourceScheduler implements Serializable
 			long minstep = Long.MAX_VALUE;
 			idle = true;
 
-			for (Resource resource: resources)
+			for (Resource resource : resources)
 			{
 				if (resource.reschedule())
 				{
 					idle = false;
-				}
-				else
+				} else
 				{
 					long d = resource.getMinimumTimestep();
 
@@ -107,45 +105,44 @@ public class ResourceScheduler implements Serializable
 			{
 				SystemClock.advance(minstep);
 
-				for (Resource resource: resources)
+				for (Resource resource : resources)
 				{
 					resource.advance();
 				}
 
 				idle = false;
 			}
-		}
-		while (!idle && main.getRunState() != RunState.COMPLETE);
+		} while (!idle && main.getRunState() != RunState.COMPLETE && main.getExceptions().isEmpty());
 
 		stopping = true;
 
 		if (main.getRunState() != RunState.COMPLETE)
 		{
-    		for (Resource resource: resources)
-    		{
-    			if (resource.hasActive())
-    			{
-   					Console.err.println("DEADLOCK detected");
+			for (Resource resource : resources)
+			{
+				if (resource.hasActive())
+				{
+					Console.err.println("DEADLOCK detected");
 					BasicSchedulableThread.signalAll(Signal.DEADLOCKED);
-					
+
 					RTLogger.dump(true);
 					NextGenRTLogger.dump();
 
 					while (main.isAlive() && Settings.usingDBGP)
 					{
 						try
-                        {
-	                        Thread.sleep(500);
-                        }
-                        catch (InterruptedException e)
-                        {
-	                        // ?
-                        }
+						{
+							Thread.sleep(100);
+						}
+						catch (InterruptedException e)
+						{
+							// ?
+						}
 					}
 
-    				break;
-    			}
-    		}
+					break;
+				}
+			}
 		}
 
 		// BasicSchedulableThread.signalAll(Signal.TERMINATE);
@@ -153,26 +150,25 @@ public class ResourceScheduler implements Serializable
 
 	public String getStatus()
 	{
- 		StringBuilder sb = new StringBuilder();
- 		String sep = "";
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
 
- 		for (Resource r: resources)
- 		{
- 			sb.append(sep);
- 			String s = r.getStatus();
+		for (Resource r : resources)
+		{
+			sb.append(sep);
+			String s = r.getStatus();
 
- 			if (!s.isEmpty())
- 			{
- 				sb.append(s);
- 				sep = "\n";
- 			}
- 			else
- 			{
- 				sep = "";
- 			}
- 		}
+			if (!s.isEmpty())
+			{
+				sb.append(s);
+				sep = "\n";
+			} else
+			{
+				sep = "";
+			}
+		}
 
- 		return sb.toString();
+		return sb.toString();
 	}
 
 	public static boolean isStopping()

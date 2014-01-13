@@ -45,4 +45,20 @@ sync
 	
   per IsFinished => finished;
 
+--thread
+-- (--World`timerRef.RegisterThread();
+  
+--  while true 
+--  do 
+--   (dcl tempCorr: NetworkTypes`correction := GetCorr();
+
+--    if tempCorr = <INC>
+--    then HA`Env.IncTemp()
+--    elseif tempCorr = <DEC>
+--    then HA`Env.DecTemp();
+	
+--    World`timerRef.WaitRelative(5);--World`timerRef.stepLength);
+--   )
+-- )
+
 end Thermostat

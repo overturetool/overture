@@ -26,6 +26,9 @@ package org.overture.typechecker;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -343,7 +346,7 @@ public class TypeComparator
 				}
 			} else if (to instanceof SNumericBasicType)
 			{
-				return (from instanceof SNumericBasicType) ? Result.Yes
+				return from instanceof SNumericBasicType ? Result.Yes
 						: Result.No;
 			} else if (to instanceof AProductType)
 			{
@@ -365,7 +368,10 @@ public class TypeComparator
 				SMapType ma = (SMapType) to;
 				SMapType mb = (SMapType) from;
 
-				return (ma.getEmpty() || mb.getEmpty() || (searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes && searchCompatible(ma.getTo(), mb.getTo(), paramOnly) == Result.Yes)) ? Result.Yes
+				return ma.getEmpty()
+						|| mb.getEmpty()
+						|| searchCompatible(ma.getFrom(), mb.getFrom(), paramOnly) == Result.Yes
+						&& searchCompatible(ma.getTo(), mb.getTo(), paramOnly) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (to instanceof ASetType)
 			{
@@ -377,7 +383,9 @@ public class TypeComparator
 				ASetType sa = (ASetType) to;
 				ASetType sb = (ASetType) from;
 
-				return (sa.getEmpty() || sb.getEmpty() || searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes) ? Result.Yes
+				return sa.getEmpty()
+						|| sb.getEmpty()
+						|| searchCompatible(sa.getSetof(), sb.getSetof(), paramOnly) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (to instanceof SSeqType) // Includes seq1
 			{
@@ -394,7 +402,9 @@ public class TypeComparator
 					return Result.No;
 				}
 
-				return (sa.getEmpty() || sb.getEmpty() || searchCompatible(sa.getSeqof(), sb.getSeqof(), paramOnly) == Result.Yes) ? Result.Yes
+				return sa.getEmpty()
+						|| sb.getEmpty()
+						|| searchCompatible(sa.getSeqof(), sb.getSeqof(), paramOnly) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (to instanceof AFunctionType)
 			{
@@ -406,7 +416,8 @@ public class TypeComparator
 				AFunctionType fa = (AFunctionType) to;
 				AFunctionType fb = (AFunctionType) from;
 
-				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes && (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ? Result.Yes
+				return allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes
+						&& (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes) ? Result.Yes
 						: Result.No;
 			} else if (to instanceof AOperationType)
 			{
@@ -418,7 +429,8 @@ public class TypeComparator
 				AOperationType fa = (AOperationType) to;
 				AOperationType fb = (AOperationType) from;
 
-				return (allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes && (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes)) ? Result.Yes
+				return allCompatible(fa.getParameters(), fb.getParameters(), paramOnly) == Result.Yes
+						&& (paramOnly || searchCompatible(fa.getResult(), fb.getResult(), paramOnly) == Result.Yes) ? Result.Yes
 						: Result.No;
 			} else if (to instanceof ARecordInvariantType)
 			{
@@ -707,7 +719,7 @@ public class TypeComparator
 					SNumericBasicType subn = (SNumericBasicType) sub;
 					SNumericBasicType supn = (SNumericBasicType) sup;
 
-					return (SNumericBasicTypeAssistantTC.getWeight(subn) <= SNumericBasicTypeAssistantTC.getWeight(supn)) ? Result.Yes
+					return SNumericBasicTypeAssistantTC.getWeight(subn) <= SNumericBasicTypeAssistantTC.getWeight(supn) ? Result.Yes
 							: Result.No;
 				}
 			} else if (sub instanceof AProductType)
@@ -741,7 +753,7 @@ public class TypeComparator
 				{
 
 					if (!(sub instanceof AInMapMapType)
-							&& (sup instanceof AInMapMapType))
+							&& sup instanceof AInMapMapType)
 					{
 						return Result.No;
 					}
@@ -762,7 +774,9 @@ public class TypeComparator
 				ASetType subs = (ASetType) sub;
 				ASetType sups = (ASetType) sup;
 
-				return (subs.getEmpty() || sups.getEmpty() || searchSubType(subs.getSetof(), sups.getSetof()) == Result.Yes) ? Result.Yes
+				return subs.getEmpty()
+						|| sups.getEmpty()
+						|| searchSubType(subs.getSetof(), sups.getSetof()) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof SSeqType) // Includes seq1
 			{
@@ -774,7 +788,7 @@ public class TypeComparator
 				SSeqType subs = (SSeqType) sub;
 				SSeqType sups = (SSeqType) sup;
 
-				if ((subs.getEmpty() && !(sup instanceof ASeq1SeqType))
+				if (subs.getEmpty() && !(sup instanceof ASeq1SeqType)
 						|| sups.getEmpty())
 				{
 					return Result.Yes;
@@ -783,7 +797,7 @@ public class TypeComparator
 				if (searchSubType(subs.getSeqof(), sups.getSeqof()) == Result.Yes)
 				{
 					if (!(sub instanceof ASeq1SeqType)
-							&& (sup instanceof ASeq1SeqType))
+							&& sup instanceof ASeq1SeqType)
 					{
 						return Result.No;
 					}
@@ -803,7 +817,8 @@ public class TypeComparator
 				AFunctionType subf = (AFunctionType) sub;
 				AFunctionType supf = (AFunctionType) sup;
 
-				return (allSubTypes(subf.getParameters(), supf.getParameters()) == Result.Yes && searchSubType(subf.getResult(), supf.getResult()) == Result.Yes) ? Result.Yes
+				return allSubTypes(subf.getParameters(), supf.getParameters()) == Result.Yes
+						&& searchSubType(subf.getResult(), supf.getResult()) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof AOperationType)
 			{
@@ -815,7 +830,8 @@ public class TypeComparator
 				AOperationType subo = (AOperationType) sub;
 				AOperationType supo = (AOperationType) sup;
 
-				return (allSubTypes(subo.getParameters(), supo.getParameters()) == Result.Yes && searchSubType(subo.getResult(), supo.getResult()) == Result.Yes) ? Result.Yes
+				return allSubTypes(subo.getParameters(), supo.getParameters()) == Result.Yes
+						&& searchSubType(subo.getResult(), supo.getResult()) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof ARecordInvariantType)
 			{
@@ -851,5 +867,63 @@ public class TypeComparator
 		}
 
 		return Result.No;
+	}
+	
+	/**
+	 * Check that the compose types that are referred to in a type have a matching
+	 * definition in the environment. The method returns a list of types that do not
+	 * exist if the newTypes parameter is passed. 
+	 */
+	public static PTypeList checkComposeTypes(PType type, Environment env, boolean newTypes)
+	{
+		PTypeList undefined = new PTypeList();
+		
+		for (PType compose: PTypeAssistantTC.getComposeTypes(type))
+		{
+			ARecordInvariantType composeType = (ARecordInvariantType)compose;
+			PDefinition existing = env.findType(composeType.getName(), null);
+			
+			if (existing != null)
+			{
+				// If the type is already defined, check that it has the same shape and
+				// does not have an invariant (which cannot match a compose definition).
+				boolean matches = false;
+				
+				if (existing instanceof ATypeDefinition)
+				{
+					ATypeDefinition edef = (ATypeDefinition)existing;
+					PType etype = existing.getType();
+					
+					if (edef.getInvExpression() == null && etype instanceof ARecordInvariantType)
+					{
+						ARecordInvariantType retype = (ARecordInvariantType)etype;
+						
+						if (retype.getFields().equals(composeType.getFields()))
+						{
+							matches = true;
+						}
+					}
+				}
+					
+				if (!matches)
+				{
+					TypeChecker.report(3325, "Mismatched compose definitions for " + composeType.getName(), composeType.getLocation());
+					TypeChecker.detail2(composeType.getName().getName(), composeType.getLocation(), existing.getName().getName(), existing.getLocation());
+				}
+			}
+			else
+			{
+				if (newTypes)
+				{
+					undefined.add(composeType);
+				}
+				else
+				{
+					TypeChecker.report(3113, "Unknown type name '" + composeType.getName() + "'", composeType.getLocation());
+				}
+			}
+		}
+		
+		return undefined;
 	}
 }

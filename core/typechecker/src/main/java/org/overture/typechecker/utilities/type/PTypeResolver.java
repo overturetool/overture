@@ -8,9 +8,16 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
+import org.overture.ast.definitions.ABusClassDefinition;
+import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImportedDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.ARenamedDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.ABracketType;
@@ -37,44 +44,32 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.ABracketTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AFieldFieldAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AProductTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SMapTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SSeqTypeAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to resolve types from general PType class.
  * 
  * @author kel
  */
-public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquestion, PType>
+public class PTypeResolver extends
+		QuestionAnswerAdaptor<PTypeResolver.Newquestion, PType>
 {
 	public static class Newquestion
 	{
 		ATypeDefinition root;
 		IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
 		TypeCheckInfo question;
-		
-		public Newquestion(ATypeDefinition root, 
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question)
+
+		public Newquestion(ATypeDefinition root,
+				IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+				TypeCheckInfo question)
 		{
 			this.question = question;
 			this.root = root;
 			this.rootVisitor = rootVisitor;
 		}
-		
-		
+
 	}
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -88,8 +83,9 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -108,19 +104,22 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return tmp;
 		} catch (TypeCheckException e)
 		{
-			ABracketTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAClassType(AClassType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
+		{
 			type.setResolved(true);
+		}
 
 		try
 		{
@@ -154,18 +153,19 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AClassTypeAssistantTC.unResolve(type);
+			PTypeAssistantTC.unResolve(type);
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAFunctionType(AFunctionType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -184,18 +184,22 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AFunctionTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
+
 	@Override
 	public PType caseANamedInvariantType(ANamedInvariantType type,
 			Newquestion question) throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
+		{
 			type.setResolved(true);
+		}
 
 		try
 		{
@@ -203,10 +207,11 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			ANamedInvariantTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
+
 	@Override
 	public PType caseARecordInvariantType(ARecordInvariantType type,
 			Newquestion question) throws AnalysisException
@@ -223,18 +228,46 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		for (AFieldField f : type.getFields())
 		{
 			if (question.root != null)
+			{
 				question.root.setInfinite(false);
+			}
 
-			AFieldFieldAssistantTC.typeResolve(f, question.root, question.rootVisitor, question.question);
+			f.apply(THIS, question);
 
 			if (question.root != null)
-				type.setInfinite(type.getInfinite() || question.root.getInfinite());
+			{
+				type.setInfinite(type.getInfinite()
+						|| question.root.getInfinite());
+			}
 		}
 
 		if (question.root != null)
+		{
 			question.root.setInfinite(type.getInfinite());
+		}
 		return type;
 	}
+
+	@Override
+	public PType caseAFieldField(AFieldField f, Newquestion question)
+			throws AnalysisException
+	{
+		// Recursion defence done by the type
+		f.setType(af.createPTypeAssistant().typeResolve(f.getType(), question.root, question.rootVisitor, question.question));
+
+		if (question.question.env.isVDMPP())
+		{
+			if (f.getType() instanceof AFunctionType)
+			{
+				f.getTagname().setTypeQualifier(((AFunctionType) f.getType()).getParameters());
+			} else if (f.getType() instanceof AOperationType)
+			{
+				f.getTagname().setTypeQualifier(((AOperationType) f.getType()).getParameters());
+			}
+		}
+		return f.getType();
+	}
+
 	@Override
 	public PType defaultSInvariantType(SInvariantType type, Newquestion question)
 			throws AnalysisException
@@ -242,13 +275,15 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		type.setResolved(true);
 		return type;
 	}
+
 	@Override
 	public PType defaultSMapType(SMapType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -264,18 +299,19 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SMapTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAOperationType(AOperationType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -294,36 +330,42 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AOperationTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAOptionalType(AOptionalType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
 		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), question.root, question.rootVisitor, question.question));
 
 		if (question.root != null)
+		{
 			question.root.setInfinite(false); // Could be nil
-		return type;	
+		}
+		return type;
 	}
-	
+
 	@Override
 	public PType caseAParameterType(AParameterType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
+		{
 			type.setResolved(true);
+		}
 
 		PDefinition p = question.question.env.findName(type.getName(), NameScope.NAMES);
 
@@ -336,14 +378,15 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 
 		return type;
 	}
-	
+
 	@Override
 	public PType caseAProductType(AProductType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -362,18 +405,19 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AProductTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType defaultSSeqType(SSeqType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -382,22 +426,25 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		{
 			type.setSeqof(af.createPTypeAssistant().typeResolve(type.getSeqof(), question.root, question.rootVisitor, question.question));
 			if (question.root != null)
+			{
 				question.root.setInfinite(false); // Could be empty
+			}
 			return type;
 		} catch (TypeCheckException e)
 		{
-			SSeqTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseASetType(ASetType type, Newquestion question)
 			throws AnalysisException
 	{
 		if (type.getResolved())
+		{
 			return type;
-		else
+		} else
 		{
 			type.setResolved(true);
 		}
@@ -406,21 +453,21 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		{
 			type.setSetof(af.createPTypeAssistant().typeResolve(type.getSetof(), question.root, question.rootVisitor, question.question));
 			if (question.root != null)
+			{
 				question.root.setInfinite(false); // Could be empty
+			}
 			return type;
 		} catch (TypeCheckException e)
 		{
-			ASetTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAUnionType(AUnionType type, Newquestion question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
-		//return AUnionTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
 		if (type.getResolved())
 		{
 			return type;
@@ -436,17 +483,24 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			for (PType t : type.getTypes())
 			{
 				if (question.root != null)
+				{
 					question.root.setInfinite(false);
+				}
 
 				fixed.add(af.createPTypeAssistant().typeResolve(t, question.root, question.rootVisitor, question.question));
 
 				if (question.root != null)
-					type.setInfinite(type.getInfinite() && question.root.getInfinite());
+				{
+					type.setInfinite(type.getInfinite()
+							&& question.root.getInfinite());
+				}
 			}
 
 			type.setTypes(new Vector<PType>(fixed));
 			if (question.root != null)
+			{
 				question.root.setInfinite(type.getInfinite());
+			}
 
 			// Resolved types may be unions, so force a re-expand
 			type.setExpanded(false);
@@ -455,18 +509,16 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 			return type;
 		} catch (TypeCheckException e)
 		{
-			AUnionTypeAssistantTC.unResolve(type);
+			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public PType caseAUnresolvedType(AUnresolvedType type, Newquestion question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
-		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
-		PType deref = AUnresolvedTypeAssistantTC.dereference(type, question.question.env, question.root);
+		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
 
 		if (!(deref instanceof AClassType))
 		{
@@ -476,7 +528,63 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		// TODO: return deref.clone()
 		return deref;
 	}
-	
+
+	private static PType dereference(AUnresolvedType type, Environment env,
+			ATypeDefinition root, ITypeCheckerAssistantFactory af)
+	{
+		PDefinition def = env.findType(type.getName(), type.getLocation().getModule());
+
+		if (def == null)
+		{
+			throw new TypeCheckException("Unable to resolve type name '"
+					+ type.getName() + "'", type.getLocation(), type);
+		}
+
+		if (def instanceof AImportedDefinition)
+		{
+			AImportedDefinition idef = (AImportedDefinition) def;
+			def = idef.getDef();
+		}
+
+		if (def instanceof ARenamedDefinition)
+		{
+			ARenamedDefinition rdef = (ARenamedDefinition) def;
+			def = rdef.getDef();
+		}
+
+		if (!(def instanceof ATypeDefinition)
+				&& !(def instanceof AStateDefinition)
+				&& !(def instanceof SClassDefinition)
+				&& !(def instanceof AInheritedDefinition))
+		{
+			TypeCheckerErrors.report(3434, "'" + type.getName()
+					+ "' is not the name of a type definition", type.getLocation(), type);
+		}
+
+		if (def instanceof ATypeDefinition)
+		{
+			if (def == root)
+			{
+				root.setInfinite(true);
+			}
+		}
+
+		if ((def instanceof ACpuClassDefinition || def instanceof ABusClassDefinition)
+				&& !env.isSystem())
+		{
+			TypeCheckerErrors.report(3296, "Cannot use '" + type.getName()
+					+ "' outside system class", type.getLocation(), type);
+		}
+
+		PType r = null;
+		r = af.createPDefinitionAssistant().getType(def);
+
+		List<PDefinition> tempDefs = new Vector<PDefinition>();
+		tempDefs.add(def);
+		r.setDefinitions(tempDefs);
+		return r;
+	}
+
 	@Override
 	public PType defaultPType(PType type, Newquestion question)
 			throws AnalysisException
@@ -484,9 +592,7 @@ public class PTypeResolver extends QuestionAnswerAdaptor<PTypeResolver.Newquesti
 		type.setResolved(true);
 		return type;
 	}
-//	PType result = null;
-//	return result;
-	
+
 	@Override
 	public PType createNewReturnValue(INode node, Newquestion question)
 			throws AnalysisException

@@ -24,60 +24,55 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class UpdatableChecker extends AnswerAdaptor<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1212903520950027195L;
-	
 	protected ITypeCheckerAssistantFactory af;
 
 	public UpdatableChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAAssignmentDefinition(AAssignmentDefinition node)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		//TODO: Here is the same problem with the FunctioChecker
-		
-		return  node.getNameScope().matches(NameScope.STATE) 
+		// TODO: Here is the same problem with the FunctioChecker
+
+		return node.getNameScope().matches(NameScope.STATE)
 				|| PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(node));
 	}
 

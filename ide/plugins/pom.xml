@@ -29,6 +29,7 @@
     <module>uml2</module>
     <module>rttraceviewer</module>
 	<module>codegen</module>
+	<module>prob-runtime</module>
     <!-- features last -->
     <module>features</module>
   </modules>

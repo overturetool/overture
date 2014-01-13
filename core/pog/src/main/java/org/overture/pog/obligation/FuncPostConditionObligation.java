@@ -81,7 +81,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 	//	valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef().clone(), func.getPostdef().clone(), params, body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body)));
 	}
 
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
@@ -123,11 +123,11 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
 
 	}
 
-	private PExp generateWithPreCond(AExplicitFunctionDefinition predef,
+	private PExp generatePredicate(AExplicitFunctionDefinition predef,
 			AExplicitFunctionDefinition postdef, List<PExp> params, PExp body)
 	{
 		

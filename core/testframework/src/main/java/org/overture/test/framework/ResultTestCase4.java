@@ -75,8 +75,8 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		
 		File file = getResultFile(filename);
 
-		Assert.assertNotNull("Result file " + file.getName() + " was not found", file);
-		Assert.assertTrue("The result files does not exist.",file.exists());
+		Assert.assertNotNull("Result file " + filename + " was not found", file);
+		Assert.assertTrue("The result files does not exist: "+file.getPath(),file.exists());
 		if(!file.exists())
 		{
 			//Assume doesn't always work.
@@ -96,7 +96,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 			PrintWriter pw = new PrintWriter(os );
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings,pw);
 			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors,pw) || errorsFound;
-			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result) || errorsFound;
+			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result,pw) || errorsFound;
 			pw.flush();
 			pw.close();
 			Assert.assertFalse("Errors found in file \"" + filename + "\"\n\n"+ os.toString(), errorsFound);
@@ -110,7 +110,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 	 * @return If equal true or check has to be ignored true is returned else false
 	 */
 	protected abstract boolean assertEqualResults(R expected,
-			R actual);
+			R actual,PrintWriter out);
 
 	protected abstract File createResultFile(String filename);
 

@@ -140,12 +140,12 @@ public class POOperationDefinitionContext extends POContext
 				AStateDefinition def = (AStateDefinition) stateDefinition;
 
 				tmBind2.setType(def.getRecordType().clone());
-				pattern.setName(OLD_STATE_ARG);
+				pattern.setName(OLD_STATE_ARG.clone());
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
 				tmBind2.setType(def.getClasstype().clone());
-				pattern.setName(OLD_SELF_ARG);
+				pattern.setName(OLD_SELF_ARG.clone());
 			}
 
 			List<PPattern> plist = new LinkedList<PPattern>();

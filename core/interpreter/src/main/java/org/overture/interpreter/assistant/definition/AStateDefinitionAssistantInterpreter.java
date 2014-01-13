@@ -57,7 +57,9 @@ public class AStateDefinitionAssistantInterpreter extends
 		{
 			PExp found = PExpAssistantInterpreter.findExpression(d.getInvExpression(), lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		if (d.getInitExpression() != null)
@@ -67,7 +69,9 @@ public class AStateDefinitionAssistantInterpreter extends
 				AEqualsBinaryExp ee = (AEqualsBinaryExp) d.getInitExpression();
 				PExp found = PExpAssistantInterpreter.findExpression(ee.getRight(), lineno);
 				if (found != null)
+				{
 					return found;
+				}
 			}
 		}
 

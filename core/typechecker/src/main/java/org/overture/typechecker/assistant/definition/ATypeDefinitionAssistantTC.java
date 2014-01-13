@@ -25,9 +25,7 @@ public class ATypeDefinitionAssistantTC
 		this.af = af;
 	}
 
-
-	public AExplicitFunctionDefinition getInvDefinition(
-			ATypeDefinition d)
+	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
 	{
 
 		ILexLocation loc = d.getInvPattern().getLocation();

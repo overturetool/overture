@@ -13,10 +13,10 @@ public class AImportedDefinitionAssistantTC
 		this.af = af;
 	}
 
+	public static boolean isUsed(AImportedDefinition u)
+	{
+		return PDefinitionAssistantTC.isUsed(u.getDef());
 
-	 public static boolean isUsed(AImportedDefinition u) {
-	 return PDefinitionAssistantTC.isUsed(u.getDef());
-	
-	 }
+	}
 
 }

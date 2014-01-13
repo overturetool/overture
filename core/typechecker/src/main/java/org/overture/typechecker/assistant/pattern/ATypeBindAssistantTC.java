@@ -3,7 +3,6 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameList;

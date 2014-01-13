@@ -24,7 +24,6 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-
 	public static AExplicitFunctionDefinition getInitDefinition(
 			AStateDefinition d)
 	{

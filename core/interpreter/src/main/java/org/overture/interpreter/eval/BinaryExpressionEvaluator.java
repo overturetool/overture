@@ -56,14 +56,6 @@ import org.overture.interpreter.values.ValueSet;
 
 public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3877784873512750134L;
-
-	
-	
-	
 	
 	/*
 	 * Boolean

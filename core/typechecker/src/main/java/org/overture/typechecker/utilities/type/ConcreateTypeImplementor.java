@@ -22,21 +22,25 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTypeImplementor.Newquestion, PType>
+/**
+ * Implement the concreate type of a given type.
+ * 
+ * @author kel
+ */
+public class ConcreateTypeImplementor extends
+		QuestionAnswerAdaptor<ConcreateTypeImplementor.Newquestion, PType>
 {
 	public static class Newquestion
 	{
 		ILexNameToken pname;
 		PType actualType;
-		
-		public Newquestion(ILexNameToken pname,
-				PType actualType)
+
+		public Newquestion(ILexNameToken pname, PType actualType)
 		{
 			this.actualType = actualType;
 			this.pname = pname;
 		}
 	}
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -44,19 +48,20 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PType caseAParameterType(AParameterType type, Newquestion question)
 			throws AnalysisException
 	{
-		return (type.getName().equals(question.pname)) ? question.actualType : type;
+		return type.getName().equals(question.pname) ? question.actualType
+				: type;
 	}
-	
+
 	@Override
 	public PType caseAFunctionType(AFunctionType type, Newquestion question)
 			throws AnalysisException
 	{
-		//return AFunctionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
+		// return AFunctionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		List<PType> polyparams = new Vector<PType>();
 
 		for (PType ptype : type.getParameters())
@@ -64,26 +69,26 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 			polyparams.add(PTypeAssistantTC.polymorph(ptype, question.pname, question.actualType));
 		}
 
-		//PType polyresult = PTypeAssistantTC.polymorph(type.getResult(), question.pname, question.actualType);
+		// PType polyresult = PTypeAssistantTC.polymorph(type.getResult(), question.pname, question.actualType);
 		PType polyresult = type.getResult().apply(this, question);
 		AFunctionType ftype = AstFactory.newAFunctionType(type.getLocation(), false, polyparams, polyresult);
 		ftype.setDefinitions(type.getDefinitions());
 		return ftype;
 	}
-	
+
 	@Override
 	public PType defaultSMapType(SMapType type, Newquestion question)
 			throws AnalysisException
 	{
-		
+
 		return AstFactory.newAMapMapType(type.getLocation(), PTypeAssistantTC.polymorph(type.getFrom(), question.pname, question.actualType), PTypeAssistantTC.polymorph(type.getTo(), question.pname, question.actualType));
 	}
-	
+
 	@Override
 	public PType caseAOptionalType(AOptionalType type, Newquestion question)
 			throws AnalysisException
 	{
-		
+
 		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(), question.pname, question.actualType));
 	}
 
@@ -100,26 +105,28 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 
 		return AstFactory.newAProductType(type.getLocation(), polytypes);
 	}
+
 	@Override
 	public PType defaultSSeqType(SSeqType type, Newquestion question)
 			throws AnalysisException
 	{
-	
+
 		return AstFactory.newASeqSeqType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSeqof(), question.pname, question.actualType));
 	}
-	
+
 	@Override
 	public PType caseASetType(ASetType type, Newquestion question)
 			throws AnalysisException
 	{
-		//return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
+		// return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), question.pname, question.actualType));
 	}
+
 	@Override
 	public PType caseAUnionType(AUnionType type, Newquestion question)
 			throws AnalysisException
 	{
-		//return AUnionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
+		// return AUnionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		PTypeSet polytypes = new PTypeSet();
 
 		for (PType ptype : ((AUnionType) type).getTypes())
@@ -133,7 +140,7 @@ public class ConcreateTypeImplementor extends QuestionAnswerAdaptor<ConcreateTyp
 
 		return AstFactory.newAUnionType(type.getLocation(), result);
 	}
-	
+
 	@Override
 	public PType defaultPType(PType type, Newquestion question)
 			throws AnalysisException

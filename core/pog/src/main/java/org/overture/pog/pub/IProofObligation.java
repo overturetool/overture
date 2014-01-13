@@ -12,6 +12,8 @@ public interface IProofObligation extends Comparable<IProofObligation>
 	
 	String getUniqueName();
 	
+	String getIsaName();
+	
 	String getValue();
 	
 	AVdmPoTree getValueTree();
@@ -23,6 +25,8 @@ public interface IProofObligation extends Comparable<IProofObligation>
 	POType getKind();
 	
 	POStatus getStatus();
+	
+	String getKindString();
 	
 	void setStatus(POStatus status);
 	

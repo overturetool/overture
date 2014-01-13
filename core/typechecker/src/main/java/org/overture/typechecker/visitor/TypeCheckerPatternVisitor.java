@@ -17,11 +17,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3210904929412698065L;
-
 	public TypeCheckerPatternVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{

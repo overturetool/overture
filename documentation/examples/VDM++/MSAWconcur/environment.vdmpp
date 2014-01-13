@@ -94,4 +94,17 @@ per isFinished => not busy;
 mutex(handleRadarWarningEvent);
 mutex(handleRadarWarningEvent,handleFOWarningEvent);
 
+--thread
+-- (
+--  while World`timerRef.GetTime() < simtime do
+--   (updateFOs();
+              
+--    if updating
+--    then (World`timerRef.WaitRelative(1);
+--          updating := false);
+--   );
+--  busy := false; 
+--  )
+
+
 end Environment

@@ -210,57 +210,6 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return null;
 	}
 
-//	public static void typeResolve(AExplicitFunctionDefinition d,
-//			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
-//			TypeCheckInfo question) throws AnalysisException
-//	{
-//
-//		if (d.getTypeParams().size() != 0)
-//		{
-//			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(d), question.env, NameScope.NAMES);
-//
-//			TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory, params, question.scope);
-//
-//			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, newQuestion));
-//		} else
-//		{
-//			d.setType(PTypeAssistantTC.typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(d), null, rootVisitor, question));
-//		}
-//
-//		if (question.env.isVDMPP())
-//		{
-//			AFunctionType fType = (AFunctionType) question.assistantFactory.createPDefinitionAssistant().getType(d);
-//			d.getName().setTypeQualifier(fType.getParameters());
-//
-//			if (d.getBody() instanceof ASubclassResponsibilityExp)
-//			{
-//				d.getClassDefinition().setIsAbstract(true);
-//			}
-//		}
-//
-//		if (d.getBody() instanceof ASubclassResponsibilityExp
-//				|| d.getBody() instanceof ANotYetSpecifiedExp)
-//		{
-//			d.setIsUndefined(true);
-//		}
-//
-//		if (d.getPrecondition() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
-//		}
-//
-//		if (d.getPostcondition() != null)
-//		{
-//			PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
-//		}
-//
-//		for (List<PPattern> pp : d.getParamPatternList())
-//		{
-//			PPatternListAssistantTC.typeResolve(pp, rootVisitor, question);
-//		}
-//
-//	}
-
 	public static void implicitDefinitions(AExplicitFunctionDefinition d,
 			Environment env)
 	{
@@ -322,14 +271,6 @@ public class AExplicitFunctionDefinitionAssistantTC
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
 
-		// new AExplicitFunctionDefinition(d.getPostcondition().getLocation(),
-		// d.getName().getPostName(d.getPostcondition().getLocation()),
-		// NameScope.GLOBAL, false, null, PAccessSpecifierAssistant.getDefault(),
-		// (List<LexNameToken>)d.getTypeParams().clone(),
-		// parameters, AFunctionTypeAssistantTC.getCurriedPostType(d.getType(),d.getIsCurried()),
-		// d.getPostcondition(), null, null, null, null, null, null,
-		// null, false, false, null, null, null, null, parameters.size() > 1, null);
-
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
@@ -341,13 +282,6 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 		@SuppressWarnings("unchecked")
 		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
-		// new AExplicitFunctionDefinition(d.getPrecondition().getLocation(),
-		// d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, false, null,
-		// d.getAccess().clone(), (List<LexNameToken>) d.getTypeParams().clone(), paramPatterns,
-		// AFunctionTypeAssistantTC.getCurriedPreType(d.getType(),d.getIsCurried()), d.getPrecondition(),
-		// null, null,
-		// null, null, null, null, null, false, false, null,
-		// null, null, null, paramPatterns.size() > 1, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

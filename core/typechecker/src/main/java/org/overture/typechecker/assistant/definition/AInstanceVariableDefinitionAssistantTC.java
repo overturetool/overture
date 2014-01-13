@@ -15,7 +15,6 @@ public class AInstanceVariableDefinitionAssistantTC
 		this.af = af;
 	}
 
-
 	public static void initializedCheck(AInstanceVariableDefinition ivd)
 	{
 		if (!ivd.getInitialized()

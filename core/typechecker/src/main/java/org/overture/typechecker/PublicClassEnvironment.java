@@ -97,7 +97,7 @@ public class PublicClassEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findName(name, scope);
+		return outer == null ? null : outer.findName(name, scope);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class PublicClassEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name, null);
+		return outer == null ? null : outer.findType(name, null);
 	}
 
 	@Override
