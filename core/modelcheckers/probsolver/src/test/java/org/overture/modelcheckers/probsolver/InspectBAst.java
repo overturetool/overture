@@ -24,10 +24,29 @@ public class InspectBAst {
 		System.out.println(f.getAst());
 		f.getAst().apply(new ASTPrinter(System.out));
 
-		f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
+		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("[1,2,3,4,5](3)");
+		//f = new ClassicalB("[1,2,3,4,5](3)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("POW({1,2,3})");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("({(1 |-> 3), (2|->4)} ; { (3 |-> 5) ,(4|->1)})");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("{(1 |-> 3), (2|->4)}~");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("iterate({(1 |-> 3), (2|->1), 3 |->2}, 3)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("1..5");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("max({1,2,3})");
 		f.getAst().apply(new ASTPrinter(System.out));
 	}
+	
 }

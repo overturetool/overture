@@ -35,11 +35,26 @@ operations
 -- getlen() n : nat
 --  post n = len [[1,1,1],[2],[1,3]]
 
--- concseq()  n : seq of nat
---  post n = [1,2] ^ [2,4];
+ 
+ concseq()  n : seq of nat
+  post n = [1,2] ^ [2,4];  
 
-  callit() n : seq of nat
-    post n = reverse( [1,2,3]);
+interval() n : set of nat1
+   post n = inds [2,3,4,5];
+   
+elements() n : set of nat
+  post n = elems [1,2,3,1,2];
+
+absolute() n : nat
+  post n = abs 3;
+
+elements0() n : set of nat
+  post n = elems [];
+--  revseq() n : seq of nat
+--    post n = reverse [1,2,3]
+
+-- power() n : set of set of nat -- can not be read
+--    post n = power {1,2,3}; -- ??
 
 -- concseq2()  n : seq of seq of nat
 --  post n = [[1,11],[2]] ^ [[2,4]]   -- error converting result expression
@@ -59,5 +74,5 @@ operations
 --seqapp() m : nat
 --  post m = [10,20,30,40](3);
   
-neqseq1() n : nat
-  post [1,2] <> [1,3] => n=1
+--neqseq1() n : nat
+--  post [1,2] <> [1,3] => n=1

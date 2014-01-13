@@ -9,14 +9,14 @@ maptest() m : map nat to nat
 domaintest() m : set of nat
   post m = dom { 1|->2, 2|->2, 3|->1 };
 
--- domaintest() m : set of nat
---   post m = dom { 1|->(2|->3), 2|->(2|->2), 3|->(1|->3) };
+--domaintest() m : set of nat
+--  post m = dom { 1|->(2|->3), 2|->(2|->2), 3|->(1|->3) };
  
 rangetest() m : set of nat
   post m = rng { 1|->2, 2|->2, 3|->1 };
 
--- rangetest() m : set of map nat to nat
---   post m = rng { 1|->(2|->3), 2|->(2|->2), 3|->(1|->3) }
+--rangetest() m : set of map nat to nat
+--  post m = rng { 1|->(2|->3), 2|->(2|->2), 3|->(1|->3) }
 
 mapu() m : map nat to nat
   post m = { 1|->3, 2|->1, 3|->4} munion { 4|->4 };
@@ -40,5 +40,14 @@ mapranrestby() m : map nat to nat
   post m = {1|->10, 2|->20,3|->30,4|->40}:->{10,40};
   
 mapapp() m : nat
-  post m = {1->11,2|->21,3|->31,4|->41}(3)
+  post m = {1|->11, 2|->21, 3|->31, 4|->41}(3);
+  
+mapcomp() m : map nat to nat
+  post m = ({10 |-> 100, 30 |-> 300 } comp {1|->10, 2|->20,3|->30,4|->40});
+
+mapinverse() m : map nat to nat
+  post m = inverse {1|->10, 2|->20,3|->30,4|->40};
+
+mapiterate() m : map nat to nat
+  post m = ({1 |-> 3, 2|->1, 3 |->2} ** 3)
   
