@@ -375,6 +375,15 @@ public class DefinitionTypeResolver extends
 			}
 
 			node.setType(node.getInvType());
+			
+			if (!node.getComposeDefinitions().isEmpty())
+			{
+				for (PDefinition compose: node.getComposeDefinitions())
+				{
+					compose.apply(this, question);
+				}
+			}
+			
 		} catch (TypeCheckException e)
 		{
 			PTypeAssistantTC.unResolve(node.getInvType());

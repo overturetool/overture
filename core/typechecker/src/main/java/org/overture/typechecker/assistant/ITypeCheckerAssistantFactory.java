@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.IAstAssistantFactory;
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -402,4 +404,5 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
+	IAnswer<PTypeList> getComposeTypeCollector();
 }

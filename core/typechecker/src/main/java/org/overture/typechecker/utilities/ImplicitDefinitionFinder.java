@@ -14,7 +14,11 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -25,6 +29,7 @@ import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -205,9 +210,22 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			// node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
 			node.setInvdef(af.createATypeDefinitionAssistant().getInvDefinition(node));
 			node.getInvType().setInvDef(node.getInvdef());
-		} else
+		}
+		else
 		{
 			node.setInvdef(null);
+		}
+		
+		if (node.getInvType() instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType ntype = (ANamedInvariantType)node.getInvType();
+			node.getComposeDefinitions().clear();
+			
+			for (PType compose: PTypeAssistantTC.getComposeTypes(ntype.getType()))
+			{
+				ARecordInvariantType rtype = (ARecordInvariantType) compose;
+				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
+			}
 		}
 	}
 

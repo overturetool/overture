@@ -150,24 +150,18 @@ public class DefinitionFinder extends
 	public PDefinition caseATypeDefinition(ATypeDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		// TODO Add stuff here to lookup compose definitions in ATypeDefinition
-
-//		PType type = node.getType();
-//		
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			ANamedInvariantType nt = (ANamedInvariantType) type;
-//
-//			if (nt.getType() instanceof ARecordInvariantType)
-//			{
-//				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
-//
-//				if (rt.getName().equals(question.sought))
-//				{
-//					return node; // T1 = compose T2 x:int end;
-//				}
-//			}
-//		}
+		if (!node.getComposeDefinitions().isEmpty())
+		{
+			for (PDefinition compose: node.getComposeDefinitions())
+			{
+				PDefinition found = PDefinitionAssistantTC.findNameBaseCase(compose, question.sought, NameScope.TYPENAME);
+				
+				if (found != null)
+				{
+					return found;
+				}
+			}
+		}
 
 		return PDefinitionAssistantTC.findNameBaseCase(node, question.sought, NameScope.TYPENAME);
 	}
