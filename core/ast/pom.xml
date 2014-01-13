@@ -72,20 +72,19 @@
 	  <configuration>
 	    <lifecycleMappingMetadata>
 	      <pluginExecutions>
+
 		<pluginExecution>
-		  <pluginExecutionFilter>
-		    <groupId>org.overture.maven.tools</groupId>
-		    <artifactId>ast-creator-plugin</artifactId>
-		    <versionRange>${astcreator.version}</versionRange>
-		    <goals>
-		      <goal>generate</goal>
-		    </goals>
-		  </pluginExecutionFilter>
-		  <action>
-		    <execute>
-		      <runOnIncremental>false</runOnIncremental>
-		    </execute>
-		  </action>
+			<pluginExecutionFilter>
+				<groupId>org.overture.astcreator</groupId>
+				<artifactId>astcreator-plugin</artifactId>
+				<versionRange>[1.6.0,)</versionRange>
+				<goals>
+					<goal>generate</goal>
+				</goals>
+			</pluginExecutionFilter>
+			<action>
+				<ignore></ignore>
+			</action>
 		</pluginExecution>
 	      </pluginExecutions>
 	    </lifecycleMappingMetadata>
