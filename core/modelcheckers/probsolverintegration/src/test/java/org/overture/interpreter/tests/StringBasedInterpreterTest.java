@@ -15,7 +15,7 @@ public abstract class StringBasedInterpreterTest extends
 		TestResourcesResultTestCase4<String>
 {
 
-	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.tc.override.";
+	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.probsolverintegration.override.";
 
 	public StringBasedInterpreterTest(File file, String suiteName,
 			File testSuiteRoot)
