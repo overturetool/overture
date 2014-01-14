@@ -1,3 +1,4 @@
+/*
 --
 -- MapTest.vdmsl
 --
@@ -41,4 +42,4 @@ mapranrestby() m : map nat to nat
   
 mapapp() m : nat
   post m = {1->11,2|->21,3|->31,4|->41}(3)
-  
+  */
