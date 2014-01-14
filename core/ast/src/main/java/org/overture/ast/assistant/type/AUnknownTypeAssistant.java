@@ -1,9 +1,6 @@
 package org.overture.ast.assistant.type;
 
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.types.ARealNumericBasicType;
-import org.overture.ast.types.AUnknownType;
 
 public class AUnknownTypeAssistant
 {

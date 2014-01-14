@@ -21,7 +21,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
@@ -32,10 +31,6 @@ import org.overture.typechecker.util.LexNameTokenMap;
 public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public ClassTypeFinder(ITypeCheckerAssistantFactory af)

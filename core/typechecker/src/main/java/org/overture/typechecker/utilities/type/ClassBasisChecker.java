@@ -16,11 +16,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	protected ITypeCheckerAssistantFactory af;
 
 	public ClassBasisChecker(ITypeCheckerAssistantFactory af)

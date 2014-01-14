@@ -39,7 +39,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseABracketType(ABracketType type) throws AnalysisException
 	{
-		//return af.createPTypeAssistant().hashCode(type.getType());
+		
 		return type.apply(THIS);
 	}
 	
@@ -55,9 +55,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		AFunctionType ftype = type;
 		return af.createPTypeAssistant().hashCode(ftype.getParameters()) + af.createPTypeAssistant().hashCode(ftype.getResult());
-	//		AFunctionType ftype = (AFunctionType) type;
-	//		return hashCode(ftype.getParameters())
-	//				+ hashCode(ftype.getResult());
+	
 	}
 	
 	@Override
@@ -71,7 +69,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	public Integer caseARecordInvariantType(ARecordInvariantType type)
 			throws AnalysisException
 	{
-		//return ((ARecordInvariantType) type).getName().hashCode();
+		
 		return type.getName().apply(THIS);
 	}
 
@@ -87,7 +85,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		SMapType mtype = type;
 		return mtype.getFrom().apply(THIS) + mtype.getTo().apply(THIS);
-	//	return hashCode(mtype.getFrom()) + hashCode(mtype.getTo());
+	
 	}
 	
 	@Override
@@ -96,7 +94,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		AOperationType otype = type;
 		return af.createPTypeAssistant().hashCode(otype.getParameters()) + af.createPTypeAssistant().hashCode(otype.getResult());
-		//return hashCode(otype.getParameters()) + hashCode(otype.getResult());
+		
 	}
 	
 	@Override
@@ -104,7 +102,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
-		//return hashCode(((AOptionalType) type).getType());
+		
 	}
 	
 	@Override
@@ -112,13 +110,13 @@ public class HashChecker extends AnswerAdaptor<Integer>
 			throws AnalysisException
 	{
 		return type.getName().apply(THIS);
-		//return ((AParameterType) type).getName().hashCode();
+		
 	}
 	
 	@Override
 	public Integer caseAProductType(AProductType type) throws AnalysisException
 	{
-		//return type.getTypes().apply(THIS);
+		
 		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
 	
@@ -161,37 +159,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		return type.getClass().hashCode();
 	}
-//	} else if (type instanceof SInvariantType) {
-//		if (type instanceof ANamedInvariantType) {
-//			return ((ANamedInvariantType) type).getName().hashCode();
-//		} else if (type instanceof ARecordInvariantType) {
-//			
-//		}
-//	} else if (type instanceof SMapType) {
-//		
-//	} else if (type instanceof AOperationType) {
-//		
-//	} else if (type instanceof AOptionalType) {
-//		
-//	} else if (type instanceof AParameterType) {
-//		
-//	} else if (type instanceof AProductType) {
-//		
-//	} else if (type instanceof AQuoteType) {
-//		
-//	} else if (type instanceof SSeqType) {
-//		
-//		
-//	} else if (type instanceof ASetType) {
-//		
-//		
-//	} else if (type instanceof AUnionType) {
-//		
-//		
-//	} else if (type instanceof AUnresolvedType) {
-//		
-//	}
-//	
+
 
 	@Override
 	public Integer createNewReturnValue(INode type) throws AnalysisException
