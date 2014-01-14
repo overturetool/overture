@@ -69,7 +69,6 @@ import org.overture.ast.expressions.ADomainResByBinaryExp;         //added -> AD
 import org.overture.ast.expressions.ARangeResToBinaryExp;          //added -> ARangeRestrictionExpression
 import org.overture.ast.expressions.ARangeResByBinaryExp;          //added -> ARangeSubtractionExpression
 import org.overture.ast.expressions.AApplyExp;                     //added -> AFunctionExpression(for seq(nat)), AImageExpression(for map(nat)), 
-
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
@@ -88,6 +87,7 @@ import org.overture.ast.types.AMapMapType;  //added
 
 import de.be4.classicalb.core.parser.node.ACardExpression;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
+import de.be4.classicalb.core.parser.node.AConvertBoolExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
 import de.be4.classicalb.core.parser.node.AIdentifierExpression;
@@ -216,7 +216,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 */
 	public PExpression exp(INode n) throws AnalysisException
 	{
-		return (PExpression) n.apply(this);
+		Node result = n.apply(this);
+		if(result instanceof PPredicate)
+		{
+			result = new AConvertBoolExpression((PPredicate)result);
+		}
+		
+		return (PExpression) result;
 	}
 
 	/**
