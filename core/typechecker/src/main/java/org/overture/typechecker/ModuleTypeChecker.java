@@ -31,6 +31,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.typechecker.Pass;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -116,6 +117,20 @@ public class ModuleTypeChecker extends TypeChecker
 			return;
 		}
 
+   		// Mark top level definitions of flat specifications as used
+   		new PDefinitionAssistantTC(new TypeCheckerAssistantFactory());
+   		
+   		for (AModuleModules module: modules)
+   		{
+   			if (module instanceof CombinedDefaultModule)
+   			{
+	   			for (PDefinition definition: module.getDefs())
+	   			{
+   					PDefinitionAssistantTC.markUsed(definition);
+	   			}
+   			}
+   		}
+   		
 		// Generate implicit definitions for pre_, post_, inv_ functions etc.
 
 		for (AModuleModules m : modules)
