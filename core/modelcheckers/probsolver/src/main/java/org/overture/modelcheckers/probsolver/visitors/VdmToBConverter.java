@@ -37,6 +37,7 @@ import org.overture.ast.expressions.APlusNumericBinaryExp;         //added -> AA
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;     //added -> AMinusExpression
 import org.overture.ast.expressions.ATimesNumericBinaryExp;        //added -> AMultiplicationExpression
 import org.overture.ast.expressions.ADivideNumericBinaryExp;       //added -> ADivExpression
+import org.overture.ast.expressions.AModNumericBinaryExp;          //added -> AModuleExpression
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;           //added -> AUnaryMinusExpression
 import org.overture.ast.expressions.AAbsoluteUnaryExp;             //added -> AMaxExpression
 import org.overture.ast.expressions.AStarStarBinaryExp;            //added -> A[PowerOf|Iteration]Expression
@@ -74,6 +75,7 @@ import org.overture.ast.expressions.ARangeResByBinaryExp;          //added -> AR
 import org.overture.ast.expressions.AApplyExp;                     //added -> AFunctionExpression(for seq(nat)), AImageExpression(for map(nat)), 
 import org.overture.ast.expressions.ACompBinaryExp;                //added -> ACompositionExpression
 import org.overture.ast.expressions.AMapInverseUnaryExp;           //added -> AReverseExpression
+import org.overture.ast.expressions.AForAllExp;                    //added -> AForallPredicate
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -90,6 +92,9 @@ import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.modelcheckers.probsolver.SolverConsole;
 import org.overture.ast.types.AMapMapType;  //added
+import org.overture.ast.patterns.PMultipleBind;//added
+import org.overture.ast.patterns.AIdentifierPattern;//added -> AIdentifireExpression
+import org.overture.ast.patterns.ASetMultipleBind;//added
 
 import de.be4.classicalb.core.parser.node.ACardExpression;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
@@ -121,6 +126,7 @@ import de.be4.classicalb.core.parser.node.AAddExpression;//added
 import de.be4.classicalb.core.parser.node.AMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AMultiplicationExpression;//added
 import de.be4.classicalb.core.parser.node.ADivExpression;//added
+import de.be4.classicalb.core.parser.node.AModuloExpression;//added
 import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AMaxExpression;//added
 import de.be4.classicalb.core.parser.node.APowerOfExpression;//added
@@ -159,7 +165,8 @@ import de.be4.classicalb.core.parser.node.AImageExpression; //added
 import de.be4.classicalb.core.parser.node.AFunctionExpression; //added
 import de.be4.classicalb.core.parser.node.ACompositionExpression; //added
 import de.be4.classicalb.core.parser.node.AReverseExpression; //added
-
+import de.be4.classicalb.core.parser.node.AForallPredicate;//added
+import de.be4.classicalb.core.parser.node.AIdentifierExpression;//added
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -498,7 +505,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseATimesNumericBinaryExp(ATimesNumericBinaryExp node)//added
 			throws AnalysisException	
-{
+	{
 
 	    return new AMultiplicationExpression(exp(node.getLeft()), exp(node.getRight()));
 	}
@@ -510,6 +517,15 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	    return new ADivExpression(exp(node.getLeft()), exp(node.getRight()));
 	}
+
+	@Override
+	public Node caseAModNumericBinaryExp(AModNumericBinaryExp node)//added
+			throws AnalysisException
+	{
+
+	    return new AModuloExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
 
 	@Override
 	public Node caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node)//added
@@ -863,6 +879,62 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return new AReverseExpression(exp(node.getExp()));
 	}
 
+	//here
+	@Override
+	public Node caseAForAllExp(AForAllExp node)//added
+			throws AnalysisException
+	{
+	    AForallPredicate fap = new AForallPredicate();
+	    LinkedList<PMultipleBind> blist = node.getBindList();
+
+	    fap.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
+	    fap.setImplication(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)),
+	    					    exp(blist.get(0))));
+	    /*
+	    for(int i=0;i<blist.size();i++) {
+	    	for(int j=0;j<blist.get(i).getPlist().size();j++) {
+	    		fap.getIdentifiers().add(exp(blist.get(i).getPlist().get(j)));
+	    		fap.setImplication(new AConjunctPredicate(fap.getImplication(), 
+								  new AMemberPredicate(exp(blist.get(i).getPlist().get(j)),
+										       exp(blist.get(i)))));
+	    	}
+	    }
+	    */
+
+	    fap.setImplication(new AImplicationPredicate(fap.getImplication(), pred(node.getPredicate())));
+
+	    return fap; 
+	}
+
+	@Override
+	public Node caseAIdentifierPattern(AIdentifierPattern node)//added
+			throws AnalysisException
+	{
+	    AIdentifierExpression aie = new AIdentifierExpression();
+	    aie.getIdentifier().add(new TIdentifierLiteral(node.getName().toString()));
+	    return aie;
+	}
+
+
+	@Override
+	public Node caseASetMultipleBind(ASetMultipleBind node)//added
+			throws AnalysisException
+	{
+	    
+
+		if (((ASetEnumSetExp)node.getSet()).getMembers().isEmpty())
+		{
+			return new AEmptySetExpression();
+		}
+
+		ASetExtensionExpression set = new ASetExtensionExpression();
+		for (PExp m : ((ASetEnumSetExp)node.getSet()).getMembers())
+		{
+			set.getExpressions().add(exp(m));
+		}
+
+		return set;
+	}
 
 
 	//StateDefinition

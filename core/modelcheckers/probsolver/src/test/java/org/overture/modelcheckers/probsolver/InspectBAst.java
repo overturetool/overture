@@ -45,8 +45,15 @@ public class InspectBAst {
 		//f = new ClassicalB("1..5");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("max({1,2,3})");
+		//f = new ClassicalB("max({1,2,3})");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("5 mod 3");
+		//f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("!(n).(n:{1,2,3} => mx>=n)");
 		f.getAst().apply(new ASTPrinter(System.out));
+		
 	}
 	
 }

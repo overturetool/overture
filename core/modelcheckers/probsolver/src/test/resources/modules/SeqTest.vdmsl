@@ -45,9 +45,6 @@ interval() n : set of nat1
 elements() n : set of nat
   post n = elems [1,2,3,1,2];
 
-absolute() n : nat
-  post n = abs 3;
-
 elements0() n : set of nat
   post n = elems [];
 --  revseq() n : seq of nat
