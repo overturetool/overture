@@ -1,0 +1,4 @@
+operations
+
+getrev() n : seq of seq of nat
+ post n = reverse [[1,1,1],[2],[1,3]]
