@@ -1,0 +1,5 @@
+operations
+
+  setele() r : nat
+    post 2 in set {1,2,3} => r =2
+ 
