@@ -12,9 +12,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.ANamedInvariantType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -153,22 +150,24 @@ public class DefinitionFinder extends
 	public PDefinition caseATypeDefinition(ATypeDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		PType type = node.getType();
+		// TODO Add stuff here to lookup compose definitions in ATypeDefinition
 
-		if (type instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nt = (ANamedInvariantType) type;
-
-			if (nt.getType() instanceof ARecordInvariantType)
-			{
-				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
-
-				if (rt.getName().equals(question.sought))
-				{
-					return node; // T1 = compose T2 x:int end;
-				}
-			}
-		}
+//		PType type = node.getType();
+//		
+//		if (type instanceof ANamedInvariantType)
+//		{
+//			ANamedInvariantType nt = (ANamedInvariantType) type;
+//
+//			if (nt.getType() instanceof ARecordInvariantType)
+//			{
+//				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
+//
+//				if (rt.getName().equals(question.sought))
+//				{
+//					return node; // T1 = compose T2 x:int end;
+//				}
+//			}
+//		}
 
 		return PDefinitionAssistantTC.findNameBaseCase(node, question.sought, NameScope.TYPENAME);
 	}

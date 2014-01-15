@@ -360,11 +360,6 @@ public class TypeReader extends SyntaxReader
 				checkFor(VDMToken.SEQ_CLOSE, 2257, "Missing close bracket after optional type");
 				break;
 
-			case NIL:
-				type = AstFactory.newAVoidType(location);
-				nextToken();
-				break;
-
 			case IDENTIFIER:
 				LexIdentifierToken id = (LexIdentifierToken)token;
 				type = AstFactory.newAUnresolvedType(idToName(id));

@@ -19,6 +19,7 @@ import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
@@ -97,6 +98,9 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 		} else if (stm instanceof AStartStm)
 		{
 			return AStartStmAssistantInterpreter.findExpression((AStartStm) stm, lineno);
+		} else if (stm instanceof AStopStm)
+		{
+			return AStartStmAssistantInterpreter.findExpression((AStopStm) stm, lineno);
 		} else if (stm instanceof ATixeStm)
 		{
 			return ATixeStmAssistantInterpreter.findExpression((ATixeStm) stm, lineno);

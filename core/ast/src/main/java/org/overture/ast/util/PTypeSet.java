@@ -1,6 +1,5 @@
 package org.overture.ast.util;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -9,10 +8,8 @@ import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
-import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
-import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 
@@ -97,30 +94,33 @@ public class PTypeSet extends TreeSet<PType>
 		// nil values, which set the overall type as optional. Other
 		// optional types stay.
 
-		Iterator<PType> tit = this.iterator();
 		boolean optional = false;
 
-		while (tit.hasNext())
-		{
-			PType t = tit.next();
+		// You get less confusing results without this, it seems...
 
-			if (t instanceof AOptionalType)
-			{
-				AOptionalType ot = (AOptionalType) t;
-
-				if (ot.getType() instanceof AUnknownType)
-				{
-					if (this.size() > 1)
-					{
-						tit.remove();
-						optional = true;
-					} else
-					{
-						optional = false;
-					}
-				}
-			}
-		}
+//		Iterator<PType> tit = this.iterator();
+//
+//		while (tit.hasNext())
+//		{
+//			PType t = tit.next();
+//
+//			if (t instanceof AOptionalType)
+//			{
+//				AOptionalType ot = (AOptionalType) t;
+//
+//				if (ot.getType() instanceof AUnknownType)
+//				{
+//					if (this.size() > 1)
+//					{
+//						tit.remove();
+//						optional = true;
+//					} else
+//					{
+//						optional = false;
+//					}
+//				}
+//			}
+//		}
 
 		assert this.size() > 0 : "Getting type of empty TypeSet";
 		PType result = null;

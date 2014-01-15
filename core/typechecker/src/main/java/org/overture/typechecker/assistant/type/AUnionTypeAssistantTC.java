@@ -369,6 +369,11 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return af.createAUnionTypeAssistant().getRecord(type) != null;
 	}
 
+	public static boolean isTag(AUnionType type)
+	{
+		return false;
+	}
+
 	public ARecordInvariantType getRecord(AUnionType type)
 	{
 		if (!type.getRecDone())
@@ -415,5 +420,4 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 
 		return type.getRecType();
 	}
-
 }

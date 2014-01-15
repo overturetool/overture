@@ -1,5 +1,6 @@
 package org.overture.modelcheckers.probsolver.visitors;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,14 +20,17 @@ import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
+import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
 import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
+import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
@@ -179,12 +183,47 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public void caseASetExtensionExpression(ASetExtensionExpression node)
 	{
 		List<PExp> exps = new Vector<PExp>();
-		PType type = ((ASetType) expectedType).getSetof();
-		for (PExpression pExp : node.getExpressions())
+
+		if (expectedType instanceof ASetType)
 		{
-			exps.add(convert(type, pExp));
+			PType type = ((ASetType) expectedType).getSetof();
+			for (PExpression pExp : node.getExpressions())
+			{
+				exps.add(convert(type, pExp));
+
+			}
+			result = AstFactory.newASetEnumSetExp(loc, exps);
+		} else if (expectedType instanceof ASeqSeqType)
+		{
+			PType type = ((ASeqSeqType) expectedType).getSeqof();
+			for (PExpression pExp : node.getExpressions())
+			{
+				if (pExp instanceof ACoupleExpression)
+				{
+					exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
+				}
+
+			}
+			result = AstFactory.newASeqEnumSeqExp(loc, exps);
 		}
-		result = AstFactory.newASetEnumSetExp(loc, exps);
+
+	}
+
+	@Override
+	public void caseASequenceExtensionExpression(
+			ASequenceExtensionExpression node)
+	{
+		List<PExp> list = new Vector<PExp>();
+
+		List<PExpression> copy = new ArrayList<PExpression>(node.getExpression());
+		for (PExpression e : copy)
+		{
+			e.apply(this);
+			list.add(result);
+		}
+
+		result = AstFactory.newASeqEnumSeqExp(loc, list);
+
 	}
 
 	@Override

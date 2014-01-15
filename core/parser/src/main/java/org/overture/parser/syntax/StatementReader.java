@@ -167,6 +167,24 @@ public class StatementReader extends SyntaxReader
 				stmt = readStartlistStatement(location);
 				break;
 
+			case STOP:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2304, "'stop' not available in VDM classic");
+				}
+
+				stmt = readStopStatement(location);
+				break;
+
+			case STOPLIST:
+				if (Settings.release == Release.CLASSIC)
+				{
+					throwMessage(2305, "'stoplist' not available in VDM classic");
+				}
+
+				stmt = readStoplistStatement(location);
+				break;
+
 			case CYCLES:
 				stmt = readCyclesStatement(location);
 				break;
@@ -959,6 +977,26 @@ public class StatementReader extends SyntaxReader
 		PExp set = getExpressionReader().readExpression();
 		checkFor(VDMToken.KET, 2248, "Expecting ')' after startlist objects");
 		return AstFactory.newAStartStm(location, set);
+	}
+
+	private PStm readStopStatement(ILexLocation location)
+		throws LexException, ParserException
+	{
+		checkFor(VDMToken.STOP, 2306, "Expecting 'stop'");
+		checkFor(VDMToken.BRA, 2307, "Expecting 'stop('");
+		PExp obj = getExpressionReader().readExpression();
+		checkFor(VDMToken.KET, 2308, "Expecting ')' after stop object");
+		return AstFactory.newAStopStm(location, obj);
+	}
+
+	private PStm readStoplistStatement(ILexLocation location)
+		throws LexException, ParserException
+	{
+		checkFor(VDMToken.STOPLIST, 2309, "Expecting 'stoplist'");
+		checkFor(VDMToken.BRA, 2310, "Expecting 'stoplist('");
+		PExp set = getExpressionReader().readExpression();
+		checkFor(VDMToken.KET, 2311, "Expecting ')' after stoplist objects");
+		return AstFactory.newAStopStm(location, set);
 	}
 
 	private PStm readDurationStatement(ILexLocation location)

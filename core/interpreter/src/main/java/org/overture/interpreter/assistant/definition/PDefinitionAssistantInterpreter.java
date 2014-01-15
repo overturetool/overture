@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -149,6 +150,9 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		} else if (def instanceof SClassDefinition)
 		{
 			return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition) def, lineno);
+		} else if (def instanceof AClassInvariantDefinition)
+		{
+			return AClassInvariantDefinitionAssistantInterpreter.findExpression((AClassInvariantDefinition)def, lineno);
 		} else if (def instanceof AEqualsDefinition)
 		{
 			return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition) def, lineno);

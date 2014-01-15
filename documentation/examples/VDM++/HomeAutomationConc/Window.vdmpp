@@ -41,4 +41,17 @@ sync
 	
   per IsFinished => finished;
 
+--thread
+-- (--World`timerRef.RegisterThread();
+ 
+--  while true 
+--  do
+--   (if (GetCorr() = <OPEN>)
+--    then (HA`Env.DecHumid();
+--          HA`Env.DecTemp();
+--         );
+--    World`timerRef.WaitRelative(5);--World`timerRef.stepLength);
+--   )
+-- )
+
 end Window

@@ -1,0 +1,6 @@
+operations
+
+
+ -- -- under construction
+  beki() s : set of set of nat
+    post power {1,2,3} =s

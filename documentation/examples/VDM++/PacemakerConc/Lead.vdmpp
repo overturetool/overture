@@ -96,7 +96,20 @@ Step() ==
 
 \end{vdm_al}
 
-The syncronization premission predicates are introduced.
+To the lead class the changes are the same a thread definition substitutes the Step function.
+\begin{vdm_al}
+--thread
+--  while true do 
+--    ( if(scheduledPulse <> nil)
+--      then followPlan();
+--      World`timerRef.WaitRelative(5);
+--      World`timerRef.NotifyAll();
+--      World`timerRef.Awake();
+--    );
+    
+\end{vdm_al}
+
+And syncronization premission predicates are introduced.
 
 \begin{vdm_al}
 

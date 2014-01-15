@@ -246,8 +246,16 @@ Step() ==
   busy := false
 );   
  
+--thread
+--  (for all r in set radars do
+--     start(r);
+--   while true do
+--    Step();    
+--  )
+
 sync 
 per isFinished => not busy;
+--per Step => busy  
 mutex(Step);
  
 end AirTrafficController
