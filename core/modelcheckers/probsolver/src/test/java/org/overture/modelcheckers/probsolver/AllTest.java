@@ -69,6 +69,7 @@ public class AllTest extends ProbConverterTestBase
 		try
 		{
 			Settings.dialect = Dialect.VDM_SL;
+			Settings.release = Release.VDM_10;
 			ParserResult<List<AModuleModules>> result = ParserUtil.parseSl(f);
 
 			for (AModuleModules m : result.result)
