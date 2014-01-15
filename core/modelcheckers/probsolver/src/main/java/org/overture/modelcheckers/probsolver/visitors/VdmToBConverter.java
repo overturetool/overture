@@ -1154,5 +1154,4 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return null;
 	}
-
 }
