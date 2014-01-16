@@ -31,7 +31,7 @@ public class AClassTypeAssistantTC
 	public static PDefinition findName(AClassType cls, ILexNameToken tag,
 			NameScope scope)
 	{
-		return SClassDefinitionAssistantTC.findName(cls.getClassdef(), tag, scope);
+		return af.createPDefinitionAssistant().findName(cls.getClassdef(), tag, scope);
 	}
 
 	public static boolean hasSupertype(AClassType sclass, PType other)

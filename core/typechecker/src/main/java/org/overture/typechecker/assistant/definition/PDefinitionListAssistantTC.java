@@ -182,14 +182,14 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public static void initializedCheck(LinkedList<PDefinition> definitions)
+	public void initializedCheck(LinkedList<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
 			if (d instanceof AInstanceVariableDefinition)
 			{
 				AInstanceVariableDefinition ivd = (AInstanceVariableDefinition) d;
-				AInstanceVariableDefinitionAssistantTC.initializedCheck(ivd);
+				af.createAInstanceVariableDefinitionAssistant().initializedCheck(ivd);
 			}
 		}
 	}

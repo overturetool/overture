@@ -48,81 +48,81 @@ public class SClassDefinitionAssistantTC
 		this.af = af;
 	}
 
-	// FIXME: Can't delete it is used in other places!
-	public static PDefinition findName(SClassDefinition classdef,
-			ILexNameToken sought, NameScope scope)
-	{
-
-		PDefinition def = null;
-
-		for (PDefinition d : classdef.getDefinitions())
-		{
-			PDefinition found = PDefinitionAssistantTC.findName(d, sought, scope);
-
-			// It is possible to have an ambiguous name if the name has
-			// type qualifiers that are a union of types that match several
-			// overloaded functions/ops (even though they themselves are
-			// distinguishable).
-
-			if (found != null)
-			{
-				if (def == null)
-				{
-					def = found;
-
-					if (sought.getTypeQualifier() == null)
-					{
-						break; // Can't be ambiguous
-					}
-				} else
-				{
-					if (!def.getLocation().equals(found.getLocation())
-							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
-					{
-						TypeCheckerErrors.report(3010, "Name " + sought
-								+ " is ambiguous", sought.getLocation(), sought);
-						TypeCheckerErrors.detail2("1", def.getLocation(), "2", found.getLocation());
-						break;
-					}
-				}
-			}
-		}
-
-		if (def == null)
-		{
-			for (PDefinition d : classdef.getAllInheritedDefinitions())
-			{
-				PDefinition indef = PDefinitionAssistantTC.findName(d, sought, scope);
-
-				// See above for the following...
-
-				if (indef != null)
-				{
-					if (def == null)
-					{
-						def = indef;
-
-						if (sought.getTypeQualifier() == null)
-						{
-							break; // Can't be ambiguous
-						}
-					} else if (def.equals(indef)
-							&& // Compares qualified names
-							!def.getLocation().equals(indef.getLocation())
-							&& !hasSupertype(def.getClassDefinition(), indef.getClassDefinition().getType())
-							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
-					{
-						TypeCheckerErrors.report(3011, "Name " + sought
-								+ " is multiply defined in class", sought.getLocation(), sought);
-						TypeCheckerErrors.detail2("1", def.getLocation(), "2", indef.getLocation());
-						break;
-					}
-				}
-			}
-		}
-
-		return def;
-	}
+//	// FIXME: Can't delete it is used in other places!
+//	public static PDefinition findName(SClassDefinition classdef,
+//			ILexNameToken sought, NameScope scope)
+//	{
+//
+//		PDefinition def = null;
+//
+//		for (PDefinition d : classdef.getDefinitions())
+//		{
+//			PDefinition found = PDefinitionAssistantTC.findName(d, sought, scope);
+//
+//			// It is possible to have an ambiguous name if the name has
+//			// type qualifiers that are a union of types that match several
+//			// overloaded functions/ops (even though they themselves are
+//			// distinguishable).
+//
+//			if (found != null)
+//			{
+//				if (def == null)
+//				{
+//					def = found;
+//
+//					if (sought.getTypeQualifier() == null)
+//					{
+//						break; // Can't be ambiguous
+//					}
+//				} else
+//				{
+//					if (!def.getLocation().equals(found.getLocation())
+//							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
+//					{
+//						TypeCheckerErrors.report(3010, "Name " + sought
+//								+ " is ambiguous", sought.getLocation(), sought);
+//						TypeCheckerErrors.detail2("1", def.getLocation(), "2", found.getLocation());
+//						break;
+//					}
+//				}
+//			}
+//		}
+//
+//		if (def == null)
+//		{
+//			for (PDefinition d : classdef.getAllInheritedDefinitions())
+//			{
+//				PDefinition indef = PDefinitionAssistantTC.findName(d, sought, scope);
+//
+//				// See above for the following...
+//
+//				if (indef != null)
+//				{
+//					if (def == null)
+//					{
+//						def = indef;
+//
+//						if (sought.getTypeQualifier() == null)
+//						{
+//							break; // Can't be ambiguous
+//						}
+//					} else if (def.equals(indef)
+//							&& // Compares qualified names
+//							!def.getLocation().equals(indef.getLocation())
+//							&& !hasSupertype(def.getClassDefinition(), indef.getClassDefinition().getType())
+//							&& PDefinitionAssistantTC.isFunctionOrOperation(def))
+//					{
+//						TypeCheckerErrors.report(3011, "Name " + sought
+//								+ " is multiply defined in class", sought.getLocation(), sought);
+//						TypeCheckerErrors.detail2("1", def.getLocation(), "2", indef.getLocation());
+//						break;
+//					}
+//				}
+//			}
+//		}
+//
+//		return def;
+//	}
 
 	public static boolean hasSupertype(SClassDefinition classDefinition,
 			PType other)
@@ -231,7 +231,7 @@ public class SClassDefinitionAssistantTC
 		SClassDefinition d = get(classes, name.getModule());
 		if (d != null)
 		{
-			PDefinition def = SClassDefinitionAssistantTC.findName(d, name, scope);
+			PDefinition def = af.createPDefinitionAssistant().findName(d, name, scope);
 
 			if (def != null)
 			{
@@ -296,17 +296,17 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static List<PDefinition> getLocalDefinitions(
-			SClassDefinition classDefinition)
-	{
-
-		List<PDefinition> all = new Vector<PDefinition>();
-
-		all.addAll(classDefinition.getLocalInheritedDefinitions());
-		all.addAll(PDefinitionListAssistantTC.singleDefinitions(classDefinition.getDefinitions()));
-
-		return all;
-	}
+//	public static List<PDefinition> getLocalDefinitions(
+//			SClassDefinition classDefinition)
+//	{
+//
+//		List<PDefinition> all = new Vector<PDefinition>();
+//
+//		all.addAll(classDefinition.getLocalInheritedDefinitions());
+//		all.addAll(PDefinitionListAssistantTC.singleDefinitions(classDefinition.getDefinitions()));
+//
+//		return all;
+//	}
 
 	public static PDefinition getSelfDefinition(SClassDefinition classDefinition)
 	{
@@ -552,7 +552,8 @@ public class SClassDefinitionAssistantTC
 
 	public static PDefinition findThread(SClassDefinition d)
 	{
-		return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
+		//return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
+		return af.createPDefinitionAssistant().findName(d, d.getName().getThreadName(), NameScope.NAMES);
 	}
 
 	public static PDefinition findConstructor(SClassDefinition classdef,
@@ -560,7 +561,7 @@ public class SClassDefinitionAssistantTC
 	{
 
 		LexNameToken constructor = getCtorName(classdef, argtypes);
-		return findName(classdef, constructor, NameScope.NAMES);
+		return af.createPDefinitionAssistant().findName(classdef, constructor, NameScope.NAMES);
 	}
 
 	public static LexNameToken getCtorName(SClassDefinition classdef,
@@ -585,7 +586,7 @@ public class SClassDefinitionAssistantTC
 	public static void checkOver(SClassDefinition c)
 	{
 		int inheritedThreads = 0;
-		checkOverloads(c);
+		af.createSClassDefinitionAssistant().checkOverloads(c);
 
 		List<List<PDefinition>> superlist = new Vector<List<PDefinition>>();
 
@@ -716,7 +717,7 @@ public class SClassDefinitionAssistantTC
 		return inheritedThread;
 	}
 
-	private static void checkOverloads(SClassDefinition c)
+	private void checkOverloads(SClassDefinition c)
 	{
 		List<String> done = new Vector<String>();
 
@@ -799,7 +800,7 @@ public class SClassDefinitionAssistantTC
 
 	public static void initializedCheck(SClassDefinition c)
 	{
-		PDefinitionListAssistantTC.initializedCheck(c.getDefinitions());
+		af.createPDefinitionListAssistant().initializedCheck(c.getDefinitions());
 	}
 
 }

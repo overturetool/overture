@@ -1054,7 +1054,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 	@Override
 	public PType caseAMutexSyncDefinition(AMutexSyncDefinition node,
-			TypeCheckInfo question)
+			TypeCheckInfo question) throws AnalysisException
 	{
 
 		SClassDefinition classdef = question.env.findClassDefinition();
@@ -1063,7 +1063,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			// Add all locally visibly callable operations for mutex(all)
 
-			for (PDefinition def : SClassDefinitionAssistantTC.getLocalDefinitions(node.getClassDefinition()))
+			for (PDefinition def : node.getClassDefinition().apply(question.assistantFactory.getDefinitionCollector()))
+				//SClassDefinitionAssistantTC.getLocalDefinitions(node.getClassDefinition()))
 			{
 				if (PDefinitionAssistantTC.isCallableOperation(def)
 						&& !def.getName().getName().equals(classdef.getName().getName()))

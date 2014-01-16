@@ -36,14 +36,12 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -300,11 +298,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AImplicitOperationDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
-	{
-		return new AImportedDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
+//	{
+//		return new AImportedDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
@@ -342,11 +340,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
-	{
-		return new AValueDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
+//	{
+//		return new AValueDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public PAccessSpecifierAssistantTC createPAccessSpecifierAssistant()

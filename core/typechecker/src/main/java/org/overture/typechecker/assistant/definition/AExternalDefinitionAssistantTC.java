@@ -12,16 +12,4 @@ public class AExternalDefinitionAssistantTC
 		this.af = af;
 	}
 
-
-//	public static PType getType(AExternalDefinition def)
-//	{
-//		return af.createPDefinitionAssistant().getType(def.getState());
-//	}
-
-//	public static boolean isUsed(AExternalDefinition u)
-//	{
-//		return PDefinitionAssistantTC.isUsed(u.getState());
-//
-//	}
-
 }

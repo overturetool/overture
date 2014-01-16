@@ -68,7 +68,7 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public PDefinition findName(ILexNameToken sought, NameScope scope)
 	{
-		PDefinition def = SClassDefinitionAssistantTC.findName(classdef, sought, scope);
+		PDefinition def = af.createPDefinitionAssistant().findName(classdef, sought, scope);
 
 		if (def != null)
 		{
