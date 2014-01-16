@@ -1,0 +1,9 @@
+operations
+
+iftest:()==>()
+iftest() =-  if1(2);
+iftest() ==  if1(10);
+
+  if1(n : nat) s : set of nat
+    post if n in set {1,2,3,4,5} then {1,2,3,4,5} union {10+n} else {n}
+ 
