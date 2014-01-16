@@ -106,15 +106,15 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-	public PType caseAImplicitFunctionDefinition(
-			AImplicitFunctionDefinition node) throws AnalysisException
+	public PType caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node) 
+			throws AnalysisException
 	{
 		return node.getType();
 	}
 
 	@Override
-	public PType caseAImplicitOperationDefinition(
-			AImplicitOperationDefinition node) throws AnalysisException
+	public PType caseAImplicitOperationDefinition(AImplicitOperationDefinition node) 
+			throws AnalysisException
 	{
 		return node.getType();
 	}

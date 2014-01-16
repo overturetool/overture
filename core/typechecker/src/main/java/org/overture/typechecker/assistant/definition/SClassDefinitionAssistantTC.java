@@ -183,37 +183,37 @@ public class SClassDefinitionAssistantTC
 		}
 	}
 
-	public static PDefinition findType(SClassDefinition classdef,
-			ILexNameToken sought, String fromModule)
-	{
-		// FIXME: This method is used and outside the TypeFinder visitor so I can't delete it!
-		// It is used in this class "public class PrivateClassEnvironment"
-		// How do I proceed in this case?
-		if (!sought.getExplicit()
-				&& sought.getName().equals(classdef.getName().getName())
-				|| sought.equals(classdef.getName().getClassName()))
-		{
-			return classdef; // Class referred to as "A" or "CLASS`A"
-		}
-
-		PDefinition def = PDefinitionAssistantTC.findType(classdef.getDefinitions(), sought, null);
-
-		if (def == null)
-		{
-			for (PDefinition d : classdef.getAllInheritedDefinitions())
-			{
-				PDefinition indef = PDefinitionAssistantTC.findType(d, sought, null);
-
-				if (indef != null)
-				{
-					def = indef;
-					break;
-				}
-			}
-		}
-
-		return def;
-	}
+//	public static PDefinition findType(SClassDefinition classdef,
+//			ILexNameToken sought, String fromModule)
+//	{
+//		// FIXME: This method is used and outside the TypeFinder visitor so I can't delete it!
+//		// It is used in this class "public class PrivateClassEnvironment"
+//		// How do I proceed in this case?
+//		if (!sought.getExplicit()
+//				&& sought.getName().equals(classdef.getName().getName())
+//				|| sought.equals(classdef.getName().getClassName()))
+//		{
+//			return classdef; // Class referred to as "A" or "CLASS`A"
+//		}
+//
+//		PDefinition def = PDefinitionAssistantTC.findType(classdef.getDefinitions(), sought, null);
+//
+//		if (def == null)
+//		{
+//			for (PDefinition d : classdef.getAllInheritedDefinitions())
+//			{
+//				PDefinition indef = PDefinitionAssistantTC.findType(d, sought, null);
+//
+//				if (indef != null)
+//				{
+//					def = indef;
+//					break;
+//				}
+//			}
+//		}
+//
+//		return def;
+//	}
 
 	public static Set<PDefinition> findMatches(SClassDefinition classdef,
 			ILexNameToken sought)
