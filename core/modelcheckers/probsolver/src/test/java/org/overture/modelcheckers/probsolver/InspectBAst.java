@@ -54,7 +54,13 @@ public class InspectBAst {
 		//f = new ClassicalB("!(n).(n:{1,2,3} => mx>=n)");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("rev([1,2,3])");
+		//f = new ClassicalB("rev([1,2,3])");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("#x.(x:{1,2,3} & x>2)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("2*2>0 <=> 2>0");
 		f.getAst().apply(new ASTPrinter(System.out));
 		
 	}

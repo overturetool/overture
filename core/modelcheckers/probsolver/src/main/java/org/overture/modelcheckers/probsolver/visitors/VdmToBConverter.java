@@ -76,6 +76,8 @@ import org.overture.ast.expressions.AApplyExp;                     //added -> AF
 import org.overture.ast.expressions.ACompBinaryExp;                //added -> ACompositionExpression
 import org.overture.ast.expressions.AMapInverseUnaryExp;           //added -> AReverseExpression
 import org.overture.ast.expressions.AForAllExp;                    //added -> AForallPredicate
+import org.overture.ast.expressions.AExistsExp;                    //added -> AExistsPredicate
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;   //added -> AEquivalencePeredicate
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -169,7 +171,8 @@ import de.be4.classicalb.core.parser.node.ACompositionExpression; //added
 import de.be4.classicalb.core.parser.node.AReverseExpression; //added
 import de.be4.classicalb.core.parser.node.AForallPredicate;//added
 import de.be4.classicalb.core.parser.node.AIdentifierExpression;//added
-
+import de.be4.classicalb.core.parser.node.AExistsPredicate;//added
+import de.be4.classicalb.core.parser.node.AEquivalencePredicate;//added
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -530,7 +533,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new AUnaryMinusExpression(exp(node.getExp()));
 	}
 
-	/*
+
 	@Override
 	public Node caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node)//not yet check
 			throws AnalysisException
@@ -539,10 +542,10 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    PExp num = node.getExp();
 	    ASetExtensionExpression nums = new ASetExtensionExpression();
 	    nums.getExpressions().add(exp(num));
-	    nums.getExpressions().add((PExpression)caseAUnaryMinusUnaryExp((AUnaryMinusUnaryExp)node));
+	    nums.getExpressions().add(new AUnaryMinusExpression(exp(num)));
 	    return new AMaxExpression(nums);
 	}
-	*/
+
 
 	@Override
 	public Node caseAStarStarBinaryExp(AStarStarBinaryExp node)// added
@@ -853,7 +856,6 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return new AReverseExpression(exp(node.getExp()));
 	}
 
-	//here
 	@Override
 	public Node caseAForAllExp(AForAllExp node)//added
 			throws AnalysisException
@@ -864,20 +866,50 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    fap.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
 	    fap.setImplication(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)),
 	    					    exp(blist.get(0))));
-	    /*
-	    for(int i=0;i<blist.size();i++) {
-	    	for(int j=0;j<blist.get(i).getPlist().size();j++) {
+	    if(blist.size()>1) {
+		for(int i=1;i<blist.size();i++) {
+		    for(int j=0;j<blist.get(i).getPlist().size();j++) {
+			//console.out.println("forall: " + blist.get(i).getPlist().get(j));
+			//console.out.println("forall: " + blist.get(i));
 	    		fap.getIdentifiers().add(exp(blist.get(i).getPlist().get(j)));
 	    		fap.setImplication(new AConjunctPredicate(fap.getImplication(), 
 								  new AMemberPredicate(exp(blist.get(i).getPlist().get(j)),
 										       exp(blist.get(i)))));
-	    	}
+		    }
+		}
 	    }
-	    */
 
 	    fap.setImplication(new AImplicationPredicate(fap.getImplication(), pred(node.getPredicate())));
 
 	    return fap; 
+	}
+
+	@Override
+	public Node caseAExistsExp(AExistsExp node)//added
+			throws AnalysisException
+	{
+	    AExistsPredicate esp = new AExistsPredicate();
+	    LinkedList<PMultipleBind> blist = node.getBindList();
+
+	    esp.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
+	    esp.setPredicate(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)),
+	    					    exp(blist.get(0))));
+	    if(blist.size()>1) {
+		for(int i=1;i<blist.size();i++) {
+		    for(int j=0;j<blist.get(i).getPlist().size();j++) {
+			console.out.println("exists: " + blist.get(i).getPlist().get(j));
+			console.out.println("exists: " + blist.get(i));
+	    		esp.getIdentifiers().add(exp(blist.get(i).getPlist().get(j)));
+	    		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), 
+								  new AMemberPredicate(exp(blist.get(i).getPlist().get(j)),
+										       exp(blist.get(i)))));
+		    }
+		}
+	    }
+
+	    esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), pred(node.getPredicate())));
+
+	    return esp; 
 	}
 
 	@Override
@@ -908,6 +940,14 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		}
 
 		return set;
+	}
+
+
+	@Override
+	public Node caseAEquivalentBooleanBinaryExp(AEquivalentBooleanBinaryExp node)//under construction
+			throws AnalysisException
+	{
+	    return new AEquivalencePredicate(pred(node.getLeft()), pred(node.getRight()));
 	}
 
 
