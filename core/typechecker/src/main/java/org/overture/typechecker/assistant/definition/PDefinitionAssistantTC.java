@@ -49,11 +49,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
+	public boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other)
 	{
 
-		if (PTypeAssistantTC.equals(af.createPDefinitionAssistant().getType(aClassDefDefinition), other))
+		if (af.createPTypeAssistant().equals(af.createPDefinitionAssistant().getType(aClassDefDefinition), other))
 		{
 			return true;
 		} else

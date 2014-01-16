@@ -316,7 +316,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		Environment classenv = null;
 
 		if (self == classdef
-				|| PDefinitionAssistantTC.hasSupertype(self, question.assistantFactory.createPDefinitionAssistant().getType(classdef)))
+				|| question.assistantFactory.createPDefinitionAssistant().hasSupertype(self, question.assistantFactory.createPDefinitionAssistant().getType(classdef)))
 		{
 			// All fields visible. Note that protected fields are inherited
 			// into "locals" so they are effectively private
@@ -454,7 +454,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			SClassDefinition self = question.env.findClassDefinition();
 			PType ctype = opdef.getClassDefinition().getType();
 			
-			if (!PDefinitionAssistantTC.hasSupertype(self, ctype) && opdef.getAccess().getStatic() == null)
+			if (!question.assistantFactory.createPDefinitionAssistant().hasSupertype(self, ctype) && opdef.getAccess().getStatic() == null)
 			{
 				TypeCheckerErrors.report(3324, "Operation " + node.getName() + " is not static", node.getLocation(), node);
 				node.setType(AstFactory.newAUnknownType(node.getLocation()));

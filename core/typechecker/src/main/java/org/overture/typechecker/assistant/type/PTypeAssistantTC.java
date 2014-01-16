@@ -42,7 +42,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	public static boolean hasSupertype(AClassType cto, PType other)
 	{
-		return PDefinitionAssistantTC.hasSupertype(cto.getClassdef(), other);
+		return af.createPDefinitionAssistant().hasSupertype(cto.getClassdef(), other);
 	}
 
 	public static boolean isType(PType type, Class<? extends PType> typeclass)
