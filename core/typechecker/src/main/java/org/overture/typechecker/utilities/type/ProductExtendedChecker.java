@@ -15,16 +15,14 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
- * This class implements an extended version of the ProductBasisChecker visitor 
- * identifying if a node is of product type.
+ * This class implements an extended version of the ProductBasisChecker visitor identifying if a node is of product
+ * type.
  * 
  * @author kel
  */
-public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boolean>
+public class ProductExtendedChecker extends
+		QuestionAnswerAdaptor<Integer, Boolean>
 {
-
-	
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -32,68 +30,75 @@ public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boole
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType type, Integer size)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS, size);
 	}
-	
+
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
 			Integer size) throws AnalysisException
 	{
-		
+
 		if (type.getOpaque())
+		{
 			return false;
+		}
 		return type.getType().apply(THIS, size);
 	}
-	
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type, Integer size)
 			throws AnalysisException
 	{
 		return false;
 	}
+
 	@Override
 	public Boolean caseAOptionalType(AOptionalType type, Integer size)
 			throws AnalysisException
 	{
-		return type.getType().apply(THIS,size);
+		return type.getType().apply(THIS, size);
 	}
-	
+
 	@Override
 	public Boolean caseAParameterType(AParameterType type, Integer size)
 			throws AnalysisException
 	{
 		return true;
 	}
+
 	@Override
 	public Boolean caseAProductType(AProductType type, Integer size)
 			throws AnalysisException
 	{
 		return size == 0 || type.getTypes().size() == size;
 	}
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type, Integer size)
 			throws AnalysisException
 	{
 		return af.createAUnionTypeAssistant().getProduct(type, size) != null;
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type, Integer size)
 			throws AnalysisException
 	{
 		return true;
 	}
+
 	@Override
 	public Boolean defaultPType(PType type, Integer size)
 			throws AnalysisException
 	{
 		return false;
 	}
+
 	@Override
 	public Boolean createNewReturnValue(INode node, Integer question)
 			throws AnalysisException
@@ -109,5 +114,5 @@ public class ProductExtendedChecker extends QuestionAnswerAdaptor<Integer, Boole
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 }

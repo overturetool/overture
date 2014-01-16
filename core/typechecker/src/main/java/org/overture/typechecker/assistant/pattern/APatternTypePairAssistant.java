@@ -32,8 +32,9 @@ public class APatternTypePairAssistant
 	{
 
 		if (result.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			result.setResolved(true);
 		}

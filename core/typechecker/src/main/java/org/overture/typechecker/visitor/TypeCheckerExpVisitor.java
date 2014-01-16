@@ -85,11 +85,6 @@ import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public TypeCheckerExpVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
 	{
@@ -117,8 +112,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PDefinition func = question.env.getEnclosingDefinition();
 
-		boolean inFunction = (func instanceof AExplicitFunctionDefinition
-				|| func instanceof AImplicitFunctionDefinition || func instanceof APerSyncDefinition);
+		boolean inFunction = func instanceof AExplicitFunctionDefinition
+				|| func instanceof AImplicitFunctionDefinition
+				|| func instanceof APerSyncDefinition;
 
 		if (inFunction)
 		{
@@ -172,14 +168,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isFunction(node.getType()))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
-			AFunctionTypeAssistantTC.typeResolve(ft, null, THIS, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
 			results.add(AApplyExpAssistantTC.functionApply(node, isSimple, ft));
 		}
 
 		if (PTypeAssistantTC.isOperation(node.getType()))
 		{
 			AOperationType ot = PTypeAssistantTC.getOperation(node.getType());
-			AOperationTypeAssistantTC.typeResolve(ot, null, THIS, question);
+			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, question);
 
 			if (inFunction && Settings.release == Release.VDM_10)
 			{
@@ -200,7 +196,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (PTypeAssistantTC.isMap(node.getType()))
 		{
-			SMapType map = PTypeAssistantTC.getMap(node.getType());
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getType());
 			results.add(AApplyExpAssistantTC.mapApply(node, isSimple, map));
 		}
 
@@ -244,8 +240,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				return node.getType();
 			}
 
-			SMapType lm = PTypeAssistantTC.getMap(node.getLeft().getType());
-			SMapType rm = PTypeAssistantTC.getMap(node.getRight().getType());
+			SMapType lm = question.assistantFactory.createPTypeAssistant().getMap(node.getLeft().getType());
+			SMapType rm = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(lm.getFrom(), rm.getTo()))
 			{
@@ -316,7 +312,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		} else
 		{
 			ASetType set = PTypeAssistantTC.getSet(node.getLeft().getType());
-			SMapType map = PTypeAssistantTC.getMap(node.getRight().getType());
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
 			{
@@ -347,7 +343,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		} else
 		{
 			ASetType set = PTypeAssistantTC.getSet(node.getLeft().getType());
-			SMapType map = PTypeAssistantTC.getMap(node.getRight().getType());
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
 			{
@@ -425,8 +421,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		} else
 		{
-			SMapType ml = PTypeAssistantTC.getMap(node.getLeft().getType());
-			SMapType mr = PTypeAssistantTC.getMap(node.getRight().getType());
+			SMapType ml = question.assistantFactory.createPTypeAssistant().getMap(node.getLeft().getType());
+			SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			PTypeSet from = new PTypeSet();
 			from.add(ml.getFrom());
@@ -653,7 +649,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PTypeSet result = new PTypeSet();
 
-		boolean unique = (!PTypeAssistantTC.isUnion(node.getLeft().getType()) && !PTypeAssistantTC.isUnion(node.getRight().getType()));
+		boolean unique = !PTypeAssistantTC.isUnion(node.getLeft().getType())
+				&& !PTypeAssistantTC.isUnion(node.getRight().getType());
 
 		if (PTypeAssistantTC.isMap(node.getLeft().getType()))
 		{
@@ -666,8 +663,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				return node.getType();
 			}
 
-			SMapType lm = PTypeAssistantTC.getMap(node.getLeft().getType());
-			SMapType rm = PTypeAssistantTC.getMap(node.getRight().getType());
+			SMapType lm = question.assistantFactory.createPTypeAssistant().getMap(node.getLeft().getType());
+			SMapType rm = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			PTypeSet domain = new PTypeSet();
 			domain.add(lm.getFrom());
@@ -689,7 +686,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
 			} else
 			{
-				SMapType mr = PTypeAssistantTC.getMap(node.getRight().getType());
+				SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 				if (!PTypeAssistantTC.isType(mr.getFrom(), SNumericBasicType.class))
 				{
@@ -758,7 +755,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3149, "Right of ':->' is not a set", node.getLocation(), node);
 		} else
 		{
-			SMapType map = PTypeAssistantTC.getMap(ltype);
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(ltype);
 			ASetType set = PTypeAssistantTC.getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
@@ -791,7 +788,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3152, "Right of ':>' is not a set", node.getLocation(), node);
 		} else
 		{
-			SMapType map = PTypeAssistantTC.getMap(ltype);
+			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(ltype);
 			ASetType set = PTypeAssistantTC.getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
@@ -829,8 +826,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType lof = PTypeAssistantTC.getSeq(ltype);
 		PType rof = PTypeAssistantTC.getSeq(rtype);
-		boolean seq1 = (lof instanceof ASeq1SeqType)
-				|| (rof instanceof ASeq1SeqType);
+		boolean seq1 = lof instanceof ASeq1SeqType
+				|| rof instanceof ASeq1SeqType;
 
 		lof = ((SSeqType) lof).getSeqof();
 		rof = ((SSeqType) rof).getSeqof();
@@ -1328,7 +1325,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				set.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else
 			{
-				boolean serious = (t.getDefinitions().size() == 1);
+				boolean serious = t.getDefinitions().size() == 1;
 
 				for (PDefinition def : t.getDefinitions()) // Possibly a union
 															// of several
@@ -1384,7 +1381,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 							}
 						}
 
-						fixed.add(question.assistantFactory.createPTypeAssistant().typeResolve(ptype, null, THIS, question));
+						ptype = question.assistantFactory.createPTypeAssistant().typeResolve(ptype, null, THIS, question);
+						fixed.add(ptype);
+						TypeComparator.checkComposeTypes(ptype, question.env, false);
 					}
 
 					node.setActualTypes(fixed);
@@ -1552,6 +1551,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (basictype != null)
 		{
 			basictype = question.assistantFactory.createPTypeAssistant().typeResolve(basictype, null, THIS, question);
+			TypeComparator.checkComposeTypes(basictype, question.env, false);
 		}
 
 		ILexNameToken typename = node.getTypeName();
@@ -1656,6 +1656,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		def.apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
 		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope);
+		local.setEnclosingDefinition(def); 	// Prevent recursive checks
 
 		PType result = node.getExpression().apply(THIS, newInfo);
 		local.unusedCheck();
@@ -1828,7 +1829,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3121, "Element is not of maplet type", node.getLocation(), node);
 			} else
 			{
-				SMapType maplet = PTypeAssistantTC.getMap(mt);
+				SMapType maplet = question.assistantFactory.createPTypeAssistant().getMap(mt);
 				dom.add(maplet.getFrom());
 				node.getDomTypes().add(maplet.getFrom());
 				rng.add(maplet.getTo());
@@ -1885,19 +1886,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType rec = null;
 		if (typeDef instanceof ATypeDefinition)
 		{
-			rec = ((ATypeDefinition) typeDef).getInvType();
+			rec = ((ATypeDefinition) typeDef).getType();
 		} else if (typeDef instanceof AStateDefinition)
 		{
 			rec = ((AStateDefinition) typeDef).getRecordType();
 		} else
 		{
 			rec = question.assistantFactory.createPDefinitionAssistant().getType(typeDef);
-		}
-
-		while (rec instanceof ANamedInvariantType)
-		{
-			ANamedInvariantType nrec = (ANamedInvariantType) rec;
-			rec = nrec.getType();
 		}
 
 		if (!(rec instanceof ARecordInvariantType))
@@ -2026,6 +2021,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 			node.setBasicType(question.assistantFactory.createPTypeAssistant().typeResolve(node.getBasicType(), null, THIS, question));
 			result = node.getBasicType();
+			TypeComparator.checkComposeTypes(result, question.env, false);
 		} else
 		{
 			node.setTypedef(question.env.findType(node.getTypeName(), node.getLocation().getModule()));
@@ -2447,7 +2443,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				question.qualifiers = null;
 				PType rhs = ee.getRight().apply(THIS, question);
 
-				if (PTypeAssistantTC.isRecord(rhs))
+				if (PTypeAssistantTC.isTag(rhs))
 				{
 					ARecordInvariantType rt = PTypeAssistantTC.getRecord(rhs);
 					canBeExecuted = rt.getName().getName().equals(node.getState().getName().getName());
@@ -2583,6 +2579,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				if (vardef.getClassDefinition() != null)
 				{
+					SClassDefinition sd = vardef.getClassDefinition();
+					if (sd != null && node.getName().getModule().equals(""))
+					{
+						node.setName(name.getModifiedName(sd.getName().getName()));
+					}
+
 					if (!SClassDefinitionAssistantTC.isAccessible(env, vardef, true))
 					{
 						TypeCheckerErrors.report(3180, "Inaccessible member "
@@ -2599,6 +2601,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					}
+					// FIXME AKM: a little test
+					// if(vardef.getClassDefinition().getName().getName().startsWith("$actionClass"))
+					// node.setName(name.getModifiedName(vardef.getClassDefinition().getName().getName()));
 				}
 			} else if (question.qualifiers != null)
 			{
@@ -2939,7 +2944,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		SMapType mt = PTypeAssistantTC.getMap(etype);
+		SMapType mt = question.assistantFactory.createPTypeAssistant().getMap(etype);
 		node.setType(AstFactory.newASetType(node.getLocation(), mt.getFrom()));
 		return node.getType();
 	}
@@ -2961,7 +2966,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		node.setMapType(PTypeAssistantTC.getMap(etype));
+		node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(etype));
 		AMapMapType mm = AstFactory.newAMapMapType(node.getLocation(), node.getMapType().getTo(), node.getMapType().getFrom());
 		node.setType(mm);
 
@@ -2984,7 +2989,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		SMapType mt = PTypeAssistantTC.getMap(etype);
+		SMapType mt = question.assistantFactory.createPTypeAssistant().getMap(etype);
 		node.setType(AstFactory.newASetType(node.getLocation(), mt.getTo()));
 		return node.getType();
 	}

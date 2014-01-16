@@ -10,22 +10,20 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-
 /**
  * Used to check if a given pattern always matches with its type.
- *  
+ * 
  * @author kel
  */
 public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public AlwaysMatchingPatternChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
@@ -39,26 +37,27 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().alwaysMatches(pattern.getPlist());
 	}
-	
+
 	@Override
 	public Boolean defaultPPattern(PPattern pattern) throws AnalysisException
 	{
 		return false;
 	}
+
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
@@ -69,7 +68,7 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean createNewReturnValue(Object node) throws AnalysisException
 	{
-		
+
 		return false;
 	}
 

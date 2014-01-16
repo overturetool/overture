@@ -32,105 +32,107 @@ import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * Used to get if a possible type out of a pattern.
- *  
+ * 
  * @author kel
  */
 public class PossibleTypeFinder extends AnswerAdaptor<PType>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public PossibleTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PType caseABooleanPattern(ABooleanPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newABooleanBasicType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseACharacterPattern(ACharacterPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newACharBasicType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
-	
+
 	@Override
 	public PType caseAExpressionPattern(AExpressionPattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
-		//return AIdentifierPatternAssistantTC.getPossibleTypes(pattern);
+		// return AIdentifierPatternAssistantTC.getPossibleTypes(pattern);
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseAIntegerPattern(AIntegerPattern pattern)
 			throws AnalysisException
 	{
 		return af.createSNumericBasicTypeAssistant().typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseANilPattern(ANilPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newAOptionalType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
-	
+
 	@Override
-	public PType caseAQuotePattern(AQuotePattern pattern) throws AnalysisException
+	public PType caseAQuotePattern(AQuotePattern pattern)
+			throws AnalysisException
 	{
 		return AstFactory.newAQuoteType(((AQuotePattern) pattern).getValue().clone());
 	}
-	
+
 	@Override
-	public PType caseARealPattern(ARealPattern pattern) throws AnalysisException
+	public PType caseARealPattern(ARealPattern pattern)
+			throws AnalysisException
 	{
 		return AstFactory.newARealNumericBasicType(pattern.getLocation());
 	}
-	
+
 	@Override
 	public PType caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getType();
 	}
-	
+
 	@Override
 	public PType caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
+
 	@Override
 	public PType caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
 		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
-	
+
 	@Override
 	public PType caseAStringPattern(AStringPattern pattern)
 			throws AnalysisException
@@ -138,9 +140,10 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 		ASeqSeqType t = AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newACharBasicType(pattern.getLocation()));
 		return t;
 	}
-	
+
 	@Override
-	public PType caseATuplePattern(ATuplePattern pattern) throws AnalysisException
+	public PType caseATuplePattern(ATuplePattern pattern)
+			throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
 
@@ -153,7 +156,8 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-	public PType caseAUnionPattern(AUnionPattern pattern) throws AnalysisException
+	public PType caseAUnionPattern(AUnionPattern pattern)
+			throws AnalysisException
 	{
 		PTypeSet set = new PTypeSet();
 
@@ -165,7 +169,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 		return af.createPTypeAssistant().isUnknown(s) ? AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
 				: s;
 	}
-	
+
 	@Override
 	public PType defaultPPattern(PPattern pattern) throws AnalysisException
 	{

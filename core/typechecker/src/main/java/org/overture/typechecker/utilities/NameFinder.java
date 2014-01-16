@@ -38,32 +38,29 @@ import org.overture.typechecker.util.HelpLexNameToken;
  * 
  * @author kel
  */
-public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PDefinition>
+public class NameFinder extends
+		QuestionAnswerAdaptor<NameFinder.Newquestion, PDefinition>
 {
 	public static class Newquestion
 	{
 		final ILexNameToken sought;
 		final NameScope scope;
-		
-		public Newquestion(ILexNameToken sought,NameScope scope)
+
+		public Newquestion(ILexNameToken sought, NameScope scope)
 		{
 			this.scope = scope;
 			this.sought = sought;
 		}
 
-	} 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
+	}
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public NameFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PDefinition defaultSClassDefinition(SClassDefinition node,
 			Newquestion question) throws AnalysisException
@@ -72,7 +69,8 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		for (PDefinition d : node.getDefinitions())
 		{
-			PDefinition found = d.apply(this, question);//PDefinitionAssistantTC.findName(d, question.sought, question.scope);
+			PDefinition found = d.apply(this, question);// PDefinitionAssistantTC.findName(d, question.sought,
+														// question.scope);
 
 			// It is possible to have an ambiguous name if the name has
 			// type qualifiers that are a union of types that match several
@@ -94,8 +92,8 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 					if (!def.getLocation().equals(found.getLocation())
 							&& af.createPDefinitionAssistant().isFunctionOrOperation(def))
 					{
-						TypeCheckerErrors.report(3010, "Name " + question.sought
-								+ " is ambiguous", question.sought.getLocation(), question.sought);
+						TypeCheckerErrors.report(3010, "Name "
+								+ question.sought + " is ambiguous", question.sought.getLocation(), question.sought);
 						TypeCheckerErrors.detail2("1", def.getLocation(), "2", found.getLocation());
 						break;
 					}
@@ -107,7 +105,8 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		{
 			for (PDefinition d : node.getAllInheritedDefinitions())
 			{
-				PDefinition indef = d.apply(this, question);//PDefinitionAssistantTC.findName(d, question.sought, question.scope);
+				PDefinition indef = d.apply(this, question);// PDefinitionAssistantTC.findName(d, question.sought,
+															// question.scope);
 
 				// See above for the following...
 
@@ -127,7 +126,8 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 							&& !af.createPDefinitionAssistant().hasSupertype(def.getClassDefinition(), indef.getClassDefinition().getType())
 							&& af.createPDefinitionAssistant().isFunctionOrOperation(def))
 					{
-						TypeCheckerErrors.report(3011, "Name " + question.sought
+						TypeCheckerErrors.report(3011, "Name "
+								+ question.sought
 								+ " is multiply defined in class", question.sought.getLocation(), question.sought);
 						TypeCheckerErrors.detail2("1", def.getLocation(), "2", indef.getLocation());
 						break;
@@ -138,7 +138,7 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return def;
 	}
-	
+
 	@Override
 	public PDefinition caseAEqualsDefinition(AEqualsDefinition node,
 			Newquestion question) throws AnalysisException
@@ -156,7 +156,7 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		}
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, Newquestion question)
@@ -168,22 +168,22 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		}
 
 		PDefinition predef = node.getPredef();
-		if (predef != null
-				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
+																	// scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = node.getPostdef();
-		if (postdef != null
-				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
+																		// scope) != null)
 		{
 			return postdef;
 		}
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, Newquestion question)
@@ -195,34 +195,34 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		}
 
 		PDefinition predef = node.getPredef();
-		if (predef != null
-				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
+																	// scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = node.getPostdef();
-		if (postdef != null
-				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
+																		// scope) != null)
 		{
 			return postdef;
 		}
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAExternalDefinition(AExternalDefinition node,
 			Newquestion question) throws AnalysisException
 	{
 		if (question.sought.getOld())
 		{
-			return (question.sought.equals(node.getOldname())) ? node : null;
+			return question.sought.equals(node.getOldname()) ? node : null;
 		}
 
-		return (question.sought.equals(node.getState().getName())) ? node : null;
+		return question.sought.equals(node.getState().getName()) ? node : null;
 	}
-	
+
 	@Override
 	public PDefinition caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, Newquestion question)
@@ -234,22 +234,22 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		}
 
 		PDefinition predef = node.getPredef();
-		if (predef != null
-				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
+																	// scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = node.getPostdef();
-		if (postdef != null
-				&& postdef.apply(this, question) != null) //PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		if (postdef != null && postdef.apply(this, question) != null) // PDefinitionAssistantTC.findName(postdef,
+																		// sought, scope) != null)
 		{
 			return postdef;
 		}
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, Newquestion question)
@@ -261,27 +261,28 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 		}
 
 		PDefinition predef = node.getPredef();
-		if (predef != null
-				&& predef.apply(this, question) != null)//PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+		if (predef != null && predef.apply(this, question) != null)// PDefinitionAssistantTC.findName(predef, sought,
+																	// scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = node.getPostdef();
-		if (postdef != null
-				&& postdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+		if (postdef != null && postdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(postdef, sought,
+																		// scope) != null)
 		{
 			return postdef;
 		}
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAImportedDefinition(AImportedDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		PDefinition def = node.getDef().apply(this, question);//PDefinitionAssistantTC.findName(d.getDef(), sought, scope);
+		PDefinition def = node.getDef().apply(this, question);// PDefinitionAssistantTC.findName(d.getDef(), sought,
+																// scope);
 
 		if (def != null)
 		{
@@ -312,6 +313,7 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return null;
 	}
+
 	@Override
 	public PDefinition caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node, Newquestion question)
@@ -319,11 +321,13 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 	{
 		PDefinition found = af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope);
 		if (found != null)
+		{
 			return found;
+		}
 		return question.scope.matches(NameScope.OLDSTATE)
 				&& node.getOldname().equals(question.sought) ? node : null;
 	}
-	
+
 	@Override
 	public PDefinition caseAMultiBindListDefinition(
 			AMultiBindListDefinition node, Newquestion question)
@@ -341,14 +345,14 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseANamedTraceDefinition(ANamedTraceDefinition node,
 			Newquestion question) throws AnalysisException
@@ -360,19 +364,24 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAPerSyncDefinition(APerSyncDefinition node,
 			Newquestion question) throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node,
 			Newquestion question) throws AnalysisException
+<<<<<<< HEAD
 	{		
 		PDefinition renamed = af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope);
+=======
+	{
+		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope);
+>>>>>>> origin/pvj/main
 
 		if (renamed != null)
 		{
@@ -384,24 +393,24 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 			return null;// PDefinitionAssistantTC.findName(d.getDef(),sought, scope);
 		}
 	}
-	
+
 	@Override
 	public PDefinition caseAStateDefinition(AStateDefinition node,
 			Newquestion question) throws AnalysisException
-	{		
+	{
 		if (question.scope.matches(NameScope.NAMES))
 		{
 			PDefinition invdef = node.getInvdef();
 
-			if (invdef != null
-					&& invdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
+			if (invdef != null && invdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(invdef,
+																		// sought, scope) != null)
 			{
 				return invdef;
 			}
 
 			PDefinition initdef = node.getInitdef();
-			if (initdef != null
-					&& initdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(initdef, sought, scope) != null)
+			if (initdef != null && initdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(initdef,
+																			// sought, scope) != null)
 			{
 				return initdef;
 			}
@@ -414,7 +423,7 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		for (PDefinition d : node.getStateDefs())
 		{
-			PDefinition def = d.apply(this, question);//PDefinitionAssistantTC.findName(d, sought, scope);
+			PDefinition def = d.apply(this, question);// PDefinitionAssistantTC.findName(d, sought, scope);
 
 			if (def != null)
 			{
@@ -424,22 +433,23 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition caseAThreadDefinition(AThreadDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		return node.getOperationDef().apply(this,question); //PDefinitionAssistantTC.findName(definition.getOperationDef(), sought, scope);
+		return node.getOperationDef().apply(this, question); // PDefinitionAssistantTC.findName(definition.getOperationDef(),
+																// sought, scope);
 	}
-	
+
 	@Override
 	public PDefinition caseATypeDefinition(ATypeDefinition node,
 			Newquestion question) throws AnalysisException
 	{
 		PDefinition invdef = node.getInvdef();
 
-		if (invdef != null
-				&& invdef.apply(this, question) != null)//PDefinitionAssistantTC.findName(invdef, sought, scope) != null)
+		if (invdef != null && invdef.apply(this, question) != null)// PDefinitionAssistantTC.findName(invdef, sought,
+																	// scope) != null)
 		{
 			return invdef;
 		}
@@ -458,7 +468,7 @@ public class NameFinder extends QuestionAnswerAdaptor<NameFinder.Newquestion, PD
 
 		return null;
 	}
-	
+
 	@Override
 	public PDefinition defaultPDefinition(PDefinition node, Newquestion question)
 			throws AnalysisException

@@ -50,7 +50,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 	@Override
 	public String toString()
 	{
-		return "[" + startNumber + "..." + (stopNumber) + "]";
+		return "[" + startNumber + "..." + stopNumber + "]";
 	}
 
 	@Override
@@ -59,10 +59,6 @@ public class TraceTestGroup extends TraceTestTreeNode
 		return toString();
 	}
 
-	// public void setParent(TraceTreeNode parent)
-	// {
-	// this.parent = parent;
-	// }
 
 	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
@@ -80,7 +76,9 @@ public class TraceTestGroup extends TraceTestTreeNode
 			{
 
 				if (node.getName().equals(child.getName()))
+				{
 					contains = true;
+				}
 			}
 			if (!contains)
 			{
@@ -94,9 +92,10 @@ public class TraceTestGroup extends TraceTestTreeNode
 	{
 		children.remove(child);
 		if (child instanceof TraceTestGroup)
+		{
 			((TraceTestGroup) child).removeChildern();
+		}
 		child.setParent(null);
-		// child.SetResult(null);
 	}
 
 	@Override
@@ -108,7 +107,6 @@ public class TraceTestGroup extends TraceTestTreeNode
 	@Override
 	public boolean hasChildren()
 	{
-		// return children.size() > 0;
 		return stopNumber - startNumber > 0;
 	}
 
@@ -118,7 +116,9 @@ public class TraceTestGroup extends TraceTestTreeNode
 		for (ITreeNode node : children)
 		{
 			if (node.getName().equals(name))
+			{
 				return true;
+			}
 
 		}
 		return false;
@@ -135,15 +135,7 @@ public class TraceTestGroup extends TraceTestTreeNode
 			{
 				if (n instanceof TraceTestTreeNode)
 				{
-					TraceTestTreeNode node = ((TraceTestTreeNode) n);
-					// if (node.getStatus() == Verdict.FAILED)
-					// status = node.getStatus();
-					// else if (node.getStatus() == Verdict.INCONCLUSIVE
-					// && status != Verdict.FAILED)
-					// status = node.getStatus();
-					// else if (node.getStatus() == Verdict.PASSED
-					// && status == null)
-					// status = node.getStatus();
+					TraceTestTreeNode node = (TraceTestTreeNode) n;
 					status = calculateStatus(status, node.getStatus());
 				}
 			}
@@ -156,11 +148,16 @@ public class TraceTestGroup extends TraceTestTreeNode
 	{
 
 		if (nextStatus == Verdict.FAILED)
+		{
 			return nextStatus;
-		else if (nextStatus == Verdict.INCONCLUSIVE && status != Verdict.FAILED)
+		} else if (nextStatus == Verdict.INCONCLUSIVE
+				&& status != Verdict.FAILED)
+		{
 			return nextStatus;
-		else if (nextStatus == Verdict.PASSED && status == null)
+		} else if (nextStatus == Verdict.PASSED && status == null)
+		{
 			status = nextStatus;
+		}
 
 		return status;
 	}
@@ -182,8 +179,6 @@ public class TraceTestGroup extends TraceTestTreeNode
 					break;
 				}
 			}
-			// System.out.println(getName()+ " "+ lastKnownStatus);
-			// int i = 0;
 
 		}
 	}
@@ -206,22 +201,21 @@ public class TraceTestGroup extends TraceTestTreeNode
 	private TraceTreeNode getTraceParent(ITreeNode node)
 	{
 		if (node.getParent() == null)
+		{
 			return null;
-		else if (node.getParent() instanceof TraceTreeNode)
-			return (TraceTreeNode) (node.getParent());
-		else
+		} else if (node.getParent() instanceof TraceTreeNode)
+		{
+			return (TraceTreeNode) node.getParent();
+		} else
+		{
 			return getTraceParent(node.getParent());
+		}
 	}
 
 	public void loadTests() throws Exception
 	{
 		removeChildern();
 
-		// for (int i = startNumber; i < stopNumber && i < traceStatus.size();
-		// i++)
-		// {
-		// this.addChild(new TraceTestTreeNode(traceStatus.get(i)));
-		// }
 
 		Long size = stopNumber - startNumber;
 
@@ -232,10 +226,6 @@ public class TraceTestGroup extends TraceTestTreeNode
 			loadTestNodes();
 		} else
 		{
-			// if (testCountInGroup.longValue() == 1)
-			// {
-			// testCountInGroup = TraceTestGroup.GROUP_SIZE.doubleValue();
-			// }
 
 			Long currentCount = startNumber - 1;
 			for (int i = 0; i < gs.getNumberOfGroups() - 1; i++)
@@ -275,13 +265,13 @@ public class TraceTestGroup extends TraceTestTreeNode
 
 	public static Double numberOfLevels(Long count, Long groupSize)
 	{
-		// levels(x,y)
-		// if x / y > y then 1+ levels(x/y,y)
-		// else 1;
-		if ((count / groupSize) > groupSize)
+		if (count / groupSize > groupSize)
+		{
 			return new Double(1) + numberOfLevels(count / groupSize, groupSize);
-		else
+		} else
+		{
 			return new Double(1);
+		}
 
 	}
 

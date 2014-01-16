@@ -23,17 +23,13 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
  */
 public class PatternUnresolver extends AnalysisAdaptor
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public PatternUnresolver(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public void caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
@@ -42,7 +38,7 @@ public class PatternUnresolver extends AnalysisAdaptor
 		pattern.getRight().apply(THIS);
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
@@ -50,36 +46,38 @@ public class PatternUnresolver extends AnalysisAdaptor
 		pattern.getType().apply(THIS);
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
 		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
 		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
-	public void caseATuplePattern(ATuplePattern pattern) throws AnalysisException
+	public void caseATuplePattern(ATuplePattern pattern)
+			throws AnalysisException
 	{
 		af.createPPatternListAssistant().unResolve(pattern.getPlist());
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
-	public void caseAUnionPattern(AUnionPattern pattern) throws AnalysisException
+	public void caseAUnionPattern(AUnionPattern pattern)
+			throws AnalysisException
 	{
 		pattern.getLeft().apply(THIS);
 		pattern.getRight().apply(THIS);
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void caseAMapUnionPattern(AMapUnionPattern pattern)
 			throws AnalysisException
@@ -88,7 +86,7 @@ public class PatternUnresolver extends AnalysisAdaptor
 		pattern.getRight().apply(THIS);
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void caseAMapPattern(AMapPattern pattern) throws AnalysisException
 	{
@@ -96,10 +94,15 @@ public class PatternUnresolver extends AnalysisAdaptor
 		{
 			af.createAMapletPatternMapletAssistant().unResolve(mp);
 		}
+<<<<<<< HEAD
 		
+=======
+
+		// pattern.setResolved(false);
+>>>>>>> origin/pvj/main
 		pattern.setResolved(false);
 	}
-	
+
 	@Override
 	public void defaultPPattern(PPattern pattern) throws AnalysisException
 	{

@@ -44,26 +44,26 @@ public class TypeCheckerUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
-		
+
 		@Override
 		public String toString()
 		{
-		StringBuilder sb = new StringBuilder();
-		sb.append("Parse result:\n"+parserResult);
-		sb.append("\n\n\n");
-		sb.append("TypeCheck result:\n");
-		sb.append("\tErrors:");
-		for (VDMError err : errors)
-		{
-			sb.append("\n\t"+err);
-		}
-		sb.append("\tWarnings:");
-		for (VDMWarning err : warnings)
-		{
-			sb.append("\n\t"+err);
-		}
-		
-		return sb.toString();
+			StringBuilder sb = new StringBuilder();
+			sb.append("Parse result:\n" + parserResult);
+			sb.append("\n\n\n");
+			sb.append("TypeCheck result:\n");
+			sb.append("\tErrors:");
+			for (VDMError err : errors)
+			{
+				sb.append("\n\t" + err);
+			}
+			sb.append("\tWarnings:");
+			for (VDMWarning err : warnings)
+			{
+				sb.append("\n\t" + err);
+			}
+
+			return sb.toString();
 		}
 	}
 
@@ -81,7 +81,8 @@ public class TypeCheckerUtil
 
 		public ExpressionTypeChecker(PExp expression)
 		{
-			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(),new Vector<PDefinition>()));// new ModuleEnvironment(""));
+			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(), new Vector<PDefinition>()));// new
+																												// ModuleEnvironment(""));
 		}
 
 		@Override
@@ -89,7 +90,7 @@ public class TypeCheckerUtil
 		{
 			try
 			{
-				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
+				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory, env, NameScope.NAMESANDSTATE));
 			} catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block
@@ -136,7 +137,8 @@ public class TypeCheckerUtil
 		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
 	}
 
-	public static TypeCheckResult<PExp> typeCheckExpression(String content) throws ParserException, LexException
+	public static TypeCheckResult<PExp> typeCheckExpression(String content)
+			throws ParserException, LexException
 	{
 		ParserResult<PExp> parserResult = ParserUtil.parseExpression(content);
 		return typeCheck(parserResult, parserResult.result, new ExpressionTypeChecker(parserResult.result));

@@ -146,6 +146,21 @@ Step() ==
 
 The Run function it's substituted by a thread definition.	
 
+\begin{vdm_al}
+--thread
+--  (
+--   while true do
+--     ( if busy
+--       then createSignal();
+--       if World`timerRef.GetTime() >= simtime
+--       then (Pacemaker`heartController.finish();
+--             Pacemaker`rateController.finish());
+--       World`timerRef.WaitRelative(1);
+--     );
+
+--  );
+\end{vdm_al}  
+
 Because of the concurrency introduction handleEvent and showResult that both manipulate the outlines instance variable are made mutex. The operation isFinished is released just when the Environment is not busy (no more inputs to be delivered) and the whole amount of simulation time is equal or above the desired.
 
 \begin{vdm_al}

@@ -8,6 +8,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+
 /**
  * Used to determine if a type is a Class type
  * 
@@ -22,23 +23,25 @@ public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAClassType(AClassType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque()) return false;
-			return ((ANamedInvariantType) type).getType().apply(THIS);//PTypeAssistantTC.isClass(type.getType());
-		}
-		else
+			if (type.getOpaque())
+			{
+				return false;
+			}
+			return ((ANamedInvariantType) type).getType().apply(THIS);// PTypeAssistantTC.isClass(type.getType());
+		} else
 		{
 			return false;
 		}
@@ -47,16 +50,16 @@ public class ClassBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getClassType(type) != null;
+		return af.createPTypeAssistant().getClassType(type) != null;
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType node) throws AnalysisException
 	{

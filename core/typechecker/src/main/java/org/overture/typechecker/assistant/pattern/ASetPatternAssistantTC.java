@@ -24,8 +24,9 @@ public class ASetPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -48,6 +49,7 @@ public class ASetPatternAssistantTC
 
 	}
 
+<<<<<<< HEAD
 	// public static LexNameList getVariableNames(ASetPattern pattern) {
 	// LexNameList list = new LexNameList();
 	//
@@ -84,20 +86,32 @@ public class ASetPatternAssistantTC
 //
 //		return defs;
 //	}
+=======
+	public static List<PDefinition> getAllDefinitions(ASetPattern rp,
+			PType type, NameScope scope)
+	{
 
-//	public static PType getPossibleTypes(ASetPattern pattern)
-//	{
-//		return AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-//	}
+		List<PDefinition> defs = new Vector<PDefinition>();
 
-//	public static PExp getMatchingExpression(ASetPattern sp)
-//	{
-//		return AstFactory.newASetEnumSetExp(sp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(sp.getPlist()));
-//	}
+		if (!PTypeAssistantTC.isSet(type))
+		{
+			TypeCheckerErrors.report(3204, "Set pattern is not matched against set type", rp.getLocation(), rp);
+			TypeCheckerErrors.detail("Actual type", type);
+		} else
+		{
+			ASetType set = PTypeAssistantTC.getSet(type);
 
-//	public static boolean isSimple(ASetPattern p)
-//	{
-//		return PPatternListAssistantTC.isSimple(p.getPlist());
-//	}
+			if (!set.getEmpty())
+			{
+				for (PPattern p : rp.getPlist())
+				{
+					defs.addAll(PPatternAssistantTC.getDefinitions(p, set.getSetof(), scope));
+				}
+			}
+		}
+
+		return defs;
+	}
+>>>>>>> origin/pvj/main
 
 }

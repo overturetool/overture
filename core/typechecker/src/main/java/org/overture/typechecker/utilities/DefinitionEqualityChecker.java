@@ -21,6 +21,10 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class DefinitionEqualityChecker extends
 		QuestionAnswerAdaptor<Object, Boolean>
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/pvj/main
 	protected ITypeCheckerAssistantFactory af;
 
 	public DefinitionEqualityChecker(ITypeCheckerAssistantFactory af)

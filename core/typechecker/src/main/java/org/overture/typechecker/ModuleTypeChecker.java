@@ -106,7 +106,9 @@ public class ModuleTypeChecker extends TypeChecker
 			}
 
 			if (!m1.getTypeChecked())
+			{
 				nothing = false;
+			}
 		}
 
 		if (nothing)
@@ -158,7 +160,9 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				alldefs.add(d);
 				if (!m.getTypeChecked())
+				{
 					checkDefs.add(d);
+				}
 			}
 		}
 
@@ -168,7 +172,9 @@ public class ModuleTypeChecker extends TypeChecker
 			{
 				alldefs.add(d);
 				if (!m.getTypeChecked())
+				{
 					checkDefs.add(d);
+				}
 			}
 		}
 

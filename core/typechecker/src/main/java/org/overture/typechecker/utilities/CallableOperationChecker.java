@@ -25,14 +25,14 @@ public class CallableOperationChecker extends AnswerAdaptor<Boolean>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
@@ -46,21 +46,21 @@ public class CallableOperationChecker extends AnswerAdaptor<Boolean>
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean defaultPDefinition(PDefinition node)
 			throws AnalysisException

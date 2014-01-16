@@ -64,8 +64,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		try
 		{
 			LexLocation.getAllLocations().clear();
-			result = startParse(file, new String(FileUtility.getCharContent(FileUtility.getContent(file.getFile()))), file.getFile().getCharset());
-			setFileMarkers(file.getFile(), result,null);
+			result = startParse(file, FileUtility.makeString(FileUtility.getContent(file.getFile())), file.getFile().getCharset());
+			setFileMarkers(file.getFile(), result);
 			if (result != null && result.getAst() != null)
 			{
 				file.reconcile(result.getAst(), result.hasParseErrors());
@@ -100,7 +100,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				LexLocation.getAllLocations().clear();
 				result = startParse(file, data, file.getFile().getCharset());
-				setFileMarkers(file.getFile(), result, null);
+				setFileMarkers(file.getFile(), result);
 				if (result != null && result.getAst() != null)
 				{
 					file.reconcile(result.getAst(), result.hasParseErrors());
@@ -147,7 +147,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 * @param content 
 	 * @throws CoreException
 	 */
-	private void setFileMarkers(IFile file, ParseResult result, String content)
+	private void setFileMarkers(IFile file, ParseResult result)
 			throws CoreException
 	{
 		if (file != null)
@@ -171,12 +171,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						previousErrorNumber = error.number;
 					}
 					
-					if(content==null)
-					{
-						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID);
-					}else{
-						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID,content);
-					}
+						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID,-1);
 				}
 			}
 
@@ -187,12 +182,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{
-					if(content ==null)
-					{
-						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID);
-					}else{
-						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID,content);
-					}
+						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID,-1);
 				}
 			}
 		}

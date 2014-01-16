@@ -47,7 +47,8 @@ public class SClassDefinitionAssistantTC
 	{
 		this.af = af;
 	}
-	//FIXME: Can't delete it is used in other places!
+
+	// FIXME: Can't delete it is used in other places!
 	public static PDefinition findName(SClassDefinition classdef,
 			ILexNameToken sought, NameScope scope)
 	{
@@ -155,7 +156,7 @@ public class SClassDefinitionAssistantTC
 		if (self == null) // Not called from within a class member
 		{
 			// We're outside, so just public access
-			return (PAccessSpecifierAssistantTC.isPublic(field.getAccess()));
+			return PAccessSpecifierAssistantTC.isPublic(field.getAccess());
 		} else
 		{
 			AClassType selftype = (AClassType) getType(self);
@@ -166,12 +167,13 @@ public class SClassDefinitionAssistantTC
 				if (AClassTypeAssistantTC.hasSupertype(selftype, targtype))
 				{
 					// We're a subclass, so see public or protected
-					return (!PAccessSpecifierAssistantTC.isPrivate(field.getAccess()));
+					return !PAccessSpecifierAssistantTC.isPrivate(field.getAccess());
 				} else
 				{
 					// We're outside, so just public/static access
-					return (PAccessSpecifierAssistantTC.isPublic(field.getAccess()) && (needStatic ? PAccessSpecifierAssistantTC.isStatic(field.getAccess())
-							: true));
+					return PAccessSpecifierAssistantTC.isPublic(field.getAccess())
+							&& (needStatic ? PAccessSpecifierAssistantTC.isStatic(field.getAccess())
+									: true);
 				}
 			} else
 			{
@@ -184,10 +186,11 @@ public class SClassDefinitionAssistantTC
 	public static PDefinition findType(SClassDefinition classdef,
 			ILexNameToken sought, String fromModule)
 	{
-		//FIXME: This method is used and outside the TypeFinder visitor so I can't delete it!
-		//It is used in this class "public class PrivateClassEnvironment"
-		//How do I proceed in this case?
-		if ((!sought.getExplicit() && sought.getName().equals(classdef.getName().getName()))
+		// FIXME: This method is used and outside the TypeFinder visitor so I can't delete it!
+		// It is used in this class "public class PrivateClassEnvironment"
+		// How do I proceed in this case?
+		if (!sought.getExplicit()
+				&& sought.getName().equals(classdef.getName().getName())
 				|| sought.equals(classdef.getName().getClassName()))
 		{
 			return classdef; // Class referred to as "A" or "CLASS`A"
@@ -246,7 +249,9 @@ public class SClassDefinitionAssistantTC
 		for (SClassDefinition sClassDefinition : classes)
 		{
 			if (sClassDefinition.getName().getName().equals(module))
+			{
 				return sClassDefinition;
+			}
 		}
 		return null;
 	}
@@ -536,7 +541,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public  void typeResolve(SClassDefinition d,
+	public void typeResolve(SClassDefinition d,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -727,8 +732,10 @@ public class SClassDefinitionAssistantTC
 						&& def1.getName().getName().equals(def2.getName().getName())
 						&& !done.contains(def1.getName().getName()))
 				{
-					if ((PDefinitionAssistantTC.isFunction(def1) && PDefinitionAssistantTC.isFunction(def2))
-							|| (PDefinitionAssistantTC.isOperation(def1) && PDefinitionAssistantTC.isOperation(def2)))
+					if (PDefinitionAssistantTC.isFunction(def1)
+							&& PDefinitionAssistantTC.isFunction(def2)
+							|| PDefinitionAssistantTC.isOperation(def1)
+							&& PDefinitionAssistantTC.isOperation(def2))
 					{
 						PType to = def1.getType();
 						PType from = def2.getType();
@@ -754,7 +761,9 @@ public class SClassDefinitionAssistantTC
 						{
 							TypeCheckerErrors.report(3017, "Duplicate definitions for "
 									+ def1.getName().getName(), def1.getName().getLocation(), def1);
-							TypeCheckerErrors.detail2(def1.getName().getName(), def1.getLocation().getFile().getName()+" "+def1.getLocation().toShortString(), def2.getName().getName(), def2.getLocation().getFile().getName()+ " "+def2.getLocation().toShortString());
+							TypeCheckerErrors.detail2(def1.getName().getName(), def1.getLocation().getFile().getName()
+									+ " " + def1.getLocation().toShortString(), def2.getName().getName(), def2.getLocation().getFile().getName()
+									+ " " + def2.getLocation().toShortString());
 							done.add(def1.getName().getName());
 						}
 					}
@@ -764,11 +773,14 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public  void typeCheckPass(SClassDefinition c, Pass p,
-			Environment base, QuestionAnswerAdaptor<TypeCheckInfo, PType> tc) throws AnalysisException
+	public void typeCheckPass(SClassDefinition c, Pass p, Environment base,
+			QuestionAnswerAdaptor<TypeCheckInfo, PType> tc)
+			throws AnalysisException
 	{
 		if (c.getTypeChecked())
+		{
 			return;
+		}
 
 		for (PDefinition d : c.getDefinitions())
 		{

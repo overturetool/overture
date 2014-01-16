@@ -11,11 +11,6 @@ public class AbstractTypeCheckVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public AbstractTypeCheckVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> visitor)
 	{

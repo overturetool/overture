@@ -52,4 +52,5 @@ public class IDebugPreferenceConstants {
 
 	public static final String PREF_DBGP_SHOW_SCOPE_CLASS = PREF_DBGP_SHOW_SCOPE_PREFIX
 			+ "class"; //$NON-NLS-1$
+	public static final String PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER = "PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER".toLowerCase();
 }

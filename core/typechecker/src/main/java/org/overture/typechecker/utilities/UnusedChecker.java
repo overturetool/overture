@@ -8,6 +8,11 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+<<<<<<< HEAD
+=======
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
+
+>>>>>>> origin/pvj/main
 /**
  * This class checks if a node is used.
  * 
@@ -16,16 +21,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class UnusedChecker extends AnalysisAdaptor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public UnusedChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public void caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
@@ -35,7 +37,7 @@ public class UnusedChecker extends AnalysisAdaptor
 			af.createPDefinitionListAssistant().unusedCheck(node.getDefs());
 		}
 	}
-	
+
 	@Override
 	public void caseAMultiBindListDefinition(AMultiBindListDefinition node)
 			throws AnalysisException
@@ -45,14 +47,14 @@ public class UnusedChecker extends AnalysisAdaptor
 			af.createPDefinitionListAssistant().unusedCheck(node.getDefs());
 		}
 	}
-	
+
 	@Override
 	public void caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
 		af.createPDefinitionListAssistant().unusedCheck(node.getStateDefs());
 	}
-	
+
 	@Override
 	public void caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
@@ -66,16 +68,17 @@ public class UnusedChecker extends AnalysisAdaptor
 		{
 			for (PDefinition def : node.getDefs())
 			{
-				//PDefinitionAssistantTC.unusedCheck(def);
+				// PDefinitionAssistantTC.unusedCheck(def);
 				def.apply(THIS);
 			}
 		}
 
 	}
+
 	@Override
 	public void defaultPDefinition(PDefinition node) throws AnalysisException
 	{
 		af.createPDefinitionAssistant().unusedCheckBaseCase(node);
 	}
-	
+
 }

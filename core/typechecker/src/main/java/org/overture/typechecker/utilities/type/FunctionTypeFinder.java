@@ -31,50 +31,54 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  */
 public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public FunctionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public AFunctionType caseABracketType(ABracketType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public AFunctionType caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public AFunctionType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return null;
 	}
+
 	@Override
 	public AFunctionType caseAFunctionType(AFunctionType type)
 			throws AnalysisException
 	{
 		return type;
 	}
+
 	@Override
 	public AFunctionType caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
-		
+
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public AFunctionType caseAUnionType(AUnionType type)
 			throws AnalysisException
 	{
-		
+
 		if (!type.getFuncDone())
 		{
 			type.setFuncDone(true);
@@ -89,8 +93,14 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 				if (af.createPTypeAssistant().isFunction(t))
 				{
 					if (t.getDefinitions() != null)
+					{
 						defs.addAll(t.getDefinitions());
+<<<<<<< HEAD
 					AFunctionType f = af.createPTypeAssistant().getFunction(t);
+=======
+					}
+					AFunctionType f = PTypeAssistantTC.getFunction(t);
+>>>>>>> origin/pvj/main
 					result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)
@@ -131,11 +141,12 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 		return (AFunctionType) type.getFuncType();
 	}
+
 	@Override
 	public AFunctionType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		
+
 		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
@@ -154,6 +165,5 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 		assert false : "Can't getFunction of a non-function";
 		return null;
 	}
-	
 
 }

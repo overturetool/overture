@@ -121,7 +121,15 @@ Step() ==
 
 \end{vdm_al}
 
-The syncronization is added.
+The usual Step by thread substitution is done in the RateController class.
+\begin{vdm_al}
+
+--thread
+-- while true do
+--    controlRate();
+\end{vdm_al}
+
+And syncronization is added.
 
 \begin{vdm_al}    
 
@@ -133,6 +141,8 @@ mutex(increaseRate,decreaseRate,getInterval);
 per isFinished => finished;
 
 mutex(Step);
+--per controlRate => sensed <> nil;
+
 \end{vdm_al} 
 
 \begin{vdm_al}

@@ -9,10 +9,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AIdentifierPatternAssistantTC;
 
-public class AIdentifierPatternAssistantInterpreter extends
-		AIdentifierPatternAssistantTC
+public class AIdentifierPatternAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -20,7 +19,6 @@ public class AIdentifierPatternAssistantInterpreter extends
 	public AIdentifierPatternAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

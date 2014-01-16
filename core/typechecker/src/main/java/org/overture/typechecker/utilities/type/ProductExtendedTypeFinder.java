@@ -23,20 +23,20 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to check if a type of some size is a product type
- *  
+ * 
  * @author kel
  */
-public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AProductType>
+public class ProductExtendedTypeFinder extends
+		QuestionAnswerAdaptor<Integer, AProductType>
 {
-	
-	private static final long serialVersionUID = 1L;
+
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public ProductExtendedTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public AProductType caseABracketType(ABracketType type, Integer size)
 			throws AnalysisException
@@ -50,22 +50,22 @@ public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AP
 	{
 		return type.getType().apply(THIS, size);
 	}
-	
+
 	@Override
-	public AProductType defaultSInvariantType(SInvariantType type,
-			Integer size) throws AnalysisException
+	public AProductType defaultSInvariantType(SInvariantType type, Integer size)
+			throws AnalysisException
 	{
 		assert false : "cannot getProduct from non-product type";
 		return null;
 	}
-	
+
 	@Override
 	public AProductType caseAOptionalType(AOptionalType type, Integer size)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS, size);
 	}
-	
+
 	@Override
 	public AProductType caseAProductType(AProductType type, Integer size)
 			throws AnalysisException
@@ -89,7 +89,7 @@ public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AP
 
 			for (PType t : type.getTypes())
 			{
-				if ((size == 0 && PTypeAssistantTC.isProduct(t))
+				if (size == 0 && PTypeAssistantTC.isProduct(t)
 						|| PTypeAssistantTC.isProduct(t, size))
 				{
 					AProductType pt = PTypeAssistantTC.getProduct(t, size);
@@ -124,7 +124,7 @@ public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AP
 
 		return type.getProdType();
 	}
-	
+
 	@Override
 	public AProductType caseAUnknownType(AUnknownType type, Integer size)
 			throws AnalysisException
@@ -138,7 +138,7 @@ public class ProductExtendedTypeFinder extends QuestionAnswerAdaptor<Integer, AP
 
 		return AstFactory.newAProductType(type.getLocation(), tl);
 	}
-	
+
 	@Override
 	public AProductType createNewReturnValue(INode node, Integer question)
 			throws AnalysisException

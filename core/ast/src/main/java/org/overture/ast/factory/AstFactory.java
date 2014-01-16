@@ -152,7 +152,9 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
@@ -205,7 +207,6 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-
 	static
 	{
 		new AstAssistantFactory();// FIXME: remove when asssistant conversion is finished
@@ -460,6 +461,7 @@ public class AstFactory
 
 		result.setName(name);
 		result.setFields(fields);
+		result.setComposed(false);
 
 		return result;
 	}
@@ -477,6 +479,8 @@ public class AstFactory
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
+		
+		result.setType(type);
 
 		if (type != null)
 		{
@@ -484,10 +488,11 @@ public class AstFactory
 			{
 				type.setDefinitions(new LinkedList<PDefinition>());
 			}
+			
 			type.getDefinitions().add(result);
 		}
+		
 		return result;
-
 	}
 
 	public static AExplicitFunctionDefinition newAExplicitFunctionDefinition(
@@ -900,12 +905,29 @@ public class AstFactory
 		return result;
 	}
 
-	public static AThreadDefinition newAThreadDefinition(ILexNameToken opname,
+	public static AThreadDefinition newPeriodicAThreadDefinition(ILexNameToken opname,
 			List<PExp> args)
 	{
+		return newAThreadDefinition(AstFactory.newAPeriodicStm(opname, args));
+	}
 
-		APeriodicStm periodicStatement = AstFactory.newAPeriodicStm(opname, args);
-		return newAThreadDefinition(periodicStatement);
+	public static AThreadDefinition newSporadicAThreadDefinition(ILexNameToken opname,
+			List<PExp> args)
+	{
+		return newAThreadDefinition(AstFactory.newASporadicStm(opname, args));
+	}
+
+	private static PStm newASporadicStm(ILexNameToken opname, List<PExp> args)
+	{
+		ASporadicStm result = new ASporadicStm();
+
+		// Statement initialization
+		initStatement(result, opname.getLocation());
+
+		result.setOpname(opname);
+		result.setArgs(args);
+
+		return result;
 	}
 
 	private static APeriodicStm newAPeriodicStm(ILexNameToken opname,
@@ -2770,6 +2792,15 @@ public class AstFactory
 	public static AStartStm newAStartStm(ILexLocation location, PExp obj)
 	{
 		AStartStm result = new AStartStm();
+		initStatement(result, location);
+
+		result.setObj(obj);
+		return result;
+	}
+
+	public static AStopStm newAStopStm(ILexLocation location, PExp obj)
+	{
+		AStopStm result = new AStopStm();
 		initStatement(result, location);
 
 		result.setObj(obj);

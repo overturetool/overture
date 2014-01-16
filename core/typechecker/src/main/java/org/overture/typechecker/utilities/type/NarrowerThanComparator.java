@@ -22,93 +22,96 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-
 /**
  * Checks if a type is smaller than a specifier type.
  * 
  * @author kel
  */
-public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifierAccessSpecifier, Boolean>
+public class NarrowerThanComparator extends
+		QuestionAnswerAdaptor<AAccessSpecifierAccessSpecifier, Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public NarrowerThanComparator(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		return type.getType().apply(this, accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean caseAFunctionType(AFunctionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
-		
-		for (PType t: type.getParameters())
+
+		for (PType t : type.getParameters())
 		{
-			if(t.apply(this, accessSpecifier)) //(PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+			if (t.apply(this, accessSpecifier)) // (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
 			{
 				return true;
 			}
 		}
 
-		return type.getResult().apply(this, accessSpecifier); //PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+		return type.getResult().apply(this, accessSpecifier); // PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean caseAOperationType(AOperationType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
-		for (PType t: type.getParameters())
+		for (PType t : type.getParameters())
 		{
-			if (t.apply(this, accessSpecifier))//(PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+			if (t.apply(this, accessSpecifier))// (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
 			{
 				return true;
 			}
 		}
 
-		return type.getResult().apply(this, accessSpecifier); //PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
+		return type.getResult().apply(this, accessSpecifier); // PTypeAssistantTC.narrowerThan(type.getResult(),accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean caseAOptionalType(AOptionalType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
-		//return AOptionalTypeAssistantTC.narrowerThan(type, accessSpecifier);
+		// return AOptionalTypeAssistantTC.narrowerThan(type, accessSpecifier);
 		return type.getType().apply(this, accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean defaultSSeqType(SSeqType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
-		return type.getSeqof().apply(this,accessSpecifier);
+		return type.getSeqof().apply(this, accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean caseASetType(ASetType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		return type.getSetof().apply(this, accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		for (PType t : type.getTypes())
 		{
-			if(t.apply(this, accessSpecifier)) //(PTypeAssistantTC.narrowerThan(t, accessSpecifier))
+			if (t.apply(this, accessSpecifier)) // (PTypeAssistantTC.narrowerThan(t, accessSpecifier))
 			{
 				return true;
 			}
@@ -116,16 +119,19 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		return false;
 	}
+
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		if (type.getInNarrower())
 		{
@@ -134,10 +140,10 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 
 		type.setInNarrower(true);
 		boolean result = false;
-		
+
 		if (type.getDefinitions().size() > 0)
 		{
-			for (PDefinition d: type.getDefinitions())
+			for (PDefinition d : type.getDefinitions())
 			{
 				if (af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 				{
@@ -145,9 +151,9 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 					break;
 				}
 			}
-		}
-		else if(type.getType().getDefinitions().size() == 0)
+		} else if (type.getType().getDefinitions().size() == 0)
 		{
+<<<<<<< HEAD
 			result = type.apply(this, accessSpecifier) || af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);//PTypeAssistantTC.narrowerThan(type, accessSpecifier)
 		}
 		else
@@ -155,36 +161,46 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 			for (PDefinition d : type.getType().getDefinitions())
 			{
 				if(af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
+=======
+			result = type.apply(this, accessSpecifier)
+					|| PTypeAssistantTC.narrowerThanBaseCase(type, accessSpecifier);// PTypeAssistantTC.narrowerThan(type,
+																					// accessSpecifier)
+		} else
+		{
+			for (PDefinition d : type.getType().getDefinitions())
+			{
+				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
+>>>>>>> origin/pvj/main
 				{
 					result = true;
 					break;
 				}
 			}
-			
+
 		}
-		
+
 		type.setInNarrower(false);
 		return result;
 	}
-	
+
 	@Override
 	public Boolean caseARecordInvariantType(ARecordInvariantType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		if (type.getInNarrower())
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			type.setInNarrower(true);
 		}
-		
+
 		boolean result = false;
-		
-		if(type.getDefinitions().size() > 0)
+
+		if (type.getDefinitions().size() > 0)
 		{
-			for (PDefinition d: type.getDefinitions())
+			for (PDefinition d : type.getDefinitions())
 			{
 				if (af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 				{
@@ -192,33 +208,40 @@ public class NarrowerThanComparator extends QuestionAnswerAdaptor<AAccessSpecifi
 					break;
 				}
 			}
-		}
-		else
+		} else
 		{
 			for (AFieldField field : type.getFields())
 			{
-				if (field.getType().apply(this, accessSpecifier))//(PTypeAssistantTC.narrowerThan(field.getType(), accessSpecifier))
+				if (field.getType().apply(this, accessSpecifier))// (PTypeAssistantTC.narrowerThan(field.getType(),
+																	// accessSpecifier))
 				{
 					result = true;
 					break;
 				}
 			}
 		}
-		
+
 		type.setInNarrower(false);
 		return result;
 	}
+<<<<<<< HEAD
 	
+=======
+
+	// FIXME: IN PTypeAssistantTC the SInvariatType is SInvariantTypeBase. ASK
+>>>>>>> origin/pvj/main
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		return af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type,
-			AAccessSpecifierAccessSpecifier accessSpecifier) throws AnalysisException
+			AAccessSpecifierAccessSpecifier accessSpecifier)
+			throws AnalysisException
 	{
 		return af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);
 	}

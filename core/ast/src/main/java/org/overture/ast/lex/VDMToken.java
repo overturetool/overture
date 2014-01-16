@@ -244,6 +244,7 @@ public enum VDMToken implements Serializable
 	SAMECLASS("sameclass", "sameclass", VDM_PP, VDM_RT),
 	THREADID("threadid", "threadid", VDM_PP, VDM_RT),
 	PERIODIC("periodic", "periodic", VDM_PP, VDM_RT),
+	SPORADIC("sporadic", "sporadic", VDM_PP, VDM_RT),
 	PER("per", "per", VDM_PP, VDM_RT),
 	MUTEX("mutex", "mutex", VDM_PP, VDM_RT),
 	REQ("#req", "#req", VDM_PP, VDM_RT),
@@ -253,6 +254,8 @@ public enum VDMToken implements Serializable
 	WAITING("#waiting", "#waiting", VDM_PP, VDM_RT),
 	START("start", "start", VDM_PP, VDM_RT),
 	STARTLIST("startlist", "startlist", VDM_PP, VDM_RT),
+	STOP("stop", "stop", VDM_PP, VDM_RT),
+	STOPLIST("stoplist", "stoplist", VDM_PP, VDM_RT),
 
 	// VICE extra tokens
 	TIME("time", "time", VDM_RT),

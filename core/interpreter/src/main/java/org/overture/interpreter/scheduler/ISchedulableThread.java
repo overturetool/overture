@@ -58,6 +58,10 @@ public interface ISchedulableThread
 
 	public abstract void suspendOthers();
 
+	public abstract boolean stopThread();
+	
+	public abstract void reschedule(Context ctxt, ILexLocation location);
+
 	public abstract ObjectValue getObject();
 
 	public abstract void setSwapInBy(long swapInBy);

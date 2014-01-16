@@ -15,10 +15,6 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
  */
 public class SelfDefinitionFinder extends AnswerAdaptor<PDefinition>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 

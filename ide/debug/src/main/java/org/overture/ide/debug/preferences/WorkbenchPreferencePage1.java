@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -42,6 +43,8 @@ public class WorkbenchPreferencePage1 extends
 		commTimeoutField.setValidRange(0, Integer.MAX_VALUE);
 		addField(commTimeoutField);
 		
+		BooleanFieldEditor modelCheckerField = new BooleanFieldEditor(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER, "Enable experimental model checker", getFieldEditorParent());
+		addField(modelCheckerField);
 	}
 
 	@Override

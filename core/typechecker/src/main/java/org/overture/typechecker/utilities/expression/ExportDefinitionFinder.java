@@ -28,26 +28,27 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * Used to find the definition of an exported expression from its actualType.
- *  
+ * 
  * @author kel
  */
-public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDefinition>, Collection<? extends PDefinition>>
+public class ExportDefinitionFinder
+		extends
+		QuestionAnswerAdaptor<LinkedList<PDefinition>, Collection<? extends PDefinition>>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public ExportDefinitionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAAllExport(AAllExport exp,
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
 		return actualDefs; // The lot!
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAFunctionExport(
 			AFunctionExport exp, LinkedList<PDefinition> actualDefs)
@@ -60,8 +61,8 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 
 			if (def == null)
 			{
-				TypeCheckerErrors.report(3183, "Exported function "
-						+ name + " not defined in module", name.getLocation(), exp);
+				TypeCheckerErrors.report(3183, "Exported function " + name
+						+ " not defined in module", name.getLocation(), exp);
 			} else
 			{
 				PType act = af.createPDefinitionAssistant().getType(def);
@@ -79,7 +80,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		}
 		return list;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseAOperationExport(
 			AOperationExport exp, LinkedList<PDefinition> actualDefs)
@@ -92,8 +93,8 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 
 			if (def == null)
 			{
-				TypeCheckerErrors.report(3185, "Exported operation "
-						+ name + " not defined in module", name.getLocation(), exp);
+				TypeCheckerErrors.report(3185, "Exported operation " + name
+						+ " not defined in module", name.getLocation(), exp);
 			} else
 			{
 				PType act = def.getType();
@@ -110,7 +111,7 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		}
 		return list;
 	}
-	
+
 	@Override
 	public Collection<? extends PDefinition> caseATypeExport(ATypeExport exp,
 			LinkedList<PDefinition> actualDefs) throws AnalysisException
@@ -158,18 +159,17 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 					// copy,null,null,null,false,def.getName()));
 				} else
 				{
-					TypeCheckerErrors.report(67, "Exported type "
-							+ name + " not structured", name.getLocation(), exp);
+					TypeCheckerErrors.report(67, "Exported type " + name
+							+ " not structured", name.getLocation(), exp);
 				}
 			}
 		}
 		return list;
 	}
-	
+
 	@Override
-	public Collection<? extends PDefinition> caseAValueExport(
-			AValueExport exp, LinkedList<PDefinition> actualDefs)
-			throws AnalysisException
+	public Collection<? extends PDefinition> caseAValueExport(AValueExport exp,
+			LinkedList<PDefinition> actualDefs) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
 		for (ILexNameToken name : ((AValueExport) exp).getNameList())
@@ -202,7 +202,28 @@ public class ExportDefinitionFinder extends QuestionAnswerAdaptor<LinkedList<PDe
 		}
 		return list;
 	}
+<<<<<<< HEAD
 	
+=======
+
+	// @Override
+	// public Collection<? extends PDefinition> defaultPExport(PExport exp,
+	// LinkedList<PDefinition> actualDefs) throws AnalysisException
+	// {
+	// // TODO Auto-generated method stub
+	// return super.defaultPExport(node, question);
+	// }
+	// } else if (exp instanceof AOperationExport) {
+
+	// } else if (exp instanceof ATypeExport) {
+
+	// } else if (exp instanceof AValueExport) {
+
+	// }
+	//
+	// return null;
+
+>>>>>>> origin/pvj/main
 	@Override
 	public Collection<? extends PDefinition> createNewReturnValue(INode node,
 			LinkedList<PDefinition> question) throws AnalysisException

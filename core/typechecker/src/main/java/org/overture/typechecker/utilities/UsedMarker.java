@@ -18,27 +18,22 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class UsedMarker extends AnalysisAdaptor
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1831499172201136291L;
-	
 	protected ITypeCheckerAssistantFactory af;
 
 	public UsedMarker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public void caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-		
+
 		node.setUsed(true);
 		node.getState().apply(THIS);
 	}
-	
+
 	@Override
 	public void caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
@@ -54,12 +49,12 @@ public class UsedMarker extends AnalysisAdaptor
 		node.setUsed(true);
 		node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public void caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
-		
+
 		node.setUsed(true);
 		node.getDef().apply(THIS);
 		node.setUsed(true);

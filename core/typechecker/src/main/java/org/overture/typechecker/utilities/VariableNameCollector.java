@@ -30,6 +30,11 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+<<<<<<< HEAD
+=======
+import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
+import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
+>>>>>>> origin/pvj/main
 
 /**
  * This class implements a way to collect variable names from a node in the AST
@@ -38,10 +43,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -128,7 +129,11 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		// return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
 		LexNameList names = new LexNameList();
 		// TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
+<<<<<<< HEAD
 		af.createAInheritedDefinitionAssistant().checkSuperDefinition(node);
+=======
+		DefinitionTypeFinder.checkSuperDefinition(node);
+>>>>>>> origin/pvj/main
 
 		for (ILexNameToken vn : node.getSuperdef().apply(THIS))
 		{

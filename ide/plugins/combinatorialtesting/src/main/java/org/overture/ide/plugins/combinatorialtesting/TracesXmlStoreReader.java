@@ -19,8 +19,9 @@
 package org.overture.ide.plugins.combinatorialtesting;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,13 +197,21 @@ public class TracesXmlStoreReader extends DefaultHandler
 	Integer traceTaceTestStartNumber;
 	Integer traceTaceTestStopNumber;
 	String currentTraceName;
+	final String charset;
 
 	public TracesXmlStoreReader(File file, String className)
+			throws SAXException, IOException
+	{
+		this(file, className, "utf-8");
+	}
+
+	public TracesXmlStoreReader(File file, String className, String charset)
 			throws SAXException, IOException
 	{
 		super();
 		this.file = file;
 		this.className = className;
+		this.charset = charset;
 		parse();
 		initialParse = false;
 	}
@@ -214,8 +223,11 @@ public class TracesXmlStoreReader extends DefaultHandler
 		xr.setContentHandler(handler);
 		xr.setErrorHandler(handler);
 
-		FileReader r = new FileReader(this.file);
-		xr.parse(new InputSource(r));
+		// FileReader r = new FileReader(this.file); this cannot be used since it doesnt suppport char set
+		InputStreamReader r = new InputStreamReader(new FileInputStream(this.file), "UTF-8");
+		InputSource input = new InputSource(r);
+		input.setEncoding("UTF-8");
+		xr.parse(input);
 		r.close();
 
 	}
@@ -263,21 +275,13 @@ public class TracesXmlStoreReader extends DefaultHandler
 	public void startElement(String uri, String name, String qName,
 			Attributes atts)
 	{
-		// if ("".equals(uri))
-		// String kkk=("Start element: " + qName);
-		// for (int i = 0; i < atts.getLength(); i++)
-		// {
-		// kkk+=(" "+ atts.getLocalName(i)+ "=" + atts.getValue(i));
-		// }
-		// System.out.println(kkk);
-		// else
-		// System.out.println("Start element: {" + uri + "}" + name);
-
 		if (name.equals(TraceXmlWrapper.CLASS_TAG))
 		{
 			String cName = atts.getValue(TraceXmlWrapper.NAME_TAG);
 			if (cName != null && cName.equals(className))
+			{
 				inClass = true;
+			}
 		} else if (inClass && name.equals(TraceXmlWrapper.TRACE_TAG))
 		{
 			String tName = atts.getValue(TraceXmlWrapper.NAME_TAG);
@@ -299,7 +303,9 @@ public class TracesXmlStoreReader extends DefaultHandler
 		{
 			String tName = atts.getValue(TraceXmlWrapper.NAME_TAG);
 			if (tName != null && tName.equals(traceName))
+			{
 				inTrace = true;
+			}
 		} else if (inClass
 				&& this.traceTestParse
 				&& (name.equals(TraceXmlWrapper.TEST_CASE_TAG) || name.equals(TraceXmlWrapper.RESULT_TAG))
@@ -313,47 +319,16 @@ public class TracesXmlStoreReader extends DefaultHandler
 						&& traceTaceTestStopNumber >= number)
 				{
 
-					// boolean found = false;
-					// for (int i = 0; i < traceTestResults.size(); i++)
-					// {
-					// TraceTestResult res = traceTestResults.get(i);
-					// if (res.getNumber().equals(number))
-					// {
-					// if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
-					// this.insertArgument = true;
-					// else if (name.equals(TraceXmlWrapper.RESULT_TAG))
-					// {
-					// String verdict =
-					// atts.getValue(TraceXmlWrapper.VERDICT_TAG);
-					//
-					// res.setStatus(GetVerdict(verdict));
-					//
-					// this.insertResult = true;
-					// }
-					//
-					// this.currentResult = res;
-					// currentResultIndex = i;
-					// found = true;
-					// break;
-					// }
-					// }
-					// if (!found)
-					// {
 					TraceTestResult res = getResult(number); // new
-					// TraceTestResult();
-					// res.setNumber(number);
 					String verdict = atts.getValue(TraceXmlWrapper.VERDICT_TAG);
 					if (name.equals(TraceXmlWrapper.TEST_CASE_TAG))
+					{
 						this.insertArgument = true;
-					else if (name.equals(TraceXmlWrapper.RESULT_TAG))
+					} else if (name.equals(TraceXmlWrapper.RESULT_TAG))
 					{
 						res.setStatus(getVerdict(verdict));
 						this.insertResult = true;
 					}
-					// traceTestResults.add(res);
-					// currentResultIndex = traceTestResults.size() - 1;
-
-					// }
 				}
 			}
 		}
@@ -369,13 +344,6 @@ public class TracesXmlStoreReader extends DefaultHandler
 			traceStatus.put(currentTraceName, tmp);
 		}
 
-		// if(locator!=null)
-		// {
-		// int col = locator.getColumnNumber();
-		// int line = locator.getLineNumber();
-		// String publicId = locator.getPublicId();
-		// String systemId = locator.getSystemId();
-		// }
 	}
 
 	private TraceTestResult getResult(Integer number)
@@ -420,10 +388,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 	{
 
 		if (inClass && inTrace && traceTestResults != null
-				&& traceTestResults.size() > 0 && data.toString().length() > 0) // &&
-		// currentResult
-		// !=
-		// null
+				&& traceTestResults.size() > 0 && data.toString().length() > 0) 
 		{
 			if (insertArgument)
 			{
@@ -449,46 +414,37 @@ public class TracesXmlStoreReader extends DefaultHandler
 
 		data = new StringBuilder();
 
-		// if ("".equals(uri))
-		// System.out.println("End element: " + qName);
-		// else
-		// System.out.println("End element:   {" + uri + "}" + name);
 		if (name.equals(TraceXmlWrapper.CLASS_TAG))
+		{
 			inClass = false;
-		else if (inClass && name.equals(TraceXmlWrapper.TRACE_TAG))
+		} else if (inClass && name.equals(TraceXmlWrapper.TRACE_TAG))
+		{
 			inTrace = false;
-		else if (inClass && inTrace
+		} else if (inClass && inTrace
 				&& name.equals(TraceXmlWrapper.TEST_CASE_TAG))
+		{
 			insertArgument = false;
-		else if (inClass && inTrace && name.equals(TraceXmlWrapper.RESULT_TAG))
+		} else if (inClass && inTrace
+				&& name.equals(TraceXmlWrapper.RESULT_TAG))
+		{
 			insertResult = false;
+		}
 	}
 
 	@Override
 	public void characters(char ch[], int start, int length)
 	{
-		// System.out.print("Characters:    \"");
-
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = start; i < start + length; i++)
 		{
 			switch (ch[i])
 			{
-			// case '\\':
-			// System.out.print("\\\\");
-			// break;
-			// case '"':
-			// System.out.print("\\\"");
-			// break;
 				case '\n':
-					// System.out.print("\\n");
 					break;
 				case '\r':
-					// System.out.print("\\r");
 					break;
 				case '\t':
-					// System.out.print("\\t");
 					break;
 				default:
 					sb.append(ch[i]);
@@ -496,11 +452,8 @@ public class TracesXmlStoreReader extends DefaultHandler
 			}
 		}
 
-		// if(sb.toString().trim().length()>0)
-		// System.out.println(sb.toString().trim());
 
 		data.append(sb.toString());
-		// System.out.print("\"\n");
 	}
 
 	@Override
@@ -529,15 +482,20 @@ public class TracesXmlStoreReader extends DefaultHandler
 	public Integer getTraceTestCount(String traceName)
 	{
 		if (traceCount.containsKey(traceName))
+		{
 			return traceCount.get(traceName).getTestCount();
-		else
+		} else
+		{
 			return 0; // TODO
+		}
 	}
 
 	public TraceInfo getTraceInfo(String traceName)
 	{
 		if (traceCount.containsKey(traceName))
+		{
 			return traceCount.get(traceName);
+		}
 
 		return null;
 	}

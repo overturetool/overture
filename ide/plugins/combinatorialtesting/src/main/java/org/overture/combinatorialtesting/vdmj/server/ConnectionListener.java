@@ -82,7 +82,7 @@ public class ConnectionListener extends Thread
 						continue;
 					}
 
-					ConnectionThread worker = new ConnectionThread(group, conn, (principal == null), monitor);
+					ConnectionThread worker = new ConnectionThread(group, conn, principal == null, monitor);
 
 					if (principal == null)
 					{

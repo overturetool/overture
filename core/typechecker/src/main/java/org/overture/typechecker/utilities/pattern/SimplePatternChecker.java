@@ -20,100 +20,104 @@ import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 /**
  * Used to check if a pattern is a simple value.
- *  
+ * 
  * @author kel
  */
 public class SimplePatternChecker extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public SimplePatternChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) && pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAMapUnionPattern(AMapUnionPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) && pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
-	
+
 	@Override
-	public Boolean caseASeqPattern(ASeqPattern pattern) throws AnalysisException
+	public Boolean caseASeqPattern(ASeqPattern pattern)
+			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
-	
+
 	@Override
-	public Boolean caseASetPattern(ASetPattern pattern) throws AnalysisException
+	public Boolean caseASetPattern(ASetPattern pattern)
+			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
-	
+
 	@Override
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isSimple(pattern.getPlist());
 	}
-	
+
 	@Override
 	public Boolean caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) && pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
-	public Boolean caseAMapPattern(AMapPattern pattern) throws AnalysisException
+	public Boolean caseAMapPattern(AMapPattern pattern)
+			throws AnalysisException
 	{
 		for (AMapletPatternMaplet mp : pattern.getMaplets())
 		{
 
-			//if (!AMapletPatternMapletAssistantTC.isSimple(mp)) // Original code.
-			if(!mp.apply(THIS))
+			// if (!AMapletPatternMapletAssistantTC.isSimple(mp)) // Original code.
+			if (!mp.apply(THIS))
+			{
 				return false;
+			}
 
 		}
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPPattern(PPattern pattern) throws AnalysisException
 	{
 		/*
-		 * True if the pattern is a simple value that can match only one value for certain. Most pattern types are
-		 * like this, but any that include variables or ignore patterns are not.
+		 * True if the pattern is a simple value that can match only one value for certain. Most pattern types are like
+		 * this, but any that include variables or ignore patterns are not.
 		 */
 		return true;
 	}

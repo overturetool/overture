@@ -17,14 +17,13 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class VoidExistanceChecker extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public VoidExistanceChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
@@ -38,20 +37,20 @@ public class VoidExistanceChecker extends AnswerAdaptor<Boolean>
 
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAVoidType(AVoidType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAVoidReturnType(AVoidReturnType type)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException
 	{
@@ -71,7 +70,5 @@ public class VoidExistanceChecker extends AnswerAdaptor<Boolean>
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
 
 }

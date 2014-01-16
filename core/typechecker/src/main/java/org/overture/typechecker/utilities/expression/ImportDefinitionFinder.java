@@ -19,66 +19,74 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * Used to find the definitions of an imported object from a module.
- *  
+ * 
  * @author kel
  */
-public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules, List<PDefinition>>
+public class ImportDefinitionFinder extends
+		QuestionAnswerAdaptor<AModuleModules, List<PDefinition>>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
-	
+
 	public ImportDefinitionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public List<PDefinition> caseAAllImport(AAllImport imp,
 			AModuleModules module) throws AnalysisException
 	{
-		//return AAllImportAssistantTC.getDefinitions(imp,from);
+		// return AAllImportAssistantTC.getDefinitions(imp,from);
 		imp.setFrom(module);
 
 		if (imp.getFrom().getExportdefs().isEmpty())
 		{
-			TypeCheckerErrors.report(3190, "Import all from module with no exports?",imp.getLocation(),imp);
-		} 
+			TypeCheckerErrors.report(3190, "Import all from module with no exports?", imp.getLocation(), imp);
+		}
 
-		List<PDefinition> imported = new Vector<PDefinition>() ;
+		List<PDefinition> imported = new Vector<PDefinition>();
 
-		for (PDefinition d: imp.getFrom().getExportdefs())
+		for (PDefinition d : imp.getFrom().getExportdefs())
 		{
+<<<<<<< HEAD
 			PDefinition id = AstFactory.newAImportedDefinition(
 					imp.getLocation(), d);
 			af.createPDefinitionAssistant().markUsed(id); // So imports all is quiet
+=======
+			PDefinition id = AstFactory.newAImportedDefinition(imp.getLocation(), d);
+			PDefinitionAssistantTC.markUsed(id); // So imports all is quiet
+>>>>>>> origin/pvj/main
 			imported.add(id);
 
 		}
 
-		return imported;	// The lot!
+		return imported; // The lot!
 	}
-	
+
 	@Override
 	public List<PDefinition> caseATypeImport(ATypeImport imp,
 			AModuleModules module) throws AnalysisException
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
+<<<<<<< HEAD
 		PDefinition expdef = af.createPDefinitionListAssistant().findType(imp.getFrom().getExportdefs(),imp.getName(), null);
+=======
+		PDefinition expdef = PDefinitionListAssistantTC.findType(imp.getFrom().getExportdefs(), imp.getName(), null);
+>>>>>>> origin/pvj/main
 
 		if (expdef == null)
 		{
-			TypeCheckerErrors.report(3191, "No export declared for import of type " + imp.getName() + " from " + imp.getFrom().getName(),imp.getLocation(),imp);
-		}
-		else
+			TypeCheckerErrors.report(3191, "No export declared for import of type "
+					+ imp.getName() + " from " + imp.getFrom().getName(), imp.getLocation(), imp);
+		} else
 		{
 			if (imp.getRenamed() != null)
 			{
-				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(),expdef);
-			}
-			else
+				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(), expdef);
+			} else
 			{
-				expdef = AstFactory.newAImportedDefinition(imp.getName().getLocation(),expdef);
+				expdef = AstFactory.newAImportedDefinition(imp.getName().getLocation(), expdef);
 			}
 
 			list.add(expdef);
@@ -86,7 +94,7 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 
 		return list;
 	}
-	
+
 	@Override
 	public List<PDefinition> defaultSValueImport(SValueImport imp,
 			AModuleModules module) throws AnalysisException
@@ -94,20 +102,24 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
+<<<<<<< HEAD
 		
 		PDefinition expdef = af.createPDefinitionListAssistant().findName(module.getExportdefs(),name, NameScope.NAMES);
+=======
+
+		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(), name, NameScope.NAMES);
+>>>>>>> origin/pvj/main
 
 		if (expdef == null)
 		{
-			TypeCheckerErrors.report(3193, "No export declared for import of value " + name + " from " + module.getName(),imp.getLocation(),imp);
-		}
-		else
+			TypeCheckerErrors.report(3193, "No export declared for import of value "
+					+ name + " from " + module.getName(), imp.getLocation(), imp);
+		} else
 		{
 			if (imp.getRenamed() != null)
 			{
 				expdef = AstFactory.newARenamedDefinition(imp.getRenamed(), expdef);
-			}
-			else
+			} else
 			{
 				expdef = AstFactory.newAImportedDefinition(imp.getLocation(), expdef);
 			}
@@ -117,7 +129,7 @@ public class ImportDefinitionFinder extends QuestionAnswerAdaptor<AModuleModules
 
 		return list;
 	}
-	
+
 	@Override
 	public List<PDefinition> createNewReturnValue(INode node,
 			AModuleModules question) throws AnalysisException

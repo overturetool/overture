@@ -25,6 +25,7 @@ public class ARecordPatternAssistantTC
 		this.af = af;
 	}
 
+<<<<<<< HEAD
 //	public static void typeResolve(ARecordPattern pattern,
 //			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 //			TypeCheckInfo question) throws AnalysisException
@@ -47,24 +48,37 @@ public class ARecordPatternAssistantTC
 //		}
 //
 //	}
+=======
+	public static void typeResolve(ARecordPattern pattern,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		if (pattern.getResolved())
+		{
+			return;
+		} else
+		{
+			pattern.setResolved(true);
+		}
+
+		try
+		{
+			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
+			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
+		} catch (TypeCheckException e)
+		{
+			unResolve(pattern);
+			throw e;
+		}
+
+	}
+>>>>>>> origin/pvj/main
 
 //	public static void unResolve(ARecordPattern pattern)
 //	{
 //		PTypeAssistantTC.unResolve(pattern.getType());
 //		pattern.setResolved(false);
 //	}
-
-	// public static LexNameList getVariableNames(ARecordPattern pattern) {
-	// LexNameList list = new LexNameList();
-	//
-	// for (PPattern p: pattern.getPlist())
-	// {
-	// list.addAll(PPatternTCAssistant.getVariableNames(p));
-	// }
-	//
-	// return list;
-	//
-	// }
 
 	public static List<PDefinition> getAllDefinitions(ARecordPattern rp,
 			PType exptype, NameScope scope)
@@ -74,7 +88,7 @@ public class ARecordPatternAssistantTC
 
 		PType type = rp.getType();
 
-		if (!PTypeAssistantTC.isRecord(type))
+		if (!PTypeAssistantTC.isTag(type))
 		{
 			TypeCheckerErrors.report(3200, "Mk_ expression is not a record type", rp.getLocation(), rp);
 			TypeCheckerErrors.detail("Type", type);
@@ -110,28 +124,5 @@ public class ARecordPatternAssistantTC
 
 		return defs;
 	}
-
-//	public static PType getPossibleTypes(ARecordPattern pattern)
-//	{
-//		return pattern.getType();
-//	}
-
-//	public static PExp getMatchingExpression(ARecordPattern ptrn)
-//	{
-//		List<PExp> list = new LinkedList<PExp>();
-//
-//		for (PPattern p : ptrn.getPlist())
-//		{
-//			list.add(PPatternAssistantTC.getMatchingExpression(p));
-//		}
-//
-//		ILexNameToken tpName = ptrn.getTypename();
-//		return AstFactory.newAMkTypeExp(tpName.clone(), list);
-//	}
-
-//	public static boolean isSimple(ARecordPattern p)
-//	{
-//		return PPatternListAssistantTC.isSimple(p.getPlist());
-//	}
 
 }

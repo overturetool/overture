@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.scheduler;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.expressions.PExp;
@@ -52,7 +53,7 @@ public class MainThread extends SchedulablePoolThread
 	public final PExp expression;
 
 	private Value result = new UndefinedValue();
-	private Vector<Exception> exception = new Vector<Exception>();
+	protected Vector<Exception> exception = new Vector<Exception>();
 
 	public MainThread(PExp expr, Context ctxt)
 	{
@@ -170,6 +171,11 @@ public class MainThread extends SchedulablePoolThread
 		}
 
 		return result;
+	}
+	
+	public List<Exception> getExceptions()
+	{
+		return exception;
 	}
 
 	public void setException(Exception e)

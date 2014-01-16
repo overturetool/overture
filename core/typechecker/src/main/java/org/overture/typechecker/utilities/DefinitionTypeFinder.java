@@ -34,6 +34,12 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+<<<<<<< HEAD
+=======
+import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+>>>>>>> origin/pvj/main
 
 /**
  * This class implements a way to collect definitions from a node in the AST
@@ -46,10 +52,6 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -129,11 +131,32 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 		return ((AImportedDefinition) node).getDef().apply(THIS);
 	}
 
+	public static void checkSuperDefinition(AInheritedDefinition d)
+	{
+		// This is used to get over the case where an inherited definition
+		// is a ValueDefinition that has since been replaced with a new
+		// LocalDefinition. It would be better to somehow list the
+		// inherited definitions that refer to a LocalDefinition and update
+		// them...
+
+		if (d.getSuperdef() instanceof AUntypedDefinition)
+		{
+			if (d.getClassDefinition() != null)
+			{
+				d.setSuperdef(PDefinitionAssistantTC.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
+			}
+		}
+	}
+
 	@Override
 	public PType caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
+<<<<<<< HEAD
 		af.createAInheritedDefinitionAssistant().checkSuperDefinition(node);
+=======
+		checkSuperDefinition(node);
+>>>>>>> origin/pvj/main
 		return af.createPDefinitionAssistant().getType(node.getSuperdef());
 	}
 

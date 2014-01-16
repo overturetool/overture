@@ -18,10 +18,6 @@
  *******************************************************************************/
 package org.overture.ide.core.resources;
 
-import org.overture.ide.core.ElementChangedEvent;
-import org.overture.ide.core.IVdmElementDelta;
-import org.overture.ide.core.VdmCore;
-import org.overture.ide.core.VdmElementDelta;
 
 public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 		IVdmSourceUnit
@@ -47,7 +43,7 @@ public class VdmSourceUnitWorkingCopy extends VdmSourceUnit implements
 	{
 		return super.toString() + " - Working copy";
 	}
-	
+
 	public IVdmSourceUnit getSource()
 	{
 		return this.sourceUnit;

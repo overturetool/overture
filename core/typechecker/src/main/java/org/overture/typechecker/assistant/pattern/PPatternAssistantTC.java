@@ -50,7 +50,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	{
 		try
 		{
-			return pattern.apply(af.getAllDefinitionLocator(),new AllDefinitionLocator.NewQuestion(ptype, scope));
+			return pattern.apply(af.getAllDefinitionLocator(), new AllDefinitionLocator.NewQuestion(ptype, scope));
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -67,7 +67,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			pattern.apply(af.getPatternResolver(), new PatternResolver.NewQuestion(rootVisitor, question));
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 
@@ -78,7 +78,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			pattern.apply(af.getPatternUnresolver());
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 

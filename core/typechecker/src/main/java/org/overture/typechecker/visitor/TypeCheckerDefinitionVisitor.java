@@ -77,7 +77,6 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -91,14 +90,10 @@ import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
 
 public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4115263650076333819L;
 
 	public TypeCheckerDefinitionVisitor(
 			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
@@ -110,8 +105,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAssignmentDefinition(AAssignmentDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
 		question.qualifiers = null;
+		
+		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		
 		node.setExpType(node.getExpression().apply(THIS, question));
 		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
@@ -252,7 +249,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
-
+		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		
 		if (node.getTypeParams() != null)
 		{
 			defs.addAll(AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node));
@@ -347,7 +345,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		} else if (node.getMeasure() != null)
 		{
 			if (question.env.isVDMPP())
+			{
 				node.getMeasure().setTypeQualifier(AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
+			}
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
 			if (node.getMeasureDef() == null)
@@ -437,7 +437,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AImplicitFunctionDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		if (node.getTypeParams() != null)
@@ -527,7 +527,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		} else if (node.getMeasure() != null)
 		{
 			if (question.env.isVDMPP())
+			{
 				node.getMeasure().setTypeQualifier(((AFunctionType) node.getType()).getParameters());
+			}
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
 			if (node.getBody() == null)
@@ -608,7 +610,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AExplicitOperationDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 
 		if (node.getParameterPatterns().size() > ptypes.size())
@@ -710,9 +712,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		node.setActualResult(actualResult);
 		boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
 
-		if ((node.getIsConstructor()
-				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
-				|| (!node.getIsConstructor() && !compatible))
+		if (node.getIsConstructor()
+				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class)
+				&& !compatible || !node.getIsConstructor() && !compatible)
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
@@ -758,7 +760,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AImplicitOperationDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		question = new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers);
 		List<PDefinition> defs = new Vector<PDefinition>();
 		List<PDefinition> argdefs = new Vector<PDefinition>();
@@ -794,6 +796,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			for (AExternalClause clause : node.getExternals())
 			{
+				TypeComparator.checkComposeTypes(clause.getType(), question.env, false);
+				
 				for (ILexNameToken exname : clause.getIdentifiers())
 				{
 					PDefinition sdef = question.env.findName(exname, NameScope.STATE);
@@ -819,7 +823,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 							// effectively
 							// initialize the instance variable concerned.
 
-							if ((clause.getMode().getType() == VDMToken.WRITE)
+							if (clause.getMode().getType() == VDMToken.WRITE
 									&& sdef instanceof AInstanceVariableDefinition
 									&& node.getName().getName().equals(node.getClassDefinition().getName().getName()))
 							{
@@ -887,9 +891,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
 
-			if ((node.getIsConstructor()
-					&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class) && !compatible)
-					|| (!node.getIsConstructor() && !compatible))
+			if (node.getIsConstructor()
+					&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class)
+					&& !compatible || !node.getIsConstructor() && !compatible)
 			{
 				TypeCheckerErrors.report(3035, "Operation returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
@@ -1030,7 +1034,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		if (node.getType() != null)
+		{
+			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		}
+		
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		for (PMultipleBind mb : node.getBindings())
@@ -1136,6 +1144,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		SClassDefinition classdef = base.findClassDefinition();
 		int opfound = 0;
 		int perfound = 0;
+		Boolean isStatic = null;
 
 		for (PDefinition def : classdef.getDefinitions())
 		{
@@ -1149,6 +1158,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3042, node.getOpname()
 							+ " is not an explicit operation", node.getOpname().getLocation(), node.getOpname());
 				}
+
+				if (isStatic != null && isStatic != PDefinitionAssistantTC.isStatic(def))
+				{
+					TypeCheckerErrors.report(3323, "Overloaded operation cannot mix static and non-static",
+							node.getLocation(), node.getOpname());
+				}
+				
+				isStatic = PDefinitionAssistantTC.isStatic(def);
 			}
 
 			if (def instanceof APerSyncDefinition)
@@ -1167,7 +1184,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (opfound == 0)
 		{
 			TypeCheckerErrors.report(3043, opname + " is not in scope", opname.getLocation(), opname);
-		} else if (opfound > 1)
+		}
+		else if (opfound > 1)
 		{
 			TypeCheckerErrors.warning(5003, "Permission guard of overloaded operation", opname.getLocation(), opname);
 		}
@@ -1183,8 +1201,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3045, "Cannot put guard on a constructor", opname.getLocation(), opname);
 		}
 
-		Environment local = new FlatEnvironment(question.assistantFactory, node, base);
+		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node, base, NameScope.NAMESANDSTATE);
 		local.setEnclosingDefinition(node); // Prevent op calls
+
+		if (isStatic != null)
+		{
+			local.setStatic(isStatic);
+		}
+	
 		PType rt = node.getGuard().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE));
 
 		if (!PTypeAssistantTC.isType(rt, ABooleanBasicType.class))
@@ -1216,6 +1240,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3047, "Only one state definition allowed per module", node.getLocation(), node);
 			return null;
+		}
+		
+		for (PDefinition def: node.getStateDefs())
+		{
+			if (!def.getName().getOld())	// Don't check old names
+			{
+				TypeComparator.checkComposeTypes(def.getType(), question.env, false);
+			}
 		}
 
 		PDefinitionListAssistantTC.typeCheck(node.getStateDefs(), THIS, question);
@@ -1262,7 +1294,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public PType caseATypeDefinition(ATypeDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
 		if (node.getInvdef() != null)
 		{
 			question.scope = NameScope.NAMES;
@@ -1285,12 +1316,24 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
 			}
-		} else if (type instanceof ARecordInvariantType)
+			
+			// Rebuild the compose definitions, after we check whether they already exist
+			node.getComposeDefinitions().clear();
+
+			for (PType compose: TypeComparator.checkComposeTypes(ntype.getType(), question.env, true))
+			{
+				ARecordInvariantType rtype = (ARecordInvariantType) compose;
+				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
+			}
+		}
+		else if (type instanceof ARecordInvariantType)
 		{
 			ARecordInvariantType rtype = (ARecordInvariantType) type;
 
 			for (AFieldField field : rtype.getFields())
 			{
+				TypeComparator.checkComposeTypes(field.getType(), question.env, false);
+				
 				if (PTypeAssistantTC.narrowerThan(field.getType(), node.getAccess()))
 				{
 					TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
@@ -1315,7 +1358,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	public PType caseAValueDefinition(AValueDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		if (node.getType() != null)
+		{
+			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		}
+		
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
 		node.setExpType(expType);
@@ -1357,8 +1404,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PPattern pattern = node.getPattern();
-		PPatternAssistantTC.typeResolve(pattern, THIS, question);
-		AValueDefinitionAssistantTC.updateDefs(node, question);
+		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
+//		PPatternAssistantTC.typeResolve(pattern, THIS, question);
+//		question.assistantFactory.getTypeResolver().updateDefs(node, question);
 		question.qualifiers = null;
 		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
 		return node.getType();
