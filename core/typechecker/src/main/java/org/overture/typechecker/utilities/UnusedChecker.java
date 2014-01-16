@@ -8,11 +8,6 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-<<<<<<< HEAD
-=======
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-
->>>>>>> origin/pvj/main
 /**
  * This class checks if a node is used.
  * 

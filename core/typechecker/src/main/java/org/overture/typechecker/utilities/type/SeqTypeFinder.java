@@ -78,10 +78,6 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 	public SSeqType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-=======
-		// return AUnknownTypeAssistantTC.getSeq(type);
->>>>>>> origin/pvj/main
 		return AstFactory.newASeqSeqType(type.getLocation()); // empty
 	}
 

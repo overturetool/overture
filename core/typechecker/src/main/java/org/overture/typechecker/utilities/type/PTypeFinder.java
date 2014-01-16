@@ -117,12 +117,9 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	public PType defaultPType(PType type, String typename)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
 		return (af.createPTypeAssistant().toDisplay(type).equals(typename)) ? type
 				: null;
-=======
-		return PTypeAssistantTC.toDisplay(type).equals(typename) ? type : null;
->>>>>>> origin/pvj/main
+
 	}
 
 	@Override

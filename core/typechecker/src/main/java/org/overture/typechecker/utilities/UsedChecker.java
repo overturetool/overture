@@ -7,10 +7,6 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-<<<<<<< HEAD
-=======
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
->>>>>>> origin/pvj/main
 
 /**
  * This class implements a way to check if a node is used in the AST
@@ -31,24 +27,14 @@ public class UsedChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		//return AExternalDefinitionAssistantTC.isUsed(node);
 		return af.createPDefinitionAssistant().isUsed(node.getState());
-=======
-		return PDefinitionAssistantTC.isUsed(node.getState());
->>>>>>> origin/pvj/main
 	}
 
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		//return AInheritedDefinitionAssistantTC.isUsed(node);
 		return af.createPDefinitionAssistant().isUsed(node.getSuperdef());
-=======
-		return PDefinitionAssistantTC.isUsed(node.getSuperdef());
->>>>>>> origin/pvj/main
 	}
 
 	@Override
@@ -71,19 +57,4 @@ public class UsedChecker extends AnswerAdaptor<Boolean>
 		assert false : "should not happen";
 		return null;
 	}
-<<<<<<< HEAD
-=======
-
-	// if (d instanceof AExternalDefinition)
-	// {
-	// return AExternalDefinitionAssistantTC.isUsed((AExternalDefinition) d);
-	// } else if (d instanceof AInheritedDefinition)
-	// {
-	// return AInheritedDefinitionAssistantTC.isUsed((AInheritedDefinition) d);
-	// } else
-	// {
-	// return d.getUsed();
-	// }
->>>>>>> origin/pvj/main
-
 }

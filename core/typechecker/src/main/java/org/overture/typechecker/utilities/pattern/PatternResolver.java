@@ -87,14 +87,8 @@ public class PatternResolver extends
 	public void caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-<<<<<<< HEAD
 		af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
 		//Have to ask how is it done.
-=======
-		AExpressionPatternAssistantTC.typeResolve(pattern, question.rootVisitor, question.question);
-		// Have to ask how is it done.
->>>>>>> origin/pvj/main
-
 	}
 
 	@Override

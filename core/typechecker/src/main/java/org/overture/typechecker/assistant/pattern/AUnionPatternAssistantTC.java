@@ -12,7 +12,6 @@ public class AUnionPatternAssistantTC
 		this.af = af;
 	}
 
-<<<<<<< HEAD
 //	public static void typeResolve(AUnionPattern pattern,
 //			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 //			TypeCheckInfo question) throws AnalysisException
@@ -36,51 +35,51 @@ public class AUnionPatternAssistantTC
 //		}
 //
 //	}
-=======
-	public static void typeResolve(AUnionPattern pattern,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
 
-		if (pattern.getResolved())
-		{
-			return;
-		} else
-		{
-			pattern.setResolved(true);
-		}
+//	public static void typeResolve(AUnionPattern pattern,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//
+//		if (pattern.getResolved())
+//		{
+//			return;
+//		} else
+//		{
+//			pattern.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
+//			PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(pattern);
+//			throw e;
+//		}
+//
+//	}
+//
+//	public static void unResolve(AUnionPattern pattern)
+//	{
+//		PPatternAssistantTC.unResolve(pattern.getLeft());
+//		PPatternAssistantTC.unResolve(pattern.getRight());
+//		pattern.setResolved(false);
+//
+//	}
+//
+//	public static List<PDefinition> getAllDefinitions(AUnionPattern rp,
+//			PType type, NameScope scope)
+//	{
+//
+//		List<PDefinition> defs = new Vector<PDefinition>();
+//
+//		if (!PTypeAssistantTC.isSet(type))
+//		{
+//			TypeCheckerErrors.report(3206, "Matching expression is not a set type", rp.getLocation(), rp);
+//		}
 
-		try
-		{
-			PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
-			PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
-		} catch (TypeCheckException e)
-		{
-			unResolve(pattern);
-			throw e;
-		}
-
-	}
-
-	public static void unResolve(AUnionPattern pattern)
-	{
-		PPatternAssistantTC.unResolve(pattern.getLeft());
-		PPatternAssistantTC.unResolve(pattern.getRight());
-		pattern.setResolved(false);
-
-	}
-
-	public static List<PDefinition> getAllDefinitions(AUnionPattern rp,
-			PType type, NameScope scope)
-	{
-
-		List<PDefinition> defs = new Vector<PDefinition>();
-
-		if (!PTypeAssistantTC.isSet(type))
-		{
-			TypeCheckerErrors.report(3206, "Matching expression is not a set type", rp.getLocation(), rp);
-		}
->>>>>>> origin/pvj/main
 
 //	public static void unResolve(AUnionPattern pattern)
 //	{

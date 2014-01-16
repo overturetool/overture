@@ -20,7 +20,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Implement the concreate type of a given type.
@@ -79,27 +78,15 @@ public class ConcreateTypeImplementor extends
 	@Override
 	public PType defaultSMapType(SMapType type, Newquestion question)
 			throws AnalysisException
-	{
-<<<<<<< HEAD
-		
+	{	
 		return AstFactory.newAMapMapType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getFrom(), question.pname, question.actualType), af.createPTypeAssistant().polymorph(type.getTo(), question.pname, question.actualType));
-=======
-
-		return AstFactory.newAMapMapType(type.getLocation(), PTypeAssistantTC.polymorph(type.getFrom(), question.pname, question.actualType), PTypeAssistantTC.polymorph(type.getTo(), question.pname, question.actualType));
->>>>>>> origin/pvj/main
 	}
 
 	@Override
 	public PType caseAOptionalType(AOptionalType type, Newquestion question)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		
 		return AstFactory.newAOptionalType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getType(), question.pname, question.actualType));
-=======
-
-		return AstFactory.newAOptionalType(type.getLocation(), PTypeAssistantTC.polymorph(type.getType(), question.pname, question.actualType));
->>>>>>> origin/pvj/main
 	}
 
 	@Override
@@ -120,26 +107,15 @@ public class ConcreateTypeImplementor extends
 	public PType defaultSSeqType(SSeqType type, Newquestion question)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-	
 		return AstFactory.newASeqSeqType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSeqof(), question.pname, question.actualType));
-=======
-
-		return AstFactory.newASeqSeqType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSeqof(), question.pname, question.actualType));
->>>>>>> origin/pvj/main
 	}
 
 	@Override
 	public PType caseASetType(ASetType type, Newquestion question)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
 		//return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		return AstFactory.newASetType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSetof(), question.pname, question.actualType));
-=======
-		// return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
-		return AstFactory.newASetType(type.getLocation(), PTypeAssistantTC.polymorph(type.getSetof(), question.pname, question.actualType));
->>>>>>> origin/pvj/main
 	}
 
 	@Override

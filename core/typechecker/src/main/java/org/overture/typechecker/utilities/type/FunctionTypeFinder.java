@@ -22,7 +22,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to get a Function type from a type
@@ -95,13 +94,9 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 					if (t.getDefinitions() != null)
 					{
 						defs.addAll(t.getDefinitions());
-<<<<<<< HEAD
-					AFunctionType f = af.createPTypeAssistant().getFunction(t);
-=======
-					}
-					AFunctionType f = PTypeAssistantTC.getFunction(t);
->>>>>>> origin/pvj/main
-					result.add(f.getResult());
+
+						AFunctionType f = af.createPTypeAssistant().getFunction(t);
+						result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)
 					{
@@ -137,8 +132,8 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 			{
 				type.setFuncType(null);
 			}
+			}
 		}
-
 		return (AFunctionType) type.getFuncType();
 	}
 

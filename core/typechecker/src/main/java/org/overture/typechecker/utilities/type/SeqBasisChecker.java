@@ -56,10 +56,6 @@ public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-<<<<<<< HEAD
-=======
-		// return AUnknownTypeAssistantTC.isSeq(type);
->>>>>>> origin/pvj/main
 		return true;
 	}
 

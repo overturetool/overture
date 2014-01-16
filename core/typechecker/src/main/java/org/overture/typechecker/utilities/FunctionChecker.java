@@ -60,16 +60,8 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		
 		return (node.getValueDefinition() || af.createPTypeAssistant().isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
 		:af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node)); 
-=======
-
-		return node.getValueDefinition()
-				|| PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(node), AParameterType.class) ? false
-				: PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node));
->>>>>>> origin/pvj/main
 	}
 
 	@Override

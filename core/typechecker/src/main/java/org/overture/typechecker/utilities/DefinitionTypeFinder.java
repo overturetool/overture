@@ -34,12 +34,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-<<<<<<< HEAD
-=======
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
->>>>>>> origin/pvj/main
 
 /**
  * This class implements a way to collect definitions from a node in the AST
@@ -138,7 +133,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 		// LocalDefinition. It would be better to somehow list the
 		// inherited definitions that refer to a LocalDefinition and update
 		// them...
-
+ 
 		if (d.getSuperdef() instanceof AUntypedDefinition)
 		{
 			if (d.getClassDefinition() != null)
@@ -152,11 +147,8 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		af.createAInheritedDefinitionAssistant().checkSuperDefinition(node);
-=======
+
 		checkSuperDefinition(node);
->>>>>>> origin/pvj/main
 		return af.createPDefinitionAssistant().getType(node.getSuperdef());
 	}
 

@@ -25,7 +25,7 @@ public class ARecordPatternAssistantTC
 		this.af = af;
 	}
 
-<<<<<<< HEAD
+
 //	public static void typeResolve(ARecordPattern pattern,
 //			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 //			TypeCheckInfo question) throws AnalysisException
@@ -48,31 +48,31 @@ public class ARecordPatternAssistantTC
 //		}
 //
 //	}
-=======
-	public static void typeResolve(ARecordPattern pattern,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
-			TypeCheckInfo question) throws AnalysisException
-	{
-		if (pattern.getResolved())
-		{
-			return;
-		} else
-		{
-			pattern.setResolved(true);
-		}
 
-		try
-		{
-			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
-			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
-		} catch (TypeCheckException e)
-		{
-			unResolve(pattern);
-			throw e;
-		}
+//	public static void typeResolve(ARecordPattern pattern,
+//			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+//			TypeCheckInfo question) throws AnalysisException
+//	{
+//		if (pattern.getResolved())
+//		{
+//			return;
+//		} else
+//		{
+//			pattern.setResolved(true);
+//		}
+//
+//		try
+//		{
+//			PPatternListAssistantTC.typeResolve(pattern.getPlist(), rootVisitor, question);
+//			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, rootVisitor, question));
+//		} catch (TypeCheckException e)
+//		{
+//			unResolve(pattern);
+//			throw e;
+//		}
+//
+//	}
 
-	}
->>>>>>> origin/pvj/main
 
 //	public static void unResolve(ARecordPattern pattern)
 //	{

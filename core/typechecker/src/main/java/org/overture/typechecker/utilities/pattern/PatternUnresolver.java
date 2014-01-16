@@ -94,12 +94,6 @@ public class PatternUnresolver extends AnalysisAdaptor
 		{
 			af.createAMapletPatternMapletAssistant().unResolve(mp);
 		}
-<<<<<<< HEAD
-		
-=======
-
-		// pattern.setResolved(false);
->>>>>>> origin/pvj/main
 		pattern.setResolved(false);
 	}
 

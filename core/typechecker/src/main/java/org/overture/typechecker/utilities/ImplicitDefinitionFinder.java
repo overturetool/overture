@@ -21,18 +21,6 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-<<<<<<< HEAD
-=======
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
->>>>>>> origin/pvj/main
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -62,12 +50,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		// TODO: should I expand this even more?
 		if (node instanceof ASystemClassDefinition)
 		{
-<<<<<<< HEAD
 			af.createASystemClassDefinitionAssistant().implicitDefinitions((ASystemClassDefinition)node, question);
-=======
-			ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) node, question);
->>>>>>> origin/pvj/main
-		} else
+		}
 		{
 			af.createSClassDefinitionAssistant().implicitDefinitionsBase(node, question);
 		}
@@ -94,13 +78,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	{
 		if (node.getPrecondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPredef(af.createAExplicitFunctionDefinitionAssistant().getPreDefinition(node));
 			//PDefinitionAssistantTC.markUsed(d.getPredef());//ORIGINAL CODE
-=======
-			node.setPredef(AExplicitFunctionDefinitionAssistantTC.getPreDefinition(node));
-			// PDefinitionAssistantTC.markUsed(d.getPredef());//ORIGINAL CODE
->>>>>>> origin/pvj/main
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPredef());
 		} else
 		{
@@ -109,13 +88,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPostcondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPostdef(af.createAExplicitFunctionDefinitionAssistant().getPostDefinition(node));
 			//PDefinitionAssistantTC.markUsed(d.getPostdef());//ORIGINAL CODE
-=======
-			node.setPostdef(AExplicitFunctionDefinitionAssistantTC.getPostDefinition(node));
-			// PDefinitionAssistantTC.markUsed(d.getPostdef());//ORIGINAL CODE
->>>>>>> origin/pvj/main
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPostdef());
 		} else
 		{
@@ -132,15 +106,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPrecondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPredef(af.createAExplicitOperationDefinitionAssistant().getPreDefinition(node, question));
 			af.createPDefinitionAssistant().markUsed(node.getPredef()); //ORIGINAL CODE
-			
-=======
-			node.setPredef(AExplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPredef()); // ORIGINAL CODE
-
->>>>>>> origin/pvj/main
 		}
 
 		if (node.getPostcondition() != null)
@@ -158,15 +125,9 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPrecondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPredef(af.createAImplicitFunctionDefinitionAssistant().getPreDefinition(node));
 			af.createPDefinitionAssistant().markUsed(node.getPredef());
 			//af.createPDefinitionAssistant().markUsed(node.getPredef());
-=======
-			node.setPredef(AImplicitFunctionDefinitionAssistantTC.getPreDefinition(node));
-			PDefinitionAssistantTC.markUsed(node.getPredef());
-			// af.createPDefinitionAssistant().markUsed(node.getPredef());
->>>>>>> origin/pvj/main
 		} else
 		{
 			node.setPredef(null);
@@ -174,16 +135,8 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPostcondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPostdef(af.createAImplicitFunctionDefinitionAssistant().getPostDefinition(node));
 			af.createPDefinitionAssistant().markUsed(node.getPostdef());
-			
-			
-=======
-			node.setPostdef(AImplicitFunctionDefinitionAssistantTC.getPostDefinition(node));
-			PDefinitionAssistantTC.markUsed(node.getPostdef());
-
->>>>>>> origin/pvj/main
 		} else
 		{
 			node.setPostdef(null);
@@ -199,28 +152,14 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPrecondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPredef(af.createAImplicitOperationDefinitionAssistant().getPreDefinition(node, question));
 			af.createPDefinitionAssistant().markUsed(node.getPredef());
-			
-=======
-			node.setPredef(AImplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPredef());
-
->>>>>>> origin/pvj/main
 		}
 
 		if (node.getPostcondition() != null)
 		{
-<<<<<<< HEAD
 			node.setPostdef(af.createAImplicitOperationDefinitionAssistant().getPostDefinition(node, question));
 			af.createPDefinitionAssistant().markUsed(node.getPostdef());
-			
-=======
-			node.setPostdef(AImplicitOperationDefinitionAssistantTC.getPostDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPostdef());
-
->>>>>>> origin/pvj/main
 		}
 	}
 
@@ -269,7 +208,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			ANamedInvariantType ntype = (ANamedInvariantType)node.getInvType();
 			node.getComposeDefinitions().clear();
 			
-			for (PType compose: PTypeAssistantTC.getComposeTypes(ntype.getType()))
+			for (PType compose: af.createPTypeAssistant().getComposeTypes(ntype.getType()))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
 				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));

@@ -87,12 +87,10 @@ public class PPatternListAssistantTC
 	{
 		for (PPattern pattern : p)
 		{
-<<<<<<< HEAD
+
 			if (!af.createPPatternAssistant().isSimple(pattern))
-=======
-			if (!PPatternAssistantTC.isSimple(pattern))
 			{
->>>>>>> origin/pvj/main
+
 				return false; // NB. AND
 			}
 		}
@@ -104,12 +102,10 @@ public class PPatternListAssistantTC
 	{
 		for (PPattern p : pl)
 		{
-<<<<<<< HEAD
+
 			if (!af.createPPatternAssistant().alwaysMatches(p))
-=======
-			if (!PPatternAssistantTC.alwaysMatches(p))
 			{
->>>>>>> origin/pvj/main
+
 				return false; // NB. AND
 			}
 		}

@@ -202,28 +202,7 @@ public class ExportDefinitionFinder
 		}
 		return list;
 	}
-<<<<<<< HEAD
-	
-=======
 
-	// @Override
-	// public Collection<? extends PDefinition> defaultPExport(PExport exp,
-	// LinkedList<PDefinition> actualDefs) throws AnalysisException
-	// {
-	// // TODO Auto-generated method stub
-	// return super.defaultPExport(node, question);
-	// }
-	// } else if (exp instanceof AOperationExport) {
-
-	// } else if (exp instanceof ATypeExport) {
-
-	// } else if (exp instanceof AValueExport) {
-
-	// }
-	//
-	// return null;
-
->>>>>>> origin/pvj/main
 	@Override
 	public Collection<? extends PDefinition> createNewReturnValue(INode node,
 			LinkedList<PDefinition> question) throws AnalysisException

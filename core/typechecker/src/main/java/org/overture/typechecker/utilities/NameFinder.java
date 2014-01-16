@@ -375,13 +375,8 @@ public class NameFinder extends
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node,
 			Newquestion question) throws AnalysisException
-<<<<<<< HEAD
 	{		
 		PDefinition renamed = af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope);
-=======
-	{
-		PDefinition renamed = PDefinitionAssistantTC.findNameBaseCase(node, question.sought, question.scope);
->>>>>>> origin/pvj/main
 
 		if (renamed != null)
 		{

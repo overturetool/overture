@@ -153,7 +153,6 @@ public class NarrowerThanComparator extends
 			}
 		} else if (type.getType().getDefinitions().size() == 0)
 		{
-<<<<<<< HEAD
 			result = type.apply(this, accessSpecifier) || af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);//PTypeAssistantTC.narrowerThan(type, accessSpecifier)
 		}
 		else
@@ -161,16 +160,7 @@ public class NarrowerThanComparator extends
 			for (PDefinition d : type.getType().getDefinitions())
 			{
 				if(af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
-=======
-			result = type.apply(this, accessSpecifier)
-					|| PTypeAssistantTC.narrowerThanBaseCase(type, accessSpecifier);// PTypeAssistantTC.narrowerThan(type,
-																					// accessSpecifier)
-		} else
-		{
-			for (PDefinition d : type.getType().getDefinitions())
-			{
-				if (PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier))
->>>>>>> origin/pvj/main
+
 				{
 					result = true;
 					break;
@@ -224,12 +214,7 @@ public class NarrowerThanComparator extends
 		type.setInNarrower(false);
 		return result;
 	}
-<<<<<<< HEAD
-	
-=======
 
-	// FIXME: IN PTypeAssistantTC the SInvariatType is SInvariantTypeBase. ASK
->>>>>>> origin/pvj/main
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)

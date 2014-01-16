@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
-import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -62,11 +61,6 @@ import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
-<<<<<<< HEAD
-import org.overture.typechecker.assistant.module.SValueImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.ACharacterPatternAssistantTC;
-=======
->>>>>>> origin/pvj/main
 import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
@@ -183,12 +177,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	PImportAssistantTC createPImportAssistant();
 
 	// pattern
-<<<<<<< HEAD
 	//ABooleanPatternAssistantTC createABooleanPatternAssistant();
 
-	ACharacterPatternAssistantTC createACharacterPatternAssistant();
-=======
->>>>>>> origin/pvj/main
+	//ACharacterPatternAssistantTC createACharacterPatternAssistant();
 
 	AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
 

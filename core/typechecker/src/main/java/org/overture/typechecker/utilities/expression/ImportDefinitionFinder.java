@@ -48,14 +48,9 @@ public class ImportDefinitionFinder extends
 
 		for (PDefinition d : imp.getFrom().getExportdefs())
 		{
-<<<<<<< HEAD
 			PDefinition id = AstFactory.newAImportedDefinition(
 					imp.getLocation(), d);
 			af.createPDefinitionAssistant().markUsed(id); // So imports all is quiet
-=======
-			PDefinition id = AstFactory.newAImportedDefinition(imp.getLocation(), d);
-			PDefinitionAssistantTC.markUsed(id); // So imports all is quiet
->>>>>>> origin/pvj/main
 			imported.add(id);
 
 		}
@@ -69,11 +64,8 @@ public class ImportDefinitionFinder extends
 	{
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
-<<<<<<< HEAD
+
 		PDefinition expdef = af.createPDefinitionListAssistant().findType(imp.getFrom().getExportdefs(),imp.getName(), null);
-=======
-		PDefinition expdef = PDefinitionListAssistantTC.findType(imp.getFrom().getExportdefs(), imp.getName(), null);
->>>>>>> origin/pvj/main
 
 		if (expdef == null)
 		{
@@ -102,13 +94,8 @@ public class ImportDefinitionFinder extends
 		List<PDefinition> list = new Vector<PDefinition>();
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
-<<<<<<< HEAD
 		
 		PDefinition expdef = af.createPDefinitionListAssistant().findName(module.getExportdefs(),name, NameScope.NAMES);
-=======
-
-		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(), name, NameScope.NAMES);
->>>>>>> origin/pvj/main
 
 		if (expdef == null)
 		{

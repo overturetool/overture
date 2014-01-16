@@ -7,12 +7,8 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-<<<<<<< HEAD
-=======
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
->>>>>>> origin/pvj/main
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
@@ -47,11 +43,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-<<<<<<< HEAD
-import org.overture.typechecker.assistant.type.AUnresolvedTypeAssistantTC;
-=======
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
->>>>>>> origin/pvj/main
+
 
 /**
  * This class implements a way to resolve types from general PType class.
@@ -191,11 +183,8 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createAFunctionTypeAssistant().unResolve(type);
-=======
+
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -218,11 +207,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createANamedInvariantTypeAssistant().unResolve(type);
-=======
 			af.createPTypeAssistant().unResolve(type);
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -246,12 +231,8 @@ public class PTypeResolver extends
 			{
 				question.root.setInfinite(false);
 			}
-
-<<<<<<< HEAD
-			af.createAFieldFieldAssistant().typeResolve(f, question.root, question.rootVisitor, question.question);
-=======
+			
 			f.apply(THIS, question);
->>>>>>> origin/pvj/main
 
 			if (question.root != null)
 			{
@@ -318,11 +299,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createSMapTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -353,11 +330,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createAOperationTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -432,11 +405,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createPTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -463,11 +432,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createPTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -494,11 +459,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createPTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -507,10 +468,6 @@ public class PTypeResolver extends
 	public PType caseAUnionType(AUnionType type, Newquestion question)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		//return AUnionTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
-=======
->>>>>>> origin/pvj/main
 		if (type.getResolved())
 		{
 			return type;
@@ -552,11 +509,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-<<<<<<< HEAD
-			af.createAUnionTypeAssistant().unResolve(type);
-=======
 			type.apply(af.getTypeUnresolver());
->>>>>>> origin/pvj/main
 			throw e;
 		}
 	}
@@ -565,12 +518,12 @@ public class PTypeResolver extends
 	public PType caseAUnresolvedType(AUnresolvedType type, Newquestion question)
 			throws AnalysisException
 	{
-<<<<<<< HEAD
-		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
-		PType deref = af.createAUnresolvedTypeAssistant().dereference(type, question.question.env, question.root);
-=======
+//<<<<<<< HEAD
+//		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
+//		PType deref = af.createAUnresolvedTypeAssistant().dereference(type, question.question.env, question.root);
+//=======
 		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
->>>>>>> origin/pvj/main
+//>>>>>>> origin/pvj/main
 
 		if (!(deref instanceof AClassType))
 		{
@@ -644,11 +597,7 @@ public class PTypeResolver extends
 		type.setResolved(true);
 		return type;
 	}
-<<<<<<< HEAD
 	
-=======
-
->>>>>>> origin/pvj/main
 	@Override
 	public PType createNewReturnValue(INode node, Newquestion question)
 			throws AnalysisException
