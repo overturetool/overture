@@ -152,15 +152,20 @@ public class JavaCodeGenUtil
 
 	}
 	
+	public static List<Violation> asSortedList(Set<Violation> violations)
+	{
+		LinkedList<Violation> list = new LinkedList<Violation>(violations);
+		Collections.sort(list);
+		
+		return list;
+	}
+	
 	public static String constructNameViolationsString(InvalidNamesException e)
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		List<Violation> reservedWordViolations = new LinkedList<Violation>(e.getReservedWordViolations());
-		Collections.sort(reservedWordViolations);
-		
-		List<Violation> typenameViolations = new LinkedList<Violation>(e.getTypenameViolations());
-		Collections.sort(typenameViolations);
+		List<Violation> reservedWordViolations = asSortedList(e.getReservedWordViolations());
+		List<Violation> typenameViolations = asSortedList(e.getTypenameViolations());
 		
 		for (Violation violation : reservedWordViolations)
 		{
@@ -185,8 +190,7 @@ public class JavaCodeGenUtil
 	{
 		StringBuffer buffer = new StringBuffer();
 		
-		List<Violation> violations = new LinkedList<Violation>(e.getViolations());
-		Collections.sort(violations);
+		List<Violation> violations = asSortedList(e.getViolations());
 		
 		for (Violation violation : violations)
 		{
