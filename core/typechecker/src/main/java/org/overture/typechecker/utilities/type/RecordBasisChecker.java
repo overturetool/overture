@@ -1,12 +1,22 @@
 package org.overture.typechecker.utilities.type;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to check if a given type is a Record type.
@@ -50,7 +60,50 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getRecord(type) != null;
+		//return af.createAUnionTypeAssistant().getRecord(type) != null;
+		if (!type.getRecDone())
+		{
+			type.setRecDone(true); // Mark early to avoid recursion.
+			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+
+			// Build a record type with the common fields of the contained
+			// record types, making the field types the union of the original
+			// fields' types...
+
+			Map<String, PTypeSet> common = new HashMap<String, PTypeSet>();
+
+			for (PType t : type.getTypes())
+			{
+				if (PTypeAssistantTC.isRecord(t))
+				{
+					for (AFieldField f : PTypeAssistantTC.getRecord(t).getFields())
+					{
+						PTypeSet current = common.get(f.getTag());
+
+						if (current == null)
+						{
+							common.put(f.getTag(), new PTypeSet(f.getType()));
+						} else
+						{
+							current.add(f.getType());
+						}
+					}
+				}
+			}
+
+			List<AFieldField> fields = new Vector<AFieldField>();
+
+			for (String tag : common.keySet())
+			{
+				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
+				fields.add(AstFactory.newAFieldField(tagname, tag, common.get(tag).getType(type.getLocation()), false));
+			}
+
+			type.setRecType(fields.isEmpty() ? null
+					: AstFactory.newARecordInvariantType(type.getLocation(), fields));
+		}
+
+		return type.getRecType() != null;
 	}
 
 	@Override

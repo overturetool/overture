@@ -46,8 +46,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 			throws AnalysisException
 	{
 
-		return type.getType().apply(this, other);// FIXME: The use of THIS doesn't seems to work with
-													// QuestionAnswerAdaptor.
+		return type.getType().apply(this, other);
 
 	}
 

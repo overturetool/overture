@@ -36,29 +36,29 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		this.af = af;
 	}
 
-	public SSeqType getSeq(AUnionType type)
-	{
-		if (!type.getSeqDone())
-		{
-			type.setSeqDone(true); // Mark early to avoid recursion.
-			type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
-
-			PTypeSet set = new PTypeSet();
-
-			for (PType t : type.getTypes())
-			{
-				if (PTypeAssistantTC.isSeq(t))
-				{
-					set.add(PTypeAssistantTC.getSeq(t).getSeqof());
-				}
-			}
-
-			type.setSeqType(set.isEmpty() ? null
-					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
-		}
-
-		return type.getSeqType();
-	}
+//	public SSeqType getSeq(AUnionType type)
+//	{
+//		if (!type.getSeqDone())
+//		{
+//			type.setSeqDone(true); // Mark early to avoid recursion.
+//			type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
+//
+//			PTypeSet set = new PTypeSet();
+//
+//			for (PType t : type.getTypes())
+//			{
+//				if (PTypeAssistantTC.isSeq(t))
+//				{
+//					set.add(PTypeAssistantTC.getSeq(t).getSeqof());
+//				}
+//			}
+//
+//			type.setSeqType(set.isEmpty() ? null
+//					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
+//		}
+//
+//		return type.getSeqType();
+//	}
 
 	public ASetType getSet(AUnionType type)
 	{
@@ -194,20 +194,20 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return false;
 	}
 
-	public static PType isType(AUnionType exptype, String typename)
-	{
-		for (PType t : exptype.getTypes())
-		{
-			PType rt = PTypeAssistantTC.isType(t, typename);
-
-			if (rt != null)
-			{
-				return rt;
-			}
-		}
-
-		return null;
-	}
+//	public static PType isType(AUnionType exptype, String typename)
+//	{
+//		for (PType t : exptype.getTypes())
+//		{
+//			PType rt = PTypeAssistantTC.isType(t, typename);
+//
+//			if (rt != null)
+//			{
+//				return rt;
+//			}
+//		}
+//
+//		return null;
+//	}
 
 	public AFunctionType getFunction(AUnionType type)
 	{
@@ -270,77 +270,77 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return (AFunctionType) type.getFuncType();
 	}
 
-	public static boolean isOperation(AUnionType type)
-	{
-		return af.createAUnionTypeAssistant().getOperation(type) != null;
-	}
+//	public static boolean isOperation(AUnionType type)
+//	{
+//		return af.createAUnionTypeAssistant().getOperation(type) != null;
+//	}
 
-	public AOperationType getOperation(AUnionType type)
-	{
+//	public AOperationType getOperation(AUnionType type)
+//	{
+//
+//		if (!type.getOpDone())
+//		{
+//			type.setOpDone(true);
+//			type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
+//
+//			PTypeSet result = new PTypeSet();
+//			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
+//			List<PDefinition> defs = new Vector<PDefinition>();
+//
+//			for (PType t : type.getTypes())
+//			{
+//				if (PTypeAssistantTC.isOperation(t))
+//				{
+//					if (t.getDefinitions() != null)
+//					{
+//						defs.addAll(t.getDefinitions());
+//					}
+//					AOperationType op = PTypeAssistantTC.getOperation(t);
+//					result.add(op.getResult());
+//
+//					for (int p = 0; p < op.getParameters().size(); p++)
+//					{
+//						PType pt = op.getParameters().get(p);
+//						PTypeSet pset = params.get(p);
+//
+//						if (pset == null)
+//						{
+//							pset = new PTypeSet(pt);
+//							params.put(p, pset);
+//						} else
+//						{
+//							pset.add(pt);
+//						}
+//					}
+//				}
+//			}
+//
+//			if (!result.isEmpty())
+//			{
+//				PType rtype = result.getType(type.getLocation());
+//				PTypeList plist = new PTypeList();
+//
+//				for (int i = 0; i < params.size(); i++)
+//				{
+//					PType pt = params.get(i).getType(type.getLocation());
+//					plist.add(pt);
+//				}
+//
+//				type.setOpType(AstFactory.newAOperationType(type.getLocation(), plist, rtype));
+//				type.getOpType().setDefinitions(defs);
+//			} else
+//			{
+//				type.setOpType(null);
+//			}
+//		}
+//
+//		return (AOperationType) type.getOpType();
+//	}
 
-		if (!type.getOpDone())
-		{
-			type.setOpDone(true);
-			type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
-
-			PTypeSet result = new PTypeSet();
-			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
-			List<PDefinition> defs = new Vector<PDefinition>();
-
-			for (PType t : type.getTypes())
-			{
-				if (PTypeAssistantTC.isOperation(t))
-				{
-					if (t.getDefinitions() != null)
-					{
-						defs.addAll(t.getDefinitions());
-					}
-					AOperationType op = PTypeAssistantTC.getOperation(t);
-					result.add(op.getResult());
-
-					for (int p = 0; p < op.getParameters().size(); p++)
-					{
-						PType pt = op.getParameters().get(p);
-						PTypeSet pset = params.get(p);
-
-						if (pset == null)
-						{
-							pset = new PTypeSet(pt);
-							params.put(p, pset);
-						} else
-						{
-							pset.add(pt);
-						}
-					}
-				}
-			}
-
-			if (!result.isEmpty())
-			{
-				PType rtype = result.getType(type.getLocation());
-				PTypeList plist = new PTypeList();
-
-				for (int i = 0; i < params.size(); i++)
-				{
-					PType pt = params.get(i).getType(type.getLocation());
-					plist.add(pt);
-				}
-
-				type.setOpType(AstFactory.newAOperationType(type.getLocation(), plist, rtype));
-				type.getOpType().setDefinitions(defs);
-			} else
-			{
-				type.setOpType(null);
-			}
-		}
-
-		return (AOperationType) type.getOpType();
-	}
-
-	public boolean isSeq(AUnionType type)
-	{
-		return af.createAUnionTypeAssistant().getSeq(type) != null;
-	}
+//	public boolean isSeq(AUnionType type)
+//	{
+//		return af.createAUnionTypeAssistant().getSeq(type) != null;
+//	}
 
 	public static boolean isUnknown(AUnionType type)
 	{
@@ -365,62 +365,62 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		return af.createAUnionTypeAssistant().getSet(type) != null;
 	}
 
-	public static boolean isRecord(AUnionType type)
-	{
-		return af.createAUnionTypeAssistant().getRecord(type) != null;
-	}
+//	public static boolean isRecord(AUnionType type)
+//	{
+//		return af.createAUnionTypeAssistant().getRecord(type) != null;
+//	}
 
-	public static boolean isTag(AUnionType type)
-	{
-		return false;
-	}
+//	public static boolean isTag(AUnionType type)
+//	{
+//		return false;
+//	}
 
-	public ARecordInvariantType getRecord(AUnionType type)
-	{
-		if (!type.getRecDone())
-		{
-			type.setRecDone(true); // Mark early to avoid recursion.
-			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
-
-			// Build a record type with the common fields of the contained
-			// record types, making the field types the union of the original
-			// fields' types...
-
-			Map<String, PTypeSet> common = new HashMap<String, PTypeSet>();
-
-			for (PType t : type.getTypes())
-			{
-				if (PTypeAssistantTC.isRecord(t))
-				{
-					for (AFieldField f : PTypeAssistantTC.getRecord(t).getFields())
-					{
-						PTypeSet current = common.get(f.getTag());
-
-						if (current == null)
-						{
-							common.put(f.getTag(), new PTypeSet(f.getType()));
-						} else
-						{
-							current.add(f.getType());
-						}
-					}
-				}
-			}
-
-			List<AFieldField> fields = new Vector<AFieldField>();
-
-			for (String tag : common.keySet())
-			{
-				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
-				fields.add(AstFactory.newAFieldField(tagname, tag, common.get(tag).getType(type.getLocation()), false));
-			}
-
-			type.setRecType(fields.isEmpty() ? null
-					: AstFactory.newARecordInvariantType(type.getLocation(), fields));
-		}
-
-		return type.getRecType();
-	}
+//	public ARecordInvariantType getRecord(AUnionType type)
+//	{
+//		if (!type.getRecDone())
+//		{
+//			type.setRecDone(true); // Mark early to avoid recursion.
+//			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+//
+//			// Build a record type with the common fields of the contained
+//			// record types, making the field types the union of the original
+//			// fields' types...
+//
+//			Map<String, PTypeSet> common = new HashMap<String, PTypeSet>();
+//
+//			for (PType t : type.getTypes())
+//			{
+//				if (PTypeAssistantTC.isRecord(t))
+//				{
+//					for (AFieldField f : PTypeAssistantTC.getRecord(t).getFields())
+//					{
+//						PTypeSet current = common.get(f.getTag());
+//
+//						if (current == null)
+//						{
+//							common.put(f.getTag(), new PTypeSet(f.getType()));
+//						} else
+//						{
+//							current.add(f.getType());
+//						}
+//					}
+//				}
+//			}
+//
+//			List<AFieldField> fields = new Vector<AFieldField>();
+//
+//			for (String tag : common.keySet())
+//			{
+//				LexNameToken tagname = new LexNameToken("?", tag, type.getLocation());
+//				fields.add(AstFactory.newAFieldField(tagname, tag, common.get(tag).getType(type.getLocation()), false));
+//			}
+//
+//			type.setRecType(fields.isEmpty() ? null
+//					: AstFactory.newARecordInvariantType(type.getLocation(), fields));
+//		}
+//
+//		return type.getRecType();
+//	}
 
 
 //	public static boolean isClass(AUnionType type)
@@ -568,23 +568,23 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 //		return false;
 //	}
 
-	public static PType polymorph(AUnionType type, ILexNameToken pname,
-			PType actualType)
-	{
-
-		PTypeSet polytypes = new PTypeSet();
-
-		for (PType ptype : ((AUnionType) type).getTypes())
-		{
-			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
-		}
-
-		// TODO: Types in unionType should be a SET
-		PTypeList result = new PTypeList();
-		result.addAll(polytypes);
-
-		return AstFactory.newAUnionType(type.getLocation(), result);
-	}
+//	public static PType polymorph(AUnionType type, ILexNameToken pname,
+//			PType actualType)
+//	{
+//
+//		PTypeSet polytypes = new PTypeSet();
+//
+//		for (PType ptype : ((AUnionType) type).getTypes())
+//		{
+//			polytypes.add(PTypeAssistantTC.polymorph(ptype, pname, actualType));
+//		}
+//
+//		// TODO: Types in unionType should be a SET
+//		PTypeList result = new PTypeList();
+//		result.addAll(polytypes);
+//
+//		return AstFactory.newAUnionType(type.getLocation(), result);
+//	}
 
 
 }
