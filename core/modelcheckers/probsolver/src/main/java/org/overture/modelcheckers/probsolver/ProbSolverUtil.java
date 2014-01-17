@@ -527,7 +527,7 @@ public class ProbSolverUtil
 
 						} catch (Exception e)
 						{
-							throw new SolverException("Error converting result expression", e);
+							throw new SolverException("Error converting result expression. Expected output type: "+context.types.get(solutionName), e);
 						}
 					}
 				}

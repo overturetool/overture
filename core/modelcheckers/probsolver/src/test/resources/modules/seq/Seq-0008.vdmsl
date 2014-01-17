@@ -1,0 +1,4 @@
+operations
+
+getlast() e : seq of seq of nat -- BtoVdimConverter.converter error
+post e = tl [[3,1],[4],[1,5]]  -- error converting result expression

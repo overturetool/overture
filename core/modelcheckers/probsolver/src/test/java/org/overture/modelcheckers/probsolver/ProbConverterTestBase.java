@@ -13,6 +13,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
@@ -47,7 +48,9 @@ public class ProbConverterTestBase
 			AImplicitOperationDefinition opDef = findOperation(name);
 
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
-			ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
+		PStm stm=	ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
+		
+		System.out.println("Result="+stm);
 
 		} catch (SolverException e)
 		{
