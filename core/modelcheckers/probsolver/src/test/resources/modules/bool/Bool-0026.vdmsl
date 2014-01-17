@@ -1,4 +1,4 @@
 operations
-equiv()
-  post 2*2>0 <=> 2>0
+equiv() m : bool
+  post m = (2*2>0 <=> 2>0)
 
