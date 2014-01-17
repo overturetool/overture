@@ -78,6 +78,9 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;           //added -> AR
 import org.overture.ast.expressions.AForAllExp;                    //added -> AForallPredicate
 import org.overture.ast.expressions.AExistsExp;                    //added -> AExistsPredicate
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;   //added -> AEquivalencePeredicate
+import org.overture.ast.expressions.ASetCompSetExp;                //added -> AComprehensionSetExpression
+import org.overture.ast.expressions.AIfExp;                        //added
+import org.overture.ast.expressions.AElseIfExp;                    //added
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -124,8 +127,8 @@ import de.be4.classicalb.core.parser.node.TIntegerLiteral;
 
 import de.be4.classicalb.core.parser.node.ADisjunctPredicate;//added
 import de.be4.classicalb.core.parser.node.ANegationPredicate;//added
-import de.be4.classicalb.core.parser.node.ATruthPredicate;//addedimport de.be4.classicalb.core.parser.node.ATruthPredicate;//added
-import de.be4.classicalb.core.parser.node.AFalsityPredicate;//addedimport de.be4.classicalb.core.parser.node.AFalsityPredicate;//added
+import de.be4.classicalb.core.parser.node.ATruthPredicate;//added
+import de.be4.classicalb.core.parser.node.AFalsityPredicate;//added
 import de.be4.classicalb.core.parser.node.AAddExpression;//added
 import de.be4.classicalb.core.parser.node.AMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AMultiplicationExpression;//added
@@ -173,6 +176,8 @@ import de.be4.classicalb.core.parser.node.AForallPredicate;//added
 import de.be4.classicalb.core.parser.node.AIdentifierExpression;//added
 import de.be4.classicalb.core.parser.node.AExistsPredicate;//added
 import de.be4.classicalb.core.parser.node.AEquivalencePredicate;//added
+import de.be4.classicalb.core.parser.node.AComprehensionSetExpression;//added
+
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -277,13 +282,62 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return set;
 	}
 
+	@Override
+        public Node caseASetCompSetExp(ASetCompSetExp node) //added
+	                throws AnalysisException
+	{
+	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
+
+	    LinkedList<PMultipleBind> blist = node.getBindings();
+	    scs.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
+	    scs.setPredicates(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)), exp(blist.get(0))));
+	    //console.out.println("Setcompset: " + scs.getPredicates());
+
+	    for(int i=1;i<blist.size();i++) {
+		for(int j=0;j<blist.get(i).getPlist().size();j++) {
+		    scs.getIdentifiers().add(exp(blist.get(i).getPlist().get(j)));
+		    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), 
+							     new AMemberPredicate(exp(blist.get(i).getPlist().get(j)),
+										  exp(blist.get(i)))));
+		}
+	    }
+	    List<TIdentifierLiteral> ident = new ArrayList<TIdentifierLiteral>();
+	    ident.add(new TIdentifierLiteral("_target_"));
+	    PExpression temp = new AIdentifierExpression(ident);
+	    scs.getIdentifiers().add(temp);
+
+
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), pred(node.getPredicate())));
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), new AEqualPredicate(temp, exp(node.getFirst()))));
+	    // { x+y | x in set A, y in set B & P } -> { x, y, _target_ | x : A & y : B & P & _target = x+y }
+	    //console.out.println("Setcompset: " + scs.getPredicates());
+	    //return scs;
+	    console.out.println("Setcompset: " + scs.getIdentifiers());
+	    console.out.println("Setcompset: " + scs.getPredicates());
+	    return new ARangeExpression(scs);
+	}
+
 	/*
-	 * @Override public Node caseASetCompSetExp(ASeCompSetExp node) throws AnalysisException { node.getFirst();//
-	 * target, variables node.getBindings(); //blist = for(PExp m : node.getBindings() ) { blist+=(exp(m) + "&")
-	 * node.getPredicate(); // pred = exp(node.getPredicate()) + "target = exp(node.getFirst())); if
-	 * (node.getMembers().isEmpty()) { return new AEmptySetExpression(); } ASetExtensionExpression set = new
-	 * ASetExtensionExpression(); for (PExp m : node.getMembers()) { set.getExpressions().add(exp(m)); } return set; }
-	 */
+	@Override
+        public Node caseAIfExp(AIfExp node)//under construction
+			throws AnalysisException
+	{
+	    //node.getTest();//testpart
+	    //node.getThen();//thenpart
+	    return new AConjunctPredicate(pred(node.getTest()), pred(node.getThen()));
+	}
+
+	@Override
+        public Node caseAElseIfExp(AElseIfExp node)//under construction
+			throws AnalysisException
+	{
+	    //node.getTest();//testpart
+	    //node.getThen();//thenpart
+	    //node.getElseIf();//elsepart
+	    return new ADisjointPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())),
+					  new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getElseIf())));
+	}
+	*/
 
 	@Override
 	public Node caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node)
