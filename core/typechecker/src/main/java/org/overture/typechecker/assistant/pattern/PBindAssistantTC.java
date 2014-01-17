@@ -26,14 +26,6 @@ public class PBindAssistantTC
 		{
 			return null;
 		}
-		// if (bind instanceof ASetBind)
-		// {
-		// return ASetBindAssistantTC.getMultipleBindList((ASetBind) bind);
-		// } else if (bind instanceof ATypeBind)
-		// {
-		// return ATypeBindAssistantTC.getMultipleBindList((ATypeBind) bind);
-		// }
-		// return null;
 
 	}
 

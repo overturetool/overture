@@ -30,7 +30,7 @@ public class PMultipleBindAssistantTC
 
 		for (PPattern p : mb.getPlist())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p, type, question.scope));
+			defs.addAll(af.createPPatternAssistant().getDefinitions(p, type, question.scope));
 		}
 
 		return defs;

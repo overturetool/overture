@@ -32,7 +32,7 @@ public class PPatternListAssistantTC
 
 		for (PPattern pattern : pp)
 		{
-			PPatternAssistantTC.typeResolve(pattern, rootVisitor, question);
+			af.createPPatternAssistant().typeResolve(pattern, rootVisitor, question);
 		}
 
 	}

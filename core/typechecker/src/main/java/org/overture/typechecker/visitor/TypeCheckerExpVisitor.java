@@ -1639,7 +1639,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.setParamPatterns(paramPatterns);
 		for (ATypeBind tb : node.getBindList())
 		{
-			mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb));
+			//mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb)); 
+			//FIXME: I am not sure if this is the way.
+			mbinds.addAll(tb.apply(question.assistantFactory.getMultipleBindLister()));
 			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
