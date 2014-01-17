@@ -1,4 +1,4 @@
-package org.overture.codegen.utils;
+package org.overture.codegen.analysis.violations;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;

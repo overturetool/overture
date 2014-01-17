@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.constants.OoAstConstants;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.InvalidNamesException;
-import org.overture.codegen.utils.UnsupportedModelingException;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase

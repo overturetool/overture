@@ -13,7 +13,13 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.OoAstAnalysis;
+import org.overture.codegen.analysis.vdm.OoAstAnalysis;
+import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.ReservedWordsComparison;
+import org.overture.codegen.analysis.violations.TypenameComparison;
+import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.analysis.violations.VdmAstAnalysis;
+import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -28,12 +34,6 @@ import org.overture.codegen.utils.ExpStatus;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.InvalidNamesException;
-import org.overture.codegen.utils.UnsupportedModelingException;
-import org.overture.codegen.utils.Violation;
-import org.overture.codegen.utils.ReservedWordsComparison;
-import org.overture.codegen.utils.TypenameComparison;
-import org.overture.codegen.utils.VdmAstAnalysis;
 import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen

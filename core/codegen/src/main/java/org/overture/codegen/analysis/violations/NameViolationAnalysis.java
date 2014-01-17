@@ -1,4 +1,4 @@
-package org.overture.codegen.utils;
+package org.overture.codegen.analysis.violations;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;

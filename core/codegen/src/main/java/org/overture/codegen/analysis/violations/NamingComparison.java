@@ -1,4 +1,4 @@
-package org.overture.codegen.utils;
+package org.overture.codegen.analysis.violations;
 
 import java.util.Arrays;
 import java.util.List;

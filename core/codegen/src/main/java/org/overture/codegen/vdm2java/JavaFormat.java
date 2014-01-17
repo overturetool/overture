@@ -4,7 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.analysis.OoAstAnalysis;
+import org.overture.codegen.analysis.vdm.OoAstAnalysis;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
