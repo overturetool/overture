@@ -59,7 +59,6 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -136,7 +135,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				&& PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType funcType = PTypeAssistantTC.getFunction(type);
-			ILexNameToken prename = PExpAssistantTC.getPreName(root);
+			ILexNameToken prename = assistantFactory.createPExpAssistant().getPreName(root);
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
@@ -1115,8 +1114,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (PTypeAssistantTC.isFunction(lType))
 		{
-			ILexNameToken pref1 = PExpAssistantTC.getPreName(lExp);
-			ILexNameToken pref2 = PExpAssistantTC.getPreName(rExp);
+			ILexNameToken pref1 = assistantFactory.createPExpAssistant().getPreName(lExp);
+			ILexNameToken pref2 = assistantFactory.createPExpAssistant().getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(PExpAssistantTC.NO_PRECONDITION))
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
@@ -1334,7 +1333,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (PTypeAssistantTC.isFunction(lType))
 		{
-			ILexNameToken preName = PExpAssistantTC.getPreName(lExp);
+			ILexNameToken preName = assistantFactory.createPExpAssistant().getPreName(lExp);
 			if (preName == null
 					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
 			{

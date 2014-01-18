@@ -25,7 +25,7 @@ public class ACaseAlternativeAssistantTC
 		this.af = af;
 	}
 
-	public static PType typeCheck(ACaseAlternative c,
+	public PType typeCheck(ACaseAlternative c,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question, PType expType) throws AnalysisException
 	{
@@ -33,7 +33,7 @@ public class ACaseAlternativeAssistantTC
 		if (c.getDefs().size() == 0)
 		{
 			// c.setDefs(new ArrayList<PDefinition>());
-			PPatternAssistantTC.typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+			af.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
 
 			if (c.getPattern() instanceof AExpressionPattern)
 			{

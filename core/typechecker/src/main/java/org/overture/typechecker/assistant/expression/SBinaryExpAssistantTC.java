@@ -21,7 +21,7 @@ public class SBinaryExpAssistantTC
 		this.af = af;
 	}
 
-	public static ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
+	public ABooleanBasicType binaryCheck(SBooleanBinaryExp node,
 			ABooleanBasicType expected,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException

@@ -58,7 +58,6 @@ import org.overture.pog.obligation.UniqueExistenceObligation;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -117,7 +116,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 				&& PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType funcType = PTypeAssistantTC.getFunction(type);
-			ILexNameToken prename = PExpAssistantTC.getPreName(root);
+			ILexNameToken prename = assistantFactory.createPExpAssistant().getPreName(root);
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
@@ -1057,8 +1056,8 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 		if (PTypeAssistantTC.isFunction(lType))
 		{
-			String pref1 = PExpAssistantTC.getPreName(lExp).getName();
-			String pref2 = PExpAssistantTC.getPreName(rExp).getName();
+			String pref1 = assistantFactory.createPExpAssistant().getPreName(lExp).getName();
+			String pref2 = assistantFactory.createPExpAssistant().getPreName(rExp).getName();
 
 			if (pref1 == null || !pref1.equals(""))
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
@@ -1266,7 +1265,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 		if (PTypeAssistantTC.isFunction(lType))
 		{
-			ILexNameToken preName = PExpAssistantTC.getPreName(lExp);
+			ILexNameToken preName = assistantFactory.createPExpAssistant().getPreName(lExp);
 			if (preName == null
 					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
 			{

@@ -66,9 +66,6 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
-import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
@@ -114,7 +111,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (inFunction)
 		{
-			PDefinition called = AApplyExpAssistantTC.getRecursiveDefinition(node, question);
+			PDefinition called = question.assistantFactory.createAApplyExpAssistant().getRecursiveDefinition(node, question);
 
 			if (called instanceof AExplicitFunctionDefinition)
 			{
@@ -165,7 +162,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
-			results.add(AApplyExpAssistantTC.functionApply(node, isSimple, ft));
+			results.add(question.assistantFactory.createAApplyExpAssistant().functionApply(node, isSimple, ft));
 		}
 
 		if (PTypeAssistantTC.isOperation(node.getType()))
@@ -180,20 +177,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else
 			{
-				results.add(AApplyExpAssistantTC.operationApply(node, isSimple, ot));
+				results.add(question.assistantFactory.createAApplyExpAssistant().operationApply(node, isSimple, ot));
 			}
 		}
 
 		if (PTypeAssistantTC.isSeq(node.getType()))
 		{
 			SSeqType seq = PTypeAssistantTC.getSeq(node.getType());
-			results.add(AApplyExpAssistantTC.sequenceApply(node, isSimple, seq));
+			results.add(question.assistantFactory.createAApplyExpAssistant().sequenceApply(node, isSimple, seq));
 		}
 
 		if (PTypeAssistantTC.isMap(node.getType()))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getType());
-			results.add(AApplyExpAssistantTC.mapApply(node, isSimple, map));
+			results.add(question.assistantFactory.createAApplyExpAssistant().mapApply(node, isSimple, map));
 		}
 
 		if (results.isEmpty())
@@ -211,7 +208,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.setType(SBinaryExpAssistantTC.binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
+		node.setType(question.assistantFactory.createSBinaryExpAssistant().binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
 		return node.getType();
 	}
 
@@ -1022,7 +1019,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		for (ACaseAlternative c : node.getCases())
 		{
-			rtypes.add(ACaseAlternativeAssistantTC.typeCheck(c, THIS, question, expType));
+			rtypes.add(question.assistantFactory.createACaseAlternativeAssistant().typeCheck(c, THIS, question, expType));
 		}
 
 		if (node.getOthers() != null)

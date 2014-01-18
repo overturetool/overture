@@ -19,7 +19,7 @@ public class PExpAssistantTC
 		this.af = af;
 	}
 
-	public static ILexNameToken getPreName(PExp expression)
+	public ILexNameToken getPreName(PExp expression)
 	{
 		try
 		{
