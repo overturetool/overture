@@ -38,7 +38,7 @@ public class AModuleExportsAssistantTC
 
 		for (PDefinition d : exportDefs)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 		return exportDefs;
@@ -61,7 +61,7 @@ public class AModuleExportsAssistantTC
 
 		for (PDefinition d : exportDefs)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 		return exportDefs;

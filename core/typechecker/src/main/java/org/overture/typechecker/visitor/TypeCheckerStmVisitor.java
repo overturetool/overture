@@ -282,7 +282,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		for (PDefinition d : node.getAssignmentDefs())
 		{
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-			PDefinitionAssistantTC.implicitDefinitions(d, local);
+			question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 		}
 
@@ -386,7 +386,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		} else {
 			question.assistantFactory.createPDefinitionAssistant();
-			if (PDefinitionAssistantTC.isStatic(fdef)
+			if (question.assistantFactory.createPDefinitionAssistant().isStatic(fdef)
 					&& !question.env.isStatic())
 			{
 				// warning(5005, "Should invoke member " + field +
@@ -462,7 +462,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 		
-		if (!PDefinitionAssistantTC.isStatic(opdef) && question.env.isStatic())
+		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef) && question.env.isStatic())
 		{
 			TypeCheckerErrors.report(3214, "Cannot call " + node.getName()
 					+ " from static context", node.getLocation(), node);
@@ -649,7 +649,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
 
 				if (question.env.isVDMPP())
@@ -662,7 +662,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			} else
 			{
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, THIS, question);
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative

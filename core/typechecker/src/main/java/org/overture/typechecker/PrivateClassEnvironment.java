@@ -113,7 +113,7 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		PDefinitionAssistantTC.unusedCheck(classdef);
+		af.createPDefinitionAssistant().unusedCheck(classdef);
 	}
 
 	@Override

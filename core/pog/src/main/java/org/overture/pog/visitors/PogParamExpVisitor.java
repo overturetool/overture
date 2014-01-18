@@ -589,7 +589,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		for (PDefinition def : node.getLocalDefs())
 		{
-			question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(def)));
+			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(def)));
 			obligations.addAll(def.apply(rootVisitor, question));
 			question.pop();
 		}

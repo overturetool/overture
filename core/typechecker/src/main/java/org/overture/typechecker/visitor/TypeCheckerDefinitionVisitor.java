@@ -286,7 +286,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (question.env.isVDMPP()
 				&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
 		{
-			local.add(PDefinitionAssistantTC.getSelfDefinition(node));
+			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
 		if (node.getPredef() != null)
@@ -464,7 +464,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			if (node.getClassDefinition() != null
 					&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
 			{
-				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
+				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
 			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
@@ -636,7 +636,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			if (!PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
 			{
-				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
+				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
 			if (node.getName().getName().equals(node.getClassDefinition().getName().getName()))
@@ -884,7 +884,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			if (node.getClassDefinition() != null
 					&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
 			{
-				local.add(PDefinitionAssistantTC.getSelfDefinition(node));
+				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
 			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)));
@@ -1066,7 +1066,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			for (PDefinition def : node.getClassDefinition().apply(question.assistantFactory.getDefinitionCollector()))
 				//SClassDefinitionAssistantTC.getLocalDefinitions(node.getClassDefinition()))
 			{
-				if (PDefinitionAssistantTC.isCallableOperation(def)
+				if (question.assistantFactory.createPDefinitionAssistant().isCallableOperation(def)
 						&& !def.getName().getName().equals(classdef.getName().getName()))
 				{
 					node.getOperations().add(def.getName());
@@ -1084,7 +1084,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				{
 					found++;
 
-					if (!PDefinitionAssistantTC.isCallableOperation(def))
+					if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(def))
 					{
 						TypeCheckerErrors.report(3038, opname
 								+ " is not an explicit operation", opname.getLocation(), opname);
@@ -1124,7 +1124,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (question.env.isVDMPP())
 		{
-			question = new TypeCheckInfo(question.assistantFactory, new FlatEnvironment(question.assistantFactory, PDefinitionAssistantTC.getSelfDefinition(node), question.env), question.scope, question.qualifiers);
+			question = new TypeCheckInfo(question.assistantFactory, new FlatEnvironment(question.assistantFactory, question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node), question.env), question.scope, question.qualifiers);
 		}
 
 		for (ATraceDefinitionTerm term : node.getTerms())
@@ -1154,19 +1154,19 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				opfound++;
 
-				if (!PDefinitionAssistantTC.isCallableOperation(def))
+				if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(def))
 				{
 					TypeCheckerErrors.report(3042, node.getOpname()
 							+ " is not an explicit operation", node.getOpname().getLocation(), node.getOpname());
 				}
 
-				if (isStatic != null && isStatic != PDefinitionAssistantTC.isStatic(def))
+				if (isStatic != null && isStatic != question.assistantFactory.createPDefinitionAssistant().isStatic(def))
 				{
 					TypeCheckerErrors.report(3323, "Overloaded operation cannot mix static and non-static",
 							node.getLocation(), node.getOpname());
 				}
 				
-				isStatic = PDefinitionAssistantTC.isStatic(def);
+				isStatic = question.assistantFactory.createPDefinitionAssistant().isStatic(def);
 			}
 
 			if (def instanceof APerSyncDefinition)
@@ -1272,7 +1272,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 
 		question.scope = NameScope.NAMESANDSTATE;
-		FlatEnvironment local = new FlatEnvironment(question.assistantFactory, PDefinitionAssistantTC.getSelfDefinition(node), question.env);
+		FlatEnvironment local = new FlatEnvironment(question.assistantFactory, question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node), question.env);
 
 		PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 

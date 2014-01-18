@@ -160,7 +160,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 			// pname.location, NameScope.NAMES,false,null, null, new
 			// AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistantTC.markUsed(p);
+			af.createPDefinitionAssistant().markUsed(p);
 			defs.add(p);
 		}
 
@@ -188,21 +188,21 @@ public class AExplicitFunctionDefinitionAssistantTC
 	public static PDefinition findName(AExplicitFunctionDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
+		if (af.createPDefinitionAssistant().findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
 		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+				&& af.createPDefinitionAssistant().findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
 		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+				&& af.createPDefinitionAssistant().findName(postdef, sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -217,7 +217,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		if (d.getPrecondition() != null)
 		{
 			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
+			af.createPDefinitionAssistant().markUsed(d.getPredef());
 		} else
 		{
 			d.setPredef(null);
@@ -226,7 +226,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		if (d.getPostcondition() != null)
 		{
 			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
+			af.createPDefinitionAssistant().markUsed(d.getPostdef());
 		} else
 		{
 			d.setPostdef(null);

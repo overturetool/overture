@@ -180,7 +180,7 @@ public class ClassTypeChecker extends TypeChecker
 			if (!c.getTypeChecked())
 			{
 				SClassDefinitionAssistantTC.initializedCheck(c);
-				PDefinitionAssistantTC.unusedCheck(c);
+				assistantFactory.createPDefinitionAssistant().unusedCheck(c);
 			}
 		}
 	}

@@ -59,7 +59,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 			// pname.location, NameScope.NAMES,false,null, null, new
 			// AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistantTC.markUsed(p);
+			af.createPDefinitionAssistant().markUsed(p);
 			defs.add(p);
 		}
 

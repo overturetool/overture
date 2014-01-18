@@ -569,7 +569,7 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 			for (PDefinition localDef : node.getLocalDefs())
 			{
 				// PDefinitionAssistantTC.get
-				question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(localDef)));
+				question.push(new PONameContext(question.assistantFactory.createPDefinitionAssistant().getVariableNames(localDef)));
 				obligations.addAll(localDef.apply(rootVisitor, question));
 				question.pop();
 			}

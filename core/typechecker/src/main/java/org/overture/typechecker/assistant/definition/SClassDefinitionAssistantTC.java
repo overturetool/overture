@@ -262,7 +262,7 @@ public class SClassDefinitionAssistantTC
 
 		for (SClassDefinition d : classes)
 		{
-			PDefinition def = PDefinitionAssistantTC.findType(d, name, null);
+			PDefinition def = af.createPDefinitionAssistant().findType(d, name, null);
 
 			if (def != null)
 			{
@@ -291,7 +291,7 @@ public class SClassDefinitionAssistantTC
 	{
 		for (SClassDefinition d : classes)
 		{
-			PDefinitionAssistantTC.unusedCheck(d);
+			af.createPDefinitionAssistant().unusedCheck(d);
 		}
 
 	}
@@ -312,7 +312,7 @@ public class SClassDefinitionAssistantTC
 	{
 
 		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
-		PDefinitionAssistantTC.markUsed(def);
+		af.createPDefinitionAssistant().markUsed(def);
 		return def;
 	}
 

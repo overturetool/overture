@@ -1175,7 +1175,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 				for (PDefinition possible : question.env.findMatches(memberName))
 				{
-					if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
+					if (question.assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(possible))
 					{
 						if (fdef != null)
 						{
@@ -1428,7 +1428,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				{
 					found++;
 
-					if (!PDefinitionAssistantTC.isCallableOperation(def))
+					if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(def))
 					{
 						TypeCheckerErrors.report(3105, opname
 								+ " is not an explicit operation", opname.getLocation(), opname);
@@ -1710,7 +1710,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 
 				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
@@ -1724,7 +1724,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 			} else
 			{
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
@@ -1753,7 +1753,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				// simple variable declarations aren't
 
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
 				PDefinitionAssistantTC.typeResolve(d, THIS, question);
@@ -1768,7 +1768,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				d.apply(THIS, newQuestion);
 			} else
 			{
-				PDefinitionAssistantTC.implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
@@ -2095,7 +2095,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		} else
 		{
-			if (!PDefinitionAssistantTC.isCallableOperation(opdef))
+			if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(opdef))
 			{
 				TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types", node.getLocation(), node);
 				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));

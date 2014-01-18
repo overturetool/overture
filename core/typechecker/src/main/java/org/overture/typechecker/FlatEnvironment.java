@@ -104,7 +104,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistantTC.findType(definitions, name, fromModule);
+		PDefinition def = af.createPDefinitionAssistant().findType(definitions, name, fromModule);
 
 		if (def != null)
 		{

@@ -37,7 +37,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition d : paramDefinitions)
 		{
-			PDefinitionAssistantTC.implicitDefinitions(d, env);
+			af.createPDefinitionAssistant().implicitDefinitions(d, env);
 			// System.out.println();
 		}
 
@@ -48,7 +48,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinition def = PDefinitionAssistantTC.findName(d, name, scope);
+			PDefinition def = af.createPDefinitionAssistant().findName(d, name, scope);
 
 			if (def != null)
 			{
@@ -77,7 +77,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinitionAssistantTC.unusedCheck(d);
+			af.createPDefinitionAssistant().unusedCheck(d);
 		}
 
 	}
@@ -90,7 +90,7 @@ public class PDefinitionListAssistantTC
 
 		for (PDefinition d : singleDefinitions(definitions))
 		{
-			if (PDefinitionAssistantTC.isFunctionOrOperation(d)
+			if (af.createPDefinitionAssistant().isFunctionOrOperation(d)
 					&& d.getName().matches(name))
 			{
 				set.add(d);
@@ -117,7 +117,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 	}
@@ -139,7 +139,7 @@ public class PDefinitionListAssistantTC
 
 		for (PDefinition d : list)
 		{
-			variableNames.addAll(PDefinitionAssistantTC.getVariableNames(d));
+			variableNames.addAll(af.createPDefinitionAssistant().getVariableNames(d));
 		}
 
 		return variableNames;
@@ -171,7 +171,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition d : actualDefs)
 		{
-			PDefinition def = PDefinitionAssistantTC.findType(d, name, fromModule);
+			PDefinition def = af.createPDefinitionAssistant().findType(d, name, fromModule);
 
 			if (def != null)
 			{

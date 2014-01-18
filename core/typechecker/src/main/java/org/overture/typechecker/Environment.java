@@ -185,7 +185,7 @@ abstract public class Environment
 	{
 		for (PDefinition possible : findMatches(name))
 		{
-			if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
+			if (af.createPDefinitionAssistant().isFunctionOrOperation(possible))
 			{
 				TypeChecker.detail("Possible", possible.getName());
 			}

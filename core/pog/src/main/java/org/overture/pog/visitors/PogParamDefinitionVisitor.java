@@ -3,6 +3,7 @@ package org.overture.pog.visitors;
 import java.util.Iterator;
 import java.util.List;
 
+import org.junit.experimental.theories.internal.Assignments;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -50,9 +51,11 @@ import org.overture.pog.obligation.StateInvariantObligation;
 import org.overture.pog.obligation.SubTypeObligation;
 import org.overture.pog.obligation.ValueBindingObligation;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PatternAlwaysMatchesVisitor;
+import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -69,12 +72,16 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
 
+	final private IPogAssistantFactory assistantFactory;
+	
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
-			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor)
+			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
+			IPogAssistantFactory assistantFactory)
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
+		this.assistantFactory = assistantFactory;
 	}
 
 	public PogParamDefinitionVisitor(
@@ -82,6 +89,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
+		this.assistantFactory =  new PogAssistantFactory();
 	}
 
 	@Override
@@ -741,7 +749,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			for (PDefinition def : node.getDefinitions())
 			{
-				question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(def)));
+				question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(def)));
 				proofObligationList.addAll(def.apply(mainVisitor, question));
 				question.pop();
 			}

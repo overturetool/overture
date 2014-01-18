@@ -21,7 +21,6 @@ import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
@@ -71,13 +70,14 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return false;
 
 	}
-
+	//TODO: Used at places of the interpreter without the posibility to call the assistantFactory to call the method dynamically.
+	//places like ClassInterpreter.
 	public static boolean isFunctionOrOperation(PDefinition possible)
 	{
 		return isFunction(possible) || isOperation(possible);
 	}
 
-	public static PDefinition findType(List<PDefinition> definitions,
+	public PDefinition findType(List<PDefinition> definitions,
 			ILexNameToken name, String fromModule)
 	{
 
@@ -95,7 +95,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static PDefinition findType(PDefinition d, ILexNameToken sought,
+	public PDefinition findType(PDefinition d, ILexNameToken sought,
 			String fromModule)
 	{
 		try
@@ -125,7 +125,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static PDefinition findNameBaseCase(PDefinition d,
+	public PDefinition findNameBaseCase(PDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
 		if (HelpLexNameToken.isEqual(d.getName(), sought))
@@ -149,7 +149,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void markUsed(PDefinition d)
+	public void markUsed(PDefinition d)
 	{
 		try
 		{
@@ -160,7 +160,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static void unusedCheck(PDefinition d)
+	public void unusedCheck(PDefinition d)
 	{
 		try
 		{
@@ -173,7 +173,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public void unusedCheckBaseCase(PDefinition d)
 	{
-		if (!PDefinitionAssistantTC.isUsed(d))
+		if (!af.createPDefinitionAssistant().isUsed(d))
 		{
 			TypeCheckerErrors.warning(5000, "Definition '" + d.getName()
 					+ "' not used", d.getLocation(), d);
@@ -194,7 +194,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static PDefinition getSelfDefinition(PDefinition d)
+	public PDefinition getSelfDefinition(PDefinition d)
 	{
 		try
 		{
@@ -206,7 +206,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static LexNameList getVariableNames(PDefinition d)
+	public LexNameList getVariableNames(PDefinition d)
 	{
 		try
 		{
@@ -218,9 +218,9 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isStatic(PDefinition fdef)
+	public boolean isStatic(PDefinition fdef)
 	{
-		return PAccessSpecifierAssistantTC.isStatic(fdef.getAccess());
+		return af.createPAccessSpecifierAssistant().isStatic(fdef.getAccess());
 	}
 
 	public static PDefinition deref(PDefinition d)
@@ -235,7 +235,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isCallableOperation(PDefinition d)
+	public boolean isCallableOperation(PDefinition d)
 	{
 		try
 		{
@@ -247,7 +247,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isUsed(PDefinition d)
+	public boolean isUsed(PDefinition d)
 	{
 		try
 		{
@@ -259,7 +259,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void implicitDefinitions(PDefinition d, Environment env)
+	public void implicitDefinitions(PDefinition d, Environment env)
 	{
 		try
 		{

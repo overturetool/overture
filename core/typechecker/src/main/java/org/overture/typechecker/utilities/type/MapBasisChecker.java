@@ -44,7 +44,8 @@ public class MapBasisChecker extends TypeUnwrapper<Boolean>
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		// return AUnionTypeAssistantTC.getMap(type) != null; //static call
-		return af.createAUnionTypeAssistant().getMap(type) != null;// non static call
+		//return af.createAUnionTypeAssistant().getMap(type) != null;// non static call
+		return type.apply(af.getMapTypeFinder()) != null;
 	}
 
 	@Override

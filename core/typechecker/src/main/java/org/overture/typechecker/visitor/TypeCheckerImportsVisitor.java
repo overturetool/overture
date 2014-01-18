@@ -114,7 +114,7 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 				ILexNameToken pnameClone = pname.clone();
 				PDefinition p = AstFactory.newALocalDefinition(pname.getLocation(), pnameClone, NameScope.NAMES, AstFactory.newAParameterType(pnameClone));
 
-				PDefinitionAssistantTC.markUsed(p);
+				question.assistantFactory.createPDefinitionAssistant().markUsed(p);
 				defs.add(p);
 			}
 
