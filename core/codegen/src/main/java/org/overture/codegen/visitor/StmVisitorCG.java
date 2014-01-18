@@ -38,6 +38,7 @@ import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.ooast.OoAstInfo;
 
 
 public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>

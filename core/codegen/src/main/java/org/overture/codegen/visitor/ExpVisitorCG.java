@@ -114,6 +114,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>

@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2java;
+package org.overture.codegen.ooast;
 
 import java.util.HashMap;
 

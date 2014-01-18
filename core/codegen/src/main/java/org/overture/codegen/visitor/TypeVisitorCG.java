@@ -45,6 +45,7 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.ooast.OoAstInfo;
 
 public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 {

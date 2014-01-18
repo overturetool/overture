@@ -27,6 +27,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class JavaFormatAssistant
 {

@@ -5,6 +5,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.INode;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.ooast.OoAstInfo;
 
 public class AbstractVisitorCG<Q extends OoAstInfo, A extends org.overture.codegen.cgast.INode> extends QuestionAnswerAdaptor<Q, A>
 {

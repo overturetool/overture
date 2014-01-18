@@ -1,4 +1,4 @@
-package org.overture.codegen.visitor;
+package org.overture.codegen.ooast;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +12,6 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.utils.ClassDeclStatus;
-import org.overture.codegen.utils.ExpStatus;
 
 public class OoAstGenerator
 {

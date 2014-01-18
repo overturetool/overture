@@ -26,8 +26,8 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.LexNameTokenWrapper;
-import org.overture.codegen.visitor.OoAstInfo;
 
 public class DeclAssistantCG
 {

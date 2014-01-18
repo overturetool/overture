@@ -4,7 +4,6 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.analysis.vdm.OoAstAnalysis;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
@@ -56,7 +55,9 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.ooast.OoAstAnalysis;
 
 public class JavaFormat
 {

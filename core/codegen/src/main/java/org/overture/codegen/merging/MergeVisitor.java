@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.CodeGenContext;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {

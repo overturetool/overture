@@ -1,5 +1,10 @@
-package org.overture.codegen.analysis.vdm;
+package org.overture.codegen.ooast;
 
+import org.overture.codegen.analysis.vdm.AbstractAnalysis;
+import org.overture.codegen.analysis.vdm.QuoteAnalysis;
+import org.overture.codegen.analysis.vdm.SequenceAnalysis;
+import org.overture.codegen.analysis.vdm.SetAnalysis;
+import org.overture.codegen.analysis.vdm.UtilAnalysis;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 

@@ -1,4 +1,4 @@
-package org.overture.codegen.visitor;
+package org.overture.codegen.ooast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +13,14 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.visitor.ClassVisitorCG;
+import org.overture.codegen.visitor.DeclVisitorCG;
+import org.overture.codegen.visitor.ExpVisitorCG;
+import org.overture.codegen.visitor.StateDesignatorVisitorCG;
+import org.overture.codegen.visitor.StmVisitorCG;
+import org.overture.codegen.visitor.TypeVisitorCG;
 
 public class OoAstInfo
 {
@@ -26,7 +32,7 @@ public class OoAstInfo
 	private ExpVisitorCG expVisitor;
 	private TypeVisitorCG typeVisitor;
 	private StmVisitorCG stmVisitor;
-	private StateDesignatorVisitor stateDesignatorVisitor;
+	private StateDesignatorVisitorCG stateDesignatorVisitor;
 	
 	//Quotes:
 	private Set<String> quoteVaues;
@@ -43,7 +49,7 @@ public class OoAstInfo
 		this.expVisitor = new ExpVisitorCG();
 		this.typeVisitor = new TypeVisitorCG();
 		this.stmVisitor = new StmVisitorCG();
-		this.stateDesignatorVisitor = new StateDesignatorVisitor();
+		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
 		
 		this.quoteVaues = new HashSet<String>();
 		
@@ -80,7 +86,7 @@ public class OoAstInfo
 		return stmVisitor;
 	}
 	
-	public StateDesignatorVisitor getStateDesignatorVisitor()
+	public StateDesignatorVisitorCG getStateDesignatorVisitor()
 	{
 		return stateDesignatorVisitor;
 	}
@@ -105,7 +111,7 @@ public class OoAstInfo
 	{
 		AInterfaceDeclCG quotes = new AInterfaceDeclCG();
 		
-		quotes.setName(OoAstConstants.QUOTES_INTERFACE_NAME);
+		quotes.setName(IOoAstConstants.QUOTES_INTERFACE_NAME);
 		
 		LinkedList<AFieldDeclCG> fields = quotes.getFields();
 		
@@ -115,7 +121,7 @@ public class OoAstInfo
 		{
 			AFieldDeclCG fieldDecl = new AFieldDeclCG();
 			fieldDecl.setName(quoteValuesList.get(i));
-			fieldDecl.setAccess(OoAstConstants.PUBLIC);
+			fieldDecl.setAccess(IOoAstConstants.PUBLIC);
 			fieldDecl.setFinal(false);
 			fieldDecl.setStatic(true);
 			fieldDecl.setType(new AIntNumericBasicTypeCG());

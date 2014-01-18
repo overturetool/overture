@@ -6,8 +6,8 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
-import org.overture.codegen.constants.OoAstConstants;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -33,7 +33,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		GeneratedData data = null;
 		
-		File folder = new File(file.getParentFile().getParentFile(), OoAstConstants.UTIL_RESOURCE_FOLDER); 
+		File folder = new File(file.getParentFile().getParentFile(), IOoAstConstants.UTIL_RESOURCE_FOLDER); 
 		List<File> files = GeneralUtils.getFiles(folder);
 		files.add(file);
 		

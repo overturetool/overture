@@ -3,6 +3,8 @@ package org.overture.codegen.vdm2java;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.ooast.OoAstOperatorInfo;
+import org.overture.codegen.ooast.OoAstOperatorLookup;
 
 public class JavaPrecedence
 {

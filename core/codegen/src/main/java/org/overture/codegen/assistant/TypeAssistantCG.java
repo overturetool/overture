@@ -19,7 +19,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.visitor.OoAstInfo;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeAssistantCG

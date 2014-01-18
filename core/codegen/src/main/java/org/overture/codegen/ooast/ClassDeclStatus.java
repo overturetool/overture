@@ -1,4 +1,4 @@
-package org.overture.codegen.utils;
+package org.overture.codegen.ooast;
 
 import java.util.Set;
 

@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>

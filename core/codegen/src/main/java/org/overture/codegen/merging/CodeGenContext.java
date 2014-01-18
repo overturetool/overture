@@ -1,4 +1,4 @@
-package org.overture.codegen.visitor;
+package org.overture.codegen.merging;
 
 import org.apache.velocity.VelocityContext;
 

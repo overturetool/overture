@@ -31,7 +31,8 @@ import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
@@ -78,7 +79,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		//		public R ::
 		//		    x : nat
 		//		    y : nat;
-		record.setAccess(OoAstConstants.PUBLIC);
+		record.setAccess(IOoAstConstants.PUBLIC);
 		record.setName(name.getName());
 		
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -103,7 +104,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			throws AnalysisException
 	{
 		//Record fields are public
-		String access = OoAstConstants.PUBLIC;
+		String access = IOoAstConstants.PUBLIC;
 		String name = node.getTag();
 		boolean isStatic = false;
 		boolean isFinal = false;

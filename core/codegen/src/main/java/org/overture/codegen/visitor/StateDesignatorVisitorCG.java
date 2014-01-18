@@ -6,10 +6,11 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
+import org.overture.codegen.ooast.OoAstInfo;
 
-public class StateDesignatorVisitor extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
+public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
 {
-	public StateDesignatorVisitor()
+	public StateDesignatorVisitorCG()
 	{
 		
 	}

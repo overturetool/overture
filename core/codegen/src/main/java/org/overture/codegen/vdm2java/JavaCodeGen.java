@@ -13,7 +13,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.OoAstAnalysis;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
 import org.overture.codegen.analysis.violations.TypenameComparison;
@@ -23,18 +22,20 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.utils.ClassDeclStatus;
-import org.overture.codegen.utils.ExpStatus;
+import org.overture.codegen.ooast.ClassDeclStatus;
+import org.overture.codegen.ooast.ExpStatus;
+import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.ooast.OoAstGenerator;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.visitor.OoAstGenerator;
 
 public class JavaCodeGen
 {
