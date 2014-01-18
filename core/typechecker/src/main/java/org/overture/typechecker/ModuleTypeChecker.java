@@ -131,7 +131,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processExports(m); // Populate exportDefs
+				assistantFactory.createAModuleModulesAssistant().processExports(m); // Populate exportDefs
 			}
 		}
 
@@ -142,7 +142,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processImports(m, modules); // Populate importDefs
+				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Populate importDefs
 			}
 		}
 

@@ -23,7 +23,7 @@ public class AFromModuleImportsAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(AFromModuleImports ifm,
+	public List<PDefinition> getDefinitions(AFromModuleImports ifm,
 			AModuleModules from)
 	{
 
@@ -33,14 +33,14 @@ public class AFromModuleImportsAssistantTC
 		{
 			for (PImport imp : ofType)
 			{
-				defs.addAll(PImportAssistantTC.getDefinitions(imp, from));
+				defs.addAll(af.createPImportAssistant().getDefinitions(imp, from));
 			}
 		}
 
 		return defs;
 	}
 
-	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env)
+	public void typeCheck(AFromModuleImports ifm, ModuleEnvironment env)
 			throws AnalysisException
 	{
 		TypeCheckVisitor tc = new TypeCheckVisitor();

@@ -9,7 +9,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class AModuleExportsAssistantTC
 {
@@ -21,7 +20,7 @@ public class AModuleExportsAssistantTC
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinitions(
+	public Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
@@ -30,7 +29,7 @@ public class AModuleExportsAssistantTC
 		{
 			for (PExport exp : etype)
 			{
-				exportDefs.addAll(PExportAssistantTC.getDefinition(exp, actualDefs));
+				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp, actualDefs));
 			}
 		}
 
@@ -44,7 +43,7 @@ public class AModuleExportsAssistantTC
 		return exportDefs;
 	}
 
-	public static Collection<? extends PDefinition> getDefinitions(
+	public Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
@@ -53,7 +52,7 @@ public class AModuleExportsAssistantTC
 		{
 			for (PExport exp : etype)
 			{
-				exportDefs.addAll(PExportAssistantTC.getDefinition(exp));
+				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp));
 			}
 		}
 

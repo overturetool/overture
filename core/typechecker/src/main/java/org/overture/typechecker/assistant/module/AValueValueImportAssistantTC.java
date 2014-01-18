@@ -22,7 +22,7 @@ public class AValueValueImportAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(AValueValueImport imp,
+	public List<PDefinition> getDefinitions(AValueValueImport imp,
 			AModuleModules module)
 	{
 
