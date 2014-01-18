@@ -26,7 +26,6 @@ package org.overture.typechecker;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -36,9 +35,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.utilities.DefinitionFinder;
 
 /**
  * Define the type checking environment for a class as observed from inside.

@@ -1649,8 +1649,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		node.setParamPatterns(paramPatterns);
 
-		PDefinitionListAssistantTC.implicitDefinitions(paramDefinitions, question.env);
-		PDefinitionListAssistantTC.typeCheck(paramDefinitions, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().implicitDefinitions(paramDefinitions, question.env);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(paramDefinitions, THIS, question);
 
 		node.setParamDefinitions(paramDefinitions);
 

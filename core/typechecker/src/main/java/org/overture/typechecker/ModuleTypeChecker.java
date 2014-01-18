@@ -34,8 +34,6 @@ import org.overture.ast.typechecker.Pass;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
@@ -262,8 +260,8 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				PDefinitionListAssistantTC.unusedCheck(m.getImportdefs());
-				PDefinitionListAssistantTC.unusedCheck(m.getDefs());
+				assistantFactory.createPDefinitionListAssistant().unusedCheck(m.getImportdefs());
+				assistantFactory.createPDefinitionListAssistant().unusedCheck(m.getDefs());
 			}
 		}
 	}

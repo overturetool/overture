@@ -11,7 +11,6 @@ import org.overture.ast.modules.AValueValueImport;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 public class AValueValueImportAssistantTC
 {
@@ -31,7 +30,7 @@ public class AValueValueImportAssistantTC
 		imp.setFrom(module);
 		ILexNameToken name = imp.getName();
 
-		PDefinition expdef = PDefinitionListAssistantTC.findName(module.getExportdefs(), name, NameScope.NAMES);
+		PDefinition expdef = af.createPDefinitionListAssistant().findName(module.getExportdefs(), name, NameScope.NAMES);
 
 		if (expdef == null)
 		{

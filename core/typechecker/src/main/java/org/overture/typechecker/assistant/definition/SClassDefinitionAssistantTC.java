@@ -420,7 +420,7 @@ public class SClassDefinitionAssistantTC
 
 			ILexNameToken localname = d.getName().getModifiedName(definition.getName().getName());
 
-			if (PDefinitionListAssistantTC.findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null)
+			if (af.createPDefinitionListAssistant().findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null)
 			{
 				AInheritedDefinition local = AstFactory.newAInheritedDefinition(localname, d);
 				definition.getLocalInheritedDefinitions().add(local);
@@ -453,7 +453,7 @@ public class SClassDefinitionAssistantTC
 		// members before others. So we add the local definitions
 		// before the inherited ones.
 
-		List<PDefinition> singles = PDefinitionListAssistantTC.singleDefinitions(def.getDefinitions());
+		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(def.getDefinitions());
 
 		for (PDefinition d : singles)
 		{
@@ -473,7 +473,7 @@ public class SClassDefinitionAssistantTC
 
 				ILexNameToken localname = d.getName().getModifiedName(def.getName().getName());
 
-				if (PDefinitionListAssistantTC.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
+				if (af.createPDefinitionListAssistant().findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
 					AInheritedDefinition local = AstFactory.newAInheritedDefinition(localname, d);
 					defs.add(local);
@@ -502,7 +502,7 @@ public class SClassDefinitionAssistantTC
 				return;
 		}
 
-		PDefinitionListAssistantTC.implicitDefinitions(d.getDefinitions(), base);
+		af.createPDefinitionListAssistant().implicitDefinitions(d.getDefinitions(), base);
 
 		for (ILexNameToken supername : d.getSupernames())
 		{
@@ -547,7 +547,7 @@ public class SClassDefinitionAssistantTC
 	{
 
 		Environment cenv = new FlatEnvironment(question.assistantFactory, d.getDefinitions(), question.env);
-		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
+		af.createPDefinitionListAssistant().typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
 	}
 
 	public static PDefinition findThread(SClassDefinition d)
@@ -646,7 +646,7 @@ public class SClassDefinitionAssistantTC
 
 					if (HelpLexNameToken.isEqual(localName, localName2))
 					{
-						PDefinition override = PDefinitionListAssistantTC.findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
+						PDefinition override = af.createPDefinitionListAssistant().findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
 
 						if (override == null) // OK if we override the ambiguity
 						{
@@ -679,11 +679,11 @@ public class SClassDefinitionAssistantTC
 
 			ILexNameToken localName = indef.getName().getModifiedName(c.getName().getName());
 
-			PDefinition override = PDefinitionListAssistantTC.findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
+			PDefinition override = af.createPDefinitionListAssistant().findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
 
 			if (override == null)
 			{
-				override = PDefinitionListAssistantTC.findType(c.getDefinitions(), localName, null);
+				override = af.createPDefinitionListAssistant().findType(c.getDefinitions(), localName, null);
 			}
 
 			if (override != null)
@@ -721,7 +721,7 @@ public class SClassDefinitionAssistantTC
 	{
 		List<String> done = new Vector<String>();
 
-		List<PDefinition> singles = PDefinitionListAssistantTC.singleDefinitions(c.getDefinitions());
+		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(c.getDefinitions());
 
 		for (PDefinition def1 : singles)
 		{

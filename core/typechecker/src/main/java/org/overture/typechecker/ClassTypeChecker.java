@@ -32,7 +32,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 

@@ -78,10 +78,7 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
@@ -238,7 +235,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			node.setDefs(PPatternAssistantTC.getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
 		}
 
-		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 		return node.getType();
 	}
 
@@ -274,7 +271,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		// building the new scope for subtypechecks
 
-		PDefinitionListAssistantTC.typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can
 																																					// be
 																																					// this
 																																					// because
@@ -457,7 +454,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
 		if (node.getBody() != null)
 		{
@@ -626,7 +623,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setParamDefinitions(AExplicitOperationDefinitionAssistantTC.getParamDefinitions(node));
-		PDefinitionListAssistantTC.typeCheck(node.getParamDefinitions(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getParamDefinitions(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
@@ -841,7 +838,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			limitStateScope = true;
 		}
 
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		local.setLimitStateScope(limitStateScope);
@@ -1047,7 +1044,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			defs.addAll(PMultipleBindAssistantTC.getDefinitions(mb, type, question));
 		}
 
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		node.setDefs(defs);
 		return null;
 	}
@@ -1251,7 +1248,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PDefinitionListAssistantTC.typeCheck(node.getStateDefs(), THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getStateDefs(), THIS, question);
 
 		if (node.getInvdef() != null)
 		{
@@ -1409,7 +1406,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 //		PPatternAssistantTC.typeResolve(pattern, THIS, question);
 //		question.assistantFactory.getTypeResolver().updateDefs(node, question);
 		question.qualifiers = null;
-		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 		return node.getType();
 	}
 

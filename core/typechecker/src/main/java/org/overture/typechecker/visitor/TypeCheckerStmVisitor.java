@@ -87,7 +87,6 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
@@ -197,7 +196,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.setSeqType(PTypeAssistantTC.getSeq(stype));
 			node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-			PDefinitionListAssistantTC.typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+			question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		} else
 		{
@@ -545,7 +544,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.getDefs().addAll(PPatternAssistantTC.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
 		}
 
-		PDefinitionListAssistantTC.typeCheck(node.getDefs(), THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 
 		if (!PPatternAssistantTC.matches(node.getPattern(), node.getCtype()))
 		{
@@ -970,7 +969,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatEnvironment(question.assistantFactory, defs, question.env); // NB. No
 		// check
 		// //Unused
@@ -1017,7 +1016,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.getPatternBind().apply(THIS, question);
 		// TODO: PatternBind stuff
 		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		rtypes.add(node.getWith().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
 
@@ -1335,7 +1334,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// DefinitionList defs = patternBind.getDefinitions();
 		node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
-		PDefinitionListAssistantTC.typeCheck(defs, THIS, question);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 		local.unusedCheck();
