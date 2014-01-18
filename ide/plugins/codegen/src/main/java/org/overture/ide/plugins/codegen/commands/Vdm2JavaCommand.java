@@ -21,10 +21,10 @@ import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.constants.OoAstConstants;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.IVdmModel;
@@ -181,7 +181,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 			vdm2java.generateJavaSourceFile(quotesFolder, quotes);
 			
 			CodeGenConsole.GetInstance().println("Quotes interface generated.");
-			File quotesFile = new File(outputFolder, OoAstConstants.QUOTES_INTERFACE_NAME + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+			File quotesFile = new File(outputFolder, IOoAstConstants.QUOTES_INTERFACE_NAME + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
 			CodeGenConsole.GetInstance().println("Java source file: " + quotesFile.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}	
