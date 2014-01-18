@@ -28,6 +28,7 @@ import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALenUnaryExp;
@@ -82,6 +83,7 @@ import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
@@ -361,6 +363,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseAIndicesUnaryExp(AIndicesUnaryExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType expType = node.getExp().getType();
+		
+		if(!(expType instanceof SSeqType))
+			throw new AnalysisExceptionCG("Expected sequence type for indices unary expression", node.getLocation());
+		
+		PExp exp = node.getExp();
+		
+		PTypeCG typeCg = expType.apply(question.getTypeVisitor(), question);
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		AIndicesUnaryExpCG indicesExp = new AIndicesUnaryExpCG();
+		indicesExp.setType(typeCg);
+		indicesExp.setExp(expCg);
+		
+		return indicesExp;
 	}
 	
 	@Override

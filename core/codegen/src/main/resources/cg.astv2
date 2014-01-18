@@ -192,6 +192,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{isolation}
     |	{len}
     |	{elems}
+    |	{indices}
     |	{head}
     |	{tail}
     |	{reverse}

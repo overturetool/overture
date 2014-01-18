@@ -1,4 +1,6 @@
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 public class Utils
@@ -44,8 +46,23 @@ public class Utils
 		return hashcode;
 	}
 	
+	public static Set<Long> inds(List<? extends Object> seq)
+	{
+		Set<Long> indices = new HashSet<Long>();
+		
+		for(long i = 0; i < seq.size(); i++)
+		{
+			indices.add(i);
+		}
+		
+		return indices;
+	}
+	
 	public static boolean seqEquals(List<? extends Object> left, List<? extends Object> right)
 	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("Sequence arguments cannot be null");
+		
 		if(left.size() != right.size())
 			return false;
 		
