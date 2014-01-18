@@ -78,7 +78,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
@@ -1126,7 +1125,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (ATraceDefinitionTerm term : node.getTerms())
 		{
-			PTraceDefinitionAssistantTC.typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
+			question.assistantFactory.createPTraceDefinitionAssistant().typeCheck(term.getList(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		}
 
 		return null;

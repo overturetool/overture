@@ -35,7 +35,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 /**
  * Define the type checking environment for a class as observed from inside.
@@ -97,7 +96,7 @@ public class PrivateClassEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
-		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classdef, name);
+		Set<PDefinition> defs = af.createSClassDefinitionAssistant().findMatches(classdef, name);
 
 		if (outer != null)
 		{

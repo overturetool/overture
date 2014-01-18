@@ -42,8 +42,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
@@ -167,7 +165,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ field + "'", field.getLocation(), field);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
 
-			} else if (SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false))
+			} else if (question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, fdef, false))
 			{
 
 				result.add(fdef.getType());
@@ -243,7 +241,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				return node.getType();
 			} else if (def.getClassDefinition() != null)
 			{
-				if (!SClassDefinitionAssistantTC.isAccessible(env, def, true))
+				if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(env, def, true))
 				{
 					TypeCheckerErrors.report(3180, "Inaccessible member '"
 							+ name + "' of class "

@@ -89,7 +89,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = SClassDefinitionAssistantTC.findName(classes, name, scope);
+		PDefinition def = af.createSClassDefinitionAssistant().findName(classes, name, scope);
 
 		if (def != null
 				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
@@ -103,7 +103,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = SClassDefinitionAssistantTC.findType(classes, name);
+		PDefinition def = af.createSClassDefinitionAssistant().findType(classes, name);
 
 		if (def != null
 				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
@@ -117,7 +117,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
-		Set<PDefinition> defs = SClassDefinitionAssistantTC.findMatches(classes, name);
+		Set<PDefinition> defs = af.createSClassDefinitionAssistant().findMatches(classes, name);
 
 		if (outer != null)
 		{
@@ -130,7 +130,7 @@ public class PublicClassEnvironment extends Environment
 	@Override
 	public void unusedCheck()
 	{
-		SClassDefinitionAssistantTC.unusedCheck(classes);
+		af.createSClassDefinitionAssistant().unusedCheck(classes);
 	}
 
 	@Override

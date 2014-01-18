@@ -32,7 +32,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 /**
@@ -84,7 +83,7 @@ public class ClassTypeChecker extends TypeChecker
 
 		for (SClassDefinition c1 : classes)
 		{
-			c1.setType(SClassDefinitionAssistantTC.getType(c1));
+			c1.setType(assistantFactory.createSClassDefinitionAssistant().getType(c1));
 			for (SClassDefinition c2 : classes)
 			{
 				if (c1 != c2 && c1.getName().equals(c2.getName()))
@@ -122,7 +121,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getTypeChecked())
 			{
-				SClassDefinitionAssistantTC.implicitDefinitions(c, allClasses);
+				assistantFactory.createSClassDefinitionAssistant().implicitDefinitions(c, allClasses);
 			}
 		}
 
@@ -148,7 +147,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getTypeChecked())
 			{
-				SClassDefinitionAssistantTC.checkOver(c);
+				assistantFactory.createSClassDefinitionAssistant().checkOver(c);
 			}
 		}
 
@@ -178,7 +177,7 @@ public class ClassTypeChecker extends TypeChecker
 		{
 			if (!c.getTypeChecked())
 			{
-				SClassDefinitionAssistantTC.initializedCheck(c);
+				assistantFactory.createSClassDefinitionAssistant().initializedCheck(c);
 				assistantFactory.createPDefinitionAssistant().unusedCheck(c);
 			}
 		}

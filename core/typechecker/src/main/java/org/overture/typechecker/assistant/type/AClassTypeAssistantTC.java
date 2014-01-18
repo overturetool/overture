@@ -8,7 +8,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class AClassTypeAssistantTC
 {
@@ -36,7 +35,7 @@ public class AClassTypeAssistantTC
 
 	public static boolean hasSupertype(AClassType sclass, PType other)
 	{
-		return SClassDefinitionAssistantTC.hasSupertype(sclass.getClassdef(), other);
+		return af.createSClassDefinitionAssistant().hasSupertype(sclass.getClassdef(), other);
 	}
 
 }

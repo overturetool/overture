@@ -124,7 +124,7 @@ public class SClassDefinitionAssistantTC
 //		return def;
 //	}
 
-	public static boolean hasSupertype(SClassDefinition classDefinition,
+	public boolean hasSupertype(SClassDefinition classDefinition,
 			PType other)
 	{
 
@@ -147,7 +147,7 @@ public class SClassDefinitionAssistantTC
 		return false;
 	}
 
-	public static boolean isAccessible(Environment env, PDefinition field,
+	public boolean isAccessible(Environment env, PDefinition field,
 			boolean needStatic)
 	{
 		SClassDefinition self = env.findClassDefinition();
@@ -215,7 +215,7 @@ public class SClassDefinitionAssistantTC
 //		return def;
 //	}
 
-	public static Set<PDefinition> findMatches(SClassDefinition classdef,
+	public Set<PDefinition> findMatches(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 
@@ -224,7 +224,7 @@ public class SClassDefinitionAssistantTC
 		return set;
 	}
 
-	public static PDefinition findName(List<SClassDefinition> classes,
+	public PDefinition findName(List<SClassDefinition> classes,
 			ILexNameToken name, NameScope scope)
 	{
 
@@ -242,7 +242,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	private static SClassDefinition get(List<SClassDefinition> classes,
+	private SClassDefinition get(List<SClassDefinition> classes,
 			String module)
 	{
 
@@ -256,7 +256,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static PDefinition findType(List<SClassDefinition> classes,
+	public PDefinition findType(List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
@@ -273,7 +273,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static Set<PDefinition> findMatches(List<SClassDefinition> classes,
+	public Set<PDefinition> findMatches(List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
@@ -281,13 +281,13 @@ public class SClassDefinitionAssistantTC
 
 		for (SClassDefinition d : classes)
 		{
-			set.addAll(SClassDefinitionAssistantTC.findMatches(d, name));
+			set.addAll(af.createSClassDefinitionAssistant().findMatches(d, name));
 		}
 
 		return set;
 	}
 
-	public static void unusedCheck(List<SClassDefinition> classes)
+	public void unusedCheck(List<SClassDefinition> classes)
 	{
 		for (SClassDefinition d : classes)
 		{
@@ -316,7 +316,7 @@ public class SClassDefinitionAssistantTC
 		return def;
 	}
 
-	public static void implicitDefinitions(SClassDefinition d,
+	public void implicitDefinitions(SClassDefinition d,
 			Environment publicClasses)
 	{
 		if (d instanceof ASystemClassDefinition)
@@ -329,7 +329,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitionsBase(SClassDefinition d,
+	public void implicitDefinitionsBase(SClassDefinition d,
 			Environment publicClasses)
 	{
 		setInherited(d, publicClasses);
@@ -346,7 +346,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static AExplicitOperationDefinition getInvDefinition(
+	private AExplicitOperationDefinition getInvDefinition(
 			SClassDefinition d)
 	{
 
@@ -399,7 +399,7 @@ public class SClassDefinitionAssistantTC
 		return invdefs;
 	}
 
-	private static void setInheritedDefinitions(SClassDefinition definition)
+	private void setInheritedDefinitions(SClassDefinition definition)
 	{
 		List<PDefinition> indefs = new Vector<PDefinition>();
 
@@ -434,7 +434,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static List<PDefinition> getInheritable(SClassDefinition def)
+	private List<PDefinition> getInheritable(SClassDefinition def)
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -485,7 +485,7 @@ public class SClassDefinitionAssistantTC
 		return defs;
 	}
 
-	private static void setInherited(SClassDefinition d, Environment base)
+	private void setInherited(SClassDefinition d, Environment base)
 	{
 		switch (d.getSettingHierarchy())
 		{
@@ -550,7 +550,7 @@ public class SClassDefinitionAssistantTC
 		af.createPDefinitionListAssistant().typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
 	}
 
-	public static PDefinition findThread(SClassDefinition d)
+	public PDefinition findThread(SClassDefinition d)
 	{
 		//return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
 		return af.createPDefinitionAssistant().findName(d, d.getName().getThreadName(), NameScope.NAMES);
@@ -583,7 +583,7 @@ public class SClassDefinitionAssistantTC
 		return def.getClasstype();
 	}
 
-	public static void checkOver(SClassDefinition c)
+	public void checkOver(SClassDefinition c)
 	{
 		int inheritedThreads = 0;
 		af.createSClassDefinitionAssistant().checkOverloads(c);
@@ -593,7 +593,7 @@ public class SClassDefinitionAssistantTC
 		for (PDefinition def : c.getSuperDefs())
 		{
 			SClassDefinition superdef = (SClassDefinition) def;
-			List<PDefinition> inheritable = SClassDefinitionAssistantTC.getInheritable(superdef);
+			List<PDefinition> inheritable = af.createSClassDefinitionAssistant().getInheritable(superdef);
 			superlist.add(inheritable);
 
 			if (checkOverrides(c, inheritable))
@@ -611,7 +611,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static void checkAmbiguities(SClassDefinition c,
+	private void checkAmbiguities(SClassDefinition c,
 			List<List<PDefinition>> superlist)
 	{
 		int count = superlist.size();
@@ -629,7 +629,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static void checkAmbiguities(SClassDefinition c,
+	private void checkAmbiguities(SClassDefinition c,
 			List<PDefinition> defs, List<PDefinition> defs2)
 	{
 
@@ -664,7 +664,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static boolean checkOverrides(SClassDefinition c,
+	private boolean checkOverrides(SClassDefinition c,
 			List<PDefinition> inheritable)
 	{
 		boolean inheritedThread = false;
@@ -798,7 +798,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void initializedCheck(SClassDefinition c)
+	public void initializedCheck(SClassDefinition c)
 	{
 		af.createPDefinitionListAssistant().initializedCheck(c.getDefinitions());
 	}

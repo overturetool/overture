@@ -37,7 +37,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.AMapMapType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
@@ -66,7 +65,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
 import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
@@ -76,8 +74,6 @@ import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -1198,7 +1194,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				{
 					question.env.listAlternatives(memberName);
 				}
-			} else if (SClassDefinitionAssistantTC.isAccessible(question.env, fdef, false))
+			} else if (question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, fdef, false))
 			{
 				// The following gives lots of warnings for self.value access
 				// to values as though they are fields of self in the CSK test
@@ -2099,7 +2095,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types", node.getLocation(), node);
 				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
-			} else if (!SClassDefinitionAssistantTC.isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access
+			} else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access
 																								// ==
 																								// Token.PRIVATE)
 			{
@@ -2587,7 +2583,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						node.setName(name.getModifiedName(sd.getName().getName()));
 					}
 
-					if (!SClassDefinitionAssistantTC.isAccessible(env, vardef, true))
+					if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(env, vardef, true))
 					{
 						TypeCheckerErrors.report(3180, "Inaccessible member "
 								+ name

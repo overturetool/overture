@@ -1227,7 +1227,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				AClassType ctype = PTypeAssistantTC.getClassType(set.getSetof());
 
-				if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
@@ -1236,7 +1236,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			AClassType ctype = PTypeAssistantTC.getClassType(type);
 
-			if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{
 				TypeCheckerErrors.report(3237, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 			}
@@ -1267,7 +1267,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				AClassType ctype = PTypeAssistantTC.getClassType(set.getSetof());
 
-				if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+				if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 				{
 					TypeCheckerErrors.report(3236, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 				}
@@ -1276,7 +1276,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			AClassType ctype = PTypeAssistantTC.getClassType(type);
 
-			if (SClassDefinitionAssistantTC.findThread(ctype.getClassdef()) == null)
+			if (question.assistantFactory.createSClassDefinitionAssistant().findThread(ctype.getClassdef()) == null)
 			{
 				TypeCheckerErrors.report(3237, "Class does not define a thread", node.getObj().getLocation(), node.getObj());
 			}

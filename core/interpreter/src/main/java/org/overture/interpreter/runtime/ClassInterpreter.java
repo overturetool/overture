@@ -309,13 +309,13 @@ public class ClassInterpreter extends Interpreter
 	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (SClassDefinition)SClassDefinitionAssistantInterpreter.findType(classes, name);
+		return (SClassDefinition)assistantFactory.createSClassDefinitionAssistant().findType(classes, name);
 	}
 
 	@Override
 	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		PDefinition d = SClassDefinitionAssistantInterpreter.findName(classes,name, NameScope.NAMESANDSTATE);
+		PDefinition d = assistantFactory.createSClassDefinitionAssistant().findName(classes,name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
