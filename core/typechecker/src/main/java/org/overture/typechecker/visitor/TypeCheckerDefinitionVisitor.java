@@ -452,7 +452,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			argdefs.addAll(APatternListTypePairAssistantTC.getDefinitions(pltp, NameScope.LOCAL));
 		}
 
-		defs.addAll(PDefinitionAssistantTC.checkDuplicatePatterns(node, argdefs));
+		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
@@ -778,7 +778,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			argdefs.addAll(APatternListTypePairAssistantTC.getDefinitions(ptp, NameScope.LOCAL));
 		}
 
-		defs.addAll(PDefinitionAssistantTC.checkDuplicatePatterns(node, argdefs));
+		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
 
 		if (node.getResult() != null)
 		{
@@ -1421,7 +1421,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		Environment local = question.env;
 		for (PDefinition d : node.getLocalDefs())
 		{
-			PDefinitionAssistantTC.typeResolve(d, THIS, question);
+			question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
 			d.apply(THIS, question);
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope);
 		}

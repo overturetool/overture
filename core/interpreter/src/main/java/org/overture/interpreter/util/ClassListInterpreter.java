@@ -184,7 +184,7 @@ public class ClassListInterpreter extends ClassList
 
 		if (d != null)
 		{
-			PDefinition def =PDefinitionAssistantInterpreter.findName(d,name, scope);
+			PDefinition def = PDefinitionAssistantInterpreter.findName(d,name, scope);
 
 			if (def != null)
 			{

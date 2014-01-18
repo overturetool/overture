@@ -335,7 +335,7 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (PDefinition d: c.getDefinitions())
 			{
-				if (PDefinitionAssistantTC.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
@@ -351,7 +351,7 @@ public class ClassInterpreter extends Interpreter
 
 			for (PDefinition d: c.getAllInheritedDefinitions())
 			{
-				if (PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 

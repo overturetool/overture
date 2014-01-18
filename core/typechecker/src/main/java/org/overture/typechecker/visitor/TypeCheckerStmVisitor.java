@@ -650,7 +650,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
 
 				if (question.env.isVDMPP())
 				{
@@ -663,7 +663,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, THIS, question);
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}

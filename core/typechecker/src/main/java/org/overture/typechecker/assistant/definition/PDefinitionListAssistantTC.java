@@ -161,7 +161,7 @@ public class PDefinitionListAssistantTC
 	{
 		for (PDefinition definition : definitions)
 		{
-			PDefinitionAssistantTC.typeResolve(definition, rootVisitor, question);
+			af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
 		}
 
 	}

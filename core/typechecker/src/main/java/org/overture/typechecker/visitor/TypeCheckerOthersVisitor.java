@@ -217,7 +217,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				{
 					PDefinition match = matches.iterator().next(); // Just take first
 
-					if (PDefinitionAssistantTC.isFunction(match))
+					if (question.assistantFactory.createPDefinitionAssistant().isFunction(match))
 					{
 						TypeCheckerErrors.report(3247, "Function apply not allowed in state designator", name.getLocation(), name);
 					} else
@@ -273,12 +273,12 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 						+ name + "' in assignment", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (PDefinitionAssistantTC.isFunction(def))
+			} else if (question.assistantFactory.createPDefinitionAssistant().isFunction(def))
 			{
 				TypeCheckerErrors.report(3247, "Function apply not allowed in state designator", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));
 				return node.getType();
-			} else if (PDefinitionAssistantTC.isOperation(def))
+			} else if (question.assistantFactory.createPDefinitionAssistant().isOperation(def))
 			{
 				TypeCheckerErrors.report(3247, "Operation call not allowed in state designator", name.getLocation(), name);
 				node.setType(AstFactory.newAUnknownType(name.getLocation()));

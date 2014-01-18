@@ -127,18 +127,18 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, unknown, NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, unknown, NameScope.LOCAL));
 
 				}
 			} else
 			{
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
 				}
 			}
 
-			defList.add(PDefinitionAssistantTC.checkDuplicatePatterns(node, defs));
+			defList.add(af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs));
 
 			if (ftype.getResult() instanceof AFunctionType) // else???
 			{

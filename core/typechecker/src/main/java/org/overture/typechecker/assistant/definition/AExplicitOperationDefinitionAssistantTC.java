@@ -46,7 +46,7 @@ public class AExplicitOperationDefinitionAssistantTC
 			defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
 		}
 
-		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
+		return af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs);
 	}
 
 	@SuppressWarnings("unchecked")

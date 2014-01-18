@@ -74,7 +74,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	//places like ClassInterpreter.
 	public static boolean isFunctionOrOperation(PDefinition possible)
 	{
-		return isFunction(possible) || isOperation(possible);
+		return af.createPDefinitionAssistant().isFunction(possible) || af.createPDefinitionAssistant().isOperation(possible);
 	}
 
 	public PDefinition findType(List<PDefinition> definitions,
@@ -271,7 +271,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void typeResolve(PDefinition d,
+	public void typeResolve(PDefinition d,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -312,7 +312,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static String kind(PDefinition d)
+	public String kind(PDefinition d)
 	{
 		try
 		{
@@ -349,7 +349,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.
 	 */
-	public static List<PDefinition> checkDuplicatePatterns(PDefinition d,
+	public List<PDefinition> checkDuplicatePatterns(PDefinition d,
 			List<PDefinition> defs)
 	{
 		Set<PDefinition> noDuplicates = new HashSet<PDefinition>();

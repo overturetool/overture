@@ -1712,7 +1712,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 
-				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
 				if (question.env.isVDMPP())
 				{
@@ -1725,7 +1725,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}
@@ -1756,7 +1756,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
 				TypeCheckInfo newQuestion = new TypeCheckInfo(question.assistantFactory, local, question.scope);
 
-				PDefinitionAssistantTC.typeResolve(d, THIS, question);
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
 
 				if (question.env.isVDMPP())
 				{
@@ -1769,7 +1769,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			} else
 			{
 				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				PDefinitionAssistantTC.typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
 			}

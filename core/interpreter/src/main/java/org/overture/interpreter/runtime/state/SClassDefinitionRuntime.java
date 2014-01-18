@@ -29,7 +29,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().getName(), PDefinitionAssistantTC.getDefinitions(def));
+		delegate = new Delegate(def.getName().getName(),PDefinitionAssistantTC.getDefinitions(def));
 		guardLock = new Lock();
 	}
 	

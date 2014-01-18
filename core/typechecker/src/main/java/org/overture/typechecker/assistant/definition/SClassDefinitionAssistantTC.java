@@ -640,7 +640,7 @@ public class SClassDefinitionAssistantTC
 			for (PDefinition indef2 : defs2)
 			{
 				if (!indef.getLocation().equals(indef2.getLocation())
-						&& PDefinitionAssistantTC.kind(indef).equals(PDefinitionAssistantTC.kind(indef2)))
+						&& af.createPDefinitionAssistant().kind(indef).equals(af.createPDefinitionAssistant().kind(indef2)))
 				{
 					ILexNameToken localName2 = indef2.getName().getModifiedName(c.getName().getName());
 
@@ -688,11 +688,11 @@ public class SClassDefinitionAssistantTC
 
 			if (override != null)
 			{
-				if (!PDefinitionAssistantTC.kind(indef).equals(PDefinitionAssistantTC.kind(override)))
+				if (!af.createPDefinitionAssistant().kind(indef).equals(af.createPDefinitionAssistant().kind(override)))
 				{
 					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: "
 							+ override.getName(), override.getName().getLocation(), override);
-					TypeCheckerErrors.detail2("This", PDefinitionAssistantTC.kind(override), "Super", PDefinitionAssistantTC.kind(indef));
+					TypeCheckerErrors.detail2("This", af.createPDefinitionAssistant().kind(override), "Super", af.createPDefinitionAssistant().kind(indef));
 				} else if (PAccessSpecifierAssistantTC.narrowerThan(override.getAccess(), indef.getAccess()))
 				{
 					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(), override);
@@ -733,10 +733,10 @@ public class SClassDefinitionAssistantTC
 						&& def1.getName().getName().equals(def2.getName().getName())
 						&& !done.contains(def1.getName().getName()))
 				{
-					if (PDefinitionAssistantTC.isFunction(def1)
-							&& PDefinitionAssistantTC.isFunction(def2)
-							|| PDefinitionAssistantTC.isOperation(def1)
-							&& PDefinitionAssistantTC.isOperation(def2))
+					if (af.createPDefinitionAssistant().isFunction(def1)
+							&& af.createPDefinitionAssistant().isFunction(def2)
+							|| af.createPDefinitionAssistant().isOperation(def1)
+							&& af.createPDefinitionAssistant().isOperation(def2))
 					{
 						PType to = def1.getType();
 						PType from = def2.getType();

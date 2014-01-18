@@ -240,7 +240,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		for (PDefinition d : node.getDefinitions())
 		{
 			if (!af.createPDefinitionAssistant().isStatic(d)
-					&& PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
 				initCtxt.putList(nvpl);
@@ -251,7 +251,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		for (PDefinition d : node.getDefinitions())
 		{
 			if (!af.createPDefinitionAssistant().isStatic(d)
-					&& !PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+					&& !af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
 

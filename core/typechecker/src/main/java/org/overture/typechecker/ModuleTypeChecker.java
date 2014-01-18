@@ -123,7 +123,7 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				Environment env = new ModuleEnvironment(assistantFactory, m);
-				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
+				assistantFactory.createPDefinitionListAssistant().implicitDefinitions(m.getDefs(), env);
 			}
 		}
 
@@ -185,7 +185,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
+				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
 			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);

@@ -58,6 +58,9 @@ public class Delegate implements Serializable
 	private static final long serialVersionUID = 1L;
 	private final String name;
 	private List<PDefinition> definitions;
+	//Added this variable to call the assistant factory is it correct?
+	
+	//protected IInterpreterAssistantFactory af;
 
 	public Delegate(String name, List<PDefinition> definitions)
 	{
