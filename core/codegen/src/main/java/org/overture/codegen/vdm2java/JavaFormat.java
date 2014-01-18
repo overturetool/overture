@@ -300,7 +300,7 @@ public class JavaFormat
 		
 		if(leftNodeType instanceof SSeqTypeCGBase)
 		{
-			return handleSeqComparison(node, false);
+			return handleSeqComparison(node);
 		}
 		else if(isValueType(leftNodeType))
 		{
@@ -316,7 +316,8 @@ public class JavaFormat
 
 		if (leftNodeType instanceof SSeqTypeCGBase)
 		{
-			return handleSeqComparison(node, true);
+			ANotUnaryExpCG transformed = transNotEquals(node);
+			return formatNotUnary(transformed.getExp());
 		}
 		else if(isValueType(leftNodeType))
 		{
@@ -357,24 +358,22 @@ public class JavaFormat
 		return format(valueType.getLeft()) + ".equals(" + format(valueType.getRight()) + ")";
 	}
 	
-	private String handleSeqComparison(SBinaryExpCGBase node, boolean notEquals) throws AnalysisException
+	private String handleSeqComparison(SBinaryExpCGBase node) throws AnalysisException
 	{
-		String prefix = notEquals ? "!" : "";
-		
 		//In VDM the types of the equals are compatible when the AST passes the type check
 		PExpCG leftNode = node.getLeft();
 		PExpCG rightNode = node.getRight();
 		
 		if(isEmptySeq(leftNode))
 		{
-			return prefix + format(node.getRight()) + ".isEmpty()";
+			return format(node.getRight()) + ".isEmpty()";
 		}
 		else if(isEmptySeq(rightNode))
 		{
-			return prefix + format(node.getLeft()) + ".isEmpty()";
+			return format(node.getLeft()) + ".isEmpty()";
 		}
 	
-		return prefix + "Utils.seqEquals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
+		return "Utils.seqEquals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
 
 	}
 	
