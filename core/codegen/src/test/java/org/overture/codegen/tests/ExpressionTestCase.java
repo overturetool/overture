@@ -22,7 +22,10 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 	@Override
 	protected String generateActualOutput() throws AnalysisException
 	{
-		return JavaCodeGenUtil.generateJavaFromExp(CodeGenTestUtil.getFileContent(file)).getContent();
+		String fileContent = CodeGenTestUtil.getFileContent(file);
+		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent).getContent().trim();
+		
+		return generatedJava;
 	}
 
 	@Override
