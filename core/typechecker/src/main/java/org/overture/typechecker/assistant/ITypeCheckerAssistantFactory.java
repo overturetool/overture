@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisAdaptor;
 import org.overture.ast.analysis.AnswerAdaptor;
-import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -37,14 +36,12 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -124,7 +121,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AImplicitOperationDefinitionAssistantTC createAImplicitOperationDefinitionAssistant();
 
-	AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
+	//AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
 
 	AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant();
 
@@ -138,7 +135,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
 
-	AValueDefinitionAssistantTC createAValueDefinitionAssistant();
+	//AValueDefinitionAssistantTC createAValueDefinitionAssistant();
 
 	PAccessSpecifierAssistantTC createPAccessSpecifierAssistant();
 
@@ -178,6 +175,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	PImportAssistantTC createPImportAssistant();
 
 	// pattern
+	//ABooleanPatternAssistantTC createABooleanPatternAssistant();
+
+	//ACharacterPatternAssistantTC createACharacterPatternAssistant();
 
 	AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
 

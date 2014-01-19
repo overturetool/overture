@@ -80,7 +80,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		if (type instanceof AUnionType)
 		{
-			return AUnionTypeAssistantTC.isUnknown((AUnionType) type);
+			return af.createAUnionTypeAssistant().isUnknown((AUnionType) type);
 		} else if (type instanceof AUnknownType)
 		{
 			return true;

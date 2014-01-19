@@ -13,6 +13,7 @@ import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.types.SNumericBasicType;
 
 public interface IAstAssistantFactory
 {
@@ -33,4 +34,7 @@ public interface IAstAssistantFactory
 	
 	//visitors
 	IAnswer<LexNameList> getAllVariableNameLocator();
+	IAnswer<Boolean> getNumericFinder();
+	IAnswer<SNumericBasicType> getNumericBasisChecker();
+	IAnswer<Integer> getHashChecker();
 }

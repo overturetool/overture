@@ -29,6 +29,7 @@ import java.util.Vector;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -924,6 +925,29 @@ public class TypeComparator
 			}
 		}
 		
+		// Lastly, check that the compose types extracted are compatible
+		LexNameList done = new LexNameList();
+		
+		for (PType c1: undefined)
+		{
+			for (PType c2: undefined)
+			{
+				if (c1 != c2)
+				{
+					ARecordInvariantType r1 = (ARecordInvariantType)c1;
+					ARecordInvariantType r2 = (ARecordInvariantType)c2;
+					
+					if (r1.getName().equals(r2.getName()) &&
+						!done.contains(r1.getName()) && !r1.getFields().equals(r2.getFields()))
+					{
+						TypeChecker.report(3325, "Mismatched compose definitions for " + r1.getName(), r1.getLocation());
+						TypeChecker.detail2(r1.getName().getName(), r1.getLocation(), r2.getName().getName(), r2.getLocation());
+						done.add(r1.getName());
+					}
+				}
+			}
+		}
+
 		return undefined;
 	}
 }

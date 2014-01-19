@@ -235,6 +235,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 					+ (old ? 1 : 0)
 					+ (typeQualifier == null ? 0
 							: PTypeAssistant.hashCode(typeQualifier));
+							
 		}
 
 		return hashcode;

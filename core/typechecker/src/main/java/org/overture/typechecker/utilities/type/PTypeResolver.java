@@ -7,7 +7,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -44,7 +43,7 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
 
 /**
  * This class implements a way to resolve types from general PType class.
@@ -104,7 +103,7 @@ public class PTypeResolver extends
 			return tmp;
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -153,7 +152,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(type);
+			af.createPTypeAssistant().unResolve(type);
 			throw e;
 		}
 	}
@@ -184,6 +183,7 @@ public class PTypeResolver extends
 			return type;
 		} catch (TypeCheckException e)
 		{
+
 			type.apply(af.getTypeUnresolver());
 			throw e;
 		}
@@ -231,7 +231,7 @@ public class PTypeResolver extends
 			{
 				question.root.setInfinite(false);
 			}
-
+			
 			f.apply(THIS, question);
 
 			if (question.root != null)
@@ -504,7 +504,7 @@ public class PTypeResolver extends
 
 			// Resolved types may be unions, so force a re-expand
 			type.setExpanded(false);
-			AUnionTypeAssistant.expand(type);
+			af.createAUnionTypeAssistant().expand(type);
 
 			return type;
 		} catch (TypeCheckException e)
@@ -518,7 +518,12 @@ public class PTypeResolver extends
 	public PType caseAUnresolvedType(AUnresolvedType type, Newquestion question)
 			throws AnalysisException
 	{
+//<<<<<<< HEAD
+//		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
+//		PType deref = af.createAUnresolvedTypeAssistant().dereference(type, question.question.env, question.root);
+//=======
 		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
+//>>>>>>> origin/pvj/main
 
 		if (!(deref instanceof AClassType))
 		{
@@ -592,7 +597,7 @@ public class PTypeResolver extends
 		type.setResolved(true);
 		return type;
 	}
-
+	
 	@Override
 	public PType createNewReturnValue(INode node, Newquestion question)
 			throws AnalysisException

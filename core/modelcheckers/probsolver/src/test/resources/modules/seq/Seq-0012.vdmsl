@@ -1,0 +1,4 @@
+operations
+
+callit() n : seq of nat
+post n = reverse( [1,2,3]);

@@ -21,7 +21,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
@@ -87,7 +86,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 						classname = ct.getClassdef().getName();
 					}
 
-					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
+					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());

@@ -9,7 +9,6 @@ import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 /**
  * Used to check if a given pattern always matches with its type.
@@ -29,7 +28,7 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.alwaysMatches(pattern.getPlist());
+		return af.createPPatternListAssistant().alwaysMatches(pattern.getPlist());
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class AlwaysMatchingPatternChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.alwaysMatches(pattern.getPlist());
+		return af.createPPatternListAssistant().alwaysMatches(pattern.getPlist());
 	}
 
 	@Override

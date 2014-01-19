@@ -20,6 +20,8 @@ public class ABooleanPatternAssistantInterpreter
 	@SuppressWarnings("static-access")
 	public ABooleanPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
+
+		super();
 		this.af = af;
 	}
 

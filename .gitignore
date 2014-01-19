@@ -66,6 +66,7 @@ Icon[^-0-9a-zA-Z]
 ############################
 target/
 
+.metadata/
 .classpath
 .settings/
 .metadata/

@@ -35,14 +35,6 @@ import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to resolve types from a node in the AST
@@ -78,7 +70,7 @@ public class DefinitionTypeResolver extends
 			NewQuestion question) throws AnalysisException
 	{
 		Environment cenv = new FlatEnvironment(question.question.assistantFactory, node.getDefinitions(), question.question.env);
-		PDefinitionListAssistantTC.typeResolve(node.getDefinitions(), question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, cenv));
+		af.createPDefinitionListAssistant().typeResolve(node.getDefinitions(), question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, cenv));
 	}
 
 	@Override
@@ -88,7 +80,7 @@ public class DefinitionTypeResolver extends
 	{
 		if (node.getTypeParams().size() != 0)
 		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.question.assistantFactory, AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(question.question.assistantFactory, af.createAExplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
 
 			TypeCheckInfo newQuestion = new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope);
 
@@ -97,23 +89,8 @@ public class DefinitionTypeResolver extends
 		{
 			// node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node),
 			// null, question.rootVisitor, question));
-			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); // FIXME:
-																																// my
-																																// way
-																																// to
-																																// rewrite
-																																// the
-																																// above
-																																// line.
-																																// Test
-																																// shows
-																																// that
-																																// it
-																																// is
-																																// ok
-																																// <-
-																																// George
-																																// Kanakis
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); 
+			// FIXME: my way to rewrite the above line.Test shows that it is ok <- George kanakis
 		}
 
 		if (question.question.env.isVDMPP())
@@ -147,7 +124,7 @@ public class DefinitionTypeResolver extends
 
 		for (List<PPattern> pp : node.getParamPatternList())
 		{
-			PPatternListAssistantTC.typeResolve(pp, question.rootVisitor, question.question);
+			af.createPPatternListAssistant().typeResolve(pp, question.rootVisitor, question.question);
 		}
 
 	}
@@ -171,19 +148,17 @@ public class DefinitionTypeResolver extends
 
 		if (node.getPrecondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(node.getPredef(), question.rootVisitor, question.question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(node.getPostdef(), question.rootVisitor, question.question);
 			node.getPostdef().apply(this, question);
 		}
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			PPatternAssistantTC.typeResolve(p, question.rootVisitor, question.question);
+			af.createPPatternAssistant().typeResolve(p, question.rootVisitor, question.question);
 		}
 	}
 
@@ -194,7 +169,7 @@ public class DefinitionTypeResolver extends
 	{
 		if (node.getTypeParams().size() > 0)
 		{
-			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
+			FlatCheckedEnvironment params = new FlatCheckedEnvironment(af, af.createAImplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node), question.question.env, NameScope.NAMES);
 			node.setType(af.createPTypeAssistant().typeResolve(af.createPDefinitionAssistant().getType(node), null, question.rootVisitor, new TypeCheckInfo(question.question.assistantFactory, params, question.question.scope, question.question.qualifiers)));
 		} else
 		{
@@ -204,7 +179,7 @@ public class DefinitionTypeResolver extends
 
 		if (node.getResult() != null)
 		{
-			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
 		}
 
 		if (question.question.env.isVDMPP())
@@ -226,13 +201,11 @@ public class DefinitionTypeResolver extends
 
 		if (node.getPrecondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -251,7 +224,7 @@ public class DefinitionTypeResolver extends
 
 		if (node.getResult() != null)
 		{
-			APatternTypePairAssistant.typeResolve(node.getResult(), question.rootVisitor, question.question);
+			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
 		}
 
 		if (question.question.env.isVDMPP())
@@ -266,13 +239,11 @@ public class DefinitionTypeResolver extends
 
 		if (node.getPrecondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(d.getPredef(), rootVisitor, question);
 			node.getPredef().apply(this, question);
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(d.getPostdef(), rootVisitor, question);
 			node.getPostdef().apply(this, question);
 		}
 
@@ -283,8 +254,7 @@ public class DefinitionTypeResolver extends
 	}
 
 	@Override
-	public void caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, NewQuestion question)
+	public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
 
@@ -293,7 +263,7 @@ public class DefinitionTypeResolver extends
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(node.getType());
+			af.createPTypeAssistant().unResolve(node.getType());
 			throw e;
 		}
 	}
@@ -313,7 +283,6 @@ public class DefinitionTypeResolver extends
 	public void caseARenamedDefinition(ARenamedDefinition node,
 			NewQuestion question) throws AnalysisException
 	{
-		// PDefinitionAssistantTC.typeResolve(d.getDef(), rootVisitor, question);
 		node.getDef().apply(this, question);
 	}
 
@@ -337,13 +306,11 @@ public class DefinitionTypeResolver extends
 
 		if (node.getInvPattern() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(node.getInvdef(), question.rootVisitor, question.question);
 			node.getInvdef().apply(this, question);
 		}
 
 		if (node.getInitPattern() != null)
 		{
-			// PDefinitionAssistantTC.typeResolve(d.getInitdef(), rootVisitor, question);
 			node.getInitdef().apply(this, question);
 		}
 
@@ -369,9 +336,8 @@ public class DefinitionTypeResolver extends
 
 			if (node.getInvdef() != null)
 			{
-				// PDefinitionAssistantTC.typeResolve(d.getInvdef(), rootVisitor, question);
 				node.getInvdef().apply(this, question);
-				PPatternAssistantTC.typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
+				af.createPPatternAssistant().typeResolve(node.getInvPattern(), question.rootVisitor, question.question);
 			}
 
 			node.setType(node.getInvType());
@@ -386,7 +352,7 @@ public class DefinitionTypeResolver extends
 			
 		} catch (TypeCheckException e)
 		{
-			PTypeAssistantTC.unResolve(node.getInvType());
+			af.createPTypeAssistant().unResolve(node.getInvType());
 			throw e;
 		}
 	}
@@ -398,7 +364,8 @@ public class DefinitionTypeResolver extends
 		if (node.getType() != null)
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
-			PPatternAssistantTC.typeResolve(node.getPattern(), question.rootVisitor, question.question);
+			af.createPPatternAssistant().typeResolve(node.getPattern(), question.rootVisitor, question.question);
+			//			af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 			updateDefs(node, question.question);
 		}
 	}
@@ -408,7 +375,7 @@ public class DefinitionTypeResolver extends
 		PType type = node.getType();
 		PPattern pattern = node.getPattern();
 
-		List<PDefinition> newdefs = PPatternAssistantTC.getDefinitions(pattern, type, node.getNameScope());
+		List<PDefinition> newdefs = af.createPPatternAssistant().getDefinitions(pattern, type, node.getNameScope());
 
 		// The untyped definitions may have had "used" markers, so we copy
 		// those into the new typed definitions, lest we get warnings. We
@@ -431,20 +398,20 @@ public class DefinitionTypeResolver extends
 			}
 
 			ALocalDefinition ld = (ALocalDefinition) d;
-			ALocalDefinitionAssistantTC.setValueDefinition(ld);
+			af.createALocalDefinitionAssistant().setValueDefinition(ld);
 		}
 
 		node.setDefs(newdefs);
 		List<PDefinition> defs = node.getDefs();
-		PDefinitionListAssistantTC.setAccessibility(defs, node.getAccess().clone());
-		PDefinitionListAssistantTC.setClassDefinition(defs, node.getClassDefinition());
+		af.createPDefinitionListAssistant().setAccessibility(defs, node.getAccess().clone());
+		af.createPDefinitionListAssistant().setClassDefinition(defs, node.getClassDefinition());
 	}
 
 	@Override
 	public void caseAPatternListTypePair(APatternListTypePair pltp,
 			NewQuestion question) throws AnalysisException
 	{
-		PPatternListAssistantTC.typeResolve(pltp.getPatterns(), question.rootVisitor, question.question);
+		af.createPPatternListAssistant().typeResolve(pltp.getPatterns(), question.rootVisitor, question.question);
 		PType type = af.createPTypeAssistant().typeResolve(pltp.getType(), null, question.rootVisitor, question.question);
 		pltp.setType(type);
 	}

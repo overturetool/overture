@@ -1,0 +1,4 @@
+operations
+
+getlen() n : nat
+post n = len [1,2,3];

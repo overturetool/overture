@@ -61,7 +61,7 @@ public class ACaseAlternativeAssistantTC
 
 		PDefinitionListAssistantTC.typeCheck(c.getDefs(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
-		if (!PPatternAssistantTC.matches(c.getPattern(), expType))
+		if (!af.createPPatternAssistant().matches(c.getPattern(), expType))
 		{
 			TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
 		}
