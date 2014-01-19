@@ -1,4 +1,1 @@
-#set ($sizeCall = ".size()")
-#set( $exp = $JavaFormat.format($node.getExp()) )
-#set( $tailCall = ".subList(1,$exp$sizeCall)")
-$exp$tailCall
+Utils.seqTail($JavaFormat.format($node.getExp()))

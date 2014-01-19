@@ -23,6 +23,11 @@ public class Utils
 		return vector;
 	}
 	
+	public static <T> List<T> seqTail(List<T> seq)
+	{
+		return seq.subList(1,seq.size());
+	}
+	
 	public static <T> List<T> seqConc(List<T> left, List<T> right)
 	{
 		List<T> result = new Vector<T>();
