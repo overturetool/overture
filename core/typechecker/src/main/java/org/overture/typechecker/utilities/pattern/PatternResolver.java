@@ -231,11 +231,13 @@ public class PatternResolver extends
 		{
 			for (AMapletPatternMaplet mp : pattern.getMaplets())
 			{
-				af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
+				//af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
+				mp.apply(THIS, question);
 			}
 		} catch (TypeCheckException e)
 		{
-			af.createAMapPatternAssistant().unResolve(pattern);
+			//af.createAMapPatternAssistant().unResolve(pattern);
+			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}
 	}
@@ -258,7 +260,8 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			af.createAMapUnionPatternAssistant().unResolve(pattern);
+			//af.createAMapUnionPatternAssistant().unResolve(pattern);
+			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}
 	}
