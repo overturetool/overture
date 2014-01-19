@@ -25,7 +25,7 @@ public class PPatternListAssistantTC
 		this.af = af;
 	}
 
-	public static void typeResolve(List<PPattern> pp,
+	public void typeResolve(List<PPattern> pp,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -37,7 +37,7 @@ public class PPatternListAssistantTC
 
 	}
 
-	public static void unResolve(List<PPattern> pp)
+	public void unResolve(List<PPattern> pp)
 	{
 
 		for (PPattern pPattern : pp)
@@ -46,7 +46,7 @@ public class PPatternListAssistantTC
 		}
 	}
 
-	public static PType getPossibleType(LinkedList<PPattern> plist,
+	public PType getPossibleType(LinkedList<PPattern> plist,
 			ILexLocation location)
 	{
 
@@ -83,7 +83,7 @@ public class PPatternListAssistantTC
 		return list;
 	}
 
-	public static boolean isSimple(LinkedList<PPattern> p)
+	public boolean isSimple(LinkedList<PPattern> p)
 	{
 		for (PPattern pattern : p)
 		{
@@ -98,7 +98,7 @@ public class PPatternListAssistantTC
 		return true;
 	}
 
-	public static boolean alwaysMatches(List<PPattern> pl)
+	public boolean alwaysMatches(List<PPattern> pl)
 	{
 		for (PPattern p : pl)
 		{

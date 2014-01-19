@@ -161,13 +161,13 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 	@Override
 	public PExp caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newASeqEnumSeqExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
+		return AstFactory.newASeqEnumSeqExp(pattern.getLocation(), af.createPPatternListAssistant().getMatchingExpressionList(pattern.getPlist()));
 	}
 
 	@Override
 	public PExp caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newASetEnumSetExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
+		return AstFactory.newASetEnumSetExp(pattern.getLocation(), af.createPPatternListAssistant().getMatchingExpressionList(pattern.getPlist()));
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 	public PExp caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		return AstFactory.newATupleExp(pattern.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(pattern.getPlist()));
+		return AstFactory.newATupleExp(pattern.getLocation(), af.createPPatternListAssistant().getMatchingExpressionList(pattern.getPlist()));
 	}
 
 	@Override

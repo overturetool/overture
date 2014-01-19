@@ -48,9 +48,6 @@ import org.overture.pog.obligation.SubTypeObligation;
 import org.overture.pog.obligation.ValueBindingObligation;
 import org.overture.pog.util.POException;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogParamDefinitionVisitor<Q extends POContextStack, A extends ProofObligationList>
@@ -105,7 +102,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 					for (PDefinition def : p.getDefinitions())
 						pids.add(def.getName());
 				
-				if (!PPatternListAssistantTC.alwaysMatches(patterns))
+				if (!question.assistantFactory.createPPatternListAssistant().alwaysMatches(patterns))
 				{
 					matchNeeded = true;
 				}
@@ -278,7 +275,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 						pids.add(def.getName());
 				}
 				
-				if (!PPatternListAssistantTC.alwaysMatches(pltp.getPatterns()))
+				if (!question.assistantFactory.createPPatternListAssistant().alwaysMatches(pltp.getPatterns()))
 				{
 					matchNeeded = true;
 				}
@@ -352,7 +349,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				for (PDefinition def : p.getDefinitions())
 					pids.add(def.getName());
 
-			if (pids.hasDuplicates() || !PPatternListAssistantTC.alwaysMatches(node.getParameterPatterns()))
+			if (pids.hasDuplicates() || !question.assistantFactory.createPPatternListAssistant().alwaysMatches(node.getParameterPatterns()))
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}
@@ -411,7 +408,7 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 				}
 			}
 
-			if (pids.hasDuplicates() || !PPatternListAssistantTC.alwaysMatches(tmpPatterns))
+			if (pids.hasDuplicates() || !question.assistantFactory.createPPatternListAssistant().alwaysMatches(tmpPatterns))
 			{
 				obligations.add(new ParameterPatternObligation(node, question));
 			}

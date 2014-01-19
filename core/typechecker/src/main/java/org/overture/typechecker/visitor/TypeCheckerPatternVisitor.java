@@ -27,7 +27,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		question.assistantFactory.createPPatternListAssistant().typeResolve(node.getPlist(), THIS, question);
 		question.qualifiers = null;
 		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
@@ -64,9 +64,9 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		question.assistantFactory.createPPatternListAssistant().typeResolve(node.getPlist(), THIS, question);
 		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
-		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
+		PType ptype = question.assistantFactory.createPPatternListAssistant().getPossibleType(node.getPlist(), node.getLocation());
 
 		if (!TypeComparator.compatible(ptype, type))
 		{

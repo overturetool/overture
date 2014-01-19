@@ -87,8 +87,6 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
 import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
@@ -191,7 +189,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			node.setSeqType(PTypeAssistantTC.getSeq(stype));
 			node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
-			List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
+			List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
 			question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		} else
@@ -1011,7 +1009,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.setType(ptype);
 		node.getPatternBind().apply(THIS, question);
 		// TODO: PatternBind stuff
-		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
+		List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		rtypes.add(node.getWith().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
@@ -1329,7 +1327,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// THIS, question);
 		// DefinitionList defs = patternBind.getDefinitions();
 		node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
-		List<PDefinition> defs = PPatternBindAssistantTC.getDefinitions(node.getPatternBind());
+		List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
