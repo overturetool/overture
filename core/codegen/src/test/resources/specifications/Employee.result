@@ -66,8 +66,7 @@ public class Company {
         if (emps.size() == 0L) {
             return sum;
         } else {
-            return start_calc(sum + emps.get(0).getSalary(),
-                emps.subList(1, emps.size()));
+            return start_calc(sum + emps.get(0).getSalary(), Utils.seqTail(emps));
         }
     }
 
