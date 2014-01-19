@@ -190,7 +190,7 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 			throws AnalysisException
 	{
 		LexToken op = new LexKeywordToken(VDMToken.UNION, pattern.getLocation());
-		return AstFactory.newASetUnionBinaryExp(PPatternAssistantTC.getMatchingExpression(pattern.getLeft()), op, PPatternAssistantTC.getMatchingExpression(pattern.getRight()));
+		return AstFactory.newASetUnionBinaryExp(af.createPPatternAssistant().getMatchingExpression(pattern.getLeft()), op, af.createPPatternAssistant().getMatchingExpression(pattern.getRight()));
 	}
 
 	@Override

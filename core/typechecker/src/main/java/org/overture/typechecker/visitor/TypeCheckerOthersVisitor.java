@@ -42,7 +42,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
@@ -87,7 +86,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				// resolve pattern such that it is resolved before it is cloned later in newAMultiBindListDefinition
 				if (node.getBind().getPattern() != null)
 				{
-					PPatternAssistantTC.typeResolve(node.getBind().getPattern(), THIS, question);
+					question.assistantFactory.createPPatternAssistant().typeResolve(node.getBind().getPattern(), THIS, question);
 				}
 
 				if (!TypeComparator.compatible(typebind.getType(), type))
@@ -106,7 +105,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 
-			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind()));
+			PDefinition def = AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
 
 			def.apply(THIS, question);
 			LinkedList<PDefinition> defs = new LinkedList<PDefinition>();
@@ -116,8 +115,8 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		{
 			assert type != null : "Can't typecheck a pattern without a type";
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 
 		return null;

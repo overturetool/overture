@@ -1,14 +1,7 @@
 package org.overture.typechecker.assistant.pattern;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.factory.AstFactory;
-import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.ATypeBind;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -23,7 +16,7 @@ public class ATypeBindAssistantTC
 		this.af = af;
 	}
 
-	public static void typeResolve(ATypeBind typebind,
+	public void typeResolve(ATypeBind typebind,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{

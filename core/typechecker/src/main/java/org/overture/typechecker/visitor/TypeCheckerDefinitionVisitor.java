@@ -78,8 +78,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
-import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
@@ -194,12 +192,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (pattern != null)
 		{
-			PPatternAssistantTC.typeResolve(pattern, THIS, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(pattern, node.getExpType(), question.scope));
+			question.assistantFactory.createPPatternAssistant().typeResolve(pattern, THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(pattern, node.getExpType(), question.scope));
 			node.setDefType(node.getExpType());
 		} else if (node.getTypebind() != null)
 		{
-			ATypeBindAssistantTC.typeResolve(node.getTypebind(), THIS, question);
+			question.assistantFactory.createATypeBindAssistant().typeResolve(node.getTypebind(), THIS, question);
 			ATypeBind typebind = node.getTypebind();
 
 			if (!TypeComparator.compatible(typebind.getType(), node.getExpType()))
@@ -208,7 +206,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 
 			node.setDefType(typebind.getType()); // Effectively a cast
-			node.setDefs(PPatternAssistantTC.getDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(typebind.getPattern(), node.getDefType(), question.scope));
 		} else
 		{
 			question.qualifiers = null;
@@ -230,8 +228,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				node.setDefType(setof); // Effectively a cast
 			}
 
-			PPatternAssistantTC.typeResolve(node.getSetbind().getPattern(), THIS, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getSetbind().getPattern(), THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getSetbind().getPattern(), node.getDefType(), question.scope));
 		}
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
@@ -303,7 +301,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, expectedResult, NameScope.NAMES);
+			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant().getDefinitions(rp, expectedResult, NameScope.NAMES);
 			FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, rdefs, local, NameScope.NAMES);
 
 			// building the new scope for subtypechecks
@@ -497,7 +495,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			if (node.getResult() != null)
 			{
-				List<PDefinition> postdefs = APatternTypePairAssistant.getDefinitions(node.getResult());
+				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant().getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMES);
 				post.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node);
@@ -691,7 +689,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			LexNameToken result = new LexNameToken(node.getName().getModule(), "RESULT", node.getLocation());
 			PPattern rp = AstFactory.newAIdentifierPattern(result);
-			List<PDefinition> rdefs = PPatternAssistantTC.getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE);
+			List<PDefinition> rdefs = question.assistantFactory.createPPatternAssistant().getDefinitions(rp, ((AOperationType) node.getType()).getResult(), NameScope.NAMESANDANYSTATE);
 			FlatEnvironment post = new FlatEnvironment(question.assistantFactory, rdefs, local);
 			post.setEnclosingDefinition(node.getPostdef());
 			PType b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
@@ -778,7 +776,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getResult() != null)
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(node.getResult().getPattern(), ((AOperationType) node.getType()).getResult(), NameScope.LOCAL));
+			defs.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getResult().getPattern(), ((AOperationType) node.getType()).getResult(), NameScope.LOCAL));
 		}
 
 		// Now we build local definitions for each of the externals, so
@@ -944,7 +942,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			if (node.getResult() != null)
 			{
-				List<PDefinition> postdefs = APatternTypePairAssistant.getDefinitions(node.getResult());
+				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant().getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMESANDANYSTATE);
 				post.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node.getPostdef());
@@ -1040,7 +1038,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		for (PMultipleBind mb : node.getBindings())
 		{
 			PType type = mb.apply(THIS, question);
-			defs.addAll(PMultipleBindAssistantTC.getDefinitions(mb, type, question));
+			defs.addAll(question.assistantFactory.createPMultipleBindAssistant().getDefinitions(mb, type, question));
 		}
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
@@ -1433,7 +1431,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));
+		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList(node.getBind())));
 		node.getDef().apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 

@@ -22,7 +22,7 @@ public class PMultipleBindAssistantTC
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinitions(
+	public Collection<? extends PDefinition> getDefinitions(
 			PMultipleBind mb, PType type, TypeCheckInfo question)
 	{
 
@@ -43,7 +43,7 @@ public class PMultipleBindAssistantTC
 		return list;
 	}
 
-	public static PType getPossibleType(PMultipleBind mb)
+	public PType getPossibleType(PMultipleBind mb)
 	{
 		try
 		{

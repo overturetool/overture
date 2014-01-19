@@ -43,7 +43,7 @@ public class AExplicitOperationDefinitionAssistantTC
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
+			defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
 		}
 
 		return af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs);

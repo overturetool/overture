@@ -180,6 +180,7 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
+			//node.getResult().apply(af.getPatternResolver(), question);
 		}
 
 		if (question.question.env.isVDMPP())

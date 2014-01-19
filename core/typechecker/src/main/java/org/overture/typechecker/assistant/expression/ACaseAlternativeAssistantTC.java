@@ -13,7 +13,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class ACaseAlternativeAssistantTC
 {
@@ -49,8 +48,8 @@ public class ACaseAlternativeAssistantTC
 
 			try
 			{
-				PPatternAssistantTC.typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
-				c.getDefs().addAll(PPatternAssistantTC.getDefinitions(c.getPattern(), expType, NameScope.LOCAL));
+				af.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+				c.getDefs().addAll(af.createPPatternAssistant().getDefinitions(c.getPattern(), expType, NameScope.LOCAL));
 			} catch (TypeCheckException e)
 			{
 				c.getDefs().clear();

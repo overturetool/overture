@@ -66,8 +66,6 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
@@ -1058,14 +1056,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind())));
+		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind())));
 		node.getDef().apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 
 		if (node.getBind() instanceof ATypeBind)
 		{
 			ATypeBind tb = (ATypeBind) node.getBind();
-			ATypeBindAssistantTC.typeResolve(tb, THIS, question);
+			question.assistantFactory.createATypeBindAssistant().typeResolve(tb, THIS, question);
 		}
 
 		question.qualifiers = null;
@@ -1497,7 +1495,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList(node.getBind()));
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
 
 		def.apply(THIS, question);
 
@@ -1520,7 +1518,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		} else
 		{
 			ATypeBind tb = (ATypeBind) bind;
-			ATypeBindAssistantTC.typeResolve(tb, THIS, question);
+			question.assistantFactory.createATypeBindAssistant().typeResolve(tb, THIS, question);
 			rt = tb.getType();
 		}
 
@@ -1635,7 +1633,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			//mbinds.addAll(ATypeBindAssistantTC.getMultipleBindList(tb)); 
 			//FIXME: I am not sure if this is the way.
 			mbinds.addAll(tb.apply(question.assistantFactory.getMultipleBindLister()));
-			paramDefinitions.addAll(PPatternAssistantTC.getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
+			paramDefinitions.addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(tb.getPattern(), tb.getType(), NameScope.LOCAL));
 			paramPatterns.add(tb.getPattern());
 			ptypes.add(question.assistantFactory.createPTypeAssistant().typeResolve(tb.getType(), null, THIS, question));
 		}
@@ -1664,7 +1662,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList((PMultipleBind) node.getBind()));
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) node.getBind()));
 
 		def.apply(THIS, question);
 		node.setDef((AMultiBindListDefinition) def);
@@ -2282,7 +2280,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// mblist.add(new ASetMultipleBind(plist.get(0).getLocation(), plist,
 		// setBindSet));
 
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), PBindAssistantTC.getMultipleBindList(node.getSetBind()));
+		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getSetBind()));
 		def.apply(THIS, question);
 
 		// now they are typechecked, add them again

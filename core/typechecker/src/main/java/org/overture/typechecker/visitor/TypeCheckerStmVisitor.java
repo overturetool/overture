@@ -87,10 +87,6 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
@@ -524,7 +520,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getDefs().size() == 0)
 		{
 			node.setDefs(new LinkedList<PDefinition>());
-			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
 
 			if (node.getPattern() instanceof AExpressionPattern)
 			{
@@ -538,15 +534,15 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
 
 			ACasesStm stm = (ACasesStm) node.parent();
-			node.getDefs().addAll(PPatternAssistantTC.getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
+			node.getDefs().addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), stm.getExp().getType(), NameScope.LOCAL));
 		}
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 
-		if (!PPatternAssistantTC.matches(node.getPattern(), node.getCtype()))
+		if (!question.assistantFactory.createPPatternAssistant().matches(node.getPattern(), node.getCtype()))
 		{
 			TypeCheckerErrors.report(3311, "Pattern cannot match", node.getPattern().getLocation(), node.getPattern());
 		}
@@ -733,12 +729,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		node.setType(node.getSet().apply(THIS, question));
-		PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
+		question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
 
 		if (PTypeAssistantTC.isSet(node.getType()))
 		{
 			ASetType st = PTypeAssistantTC.getSet(node.getType());
-			List<PDefinition> defs = PPatternAssistantTC.getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
+			List<PDefinition> defs = question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), st.getSetof(), NameScope.LOCAL);
 
 			Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 			PType rt = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
@@ -828,7 +824,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getLocation(), PMultipleBindAssistantTC.getMultipleBindList(node.getBind())));
+		node.setDef(AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList(node.getBind())));
 		node.getDef().apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 
@@ -1357,7 +1353,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			if (bind instanceof ATypeBind)
 			{
 				ATypeBind typebind = (ATypeBind) bind;
-				ATypeBindAssistantTC.typeResolve(typebind, THIS, question);
+				question.assistantFactory.createATypeBindAssistant().typeResolve(typebind, THIS, question);
 
 				if (!TypeComparator.compatible(typebind.getType(), type))
 				{
@@ -1376,7 +1372,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 
-			PDefinition def = AstFactory.newAMultiBindListDefinition(bind.getLocation(), PBindAssistantTC.getMultipleBindList(bind));
+			PDefinition def = AstFactory.newAMultiBindListDefinition(bind.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(bind));
 
 			def.apply(THIS, question);
 			List<PDefinition> defs = new LinkedList<PDefinition>();
@@ -1386,8 +1382,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			assert type != null : "Can't typecheck a pattern without a type";
 
-			PPatternAssistantTC.typeResolve(node.getPattern(), THIS, question);
-			node.setDefs(PPatternAssistantTC.getDefinitions(node.getPattern(), type, NameScope.LOCAL));
+			question.assistantFactory.createPPatternAssistant().typeResolve(node.getPattern(), THIS, question);
+			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		return null;
 	}

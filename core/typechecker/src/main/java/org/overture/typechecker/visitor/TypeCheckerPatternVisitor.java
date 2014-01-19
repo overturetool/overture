@@ -10,7 +10,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -44,7 +43,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			if (!st.getEmpty())
 			{
 				result = st.getSetof();
-				PType ptype = PMultipleBindAssistantTC.getPossibleType(node);
+				PType ptype = question.assistantFactory.createPMultipleBindAssistant().getPossibleType(node);
 
 				if (!TypeComparator.compatible(ptype, result))
 				{
