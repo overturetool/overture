@@ -39,6 +39,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.pog.assistant.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
@@ -57,7 +58,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(def.getParamPatternList(), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult(),ctxt.assistantFactory));
 	}
 
 	public ParameterPatternObligation(AImplicitFunctionDefinition def,
@@ -65,7 +66,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult(),ctxt.assistantFactory));
 	}
 
 	public ParameterPatternObligation(AExplicitOperationDefinition def,
@@ -73,7 +74,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(), ctxt.assistantFactory));
 	}
 
 	public ParameterPatternObligation(AImplicitOperationDefinition def,
@@ -81,15 +82,16 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult()));
+		value = ctxt.getObligation(generate(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(),ctxt.assistantFactory));
 	}
 
 	private String generate(List<List<PPattern>> plist, List<PType> params,
-			PType result)
+			PType result, IPogAssistantFactory assistantFactory)
 	{
 		StringBuilder foralls = new StringBuilder();
 		StringBuilder argnames = new StringBuilder();
 		StringBuilder exists = new StringBuilder();
+		
 
 		String INDENT = "  ";
 		String fprefix = "";
@@ -132,7 +134,6 @@ public class ParameterPatternObligation extends ProofObligation
 					PType atype = titer.next();
 					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
 					List<PDefinition> dlist = PPatternAssistantTC.getDefinitions(p, atype, NameScope.LOCAL);
-					
 					foralls.append(fprefix);
 					foralls.append(aname);
 					foralls.append(":");

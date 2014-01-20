@@ -87,11 +87,6 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallObjectStatementAssistantTC;
-import org.overture.typechecker.assistant.statement.ACallStmAssistantTC;
-import org.overture.typechecker.assistant.statement.ANonDeterministicSimpleBlockStmAssistantTC;
-import org.overture.typechecker.assistant.statement.PStateDesignatorAssistantTC;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -150,7 +145,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			// Mark assignment target as initialized (so no warnings)
 			PDefinition state;
-			state = PStateDesignatorAssistantTC.targetDefinition(node.getTarget(), question);
+			state = question.assistantFactory.createPStateDesignatorAssistant().targetDefinition(node.getTarget(), question);
 
 			if (state instanceof AInstanceVariableDefinition)
 			{
@@ -229,7 +224,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 					for (PType t : ust.getTypes())
 					{
-						ABlockSimpleBlockStmAssistantTC.addOne(rtypes, t);
+						question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, t);
 
 						if (t instanceof AVoidType || t instanceof AUnknownType)
 						{
@@ -238,7 +233,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					}
 				} else
 				{
-					ABlockSimpleBlockStmAssistantTC.addOne(rtypes, stype);
+					question.assistantFactory.createABlockSimpleBlockStmAssistant().addOne(rtypes, stype);
 
 					if (stype instanceof AVoidType
 							|| stype instanceof AUnknownType)
@@ -329,7 +324,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.getField().getLocation().executable(true);
-		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
 		node.getField().setTypeQualifier(atypes);
 		PDefinition fdef = classenv.findName(node.getField(), question.scope);
 
@@ -394,7 +389,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AOperationType optype = PTypeAssistantTC.getOperation(type);
 			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
-			ACallObjectStatementAssistantTC.checkArgTypes(type, optype.getParameters(), atypes); // Not necessary?
+			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not necessary?
 			node.setType(optype.getResult());
 			return node.getType();
 		} else if (PTypeAssistantTC.isFunction(type))
@@ -406,7 +401,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AFunctionType ftype = PTypeAssistantTC.getFunction(type);
 			ftype.apply(THIS, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
-			ACallObjectStatementAssistantTC.checkArgTypes(type, ftype.getParameters(), atypes); // Not necessary?
+			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not necessary?
 			node.setType(ftype.getResult());
 			return node.getType();
 		} else
@@ -421,7 +416,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseACallStm(ACallStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		List<PType> atypes = ACallObjectStatementAssistantTC.getArgTypes(node.getArgs(), THIS, question);
+		List<PType> atypes = question.assistantFactory.createACallObjectStatementAssistant().getArgTypes(node.getArgs(), THIS, question);
 
 		if (question.env.isVDMPP())
 		{
@@ -478,7 +473,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(optype.getParameters());
 			}
 
-			ACallStmAssistantTC.checkArgTypes(node, optype, optype.getParameters(), atypes);
+			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, optype, optype.getParameters(), atypes);
 			node.setType(optype.getResult());
 			return optype.getResult();
 		} else if (PTypeAssistantTC.isFunction(type))
@@ -498,7 +493,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				node.getName().setTypeQualifier(ftype.getParameters());
 			}
 
-			ACallStmAssistantTC.checkArgTypes(node, ftype, ftype.getParameters(), atypes);
+			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, ftype, ftype.getParameters(), atypes);
 			node.setType(ftype.getResult());
 			return ftype.getResult();
 		} else
@@ -857,14 +852,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				AUnionType ust = (AUnionType) stype;
 				for (PType t : ust.getTypes())
 				{
-					if (ANonDeterministicSimpleBlockStmAssistantTC.addOne(rtypes, t))
+					if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, t))
 					{
 						rcount++;
 					}
 				}
 			} else
 			{
-				if (ANonDeterministicSimpleBlockStmAssistantTC.addOne(rtypes, stype))
+				if (question.assistantFactory.createANonDeterministicSimpleBlockStmAssistant().addOne(rtypes, stype))
 				{
 					rcount++;
 				}
@@ -995,7 +990,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		PType bt = body.apply(THIS, question);
 		rtypes.add(bt);
 
-		PTypeSet extype = PStmAssistantTC.exitCheck(body);
+		PTypeSet extype = question.assistantFactory.createPStmAssistant().exitCheck(body);
 		PType ptype = null;
 
 		if (extype.isEmpty())
@@ -1300,7 +1295,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType rt = node.getBody().apply(THIS, question);
-		PTypeSet extypes = PStmAssistantTC.exitCheck(node.getBody());
+		PTypeSet extypes = question.assistantFactory.createPStmAssistant().exitCheck(node.getBody());
 
 		if (!extypes.isEmpty())
 		{

@@ -78,7 +78,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.statement.AExternalClauseAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -793,7 +792,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				for (ILexNameToken exname : clause.getIdentifiers())
 				{
 					PDefinition sdef = question.env.findName(exname, NameScope.STATE);
-					AExternalClauseAssistantTC.typeResolve(clause, THIS, question);
+					question.assistantFactory.createAExternalClauseAssistant().typeResolve(clause, THIS, question);
 
 					if (sdef == null)
 					{

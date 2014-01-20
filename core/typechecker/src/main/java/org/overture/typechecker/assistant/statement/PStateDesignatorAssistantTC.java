@@ -17,7 +17,7 @@ public class PStateDesignatorAssistantTC
 		this.af = af;
 	}
 
-	public static PDefinition targetDefinition(
+	public PDefinition targetDefinition(
 			PStateDesignator pStateDesignator, TypeCheckInfo question)
 	{
 		if (pStateDesignator instanceof AIdentifierStateDesignator)
