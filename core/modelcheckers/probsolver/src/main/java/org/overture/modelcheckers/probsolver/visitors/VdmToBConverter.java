@@ -317,16 +317,42 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return new ARangeExpression(scs);
 	}
 
-	/*
+
 	@Override
         public Node caseAIfExp(AIfExp node)//under construction
 			throws AnalysisException
 	{
 	    //node.getTest();//testpart
 	    //node.getThen();//thenpart
-	    return new AConjunctPredicate(pred(node.getTest()), pred(node.getThen()));
+	    ADisjunctPredicate dp = new ADisjunctPredicate();
+	    if(node.getElseList().size()==0) {
+		//console.out.println("ifExp: then " + node.getThen().getType());
+		//console.out.println("ifExp: else " + node.getElse().getType());
+		dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())),
+					      new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getElse())));
+	    } else {
+		LinkedList<AElseIfExp> eilist = node.getElseList();
+		eilist.get(eilist.size()-1).getElseIf();
+		eilist.get(eilist.size()-1).getThen();
+		ADisjunctPredicate elsePart = new ADisjunctPredicate();
+		elsePart = new ADisjunctPredicate(new AConjunctPredicate(pred(eilist.get(eilist.size()-1).getElseIf()), 
+									pred(eilist.get(eilist.size()-1).getThen())),
+						  new AConjunctPredicate(new ANegationPredicate(pred(eilist.get(eilist.size()-1).getElseIf())), 
+									 pred(node.getElse())));
+		for(int i=eilist.size()-2;i>=0;i--) {
+		    elsePart = new ADisjunctPredicate(new AConjunctPredicate(pred(eilist.get(i).getElseIf()), 
+									     pred(eilist.get(i).getThen())),
+						      new AConjunctPredicate(new ANegationPredicate(pred(eilist.get(i).getElseIf())), 
+									     elsePart));
+		}
+		dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())),
+					    new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), elsePart));
+
+	    }
+	    return dp;
 	}
 
+	/*
 	@Override
         public Node caseAElseIfExp(AElseIfExp node)//under construction
 			throws AnalysisException

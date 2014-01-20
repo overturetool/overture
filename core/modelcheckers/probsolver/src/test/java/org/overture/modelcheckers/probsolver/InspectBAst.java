@@ -63,10 +63,10 @@ public class InspectBAst {
 		//f = new ClassicalB("2*2>0 <=> 2>0");
 		//f.getAst().apply(new ASTPrinter(System.out));
 
-		f = new ClassicalB("{ x | x:{1,2,3,4,5} & x > 3 }");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("{ x | x:{1,2,3,4,5} & x > 3 }");
+		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("x=3");
+		f = new ClassicalB("{1|->2|->3}");
 		f.getAst().apply(new ASTPrinter(System.out));
 		
 	}
