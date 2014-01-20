@@ -20,20 +20,20 @@ public class AClassTypeAssistantTC
 		this.af = af;
 	}
 
-	public static LexNameToken getMemberName(AClassType cls,
+	public LexNameToken getMemberName(AClassType cls,
 			ILexIdentifierToken id)
 	{
 		// Note: not explicit
 		return new LexNameToken(cls.getName().getName(), id.getName(), id.getLocation(), false, false);
 	}
 
-	public static PDefinition findName(AClassType cls, ILexNameToken tag,
+	public PDefinition findName(AClassType cls, ILexNameToken tag,
 			NameScope scope)
 	{
 		return af.createPDefinitionAssistant().findName(cls.getClassdef(), tag, scope);
 	}
 
-	public static boolean hasSupertype(AClassType sclass, PType other)
+	public boolean hasSupertype(AClassType sclass, PType other)
 	{
 		return af.createSClassDefinitionAssistant().hasSupertype(sclass.getClassdef(), other);
 	}

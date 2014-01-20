@@ -66,9 +66,7 @@ import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -1140,12 +1138,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 			if (memberName == null)
 			{
-				memberName = AClassTypeAssistantTC.getMemberName(cls, node.getField());
+				memberName = question.assistantFactory.createAClassTypeAssistant().getMemberName(cls, node.getField());
 				node.setMemberName(memberName);
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = AClassTypeAssistantTC.findName(cls, memberName, question.scope);
+			PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 
 			if (fdef == null)
 			{
@@ -1154,7 +1152,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 				List<PType> oldq = memberName.getTypeQualifier();
 				memberName.setTypeQualifier(null);
-				fdef = AClassTypeAssistantTC.findName(cls, memberName, question.scope);
+				fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 

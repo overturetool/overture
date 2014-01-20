@@ -397,27 +397,27 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isMap(type))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(type);
-			result.add(AApplyObjectDesignatorAssistantTC.mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().mapApply(node, map, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (PTypeAssistantTC.isSeq(type))
 		{
 			SSeqType seq = PTypeAssistantTC.getSeq(type);
-			result.add(AApplyObjectDesignatorAssistantTC.seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().seqApply(node, seq, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType ft = PTypeAssistantTC.getFunction(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().functionApply(node, ft, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (PTypeAssistantTC.isOperation(type))
 		{
 			AOperationType ot = PTypeAssistantTC.getOperation(type);
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-			result.add(AApplyObjectDesignatorAssistantTC.operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
+			result.add(question.assistantFactory.createAApplyObjectDesignatorAssistant().operationApply(node, ot, question.env, NameScope.NAMESANDSTATE, unique, THIS));
 		}
 
 		if (result.isEmpty())

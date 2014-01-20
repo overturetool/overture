@@ -10,8 +10,9 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 
-public class ANamedInvariantTypeAssistantInterpreter extends
-		ANamedInvariantTypeAssistantTC
+public class ANamedInvariantTypeAssistantInterpreter 
+	extends ANamedInvariantTypeAssistantTC
+
 {
 	protected static IInterpreterAssistantFactory af;
 

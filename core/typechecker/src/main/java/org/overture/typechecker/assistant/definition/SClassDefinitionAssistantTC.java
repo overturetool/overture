@@ -34,7 +34,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 
@@ -137,7 +136,7 @@ public class SClassDefinitionAssistantTC
 			{
 				AClassType sclass = (AClassType) type;
 
-				if (AClassTypeAssistantTC.hasSupertype(sclass, other))
+				if (af.createAClassTypeAssistant().hasSupertype(sclass, other))
 				{
 					return true;
 				}
@@ -164,7 +163,7 @@ public class SClassDefinitionAssistantTC
 
 			if (!PTypeAssistantTC.equals(selftype, targtype))
 			{
-				if (AClassTypeAssistantTC.hasSupertype(selftype, targtype))
+				if (af.createAClassTypeAssistant().hasSupertype(selftype, targtype))
 				{
 					// We're a subclass, so see public or protected
 					return !PAccessSpecifierAssistantTC.isPrivate(field.getAccess());
