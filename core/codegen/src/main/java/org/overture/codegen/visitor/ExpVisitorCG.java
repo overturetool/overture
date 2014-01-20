@@ -71,7 +71,6 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -100,6 +99,7 @@ import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -616,10 +616,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		if(ExpAssistantCG.isIntegerType(leftExp) && ExpAssistantCG.isIntegerType(rightExp))
 		{
-			ACastUnaryExpCG castExpr = new ACastUnaryExpCG();
-			castExpr.setType(new ARealNumericBasicTypeCG());
-			castExpr.setExp(leftExpCG);
-			divide.setLeft(castExpr);
+			ARealLiteralExpCG one = new ARealLiteralExpCG();
+			one.setType(new ARealNumericBasicTypeCG());
+			one.setValue(1.0);
+			
+			ATimesNumericBinaryExpCG neutralMul = new ATimesNumericBinaryExpCG();
+			neutralMul.setType(new ARealNumericBasicTypeCG());
+			neutralMul.setLeft(one);
+			neutralMul.setRight(leftExpCG);
+			
+			divide.setLeft(ExpAssistantCG.isolateExpression(neutralMul));
 		}
 		
 		return divide;
