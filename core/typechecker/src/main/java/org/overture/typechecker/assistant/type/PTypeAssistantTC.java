@@ -344,7 +344,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 			for (PDefinition d : type.getDefinitions())
 			{
 				result = result
-						|| PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier);
+						|| af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier);
 			}
 			return result;
 		} else

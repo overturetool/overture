@@ -23,7 +23,7 @@ public class PAccessSpecifierAssistant
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
 	}
 
-	public static boolean isStatic(AAccessSpecifierAccessSpecifier access)
+	public boolean isStatic(AAccessSpecifierAccessSpecifier access)
 	{
 
 		return access != null && access.getStatic() != null;

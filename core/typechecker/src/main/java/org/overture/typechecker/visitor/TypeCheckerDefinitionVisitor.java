@@ -125,7 +125,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getExpression() instanceof AUndefinedExp)
 		{
-			if (PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+			if (question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 			{
 				TypeCheckerErrors.report(3037, "Static instance variable is not initialized: "
 						+ node.getName(), node.getLocation(), node);
@@ -260,22 +260,15 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 
-		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
 		// building the new scope for subtypechecks
 
-		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can
-																																					// be
-																																					// this
-																																					// because
-																																					// its
-																																					// a
-																																					// definition
-																																					// list
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can be this because its a definition list
 
 		if (question.env.isVDMPP()
-				&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+				&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 		{
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
@@ -445,7 +438,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
-		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
@@ -453,7 +446,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null
-					&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+					&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 			{
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
@@ -494,7 +487,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant().getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMES);
-				post.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node);
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMES));
 				post.unusedCheck();
@@ -620,12 +613,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getParamDefinitions(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);
-		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
 		if (question.env.isVDMPP())
 		{
-			if (!PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+			if (!question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 			{
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
@@ -635,7 +628,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
 
-				if (PAccessSpecifierAssistantTC.isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
 				{
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 				}
@@ -725,7 +718,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
+		if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess())
 				&& !PTypeAssistantTC.isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation "
@@ -836,7 +829,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		local.setLimitStateScope(limitStateScope);
-		local.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
 		if (question.env.isVDMPP())
@@ -847,7 +840,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				node.setIsConstructor(true);
 				node.getClassDefinition().setHasContructors(true);
 
-				if (PAccessSpecifierAssistantTC.isAsync(node.getAccess()))
+				if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess()))
 				{
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 				}
@@ -873,7 +866,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null
-					&& !PAccessSpecifierAssistantTC.isStatic(node.getAccess()))
+					&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
 			{
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
@@ -905,7 +898,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (PAccessSpecifierAssistantTC.isAsync(node.getAccess())
+		if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess())
 				&& !PTypeAssistantTC.isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
 		{
 			TypeCheckerErrors.report(3293, "Asynchronous operation "
@@ -941,7 +934,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				List<PDefinition> postdefs = question.assistantFactory.createAPatternTypePairAssistant().getDefinitions(node.getResult());
 				FlatCheckedEnvironment post = new FlatCheckedEnvironment(question.assistantFactory, postdefs, local, NameScope.NAMESANDANYSTATE);
-				post.setStatic(PAccessSpecifierAssistantTC.isStatic(node.getAccess()));
+				post.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 				post.setEnclosingDefinition(node.getPostdef());
 				b = node.getPostdef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, post, NameScope.NAMESANDANYSTATE));
 				post.unusedCheck();
@@ -1389,7 +1382,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				return node.getType();
 			}
 
-			if (PAccessSpecifierAssistantTC.narrowerThan(typedef.getAccess(), node.getAccess()))
+			if (question.assistantFactory.createPAccessSpecifierAssistant().narrowerThan(typedef.getAccess(), node.getAccess()))
 			{
 				TypeCheckerErrors.report(3052, "Value type visibility less than value definition", node.getLocation(), node);
 			}

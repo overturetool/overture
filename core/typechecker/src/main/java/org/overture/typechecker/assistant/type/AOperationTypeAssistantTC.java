@@ -24,7 +24,7 @@ public class AOperationTypeAssistantTC
 		this.af = af;
 	}
 
-	public static AFunctionType getPreType(AOperationType type,
+	public AFunctionType getPreType(AOperationType type,
 			AStateDefinition state, SClassDefinition classname, boolean isStatic)
 	{
 

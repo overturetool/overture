@@ -2584,7 +2584,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 								+ vardef.getClassDefinition().getName().getName(), node.getLocation(), node);
 						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
-					} else if (!PAccessSpecifierAssistantTC.isStatic(vardef.getAccess())
+					} else if (!question.assistantFactory.createPAccessSpecifierAssistant().isStatic(vardef.getAccess())
 							&& env.isStatic())
 					{
 						TypeCheckerErrors.report(3181, "Cannot access " + name

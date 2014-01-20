@@ -155,7 +155,7 @@ public class SClassDefinitionAssistantTC
 		if (self == null) // Not called from within a class member
 		{
 			// We're outside, so just public access
-			return PAccessSpecifierAssistantTC.isPublic(field.getAccess());
+			return af.createPAccessSpecifierAssistant().isPublic(field.getAccess());
 		} else
 		{
 			AClassType selftype = (AClassType) getType(self);
@@ -166,12 +166,12 @@ public class SClassDefinitionAssistantTC
 				if (af.createAClassTypeAssistant().hasSupertype(selftype, targtype))
 				{
 					// We're a subclass, so see public or protected
-					return !PAccessSpecifierAssistantTC.isPrivate(field.getAccess());
+					return !af.createPAccessSpecifierAssistant().isPrivate(field.getAccess());
 				} else
 				{
 					// We're outside, so just public/static access
-					return PAccessSpecifierAssistantTC.isPublic(field.getAccess())
-							&& (needStatic ? PAccessSpecifierAssistantTC.isStatic(field.getAccess())
+					return af.createPAccessSpecifierAssistant().isPublic(field.getAccess())
+							&& (needStatic ? af.createPAccessSpecifierAssistant().isStatic(field.getAccess())
 									: true);
 				}
 			} else
@@ -456,7 +456,7 @@ public class SClassDefinitionAssistantTC
 
 		for (PDefinition d : singles)
 		{
-			if (!PAccessSpecifierAssistantTC.isPrivate(d.getAccess()))
+			if (!af.createPAccessSpecifierAssistant().isPrivate(d.getAccess()))
 			{
 				defs.add(d);
 			}
@@ -692,7 +692,7 @@ public class SClassDefinitionAssistantTC
 					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: "
 							+ override.getName(), override.getName().getLocation(), override);
 					TypeCheckerErrors.detail2("This", af.createPDefinitionAssistant().kind(override), "Super", af.createPDefinitionAssistant().kind(indef));
-				} else if (PAccessSpecifierAssistantTC.narrowerThan(override.getAccess(), indef.getAccess()))
+				} else if (af.createPAccessSpecifierAssistant().narrowerThan(override.getAccess(), indef.getAccess()))
 				{
 					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(), override);
 					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
