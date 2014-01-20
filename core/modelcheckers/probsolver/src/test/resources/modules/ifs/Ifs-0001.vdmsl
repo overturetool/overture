@@ -1,5 +1,5 @@
 operations
 
   if1() m : set of nat
-    post m = (if 2 in set {1,2,3,4,5} then {1,2,3,4,5}\{2})
+    post if 2 in set {1,2,3,4,5} then m = {1,2,3,4,5}\{2} else m = {1,2,3,4,5}
  
