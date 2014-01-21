@@ -591,10 +591,10 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 
 			if (!(pattern instanceof AIdentifierPattern)
 					&& !(pattern instanceof AIgnorePattern)
-					&& PTypeAssistantTC.isUnion(type))
+					&& question.assistantFactory.createPTypeAssistant().isUnion(type))
 			{
 				PType patternType = question.assistantFactory.createPPatternAssistant().getPossibleType(pattern);
-				AUnionType ut = PTypeAssistantTC.getUnion(type);
+				AUnionType ut = question.assistantFactory.createPTypeAssistant().getUnion(type);
 				PTypeSet set = new PTypeSet();
 
 				for (PType u : ut.getTypes())

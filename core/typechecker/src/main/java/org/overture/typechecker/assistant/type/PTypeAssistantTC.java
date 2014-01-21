@@ -86,7 +86,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return false;
 	}
 
-	public static boolean isUnion(PType type)
+	public boolean isUnion(PType type)
 	{
 		try
 		{
@@ -97,7 +97,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AUnionType getUnion(PType type)
+	public AUnionType getUnion(PType type)
 	{
 		try
 		{
@@ -108,7 +108,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isFunction(PType type)
+	public boolean isFunction(PType type)
 	{
 		try
 		{
@@ -119,7 +119,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AFunctionType getFunction(PType type)
+	public AFunctionType getFunction(PType type)
 	{
 		try
 		{
@@ -143,7 +143,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static void unResolve(PType type)
+	public void unResolve(PType type)
 	{
 		try
 		{
@@ -154,7 +154,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isOperation(PType type)
+	public boolean isOperation(PType type)
 	{
 		try
 		{
@@ -165,7 +165,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AOperationType getOperation(PType type)
+	public AOperationType getOperation(PType type)
 	{
 		try
 		{
@@ -177,7 +177,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isSeq(PType type)
+	public boolean isSeq(PType type)
 	{
 		try
 		{
@@ -188,7 +188,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static SSeqType getSeq(PType type)
+	public SSeqType getSeq(PType type)
 	{
 		try
 		{
@@ -199,7 +199,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isMap(PType type)
+	public boolean isMap(PType type)
 	{
 		try
 		{
@@ -221,7 +221,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isSet(PType type)
+	public boolean isSet(PType type)
 	{
 		try
 		{
@@ -232,7 +232,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static ASetType getSet(PType type)
+	public ASetType getSet(PType type)
 	{
 		try
 		{
@@ -243,7 +243,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isRecord(PType type)
+	public boolean isRecord(PType type)
 	{
 		try
 		{
@@ -254,7 +254,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isTag(PType type)
+	public boolean isTag(PType type)
 	{
 		try
 		{
@@ -265,7 +265,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static ARecordInvariantType getRecord(PType type)
+	public ARecordInvariantType getRecord(PType type)
 	{
 		try
 		{
@@ -276,7 +276,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isClass(PType type)
+	public boolean isClass(PType type)
 	{
 		try
 		{

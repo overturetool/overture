@@ -207,13 +207,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.qualifiers = null;
 			PType st = node.getSetbind().getSet().apply(THIS, question);
 
-			if (!PTypeAssistantTC.isSet(st))
+			if (!question.assistantFactory.createPTypeAssistant().isSet(st))
 			{
 				TypeCheckerErrors.report(3015, "Set bind is not a set type?", node.getLocation(), node);
 				node.setDefType(node.getExpType());
 			} else
 			{
-				PType setof = PTypeAssistantTC.getSet(st).getSetof();
+				PType setof = question.assistantFactory.createPTypeAssistant().getSet(st).getSetof();
 
 				if (!TypeComparator.compatible(node.getExpType(), setof))
 				{
@@ -631,9 +631,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 				}
 
-				if (PTypeAssistantTC.isClass(((AOperationType) node.getType()).getResult()))
+				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
 				{
-					AClassType ctype = PTypeAssistantTC.getClassType(((AOperationType) node.getType()).getResult());
+					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult());
 
 					if (ctype.getClassdef() != node.getClassDefinition())
 					{
@@ -843,9 +843,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.report(3286, "Constructor cannot be 'async'", node.getLocation(), node);
 				}
 
-				if (PTypeAssistantTC.isClass(((AOperationType) node.getType()).getResult()))
+				if (question.assistantFactory.createPTypeAssistant().isClass(((AOperationType) node.getType()).getResult()))
 				{
-					AClassType ctype = PTypeAssistantTC.getClassType(((AOperationType) node.getType()).getResult());
+					AClassType ctype = question.assistantFactory.createPTypeAssistant().getClassType(((AOperationType) node.getType()).getResult());
 
 					if (ctype.getClassdef() != node.getClassDefinition())
 					{

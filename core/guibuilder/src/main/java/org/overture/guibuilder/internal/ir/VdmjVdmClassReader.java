@@ -38,11 +38,11 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.util.ClassListInterpreter;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Vdm Class Reader that uses Vdmj to extract most of the information (the exception is annotation)
@@ -54,6 +54,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	private Vector<IVdmDefinition> classList = null;
 	ClassListInterpreter classes;
+	ITypeCheckerAssistantFactory assistantFactory;
 
 	/**
 	 * Constructor
@@ -166,7 +167,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				{
 					AExplicitOperationDefinition operation = ((AExplicitOperationDefinition) def);
 					// FIXME: In terms of type only 'class types' are treated
-					VdmType type = getType(((AOperationType) operation.getType()).getResult());
+					VdmType type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
 					// FIXME: Temporary solution, just to check if there's a return
 					/*
@@ -193,7 +194,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					AImplicitOperationDefinition operation = ((AImplicitOperationDefinition) def);
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AOperationType)operation.getType()).getResult());
+					type = getType(((AOperationType)operation.getType()).getResult(),assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
 
 					// fetching the arguments
@@ -219,7 +220,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					AExplicitFunctionDefinition function = ((AExplicitFunctionDefinition) def);
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AFunctionType) function.getType()).getResult());
+					type = getType(((AFunctionType) function.getType()).getResult(),assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
 					for (List<PPattern> li : function.getParamPatternList())
@@ -245,7 +246,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					AImplicitFunctionDefinition function = ((AImplicitFunctionDefinition) def);
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AFunctionType) function.getType()).getResult());
+					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
 					for (List<PPattern> li : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(function))
@@ -328,9 +329,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 //		return false;
 //	}
 
-	public static VdmType getType(PType type)
+	public static VdmType getType(PType type, ITypeCheckerAssistantFactory assistantFactory) //added parameter for the assistantFactory
 	{
-		if (PTypeAssistantTC.isClass(type))
+		if (assistantFactory.createPTypeAssistant().isClass(type))
 		{
 			return new VdmType(type.getLocation().getModule(), true);
 		}

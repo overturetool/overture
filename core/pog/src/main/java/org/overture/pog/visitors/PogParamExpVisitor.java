@@ -115,7 +115,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		// is it a map?
 
 		PType type = root.getType();
-		if (PTypeAssistantTC.isMap(type))
+		if (assistantFactory.createPTypeAssistant().isMap(type))
 		{
 			SMapType mapType = assistantFactory.createPTypeAssistant().getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
@@ -134,7 +134,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (!assistantFactory.createPTypeAssistant().isUnknown(type)
 				&& assistantFactory.createPTypeAssistant().isFunction(type))
 		{
-			AFunctionType funcType = PTypeAssistantTC.getFunction(type);
+			AFunctionType funcType = assistantFactory.createPTypeAssistant().getFunction(type);
 			ILexNameToken prename = assistantFactory.createPExpAssistant().getPreName(root);
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
@@ -183,7 +183,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (PTypeAssistantTC.isSeq(type))
+		if (assistantFactory.createPTypeAssistant().isSeq(type))
 		{
 			obligations.add(new SeqApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 		}
@@ -391,9 +391,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		PType puType = node.getTuple().getType();
 
-		if (PTypeAssistantTC.isUnion(puType))
+		if (assistantFactory.createPTypeAssistant().isUnion(puType))
 		{
-			AUnionType utype = (AUnionType) PTypeAssistantTC.getUnion(puType);
+			AUnionType utype = (AUnionType) assistantFactory.createPTypeAssistant().getUnion(puType);
 
 			for (PType t : utype.getTypes())
 			{
@@ -1112,16 +1112,16 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType lType = lExp.getType();
 		PExp rExp = node.getRight();
 
-		if (PTypeAssistantTC.isFunction(lType))
+		if (assistantFactory.createPTypeAssistant().isFunction(lType))
 		{
 			ILexNameToken pref1 = assistantFactory.createPExpAssistant().getPreName(lExp);
 			ILexNameToken pref2 = assistantFactory.createPExpAssistant().getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(PExpAssistantTC.NO_PRECONDITION))
-				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
+				obligations.add(new FuncComposeObligation(node, pref1, pref2, question, assistantFactory));//gkanos:add on more argument for the assistantFactory need it
 		}
 
-		if (PTypeAssistantTC.isMap(lType))
+		if (assistantFactory.createPTypeAssistant().isMap(lType))
 		{
 			obligations.add(new MapComposeObligation(node, question));
 		}
@@ -1258,7 +1258,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = handleBinaryExpression(node, question);
 		PType lType = node.getLeft().getType();
 
-		if (PTypeAssistantTC.isSeq(lType))
+		if (assistantFactory.createPTypeAssistant().isSeq(lType))
 		{
 			obligations.add(new org.overture.pog.obligation.SeqModificationObligation(node, question));
 		}
@@ -1331,7 +1331,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
 
-		if (PTypeAssistantTC.isFunction(lType))
+		if (assistantFactory.createPTypeAssistant().isFunction(lType))
 		{
 			ILexNameToken preName = assistantFactory.createPExpAssistant().getPreName(lExp);
 			if (preName == null
@@ -1341,7 +1341,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (PTypeAssistantTC.isMap(lType))
+		if (assistantFactory.createPTypeAssistant().isMap(lType))
 		{
 			obligations.add(new MapIterationObligation(node, question));
 		}
@@ -1368,7 +1368,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp rExp = node.getRight();
 		PType rType = rExp.getType();
 
-		if (PTypeAssistantTC.isUnion(lType))
+		if (assistantFactory.createPTypeAssistant().isUnion(lType))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question);
 			if (sto != null)
@@ -1377,7 +1377,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (PTypeAssistantTC.isUnion(rType))
+		if (assistantFactory.createPTypeAssistant().isUnion(rType))
 		{
 			question.push(new POImpliesContext(lExp));
 
@@ -1409,7 +1409,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
 
-		if (PTypeAssistantTC.isUnion(lType))
+		if (assistantFactory.createPTypeAssistant().isUnion(lType))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question);
 			if (sto != null)
@@ -1418,7 +1418,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (PTypeAssistantTC.isUnion(rType))
+		if (assistantFactory.createPTypeAssistant().isUnion(rType))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question);
 			if (sto != null)
@@ -1556,7 +1556,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (left.getLocation().getStartLine() == 2792)
 			System.out.println("fd");
 
-		if (PTypeAssistantTC.isUnion(ltype))
+		if (assistantFactory.createPTypeAssistant().isUnion(ltype))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question);
 			if (sto != null)
@@ -1565,7 +1565,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (PTypeAssistantTC.isUnion(rtype))
+		if (assistantFactory.createPTypeAssistant().isUnion(rtype))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question);
 			if (sto != null)

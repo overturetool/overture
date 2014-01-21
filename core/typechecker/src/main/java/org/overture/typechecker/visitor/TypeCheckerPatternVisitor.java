@@ -10,8 +10,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
@@ -32,13 +30,13 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!PTypeAssistantTC.isSet(type))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(type))
 		{
 			TypeCheckerErrors.report(3197, "Expression matching set bind is not a set", node.getSet().getLocation(), node.getSet());
 			TypeCheckerErrors.detail("Actual type", type);
 		} else
 		{
-			ASetType st = PTypeAssistantTC.getSet(type);
+			ASetType st = question.assistantFactory.createPTypeAssistant().getSet(type);
 
 			if (!st.getEmpty())
 			{

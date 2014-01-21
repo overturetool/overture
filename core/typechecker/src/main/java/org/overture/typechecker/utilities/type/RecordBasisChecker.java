@@ -16,7 +16,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to check if a given type is a Record type.
@@ -64,7 +63,7 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
-			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation())));
 
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
@@ -74,9 +73,9 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistantTC.isRecord(t))
+				if (af.createPTypeAssistant().isRecord(t))
 				{
-					for (AFieldField f : PTypeAssistantTC.getRecord(t).getFields())
+					for (AFieldField f : af.createPTypeAssistant().getRecord(t).getFields())
 					{
 						PTypeSet current = common.get(f.getTag());
 

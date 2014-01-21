@@ -150,19 +150,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		boolean isSimple = !PTypeAssistantTC.isUnion(node.getType());
+		boolean isSimple = !question.assistantFactory.createPTypeAssistant().isUnion(node.getType());
 		PTypeSet results = new PTypeSet();
 
-		if (PTypeAssistantTC.isFunction(node.getType()))
+		if (question.assistantFactory.createPTypeAssistant().isFunction(node.getType()))
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
 			results.add(question.assistantFactory.createAApplyExpAssistant().functionApply(node, isSimple, ft));
 		}
 
-		if (PTypeAssistantTC.isOperation(node.getType()))
+		if (question.assistantFactory.createPTypeAssistant().isOperation(node.getType()))
 		{
-			AOperationType ot = PTypeAssistantTC.getOperation(node.getType());
+			AOperationType ot = question.assistantFactory.createPTypeAssistant().getOperation(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ot, null, THIS, question);
 
 			if (inFunction && Settings.release == Release.VDM_10)
@@ -176,13 +176,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (PTypeAssistantTC.isSeq(node.getType()))
+		if (question.assistantFactory.createPTypeAssistant().isSeq(node.getType()))
 		{
-			SSeqType seq = PTypeAssistantTC.getSeq(node.getType());
+			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(node.getType());
 			results.add(question.assistantFactory.createAApplyExpAssistant().sequenceApply(node, isSimple, seq));
 		}
 
-		if (PTypeAssistantTC.isMap(node.getType()))
+		if (question.assistantFactory.createPTypeAssistant().isMap(node.getType()))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getType());
 			results.add(question.assistantFactory.createAApplyExpAssistant().mapApply(node, isSimple, map));
@@ -216,9 +216,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PTypeSet results = new PTypeSet();
 
-		if (PTypeAssistantTC.isMap(node.getLeft().getType()))
+		if (question.assistantFactory.createPTypeAssistant().isMap(node.getLeft().getType()))
 		{
-			if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+			if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 			{
 				TypeCheckerErrors.report(3068, "Right hand of map 'comp' is not a map", node.getLocation(), node);
 				TypeCheckerErrors.detail("Type", node.getRight().getType());
@@ -240,9 +240,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			results.add(AstFactory.newAMapMapType(node.getLocation(), rm.getFrom(), lm.getTo()));
 		}
 
-		if (PTypeAssistantTC.isFunction(node.getLeft().getType()))
+		if (question.assistantFactory.createPTypeAssistant().isFunction(node.getLeft().getType()))
 		{
-			if (!PTypeAssistantTC.isFunction(node.getRight().getType()))
+			if (!question.assistantFactory.createPTypeAssistant().isFunction(node.getRight().getType()))
 			{
 				TypeCheckerErrors.report(3070, "Right hand of function 'comp' is not a function", node.getLocation(), node);
 				TypeCheckerErrors.detail("Type", node.getRight().getType());
@@ -291,15 +291,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSet(node.getLeft().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3079, "Left of '<-:' is not a set", node.getLocation(), node);
-		} else if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+		} else if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3080, "Right of '<-:' is not a map", node.getLocation(), node);
 		} else
 		{
-			ASetType set = PTypeAssistantTC.getSet(node.getLeft().getType());
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(node.getLeft().getType());
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
@@ -320,17 +320,17 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSet(node.getLeft().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3082, "Left of '<:' is not a set", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
-		} else if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+		} else if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3083, "Right of '<:' is not a map", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 		} else
 		{
-			ASetType set = PTypeAssistantTC.getSet(node.getLeft().getType());
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(node.getLeft().getType());
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getFrom()))
@@ -368,13 +368,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().apply(THIS, question);
 		PType rtype = node.getRight().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSet(node.getRight().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3110, "Argument of 'in set' is not a set", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", rtype);
 		} else
 		{
-			ASetType stype = PTypeAssistantTC.getSet(rtype);
+			ASetType stype = question.assistantFactory.createPTypeAssistant().getSet(rtype);
 
 			if (!TypeComparator.compatible(stype.getSetof(), ltype))
 			{
@@ -394,14 +394,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isMap(node.getLeft().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3123, "Left hand of 'munion' is not a map", node.getLocation(), node);
 			TypeCheckerErrors.detail("Type", node.getLeft().getType());
 			node.setType(AstFactory.newAMapMapType(node.getLocation())); // Unknown
 																			// types
 			return node.getType();
-		} else if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+		} else if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3124, "Right hand of 'munion' is not a map", node.getLocation(), node);
 			TypeCheckerErrors.detail("Type", node.getRight().getType());
@@ -448,13 +448,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().apply(THIS, question);
 		PType rtype = node.getRight().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSet(node.getRight().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3138, "Argument of 'not in set' is not a set", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", node.getRight().getType());
 		} else
 		{
-			ASetType stype = PTypeAssistantTC.getSet(rtype);
+			ASetType stype = question.assistantFactory.createPTypeAssistant().getSet(rtype);
 
 			if (!TypeComparator.compatible(stype.getSetof(), ltype))
 			{
@@ -637,12 +637,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PTypeSet result = new PTypeSet();
 
-		boolean unique = !PTypeAssistantTC.isUnion(node.getLeft().getType())
-				&& !PTypeAssistantTC.isUnion(node.getRight().getType());
+		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(node.getLeft().getType())
+				&& !question.assistantFactory.createPTypeAssistant().isUnion(node.getRight().getType());
 
-		if (PTypeAssistantTC.isMap(node.getLeft().getType()))
+		if (question.assistantFactory.createPTypeAssistant().isMap(node.getLeft().getType()))
 		{
-			if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+			if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 			{
 				TypeCheckerErrors.concern(unique, 3141, "Right hand of '++' is not a map", node.getLocation(), node);
 				TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
@@ -664,11 +664,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			result.add(AstFactory.newAMapMapType(node.getLocation(), domain.getType(node.getLocation()), range.getType(node.getLocation())));
 		}
 
-		if (PTypeAssistantTC.isSeq(node.getLeft().getType()))
+		if (question.assistantFactory.createPTypeAssistant().isSeq(node.getLeft().getType()))
 		{
-			SSeqType st = PTypeAssistantTC.getSeq(node.getLeft().getType());
+			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(node.getLeft().getType());
 
-			if (!PTypeAssistantTC.isMap(node.getRight().getType()))
+			if (!question.assistantFactory.createPTypeAssistant().isMap(node.getRight().getType()))
 			{
 				TypeCheckerErrors.concern(unique, 3142, "Right hand of '++' is not a map", node.getLocation(), node);
 				TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
@@ -708,13 +708,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSet(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3146, "Left hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isSet(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3147, "Right hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
@@ -735,16 +735,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isMap(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(ltype))
 		{
 			TypeCheckerErrors.report(3148, "Left of ':->' is not a map", node.getLocation(), node);
-		} else if (!PTypeAssistantTC.isSet(rtype))
+		} else if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3149, "Right of ':->' is not a set", node.getLocation(), node);
 		} else
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(ltype);
-			ASetType set = PTypeAssistantTC.getSet(rtype);
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
 			{
@@ -768,16 +768,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isMap(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(ltype))
 		{
 			TypeCheckerErrors.report(3151, "Left of ':>' is not a map", node.getLocation(), node);
-		} else if (!PTypeAssistantTC.isSet(rtype))
+		} else if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3152, "Right of ':>' is not a set", node.getLocation(), node);
 		} else
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(ltype);
-			ASetType set = PTypeAssistantTC.getSet(rtype);
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(rtype);
 
 			if (!TypeComparator.compatible(set.getSetof(), map.getTo()))
 			{
@@ -800,20 +800,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSeq(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(ltype))
 		{
 			TypeCheckerErrors.report(3157, "Left hand of '^' is not a sequence", node.getLocation(), node);
 			ltype = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation()));
 		}
 
-		if (!PTypeAssistantTC.isSeq(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(rtype))
 		{
 			TypeCheckerErrors.report(3158, "Right hand of '^' is not a sequence", node.getLocation(), node);
 			rtype = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation()));
 		}
 
-		PType lof = PTypeAssistantTC.getSeq(ltype);
-		PType rof = PTypeAssistantTC.getSeq(rtype);
+		PType lof = question.assistantFactory.createPTypeAssistant().getSeq(ltype);
+		PType rof = question.assistantFactory.createPTypeAssistant().getSeq(rtype);
 		boolean seq1 = lof instanceof ASeq1SeqType
 				|| rof instanceof ASeq1SeqType;
 
@@ -839,12 +839,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSet(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3160, "Left hand of '\\' is not a set", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isSet(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3161, "Right hand of '\\' is not a set", node.getLocation(), node);
 		}
@@ -870,13 +870,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSet(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3163, "Left hand of " + node.getLocation()
 					+ " is not a set", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isSet(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3164, "Right hand of "
 					+ node.getLocation() + " is not a set", node.getLocation(), node);
@@ -903,13 +903,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSet(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3168, "Left hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isSet(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3169, "Right hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
@@ -933,23 +933,23 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (PTypeAssistantTC.isMap(ltype))
+		if (question.assistantFactory.createPTypeAssistant().isMap(ltype))
 		{
-			if (!PTypeAssistantTC.isNumeric(rtype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
 				// rtype.report(3170,
 				// "Map iterator expects nat as right hand arg");
 				TypeCheckerErrors.report(3170, "Map iterator expects nat as right hand arg", rtype.getLocation(), rtype);
 			}
-		} else if (PTypeAssistantTC.isFunction(ltype))
+		} else if (question.assistantFactory.createPTypeAssistant().isFunction(ltype))
 		{
-			if (!PTypeAssistantTC.isNumeric(rtype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
 				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg", rtype.getLocation(), rtype);
 			}
-		} else if (PTypeAssistantTC.isNumeric(ltype))
+		} else if (question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
 		{
-			if (!PTypeAssistantTC.isNumeric(rtype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
 				TypeCheckerErrors.report(3172, "'**' expects number as right hand arg", rtype.getLocation(), rtype);
 			}
@@ -975,14 +975,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!PTypeAssistantTC.isSet(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3177, "Left hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
 			TypeCheckerErrors.detail("Type", ltype);
 		}
 
-		if (!PTypeAssistantTC.isSet(rtype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
 		{
 			TypeCheckerErrors.report(3178, "Right hand of " + node.getOp()
 					+ " is not a set", node.getLocation(), node);
@@ -1110,11 +1110,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PTypeSet results = new PTypeSet();
 		boolean recOrClass = false;
-		boolean unique = !PTypeAssistantTC.isUnion(root);
+		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(root);
 
-		if (PTypeAssistantTC.isRecord(root))
+		if (question.assistantFactory.createPTypeAssistant().isRecord(root))
 		{
-			ARecordInvariantType rec = PTypeAssistantTC.getRecord(root);
+			ARecordInvariantType rec = question.assistantFactory.createPTypeAssistant().getRecord(root);
 			AFieldField cf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, node.getField().getName());
 
 			if (cf != null)
@@ -1130,9 +1130,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			recOrClass = true;
 		}
 
-		if (question.env.isVDMPP() && PTypeAssistantTC.isClass(root))
+		if (question.env.isVDMPP() && question.assistantFactory.createPTypeAssistant().isClass(root))
 		{
-			AClassType cls = PTypeAssistantTC.getClassType(root);
+			AClassType cls = question.assistantFactory.createPTypeAssistant().getClassType(root);
 			ILexNameToken memberName = node.getMemberName();
 
 			if (memberName == null)
@@ -1302,7 +1302,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return ftype;
 		}
 
-		if (PTypeAssistantTC.isFunction(ftype))
+		if (question.assistantFactory.createPTypeAssistant().isFunction(ftype))
 		{
 			AFunctionType t = question.assistantFactory.createPTypeAssistant().getFunction(ftype);
 			PTypeSet set = new PTypeSet();
@@ -1505,9 +1505,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			question.qualifiers = null;
 			rt = sb.getSet().apply(THIS, question);
 
-			if (PTypeAssistantTC.isSet(rt))
+			if (question.assistantFactory.createPTypeAssistant().isSet(rt))
 			{
-				rt = PTypeAssistantTC.getSet(rt).getSetof();
+				rt = question.assistantFactory.createPTypeAssistant().getSet(rt).getSetof();
 			} else
 			{
 				TypeCheckerErrors.report(3112, "Iota set bind is not a set", node.getLocation(), node);
@@ -1576,7 +1576,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -1605,7 +1605,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = node.getExp().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", node.getExp().getLocation(), node.getExp());
 		}
@@ -1814,7 +1814,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			PType mt = ex.apply(THIS, question);
 
-			if (!PTypeAssistantTC.isMap(mt))
+			if (!question.assistantFactory.createPTypeAssistant().isMap(mt))
 			{
 				TypeCheckerErrors.report(3121, "Element is not of maplet type", node.getLocation(), node);
 			} else
@@ -1962,9 +1962,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return rtype;
 		}
 
-		if (PTypeAssistantTC.isRecord(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isRecord(rtype))
 		{
-			node.setRecordType(PTypeAssistantTC.getRecord(rtype));
+			node.setRecordType(question.assistantFactory.createPTypeAssistant().getRecord(rtype));
 			node.setModTypes(new LinkedList<PType>());
 
 			List<PType> modTypes = node.getModTypes();
@@ -2202,7 +2202,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2210,7 +2210,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
@@ -2229,7 +2229,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType lt = left.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(lt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(lt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", left.getLocation(), left);
 		}
@@ -2237,7 +2237,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType rt = right.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isClass(rt))
+		if (!question.assistantFactory.createPTypeAssistant().isClass(rt))
 		{
 			TypeCheckerErrors.report(3266, "Argument is not an object", right.getLocation(), right);
 		}
@@ -2433,9 +2433,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				question.qualifiers = null;
 				PType rhs = ee.getRight().apply(THIS, question);
 
-				if (PTypeAssistantTC.isTag(rhs))
+				if (question.assistantFactory.createPTypeAssistant().isTag(rhs))
 				{
-					ARecordInvariantType rt = PTypeAssistantTC.getRecord(rhs);
+					ARecordInvariantType rt = question.assistantFactory.createPTypeAssistant().getRecord(rhs);
 					canBeExecuted = rt.getName().getName().equals(node.getState().getName().getName());
 				}
 			}
@@ -2494,17 +2494,17 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.setTtype(node.getTo().apply(THIS, question));
 		PType ttype = node.getTtype();
 
-		if (!PTypeAssistantTC.isSeq(stype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(stype))
 		{
 			TypeCheckerErrors.report(3174, "Subsequence is not of a sequence type", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(ftype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
 			TypeCheckerErrors.report(3175, "Subsequence range start is not a number", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(ttype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ttype))
 		{
 			TypeCheckerErrors.report(3176, "Subsequence range end is not a number", node.getLocation(), node);
 		}
@@ -2731,7 +2731,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
-		if (!PTypeAssistantTC.isSet(exp.apply(THIS, question)))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(exp.apply(THIS, question)))
 		{
 			TypeCheckerErrors.report(3067, "Argument of 'card' is not a set", exp.getLocation(), exp);
 		}
@@ -2748,13 +2748,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType result = exp.apply(THIS, question);
 
-		if (PTypeAssistantTC.isSeq(result))
+		if (question.assistantFactory.createPTypeAssistant().isSeq(result))
 		{
-			PType inner = PTypeAssistantTC.getSeq(result).getSeqof();
+			PType inner = question.assistantFactory.createPTypeAssistant().getSeq(result).getSeqof();
 
-			if (PTypeAssistantTC.isSeq(inner))
+			if (question.assistantFactory.createPTypeAssistant().isSeq(inner))
 			{
-				node.setType(PTypeAssistantTC.getSeq(inner));
+				node.setType(question.assistantFactory.createPTypeAssistant().getSeq(inner));
 				return node.getType();
 			}
 		}
@@ -2774,11 +2774,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType arg = exp.apply(THIS, question);
 
-		if (PTypeAssistantTC.isSet(arg))
+		if (question.assistantFactory.createPTypeAssistant().isSet(arg))
 		{
-			ASetType set = PTypeAssistantTC.getSet(arg);
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(arg);
 
-			if (set.getEmpty() || PTypeAssistantTC.isSet(set.getSetof()))
+			if (set.getEmpty() || question.assistantFactory.createPTypeAssistant().isSet(set.getSetof()))
 			{
 				node.setType(set.getSetof());
 				return set.getSetof();
@@ -2800,11 +2800,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType arg = exp.apply(THIS, question);
 
-		if (PTypeAssistantTC.isSet(arg))
+		if (question.assistantFactory.createPTypeAssistant().isSet(arg))
 		{
-			ASetType set = PTypeAssistantTC.getSet(arg);
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(arg);
 
-			if (!set.getEmpty() && PTypeAssistantTC.isMap(set.getSetof()))
+			if (!set.getEmpty() && question.assistantFactory.createPTypeAssistant().isMap(set.getSetof()))
 			{
 				node.setType(set.getSetof());
 				return set.getSetof();
@@ -2825,11 +2825,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType type = exp.apply(THIS, question);
 
-		if (PTypeAssistantTC.isSet(type))
+		if (question.assistantFactory.createPTypeAssistant().isSet(type))
 		{
-			ASetType set = PTypeAssistantTC.getSet(type);
+			ASetType set = question.assistantFactory.createPTypeAssistant().getSet(type);
 
-			if (PTypeAssistantTC.isSet(set.getSetof()))
+			if (question.assistantFactory.createPTypeAssistant().isSet(set.getSetof()))
 			{
 				node.setType(set.getSetof());
 				return set.getSetof();
@@ -2867,14 +2867,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3104, "Argument to 'hd' is not a sequence", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
 		}
 
-		node.setType(PTypeAssistantTC.getSeq(etype).getSeqof());
+		node.setType(question.assistantFactory.createPTypeAssistant().getSeq(etype).getSeqof());
 		return node.getType();
 	}
 
@@ -2888,7 +2888,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3109, "Argument to 'inds' is not a sequence", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual type", etype);
@@ -2908,7 +2908,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3116, "Argument to 'len' is not a sequence", node.getLocation(), node);
 		}
@@ -2927,7 +2927,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isMap(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(etype))
 		{
 			TypeCheckerErrors.report(3120, "Argument to 'dom' is not a map", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -2949,7 +2949,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isMap(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(etype))
 		{
 			TypeCheckerErrors.report(3111, "Argument to 'inverse' is not a map", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -2972,7 +2972,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isMap(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isMap(etype))
 		{
 			TypeCheckerErrors.report(3122, "Argument to 'rng' is not a map", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -3011,7 +3011,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSet(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(etype))
 		{
 			TypeCheckerErrors.report(3145, "Argument to 'power' is not a set", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -3032,7 +3032,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3295, "Argument to 'reverse' is not a sequence", node.getLocation(), node);
 			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation()));
@@ -3053,7 +3053,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType etype = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(etype))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{
 			TypeCheckerErrors.report(3179, "Argument to 'tl' is not a sequence", node.getLocation(), node);
 			node.setType(AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
@@ -3099,14 +3099,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType arg = etype.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isSeq(arg))
+		if (!question.assistantFactory.createPTypeAssistant().isSeq(arg))
 		{
 			TypeCheckerErrors.report(3085, "Argument of 'elems' is not a sequence", node.getLocation(), node);
 			node.setType(AstFactory.newASetType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 			return node.getType();
 		}
 
-		SSeqType seq = PTypeAssistantTC.getSeq(arg);
+		SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(arg);
 		node.setType(seq.getEmpty() ? AstFactory.newASetType(node.getLocation())
 				: AstFactory.newASetType(node.getLocation(), seq.getSeqof()));
 		return node.getType();
