@@ -1,0 +1,13 @@
+import utils.*;
+
+import java.util.*;
+
+
+public class A {
+    private List y = Utils.distConc(op(), op());
+
+    public List op() {
+        return Utils.seq(1L, 2L);
+    }
+}
+##########
