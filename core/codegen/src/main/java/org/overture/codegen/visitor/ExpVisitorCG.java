@@ -395,7 +395,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PType type = node.getType();
 		if(type instanceof SSeqType)
 		{
-			PTypeCG seqType = ((SSeqType) type).getSeqof().apply(question.getTypeVisitor(), question);
+			PTypeCG seqType = type.apply(question.getTypeVisitor(), question);
 			enumSeq.setType(seqType);
 		}
 		else
