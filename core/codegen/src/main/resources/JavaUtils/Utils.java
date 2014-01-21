@@ -6,16 +6,16 @@ import java.util.Vector;
 public class Utils
 {
 
-	public static <T> List<T> seq()
+	public static List seq()
 	{
-		return new Vector<T>();
+		return new Vector();
 	}
 	
-	public static <T> List<T> seq(T... elements)
+	public static List seq(Object... elements)
 	{
-		Vector<T> vector = new Vector<T>();
+		Vector vector = new Vector();
 		
-		for (T element : elements)
+		for (Object element : elements)
 		{
 			vector.add(element);
 		}
@@ -23,14 +23,14 @@ public class Utils
 		return vector;
 	}
 	
-	public static <T> List<T> seqTail(List<T> seq)
+	public static List seqTail(List seq)
 	{
 		return seq.subList(1,seq.size());
 	}
 	
-	public static <T> List<T> seqConc(List<T> left, List<T> right)
+	public static List seqConc(List left, List right)
 	{
-		List<T> result = new Vector<T>();
+		List result = new Vector();
 		
 		result.addAll(left);
 		result.addAll(right);
@@ -63,7 +63,7 @@ public class Utils
 		return indices;
 	}
 	
-	public static boolean seqEquals(List<? extends Object> left, List<? extends Object> right)
+	public static boolean seqEquals(List left, List right)
 	{
 		if(left == null || right == null)
 			throw new IllegalArgumentException("Sequence arguments cannot be null");
@@ -95,18 +95,18 @@ public class Utils
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> reverse(List<T> list)
+	public static List reverse(List list)
 	{
-		Vector<T> reversed = new Vector<T>();
+		Vector reversed = new Vector();
 		
 		for(int i = list.size() - 1; i >= 0; i--)
 		{
-			T current = list.get(i);
+			Object current = list.get(i);
 			
 			if(current instanceof ValueType)
 			{
 				ValueType valueType = ((ValueType) current).clone();
-				reversed.add((T) valueType);
+				reversed.add(valueType);
 			}
 			else
 				reversed.add(current);
