@@ -15,6 +15,7 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {
+	private static final String MODULE_DELIMITER = IText.NEW_LINE  + "##########" + IText.NEW_LINE ;
 
 	public SpecificationTestCase()
 	{
@@ -53,7 +54,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		for (GeneratedModule classCg : classes)
 		{
 			generatedCode.append(classCg.getContent());
-			generatedCode.append(IText.NEW_LINE);
+			generatedCode.append(MODULE_DELIMITER);
 		}
 		
 		int lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
@@ -67,6 +68,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		{
 			generatedCode.append(IText.NEW_LINE);
 			generatedCode.append(quoteData.getContent());
+			generatedCode.append(MODULE_DELIMITER);
 		}
 		
 		lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
