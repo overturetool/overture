@@ -34,8 +34,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 /**
  * Define the type checking environment for a set of classes, as observed from the outside.
@@ -92,7 +90,7 @@ public class PublicClassEnvironment extends Environment
 		PDefinition def = af.createSClassDefinitionAssistant().findName(classes, name, scope);
 
 		if (def != null
-				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
+				&& af.createPAccessSpecifierAssistant().isPublic(def.getAccess()))
 		{
 			return def;
 		}
@@ -106,7 +104,7 @@ public class PublicClassEnvironment extends Environment
 		PDefinition def = af.createSClassDefinitionAssistant().findType(classes, name);
 
 		if (def != null
-				&& PAccessSpecifierAssistantTC.isPublic(def.getAccess()))
+				&& af.createPAccessSpecifierAssistant().isPublic(def.getAccess()))
 		{
 			return def;
 		}

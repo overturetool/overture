@@ -29,7 +29,7 @@ public class PAccessSpecifierAssistant
 		return access != null && access.getStatic() != null;
 	}
 
-	public static boolean isPublic(AAccessSpecifierAccessSpecifier access)
+	public boolean isPublic(AAccessSpecifierAccessSpecifier access)
 	{
 
 		return access != null && access.getAccess() instanceof APublicAccess;

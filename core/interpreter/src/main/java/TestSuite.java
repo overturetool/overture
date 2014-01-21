@@ -16,7 +16,6 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class TestSuite
@@ -72,7 +71,7 @@ public class TestSuite
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
 								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule()) && ctor.getParamDefinitions().isEmpty())
-								|| !(PAccessSpecifierAssistantTC.isPublic(ctor.getAccess())))
+								|| !(ClassInterpreter.getInstance().getAssistantFactory().createPAccessSpecifierAssistant().isPublic(ctor.getAccess())))
 						{
 							throw new Exception("Class "
 									+ p.name.getModule()
