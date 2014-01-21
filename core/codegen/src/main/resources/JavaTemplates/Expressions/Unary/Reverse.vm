@@ -1,8 +1,7 @@
 #set( $exp = $JavaFormat.format($node.getExp()) )
 ##
-#if ($JavaFormat.isCharType($node.getType()))
+#if ($JavaFormat.isStringType($node.getExp().getType()))
 	new StringBuilder($exp).reverse().toString()
 #else
-	#set( $type = $JavaFormat.formatTemplateParam($node.getType()) )
-	Utils.<$type>reverse($exp)
+	Utils.reverse($exp)
 #end
