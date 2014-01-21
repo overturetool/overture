@@ -67,7 +67,6 @@ import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
@@ -94,7 +93,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		node.setType(node.getRoot().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, node.getArgtypes())));
 
-		if (PTypeAssistantTC.isUnknown(node.getType()))
+		if (question.assistantFactory.createPTypeAssistant().isUnknown(node.getType()))
 		{
 			return node.getType();
 		}
@@ -1102,7 +1101,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType root = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
-		if (PTypeAssistantTC.isUnknown(root))
+		if (question.assistantFactory.createPTypeAssistant().isUnknown(root))
 		{
 			node.setMemberName(new LexNameToken("?", node.getField()));
 			node.setType(root);
@@ -1116,7 +1115,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (PTypeAssistantTC.isRecord(root))
 		{
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(root);
-			AFieldField cf = ARecordInvariantTypeAssistantTC.findField(rec, node.getField().getName());
+			AFieldField cf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, node.getField().getName());
 
 			if (cf != null)
 			{
@@ -1297,7 +1296,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType ftype = node.getFunction().apply(THIS, question);
 
-		if (PTypeAssistantTC.isUnknown(ftype))
+		if (question.assistantFactory.createPTypeAssistant().isUnknown(ftype))
 		{
 			node.setType(ftype);
 			return ftype;
@@ -1957,7 +1956,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType rtype = node.getRecord().apply(THIS, question);
 
-		if (PTypeAssistantTC.isUnknown(rtype))
+		if (question.assistantFactory.createPTypeAssistant().isUnknown(rtype))
 		{
 			node.setType(rtype);
 			return rtype;
@@ -1974,7 +1973,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				PType mtype = rm.getValue().apply(THIS, question);
 				modTypes.add(mtype);
-				AFieldField f = ARecordInvariantTypeAssistantTC.findField(node.getRecordType(), rm.getTag().getName());
+				AFieldField f = question.assistantFactory.createARecordInvariantTypeAssistant().findField(node.getRecordType(), rm.getTag().getName());
 
 				if (f != null)
 				{

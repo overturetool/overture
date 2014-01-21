@@ -20,7 +20,7 @@ public class APatternListTypePairAssistantTC
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinitions(
+	public Collection<? extends PDefinition> getDefinitions(
 			APatternListTypePair pltp, NameScope scope)
 	{
 		List<PDefinition> list = new Vector<PDefinition>();

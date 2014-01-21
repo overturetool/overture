@@ -77,8 +77,6 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
@@ -433,7 +431,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (APatternListTypePair pltp : node.getParamPatterns())
 		{
-			argdefs.addAll(APatternListTypePairAssistantTC.getDefinitions(pltp, NameScope.LOCAL));
+			argdefs.addAll(question.assistantFactory.createAPatternListTypePairAssistant().getDefinitions(pltp, NameScope.LOCAL));
 		}
 
 		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
@@ -703,15 +701,15 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
 		} else if (!node.getIsConstructor()
-				&& !PTypeAssistantTC.isUnknown(actualResult))
+				&& !question.assistantFactory.createPTypeAssistant().isUnknown(actualResult))
 		{
-			if (PTypeAssistantTC.isVoid(((AOperationType) node.getType()).getResult())
-					&& !PTypeAssistantTC.isVoid(actualResult))
+			if (question.assistantFactory.createPTypeAssistant().isVoid(((AOperationType) node.getType()).getResult())
+					&& !question.assistantFactory.createPTypeAssistant().isVoid(actualResult))
 			{
 				TypeCheckerErrors.report(3312, "Void operation returns non-void value", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected", ((AOperationType) node.getType()).getResult());
-			} else if (!PTypeAssistantTC.isVoid(((AOperationType) node.getType()).getResult())
-					&& PTypeAssistantTC.hasVoid(actualResult))
+			} else if (!question.assistantFactory.createPTypeAssistant().isVoid(((AOperationType) node.getType()).getResult())
+					&& question.assistantFactory.createPTypeAssistant().hasVoid(actualResult))
 			{
 				TypeCheckerErrors.report(3313, "Operation returns void value", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", actualResult, "Expected", ((AOperationType) node.getType()).getResult());
@@ -759,7 +757,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		for (APatternListTypePair ptp : node.getParameterPatterns())
 		{
-			argdefs.addAll(APatternListTypePairAssistantTC.getDefinitions(ptp, NameScope.LOCAL));
+			argdefs.addAll(question.assistantFactory.createAPatternListTypePairAssistant().getDefinitions(ptp, NameScope.LOCAL));
 		}
 
 		defs.addAll(question.assistantFactory.createPDefinitionAssistant().checkDuplicatePatterns(node, argdefs));
@@ -882,15 +880,15 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3035, "Operation returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
 			} else if (!node.getIsConstructor()
-					&& !PTypeAssistantTC.isUnknown(node.getActualResult()))
+					&& !question.assistantFactory.createPTypeAssistant().isUnknown(node.getActualResult()))
 			{
-				if (PTypeAssistantTC.isVoid(((AOperationType) node.getType()).getResult())
-						&& !PTypeAssistantTC.isVoid(node.getActualResult()))
+				if (question.assistantFactory.createPTypeAssistant().isVoid(((AOperationType) node.getType()).getResult())
+						&& !question.assistantFactory.createPTypeAssistant().isVoid(node.getActualResult()))
 				{
 					TypeCheckerErrors.report(3312, "Void operation returns non-void value", node.getLocation(), node);
 					TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());
-				} else if (!PTypeAssistantTC.isVoid(((AOperationType) node.getType()).getResult())
-						&& PTypeAssistantTC.hasVoid(node.getActualResult()))
+				} else if (!question.assistantFactory.createPTypeAssistant().isVoid(((AOperationType) node.getType()).getResult())
+						&& question.assistantFactory.createPTypeAssistant().hasVoid(node.getActualResult()))
 				{
 					TypeCheckerErrors.report(3313, "Operation returns void value", node.getLocation(), node);
 					TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", ((AOperationType) node.getType()).getResult());

@@ -24,8 +24,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
 
@@ -57,7 +55,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static PType polymorph(PType type, ILexNameToken pname,
+	public PType polymorph(PType type, ILexNameToken pname,
 			PType actualType)
 	{
 		try
@@ -76,7 +74,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isUnknown(PType type)
+	public boolean isUnknown(PType type)
 	{
 		if (type instanceof AUnionType)
 		{

@@ -58,10 +58,11 @@ public class State implements ValueListener
 		}
 
 		ARecordInvariantType rt = (ARecordInvariantType)definition.getRecordType();
-		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues),
+		this.context = new Context(Interpreter.getInstance().getAssistantFactory(),definition.getLocation(), "module state", null);
+		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues, context),
 			new ValueListenerList(this));
 
-		this.context = new Context(Interpreter.getInstance().getAssistantFactory(),definition.getLocation(), "module state", null);
+		
 		this.context.put(definition.getName(), recordValue);
 		this.context.putList(fieldvalues);
 	}

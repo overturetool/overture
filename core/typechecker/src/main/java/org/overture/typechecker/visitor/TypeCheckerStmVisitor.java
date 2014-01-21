@@ -249,7 +249,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// return type, as the block may return nothing.
 
 		if (last != null
-				&& (PTypeAssistantTC.isType(last, AVoidType.class) || PTypeAssistantTC.isUnknown(last)))
+				&& (question.assistantFactory.createPTypeAssistant().isType(last, AVoidType.class) || question.assistantFactory.createPTypeAssistant().isUnknown(last)))
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
 		}

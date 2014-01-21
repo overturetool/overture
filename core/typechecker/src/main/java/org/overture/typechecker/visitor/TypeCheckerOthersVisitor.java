@@ -42,9 +42,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
-import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
@@ -136,7 +133,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		{
 
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
-			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, field.getName());
+			AFieldField rf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, field.getName());
 
 			if (rf == null)
 			{
@@ -486,7 +483,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			String sname = node.getFieldName() != null ? node.getFieldName().getName()
 					: node.getClassName().toString();
 			ARecordInvariantType rec = PTypeAssistantTC.getRecord(type);
-			AFieldField rf = ARecordInvariantTypeAssistantTC.findField(rec, sname);
+			AFieldField rf = question.assistantFactory.createARecordInvariantTypeAssistant().findField(rec, sname);
 
 			if (rf == null)
 			{

@@ -51,6 +51,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
@@ -64,7 +65,7 @@ public class TypeComparator
 	 * A vector of type pairs that have already been compared. This is to allow recursive type definitions to be
 	 * compared without infinite regress.
 	 */
-
+	
 	private static Vector<TypePair> done = new Vector<TypePair>(256);
 
 	/**

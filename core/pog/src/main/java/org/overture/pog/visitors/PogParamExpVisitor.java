@@ -131,8 +131,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (!PTypeAssistantTC.isUnknown(type)
-				&& PTypeAssistantTC.isFunction(type))
+		if (!assistantFactory.createPTypeAssistant().isUnknown(type)
+				&& assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			AFunctionType funcType = PTypeAssistantTC.getFunction(type);
 			ILexNameToken prename = assistantFactory.createPExpAssistant().getPreName(root);

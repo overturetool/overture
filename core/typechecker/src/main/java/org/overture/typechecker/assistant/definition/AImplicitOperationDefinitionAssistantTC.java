@@ -68,7 +68,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		parameters.add(plist);
 		PExp postop = AstFactory.newAPostOpExp(d.getName().clone(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), d.getState());
 
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, postop, null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, af.createAOperationTypeAssistant().getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, postop, null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even

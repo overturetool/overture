@@ -176,7 +176,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 			for (ILexNameToken pname : efd.getTypeParams())
 			{
 				PType ptype = ti.next();
-				ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype, pname, ptype);
+				ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 			}
 		}
 

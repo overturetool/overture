@@ -39,7 +39,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		{
 			PType ptype = ti.next();
 			// AFunctionTypeAssistent.
-			ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype, pname, ptype);
+			ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 		}
 
 		return ftype;

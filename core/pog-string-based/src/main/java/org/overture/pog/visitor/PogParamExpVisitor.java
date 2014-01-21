@@ -112,7 +112,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 			}
 		}
 
-		if (!PTypeAssistantTC.isUnknown(type)
+		if (!question.assistantFactory.createPTypeAssistant().isUnknown(type)
 				&& PTypeAssistantTC.isFunction(type))
 		{
 			AFunctionType funcType = PTypeAssistantTC.getFunction(type);
