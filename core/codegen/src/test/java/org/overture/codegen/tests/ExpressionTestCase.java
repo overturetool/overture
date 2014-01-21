@@ -24,8 +24,9 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 	{
 		String fileContent = CodeGenTestUtil.getFileContent(file);
 		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent).getContent().trim();
+		String trimmed = generatedJava.replaceAll("\\s+", " ");
 		
-		return generatedJava;
+		return trimmed;
 	}
 
 	@Override
