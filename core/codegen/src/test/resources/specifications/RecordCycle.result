@@ -33,6 +33,7 @@ public class A {
     }
 }
 
+##########
 import utils.*;
 
 
@@ -67,3 +68,4 @@ public class B {
         }
     }
 }
+##########

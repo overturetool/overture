@@ -1,8 +1,8 @@
 public class A {
-    public long op() {
-        long n = 0L;
+    public Number op() {
+        Number n = 0L;
         boolean b = false;
-        double r = 0.0;
+        Number r = 0.0;
         char c = '0';
         String s = null;
         A a = null;
@@ -10,3 +10,4 @@ public class A {
         return 0L;
     }
 }
+##########

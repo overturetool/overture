@@ -36,14 +36,15 @@ public class A {
     }
 }
 
+##########
 import utils.*;
 
 
 public class B {
     public static class RecB implements Record {
-        public long b;
+        public Number b;
 
-        public RecB(long _b) {
+        public RecB(Number _b) {
             b = _b;
         }
 
@@ -70,3 +71,4 @@ public class B {
         }
     }
 }
+##########

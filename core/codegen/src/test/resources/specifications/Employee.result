@@ -1,24 +1,25 @@
 abstract public class Employee {
-    public abstract double getSalary();
+    public abstract Number getSalary();
 }
 
+##########
 public class HourlyPaidEmployee extends Employee {
-    public double hours;
-    private double rate;
+    public Number hours;
+    private Number rate;
 
-    public HourlyPaidEmployee(double pHours, double pRate) {
+    public HourlyPaidEmployee(Number pHours, Number pRate) {
         hours = pHours;
         rate = pRate;
     }
 
-    public double getSalary() {
-        return hours * rate;
+    public Number getSalary() {
+        return hours.doubleValue() * rate.doubleValue();
     }
 
-    public void SetRate(double pRate) {
-        if (pRate > 150L) {
+    public void SetRate(Number pRate) {
+        if (pRate.doubleValue() > 150L) {
             rate = 150L;
-        } else if (pRate < 0L) {
+        } else if (pRate.doubleValue() < 0L) {
             rate = 0L;
         } else {
             rate = pRate;
@@ -26,51 +27,55 @@ public class HourlyPaidEmployee extends Employee {
     }
 }
 
+##########
 public class FixedSalaryEmployee extends Employee {
-    private double fixedSalary;
+    private Number fixedSalary;
 
-    public FixedSalaryEmployee(double pFixedSalary) {
+    public FixedSalaryEmployee(Number pFixedSalary) {
         fixedSalary = pFixedSalary;
     }
 
-    public double getSalary() {
+    public Number getSalary() {
         return fixedSalary;
     }
 }
 
+##########
 import utils.*;
 
 import java.util.*;
 
 
 public class Company {
-    private List<Employee> employees;
+    private List employees;
 
     public Company() {
         employees = Utils.seq();
     }
 
     public void op1() {
-        long x = employees.size();
-        List<Employee> y = employees;
-        Employee q = employees.get(0);
+        Number x = employees.size();
+        List y = employees;
+        Employee q = ((Employee) employees.get(0));
 
         //Skip;
     }
 
-    public double calculateSalary() {
+    public Number calculateSalary() {
         return start_calc(0L, employees);
     }
 
-    private double start_calc(double sum, List<Employee> emps) {
+    private Number start_calc(Number sum, List emps) {
         if (emps.size() == 0L) {
             return sum;
         } else {
-            return start_calc(sum + emps.get(0).getSalary(), Utils.seqTail(emps));
+            return start_calc(sum.doubleValue() +
+                ((Employee) emps.get(0)).getSalary().doubleValue(),
+                Utils.seqTail(emps));
         }
     }
 
-    private double not_used(double r, long n1, long n, char c, boolean b) {
+    private Number not_used(Number r, Number n1, Number n, char c, boolean b) {
         return 2.1;
     }
 
@@ -81,8 +86,9 @@ public class Company {
     }
 }
 
+##########
 public class World {
-    public double run() {
+    public Number run() {
         HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
         FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
         FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
@@ -93,3 +99,4 @@ public class World {
         return company.calculateSalary();
     }
 }
+##########

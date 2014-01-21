@@ -1,7 +1,8 @@
 public class C {
-    public double CalcProbCrossed(double n) {
-        double retVal = 0L;
+    public Number CalcProbCrossed(Number n) {
+        Number retVal = 0L;
 
         return retVal;
     }
 }
+##########

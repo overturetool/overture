@@ -3,10 +3,10 @@ import utils.*;
 
 public class A {
     private static class Vector2D implements Record {
-        public long x;
-        public long y;
+        public Number x;
+        public Number y;
 
-        public Vector2D(long _x, long _y) {
+        public Vector2D(Number _x, Number _y) {
             x = _x;
             y = _y;
         }
@@ -35,9 +35,9 @@ public class A {
     }
 
     public static class Real implements Record {
-        public double r;
+        public Number r;
 
-        public Real(double _r) {
+        public Real(Number _r) {
             r = _r;
         }
 
@@ -64,3 +64,4 @@ public class A {
         }
     }
 }
+##########

@@ -3,14 +3,15 @@ import utils.*;
 
 public class A {
     public static class RecA implements Record {
-        public long i;
+        public Number i;
         public char c;
-        public double r;
-        public double q;
-        public long n;
-        public long n1;
+        public Number r;
+        public Number q;
+        public Number n;
+        public Number n1;
 
-        public RecA(long _i, char _c, double _r, double _q, long _n, long _n1) {
+        public RecA(Number _i, char _c, Number _r, Number _q, Number _n,
+            Number _n1) {
             i = _i;
             c = _c;
             r = _r;
@@ -43,3 +44,4 @@ public class A {
         }
     }
 }
+##########

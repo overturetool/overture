@@ -5,3 +5,4 @@ public class A {
     public static final boolean y = a0 == a1;
     public static final boolean z = new A() == new A();
 }
+##########

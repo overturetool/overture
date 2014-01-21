@@ -1,9 +1,10 @@
 public class C {
-    public void op1(long arg) {
+    public void op1(Number arg) {
         op2(arg);
     }
 
-    public void op2(long arg) {
+    public void op2(Number arg) {
         //Skip;
     }
 }
+##########

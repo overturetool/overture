@@ -1,27 +1,29 @@
 public class A {
-    private long n = 2L;
+    private Number n = 2L;
 
-    public long getN() {
+    public Number getN() {
         return n;
     }
 
-    public long o1() {
-        return A.f() + A.g(3L) + h(1L, 2L) + op2(3L) + A.op2(3L);
+    public Number o1() {
+        return A.f().longValue() + A.g(3L).longValue() + h(1L, 2L).longValue() +
+        op2(3L).longValue() + A.op2(3L).longValue();
     }
 
-    public static long op2(long x) {
-        return 2L + x;
+    public static Number op2(Number x) {
+        return 2L + x.longValue();
     }
 
-    public static long f() {
+    public static Number f() {
         return 2L;
     }
 
-    public static long g(long x) {
+    public static Number g(Number x) {
         return x;
     }
 
-    public static long h(long x, long y) {
-        return x + y;
+    public static Number h(Number x, Number y) {
+        return x.longValue() + y.longValue();
     }
 }
+##########

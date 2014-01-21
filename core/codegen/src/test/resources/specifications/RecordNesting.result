@@ -6,9 +6,9 @@ public class A {
     private static final R3 y = x.clone();
 
     public static class R1 implements Record {
-        public long x;
+        public Number x;
 
-        public R1(long _x) {
+        public R1(Number _x) {
             x = _x;
         }
 
@@ -66,10 +66,10 @@ public class A {
     }
 
     public static class R3 implements Record {
-        public long x;
+        public Number x;
         public R2 r;
 
-        public R3(long _x, R2 _r) {
+        public R3(Number _x, R2 _r) {
             x = _x;
             r = (_r != null) ? _r.clone() : null;
         }
@@ -97,3 +97,4 @@ public class A {
         }
     }
 }
+##########

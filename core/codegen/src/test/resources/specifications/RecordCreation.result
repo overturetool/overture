@@ -9,10 +9,10 @@ public class Records {
     }
 
     public static class Vector2D implements Record {
-        public long x;
-        public long y;
+        public Number x;
+        public Number y;
 
-        public Vector2D(long _x, long _y) {
+        public Vector2D(Number _x, Number _y) {
             x = _x;
             y = _y;
         }
@@ -40,3 +40,4 @@ public class Records {
         }
     }
 }
+##########

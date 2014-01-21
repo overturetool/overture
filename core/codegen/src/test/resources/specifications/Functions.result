@@ -1,5 +1,5 @@
 public class Functions {
-    public static long f1() {
+    public static Number f1() {
         if (1L == 1L) {
             return 1L;
         } else {
@@ -7,7 +7,7 @@ public class Functions {
         }
     }
 
-    public static long f2() {
+    public static Number f2() {
         if (1L == 1L) {
             if (2L == 2L) {
                 return 3L;
@@ -21,7 +21,8 @@ public class Functions {
         }
     }
 
-    public static long f3() {
+    public static Number f3() {
         return 5L;
     }
 }
+##########

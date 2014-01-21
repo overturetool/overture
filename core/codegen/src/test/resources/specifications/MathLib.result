@@ -2,26 +2,27 @@ import utils.*;
 
 
 public class A {
-    private static final long x = 1L;
+    private static final Number x = 1L;
 
     public void op() {
-        double x0 = MATH.sin(x);
-        double x1 = MATH.cos(x);
-        double x2 = MATH.tan(x);
-        double x3 = MATH.cot(x);
-        double x4 = MATH.asin(x);
-        double x5 = MATH.acos(x);
-        double x6 = MATH.atan(x);
-        double x7 = MATH.acot(x);
-        double x8 = MATH.sqrt(x);
-        double x9 = MATH.pi_f();
-        long x10 = MATH.rand(x);
-        long x11 = MATH.srand2(x);
-        double x12 = MATH.exp(x);
-        double x13 = MATH.ln(x);
-        double x14 = MATH.log(x);
-        long x15 = MATH.fac(x);
-        double x16 = MATH.pi;
+        Number x0 = MATH.sin(x);
+        Number x1 = MATH.cos(x);
+        Number x2 = MATH.tan(x);
+        Number x3 = MATH.cot(x);
+        Number x4 = MATH.asin(x);
+        Number x5 = MATH.acos(x);
+        Number x6 = MATH.atan(x);
+        Number x7 = MATH.acot(x);
+        Number x8 = MATH.sqrt(x);
+        Number x9 = MATH.pi_f();
+        Number x10 = MATH.rand(x);
+        Number x11 = MATH.srand2(x);
+        Number x12 = MATH.exp(x);
+        Number x13 = MATH.ln(x);
+        Number x14 = MATH.log(x);
+        Number x15 = MATH.fac(x);
+        Number x16 = MATH.pi;
         MATH.srand(x);
     }
 }
+##########

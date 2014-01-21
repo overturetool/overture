@@ -6,9 +6,9 @@ public class A {
     public static final boolean b = !(new R(1L).equals(new R(2L)));
 
     public static class R implements Record {
-        public long x;
+        public Number x;
 
-        public R(long _x) {
+        public R(Number _x) {
             x = _x;
         }
 
@@ -35,3 +35,4 @@ public class A {
         }
     }
 }
+##########

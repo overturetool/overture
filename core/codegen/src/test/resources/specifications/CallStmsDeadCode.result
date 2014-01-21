@@ -1,9 +1,9 @@
 public class A {
-    public long op1() {
+    public Number op1() {
         return 1L;
     }
 
-    public long q2() {
+    public Number q2() {
         return op1();
 
         return op1();
@@ -11,3 +11,4 @@ public class A {
         return op1();
     }
 }
+##########

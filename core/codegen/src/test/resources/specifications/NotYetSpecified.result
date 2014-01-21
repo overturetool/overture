@@ -3,7 +3,8 @@ public class A {
         throw new UnsupportedOperationException();
     }
 
-    public static long f() {
+    public static Number f() {
         throw new UnsupportedOperationException();
     }
 }
+##########

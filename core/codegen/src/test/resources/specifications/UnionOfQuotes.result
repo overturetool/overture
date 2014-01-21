@@ -2,26 +2,29 @@ import quotes.*;
 
 
 public class A {
-    public void op(long v) {
+    public void op(Number v) {
         if (v == Quotes.Red) {
             //Skip;
         }
     }
 
-    public void op2(long v) {
+    public void op2(Number v) {
         if (v == Quotes.A) {
             //Skip;
         }
     }
 
-    public long op3() {
+    public Number op3() {
         return Quotes.Red;
     }
 }
 
+##########
 package quotes;
 
 public interface Quotes {
-    public static long A = 1L;
-    public static long Red = 2L;
+    public static Number A = 1L;
+    public static Number Red = 2L;
 }
+
+##########

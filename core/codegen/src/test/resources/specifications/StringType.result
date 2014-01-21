@@ -3,3 +3,4 @@ public class StringType {
         return "kattebakke";
     }
 }
+##########

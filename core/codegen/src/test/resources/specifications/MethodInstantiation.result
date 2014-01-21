@@ -1,5 +1,5 @@
 public class A {
-    public static long f1() {
+    public static Number f1() {
         return g(1L, 2L);
     }
 
@@ -11,3 +11,4 @@ public class A {
         return arg1;
     }
 }
+##########

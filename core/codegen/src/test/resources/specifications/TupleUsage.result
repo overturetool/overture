@@ -5,28 +5,28 @@ public class A {
     private static final Tuple a = Tuple.mk_(Tuple.mk_(1L, true), 3L);
     private static final Tuple b = a.clone();
     private static final Tuple c = a.<Tuple>get(0).clone();
-    private static final long d = a.<Tuple>get(0).<Long>get(0);
+    private static final Number d = a.<Tuple>get(0).<Number>get(0);
     private static final boolean e = a.<Tuple>get(0).<Boolean>get(1);
-    private static final long f = a.<Long>get(1);
+    private static final Number f = a.<Number>get(1);
 
-    public long op1() {
+    public Number op1() {
         Tuple r = Tuple.mk_(1L, 2L);
 
-        return r.<Long>get(0);
+        return r.<Number>get(0);
     }
 
-    public long op2() {
+    public Number op2() {
         Tuple a = Tuple.mk_(1L, 2L);
         Tuple b = a.clone();
 
-        return b.<Long>get(0);
+        return b.<Number>get(0);
     }
 
-    public long op3() {
+    public Number op3() {
         Tuple a = Tuple.mk_(Tuple.mk_(1L, 2L), 3L);
         Tuple b = a.<Tuple>get(0).clone();
 
-        return a.<Tuple>get(0).<Long>get(0);
+        return a.<Tuple>get(0).<Number>get(0);
     }
 
     public Tuple op4() {
@@ -41,3 +41,4 @@ public class A {
         return a.<Tuple>get(0).clone();
     }
 }
+##########
