@@ -44,10 +44,6 @@ import org.overture.interpreter.values.ValueSet;
 
 public class UnaryExpressionEvaluator extends LiteralEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3877784873512750134L;
 
 	
 	@Override

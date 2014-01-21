@@ -1,7 +1,7 @@
 package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -14,51 +14,46 @@ import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class TypeCheckerPatternVisitor extends
-		QuestionAnswerAdaptor<TypeCheckInfo, PType> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3210904929412698065L;
-	final private QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor;
+public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
+{
 
 	public TypeCheckerPatternVisitor(
-			QuestionAnswerAdaptor<TypeCheckInfo, PType> typeCheckVisitor) {
-		this.rootVisitor = typeCheckVisitor;
+			IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
+	{
+		super(typeCheckVisitor);
 	}
 
 	@Override
 	public PType caseASetMultipleBind(ASetMultipleBind node,
-			TypeCheckInfo question) throws AnalysisException {
+			TypeCheckInfo question) throws AnalysisException
+	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor,
-				question);
+		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
 		question.qualifiers = null;
-		PType type = node.getSet().apply(rootVisitor, question);
+		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!PTypeAssistantTC.isSet(type)) {
-			TypeCheckerErrors.report(3197,
-					"Expression matching set bind is not a set", node.getSet()
-							.getLocation(), node.getSet());
+		if (!PTypeAssistantTC.isSet(type))
+		{
+			TypeCheckerErrors.report(3197, "Expression matching set bind is not a set", node.getSet().getLocation(), node.getSet());
 			TypeCheckerErrors.detail("Actual type", type);
-		} else {
+		} else
+		{
 			ASetType st = PTypeAssistantTC.getSet(type);
 
-			if (!st.getEmpty()) {
+			if (!st.getEmpty())
+			{
 				result = st.getSetof();
 				PType ptype = PMultipleBindAssistantTC.getPossibleType(node);
 
-				if (!TypeComparator.compatible(ptype, result)) {
-					TypeCheckerErrors.report(3264,
-							"At least one bind cannot match set", node.getSet()
-									.getLocation(), node.getSet());
+				if (!TypeComparator.compatible(ptype, result))
+				{
+					TypeCheckerErrors.report(3264, "At least one bind cannot match set", node.getSet().getLocation(), node.getSet());
 					TypeCheckerErrors.detail2("Binds", ptype, "Set of", st);
 				}
-			} else {
-				TypeCheckerErrors.warning(3264, "Empty set used in bind", node
-						.getSet().getLocation(), node.getSet());
+			} else
+			{
+				TypeCheckerErrors.warning(3264, "Empty set used in bind", node.getSet().getLocation(), node.getSet());
 			}
 		}
 
@@ -67,19 +62,16 @@ public class TypeCheckerPatternVisitor extends
 
 	@Override
 	public PType caseATypeMultipleBind(ATypeMultipleBind node,
-			TypeCheckInfo question) throws AnalysisException {
+			TypeCheckInfo question) throws AnalysisException
+	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), rootVisitor,
-				question);
-		PType type = PTypeAssistantTC.typeResolve(node.getType(), null,
-				rootVisitor, question);
-		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(),
-				node.getLocation());
+		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
+		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
 
-		if (!TypeComparator.compatible(ptype, type)) {
-			TypeCheckerErrors.report(3265,
-					"At least one bind cannot match this type",
-					type.getLocation(), type);
+		if (!TypeComparator.compatible(ptype, type))
+		{
+			TypeCheckerErrors.report(3265, "At least one bind cannot match this type", type.getLocation(), type);
 			TypeCheckerErrors.detail2("Binds", ptype, "Type", type);
 		}
 

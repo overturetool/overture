@@ -1,0 +1,4 @@
+operations
+
+    div1() r : nat
+   post 5/3=r;

@@ -45,7 +45,7 @@ public class FuncComposeObligation extends ProofObligation
 	public FuncComposeObligation(
 		ACompBinaryExp exp, ILexNameToken pref1, ILexNameToken pref2, IPOContextStack ctxt)
 	{
-		super(exp, POType.FUNC_COMPOSE, ctxt);
+		super(exp, POType.FUNC_COMPOSE, ctxt, exp.getLocation());
 		
 		// Function composition must be of two functions with a single parameter each.
 		// The obligation depends on whether the left/right expressions of the "comp"

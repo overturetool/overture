@@ -54,7 +54,7 @@ public class FuncIterationObligation extends ProofObligation {
 
 	public FuncIterationObligation(AStarStarBinaryExp exp,
 			ILexNameToken preName, IPOContextStack ctxt) {
-		super(exp, POType.FUNC_ITERATION, ctxt);
+		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation());
 
 		// n > 1
 		AGreaterNumericBinaryExp gTExp = AstExpressionFactory

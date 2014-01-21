@@ -22,10 +22,11 @@ import java.net.URI;
 
 import org.overture.ide.debug.core.model.IVdmBreakpointPathMapper;
 
-public class NopVdmbreakpointPathMapper implements
-		IVdmBreakpointPathMapper {
+public class NopVdmbreakpointPathMapper implements IVdmBreakpointPathMapper
+{
 
-	public URI map(URI uri) {
+	public URI map(URI uri)
+	{
 		return uri;
 	}
 

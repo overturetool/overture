@@ -52,7 +52,7 @@ public class FuncPostConditionObligation extends ProofObligation
 	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
 			IPOContextStack ctxt)
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
@@ -81,13 +81,13 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 	//	valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef().clone(), func.getPostdef().clone(), params, body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body)));
 	}
 
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt)
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 
@@ -123,11 +123,11 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
 
 	}
 
-	private PExp generateWithPreCond(AExplicitFunctionDefinition predef,
+	private PExp generatePredicate(AExplicitFunctionDefinition predef,
 			AExplicitFunctionDefinition postdef, List<PExp> params, PExp body)
 	{
 		
@@ -135,7 +135,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		{
 			// pre(params) =>
 			AApplyExp applyExp = new AApplyExp();
-			applyExp.setArgs(params);
+			applyExp.setArgs(cloneListPExp(params));
 			AVariableExp varExp = getVarExp(predef.getName().clone());
 			applyExp.setRoot(varExp);
 			

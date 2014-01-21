@@ -36,12 +36,10 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.PStmBase;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.VoidValue;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
-
 
 public class TraceVariableStatement extends PStmBase
 {
@@ -57,47 +55,48 @@ public class TraceVariableStatement extends PStmBase
 
 	public void typeCheck(Environment env, NameScope scope)
 	{
-		FlatEnvironment flat = (FlatEnvironment)env;
+		FlatEnvironment flat = (FlatEnvironment) env;
 		flat.add(AstFactoryTC.newALocalDefinition(var.name.getLocation(), var.name, scope, var.type));
-		//return var.type;
+		// return var.type;
 	}
-	
-//	@Override
-//	public Value eval(Context ctxt)
-//	{
-//		location.hit();
-//		Value val = var.value;
-//
-//		if (val.isType(ObjectValue.class))
-//		{
-//			val = (Value)var.value.clone();		// To allow updates to objects
-//		}
-//
-//		ctxt.put(var.name, val);
-//		return new VoidValue();
-//	}
-	
-	public static Value eval(TraceVariableStatement stmt,Context ctxt)
+
+	// @Override
+	// public Value eval(Context ctxt)
+	// {
+	// location.hit();
+	// Value val = var.value;
+	//
+	// if (val.isType(ObjectValue.class))
+	// {
+	// val = (Value)var.value.clone(); // To allow updates to objects
+	// }
+	//
+	// ctxt.put(var.name, val);
+	// return new VoidValue();
+	// }
+
+	public static Value eval(TraceVariableStatement stmt, Context ctxt)
 	{
 		stmt.getLocation().hit();
 		Value val = stmt.var.value;
 
 		if (stmt.var.clone)
 		{
-			val = (Value)stmt.var.value.clone();		// To allow updates to objects
+			val = (Value) stmt.var.value.clone(); // To allow updates to objects
 		}
 
 		ctxt.put(stmt.var.name, val);
 		return new VoidValue();
 	}
-//
-//	@Override
-//	public String kind()
-//	{
-//		return "trace variable";
-//	}
 
-//	@Override
+	//
+	// @Override
+	// public String kind()
+	// {
+	// return "trace variable";
+	// }
+
+	// @Override
 	public String toString()
 	{
 		return var.toString();
@@ -105,13 +104,6 @@ public class TraceVariableStatement extends PStmBase
 
 	@Override
 	public PStm clone()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String kindPStm()
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -128,7 +120,7 @@ public class TraceVariableStatement extends PStmBase
 	public void apply(IAnalysis analysis) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -139,10 +131,11 @@ public class TraceVariableStatement extends PStmBase
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -153,11 +146,11 @@ public class TraceVariableStatement extends PStmBase
 		return null;
 	}
 
-//	@Override
-//	public Type typeCheck(Environment env, NameScope scope)
-//	{
-//		FlatEnvironment flat = (FlatEnvironment)env;
-//		flat.add(new LocalDefinition(location, var.name, scope, var.type));
-//		return var.type;
-//	}
+	// @Override
+	// public Type typeCheck(Environment env, NameScope scope)
+	// {
+	// FlatEnvironment flat = (FlatEnvironment)env;
+	// flat.add(new LocalDefinition(location, var.name, scope, var.type));
+	// return var.type;
+	// }
 }

@@ -5,17 +5,16 @@ import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.AForPatternBindStmAssitantTC;
 
-public class AForPatternBindStmAssitantInterpreter extends
-		AForPatternBindStmAssitantTC
+public class AForPatternBindStmAssitantInterpreter // extends
+// AForPatternBindStmAssitantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AForPatternBindStmAssitantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

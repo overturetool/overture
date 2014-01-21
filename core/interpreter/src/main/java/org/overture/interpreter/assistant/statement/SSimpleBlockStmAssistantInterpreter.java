@@ -9,17 +9,16 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.VoidValue;
-import org.overture.typechecker.assistant.statement.SSimpleBlockStmAssistantTC;
 
-public class SSimpleBlockStmAssistantInterpreter extends
-		SSimpleBlockStmAssistantTC
+public class SSimpleBlockStmAssistantInterpreter // extends
+// SSimpleBlockStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public SSimpleBlockStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

@@ -59,6 +59,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 
 		// TODO: this is a hack to get latex related stuff commented
 		rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
+//		rules.add(new SingleLineRule("[","]", comment));
 		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
 
 		if(fgKeywords.supportsQuoteTypes())
@@ -100,17 +101,10 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);
 		setRules(result);
-
+		//sets the default style. If styledText.getStyleRangeAtOffset is called on the editor this default style is returned instead of null
+		setDefaultReturnToken(other);
 	}
 
-	private static class VdmMultipleWordDetector extends VdmWordDetector
-	{
-		@Override
-		public boolean isWordPart(char character)
-		{
-			return super.isWordPart(character) || character == ' ';
-		}
-	}
 
 	private static class QuoteWordDetector implements IWordDetector
 	{

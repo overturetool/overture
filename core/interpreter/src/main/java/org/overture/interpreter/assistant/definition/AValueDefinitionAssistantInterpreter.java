@@ -9,23 +9,22 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 
-public class AValueDefinitionAssistantInterpreter extends
-		AValueDefinitionAssistantTC
+public class AValueDefinitionAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AValueDefinitionAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

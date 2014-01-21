@@ -6,7 +6,7 @@
 
   <groupId>org.overture</groupId>
   <artifactId>root</artifactId>
-  <version>2.0.0<!--Replaceable: Main Version--></version>
+  <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
   <name>OvertureTool</name>
 
   <modules>
@@ -35,6 +35,41 @@
     </dependency>
   </dependencies>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>overture-astcreator-github</id>
+      <name>Overture AstCreator maven development repo on GitHub</name>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <url>https://github.com/overturetool/astcreator/raw/mvn-dev-repo</url>
+      <layout>default</layout>
+    </pluginRepository>
+    <pluginRepository>
+      <id>overture-example-packager-github</id>
+      <name>Overture Example Packager maven development repo on GitHub</name>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>daily</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
+      <url>https://github.com/overturetool/example-packager/raw/mvn-dev-repo</url>
+      <layout>default</layout>
+    </pluginRepository>
+  </pluginRepositories>
+  
   <profiles>
     <profile>
       <id>With-IDE</id>
@@ -85,39 +120,38 @@
   </profiles>
 
   <repositories>
-    <!--repository>
-      <id>overture.sf.net</id>
-      <name>Overture SF Snapshots</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>http://overture.sourceforge.net/maven/repo</url>
-      <layout>default</layout>
-    </repository-->
-
-    <repository>
-      <id>IHA</id>
-      <name>Build server Snapshots</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>http://build.overturetool.org/builds/overture-m2repo</url>
-      <layout>default</layout>
-    </repository>
+    <!-- <repository> -->
+    <!--   <id>overture.sf.net</id> -->
+    <!--   <name>Overture SF Snapshots</name> -->
+    <!--   <releases> -->
+    <!--     <enabled>true</enabled> -->
+    <!--     <updatePolicy>daily</updatePolicy> -->
+    <!--     <checksumPolicy>warn</checksumPolicy> -->
+    <!--   </releases> -->
+    <!--   <snapshots> -->
+    <!--     <enabled>false</enabled> -->
+    <!--     <updatePolicy>daily</updatePolicy> -->
+    <!--     <checksumPolicy>warn</checksumPolicy> -->
+    <!--   </snapshots> -->
+    <!--   <url>http://overture.sourceforge.net/maven/repo</url> -->
+    <!--   <layout>default</layout> -->
+    <!-- </repository> -->
+    <!-- <repository> -->
+    <!--   <id>IHA</id> -->
+    <!--   <name>Build server Snapshots</name> -->
+    <!--   <releases> -->
+    <!--     <enabled>true</enabled> -->
+    <!--     <updatePolicy>daily</updatePolicy> -->
+    <!--     <checksumPolicy>warn</checksumPolicy> -->
+    <!--   </releases> -->
+    <!--   <snapshots> -->
+    <!--     <enabled>false</enabled> -->
+    <!--     <updatePolicy>daily</updatePolicy> -->
+    <!--     <checksumPolicy>warn</checksumPolicy> -->
+    <!--   </snapshots> -->
+    <!--   <url>http://build.overturetool.org/builds/overture-m2repo</url> -->
+    <!--   <layout>default</layout> -->
+    <!-- </repository> -->
   </repositories>
 
   <build>
@@ -188,8 +222,8 @@
           <version>2.13</version>
           <configuration>
             <testFailureIgnore>true</testFailureIgnore>
-			<!-- required for java7 to avoid verifier errors-->
-			<argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
+	    <!-- required for java7 to avoid verifier errors-->
+	    <argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
           </configuration>
         </plugin>
 
@@ -308,11 +342,11 @@
     <!-- <downloadUrl>http://overture.sourceforge.net/maven/repo/</downloadUrl> -->
   </distributionManagement>
 
-  <scm>
-    <connection>scm:git:git://git.code.sf.net/p/overture/code</connection>
-    <!-- <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection> -->
-    <url>http://sourceforge.net/p/overture/code</url>
-  </scm>
+  <!-- <scm> -->
+  <!--   <connection>scm:git:git://git.code.sf.net/p/overture/code</connection> -->
+  <!--   <!-\- <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection> -\-> -->
+  <!--   <url>http://sourceforge.net/p/overture/code</url> -->
+  <!-- </scm> -->
 
   <organization>
     <name>Overture</name>

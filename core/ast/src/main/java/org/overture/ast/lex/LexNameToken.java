@@ -1,7 +1,6 @@
 package org.overture.ast.lex;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,8 @@ import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
-public class LexNameToken extends LexToken implements ILexNameToken, Serializable
+public class LexNameToken extends LexToken implements ILexNameToken,
+		Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -32,25 +32,16 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 
 	private int hashcode = 0;
 
-	
-	
-
-
-
 	@Override
 	public boolean getExplicit()
 	{
 		return explicit;
 	}
 
-
-	public String getName(){
+	public String getName()
+	{
 		return name;
 	}
-
-
-
-
 
 	@Override
 	public boolean getOld()
@@ -58,15 +49,11 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		return old;
 	}
 
-
-
-
 	@Override
 	public List<PType> typeQualifier()
 	{
 		return typeQualifier;
 	}
-
 
 	public LexNameToken(String module, String name, ILexLocation location,
 			boolean old, boolean explicit)
@@ -113,13 +100,12 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
 				+ name + (old ? "~" : ""); // NB. No qualifier
 	}
-	
+
 	public LexNameToken getNewName()
 	{
-		return new LexNameToken(module,
-			new LexIdentifierToken(name, false, location));
+		return new LexNameToken(module, new LexIdentifierToken(name, false, location));
 	}
-	
+
 	public String getSimpleName()
 	{
 		return name;
@@ -147,7 +133,7 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location);
+		LexNameToken mod = new LexNameToken(classname, name, location,old,explicit);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}
@@ -204,6 +190,10 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		typeQualifier = types;
 	}
 
+	/**
+	 * Basic equals method for LexNameTokens. This method does not handle type qualifiers in that case use
+	 * HelpLexNameToken
+	 */
 	@Override
 	public boolean equals(Object other)
 	{
@@ -216,26 +206,10 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 
 		if (typeQualifier != null && lother.getTypeQualifier() != null)
 		{
-			ClassLoader cls = ClassLoader.getSystemClassLoader(); 
-			try
-			{			
-				@SuppressWarnings("rawtypes")
-				Class helpLexNameTokenClass = cls.loadClass("org.overture.typechecker.util.HelpLexNameToken");			
-				Object helpLexNameTokenObject = helpLexNameTokenClass.newInstance();
-				@SuppressWarnings("unchecked")
-				Method isEqualMethod = helpLexNameTokenClass.getMethod("isEqual", ILexNameToken.class, Object.class);
-				Object result = isEqualMethod.invoke(helpLexNameTokenObject, this,other);
-				return (Boolean) result;
-			} catch (Exception e)
-			{				
-				e.printStackTrace();
-			}
-			throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
-			
-			// if (!TypeComparator.compatible(typeQualifier, lother.getTypeQualifier()))
-			// {
-			// return false;
-			// }
+			// For testing purpose the following line can be uncommented. The Type Checker is not supose to rely on this
+			// equal method but use the HelpLexNameToken class for that
+			// throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
+
 		} else if ((typeQualifier != null && lother.getTypeQualifier() == null)
 				|| (typeQualifier == null && lother.getTypeQualifier() != null))
 		{
@@ -256,8 +230,12 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	{
 		if (hashcode == 0)
 		{
-			hashcode = module.hashCode() + name.hashCode() + (old ? 1 : 0)
-					+ (typeQualifier == null ? 0 : PTypeAssistant.hashCode(typeQualifier));
+			hashcode = module.hashCode()
+					+ name.hashCode()
+					+ (old ? 1 : 0)
+					+ (typeQualifier == null ? 0
+							: PTypeAssistant.hashCode(typeQualifier));
+							
 		}
 
 		return hashcode;
@@ -277,7 +255,6 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 		c.setTypeQualifier(typeQualifier);
 		return c;
 	}
-
 
 	public int compareTo(ILexNameToken o)
 	{
@@ -323,34 +300,38 @@ public class LexNameToken extends LexToken implements ILexNameToken, Serializabl
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
 	{
 		caller.caseILexNameToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+			throws AnalysisException
 	{
 		return caller.caseILexNameToken(this, question);
 	}
-	
+
 	/**
 	 * Creates a map of all field names and their value
-	 * @param includeInheritedFields if true all inherited fields are included
+	 * 
+	 * @param includeInheritedFields
+	 *            if true all inherited fields are included
 	 * @return a a map of names to values of all fields
 	 */
 	@Override
-	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String,Object> fields = new HashMap<String,Object>();
-		if(includeInheritedFields)
+		Map<String, Object> fields = new HashMap<String, Object>();
+		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));
 		}
-		fields.put("module",this.module);
-		fields.put("name",this.name);
-		fields.put("old",this.old);
-		fields.put("explicit",this.explicit);
+		fields.put("module", this.module);
+		fields.put("name", this.name);
+		fields.put("old", this.old);
+		fields.put("explicit", this.explicit);
 		return fields;
 	}
 }

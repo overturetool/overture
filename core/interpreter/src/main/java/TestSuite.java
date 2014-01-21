@@ -4,7 +4,6 @@ import java.util.Vector;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.types.AOperationType;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -18,6 +17,7 @@ import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class TestSuite
 {
@@ -89,7 +89,7 @@ public class TestSuite
 						{
 							boolean foundSetName = false;
 							// check that we have setName and that it is accesiable
-							for (PDefinition def : SClassDefinitionAssistantInterpreter.getDefinitions(instance.type.getClassdef()))
+							for (PDefinition def : PDefinitionAssistantTC.getDefinitions(instance.type.getClassdef()))
 							{
 								if (def.getName().getName().equals("setName"))
 								{

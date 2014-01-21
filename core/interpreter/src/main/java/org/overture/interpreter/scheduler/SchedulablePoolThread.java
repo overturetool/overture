@@ -72,6 +72,16 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			}
 
 		}
+		
+		@Override
+		protected void afterExecute(Runnable r, Throwable t)
+		{
+			if (r instanceof SchedulablePoolThread)
+			{
+				SchedulablePoolThread spt = (SchedulablePoolThread) r;
+				spt.setThread(null);
+			}
+		}
 
 		/**
 		 * Prints an error message if a execution is rejected
@@ -109,6 +119,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	private Thread executingThread;
 	private char name[];
 	private long tid = 0;
+	protected boolean stopCalled;
 
 	/**
 	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue
@@ -138,6 +149,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		durationEnd = 0;
 		alarmWakeTime = Long.MAX_VALUE;
 		inOuterTimeStep = false;
+		stopCalled = false;
 
 		resource.register(this, priority);
 
@@ -185,7 +197,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	@Override
 	public String toString()
 	{
-		return getName() + " (" + state + ")";
+		return getName() + " (" + (stopCalled ? "STOPPING" : state) + ")";
 	}
 
     /* (non-Javadoc)
@@ -216,13 +228,18 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 
 	public void run()
 	{
-		reschedule(null, null);
-		body();
-		setState(RunState.COMPLETE);
-		resource.unregister(this);
-
-		BasicSchedulableThread.remove(this);
-		getThread().setName( "pool-"+ getThread().getId()+ "-thread-");
+		try
+		{
+			reschedule(null, null);
+			body();
+		}
+		finally
+		{
+			setState(RunState.COMPLETE);
+			resource.unregister(this);
+			BasicSchedulableThread.remove(this);
+			getThread().setName( "pool-"+ getThread().getId()+ "-thread-");
+		}
 	}
 
 	abstract protected void body();
@@ -270,7 +287,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		notifyAll();
 	}
 
-	protected synchronized void reschedule(Context ctxt, ILexLocation location)
+	public synchronized void reschedule(Context ctxt, ILexLocation location)
 	{
 		// Yield control but remain runnable - called by thread
 		waitUntilState(RunState.RUNNABLE, RunState.RUNNING, ctxt, location);
@@ -345,11 +362,11 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	}
 
 	private synchronized void waitWhileState(
-		RunState newstate, RunState until, Context ctxt, ILexLocation location)
+		RunState newstate, RunState whilestate, Context ctxt, ILexLocation location)
 	{
 		setState(newstate);
 
-		while (state == until)
+		while (state == whilestate)
 		{
 			sleep(ctxt, location);
 		}
@@ -373,6 +390,13 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
     		try
     		{
    				wait();
+   				
+   				if (stopCalled && state == RunState.RUNNING)
+   				{
+   					// stopThread made us RUNNABLE, now we're running, so die
+   					throw new ThreadDeath();
+   				}
+   				
  				return;
     		}
     		catch (InterruptedException e)
@@ -408,6 +432,26 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		BasicSchedulableThread.signalAll(sig);
 	}
 
+	public synchronized boolean stopThread()
+	{
+		if (!stopCalled)
+		{
+			stopCalled = true;
+			timestep = Long.MAX_VALUE;			// Don't take part in time step
+			
+			if (Thread.currentThread() != this.getThread())
+			{
+				setState(RunState.RUNNABLE);	// So that thread is rescheduled
+			}
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public synchronized void setSignal(Signal sig)
 	{
 		signal = sig;

@@ -48,12 +48,12 @@ public class SeqApplyObligation extends ProofObligation
 
 	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
 	{
-		super(root, POType.SEQ_APPLY, ctxt);
-		AInSetBinaryExp inSetExp = new AInSetBinaryExp();
-		inSetExp.setLeft(arg.clone());
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
+		
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
 		indsExp.setExp(root.clone());
-		inSetExp.setRight(indsExp);
+	
+		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), indsExp);
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
 	
@@ -62,7 +62,7 @@ public class SeqApplyObligation extends ProofObligation
 	public SeqApplyObligation(PStateDesignator root,
 		PExp arg, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(root, POType.SEQ_APPLY, ctxt);
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
 		//arg >0
 		AIntLiteralExp zeroExp = new AIntLiteralExp();
 		zeroExp.setValue(new LexIntegerToken(0, null));

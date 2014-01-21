@@ -4,10 +4,8 @@ import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
-import org.overture.typechecker.assistant.definition.AUntypedDefinitionAssistantTC;
 
-public class AUntypedDefinitionAssistantInterpreter extends
-		AUntypedDefinitionAssistantTC
+public class AUntypedDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -15,7 +13,6 @@ public class AUntypedDefinitionAssistantInterpreter extends
 	public AUntypedDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

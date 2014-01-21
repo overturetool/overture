@@ -15,6 +15,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
@@ -55,6 +56,8 @@ import org.overture.pog.obligation.SubTypeObligation;
 import org.overture.pog.obligation.TupleSelectObligation;
 import org.overture.pog.obligation.UniqueExistenceObligation;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -63,12 +66,10 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		extends QuestionAnswerAdaptor<POContextStack, ProofObligationList>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7899640121529246521L;
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<POContextStack, ProofObligationList> mainVisitor;
+	
+	final private ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	// Added a mainVisitor hack to enable use from the compassVisitors -ldc
 
@@ -102,7 +103,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		PType type = root.getType();
 		if (PTypeAssistantTC.isMap(type))
 		{
-			SMapType mapType = PTypeAssistantTC.getMap(type);
+			SMapType mapType = assistantFactory.createPTypeAssistant().getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
 
@@ -1660,6 +1661,20 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 	@Override
 	public ProofObligationList defaultPExp(PExp node, POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
 	{
 		return new ProofObligationList();
 	}

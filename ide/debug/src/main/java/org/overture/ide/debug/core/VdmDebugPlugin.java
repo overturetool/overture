@@ -340,6 +340,7 @@ public class VdmDebugPlugin extends AbstractUIPlugin
 	{
 		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
 		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_CONNECTION_TIMEOUT, IDebugPreferenceConstants.DBGP_DEFAULT_CONNECTION_TIMEOUT);
+		store.setDefault(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER, false);
 	}
 
 }

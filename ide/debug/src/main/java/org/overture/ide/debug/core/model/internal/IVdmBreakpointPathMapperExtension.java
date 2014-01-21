@@ -20,9 +20,9 @@ package org.overture.ide.debug.core.model.internal;
 
 import org.overture.ide.debug.core.model.IVdmBreakpointPathMapper;
 
-
 public interface IVdmBreakpointPathMapperExtension extends
-		IVdmBreakpointPathMapper {
+		IVdmBreakpointPathMapper
+{
 
 	void clearCache();
 

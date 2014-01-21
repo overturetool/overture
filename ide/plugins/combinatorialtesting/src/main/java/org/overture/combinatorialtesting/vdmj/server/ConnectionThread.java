@@ -68,10 +68,6 @@ public class ConnectionThread extends Thread
 		return quiet;
 	}
 
-	// public static synchronized void setFocus(ConnectionThread f)
-	// {
-	// focus = f;
-	// }
 
 	@Override
 	public void run()
@@ -119,15 +115,6 @@ public class ConnectionThread extends Thread
 		}
 	}
 
-	// private synchronized void write(String cmd) throws IOException
-	// {
-	// if (trace)
-	// System.err.println("[" + id + "] " + cmd); // diags!
-	//
-	// output.write(cmd.getBytes("UTF-8"));
-	// output.write('\n');
-	// output.flush();
-	// }
 
 	private void receive() throws IOException
 	{
@@ -138,7 +125,7 @@ public class ConnectionThread extends Thread
 
 		while (c >= '0' && c <= '9')
 		{
-			length = length * 10 + (c - '0');
+			length = length * 10 + c - '0';
 			c = input.read();
 		}
 
@@ -195,7 +182,9 @@ public class ConnectionThread extends Thread
 		XMLNode node = parser.readNode();
 
 		if (trace)
+		{
 			System.err.println("[" + id + "] " + node); // diags!
+		}
 
 		try
 		{

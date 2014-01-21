@@ -23,10 +23,10 @@
 
 package org.overture.pog.obligation;
 
-import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.ANotUnaryExp;
-import org.overture.ast.types.AProductType;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
 
@@ -38,10 +38,10 @@ public class TupleSelectObligation extends ProofObligation
 	private static final long serialVersionUID = -7776291065628025047L;
 
 	public TupleSelectObligation(
-		AFieldNumberExp exp, AProductType type, IPOContextStack ctxt)
+		PExp exp, PType type, IPOContextStack ctxt)
 	{
 		// not is_(exp, type)
-		super(exp, POType.TUPLE_SELECT, ctxt);
+		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation());
 
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		AIsExp isExp = new AIsExp();

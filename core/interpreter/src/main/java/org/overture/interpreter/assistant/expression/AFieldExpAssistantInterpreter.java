@@ -17,16 +17,14 @@ import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.AFieldExpAssistantTC;
 
-public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
+public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AFieldExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
@@ -69,7 +67,6 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 
 			ctxt.threadState.setAtomic(true);
 			Value r = evaluate(exp, ctxt);
-			ctxt.threadState.setAtomic(false);
 
 			if (r instanceof UpdatableValue)
 			{
@@ -77,7 +74,8 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 			}
 
 			return values;
-		} catch (ContextException e)
+		}
+		catch (ContextException e)
 		{
 			if (e.number == 4034)
 			{
@@ -86,14 +84,20 @@ public class AFieldExpAssistantInterpreter extends AFieldExpAssistantTC
 			{
 				throw e;
 			}
-		} catch (ValueException e)
+		}
+		catch (ValueException e)
 		{
 			VdmRuntimeError.abort(exp.getLocation(), e);
 			return null;
-		} catch (AnalysisException e)
+		}
+		catch (AnalysisException e)
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{
+			ctxt.threadState.setAtomic(false);
 		}
 	}
 

@@ -69,7 +69,7 @@ public class VdmBreakpointPathMapper implements
 		{
 			return uri;
 		}
-		
+
 		final IPath projectPath = project.getLocation();
 		if (projectPath == null)
 		{
@@ -80,8 +80,7 @@ public class VdmBreakpointPathMapper implements
 		// only map paths that start w/ the project path
 		if (projectPath.isPrefixOf(path))
 		{
-			IPath temp = path.removeFirstSegments(projectPath.segmentCount())
-					.setDevice(null);
+			IPath temp = path.removeFirstSegments(projectPath.segmentCount()).setDevice(null);
 			if (stripSrcFolders)
 			{
 				temp = stripSourceFolders(temp);

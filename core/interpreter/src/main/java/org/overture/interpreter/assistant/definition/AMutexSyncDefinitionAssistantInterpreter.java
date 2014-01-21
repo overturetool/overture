@@ -10,10 +10,8 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.typechecker.assistant.definition.AMutexSyncDefinitionAssistantTC;
 
-public class AMutexSyncDefinitionAssistantInterpreter extends
-		AMutexSyncDefinitionAssistantTC
+public class AMutexSyncDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -21,7 +19,6 @@ public class AMutexSyncDefinitionAssistantInterpreter extends
 	public AMutexSyncDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

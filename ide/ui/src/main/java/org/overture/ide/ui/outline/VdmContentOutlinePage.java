@@ -22,8 +22,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -33,6 +31,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.internal.navigator.NavigatorDecoratingLabelProvider;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -44,9 +45,8 @@ import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.VdmElementDelta;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.editor.core.VdmEditor;
-import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
-import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
 
+@SuppressWarnings("restriction")
 public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 /* IAdaptable, */IPostSelectionProvider
 {
@@ -62,7 +62,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 		{
 
 			if (getControl() == null || getControl().isDisposed())
+			{
 				return;
+			}
 
 			if (e.getSource() != null
 					&& e.getSource() instanceof VdmElementDelta)
@@ -84,8 +86,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 								&& !fOutlineViewer.getControl().isDisposed())
 						{
 
-							fOutlineViewer.refresh(true);
-							fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
+							fOutlineViewer.setInput(fOutlineViewer.getInput());
+							// fOutlineViewer.refresh(false);
+							// fOutlineViewer.expandToLevel(AUTO_EXPAND_LEVEL);
 						}
 					}
 				});
@@ -113,21 +116,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 
 	private MemberFilterActionGroup fMemberFilterActionGroup;
 
-	// private VdmUILabelProvider uiLabelProvider;
-
 	public VdmContentOutlinePage(VdmEditor vdmEditor)
 	{
 		this.vdmEditor = vdmEditor;
-	}
-
-	IContentProvider contentProvider = new VdmOutlineTreeContentProvider();
-	ILabelProvider labelProvider = new DecorationgVdmLabelProvider(new VdmUILabelProvider());
-
-	public void configure(IContentProvider contentProvider,
-			ILabelProvider labelProvider)
-	{
-		this.contentProvider = contentProvider;
-		this.labelProvider = labelProvider;
 	}
 
 	@Override
@@ -136,9 +127,8 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 
 		fOutlineViewer = new VdmOutlineViewer(parent);
 		fOutlineViewer.setAutoExpandLevel(AUTO_EXPAND_LEVEL);
-		fOutlineViewer.setContentProvider(contentProvider);
-		fOutlineViewer.setLabelProvider(labelProvider);
-		// fOutlineViewer.addSelectionChangedListener(this);
+		fOutlineViewer.setContentProvider(new WorkbenchContentProvider());
+		fOutlineViewer.setLabelProvider(new NavigatorDecoratingLabelProvider(new WorkbenchLabelProvider()));
 
 		Object[] listeners = fSelectionChangedListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++)
@@ -169,20 +159,6 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 
 		fMemberFilterActionGroup = new MemberFilterActionGroup(fOutlineViewer, IVdmUiConstants.OUTLINE_ID); //$NON-NLS-1$
 		fMemberFilterActionGroup.contributeToToolBar(toolBarManager);
-
-		// fCustomFiltersActionGroup.fillActionBars(actionBars);
-		//
-		// IMenuManager viewMenuManager= actionBars.getMenuManager();
-		//			viewMenuManager.add(new Separator("EndFilterGroup")); //$NON-NLS-1$
-		//
-		// fToggleLinkingAction= new ToggleLinkingAction();
-		// fToggleLinkingAction.setActionDefinitionId(IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR);
-		// viewMenuManager.add(new ClassOnlyAction());
-		// viewMenuManager.add(fToggleLinkingAction);
-		//
-		//			fCategoryFilterActionGroup= new CategoryFilterActionGroup(fOutlineViewer, "org.eclipse.jdt.ui.JavaOutlinePage", new IJavaElement[] {fInput}); //$NON-NLS-1$
-		// fCategoryFilterActionGroup.contributeToViewMenu(viewMenuManager);
-
 	}
 
 	@Override
@@ -194,26 +170,6 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 			vdmEditor.outlinePageClosed();
 			vdmEditor = null;
 		}
-		// fListener.clear();
-		// fListener = null;
-
-		// fPostSelectionChangedListeners.clear();
-		// fPostSelectionChangedListeners= null;
-
-		// if (fPropertyChangeListener != null) {
-		// JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
-		// fPropertyChangeListener= null;
-		// }
-
-		// if (fMenu != null && !fMenu.isDisposed()) {
-		// fMenu.dispose();
-		// fMenu= null;
-		// }
-
-		// if (fActionGroups != null)
-		// fActionGroups.dispose();
-
-		// fTogglePresentation.setEditor(null);
 
 		if (fOutlineViewer != null)
 		{
@@ -224,10 +180,6 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 		{
 			fMemberFilterActionGroup.dispose();
 		}
-
-		// if (uiLabelProvider != null) {
-		// uiLabelProvider.dispose();
-		// }
 
 		fOutlineViewer = null;
 
@@ -249,7 +201,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 	public void setFocus()
 	{
 		if (fOutlineViewer != null)
+		{
 			this.fOutlineViewer.getControl().setFocus();
+		}
 
 	}
 
@@ -260,7 +214,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 	public void setSelection(ISelection selection)
 	{
 		if (fOutlineViewer != null)
+		{
 			fOutlineViewer.setSelection(selection);
+		}
 	}
 
 	/*
@@ -270,7 +226,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 	public ISelection getSelection()
 	{
 		if (fOutlineViewer == null)
+		{
 			return StructuredSelection.EMPTY;
+		}
 		return fOutlineViewer.getSelection();
 	}
 
@@ -284,7 +242,9 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 
 		}
 		if (fListener != null)
+		{
 			VdmCore.removeElementChangedListener(fListener);
+		}
 		fListener = new ElementChangedListener();
 		VdmCore.addElementChangedListener(fListener);
 	}
@@ -311,8 +271,8 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 				List elements = ss.toList();
 				if (!elements.contains(reference))
 				{
-					s = (reference == null ? StructuredSelection.EMPTY
-							: new StructuredSelection(reference));
+					s = reference == null ? StructuredSelection.EMPTY
+							: new StructuredSelection(reference);
 					fOutlineViewer.setSelection(s, true);
 				}
 			}
@@ -325,9 +285,12 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 	public void addSelectionChangedListener(ISelectionChangedListener listener)
 	{
 		if (fOutlineViewer != null)
+		{
 			fOutlineViewer.addSelectionChangedListener(listener);
-		else
+		} else
+		{
 			fSelectionChangedListeners.add(listener);
+		}
 	}
 
 	/*
@@ -337,9 +300,12 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 			ISelectionChangedListener listener)
 	{
 		if (fOutlineViewer != null)
+		{
 			fOutlineViewer.removeSelectionChangedListener(listener);
-		else
+		} else
+		{
 			fSelectionChangedListeners.remove(listener);
+		}
 	}
 
 	/*
@@ -350,9 +316,12 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 			ISelectionChangedListener listener)
 	{
 		if (fOutlineViewer != null)
+		{
 			fOutlineViewer.addPostSelectionChangedListener(listener);
-		else
+		} else
+		{
 			fPostSelectionChangedListeners.add(listener);
+		}
 	}
 
 	/*
@@ -363,15 +332,12 @@ public class VdmContentOutlinePage extends Page implements IContentOutlinePage,
 			ISelectionChangedListener listener)
 	{
 		if (fOutlineViewer != null)
+		{
 			fOutlineViewer.removePostSelectionChangedListener(listener);
-		else
+		} else
+		{
 			fPostSelectionChangedListeners.remove(listener);
+		}
 	}
-
-	// @Override
-	// public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-	//
-	// return null;
-	// }
 
 }

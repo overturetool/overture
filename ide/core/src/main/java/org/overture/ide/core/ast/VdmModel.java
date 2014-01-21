@@ -121,6 +121,7 @@ public class VdmModel implements IVdmModel
 	 * (non-Javadoc)
 	 * @see org.overture.ide.core.ast.IVdmElement#hasFile(java.io.File)
 	 */
+	@SuppressWarnings("unused")
 	public synchronized boolean hasFile(File file)
 	{
 		Assert.isNotNull(null);

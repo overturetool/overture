@@ -1,15 +1,20 @@
 package org.overture.ide.ui.adapters;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.IWorkbenchAdapter3;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.ui.IVdmUiConstants;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.internal.viewsupport.DecorationgVdmLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmColoringLabelProvider;
 import org.overture.ide.ui.internal.viewsupport.VdmUILabelProvider;
@@ -18,7 +23,7 @@ import org.overture.ide.ui.outline.VdmOutlineTreeContentProvider;
 public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 {
 	public static class VdmSourcenitWorkbenchAdapter implements
-			IWorkbenchAdapter
+			IWorkbenchAdapter, IWorkbenchAdapter3
 	{
 
 		private IVdmSourceUnit sourceUnit;
@@ -58,18 +63,27 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 			return this.adapter.getParent(o);
 		}
 
+		@Override
+		public StyledString getStyledText(Object element)
+		{
+			return new StyledString(getLabel(element));
+		}
+
 	}
 
-	public static class NodeWorkbenchAdapter implements IWorkbenchAdapter,IWorkbenchAdapter3
+	public static class NodeWorkbenchAdapter implements IWorkbenchAdapter,
+			IWorkbenchAdapter3
 	{
 		INode node;
 		VdmColoringLabelProvider labelProvider;
 		VdmOutlineTreeContentProvider contentProvider = new VdmOutlineTreeContentProvider();
+		List<IOvertureWorkbenchAdapter> extensions = null;
 
 		public NodeWorkbenchAdapter(INode node)
 		{
 			this.node = node;
 			this.labelProvider = new DecorationgVdmLabelProvider(new VdmUILabelProvider());
+			this.extensions = getOvertureWorkbenchAdapterExtensions();
 		}
 
 		@Override
@@ -77,6 +91,18 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 		{
 			Object[] children = this.contentProvider.getChildren(o);
 			if (children == null)
+			{
+				for (IOvertureWorkbenchAdapter ext : extensions)
+				{
+					children = ext.getChildren(o);
+					if (children != null)
+					{
+						break;
+					}
+				}
+				
+			}
+			if(children == null)
 			{
 				children = new Object[0];
 			}
@@ -87,17 +113,48 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 		public ImageDescriptor getImageDescriptor(Object object)
 		{
 			Image img = labelProvider.getImage(object);
+
 			if (img != null)
 			{
 				return ImageDescriptor.createFromImage(img);
 			}
-			return null;
+
+			ImageDescriptor descriptor = null;
+			for (IOvertureWorkbenchAdapter ext : extensions)
+			{
+				descriptor = ext.getImageDescriptor(object);
+				if (descriptor != null)
+				{
+					break;
+				}
+			}
+
+			return descriptor;
 		}
 
 		@Override
 		public String getLabel(Object o)
 		{
-			return labelProvider.getText(o);
+			String label = labelProvider.getText(o);
+
+			if (label == null)
+			{
+				for (IOvertureWorkbenchAdapter ext : extensions)
+				{
+					label = ext.getLabel(o);
+					if (label != null)
+					{
+						break;
+					}
+				}
+			}
+
+			if (label == null)
+			{
+				label = "Unsupported type reached: " + o;
+			}
+
+			return label;
 		}
 
 		@Override
@@ -110,7 +167,27 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 		@Override
 		public StyledString getStyledText(Object element)
 		{
-			return labelProvider.getStyledStringProvider().getStyledText(element);
+			StyledString text = labelProvider.getStyledStringProvider().getStyledText(element);
+
+			if (text == null)
+			{
+				for (IOvertureWorkbenchAdapter ext : extensions)
+				{
+					text = ext.getStyledText(element);
+					if (text != null)
+					{
+						break;
+					}
+				}
+			}
+
+			if (text == null)
+			{
+				text = new StyledString();
+				text.append("Unsupported type reached: " + element);
+			}
+
+			return text;
 		}
 
 	}
@@ -119,15 +196,17 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
-		if (adapterType == IWorkbenchAdapter.class)
+		if (adapterType == IWorkbenchAdapter.class
+				|| adapterType == IWorkbenchAdapter3.class)
 		{
 			if (adaptableObject instanceof IVdmSourceUnit)
 			{
 				return new VdmSourcenitWorkbenchAdapter((IVdmSourceUnit) adaptableObject);
-			} 
+			}
 		}
-		
-		if(adapterType ==IWorkbenchAdapter.class|| adapterType==IWorkbenchAdapter3.class)
+
+		if (adapterType == IWorkbenchAdapter.class
+				|| adapterType == IWorkbenchAdapter3.class)
 		{
 			if (adaptableObject instanceof INode)
 			{
@@ -142,6 +221,29 @@ public class AdapterFactoryWorkbenchAdapter implements IAdapterFactory
 	public Class[] getAdapterList()
 	{
 		return new Class[] { IVdmSourceUnit.class, INode.class };
+	}
+
+	private static List<IOvertureWorkbenchAdapter> getOvertureWorkbenchAdapterExtensions()
+	{
+		List<IOvertureWorkbenchAdapter> extensions = new Vector<IOvertureWorkbenchAdapter>();
+		try
+		{
+			IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(IVdmUiConstants.EXTENSION_WORKBENCH_DISPLAY);
+			for (IConfigurationElement e : config)
+			{
+				final Object o = e.createExecutableExtension("class");
+				if (o instanceof IOvertureWorkbenchAdapter)
+				{
+					IOvertureWorkbenchAdapter adaptor = (IOvertureWorkbenchAdapter) o;
+					extensions.add(adaptor);
+				}
+			}
+		} catch (Exception ex)
+		{
+			VdmUIPlugin.log(ex);
+		}
+
+		return extensions;
 	}
 
 }

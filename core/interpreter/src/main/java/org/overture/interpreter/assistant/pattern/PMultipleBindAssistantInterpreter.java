@@ -24,22 +24,28 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	public static ValueList getBindValues(PMultipleBind mb, Context ctxt)
 			throws ValueException
 	{
-		if (mb instanceof ASetMultipleBind) {
+		if (mb instanceof ASetMultipleBind)
+		{
 			return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb, ctxt);
-		} else if (mb instanceof ATypeMultipleBind) {
+		} else if (mb instanceof ATypeMultipleBind)
+		{
 			return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind) mb, ctxt);
-		} else {
+		} else
+		{
 		}
 		return null;
 	}
 
 	public static ValueList getValues(PMultipleBind mb, ObjectContext ctxt)
 	{
-		if (mb instanceof ASetMultipleBind) {
+		if (mb instanceof ASetMultipleBind)
+		{
 			return ASetMultipleBindAssistantInterpreter.getValues((ASetMultipleBind) mb, ctxt);
-		} else if (mb instanceof ATypeMultipleBind) {
+		} else if (mb instanceof ATypeMultipleBind)
+		{
 			return ATypeMultipleBindAssistantInterpreter.getValues((ATypeMultipleBind) mb, ctxt);
-		} else {
+		} else
+		{
 			return new ValueList();
 		}
 	}

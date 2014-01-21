@@ -88,7 +88,7 @@ public class Message implements IMessage
 	@Override
 	public String toString()
 	{
-		return resource+ " "+number + ":" + line + "-" + col + " " + message;
+		return number+" "+resource + " at " + line + ":" + col + " " + message;
 	}
 
 	public void setResource(String resource)

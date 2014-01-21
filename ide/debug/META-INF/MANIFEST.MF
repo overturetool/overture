@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: Overture
-Bundle-Version: 2.0.0
+Bundle-Version: 2.0.1.qualifier
 Eclipse-BuddyPolicy: registered
 Eclipse-BundleShape: dir
 Bundle-Localization: plugin
@@ -23,7 +23,9 @@ Require-Bundle: org.eclipse.debug.core;visibility:=reexport,
  org.overture.ide.builders.vdmj,
  org.overture.ide.ui;visibility:=reexport
 Export-Package: org.overture.ide.debug.core,
+ org.overture.ide.debug.core.dbgp,
  org.overture.ide.debug.core.launching,
+ org.overture.ide.debug.core.model,
  org.overture.ide.debug.ui.launchconfigurations,
  org.overture.ide.debug.ui.launching,
  org.overture.ide.debug.utils,

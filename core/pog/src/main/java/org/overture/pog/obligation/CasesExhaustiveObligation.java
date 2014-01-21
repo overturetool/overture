@@ -55,7 +55,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 
 	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt) throws AnalysisException
 	{
-		super(exp, POType.CASES_EXHAUSTIVE, ctxt);
+		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation());
 		
 		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp);
 		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());

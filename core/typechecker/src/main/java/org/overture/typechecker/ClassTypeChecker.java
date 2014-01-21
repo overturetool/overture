@@ -26,10 +26,12 @@ package org.overture.typechecker;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.typechecker.Pass;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
+import org.overture.ast.types.PType;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
@@ -41,11 +43,11 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 public class ClassTypeChecker extends TypeChecker
 {
 	/** The list of classes to check. */
-	private final List<SClassDefinition>  classes;
+	protected final List<SClassDefinition> classes;
 
 	/**
 	 * Create a type checker with the list of classes passed.
-	 *
+	 * 
 	 * @param classes
 	 */
 
@@ -56,35 +58,54 @@ public class ClassTypeChecker extends TypeChecker
 	}
 
 	/**
+	 * Create a type checker with the list of classes passed.
+	 * 
+	 * @param classes
+	 * @param factory
+	 */
+
+	public ClassTypeChecker(List<SClassDefinition> classes,
+			ITypeCheckerAssistantFactory factory)
+	{
+		super(factory);
+		this.classes = classes;
+	}
+
+	/**
 	 * Perform type checking across all classes in the list.
-	 * @throws AnalysisException 
+	 * 
+	 * @throws AnalysisException
 	 */
 
 	@Override
-	public void typeCheck() 
+	public void typeCheck()
 	{
 		boolean nothing = true;
 		boolean hasSystem = false;
 
-		for (SClassDefinition c1: classes)
+		for (SClassDefinition c1 : classes)
 		{
-			for (SClassDefinition c2: classes)
+			c1.setType(SClassDefinitionAssistantTC.getType(c1));
+			for (SClassDefinition c2 : classes)
 			{
 				if (c1 != c2 && c1.getName().equals(c2.getName()))
 				{
-					TypeChecker.report(3426, "Class " + c1.getName() + " duplicates " + c2.getName(), c1.getName().getLocation());
+					TypeChecker.report(3426, "Class " + c1.getName()
+							+ " duplicates " + c2.getName(), c1.getName().getLocation());
 				}
 			}
 
-			if (!c1.getTypeChecked()) nothing = false;
+			if (!c1.getTypeChecked())
+			{
+				nothing = false;
+			}
 
 			if (c1 instanceof ASystemClassDefinition)
 			{
 				if (hasSystem)
 				{
 					TypeChecker.report(3294, "Only one system class permitted", c1.getLocation());
-				}
-				else
+				} else
 				{
 					hasSystem = true;
 				}
@@ -96,9 +117,9 @@ public class ClassTypeChecker extends TypeChecker
 			return;
 		}
 
-		Environment allClasses = new PublicClassEnvironment(assistantFactory,classes,null);
+		Environment allClasses = getAllClassesEnvronment();
 
-		for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
 			if (!c.getTypeChecked())
 			{
@@ -106,58 +127,55 @@ public class ClassTypeChecker extends TypeChecker
 			}
 		}
 
-    	for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
 			if (!c.getTypeChecked())
 			{
-    			try
-    			{
-    				Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
-    				SClassDefinitionAssistantTC.typeResolve(c, null, new TypeCheckInfo(new TypeCheckerAssistantFactory(),self));
-    			}
-    			catch (TypeCheckException te)
-    			{
-    				report(3427, te.getMessage(), te.location);
-    			}
-    			catch (AnalysisException te)
+				try
 				{
-					report(3431, te.getMessage(), null);//FIXME: internal error
+					Environment self = new PrivateClassEnvironment(assistantFactory, c, allClasses);
+					assistantFactory.createSClassDefinitionAssistant().typeResolve(c, null, new TypeCheckInfo(assistantFactory, self));
+				} catch (TypeCheckException te)
+				{
+					report(3427, te.getMessage(), te.location);
+				} catch (AnalysisException te)
+				{
+					report(3431, te.getMessage(), null);// FIXME: internal error
 				}
 			}
 		}
 
-		for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
 			if (!c.getTypeChecked())
 			{
 				SClassDefinitionAssistantTC.checkOver(c);
 			}
 		}
-		TypeCheckVisitor tc = new TypeCheckVisitor();
-	    for (Pass pass: Pass.values())
+
+		QuestionAnswerAdaptor<TypeCheckInfo, PType> tc = getTypeCheckVisitor();
+		for (Pass pass : Pass.values())
 		{
-        	for (SClassDefinition c: classes)
-    		{
-    			if (!c.getTypeChecked())
-    			{
-    				try
-    				{
-    					Environment self = new PrivateClassEnvironment(assistantFactory,c, allClasses);
-    	         		SClassDefinitionAssistantTC.typeCheckPass(c,pass, self,tc);
-    				}
-    				catch (TypeCheckException te)
-    				{
-    					report(3428, te.getMessage(), te.location);
-    				}
-    				catch (AnalysisException te)
+			for (SClassDefinition c : classes)
+			{
+				if (!c.getTypeChecked())
+				{
+					try
 					{
-						report(3431, te.getMessage(), null);//FIXME: internal error
+						Environment self = new PrivateClassEnvironment(assistantFactory, c, allClasses);
+						assistantFactory.createSClassDefinitionAssistant().typeCheckPass(c, pass, self, tc);
+					} catch (TypeCheckException te)
+					{
+						report(3428, te.getMessage(), te.location);
+					} catch (AnalysisException te)
+					{
+						report(3431, te.getMessage(), null);// FIXME: internal error
 					}
-    			}
-    		}
+				}
+			}
 		}
 
-    	for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
 			if (!c.getTypeChecked())
 			{
@@ -165,5 +183,15 @@ public class ClassTypeChecker extends TypeChecker
 				PDefinitionAssistantTC.unusedCheck(c);
 			}
 		}
+	}
+
+	protected Environment getAllClassesEnvronment()
+	{
+		return new PublicClassEnvironment(assistantFactory, classes, null);
+	}
+
+	protected QuestionAnswerAdaptor<TypeCheckInfo, PType> getTypeCheckVisitor()
+	{
+		return new TypeCheckVisitor();
 	}
 }

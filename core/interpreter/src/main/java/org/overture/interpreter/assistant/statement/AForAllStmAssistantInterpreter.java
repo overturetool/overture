@@ -5,16 +5,15 @@ import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.AForAllStmAssistantTC;
 
-public class AForAllStmAssistantInterpreter extends AForAllStmAssistantTC
+public class AForAllStmAssistantInterpreter// extends AForAllStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AForAllStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

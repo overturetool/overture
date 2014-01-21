@@ -37,11 +37,11 @@ import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.model.IVdmBreakpoint;
 
 public abstract class AbstractVdmBreakpoint extends Breakpoint implements
-		IVdmBreakpoint {
+		IVdmBreakpoint
+{
 
 	/**
-	 * Debugging engine breakpoint identifier (available only during debug
-	 * session)
+	 * Debugging engine breakpoint identifier (available only during debug session)
 	 * 
 	 * @deprecated
 	 */
@@ -49,8 +49,7 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 			+ ".id"; //$NON-NLS-1$
 
 	/**
-	 * The number of breakpoint hits during debug session (available only during
-	 * debug session)
+	 * The number of breakpoint hits during debug session (available only during debug session)
 	 * 
 	 * @deprecated
 	 */
@@ -82,17 +81,20 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 
 	public static final String PATH_DELIMITER = ";"; //$NON-NLS-1$
 	private static final char SEPARATOR = '/';
-	
-	private static boolean isFull(IPath path) {
+
+	private static boolean isFull(IPath path)
+	{
 		String device = path.getDevice();
 		return device != null && device.indexOf(SEPARATOR) >= 0;
 	}
-	
-	private static IPath getLocalPath(IPath path) {
+
+	private static IPath getLocalPath(IPath path)
+	{
 		// if( path.segment(0).startsWith("#special#")) {
 		// return path;
 		// }
-		if (!isFull(path)) {
+		if (!isFull(path))
+		{
 			return path;
 			// throw new RuntimeException("Invalid path");
 		}
@@ -107,16 +109,18 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 		return path.setDevice(device);
 	}
 
-	
-	public static URI makeUri(IPath location) {
-		try {
-			String path = getLocalPath(location)
-					.toString();
-			if (path.length() != 0 && path.charAt(0) != '/') {
+	public static URI makeUri(IPath location)
+	{
+		try
+		{
+			String path = getLocalPath(location).toString();
+			if (path.length() != 0 && path.charAt(0) != '/')
+			{
 				path = '/' + path;
 			}
 			return new URI("file", "", path, null); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException e)
+		{
 			VdmDebugPlugin.log(e);
 		}
 		return null;
@@ -124,24 +128,30 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 
 	private String debugModelId;
 
-	protected void addVdmBreakpointAttributes(Map<String,Object> attributes,
-			String debugModelId, boolean enabled) {
+	protected void addVdmBreakpointAttributes(Map<String, Object> attributes,
+			String debugModelId, boolean enabled)
+	{
 		this.debugModelId = debugModelId;
 		attributes.put(IBreakpoint.ID, debugModelId);
 		attributes.put(IBreakpoint.ENABLED, Boolean.valueOf(enabled));
 	}
 
-	public AbstractVdmBreakpoint() {
+	public AbstractVdmBreakpoint()
+	{
 
 	}
 
-	public String getModelIdentifier() {
-		if (debugModelId == null) {
-			try {
-				debugModelId = ensureMarker()
-						.getAttribute(IBreakpoint.ID, null);
-			} catch (DebugException e) {
-				if (VdmDebugPlugin.DEBUG) {
+	public String getModelIdentifier()
+	{
+		if (debugModelId == null)
+		{
+			try
+			{
+				debugModelId = ensureMarker().getAttribute(IBreakpoint.ID, null);
+			} catch (DebugException e)
+			{
+				if (VdmDebugPlugin.DEBUG)
+				{
 					e.printStackTrace();
 				}
 				return null;
@@ -150,19 +160,22 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 		return debugModelId;
 	}
 
-	private static class PerSessionInfo {
+	private static class PerSessionInfo
+	{
 		String identifier;
 		int hitCount = -1;
 	}
 
-	private final Map<IDbgpSession,PerSessionInfo> sessions = new IdentityHashMap<IDbgpSession,PerSessionInfo>(1);
+	private final Map<IDbgpSession, PerSessionInfo> sessions = new IdentityHashMap<IDbgpSession, PerSessionInfo>(1);
 
 	/*
 	 * @see IScriptBreakpoint#getId(IDbgpSession)
 	 */
-	public String getId(IDbgpSession session) {
+	public String getId(IDbgpSession session)
+	{
 		final PerSessionInfo info;
-		synchronized (sessions) {
+		synchronized (sessions)
+		{
 			info = (PerSessionInfo) sessions.get(session);
 		}
 		return info != null ? info.identifier : null;
@@ -171,10 +184,13 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	/*
 	 * @see IScriptBreakpoint#setId(IDbgpSession, java.lang.String)
 	 */
-	public void setId(IDbgpSession session, String identifier) {
-		synchronized (sessions) {
+	public void setId(IDbgpSession session, String identifier)
+	{
+		synchronized (sessions)
+		{
 			PerSessionInfo info = (PerSessionInfo) sessions.get(session);
-			if (info == null) {
+			if (info == null)
+			{
 				info = new PerSessionInfo();
 				sessions.put(session, info);
 			}
@@ -185,9 +201,11 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	/*
 	 * @see IScriptBreakpoint#removeId(IDbgpSession)
 	 */
-	public String removeId(IDbgpSession session) {
+	public String removeId(IDbgpSession session)
+	{
 		final PerSessionInfo info;
-		synchronized (sessions) {
+		synchronized (sessions)
+		{
 			info = (PerSessionInfo) sessions.remove(session);
 		}
 		return info != null ? info.identifier : null;
@@ -196,8 +214,10 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	/*
 	 * @see IScriptBreakpoint#clearSessionInfo()
 	 */
-	public void clearSessionInfo() {
-		synchronized (sessions) {
+	public void clearSessionInfo()
+	{
+		synchronized (sessions)
+		{
 			sessions.clear();
 		}
 	}
@@ -205,28 +225,35 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	/*
 	 * @see IScriptBreakpoint#getIdentifiers()
 	 */
-	public String[] getIdentifiers() {
+	public String[] getIdentifiers()
+	{
 		final PerSessionInfo[] infos;
-		synchronized (sessions) {
-			infos = (PerSessionInfo[]) sessions.values().toArray(
-					new PerSessionInfo[sessions.size()]);
+		synchronized (sessions)
+		{
+			infos = (PerSessionInfo[]) sessions.values().toArray(new PerSessionInfo[sessions.size()]);
 		}
 		int count = 0;
-		for (int i = 0; i < infos.length; ++i) {
-			if (infos[i] != null && infos[i].identifier != null) {
+		for (int i = 0; i < infos.length; ++i)
+		{
+			if (infos[i] != null && infos[i].identifier != null)
+			{
 				++count;
 			}
 		}
-		if (count > 0) {
+		if (count > 0)
+		{
 			final String[] result = new String[count];
 			int index = 0;
-			for (int i = 0; i < infos.length; ++i) {
-				if (infos[i] != null && infos[i].identifier != null) {
+			for (int i = 0; i < infos.length; ++i)
+			{
+				if (infos[i] != null && infos[i].identifier != null)
+				{
 					result[index++] = infos[i].identifier;
 				}
 			}
 			return result;
-		} else {
+		} else
+		{
 			return null;
 		}
 	}
@@ -235,10 +262,13 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	 * @see IScriptBreakpoint#setHitCount(IDbgpSession, int)
 	 */
 	public void setHitCount(IDbgpSession session, int value)
-			throws CoreException {
-		synchronized (sessions) {
+			throws CoreException
+	{
+		synchronized (sessions)
+		{
 			PerSessionInfo info = (PerSessionInfo) sessions.get(session);
-			if (info == null) {
+			if (info == null)
+			{
 				info = new PerSessionInfo();
 				sessions.put(session, info);
 			}
@@ -249,42 +279,53 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 	/*
 	 * @see IScriptBreakpoint#getHitCount(IDbgpSession)
 	 */
-	public int getHitCount(IDbgpSession session) throws CoreException {
+	public int getHitCount(IDbgpSession session) throws CoreException
+	{
 		final PerSessionInfo info;
-		synchronized (sessions) {
+		synchronized (sessions)
+		{
 			info = (PerSessionInfo) sessions.get(session);
 		}
 		return info != null ? info.hitCount : -1;
 	}
 
 	// Identifier
-	public String getIdentifier() throws CoreException {
+	public String getIdentifier() throws CoreException
+	{
 		return null;
 	}
 
-	public void setIdentifier(String id) throws CoreException {
+	public void setIdentifier(String id) throws CoreException
+	{
 		//
 	}
 
 	// Message
-	public String getMessage() throws CoreException {
+	public String getMessage() throws CoreException
+	{
 		return ensureMarker().getAttribute(IMarker.MESSAGE, null);
 	}
 
-	public void setMessage(String message) throws CoreException {
+	public void setMessage(String message) throws CoreException
+	{
 		setAttribute(IMarker.MESSAGE, message);
 	}
 
 	// Hit count
-	public int getHitCount() throws CoreException {
-		synchronized (sessions) {
-			if (sessions.isEmpty()) {
+	public int getHitCount() throws CoreException
+	{
+		synchronized (sessions)
+		{
+			if (sessions.isEmpty())
+			{
 				return -1;
 			}
 			int result = 0;
-			for (Iterator<PerSessionInfo> i = sessions.values().iterator(); i.hasNext();) {
+			for (Iterator<PerSessionInfo> i = sessions.values().iterator(); i.hasNext();)
+			{
 				PerSessionInfo info = (PerSessionInfo) i.next();
-				if (info.hitCount > 0) {
+				if (info.hitCount > 0)
+				{
 					result += info.hitCount;
 				}
 			}
@@ -292,67 +333,83 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 		}
 	}
 
-	public void setHitCount(int value) throws CoreException {
+	public void setHitCount(int value) throws CoreException
+	{
 		//
 	}
 
 	// Hit value
-	public int getHitValue() throws CoreException {
+	public int getHitValue() throws CoreException
+	{
 		return ensureMarker().getAttribute(HIT_VALUE, -1);
 	}
 
-	public void setHitValue(int hitValue) throws CoreException {
-		if (getHitValue() != hitValue) {
+	public void setHitValue(int hitValue) throws CoreException
+	{
+		if (getHitValue() != hitValue)
+		{
 			setAttribute(HIT_VALUE, hitValue);
 		}
 	}
 
 	// Hit condition
-	public int getHitCondition() throws CoreException {
+	public int getHitCondition() throws CoreException
+	{
 		return ensureMarker().getAttribute(HIT_CONDITION, -1);
 	}
 
-	public void setHitCondition(int condition) throws CoreException {
-		if (getHitCondition() != condition) {
+	public void setHitCondition(int condition) throws CoreException
+	{
+		if (getHitCondition() != condition)
+		{
 			setAttribute(HIT_CONDITION, condition);
 		}
 	}
 
 	// Resource name
-	public String getResourceName() throws CoreException {
+	public String getResourceName() throws CoreException
+	{
 		return ensureMarker().getResource().getName();
 	}
 
 	// Expression
-	public String getExpression() throws CoreException {
+	public String getExpression() throws CoreException
+	{
 		return ensureMarker().getAttribute(EXPRESSION, null);
 	}
 
-	public void setExpression(String expression) throws CoreException {
-		if (!StrUtils.equals(getExpression(), expression)) {
+	public void setExpression(String expression) throws CoreException
+	{
+		if (!StrUtils.equals(getExpression(), expression))
+		{
 			setAttribute(EXPRESSION, expression);
 		}
 	}
 
-	public boolean getExpressionState() throws CoreException {
+	public boolean getExpressionState() throws CoreException
+	{
 		return ensureMarker().getAttribute(EXPRESSION_STATE, false);
 	}
 
-	public void setExpressionState(boolean state) throws CoreException {
-		if (getExpressionState() != state) {
+	public void setExpressionState(boolean state) throws CoreException
+	{
+		if (getExpressionState() != state)
+		{
 			setAttribute(EXPRESSION_STATE, state);
 		}
 	}
 
 	/**
-	 * Add this breakpoint to the breakpoint manager, or sets it as
-	 * unregistered.
+	 * Add this breakpoint to the breakpoint manager, or sets it as unregistered.
 	 */
-	public void register(boolean register) throws CoreException {
+	public void register(boolean register) throws CoreException
+	{
 		DebugPlugin plugin = DebugPlugin.getDefault();
-		if (plugin != null && register) {
+		if (plugin != null && register)
+		{
 			plugin.getBreakpointManager().addBreakpoint(this);
-		} else {
+		} else
+		{
 			setRegistered(false);
 		}
 	}

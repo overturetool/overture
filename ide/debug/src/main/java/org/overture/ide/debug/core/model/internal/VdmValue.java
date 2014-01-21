@@ -45,7 +45,8 @@ import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
 import org.overture.ide.debug.core.model.internal.eval.VdmEvaluationCommand;
 
 public class VdmValue extends VdmDebugElement implements IVdmValue,
-		IIndexedValue {
+		IIndexedValue
+{
 
 	static final IVariable[] NO_VARIABLES = new IVariable[0];
 
@@ -63,28 +64,32 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 	private String address;
 
 	public static IVdmValue createValue(IVdmStackFrame frame,
-			IDbgpProperty property) {
+			IDbgpProperty property)
+	{
 		IVdmType type = createType(frame.getDebugTarget(), property);
 		return new VdmValue(frame, property, type);
 	}
 
 	private static IVdmType createType(IDebugTarget target,
-			IDbgpProperty property) {
+			IDbgpProperty property)
+	{
 		IVdmType type = null;
 		final String rawType = property.getType();
 
-		final IVdmTypeFactory factory = VdmDebugManager.getInstance()
-				.getTypeFactory();
-		if (factory != null) {
+		final IVdmTypeFactory factory = VdmDebugManager.getInstance().getTypeFactory();
+		if (factory != null)
+		{
 			type = factory.buildType(rawType);
-		} else {
+		} else
+		{
 			type = new AtomicVdmType(rawType);
 		}
 		return type;
 	}
 
 	protected VdmValue(IVdmStackFrame frame, IDbgpProperty property,
-			IVdmType type) {
+			IVdmType type)
+	{
 		this.frame = frame;
 		this.type = type;
 
@@ -98,74 +103,80 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		this.address = property.getAddress();
 
 		final int childrenCount = property.getChildrenCount();
-		if (childrenCount > 0) {
+		if (childrenCount > 0)
+		{
 			this.variables = new IVariable[childrenCount];
 			fillVariables(property.getPage(), property);
-		} else {
+		} else
+		{
 			this.variables = NO_VARIABLES;
 		}
 	}
 
-	private void loadPage(int page) throws DbgpException {
-		IDbgpPropertyCommands commands = frame.getVdmThread().getDbgpSession()
-				.getCoreCommands();
+	private void loadPage(int page) throws DbgpException
+	{
+		IDbgpPropertyCommands commands = frame.getVdmThread().getDbgpSession().getCoreCommands();
 		IDbgpProperty pageProperty = null;
-		if(key == null || key.length() == 0){
-			pageProperty = commands.getProperty(page, fullname, frame
-				.getLevel());
-		}else{
-			pageProperty = commands.getPropertyByKey(page, fullname, frame
-					.getLevel(), key);
+		if (key == null || key.length() == 0)
+		{
+			pageProperty = commands.getProperty(page, fullname, frame.getLevel());
+		} else
+		{
+			pageProperty = commands.getPropertyByKey(page, fullname, frame.getLevel(), key);
 		}
-		
+
 		fillVariables(page, pageProperty);
 		final int endIndex = Math.min((page + 1) * pageSize, variables.length);
-		for (int i = page * pageSize; i < endIndex; ++i) {
-			if (variables[i] == null) {
+		for (int i = page * pageSize; i < endIndex; ++i)
+		{
+			if (variables[i] == null)
+			{
 				variables[i] = new UnknownVariable(frame, this, i);
 			}
 		}
 	}
 
-	private void fillVariables(int page, IDbgpProperty pageProperty) {
+	private void fillVariables(int page, IDbgpProperty pageProperty)
+	{
 		int offset = getPageOffset(page);
 		IDbgpProperty[] properties = pageProperty.getAvailableChildren();
-//		if(pageProperty.getType().equals("map") && !pageProperty.getName().startsWith("Maplet")){
-//			properties = filterProperties(properties);
-//		}
-		
+		// if(pageProperty.getType().equals("map") && !pageProperty.getName().startsWith("Maplet")){
+		// properties = filterProperties(properties);
+		// }
+
 		final int size = Math.min(properties.length, variables.length - offset);
-		if (size != properties.length) {
-			VdmDebugPlugin.logWarning(NLS.bind(
-					"AvailableChildrenExceedsVariableLength", name),
-					null);
+		if (size != properties.length)
+		{
+			VdmDebugPlugin.logWarning(NLS.bind("AvailableChildrenExceedsVariableLength", name), null);
 		}
-		if (size > 0) {
-			for (int i = 0; i < size; ++i) {
+		if (size > 0)
+		{
+			for (int i = 0; i < size; ++i)
+			{
 				IDbgpProperty p = properties[i];
 				variables[offset + i] = new VdmVariable(frame, p.getName(), p);
 			}
-			Arrays.sort(this.variables, offset, offset + size, VdmDebugManager
-					.getInstance().getVariableNameComparator());
+			Arrays.sort(this.variables, offset, offset + size, VdmDebugManager.getInstance().getVariableNameComparator());
 		}
 		Assert.isLegal(pageSize > 0 || properties.length == variables.length);
 	}
 
-//	private IDbgpProperty[]  filterProperties(IDbgpProperty[] properties) {
-//		
-//		ArrayList<IDbgpProperty> ret = new ArrayList<IDbgpProperty>();
-//		
-//		for (IDbgpProperty iDbgpProperty : properties) {
-//			if(iDbgpProperty.getName().startsWith("Maplet"))
-//				ret.add(iDbgpProperty);
-//		}
-//		
-//		
-//		return (IDbgpProperty[]) ret.toArray(new IDbgpProperty[ret.size()]);
-//		
-//	}
+	// private IDbgpProperty[] filterProperties(IDbgpProperty[] properties) {
+	//
+	// ArrayList<IDbgpProperty> ret = new ArrayList<IDbgpProperty>();
+	//
+	// for (IDbgpProperty iDbgpProperty : properties) {
+	// if(iDbgpProperty.getName().startsWith("Maplet"))
+	// ret.add(iDbgpProperty);
+	// }
+	//
+	//
+	// return (IDbgpProperty[]) ret.toArray(new IDbgpProperty[ret.size()]);
+	//
+	// }
 
-	private int getPageOffset(int page) {
+	private int getPageOffset(int page)
+	{
 		if (pageSize <= 0)
 			pageSize = frame.getVdmThread().getPropertyPageSize();
 
@@ -174,92 +185,111 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		return page * pageSize;
 	}
 
-	private int getPageForOffset(int offset) {
+	private int getPageForOffset(int offset)
+	{
 		Assert.isLegal(pageSize > 0);
 		return offset / pageSize;
 	}
 
-	public String getReferenceTypeName() {
+	public String getReferenceTypeName()
+	{
 		return getType().getName();
 	}
 
-	public String getValueString() {
-		if (value == null || value.length() == 0) {
-			
+	public String getValueString()
+	{
+		if (value == null || value.length() == 0)
+		{
+
 			value = getRawValue();
-			if(value.equals("seq") || value.equals("map") || value.equals("set") ){
+			if (value.equals("seq") || value.equals("map")
+					|| value.equals("set"))
+			{
 				value = type.formatValue(this);
 			}
-			
+
 		}
-		
-		if(type instanceof CollectionVdmType || type instanceof ComplexVdmType || type instanceof StringVdmType)
+
+		if (type instanceof CollectionVdmType || type instanceof ComplexVdmType
+				|| type instanceof StringVdmType)
 		{
 			return type.getName();
 		}
 		return value;
 	}
 
-	public String getDetailsString() {
-		if (details == null || details.length() == 0) {
+	public String getDetailsString()
+	{
+		if (details == null || details.length() == 0)
+		{
 			details = type.formatDetails(this);
 		}
 
 		return details;
 	}
 
-	public String getRawValue() {
+	public String getRawValue()
+	{
 		return rawValue;
 	}
 
-	public String getEvalName() {
+	public String getEvalName()
+	{
 		return fullname;
 	}
 
-	public boolean hasVariables() {
+	public boolean hasVariables()
+	{
 		return hasChildren;
 	}
 
-	public boolean isAllocated() {
+	public boolean isAllocated()
+	{
 		return true;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getValueString();
 	}
 
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return frame.getDebugTarget();
 	}
 
-	public String getInstanceId() {
+	public String getInstanceId()
+	{
 		return key;
 	}
 
-	public IVdmType getType() {
+	public IVdmType getType()
+	{
 		return type;
 	}
 
 	public IVdmEvaluationCommand createEvaluationCommand(
-			String messageTemplate, IVdmThread thread) {
+			String messageTemplate, IVdmThread thread)
+	{
 		IVdmEvaluationEngine engine = thread.getEvaluationEngine();
 
 		String pattern = "(%variable%)"; //$NON-NLS-1$
 		String evalName = getEvalName();
-		if (messageTemplate.indexOf(pattern) != -1) {
+		if (messageTemplate.indexOf(pattern) != -1)
+		{
 			String snippet = replacePattern(messageTemplate, pattern, evalName);
 			return new VdmEvaluationCommand(engine, snippet, frame);
 		}
-		VdmDebugPlugin.logWarning(NLS.bind(
-				"detailFormatterRequiredToContainIdentifier",
-				pattern), null);
+		VdmDebugPlugin.logWarning(NLS.bind("detailFormatterRequiredToContainIdentifier", pattern), null);
 		return new VdmEvaluationCommand(engine, evalName, frame);
 	}
 
 	private static String replacePattern(String messageTemplate,
-			String pattern, String evalName) {
+			String pattern, String evalName)
+	{
 		String result = messageTemplate;
-		while (result.indexOf(pattern) != -1) {
+		while (result.indexOf(pattern) != -1)
+		{
 			int pos = result.indexOf(pattern);
 			result = result.substring(0, pos) + evalName
 					+ result.substring(pos + pattern.length(), result.length());
@@ -267,54 +297,66 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 		return result;
 	}
 
-	public int getInitialOffset() {
+	public int getInitialOffset()
+	{
 		return 0;
 	}
 
-	public int getSize() {
+	public int getSize()
+	{
 		return variables.length;
 	}
 
-	public IVariable getVariable(int offset) throws DebugException {
-		try {
-			if (variables[offset] == null) {
+	public IVariable getVariable(int offset) throws DebugException
+	{
+		try
+		{
+			if (variables[offset] == null)
+			{
 				loadPage(getPageForOffset(offset));
 			}
 			return variables[offset];
-		} catch (DbgpException e) {
-			throw wrapDbgpException(NLS.bind(
-					"unableToLoadChildrenOf", name), e);
+		} catch (DbgpException e)
+		{
+			throw wrapDbgpException(NLS.bind("unableToLoadChildrenOf", name), e);
 		}
 	}
 
-	public IVariable[] getVariables() throws DebugException {
+	public IVariable[] getVariables() throws DebugException
+	{
 		return getVariables(0, getSize());
 	}
 
 	public IVariable[] getVariables(int offset, int length)
-			throws DebugException {
+			throws DebugException
+	{
 		IVariable[] variables = new IVariable[length];
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length; i++)
+		{
 			variables[i] = getVariable(offset + i);
 		}
 		return variables;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
-		if (adapter == IIndexedValue.class && type.isCollection()) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
+		if (adapter == IIndexedValue.class && type.isCollection())
+		{
 			return this;
 		}
 		return super.getAdapter(adapter);
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
 	/*
 	 * @see org.eclipse.dltk.debug.core.model.IVdmValue#getMemoryAddress()
 	 */
-	public String getMemoryAddress() {
+	public String getMemoryAddress()
+	{
 		return address;
 	}
 
@@ -323,9 +365,12 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 	 * 
 	 * @return
 	 */
-	protected boolean hasChildrenValuesLoaded() {
-		for (int i = 0; i < variables.length; ++i) {
-			if (variables[i] != null) {
+	protected boolean hasChildrenValuesLoaded()
+	{
+		for (int i = 0; i < variables.length; ++i)
+		{
+			if (variables[i] != null)
+			{
 				return true;
 			}
 		}

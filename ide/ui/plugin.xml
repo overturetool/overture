@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.overture.ide.ui.templateContextType" name="Template Context Type" schema="schema/org.overture.ide.ui.templateContextType.exsd"/>
+   <extension-point id="org.overture.ide.ui.workbenchDisplay" name="Extention for the workbench adatpr display mechanism in Overture" schema="schema/org.overture.ide.ui.workbenchDisplay.exsd"/>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -342,11 +343,13 @@
      <key
            commandId="org.overture.ide.ui.commands.toggleComment"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.textEditorScope"
            sequence="M1+7">
      </key>
       <key
            commandId="org.overture.ide.ui.editor.commandGoToDefinition"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            contextId="org.eclipse.ui.textEditorScope"
            sequence="F3">
      </key>
   </extension>

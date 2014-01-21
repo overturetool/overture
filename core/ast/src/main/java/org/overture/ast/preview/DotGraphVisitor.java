@@ -17,10 +17,6 @@ import org.overture.ast.node.NodeList;
 public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 {
 
-	/**
-	 * generated serial version
-	 */
-	private static final long serialVersionUID = 637147601437624885L;
 
 	public static class DotPair
 	{
@@ -52,6 +48,8 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	private StringBuilder resultString;
 	public boolean showNullPointers = false;
 	Set<INode> visitedNodes= null;
+	
+	Set<String> filterClassNames = new HashSet<String>();
 
 	public DotGraphVisitor()
 	{
@@ -59,6 +57,12 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 		resultString = new StringBuilder();
 		visitedNodes = new HashSet<INode>();
 		resultString.append("\tnode [shape=record];\n");
+	}
+	
+	public DotGraphVisitor(Set<String> filterClassNames )
+	{
+	this();
+	this.filterClassNames = filterClassNames;
 	}
 
 	public String getResultString()
@@ -174,7 +178,7 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 		{
 
 			Object fieldObject = field.getValue();
-			if (fieldObject == null && !showNullPointers)
+			if (fieldObject == null && !showNullPointers || filterClassNames.contains(fieldObject.getClass().getSimpleName()))
 			{
 				continue;// do not show on diagram
 			}

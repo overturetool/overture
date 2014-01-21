@@ -8,6 +8,7 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.AStringLiteralExp;
+import org.overture.ast.node.INode;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntimeError;
@@ -21,10 +22,6 @@ import org.overture.interpreter.values.Value;
 
 public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -9092856001136845731L;
 
 	@Override
 	public Value caseAIntLiteralExp(AIntLiteralExp node, Context ctxt)
@@ -88,5 +85,19 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new SeqValue(node.getValue().getValue());
+	}
+
+	@Override
+	public Value createNewReturnValue(INode node, Context question)
+	{
+		assert false : "Should not happen";
+		return null;
+	}
+
+	@Override
+	public Value createNewReturnValue(Object node, Context question)
+	{
+		assert false : "Should not happen";
+		return null;
 	}
 }
