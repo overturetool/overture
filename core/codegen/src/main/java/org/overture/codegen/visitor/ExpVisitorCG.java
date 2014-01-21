@@ -13,6 +13,7 @@ import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACharLiteralExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AElementsUnaryExp;
@@ -71,6 +72,7 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ADistConcatExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -344,10 +346,37 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
+	public PExpCG caseADistConcatUnaryExp(ADistConcatUnaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		PExp exp = node.getExp();
+		PType type = node.getType();
+		
+		if(!(exp instanceof ASeqEnumSeqExp))
+			throw new AnalysisExceptionCG("Unexpected expression for distributed concatenation: " + exp.getClass().getName(), node.getLocation());
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		ASeqEnumSeqExp seqEnumExp = (ASeqEnumSeqExp) exp;
+		
+		LinkedList<PExp> members = seqEnumExp.getMembers();
+		LinkedList<PExpCG> membersCg = new LinkedList<PExpCG>();
+		for(PExp member : members)
+		{
+			PExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			membersCg.add(memberCg);
+		}
+		
+		ADistConcatExpCG distConcat = new ADistConcatExpCG();
+		distConcat.setType(typeCg);
+		distConcat.setMembers(membersCg);
+		
+		return distConcat;
+	}
+	
+	@Override
 	public PExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		//Operator prec?
 		return expAssistant.handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question);
 	}
 	

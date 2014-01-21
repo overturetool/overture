@@ -88,6 +88,28 @@ public class Utils
 		return result;
 	}
 	
+	public static List distConc(List... seqs)
+	{
+		List result = seq();
+		
+		for(List seq : seqs)
+		{
+			addAll(result, seq.toArray());
+		}
+		
+		return result;
+	}
+	
+	public static String distConcStrings(String... strings)
+	{
+		String result = "";
+		
+		for(String str : strings)
+			result += str;
+		
+		return result;
+	}
+	
 	public static int hashCode(Object... fields)
 	{
 		if(fields == null)

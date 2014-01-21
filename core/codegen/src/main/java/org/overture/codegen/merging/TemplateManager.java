@@ -25,7 +25,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ADistConcUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistConcatExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
@@ -231,6 +231,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXPS_PATH + "TernaryIf");
 		
+		nodeTemplateFileNames.put(ADistConcatExpCG.class, templateStructure.EXPS_PATH + "DistConcat");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
@@ -255,8 +257,6 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATailUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Tail");
 		
 		nodeTemplateFileNames.put(AReverseUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Reverse");
-		
-		nodeTemplateFileNames.put(ADistConcUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistConc");
 		
 		nodeTemplateFileNames.put(AFloorUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Floor");
 		

@@ -139,6 +139,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{tuple} [args]:expCG* [tupleType]:typeCG.tuple
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
     |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
+    |	{distConcat} [members]:expCG*
     |	#Seq
     ;
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -196,7 +197,6 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{head}
     |	{tail}
     |	{reverse}
-    |	{distConc}
     |	{floor}    
     |	{abs}
     |	{not}  

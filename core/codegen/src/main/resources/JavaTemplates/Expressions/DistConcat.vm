@@ -1,0 +1,13 @@
+## Note that in the VDM AST a distributed concatenation is treated as
+## a unary expression. This is not the case here.
+##
+#if ($node.getMembers().size() == 0)
+	Utils.seq()
+#else
+	#set( $args = $JavaFormat.formatArgs($node.getMembers()) )
+	#if ($JavaFormat.isStringType($node.getType()))
+		Utils.distConcStrings($args)
+	#else
+		Utils.distConc($args)
+	#end
+#end
