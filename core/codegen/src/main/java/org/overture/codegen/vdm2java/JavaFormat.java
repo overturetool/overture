@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
@@ -33,6 +34,9 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
+import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
+import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -44,8 +48,10 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
@@ -54,6 +60,7 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCGBase;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.merging.MergeVisitor;
@@ -82,7 +89,33 @@ public class JavaFormat
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
-		return writer.toString();
+		return writer.toString() + getNumberDereference(node);
+	}
+	
+	private static String getNumberDereference(INode node)
+	{
+		if (node.parent() instanceof SNumericBinaryExpCG
+				&& !(node instanceof SNumericBinaryExpCG)
+				&& !(node instanceof SLiteralExpCGBase)
+				&& !(node instanceof AIsolationUnaryExpCG)
+				&& !(node instanceof SUnaryExpCG))
+		{
+			PExpCG exp = (PExpCG) node;
+			PTypeCG type = exp.getType();
+
+			if (type instanceof ARealNumericBasicTypeCG
+					|| type instanceof ARealBasicTypeWrappersTypeCG)
+			{
+				return ".doubleValue()";
+			} else if (type instanceof AIntNumericBasicTypeCG
+					|| type instanceof AIntBasicTypeWrappersTypeCG)
+			{
+				return ".longValue()";
+			}
+		}
+
+		// No dereference is needed
+		return "";
 	}
 	
 	public String formatName(INode node) throws AnalysisException
@@ -119,11 +152,7 @@ public class JavaFormat
 	
 	public String format(PExpCG exp, boolean leftChild) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class));
-		StringWriter writer = new StringWriter();
-
-		exp.apply(mergeVisitor, writer);
-		String formattedExp = writer.toString();
+		String formattedExp = format(exp);
 		
 		JavaPrecedence precedence = new JavaPrecedence();
 		
@@ -469,10 +498,9 @@ public class JavaFormat
 		if(potentialBasicType == null)
 			return "";
 		
-		if(potentialBasicType instanceof AIntNumericBasicTypeCG)
-			return "Long";
-		else if(potentialBasicType instanceof ARealNumericBasicTypeCG)
-			return "Double";
+		if(potentialBasicType instanceof AIntNumericBasicTypeCG ||
+		   potentialBasicType instanceof ARealNumericBasicTypeCG)
+			return "Number";
 		else if(potentialBasicType instanceof ABoolBasicTypeCG)
 			return "Boolean";
 		else if(potentialBasicType instanceof ACharBasicTypeCG)
@@ -697,14 +725,14 @@ public class JavaFormat
 		return exp instanceof AStringLiteralExpCG;
 	}
 	
-	public boolean isSeqEnum(PExpCG exp)
+	public boolean isSeq(PExpCG exp)
 	{
-		return exp instanceof AEnumSeqExpCG;
+		return exp.getType() instanceof SSeqTypeCG;
 	}
 	
-	public boolean isCharType(PTypeCG type)
+	public boolean isStringType(PTypeCG type)
 	{
-		return type instanceof ACharBasicTypeCG; 
+		return type instanceof AStringTypeCG; 
 	}
 	
 	public String buildString(List<PExpCG> exps) throws AnalysisException
