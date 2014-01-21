@@ -725,7 +725,7 @@ public class JavaFormat
 		return exp instanceof AStringLiteralExpCG;
 	}
 	
-	public boolean isSeq(PExpCG exp)
+	public boolean isSeqType(PExpCG exp)
 	{
 		return exp.getType() instanceof SSeqTypeCG;
 	}
