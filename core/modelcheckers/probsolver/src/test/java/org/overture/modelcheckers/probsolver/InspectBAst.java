@@ -66,9 +66,14 @@ public class InspectBAst {
 		//f = new ClassicalB("{ x | x:{1,2,3,4,5} & x > 3 }");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("{1|->2|->3}");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("{1|->2|->3}");
+		//f.getAst().apply(new ASTPrinter(System.out));
 		
+		//f = new ClassicalB("-7-(-3)*(-7/-3)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("TRUE");
+		f.getAst().apply(new ASTPrinter(System.out));
 	}
 	
 }

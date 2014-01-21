@@ -32,15 +32,18 @@ import org.overture.ast.expressions.PExp;
 
 import org.overture.ast.expressions.AOrBooleanBinaryExp;           //added -> ADisjunctPredicate
 import org.overture.ast.expressions.ANotUnaryExp;                  //added -> ANegationPredicate
-import org.overture.ast.expressions.ABooleanConstExp;              //added -> A[Trueth|Falsity]Predicate
+//import org.overture.ast.expressions.ABooleanConstExp;              //added -> ATruethPredicate, AFalsityPredicate
+import org.overture.ast.expressions.ABooleanConstExp;              //added -> ABooleanTrueExpression, ABooleanFalseExpression
 import org.overture.ast.expressions.APlusNumericBinaryExp;         //added -> AAddExpression
-import org.overture.ast.expressions.ASubtractNumericBinaryExp;     //added -> AMinusExpression
+import org.overture.ast.expressions.ASubtractNumericBinaryExp;     //added -> AMinusOrSetSubtractExpression
 import org.overture.ast.expressions.ATimesNumericBinaryExp;        //added -> AMultiplicationExpression
 import org.overture.ast.expressions.ADivideNumericBinaryExp;       //added -> ADivExpression
+import org.overture.ast.expressions.ADivNumericBinaryExp;          //added -> ADivExpression
+import org.overture.ast.expressions.ARemNumericBinaryExp;          //added -> ASubtractExpression, AMultiplicationExpression, ADivExpression
 import org.overture.ast.expressions.AModNumericBinaryExp;          //added -> AModuleExpression
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;           //added -> AUnaryMinusExpression
 import org.overture.ast.expressions.AAbsoluteUnaryExp;             //added -> AMaxExpression
-import org.overture.ast.expressions.AStarStarBinaryExp;            //added -> A[PowerOf|Iteration]Expression
+import org.overture.ast.expressions.AStarStarBinaryExp;            //added -> APowerOfExpression, AIterationExpression
 import org.overture.ast.expressions.ALessNumericBinaryExp;         //added -> ALessPredicate
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;    //added -> ALessEqualPredicate
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;      //added -> AGreaterPredicate
@@ -177,6 +180,8 @@ import de.be4.classicalb.core.parser.node.AIdentifierExpression;//added
 import de.be4.classicalb.core.parser.node.AExistsPredicate;//added
 import de.be4.classicalb.core.parser.node.AEquivalencePredicate;//added
 import de.be4.classicalb.core.parser.node.AComprehensionSetExpression;//added
+import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;//added
+import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;//added
 
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
@@ -557,10 +562,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		System.out.println("new class: " + node.getValue());
 		if (node.getValue().getValue())
 		{
-			return new ATruthPredicate();
+		    //return new ATruthPredicate();
+			return new ABooleanTrueExpression();
 		} else
 		{
-			return new AFalsityPredicate();
+		    //return new AFalsityPredicate();
+			return new ABooleanFalseExpression();
 		}
 	}
 
@@ -577,7 +584,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			throws AnalysisException
 	{
 
-		return new AMinusExpression(exp(node.getLeft()), exp(node.getRight()));
+		return new AMinusOrSetSubtractExpression(exp(node.getLeft()), exp(node.getRight()));
 	}
 
 	@Override
@@ -594,6 +601,24 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 
 		return new ADivExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseADivNumericBinaryExp(ADivNumericBinaryExp node)// added
+			throws AnalysisException
+	{
+	    // x div y = x / y
+		return new ADivExpression(exp(node.getLeft()), exp(node.getRight()));
+	}
+
+	@Override
+	public Node caseARemNumericBinaryExp(ARemNumericBinaryExp node)// added
+			throws AnalysisException
+	{
+	    // x rem y = x - y * (x/y)
+	    return new AMinusOrSetSubtractExpression(exp(node.getLeft()),
+			     new AMultiplicationExpression(exp(node.getRight()),
+							   new ADivExpression(exp(node.getLeft()), exp(node.getRight()))));
 	}
 
 	@Override
