@@ -1,6 +1,4 @@
 operations
 
--- -- underconstruction: unable type check
--- -- operator ** for MapExp and NumericExp
---  ite() m : map nat to nat
---  post {1|->3, 2|->1, 3|->2} ** 2 = m;
+powpow() m : nat
+  post m = 2 ** 3 ** 2
