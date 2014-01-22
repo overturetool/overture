@@ -68,29 +68,31 @@ public class ViewLabelProvider extends LabelProvider
 		{
 			return OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN).createImage();
 		}
-		// if (obj instanceof TraceTestGroup) {
-		// return
-		// OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN).createImage();
-		// }
 		if (obj instanceof TraceTestTreeNode)
 		{
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			Verdict status = (((TraceTestTreeNode) obj).getStatus());
+			Verdict status = ((TraceTestTreeNode) obj).getStatus();
 			if (status == Verdict.PASSED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-			else if (status == null)
+			} else if (status == null)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			else if (status == Verdict.INCONCLUSIVE)
+			} else if (status == Verdict.INCONCLUSIVE)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-			else if (status == Verdict.FAILED)
+			} else if (status == Verdict.FAILED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
-			// else if (status == TestResultType.ExpansionFaild)
-			// imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
-			else if (status == Verdict.SKIPPED)
+			} else if (status == Verdict.SKIPPED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
+			}
 
 			if (((TraceTestTreeNode) obj).hasRunTimeError())
+			{
 				imgPath = OvertureTracesPlugin.IMG_ERROR;
+			}
 
 			return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();
 		}

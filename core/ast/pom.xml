@@ -14,14 +14,14 @@
   <name>The Overture Abstract Syntax Tree </name>
 
   <properties>
-    <astcreator.version>1.5.0</astcreator.version>
+    <astcreator.version>1.6.1</astcreator.version>
   </properties>
 
   <build>
     <plugins>
       <plugin>
-	<groupId>org.overture.maven.tools</groupId>
-	<artifactId>ast-creator-plugin</artifactId>
+	<groupId>org.overture.astcreator</groupId>
+	<artifactId>astcreator-plugin</artifactId>
 	<version>${astcreator.version}</version>
 	<executions>
 	  <execution>

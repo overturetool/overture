@@ -214,4 +214,14 @@ sync
 per IsFinished => finished;
 per printStr => print;
 
+
+--thread
+-- (while true 
+--  do
+--   (UpdateValues();
+--    Algorithm();
+--    World`timerRef.WaitRelative(3);--World`timerRef.stepLength);
+--   )
+-- )
+
 end HostController

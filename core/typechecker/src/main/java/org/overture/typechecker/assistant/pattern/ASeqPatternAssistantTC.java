@@ -6,8 +6,6 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -34,8 +32,9 @@ public class ASeqPatternAssistantTC
 	{
 
 		if (pattern.getResolved())
+		{
 			return;
-		else
+		} else
 		{
 			pattern.setResolved(true);
 		}
@@ -58,17 +57,6 @@ public class ASeqPatternAssistantTC
 
 	}
 
-	// public static LexNameList getVariableNames(ASeqPattern pattern) {
-	// LexNameList list = new LexNameList();
-	//
-	// for (PPattern p: pattern.getPlist())
-	// {
-	// list.addAll(PPatternTCAssistant.getVariableNames(p));
-	// }
-	//
-	// return list;
-	// }
-
 	public static List<PDefinition> getAllDefinitions(ASeqPattern rp,
 			PType type, NameScope scope)
 	{
@@ -90,21 +78,6 @@ public class ASeqPatternAssistantTC
 		}
 
 		return defs;
-	}
-
-	public static PType getPossibleTypes(ASeqPattern pattern)
-	{
-		return AstFactory.newASeqSeqType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()));
-	}
-
-	public static PExp getMatchingExpression(ASeqPattern seqp)
-	{
-		return AstFactory.newASeqEnumSeqExp(seqp.getLocation(), PPatternListAssistantTC.getMatchingExpressionList(seqp.getPlist()));
-	}
-
-	public static boolean isSimple(ASeqPattern p)
-	{
-		return PPatternListAssistantTC.isSimple(p.getPlist());
 	}
 
 }

@@ -54,7 +54,6 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.utility.SourceLocationConverter;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
@@ -97,10 +96,10 @@ public abstract class CoverageEditor
 	IFile vdmSourceFile = null;
 	String vdmCoverage = null;
 	List<StyleRange> styleRanges = new Vector<StyleRange>();
-//	SourceReferenceManager sourceReferenceManager = null;
+	// SourceReferenceManager sourceReferenceManager = null;
 	IVdmProject project = null;
 
-	@SuppressWarnings( { "deprecation" })
+	@SuppressWarnings({ "deprecation" })
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException
 	{
@@ -120,14 +119,15 @@ public abstract class CoverageEditor
 			IFile res = ((FileEditorInput) input).getFile();
 			if (res.exists())
 			{
-				org.eclipse.core.internal.resources.File f = ((org.eclipse.core.internal.resources.File) res);
+				org.eclipse.core.internal.resources.File f = (org.eclipse.core.internal.resources.File) res;
 				charset = f.getCharset();
 				sourceFile = f.getLocation().toFile();
 				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
 				vdmSourceFile = (IFile) res;
-			}else
+			} else
 			{
-				throw new PartInitException("File not found: "+res.getLocationURI().toASCIIString());
+				throw new PartInitException("File not found: "
+						+ res.getLocationURI().toASCIIString());
 			}
 
 			project = (IVdmProject) res.getProject().getAdapter(IVdmProject.class);
@@ -145,8 +145,6 @@ public abstract class CoverageEditor
 				selectedFile = (IFile) covTbl;
 				vdmCoverage = readFile(selectedFile);
 			}
-			
-			
 
 		} catch (IOException e)
 		{
@@ -181,11 +179,11 @@ public abstract class CoverageEditor
 
 		// getSourceViewer().getTextWidget().addLineStyleListener(new LineStyleListener()
 		// {
-		//			
+		//
 		// public void lineGetStyle(LineStyleEvent event)
 		// {
 		// event.styles = styleRanges.toArray(new StyleRange[0]);
-		//				
+		//
 		// }
 		// });
 
@@ -195,7 +193,7 @@ public abstract class CoverageEditor
 		LexTokenReader ltr = null;
 		try
 		{
-			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset,AbstractParserParticipant.findStreamReaderType(vdmSourceFile));
+			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset, AbstractParserParticipant.findStreamReaderType(vdmSourceFile));
 		} catch (CoreException e1)
 		{
 			// TODO Auto-generated catch block
@@ -224,21 +222,21 @@ public abstract class CoverageEditor
 			case CML:
 				break;
 		}
-		SourceLocationConverter converter = new SourceLocationConverter(content);
+		// SourceLocationConverter converter = new SourceLocationConverter(content);
 
 		BufferedReader br;
-		if(selectedFile!=null)
+		if (selectedFile != null)
 		{
-		try
-		{
-			
-			for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
+			try
+			{
+
+				for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
 				// executable
 				{
 					if (l.hits == 0)
 					{
-						int start = converter.getStartPos(l);
-						int end = converter.getEndPos(l);
+						int start = l.getStartOffset();// converter.getStartPos(l);
+						int end = l.getEndOffset();// converter.getEndPos(l);
 						if (start < content.length() && start < end
 								&& end < content.length())
 						{
@@ -247,73 +245,71 @@ public abstract class CoverageEditor
 					}
 
 				}
-			
-			
-			if(!selectedFile.isSynchronized(IResource.DEPTH_ZERO))
-			{
-				selectedFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
-			}
-			br = new BufferedReader(new BufferedReader(new InputStreamReader(selectedFile.getContents())));
-			String line = br.readLine();
 
-			while (line != null)
-			{
-				if (line.charAt(0) == '+')
+				if (!selectedFile.isSynchronized(IResource.DEPTH_ZERO))
 				{
-					// Hit lines are "+line from-to=hits"
+					selectedFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+				}
+				br = new BufferedReader(new BufferedReader(new InputStreamReader(selectedFile.getContents())));
+				String line = br.readLine();
 
-					int s1 = line.indexOf(' ');
-					int s2 = line.indexOf('-');
-					int s3 = line.indexOf('=');
-
-					int lnum = Integer.parseInt(line.substring(1, s1));
-					int from = Integer.parseInt(line.substring(s1 + 1, s2));
-					int to = Integer.parseInt(line.substring(s2 + 1, s3));
-					int hits = Integer.parseInt(line.substring(s3 + 1));
-
-					for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
-					// executable
+				while (line != null)
+				{
+					if (line.charAt(0) == '+')
 					{
-						if (l.startLine == lnum && l.startPos == from
-								&& l.endPos == to)
+						// Hit lines are "+line from-to=hits"
+
+						int s1 = line.indexOf(' ');
+						int s2 = line.indexOf('-');
+						int s3 = line.indexOf('=');
+
+						int lnum = Integer.parseInt(line.substring(1, s1));
+						int from = Integer.parseInt(line.substring(s1 + 1, s2));
+						int to = Integer.parseInt(line.substring(s2 + 1, s3));
+						int hits = Integer.parseInt(line.substring(s3 + 1));
+
+						for (LexLocation l : LexLocation.getSourceLocations(sourceFile)) // Only
+						// executable
 						{
-							l.hits += hits;
-
-							int start = converter.getStartPos(l);
-							int end = converter.getEndPos(l);
-							if (start < content.length() && start < end
-									&& end < content.length())
+							if (l.startLine == lnum && l.startPos == from
+									&& l.endPos == to)
 							{
-								styleRanges.add(new StyleRange(start, end
-										- start, black, green));
-							}
+								l.hits += hits;
 
-							break;
+								int start = l.getStartOffset();//converter.getStartPos(l);
+								int end = l.getEndOffset();//converter.getEndPos(l);
+								if (start < content.length() && start < end
+										&& end < content.length())
+								{
+									styleRanges.add(new StyleRange(start, end
+											- start, black, green));
+								}
+
+								break;
+							}
 						}
 					}
+
+					line = br.readLine();
 				}
 
-				line = br.readLine();
-			}
+				br.close();
 
-			br.close();
-
-	
-
-		} catch (IOException e)
-		{
-			if (Activator.DEBUG)
+			} catch (IOException e)
 			{
-				e.printStackTrace();
-			}
-		} catch (CoreException e)
-		{
-			if (Activator.DEBUG)
+				if (Activator.DEBUG)
+				{
+					e.printStackTrace();
+				}
+			} catch (CoreException e)
 			{
-				e.printStackTrace();
+				if (Activator.DEBUG)
+				{
+					e.printStackTrace();
+				}
 			}
-		}
-		}else{
+		} else
+		{
 			MessageDialog.openError(getEditorSourceViewer().getTextWidget().getShell(), "Error opening coverage editor", "No coverage table table info found.");
 		}
 
@@ -328,7 +324,8 @@ public abstract class CoverageEditor
 					getEditorSourceViewer().getTextWidget().replaceStyleRanges(styleRange.start, styleRange.length, new StyleRange[] { styleRange });
 				} else
 				{
-					System.err.println("Coverage range not valid: " + styleRange);
+					System.err.println("Coverage range not valid: "
+							+ styleRange);
 				}
 			} catch (Exception e)
 			{
@@ -352,15 +349,18 @@ public abstract class CoverageEditor
 			throws CoreException
 	{
 		if (resource != null && resource.getName().equals(memberName))
+		{
 			return resource;
-		else if (!(resource instanceof org.eclipse.core.internal.resources.File))
+		} else if (!(resource instanceof org.eclipse.core.internal.resources.File))
 		{
 			IResource[] members = ((IContainer) resource).members();
 			for (int i = 0; i < members.length; i++)
 			{
 				IResource tmp = findMember(members[i], memberName);
 				if (tmp != null)
+				{
 					return tmp;
+				}
 			}
 		}
 		return null;
@@ -368,7 +368,7 @@ public abstract class CoverageEditor
 
 	public static String readFile(IFile file) throws IOException, CoreException
 	{
-		if(!file.isSynchronized(IResource.DEPTH_ZERO))
+		if (!file.isSynchronized(IResource.DEPTH_ZERO))
 		{
 			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 		}
@@ -397,13 +397,13 @@ public abstract class CoverageEditor
 		return sb.toString();
 	}
 
-//	public void setInitDocument(IDocumentProvider documentProvider, IEditorInput input)
-//	{
-//		IDocument document= documentProvider.getDocument(input);
-//		if(document instanceof VdmDocument)
-//		{
-//			IFile res = ((FileEditorInput) input).getFile();
-//			((VdmDocument)document).setSourceUnit(new CoverageSourceUnit(project, res));
-//		}
-//	}
+	// public void setInitDocument(IDocumentProvider documentProvider, IEditorInput input)
+	// {
+	// IDocument document= documentProvider.getDocument(input);
+	// if(document instanceof VdmDocument)
+	// {
+	// IFile res = ((FileEditorInput) input).getFile();
+	// ((VdmDocument)document).setSourceUnit(new CoverageSourceUnit(project, res));
+	// }
+	// }
 }

@@ -19,9 +19,7 @@ public class AThreadDefinitionAssistantTC
 		this.af = af;
 	}
 
-
-	public AExplicitOperationDefinition getThreadDefinition(
-			AThreadDefinition d)
+	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
 	{
 
 		AOperationType type = AstFactory.newAOperationType(d.getLocation()); // () ==> ()

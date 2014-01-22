@@ -25,6 +25,7 @@
 	<module>poviewer</module>
     <module>quickinterpreter</module>
     <module>uml2</module>
+	<module>probruntime</module>
     <module>rttraceviewer</module>
   </modules>
 

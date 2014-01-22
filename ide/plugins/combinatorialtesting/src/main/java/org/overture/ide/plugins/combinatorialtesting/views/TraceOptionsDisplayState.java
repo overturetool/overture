@@ -1,6 +1,5 @@
 package org.overture.ide.plugins.combinatorialtesting.views;
 
-
 public class TraceOptionsDisplayState
 {
 	private int subset = -1;

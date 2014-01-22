@@ -37,25 +37,20 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class KindFinder extends AnswerAdaptor<String>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	protected ITypeCheckerAssistantFactory af;
 
 	public KindFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public String caseAAssignmentDefinition(AAssignmentDefinition node)
 			throws AnalysisException
 	{
 		return "assignable variable";
 	}
-	
+
 	@Override
 	public String defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
@@ -69,7 +64,7 @@ public class KindFinder extends AnswerAdaptor<String>
 	{
 		return "invariant";
 	}
-	
+
 	@Override
 	public String caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
@@ -83,14 +78,14 @@ public class KindFinder extends AnswerAdaptor<String>
 	{
 		return "explicit function";
 	}
-	
+
 	@Override
 	public String caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
 	{
 		return "explicit operation";
 	}
-	
+
 	@Override
 	public String caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
@@ -104,47 +99,49 @@ public class KindFinder extends AnswerAdaptor<String>
 	{
 		return "implicit function";
 	}
-	
+
 	@Override
 	public String caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node) throws AnalysisException
 	{
 		return "implicit operation";
 	}
-	
+
 	@Override
 	public String caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
 		return "import";
 	}
+
 	@Override
 	public String caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public String caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node) throws AnalysisException
 	{
 		return "instance variable";
 	}
-	
+
 	@Override
 	public String caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
 		return "local";
 	}
+
 	@Override
 	public String caseAMultiBindListDefinition(AMultiBindListDefinition node)
 			throws AnalysisException
 	{
 		return "bind";
 	}
-	
+
 	@Override
 	public String caseAMutexSyncDefinition(AMutexSyncDefinition node)
 			throws AnalysisException
@@ -158,55 +155,56 @@ public class KindFinder extends AnswerAdaptor<String>
 	{
 		return "trace";
 	}
-	
+
 	@Override
 	public String caseAPerSyncDefinition(APerSyncDefinition node)
 			throws AnalysisException
 	{
 		return "permission predicate";
 	}
-	
+
 	@Override
 	public String caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
+
 	@Override
 	public String caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
 		return "state";
 	}
-	
+
 	@Override
 	public String caseAThreadDefinition(AThreadDefinition node)
 			throws AnalysisException
 	{
 		return "thread";
 	}
-	
+
 	@Override
 	public String caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
 		return "type";
 	}
-	
+
 	@Override
 	public String caseAUntypedDefinition(AUntypedDefinition node)
 			throws AnalysisException
 	{
 		return "untyped";
 	}
-	
+
 	@Override
 	public String caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
 		return "value";
 	}
-	
+
 	@Override
 	public String defaultPDefinition(PDefinition node) throws AnalysisException
 	{

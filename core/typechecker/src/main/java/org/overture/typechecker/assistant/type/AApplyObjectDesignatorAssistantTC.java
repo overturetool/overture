@@ -3,7 +3,6 @@ package org.overture.typechecker.assistant.type;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -79,8 +78,7 @@ public class AApplyObjectDesignatorAssistantTC
 
 	public static PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
-			boolean unique,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
 	{
 
@@ -121,8 +119,7 @@ public class AApplyObjectDesignatorAssistantTC
 
 	public static PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
-			boolean unique,
-			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
+			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
 	{
 		LinkedList<PType> ptypes = optype.getParameters();

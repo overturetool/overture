@@ -14,11 +14,10 @@ public class ALocalDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void setValueDefinition(ALocalDefinition ld)
+	public void setValueDefinition(ALocalDefinition ld)
 	{
 		ld.setValueDefinition(true);
 
 	}
-
 
 }

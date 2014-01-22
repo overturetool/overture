@@ -100,7 +100,7 @@ public class XmlResultReaderWritter<R>
 			{
 				Element message = doc.createElement("message");
 				message.setAttribute("messageType", "warning");
-				message.setAttribute("resource", file.getName());
+				message.setAttribute("resource", warning.getResource());
 				message.setAttribute("number", new Integer(warning.getNumber()).toString());
 				message.setAttribute("message", warning.getMessage());
 				message.setAttribute("column", new Integer(warning.getCol()).toString());
@@ -115,7 +115,7 @@ public class XmlResultReaderWritter<R>
 			{
 				Element message = doc.createElement("message");
 				message.setAttribute("messageType", "error");
-				message.setAttribute("resource", file.getName());
+				message.setAttribute("resource", warning.getResource());
 				message.setAttribute("number", new Integer(warning.getNumber()).toString());
 				message.setAttribute("message", warning.getMessage());
 				message.setAttribute("column", new Integer(warning.getCol()).toString());

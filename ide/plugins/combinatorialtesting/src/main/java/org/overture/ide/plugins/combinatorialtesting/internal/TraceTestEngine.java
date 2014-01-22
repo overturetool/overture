@@ -43,6 +43,7 @@ public class TraceTestEngine
 				File traceFolder = StorageManager.getCtOutputFolder(texe.project);// new File(outputFolder, "traces");
 				traceFolder.mkdirs();
 				Process p = null;
+
 				ConnectionListener conn = null;
 				try
 				{
@@ -57,10 +58,15 @@ public class TraceTestEngine
 
 						public void initialize(String module)
 						{
-							// System.out.println("CT init recieved");
-							out.println(texe.project.getName() + ":" + module
-									+ " Initialized");
-							monitor.subTask(module);
+							try
+							{
+								out.println(texe.project.getName() + ":"
+										+ module + " Initialized");
+								monitor.subTask(module);
+							} catch (Exception e)
+							{
+								e.printStackTrace();
+							}
 						}
 
 						public void progress(String traceName, Integer progress)
@@ -102,8 +108,6 @@ public class TraceTestEngine
 						}
 					});
 					conn.start();
-					// System.out.println("Starting CT runtime with: "
-					// + texe.container + "-" + texe.traceName);
 					p = new TestEngineDelegate().launch(texe, preferences, traceFolder, port);
 
 				} catch (Exception e)
@@ -116,7 +120,6 @@ public class TraceTestEngine
 				{
 					millisleep();
 				}
-				// System.out.println("CT eval runtime finished");
 
 				if (isRunning)
 				{

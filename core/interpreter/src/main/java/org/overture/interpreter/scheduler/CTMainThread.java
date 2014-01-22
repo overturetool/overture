@@ -162,12 +162,19 @@ public class CTMainThread extends MainThread
 		}
 		catch (Throwable e)
 		{
-			if(e instanceof ThreadDeath)
+			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
-				throw (ThreadDeath)e;
+				if (!getExceptions().isEmpty())
+				{
+					result.addAll(getExceptions());
+				}
+				else
+				{
+					result.add(e.getMessage());
+				}
+	
+				result.add(Verdict.FAILED);
 			}
-			result.add(e.getMessage());
-			result.add(Verdict.FAILED);
 		}
 	}
 
@@ -186,5 +193,11 @@ public class CTMainThread extends MainThread
 	public List<Object> getList()
 	{
 		return result;
+	}
+
+	public void setException(Exception e)
+	{
+		// Don't print out the error for CT
+		exception.add(e);
 	}
 }

@@ -20,5 +20,7 @@
 *.tex	 text
 *.txt	 text
 *.vdmsl	 text
+*.vdmpp	 text
+*.vdmrt	 text
 *.xml	 text
 *.y	 text

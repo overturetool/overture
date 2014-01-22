@@ -17,6 +17,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to get a Record type from a type
@@ -26,36 +27,31 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public RecordTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ARecordInvariantType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			
+
 			return ((ANamedInvariantType) type).getType().apply(THIS);
 		} else if (type instanceof ARecordInvariantType)
 		{
 			return (ARecordInvariantType) type;
-		}
-		else
+		} else
 		{
 			return null;
 		}
-		
+
 	}
-	
+
 	@Override
 	public ARecordInvariantType caseAUnionType(AUnionType type)
 			throws AnalysisException
@@ -63,8 +59,9 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.
-			//type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
-			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			af.createPTypeAssistant();
+			// type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
 			// fields' types...
@@ -73,9 +70,10 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 
 			for (PType t : type.getTypes())
 			{
-				if (af.createPTypeAssistant().isRecord(t))//PTypeAssistantTC.isRecord(t))
+				af.createPTypeAssistant();
+				if (PTypeAssistantTC.isRecord(t))// PTypeAssistantTC.isRecord(t))
 				{
-					for (AFieldField f : t.apply(THIS).getFields())//;PTypeAssistantTC.getRecord(t).getFields())
+					for (AFieldField f : t.apply(THIS).getFields())// ;PTypeAssistantTC.getRecord(t).getFields())
 					{
 						PTypeSet current = common.get(f.getTag());
 
@@ -104,14 +102,14 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 
 		return type.getRecType();
 	}
-	
+
 	@Override
 	public ARecordInvariantType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>()); 
+		return AstFactory.newARecordInvariantType(type.getLocation(), new Vector<AFieldField>());
 	}
-	
+
 	@Override
 	public ARecordInvariantType defaultPType(PType type)
 			throws AnalysisException

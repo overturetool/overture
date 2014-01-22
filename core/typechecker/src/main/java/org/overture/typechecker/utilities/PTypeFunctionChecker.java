@@ -20,69 +20,68 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public PTypeFunctionChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType node) throws AnalysisException
 	{
 		return node.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAFunctionType(AFunctionType node)
 			throws AnalysisException
 	{
 		return true;
-	}	
+	}
 
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType node)
 			throws AnalysisException
 	{
 		if (node instanceof ANamedInvariantType)
+		{
+			if (node.getOpaque())
 			{
-				if (node.getOpaque()) return false;
-				return ((ANamedInvariantType) node).getType().apply(THIS); //PTypeAssistantTC.isFunction(type.getType());
+				return false;
 			}
-		//FIXME:Added code from gkanos in order to return a value; I returned the default one.
+			return ((ANamedInvariantType) node).getType().apply(THIS); // PTypeAssistantTC.isFunction(type.getType());
+		}
+		// FIXME:Added code from gkanos in order to return a value; I returned the default one.
 		else
 		{
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Boolean caseAOptionalType(AOptionalType node)
 			throws AnalysisException
 	{
-		
-		
+
 		return node.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType node) throws AnalysisException
 	{
-		
+
 		return af.createAUnionTypeAssistant().getFunction(node) != null;
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType node) throws AnalysisException
 	{
-		
+
 		return true;
 	}
+
 	@Override
 	public Boolean defaultPType(PType node) throws AnalysisException
 	{

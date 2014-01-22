@@ -17,49 +17,48 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public SeqBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean defaultSSeqType(SSeqType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
+		{
+			if (type.getOpaque())
 			{
-				if (type.getOpaque()) return false;
-				return ((ANamedInvariantType) type).getType().apply(THIS);//PTypeAssistantTC.isSeq(type.getType());
+				return false;
 			}
-		else
+			return ((ANamedInvariantType) type).getType().apply(THIS);// PTypeAssistantTC.isSeq(type.getType());
+		} else
 		{
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return 	af.createAUnionTypeAssistant().getSeq(type) != null;
+		return af.createAUnionTypeAssistant().getSeq(type) != null;
 	}
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
-		//return AUnknownTypeAssistantTC.isSeq(type);
 		return true;
 	}
+
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException
 	{

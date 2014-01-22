@@ -21,7 +21,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
@@ -32,22 +31,19 @@ import org.overture.typechecker.util.LexNameTokenMap;
 public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public ClassTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public AClassType caseAClassType(AClassType type) throws AnalysisException
 	{
 		return type;
 	}
+
 	@Override
 	public AClassType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
@@ -55,21 +51,21 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 		if (type instanceof ANamedInvariantType)
 		{
 			return ((ANamedInvariantType) type).getType().apply(THIS);
-		}
-		else
+		} else
 		{
 			return null;
 		}
 	}
+
 	@Override
 	public AClassType caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		
+
 		if (!type.getClassDone())
 		{
 			type.setClassDone(true); // Mark early to avoid recursion.
-			//type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
-			//Rewritten in non static way.
+			// type.setClassType(PTypeAssistantTC.getClassType(AstFactory.newAUnknownType(type.getLocation())));
+			// Rewritten in non static way.
 			type.setClassType(af.createPTypeAssistant().getClassType(AstFactory.newAUnknownType(type.getLocation())));
 			// Build a class type with the common fields of the contained
 			// class types, making the field types the union of the original
@@ -83,14 +79,14 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			{
 				if (af.createPTypeAssistant().isClass(t))
 				{
-					AClassType ct = t.apply(THIS);//PTypeAssistantTC.getClassType(t);
+					AClassType ct = t.apply(THIS);// PTypeAssistantTC.getClassType(t);
 
 					if (classname == null)
 					{
 						classname = ct.getClassdef().getName();
 					}
 
-					for (PDefinition f : PDefinitionAssistantTC.getDefinitions(ct.getClassdef()))
+					for (PDefinition f : af.createPDefinitionAssistant().getDefinitions(ct.getClassdef()))
 					{
 						// TypeSet current = common.get(f.name);
 						ILexNameToken synthname = f.getName().getModifiedName(classname.getName());
@@ -139,18 +135,15 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 			for (ILexNameToken synthname : common.keySet())
 			{
-				PDefinition def = 
-						AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
+				PDefinition def = AstFactory.newALocalDefinition(synthname.getLocation(), synthname, NameScope.GLOBAL, common.get(synthname).getType(type.getLocation()));
 
 				def.setAccess(access.get(synthname).clone());
 				newdefs.add(def);
 			}
 
-			type.setClassType((classname == null) ? null : AstFactory
-					.newAClassType(type.getLocation(), AstFactory
-							.newAClassClassDefinition(classname.clone(),
-									new LexNameList(), newdefs)));
-			
+			type.setClassType(classname == null ? null
+					: AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition(classname.clone(), new LexNameList(), newdefs)));
+
 		}
 
 		return type.getClassType();
@@ -160,10 +153,10 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 	public AClassType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		
+
 		return AstFactory.newAClassType(type.getLocation(), AstFactory.newAClassClassDefinition());
 	}
-	
+
 	@Override
 	public AClassType defaultPType(PType tyoe) throws AnalysisException
 	{

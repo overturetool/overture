@@ -1,0 +1,15 @@
+class A
+
+instance variables
+
+private x:nat;
+
+functions
+
+	public f :  () -> nat
+	f () == 1;
+
+	public g : () -> nat
+	g () == f()
+
+end A

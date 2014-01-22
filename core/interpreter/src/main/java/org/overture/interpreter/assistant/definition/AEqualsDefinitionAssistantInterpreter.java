@@ -17,17 +17,15 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
 
-public class AEqualsDefinitionAssistantInterpreter extends
-		AEqualsDefinitionAssistantTC
+public class AEqualsDefinitionAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AEqualsDefinitionAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

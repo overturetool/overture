@@ -1,0 +1,4 @@
+operations
+
+getlen() n : nat
+post n = len [[1,1,1],[2],[1,3]]
