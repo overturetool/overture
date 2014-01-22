@@ -36,7 +36,6 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
@@ -159,7 +158,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		for (PDefinition def : c.getDefinitions())
 		{
 			VdmMethod newDefinition = null;
-			if (PDefinitionAssistantInterpreter.isFunctionOrOperation(def))
+			if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(def))
 			{
 				// now we check what sub class it is...
 				// FIXME: Better way of doing this ?
