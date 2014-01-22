@@ -21,8 +21,8 @@ public class AMapUnionPatternAssistantTC
 	public static void unResolve(AMapUnionPattern pattern)
 	{
 
-		PPatternAssistantTC.unResolve(pattern.getLeft());
-		PPatternAssistantTC.unResolve(pattern.getRight());
+		af.createPPatternAssistant().unResolve(pattern.getLeft());
+		af.createPPatternAssistant().unResolve(pattern.getRight());
 		pattern.setResolved(false);
 	}
 
@@ -41,8 +41,8 @@ public class AMapUnionPatternAssistantTC
 
 		try
 		{
-			PPatternAssistantTC.typeResolve(pattern.getLeft(), rootVisitor, question);
-			PPatternAssistantTC.typeResolve(pattern.getRight(), rootVisitor, question);
+			af.createPPatternAssistant().typeResolve(pattern.getLeft(), rootVisitor, question);
+			af.createPPatternAssistant().typeResolve(pattern.getRight(), rootVisitor, question);
 		} catch (TypeCheckException e)
 		{
 			unResolve(pattern);

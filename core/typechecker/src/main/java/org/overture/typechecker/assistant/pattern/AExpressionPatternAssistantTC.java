@@ -38,7 +38,7 @@ public class AExpressionPatternAssistantTC
 			pattern.getExp().apply(rootVisitor, question);
 		} catch (TypeCheckException e)
 		{
-			PPatternAssistantTC.unResolve(pattern);
+			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 

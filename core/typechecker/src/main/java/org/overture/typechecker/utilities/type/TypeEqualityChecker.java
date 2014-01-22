@@ -78,13 +78,11 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 			return false;
 		}
 
-		AFunctionType fo = (AFunctionType) other;
-		return type.getPartial() == fo.getPartial() && // FIXME:The Below statement doesn't work correct. I cannot Apply
-														// with this syntax.
-				type.getResult().apply(this, fo.getResult()) && // type.getParameters().apply(this,fo.getParameters()));
-				// PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
-				PTypeAssistantTC.equals(type.getParameters(), fo.getParameters());
-
+		AFunctionType fo = (AFunctionType)other;
+		return (type.getPartial() == fo.getPartial() &&			//FIXME:The Below statement doesn't work correct. I cannot Apply with this syntax. 
+				type.getResult().apply(this,fo.getResult()) &&  //type.getParameters().apply(this,fo.getParameters()));
+				//PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
+				af.createPTypeAssistant().equals(type.getParameters(),fo.getParameters()));
 	}
 
 	@Override
@@ -104,9 +102,8 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 
 			return false;
 		} else if (type instanceof ARecordInvariantType)
-		{
-
-			other = PTypeAssistantTC.deBracket(other);
+		{			
+			other = af.createPTypeAssistant().deBracket(other);
 
 			if (other instanceof ARecordInvariantType)
 			{
@@ -126,8 +123,8 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 	public Boolean defaultSMapType(SMapType type, Object other)
 			throws AnalysisException
 	{
-		// return SMapTypeAssistantTC.equals(type, other);
-		other = PTypeAssistantTC.deBracket(other);
+		//return SMapTypeAssistantTC.equals(type, other);
+		other = af.createPTypeAssistant().deBracket(other);
 
 		if (other.getClass() == type.getClass()) // inmaps too
 		{
@@ -145,19 +142,19 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 	public Boolean caseAOperationType(AOperationType type, Object other)
 			throws AnalysisException
 	{
-		other = PTypeAssistantTC.deBracket(other);
+		other = af.createPTypeAssistant().deBracket(other);
 
 		if (!(other instanceof AOperationType))
 		{
 			return false;
 		}
 
-		AOperationType oother = (AOperationType) other;
-		return type.getResult().apply(this, oother.getResult())
-				&& PTypeAssistantTC.equals(type.getParameters(), oother.getParameters());
-		// FIXME:The above statement cannot be changed to apply form.
-		// PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
-		// PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
+		AOperationType oother = (AOperationType)other;
+		return (type.getResult().apply(this,oother.getResult()) &&  
+				af.createPTypeAssistant().equals(type.getParameters(),oother.getParameters()));
+				//FIXME:The above statement cannot be changed to apply form.
+				//PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
+				//PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
 	}
 
 	@Override
@@ -182,9 +179,9 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 
 		if (other instanceof AProductType)
 		{
-			AProductType pother = (AProductType) other;
-			return PTypeAssistantTC.equals(type.getTypes(), pother.getTypes());
-			// FIXME: apply method is not applicable here.
+			AProductType pother = (AProductType)other;
+			return af.createPTypeAssistant().equals(type.getTypes(),pother.getTypes());
+			//FIXME: apply method is not applicable here.
 		}
 
 		return false;
@@ -215,8 +212,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 		{
 			SSeqType os = (SSeqType) other;
 			// NB. Empty sequence is the same type as any sequence
-			return type.getEmpty() || os.getEmpty()
-					|| PTypeAssistantTC.equals(type.getSeqof(), os.getSeqof());
+			return type.getEmpty() || os.getEmpty() ||	af.createPTypeAssistant().equals(type.getSeqof(), os.getSeqof());
 		}
 
 		return false;

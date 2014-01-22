@@ -26,6 +26,10 @@ package org.overture.typechecker;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.pattern.PTypeList;
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -864,5 +868,86 @@ public class TypeComparator
 		}
 
 		return Result.No;
+	}
+	
+	/**
+	 * Check that the compose types that are referred to in a type have a matching
+	 * definition in the environment. The method returns a list of types that do not
+	 * exist if the newTypes parameter is passed. 
+	 */
+	public static PTypeList checkComposeTypes(PType type, Environment env, boolean newTypes)
+	{
+		PTypeList undefined = new PTypeList();
+		
+		for (PType compose: PTypeAssistantTC.getComposeTypes(type))
+		{
+			ARecordInvariantType composeType = (ARecordInvariantType)compose;
+			PDefinition existing = env.findType(composeType.getName(), null);
+			
+			if (existing != null)
+			{
+				// If the type is already defined, check that it has the same shape and
+				// does not have an invariant (which cannot match a compose definition).
+				boolean matches = false;
+				
+				if (existing instanceof ATypeDefinition)
+				{
+					ATypeDefinition edef = (ATypeDefinition)existing;
+					PType etype = existing.getType();
+					
+					if (edef.getInvExpression() == null && etype instanceof ARecordInvariantType)
+					{
+						ARecordInvariantType retype = (ARecordInvariantType)etype;
+						
+						if (retype.getFields().equals(composeType.getFields()))
+						{
+							matches = true;
+						}
+					}
+				}
+					
+				if (!matches)
+				{
+					TypeChecker.report(3325, "Mismatched compose definitions for " + composeType.getName(), composeType.getLocation());
+					TypeChecker.detail2(composeType.getName().getName(), composeType.getLocation(), existing.getName().getName(), existing.getLocation());
+				}
+			}
+			else
+			{
+				if (newTypes)
+				{
+					undefined.add(composeType);
+				}
+				else
+				{
+					TypeChecker.report(3113, "Unknown type name '" + composeType.getName() + "'", composeType.getLocation());
+				}
+			}
+		}
+		
+		// Lastly, check that the compose types extracted are compatible
+		LexNameList done = new LexNameList();
+		
+		for (PType c1: undefined)
+		{
+			for (PType c2: undefined)
+			{
+				if (c1 != c2)
+				{
+					ARecordInvariantType r1 = (ARecordInvariantType)c1;
+					ARecordInvariantType r2 = (ARecordInvariantType)c2;
+					
+					if (r1.getName().equals(r2.getName()) &&
+						!done.contains(r1.getName()) && !r1.getFields().equals(r2.getFields()))
+					{
+						TypeChecker.report(3325, "Mismatched compose definitions for " + r1.getName(), r1.getLocation());
+						TypeChecker.detail2(r1.getName().getName(), r1.getLocation(), r2.getName().getName(), r2.getLocation());
+						done.add(r1.getName());
+					}
+				}
+			}
+		}
+
+		return undefined;
 	}
 }

@@ -69,11 +69,9 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
-	{
-		// TODO: Here is the same problem with the FunctioChecker
-
-		return node.getNameScope().matches(NameScope.STATE)
-				|| PTypeAssistantTC.isClass(af.createPDefinitionAssistant().getType(node));
+	{		
+		return  node.getNameScope().matches(NameScope.STATE) 
+				|| af.createPTypeAssistant().isClass(af.createPDefinitionAssistant().getType(node));
 	}
 
 	@Override

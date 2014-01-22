@@ -13,7 +13,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 /**
  * This class implements an extended version of the ProductBasisChecker visitor identifying if a node is of product
@@ -83,7 +82,7 @@ public class ProductExtendedChecker extends
 	public Boolean caseAUnionType(AUnionType type, Integer size)
 			throws AnalysisException
 	{
-		return AUnionTypeAssistantTC.getProduct(type, size) != null;
+		return af.createAUnionTypeAssistant().getProduct(type, size) != null;
 	}
 
 	@Override

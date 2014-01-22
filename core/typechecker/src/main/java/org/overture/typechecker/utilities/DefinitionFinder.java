@@ -13,7 +13,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 /**
  * This class implements a way to find type from a node in the AST
@@ -54,13 +53,13 @@ public class DefinitionFinder extends
 			return node; // Class referred to as "A" or "CLASS`A"
 		}
 
-		PDefinition def = PDefinitionAssistantTC.findType(node.getDefinitions(), question.sought, null);
+		PDefinition def = af.createPDefinitionAssistant().findType(node.getDefinitions(), question.sought, null);
 
 		if (def == null)
 		{
 			for (PDefinition d : node.getAllInheritedDefinitions())
 			{
-				PDefinition indef = PDefinitionAssistantTC.findType(d, question.sought, null);
+				PDefinition indef = af.createPDefinitionAssistant().findType(d, question.sought, null);
 
 				if (indef != null)
 				{
@@ -86,11 +85,11 @@ public class DefinitionFinder extends
 			return null; // Someone else's import
 		}
 
-		PDefinition def = PDefinitionAssistantTC.findType(node.getDef(), question.sought, question.fromModule);
+		PDefinition def = af.createPDefinitionAssistant().findType(node.getDef(), question.sought, question.fromModule);
 
 		if (def != null)
 		{
-			PDefinitionAssistantTC.markUsed(node);
+			af.createPDefinitionAssistant().markUsed(node);
 		}
 
 		return def;
@@ -122,15 +121,15 @@ public class DefinitionFinder extends
 			return null; // Someone else's import
 		}
 
-		PDefinition renamed = PDefinitionAssistantTC.findName(node, question.sought, NameScope.TYPENAME);
+		PDefinition renamed = af.createPDefinitionAssistant().findName(node, question.sought, NameScope.TYPENAME);
 
 		if (renamed != null && node.getDef() instanceof ATypeDefinition)
 		{
-			PDefinitionAssistantTC.markUsed(node.getDef());
+			af.createPDefinitionAssistant().markUsed(node.getDef());
 			return renamed;
 		} else
 		{
-			return PDefinitionAssistantTC.findType(node.getDef(), question.sought, question.fromModule);
+			return af.createPDefinitionAssistant().findType(node.getDef(), question.sought, question.fromModule);
 		}
 	}
 
@@ -138,7 +137,7 @@ public class DefinitionFinder extends
 	public PDefinition caseAStateDefinition(AStateDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		if (PDefinitionAssistantTC.findName(node, question.sought, NameScope.STATE) != null)
+		if (af.createPDefinitionAssistant().findName(node, question.sought, NameScope.STATE) != null)
 		{
 			return node;
 		}
@@ -150,26 +149,20 @@ public class DefinitionFinder extends
 	public PDefinition caseATypeDefinition(ATypeDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		// TODO Add stuff here to lookup compose definitions in ATypeDefinition
+		if (!node.getComposeDefinitions().isEmpty())
+		{
+			for (PDefinition compose: node.getComposeDefinitions())
+			{
+				PDefinition found = af.createPDefinitionAssistant().findNameBaseCase(compose, question.sought, NameScope.TYPENAME);
+				
+				if (found != null)
+				{
+					return found;
+				}
+			}
+		}
 
-//		PType type = node.getType();
-//		
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			ANamedInvariantType nt = (ANamedInvariantType) type;
-//
-//			if (nt.getType() instanceof ARecordInvariantType)
-//			{
-//				ARecordInvariantType rt = (ARecordInvariantType) nt.getType();
-//
-//				if (rt.getName().equals(question.sought))
-//				{
-//					return node; // T1 = compose T2 x:int end;
-//				}
-//			}
-//		}
-
-		return PDefinitionAssistantTC.findNameBaseCase(node, question.sought, NameScope.TYPENAME);
+		return af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, NameScope.TYPENAME);
 	}
 
 	@Override

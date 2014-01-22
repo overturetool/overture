@@ -10,6 +10,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -35,14 +36,12 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
@@ -99,6 +98,7 @@ import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.utilities.CallableOperationChecker;
+import org.overture.typechecker.utilities.ComposeTypeCollector;
 import org.overture.typechecker.utilities.DefinitionCollector;
 import org.overture.typechecker.utilities.DefinitionEqualityChecker;
 import org.overture.typechecker.utilities.DefinitionFinder;
@@ -298,11 +298,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AImplicitOperationDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
-	{
-		return new AImportedDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
+//	{
+//		return new AImportedDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
@@ -340,11 +340,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
-	{
-		return new AValueDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
+//	{
+//		return new AValueDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public PAccessSpecifierAssistantTC createPAccessSpecifierAssistant()
@@ -453,6 +453,19 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	// pattern
+
+
+//	@Override
+//	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
+//	{
+//		return new ABooleanPatternAssistantTC(this);
+//	}
+
+//	@Override
+//	public ACharacterPatternAssistantTC createACharacterPatternAssistant()
+//	{
+//		return new ACharacterPatternAssistantTC(this);
+//	}
 
 	@Override
 	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
@@ -1092,5 +1105,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder()
 	{
 		return new ImportDefinitionFinder(this);
+	}
+
+	@Override
+	public IAnswer<PTypeList> getComposeTypeCollector()
+	{
+		return new ComposeTypeCollector();
 	}
 }

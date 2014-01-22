@@ -91,7 +91,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAIntegerPattern(AIntegerPattern pattern)
 			throws AnalysisException
 	{
-		return SNumericBasicTypeAssistantTC.typeOf(pattern.getValue().getValue(), pattern.getLocation());
+		return af.createSNumericBasicTypeAssistant().typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.add(PPatternAssistantTC.getPossibleType(p));
+			list.add(af.createPPatternAssistant().getPossibleType(p));
 		}
 
 		return list.getType(pattern.getLocation());
@@ -161,12 +161,12 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	{
 		PTypeSet set = new PTypeSet();
 
-		set.add(PPatternAssistantTC.getPossibleType(pattern.getLeft()));
-		set.add(PPatternAssistantTC.getPossibleType(pattern.getRight()));
+		set.add(af.createPPatternAssistant().getPossibleType(pattern.getLeft()));
+		set.add(af.createPPatternAssistant().getPossibleType(pattern.getRight()));
 
 		PType s = set.getType(pattern.getLocation());
 
-		return PTypeAssistantTC.isUnknown(s) ? AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
+		return af.createPTypeAssistant().isUnknown(s) ? AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
 				: s;
 	}
 

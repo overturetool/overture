@@ -62,7 +62,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			{
 				AClassType sclass = (AClassType) type;
 
-				if (PTypeAssistantTC.hasSupertype(sclass, other))
+				if (af.createPTypeAssistant().hasSupertype(sclass, other))
 				{
 					return true;
 				}

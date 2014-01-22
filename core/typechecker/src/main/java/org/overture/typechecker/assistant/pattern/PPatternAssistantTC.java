@@ -37,7 +37,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 			NameScope scope)
 	{
 		PDefinitionSet set = af.createPDefinitionSet();
-		set.addAll(getAllDefinitions(rp, ptype, scope));
+		set.addAll(af.createPPatternAssistant().getAllDefinitions(rp, ptype, scope));
 		List<PDefinition> result = new Vector<PDefinition>(set);
 		return result;
 	}
@@ -45,7 +45,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	/**
 	 * Get a complete list of all definitions, including duplicates. This method should only be used only by PP
 	 */
-	private static List<PDefinition> getAllDefinitions(PPattern pattern,
+	private List<PDefinition> getAllDefinitions(PPattern pattern,
 			PType ptype, NameScope scope)
 	{
 		try
@@ -71,7 +71,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 		}
 	}
 
-	public static void unResolve(PPattern pattern)
+	public void unResolve(PPattern pattern)
 	{
 		try
 		{
@@ -95,7 +95,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public static boolean matches(PPattern pattern, PType expType)
 	{
-		return TypeComparator.compatible(getPossibleType(pattern), expType);
+		return TypeComparator.compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
 	}
 
 	public static PExp getMatchingExpression(PPattern pattern)

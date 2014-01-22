@@ -75,12 +75,11 @@ public class TypeUnresolver extends AnalysisAdaptor
 		}
 
 		for (PType ft : type.getParameters())
-		{
-			// PTypeAssistantTC.unResolve(ft);
+		{	
 			ft.apply(THIS);
 		}
 
-		// PTypeAssistantTC.unResolve(type.getResult());
+		
 		type.getResult().apply(THIS);
 	}
 
@@ -136,10 +135,8 @@ public class TypeUnresolver extends AnalysisAdaptor
 		}
 
 		if (!type.getEmpty())
-		{
-			// PTypeAssistantTC.unResolve(type.getFrom());
+		{			
 			type.getFrom().apply(THIS);
-			// PTypeAssistantTC.unResolve(type.getTo());
 			type.getTo().apply(THIS);
 		}
 	}
@@ -158,11 +155,9 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType ot : type.getParameters())
 		{
-			// PTypeAssistantTC.unResolve(ot);
 			ot.apply(THIS);
 		}
 
-		// PTypeAssistantTC.unResolve(type.getResult());
 		type.getResult().apply(THIS);
 	}
 
@@ -193,7 +188,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType t : type.getTypes())
 		{
-			// PTypeAssistantTC.unResolve(t);
 			t.apply(THIS);
 		}
 	}
@@ -208,7 +202,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 		{
 			type.setResolved(false);
 		}
-		// PTypeAssistantTC.unResolve(type.getSeqof());
 		type.getSeqof().apply(THIS);
 	}
 
@@ -222,7 +215,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 		{
 			type.setResolved(false);
 		}
-		// PTypeAssistantTC.unResolve(type.getSetof()) ;
 		type.getSetof().apply(THIS);
 	}
 
@@ -239,7 +231,6 @@ public class TypeUnresolver extends AnalysisAdaptor
 
 		for (PType t : type.getTypes())
 		{
-			// PTypeAssistantTC.unResolve(t);
 			t.apply(THIS);
 		}
 	}

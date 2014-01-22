@@ -22,14 +22,14 @@ public class PossibleBindTypeFinder extends AnswerAdaptor<PType>
 	public PType caseASetMultipleBind(ASetMultipleBind mb)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
+		return af.createPPatternListAssistant().getPossibleType(mb.getPlist(), mb.getLocation());
 	}
 
 	@Override
 	public PType caseATypeMultipleBind(ATypeMultipleBind mb)
 			throws AnalysisException
 	{
-		return PPatternListAssistantTC.getPossibleType(mb.getPlist(), mb.getLocation());
+		return af.createPPatternListAssistant().getPossibleType(mb.getPlist(), mb.getLocation());
 	}
 
 	@Override

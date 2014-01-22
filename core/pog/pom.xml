@@ -1,157 +1,157 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.overture</groupId>
-		<artifactId>core</artifactId>
-		<version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+  <parent>
+    <groupId>org.overture</groupId>
+    <artifactId>core</artifactId>
+    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
-	<groupId>org.overture.core</groupId>
-	<artifactId>pog</artifactId>
-	<name>New Proof Obligation Generator</name>
+  <groupId>org.overture.core</groupId>
+  <artifactId>pog</artifactId>
+  <name>New Proof Obligation Generator</name>
 
-	<properties>
-		<astcreator.version>1.4.5</astcreator.version>
-	</properties>
+  <properties>
+    <astcreator.version>1.6.0</astcreator.version>
+  </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overture.core</groupId>
-			<artifactId>ast</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.core</groupId>
-			<artifactId>parser</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.core</groupId>
-			<artifactId>typechecker</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.core</groupId>
-			<artifactId>testframework</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overture.core.prettyprinting</groupId>
-			<artifactId>prettyprinter</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-		</dependency>
-	</dependencies>
-
-
-
-	<build>
+  <dependencies>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core</groupId>
+      <artifactId>testframework</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overture.core.prettyprinting</groupId>
+      <artifactId>prettyprinter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+  </dependencies>
 
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<redirectTestOutputToFile>true</redirectTestOutputToFile>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*Test?.java</include>
-						<include>**/*TestSuite.java</include>
-					</includes>
-				</configuration>
-			</plugin>
 
-			<plugin>
-				<groupId>org.overture.maven.tools</groupId>
-				<artifactId>ast-creator-plugin</artifactId>
-				<version>${astcreator.version}</version>
-				<executions>
-					<execution>
-						<id>generate-ast</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<ast>overtureII.astv2</ast>
-					<extendedAst>pof.ast</extendedAst>
-					<extendedName>POF</extendedName>
-					<extendedTreeOnly>true</extendedTreeOnly>
-					<useSrcOutput>false</useSrcOutput>
-					<extendedAstGroupId>org.overture.core</extendedAstGroupId>
-					<extendedAstArtifactId>ast</extendedAstArtifactId>
-				</configuration>
-			</plugin>
-
-			<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>build-helper-maven-plugin</artifactId>
-			<executions>
-			<execution>
-			<id>add-source</id>
-			<phase>generate-sources</phase>
-			<goals>
-			<goal>add-source</goal>
-			</goals>
-			<configuration>
-			<sources>
-			<source>${project.build.directory}/generated-sources/astCreator/</source>
-			</sources>
-			</configuration>
-			</execution>
-			</executions>
-			</plugin>
+  <build>
 
 
-		</plugins>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<configuration>
+	  <testFailureIgnore>true</testFailureIgnore>
+	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
+	  <includes>
+	    <include>**/*Test.java</include>
+	    <include>**/*Test?.java</include>
+	    <include>**/*TestSuite.java</include>
+	  </includes>
+	</configuration>
+      </plugin>
 
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.overture.maven.tools</groupId>
-										<artifactId>ast-creator-plugin</artifactId>
-										<versionRange>${astcreator.version}</versionRange>
-										<goals>
-											<goal>generate</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+      <plugin>
+	<groupId>org.overture.astcreator</groupId>
+	<artifactId>astcreator-plugin</artifactId>
+	<version>${astcreator.version}</version>
+	<executions>
+	  <execution>
+	    <id>generate-ast</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>generate</goal>
+	    </goals>
+	  </execution>
+	</executions>
+	<configuration>
+	  <ast>overtureII.astv2</ast>
+	  <extendedAst>pof.ast</extendedAst>
+	  <extendedName>POF</extendedName>
+	  <extendedTreeOnly>true</extendedTreeOnly>
+	  <useSrcOutput>false</useSrcOutput>
+	  <extendedAstGroupId>org.overture.core</extendedAstGroupId>
+	  <extendedAstArtifactId>ast</extendedAstArtifactId>
+	</configuration>
+      </plugin>
 
-	</build>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>build-helper-maven-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>add-source</id>
+	    <phase>generate-sources</phase>
+	    <goals>
+	      <goal>add-source</goal>
+	    </goals>
+	    <configuration>
+	      <sources>
+		<source>${project.build.directory}/generated-sources/astCreator/</source>
+	      </sources>
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+
+
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+	<!--This plugin's configuration is used to store Eclipse m2e settings 
+	    only. It has no influence on the Maven build itself. -->
+	<plugin>
+	  <groupId>org.eclipse.m2e</groupId>
+	  <artifactId>lifecycle-mapping</artifactId>
+	  <version>1.0.0</version>
+	  <configuration>
+	    <lifecycleMappingMetadata>
+	      <pluginExecutions>
+		<pluginExecution>
+		  <pluginExecutionFilter>
+		    <groupId>org.overture.maven.tools</groupId>
+		    <artifactId>ast-creator-plugin</artifactId>
+		    <versionRange>${astcreator.version}</versionRange>
+		    <goals>
+		      <goal>generate</goal>
+		    </goals>
+		  </pluginExecutionFilter>
+		  <action>
+		    <ignore />
+		  </action>
+		</pluginExecution>
+	      </pluginExecutions>
+	    </lifecycleMappingMetadata>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+
+  </build>
 </project>
 
