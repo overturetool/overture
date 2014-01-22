@@ -34,7 +34,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenThreadSwapEvent;
 
 public class TraceFileRunner
 {
-	private TraceData data;
+	public final TraceData data;
 	private Map<Class<?>, EventHandler> eventHandlers;
 	private ConjectureData conjectures;
 	

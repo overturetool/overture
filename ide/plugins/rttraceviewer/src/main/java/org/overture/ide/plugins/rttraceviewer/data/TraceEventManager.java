@@ -7,72 +7,96 @@ import java.util.TreeMap;
 import org.overture.interpreter.messages.rtlog.nextgen.INextGenEvent;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
-public class TraceEventManager {
+public class TraceEventManager
+{
 	private final TreeMap<Long, ArrayList<INextGenEvent>> events;
 	private Long currentEventTime;
-	
-	public TraceEventManager(NextGenRTLogger logger) {
-		this.events = (TreeMap<Long, ArrayList<INextGenEvent>>) logger.getEvents();
+	private final NextGenRTLogger logger;
+
+	public TraceEventManager(NextGenRTLogger logger)
+	{
+		this.logger = logger;
+		this.events = logger.getEvents();
 	}
-	
+
 	/**
-	 * Get events from a specified start time. If no events at specified time the next series of 
-	 * events is returned
-	 * @param startTime time to start searching for events
+	 * Get events from a specified start time. If no events at specified time the next series of events is returned
+	 * 
+	 * @param startTime
+	 *            time to start searching for events
 	 * @return list of all events at this or the next event time
 	 */
-	public List<INextGenEvent> getEvents(Long startTime) {
+	public List<INextGenEvent> getEvents(Long startTime)
+	{
 		ArrayList<INextGenEvent> eventList = null;
-		
-		//Key events where key is equal to or greater (null if nothing is found)
-		Long eventKey = events.ceilingKey(startTime); 
-		
-	    if(eventKey != null) {
-	    	eventList = events.get(eventKey);
-	    	currentEventTime = eventKey;
-	    } 		
+
+		// Key events where key is equal to or greater (null if nothing is found)
+		Long eventKey = events.ceilingKey(startTime);
+
+		if (eventKey != null)
+		{
+			eventList = events.get(eventKey);
+			currentEventTime = eventKey;
+		}
 		return eventList;
 	}
-	
+
 	/**
-	 * Get events from the last referenced event time 
+	 * Get events from the last referenced event time
+	 * 
 	 * @return List of events at the next referenced event time
 	 */
-	public List<INextGenEvent> getEvents() {
+	public List<INextGenEvent> getEvents()
+	{
 		return getEvents(getCurrentEventTime() + 1);
 	}
-	
+
 	/**
 	 * Get a list of all event times
+	 * 
 	 * @return List of times
 	 */
-	public List<Long> getEventTimes() {
+	public List<Long> getEventTimes()
+	{
 		return new ArrayList<Long>(events.keySet());
 	}
-	
+
 	/**
 	 * get the current event time
+	 * 
 	 * @return Event time
 	 */
-	public Long getCurrentEventTime() {
+	public Long getCurrentEventTime()
+	{
 		return currentEventTime;
 	}
-	
+
 	/**
 	 * Get time of last event group
+	 * 
 	 * @return Event time
 	 */
-	public Long getLastEventTime() {
+	public Long getLastEventTime()
+	{
 		return events.lastKey();
 	}
-	
+
 	/**
 	 * Reset the internal state
 	 */
-	public void reset() {
+	public void reset()
+	{
 		currentEventTime = null;
 	}
-	
-	
+
+	/**
+	 * Load next data page from the data logger
+	 * 
+	 * @param i
+	 */
+	public void loadNextPage(int i) throws Exception
+	{
+		events.putAll(logger.loadEventPage(i));
+	}
 
 }

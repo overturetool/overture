@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -68,7 +69,8 @@ public class NextGenRTLogger implements IRTLogger
 			throws IOException, ClassNotFoundException
 	{
 		instance = new NextGenRTLogger();
-		instance.readFromFile(filename);
+		instance.setLogfile(new File(filename));
+		instance.load();
 		return instance;
 	}
 
@@ -80,7 +82,7 @@ public class NextGenRTLogger implements IRTLogger
 	private Map<Long, NextGenBusMessage> busMessage = new HashMap<Long, NextGenBusMessage>();
 	private Map<Long, NextGenThread> threadMap = new HashMap<Long, NextGenThread>();
 	// private ArrayList<INextGenEvent> events = new ArrayList<INextGenEvent>();
-	private Map<Long, ArrayList<INextGenEvent>> events = new TreeMap<Long, ArrayList<INextGenEvent>>();
+	private List<Map<Long, ArrayList<INextGenEvent>>> events = new LinkedList<Map<Long, ArrayList<INextGenEvent>>>();
 	private NextGenBus vBus;
 	private File logFile = null;
 	private long currentAbsoluteTime = -1L;
@@ -93,9 +95,14 @@ public class NextGenRTLogger implements IRTLogger
 		this.addCpu(0, false, "vCpu", "system"); // Add the implicit virtual CPU - assuming expl means explicit
 	}
 
-	public Map<Long, ArrayList<INextGenEvent>> getEvents()
+	public TreeMap<Long, ArrayList<INextGenEvent>> getEvents()
 	{
-		return this.events;
+		TreeMap<Long, ArrayList<INextGenEvent>> mmap = new TreeMap<Long, ArrayList<INextGenEvent>>();
+		for (Map<Long, ArrayList<INextGenEvent>> map : events)
+		{
+			mmap.putAll(map);
+		}
+		return mmap;
 	}
 
 	public Map<Integer, NextGenCpu> getCpuMap()
@@ -232,25 +239,54 @@ public class NextGenRTLogger implements IRTLogger
 	// }
 	// }
 
+	int eventFileIndex = 0;
+
 	public void persistToFile() throws IOException
 	{
 		if (logFile != null)
 		{
 
-			FileOutputStream fos = new FileOutputStream(logFile + ".rtbin");
-			ObjectOutputStream out = new ObjectOutputStream(fos);
+			{
+				FileOutputStream fos = new FileOutputStream(logFile + ".rtbin");
+				ObjectOutputStream out = new ObjectOutputStream(fos);
 
-			out.writeObject(cpuMap);
-			out.writeObject(busMap);
-			out.writeObject(objectMap);
-			out.writeObject(classDefMap);
-			out.writeObject(operationMap);
-			out.writeObject(busMessage);
-			out.writeObject(threadMap);
-			out.writeObject(events);
+				out.writeObject(cpuMap);// static
+				out.writeObject(busMap);// static
+				out.writeObject(objectMap);
+				out.writeObject(classDefMap);// static
+				out.writeObject(operationMap);
+				out.writeObject(busMessage);
+				out.writeObject(threadMap);
+				// out.writeObject(events);
 
-			out.flush();
-			out.close();
+				out.flush();
+				out.close();
+			}
+			{
+				if (!events.isEmpty())
+				{
+
+					for (int i = 0; i < events.size() - 1; i++)
+					{
+
+						// if (events.size() > eventFileIndex + 1)
+						// {
+						// eventFileIndex++;
+						// }
+
+						FileOutputStream fos = new FileOutputStream(logFile
+								+ "-events-" + i + ".rtbin");
+						ObjectOutputStream out = new ObjectOutputStream(fos);
+
+						out.writeObject(events.get(i));
+
+						out.flush();
+						out.close();
+					}
+
+				}
+
+			}
 		}
 	}
 
@@ -322,16 +358,21 @@ public class NextGenRTLogger implements IRTLogger
 		out.newLine();
 		out.append("### Events ######################\n");
 		out.newLine();
-		for (Map.Entry<Long, ArrayList<INextGenEvent>> entry : events.entrySet())
+
+		for (Map<Long, ArrayList<INextGenEvent>> map : events)
 		{
-			for (INextGenEvent e : entry.getValue())
+
+			for (Map.Entry<Long, ArrayList<INextGenEvent>> entry : map.entrySet())
 			{
-				out.append(Long.toString(e.getTime().getAbsoluteTime()));
-				out.append(", ");
-				out.append(Long.toString(e.getTime().getRelativeTime()));
-				out.append(" -> ");
-				out.append(e.toString());
-				out.newLine();
+				for (INextGenEvent e : entry.getValue())
+				{
+					out.append(Long.toString(e.getTime().getAbsoluteTime()));
+					out.append(", ");
+					out.append(Long.toString(e.getTime().getRelativeTime()));
+					out.append(" -> ");
+					out.append(e.toString());
+					out.newLine();
+				}
 			}
 		}
 
@@ -353,7 +394,7 @@ public class NextGenRTLogger implements IRTLogger
 	public void setLogfile(File logfile)
 	{
 		this.logFile = logfile;
-		this.enabled = logfile!=null;
+		this.enabled = logfile != null;
 	}
 
 	// Writing to log
@@ -646,12 +687,15 @@ public class NextGenRTLogger implements IRTLogger
 	private void writeEvents(BufferedWriter out) throws IOException
 	{
 
-		for (Map.Entry<Long, ArrayList<INextGenEvent>> entry : this.events.entrySet())
+		for (Map<Long, ArrayList<INextGenEvent>> map : events)
 		{
-			for (INextGenEvent e : entry.getValue())
+			for (Map.Entry<Long, ArrayList<INextGenEvent>> entry : map.entrySet())
 			{
-				out.append(e.toString());
-				out.newLine();
+				for (INextGenEvent e : entry.getValue())
+				{
+					out.append(e.toString());
+					out.newLine();
+				}
 			}
 		}
 
@@ -694,10 +738,15 @@ public class NextGenRTLogger implements IRTLogger
 	}
 
 	@SuppressWarnings("unchecked")
-	private void readFromFile(String filename) throws IOException,
+	private void load() throws IOException,
 			ClassNotFoundException
 	{
-		FileInputStream fis = new FileInputStream(filename);
+		if(logFile ==null)
+		{
+			return;
+		}
+		
+		FileInputStream fis = new FileInputStream(logFile);
 		ObjectInputStream in = new ObjectInputStream(fis);
 
 		this.cpuMap = (Map<Integer, NextGenCpu>) in.readObject();
@@ -707,10 +756,34 @@ public class NextGenRTLogger implements IRTLogger
 		this.operationMap = (Map<String, NextGenOperation>) in.readObject();
 		this.busMessage = (Map<Long, NextGenBusMessage>) in.readObject();
 		this.threadMap = (Map<Long, NextGenThread>) in.readObject();
-		this.events = (Map<Long, ArrayList<INextGenEvent>>) in.readObject();
+		// this.events = (Map<Long, ArrayList<INextGenEvent>>) in.readObject();//FIXME
 
 		in.close();
 
+		loadEventPage(0);
+
+		// printDataStructure("d:\\readFromFile_structure.txt");
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	public Map<Long, ArrayList<INextGenEvent>> loadEventPage(
+			 int index) throws IOException,
+			ClassNotFoundException
+	{
+		if(logFile==null)
+		{
+			return null;
+		}
+
+		FileInputStream fis = new FileInputStream(logFile.getAbsolutePath().substring(0, logFile.getAbsolutePath().indexOf(".rtbin"))
+				+ "-events-" + index + ".rtbin");
+		ObjectInputStream in = new ObjectInputStream(fis);
+
+		Map<Long, ArrayList<INextGenEvent>> data = (Map<Long, ArrayList<INextGenEvent>>) in.readObject();
+		this.events.add(data);
+
+		in.close();
+		return data;
 		// printDataStructure("d:\\readFromFile_structure.txt");
 	}
 
@@ -718,13 +791,46 @@ public class NextGenRTLogger implements IRTLogger
 	{
 		NextGenTimeStamp eventTime = event.getTime();
 
-		if (!events.containsKey(eventTime.getAbsoluteTime()))
+		if (events.isEmpty())
 		{
-			events.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
-		}
+			Map<Long, ArrayList<INextGenEvent>> map = new TreeMap<Long, ArrayList<INextGenEvent>>();
+			events.add(map);
 
-		ArrayList<INextGenEvent> eventList = events.get(eventTime.getAbsoluteTime());
-		eventList.add(event);
+			if (!map.containsKey(eventTime.getAbsoluteTime()))
+			{
+				map.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
+			}
+
+			ArrayList<INextGenEvent> eventList = map.get(eventTime.getAbsoluteTime());
+			eventList.add(event);
+
+		} else
+		{
+			boolean inserted = false;
+			for (Map<Long, ArrayList<INextGenEvent>> map : events)
+			{
+				if (map.containsKey(eventTime.getAbsoluteTime()))
+				{
+					ArrayList<INextGenEvent> eventList = map.get(eventTime.getAbsoluteTime());
+					eventList.add(event);
+					inserted = true;
+				}
+			}
+
+			if (!inserted)
+			{
+				Map<Long, ArrayList<INextGenEvent>> map = events.get(events.size() - 1);
+				if (events.get(events.size() - 1).size() >= 500)
+				{
+					map = new TreeMap<Long, ArrayList<INextGenEvent>>();
+					events.add(map);
+				}
+
+				map.put(eventTime.getAbsoluteTime(), new ArrayList<INextGenEvent>());
+				ArrayList<INextGenEvent> eventList = map.get(eventTime.getAbsoluteTime());
+				eventList.add(event);
+			}
+		}
 	}
 
 	@Override
@@ -736,7 +842,12 @@ public class NextGenRTLogger implements IRTLogger
 	@Override
 	public int getLogSize()
 	{
-		return this.events.size();
+		int size = 0;
+		for (Map<Long, ArrayList<INextGenEvent>> map : events)
+		{
+			size += map.size();
+		}
+		return size;
 	}
 
 	@Override

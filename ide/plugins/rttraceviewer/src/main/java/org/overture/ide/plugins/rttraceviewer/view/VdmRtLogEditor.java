@@ -32,8 +32,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -261,11 +263,55 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 	{
 		int index = theTimes.indexOf(currentTime);
 
-		if (index + 1 < theTimes.size())
+		int nextIndex = index + 1;
+
+		if (nextIndex < theTimes.size())
 		{
-			currentTime = theTimes.get(index + 1);
+			currentTime = theTimes.get(nextIndex);
 			updateOverviewPage();
+
+			
+			
+		}else //if (theTimes.size() - 1 == nextIndex)
+		{
+			loadNextDataPage();
 		}
+	}
+
+	private int currentDayaPage = 1;
+
+	private void loadNextDataPage()
+	{
+		Job job = new Job("parsing")
+		{
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				try
+				{
+					traceRunner.data.getEventManager().loadNextPage(currentDayaPage++);
+				} catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				theTimes.clear();
+				theTimes.addAll(traceRunner.data.getEventManager().getEventTimes());
+				int index = theTimes.indexOf(currentTime);
+				currentTime = theTimes.get(index+1);
+				getSite().getShell().getDisplay().asyncExec(new Runnable()
+				{
+					public void run()
+					{
+						updateOverviewPage();
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule();
+
 	}
 
 	void movePreviousHorizontal()
@@ -316,27 +362,38 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 
 		Shell shell = super.getSite().getShell();
 
-		try
+		// try
+		// {
+		Job job = new Job("parsing")
 		{
-			IRunnableWithProgress op = new IRunnableWithProgress()
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
 			{
-
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException
-				{
-					doParse(fname, monitor);
-				}
-
-			};
-			new ProgressMonitorDialog(shell).run(false, true, op);
-		} catch (InvocationTargetException e)
-		{
-			TracefileViewerPlugin.log(e);
-
-		} catch (InterruptedException e)
-		{
-			TracefileViewerPlugin.log(e);
-		}
+				doParse(fname, monitor);
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule();
+		// IRunnableWithProgress op = new IRunnableWithProgress()
+		// {
+		//
+		// public void run(IProgressMonitor monitor)
+		// throws InvocationTargetException, InterruptedException
+		// {
+		// doParse(fname, monitor);
+		// }
+		//
+		// };
+		// new ProgressMonitorDialog(shell).run(false, true, op);
+		// } catch (InvocationTargetException e)
+		// {
+		// TracefileViewerPlugin.log(e);
+		//
+		// } catch (InterruptedException e)
+		// {
+		// TracefileViewerPlugin.log(e);
+		// }
 	}
 
 	@SuppressWarnings("deprecation")
@@ -352,6 +409,7 @@ public class VdmRtLogEditor extends EditorPart implements IViewCallback
 				try
 				{
 					t.stop();
+					break;
 				} catch (Exception e)
 				{
 
