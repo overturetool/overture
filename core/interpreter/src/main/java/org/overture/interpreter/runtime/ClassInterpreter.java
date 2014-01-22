@@ -52,7 +52,6 @@ import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
@@ -240,7 +239,7 @@ public class ClassInterpreter extends Interpreter
 		
 		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
 		{
-			NextGenRTLogger.getInstance().persistToFile();
+			RTLogger.dump(true);
 		}
 		
 		RuntimeValidator.stop();

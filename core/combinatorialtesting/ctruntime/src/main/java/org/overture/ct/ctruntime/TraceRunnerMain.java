@@ -1,7 +1,6 @@
 package org.overture.ct.ctruntime;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,12 +19,14 @@ import java.util.Vector;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
@@ -36,7 +37,6 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.util.Base64;
-import org.overture.ct.utils.TraceXmlWrapper;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
@@ -439,9 +439,8 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					if (logfile != null)
 					{
-						PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
-						RTLogger.setLogfile(p);
-						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
+						RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();

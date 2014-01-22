@@ -23,9 +23,8 @@
 
 package org.overture.interpreter.commands;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +33,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 
@@ -129,9 +129,16 @@ public class ClassCommandReader extends CommandReader
 				println("Flushing " + RTLogger.getLogSize() + " RT events");
 			}
 
-			RTLogger.setLogfile(null);
-			NextGenRTLogger.getInstance().setLogfile(null);
-			println("RT events now logged to the console");
+			try
+			{
+				RTLogger.setLogfile(RTTextLogger.class,null);
+				RTLogger.setLogfile(NextGenRTLogger.class,null);
+				println("RT events now logged to the console");
+			} catch (FileNotFoundException e)
+			{
+				println("Cannot create RT event log: " + e.getMessage());
+			}
+			
 			return true;
 		}
 
@@ -148,8 +155,7 @@ public class ClassCommandReader extends CommandReader
 		{
 			try
 			{
-				PrintWriter p = new PrintWriter(new FileOutputStream(parts[1], false));
-				RTLogger.setLogfile(p);
+				RTLogger.setLogfile(RTTextLogger.class,new File(parts[1]));
 				println("RT events now logged to " + parts[1]);
 			} catch (FileNotFoundException e)
 			{
