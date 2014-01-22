@@ -156,7 +156,7 @@ public class TestSuite
 							defaultSuperCtor = op.expldef;
 						}
 					} else if (((AOperationType) op.expldef.getType()).getParameters().size() == 1
-							&& PTypeAssistantInterpreter.isType(((AOperationType) op.expldef.getType()).getParameters().get(0),typeName) != null
+							&& Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().isType(((AOperationType) op.expldef.getType()).getParameters().get(0),typeName) != null
 							&& op.expldef.getName().equals(instance.type.getName().getName()))
 					{
 						return op.expldef;

@@ -316,7 +316,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeChecker.detail2("Actual", node.getActualResult(), "Expected", expectedResult);
 		}
 
-		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
+		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3019, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
@@ -374,7 +374,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				{
 					if (mtype.getResult() instanceof AProductType)
 					{
-						AProductType pt = PTypeAssistantTC.getProduct(mtype.getResult());
+						AProductType pt = question.assistantFactory.createPTypeAssistant().getProduct(mtype.getResult());
 
 						for (PType t : pt.getTypes())
 						{
@@ -458,7 +458,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		if (PTypeAssistantTC.narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
+		if (question.assistantFactory.createPTypeAssistant().narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
@@ -468,7 +468,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
 
-			if (!PTypeAssistantTC.isType(b, ABooleanBasicType.class))
+			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
@@ -554,9 +554,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType))
 				{
-					if (PTypeAssistantTC.isProduct(mtype.getResult()))
+					if (question.assistantFactory.createPTypeAssistant().isProduct(mtype.getResult()))
 					{
-						AProductType pt = PTypeAssistantTC.getProduct(mtype.getResult());
+						AProductType pt = question.assistantFactory.createPTypeAssistant().getProduct(mtype.getResult());
 
 						for (PType t : pt.getTypes())
 						{
@@ -695,7 +695,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
 
 		if (node.getIsConstructor()
-				&& !PTypeAssistantTC.isType(node.getActualResult(), AVoidType.class)
+				&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
 				&& !compatible || !node.getIsConstructor() && !compatible)
 		{
 			TypeCheckerErrors.report(3027, "Operation returns unexpected type", node.getLocation(), node);
@@ -723,7 +723,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					+ node.getName() + " cannot return a value", node.getLocation(), node);
 		}
 
-		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
+		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3028, "Operation parameter visibility less than operation definition", node.getLocation(), node);
 		}
@@ -792,7 +792,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					} else
 					{
 						if (!(clause.getType() instanceof AUnknownType)
-								&& !PTypeAssistantTC.equals(sdef.getType(), clause.getType()))
+								&& !question.assistantFactory.createPTypeAssistant().equals(sdef.getType(), clause.getType()))
 						{
 							TypeCheckerErrors.report(3032, "State variable "
 									+ exname + " is not this type", node.getLocation(), node);
@@ -903,7 +903,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					+ node.getName() + " cannot return a value", node.getLocation(), node);
 		}
 
-		if (PTypeAssistantTC.narrowerThan(node.getType(), node.getAccess()))
+		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition", node.getLocation(), node);
 		}
@@ -1295,7 +1295,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			ANamedInvariantType ntype = (ANamedInvariantType) type;
 
-			if (PTypeAssistantTC.narrowerThan(ntype.getType(), node.getAccess()))
+			if (question.assistantFactory.createPTypeAssistant().narrowerThan(ntype.getType(), node.getAccess()))
 			{
 				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
 			}
@@ -1317,7 +1317,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeComparator.checkComposeTypes(field.getType(), question.env, false);
 				
-				if (PTypeAssistantTC.narrowerThan(field.getType(), node.getAccess()))
+				if (question.assistantFactory.createPTypeAssistant().narrowerThan(field.getType(), node.getAccess()))
 				{
 					TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
 				}

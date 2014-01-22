@@ -1092,7 +1092,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			AExplicitOperationDefinition def = (AExplicitOperationDefinition) opdef;
 
-			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
 				TypeCheckerErrors.report(3229, opname
 						+ " should have no parameters or return type", node.getLocation(), node);
@@ -1107,7 +1107,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3230, opname + " is implicit", node.getLocation(), node);
 			}
 
-			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
 				TypeCheckerErrors.report(3231, opname
 						+ " should have no parameters or return type", node.getLocation(), node);
@@ -1167,7 +1167,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			AExplicitOperationDefinition def = (AExplicitOperationDefinition)opdef;
 
-			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
 				TypeCheckerErrors.report(3229, opname + " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
@@ -1182,7 +1182,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3230, opname + " is implicit", node.getLocation(), node);
 			}
 
-			if (!PTypeAssistantTC.equals(def.getType(), expected))
+			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
 				TypeCheckerErrors.report(3231, opname + " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());

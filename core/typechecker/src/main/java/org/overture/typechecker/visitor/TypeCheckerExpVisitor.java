@@ -1238,7 +1238,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType type = tuple.apply(THIS, question);
 		node.setType(type);
 
-		if (!PTypeAssistantTC.isProduct(type))
+		if (!question.assistantFactory.createPTypeAssistant().isProduct(type))
 		{
 			TypeCheckerErrors.report(3094, "Field '#" + node.getField()
 					+ "' applied to non-tuple type", tuple.getLocation(), tuple);
@@ -1246,7 +1246,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		AProductType product = PTypeAssistantTC.getProduct(type);
+		AProductType product = question.assistantFactory.createPTypeAssistant().getProduct(type);
 		long fn = node.getField().getValue();
 
 		if (fn > product.getTypes().size() || fn < 1)
@@ -1849,7 +1849,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType argtype = node.getArg().apply(THIS, question);
 
 		if (!(node.getType() instanceof ATokenBasicType)
-				&& !PTypeAssistantTC.equals(argtype, node.getType()))
+				&& !question.assistantFactory.createPTypeAssistant().equals(argtype, node.getType()))
 		{
 			TypeCheckerErrors.report(3125, "Argument of mk_" + node.getType()
 					+ " is the wrong type", node.getLocation(), node);

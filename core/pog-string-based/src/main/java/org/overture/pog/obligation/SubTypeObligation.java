@@ -70,6 +70,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.pog.assistant.IPogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -81,6 +82,7 @@ public class SubTypeObligation extends ProofObligation
 	 * 
 	 */
 	private static final long serialVersionUID = 1108478780469068741L;
+	private IPogAssistantFactory assistantFactory;
 
 	public SubTypeObligation(PExp exp, PType etype, PType atype,
 			POContextStack ctxt)
@@ -189,7 +191,7 @@ public class SubTypeObligation extends ProofObligation
 	}
 
 	private String oneType(boolean rec, PExp exp, PType etype, PType atype)
-	{
+	{		
 		if (atype != null && rec)
 		{
 			if (TypeComparator.isSubType(atype, etype))

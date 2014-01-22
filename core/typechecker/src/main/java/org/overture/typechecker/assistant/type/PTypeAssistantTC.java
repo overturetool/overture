@@ -298,7 +298,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AProductType getProduct(PType type)
+	public AProductType getProduct(PType type)
 	{
 		try
 		{
@@ -310,7 +310,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isProduct(PType type)
+	public boolean isProduct(PType type)
 	{
 		try
 		{
@@ -321,7 +321,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean narrowerThan(PType type,
+	public boolean narrowerThan(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
 		try
@@ -333,7 +333,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean narrowerThanBaseCase(PType type,
+	public boolean narrowerThanBaseCase(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
 		if (type.getDefinitions() != null)
@@ -374,7 +374,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return other;
 	}
 
-	public static PType isType(PType type, String typename)
+	public PType isType(PType type, String typename)
 	{
 		try
 		{
@@ -385,7 +385,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static String toDisplay(PType type)
+	public String toDisplay(PType type)
 	{
 		try
 		{
@@ -396,7 +396,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isProduct(PType type, int size)
+	public boolean isProduct(PType type, int size)
 	{
 		try
 		{
@@ -407,7 +407,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AProductType getProduct(PType type, int size)
+	public AProductType getProduct(PType type, int size)
 	{
 		try
 		{
@@ -418,7 +418,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean equals(LinkedList<PType> parameters,
+	public boolean equals(LinkedList<PType> parameters,
 			LinkedList<PType> other)
 	{
 
@@ -429,7 +429,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 		for (int i = 0; i < parameters.size(); i++)
 		{
-			if (!equals(parameters.get(i), other.get(i)))
+			if (!af.createPTypeAssistant().equals(parameters.get(i), other.get(i)))
 			{
 				return false;
 			}
@@ -438,7 +438,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return true;
 	}
 
-	public static boolean isVoid(PType type)
+	public boolean isVoid(PType type)
 	{
 		try
 		{
@@ -449,7 +449,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean hasVoid(PType type)
+	public boolean hasVoid(PType type)
 	{
 		try
 		{
@@ -470,7 +470,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return other;
 	}
 
-	public static PTypeList getComposeTypes(PType type)
+	public PTypeList getComposeTypes(PType type)
 	{
 		try
 		{

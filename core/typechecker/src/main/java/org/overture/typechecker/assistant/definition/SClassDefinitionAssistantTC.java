@@ -127,7 +127,7 @@ public class SClassDefinitionAssistantTC
 			PType other)
 	{
 
-		if (PTypeAssistantTC.equals(getType(classDefinition), other))
+		if (af.createPTypeAssistant().equals(getType(classDefinition), other))
 		{
 			return true;
 		} else
@@ -161,7 +161,7 @@ public class SClassDefinitionAssistantTC
 			AClassType selftype = (AClassType) getType(self);
 			AClassType targtype = (AClassType) getType(target);
 
-			if (!PTypeAssistantTC.equals(selftype, targtype))
+			if (!af.createPTypeAssistant().equals(selftype, targtype))
 			{
 				if (af.createAClassTypeAssistant().hasSupertype(selftype, targtype))
 				{

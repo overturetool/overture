@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.omg.CORBA.CTX_RESTRICT_SCOPE;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -82,6 +83,7 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -91,6 +93,8 @@ import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 public class SubTypeObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 1108478780469068741L;
+	
+	private IPogAssistantFactory assistantFactory;
 
 	/**
 	 * Factory Method since we need to return null STOs (which should be discarded
@@ -317,7 +321,7 @@ public class SubTypeObligation extends ProofObligation
 		}
 
 		PExp po = null;
-		etype = PTypeAssistantTC.deBracket(etype);
+		etype = assistantFactory.createPTypeAssistant().deBracket(etype);
 
 		if (etype instanceof AUnionType)
 		{

@@ -879,7 +879,7 @@ public class TypeComparator
 	{
 		PTypeList undefined = new PTypeList();
 		
-		for (PType compose: PTypeAssistantTC.getComposeTypes(type))
+		for (PType compose: env.af.createPTypeAssistant().getComposeTypes(type))
 		{
 			ARecordInvariantType composeType = (ARecordInvariantType)compose;
 			PDefinition existing = env.findType(composeType.getName(), null);
