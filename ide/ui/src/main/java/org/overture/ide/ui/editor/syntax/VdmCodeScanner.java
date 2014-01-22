@@ -64,7 +64,8 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 
 		if(fgKeywords.supportsQuoteTypes())
 		{
-			rules.add(new WordPatternRule(new QuoteWordDetector(), "<", ">", type));
+//			rules.add(new WordPatternRule(new QuoteWordDetector(), "<", ">", type));
+			rules.add(new QuoteRule(type));
 		}
 		
 		if(fgKeywords.supportsTypleSelect())
@@ -106,20 +107,20 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 	}
 
 
-	private static class QuoteWordDetector implements IWordDetector
-	{
-
-		public boolean isWordPart(char c)
-		{
-			return Character.isJavaIdentifierPart(c) || c == '>';
-		}
-
-		public boolean isWordStart(char c)
-		{
-			return '<' == c;
-		}
-
-	}
+//	private static class QuoteWordDetector implements IWordDetector
+//	{
+//
+//		public boolean isWordPart(char c)
+//		{
+//			return Character.isJavaIdentifierPart(c) || c == '>';
+//		}
+//
+//		public boolean isWordStart(char c)
+//		{
+//			return '<' == c;
+//		}
+//
+//	}
 
 	
 	protected abstract IVdmKeywords getKeywords();

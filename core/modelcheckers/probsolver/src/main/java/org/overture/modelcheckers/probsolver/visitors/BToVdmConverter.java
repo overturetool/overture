@@ -22,7 +22,9 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AMapMapType;//added
 import org.overture.ast.types.PType;
+import org.overture.ast.lex.LexBooleanToken;//added
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
@@ -35,6 +37,8 @@ import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
+import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;// added
+import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -229,7 +233,20 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseAIntegerExpression(AIntegerExpression node)
 	{
+	    System.out.println("In caseAInteger...: " + node.getLiteral().getText());
 		result = AstFactory.newAIntLiteralExp(new LexIntegerToken(node.getLiteral().getText(), loc));
+	}
+
+	@Override
+        public void caseABooleanTrueExpression(ABooleanTrueExpression node) //added
+	{
+	    result = AstFactory.newABooleanConstExp(new LexBooleanToken(true, loc));
+	}
+
+	@Override
+        public void caseABooleanFalseExpression(ABooleanFalseExpression node) //added
+	{
+	    result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
 	public void defaultIn(Node node)
