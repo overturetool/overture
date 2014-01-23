@@ -11,7 +11,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -39,85 +43,116 @@ public class Vdm2JavaCommand extends AbstractHandler
 {
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
-		//Validate project
+		// Validate project
 		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		
-		if(!(selection instanceof IStructuredSelection))
+
+		if (!(selection instanceof IStructuredSelection))
 			return null;
-		
+
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		
+
 		Object firstElement = structuredSelection.getFirstElement();
-		
-		if(!(firstElement instanceof IProject))
+
+		if (!(firstElement instanceof IProject))
 			return null;
 
-		IProject project = ((IProject) firstElement);
-		IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-		
-		deleteMarkers(project);
-		
-		// Validate model before attempting to code generate it
-		if (vdmProject == null)
-			return null;
-
-		final IVdmModel model = vdmProject.getModel();
-		
-		if (model == null || !model.isParseCorrect())
-			return null;
-
-		if (!model.isTypeChecked())
-			VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);
-
-		if (!model.isTypeCorrect()
-				|| !PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
-			return null;
-
-		// Begin code generation
-		final JavaCodeGen vdm2java = new JavaCodeGen();
+		final IProject project = ((IProject) firstElement);
+		final IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 
 		CodeGenConsole.GetInstance().show();
+		
+		deleteMarkers(project);
 
-		try
+		// Validate model before attempting to code generate it
+		if (vdmProject == null)
 		{
-			CodeGenConsole.GetInstance().clearConsole();
-			CodeGenConsole.GetInstance().println("Starting Java to VDM code generation...\n");
+			CodeGenConsole.GetInstance().println("Could not get project from selection");
+			return null;
+		}
+		
+		final IVdmModel model = vdmProject.getModel();
 
-			File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
+		if(!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
+		{
+			CodeGenConsole.GetInstance().println("VDM dialect is not supported");
+			return null;
+		}
+		
+		if(model == null)
+		{
+			CodeGenConsole.GetInstance().println("Could not get model for project: " + project.getName());
+			return null;
+		}
 			
-			//Clean folder with generated Java code
-			PluginVdm2JavaUtil.deleteFolderContents(outputFolder);
-
-			// Generate user specified classes
-			List<IVdmSourceUnit> sources = model.getSourceUnits();
-			List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);			
-			List<GeneratedModule> userspecifiedClasses = vdm2java.generateJavaFromVdm(mergedParseLists);
-			vdm2java.generateJavaSourceFiles(outputFolder, userspecifiedClasses);
-			outputUserspecifiedModules(outputFolder, userspecifiedClasses);
-
-			// Quotes generation
-			handleQuotesGeneration(vdmProject, outputFolder, vdm2java);
-
-			// Utils generation
-			handleUtilsGeneration(vdmProject, vdm2java);
-			
-			project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-
-		} catch (InvalidNamesException ex)
+		if (!model.isParseCorrect())
 		{
-			handleInvalidNames(ex);
-		} catch (UnsupportedModelingException ex)
+			CodeGenConsole.GetInstance().println("Could not parse model: " + project.getName());
+			return null;
+		}
+		
+		if (!model.isTypeChecked()) 
+			VdmTypeCheckerUi.typeCheck(HandlerUtil.getActiveShell(event), vdmProject);
+		
+		if (!model.isTypeCorrect())
 		{
-			handleUnsupportedModeling(ex);
-		} catch (AnalysisExceptionCG ex)
-		{
-			CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
-					+ ex.getMessage());
-		} catch (Exception ex)
-		{
-			handleUnexpectedException(ex);
+			CodeGenConsole.GetInstance().println("Could not type check model: " + project.getName());
+			return null;
 		}
 
+		Job codeGenerate = new Job("Code generate")
+		{
+			@Override
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				// Begin code generation
+				final JavaCodeGen vdm2java = new JavaCodeGen();
+
+				try
+				{
+					CodeGenConsole.GetInstance().clearConsole();
+					CodeGenConsole.GetInstance().println("Starting Java to VDM code generation...\n");
+
+					File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
+
+					// Clean folder with generated Java code
+					PluginVdm2JavaUtil.deleteFolderContents(outputFolder);
+
+					// Generate user specified classes
+					List<IVdmSourceUnit> sources = model.getSourceUnits();
+					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
+					List<GeneratedModule> userspecifiedClasses = vdm2java.generateJavaFromVdm(mergedParseLists);
+					vdm2java.generateJavaSourceFiles(outputFolder, userspecifiedClasses);
+					outputUserspecifiedModules(outputFolder, userspecifiedClasses);
+
+					// Quotes generation
+					handleQuotesGeneration(vdmProject, outputFolder, vdm2java);
+
+					// Utils generation
+					handleUtilsGeneration(vdmProject, vdm2java);
+
+					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+
+				} catch (InvalidNamesException ex)
+				{
+					handleInvalidNames(ex);
+				} catch (UnsupportedModelingException ex)
+				{
+					handleUnsupportedModeling(ex);
+				} catch (AnalysisExceptionCG ex)
+				{
+					CodeGenConsole.GetInstance().println("Could not code generate VDM model: "
+							+ ex.getMessage());
+				} catch (Exception ex)
+				{
+					handleUnexpectedException(ex);
+				}
+
+				return Status.OK_STATUS;
+			}
+		};
+
+		codeGenerate.schedule();
+		
 		return null;
 	}
 	
