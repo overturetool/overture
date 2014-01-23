@@ -51,7 +51,9 @@ public class ExpAssistantCG
 	
 	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
 	{	
-		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
+		PType type = vdmExp.getType();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		codeGenExp.setType(typeCg);
 		
 		PExp vdmExpLeft = vdmExp.getLeft();
@@ -62,11 +64,6 @@ public class ExpAssistantCG
 		
 		codeGenExp.setLeft(leftExpCg);
 		codeGenExp.setRight(rightExpCg);
-
-		PTypeCG leftTypeCg = vdmExpLeft.getType().apply(question.getTypeVisitor(), question);
-		codeGenExp.getLeft().setType(leftTypeCg);
-		PTypeCG rightTypeCg = vdmExpRight.getType().apply(question.getTypeVisitor(), question);
-		codeGenExp.getRight().setType(rightTypeCg);
 		
 		return codeGenExp;
 	}
