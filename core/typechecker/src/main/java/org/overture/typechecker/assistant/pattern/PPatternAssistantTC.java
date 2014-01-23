@@ -33,7 +33,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 	 * Get a set of definitions for the pattern's variables. Note that if the pattern includes duplicate variable names,
 	 * these are collapse into one.
 	 */
-	public static List<PDefinition> getDefinitions(PPattern rp, PType ptype,
+	public List<PDefinition> getDefinitions(PPattern rp, PType ptype,
 			NameScope scope)
 	{
 		PDefinitionSet set = af.createPDefinitionSet();

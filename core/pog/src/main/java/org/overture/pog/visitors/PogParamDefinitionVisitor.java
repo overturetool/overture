@@ -324,7 +324,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				{
 					for (PPattern p : pltp.getPatterns())
 					{
-						for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+						for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 							pids.add(def.getName());
 						alwaysMatches = alwaysMatches && p.apply(amVisitor);
 					}
@@ -408,7 +408,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			for (PPattern p : node.getParameterPatterns())
 			{
-				for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+				for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 					pids.add(def.getName());
 
 				alwaysMatches = alwaysMatches && p.apply(amVisitor);
@@ -475,7 +475,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				for (PPattern p : tp.getPatterns())
 				{
-					for (PDefinition def : PPatternAssistantTC.getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
 						pids.add(def.getName());
 
 					alwaysMatches = alwaysMatches && p.apply(amVisitor);

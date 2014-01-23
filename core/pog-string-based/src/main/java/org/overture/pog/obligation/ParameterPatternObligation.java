@@ -133,7 +133,7 @@ public class ParameterPatternObligation extends ProofObligation
 					String bname = "bind" + bindn++;
 					PType atype = titer.next();
 					PExp pmatch = PPatternAssistantTC.getMatchingExpression(p);
-					List<PDefinition> dlist = PPatternAssistantTC.getDefinitions(p, atype, NameScope.LOCAL);
+					List<PDefinition> dlist = assistantFactory.createPPatternAssistant().getDefinitions(p, atype, NameScope.LOCAL);
 					foralls.append(fprefix);
 					foralls.append(aname);
 					foralls.append(":");
