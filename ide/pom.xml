@@ -1,205 +1,160 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overture</groupId>
-    <artifactId>root</artifactId>
-    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.overture</groupId>
+		<artifactId>root</artifactId>
+		<version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-  <packaging>pom</packaging>
+	<packaging>pom</packaging>
 
-  <groupId>org.overture</groupId>
-  <artifactId>ide</artifactId>
-  <name>Overture IDE Top-level</name>
-  <description>Super POM for all IDE (Eclipse) artifacts.</description>
+	<groupId>org.overture</groupId>
+	<artifactId>ide</artifactId>
+	<name>Overture IDE Top-level</name>
+	<description>Super POM for all IDE (Eclipse) artifacts.</description>
 
-  <properties>
-    <maven.test.skip>true</maven.test.skip>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
-    <tycho.version>0.19.0</tycho.version>
-  </properties>
+	<properties>
+		<maven.test.skip>true</maven.test.skip>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+		<tycho.version>0.19.0</tycho.version>
+	</properties>
 
-  <modules>
-    <!-- Put all child Eclipse Plugin projects(modules) here -->
-    <module>core</module>
-    <module>ui</module>
-    <module>parsers</module>
-    <module>builders</module>
-    <module>debug</module>
-    <module>vdmsl</module>
-    <module>vdmpp</module>
-    <module>vdmrt</module>
-    <module>help</module>
-    <module>plugins</module>
-    <module>platform</module>
-    <module>features</module>
-    <module>product</module>
-  </modules>
+	<modules>
+		<!-- Put all child Eclipse Plugin projects(modules) here -->
+		<module>core</module>
+		<module>ui</module>
+		<module>parsers</module>
+		<module>builders</module>
+		<module>debug</module>
+		<module>vdmsl</module>
+		<module>vdmpp</module>
+		<module>vdmrt</module>
+		<module>help</module>
+		<module>plugins</module>
+		<module>platform</module>
+		<module>features</module>
+		<module>product</module>
+	</modules>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
-        <configuration>
-          <failOnError>false</failOnError>
-          <excludePackageNames>*org.eclipse.*</excludePackageNames>
-          <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-          <show>public</show>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<excludePackageNames>*org.eclipse.*</excludePackageNames>
+					<stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+					<show>public</show>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-maven-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>target-platform-configuration</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-p2-director-plugin</artifactId>
-          <version>${tycho.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.tycho</groupId>
-          <artifactId>tycho-packaging-plugin</artifactId>
-          <version>${tycho.version}</version>
-          <configuration>
-            <archive>
-              <addMavenDescriptor>false</addMavenDescriptor>
-            </archive>
-          </configuration>
-        </plugin>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-maven-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>target-platform-configuration</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-p2-director-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-packaging-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<archive>
+							<addMavenDescriptor>false</addMavenDescriptor>
+						</archive>
+					</configuration>
+				</plugin>
 
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <versionRange>[1.0.0,)</versionRange>
-                    <goals>
-                      <goal>copy-dependencies</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-maven-plugin</artifactId>
-        <extensions>true</extensions>
-      </plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<extensions>true</extensions>
+			</plugin>
 
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>target-platform-configuration</artifactId>
-      </plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+			</plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
-  <repositories>
-    <!-- <repository> -->
-    <!--   <id>eclipse-juno</id> -->
-    <!--   <layout>p2</layout> -->
-    <!--   <url>http://download.eclipse.org/releases/juno</url> -->
-    <!-- </repository> -->
-    <repository>
-      <id>eclipse-kepler</id>
-      <layout>p2</layout>
-      <url>http://download.eclipse.org/releases/kepler</url>
-    </repository>
-  </repositories>
+	<repositories>
+		<!-- <repository> -->
+		<!--   <id>eclipse-juno</id> -->
+		<!--   <layout>p2</layout> -->
+		<!--   <url>http://download.eclipse.org/releases/juno</url> -->
+		<!-- </repository> -->
+		<repository>
+			<id>eclipse-kepler</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/kepler</url>
+		</repository>
+	</repositories>
 
-  <profiles>
-    <profile>
-      <id>all-platforms</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.eclipse.tycho</groupId>
-            <artifactId>target-platform-configuration</artifactId>
-            <configuration>
-              <environments>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86</arch>
-                </environment>
-                <environment>
-                  <os>win32</os>
-                  <ws>win32</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86</arch>
-                </environment>
-                <environment>
-                  <os>linux</os>
-                  <ws>gtk</ws>
-                  <arch>x86_64</arch>
-                </environment>
-                <environment>
-                  <os>macosx</os>
-                  <ws>cocoa</ws>
-                  <arch>x86_64</arch>
-                </environment>
-              </environments>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-	
-	
-	<profile>
+	<profiles>
+		<profile>
 			<id>win</id>
 			<activation>
+				<activeByDefault>false</activeByDefault>
 				<os>
 					<family>Windows</family>
-
+					<arch>x86</arch>
 				</os>
-				<property>
-					<name>sun.arch.data.model</name>
-					<value>32</value>
-				</property>
 			</activation>
 			<build>
 				<plugins>
@@ -224,14 +179,11 @@
 		<profile>
 			<id>win64</id>
 			<activation>
+				<activeByDefault>false</activeByDefault>
 				<os>
 					<family>Windows</family>
-
+					<arch>amd64</arch>
 				</os>
-				<property>
-					<name>sun.arch.data.model</name>
-					<value>64</value>
-				</property>
 			</activation>
 			<build>
 				<plugins>
@@ -251,5 +203,48 @@
 				</plugins>
 			</build>
 		</profile>
-  </profiles>
+
+		<!-- Profiles are orderes and the last one wins if multiple profiles is activated. This means that if they define the same configurations the last one overrides previous ones -->
+		<profile>
+			<id>all-platforms</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<configuration>
+							<environments>
+								<environment>
+									<os>win32</os>
+									<ws>win32</ws>
+									<arch>x86</arch>
+								</environment>
+								<environment>
+									<os>win32</os>
+									<ws>win32</ws>
+									<arch>x86_64</arch>
+								</environment>
+								<environment>
+									<os>linux</os>
+									<ws>gtk</ws>
+									<arch>x86</arch>
+								</environment>
+								<environment>
+									<os>linux</os>
+									<ws>gtk</ws>
+									<arch>x86_64</arch>
+								</environment>
+								<environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>x86_64</arch>
+								</environment>
+							</environments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
 </project>
