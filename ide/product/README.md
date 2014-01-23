@@ -9,6 +9,7 @@
 
 ## Known Issues:
 
+The icon source files are in the `icon-sources` subdirectory rather than, say, `src/main/resources` because we there's really no use in having maven bundle them up into otherwise useless jars.
 
 ## Contributors:
 
