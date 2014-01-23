@@ -13,7 +13,7 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 public class RTTextLogger implements IRTLogger
 {
 	private static List<RTMessage> events = new LinkedList<RTMessage>();
-	private static PrintWriter logfile = null;
+	private static File logfile = null;
 	private static RTMessage cached = null;
 	private static boolean enabled = false;
 
@@ -55,7 +55,7 @@ public class RTTextLogger implements IRTLogger
 	 * (non-Javadoc)
 	 * @see org.overture.interpreter.messages.rtlog.IRTLogger#setLogfile(java.io.PrintWriter)
 	 */
-	private void setLogfile(PrintWriter out)
+	private void _setLogfile(File out)
 	{
 		dump(true); // Write out and close previous
 		logfile = out;
@@ -81,19 +81,26 @@ public class RTTextLogger implements IRTLogger
 	{
 		if (logfile != null)
 		{
+			PrintWriter writer = null;
+			
+			try
+			{
+				writer = new PrintWriter(new FileOutputStream(logfile, true));
+			} catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+			
 			for (RTMessage event : events)
 			{
-				logfile.println(event.getMessage());
+				writer.println(event.getMessage());
 			}
 
-			logfile.flush();
+			writer.flush();
 			events.clear();
 
-			if (close)
-			{
-				logfile.close();
-			}
-
+			writer.close();
 		}
 	}
 
@@ -162,8 +169,7 @@ public class RTTextLogger implements IRTLogger
 	{
 		if (file != null)
 		{
-			PrintWriter p = new PrintWriter(new FileOutputStream(file, true));
-			setLogfile(p);
+			_setLogfile(file);
 			enabled = true;
 		}
 	}
