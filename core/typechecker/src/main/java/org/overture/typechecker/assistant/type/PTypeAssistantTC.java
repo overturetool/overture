@@ -43,7 +43,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return af.createPDefinitionAssistant().hasSupertype(cto.getClassdef(), other);
 	}
 
-	public static boolean isType(PType type, Class<? extends PType> typeclass)
+	public boolean isType(PType type, Class<? extends PType> typeclass)
 	{
 		try
 		{
@@ -373,6 +373,16 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 		return other;
 	}
+	
+//	public static Object deBracket(Object other) // used at pog-string-base, problematic conversion.
+//	{
+//		while (other instanceof ABracketType)
+//		{
+//			other = ((ABracketType) other).getType();
+//		}
+//
+//		return other;
+//	}
 
 	public PType isType(PType type, String typename)
 	{
@@ -460,7 +470,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static Object deBracket(Object other)
+	public static Object deBracket(Object other) // used at pog-string-base, problematic conversion.
 	{
 		while (other instanceof ABracketType)
 		{

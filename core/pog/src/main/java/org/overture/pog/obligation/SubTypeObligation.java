@@ -314,7 +314,7 @@ public class SubTypeObligation extends ProofObligation
 	{
 		if (atype != null && rec)
 		{
-			if (TypeComparator.isSubType(atype, etype))
+			if (TypeComparator.isSubType(atype, etype, assistantFactory))
 			{
 				return null; // Means a sub-comparison is OK without PO checks
 			}

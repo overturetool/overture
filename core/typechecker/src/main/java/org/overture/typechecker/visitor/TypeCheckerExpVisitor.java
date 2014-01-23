@@ -676,7 +676,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
-				if (!PTypeAssistantTC.isType(mr.getFrom(), SNumericBasicType.class))
+				if (!question.assistantFactory.createPTypeAssistant().isType(mr.getFrom(), SNumericBasicType.class))
 				{
 					TypeCheckerErrors.concern(unique, 3143, "Domain of right hand of '++' must be nat1", node.getLocation(), node);
 					TypeCheckerErrors.detail(unique, "Type", mr.getFrom());
@@ -1040,7 +1040,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		if (!PTypeAssistantTC.isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3086, "Else clause is not a boolean", node.getLocation(), node);
 		}
@@ -1064,7 +1064,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		question.qualifiers = null;
-		if (!PTypeAssistantTC.isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3088, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -1084,7 +1084,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		def.setNameScope(NameScope.LOCAL);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
 		question = new TypeCheckInfo(question.assistantFactory, local, question.scope);
-		if (!PTypeAssistantTC.isType(node.getPredicate().apply(THIS, question), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3089, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -1267,7 +1267,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
 		def.apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		if (!PTypeAssistantTC.isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3097, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -1319,7 +1319,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 															// of several
 				{
 					List<ILexNameToken> typeParams = null;
-					def = PDefinitionAssistantTC.deref(def);
+					def = question.assistantFactory.createPDefinitionAssistant().deref(def);
 
 					if (def instanceof AExplicitFunctionDefinition)
 					{
@@ -1449,7 +1449,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 
 		question.qualifiers = null;
-		if (!PTypeAssistantTC.isType(node.getTest().apply(THIS, question), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getTest().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeChecker.report(3108, "If expression is not a boolean", node.getLocation());
 		}
@@ -1670,7 +1670,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PExp suchThat = node.getSuchThat();
 
 		if (suchThat != null
-				&& !PTypeAssistantTC.isType(suchThat.apply(THIS, newInfo), ABooleanBasicType.class))
+				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3117, "Such that clause is not boolean", node.getLocation(), node);
 		}
@@ -1780,7 +1780,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PExp predicate = node.getPredicate();
 		if (predicate != null
-				&& !PTypeAssistantTC.isType(predicate.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)), ABooleanBasicType.class))
+				&& !question.assistantFactory.createPTypeAssistant().isType(predicate.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3118, "Predicate is not boolean", predicate.getLocation(), predicate);
 		}
@@ -2298,7 +2298,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (predicate != null)
 		{
 			question.qualifiers = null;
-			if (!PTypeAssistantTC.isType(predicate.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)), ABooleanBasicType.class))
+			if (!question.assistantFactory.createPTypeAssistant().isType(predicate.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)), ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3156, "Predicate is not boolean", predicate.getLocation(), predicate);
 			}
@@ -2347,7 +2347,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (predicate != null)
 		{
-			if (!PTypeAssistantTC.isType(predicate.apply(THIS, question), ABooleanBasicType.class))
+			if (!question.assistantFactory.createPTypeAssistant().isType(predicate.apply(THIS, question), ABooleanBasicType.class))
 			{
 				TypeCheckerErrors.report(3159, "Predicate is not boolean", predicate.getLocation(), predicate);
 			}
@@ -2993,7 +2993,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType t = exp.apply(THIS, question);
 
-		if (!PTypeAssistantTC.isType(t, ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(t, ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3137, "Not expression is not a boolean", node.getLocation(), node);
 		}

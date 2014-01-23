@@ -8,7 +8,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class SBinaryExpAssistantTC
 {
@@ -30,13 +29,13 @@ public class SBinaryExpAssistantTC
 		node.getLeft().apply(rootVisitor, question);
 		node.getRight().apply(rootVisitor, question);
 
-		if (!PTypeAssistantTC.isType(node.getLeft().getType(), expected.getClass()))
+		if (!af.createPTypeAssistant().isType(node.getLeft().getType(), expected.getClass()))
 		{
 			TypeCheckerErrors.report(3065, "Left hand of " + node.getOp()
 					+ " is not " + expected, node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isType(node.getRight().getType(), expected.getClass()))
+		if (!af.createPTypeAssistant().isType(node.getRight().getType(), expected.getClass()))
 		{
 			TypeCheckerErrors.report(3066, "Right hand of " + node.getOp()
 					+ " is not " + expected, node.getLocation(), node);

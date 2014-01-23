@@ -73,7 +73,7 @@ public class Delegate implements Serializable
 	private Map<String, Method> delegateMethods = null;
 	private Map<String, LexNameList> delegateArgs = null;
 
-	public boolean hasDelegate()
+	public boolean hasDelegate(Context ctxt)
 	{
 		if (!delegateChecked)
 		{
@@ -118,8 +118,8 @@ public class Delegate implements Serializable
 				"Cannot access native object: " + e.getMessage());
 		}
 	}
-
-	private Method getDelegateMethod(String title)
+	//gkanos:added parameters to pass the context as argument.
+	private Method getDelegateMethod(String title, Context ctxt)
 	{
 		Method m = delegateMethods.get(title);
 
@@ -136,7 +136,7 @@ public class Delegate implements Serializable
 			{
 				if (d.getName().getName().equals(mname))
 				{
-    	 			if (PDefinitionAssistantTC.isOperation(d))
+    	 			if (ctxt.assistantFactory.createPDefinitionAssistant().isOperation(d))
     	 			{
     	 				if (d instanceof AExplicitOperationDefinition)
     	 				{
@@ -151,7 +151,7 @@ public class Delegate implements Serializable
 
     	 				break;
     	 			}
-    	 			else if (PDefinitionAssistantTC.isFunction(d))
+    	 			else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
     	 			{
     	 				if (d instanceof AExplicitFunctionDefinition)
     	 				{
@@ -226,7 +226,7 @@ public class Delegate implements Serializable
 
 	public Value invokeDelegate(Object delegateObject, Context ctxt)
 	{
-		Method m = getDelegateMethod(ctxt.title);
+		Method m = getDelegateMethod(ctxt.title, ctxt);
 
 		if ((m.getModifiers() & Modifier.STATIC) == 0 &&
 			delegateObject == null)

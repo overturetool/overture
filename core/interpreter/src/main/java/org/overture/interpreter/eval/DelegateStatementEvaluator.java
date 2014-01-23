@@ -36,7 +36,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
 			if (module != null)
 			{
 				AModuleModulesRuntime	state =VdmRuntime.getNodeState(module);
-				if (state.hasDelegate())
+				if (state.hasDelegate(ctxt))
 				{
 					return state.invokeDelegate(ctxt);
 				}

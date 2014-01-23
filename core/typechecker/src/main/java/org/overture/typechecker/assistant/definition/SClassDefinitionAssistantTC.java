@@ -703,7 +703,7 @@ public class SClassDefinitionAssistantTC
 
 					// Note this uses the "parameters only" comparator option
 
-					if (!TypeComparator.compatible(to, from, true))
+					if (!TypeComparator.compatible(to, from, true, af))
 					{
 						TypeCheckerErrors.report(3007, "Overriding member incompatible type: "
 								+ override.getName().getName(), override.getLocation(), override);
@@ -742,7 +742,7 @@ public class SClassDefinitionAssistantTC
 
 						// Note this uses the "parameters only" comparator option
 
-						if (TypeComparator.compatible(to, from, true))
+						if (TypeComparator.compatible(to, from, true, af))
 						{
 							TypeCheckerErrors.report(3008, "Overloaded members indistinguishable: "
 									+ def1.getName().getName(), def1.getLocation(), def1);

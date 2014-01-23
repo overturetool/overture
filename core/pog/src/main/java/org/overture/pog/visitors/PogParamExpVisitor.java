@@ -60,7 +60,6 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -121,7 +120,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
 			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
 
-			if (!TypeComparator.isSubType(aType, mapType.getFrom()))
+			if (!TypeComparator.isSubType(aType, mapType.getFrom(), assistantFactory))
 			{
 				SubTypeObligation sto = SubTypeObligation.newInstance(node.getArgs().get(0), mapType.getFrom(), aType, question);
 				if (sto != null)
@@ -150,7 +149,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				argType = question.checkType(argList.get(i), argType);
 				PType pt = funcType.getParameters().get(i);
 
-				if (!TypeComparator.isSubType(argType, pt))
+				if (!TypeComparator.isSubType(argType, pt, assistantFactory))
 				{
 					SubTypeObligation sto = SubTypeObligation.newInstance(argList.get(i), pt, argType, question);
 					if (sto != null)
@@ -219,7 +218,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			var.setName(new LexNameToken("", var.getName().getIdentifier().clone()));
 		}
 
-		if (!PTypeAssistantTC.isType(exp.getType(), ASeq1SeqType.class))
+		if (!assistantFactory.createPTypeAssistant().isType(exp.getType(), ASeq1SeqType.class))
 			obligations.add(new NonEmptySeqObligation(fake, question));
 
 		return obligations;
@@ -659,7 +658,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			PType aType = argTypes.poll();
 			PExp aExp = args.poll();
 
-			if (!TypeComparator.isSubType(question.checkType(aExp, aType), f.getType()))
+			if (!TypeComparator.isSubType(question.checkType(aExp, aType), f.getType(), assistantFactory))
 			{
 				SubTypeObligation sto = SubTypeObligation.newInstance(aExp, f.getType(), aType, question);
 				if (sto != null)
@@ -710,7 +709,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			AFieldField f = findField(recordType, mod.getTag());
 			PType mType = mTypes.get(i++);
 			if (f != null)
-				if (!TypeComparator.isSubType(mType, f.getType()))
+				if (!TypeComparator.isSubType(mType, f.getType(), assistantFactory))
 				{
 					SubTypeObligation sto = SubTypeObligation.newInstance(mod.getValue(), f.getType(), mType, question);
 					if (sto != null)
@@ -734,7 +733,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				: assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()));
 		question.noteType(node.getTest(), expected);
 
-		if (!TypeComparator.isSubType(node.getTest().getType(), expected))
+		if (!TypeComparator.isSubType(node.getTest().getType(), expected, assistantFactory))
 		{
 			SubTypeObligation sto = SubTypeObligation.newInstance(node.getTest(), expected, node.getTest().getType(), question);
 			if (sto != null)
@@ -1050,7 +1049,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		IProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 
-		if (!PTypeAssistantTC.isType(node.getExp().getType(), ASeq1SeqType.class))
+		if (!assistantFactory.createPTypeAssistant().isType(node.getExp().getType(), ASeq1SeqType.class))
 			obligations.add(new NonEmptySeqObligation(node.getExp(), question));
 
 		return obligations;

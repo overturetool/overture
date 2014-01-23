@@ -90,7 +90,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 			if (module != null)
 			{
 				AModuleModulesRuntime	state =VdmRuntime.getNodeState(module);
-				if (state.hasDelegate())
+				if (state.hasDelegate(ctxt))
 				{
 					return state.invokeDelegate(ctxt);
 				}

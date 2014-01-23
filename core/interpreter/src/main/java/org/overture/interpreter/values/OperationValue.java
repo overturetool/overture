@@ -728,7 +728,7 @@ public class OperationValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to, AOperationType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{
 			return this;
 		} else

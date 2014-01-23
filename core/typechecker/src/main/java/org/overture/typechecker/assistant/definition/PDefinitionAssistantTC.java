@@ -110,7 +110,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static PDefinition findName(PDefinition d, ILexNameToken sought,
+	public PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope)
 	{
 
@@ -223,7 +223,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return af.createPAccessSpecifierAssistant().isStatic(fdef.getAccess());
 	}
 
-	public static PDefinition deref(PDefinition d)
+	public PDefinition deref(PDefinition d)
 	{
 		try
 		{
@@ -324,7 +324,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isFunction(PDefinition d)
+	public boolean isFunction(PDefinition d)
 	{
 		try
 		{
@@ -335,7 +335,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static boolean isOperation(PDefinition d)
+	public boolean isOperation(PDefinition d)
 	{
 		try
 		{

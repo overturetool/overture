@@ -334,7 +334,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				&& node.getField().getName().equals("deploy"))
 		{
 
-			if (!PTypeAssistantTC.isType(atypes.get(0), AClassType.class))
+			if (!question.assistantFactory.createPTypeAssistant().isType(atypes.get(0), AClassType.class))
 			{
 				TypeCheckerErrors.report(3280, "Argument to deploy must be an object", node.getArgs().get(0).getLocation(), node.getArgs().get(0));
 			}
@@ -682,7 +682,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		if (!PTypeAssistantTC.isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
 		}
@@ -783,7 +783,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PType test = node.getIfExp().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isType(test, ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getIfExp().getLocation(), node.getIfExp());
 		}
@@ -821,7 +821,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 
 		if (node.getSuchThat() != null
-				&& !PTypeAssistantTC.isType(node.getSuchThat().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+				&& !question.assistantFactory.createPTypeAssistant().isType(node.getSuchThat().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
 		}
@@ -846,7 +846,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			PType stype = stmt.apply(THIS, question);
 
-			if (PTypeAssistantTC.isType(stype, AUnionType.class))
+			if (question.assistantFactory.createPTypeAssistant().isType(stype, AUnionType.class))
 			{
 				AUnionType ust = (AUnionType) stype;
 				for (PType t : ust.getTypes())
@@ -945,12 +945,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				PType lt = err.getLeft().apply(THIS, question);
 				PType rt = err.getRight().apply(THIS, question);
 
-				if (!PTypeAssistantTC.isType(lt, ABooleanBasicType.class))
+				if (!question.assistantFactory.createPTypeAssistant().isType(lt, ABooleanBasicType.class))
 				{
 					TypeCheckerErrors.report(3275, "Error clause must be a boolean", err.getLeft().getLocation(), err.getLeft());
 				}
 
-				if (!PTypeAssistantTC.isType(rt, ABooleanBasicType.class))
+				if (!question.assistantFactory.createPTypeAssistant().isType(rt, ABooleanBasicType.class))
 				{
 					TypeCheckerErrors.report(3275, "Error clause must be a boolean", err.getRight().getLocation(), err.getRight());
 				}
@@ -963,13 +963,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// //Unused
 
 		if (node.getPrecondition() != null
-				&& !PTypeAssistantTC.isType(node.getPrecondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)), ABooleanBasicType.class))
+				&& !question.assistantFactory.createPTypeAssistant().isType(node.getPrecondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3233, "Precondition is not a boolean expression", node.getPrecondition().getLocation(), node.getPrecondition());
 		}
 
 		if (node.getPostcondition() != null
-				&& !PTypeAssistantTC.isType(node.getPostcondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
+				&& !question.assistantFactory.createPTypeAssistant().isType(node.getPostcondition().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDANYSTATE)), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3234, "Postcondition is not a boolean expression", node.getPostcondition().getLocation(), node.getPostcondition());
 		}
@@ -1086,7 +1086,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		AOperationType expected = AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));
 
-		opdef = PDefinitionAssistantTC.deref(opdef);
+		opdef = question.assistantFactory.createPDefinitionAssistant().deref(opdef);
 
 		if (opdef instanceof AExplicitOperationDefinition)
 		{
@@ -1161,7 +1161,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// Operation must be "() ==> ()"
 
 		AOperationType expected = AstFactory.newAOperationType(node.getLocation(), new Vector<PType>(), AstFactory.newAVoidType(node.getLocation()));
-		opdef = PDefinitionAssistantTC.deref(opdef);
+		opdef = question.assistantFactory.createPDefinitionAssistant().deref(opdef);
 
 		if (opdef instanceof AExplicitOperationDefinition)
 		{

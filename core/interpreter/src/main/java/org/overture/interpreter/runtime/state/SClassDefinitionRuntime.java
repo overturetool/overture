@@ -1,6 +1,7 @@
 package org.overture.interpreter.runtime.state;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.scheduler.Lock;
@@ -26,16 +27,18 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	/** A delegate Java object for any native methods. */
 	protected Delegate delegate = null;
+	
+	public Context ctxt;
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().getName(),PDefinitionAssistantTC.getDefinitions(def));
+		delegate = new Delegate(def.getName().getName(), PDefinitionAssistantTC.getDefinitions(def));
 		guardLock = new Lock();
 	}
 	
 	public boolean hasDelegate()
 	{
-		return delegate.hasDelegate();
+		return delegate.hasDelegate(ctxt);
 	}
 
 	public Object newInstance()
