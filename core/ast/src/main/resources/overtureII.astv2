@@ -66,7 +66,7 @@ exp {-> package='org.overture.ast.expressions'
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.#Function.explicit (impdef):definition.#Function.implicit
+    |   {funcInstatiation} [function]:exp (actualTypes):type* (expdef):definition.#Function.explicit (impdef):definition.#Function.implicit
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken

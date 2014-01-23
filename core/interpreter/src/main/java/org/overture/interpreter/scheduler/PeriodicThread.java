@@ -199,6 +199,11 @@ public class PeriodicThread extends SchedulablePoolThread
 			ctxt.threadState.dbgp.setErrorState();
 			BasicSchedulableThread.signalAll(Signal.ERROR);
 		}
+		catch (ThreadDeath e)
+		{
+			ctxt.threadState.dbgp.complete(DBGPReason.ABORTED, null);
+			throw e;
+		}
 		finally
 		{
 			TransactionValue.commitAll();
@@ -240,11 +245,6 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		catch (ThreadDeath e)
-		{
-			ctxt.threadState.dbgp.complete(DBGPReason.ABORTED, null);
-			throw e;
 		}
 		finally
 		{
