@@ -44,6 +44,7 @@ import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
+import org.overture.ast.expressions.APlusPlusBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
@@ -105,6 +106,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -301,6 +303,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		LinkedList<PExp> nodeArgs = node.getArgs();
 		
 		ANewExpCG newExp = new ANewExpCG();
+		newExp.setType(recordTypeCg);
 		newExp.setName(recordTypeCg.getName().clone());
 
 		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
@@ -379,6 +382,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		return expAssistant.handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question);
 	}
+	
+//	@Override
+//	public PExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
+//			OoAstInfo question) throws AnalysisException
+//	{
+//		return expAssistant.handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
+//	}
 	
 	@Override
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
@@ -553,18 +563,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		String className = node.getClassdef().getName().getName();
-		
-		LinkedList<PExp> nodeArgs = node.getArgs();
-		
-		ANewExpCG newExp = new ANewExpCG();
-		
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(null);
 		typeName.setName(className);
 		
+		PType type = node.getType();
+		LinkedList<PExp> nodeArgs = node.getArgs();
+
+		ANewExpCG newExp = new ANewExpCG();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		newExp.setType(typeCg);
 		newExp.setName(typeName);
-		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
 		
+		LinkedList<PExpCG> newExpArgs = newExp.getArgs();
 		for (PExp arg : nodeArgs)
 		{
 			newExpArgs.add(arg.apply(question.getExpVisitor(), question));
