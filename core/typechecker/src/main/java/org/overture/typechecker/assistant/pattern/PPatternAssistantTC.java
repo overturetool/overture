@@ -109,7 +109,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 		}
 	}
 
-	public static boolean isSimple(PPattern pattern)
+	public boolean isSimple(PPattern pattern)
 	{
 		try
 		{

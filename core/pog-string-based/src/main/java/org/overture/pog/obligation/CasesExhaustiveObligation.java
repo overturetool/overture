@@ -45,7 +45,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		{
 			sb.append(prefix);
 
-			if (PPatternAssistantTC.isSimple(alt.getPattern()))
+			if (ctxt.assistantFactory.createPPatternAssistant().isSimple(alt.getPattern()))
 			{
 				sb.append(exp.getExpression());
 				sb.append(" = ");

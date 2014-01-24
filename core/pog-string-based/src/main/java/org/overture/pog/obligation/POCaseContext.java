@@ -49,7 +49,7 @@ public class POCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern))
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
 		{
 			sb.append(pattern);
 			sb.append(" = ");

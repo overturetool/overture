@@ -52,7 +52,7 @@ public class POCaseContext extends POContext {
 
 	@Override
 	public PExp getContextNode(PExp stitch) {
-		if (PPatternAssistantTC.isSimple(pattern)) {
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
 			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
 			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
@@ -87,7 +87,7 @@ public class POCaseContext extends POContext {
 	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern)) {
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
 			sb.append(pattern);
 			sb.append(" = ");
 			sb.append(exp);
