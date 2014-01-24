@@ -24,7 +24,10 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
+import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
@@ -557,7 +560,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public boolean shouldClone(AVariableExpCG exp)
+	public boolean shouldClone(PExpCG exp)//Called with AVariableExpCG and AHeadUnaryExpCG 
 	{
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
@@ -583,16 +586,24 @@ public class JavaFormat
 		return false;
 	}
 	
-	private boolean cloneNotNeeded(INode node)
+	private boolean cloneNotNeeded(INode parent)
 	{
-		return 	   node instanceof AFieldExpCG
-				|| node instanceof AFieldNumberExpCG
-				|| node instanceof AApplyExpCG
-				|| node instanceof AEqualsBinaryExpCG
-				|| node instanceof ANotEqualsBinaryExpCG
-				|| node instanceof AAddrEqualsBinaryExpCG
-				|| node instanceof AAddrNotEqualsBinaryExpCG
-				|| isCallToUtil(node);
+		return 	   parent instanceof AFieldExpCG
+				|| parent instanceof AFieldNumberExpCG
+				|| parent instanceof AApplyExpCG
+				|| parent instanceof AEqualsBinaryExpCG
+				|| parent instanceof ANotEqualsBinaryExpCG
+				|| parent instanceof AAddrEqualsBinaryExpCG
+				|| parent instanceof AAddrNotEqualsBinaryExpCG
+				|| cloneNotNeededCollectionOperator(parent)
+				|| isCallToUtil(parent);
+	}
+	
+	private boolean cloneNotNeededCollectionOperator(INode parent)
+	{
+		return parent instanceof ALenUnaryExpCG
+				|| parent instanceof AIndicesUnaryExpCG
+				|| parent instanceof AHeadUnaryExpCG;
 	}
 	
 	private boolean isCallToUtil(INode node)
@@ -615,7 +626,7 @@ public class JavaFormat
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
 	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
+		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG || type instanceof SSeqTypeCG;
 	}
 	
 	public String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException
