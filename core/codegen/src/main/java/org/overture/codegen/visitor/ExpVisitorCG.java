@@ -36,6 +36,8 @@ import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
@@ -76,6 +78,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
@@ -91,6 +94,7 @@ import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
@@ -383,12 +387,59 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		return expAssistant.handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question);
 	}
 	
-//	@Override
-//	public PExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-//			OoAstInfo question) throws AnalysisException
-//	{
-//		return expAssistant.handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
-//	}
+	@Override
+	public PExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseAMapEnumMapExp(AMapEnumMapExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		AEnumMapExpCG enumMap = new AEnumMapExpCG();
+		enumMap.setType(typeCg);
+		
+		LinkedList<AMapletExp> members = node.getMembers();
+		for (PExp member : members)
+		{
+			PExpCG exp = member.apply(question.getExpVisitor(), question);
+			
+			if(!(exp instanceof AMapletExpCG))
+				throw new AnalysisExceptionCG("Got expected map enumeration member: " + exp, member.getLocation());
+			
+			enumMap.getMembers().add((AMapletExpCG) exp);
+		}
+		
+		return enumMap;
+	}
+	
+	@Override
+	public PExpCG caseAMapletExp(AMapletExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		PExp left = node.getLeft();
+		PExp right = node.getRight();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		PExpCG leftCg = left.apply(question.getExpVisitor(), question);
+		PExpCG rightCg = right.apply(question.getExpVisitor(), question);
+		
+		AMapletExpCG maplet = new AMapletExpCG();
+		maplet.setType(typeCg);
+		maplet.setLeft(leftCg);
+		maplet.setRight(rightCg);
+		
+		return maplet;
+	}
 	
 	@Override
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,

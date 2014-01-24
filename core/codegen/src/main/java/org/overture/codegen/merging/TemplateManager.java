@@ -28,6 +28,7 @@ import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
@@ -45,6 +46,7 @@ import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
@@ -60,6 +62,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
@@ -86,6 +89,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -164,13 +168,13 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACharBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Char");
 		
-		// Set types
+		// Collection types
 		
 		nodeTemplateFileNames.put(ASetSetTypeCG.class, templateStructure.SET_TYPE_PATH + "Set");
-		
-		// Seq types
-		
+
 		nodeTemplateFileNames.put(ASeqSeqTypeCG.class, templateStructure.SEQ_TYPE_PATH + "Seq");
+		
+		nodeTemplateFileNames.put(AMapMapTypeCG.class, templateStructure.MAP_TYPE_PATH + "Map");
 		
 		// Basic types
 		
@@ -233,6 +237,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ADistConcatExpCG.class, templateStructure.EXPS_PATH + "DistConcat");
 		
+		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXPS_PATH + "Maplet");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
@@ -275,6 +281,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "NotEquals");
 		
 		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SeqConcat");
+		
+		nodeTemplateFileNames.put(ASeqModificationBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SeqModification");
 		
 		// Numeric binary expressions
 
@@ -336,6 +344,8 @@ public class TemplateManager
 		//Seq expressions
 		nodeTemplateFileNames.put(AEnumSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
 				+ "Enum");
+		
+		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Enum");
 		
 		//State designators
 		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "Field");

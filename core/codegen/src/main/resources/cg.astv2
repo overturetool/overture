@@ -140,7 +140,9 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
     |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
     |	{distConcat} [members]:expCG*
+    |   {maplet}  [left]:expCG [right]:expCG
     |	#Seq
+    |	#Map
     ;
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
     =	{int} [value]:java_Long
@@ -163,6 +165,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{equals}
     |	{notEquals}
     |	{seqConcat}
+    |	{seqModification}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
@@ -208,6 +211,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 	//|   {seqEnum} [members]:exp* (types):type*
 	;
 
+#Map {-> package='org.overture.codegen.cgast.expressions'}
+	= {enum} [members]:expCG.maplet*
+	;
+
 typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{Object}
@@ -221,6 +228,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*
+    |	#map
     |	#set
     |	#seq
     |	#basicTypeWrappers
@@ -240,6 +248,10 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     
 #seq {-> package='org.overture.codegen.cgast.types'}
     =   {seq}
+    ;
+    
+#map {-> package='org.overture.codegen.cgast.types'}
+    =   {map}
     ;
     
 #basic {-> package='org.overture.codegen.cgast.types'}
@@ -267,7 +279,7 @@ Aspect Declaration
 %expCG->#Binary = [left]:expCG [right]:expCG
 	;
 	
-//TODO: Consider moving seq + set up to typeCG	
+//TODO: Consider moving seq, set and map up to typeCG	
 %typeCG->#seq
     = [seqOf]:typeCG//(seqof):type [empty]:java_Boolean
     ;
@@ -275,3 +287,8 @@ Aspect Declaration
 %typeCG->#set
     = [setOf]:typeCG
     ;
+
+%typeCG->#map
+    = [from]:typeCG [to]:typeCG 
+    ;
+    

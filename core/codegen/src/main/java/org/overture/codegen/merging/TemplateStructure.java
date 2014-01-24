@@ -17,12 +17,14 @@ public class TemplateStructure
 	public final String BOOL_BINARY_EXPS_PATH;
 	public final String UNARY_EXPS_PATH;
 	public final String SEQ_EXPS_PATH;
+	public final String MAP_EXPS_PATH;
 	public final String TYPE_PATH;
 	
 	public final String BASIC_TYPE_PATH;
 	public final String BASIC_TYPE_WRAPPERS_PATH;
 	public final String SET_TYPE_PATH;
 	public final String SEQ_TYPE_PATH;
+	public final String MAP_TYPE_PATH;
 	public final String STATE_DESIGNATOR_PATH; 
 	
 	public TemplateStructure(String rootFolder)
@@ -37,12 +39,14 @@ public class TemplateStructure
 		BOOL_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Bool" + IText.SEPARATOR_CHAR;
 		UNARY_EXPS_PATH = EXPS_PATH + "Unary" + IText.SEPARATOR_CHAR;
 		SEQ_EXPS_PATH = EXPS_PATH + "Seq" + IText.SEPARATOR_CHAR;
+		MAP_EXPS_PATH = EXPS_PATH + "Map" + IText.SEPARATOR_CHAR;
 		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;
 		
 		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + IText.SEPARATOR_CHAR;
 		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + IText.SEPARATOR_CHAR;
 		SET_TYPE_PATH = TYPE_PATH + "Set" + IText.SEPARATOR_CHAR;
 		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + IText.SEPARATOR_CHAR;
+		MAP_TYPE_PATH = TYPE_PATH + "Map" + IText.SEPARATOR_CHAR;
 		STATE_DESIGNATOR_PATH = root + "StateDesignator" + IText.SEPARATOR_CHAR; 
 	}
 	

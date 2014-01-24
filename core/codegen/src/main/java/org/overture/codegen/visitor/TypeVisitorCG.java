@@ -9,6 +9,7 @@ import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -36,6 +37,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -67,6 +69,23 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 		setType.setSetOf(typeCg);
 
 		return setType;
+	}
+	
+	@Override
+	public PTypeCG caseAMapMapType(AMapMapType node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType from = node.getFrom();
+		PType to = node.getTo();
+		
+		PTypeCG fromCg = from.apply(question.getTypeVisitor(), question);
+		PTypeCG toCg = to.apply(question.getTypeVisitor(), question);
+		
+		AMapMapTypeCG mapType = new AMapMapTypeCG();
+		mapType.setFrom(fromCg);
+		mapType.setTo(toCg);
+		
+		return mapType;
 	}
 	
 	@Override
