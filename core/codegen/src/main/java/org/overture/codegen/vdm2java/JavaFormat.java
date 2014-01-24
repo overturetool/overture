@@ -596,7 +596,7 @@ public class JavaFormat
 				|| parent instanceof AAddrEqualsBinaryExpCG
 				|| parent instanceof AAddrNotEqualsBinaryExpCG
 				|| cloneNotNeededCollectionOperator(parent)
-				|| isCallToUtil(parent);
+				|| cloneNotNeededUtilCall(parent);
 	}
 	
 	private boolean cloneNotNeededCollectionOperator(INode parent)
@@ -606,7 +606,7 @@ public class JavaFormat
 				|| parent instanceof AHeadUnaryExpCG;
 	}
 	
-	private boolean isCallToUtil(INode node)
+	private boolean cloneNotNeededUtilCall(INode node)
 	{
 		if(!(node instanceof AApplyExpCG))
 			return false;
