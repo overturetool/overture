@@ -8,12 +8,12 @@ import java.util.Vector;
 
 public class Utils
 {
-	public static List seq()
+	public static VDMSeq seq()
 	{
-		return new Vector();
+		return new VDMSeq();
 	}
 	
-	public static List seq(Object... elements)
+	public static VDMSeq seq(Object... elements)
 	{
 		if(elements == null)
 			throw new IllegalArgumentException("Cannot instantiate sequence from null");
@@ -62,7 +62,7 @@ public class Utils
 		return to;
 	}
 	
-	private static List addAll(List to, Object... from)
+	private static VDMSeq addAll(VDMSeq to, Object... from)
 	{
 		if(to == null || from == null)
 			throw new IllegalArgumentException("Arguments to addAll cannot be null");
@@ -81,12 +81,12 @@ public class Utils
 		return to;
 	}
 	
-	public static List reverse(List seq)
+	public static VDMSeq reverse(VDMSeq seq)
 	{
 		if(seq == null)
 			throw new IllegalArgumentException("Cannot reverse null");
 		
-		List result = seq();
+		VDMSeq result = seq();
 		
 		addAll(result, seq);
 
@@ -95,15 +95,26 @@ public class Utils
 		return result;
 	}
 	
-	public static List seqTail(List seq)
+	public static VDMSeq seqTail(VDMSeq seq)
 	{
 		if(seq == null)
 			throw new IllegalArgumentException("Cannot take tail of null");
 		
-		return seq.subList(1,seq.size());
+		if(seq.isEmpty())
+			throw new IllegalArgumentException("Cannot take tail of empty sequence");
+		
+		VDMSeq tail = new VDMSeq();
+		
+		for(int i = 1; i < seq.size(); i++)
+		{
+			Object element = seq.get(i);
+			tail.add(element);
+		}
+		
+		return tail;
 	}
 	
-	public static boolean seqEquals(List left, List right)
+	public static boolean seqEquals(VDMSeq left, VDMSeq right)
 	{
 		if(left == null || right == null)
 			throw new IllegalArgumentException("A sequences cannot be compared to null");
@@ -118,12 +129,12 @@ public class Utils
 		return true;
 	}
 	
-	public static List seqConc(List left, List right)
+	public static VDMSeq seqConc(VDMSeq left, VDMSeq right)
 	{
 		if(left == null || right == null)
 			throw new IllegalArgumentException("Cannot concatenate null");
 
-		List result = seq();
+		VDMSeq result = seq();
 
 		addAll(result, left.toArray());
 		addAll(result, right.toArray());
@@ -131,11 +142,11 @@ public class Utils
 		return result;
 	}
 	
-	public static List distConc(List... seqs)
+	public static VDMSeq distConc(VDMSeq... seqs)
 	{
-		List result = seq();
+		VDMSeq result = seq();
 		
-		for(List seq : seqs)
+		for(VDMSeq seq : seqs)
 		{
 			addAll(result, seq.toArray());
 		}
@@ -169,7 +180,7 @@ public class Utils
 		return hashcode;
 	}
 	
-	public static Set<Long> inds(List seq)
+	public static Set<Long> inds(VDMSeq seq)
 	{
 		if(seq == null)
 			throw new IllegalArgumentException("Cannot get indices of null");
