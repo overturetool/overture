@@ -53,7 +53,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return access.getStatic() != null;
 	}
 
-	public static boolean isAsync(PAccessSpecifier access)
+	public boolean isAsync(PAccessSpecifier access)
 	{
 		if (access instanceof AAccessSpecifierAccessSpecifier)
 		{
@@ -86,7 +86,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return false;
 	}
 
-	public static AAccessSpecifierAccessSpecifier getStatic(PDefinition d,
+	public AAccessSpecifierAccessSpecifier getStatic(PDefinition d,
 			boolean asStatic)
 	{
 		AAccessSpecifierAccessSpecifier paccess = d.getAccess();

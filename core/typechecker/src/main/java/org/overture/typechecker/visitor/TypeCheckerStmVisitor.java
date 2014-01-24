@@ -643,7 +643,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
 					d.setClassDefinition(cdef);
-					d.setAccess(PAccessSpecifierAssistantTC.getStatic(d, true));
+					d.setAccess(question.assistantFactory.createPAccessSpecifierAssistant().getStatic(d, true));
 				}
 
 				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));

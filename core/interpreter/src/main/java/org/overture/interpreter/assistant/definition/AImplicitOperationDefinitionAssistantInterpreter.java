@@ -43,7 +43,7 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 		// when the function is invoked. The value is needed to implement
 		// the pre_() expression for implicit functions.
 
-		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState());
+		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState(), af);
 		op.isConstructor = d.getIsConstructor();
 		op.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		nvl.add(new NameValuePair(d.getName(), op));

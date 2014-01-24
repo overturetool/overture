@@ -74,7 +74,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
@@ -112,7 +112,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
