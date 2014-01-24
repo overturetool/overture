@@ -1,0 +1,11 @@
+import utils.*;
+
+
+public class A {
+    private Tuple x = op();
+
+    public Tuple op() {
+        return Tuple.mk_(2L, 3L);
+    }
+}
+##########
