@@ -587,6 +587,7 @@ public class JavaFormat
 	{
 		return 	   node instanceof AFieldExpCG
 				|| node instanceof AFieldNumberExpCG
+				|| node instanceof AApplyExpCG
 				|| node instanceof AEqualsBinaryExpCG
 				|| node instanceof ANotEqualsBinaryExpCG
 				|| node instanceof AAddrEqualsBinaryExpCG
