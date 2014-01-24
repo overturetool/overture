@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
@@ -28,10 +29,12 @@ import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -444,7 +447,14 @@ public class JavaFormat
 		return classDecl.getSuperName() == null ? "" : "extends " + classDecl.getSuperName(); 
 	}
 	
-	public String formatArgs(List<PExpCG> exps) throws AnalysisException
+	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
+	{
+		LinkedList<AMapletExpCG> members = mapEnum.getMembers();
+		
+		return "new Maplet[]{" + formatArgs(members) + "}";
+	}
+	
+	public String formatArgs(List<? extends PExpCG> exps) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		

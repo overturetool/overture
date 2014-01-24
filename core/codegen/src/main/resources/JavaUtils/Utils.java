@@ -62,6 +62,23 @@ public class Utils
 		return to;
 	}
 	
+	public static VDMSeq seqMod(VDMSeq seq, Maplet... maplets)
+	{
+		for(Maplet maplet : maplets)
+		{
+			Object left = maplet.getLeft();
+			Object right = maplet.getRight();
+			
+			if(!(left instanceof Long))
+				throw new IllegalArgumentException("Domain values of maplets in a sequence modification must be of type nat1");
+			
+			Long key = (Long) left;
+			seq.set(Utils.index(key), right);
+		}
+		
+		return seq;
+	}
+	
 	private static VDMSeq addAll(VDMSeq to, Object... from)
 	{
 		if(to == null || from == null)
