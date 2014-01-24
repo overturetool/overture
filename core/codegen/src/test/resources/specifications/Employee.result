@@ -47,7 +47,7 @@ import java.util.*;
 
 
 public class Company {
-    private List employees;
+    private VDMSeq employees;
 
     public Company() {
         employees = Utils.seq();
@@ -55,7 +55,7 @@ public class Company {
 
     public void op1() {
         Number x = employees.size();
-        List y = employees;
+        VDMSeq y = employees.clone();
         Employee q = ((Employee) employees.get(0));
 
         //Skip;
@@ -65,13 +65,13 @@ public class Company {
         return start_calc(0L, employees);
     }
 
-    private Number start_calc(Number sum, List emps) {
+    private Number start_calc(Number sum, VDMSeq emps) {
         if (emps.size() == 0L) {
             return sum;
         } else {
             return start_calc(sum.doubleValue() +
                 ((Employee) emps.get(0)).getSalary().doubleValue(),
-                Utils.seqTail(emps));
+                Utils.seqTail(emps.clone()));
         }
     }
 
@@ -80,7 +80,7 @@ public class Company {
     }
 
     public Company addEmp(Employee emp) {
-        employees = Utils.seqConc(employees, Utils.seq(emp));
+        employees = Utils.seqConc(employees.clone(), Utils.seq(emp));
 
         return this;
     }

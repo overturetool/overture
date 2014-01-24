@@ -4,25 +4,25 @@ import java.util.*;
 
 
 public class A {
-    private static final List as = Utils.seq();
-    private static final List bs = Utils.seq(1L, 2L);
-    private static final List cs = Utils.seq(1.2, 3.3);
-    private static final List ds = Utils.seq(true, false);
+    private static final VDMSeq as = Utils.seq();
+    private static final VDMSeq bs = Utils.seq(1L, 2L);
+    private static final VDMSeq cs = Utils.seq(1.2, 3.3);
+    private static final VDMSeq ds = Utils.seq(true, false);
     private static final String es = new String(new char[] { 'a', 'b' });
-    private static final List fs = Utils.seq("a", "b");
+    private static final VDMSeq fs = Utils.seq("a", "b");
 
     public void op() {
-        List as_ = Utils.reverse(as);
+        VDMSeq as_ = Utils.reverse(as.clone());
 
-        List bs_ = Utils.reverse(bs);
+        VDMSeq bs_ = Utils.reverse(bs.clone());
 
-        List cs_ = Utils.reverse(cs);
+        VDMSeq cs_ = Utils.reverse(cs.clone());
 
-        List ds_ = Utils.reverse(ds);
+        VDMSeq ds_ = Utils.reverse(ds.clone());
 
         String es_ = new StringBuilder(es).reverse().toString();
 
-        List fs_ = Utils.reverse(fs);
+        VDMSeq fs_ = Utils.reverse(fs.clone());
 
         //Skip;
     }

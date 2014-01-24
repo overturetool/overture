@@ -4,9 +4,9 @@ import java.util.*;
 
 
 public class A {
-    private List y = Utils.distConc(op(), op());
+    private VDMSeq y = Utils.distConc(op(), op());
 
-    public List op() {
+    public VDMSeq op() {
         return Utils.seq(1L, 2L);
     }
 }
