@@ -98,7 +98,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 		return TypeComparator.compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
 	}
 
-	public static PExp getMatchingExpression(PPattern pattern)
+	public PExp getMatchingExpression(PPattern pattern)
 	{
 		try
 		{

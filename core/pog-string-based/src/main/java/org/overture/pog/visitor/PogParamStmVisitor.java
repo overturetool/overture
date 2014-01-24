@@ -114,7 +114,7 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 
 			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), question.assistantFactory))
 			{
-				obligations.add(new SubTypeObligation(node.getExp(), node.getTargetType(), node.getExpType(), question));
+				obligations.add(new SubTypeObligation(node.getExp(), node.getTargetType(), node.getExpType(), question, question.assistantFactory));
 			}
 
 			return obligations;

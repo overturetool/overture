@@ -130,7 +130,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question);
+				SubTypeObligation sto = SubTypeObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);

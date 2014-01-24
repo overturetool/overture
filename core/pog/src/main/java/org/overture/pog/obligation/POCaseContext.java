@@ -33,6 +33,7 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -40,18 +41,20 @@ public class POCaseContext extends POContext {
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
+	public final IPogAssistantFactory assistantFactory;
 
-	public POCaseContext(PPattern pattern, PType type, PExp exp) {
+	public POCaseContext(PPattern pattern, PType type, PExp exp, IPogAssistantFactory assistantFactory) {
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
+		this.assistantFactory = assistantFactory;
 	}
 
 	@Override
 	public PExp getContextNode(PExp stitch) {
 		if (PPatternAssistantTC.isSimple(pattern)) {
 			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
 					matching.clone(), exp.clone()));
 			impliesExp.setRight(stitch);
@@ -61,7 +64,7 @@ public class POCaseContext extends POContext {
 			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(
 					pattern.clone(), type.clone());
 			existsExp.setBindList(bindList);
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 
 			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
 			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
@@ -90,7 +93,7 @@ public class POCaseContext extends POContext {
 			sb.append(exp);
 			sb.append(" => ");
 		} else {
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 
 			sb.append("exists ");
 			sb.append(matching);

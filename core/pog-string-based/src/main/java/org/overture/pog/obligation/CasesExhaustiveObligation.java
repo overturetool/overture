@@ -53,7 +53,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 			} else
 			{
 
-				PExp matching = PPatternAssistantTC.getMatchingExpression(alt.getPattern());
+				PExp matching = ctxt.assistantFactory.createPPatternAssistant().getMatchingExpression(alt.getPattern());
 
 				sb.append("(exists ");
 				sb.append(matching);
