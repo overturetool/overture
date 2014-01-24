@@ -158,7 +158,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (postcondition != null)
 			{
 				question.push(new POFunctionDefinitionContext(node, false));
-				obligations.add(new FuncPostConditionObligation(node, question));
+				obligations.add(new FuncPostConditionObligation(node, question, assistantFactory));
 				question.push(new POFunctionResultContext(node));
 				obligations.addAll(postcondition.apply(rootVisitor, question));
 				question.pop();
@@ -348,7 +348,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (node.getBody() != null) // else satisfiability, below
 				{
-					obligations.add(new FuncPostConditionObligation(node, question));
+					obligations.add(new FuncPostConditionObligation(node, question, assistantFactory));
 				}
 
 				question.push(new POFunctionResultContext(node));

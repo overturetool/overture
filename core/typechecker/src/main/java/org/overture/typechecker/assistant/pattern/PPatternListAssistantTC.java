@@ -70,7 +70,7 @@ public class PPatternListAssistantTC
 		}
 	}
 
-	public static List<PExp> getMatchingExpressionList(List<PPattern> pl)
+	public List<PExp> getMatchingExpressionList(List<PPattern> pl)
 	{
 
 		List<PExp> list = new ArrayList<PExp>();
