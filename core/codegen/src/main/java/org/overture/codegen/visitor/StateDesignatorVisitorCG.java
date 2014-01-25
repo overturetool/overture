@@ -3,8 +3,8 @@ package org.overture.codegen.visitor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.statements.AFieldStateDesignator;
 import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.ooast.OoAstInfo;
 
@@ -37,10 +37,6 @@ public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStat
 	{
 		String name = node.getName().getName();
 		
-		AIdentifierStateDesignatorCG identifier = new AIdentifierStateDesignatorCG();
-		identifier.setName(name);
-		
-		return identifier;
-	}
-		
+		return DesignatorAssistantCG.consMember(name);
+	}		
 }

@@ -8,9 +8,9 @@ import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
-import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
@@ -171,33 +171,31 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	public PStmCG caseACallStm(ACallStm node, OoAstInfo question)
 			throws AnalysisException
 	{
-		String name = node.getName().getName();
-		AClassTypeCG classType = null;	
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		PType type = node.getType();
+		ILexNameToken nameToken = node.getName();
+		String name = nameToken.getName();
+		LinkedList<PExp> args = node.getArgs();
+
+		AClassTypeCG classType = null;
 		
-		if (node.getName().getExplicit())
+		if (nameToken != null && nameToken.getExplicit())
 		{
-			String className = node.getName().getModule();
+			String className = nameToken.getModule();
 			classType = new AClassTypeCG();
 			classType.setName(className);
 		}
 		
-		ACallStmCG call = new ACallStmCG();
-		call.setClassType(classType);
-		call.setName(name);
-		call.setType(type);
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
-		LinkedList<PExp> applyArgs = node.getArgs();
-
-		for (int i = 0; i < applyArgs.size(); i++)
-		{
-			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
-			call.getArgs().add(arg);
-		}
-
-		return call;
+		ACallStmCG callStm = new ACallStmCG();
+		callStm.setClassType(classType);
+		callStm.setName(name);
+		callStm.setType(typeCg);
+		StmAssistantCG.generateArguments(args, callStm, question);
+		
+		return callStm;
 	}
-	
+		
 	@Override
 	public PStmCG caseAElseIfStm(AElseIfStm node, OoAstInfo question)
 			throws AnalysisException
