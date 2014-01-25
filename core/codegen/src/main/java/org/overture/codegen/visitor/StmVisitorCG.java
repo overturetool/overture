@@ -10,6 +10,7 @@ import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AIfStm;
@@ -109,7 +110,10 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		for (PStm pStm : stms)
 		{
-			blockStm.getStatements().add(pStm.apply(question.getStatementVisitor(), question));
+			PStmCG stmCg = pStm.apply(question.getStatementVisitor(), question);
+			
+			if(stmCg != null)
+				blockStm.getStatements().add(stmCg);
 		}
 		
 		return blockStm;
