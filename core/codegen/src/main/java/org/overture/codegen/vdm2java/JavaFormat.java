@@ -333,13 +333,13 @@ public class JavaFormat
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
 		
-		if(leftNodeType instanceof SSeqTypeCGBase)
+		if(isValueType(leftNodeType) || leftNodeType instanceof AStringTypeCG)
+		{
+			return handleEquals(node);
+		}
+		else if(leftNodeType instanceof SSeqTypeCG)
 		{
 			return handleSeqComparison(node);
-		}
-		else if(isValueType(leftNodeType))
-		{
-			return handleValueTypeEquality(node);
 		}
 		
 		return format(node.getLeft()) + " == " + format(node.getRight());
@@ -349,12 +349,12 @@ public class JavaFormat
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
 
-		if (leftNodeType instanceof SSeqTypeCGBase)
+		if (isValueType(leftNodeType) || leftNodeType instanceof AStringTypeCG)
 		{
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
 		}
-		else if(isValueType(leftNodeType))
+		else if(leftNodeType instanceof SSeqTypeCG)
 		{
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
@@ -388,7 +388,7 @@ public class JavaFormat
 		return notUnary;
 	}
 	
-	private String handleValueTypeEquality(AEqualsBinaryExpCG valueType) throws AnalysisException
+	private String handleEquals(AEqualsBinaryExpCG valueType) throws AnalysisException
 	{
 		return format(valueType.getLeft()) + ".equals(" + format(valueType.getRight()) + ")";
 	}
