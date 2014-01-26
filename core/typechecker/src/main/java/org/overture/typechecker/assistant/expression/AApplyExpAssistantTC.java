@@ -176,7 +176,7 @@ public class AApplyExpAssistantTC
 		}
 	}
 
-	public static String getMeasureApply(AApplyExp node, ILexNameToken measure)
+	public String getMeasureApply(AApplyExp node, ILexNameToken measure)
 	{
 		return af.createAApplyExpAssistant().getMeasureApply(node, measure, true);
 	}

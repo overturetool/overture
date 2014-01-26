@@ -566,12 +566,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp suchThat = node.getSuchThat();
 		if (suchThat != null)
 		{
-			question.push(new POForAllContext(node));
+			question.push(new POForAllContext(node, assistantFactory));
 			obligations.addAll(suchThat.apply(mainVisitor, question));
 			question.pop();
 		}
 
-		question.push(new POForAllPredicateContext(node));
+		question.push(new POForAllPredicateContext(node, assistantFactory));
 		obligations.addAll(node.getValue().apply(mainVisitor, question));
 		question.pop();
 

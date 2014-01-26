@@ -36,7 +36,7 @@ public class PMultipleBindAssistantTC
 		return defs;
 	}
 
-	public static List<PMultipleBind> getMultipleBindList(PMultipleBind bind)
+	public List<PMultipleBind> getMultipleBindList(PMultipleBind bind)
 	{
 		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(bind);
