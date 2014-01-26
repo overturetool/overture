@@ -18,6 +18,7 @@ import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.visitor.ClassVisitorCG;
 import org.overture.codegen.visitor.DeclVisitorCG;
 import org.overture.codegen.visitor.ExpVisitorCG;
+import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
 import org.overture.codegen.visitor.StateDesignatorVisitorCG;
 import org.overture.codegen.visitor.StmVisitorCG;
 import org.overture.codegen.visitor.TypeVisitorCG;
@@ -33,6 +34,7 @@ public class OoAstInfo
 	private TypeVisitorCG typeVisitor;
 	private StmVisitorCG stmVisitor;
 	private StateDesignatorVisitorCG stateDesignatorVisitor;
+	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
 	
 	//Quotes:
 	private Set<String> quoteVaues;
@@ -50,6 +52,7 @@ public class OoAstInfo
 		this.typeVisitor = new TypeVisitorCG();
 		this.stmVisitor = new StmVisitorCG();
 		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
+		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
 		
 		this.quoteVaues = new HashSet<String>();
 		
@@ -89,6 +92,11 @@ public class OoAstInfo
 	public StateDesignatorVisitorCG getStateDesignatorVisitor()
 	{
 		return stateDesignatorVisitor;
+	}
+	
+	public ObjectDesignatorVisitorCG getObjectDesignatorVisitor()
+	{
+		return objectDesignatorVisitor;
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException

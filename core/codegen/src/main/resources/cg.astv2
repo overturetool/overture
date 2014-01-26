@@ -104,6 +104,15 @@ stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
 //    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
 //   |   {identifier} [name]:LexNameToken
 //    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
+
+objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
+//	|	[location]:location}
+//  =   {apply} [object]:objectDesignator [args]:exp*
+    =   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
+    |   {identifier} [name]:java_String [exp]:expCG.variable
+    |   {new} [exp]:expCG.new
+    |   {self}// [self]:java_String
+    ;
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
            = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
@@ -118,6 +127,8 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{abstractBody}
            |	{assignment} [target]:stateDesignatorCG [exp]:expCG
            |	{block}	[localDefs]:declCG.localVar* [statements]:stmCG*
+           |	{callObject} [type]:typeCG [designator]:objectDesignatorCG [className]:java_String [fieldName]:java_String 
+           					 [args]:expCG*// [explicit]:java_Boolean [field]:LexNameToken
            |	{call} [type]:typeCG [classType]:typeCG.class [name]:java_String [args]:expCG*
            |	{notImplemented}
            ;

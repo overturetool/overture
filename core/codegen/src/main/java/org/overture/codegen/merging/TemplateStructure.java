@@ -26,6 +26,7 @@ public class TemplateStructure
 	public final String SEQ_TYPE_PATH;
 	public final String MAP_TYPE_PATH;
 	public final String STATE_DESIGNATOR_PATH; 
+	public final String OBJECT_DESIGNATOR_PATH;
 	
 	public TemplateStructure(String rootFolder)
 	{
@@ -47,7 +48,8 @@ public class TemplateStructure
 		SET_TYPE_PATH = TYPE_PATH + "Set" + IText.SEPARATOR_CHAR;
 		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + IText.SEPARATOR_CHAR;
 		MAP_TYPE_PATH = TYPE_PATH + "Map" + IText.SEPARATOR_CHAR;
-		STATE_DESIGNATOR_PATH = root + "StateDesignator" + IText.SEPARATOR_CHAR; 
+		STATE_DESIGNATOR_PATH = root + "StateDesignator" + IText.SEPARATOR_CHAR;
+		OBJECT_DESIGNATOR_PATH = root + "ObjectDesignator" + IText.SEPARATOR_CHAR;
 	}
 	
 }
