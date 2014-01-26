@@ -44,6 +44,7 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
@@ -73,7 +74,7 @@ public class Delegate implements Serializable
 	private Map<String, Method> delegateMethods = null;
 	private Map<String, LexNameList> delegateArgs = null;
 
-	public boolean hasDelegate(Context ctxt)
+	public boolean hasDelegate()
 	{
 		if (!delegateChecked)
 		{

@@ -28,7 +28,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	/** A delegate Java object for any native methods. */
 	protected Delegate delegate = null;
 	
-	public Context ctxt;
+	//public Context ctxt;
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
@@ -38,7 +38,8 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	
 	public boolean hasDelegate()
 	{
-		return delegate.hasDelegate(ctxt);
+		//return delegate.hasDelegate(ctxt.assistantFactory);
+		return delegate.hasDelegate();
 	}
 
 	public Object newInstance()

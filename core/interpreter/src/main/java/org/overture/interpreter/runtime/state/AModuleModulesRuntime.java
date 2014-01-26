@@ -20,9 +20,9 @@ public class AModuleModulesRuntime implements IRuntimeState
 		delegate = new Delegate(node.getName().getName(), node.getDefs());
 	}
 
-	public boolean hasDelegate(Context ctxt)
+	public boolean hasDelegate()
 	{
-		if (delegate.hasDelegate(ctxt))
+		if (delegate.hasDelegate())
 		{
 			if (delegateObject == null)
 			{

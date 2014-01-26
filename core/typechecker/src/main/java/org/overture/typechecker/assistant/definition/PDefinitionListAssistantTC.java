@@ -145,7 +145,7 @@ public class PDefinitionListAssistantTC
 		return variableNames;
 	}
 
-	public static void setAccessibility(List<PDefinition> defs,
+	public void setAccessibility(List<PDefinition> defs,
 			AAccessSpecifierAccessSpecifier access)
 	{
 		for (PDefinition d : defs)
