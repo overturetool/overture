@@ -1,0 +1,18 @@
+public class A {
+    public Number op() {
+        A a = new A();
+
+        return a.f(1L);
+    }
+
+    public Number op1() {
+        A a = new A();
+
+        return a.f(1L);
+    }
+
+    public static Number f(Number x) {
+        return x;
+    }
+}
+##########

@@ -1,0 +1,18 @@
+public class A {
+    public A(Number x) {
+        //Skip;
+    }
+
+    public Number op() {
+        return new A(2L).f(1L);
+    }
+
+    public Number op1() {
+        return new A(2L).f(1L);
+    }
+
+    public static Number f(Number x) {
+        return x;
+    }
+}
+##########
