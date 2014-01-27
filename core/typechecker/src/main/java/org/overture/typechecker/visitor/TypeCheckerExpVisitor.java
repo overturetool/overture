@@ -37,7 +37,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.AMapMapType;
-import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOperationType;
@@ -76,8 +75,6 @@ import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
@@ -1335,7 +1332,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 					if (def instanceof AExplicitFunctionDefinition)
 					{
-						node.setExpdef((AExplicitFunctionDefinition) def.clone());
+						node.setExpdef((AExplicitFunctionDefinition) def);
 						typeParams = node.getExpdef().getTypeParams();
 					} else if (def instanceof AImplicitFunctionDefinition)
 					{
