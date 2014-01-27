@@ -22,6 +22,7 @@ import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
 import org.overture.codegen.visitor.StateDesignatorVisitorCG;
 import org.overture.codegen.visitor.StmVisitorCG;
 import org.overture.codegen.visitor.TypeVisitorCG;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class OoAstInfo
 {
@@ -35,6 +36,9 @@ public class OoAstInfo
 	private StmVisitorCG stmVisitor;
 	private StateDesignatorVisitorCG stateDesignatorVisitor;
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
+	
+	//VDM assistant factory
+	private TypeCheckerAssistantFactory tcFactory;
 	
 	//Quotes:
 	private Set<String> quoteVaues;
@@ -53,6 +57,8 @@ public class OoAstInfo
 		this.stmVisitor = new StmVisitorCG();
 		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
+		
+		this.tcFactory = new TypeCheckerAssistantFactory();
 		
 		this.quoteVaues = new HashSet<String>();
 		
@@ -105,6 +111,11 @@ public class OoAstInfo
 			throw new AnalysisExceptionCG("Tried to register invalid qoute value");
 		
 		quoteVaues.add(value);
+	}
+	
+	public TypeCheckerAssistantFactory getTcFactory()
+	{
+		return tcFactory;
 	}
 	
 	private List<String> getQuoteValues()

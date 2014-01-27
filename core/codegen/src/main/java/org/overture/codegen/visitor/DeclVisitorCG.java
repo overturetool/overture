@@ -200,7 +200,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	{
 		
 		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = PDefinitionAssistantTC.isStatic(node);
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();
 		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
 		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);

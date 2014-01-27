@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeAssistantCG
@@ -69,11 +70,14 @@ public class TypeAssistantCG
 	//TODO: Copied from UML2VDM. Factor out in assistant
 	public static boolean isUnionOfQuotes(AUnionType type)
 	{
+		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
+		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
+		
 		try
 		{
 			for (PType t : type.getTypes())
 			{
-				if (!PTypeAssistantTC.isType(t, AQuoteType.class))
+				if (!typeAssistant.isType(t, AQuoteType.class))
 				{
 					return false;
 				}
