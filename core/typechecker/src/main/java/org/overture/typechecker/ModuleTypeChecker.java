@@ -35,6 +35,7 @@ import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 

@@ -149,7 +149,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public void markUsed(PDefinition d)
+	public static void markUsed(PDefinition d)
 	{
 		try
 		{
