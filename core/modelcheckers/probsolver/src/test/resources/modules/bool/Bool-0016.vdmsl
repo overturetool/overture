@@ -1,0 +1,4 @@
+operations
+
+  negative() r : int
+    post r=-3

@@ -14,6 +14,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -29,6 +30,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
@@ -786,7 +788,17 @@ public class SClassDefinitionAssistantTC
 		{
 			if (d.getPass() == p)
 			{
-				d.apply(tc, new TypeCheckInfo(af, base, NameScope.NAMES));
+				Environment env = base;
+				
+				if (d instanceof AValueDefinition)
+				{
+					// ValueDefinition body always a static context
+					FlatCheckedEnvironment checked = new FlatCheckedEnvironment(af, new Vector<PDefinition>(), base, NameScope.NAMES);
+					checked.setStatic(true);
+					env = checked;
+				}
+
+				d.apply(tc, new TypeCheckInfo(af, env, NameScope.NAMES));
 			}
 		}
 

@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -44,6 +43,7 @@ import org.overture.interpreter.commands.ClassCommandReader;
 import org.overture.interpreter.commands.CommandReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
@@ -285,9 +285,8 @@ public class VDMPP extends VDMJ
 		{
     		try
     		{
-    			PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
-    			RTLogger.setLogfile(p);
-    			NextGenRTLogger.getInstance().setLogfile(new File(logfile));
+    			RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
+    			RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
     			println("RT events now logged to " + logfile);
     		}
     		catch (FileNotFoundException e)

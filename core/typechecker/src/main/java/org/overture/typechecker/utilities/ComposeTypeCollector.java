@@ -5,6 +5,7 @@ import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AMapMapType;
@@ -148,7 +149,14 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	{
 		if (node.getComposed())
 		{
-			return new PTypeList(node);
+			PTypeList types = new PTypeList(node);
+
+			for (AFieldField f: node.getFields())
+			{
+				types.addAll(f.getType().apply(THIS));
+			}
+			
+			return types;
 		}
 		else
 		{

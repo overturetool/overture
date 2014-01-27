@@ -39,8 +39,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseABracketType(ABracketType type) throws AnalysisException
 	{
-		
-		return type.apply(THIS);
+		return type.getType().apply(THIS);
 	}
 	
 	@Override

@@ -1,0 +1,4 @@
+operations
+
+eqseq1() n : nat
+post [1,2] = [1,2] => n= len [1,2];

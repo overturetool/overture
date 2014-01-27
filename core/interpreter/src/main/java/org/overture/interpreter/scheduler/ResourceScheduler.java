@@ -30,7 +30,6 @@ import java.util.List;
 import org.overture.config.Settings;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
 public class ResourceScheduler implements Serializable
 {
@@ -112,7 +111,8 @@ public class ResourceScheduler implements Serializable
 
 				idle = false;
 			}
-		} while (!idle && main.getRunState() != RunState.COMPLETE && main.getExceptions().isEmpty());
+		} while (!idle && main.getRunState() != RunState.COMPLETE
+				&& main.getExceptions().isEmpty());
 
 		stopping = true;
 
@@ -126,15 +126,13 @@ public class ResourceScheduler implements Serializable
 					BasicSchedulableThread.signalAll(Signal.DEADLOCKED);
 
 					RTLogger.dump(true);
-					NextGenRTLogger.dump();
 
 					while (main.isAlive() && Settings.usingDBGP)
 					{
 						try
 						{
 							Thread.sleep(100);
-						}
-						catch (InterruptedException e)
+						} catch (InterruptedException e)
 						{
 							// ?
 						}
