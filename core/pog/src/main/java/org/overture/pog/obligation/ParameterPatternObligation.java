@@ -61,44 +61,48 @@ public class ParameterPatternObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 6831031423902894299L;
 	
-	public IPogAssistantFactory assistantFactory; //gkanos:variable added by me to pass it as param to the method generate.
+	public final IPogAssistantFactory assistantFactory; //gkanos:variable added by me to pass it as param to the method generate.
 	
 	public ParameterPatternObligation(AExplicitFunctionDefinition def,
-			IPOContextStack ctxt) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
 		// cannot clone getPredef as it can be null. We protect the ast in 
 		// the generate method where it's used
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(def.getParamPatternList()), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(AImplicitFunctionDefinition def,
-			IPOContextStack ctxt) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(AExplicitOperationDefinition def,
-			IPOContextStack ctxt) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
 	public ParameterPatternObligation(AImplicitOperationDefinition def,
-			IPOContextStack ctxt) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
 	}
 
 	private PExp generate(PDefinition predef, List<List<PPattern>> plist,
-			List<PType> params, PType result, IPogAssistantFactory assistantFactory) throws AnalysisException
+			List<PType> params, PType result) throws AnalysisException
 	{
 		AForAllExp forallExp = new AForAllExp();
 		List<PMultipleBind> forallBindList = new Vector<PMultipleBind>();
