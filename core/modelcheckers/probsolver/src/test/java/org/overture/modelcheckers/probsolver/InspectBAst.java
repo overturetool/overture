@@ -72,7 +72,10 @@ public class InspectBAst {
 		//f = new ClassicalB("-7-(-3)*(-7/-3)");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("TRUE");
+		//f = new ClassicalB("TRUE");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("{1|->3, 3|->2}");
 		f.getAst().apply(new ASTPrinter(System.out));
 	}
 	
