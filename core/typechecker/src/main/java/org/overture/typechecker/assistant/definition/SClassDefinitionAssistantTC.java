@@ -36,7 +36,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 
@@ -126,11 +125,11 @@ public class SClassDefinitionAssistantTC
 //		return def;
 //	}
 
-	public static boolean hasSupertype(SClassDefinition classDefinition,
+	public boolean hasSupertype(SClassDefinition classDefinition,
 			PType other)
 	{
 
-		if (PTypeAssistantTC.equals(getType(classDefinition), other))
+		if (af.createPTypeAssistant().equals(getType(classDefinition), other))
 		{
 			return true;
 		} else
@@ -139,7 +138,7 @@ public class SClassDefinitionAssistantTC
 			{
 				AClassType sclass = (AClassType) type;
 
-				if (AClassTypeAssistantTC.hasSupertype(sclass, other))
+				if (af.createAClassTypeAssistant().hasSupertype(sclass, other))
 				{
 					return true;
 				}
@@ -149,7 +148,7 @@ public class SClassDefinitionAssistantTC
 		return false;
 	}
 
-	public static boolean isAccessible(Environment env, PDefinition field,
+	public boolean isAccessible(Environment env, PDefinition field,
 			boolean needStatic)
 	{
 		SClassDefinition self = env.findClassDefinition();
@@ -158,23 +157,23 @@ public class SClassDefinitionAssistantTC
 		if (self == null) // Not called from within a class member
 		{
 			// We're outside, so just public access
-			return PAccessSpecifierAssistantTC.isPublic(field.getAccess());
+			return af.createPAccessSpecifierAssistant().isPublic(field.getAccess());
 		} else
 		{
 			AClassType selftype = (AClassType) getType(self);
 			AClassType targtype = (AClassType) getType(target);
 
-			if (!PTypeAssistantTC.equals(selftype, targtype))
+			if (!af.createPTypeAssistant().equals(selftype, targtype))
 			{
-				if (AClassTypeAssistantTC.hasSupertype(selftype, targtype))
+				if (af.createAClassTypeAssistant().hasSupertype(selftype, targtype))
 				{
 					// We're a subclass, so see public or protected
-					return !PAccessSpecifierAssistantTC.isPrivate(field.getAccess());
+					return !af.createPAccessSpecifierAssistant().isPrivate(field.getAccess());
 				} else
 				{
 					// We're outside, so just public/static access
-					return PAccessSpecifierAssistantTC.isPublic(field.getAccess())
-							&& (needStatic ? PAccessSpecifierAssistantTC.isStatic(field.getAccess())
+					return af.createPAccessSpecifierAssistant().isPublic(field.getAccess())
+							&& (needStatic ? af.createPAccessSpecifierAssistant().isStatic(field.getAccess())
 									: true);
 				}
 			} else
@@ -217,7 +216,7 @@ public class SClassDefinitionAssistantTC
 //		return def;
 //	}
 
-	public static Set<PDefinition> findMatches(SClassDefinition classdef,
+	public Set<PDefinition> findMatches(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 
@@ -226,7 +225,7 @@ public class SClassDefinitionAssistantTC
 		return set;
 	}
 
-	public static PDefinition findName(List<SClassDefinition> classes,
+	public PDefinition findName(List<SClassDefinition> classes,
 			ILexNameToken name, NameScope scope)
 	{
 
@@ -244,7 +243,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	private static SClassDefinition get(List<SClassDefinition> classes,
+	private SClassDefinition get(List<SClassDefinition> classes,
 			String module)
 	{
 
@@ -258,13 +257,13 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static PDefinition findType(List<SClassDefinition> classes,
+	public PDefinition findType(List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
 		for (SClassDefinition d : classes)
 		{
-			PDefinition def = PDefinitionAssistantTC.findType(d, name, null);
+			PDefinition def = af.createPDefinitionAssistant().findType(d, name, null);
 
 			if (def != null)
 			{
@@ -275,7 +274,7 @@ public class SClassDefinitionAssistantTC
 		return null;
 	}
 
-	public static Set<PDefinition> findMatches(List<SClassDefinition> classes,
+	public Set<PDefinition> findMatches(List<SClassDefinition> classes,
 			ILexNameToken name)
 	{
 
@@ -283,17 +282,17 @@ public class SClassDefinitionAssistantTC
 
 		for (SClassDefinition d : classes)
 		{
-			set.addAll(SClassDefinitionAssistantTC.findMatches(d, name));
+			set.addAll(af.createSClassDefinitionAssistant().findMatches(d, name));
 		}
 
 		return set;
 	}
 
-	public static void unusedCheck(List<SClassDefinition> classes)
+	public void unusedCheck(List<SClassDefinition> classes)
 	{
 		for (SClassDefinition d : classes)
 		{
-			PDefinitionAssistantTC.unusedCheck(d);
+			af.createPDefinitionAssistant().unusedCheck(d);
 		}
 
 	}
@@ -314,11 +313,11 @@ public class SClassDefinitionAssistantTC
 	{
 
 		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
-		PDefinitionAssistantTC.markUsed(def);
+		af.createPDefinitionAssistant().markUsed(def);
 		return def;
 	}
 
-	public static void implicitDefinitions(SClassDefinition d,
+	public void implicitDefinitions(SClassDefinition d,
 			Environment publicClasses)
 	{
 		if (d instanceof ASystemClassDefinition)
@@ -331,7 +330,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void implicitDefinitionsBase(SClassDefinition d,
+	public void implicitDefinitionsBase(SClassDefinition d,
 			Environment publicClasses)
 	{
 		setInherited(d, publicClasses);
@@ -348,7 +347,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static AExplicitOperationDefinition getInvDefinition(
+	private AExplicitOperationDefinition getInvDefinition(
 			SClassDefinition d)
 	{
 
@@ -401,7 +400,7 @@ public class SClassDefinitionAssistantTC
 		return invdefs;
 	}
 
-	private static void setInheritedDefinitions(SClassDefinition definition)
+	private void setInheritedDefinitions(SClassDefinition definition)
 	{
 		List<PDefinition> indefs = new Vector<PDefinition>();
 
@@ -422,7 +421,7 @@ public class SClassDefinitionAssistantTC
 
 			ILexNameToken localname = d.getName().getModifiedName(definition.getName().getName());
 
-			if (PDefinitionListAssistantTC.findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null)
+			if (af.createPDefinitionListAssistant().findName(definition.getDefinitions(), localname, NameScope.NAMESANDSTATE) == null)
 			{
 				AInheritedDefinition local = AstFactory.newAInheritedDefinition(localname, d);
 				definition.getLocalInheritedDefinitions().add(local);
@@ -436,7 +435,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static List<PDefinition> getInheritable(SClassDefinition def)
+	private List<PDefinition> getInheritable(SClassDefinition def)
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -455,11 +454,11 @@ public class SClassDefinitionAssistantTC
 		// members before others. So we add the local definitions
 		// before the inherited ones.
 
-		List<PDefinition> singles = PDefinitionListAssistantTC.singleDefinitions(def.getDefinitions());
+		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(def.getDefinitions());
 
 		for (PDefinition d : singles)
 		{
-			if (!PAccessSpecifierAssistantTC.isPrivate(d.getAccess()))
+			if (!af.createPAccessSpecifierAssistant().isPrivate(d.getAccess()))
 			{
 				defs.add(d);
 			}
@@ -475,7 +474,7 @@ public class SClassDefinitionAssistantTC
 
 				ILexNameToken localname = d.getName().getModifiedName(def.getName().getName());
 
-				if (PDefinitionListAssistantTC.findName(defs, localname, NameScope.NAMESANDSTATE) == null)
+				if (af.createPDefinitionListAssistant().findName(defs, localname, NameScope.NAMESANDSTATE) == null)
 				{
 					AInheritedDefinition local = AstFactory.newAInheritedDefinition(localname, d);
 					defs.add(local);
@@ -487,7 +486,7 @@ public class SClassDefinitionAssistantTC
 		return defs;
 	}
 
-	private static void setInherited(SClassDefinition d, Environment base)
+	private void setInherited(SClassDefinition d, Environment base)
 	{
 		switch (d.getSettingHierarchy())
 		{
@@ -504,7 +503,7 @@ public class SClassDefinitionAssistantTC
 				return;
 		}
 
-		PDefinitionListAssistantTC.implicitDefinitions(d.getDefinitions(), base);
+		af.createPDefinitionListAssistant().implicitDefinitions(d.getDefinitions(), base);
 
 		for (ILexNameToken supername : d.getSupernames())
 		{
@@ -549,10 +548,10 @@ public class SClassDefinitionAssistantTC
 	{
 
 		Environment cenv = new FlatEnvironment(question.assistantFactory, d.getDefinitions(), question.env);
-		PDefinitionListAssistantTC.typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
+		af.createPDefinitionListAssistant().typeResolve(d.getDefinitions(), rootVisitor, new TypeCheckInfo(question.assistantFactory, cenv));
 	}
 
-	public static PDefinition findThread(SClassDefinition d)
+	public PDefinition findThread(SClassDefinition d)
 	{
 		//return SClassDefinitionAssistantTC.findName(d, d.getName().getThreadName(), NameScope.NAMES);
 		return af.createPDefinitionAssistant().findName(d, d.getName().getThreadName(), NameScope.NAMES);
@@ -585,7 +584,7 @@ public class SClassDefinitionAssistantTC
 		return def.getClasstype();
 	}
 
-	public static void checkOver(SClassDefinition c)
+	public void checkOver(SClassDefinition c)
 	{
 		int inheritedThreads = 0;
 		af.createSClassDefinitionAssistant().checkOverloads(c);
@@ -595,7 +594,7 @@ public class SClassDefinitionAssistantTC
 		for (PDefinition def : c.getSuperDefs())
 		{
 			SClassDefinition superdef = (SClassDefinition) def;
-			List<PDefinition> inheritable = SClassDefinitionAssistantTC.getInheritable(superdef);
+			List<PDefinition> inheritable = af.createSClassDefinitionAssistant().getInheritable(superdef);
 			superlist.add(inheritable);
 
 			if (checkOverrides(c, inheritable))
@@ -613,7 +612,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static void checkAmbiguities(SClassDefinition c,
+	private void checkAmbiguities(SClassDefinition c,
 			List<List<PDefinition>> superlist)
 	{
 		int count = superlist.size();
@@ -631,7 +630,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static void checkAmbiguities(SClassDefinition c,
+	private void checkAmbiguities(SClassDefinition c,
 			List<PDefinition> defs, List<PDefinition> defs2)
 	{
 
@@ -642,13 +641,13 @@ public class SClassDefinitionAssistantTC
 			for (PDefinition indef2 : defs2)
 			{
 				if (!indef.getLocation().equals(indef2.getLocation())
-						&& PDefinitionAssistantTC.kind(indef).equals(PDefinitionAssistantTC.kind(indef2)))
+						&& af.createPDefinitionAssistant().kind(indef).equals(af.createPDefinitionAssistant().kind(indef2)))
 				{
 					ILexNameToken localName2 = indef2.getName().getModifiedName(c.getName().getName());
 
 					if (HelpLexNameToken.isEqual(localName, localName2))
 					{
-						PDefinition override = PDefinitionListAssistantTC.findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
+						PDefinition override = af.createPDefinitionListAssistant().findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
 
 						if (override == null) // OK if we override the ambiguity
 						{
@@ -666,7 +665,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	private static boolean checkOverrides(SClassDefinition c,
+	private boolean checkOverrides(SClassDefinition c,
 			List<PDefinition> inheritable)
 	{
 		boolean inheritedThread = false;
@@ -681,21 +680,21 @@ public class SClassDefinitionAssistantTC
 
 			ILexNameToken localName = indef.getName().getModifiedName(c.getName().getName());
 
-			PDefinition override = PDefinitionListAssistantTC.findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
+			PDefinition override = af.createPDefinitionListAssistant().findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
 
 			if (override == null)
 			{
-				override = PDefinitionListAssistantTC.findType(c.getDefinitions(), localName, null);
+				override = af.createPDefinitionListAssistant().findType(c.getDefinitions(), localName, null);
 			}
 
 			if (override != null)
 			{
-				if (!PDefinitionAssistantTC.kind(indef).equals(PDefinitionAssistantTC.kind(override)))
+				if (!af.createPDefinitionAssistant().kind(indef).equals(af.createPDefinitionAssistant().kind(override)))
 				{
 					TypeCheckerErrors.report(3005, "Overriding a superclass member of a different kind: "
 							+ override.getName(), override.getName().getLocation(), override);
-					TypeCheckerErrors.detail2("This", PDefinitionAssistantTC.kind(override), "Super", PDefinitionAssistantTC.kind(indef));
-				} else if (PAccessSpecifierAssistantTC.narrowerThan(override.getAccess(), indef.getAccess()))
+					TypeCheckerErrors.detail2("This", af.createPDefinitionAssistant().kind(override), "Super", af.createPDefinitionAssistant().kind(indef));
+				} else if (af.createPAccessSpecifierAssistant().narrowerThan(override.getAccess(), indef.getAccess()))
 				{
 					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(), override);
 					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
@@ -706,7 +705,7 @@ public class SClassDefinitionAssistantTC
 
 					// Note this uses the "parameters only" comparator option
 
-					if (!TypeComparator.compatible(to, from, true))
+					if (!TypeComparator.compatible(to, from, true, af))
 					{
 						TypeCheckerErrors.report(3007, "Overriding member incompatible type: "
 								+ override.getName().getName(), override.getLocation(), override);
@@ -723,7 +722,7 @@ public class SClassDefinitionAssistantTC
 	{
 		List<String> done = new Vector<String>();
 
-		List<PDefinition> singles = PDefinitionListAssistantTC.singleDefinitions(c.getDefinitions());
+		List<PDefinition> singles = af.createPDefinitionListAssistant().singleDefinitions(c.getDefinitions());
 
 		for (PDefinition def1 : singles)
 		{
@@ -735,17 +734,17 @@ public class SClassDefinitionAssistantTC
 						&& def1.getName().getName().equals(def2.getName().getName())
 						&& !done.contains(def1.getName().getName()))
 				{
-					if (PDefinitionAssistantTC.isFunction(def1)
-							&& PDefinitionAssistantTC.isFunction(def2)
-							|| PDefinitionAssistantTC.isOperation(def1)
-							&& PDefinitionAssistantTC.isOperation(def2))
+					if (af.createPDefinitionAssistant().isFunction(def1)
+							&& af.createPDefinitionAssistant().isFunction(def2)
+							|| af.createPDefinitionAssistant().isOperation(def1)
+							&& af.createPDefinitionAssistant().isOperation(def2))
 					{
 						PType to = def1.getType();
 						PType from = def2.getType();
 
 						// Note this uses the "parameters only" comparator option
 
-						if (TypeComparator.compatible(to, from, true))
+						if (TypeComparator.compatible(to, from, true, af))
 						{
 							TypeCheckerErrors.report(3008, "Overloaded members indistinguishable: "
 									+ def1.getName().getName(), def1.getLocation(), def1);
@@ -810,7 +809,7 @@ public class SClassDefinitionAssistantTC
 
 	}
 
-	public static void initializedCheck(SClassDefinition c)
+	public void initializedCheck(SClassDefinition c)
 	{
 		af.createPDefinitionListAssistant().initializedCheck(c.getDefinitions());
 	}

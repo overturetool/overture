@@ -32,6 +32,7 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.pog.pub.IPogAssistantFactory;
 
 public class POForAllPredicateContext extends POForAllContext
 {
@@ -61,9 +62,9 @@ public class POForAllPredicateContext extends POForAllContext
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ALetBeStExp exp)
+	public POForAllPredicateContext(ALetBeStExp exp, IPogAssistantFactory assistantFactory)
 	{
-		super(exp);
+		super(exp, assistantFactory);
 		this.predicate = exp.getSuchThat();
 	}
 	

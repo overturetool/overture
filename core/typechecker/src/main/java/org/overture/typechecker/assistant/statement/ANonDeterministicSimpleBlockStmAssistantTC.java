@@ -18,7 +18,7 @@ public class ANonDeterministicSimpleBlockStmAssistantTC
 		this.af = af;
 	}
 
-	public static boolean addOne(PTypeSet rtypes, PType add)
+	public boolean addOne(PTypeSet rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)
 		{

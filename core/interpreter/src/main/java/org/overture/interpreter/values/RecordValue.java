@@ -29,7 +29,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -108,7 +107,8 @@ public class RecordValue extends Value
 	}
 
 	// State records - invariant handled separately
-	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues)
+	//gkanos: added a parameter here the context.
+	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues, Context ctxt)
 	{
 		this.type = type;
 		this.invariant = null;
@@ -116,7 +116,7 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(type,nvp.name.getName());
+			AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(type,nvp.name.getName());
 			this.fieldmap.add(nvp.name.getName(), nvp.value, !f.getEqualityAbstraction());
 		}
 	}

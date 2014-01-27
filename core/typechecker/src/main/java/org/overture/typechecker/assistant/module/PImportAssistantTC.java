@@ -18,7 +18,7 @@ public class PImportAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(PImport imp,
+	public List<PDefinition> getDefinitions(PImport imp,
 			AModuleModules from)
 	{
 		try

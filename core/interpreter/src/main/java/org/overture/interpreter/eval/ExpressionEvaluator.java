@@ -1022,7 +1022,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (ARecordModifier rm : node.getModifiers())
 			{
-				AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(r.type, rm.getTag().getName());
+				AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(r.type, rm.getTag().getName());
 
 				if (f == null)
 				{

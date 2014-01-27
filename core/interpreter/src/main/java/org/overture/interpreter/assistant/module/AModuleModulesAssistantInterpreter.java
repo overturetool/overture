@@ -85,7 +85,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	public static Context getStateContext(AModuleModules defaultModule)
 	{
-		AStateDefinition sdef = PDefinitionListAssistantInterpreter.findStateDefinition(defaultModule.getDefs());
+		AStateDefinition sdef = af.createPDefinitionListAssistant().findStateDefinition(defaultModule.getDefs());
 
 		if (sdef != null)
 		{
@@ -135,7 +135,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 		try
 		{
-			AStateDefinition sdef = PDefinitionListAssistantInterpreter.findStateDefinition(m.getDefs());
+			AStateDefinition sdef = af.createPDefinitionListAssistant().findStateDefinition(m.getDefs());
 
 			if (sdef != null)
 			{

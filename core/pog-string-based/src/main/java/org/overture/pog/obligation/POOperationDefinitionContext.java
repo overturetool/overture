@@ -35,6 +35,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.pog.assistant.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -46,10 +47,11 @@ public class POOperationDefinitionContext extends POContext
 	public final boolean addPrecond;
 	public final PExp precondition;
 	public final PDefinition stateDefinition;
+	public final IPogAssistantFactory assistantFactory;
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition)
+			PDefinition stateDefinition, IPogAssistantFactory assistantFactory)
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
@@ -57,6 +59,7 @@ public class POOperationDefinitionContext extends POContext
 		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
+		this.assistantFactory = assistantFactory;
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public class POOperationDefinitionContext extends POContext
 			for (PPattern p : paramPatternList)
 			{
 				sb.append(sep);
-				sb.append(PPatternAssistantTC.getMatchingExpression(p)); // Expands anys
+				sb.append(assistantFactory.createPPatternAssistant().getMatchingExpression(p)); // Expands anys
 				sb.append(":");
 				sb.append(types.next());
 				sep = ", ";

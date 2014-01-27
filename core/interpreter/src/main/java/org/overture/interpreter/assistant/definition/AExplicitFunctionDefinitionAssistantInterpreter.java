@@ -47,7 +47,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 				: new FunctionValue(d.getPostdef(), null, null, free);
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
-		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		func.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		func.uninstantiated = !d.getTypeParams().isEmpty();
 		nvl.add(new NameValuePair(d.getName(), func));
 

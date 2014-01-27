@@ -33,10 +33,10 @@ public class ACaseAlternativeAssistantPOG extends ACaseAlternativeAssistantTC {
 		PExp cexp = node.getCexp();
 		
 		ProofObligationList obligations = new ProofObligationList();
-		question.push(new POCaseContext(pattern, type,  cexp.clone()));
+		question.push(new POCaseContext(pattern, type,  cexp.clone(), af));
 		obligations.addAll(node.getResult().apply(rootVisitor,question));
 		question.pop();
-		question.push(new PONotCaseContext(pattern, type, cexp.clone()));
+		question.push(new PONotCaseContext(pattern, type, cexp.clone(), af));
 
 		return obligations;
 	}

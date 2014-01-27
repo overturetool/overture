@@ -29,7 +29,7 @@ public class ASystemClassDefinitionAssistantTC
 	public static void implicitDefinitions(ASystemClassDefinition def,
 			Environment publicClasses)
 	{
-		SClassDefinitionAssistantTC.implicitDefinitionsBase(def, publicClasses);
+		af.createSClassDefinitionAssistant().implicitDefinitionsBase(def, publicClasses);
 
 		for (PDefinition d : def.getDefinitions())
 		{

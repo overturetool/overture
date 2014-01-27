@@ -16,6 +16,7 @@ import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpr
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
@@ -184,7 +185,7 @@ public class ClassListInterpreter extends ClassList
 
 		if (d != null)
 		{
-			PDefinition def =PDefinitionAssistantInterpreter.findName(d,name, scope);
+			PDefinition def = ClassInterpreter.getInstance().initialContext.assistantFactory.createPDefinitionAssistant().findName(d,name, scope);
 
 			if (def != null)
 			{

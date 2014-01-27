@@ -34,7 +34,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 /**
  * This class implements a way to collect definitions from a node in the AST
@@ -48,7 +47,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 {
 
-	protected ITypeCheckerAssistantFactory af;
+	protected static ITypeCheckerAssistantFactory af;
 
 	public DefinitionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
@@ -138,7 +137,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 		{
 			if (d.getClassDefinition() != null)
 			{
-				d.setSuperdef(PDefinitionAssistantTC.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
+				d.setSuperdef(af.createPDefinitionAssistant().findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
 			}
 		}
 	}

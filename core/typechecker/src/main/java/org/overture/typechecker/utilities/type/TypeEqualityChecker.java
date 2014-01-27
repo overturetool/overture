@@ -25,7 +25,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class checks if 2 objects of a Type are equal.
@@ -47,8 +46,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 			throws AnalysisException
 	{
 
-		return type.getType().apply(this, other);// FIXME: The use of THIS doesn't seems to work with
-													// QuestionAnswerAdaptor.
+		return type.getType().apply(this, other);
 
 	}
 
