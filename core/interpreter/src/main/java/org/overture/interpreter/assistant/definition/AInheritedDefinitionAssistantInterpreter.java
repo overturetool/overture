@@ -28,7 +28,7 @@ public class AInheritedDefinitionAssistantInterpreter
 		{
 			if (d.getClassDefinition() != null)
 			{
-				d.setSuperdef(PDefinitionAssistantInterpreter.findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
+				d.setSuperdef(af.createPDefinitionAssistant().findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
 			}
 		}
 

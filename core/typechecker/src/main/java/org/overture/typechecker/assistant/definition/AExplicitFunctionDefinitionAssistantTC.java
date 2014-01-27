@@ -21,8 +21,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantTC
@@ -127,18 +125,18 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, unknown, NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, unknown, NameScope.LOCAL));
 
 				}
 			} else
 			{
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
 				}
 			}
 
-			defList.add(PDefinitionAssistantTC.checkDuplicatePatterns(node, defs));
+			defList.add(af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs));
 
 			if (ftype.getResult() instanceof AFunctionType) // else???
 			{
@@ -160,7 +158,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 			// pname.location, NameScope.NAMES,false,null, null, new
 			// AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistantTC.markUsed(p);
+			af.createPDefinitionAssistant().markUsed(p);
 			defs.add(p);
 		}
 
@@ -178,7 +176,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 			for (ILexNameToken pname : efd.getTypeParams())
 			{
 				PType ptype = ti.next();
-				ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype, pname, ptype);
+				ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 			}
 		}
 
@@ -188,21 +186,21 @@ public class AExplicitFunctionDefinitionAssistantTC
 	public static PDefinition findName(AExplicitFunctionDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
+		if (af.createPDefinitionAssistant().findNameBaseCase(d, sought, scope) != null)
 		{
 			return d;
 		}
 
 		PDefinition predef = d.getPredef();
 		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
+				&& af.createPDefinitionAssistant().findName(predef, sought, scope) != null)
 		{
 			return predef;
 		}
 
 		PDefinition postdef = d.getPostdef();
 		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
+				&& af.createPDefinitionAssistant().findName(postdef, sought, scope) != null)
 		{
 			return postdef;
 		}
@@ -217,7 +215,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		if (d.getPrecondition() != null)
 		{
 			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
+			af.createPDefinitionAssistant().markUsed(d.getPredef());
 		} else
 		{
 			d.setPredef(null);
@@ -226,7 +224,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		if (d.getPostcondition() != null)
 		{
 			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
+			af.createPDefinitionAssistant().markUsed(d.getPostdef());
 		} else
 		{
 			d.setPostdef(null);
@@ -269,7 +267,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		parameters.add(last);
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
@@ -281,7 +279,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 	{
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

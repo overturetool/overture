@@ -55,10 +55,13 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.ui.utility.ast.AstNameUtil;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 
 public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 {
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 	/**
 	 * Returns the type of configuration this shortcut is applicable to.
 	 * 
@@ -288,7 +291,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		if (node instanceof AExplicitFunctionDefinition)
 		{
 			name = ((AExplicitFunctionDefinition) node).getLocation().getModule();
-			if (!PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) node).getAccess()))
+			if (!assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitFunctionDefinition) node).getAccess()))
 			{
 				name += "()";
 			}
@@ -297,7 +300,7 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 		if (node instanceof AExplicitOperationDefinition)
 		{
 			name = ((AExplicitOperationDefinition) node).getLocation().getModule();
-			if (!PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) node).getAccess()))
+			if (!assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitOperationDefinition) node).getAccess()))
 			{
 				name += "()";
 			}
@@ -315,11 +318,11 @@ public abstract class VdmLaunchShortcut implements ILaunchShortcut2
 	{
 		if (node instanceof AExplicitFunctionDefinition)
 		{
-			return PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) node).getAccess());
+			return assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitFunctionDefinition) node).getAccess());
 		}
 		if (node instanceof AExplicitOperationDefinition)
 		{
-			return PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) node).getAccess());
+			return assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitOperationDefinition) node).getAccess());
 		}
 
 		return true;

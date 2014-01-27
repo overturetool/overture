@@ -107,6 +107,9 @@ import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
+	//Typechecker
+	
+	
 	// Definition
 	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();

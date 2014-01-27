@@ -52,7 +52,6 @@ import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
@@ -240,7 +239,7 @@ public class ClassInterpreter extends Interpreter
 		
 		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
 		{
-			NextGenRTLogger.getInstance().persistToFile();
+			RTLogger.dump(true);
 		}
 		
 		RuntimeValidator.stop();
@@ -309,13 +308,13 @@ public class ClassInterpreter extends Interpreter
 	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (SClassDefinition)SClassDefinitionAssistantInterpreter.findType(classes, name);
+		return (SClassDefinition)assistantFactory.createSClassDefinitionAssistant().findType(classes, name);
 	}
 
 	@Override
 	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		PDefinition d = SClassDefinitionAssistantInterpreter.findName(classes,name, NameScope.NAMESANDSTATE);
+		PDefinition d = assistantFactory.createSClassDefinitionAssistant().findName(classes,name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
@@ -335,7 +334,7 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (PDefinition d: c.getDefinitions())
 			{
-				if (PDefinitionAssistantTC.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
@@ -351,7 +350,7 @@ public class ClassInterpreter extends Interpreter
 
 			for (PDefinition d: c.getAllInheritedDefinitions())
 			{
-				if (PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 

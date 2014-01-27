@@ -61,7 +61,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 			type.setRecDone(true); // Mark early to avoid recursion.
 			af.createPTypeAssistant();
 			// type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
-			type.setRecType(PTypeAssistantTC.getRecord(AstFactory.newAUnknownType(type.getLocation())));
+			type.setRecType(af.createPTypeAssistant().getRecord(AstFactory.newAUnknownType(type.getLocation())));
 			// Build a record type with the common fields of the contained
 			// record types, making the field types the union of the original
 			// fields' types...
@@ -71,7 +71,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 			for (PType t : type.getTypes())
 			{
 				af.createPTypeAssistant();
-				if (PTypeAssistantTC.isRecord(t))// PTypeAssistantTC.isRecord(t))
+				if (af.createPTypeAssistant().isRecord(t))// PTypeAssistantTC.isRecord(t))
 				{
 					for (AFieldField f : t.apply(THIS).getFields())// ;PTypeAssistantTC.getRecord(t).getFields())
 					{

@@ -41,6 +41,7 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
@@ -97,9 +98,9 @@ public class POForAllContext extends POContext
 		}
 	}
 
-	public POForAllContext(ALetBeStExp exp)
+	public POForAllContext(ALetBeStExp exp, ITypeCheckerAssistantFactory assistantFactory)
 	{
-		this.bindings = PMultipleBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = assistantFactory.createPMultipleBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
 	@Override

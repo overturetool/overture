@@ -22,7 +22,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		this.af = af;
 	}
 
-	public static boolean isPublic(PAccessSpecifier access)
+	public boolean isPublic(PAccessSpecifier access)
 	{
 		if (access instanceof AAccessSpecifierAccessSpecifier)
 		{
@@ -32,12 +32,12 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return false;
 	}
 
-	public static boolean isPrivate(AAccessSpecifierAccessSpecifier access)
+	public boolean isPrivate(AAccessSpecifierAccessSpecifier access)
 	{
 		return access.getAccess() instanceof APrivateAccess;
 	}
 
-	public static boolean isProtected(PAccessSpecifier access)
+	public boolean isProtected(PAccessSpecifier access)
 	{
 		if (access instanceof AAccessSpecifierAccessSpecifier)
 		{
@@ -47,13 +47,13 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return false;
 	}
 
-	public static boolean isStatic(AAccessSpecifierAccessSpecifier access)
+	public boolean isStatic(AAccessSpecifierAccessSpecifier access)
 	{
 
 		return access.getStatic() != null;
 	}
 
-	public static boolean isAsync(PAccessSpecifier access)
+	public boolean isAsync(PAccessSpecifier access)
 	{
 		if (access instanceof AAccessSpecifierAccessSpecifier)
 		{
@@ -63,14 +63,14 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return false;
 	}
 
-	public static boolean narrowerThan(AAccessSpecifierAccessSpecifier access,
+	public boolean narrowerThan(AAccessSpecifierAccessSpecifier access,
 			AAccessSpecifierAccessSpecifier other)
 	{
 		return narrowerThan(access.getAccess(), other.getAccess());
 
 	}
 
-	private static boolean narrowerThan(PAccess access, PAccess other)
+	private boolean narrowerThan(PAccess access, PAccess other)
 	{
 		if (access instanceof APrivateAccess)
 		{
@@ -86,7 +86,7 @@ public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 		return false;
 	}
 
-	public static AAccessSpecifierAccessSpecifier getStatic(PDefinition d,
+	public AAccessSpecifierAccessSpecifier getStatic(PDefinition d,
 			boolean asStatic)
 	{
 		AAccessSpecifierAccessSpecifier paccess = d.getAccess();

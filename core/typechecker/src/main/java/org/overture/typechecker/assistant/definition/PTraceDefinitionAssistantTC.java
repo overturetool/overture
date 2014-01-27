@@ -19,7 +19,7 @@ public class PTraceDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static void typeCheck(List<PTraceDefinition> term,
+	public void typeCheck(List<PTraceDefinition> term,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{

@@ -34,6 +34,7 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -41,11 +42,13 @@ public class PONotCaseContext extends POContext {
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
+	public final IPogAssistantFactory assistantFactory;
 
-	public PONotCaseContext(PPattern pattern, PType type, PExp exp) {
+	public PONotCaseContext(PPattern pattern, PType type, PExp exp, IPogAssistantFactory assistantFactory) {
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
+		this.assistantFactory = assistantFactory;
 	}
 
 	@Override
@@ -58,10 +61,10 @@ public class PONotCaseContext extends POContext {
 	}
 
 	private PExp getCaseExp() {
-		if (PPatternAssistantTC.isSimple(pattern)) {
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
 			ANotUnaryExp notExp = new ANotUnaryExp();
 			AEqualsBinaryExp equalsExp = AstExpressionFactory
-					.newAEqualsBinaryExp(PPatternAssistantTC
+					.newAEqualsBinaryExp(assistantFactory.createPPatternAssistant()
 							.getMatchingExpression(pattern.clone()), exp
 							.clone());
 			notExp.setExp(equalsExp);
@@ -75,7 +78,7 @@ public class PONotCaseContext extends POContext {
 					pattern.clone(), type.clone());
 
 			existsExp.setBindList(bindList);
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 			AEqualsBinaryExp equalsExp = AstExpressionFactory
 					.newAEqualsBinaryExp(matching, exp.clone());
 
@@ -90,13 +93,13 @@ public class PONotCaseContext extends POContext {
 	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern)) {
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
 			sb.append("not ");
 			sb.append(pattern);
 			sb.append(" = ");
 			sb.append(exp);
 		} else {
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 
 			sb.append("not exists ");
 			sb.append(matching);

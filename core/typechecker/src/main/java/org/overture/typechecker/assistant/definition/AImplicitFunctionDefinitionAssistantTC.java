@@ -16,7 +16,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AImplicitFunctionDefinitionAssistantTC
@@ -40,7 +39,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		{
 			PType ptype = ti.next();
 			// AFunctionTypeAssistent.
-			ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype, pname, ptype);
+			ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 		}
 
 		return ftype;
@@ -59,7 +58,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 			// pname.location, NameScope.NAMES,false,null, null, new
 			// AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistantTC.markUsed(p);
+			af.createPDefinitionAssistant().markUsed(p);
 			defs.add(p);
 		}
 
@@ -74,7 +73,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		parameters.get(0).add(d.getResult().getPattern().clone());
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getPostType((AFunctionType) d.getType()), parameters, d.getPostcondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getPostType((AFunctionType) d.getType()), parameters, d.getPostcondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
@@ -86,7 +85,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 	{
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getPreType((AFunctionType) d.getType()), getParamPatternList(d), d.getPrecondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getPreType((AFunctionType) d.getType()), getParamPatternList(d), d.getPrecondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

@@ -20,8 +20,6 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 
 public class AExplicitOperationDefinitionAssistantTC
 {
@@ -43,10 +41,10 @@ public class AExplicitOperationDefinitionAssistantTC
 
 		for (PPattern p : node.getParameterPatterns())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
+			defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
 		}
 
-		return PDefinitionAssistantTC.checkDuplicatePatterns(node, defs);
+		return af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,7 +74,7 @@ public class AExplicitOperationDefinitionAssistantTC
 			// Two arguments called "self~" and "self"
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName().getOldName()));
 			
-			if (!PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+			if (!af.createPAccessSpecifierAssistant().isStatic(d.getAccess()))
 			{
 				plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 			}
@@ -85,13 +83,13 @@ public class AExplicitOperationDefinitionAssistantTC
 		parameters.add(plist);
 		APostOpExp postop = AstFactory.newAPostOpExp(d.getName().clone(), d.getPrecondition(), d.getPostcondition(), null, d.getState());
 
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, postop, null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, af.createAOperationTypeAssistant().getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, postop, null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 
@@ -110,7 +108,7 @@ public class AExplicitOperationDefinitionAssistantTC
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getState().getName().clone()));
 		} else if (base.isVDMPP()
-				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+				&& !af.createPAccessSpecifierAssistant().isStatic(d.getAccess()))
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
@@ -118,13 +116,13 @@ public class AExplicitOperationDefinitionAssistantTC
 		parameters.add(plist);
 		APreOpExp preop = AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(), null, d.getState());
 
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), d.getState(), d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, preop, null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, af.createAOperationTypeAssistant().getPreType((AOperationType) d.getType(), d.getState(), d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, preop, null, null, false, null);
 
 		// Operation precondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(def, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(def, false));
 		def.setClassDefinition(def.getClassDefinition());
 		return def;
 	}

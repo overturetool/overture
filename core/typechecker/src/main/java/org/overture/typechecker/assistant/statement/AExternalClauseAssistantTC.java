@@ -16,7 +16,7 @@ public class AExternalClauseAssistantTC
 		this.af = af;
 	}
 
-	public static void typeResolve(AExternalClause clause,
+	public void typeResolve(AExternalClause clause,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{
