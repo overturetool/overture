@@ -65,15 +65,11 @@ public class JavaCodeGen
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
 	
-	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = new TemplateCallable[]
-	{
-			new TemplateCallable(JAVA_FORMAT_KEY, new JavaFormat()),
-			new TemplateCallable(OO_AST_ANALYSIS_KEY, new OoAstAnalysis())
-	};
+	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class);
 	
 	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis)
 	{
-		return new TemplateCallable[]{new TemplateCallable("JavaFormat", javaFormat), new TemplateCallable("OoAstAnalysis", ooAstAnalysis)};
+		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(OO_AST_ANALYSIS_KEY, ooAstAnalysis)};
 	}
 	
 	public JavaCodeGen()
