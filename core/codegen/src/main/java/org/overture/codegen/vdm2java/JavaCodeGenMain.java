@@ -14,6 +14,7 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -52,7 +53,8 @@ public class JavaCodeGenMain
 		{
 			try
 			{
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(args);
+				List<File> files = GeneralUtils.getFilesFromPaths(args);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)

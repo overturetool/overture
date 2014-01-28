@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,25 +31,6 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
-	public static List<GeneratedModule> generateJava(File file) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
-	{
-		return generateJava(file, new JavaCodeGen());
-	}
-	
-	public static List<GeneratedModule> generateJava(File file, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
-	{
-		TypeCheckResult<List<SClassDefinition>> typeCheckResult = GeneralCodeGenUtils.validateFile(file);
-
-		try
-		{
-			return vdmCodGen.generateJavaFromVdm(typeCheckResult.result);
-		} catch (AnalysisException e)
-		{
-			throw new AnalysisException("Unable to generate code from specification. Exception message: "
-					+ e.getMessage());
-		}
-	}
-	
 	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		VDMRT vdmrt = new VDMRT();
@@ -90,43 +70,10 @@ public class JavaCodeGenUtil
 		
 	}
 
-	public static List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
-	{
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
-	}
-	
-	
-	public static List<GeneratedModule> generateJavaFromVdm(
+	private static List<GeneratedModule> generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
-	}
-
-	
-	public static GeneratedData generateJavaFromFile(File file) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
-	{
-		return generateJavaFromFiles(new String[]{"", file.getAbsolutePath()});
-	}
-	
-	public static GeneratedData generateJavaFromFiles(String[] args) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
-	{		
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		List<GeneratedModule> data = new ArrayList<GeneratedModule>();
-		
-		for (int i = 1; i < args.length; i++)
-		{
-			String fileName = args[i];
-			File file = new File(fileName);
-			data.addAll(generateJava(file, vdmCodGen));
-		}
-		
-		GeneratedModule quoteValues = vdmCodGen.generateJavaFromVdmQuotes();
-		
-		GeneratedData dataToReturn = new GeneratedData(data, quoteValues);
-		
-		return dataToReturn;
 	}
 
 	public static Generated generateJavaFromExp(String exp) throws AnalysisException
