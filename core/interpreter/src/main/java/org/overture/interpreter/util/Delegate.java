@@ -49,6 +49,8 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -59,9 +61,8 @@ public class Delegate implements Serializable
 	private static final long serialVersionUID = 1L;
 	private final String name;
 	private List<PDefinition> definitions;
-	//Added this variable to call the assistant factory is it correct?
 	
-	//protected IInterpreterAssistantFactory af;
+	
 
 	public Delegate(String name, List<PDefinition> definitions)
 	{
@@ -74,7 +75,7 @@ public class Delegate implements Serializable
 	private Map<String, Method> delegateMethods = null;
 	private Map<String, LexNameList> delegateArgs = null;
 
-	public boolean hasDelegate()
+	public boolean hasDelegate(ITypeCheckerAssistantFactory assistantFactory)
 	{
 		if (!delegateChecked)
 		{
@@ -86,7 +87,7 @@ public class Delegate implements Serializable
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
-				definitions = PDefinitionListAssistantTC.singleDefinitions(definitions);
+				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
 			}
 			catch (ClassNotFoundException e)
 			{
