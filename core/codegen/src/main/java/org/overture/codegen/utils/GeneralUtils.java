@@ -32,6 +32,9 @@ public class GeneralUtils
 		
 		List<File> fileList = new LinkedList<File>();
 
+		if(listOfFiles == null || listOfFiles.length == 0)
+			return fileList;
+		
 		for (File file : listOfFiles)
 			if (file.isFile())
 				fileList.add(file);
