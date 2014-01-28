@@ -2068,14 +2068,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			argtypes.add(a.apply(THIS, question));
 		}
 
-		PDefinition opdef = SClassDefinitionAssistantTC.findConstructor(classdef, argtypes);
+		PDefinition opdef = question.assistantFactory.createSClassDefinitionAssistant().findConstructor(classdef, argtypes);
 
 		if (opdef == null)
 		{
 			if (!node.getArgs().isEmpty()) // Not having a default ctor is OK
 			{
 				TypeCheckerErrors.report(3134, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
+				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
 			} else if (classdef instanceof ACpuClassDefinition
 					|| classdef instanceof ABusClassDefinition)
 			{
@@ -2086,13 +2086,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(opdef))
 			{
 				TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
+				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
 			} else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, opdef, false)) // (opdef.accessSpecifier.access
 																								// ==
 																								// Token.PRIVATE)
 			{
 				TypeCheckerErrors.report(3292, "Constructor is not accessible", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
+				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
 			} else
 			{
 				node.setCtorDefinition(opdef);

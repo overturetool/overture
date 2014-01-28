@@ -255,12 +255,12 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				// TODO
-				AModuleModulesAssistantTC.processImports(m, modules); // Re-populate importDefs
+				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Re-populate importDefs
 
 				try
 				{
 					// TODO
-					AModuleModulesAssistantTC.typeCheckImports(m);
+					assistantFactory.createAModuleModulesAssistant().typeCheckImports(m);
 					// m.typeCheckImports(); // Imports compared to exports
 				} catch (TypeCheckException te)
 				{

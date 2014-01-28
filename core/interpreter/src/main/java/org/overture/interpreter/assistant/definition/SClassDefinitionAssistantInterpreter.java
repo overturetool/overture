@@ -265,14 +265,14 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		ObjectValue creator = ctxt.outer == null ? null : ctxt.outer.getSelf();
 
-		ObjectValue object = new ObjectValue((AClassType) SClassDefinitionAssistantTC.getType(node), members, inherited, ctxt.threadState.CPU, creator);
+		ObjectValue object = new ObjectValue((AClassType) af.createSClassDefinitionAssistant().getType(node), members, inherited, ctxt.threadState.CPU, creator);
 
 		Value ctor = null;
 
 		if (ctorDefinition == null)
 		{
 			argvals = new ValueList();
-			LexNameToken cname = getCtorName(node, new PTypeList());
+			LexNameToken cname = af.createSClassDefinitionAssistant().getCtorName(node, new PTypeList());
 			ctor = object.get(cname, false);
 		} else
 		{

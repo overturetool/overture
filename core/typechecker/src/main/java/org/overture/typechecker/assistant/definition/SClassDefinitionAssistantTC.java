@@ -558,7 +558,7 @@ public class SClassDefinitionAssistantTC
 		return af.createPDefinitionAssistant().findName(d, d.getName().getThreadName(), NameScope.NAMES);
 	}
 
-	public static PDefinition findConstructor(SClassDefinition classdef,
+	public PDefinition findConstructor(SClassDefinition classdef,
 			List<PType> argtypes)
 	{
 
@@ -566,7 +566,7 @@ public class SClassDefinitionAssistantTC
 		return af.createPDefinitionAssistant().findName(classdef, constructor, NameScope.NAMES);
 	}
 
-	public static LexNameToken getCtorName(SClassDefinition classdef,
+	public LexNameToken getCtorName(SClassDefinition classdef,
 			List<PType> argtypes)
 	{
 		ILexNameToken name = classdef.getName();
@@ -575,7 +575,7 @@ public class SClassDefinitionAssistantTC
 		return cname;
 	}
 
-	public static PType getType(SClassDefinition def)
+	public PType getType(SClassDefinition def)
 	{
 		if (def.getClasstype() == null)
 		{
