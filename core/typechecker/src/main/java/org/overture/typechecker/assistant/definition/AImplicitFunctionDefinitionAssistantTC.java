@@ -29,7 +29,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static AFunctionType getType(AImplicitFunctionDefinition impdef,
+	public AFunctionType getType(AImplicitFunctionDefinition impdef,
 			List<PType> actualTypes)
 	{
 		Iterator<PType> ti = actualTypes.iterator();
@@ -45,7 +45,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return ftype;
 	}
 
-	public static List<PDefinition> getTypeParamDefinitions(
+	public List<PDefinition> getTypeParamDefinitions(
 			AImplicitFunctionDefinition node)
 	{
 
@@ -65,7 +65,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AImplicitFunctionDefinition d)
 	{
 
@@ -80,7 +80,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	public static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AImplicitFunctionDefinition d)
 	{
 
@@ -93,7 +93,7 @@ public class AImplicitFunctionDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<List<PPattern>> getParamPatternList(
+	public List<List<PPattern>> getParamPatternList(
 			AImplicitFunctionDefinition d)
 	{
 

@@ -52,6 +52,7 @@ import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
+import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
@@ -61,7 +62,7 @@ public class ParameterPatternObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 6831031423902894299L;
 	
-	public IPogAssistantFactory assistantFactory; //gkanos:variable added by me to pass it as param to the method generate.
+	public IPogAssistantFactory assistantFactory = new PogAssistantFactory(); //gkanos:variable added by me to pass it as param to the method generate.
 	
 	public ParameterPatternObligation(AExplicitFunctionDefinition def,
 			IPOContextStack ctxt) throws AnalysisException
@@ -78,7 +79,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone(), assistantFactory)));
 	}
 
 	public ParameterPatternObligation(AExplicitOperationDefinition def,
@@ -86,7 +87,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAExplicitOperationDefinitionAssistant().getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
 	}
 
 	public ParameterPatternObligation(AImplicitOperationDefinition def,

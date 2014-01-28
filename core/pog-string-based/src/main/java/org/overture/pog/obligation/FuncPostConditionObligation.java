@@ -88,7 +88,7 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
+		for (List<PPattern> pl : ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
 			params.append(Utils.listToString(ctxt.assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl)));
 		}

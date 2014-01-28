@@ -38,6 +38,7 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
@@ -53,7 +54,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	private Vector<IVdmDefinition> classList = null;
 	ClassListInterpreter classes;
-	ITypeCheckerAssistantFactory assistantFactory;
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	/**
 	 * Constructor
@@ -172,7 +173,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					/*
 					 * if (!operation.type.result.equals("()")) newDefinition.setType( "" );
 					 */// fetching the arguments
-					for (List<PPattern> li : AExplicitOperationDefinitionAssistantTC.getParamPatternList(operation))
+					for (List<PPattern> li : assistantFactory.createAExplicitOperationDefinitionAssistant().getParamPatternList(operation))
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
@@ -226,7 +227,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
-							LexNameList varName = PPatternAssistantTC.getVariableNames(li.get(n));
+							LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li.get(n));
 							// the type
 							String typeName = extractTypeName(function.getType(), n);
 							boolean flag = false;
@@ -248,7 +249,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
-					for (List<PPattern> li : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(function))
+					for (List<PPattern> li : assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(function))
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{

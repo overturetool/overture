@@ -1376,8 +1376,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 					node.setActualTypes(fixed);
 
-					node.setType(node.getExpdef() == null ? AImplicitFunctionDefinitionAssistantTC.getType(node.getImpdef(), node.getActualTypes())
-							: AExplicitFunctionDefinitionAssistantTC.getType(node.getExpdef(), node.getActualTypes()));
+					node.setType(node.getExpdef() == null ? question.assistantFactory.createAImplicitFunctionDefinitionAssistant().getType(node.getImpdef(), node.getActualTypes())
+							: question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getType(node.getExpdef(), node.getActualTypes()));
 
 					// type = expdef == null ?
 					// impdef.getType(actualTypes) :

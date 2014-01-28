@@ -13,7 +13,8 @@ import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistan
 
 public class AstFactoryTC extends AstFactory
 {
-
+	//public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	
 	public static SClassDefinition newACpuClassDefinition()
 			throws ParserException, LexException
 	{

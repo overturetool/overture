@@ -148,7 +148,7 @@ public class Delegate implements Serializable
     	 				else if (d instanceof AImplicitOperationDefinition)
     	 				{
     	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
-    	 					plist = AImplicitOperationDefinitionAssistantTC.getParamPatternList(e);
+    	 					plist = ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(e);
     	 				}
 
     	 				break;
@@ -163,7 +163,7 @@ public class Delegate implements Serializable
     	 				else if (d instanceof AImplicitFunctionDefinition)
     	 				{
     	 					AImplicitFunctionDefinition e = (AImplicitFunctionDefinition)d;
-    	 					plist = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(e).get(0);
+    	 					plist = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(e).get(0);
     	 				}
 
     	 				break;
