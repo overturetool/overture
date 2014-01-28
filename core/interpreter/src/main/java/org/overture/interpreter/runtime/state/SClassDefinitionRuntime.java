@@ -9,7 +9,6 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
@@ -34,7 +33,7 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().getName(), PDefinitionAssistantTC.getDefinitions(def));
+		delegate = new Delegate(def.getName().getName(), assistantFactory.createPDefinitionAssistant().getDefinitions(def));
 		guardLock = new Lock();
 	}
 	

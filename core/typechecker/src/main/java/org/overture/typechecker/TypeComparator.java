@@ -53,6 +53,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
@@ -94,6 +95,8 @@ public class TypeComparator
 			this.b = b;
 			this.result = Result.Maybe;
 		}
+		
+		public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 		@Override
 		public boolean equals(Object other)

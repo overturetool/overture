@@ -34,6 +34,7 @@ import org.overture.ast.typechecker.Pass;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
@@ -57,6 +58,8 @@ public class ModuleTypeChecker extends TypeChecker
 	 * @param modules
 	 */
 
+	public final ITypeCheckerAssistantFactory assistantFactory  = new TypeCheckerAssistantFactory();
+	
 	public ModuleTypeChecker(List<AModuleModules> modules)
 	{
 		super();
@@ -125,7 +128,7 @@ public class ModuleTypeChecker extends TypeChecker
    			{
 	   			for (PDefinition definition: module.getDefs())
 	   			{
-   					PDefinitionAssistantTC.markUsed(definition);
+   					assistantFactory.createPDefinitionAssistant().markUsed(definition);
 	   			}
    			}
    		}
