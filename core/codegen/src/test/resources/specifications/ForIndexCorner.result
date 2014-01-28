@@ -1,0 +1,19 @@
+import utils.*;
+
+
+public class A {
+    public void op() {
+        long temp_1 = 1L;
+
+        for (long i = 1L; i <= temp_1; i++) {
+            IO.print("kat");
+        }
+
+        long temp_2 = 1L;
+
+        for (long i = 4L; i <= temp_2; i++) {
+            IO.print("hej");
+        }
+    }
+}
+##########

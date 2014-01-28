@@ -1,0 +1,10 @@
+public class A {
+    public void op() {
+        long temp_1 = 10L;
+
+        for (long i = 1L; i <= temp_1; i++) {
+            //Skip;
+        }
+    }
+}
+##########

@@ -1,0 +1,12 @@
+class A
+
+operations
+
+public op : () ==> ()
+op () ==
+(
+	for i = 1 to 1 do IO`print("kat");
+	for i = 4 to 1 do IO`print("hej");
+)
+
+end A
