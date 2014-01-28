@@ -76,14 +76,17 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
+	private JavaTempVarNameGen tempVarNameGen;
 	
 	public JavaFormat(List<AClassDeclCG> classes)
 	{
+		this();
 		this.classes = classes;
 	}
 	
 	public JavaFormat()
 	{
+		this.tempVarNameGen = new JavaTempVarNameGen();
 	}
 	
 	public String format(INode node) throws AnalysisException
@@ -774,5 +777,10 @@ public class JavaFormat
 		sb.append("})");
 		
 		return sb.toString();
+	}
+	
+	public String nextVarName()
+	{
+		return tempVarNameGen.nextVarName();
 	}
 }

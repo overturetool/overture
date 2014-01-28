@@ -1,0 +1,15 @@
+#set( $index = $node.getVar())
+#set( $fromExp = $JavaFormat.format($node.getFrom()) )
+#set( $toExp = $JavaFormat.format($node.getTo()) )
+#set( $byExp = $JavaFormat.format($node.getBy()) )
+#set( $body = $JavaFormat.format($node.getBody()) )
+#set( $toVar = $JavaFormat.nextVarName() )
+#set( $byVar = $JavaFormat.nextVarName() )
+##
+long ${toVar} = ${toExp};
+long ${byVar} = ${byExp};
+
+for(long ${index} = ${fromExp}; ${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}; ${index} += ${byVar})
+{
+	$body
+}

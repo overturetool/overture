@@ -131,6 +131,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            					 [args]:expCG*// [explicit]:java_Boolean [field]:LexNameToken
            |	{call} [type]:typeCG [classType]:typeCG.class [name]:java_String [args]:expCG*
            |	{notImplemented}
+           |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

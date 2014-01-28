@@ -14,6 +14,7 @@ import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
@@ -33,6 +34,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
+import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
@@ -324,6 +326,32 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			throws AnalysisException
 	{
 		return null;//Indicates an abstract body
+	}
+	
+	@Override
+	public PStmCG caseAForIndexStm(AForIndexStm node, OoAstInfo question)
+			throws AnalysisException
+	{
+		ILexNameToken var = node.getVar();
+		PExp from = node.getFrom();
+		PExp to = node.getTo();
+		PExp by = node.getBy();
+		PStm stm = node.getStatement();
+		
+		String varCg = var.getName();
+		PExpCG fromCg = from.apply(question.getExpVisitor(), question);
+		PExpCG toCg = to.apply(question.getExpVisitor(), question);
+		PExpCG byCg = by.apply(question.getExpVisitor(), question);
+		PStmCG bodyCg = stm.apply(question.getStatementVisitor(), question);
+		
+		AForIndexStmCG forStm = new AForIndexStmCG();
+		forStm.setVar(varCg);
+		forStm.setFrom(fromCg);
+		forStm.setTo(toCg);
+		forStm.setBy(byCg);
+		forStm.setBody(bodyCg);
+		
+		return forStm;
 	}
 	
 }
