@@ -1,0 +1,36 @@
+public class A {
+    public void op() {
+        long temp_1 = 10L;
+        long temp_2 = 5L;
+
+        for (long i = 1L; (temp_2 < 0) ? (i >= temp_1) : (i <= temp_1);
+                i += temp_2) {
+            //Skip;
+        }
+
+        long temp_3 = -1L;
+        long temp_4 = -2L;
+
+        for (long j = 10L; (temp_4 < 0) ? (j >= temp_3) : (j <= temp_3);
+                j += temp_4) {
+            //Skip;
+        }
+
+        long temp_5 = 1L;
+        long temp_6 = 1L;
+
+        for (long i = 1L; (temp_6 < 0) ? (i >= temp_5) : (i <= temp_5);
+                i += temp_6) {
+            //Skip;
+        }
+
+        long temp_7 = 0L;
+        long temp_8 = 1L;
+
+        for (long i = 1L; (temp_8 < 0) ? (i >= temp_7) : (i <= temp_7);
+                i += temp_8) {
+            //Skip;
+        }
+    }
+}
+##########
