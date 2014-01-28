@@ -95,7 +95,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
 		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAImplicitOperationDefinitionAssistant().getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone(), assistantFactory)));
 	}
 
 	private PExp generate(PDefinition predef, List<List<PPattern>> plist,

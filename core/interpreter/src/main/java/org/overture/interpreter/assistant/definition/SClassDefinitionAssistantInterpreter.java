@@ -308,7 +308,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			OperationValue invop = new OperationValue(node.getInvariant(), null, null, null, af);
 			ClassInvariantListener listener = new ClassInvariantListener(invop);
 
-			for (PDefinition d : getInvDefs(node))
+			for (PDefinition d : af.createSClassDefinitionAssistant().getInvDefs(node))
 			{
 				AClassInvariantDefinition inv = (AClassInvariantDefinition) d;
 

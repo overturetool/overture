@@ -37,12 +37,16 @@ import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
+import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class StateInvariantObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -5828298910806421399L;
+	
+	public final IPogAssistantFactory assistantFactory = new PogAssistantFactory();
 
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt)
 	{
@@ -99,7 +103,7 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		PExp root = null;
 		
-		for (PDefinition d: SClassDefinitionAssistantTC.getInvDefs(def.clone()))
+		for (PDefinition d: assistantFactory.createSClassDefinitionAssistant().getInvDefs(def.clone()))
 		{
 			AClassInvariantDefinition cid = (AClassInvariantDefinition)d;
 			root = makeAnd(root, cid.getExpression().clone());

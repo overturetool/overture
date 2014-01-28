@@ -199,7 +199,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 					// fetching the arguments
 					int n = 0;
-					for (PPattern li : AImplicitOperationDefinitionAssistantTC.getParamPatternList(operation))
+					for (PPattern li : assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(operation))
 					{
 						LexNameList varName = PPatternAssistantTC.getVariableNames(li);
 						// the type

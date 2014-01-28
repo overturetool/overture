@@ -31,7 +31,7 @@ public class AImplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 
@@ -80,7 +80,7 @@ public class AImplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 
@@ -117,7 +117,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		return def;
 	}
 
-	public static List<PPattern> getParamPatternList(
+	public List<PPattern> getParamPatternList(
 			AImplicitOperationDefinition definition)
 	{
 		List<PPattern> plist = new ArrayList<PPattern>();
@@ -130,7 +130,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		return plist;
 	}
 
-	public static List<List<PPattern>> getListParamPatternList(
+	public List<List<PPattern>> getListParamPatternList(
 			AImplicitOperationDefinition func)
 	{
 		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();

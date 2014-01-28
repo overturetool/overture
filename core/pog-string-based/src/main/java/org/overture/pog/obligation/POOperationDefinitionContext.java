@@ -56,7 +56,7 @@ public class POOperationDefinitionContext extends POContext
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 		this.assistantFactory = assistantFactory;

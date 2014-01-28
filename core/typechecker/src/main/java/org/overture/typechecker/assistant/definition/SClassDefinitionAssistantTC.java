@@ -322,7 +322,8 @@ public class SClassDefinitionAssistantTC
 	{
 		if (d instanceof ASystemClassDefinition)
 		{
-			ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) d, publicClasses);
+			af.createPDefinitionAssistant().implicitDefinitions(d, publicClasses);
+			//ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition) d, );
 		} else
 		{
 			implicitDefinitionsBase(d, publicClasses);
@@ -371,7 +372,7 @@ public class SClassDefinitionAssistantTC
 		return AstFactory.newAExplicitOperationDefinition(invname, type, new Vector<PPattern>(), null, null, body);
 	}
 
-	public static List<PDefinition> getInvDefs(SClassDefinition def)
+	public List<PDefinition> getInvDefs(SClassDefinition def)
 	{
 		List<PDefinition> invdefs = new Vector<PDefinition>();
 

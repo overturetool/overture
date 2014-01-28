@@ -521,7 +521,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (node.getPostcondition() != null)
 				{
-					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition()));
+					//passed 1 more argument to give the assistantFactory to the constructor.
+					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition(), assistantFactory));
 					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question));
 					question.pop();
 				}
