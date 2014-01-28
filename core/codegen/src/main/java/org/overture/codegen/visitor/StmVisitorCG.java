@@ -341,7 +341,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		String varCg = var.getName();
 		PExpCG fromCg = from.apply(question.getExpVisitor(), question);
 		PExpCG toCg = to.apply(question.getExpVisitor(), question);
-		PExpCG byCg = by.apply(question.getExpVisitor(), question);
+		PExpCG byCg = by != null ? by.apply(question.getExpVisitor(), question) : null;
 		PStmCG bodyCg = stm.apply(question.getStatementVisitor(), question);
 		
 		AForIndexStmCG forStm = new AForIndexStmCG();

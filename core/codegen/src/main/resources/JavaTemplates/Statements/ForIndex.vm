@@ -4,12 +4,25 @@
 #set( $byExp = $JavaFormat.format($node.getBy()) )
 #set( $body = $JavaFormat.format($node.getBody()) )
 #set( $toVar = $JavaFormat.nextVarName() )
-#set( $byVar = $JavaFormat.nextVarName() )
+#set( $bySpecified = !$JavaFormat.isNull($byExp) )
 ##
 long ${toVar} = ${toExp};
-long ${byVar} = ${byExp};
+##
+#set( $condition = "" )
+#set( $step = "" )
+##
+#if ( $bySpecified == true )
+	#set($byVar = "$JavaFormat.nextVarName()" )
+	long ${byVar} =  ${byExp};
+	#set( $step = "${index} += ${byVar}" )
+	#set( $condition = "${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}")
+#else
 
-for(long ${index} = ${fromExp}; ${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}; ${index} += ${byVar})
+	#set( $condition = "${index} <= ${toVar}" )
+	#set( $step = "${index}++" )
+#end
+
+for(long ${index} = ${fromExp}; ${condition} ; ${step})
 {
 	$body
 }
