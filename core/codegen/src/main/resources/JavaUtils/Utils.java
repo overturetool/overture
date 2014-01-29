@@ -105,7 +105,7 @@ public class Utils
 		
 		VDMSeq result = seq();
 		
-		addAll(result, seq);
+		addAll(result, seq.toArray());
 
 		Collections.reverse(result);
 		
