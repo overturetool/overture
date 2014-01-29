@@ -12,6 +12,7 @@ import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
+import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
@@ -170,6 +171,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		instanceOfExp.setObjRef(objRefCg);
 		
 		return instanceOfExp;
+	}
+	
+	@Override
+	public PExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleUnaryExp(node, new ALenUnaryExpCG(), question);
 	}
 	
 	@Override
