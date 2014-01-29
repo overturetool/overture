@@ -29,6 +29,8 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -42,6 +44,7 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
+	public final IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
 
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
@@ -229,7 +232,7 @@ public class RecordValue extends Value
 		{
 			RecordValue ot = (RecordValue)val;
 
-			if (PTypeAssistantInterpreter.equals(ot.type,type))
+			if (assistantFactory.createPTypeAssistant().equals(ot.type,type))
 			{
 				for (AFieldField f: type.getFields())
 				{
@@ -298,7 +301,7 @@ public class RecordValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantInterpreter.equals(to, type))
+		if (ctxt.assistantFactory.createPTypeAssistant().equals(to, type))
 		{
 			return this;
 		}

@@ -60,9 +60,9 @@ public class POForAllContext extends POContext
 		this.bindings = exp.getBindings();
 	}
 
-	public POForAllContext(ASeqCompSeqExp exp)
+	public POForAllContext(ASeqCompSeqExp exp, ITypeCheckerAssistantFactory assistantFactory)
 	{
-		this.bindings = ASetBindAssistantTC.getMultipleBindList(exp.getSetBind());
+		this.bindings = assistantFactory.createASetBindAssistant().getMultipleBindList(exp.getSetBind());
 	}
 
 	public POForAllContext(AForAllExp exp)
