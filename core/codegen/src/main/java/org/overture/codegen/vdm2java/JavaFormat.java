@@ -804,6 +804,11 @@ public class JavaFormat
 		return type instanceof AStringTypeCG; 
 	}
 	
+	public boolean isCharType(PTypeCG type)
+	{
+		return type instanceof ACharBasicTypeCG; 
+	}
+	
 	public String buildString(List<PExpCG> exps) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
