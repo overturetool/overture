@@ -2,12 +2,12 @@
 ## a unary expression. This is not the case here.
 ##
 #if ($node.getMembers().size() == 0)
-	Utils.seq()
+	Seq.seq()
 #else
 	#set( $args = $JavaFormat.formatArgs($node.getMembers()) )
 	#if ($JavaFormat.isStringType($node.getType()))
-		Utils.distConcStrings($args)
+		Seq.distConcStrings($args)
 	#else
-		Utils.distConc($args)
+		Seq.distConc($args)
 	#end
 #end

@@ -1,1 +1,1 @@
-Utils.seqTail($JavaFormat.format($node.getExp()))
+Seq.tail($JavaFormat.format($node.getExp()))
