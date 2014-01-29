@@ -17,7 +17,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 
 public class AImplicitOperationDefinitionAssistantTC
 {

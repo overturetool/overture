@@ -181,55 +181,6 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return ftype;
 	}
 
-//	public static PDefinition findName(AExplicitFunctionDefinition d,
-//			ILexNameToken sought, NameScope scope)
-//	{
-//		if (af.createPDefinitionAssistant().findNameBaseCase(d, sought, scope) != null)
-//		{
-//			return d;
-//		}
-//
-//		PDefinition predef = d.getPredef();
-//		if (predef != null
-//				&& af.createPDefinitionAssistant().findName(predef, sought, scope) != null)
-//		{
-//			return predef;
-//		}
-//
-//		PDefinition postdef = d.getPostdef();
-//		if (postdef != null
-//				&& af.createPDefinitionAssistant().findName(postdef, sought, scope) != null)
-//		{
-//			return postdef;
-//		}
-//
-//		return null;
-//	}
-
-//	public static void implicitDefinitions(AExplicitFunctionDefinition d,
-//			Environment env)
-//	{
-//
-//		if (d.getPrecondition() != null)
-//		{
-//			d.setPredef(getPreDefinition(d));
-//			af.createPDefinitionAssistant().markUsed(d.getPredef());
-//		} else
-//		{
-//			d.setPredef(null);
-//		}
-//
-//		if (d.getPostcondition() != null)
-//		{
-//			d.setPostdef(getPostDefinition(d));
-//			af.createPDefinitionAssistant().markUsed(d.getPostdef());
-//		} else
-//		{
-//			d.setPostdef(null);
-//		}
-//
-//	}
-
 	public AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d)
 	{

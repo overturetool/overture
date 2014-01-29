@@ -60,13 +60,8 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		try
 		{
-			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));// FIXME:
-																																// should
-																																// we
-																																// handle
-																																// exceptions
-																																// like
-																																// this
+			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));
+			
 		} catch (AnalysisException e)
 		{
 			return null;

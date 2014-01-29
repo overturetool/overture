@@ -25,18 +25,4 @@ public class ATypeBindAssistantTC
 
 	}
 
-//	public static List<PMultipleBind> getMultipleBindList(ATypeBind bind)
-//	{
-//		List<PPattern> plist = new Vector<PPattern>();
-//		plist.add(bind.getPattern().clone());
-//		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
-//		mblist.add(AstFactory.newATypeMultipleBind(plist, bind.getType().clone()));
-//		return mblist;
-//	}
-
-//	public static LexNameList getOldNames(ATypeBind bind)
-//	{
-//		return new LexNameList();
-//	}
-
 }

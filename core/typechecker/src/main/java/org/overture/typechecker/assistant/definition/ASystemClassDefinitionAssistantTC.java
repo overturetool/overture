@@ -12,8 +12,4 @@ public class ASystemClassDefinitionAssistantTC
 		this.af = af;
 	}
 
-//	public static void implicitDefinitions(ASystemClassDefinition def,
-//			Environment publicClasses)
-//	{}
-
 }
