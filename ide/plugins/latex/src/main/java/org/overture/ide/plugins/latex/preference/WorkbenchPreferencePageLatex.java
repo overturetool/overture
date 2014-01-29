@@ -16,44 +16,47 @@
  * 	
  * The Overture Tool web-site: http://overturetool.org/
  *******************************************************************************/
-package org.overture.ide.ui.preferences;
+package org.overture.ide.plugins.latex.preference;
 
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.overture.ide.plugins.latex.ILatexConstants;
+import org.overture.ide.plugins.latex.LatexPlugin;
 
-import org.overture.ide.ui.IVdmUiConstants;
-import org.overture.ide.ui.VdmUIPlugin;
+public class WorkbenchPreferencePageLatex extends FieldEditorPreferencePage
+		implements IWorkbenchPreferencePage
+{
 
-public class WorkbenchPreferencePageLatex extends FieldEditorPreferencePage implements
-IWorkbenchPreferencePage {
+	public void init(IWorkbench workbench)
+	{
 
-	public void init(IWorkbench workbench) {
-		
-		
 	}
 
 	@Override
-	protected void createFieldEditors() {
-		
-		
-		addField(new FileFieldEditor(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE, "MacOS Latex Path", getFieldEditorParent()));
-		
+	protected void createFieldEditors()
+	{
+
+		addField(new FileFieldEditor(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, "MacOS Latex Path", getFieldEditorParent()));
+		addField(new ComboFieldEditor(ILatexConstants.PDF_BUILDER, "PDF Builder", new String[][] {
+				new String[] { "PdfLaTex", "pdflatex" },
+				new String[] { "XeTex", "xetex" } }, getFieldEditorParent()));
 	}
 
 	@Override
 	protected IPreferenceStore doGetPreferenceStore()
 	{
-		return VdmUIPlugin.getDefault().getPreferenceStore();
+		return LatexPlugin.getDefault().getPreferenceStore();
 	}
 
 	@Override
 	protected void performDefaults()
 	{
 		IPreferenceStore store = getPreferenceStore();
-		store.setDefault(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE, IVdmUiConstants.DEFAULT_OSX_LATEX_PATH);
+		store.setDefault(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, ILatexConstants.DEFAULT_OSX_LATEX_PATH);
 		super.performDefaults();
 	}
 

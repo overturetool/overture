@@ -24,19 +24,19 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin
+public class LatexPlugin extends AbstractUIPlugin
 {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.overture.ide.plugins.latex";
 
 	// The shared instance
-	private static Activator plugin;
+	private static LatexPlugin plugin;
 
 	/**
 	 * The constructor
 	 */
-	public Activator()
+	public LatexPlugin()
 	{
 	}
 
@@ -67,9 +67,21 @@ public class Activator extends AbstractUIPlugin
 	 * 
 	 * @return the shared instance
 	 */
-	public static Activator getDefault()
+	public static LatexPlugin getDefault()
 	{
 		return plugin;
+	}
+
+	public static boolean usePdfLatex()
+	{
+		String builder = getDefault().getPreferenceStore().getDefaultString(ILatexConstants.PDF_BUILDER);
+		return builder == null || builder.equals("pdflatex");
+	}
+
+	public static boolean useXetex()
+	{
+		String builder = getDefault().getPreferenceStore().getDefaultString(ILatexConstants.PDF_BUILDER);
+		return builder != null && builder.equals("xetex");
 	}
 
 }

@@ -31,7 +31,7 @@ import org.overture.ide.plugins.latex.ILatexConstants;
 import org.overture.ide.plugins.latex.LatexPlugin;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
-public class PdfLatex extends Thread implements PdfGenerator
+public class Xetex extends Thread implements PdfGenerator
 {
 
 	private String documentName;
@@ -44,7 +44,7 @@ public class PdfLatex extends Thread implements PdfGenerator
 	private String currentOS = null;
 	private boolean latexFailed = false;
 
-	public PdfLatex(IProject project, File outputFolder, String documentName)
+	public Xetex(IProject project, File outputFolder, String documentName)
 	{
 		this.documentName = documentName;
 		this.outputFolder = outputFolder;
@@ -89,7 +89,8 @@ public class PdfLatex extends Thread implements PdfGenerator
 				documentName = getRelativePath(new File(documentName), outputFolder);
 			}
 
-			String argument = "pdflatex " + documentName;
+			// String argument = "pdflatex " + documentName;
+			String argument = "xelatex " + documentName; // modified by his 2013/10/08
 			cw.println("Starting: " + argument + "\nIn: "
 					+ outputFolder.getAbsolutePath());
 			ProcessBuilder pb = new ProcessBuilder(argument);
@@ -98,15 +99,19 @@ public class PdfLatex extends Thread implements PdfGenerator
 				String osxpath = LatexPlugin.getDefault().getPreferenceStore().getString(ILatexConstants.OSX_LATEX_PATH_PREFERENCE);
 				if (osxpath.equals(""))
 				{
-					pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+					// pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
+					pb.command("/usr/texbin/xelatex", "-interaction=nonstopmode", documentName); // modified by his
+																									// 2013/10/08
 				} else
 				{
 					pb.command(osxpath, "-interaction=nonstopmode", documentName);
 				}
 			} else
 			{
-				pb.command("pdflatex", "-interaction=nonstopmode", "\""
-						+ documentName + "\"");
+				// pb.command("pdflatex", "-interaction=nonstopmode", "\""
+				// + documentName + "\"");
+				pb.command("xelatex", "-interaction=nonstopmode", "\""
+						+ documentName + "\""); // modified by his 2013/10/08
 			}
 
 			pb.directory(outputFolder);
