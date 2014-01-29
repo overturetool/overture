@@ -72,6 +72,13 @@ import org.overture.codegen.ooast.OoAstAnalysis;
 
 public class JavaFormat
 {
+	private static final String JAVA_NUMBER = "Number";
+	
+	public String getJavaNumber()
+	{
+		return JAVA_NUMBER;
+	}
+	
 	private static final String JAVA_PUBLIC = "public";
 	private static final String JAVA_INT = "int";
 	
