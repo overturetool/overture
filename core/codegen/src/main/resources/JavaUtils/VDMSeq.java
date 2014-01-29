@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class VDMSeq extends Vector implements ValueType
+public class VDMSeq extends Vector implements ValueType, VDMCollection
 {	
 	public VDMSeq clone()
 	{

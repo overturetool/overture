@@ -15,7 +15,10 @@ public class Seq
 		if(elements == null)
 			throw new IllegalArgumentException("Cannot instantiate sequence from null");
 		
-		return addAll(seq(), elements);
+		VDMSeq seq = seq();
+		CollectionUtil.addAll(seq, elements);
+
+		return seq;
 	}
 	
 	public static VDMSeq mod(VDMSeq seq, Maplet... maplets)
@@ -42,8 +45,7 @@ public class Seq
 		
 		VDMSeq result = seq();
 		
-		addAll(result, seq.toArray());
-
+		CollectionUtil.addAll(result, seq.toArray());
 		Collections.reverse(result);
 		
 		return result;
@@ -105,8 +107,8 @@ public class Seq
 
 		VDMSeq result = seq();
 
-		addAll(result, left.toArray());
-		addAll(result, right.toArray());
+		CollectionUtil.addAll(result, left.toArray());
+		CollectionUtil.addAll(result, right.toArray());
 		
 		return result;
 	}
@@ -117,7 +119,7 @@ public class Seq
 		
 		for(VDMSeq seq : seqs)
 		{
-			addAll(result, seq.toArray());
+			CollectionUtil.addAll(result, seq.toArray());
 		}
 		
 		return result;
@@ -131,24 +133,5 @@ public class Seq
 			result += str;
 		
 		return result;
-	}
-	
-	private static VDMSeq addAll(VDMSeq to, Object... from)
-	{
-		if(to == null || from == null)
-			throw new IllegalArgumentException("Arguments to addAll cannot be null");
-		
-		for(Object element : from)
-		{
-			if(element instanceof ValueType)
-			{
-				ValueType valueType = (ValueType) element;
-				element = valueType.clone();
-			}
-			
-			to.add(element);
-		}
-		
-		return to;
-	}
+	}	
 }
