@@ -1,0 +1,1 @@
+((Tuple) Seq.seq(Tuple.mk_(1L, 2L)).get(Utils.index(1L))).clone()
