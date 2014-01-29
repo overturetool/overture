@@ -1,0 +1,10 @@
+public class A {
+    public char op() {
+        return s().charAt(Utils.index(1L));
+    }
+
+    public String s() {
+        return "hej";
+    }
+}
+##########
