@@ -1,1 +1,1 @@
-Utils.distConc(Utils.seq())
+Seq.distConc(Seq.seq())

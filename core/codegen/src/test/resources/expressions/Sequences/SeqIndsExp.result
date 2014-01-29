@@ -1,1 +1,1 @@
-Utils.inds(Utils.seq(1L, 2L, 3L))
+Seq.inds(Seq.seq(1L, 2L, 3L))

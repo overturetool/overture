@@ -4,25 +4,25 @@ import java.util.*;
 
 
 public class A {
-    private static final VDMSeq as = Utils.seq();
-    private static final VDMSeq bs = Utils.seq(1L, 2L);
-    private static final VDMSeq cs = Utils.seq(1.2, 3.3);
-    private static final VDMSeq ds = Utils.seq(true, false);
+    private static final VDMSeq as = Seq.seq();
+    private static final VDMSeq bs = Seq.seq(1L, 2L);
+    private static final VDMSeq cs = Seq.seq(1.2, 3.3);
+    private static final VDMSeq ds = Seq.seq(true, false);
     private static final String es = new String(new char[] { 'a', 'b' });
-    private static final VDMSeq fs = Utils.seq("a", "b");
+    private static final VDMSeq fs = Seq.seq("a", "b");
 
     public void op() {
-        VDMSeq as_ = Utils.reverse(as.clone());
+        VDMSeq as_ = Seq.reverse(as.clone());
 
-        VDMSeq bs_ = Utils.reverse(bs.clone());
+        VDMSeq bs_ = Seq.reverse(bs.clone());
 
-        VDMSeq cs_ = Utils.reverse(cs.clone());
+        VDMSeq cs_ = Seq.reverse(cs.clone());
 
-        VDMSeq ds_ = Utils.reverse(ds.clone());
+        VDMSeq ds_ = Seq.reverse(ds.clone());
 
         String es_ = new StringBuilder(es).reverse().toString();
 
-        VDMSeq fs_ = Utils.reverse(fs.clone());
+        VDMSeq fs_ = Seq.reverse(fs.clone());
 
         //Skip;
     }

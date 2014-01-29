@@ -50,7 +50,7 @@ public class Company {
     private VDMSeq employees;
 
     public Company() {
-        employees = Utils.seq();
+        employees = Seq.seq();
     }
 
     public void op1() {
@@ -71,7 +71,7 @@ public class Company {
         } else {
             return start_calc(sum.doubleValue() +
                 ((Employee) emps.get(0)).getSalary().doubleValue(),
-                Utils.seqTail(emps.clone()));
+                Seq.tail(emps.clone()));
         }
     }
 
@@ -80,7 +80,7 @@ public class Company {
     }
 
     public Company addEmp(Employee emp) {
-        employees = Utils.seqConc(employees.clone(), Utils.seq(emp));
+        employees = Seq.conc(employees.clone(), Seq.seq(emp));
 
         return this;
     }

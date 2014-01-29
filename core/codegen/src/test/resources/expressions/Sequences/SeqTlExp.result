@@ -1,1 +1,1 @@
-Utils.seqTail(Utils.seq(1L, 2L, 3L))
+Seq.tail(Seq.seq(1L, 2L, 3L))
