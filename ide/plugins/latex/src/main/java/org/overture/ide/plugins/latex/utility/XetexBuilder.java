@@ -37,7 +37,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.latex.LatexPlugin;
 
 @SuppressWarnings("restriction")
-public class LatexBuilder implements PdfBuilder
+public class XetexBuilder implements PdfBuilder
 {
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
@@ -45,12 +45,6 @@ public class LatexBuilder implements PdfBuilder
 	File outputFolder = null;
 	List<String> includes = new Vector<String>();
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#prepare(org.eclipse.core.resources.IProject,
-	 * org.overture.ast.lex.Dialect)
-	 */
-	@Override
 	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
@@ -65,16 +59,10 @@ public class LatexBuilder implements PdfBuilder
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#saveDocument(org.eclipse.core.resources.IProject,
-	 * java.io.File, java.lang.String)
-	 */
-	@Override
 	public void saveDocument(IProject project, File projectRoot, String name)
 			throws IOException
 	{
-		String document = readFile("latex/document.tex");
+		String document = readFile("xetex/document.tex");
 		String documentFileName = name;// + ".tex";
 		File latexRoot = makeOutputFolder(project);
 		StringBuilder sb = new StringBuilder();
@@ -119,11 +107,6 @@ public class LatexBuilder implements PdfBuilder
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#addInclude(java.lang.String)
-	 */
-	@Override
 	public void addInclude(String path)
 	{
 		if (!includes.contains(path))

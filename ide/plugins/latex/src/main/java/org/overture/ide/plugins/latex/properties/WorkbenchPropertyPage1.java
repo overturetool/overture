@@ -43,8 +43,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.overture.ide.core.resources.IOptionGroup;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.latex.Activator;
 import org.overture.ide.plugins.latex.ILatexConstants;
+import org.overture.ide.plugins.latex.LatexPlugin;
 
 @SuppressWarnings("restriction")
 public class WorkbenchPropertyPage1 extends PropertyPage implements
@@ -103,7 +103,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			fileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
-			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID, true);
+			IOptionGroup opt = p.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true);
 
 			String documentName = null;
 			String tmpDoc = opt.getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, null);
@@ -112,9 +112,12 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 				documentName = tmpDoc;
 			}
 			if (documentName == null)
+			{
 				fileNameText.setText(project.getProject().getName() + ".tex");
-			else
+			} else
+			{
 				fileNameText.setText(documentName);
+			}
 			buttonSelectFile = new Button(mainDocumentGroup, SWT.NONE);
 			buttonSelectFile.setLayoutData(new GridData());
 			buttonSelectFile.setText("Browse...");
@@ -209,7 +212,7 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 		IVdmProject p = (IVdmProject) project.getAdapter(IVdmProject.class);
 		if (p != null)
 		{
-			IOptionGroup opt = p.getOptions().getGroup(Activator.PLUGIN_ID, true);
+			IOptionGroup opt = p.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true);
 
 			if (useAutoReportGeneration.getSelection())
 			{
@@ -262,16 +265,21 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 			{
 				Object project = selection.getPaths()[0].getLastSegment();
 				if (project instanceof IProject)
+				{
 					selectedProject = (IProject) project;
-				else if (project instanceof IVdmProject)
+				} else if (project instanceof IVdmProject)
+				{
 					selectedProject = (IProject) ((IVdmProject) project).getAdapter(IProject.class);
+				}
 
 			}
 		} else if (selectedItem instanceof IStructuredSelection)
 		{
 			IStructuredSelection selection = (IStructuredSelection) selectedItem;
 			if (selection.getFirstElement() instanceof IProject)
+			{
 				selectedProject = (IProject) selection.getFirstElement();
+			}
 		}
 
 		return selectedProject;
