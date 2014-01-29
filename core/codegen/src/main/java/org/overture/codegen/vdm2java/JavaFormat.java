@@ -98,33 +98,64 @@ public class JavaFormat
 	
 	public String format(INode node) throws AnalysisException
 	{		
+		return format(node, false);
+	}
+	
+	public String formatIgnoreContext(INode node) throws AnalysisException
+	{
+		return format(node, true);
+	}
+	
+	private String format(INode node, boolean ignoreContext) throws AnalysisException
+	{
 		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class));
 		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
-		return writer.toString() + getNumberDereference(node);
+		return writer.toString() + getNumberDereference(node, ignoreContext);
 	}
 	
-	private static String getNumberDereference(INode node)
+	private static String findNumberDereferenceCall(PTypeCG type)
 	{
-		if (node.parent() instanceof SNumericBinaryExpCG
-				&& !(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCGBase)
-				&& !(node instanceof AIsolationUnaryExpCG)
-				&& !(node instanceof SUnaryExpCG))
+		if (type instanceof ARealNumericBasicTypeCG
+				|| type instanceof ARealBasicTypeWrappersTypeCG)
+		{
+			return ".doubleValue()";
+		} else if (type instanceof AIntNumericBasicTypeCG
+				|| type instanceof AIntBasicTypeWrappersTypeCG)
+		{
+			return ".longValue()";
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
+	private static String getNumberDereference(INode node, boolean ignoreContext)
+	{
+		if(ignoreContext && node instanceof PExpCG)
 		{
 			PExpCG exp = (PExpCG) node;
 			PTypeCG type = exp.getType();
-
-			if (type instanceof ARealNumericBasicTypeCG
-					|| type instanceof ARealBasicTypeWrappersTypeCG)
+			
+			if(isNumberDereferenceCandidate(exp))
 			{
-				return ".doubleValue()";
-			} else if (type instanceof AIntNumericBasicTypeCG
-					|| type instanceof AIntBasicTypeWrappersTypeCG)
+				return findNumberDereferenceCall(type);
+			}
+		}
+		
+		INode parent = node.parent();
+			
+		if (parent instanceof SNumericBinaryExpCG)
+		{
+			PExpCG exp = (PExpCG) node;
+			PTypeCG type = exp.getType();
+			
+			if(isNumberDereferenceCandidate(exp))
 			{
-				return ".longValue()";
+				return findNumberDereferenceCall(type);
 			}
 		}
 
@@ -132,6 +163,14 @@ public class JavaFormat
 		return "";
 	}
 	
+	private static boolean isNumberDereferenceCandidate(PExpCG node)
+	{
+		return !(node instanceof SNumericBinaryExpCG)
+				&& !(node instanceof SLiteralExpCGBase)
+				&& !(node instanceof AIsolationUnaryExpCG)
+				&& !(node instanceof SUnaryExpCG);
+	}
+
 	public String formatName(INode node) throws AnalysisException
 	{
 		if(node instanceof ANewExpCG)

@@ -1,10 +1,9 @@
 #set( $index = $node.getVar())
-#set( $fromExp = $JavaFormat.format($node.getFrom()) )
-#set( $toExp = $JavaFormat.format($node.getTo()) )
-#set( $byExp = $JavaFormat.format($node.getBy()) )
+#set( $fromExp = $JavaFormat.formatIgnoreContext($node.getFrom()) )
+#set( $toExp = $JavaFormat.formatIgnoreContext($node.getTo()) )
 #set( $body = $JavaFormat.format($node.getBody()) )
 #set( $toVar = $JavaFormat.nextVarName() )
-#set( $bySpecified = !$JavaFormat.isNull($byExp) )
+#set( $bySpecified = !$JavaFormat.isNull($node.getBy()) )
 ##
 long ${toVar} = ${toExp};
 ##
@@ -13,7 +12,7 @@ long ${toVar} = ${toExp};
 ##
 #if ( $bySpecified == true )
 	#set($byVar = "$JavaFormat.nextVarName()" )
-	long ${byVar} =  ${byExp};
+	long ${byVar} =  $JavaFormat.formatIgnoreContext($node.getBy());
 	#set( $step = "${index} += ${byVar}" )
 	#set( $condition = "${byVar} < 0 ? ${index} >= ${toVar} : ${index} <= ${toVar}")
 #else
