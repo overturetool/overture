@@ -17,6 +17,7 @@ public class TemplateStructure
 	public final String BOOL_BINARY_EXPS_PATH;
 	public final String UNARY_EXPS_PATH;
 	public final String SEQ_EXPS_PATH;
+	public final String SET_EXPS_PATH;
 	public final String MAP_EXPS_PATH;
 	public final String TYPE_PATH;
 	
@@ -40,6 +41,7 @@ public class TemplateStructure
 		BOOL_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Bool" + IText.SEPARATOR_CHAR;
 		UNARY_EXPS_PATH = EXPS_PATH + "Unary" + IText.SEPARATOR_CHAR;
 		SEQ_EXPS_PATH = EXPS_PATH + "Seq" + IText.SEPARATOR_CHAR;
+		SET_EXPS_PATH = EXPS_PATH + "Set" + IText.SEPARATOR_CHAR;
 		MAP_EXPS_PATH = EXPS_PATH + "Map" + IText.SEPARATOR_CHAR;
 		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;
 		

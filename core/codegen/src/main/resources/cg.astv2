@@ -154,6 +154,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{distConcat} [members]:expCG*
     |   {maplet}  [left]:expCG [right]:expCG
     |	#Seq
+    |	#Set
     |	#Map
     ;
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -221,6 +222,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
+	;
+
+#Set {-> package='org.overture.codegen.cgast.expressions'}
+	= {enum} [members]:expCG*
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}

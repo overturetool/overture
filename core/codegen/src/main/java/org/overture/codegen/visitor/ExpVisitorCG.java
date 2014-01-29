@@ -54,6 +54,7 @@ import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
@@ -68,6 +69,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.DeclAssistantCG;
@@ -80,6 +82,7 @@ import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -167,6 +170,31 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		instanceOfExp.setObjRef(objRefCg);
 		
 		return instanceOfExp;
+	}
+	
+	@Override
+	public PExpCG caseASetEnumSetExp(ASetEnumSetExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		if(!(type instanceof ASetType))
+			throw new AnalysisExceptionCG("Unexpected set type for set enumeration expression: " + type.getClass().getName(), node.getLocation());
+		
+		LinkedList<PExp> members = node.getMembers();
+		
+		AEnumSetExpCG enumSet = new AEnumSetExpCG();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		enumSet.setType(typeCg);
+		LinkedList<PExpCG> membersCg = enumSet.getMembers();
+		
+		for(PExp member : members)
+		{
+			membersCg.add(member.apply(question.getExpVisitor(), question));
+		}
+	
+		return enumSet;
 	}
 	
 	@Override
