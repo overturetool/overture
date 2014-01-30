@@ -57,6 +57,7 @@ import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
@@ -119,6 +120,7 @@ import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
@@ -213,6 +215,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ASetIntersectBinaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node, new ASetDifferenceBinaryExpCG(), question);
 	}
 	
 	@Override
