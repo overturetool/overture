@@ -455,7 +455,7 @@ public class JavaFormat
 			return format(node.getLeft()) + ".isEmpty()";
 		}
 	
-		return "Seq.equals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
+		return "SeqUtil.equals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
 
 	}
 	

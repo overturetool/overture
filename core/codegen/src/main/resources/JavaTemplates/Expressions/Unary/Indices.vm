@@ -1,1 +1,1 @@
-Seq.inds($JavaFormat.format($node.getExp()))
+SeqUtil.inds($JavaFormat.format($node.getExp()))

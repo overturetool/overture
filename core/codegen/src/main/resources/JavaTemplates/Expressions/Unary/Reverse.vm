@@ -3,5 +3,5 @@
 #if ($JavaFormat.isStringType($node.getExp().getType()))
 	new StringBuilder($exp).reverse().toString()
 #else
-	Seq.reverse($exp)
+	SeqUtil.reverse($exp)
 #end
