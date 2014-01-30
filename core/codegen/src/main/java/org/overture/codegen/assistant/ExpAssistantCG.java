@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
@@ -36,6 +37,15 @@ public class ExpAssistantCG
 		isolationExp.setExp(exp);
 		isolationExp.setType(exp.getType());
 		return isolationExp;
+	}
+	
+	public ANotUnaryExpCG negate(PExpCG exp)
+	{
+		ANotUnaryExpCG negated = new ANotUnaryExpCG();
+		negated.setType(new ABoolBasicTypeCG());
+		negated.setExp(exp);
+
+		return negated;
 	}
 	
 	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException

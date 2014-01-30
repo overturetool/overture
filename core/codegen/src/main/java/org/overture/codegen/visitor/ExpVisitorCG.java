@@ -45,6 +45,7 @@ import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
@@ -187,6 +188,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node,  new AInSetBinaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseANotInSetBinaryExp(ANotInSetBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.negate(expAssistant.handleBinaryExp(node,  new AInSetBinaryExpCG(), question));
 	}
 	
 	@Override
