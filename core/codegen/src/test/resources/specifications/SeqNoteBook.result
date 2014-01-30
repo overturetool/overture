@@ -118,11 +118,11 @@ public class NoteBook {
         return !(message.equals(getMessage(index)));
     }
 
-    public Set getMessgaesSet() {
+    public VDMSet getMessgaesSet() {
         return new HashSet(messages.clone());
     }
 
-    public Set getMessageIndices() {
+    public VDMSet getMessageIndices() {
         return SeqUtil.inds(messages);
     }
 
