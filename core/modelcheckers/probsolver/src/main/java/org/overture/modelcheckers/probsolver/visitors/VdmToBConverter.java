@@ -266,7 +266,24 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 */
 	private PPredicate pred(INode n) throws AnalysisException
 	{
-		return (PPredicate) n.apply(this);
+		Node result = n.apply(this);
+		if (result instanceof PExpression)
+		{
+			if (result instanceof PExpression)
+			{
+
+				if (result instanceof ABooleanTrueExpression)
+				{
+					//TODO clean this later
+					return new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanTrueExpression());//new ATruthPredicate();
+				} else if (result instanceof ABooleanFalseExpression)
+				{
+					return new AFalsityPredicate();
+				}
+			}
+		}
+
+		return (PPredicate) result;
 	}
 
 	@Override
