@@ -1,1 +1,1 @@
-Utils.map($JavaFormat.formatArgs($node.getMembers()))
+MapUtil.map($JavaFormat.formatArgs($node.getMembers()))
