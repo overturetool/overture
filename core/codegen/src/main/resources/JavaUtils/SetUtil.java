@@ -30,6 +30,19 @@ public class SetUtil
 		return result;
 	}
 	
+	public static VDMSet intersect(VDMSet left, VDMSet right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("Cannot intersect null");
+
+		VDMSet result = new VDMSet();
+		
+		result.addAll(left);
+		result.retainAll(right);
+		
+		return result;
+	}
+	
 	public static boolean equals(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)

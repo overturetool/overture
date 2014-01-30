@@ -181,6 +181,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{seqModification}
     |   {inSet}
     |	{setUnion}
+    |	{setIntersect}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
