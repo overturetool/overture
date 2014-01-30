@@ -42,8 +42,8 @@ public class VDMRT extends VDMPP
 	{
 		try
 		{
-			classes.add(AstFactoryTC.newACpuClassDefinition());
-  			classes.add(AstFactoryTC.newABusClassDefinition());
+			classes.add(AstFactoryTC.newACpuClassDefinition(assistantFactory));
+  			classes.add(AstFactoryTC.newABusClassDefinition(assistantFactory));
 		}
 		catch (Exception e)
 		{

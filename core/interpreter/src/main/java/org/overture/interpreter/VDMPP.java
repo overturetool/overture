@@ -54,6 +54,7 @@ import org.overture.parser.syntax.ClassReader;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.ClassTypeChecker;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 
@@ -67,6 +68,7 @@ public class VDMPP extends VDMJ
 
 	public VDMPP()
 	{
+		super();
 		Settings.dialect = Dialect.VDM_PP;
 	}
 
@@ -183,7 +185,7 @@ public class VDMPP extends VDMJ
 
    		try
    		{
-   			TypeChecker typeChecker = new ClassTypeChecker(classes);
+   			TypeChecker typeChecker = new ClassTypeChecker(classes, assistantFactory);
    			typeChecker.typeCheck();
    		}
 		catch (InternalException e)

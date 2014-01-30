@@ -15,20 +15,18 @@ public class AstFactoryTC extends AstFactory
 {
 	
 	
-	public static SClassDefinition newACpuClassDefinition()
+	public static SClassDefinition newACpuClassDefinition(ITypeCheckerAssistantFactory assistantFactory)
 			throws ParserException, LexException
 	{
-		ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 		ACpuClassDefinition result = new ACpuClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()), new LexNameList(), assistantFactory.createACpuClassDefinitionAssistant().operationDefs());
 
 		return result;
 	}
 
-	public static SClassDefinition newABusClassDefinition()
+	public static SClassDefinition newABusClassDefinition(ITypeCheckerAssistantFactory assistantFactory)
 			throws ParserException, LexException
 	{
-		ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 		ABusClassDefinition result = new ABusClassDefinition();
 		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), assistantFactory.createABusClassDefinitionAssistant().operationDefs());
 

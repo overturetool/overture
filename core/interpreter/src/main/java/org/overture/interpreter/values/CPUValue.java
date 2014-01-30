@@ -143,7 +143,7 @@ public class CPUValue extends ObjectValue
 		try
 		{
 			CPUResource.init();
-			SClassDefinition def =  AstFactoryTC.newACpuClassDefinition();
+			SClassDefinition def =  AstFactoryTC.newACpuClassDefinition(assistantFactory);
 			vCPU = new CPUValue((AClassType)assistantFactory.createSClassDefinitionAssistant().getType(def));
 			vCPU.setup(scheduler, "vCPU");
 		}
