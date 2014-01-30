@@ -10,6 +10,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Settings;
+import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -22,8 +23,8 @@ import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.TypeCheckedTestSequence;
 import org.overture.interpreter.traces.Verdict;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.ct.utils.TraceXmlWrapper;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class TraceInterpreter
 {
@@ -41,6 +42,8 @@ public class TraceInterpreter
 	IProgressMonitor monitor = null;
 
 	private Integer currentPct = 0;
+	
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	public TraceInterpreter(IProgressMonitor monitor)
 	{
@@ -79,7 +82,7 @@ public class TraceInterpreter
 			{
 				if (classDefinition.getName().getName().equals(moduleName))
 				{
-					definitions = PDefinitionAssistantTC.getDefinitions(classDefinition);
+					definitions = assistantFactory.createPDefinitionAssistant().getDefinitions(classDefinition);
 					
 				}				
 			}

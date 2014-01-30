@@ -66,7 +66,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.FUNC_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AImplicitFunctionDefinitionAssistantTC.getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult(),ctxt.assistantFactory));
+		value = ctxt.getObligation(generate(ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(def), ((AFunctionType) def.getType()).getParameters(), ((AFunctionType) def.getType()).getResult(),ctxt.assistantFactory));
 	}
 
 	public ParameterPatternObligation(AExplicitOperationDefinition def,
@@ -74,7 +74,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AExplicitOperationDefinitionAssistantTC.getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(), ctxt.assistantFactory));
+		value = ctxt.getObligation(generate(ctxt.assistantFactory.createAExplicitOperationDefinitionAssistant().getParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(), ctxt.assistantFactory));
 	}
 
 	public ParameterPatternObligation(AImplicitOperationDefinition def,
@@ -82,7 +82,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def.getLocation(), POType.OPERATION_PATTERNS, ctxt);
 		this.predef = def.getPredef();
-		value = ctxt.getObligation(generate(AImplicitOperationDefinitionAssistantTC.getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(),ctxt.assistantFactory));
+		value = ctxt.getObligation(generate(ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getListParamPatternList(def), ((AOperationType) def.getType()).getParameters(), ((AOperationType) def.getType()).getResult(),ctxt.assistantFactory));
 	}
 
 	private String generate(List<List<PPattern>> plist, List<PType> params,

@@ -191,7 +191,7 @@ public class ModuleInterpreter extends Interpreter
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
-		CPUValue.init(scheduler);
+		CPUValue.init(scheduler,assistantFactory);
 		initialContext = ModuleListAssistantInterpreter.initialize(modules,dbgp);
 	}
 

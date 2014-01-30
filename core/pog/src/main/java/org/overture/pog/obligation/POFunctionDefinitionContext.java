@@ -41,6 +41,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 
 public class POFunctionDefinitionContext extends POContext
@@ -62,12 +63,12 @@ public class POFunctionDefinitionContext extends POContext
 	}
 
 	public POFunctionDefinitionContext(AImplicitFunctionDefinition definition,
-			boolean precond)
+			boolean precond, IPogAssistantFactory assistantFactory)
 	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 	}
 

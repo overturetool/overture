@@ -34,6 +34,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.pog.assistant.IPogAssistantFactory;
+import org.overture.pog.assistant.PogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -63,7 +64,7 @@ public class POFunctionDefinitionContext extends POContext
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = question.createAImplicitFunctionDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.assistantFactory = question;
 	}

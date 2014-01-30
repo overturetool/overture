@@ -32,7 +32,7 @@ public class ACpuClassDefinitionAssistantTC
 			+ "public setPriority: ? * nat ==> () "
 			+ "	setPriority(opname, priority) == is not yet specified;";
 
-	public static List<PDefinition> operationDefs() throws ParserException,
+	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);

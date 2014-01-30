@@ -18,10 +18,8 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantTC
 {
@@ -34,7 +32,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<PType> getMeasureParams(AExplicitFunctionDefinition node)
+	public List<PType> getMeasureParams(AExplicitFunctionDefinition node)
 	{
 		AFunctionType functionType = (AFunctionType) node.getType();
 
@@ -56,7 +54,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return params;
 	}
 
-	public static PType checkParams(AExplicitFunctionDefinition node,
+	public PType checkParams(AExplicitFunctionDefinition node,
 			ListIterator<List<PPattern>> plists, AFunctionType ftype)
 	{
 		List<PType> ptypes = ftype.getParameters();
@@ -101,7 +99,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return ftype.getResult();
 	}
 
-	public static List<List<PDefinition>> getParamDefinitions(
+	public List<List<PDefinition>> getParamDefinitions(
 			AExplicitFunctionDefinition node, AFunctionType type,
 			List<List<PPattern>> paramPatternList, ILexLocation location)
 	{
@@ -147,7 +145,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return defList;
 	}
 
-	public static List<PDefinition> getTypeParamDefinitions(
+	public List<PDefinition> getTypeParamDefinitions(
 			AExplicitFunctionDefinition node)
 	{
 		List<PDefinition> defs = new ArrayList<PDefinition>();
@@ -165,7 +163,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return defs;
 	}
 
-	public static AFunctionType getType(AExplicitFunctionDefinition efd,
+	public AFunctionType getType(AExplicitFunctionDefinition efd,
 			List<PType> actualTypes)
 	{
 		Iterator<PType> ti = actualTypes.iterator();
@@ -183,56 +181,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return ftype;
 	}
 
-	public static PDefinition findName(AExplicitFunctionDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-		if (af.createPDefinitionAssistant().findNameBaseCase(d, sought, scope) != null)
-		{
-			return d;
-		}
-
-		PDefinition predef = d.getPredef();
-		if (predef != null
-				&& af.createPDefinitionAssistant().findName(predef, sought, scope) != null)
-		{
-			return predef;
-		}
-
-		PDefinition postdef = d.getPostdef();
-		if (postdef != null
-				&& af.createPDefinitionAssistant().findName(postdef, sought, scope) != null)
-		{
-			return postdef;
-		}
-
-		return null;
-	}
-
-	public static void implicitDefinitions(AExplicitFunctionDefinition d,
-			Environment env)
-	{
-
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d));
-			af.createPDefinitionAssistant().markUsed(d.getPredef());
-		} else
-		{
-			d.setPredef(null);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d));
-			af.createPDefinitionAssistant().markUsed(d.getPostdef());
-		} else
-		{
-			d.setPostdef(null);
-		}
-
-	}
-
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
@@ -274,7 +223,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return def;
 	}
 
-	public static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
