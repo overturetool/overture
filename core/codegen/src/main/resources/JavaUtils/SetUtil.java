@@ -17,6 +17,19 @@ public class SetUtil
 		return set;
 	}
 	
+	public static VDMSet union(VDMSet left, VDMSet right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("Cannot union null");
+
+		VDMSet result = new VDMSet();
+		
+		result.addAll(left);
+		result.addAll(right);
+		
+		return result;
+	}
+	
 	public static boolean equals(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)

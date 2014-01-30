@@ -58,6 +58,7 @@ import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
@@ -117,6 +118,7 @@ import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
@@ -195,6 +197,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.negate(expAssistant.handleBinaryExp(node,  new AInSetBinaryExpCG(), question));
+	}
+	
+	@Override
+	public PExpCG caseASetUnionBinaryExp(ASetUnionBinaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleBinaryExp(node,  new ASetUnionBinaryExpCG(), question);
 	}
 	
 	@Override

@@ -180,6 +180,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{seqConcat}
     |	{seqModification}
     |   {inSet}
+    |	{setUnion}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
