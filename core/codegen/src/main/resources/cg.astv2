@@ -207,7 +207,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |   {minus}
     |	{cast}
     |	{isolation}
-    |	{len}
+    |	{size} //Used for both sets and sequences
     |	{elems}
     |	{indices}
     |	{head}

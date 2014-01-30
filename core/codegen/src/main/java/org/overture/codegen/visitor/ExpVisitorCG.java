@@ -94,7 +94,6 @@ import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
-import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
@@ -115,6 +114,7 @@ import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -177,7 +177,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return expAssistant.handleUnaryExp(node, new ALenUnaryExpCG(), question);
+		return expAssistant.handleUnaryExp(node, new ASizeUnaryExpCG(), question);
 	}
 	
 	@Override
@@ -918,7 +918,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return expAssistant.handleUnaryExp(node, new ALenUnaryExpCG(), question);
+		return expAssistant.handleUnaryExp(node, new ASizeUnaryExpCG(), question);
 	}
 	
 	@Override

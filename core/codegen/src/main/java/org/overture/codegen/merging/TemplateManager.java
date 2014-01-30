@@ -43,7 +43,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
@@ -263,7 +263,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
 				+ "Isolation");
 		
-		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Len");
+		nodeTemplateFileNames.put(ASizeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Size");
 		
 		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Elems");
 		
