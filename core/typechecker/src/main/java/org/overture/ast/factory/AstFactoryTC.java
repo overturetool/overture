@@ -8,18 +8,19 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
-import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class AstFactoryTC extends AstFactory
 {
-	//public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	
 	
 	public static SClassDefinition newACpuClassDefinition()
 			throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 		ACpuClassDefinition result = new ACpuClassDefinition();
-		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()), new LexNameList(), ACpuClassDefinitionAssistantTC.operationDefs());
+		initClassDefinition(result, new LexNameToken("CLASS", "CPU", new LexLocation()), new LexNameList(), assistantFactory.createACpuClassDefinitionAssistant().operationDefs());
 
 		return result;
 	}
@@ -27,8 +28,9 @@ public class AstFactoryTC extends AstFactory
 	public static SClassDefinition newABusClassDefinition()
 			throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 		ABusClassDefinition result = new ABusClassDefinition();
-		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), ABusClassDefinitionAssistantTC.operationDefs());
+		initClassDefinition(result, new LexNameToken("CLASS", "BUS", new LexLocation()), new LexNameList(), assistantFactory.createABusClassDefinitionAssistant().operationDefs());
 
 		result.setInstance(result);
 
