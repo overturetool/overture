@@ -21,11 +21,13 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
@@ -66,6 +68,7 @@ import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
+import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
@@ -380,13 +383,17 @@ public class JavaFormat
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
 		
-		if(isValueType(leftNodeType) || leftNodeType instanceof AStringTypeCG)
+		if(isTupleOrRecord(leftNodeType) || leftNodeType instanceof AStringTypeCG)
 		{
 			return handleEquals(node);
 		}
 		else if(leftNodeType instanceof SSeqTypeCG)
 		{
 			return handleSeqComparison(node);
+		}
+		else if(leftNodeType instanceof SSetTypeCG)
+		{
+			return handleSetComparison(node);
 		}
 		
 		return format(node.getLeft()) + " == " + format(node.getRight());
@@ -396,7 +403,7 @@ public class JavaFormat
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
 
-		if (isValueType(leftNodeType) || leftNodeType instanceof AStringTypeCG)
+		if (isTupleOrRecord(leftNodeType) || leftNodeType instanceof AStringTypeCG)
 		{
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
@@ -406,11 +413,16 @@ public class JavaFormat
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
 		}
+		else if(leftNodeType instanceof SSetTypeCG)
+		{
+			ANotUnaryExpCG transformed = transNotEquals(node);
+			return formatNotUnary(transformed.getExp());
+		}
 		
 		return format(node.getLeft()) + " != " + format(node.getRight());
 	}
 	
-	private static boolean isValueType(PTypeCG type)
+	private static boolean isTupleOrRecord(PTypeCG type)
 	{
 		return type instanceof ARecordTypeCG || 
 				type instanceof ATupleTypeCG;
@@ -440,32 +452,48 @@ public class JavaFormat
 		return format(valueType.getLeft()) + ".equals(" + format(valueType.getRight()) + ")";
 	}
 	
+	private String handleSetComparison(AEqualsBinaryExpCG node) throws AnalysisException
+	{
+		return handleCollectionComparison(node, IJavaCodeGenConstants.SET_UTIL_FILE);
+	}
+	
 	private String handleSeqComparison(SBinaryExpCGBase node) throws AnalysisException
+	{
+		return handleCollectionComparison(node, IJavaCodeGenConstants.SEQ_UTIL_FILE);
+	}
+	
+	private String handleCollectionComparison(SBinaryExpCGBase node, String className) throws AnalysisException
 	{
 		//In VDM the types of the equals are compatible when the AST passes the type check
 		PExpCG leftNode = node.getLeft();
 		PExpCG rightNode = node.getRight();
 		
-		if(isEmptySeq(leftNode))
+		if(isEmptyCollection(leftNode))
 		{
 			return format(node.getRight()) + ".isEmpty()";
 		}
-		else if(isEmptySeq(rightNode))
+		else if(isEmptyCollection(rightNode))
 		{
 			return format(node.getLeft()) + ".isEmpty()";
 		}
 	
-		return "SeqUtil.equals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
+		return className + ".equals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
 
 	}
 	
-	private boolean isEmptySeq(PExpCG exp)
+	private boolean isEmptyCollection(PExpCG exp)
 	{
 		if(exp instanceof AEnumSeqExpCG)
 		{
 			AEnumSeqExpCG v = (AEnumSeqExpCG) exp;
 
-			return v.getMembers().size() == 0;
+			return v.getMembers().isEmpty();
+		}
+		else if(exp instanceof AEnumSetExpCG)
+		{
+			AEnumSetExpCG v = (AEnumSetExpCG) exp;
+			
+			return v.getMembers().isEmpty();
 		}
 		
 		return false;
@@ -658,9 +686,20 @@ public class JavaFormat
 	
 	private boolean cloneNotNeededCollectionOperator(INode parent)
 	{
+		return cloneNotNeededSeqOperators(parent)
+				|| cloneNotNeededSetOperators(parent);
+	}
+
+	private boolean cloneNotNeededSeqOperators(INode parent)
+	{
 		return parent instanceof ASizeUnaryExpCG
 				|| parent instanceof AIndicesUnaryExpCG
 				|| parent instanceof AHeadUnaryExpCG;
+	}
+
+	private boolean cloneNotNeededSetOperators(INode parent)
+	{
+		return parent instanceof AInSetBinaryExpCG;
 	}
 	
 	private boolean cloneNotNeededUtilCall(INode node)
@@ -683,7 +722,7 @@ public class JavaFormat
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
 	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG || type instanceof SSeqTypeCG;
+		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG || type instanceof SSeqTypeCG || type instanceof SSetTypeCG;
 	}
 	
 	public String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException

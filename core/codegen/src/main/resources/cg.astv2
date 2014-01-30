@@ -179,6 +179,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{notEquals}
     |	{seqConcat}
     |	{seqModification}
+    |   {inSet}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}

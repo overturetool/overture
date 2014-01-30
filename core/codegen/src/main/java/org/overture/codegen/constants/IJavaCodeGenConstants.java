@@ -9,6 +9,10 @@ public interface IJavaCodeGenConstants
 	public static final String UTILS_PACKAGE = "package utils;";
 	
 	public static final String UTILS_FILE = "Utils";
+	public static final String SEQ_UTIL_FILE = "SeqUtil";
+	public static final String SET_UTIL_FILE = "SetUtil";
+	public static final String MAP_UTIL_FILE = "MapUtil";
+	
 	
 	public static final String MATH_FILE = "MATH";
 	public static final String IO_FILE = "IO";

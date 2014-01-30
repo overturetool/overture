@@ -16,4 +16,15 @@ public class SetUtil
 		
 		return set;
 	}
+	
+	public static boolean equals(VDMSet left, VDMSet right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("A set cannot be compared to null");
+		
+		if(left.size() != right.size())
+			return false;
+		
+		return left.containsAll(right);
+	}
 }
