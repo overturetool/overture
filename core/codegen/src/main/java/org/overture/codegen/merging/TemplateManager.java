@@ -46,6 +46,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
@@ -306,6 +307,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASetIntersectBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetIntersect");
 		
 		nodeTemplateFileNames.put(ASetDifferenceBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetDifference");
+		
+		nodeTemplateFileNames.put(ASetSubsetBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetSubset");
 		
 		// Numeric binary expressions
 

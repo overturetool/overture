@@ -35,6 +35,7 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -699,7 +700,8 @@ public class JavaFormat
 
 	private boolean cloneNotNeededSetOperators(INode parent)
 	{
-		return parent instanceof AInSetBinaryExpCG;
+		return parent instanceof AInSetBinaryExpCG
+				|| parent instanceof ASetSubsetBinaryExpCG;
 	}
 	
 	private boolean cloneNotNeededUtilCall(INode node)

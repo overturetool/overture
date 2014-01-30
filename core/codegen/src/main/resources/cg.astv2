@@ -183,6 +183,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{setUnion}
     |	{setIntersect}
     |	{setDifference}
+    |	{setSubset}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
