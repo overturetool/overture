@@ -119,7 +119,7 @@ public class NoteBook {
     }
 
     public VDMSet getMessgaesSet() {
-        return new HashSet(messages.clone());
+        return SeqUtil.elems(messages.clone());
     }
 
     public VDMSet getMessageIndices() {
