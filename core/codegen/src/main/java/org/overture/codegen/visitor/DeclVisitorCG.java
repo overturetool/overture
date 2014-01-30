@@ -34,7 +34,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
