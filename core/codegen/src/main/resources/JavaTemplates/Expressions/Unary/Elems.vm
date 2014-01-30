@@ -1,1 +1,1 @@
-new HashSet($JavaFormat.format($node.getExp()))
+SeqUtil.elems($JavaFormat.format($node.getExp()))

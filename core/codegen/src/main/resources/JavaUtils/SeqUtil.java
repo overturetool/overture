@@ -1,6 +1,4 @@
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class SeqUtil
@@ -38,6 +36,17 @@ public class SeqUtil
 		return seq;
 	}
 	
+	public static VDMSet elems(VDMSeq seq)
+	{
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot get elems of null");
+
+		VDMSet elems = SetUtil.set();
+		elems.addAll(seq);
+		
+		return elems;
+	}
+	
 	public static VDMSeq reverse(VDMSeq seq)
 	{
 		if(seq == null)
@@ -70,12 +79,12 @@ public class SeqUtil
 		return tail;
 	}
 	
-	public static Set<Long> inds(VDMSeq seq)
+	public static VDMSet inds(VDMSeq seq)
 	{
 		if(seq == null)
 			throw new IllegalArgumentException("Cannot get indices of null");
 		
-		Set<Long> indices = new HashSet<Long>();
+		VDMSet indices = SetUtil.set();
 		
 		for(long i = 0; i < seq.size(); i++)
 		{
