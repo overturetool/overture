@@ -503,15 +503,19 @@ public class OperationValue extends Value
 			} else
 			{
 				// TODO
-				for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
+				if (self != null)
 				{
-					if(argVal.getValue() instanceof FunctionValue|| argVal.getValue() instanceof  OperationValue)
+					for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
 					{
-						continue;
-					}
-					if (argVal.getValue() instanceof UpdatableValue)
-					{
-						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						if (argVal.getValue() instanceof FunctionValue
+								|| argVal.getValue() instanceof OperationValue)
+						{
+							continue;
+						}
+						if (argVal.getValue() instanceof UpdatableValue)
+						{
+							stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						}
 					}
 				}
 			}
