@@ -192,7 +192,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 		List<PExp> exps = new Vector<PExp>();
 		List<AMapletExp> mems = new Vector<AMapletExp>();
 
-		System.err.println("In caseASetExtension...: " + expectedType);//added
+		//System.err.println("In caseASetExtension...: " + expectedType);//added
 
 		if (expectedType instanceof ASetType)
 		{
@@ -249,7 +249,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 
 		List<PExp> list = new Vector<PExp>();
 		List<AMapletExp> mems = new Vector<AMapletExp>();
-	    System.err.println("In caseASequenceExtension...: " + expectedType);
+		//System.err.println("In caseASequenceExtension...: " + expectedType);
 
 
 	    if (expectedType instanceof AMapMapType) //added from here

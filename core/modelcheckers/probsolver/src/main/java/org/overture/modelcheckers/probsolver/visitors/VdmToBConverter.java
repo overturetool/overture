@@ -29,6 +29,7 @@ import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.NodeList;//added
 
 import org.overture.ast.expressions.AOrBooleanBinaryExp;           //added -> ADisjunctPredicate
 import org.overture.ast.expressions.ANotUnaryExp;                  //added -> ANegationPredicate
@@ -84,6 +85,7 @@ import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;   //added -> AE
 import org.overture.ast.expressions.ASetCompSetExp;                //added -> AComprehensionSetExpression
 import org.overture.ast.expressions.AIfExp;                        //added
 import org.overture.ast.expressions.AElseIfExp;                    //added
+import org.overture.ast.expressions.ADistConcatUnaryExp;          //added -> AGeneralConcatExpression
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -182,6 +184,7 @@ import de.be4.classicalb.core.parser.node.AEquivalencePredicate;//added
 import de.be4.classicalb.core.parser.node.AComprehensionSetExpression;//added
 import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;//added
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;//added
+import de.be4.classicalb.core.parser.node.AGeneralConcatExpression;//added
 
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
@@ -1049,11 +1052,42 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 
 	@Override
-	public Node caseAEquivalentBooleanBinaryExp(AEquivalentBooleanBinaryExp node)//under construction
+	public Node caseAEquivalentBooleanBinaryExp(AEquivalentBooleanBinaryExp node)//added
 			throws AnalysisException
 	{
 	    return new AEquivalencePredicate(pred(node.getLeft()), pred(node.getRight()));
 	}
+
+	@Override
+	public Node caseADistConcatUnaryExp(ADistConcatUnaryExp node)//under construction
+			throws AnalysisException
+	{
+
+	    LinkedList<PExp> seqlist = ((ASeqEnumSeqExp)node.getExp()).getMembers();
+	    if (seqlist.isEmpty())
+		{
+			return new AEmptySequenceExpression();
+		}
+
+
+		ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
+
+		seq.getExpression().add(exp(seqlist.get(0)));
+		LinkedList<PExp> temp = new LinkedList<PExp>();
+		temp.add(seqlist.get(0));
+
+		for (int i=1;i<seqlist.size();i++) 
+		{
+		        PExp m = seqlist.get(i);
+			//System.err.println(m);
+			//System.err.println(exp(m));
+			if(temp.indexOf(m)==-1) {
+			    seq.getExpression().add(exp(m));
+			}
+		}
+		return new AGeneralConcatExpression(seq);
+	}
+
 
 
 	//StateDefinition
