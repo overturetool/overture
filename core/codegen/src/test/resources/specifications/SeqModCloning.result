@@ -4,8 +4,8 @@ import java.util.*;
 
 
 public class A {
-    private static final VDMSeq a = Seq.seq(1L, 2L);
-    private static final VDMSeq b = Seq.mod(a.clone(),
+    private static final VDMSeq a = SeqUtil.seq(1L, 2L);
+    private static final VDMSeq b = SeqUtil.mod(a.clone(),
             new Maplet[] { new Maplet(1L, 5L) });
 }
 ##########

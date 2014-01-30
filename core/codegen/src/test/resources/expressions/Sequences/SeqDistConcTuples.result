@@ -1,1 +1,1 @@
-Seq.distConc(Seq.seq(Tuple.mk_(1L, 1L), Tuple.mk_(1L, 2L)), Seq.seq(Tuple.mk_(1L, 3L)))
+SeqUtil.distConc(SeqUtil.seq(Tuple.mk_(1L, 1L), Tuple.mk_(1L, 2L)), SeqUtil.seq(Tuple.mk_(1L, 3L)))

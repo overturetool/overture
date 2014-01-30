@@ -1,1 +1,1 @@
-Seq.distConcStrings("hej", "kat", "mouse")
+SeqUtil.distConcStrings("hej", "kat", "mouse")

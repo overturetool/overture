@@ -1,1 +1,1 @@
-Seq.seq(1L, 2L, 3L).size()
+SeqUtil.seq(1L, 2L, 3L).size()

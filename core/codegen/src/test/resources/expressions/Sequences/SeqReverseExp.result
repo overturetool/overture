@@ -1,1 +1,1 @@
-Seq.reverse(Seq.seq(1L, 2L, 3L))
+SeqUtil.reverse(SeqUtil.seq(1L, 2L, 3L))

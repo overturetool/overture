@@ -1,1 +1,1 @@
-new HashSet(Seq.seq(1L, 2L, 3L))
+new HashSet(SeqUtil.seq(1L, 2L, 3L))

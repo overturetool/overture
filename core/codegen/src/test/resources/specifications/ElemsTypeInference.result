@@ -4,11 +4,11 @@ import java.util.*;
 
 
 public class A {
-    private static final VDMSeq x0 = Seq.seq();
+    private static final VDMSeq x0 = SeqUtil.seq();
     private static final Set a = new HashSet(x0.clone());
-    private static final VDMSeq x1 = Seq.seq(1L, 2L, 3L);
+    private static final VDMSeq x1 = SeqUtil.seq(1L, 2L, 3L);
     private static final Set b = new HashSet(x1.clone());
-    private static final Set c = new HashSet(Seq.seq(x1.clone()));
-    private static final Set d = new HashSet(Seq.seq(Seq.seq(x1.clone())));
+    private static final Set c = new HashSet(SeqUtil.seq(x1.clone()));
+    private static final Set d = new HashSet(SeqUtil.seq(SeqUtil.seq(x1.clone())));
 }
 ##########

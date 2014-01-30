@@ -1,1 +1,1 @@
-((Number) Seq.seq(1L, 2L).get(Utils.index(2L)))
+((Number) SeqUtil.seq(1L, 2L).get(Utils.index(2L)))

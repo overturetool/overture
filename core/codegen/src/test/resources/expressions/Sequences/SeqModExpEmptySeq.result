@@ -1,1 +1,1 @@
-Seq.mod(Seq.seq(), new Maplet[]{})
+SeqUtil.mod(SeqUtil.seq(), new Maplet[]{})
