@@ -15,6 +15,7 @@ import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
+import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AElementsUnaryExp;
@@ -86,6 +87,7 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistUnionUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
@@ -240,6 +242,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleBinaryExp(node, new ASetProperSubsetBinaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseADistUnionUnaryExp(ADistUnionUnaryExp node,
+			OoAstInfo question) throws AnalysisException
+	{
+		return expAssistant.handleUnaryExp(node, new ADistUnionUnaryExpCG(), question);
 	}
 	
 	@Override

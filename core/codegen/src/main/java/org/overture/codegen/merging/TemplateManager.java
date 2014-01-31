@@ -26,6 +26,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistUnionUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
@@ -286,6 +287,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANotUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Not");
 
 		nodeTemplateFileNames.put(ADistConcatUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistConcat");
+		
+		nodeTemplateFileNames.put(ADistUnionUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistUnion");
 		
 		// Binary expressions
 		

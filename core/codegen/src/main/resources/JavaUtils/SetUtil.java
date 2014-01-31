@@ -32,6 +32,25 @@ public class SetUtil
 		return result;
 	}
 	
+	public static VDMSet dunion(VDMSet sets)
+	{
+		if(sets == null)
+			throw new IllegalArgumentException("Distributed union of null is undefined");
+	
+		VDMSet result = set();
+		
+		for(Object set : sets)
+		{
+			if(!(set instanceof VDMSet))
+				throw new IllegalArgumentException("Distributed union only supports sets");
+			
+			VDMSet vdmSet = (VDMSet) set;
+			result.addAll(vdmSet);
+		}
+		
+		return result;
+	}
+	
 	public static VDMSet diff(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
