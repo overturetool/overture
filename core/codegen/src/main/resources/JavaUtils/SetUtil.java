@@ -12,7 +12,9 @@ public class SetUtil
 			throw new IllegalArgumentException("Cannot instantiate set from null");
 		
 		VDMSet set = set();
-		CollectionUtil.addAll(set(), elements);
+		
+		for(Object element : elements)
+			set.add(element);
 		
 		return set;
 	}

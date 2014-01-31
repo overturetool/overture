@@ -85,7 +85,7 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
-import org.overture.codegen.cgast.expressions.ADistConcatExpCG;
+import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
@@ -454,28 +454,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseADistConcatUnaryExp(ADistConcatUnaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		PExp exp = node.getExp();
-		PType type = node.getType();
-		
-		if(!(exp instanceof ASeqEnumSeqExp))
-			throw new AnalysisExceptionCG("Unexpected expression for distributed concatenation: " + exp.getClass().getName(), node.getLocation());
-		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		ASeqEnumSeqExp seqEnumExp = (ASeqEnumSeqExp) exp;
-		
-		LinkedList<PExp> members = seqEnumExp.getMembers();
-		LinkedList<PExpCG> membersCg = new LinkedList<PExpCG>();
-		for(PExp member : members)
-		{
-			PExpCG memberCg = member.apply(question.getExpVisitor(), question);
-			membersCg.add(memberCg);
-		}
-		
-		ADistConcatExpCG distConcat = new ADistConcatExpCG();
-		distConcat.setType(typeCg);
-		distConcat.setMembers(membersCg);
-		
-		return distConcat;
+		return expAssistant.handleUnaryExp(node, new ADistConcatUnaryExpCG(), question);
 	}
 	
 	@Override

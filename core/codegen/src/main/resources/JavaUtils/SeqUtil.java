@@ -14,7 +14,8 @@ public class SeqUtil
 			throw new IllegalArgumentException("Cannot instantiate sequence from null");
 		
 		VDMSeq seq = seq();
-		CollectionUtil.addAll(seq, elements);
+		for(Object element : elements)
+			seq.add(element);
 
 		return seq;
 	}
@@ -54,7 +55,7 @@ public class SeqUtil
 		
 		VDMSeq result = seq();
 		
-		CollectionUtil.addAll(result, seq.toArray());
+		result.addAll(seq);
 		Collections.reverse(result);
 		
 		return result;
@@ -116,30 +117,39 @@ public class SeqUtil
 
 		VDMSeq result = seq();
 
-		CollectionUtil.addAll(result, left.toArray());
-		CollectionUtil.addAll(result, right.toArray());
+		result.addAll(left);
+		result.addAll(right);
 		
 		return result;
 	}
 	
-	public static VDMSeq distConc(VDMSeq... seqs)
+	public static VDMSeq distConc(VDMSeq sequences)
 	{
 		VDMSeq result = seq();
 		
-		for(VDMSeq seq : seqs)
+		for(Object seq : sequences)
 		{
-			CollectionUtil.addAll(result, seq.toArray());
+			if(!(seq instanceof VDMSeq))
+				throw new IllegalArgumentException("Can only concatenate sequences");
+			
+			VDMSeq vdmSeq = (VDMSeq) seq;
+			result.addAll(vdmSeq);
 		}
 		
 		return result;
 	}
 	
-	public static String distConcStrings(String... strings)
+	public static String distConcStrings(VDMSeq seq)
 	{
 		String result = "";
 		
-		for(String str : strings)
+		for(Object str : seq)
+		{
+			if(!(str instanceof String))
+				throw new IllegalArgumentException("Distributed string concatenation only supports strings");
+			
 			result += str;
+		}
 		
 		return result;
 	}	
