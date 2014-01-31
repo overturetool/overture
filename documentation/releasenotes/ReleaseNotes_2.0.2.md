@@ -1,6 +1,4 @@
-
-
-# Overture 2.0.2 Release Notes — 3 February 2014 
+# Overture 2.0.2 Release Notes — 31 January 2014 
 
 ## What's New in Overture 2.0.2?
 
