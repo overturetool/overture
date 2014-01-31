@@ -125,12 +125,15 @@ public class SeqUtil
 	
 	public static VDMSeq distConc(VDMSeq sequences)
 	{
+		if(sequences == null)
+			throw new IllegalArgumentException("Distributed concatenation of null is undefined");
+		
 		VDMSeq result = seq();
 		
 		for(Object seq : sequences)
 		{
 			if(!(seq instanceof VDMSeq))
-				throw new IllegalArgumentException("Can only concatenate sequences");
+				throw new IllegalArgumentException("Distributed concatenation only supports sequences");
 			
 			VDMSeq vdmSeq = (VDMSeq) seq;
 			result.addAll(vdmSeq);
@@ -139,11 +142,14 @@ public class SeqUtil
 		return result;
 	}
 	
-	public static String distConcStrings(VDMSeq seq)
+	public static String distConcStrings(VDMSeq stringSeq)
 	{
+		if(stringSeq == null)
+			throw new IllegalArgumentException("Distributed string concatenation of null is undefined");
+	
 		String result = "";
 		
-		for(Object str : seq)
+		for(Object str : stringSeq)
 		{
 			if(!(str instanceof String))
 				throw new IllegalArgumentException("Distributed string concatenation only supports strings");
