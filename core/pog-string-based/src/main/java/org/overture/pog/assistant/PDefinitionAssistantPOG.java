@@ -20,7 +20,7 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC
 	}
 
 	public ProofObligationList getProofObligations(
-			LinkedList<PDefinition> defs,
+			LinkedList<? extends PDefinition> defs,
 			QuestionAnswerAdaptor<POContextStack, ProofObligationList> pogVisitor,
 			POContextStack ctxt) throws AnalysisException
 	{

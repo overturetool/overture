@@ -41,7 +41,7 @@ public class NonEmptySeqObligation extends ProofObligation
 
 	public NonEmptySeqObligation(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.NON_EMPTY_SEQ, ctxt);
+		super(exp, POType.NON_EMPTY_SEQ, ctxt, exp.getLocation());
 		
 		// exp <> []
 		

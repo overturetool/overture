@@ -1,0 +1,4 @@
+operations
+
+  compgreaterthan() r : nat
+    post 1>2 => r=2

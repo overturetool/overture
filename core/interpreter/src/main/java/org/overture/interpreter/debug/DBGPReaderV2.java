@@ -69,6 +69,7 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -418,10 +419,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 			if (controller.typeCheck() == ExitStatus.EXIT_OK) {
 				try {
 					if (logfile != null) {
-						PrintWriter p = new PrintWriter(new FileOutputStream(
-								logfile, false));
-						RTLogger.setLogfile(p);
-						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
+						RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
 					}
 					
 					if(logTimeInvfile != null)
@@ -1751,17 +1750,15 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable {
 							+ " RT events\n");
 				}
 
-				RTLogger.setLogfile(null);
-				NextGenRTLogger.getInstance().setLogfile(null);
+				RTLogger.setLogfile(RTTextLogger.class,null);
+				RTLogger.setLogfile(NextGenRTLogger.class,(File)null);
 				out.append("RT events now logged to the console");
 			} else if (c.data.equals("off")) {
 				RTLogger.enable(false);
 				out.append("RT event logging disabled");
 			} else {
 				File file = new File(new URI(c.data));
-				PrintWriter p = new PrintWriter(
-						new FileOutputStream(file, true));
-				RTLogger.setLogfile(p);
+				RTLogger.setLogfile(RTTextLogger.class,file);
 				out.append("RT events now logged to " + c.data);
 			}
 		} catch (FileNotFoundException e) {

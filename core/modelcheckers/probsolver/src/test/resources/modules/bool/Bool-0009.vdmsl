@@ -1,0 +1,4 @@
+operations
+
+  compgreatereql() r : nat
+    post 2>=2 => r=2

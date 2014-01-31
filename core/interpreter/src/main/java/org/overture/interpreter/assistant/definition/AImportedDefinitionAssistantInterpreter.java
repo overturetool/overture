@@ -5,10 +5,8 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
-import org.overture.typechecker.assistant.definition.AImportedDefinitionAssistantTC;
 
-public class AImportedDefinitionAssistantInterpreter extends
-		AImportedDefinitionAssistantTC
+public class AImportedDefinitionAssistantInterpreter 
 {
 
 	protected static IInterpreterAssistantFactory af;
@@ -17,7 +15,6 @@ public class AImportedDefinitionAssistantInterpreter extends
 	public AImportedDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

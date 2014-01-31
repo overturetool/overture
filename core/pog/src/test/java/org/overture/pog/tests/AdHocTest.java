@@ -68,7 +68,7 @@ public class AdHocTest extends TestCase
 		for (IProofObligation po : polist)
 		{
 			
-				String pretty = po.getValueTree().toString();
+				String pretty = po.getKind() + " / " + po.getValueTree().toString();
 				System.out.println(pretty);
 				assertTrue(comparePOtoExp(result, po.getValueTree()));
 		}
@@ -79,7 +79,7 @@ public class AdHocTest extends TestCase
 
 	private boolean comparePOtoExp(PExp result, AVdmPoTree valueTree)
 	{
-		// TODO need comparison logic now... .(
+		// TODO need comparison logic now... 
 		return true;
 	}
 

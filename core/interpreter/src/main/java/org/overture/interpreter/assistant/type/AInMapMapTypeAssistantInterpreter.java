@@ -7,16 +7,14 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.type.AInMapMapTypeAssistantTC;
 
-public class AInMapMapTypeAssistantInterpreter extends AInMapMapTypeAssistantTC
+public class AInMapMapTypeAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AInMapMapTypeAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

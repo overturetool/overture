@@ -27,11 +27,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
-import org.overture.ide.ui.IVdmUiConstants;
-import org.overture.ide.ui.VdmUIPlugin;
+import org.overture.ide.plugins.latex.ILatexConstants;
+import org.overture.ide.plugins.latex.LatexPlugin;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
-public class PdfLatex extends Thread
+public class PdfLatex extends Thread implements PdfGenerator
 {
 
 	private String documentName;
@@ -39,8 +39,8 @@ public class PdfLatex extends Thread
 	private File outputFolder;
 
 	private Process process;
-	public boolean isFinished = false;
-	public boolean hasFailed = false;
+	public boolean finished = false;
+	public boolean failed = false;
 	private String currentOS = null;
 	private boolean latexFailed = false;
 
@@ -62,7 +62,7 @@ public class PdfLatex extends Thread
 		}
 	}
 
-	public void setLatexFail(boolean b)
+	public void setFail(boolean b)
 	{
 		this.latexFailed = b;
 	}
@@ -95,7 +95,7 @@ public class PdfLatex extends Thread
 			ProcessBuilder pb = new ProcessBuilder(argument);
 			if (currentOS.equals(Platform.OS_MACOSX))
 			{ // fix for MacOS
-				String osxpath = VdmUIPlugin.getDefault().getPreferenceStore().getString(IVdmUiConstants.OSX_LATEX_PATH_PREFERENCE);
+				String osxpath = LatexPlugin.getDefault().getPreferenceStore().getString(ILatexConstants.OSX_LATEX_PATH_PREFERENCE);
 				if (osxpath.equals(""))
 				{
 					pb.command("/usr/texbin/pdflatex", "-interaction=nonstopmode", documentName);
@@ -118,27 +118,29 @@ public class PdfLatex extends Thread
 			process.waitFor();
 
 			if (project != null)
+			{
 				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+			}
 
 			if (latexFailed)
 			{
-				this.hasFailed = true;
+				this.failed = true;
 			}
 
-			isFinished = true;
+			finished = true;
 		} catch (IOException e)
 		{
-			this.hasFailed = true;
+			this.failed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CoreException e)
 		{
-			this.hasFailed = true;
+			this.failed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e)
 		{
-			this.hasFailed = true;
+			this.failed = true;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -172,8 +174,8 @@ public class PdfLatex extends Thread
 		int count = 0;
 		file = (File) filePathStack.get(count);
 		relativeTo = (File) relativeToPathStack.get(count);
-		while ((count < filePathStack.size() - 1)
-				&& (count < relativeToPathStack.size() - 1)
+		while (count < filePathStack.size() - 1
+				&& count < relativeToPathStack.size() - 1
 				&& file.equals(relativeTo))
 		{
 			count++;
@@ -181,7 +183,9 @@ public class PdfLatex extends Thread
 			relativeTo = (File) relativeToPathStack.get(count);
 		}
 		if (file.equals(relativeTo))
+		{
 			count++;
+		}
 		// up as far as necessary
 		StringBuffer relString = new StringBuffer();
 		for (int i = count; i < relativeToPathStack.size(); i++)
@@ -203,5 +207,17 @@ public class PdfLatex extends Thread
 			throw new IOException("Failed to find relative path.");
 		}
 		return relString.toString();
+	}
+
+	@Override
+	public boolean isFinished()
+	{
+		return finished;
+	}
+
+	@Override
+	public boolean hasFailed()
+	{
+		return failed;
 	}
 }

@@ -160,31 +160,25 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		public Image getImage(Object obj)
 		{
 			Data data = (Data) obj;
-			// if (data.status == TestResultType.Fail) {
-			// return OvertureTracesPlugin.getImageDescriptor(
-			// OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL)
-			// .createImage();
-			// }
-			// if (data.status == TestResultType.Ok) {
-			// return OvertureTracesPlugin.getImageDescriptor(
-			// OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES)
-			// .createImage();
-			// }
 
 			String imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
 
 			if (data.status == Verdict.PASSED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SUCCES;
-			else if (data.status == null)
+			} else if (data.status == null)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNKNOWN;
-			else if (data.status == Verdict.INCONCLUSIVE)
+			} else if (data.status == Verdict.INCONCLUSIVE)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_UNDETERMINED;
-			else if (data.status == Verdict.FAILED)
+			} else if (data.status == Verdict.FAILED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FAIL;
-			// else if (data.status == TestResultType.ExpansionFaild)
-			// imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_EXPANSIN_FAIL;
-			else if (data.status == Verdict.SKIPPED)
+			} else if (data.status == Verdict.SKIPPED)
+			{
 				imgPath = OvertureTracesPlugin.IMG_TRACE_TEST_CASE_SKIPPED;
+			}
 
 			return OvertureTracesPlugin.getImageDescriptor(imgPath).createImage();
 
@@ -232,25 +226,15 @@ public class TraceTest extends ViewPart implements ISelectionListener
 		column2.setText("Result");
 		column2.setToolTipText("Show Description");
 
-		// TableColumn column3 = new TableColumn(viewer.getTable(), SWT.LEFT);
-		// column3.setText("Verdict");
-		// column3.setToolTipText("Show verdict");
-
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		// viewer.setSorter(new NameSorter());
 
 		// input
 
-		// viewer.setInput(getViewSite());
 
 		makeActions();
-		// hookContextMenu();
 		hookDoubleClickAction();
-		// contributeToActionBars();
-
-		// we do this directly instead
-		// getViewSite().getPage().addSelectionListener(ITracesConstants.TRACES_VIEW_ID,this);
 
 	}
 
@@ -294,7 +278,9 @@ public class TraceTest extends ViewPart implements ISelectionListener
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection) selection).getFirstElement();
 				if (obj instanceof Data)
+				{
 					showMessage(((Data) obj).GetDescription().toString());
+				}
 			}
 		};
 	}
@@ -347,9 +333,12 @@ public class TraceTest extends ViewPart implements ISelectionListener
 				{
 
 					if (res.getResults().size() > i)
+					{
 						list.add(new Data(res.getArguments().get(i), res.getResults().get(i), res.getStatus()));
-					else if (res.getResults().size() <= i)
+					} else if (res.getResults().size() <= i)
+					{
 						list.add(new Data(res.getArguments().get(i), "N / A", res.getStatus()));
+					}
 				}
 
 				viewer.setInput(list);

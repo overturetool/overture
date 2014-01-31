@@ -50,7 +50,7 @@ public class FiniteMapObligation extends ProofObligation
 
 	public FiniteMapObligation(AMapCompMapExp exp, PType mapType, IPOContextStack ctxt)
 	{
-		super(exp, POType.FINITE_MAP, ctxt);
+		super(exp, POType.FINITE_MAP, ctxt, exp.getLocation());
 
 		ILexNameToken finmap = getUnique("finmap");
 		ILexNameToken findex = getUnique("findex");

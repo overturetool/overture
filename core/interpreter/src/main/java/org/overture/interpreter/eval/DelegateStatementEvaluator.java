@@ -21,11 +21,6 @@ import org.overture.interpreter.values.Value;
 
 public class DelegateStatementEvaluator extends StatementEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3950086417577159578L;
-
 	
 	@Override
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,

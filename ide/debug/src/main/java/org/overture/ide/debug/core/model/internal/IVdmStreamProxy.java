@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.model.internal;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface IVdmStreamProxy {
+public interface IVdmStreamProxy
+{
 	InputStream getStdin();
 
 	OutputStream getStdout();

@@ -31,7 +31,8 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmMethodEntryBreakpoint;
 
 public class VdmMethodEntryBreakpoint extends VdmLineBreakpoint implements
-		IVdmMethodEntryBreakpoint {
+		IVdmMethodEntryBreakpoint
+{
 
 	public static final String METHOD_NAME = VdmDebugPlugin.PLUGIN_ID
 			+ ".methodName"; //$NON-NLS-1$
@@ -48,73 +49,87 @@ public class VdmMethodEntryBreakpoint extends VdmLineBreakpoint implements
 	private static final String EXIT_ID = VdmDebugPlugin.PLUGIN_ID
 			+ ".exitBrId"; //$NON-NLS-1$
 
-	protected String getMarkerId() {
+	protected String getMarkerId()
+	{
 		return IDebugConstants.METHOD_ENTRY_MARKER_ID;
 	}
 
-	public VdmMethodEntryBreakpoint() {
+	public VdmMethodEntryBreakpoint()
+	{
 
 	}
 
 	public VdmMethodEntryBreakpoint(String debugModelId, IResource resource,
 			IPath path, int lineNumber, int charStart, int charEnd,
-			boolean register, String methodName) throws DebugException {
+			boolean register, String methodName) throws DebugException
+	{
 
-		super(debugModelId, resource, path, lineNumber, charStart, charEnd,
-				register);
+		super(debugModelId, resource, path, lineNumber, charStart, charEnd, register);
 
-		try {
+		try
+		{
 			ensureMarker().setAttribute(METHOD_NAME, methodName);
-		} catch (CoreException e) {
+		} catch (CoreException e)
+		{
 			throw new DebugException(e.getStatus());
 		}
 	}
 
 	// Method name
-	public String getMethodName() throws CoreException {
+	public String getMethodName() throws CoreException
+	{
 		return ensureMarker().getAttribute(METHOD_NAME, ""); //$NON-NLS-1$
 	}
 
 	// Break on entry
-	public boolean breakOnEntry() throws CoreException {
+	public boolean breakOnEntry() throws CoreException
+	{
 		return ensureMarker().getAttribute(BREAK_ON_ENTRY, false);
 	}
 
-	public void setBreakOnEntry(boolean value) throws CoreException {
+	public void setBreakOnEntry(boolean value) throws CoreException
+	{
 		ensureMarker().setAttribute(BREAK_ON_ENTRY, value);
 	}
 
 	// Break on exit
-	public boolean breakOnExit() throws CoreException {
+	public boolean breakOnExit() throws CoreException
+	{
 		return ensureMarker().getAttribute(BREAK_ON_EXIT, false);
 	}
 
-	public void setBreakOnExit(boolean value) throws CoreException {
+	public void setBreakOnExit(boolean value) throws CoreException
+	{
 		ensureMarker().setAttribute(BREAK_ON_EXIT, value);
 	}
 
 	// Entry breakpoint id
-	public String getEntryBreakpointId() throws CoreException {
+	public String getEntryBreakpointId() throws CoreException
+	{
 		return ensureMarker().getAttribute(ENTRY_ID, null);
 	}
 
-	public void setEntryBreakpointId(String id) throws CoreException {
+	public void setEntryBreakpointId(String id) throws CoreException
+	{
 		ensureMarker().setAttribute(ENTRY_ID, id);
 	}
 
 	// Exit breakpoint id
-	public String getExitBreakpointId() throws CoreException {
+	public String getExitBreakpointId() throws CoreException
+	{
 		return ensureMarker().getAttribute(EXIT_ID, null);
 	}
 
-	public void setExitBreakpointId(String id) throws CoreException {
+	public void setExitBreakpointId(String id) throws CoreException
+	{
 		ensureMarker().setAttribute(EXIT_ID, id);
 	}
 
 	private static final String[] UPDATABLE_ATTRS = new String[] { METHOD_NAME,
 			BREAK_ON_ENTRY, BREAK_ON_EXIT };
 
-	public String[] getUpdatableAttributes() {
+	public String[] getUpdatableAttributes()
+	{
 		List<String> all = new ArrayList<String>();
 		all.addAll(Arrays.asList(super.getUpdatableAttributes()));
 		all.addAll(Arrays.asList(UPDATABLE_ATTRS));

@@ -4,17 +4,16 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.typechecker.assistant.statement.AAssignmentStmAssistantTC;
 
-public class AAssignmentStmAssistantInterpreter extends
-		AAssignmentStmAssistantTC
+public class AAssignmentStmAssistantInterpreter// extends
+// AAssignmentStmAssistantTC
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AAssignmentStmAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		// super(af);
 		this.af = af;
 	}
 

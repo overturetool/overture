@@ -39,7 +39,7 @@ public class SeqModificationObligation extends ProofObligation
 
 	public SeqModificationObligation(APlusPlusBinaryExp arg, IPOContextStack ctxt)
 	{
-		super(arg, POType.SEQ_MODIFICATION, ctxt);
+		super(arg, POType.SEQ_MODIFICATION, ctxt, arg.getLocation());
 		
 		/**
 		 * "seq ++ map" produces "dom map subset inds seq"

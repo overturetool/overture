@@ -115,8 +115,12 @@ public class POForAllContext extends POContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
+		return getSuperContext(stitch);
+	}
+	
+	protected AForAllExp getSuperContext(PExp stitch){
 		AForAllExp forAllExp = new AForAllExp();
-		forAllExp.setBindList(bindings);
+		forAllExp.setBindList(cloneBinds(bindings));
 		forAllExp.setPredicate(stitch);
 		return forAllExp;
 	}

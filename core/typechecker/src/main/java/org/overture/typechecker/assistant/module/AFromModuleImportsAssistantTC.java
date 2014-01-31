@@ -13,7 +13,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
-public class AFromModuleImportsAssistantTC {
+public class AFromModuleImportsAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -21,34 +22,38 @@ public class AFromModuleImportsAssistantTC {
 	{
 		this.af = af;
 	}
-	public static List<PDefinition> getDefinitions(
-			AFromModuleImports ifm, AModuleModules from) {
-		
+
+	public static List<PDefinition> getDefinitions(AFromModuleImports ifm,
+			AModuleModules from)
+	{
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (List<PImport> ofType: ifm.getSignatures())
+		for (List<PImport> ofType : ifm.getSignatures())
 		{
-			for (PImport imp: ofType)
+			for (PImport imp : ofType)
 			{
-				defs.addAll(PImportAssistantTC.getDefinitions(imp,from));
+				defs.addAll(PImportAssistantTC.getDefinitions(imp, from));
 			}
 		}
 
 		return defs;
 	}
 
-	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env) throws AnalysisException {
+	public static void typeCheck(AFromModuleImports ifm, ModuleEnvironment env)
+			throws AnalysisException
+	{
 		TypeCheckVisitor tc = new TypeCheckVisitor();
-		TypeCheckInfo question = new TypeCheckInfo(af,env, null, null);
-		
-		for (List<PImport> ofType: ifm.getSignatures())
+		TypeCheckInfo question = new TypeCheckInfo(af, env, null, null);
+
+		for (List<PImport> ofType : ifm.getSignatures())
 		{
-			for (PImport imp: ofType)
+			for (PImport imp : ofType)
 			{
-				 imp.apply(tc, question);
+				imp.apply(tc, question);
 			}
 		}
-		
+
 	}
 
 }

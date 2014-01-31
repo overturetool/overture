@@ -20,36 +20,38 @@ public class AModuleExportsAssistantTC
 	{
 		this.af = af;
 	}
+
 	public static Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
 
-		for (List<PExport> etype: aModuleExports.getExports())
+		for (List<PExport> etype : aModuleExports.getExports())
 		{
-			for (PExport exp: etype)
+			for (PExport exp : etype)
 			{
-				exportDefs.addAll(PExportAssistantTC.getDefinition(exp,actualDefs));
+				exportDefs.addAll(PExportAssistantTC.getDefinition(exp, actualDefs));
 			}
 		}
 
 		// Mark all exports as used
 
-		for (PDefinition d: exportDefs)
+		for (PDefinition d : exportDefs)
 		{
 			PDefinitionAssistantTC.markUsed(d);
 		}
 
 		return exportDefs;
 	}
-	
-	public static Collection<? extends PDefinition> getDefinitions(AModuleExports aModuleExports)
+
+	public static Collection<? extends PDefinition> getDefinitions(
+			AModuleExports aModuleExports)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
 
-		for (List<PExport> etype: aModuleExports.getExports())
+		for (List<PExport> etype : aModuleExports.getExports())
 		{
-			for (PExport exp: etype)
+			for (PExport exp : etype)
 			{
 				exportDefs.addAll(PExportAssistantTC.getDefinition(exp));
 			}
@@ -57,7 +59,7 @@ public class AModuleExportsAssistantTC
 
 		// Mark all exports as used
 
-		for (PDefinition d: exportDefs)
+		for (PDefinition d : exportDefs)
 		{
 			PDefinitionAssistantTC.markUsed(d);
 		}

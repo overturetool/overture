@@ -6,17 +6,14 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.ASeqCompSeqExpAssistantTC;
 
-public class ASeqCompSeqExpAssistantInterpreter extends
-		ASeqCompSeqExpAssistantTC
+public class ASeqCompSeqExpAssistantInterpreter 
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ASeqCompSeqExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

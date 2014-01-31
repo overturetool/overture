@@ -34,14 +34,18 @@ public class GroupSizeCalculator
 					/ TraceTestGroup.GROUP_SIZE);
 
 			if (numberOfGroups > TraceTestGroup.GROUP_SIZE)
+			{
 				numberOfGroups = TraceTestGroup.GROUP_SIZE.doubleValue();
+			}
 
-			testCountInGroup = (size) / numberOfGroups.longValue();
+			testCountInGroup = size / numberOfGroups.longValue();
 
 			if (testCountInGroup < TraceTestGroup.GROUP_SIZE
 					&& size >= TraceTestGroup.GROUP_SIZE)
+			{
 				testCountInGroup = TraceTestGroup.GROUP_SIZE; // top up all
 																// groups
+			}
 		}
 	}
 

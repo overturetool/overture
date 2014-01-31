@@ -46,6 +46,6 @@ public interface IVdmValue extends IValue {
 
 	IVariable getVariable(int offset) throws DebugException;
 
-	IVdmEvaluationCommand createEvaluationCommand(String messageTemplate,
-			IVdmThread thread);
+//	IVdmEvaluationCommand createEvaluationCommand(String messageTemplate,
+//			IVdmThread thread);
 }

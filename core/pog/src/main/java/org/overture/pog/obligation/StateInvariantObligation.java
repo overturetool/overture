@@ -46,11 +46,11 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt)
 	{
-		super(ass, POType.STATE_INVARIANT, ctxt);
+		super(ass, POType.STATE_INVARIANT, ctxt, ass.getLocation());
 		
 		if (ass.getClassDefinition() != null)
 		{
-			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition().clone())));
+			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition())));
 		}
 		else
 		{
@@ -73,25 +73,25 @@ public class StateInvariantObligation extends ProofObligation
 
 	public StateInvariantObligation(AClassInvariantDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After instance variable initializers
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public StateInvariantObligation(AExplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def, IPOContextStack ctxt)
 	{
-		super(def, POType.STATE_INVARIANT, ctxt);
+		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition().clone())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 //    	valuetree.setContext(ctxt.getContextNodeList());
 	}
 
@@ -99,10 +99,10 @@ public class StateInvariantObligation extends ProofObligation
 	{
 		PExp root = null;
 		
-		for (PDefinition d: SClassDefinitionAssistantTC.getInvDefs(def))
+		for (PDefinition d: SClassDefinitionAssistantTC.getInvDefs(def.clone()))
 		{
 			AClassInvariantDefinition cid = (AClassInvariantDefinition)d;
-			root = makeAnd(root, cid.getExpression());
+			root = makeAnd(root, cid.getExpression().clone());
 		}
 
     	return root;

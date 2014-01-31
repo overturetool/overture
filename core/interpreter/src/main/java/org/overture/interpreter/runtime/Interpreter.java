@@ -661,7 +661,7 @@ abstract public class Interpreter
 			else
 			{
 				// Initialize completely between every run...
-    			traceInit(ctxt.threadState.dbgp);
+    			init(ctxt.threadState.dbgp);
     			List<Object> result = runOneTrace(tracedef, test, debug);
     			tests.filter(result, test, n);
 
@@ -677,7 +677,7 @@ abstract public class Interpreter
 			n++;
 		}
 
-		traceInit(null);
+		init(null);
 		Settings.usingCmdLine = wasCMD;
 		Settings.usingDBGP = wasDBGP;
 		

@@ -12,7 +12,8 @@ import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AModuleImportsAssistantTC {
+public class AModuleImportsAssistantTC
+{
 	protected static ITypeCheckerAssistantFactory af;
 
 	@SuppressWarnings("static-access")
@@ -20,11 +21,13 @@ public class AModuleImportsAssistantTC {
 	{
 		this.af = af;
 	}
-	public static List<PDefinition> getDefinitions(
-			AModuleImports imports, List<AModuleModules> allModules) {
+
+	public static List<PDefinition> getDefinitions(AModuleImports imports,
+			List<AModuleModules> allModules)
+	{
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		for (AFromModuleImports ifm: imports.getImports())
+		for (AFromModuleImports ifm : imports.getImports())
 		{
 			if (ifm.getName().getName().equals(imports.getName()))
 			{
@@ -32,29 +35,30 @@ public class AModuleImportsAssistantTC {
 				continue;
 			}
 
-			AModuleModules from = AModuleModulesAssistantTC.findModule(allModules,ifm.getName());
+			AModuleModules from = AModuleModulesAssistantTC.findModule(allModules, ifm.getName());
 
 			if (from == null)
 			{
-				TypeCheckerErrors.report(3196, "No such module as " + ifm.getName(), ifm.getName().getLocation(),ifm);
-			}
-			else
+				TypeCheckerErrors.report(3196, "No such module as "
+						+ ifm.getName(), ifm.getName().getLocation(), ifm);
+			} else
 			{
-				defs.addAll(AFromModuleImportsAssistantTC.getDefinitions(ifm,from));
+				defs.addAll(AFromModuleImportsAssistantTC.getDefinitions(ifm, from));
 			}
 		}
 
 		return defs;
 	}
 
-	public static void typeCheck(AModuleImports imports,
-			ModuleEnvironment env) throws AnalysisException {
-		
-		for (AFromModuleImports ifm: imports.getImports())
+	public static void typeCheck(AModuleImports imports, ModuleEnvironment env)
+			throws AnalysisException
+	{
+
+		for (AFromModuleImports ifm : imports.getImports())
 		{
-			AFromModuleImportsAssistantTC.typeCheck(ifm,env);
+			AFromModuleImportsAssistantTC.typeCheck(ifm, env);
 		}
-		
+
 	}
 
 }

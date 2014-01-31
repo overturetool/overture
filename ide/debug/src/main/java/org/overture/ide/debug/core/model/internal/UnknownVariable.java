@@ -28,83 +28,92 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 
 public class UnknownVariable extends VdmDebugElement implements IVariable,
-		IValue {
+		IValue
+{
 
 	private final IVdmStackFrame frame;
 	private final VdmValue owner;
 	private final int index;
 
-	public UnknownVariable(IVdmStackFrame frame, VdmValue owner, int index) {
+	public UnknownVariable(IVdmStackFrame frame, VdmValue owner, int index)
+	{
 		this.frame = frame;
 		this.owner = owner;
 		this.index = index;
 	}
 
-	public String getName() throws DebugException {
+	public String getName() throws DebugException
+	{
 		return "(" + index + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public String getReferenceTypeName() throws DebugException {
+	public String getReferenceTypeName() throws DebugException
+	{
 		return owner.getType().getName();
 	}
 
-	public IValue getValue() throws DebugException {
+	public IValue getValue() throws DebugException
+	{
 		return this;
 	}
 
-	public boolean hasValueChanged() throws DebugException {
+	public boolean hasValueChanged() throws DebugException
+	{
 		return false;
 	}
 
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return frame.getDebugTarget();
 	}
 
-	public void setValue(String expression) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				"setValue", null)); //$NON-NLS-1$
+	public void setValue(String expression) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED, "setValue", null)); //$NON-NLS-1$
 	}
 
-	public void setValue(IValue value) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				"setValue", null)); //$NON-NLS-1$
+	public void setValue(IValue value) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED, "setValue", null)); //$NON-NLS-1$
 	}
 
-	public boolean supportsValueModification() {
+	public boolean supportsValueModification()
+	{
 		return false;
 	}
 
-	public boolean verifyValue(String expression) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				"verifyValue", null)); //$NON-NLS-1$
+	public boolean verifyValue(String expression) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED, "verifyValue", null)); //$NON-NLS-1$
 	}
 
-	public boolean verifyValue(IValue value) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				"verifyValue", null)); //$NON-NLS-1$
+	public boolean verifyValue(IValue value) throws DebugException
+	{
+		throw new DebugException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED, "verifyValue", null)); //$NON-NLS-1$
 	}
 
-	public String getValueString() {
+	public String getValueString()
+	{
 		return ""; //$NON-NLS-1$
 	}
 
-	public IVariable[] getVariables() throws DebugException {
+	public IVariable[] getVariables() throws DebugException
+	{
 		return VdmValue.NO_VARIABLES;
 	}
 
-	public boolean hasVariables() throws DebugException {
+	public boolean hasVariables() throws DebugException
+	{
 		return false;
 	}
 
-	public boolean isAllocated() throws DebugException {
+	public boolean isAllocated() throws DebugException
+	{
 		return false;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return getValueString();
 	}
 

@@ -1,0 +1,5 @@
+operations
+
+-- under construction
+    complessthan() r : bool
+   post (2<=2) = r;

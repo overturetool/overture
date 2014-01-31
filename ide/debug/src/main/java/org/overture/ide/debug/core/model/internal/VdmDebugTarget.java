@@ -63,6 +63,7 @@ import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.IDbgpStreamFilter;
 import org.overture.ide.debug.core.dbgp.IDbgpThreadAcceptor;
+import org.overture.ide.debug.core.model.DebugEventHelper;
 import org.overture.ide.debug.core.model.DefaultDebugOptions;
 import org.overture.ide.debug.core.model.IDebugLaunchConstants;
 import org.overture.ide.debug.core.model.IVdmBreakpointPathMapper;
@@ -78,10 +79,10 @@ import org.overture.ide.debug.utils.CharOperation;
 public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		IVdmThreadManagerListener, IStepFilters
 {
-	/**
-	 * @deprecated
-	 * @see #getVdmProject()
-	 */
+//	/**
+//	 * @deprecated
+//	 * @see #getVdmProject()
+//	 */
 	//	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
@@ -781,11 +782,11 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 			}
 
-			if(logView != null)
+			if (logView != null)
 			{
 				logView.clear();
 			}
-			
+
 		}
 
 	}

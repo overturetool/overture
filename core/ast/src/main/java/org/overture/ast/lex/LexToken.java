@@ -145,11 +145,6 @@ import org.overture.ast.node.Node;
 		return caller.caseILexToken(this, question);
 	}
 
-	@Override
-	public String kindNode() {
-		return kindNode;
-	}
-	public static final String kindNode = "ExternalDefined";
 
 	@Override
 	public void removeChild(INode child) {

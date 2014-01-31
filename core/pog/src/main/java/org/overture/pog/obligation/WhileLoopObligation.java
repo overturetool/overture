@@ -23,6 +23,8 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.pog.pub.IPOContextStack;
@@ -34,10 +36,13 @@ public class WhileLoopObligation extends ProofObligation
 
 	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt)
 	{
-		super(stmt, POType.WHILE_LOOP, ctxt);
+		super(stmt, POType.WHILE_LOOP, ctxt, stmt.getLocation());
 		AWhileStm whileStmt = new AWhileStm();
 		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());
+		
+		AVariableExp nyexp = getVarExp(new LexNameToken("", "NotYetImplemented", null));
+		valuetree.setPredicate(nyexp);
 		
 		// TODO what do we do with loop invariants?
 		// valuetree.setPredicate(whileStmt);

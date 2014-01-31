@@ -30,14 +30,11 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-
-
 
 /**
  * Define the type checking environment for a list of definitions.
@@ -48,29 +45,29 @@ public class FlatEnvironment extends Environment
 	protected final List<PDefinition> definitions;
 	private boolean limitStateScope = false;
 
-	public List<PDefinition> getDefinitions() {
+	public List<PDefinition> getDefinitions()
+	{
 		return definitions;
 	}
 
-	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions, EnvironmentSearchStrategy strategy)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,
+			List<PDefinition> definitions)
 	{
-		super(af,null,strategy);
+		super(af, null);
 		this.definitions = definitions;
 	}
 
-	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions) {
-		this(af,definitions,(EnvironmentSearchStrategy)null);
-	}
-
-	public FlatEnvironment(ITypeCheckerAssistantFactory af,List<PDefinition> definitions, Environment env)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af,
+			List<PDefinition> definitions, Environment env)
 	{
-		super(af,env,env.searchStrategy);
+		super(af, env);
 		this.definitions = definitions;
 	}
 
-	public FlatEnvironment(ITypeCheckerAssistantFactory af,PDefinition one, Environment env)
+	public FlatEnvironment(ITypeCheckerAssistantFactory af, PDefinition one,
+			Environment env)
 	{
-		super(af,env,env.searchStrategy);
+		super(af, env);
 		this.definitions = new ArrayList<PDefinition>();
 		this.definitions.add(one);
 	}
@@ -81,12 +78,9 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName( ILexNameToken name, NameScope scope)
+	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = searchStrategy != null ? searchStrategy.findName(name, scope, getEnclosingDefinition(), outer, getDefinitions()) : null;
-		if (def != null) return def;
-
-		def = PDefinitionListAssistantTC.findName(definitions,name, scope);
+		PDefinition def = PDefinitionListAssistantTC.findName(definitions, name, scope);
 
 		if (def != null)
 		{
@@ -96,12 +90,11 @@ public class FlatEnvironment extends Environment
 		if (outer == null)
 		{
 			return null;
-		}
-		else
+		} else
 		{
 			if (limitStateScope)
 			{
-				scope = NameScope.NAMES;	// Limit NAMESAND(ANY)STATE
+				scope = NameScope.NAMES; // Limit NAMESAND(ANY)STATE
 			}
 
 			return outer.findName(name, scope);
@@ -111,17 +104,14 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = searchStrategy != null ? searchStrategy.findType(name, fromModule, getEnclosingDefinition(), outer, getDefinitions()) : null;
-		if (def != null) return def;
-
-		def = PDefinitionAssistantTC.findType(definitions,name, fromModule);
+		PDefinition def = PDefinitionAssistantTC.findType(definitions, name, fromModule);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name, fromModule);
+		return outer == null ? null : outer.findType(name, fromModule);
 	}
 
 	@Override
@@ -134,7 +124,7 @@ public class FlatEnvironment extends Environment
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findStateDefinition();
+		return outer == null ? null : outer.findStateDefinition();
 	}
 
 	@Override
@@ -168,9 +158,9 @@ public class FlatEnvironment extends Environment
 	}
 
 	@Override
-	public Set<PDefinition> findMatches( ILexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(definitions,name);
+		Set<PDefinition> defs = af.createPDefinitionListAssistant().findMatches(definitions, name);
 
 		if (outer != null)
 		{
@@ -189,13 +179,6 @@ public class FlatEnvironment extends Environment
 	public void setLimitStateScope(boolean limitStateScope)
 	{
 		this.limitStateScope = limitStateScope;
-	}
-
-	@Override
-	public PDefinition find(ILexIdentifierToken name) {
-		if (super.searchStrategy != null)
-			return searchStrategy.find(name, getEnclosingDefinition(), outer, definitions);
-		return null;
 	}
 
 }

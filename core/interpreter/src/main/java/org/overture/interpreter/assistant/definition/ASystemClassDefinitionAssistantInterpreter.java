@@ -6,12 +6,10 @@ import java.util.Vector;
 
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AUndefinedType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
@@ -60,7 +58,6 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 			// predict the CPU numbers at this point.
 
 			List<PDefinition> cpudefs = new Vector<PDefinition>();
-			int cpuNumber = 1;
 			ACpuClassDefinition instance = null;
 
 			for (PDefinition d : systemClass.getDefinitions())
@@ -69,15 +66,12 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 
 				if (t instanceof AClassType)
 				{
-					AInstanceVariableDefinition ivd = (AInstanceVariableDefinition) d;
 					AClassType ct = (AClassType) t;
 
 					if (ct.getClassdef() instanceof ACpuClassDefinition)
 					{
 						cpudefs.add(d);
 						instance = (ACpuClassDefinition) ct.getClassdef();
-
-						RTLogger.log(new RTDeclareCPUMessage(cpuNumber++, !(ivd.getExpType() instanceof AUndefinedType), systemClass.getName().getName(), d.getName().getName()));
 					}
 				}
 			}
@@ -110,6 +104,8 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 				{
 					cpu = (CPUValue) v.deref();
 				}
+
+//				RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), !v.isUndefined(), systemClass.getName().getName(), d.getName().getName()));
 
 				// Set the name and scheduler for the CPU resource, and
 				// associate the resource with the scheduler.

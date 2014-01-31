@@ -1,11 +1,33 @@
-module A
-definitions
+values
+   MAX : nat1 = 10;
 
+types
+
+   Loc = nat;
+
+   
+   Free = set of Loc
+   inv f == card f <= MAX;
+
+functions
+
+   locs_of : Loc * nat1 -> set of Loc
+   locs_of(x, s) == {x,...,x+s-1};
+
+
+state Heap of
+   f: Free
+end
 
 operations
-impF1 (p1 : nat, p2 : nat, p3 : bool) result : nat
-pre p3 => p1 / p2 > 0
-post result = p1 /p2;
-	
-end A
 
+ 
+    malloc(s: nat1) r: Loc
+    ext wr f
+    pre exists x : Loc & locs_of(x, s) subset f
+    post locs_of(r, s) subset f and f = f~ \ locs_of(r, s);
+    
+free(d: Loc, s: nat1)
+ext wr f
+pre locs_of(d, s) inter f = {} 
+post f = f~ union locs_of(d, s);

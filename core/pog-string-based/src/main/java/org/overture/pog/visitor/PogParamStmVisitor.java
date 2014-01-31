@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -15,7 +16,6 @@ import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.ADefLetDefStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.ast.statements.AExitStm;
@@ -24,6 +24,7 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
+import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASpecificationStm;
 import org.overture.ast.statements.AStartStm;
@@ -32,7 +33,6 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.SLetDefStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.POContextStack;
@@ -387,26 +387,27 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 		}
 	}
 
-	@Override
-	public ProofObligationList defaultSLetDefStm(SLetDefStm node,
-			POContextStack question) throws AnalysisException
-	{
-		try
-		{
-			ProofObligationList obligations = new ProofObligationList();
-
-			obligations.addAll(question.assistantFactory.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(), rootVisitor, question));
-
-			question.push(new POScopeContext());
-			obligations.addAll(node.getStatement().apply(mainVisitor, question));
-			question.pop();
-
-			return obligations;
-		} catch (Exception e)
-		{
-			throw new POException(node, e);
-		}
-	}
+	// @Override
+	// public ProofObligationList defaultSLetDefStm(SLetDefStm node,
+	// POContextStack question) throws AnalysisException
+	// {
+	// try
+	// {
+	// ProofObligationList obligations = new ProofObligationList();
+	//
+	// obligations.addAll(question.assistantFactory.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(),
+	// rootVisitor, question));
+	//
+	// question.push(new POScopeContext());
+	// obligations.addAll(node.getStatement().apply(mainVisitor, question));
+	// question.pop();
+	//
+	// return obligations;
+	// } catch (Exception e)
+	// {
+	// throw new POException(node, e);
+	// }
+	// }
 
 	@Override
 	public ProofObligationList caseAReturnStm(AReturnStm node,
@@ -558,8 +559,8 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 	}
 
 	@Override
-	public ProofObligationList caseADefLetDefStm(ADefLetDefStm node,
-			POContextStack question) throws AnalysisException
+	public ProofObligationList caseALetStm(ALetStm node, POContextStack question)
+			throws AnalysisException
 	{
 		try
 		{
@@ -621,6 +622,20 @@ public class PogParamStmVisitor<Q extends POContextStack, A extends ProofObligat
 		{
 			throw new POException(node, e);
 		}
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(INode node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
+	}
+
+	@Override
+	public ProofObligationList createNewReturnValue(Object node,
+			POContextStack question)
+	{
+		return new ProofObligationList();
 	}
 
 }

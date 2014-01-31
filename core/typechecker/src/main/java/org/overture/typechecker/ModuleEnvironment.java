@@ -29,16 +29,12 @@ import java.util.Set;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-
-
-
 
 /**
  * Define the type checking environment for a modular specification.
@@ -52,10 +48,11 @@ public class ModuleEnvironment extends Environment
 	{
 		return module.getDefs();
 	}
-	
-	public ModuleEnvironment(ITypeCheckerAssistantFactory af, AModuleModules module)
+
+	public ModuleEnvironment(ITypeCheckerAssistantFactory af,
+			AModuleModules module)
 	{
-		super(af,null,null);
+		super(af, null);
 		this.module = module;
 		dupHideCheck(module.getDefs(), NameScope.NAMESANDSTATE);
 	}
@@ -65,7 +62,7 @@ public class ModuleEnvironment extends Environment
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (PDefinition d: module.getDefs())
+		for (PDefinition d : module.getDefs())
 		{
 			sb.append(d.getName().getFullName());
 			sb.append("\n");
@@ -75,50 +72,50 @@ public class ModuleEnvironment extends Environment
 	}
 
 	@Override
-	public PDefinition findName( ILexNameToken name, NameScope scope)
+	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionListAssistantTC.findName(module.getDefs(),name, scope);
+		PDefinition def = PDefinitionListAssistantTC.findName(module.getDefs(), name, scope);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = PDefinitionListAssistantTC.findName(module.getImportdefs(),name, scope);
+		def = PDefinitionListAssistantTC.findName(module.getImportdefs(), name, scope);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-   		return null;	// Modules are always bottom of the env chain
+		return null; // Modules are always bottom of the env chain
 	}
 
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistantTC.findType(module.getDefs(), name,module.getName().getName());
+		PDefinition def = PDefinitionAssistantTC.findType(module.getDefs(), name, module.getName().getName());
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def =  PDefinitionAssistantTC.findType(module.getImportdefs(),name,module.getName().getName());
+		def = PDefinitionAssistantTC.findType(module.getImportdefs(), name, module.getName().getName());
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return null;	// Modules are always bottom of the env chain
+		return null; // Modules are always bottom of the env chain
 	}
 
 	@Override
-	public Set<PDefinition> findMatches( ILexNameToken name)
+	public Set<PDefinition> findMatches(ILexNameToken name)
 	{
-		Set<PDefinition> defs = PDefinitionListAssistantTC.findMatches(module.getDefs(),name);
-		defs.addAll(PDefinitionListAssistantTC.findMatches(module.getImportdefs(),name));
+		Set<PDefinition> defs = af.createPDefinitionListAssistant().findMatches(module.getDefs(), name);
+		defs.addAll(af.createPDefinitionListAssistant().findMatches(module.getImportdefs(), name));
 		return defs;
 	}
 
@@ -140,7 +137,7 @@ public class ModuleEnvironment extends Environment
 			return def;
 		}
 
-		return null;	// Modules are always bottom of the env chain
+		return null; // Modules are always bottom of the env chain
 	}
 
 	@Override
@@ -167,8 +164,4 @@ public class ModuleEnvironment extends Environment
 		return false;
 	}
 
-	@Override
-	public PDefinition find(ILexIdentifierToken name) {
-		return null;
-	}
 }

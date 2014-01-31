@@ -10,10 +10,6 @@ import org.overture.ast.statements.PStm;
 
 public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5353696074294132014L;
 	private final int searchLine;
 	
 	private String module = null;

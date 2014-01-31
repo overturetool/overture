@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.model.internal;
 
 import org.overture.ide.debug.core.model.IVdmThread;
 
-public interface IVdmThreadManagerListener {
+public interface IVdmThreadManagerListener
+{
 	void threadAccepted(IVdmThread thread, boolean first);
 
 	void allThreadsTerminated();

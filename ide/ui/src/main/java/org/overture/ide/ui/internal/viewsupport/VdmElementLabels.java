@@ -125,7 +125,7 @@ public class VdmElementLabels {
 			return getLocalDefinitionLabel((ALocalDefinition) element);
 		}
 		if (element instanceof AValueDefinition) {
-			System.out.println("VALUE DEF");
+//			System.out.println("VALUE DEF");
 		}
 		if (element instanceof ANamedTraceDefinition) {
 			return getNamedTraceDefinitionLabel((ANamedTraceDefinition) element);
@@ -175,9 +175,10 @@ public class VdmElementLabels {
 			return getRenamedDefinitionLabel((ARenamedDefinition) element, flags);
 		}
 
-		StyledString result = new StyledString();
-		result.append("Unsupported type reached: " + element);
-		return result;
+//		StyledString result = new StyledString();
+//		result.append("Unsupported type reached: " + element);
+//		return result;
+		return null;
 
 	}
 

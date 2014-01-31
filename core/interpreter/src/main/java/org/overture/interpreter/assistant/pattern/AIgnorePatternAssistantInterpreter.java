@@ -8,17 +8,15 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AIgnorePatternAssistantTC;
 
-public class AIgnorePatternAssistantInterpreter extends
-		AIgnorePatternAssistantTC
+public class AIgnorePatternAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AIgnorePatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

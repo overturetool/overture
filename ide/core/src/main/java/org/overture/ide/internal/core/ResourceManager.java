@@ -392,40 +392,6 @@ public class ResourceManager implements IResourceChangeListener
 		}
 	}
 
-	private boolean isProjectBuildConttent(IFile file)
-	{
-		if (VdmProject.isVdmProject(file.getProject()))
-		{
-			// Add the VDM builder to the project if missing and the
-			// project have the correct nature
-			if (!projects.containsValue(file.getProject()))
-			{
-				addBuilderProject(file.getProject());
-			}
-			// Call getVdmSourceUnit to associate the the IFile to the
-			// project if the project contains the content type
-
-			IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
-			Assert.isNotNull(project, "Project in ResourceManager is null for file: "
-					+ file);
-			IContentType contentTypeId = null;
-			try
-			{
-				if (file.getContentDescription() != null)
-				{
-					contentTypeId = file.getContentDescription().getContentType();
-				}
-			} catch (CoreException e)
-			{
-
-			}
-			if (project.getContentTypeIds().contains(contentTypeId))
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	private List<IProject> addBuilders = new Vector<IProject>();
 	private boolean addBuilderThreadRunning = false;

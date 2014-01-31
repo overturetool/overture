@@ -34,10 +34,10 @@ import org.eclipse.ui.internal.util.BundleUtility;
 import org.osgi.framework.Bundle;
 import org.overture.ast.lex.Dialect;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.latex.Activator;
+import org.overture.ide.plugins.latex.LatexPlugin;
 
 @SuppressWarnings("restriction")
-public class LatexBuilder
+public class LatexBuilder implements PdfBuilder
 {
 	final static String OUTPUT_FOLDER_NAME = "latex";
 	final String PROJECT_INCLUDE_MODEL_FILES = "%PROJECT_INCLUDE_MODEL_FILES";
@@ -45,6 +45,12 @@ public class LatexBuilder
 	File outputFolder = null;
 	List<String> includes = new Vector<String>();
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#prepare(org.eclipse.core.resources.IProject,
+	 * org.overture.ast.lex.Dialect)
+	 */
+	@Override
 	public void prepare(IProject project, Dialect dialect) throws IOException
 	{
 		outputFolder = makeOutputFolder(project);
@@ -59,6 +65,12 @@ public class LatexBuilder
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#saveDocument(org.eclipse.core.resources.IProject,
+	 * java.io.File, java.lang.String)
+	 */
+	@Override
 	public void saveDocument(IProject project, File projectRoot, String name)
 			throws IOException
 	{
@@ -87,10 +99,12 @@ public class LatexBuilder
 				// '/')
 				// + "}");
 				sb.append("\n" + "\\input{"
-						+ (path).replace('\\', '/').substring(1, path.length())
+						+ path.replace('\\', '/').substring(1, path.length())
 						+ "}");
 			} else
+			{
 				sb.append("\n" + "\\input{" + path.replace('\\', '/') + "}");
+			}
 
 		}
 		document = document.replace(TITLE, latexQuote(title)).replace(PROJECT_INCLUDE_MODEL_FILES, sb.toString());
@@ -105,10 +119,17 @@ public class LatexBuilder
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.ide.plugins.latex.utility.PdfBuilder#addInclude(java.lang.String)
+	 */
+	@Override
 	public void addInclude(String path)
 	{
 		if (!includes.contains(path))
+		{
 			includes.add(path);
+		}
 	}
 
 	public static File makeOutputFolder(IProject project)
@@ -124,18 +145,22 @@ public class LatexBuilder
 		File outputFolder = p.getModelBuildPath().getOutput().getLocation().toFile();// new File(projectRoot,
 																						// "generated");
 		if (!outputFolder.exists())
+		{
 			outputFolder.mkdirs();
+		}
 
 		File latexoutput = new File(outputFolder, OUTPUT_FOLDER_NAME);
 		if (!latexoutput.exists())
+		{
 			latexoutput.mkdirs();
+		}
 
 		return latexoutput;
 	}
 
 	private static String readFile(String relativePath) throws IOException
 	{
-		URL tmp = getResource(Activator.PLUGIN_ID, relativePath);
+		URL tmp = getResource(LatexPlugin.PLUGIN_ID, relativePath);
 
 		InputStreamReader reader = new InputStreamReader(tmp.openStream());
 		// Create Buffered/PrintWriter Objects

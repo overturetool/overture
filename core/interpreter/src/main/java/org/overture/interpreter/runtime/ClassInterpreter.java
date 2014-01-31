@@ -52,12 +52,12 @@ import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.scheduler.RunState;
 import org.overture.interpreter.scheduler.Signal;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.traces.CallSequence;
@@ -239,7 +239,7 @@ public class ClassInterpreter extends Interpreter
 		
 		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
 		{
-			NextGenRTLogger.getInstance().persistToFile();
+			RTLogger.dump(true);
 		}
 		
 		RuntimeValidator.stop();
@@ -470,6 +470,18 @@ public class ClassInterpreter extends Interpreter
 
 		//Ensures all threads are terminated for next trace run
 		BasicSchedulableThread.signalAll(Signal.TERMINATE);
+
+		while (main.getRunState() != RunState.COMPLETE)
+		{
+			try
+            {
+                Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+		}
 
 		return main.getList();
 	}

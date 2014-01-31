@@ -9,11 +9,11 @@ import org.overture.ast.util.ToStringUtil;
 %exp->apply = [root] "(" + $Utils.listToString($ [args] $)$ + ")"
 %exp->narrow = "narrow_(" [test] ", " + $( $ [typeName] $ == null ? $ [basicType] $ : $ [typeName] $)$ + ")"
 %exp->boolean_const =  [value] 
-%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + "end)" 
+%exp->cases = "(cases " [expression] " :\n" +  $Utils.listToString("",$ [cases] $, ",\n", "") + ($ [others] $ == null ? "\n" : "\nothers " + $ [others] + $"\n")$ + " end)" 
 %exp->charLiteral =  "'" + $_value.getValue()$ + "'" 
 %exp->elseIf =  "elseif " + [elseIf] + "\nthen " + [then]
+%exp->exists = "(exists " + $Utils.listToString($[bindList]$)$+ " & " + [predicate] + ")"
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
-%exp->exists = "(exists " + [bindList] + " & " + [predicate] + ")"
 %exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getFullName())$ + ")"
 %exp->fieldNumber = "(" + [tuple] + "." + [field] + ")"
 %exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
@@ -88,6 +88,9 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#Set->setComp = "{" [first] " | " [bindings] + $($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
 %exp->#Set->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
 %exp->#Set->setRange = "{" [first] ", ... ," + [last] "}"
+ 
+//field
+%field->field=[tagname] + $(($[equalityAbstraction]$ ? " :- " : " : "))$ + [type]
  
 //  Types
 %type->#basic->boolean = "bool"
@@ -207,8 +210,9 @@ import org.overture.ast.util.ToStringUtil;
 %stm->if = ""+$ToStringUtil.getIfString(this)$
 %stm->letBeSt = "let " [bind] +
             $($[suchThat]$ == null ? "" : " be st " + $[suchThat]$)$ + " in " [statement]
-%stm->#LetDef = "let " [localDefs]  " in " [statement]
-%stm->#LetDef->def = "def " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
+//%stm->#LetDef = "let " [localDefs]  " in " [statement]
+//%stm->#LetDef->def = "def " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
+%stm->Let = "let " + $Utils.listToString($[localDefs]$)$ + " in " [statement]
 %stm->notYetSpecified = "is not yet specified" 
 %stm->return = "return" + $($[expression]$ == null ? "" : " (" + $[expression]$ + ")")$
 %stm->#SimpleBlock = ""+$ToStringUtil.getSimpleBlockString(this)$ 
@@ -221,12 +225,17 @@ import org.overture.ast.util.ToStringUtil;
             ($[postcondition]$ == null ? "" : "\n\tpost " + $[postcondition]$) +
             ($[errors]$.isEmpty() ? "" : "\n\terrs " + $[errors]$)$ + "]" 
 %stm->start = "start (" [obj] ")"
+%stm->stop = "stop (" [obj] ")"
 %stm->subclassResponsibility = "is subclass responsibility"
 %stm->tixe = "tixe {" [traps] "} in " [body]
 //%stm->traceVariable = 
 %stm->trap = "trap " [patternBind] " with " [with] " in " [body]
 %stm->while = "while " [exp]  " do " [statement]
 %stm->periodic = "periodic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
+%stm->sporadic = "sporadic(" + $Utils.listToString($[args]$)$ + ")(" [opname] ")"
+
+
+%alternativeStm->case = [pattern] " -> " [result]
 
 //Other
 
@@ -251,7 +260,10 @@ import org.overture.ast.util.ToStringUtil;
 // Modifiers
 %modifier->record = [tag] " |-> " [value];
 
-//designator
+//state designator
 %stateDesignator->field = [object] "." [field];
 %stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")";
 %stateDesignator->identifier = [name];
+
+//object designator
+%objectDesignator->identifier = [name];

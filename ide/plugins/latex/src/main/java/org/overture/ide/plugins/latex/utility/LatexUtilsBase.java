@@ -10,8 +10,8 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
-import org.overture.ide.plugins.latex.Activator;
 import org.overture.ide.plugins.latex.ILatexConstants;
+import org.overture.ide.plugins.latex.LatexPlugin;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ModuleReader;
@@ -22,28 +22,28 @@ public class LatexUtilsBase
 	public boolean hasGenerateMainDocument(IVdmProject project)
 			throws CoreException
 	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_GENERATE_MAIN_DOCUMENT, true);
 	}
 
 	public String getDocument(IVdmProject project) throws CoreException
 	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, "");
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MAIN_DOCUMENT, "");
 	}
 
 	public boolean insertCoverageTable(IVdmProject project)
 			throws CoreException
 	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true);
 	}
 
 	public boolean markCoverage(IVdmProject project) throws CoreException
 	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true);
 	}
 
 	public boolean modelOnly(IVdmProject project) throws CoreException
 	{
-		return project.getOptions().getGroup(Activator.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MODEL_ONLY, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MODEL_ONLY, true);
 	}
 
 	public static String getFileName(File file)
@@ -64,10 +64,12 @@ public class LatexUtilsBase
 		}
 
 		if (file != null && file.listFiles() != null)
+		{
 			for (File file2 : file.listFiles())
 			{
 				list.addAll(getFileChildern(file2));
 			}
+		}
 
 		return list;
 

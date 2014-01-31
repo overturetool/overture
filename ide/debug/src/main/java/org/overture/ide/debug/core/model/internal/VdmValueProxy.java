@@ -27,80 +27,99 @@ import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmValue;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 
-public class VdmValueProxy implements IVdmValue {
+public class VdmValueProxy implements IVdmValue
+{
 
 	private final IVdmValue origin;
 
-	public VdmValueProxy(IVdmValue origin) {
+	public VdmValueProxy(IVdmValue origin)
+	{
 		this.origin = origin;
 	}
 
-	public IVdmEvaluationCommand createEvaluationCommand(
-			String messageTemplate, IVdmThread thread) {
-		return origin.createEvaluationCommand(messageTemplate, thread);
-	}
+//	public IVdmEvaluationCommand createEvaluationCommand(
+//			String messageTemplate, IVdmThread thread)
+//	{
+//		return origin.createEvaluationCommand(messageTemplate, thread);
+//	}
 
-	public String getDetailsString() {
+	public String getDetailsString()
+	{
 		return origin.getDetailsString();
 	}
 
-	public String getEvalName() {
+	public String getEvalName()
+	{
 		return origin.getEvalName();
 	}
 
-	public String getInstanceId() {
+	public String getInstanceId()
+	{
 		return origin.getInstanceId();
 	}
 
-	public String getMemoryAddress() {
+	public String getMemoryAddress()
+	{
 		return origin.getMemoryAddress();
 	}
 
-	public String getRawValue() {
+	public String getRawValue()
+	{
 		return origin.getRawValue();
 	}
 
-	public IVdmType getType() {
+	public IVdmType getType()
+	{
 		return origin.getType();
 	}
 
-	public IVariable getVariable(int offset) throws DebugException {
+	public IVariable getVariable(int offset) throws DebugException
+	{
 		return origin.getVariable(offset);
 	}
 
-	public String getReferenceTypeName() throws DebugException {
+	public String getReferenceTypeName() throws DebugException
+	{
 		return origin.getReferenceTypeName();
 	}
 
-	public String getValueString() throws DebugException {
+	public String getValueString() throws DebugException
+	{
 		return origin.getValueString();
 	}
 
-	public IVariable[] getVariables() throws DebugException {
+	public IVariable[] getVariables() throws DebugException
+	{
 		return origin.getVariables();
 	}
 
-	public boolean hasVariables() throws DebugException {
+	public boolean hasVariables() throws DebugException
+	{
 		return origin.hasVariables();
 	}
 
-	public boolean isAllocated() throws DebugException {
+	public boolean isAllocated() throws DebugException
+	{
 		return origin.isAllocated();
 	}
 
-	public IDebugTarget getDebugTarget() {
+	public IDebugTarget getDebugTarget()
+	{
 		return origin.getDebugTarget();
 	}
 
-	public ILaunch getLaunch() {
+	public ILaunch getLaunch()
+	{
 		return origin.getLaunch();
 	}
 
-	public String getModelIdentifier() {
+	public String getModelIdentifier()
+	{
 		return origin.getModelIdentifier();
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
+	{
 		return origin.getAdapter(adapter);
 	}
 

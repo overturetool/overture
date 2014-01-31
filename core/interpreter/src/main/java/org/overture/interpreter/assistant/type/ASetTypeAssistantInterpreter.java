@@ -9,16 +9,14 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 
-public class ASetTypeAssistantInterpreter extends ASetTypeAssistantTC
+public class ASetTypeAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ASetTypeAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 

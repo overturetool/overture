@@ -35,9 +35,9 @@ import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.LexStringToken;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -54,6 +54,21 @@ public class POOperationDefinitionContext extends POContext
 	public final PExp precondition;
 	public final PDefinition stateDefinition;
 	final AImplicitOperationDefinition opDef;
+
+	protected POOperationDefinitionContext(ILexNameToken name,
+			AOperationType deftype, List<PPattern> paramPatternList,
+			boolean addPrecond, PExp precondition, PDefinition stateDefinition,
+			AImplicitOperationDefinition opDef)
+	{
+		super();
+		this.name = name;
+		this.deftype = deftype;
+		this.paramPatternList = paramPatternList;
+		this.addPrecond = addPrecond;
+		this.precondition = precondition;
+		this.stateDefinition = stateDefinition;
+		this.opDef = opDef;
+	}
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
@@ -95,38 +110,58 @@ public class POOperationDefinitionContext extends POContext
 
 	}
 
-	private List<? extends PMultipleBind> makeBinds()
+	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
+	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
+
+	private void addParameterBinds(LinkedList<PMultipleBind> r)
 	{
-		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		Iterator<PType> types = deftype.getParameters().iterator();
+		for (PPattern p : paramPatternList)
+		{
+			ATypeMultipleBind tmBind = new ATypeMultipleBind();
+			List<PPattern> pats = new LinkedList<PPattern>();
 
-		ATypeMultipleBind tmBind = new ATypeMultipleBind();
-		tmBind.setPlist(cloneList(paramPatternList));
-		tmBind.setType(deftype.clone());
-		r.add(tmBind);
+			pats.add(p.clone());
+			tmBind.setType(types.next().clone());
+			tmBind.setPlist(pats);
+			r.add(tmBind);
+		}
+	}
 
+	protected void addStateBinds(LinkedList<PMultipleBind> r)
+	{
 		if (stateDefinition != null)
 		{
 			ATypeMultipleBind tmBind2 = new ATypeMultipleBind();
-			AStringPattern pattern = new AStringPattern();
+			AIdentifierPattern pattern = new AIdentifierPattern();
 
 			if (stateDefinition instanceof AStateDefinition)
 			{
 				AStateDefinition def = (AStateDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
-				pattern.setValue(new LexStringToken("oldstate", null));
+
+				tmBind2.setType(def.getRecordType().clone());
+				pattern.setName(OLD_STATE_ARG.clone());
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
-				tmBind2.setType(def.getType().clone());
-				pattern.setValue(new LexStringToken("oldself", null));
+				tmBind2.setType(def.getClasstype().clone());
+				pattern.setName(OLD_SELF_ARG.clone());
 			}
 
 			List<PPattern> plist = new LinkedList<PPattern>();
 			plist.add(pattern);
 			tmBind2.setPlist(plist);
 			r.add(tmBind2);
-
 		}
+	}
+
+	private List<? extends PMultipleBind> makeBinds()
+	{
+		LinkedList<PMultipleBind> r = new LinkedList<PMultipleBind>();
+
+		addParameterBinds(r);
+
+		addStateBinds(r);
 
 		return r;
 
@@ -190,14 +225,5 @@ public class POOperationDefinitionContext extends POContext
 			sb.append(def.getName().getName());
 		}
 	}
-	
-	private List<PPattern> cloneList(List<PPattern> list){
-		List<PPattern> r = new LinkedList<PPattern>();
-		for (PPattern p : list){
-			r.add(p);
-		}
-		return r;
-	}
-	
 
 }

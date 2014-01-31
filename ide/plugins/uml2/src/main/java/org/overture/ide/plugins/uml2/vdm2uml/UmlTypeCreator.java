@@ -49,7 +49,6 @@ import org.overture.ide.plugins.uml2.UmlConsole;
  * 
  * @author kel
  */
-@SuppressWarnings("deprecation")
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
 	public static final String BASIC_VDM_TYPES_PACKAGE = "Basic VDM Types";
@@ -112,7 +111,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	
 	public void create(Class class_, PType type)
 	{
-		System.out.println(type + " " + type.kindPType().toString() + " "
+		System.out.println(type + " " + type.getClass().getName().toString() + " "
 				+ getName(type));
 		if (types.get(getName(type)) != null)
 		{
