@@ -141,7 +141,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			// check for duplicates
 			if (pids.hasDuplicates() || !alwaysMatches)
 			{
-				obligations.add(new ParameterPatternObligation(node, question, assistantFactory));
+				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));
 			}
 
 			// do proof obligations for the pre-condition
@@ -334,7 +334,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (pids.hasDuplicates() || !alwaysMatches)
 			{
-				obligations.add(new ParameterPatternObligation(node, question, assistantFactory));
+				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));
 			}
 			//I pass one more argument to the method POFunctionDefinitionContext to pass the assistantFactory.
 			question.push(new POFunctionDefinitionContext(node, false, assistantFactory));
@@ -416,7 +416,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (pids.hasDuplicates() || !alwaysMatches)
 			{
-				obligations.add(new ParameterPatternObligation(node, question, assistantFactory));
+				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));
 			}
 
 			if (node.getPrecondition() != null)
@@ -484,7 +484,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (pids.hasDuplicates() || !alwaysMatches)
 			{
-				obligations.add(new ParameterPatternObligation(node, question, assistantFactory));
+				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));
 			}
 
 			if (node.getPrecondition() != null)
@@ -511,7 +511,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				if (!node.getIsConstructor()
 						&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult(), assistantFactory))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(node, node.getActualResult(), question);
+					SubTypeObligation sto = SubTypeObligation.newInstance(node, node.getActualResult(), question,assistantFactory);
 					if (sto != null)
 					{
 						obligations.add(sto);

@@ -640,7 +640,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 
 	@Override
-	public Node caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node)//not yet check
+	public Node caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node)// added
 			throws AnalysisException
 	{
 

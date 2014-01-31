@@ -407,12 +407,6 @@
      </page>
      <page
            category="org.overture.ide.ui.vdm"
-           class="org.overture.ide.ui.preferences.WorkbenchPreferencePageLatex"
-           id="org.overture.ide.ui.latex"
-           name="Latex">
-     </page>
-     <page
-           category="org.overture.ide.ui.vdm"
            class="org.overture.ide.ui.preferences.WorkbenchPreferencePageEditor"
            id="org.overture.ide.ui.vdmEditor"
            name="Editor">

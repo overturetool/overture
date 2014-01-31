@@ -104,6 +104,15 @@
        
       
     </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+   <page
+           category="org.overture.ide.ui.vdm"
+           class="org.overture.ide.plugins.latex.preference.WorkbenchPreferencePageLatex"
+           id="org.overture.ide.ui.latex"
+           name="Latex">
+     </page>
+ </extension>
 
 
 
