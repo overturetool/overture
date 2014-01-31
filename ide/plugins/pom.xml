@@ -28,7 +28,7 @@
     <module>developerutils</module>
     <module>uml2</module>
     <module>rttraceviewer</module>
-	<module>prob-runtime</module>
+    <module>prob-runtime</module>
     <!-- features last -->
     <module>features</module>
   </modules>
