@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class A {
-    private VDMSeq y = SeqUtil.distConc(op(), op());
+    private VDMSeq y = SeqUtil.distConc(SeqUtil.seq(op(), op()));
 
     public VDMSeq op() {
         return SeqUtil.seq(1L, 2L);

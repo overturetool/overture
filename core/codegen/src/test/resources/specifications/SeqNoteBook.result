@@ -77,8 +77,9 @@ public class NoteBook {
     }
 
     private void addMessagesDist(VDMSeq newMessages1, VDMSeq newMessages2) {
-        messages = SeqUtil.conc(SeqUtil.distConc(newMessages1.clone(),
-                    newMessages2.clone()), messages.clone());
+        messages = SeqUtil.conc(SeqUtil.distConc(SeqUtil.seq(
+                        newMessages1.clone(), newMessages2.clone())),
+                messages.clone());
     }
 
     public String readLatest() {
