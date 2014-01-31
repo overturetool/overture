@@ -50,6 +50,26 @@ public class SetUtil
 		
 		return result;
 	}
+
+	public static VDMSet dinter(VDMSet sets)
+	{
+		if(sets == null)
+			throw new IllegalArgumentException("Distributed intersection of null is undefined");
+	
+		VDMSet result = dunion(sets);
+		
+		for(Object set : sets)
+		{
+			if(!(set instanceof VDMSet))
+				throw new IllegalArgumentException("Distributed intersection only supports sets");
+			
+			VDMSet vdmSet = (VDMSet) set;
+			result.retainAll(vdmSet);
+		}
+		
+		return result;
+	}
+
 	
 	public static VDMSet diff(VDMSet left, VDMSet right)
 	{
