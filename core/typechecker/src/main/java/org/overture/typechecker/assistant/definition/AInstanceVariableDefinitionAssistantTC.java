@@ -18,7 +18,7 @@ public class AInstanceVariableDefinitionAssistantTC
 	public void initializedCheck(AInstanceVariableDefinition ivd)
 	{
 		if (!ivd.getInitialized()
-				&& !PAccessSpecifierAssistantTC.isStatic(ivd.getAccess()))
+				&& !af.createPAccessSpecifierAssistant().isStatic(ivd.getAccess()))
 		{
 			TypeCheckerErrors.warning(5001, "Instance variable '"
 					+ ivd.getName() + "' is not initialized", ivd.getLocation(), ivd);

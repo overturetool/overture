@@ -101,6 +101,19 @@
 		    </execute>
 		  </action>
 		</pluginExecution>
+		<pluginExecution>
+			<pluginExecutionFilter>
+				<groupId>org.overture.build</groupId>
+				<artifactId>example-packager-plugin</artifactId>
+				<versionRange>[2.0.2,)</versionRange>
+				<goals>
+					<goal>package-examples</goal>
+				</goals>
+			</pluginExecutionFilter>
+			<action>
+				<ignore></ignore>
+			</action>
+		</pluginExecution>
 	      </pluginExecutions>
 	    </lifecycleMappingMetadata>
 	  </configuration>

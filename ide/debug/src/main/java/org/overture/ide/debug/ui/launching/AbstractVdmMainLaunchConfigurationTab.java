@@ -81,6 +81,8 @@ import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /**
  * Main launch configuration tab for overture scripts
@@ -88,6 +90,7 @@ import org.overture.parser.syntax.ParserException;
 public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab
 {
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 	/**
 	 * Custom content provider for the operation selection. Overloads the default one to merge DEFAULT modules into one
 	 * module
@@ -97,6 +100,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private class MergedModuleVdmOutlineTreeContentProvider extends
 			VdmOutlineTreeContentProvider
 	{
+		
+		
 		@Override
 		public Object[] getElements(Object inputElement)
 		{
@@ -124,6 +129,8 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
+		
+		
 		public void modifyText(ModifyEvent e)
 		{
 			// validatePage();
@@ -142,7 +149,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			updateLaunchConfigurationDialog();
 		}
 	}
-
+	
 	protected final static String STATIC_CALL_SEPERATOR = "`";
 	protected final static String CALL_SEPERATOR = ".";
 
@@ -165,6 +172,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private String expression = "";
 	private boolean staticOperation = false;
 	private WidgetListener fListener = new WidgetListener();
+	
 
 	// private String moduleDefinitionPath;
 
@@ -759,7 +767,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 				if (method.getClassDefinition() != null)
 				{
-					if (!PAccessSpecifierAssistant.isStatic(method.getAccess()))
+					if (!assistantFactory.createPAccessSpecifierAssistant().isStatic(method.getAccess()))
 					{
 						boolean foundConstructor = false;
 						for (PDefinition def : method.getClassDefinition().getDefinitions())
@@ -831,11 +839,11 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		if (module != null && !(module instanceof AModuleModules))
 		{
 			if (operation instanceof AExplicitOperationDefinition
-					&& !PAccessSpecifierAssistant.isStatic(((AExplicitOperationDefinition) operation).getAccess()))
+					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitOperationDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
 			} else if (operation instanceof AExplicitFunctionDefinition
-					&& !PAccessSpecifierAssistant.isStatic(((AExplicitFunctionDefinition) operation).getAccess()))
+					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitFunctionDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
 			}

@@ -20,7 +20,7 @@ public class AFunctionTypeAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AFunctionType getCurriedPreType(AFunctionType t,
+	public AFunctionType getCurriedPreType(AFunctionType t,
 			Boolean isCurried)
 	{
 
@@ -37,14 +37,14 @@ public class AFunctionTypeAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AFunctionType getPreType(AFunctionType t)
+	public AFunctionType getPreType(AFunctionType t)
 	{
 		AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, t.getParameters(), AstFactory.newABooleanBasicType(t.getLocation()));
 		type.setDefinitions((List<PDefinition>) t.getDefinitions().clone());
 		return type;
 	}
 
-	public static AFunctionType getCurriedPostType(AFunctionType type,
+	public AFunctionType getCurriedPostType(AFunctionType type,
 			Boolean isCurried)
 	{
 
@@ -60,7 +60,7 @@ public class AFunctionTypeAssistantTC
 		}
 	}
 
-	public static AFunctionType getPostType(AFunctionType t)
+	public AFunctionType getPostType(AFunctionType t)
 	{
 		List<PType> params = new PTypeList();
 		params.addAll((List<PType>) t.getParameters());
@@ -68,12 +68,6 @@ public class AFunctionTypeAssistantTC
 		AFunctionType type = AstFactory.newAFunctionType(t.getLocation(), false, params, AstFactory.newABooleanBasicType(t.getLocation()));
 		type.setDefinitions(t.getDefinitions());
 		return type;
-	}
-
-	public static int hashCode(AFunctionType type)
-	{
-		return PTypeAssistantTC.hashCode(type.getParameters())
-				+ PTypeAssistantTC.hashCode(type.getResult());
 	}
 
 }

@@ -38,20 +38,20 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends
 		FunctionValue postfunc = d.getPostdef() == null ? null
 				: new FunctionValue(d.getPostdef(), null, null, null);
 
-		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState());
+		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState(), af);
 		op.isConstructor = d.getIsConstructor();
-		op.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		op.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		nvl.add(new NameValuePair(d.getName(), op));
 
 		if (d.getPredef() != null)
 		{
-			prefunc.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+			prefunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
 		}
 
 		if (d.getPostdef() != null)
 		{
-			postfunc.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+			postfunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
 		}
 

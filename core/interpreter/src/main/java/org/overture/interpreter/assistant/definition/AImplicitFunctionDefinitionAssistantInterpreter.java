@@ -51,7 +51,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		// the pre_() expression for implicit functions.
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
-		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		func.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		func.uninstantiated = !d.getTypeParams().isEmpty();
 		nvl.add(new NameValuePair(d.getName(), func));
 

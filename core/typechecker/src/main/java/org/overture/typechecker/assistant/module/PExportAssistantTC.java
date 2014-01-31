@@ -18,7 +18,7 @@ public class PExportAssistantTC
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinition(PExport exp,
+	public Collection<? extends PDefinition> getDefinition(PExport exp,
 			LinkedList<PDefinition> actualDefs)
 	{
 		try
@@ -31,7 +31,7 @@ public class PExportAssistantTC
 
 	}
 
-	public static Collection<? extends PDefinition> getDefinition(PExport exp)
+	public Collection<? extends PDefinition> getDefinition(PExport exp)
 	{
 		try
 		{

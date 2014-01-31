@@ -22,7 +22,7 @@ public class PMultipleBindAssistantTC
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinitions(
+	public Collection<? extends PDefinition> getDefinitions(
 			PMultipleBind mb, PType type, TypeCheckInfo question)
 	{
 
@@ -30,20 +30,20 @@ public class PMultipleBindAssistantTC
 
 		for (PPattern p : mb.getPlist())
 		{
-			defs.addAll(PPatternAssistantTC.getDefinitions(p, type, question.scope));
+			defs.addAll(af.createPPatternAssistant().getDefinitions(p, type, question.scope));
 		}
 
 		return defs;
 	}
 
-	public static List<PMultipleBind> getMultipleBindList(PMultipleBind bind)
+	public List<PMultipleBind> getMultipleBindList(PMultipleBind bind)
 	{
 		List<PMultipleBind> list = new Vector<PMultipleBind>();
 		list.add(bind);
 		return list;
 	}
 
-	public static PType getPossibleType(PMultipleBind mb)
+	public PType getPossibleType(PMultipleBind mb)
 	{
 		try
 		{

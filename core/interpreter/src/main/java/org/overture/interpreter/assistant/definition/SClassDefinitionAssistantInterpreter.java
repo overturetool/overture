@@ -239,8 +239,8 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		for (PDefinition d : node.getDefinitions())
 		{
-			if (!PDefinitionAssistantInterpreter.isStatic(d)
-					&& PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+			if (!af.createPDefinitionAssistant().isStatic(d)
+					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
 				initCtxt.putList(nvpl);
@@ -250,8 +250,8 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		for (PDefinition d : node.getDefinitions())
 		{
-			if (!PDefinitionAssistantInterpreter.isStatic(d)
-					&& !PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+			if (!af.createPDefinitionAssistant().isStatic(d)
+					&& !af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
 				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
 
@@ -265,14 +265,14 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		ObjectValue creator = ctxt.outer == null ? null : ctxt.outer.getSelf();
 
-		ObjectValue object = new ObjectValue((AClassType) SClassDefinitionAssistantTC.getType(node), members, inherited, ctxt.threadState.CPU, creator);
+		ObjectValue object = new ObjectValue((AClassType) af.createSClassDefinitionAssistant().getType(node), members, inherited, ctxt.threadState.CPU, creator);
 
 		Value ctor = null;
 
 		if (ctorDefinition == null)
 		{
 			argvals = new ValueList();
-			LexNameToken cname = getCtorName(node, new PTypeList());
+			LexNameToken cname = af.createSClassDefinitionAssistant().getCtorName(node, new PTypeList());
 			ctor = object.get(cname, false);
 		} else
 		{
@@ -305,10 +305,10 @@ public class SClassDefinitionAssistantInterpreter extends
 		if (node.getInvariant() != null)
 		{
 
-			OperationValue invop = new OperationValue(node.getInvariant(), null, null, null);
+			OperationValue invop = new OperationValue(node.getInvariant(), null, null, null, af);
 			ClassInvariantListener listener = new ClassInvariantListener(invop);
 
-			for (PDefinition d : getInvDefs(node))
+			for (PDefinition d : af.createSClassDefinitionAssistant().getInvDefs(node))
 			{
 				AClassInvariantDefinition inv = (AClassInvariantDefinition) d;
 
@@ -414,7 +414,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			if (inherit)
 			{
 				AInheritedDefinition id = (AInheritedDefinition) d;
-				LexNameList names = PDefinitionAssistantInterpreter.getVariableNames(d);
+				LexNameList names = af.createPDefinitionAssistant().getVariableNames(d);
 				nvl = new NameValuePairList();
 
 				for (ILexNameToken vname : names)
@@ -432,7 +432,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				if (PDefinitionAssistantInterpreter.isValueDefinition(d))
 				{
 					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt);
-				} else if (PDefinitionAssistantInterpreter.isStatic(d)
+				} else if (af.createPDefinitionAssistant().isStatic(d)
 						&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 				{
 					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
@@ -454,7 +454,7 @@ public class SClassDefinitionAssistantInterpreter extends
 					VdmRuntime.getNodeState(node).publicStaticValues.putAllNew(nvl);
 					initCtxt.putAllNew(nvl);
 				}
-			} else if (PDefinitionAssistantInterpreter.isStatic(d)
+			} else if (af.createPDefinitionAssistant().isStatic(d)
 					&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 			{
 				// Static instance variables are updatable
@@ -514,8 +514,8 @@ public class SClassDefinitionAssistantInterpreter extends
 	{
 		for (PDefinition d : defs)
 		{
-			if (PDefinitionAssistantInterpreter.isStatic(d)
-					&& PDefinitionAssistantInterpreter.isFunctionOrOperation(d)
+			if (af.createPDefinitionAssistant().isStatic(d)
+					&& af.createPDefinitionAssistant().isFunctionOrOperation(d)
 					|| PDefinitionAssistantInterpreter.isTypeDefinition(d))
 			{
 				// Note function and operation values are not updatable.

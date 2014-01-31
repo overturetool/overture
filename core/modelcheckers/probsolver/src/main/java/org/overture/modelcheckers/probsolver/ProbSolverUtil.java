@@ -387,7 +387,7 @@ public class ProbSolverUtil
 
 	}
 
-	private IAnimator animator;
+	private static IAnimator animator;
 
 	public static void setLoggingLevel(Level level)
 	{

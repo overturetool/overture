@@ -30,11 +30,14 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 
 public class MethodSearchEngine
 {
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 	public final static int MAIN_ONLY = 1;
 	public final static int EXPLICIT_FUNCTION = 2;
 	public final static int EXPLICIT_OPERATION = 4;
@@ -84,12 +87,12 @@ public class MethodSearchEngine
 					continue;
 				}
 
-				if (onlyStatic && !PAccessSpecifierAssistant.isStatic(exop.getAccess()))
+				if (onlyStatic && !assistantFactory.createPAccessSpecifierAssistant().isStatic(exop.getAccess()))
 				{
 					continue;
 				}
 
-				if (!PAccessSpecifierAssistant.isStatic(exop.getAccess()) && exop.getClassDefinition() != null)
+				if (!assistantFactory.createPAccessSpecifierAssistant().isStatic(exop.getAccess()) && exop.getClassDefinition() != null)
 				{
 					// check for empty constructor
 					boolean ok = false;
@@ -133,7 +136,7 @@ public class MethodSearchEngine
 					continue;
 				}
 				if (onlyPublicAccess
-						&& !PAccessSpecifierAssistant.isPublic(exop.getAccess()))
+						&& !assistantFactory.createPAccessSpecifierAssistant().isPublic(exop.getAccess()))
 				{
 					continue;
 				}
@@ -150,7 +153,7 @@ public class MethodSearchEngine
 					&& iAstNode instanceof AExplicitFunctionDefinition)
 			{
 				AExplicitFunctionDefinition exfu = (AExplicitFunctionDefinition) iAstNode;
-				if (onlyStatic && !PAccessSpecifierAssistant.isStatic(exfu.getAccess()))
+				if (onlyStatic && !assistantFactory.createPAccessSpecifierAssistant().isStatic(exfu.getAccess()))
 				{
 					continue;
 				}
@@ -171,7 +174,7 @@ public class MethodSearchEngine
 					continue;
 				}
 				if (onlyPublicAccess
-						&& !PAccessSpecifierAssistant.isPublic(exfu.getAccess()))
+						&& !assistantFactory.createPAccessSpecifierAssistant().isPublic(exfu.getAccess()))
 				{
 					continue;
 				}

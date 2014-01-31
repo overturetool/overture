@@ -53,6 +53,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -85,8 +86,6 @@ import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class OperationValue extends Value
 {
@@ -101,6 +100,7 @@ public class OperationValue extends Value
 	public final FunctionValue postcondition;
 	public final AStateDefinition state;
 	public final SClassDefinition classdef;
+	public final IInterpreterAssistantFactory assistantFactory;
 
 	private ILexNameToken stateName = null;
 	private Context stateContext = null;
@@ -136,7 +136,7 @@ public class OperationValue extends Value
 
 	public OperationValue(AExplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state)
+			AStateDefinition state, IInterpreterAssistantFactory assistantFactory)
 	{
 		this.expldef = def;
 		this.impldef = null;
@@ -148,7 +148,8 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess());
+		this.assistantFactory = assistantFactory;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -160,7 +161,7 @@ public class OperationValue extends Value
 
 	public OperationValue(AImplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state)
+			AStateDefinition state, IInterpreterAssistantFactory assistantFactory)
 	{
 		this.impldef = def;
 		this.expldef = null;
@@ -178,7 +179,8 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess());
+		this.assistantFactory = assistantFactory;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -728,7 +730,7 @@ public class OperationValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to, AOperationType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{
 			return this;
 		} else
@@ -748,10 +750,10 @@ public class OperationValue extends Value
 	{
 		if (expldef != null)
 		{
-			return new OperationValue(expldef, precondition, postcondition, state);
+			return new OperationValue(expldef, precondition, postcondition, state, assistantFactory);
 		} else
 		{
-			return new OperationValue(impldef, precondition, postcondition, state);
+			return new OperationValue(impldef, precondition, postcondition, state, assistantFactory);
 		}
 	}
 

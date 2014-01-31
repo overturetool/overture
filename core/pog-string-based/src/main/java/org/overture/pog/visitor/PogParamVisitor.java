@@ -92,10 +92,10 @@ public class PogParamVisitor<Q extends POContextStack, A extends ProofObligation
 		{
 			ProofObligationList obligations = new ProofObligationList();
 
-			question.push(new POCaseContext(node.getPattern(), node.getType(), node.getCexp()));
+			question.push(new POCaseContext(node.getPattern(), node.getType(), node.getCexp(), question.assistantFactory));
 			obligations.addAll(node.getResult().apply(this.pogExpVisitor, question));
 			question.pop();
-			question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp()));
+			question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp(), question.assistantFactory));
 
 			return obligations;
 		} catch (Exception e)

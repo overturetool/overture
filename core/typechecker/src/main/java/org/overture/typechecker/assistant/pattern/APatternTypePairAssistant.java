@@ -20,13 +20,13 @@ public class APatternTypePairAssistant
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(APatternTypePair result)
+	public List<PDefinition> getDefinitions(APatternTypePair result)
 	{
 
-		return PPatternAssistantTC.getDefinitions(result.getPattern(), result.getType(), NameScope.LOCAL);
+		return af.createPPatternAssistant().getDefinitions(result.getPattern(), result.getType(), NameScope.LOCAL);
 	}
 
-	public static void typeResolve(APatternTypePair result,
+	public void typeResolve(APatternTypePair result,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{

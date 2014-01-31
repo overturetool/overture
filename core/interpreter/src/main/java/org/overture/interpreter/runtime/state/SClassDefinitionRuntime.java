@@ -7,7 +7,8 @@ import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
@@ -26,16 +27,19 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	/** A delegate Java object for any native methods. */
 	protected Delegate delegate = null;
+	
+	// I instanciate the assistantFactory to pass it as parameter to the needed method.
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	public SClassDefinitionRuntime(SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().getName(), PDefinitionAssistantTC.getDefinitions(def));
+		delegate = new Delegate(def.getName().getName(), assistantFactory.createPDefinitionAssistant().getDefinitions(def));
 		guardLock = new Lock();
 	}
 	
 	public boolean hasDelegate()
 	{
-		return delegate.hasDelegate();
+		return delegate.hasDelegate(assistantFactory);
 	}
 
 	public Object newInstance()

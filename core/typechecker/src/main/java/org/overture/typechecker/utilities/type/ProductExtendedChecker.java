@@ -82,7 +82,8 @@ public class ProductExtendedChecker extends
 	public Boolean caseAUnionType(AUnionType type, Integer size)
 			throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getProduct(type, size) != null;
+		//return af.createAUnionTypeAssistant().getProduct(type, size) != null;
+		return type.apply(af.getProductExtendedTypeFinder(), size) != null;
 	}
 
 	@Override

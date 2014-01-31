@@ -18,7 +18,7 @@ public class ABlockSimpleBlockStmAssistantTC
 		this.af = af;
 	}
 
-	public static void addOne(Set<PType> rtypes, PType add)
+	public void addOne(Set<PType> rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)
 		{

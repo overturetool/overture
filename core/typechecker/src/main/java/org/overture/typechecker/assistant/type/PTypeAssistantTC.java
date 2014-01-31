@@ -24,8 +24,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
 
@@ -40,12 +38,12 @@ public class PTypeAssistantTC extends PTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean hasSupertype(AClassType cto, PType other)
+	public boolean hasSupertype(AClassType cto, PType other)
 	{
-		return PDefinitionAssistantTC.hasSupertype(cto.getClassdef(), other);
+		return af.createPDefinitionAssistant().hasSupertype(cto.getClassdef(), other);
 	}
 
-	public static boolean isType(PType type, Class<? extends PType> typeclass)
+	public boolean isType(PType type, Class<? extends PType> typeclass)
 	{
 		try
 		{
@@ -57,18 +55,13 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static PType polymorph(PType type, ILexNameToken pname,
+	public PType polymorph(PType type, ILexNameToken pname,
 			PType actualType)
 	{
 		try
 		{
-			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));// FIXME:
-																																// should
-																																// we
-																																// handle
-																																// exceptions
-																																// like
-																																// this
+			return type.apply(af.getConcreateTypeImplementor(), new ConcreateTypeImplementor.Newquestion(pname, actualType));
+			
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -76,7 +69,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isUnknown(PType type)
+	public boolean isUnknown(PType type)
 	{
 		if (type instanceof AUnionType)
 		{
@@ -88,7 +81,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return false;
 	}
 
-	public static boolean isUnion(PType type)
+	public boolean isUnion(PType type)
 	{
 		try
 		{
@@ -99,7 +92,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AUnionType getUnion(PType type)
+	public AUnionType getUnion(PType type)
 	{
 		try
 		{
@@ -110,7 +103,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isFunction(PType type)
+	public boolean isFunction(PType type)
 	{
 		try
 		{
@@ -121,7 +114,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AFunctionType getFunction(PType type)
+	public AFunctionType getFunction(PType type)
 	{
 		try
 		{
@@ -145,7 +138,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static void unResolve(PType type)
+	public void unResolve(PType type)
 	{
 		try
 		{
@@ -156,7 +149,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isOperation(PType type)
+	public boolean isOperation(PType type)
 	{
 		try
 		{
@@ -167,7 +160,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AOperationType getOperation(PType type)
+	public AOperationType getOperation(PType type)
 	{
 		try
 		{
@@ -179,7 +172,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isSeq(PType type)
+	public boolean isSeq(PType type)
 	{
 		try
 		{
@@ -190,7 +183,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static SSeqType getSeq(PType type)
+	public SSeqType getSeq(PType type)
 	{
 		try
 		{
@@ -201,7 +194,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isMap(PType type)
+	public boolean isMap(PType type)
 	{
 		try
 		{
@@ -223,7 +216,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isSet(PType type)
+	public boolean isSet(PType type)
 	{
 		try
 		{
@@ -234,7 +227,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static ASetType getSet(PType type)
+	public ASetType getSet(PType type)
 	{
 		try
 		{
@@ -245,7 +238,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isRecord(PType type)
+	public boolean isRecord(PType type)
 	{
 		try
 		{
@@ -256,7 +249,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isTag(PType type)
+	public boolean isTag(PType type)
 	{
 		try
 		{
@@ -267,7 +260,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static ARecordInvariantType getRecord(PType type)
+	public ARecordInvariantType getRecord(PType type)
 	{
 		try
 		{
@@ -278,7 +271,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isClass(PType type)
+	public boolean isClass(PType type)
 	{
 		try
 		{
@@ -289,7 +282,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AClassType getClassType(PType type)
+	public AClassType getClassType(PType type)
 	{
 		try
 		{
@@ -300,7 +293,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AProductType getProduct(PType type)
+	public AProductType getProduct(PType type)
 	{
 		try
 		{
@@ -312,7 +305,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static boolean isProduct(PType type)
+	public boolean isProduct(PType type)
 	{
 		try
 		{
@@ -323,7 +316,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean narrowerThan(PType type,
+	public boolean narrowerThan(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
 		try
@@ -335,7 +328,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean narrowerThanBaseCase(PType type,
+	public boolean narrowerThanBaseCase(PType type,
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
 		if (type.getDefinitions() != null)
@@ -344,7 +337,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 			for (PDefinition d : type.getDefinitions())
 			{
 				result = result
-						|| PAccessSpecifierAssistantTC.narrowerThan(d.getAccess(), accessSpecifier);
+						|| af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier);
 			}
 			return result;
 		} else
@@ -353,7 +346,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean equals(PType type, Object other)
+	public boolean equals(PType type, Object other)
 	{
 		try
 		{
@@ -365,7 +358,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 	}
 
-	public static PType deBracket(PType other)
+	public PType deBracket(PType other)
 	{
 
 		while (other instanceof ABracketType)
@@ -375,8 +368,18 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 		return other;
 	}
+	
+//	public static Object deBracket(Object other) // used at pog-string-base, problematic conversion.
+//	{
+//		while (other instanceof ABracketType)
+//		{
+//			other = ((ABracketType) other).getType();
+//		}
+//
+//		return other;
+//	}
 
-	public static PType isType(PType type, String typename)
+	public PType isType(PType type, String typename)
 	{
 		try
 		{
@@ -387,7 +390,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static String toDisplay(PType type)
+	public String toDisplay(PType type)
 	{
 		try
 		{
@@ -398,7 +401,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean isProduct(PType type, int size)
+	public boolean isProduct(PType type, int size)
 	{
 		try
 		{
@@ -409,7 +412,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static AProductType getProduct(PType type, int size)
+	public AProductType getProduct(PType type, int size)
 	{
 		try
 		{
@@ -420,7 +423,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean equals(LinkedList<PType> parameters,
+	public boolean equals(LinkedList<PType> parameters,
 			LinkedList<PType> other)
 	{
 
@@ -431,7 +434,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 
 		for (int i = 0; i < parameters.size(); i++)
 		{
-			if (!equals(parameters.get(i), other.get(i)))
+			if (!af.createPTypeAssistant().equals(parameters.get(i), other.get(i)))
 			{
 				return false;
 			}
@@ -440,7 +443,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return true;
 	}
 
-	public static boolean isVoid(PType type)
+	public boolean isVoid(PType type)
 	{
 		try
 		{
@@ -451,7 +454,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static boolean hasVoid(PType type)
+	public boolean hasVoid(PType type)
 	{
 		try
 		{
@@ -462,7 +465,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		}
 	}
 
-	public static Object deBracket(Object other)
+	public Object deBracket(Object other)
 	{
 		while (other instanceof ABracketType)
 		{
@@ -472,7 +475,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 		return other;
 	}
 
-	public static PTypeList getComposeTypes(PType type)
+	public PTypeList getComposeTypes(PType type)
 	{
 		try
 		{

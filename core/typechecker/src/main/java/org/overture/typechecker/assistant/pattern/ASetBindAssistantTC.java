@@ -20,7 +20,7 @@ public class ASetBindAssistantTC
 		this.af = af;
 	}
 
-	public static List<PMultipleBind> getMultipleBindList(ASetBind bind)
+	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
 	{
 
 		List<PPattern> plist = new ArrayList<PPattern>();

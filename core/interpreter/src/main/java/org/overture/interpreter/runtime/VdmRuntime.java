@@ -120,7 +120,7 @@ public class VdmRuntime
 		ASystemClassDefinitionRuntime state = (ASystemClassDefinitionRuntime) runtimeState.get(node);
 		
 		if(state == null)
-		{
+		{	
 			state = new ASystemClassDefinitionRuntime(node);
 			runtimeState.put(node, state );
 		}

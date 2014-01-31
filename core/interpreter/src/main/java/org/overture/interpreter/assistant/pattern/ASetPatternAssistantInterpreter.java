@@ -147,7 +147,7 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 	static boolean isConstrained(ASetPattern pattern)
 	{
 
-		if (PTypeAssistantInterpreter.isUnion(PPatternListAssistantTC.getPossibleType(pattern.getPlist(), pattern.getLocation())))
+		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))
 		{
 			return true; // Set types are various, so we must permute
 		}

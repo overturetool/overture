@@ -52,7 +52,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
 			String postfix = "";
-			for (PExp p : PPatternListAssistantTC.getMatchingExpressionList(pl))
+			for (PExp p : ctxt.assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl))
 			{
 				params.append(postfix);
 				params.append(p);
@@ -88,9 +88,9 @@ public class FuncPostConditionObligation extends ProofObligation
 
 		StringBuilder params = new StringBuilder();
 
-		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
+		for (List<PPattern> pl : ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
-			params.append(Utils.listToString(PPatternListAssistantTC.getMatchingExpressionList(pl)));
+			params.append(Utils.listToString(ctxt.assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl)));
 		}
 
 		String body = null;

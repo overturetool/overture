@@ -22,7 +22,7 @@ public class AModuleImportsAssistantTC
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(AModuleImports imports,
+	public List<PDefinition> getDefinitions(AModuleImports imports,
 			List<AModuleModules> allModules)
 	{
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -35,7 +35,7 @@ public class AModuleImportsAssistantTC
 				continue;
 			}
 
-			AModuleModules from = AModuleModulesAssistantTC.findModule(allModules, ifm.getName());
+			AModuleModules from = af.createAModuleModulesAssistant().findModule(allModules, ifm.getName());
 
 			if (from == null)
 			{
@@ -43,20 +43,20 @@ public class AModuleImportsAssistantTC
 						+ ifm.getName(), ifm.getName().getLocation(), ifm);
 			} else
 			{
-				defs.addAll(AFromModuleImportsAssistantTC.getDefinitions(ifm, from));
+				defs.addAll(af.createAFromModuleImportsAssistant().getDefinitions(ifm, from));
 			}
 		}
 
 		return defs;
 	}
 
-	public static void typeCheck(AModuleImports imports, ModuleEnvironment env)
+	public void typeCheck(AModuleImports imports, ModuleEnvironment env)
 			throws AnalysisException
 	{
 
 		for (AFromModuleImports ifm : imports.getImports())
 		{
-			AFromModuleImportsAssistantTC.typeCheck(ifm, env);
+			af.createAFromModuleImportsAssistant().typeCheck(ifm, env);
 		}
 
 	}

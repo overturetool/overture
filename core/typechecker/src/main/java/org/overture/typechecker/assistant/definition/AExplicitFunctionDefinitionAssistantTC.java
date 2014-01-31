@@ -18,12 +18,8 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantTC
 {
@@ -36,7 +32,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<PType> getMeasureParams(AExplicitFunctionDefinition node)
+	public List<PType> getMeasureParams(AExplicitFunctionDefinition node)
 	{
 		AFunctionType functionType = (AFunctionType) node.getType();
 
@@ -58,7 +54,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return params;
 	}
 
-	public static PType checkParams(AExplicitFunctionDefinition node,
+	public PType checkParams(AExplicitFunctionDefinition node,
 			ListIterator<List<PPattern>> plists, AFunctionType ftype)
 	{
 		List<PType> ptypes = ftype.getParameters();
@@ -103,7 +99,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return ftype.getResult();
 	}
 
-	public static List<List<PDefinition>> getParamDefinitions(
+	public List<List<PDefinition>> getParamDefinitions(
 			AExplicitFunctionDefinition node, AFunctionType type,
 			List<List<PPattern>> paramPatternList, ILexLocation location)
 	{
@@ -127,18 +123,18 @@ public class AExplicitFunctionDefinitionAssistantTC
 
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, unknown, NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, unknown, NameScope.LOCAL));
 
 				}
 			} else
 			{
 				for (PPattern p : plist)
 				{
-					defs.addAll(PPatternAssistantTC.getDefinitions(p, titer.next(), NameScope.LOCAL));
+					defs.addAll(af.createPPatternAssistant().getDefinitions(p, titer.next(), NameScope.LOCAL));
 				}
 			}
 
-			defList.add(PDefinitionAssistantTC.checkDuplicatePatterns(node, defs));
+			defList.add(af.createPDefinitionAssistant().checkDuplicatePatterns(node, defs));
 
 			if (ftype.getResult() instanceof AFunctionType) // else???
 			{
@@ -149,7 +145,7 @@ public class AExplicitFunctionDefinitionAssistantTC
 		return defList;
 	}
 
-	public static List<PDefinition> getTypeParamDefinitions(
+	public List<PDefinition> getTypeParamDefinitions(
 			AExplicitFunctionDefinition node)
 	{
 		List<PDefinition> defs = new ArrayList<PDefinition>();
@@ -160,14 +156,14 @@ public class AExplicitFunctionDefinitionAssistantTC
 			// pname.location, NameScope.NAMES,false,null, null, new
 			// AParameterType(null,false,null,pname.clone()),false,pname.clone());
 
-			PDefinitionAssistantTC.markUsed(p);
+			af.createPDefinitionAssistant().markUsed(p);
 			defs.add(p);
 		}
 
 		return defs;
 	}
 
-	public static AFunctionType getType(AExplicitFunctionDefinition efd,
+	public AFunctionType getType(AExplicitFunctionDefinition efd,
 			List<PType> actualTypes)
 	{
 		Iterator<PType> ti = actualTypes.iterator();
@@ -178,63 +174,14 @@ public class AExplicitFunctionDefinitionAssistantTC
 			for (ILexNameToken pname : efd.getTypeParams())
 			{
 				PType ptype = ti.next();
-				ftype = (AFunctionType) PTypeAssistantTC.polymorph(ftype, pname, ptype);
+				ftype = (AFunctionType) af.createPTypeAssistant().polymorph(ftype, pname, ptype);
 			}
 		}
 
 		return ftype;
 	}
 
-	public static PDefinition findName(AExplicitFunctionDefinition d,
-			ILexNameToken sought, NameScope scope)
-	{
-		if (PDefinitionAssistantTC.findNameBaseCase(d, sought, scope) != null)
-		{
-			return d;
-		}
-
-		PDefinition predef = d.getPredef();
-		if (predef != null
-				&& PDefinitionAssistantTC.findName(predef, sought, scope) != null)
-		{
-			return predef;
-		}
-
-		PDefinition postdef = d.getPostdef();
-		if (postdef != null
-				&& PDefinitionAssistantTC.findName(postdef, sought, scope) != null)
-		{
-			return postdef;
-		}
-
-		return null;
-	}
-
-	public static void implicitDefinitions(AExplicitFunctionDefinition d,
-			Environment env)
-	{
-
-		if (d.getPrecondition() != null)
-		{
-			d.setPredef(getPreDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPredef());
-		} else
-		{
-			d.setPredef(null);
-		}
-
-		if (d.getPostcondition() != null)
-		{
-			d.setPostdef(getPostDefinition(d));
-			PDefinitionAssistantTC.markUsed(d.getPostdef());
-		} else
-		{
-			d.setPostdef(null);
-		}
-
-	}
-
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
@@ -269,19 +216,19 @@ public class AExplicitFunctionDefinitionAssistantTC
 		parameters.add(last);
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPostType((AFunctionType) d.getType(), d.getIsCurried()), parameters, d.getPostcondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
 
-	public static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AExplicitFunctionDefinition d)
 	{
 
 		@SuppressWarnings("unchecked")
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), AFunctionTypeAssistantTC.getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, (List<ILexNameToken>) d.getTypeParams().clone(), af.createAFunctionTypeAssistant().getCurriedPreType((AFunctionType) d.getType(), d.getIsCurried()), (LinkedList<List<PPattern>>) d.getParamPatternList().clone(), d.getPrecondition(), null, null, false, null);
 
 		def.setAccess(d.getAccess().clone());
 		def.setClassDefinition(d.getClassDefinition());

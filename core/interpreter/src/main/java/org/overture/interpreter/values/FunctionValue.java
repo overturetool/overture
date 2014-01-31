@@ -60,10 +60,13 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+import org.overture.typechecker.utilities.NameFinder;
 
 
 
@@ -80,6 +83,8 @@ public class FunctionValue extends Value
 	public final FunctionValue postcondition;
 	public final Context freeVariables;
 
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	
 	// Causes parameter assignments to check their invariants (if any).
 	// This is set to false for inv_() functions, which cannot check them.
 	private final boolean checkInvariants;
@@ -202,7 +207,7 @@ public class FunctionValue extends Value
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type =  AImplicitFunctionDefinitionAssistantTC.getType(fdef, actualTypes);
+		this.type =  assistantFactory.createAImplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
@@ -219,7 +224,7 @@ public class FunctionValue extends Value
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = AExplicitFunctionDefinitionAssistantTC.getType(fdef,actualTypes);
+		this.type = assistantFactory.createAExplicitFunctionDefinitionAssistant().getType(fdef,actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
@@ -647,7 +652,7 @@ public class FunctionValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to,AFunctionType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,AFunctionType.class))
 		{
 			return this;
 		}

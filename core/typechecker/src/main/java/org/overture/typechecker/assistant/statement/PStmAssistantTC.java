@@ -15,7 +15,7 @@ public class PStmAssistantTC
 		this.af = af;
 	}
 
-	public static PTypeSet exitCheck(PStm statement)
+	public PTypeSet exitCheck(PStm statement)
 	{
 		try
 		{
