@@ -43,6 +43,14 @@ public class SetUtil
 		return result;
 	}
 	
+	public static boolean psubset(VDMSet left, VDMSet right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("proper subset is undefined for null");
+
+		return left.size() < right.size() && right.containsAll(left);
+	}
+	
 	public static VDMSet intersect(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
