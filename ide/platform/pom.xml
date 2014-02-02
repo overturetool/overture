@@ -51,6 +51,7 @@
             <dirty>-dirty</dirty>
             <forceLongFormat>false</forceLongFormat>
           </gitDescribe>
+          <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
         </configuration>
       </plugin>
     </plugins>
