@@ -97,6 +97,7 @@ import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType; //added -> ANat1SetExpression
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -116,6 +117,7 @@ import de.be4.classicalb.core.parser.node.AIntegerExpression;
 import de.be4.classicalb.core.parser.node.AMemberPredicate;
 import de.be4.classicalb.core.parser.node.AMinusOrSetSubtractExpression;
 import de.be4.classicalb.core.parser.node.ANatSetExpression;
+import de.be4.classicalb.core.parser.node.ANat1SetExpression; //added
 import de.be4.classicalb.core.parser.node.APowSubsetExpression;
 import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecordFieldExpression;
@@ -377,6 +379,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node)
 			throws AnalysisException
 	{
+	    //System.out.println("in AndBooleanBinaryExp " + node);
 		return new AConjunctPredicate(pred(node.getLeft()), pred(node.getRight()));
 	}
 
@@ -937,6 +940,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 * // AFunctionExpression fun = new AFunctionExpression(); // fun.setIdentifier(exp(node.getRoot())); // // for(PExp
 	 * m : node.getArgs()) { // fun.getParameters().add(exp(m)); // } // return (Node)fun; // } }
 	 */
+
 	@Override
 	public Node caseAApplyExp(AApplyExp node)// added
 			throws AnalysisException
@@ -1264,6 +1268,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			throws AnalysisException
 	{
 		return new ANatSetExpression();
+	}
+
+	@Override
+        public Node caseANatOneNumericBasicType(ANatOneNumericBasicType node) //added
+			throws AnalysisException
+	{
+	        return new ANat1SetExpression();
 	}
 
 	@Override
