@@ -1,0 +1,12 @@
+#set( $iterator = $JavaFormat.nextVarName() )
+#set( $set = $JavaFormat.format($node.getSet()) )
+#set( $var = $node.getVar() )
+#set( $elementType = $JavaFormat.formatSetElementType($node.getSet().getType()) )
+#set( $body = $JavaFormat.format($node.getBody()) )
+##
+Iterator ${iterator} = ${set}.iterator();
+while (${iterator}.hasNext())
+{
+	${elementType} ${var} = ((${elementType}) ${iterator}.next());
+	${body}
+}

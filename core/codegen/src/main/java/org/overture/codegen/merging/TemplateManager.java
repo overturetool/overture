@@ -87,6 +87,7 @@ import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
@@ -226,6 +227,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANotImplementedStmCG.class, templateStructure.STM_PATH + "NotImplemented");
 		
 		nodeTemplateFileNames.put(AForIndexStmCG.class, templateStructure.STM_PATH + "ForIndex");
+		
+		nodeTemplateFileNames.put(AForAllStmCG.class, templateStructure.STM_PATH + "ForAll");
 		
 		// Expressions
 		

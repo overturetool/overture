@@ -49,6 +49,7 @@ import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -682,6 +683,7 @@ public class JavaFormat
 				|| parent instanceof ANotEqualsBinaryExpCG
 				|| parent instanceof AAddrEqualsBinaryExpCG
 				|| parent instanceof AAddrNotEqualsBinaryExpCG
+				|| parent instanceof AForAllStmCG
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
 	}
@@ -871,6 +873,16 @@ public class JavaFormat
 		sb.append("})");
 		
 		return sb.toString();
+	}
+	
+	public String formatSetElementType(PTypeCG type) throws AnalysisException
+	{
+		if(!(type instanceof SSetTypeCG))
+			throw new AnalysisException("Expected set type when trying to format element type");
+		
+		SSetTypeCG setType = (SSetTypeCG) type;
+		
+		return format(setType.getSetOf());
 	}
 	
 	public String nextVarName()
