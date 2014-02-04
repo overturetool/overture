@@ -129,15 +129,14 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	/**
-	 * Creates a new return tuple with the approbate return expressions
+	 * Creates a new  tuple with the approbate return expressions
 	 * 
-	 * @param resultType
 	 * @param exp
 	 * @return
 	 */
-	public static PStm getReturnStatement(PType resultType, List<PExp> exps)
+	public static PExp createTuple(List<PExp> exps)
 	{
-		return AstFactory.newAReturnStm(loc, AstFactory.newATupleExp(loc, exps));
+		return AstFactory.newATupleExp(loc, exps);
 	}
 
 	@Override
@@ -316,5 +315,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 	    //System.err.println("Hit unsupported node: "
 	    //	 + node.getClass().getSimpleName() + " - " + node);
 	}
+
+	
 
 }
