@@ -81,11 +81,12 @@ import org.overture.ast.expressions.ACompBinaryExp;                //added -> AC
 import org.overture.ast.expressions.AMapInverseUnaryExp;           //added -> AReverseExpression
 import org.overture.ast.expressions.AForAllExp;                    //added -> AForallPredicate
 import org.overture.ast.expressions.AExistsExp;                    //added -> AExistsPredicate
+import org.overture.ast.expressions.AExists1Exp;                   //added
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;   //added -> AEquivalencePeredicate
 import org.overture.ast.expressions.ASetCompSetExp;                //added -> AComprehensionSetExpression
 import org.overture.ast.expressions.AIfExp;                        //added
 import org.overture.ast.expressions.AElseIfExp;                    //added
-import org.overture.ast.expressions.ADistConcatUnaryExp;          //added -> AGeneralConcatExpression
+import org.overture.ast.expressions.ADistConcatUnaryExp;           //added -> AGeneralConcatExpression
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -93,6 +94,7 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
@@ -1022,6 +1024,26 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), pred(node.getPredicate())));
 
 	    return esp; 
+	}
+
+	@Override
+	public Node caseAExists1Exp(AExists1Exp node)//added
+			throws AnalysisException
+	{
+	    //exists1 x in set S & pred -> card( { x | x : S & pred } ) = 1
+
+	    AIntegerExpression one = new AIntegerExpression(new TIntegerLiteral(new String(new Integer("1").toString())));
+	    AComprehensionSetExpression cse = new AComprehensionSetExpression();
+
+	    //System.out.println(((ASetBind)(node.getBind())).getSet());
+	    cse.setPredicates(new AMemberPredicate(exp(node.getBind().getPattern()), exp(((ASetBind)(node.getBind())).getSet())));
+
+	    cse.getIdentifiers().add(exp(node.getBind().getPattern()));
+	    cse.setPredicates(new AConjunctPredicate(cse.getPredicates(), pred(node.getPredicate())));
+	    AEqualPredicate equal =  new AEqualPredicate(new ACardExpression(cse), one);
+	    
+	    return equal;
+
 	}
 
 	@Override
