@@ -1,0 +1,87 @@
+import utils.*;
+
+import java.util.*;
+
+
+public class A {
+    public void op() {
+        VDMSeq x = SeqUtil.seq(new Rec(1L), new Rec(2L), new Rec(3L));
+        Iterator temp_1 = x.iterator();
+
+        while (temp_1.hasNext()) {
+            Rec e = (Rec) temp_1.next();
+            IO.printf("%s ", SeqUtil.seq(e.clone()));
+        }
+    }
+
+    public void op1() {
+        Iterator temp_2 = SeqUtil.seq(1L, 2L, 3L).iterator();
+
+        while (temp_2.hasNext()) {
+            Number n = (Number) temp_2.next();
+            IO.printf("%s ", SeqUtil.seq(n));
+        }
+    }
+
+    public void op2() {
+        Iterator temp_3 = SeqUtil.seq().iterator();
+
+        while (temp_3.hasNext()) {
+            Object e = (Object) temp_3.next();
+            IO.print("x");
+        }
+    }
+
+    public void op3() {
+        Iterator temp_4 = f().iterator();
+
+        while (temp_4.hasNext()) {
+            Number n = (Number) temp_4.next();
+            IO.printf("%s ", SeqUtil.seq(n));
+        }
+    }
+
+    public void op4() {
+        Iterator temp_5 = SeqUtil.reverse(SeqUtil.seq(1L, 2L, 3L)).iterator();
+
+        while (temp_5.hasNext()) {
+            Number n = (Number) temp_5.next();
+            IO.printf("%s ", SeqUtil.seq(n));
+        }
+    }
+
+    public static VDMSeq f() {
+        return SeqUtil.seq(1L, 2L, 3L);
+    }
+
+    private static class Rec implements Record {
+        public Number x;
+
+        public Rec(Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return x == other.x;
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public Rec clone() {
+            return new Rec(x);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x);
+        }
+    }
+}
+##########
