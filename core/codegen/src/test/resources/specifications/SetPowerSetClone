@@ -1,0 +1,14 @@
+class A
+
+values 
+
+a = {1,2,3};
+b = power {a,a,a};
+c = power op();
+
+operations 
+
+public static op : () ==> set of nat
+op () == return {1,2,3};
+ 
+end A
