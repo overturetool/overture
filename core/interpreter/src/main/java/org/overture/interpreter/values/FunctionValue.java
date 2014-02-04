@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -43,12 +44,14 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -60,12 +63,11 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
+import org.overture.interpreter.solver.IConstraintSolver;
+import org.overture.interpreter.solver.SolverFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-
-
 
 public class FunctionValue extends Value
 {
@@ -97,12 +99,14 @@ public class FunctionValue extends Value
 	public boolean isStatic = false;
 	public boolean uninstantiated = false;
 	private SClassDefinition classdef = null;
+	private APatternTypePair result;
 
-	private FunctionValue(ILexLocation location, String name, AFunctionType type,
-			List<List<PPattern>> paramPatternList, PExp body,
-		FunctionValue precondition, FunctionValue postcondition,
-		Context freeVariables, boolean checkInvariants, ValueList curriedArgs,
-		ILexNameToken measureName, Map<Long, Stack<Value>> measureValues)
+	private FunctionValue(ILexLocation location, String name,
+			AFunctionType type, List<List<PPattern>> paramPatternList,
+			PExp body, FunctionValue precondition, FunctionValue postcondition,
+			Context freeVariables, boolean checkInvariants,
+			ValueList curriedArgs, ILexNameToken measureName,
+			Map<Long, Stack<Value>> measureValues)
 	{
 		this.location = location;
 		this.name = name;
@@ -115,16 +119,17 @@ public class FunctionValue extends Value
 		this.freeVariables = freeVariables;
 		this.checkInvariants = checkInvariants;
 		this.curriedArgs = curriedArgs;
-		
+
 		if (Settings.measureChecks && measureName != null)
 		{
 			this.measureName = measureName;
-			this.measureValues = measureValues;	// NB. a copy of the base FunctionValue's
+			this.measureValues = measureValues; // NB. a copy of the base FunctionValue's
 		}
 	}
 
-	public FunctionValue(ILexLocation location, String name, AFunctionType type,
-		PatternListTC paramPatterns, PExp body, Context freeVariables)
+	public FunctionValue(ILexLocation location, String name,
+			AFunctionType type, PatternListTC paramPatterns, PExp body,
+			Context freeVariables)
 	{
 		this.location = location;
 		this.name = name;
@@ -141,8 +146,8 @@ public class FunctionValue extends Value
 	}
 
 	public FunctionValue(AExplicitFunctionDefinition def,
-		FunctionValue precondition, FunctionValue postcondition,
-		Context freeVariables)
+			FunctionValue precondition, FunctionValue postcondition,
+			Context freeVariables)
 	{
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
@@ -164,8 +169,8 @@ public class FunctionValue extends Value
 	}
 
 	public FunctionValue(AImplicitFunctionDefinition def,
-		FunctionValue precondition, FunctionValue postcondition,
-		Context freeVariables)
+			FunctionValue precondition, FunctionValue postcondition,
+			Context freeVariables)
 	{
 		this.location = def.getLocation();
 		this.name = def.getName().getName();
@@ -175,7 +180,7 @@ public class FunctionValue extends Value
 		this.paramPatternList = new Vector<List<PPattern>>();
 		PatternListTC plist = Interpreter.getInstance().getAssistantFactory().createPatternList();
 
-		for (APatternListTypePair ptp: def.getParamPatterns())
+		for (APatternListTypePair ptp : def.getParamPatterns())
 		{
 			plist.addAll(ptp.getPatterns());
 		}
@@ -183,6 +188,7 @@ public class FunctionValue extends Value
 		this.paramPatternList.add(plist);
 
 		this.body = def.getBody();
+		this.result = def.getResult();
 		this.precondition = precondition;
 		this.postcondition = postcondition;
 		this.freeVariables = freeVariables;
@@ -197,16 +203,16 @@ public class FunctionValue extends Value
 	}
 
 	public FunctionValue(AImplicitFunctionDefinition fdef,
-		PTypeList actualTypes, FunctionValue precondition,
-		FunctionValue postcondition, Context freeVariables)
+			PTypeList actualTypes, FunctionValue precondition,
+			FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type =  AImplicitFunctionDefinitionAssistantTC.getType(fdef, actualTypes);
+		this.type = AImplicitFunctionDefinitionAssistantTC.getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (ILexNameToken pname: fdef.getTypeParams())
+		for (ILexNameToken pname : fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
@@ -214,16 +220,16 @@ public class FunctionValue extends Value
 	}
 
 	public FunctionValue(AExplicitFunctionDefinition fdef,
-		PTypeList actualTypes, FunctionValue precondition,
-		FunctionValue postcondition, Context freeVariables)
+			PTypeList actualTypes, FunctionValue precondition,
+			FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = AExplicitFunctionDefinitionAssistantTC.getType(fdef,actualTypes);
+		this.type = AExplicitFunctionDefinitionAssistantTC.getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
-		for (ILexNameToken pname: fdef.getTypeParams())
+		for (ILexNameToken pname : fdef.getTypeParams())
 		{
 			PType ptype = ti.next();
 			typeValues.add(new NameValuePair(pname, new ParameterValue(ptype)));
@@ -253,15 +259,15 @@ public class FunctionValue extends Value
 		return type.toString();
 	}
 
-	public Value eval(
-		ILexLocation from, Value arg, Context ctxt) throws ValueException
+	public Value eval(ILexLocation from, Value arg, Context ctxt)
+			throws ValueException
 	{
 		ValueList args = new ValueList(arg);
 		return eval(from, args, ctxt, null);
 	}
 
-	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt) throws ValueException
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
+			throws ValueException
 	{
 		return eval(from, argValues, ctxt, null);
 	}
@@ -284,17 +290,13 @@ public class FunctionValue extends Value
 		this.classdef = classdef;
 	}
 
-	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt, Context sctxt) throws ValueException
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt,
+			Context sctxt) throws ValueException
 	{
-		if (body == null)
-		{
-			abort(4051, "Cannot apply implicit function: " + name, ctxt);
-		}
-
 		if (uninstantiated)
 		{
-			abort(3033, "Polymorphic function has not been instantiated: " + name, ctxt);
+			abort(3033, "Polymorphic function has not been instantiated: "
+					+ name, ctxt);
 		}
 
 		List<PPattern> paramPatterns = paramPatternList.get(0);
@@ -308,33 +310,34 @@ public class FunctionValue extends Value
 
 		if (argValues.size() != paramPatterns.size())
 		{
-			VdmRuntimeError.abort(type.getLocation(),4052, "Wrong number of arguments passed to " + name, ctxt);
+			VdmRuntimeError.abort(type.getLocation(), 4052, "Wrong number of arguments passed to "
+					+ name, ctxt);
 		}
 
 		Iterator<Value> valIter = argValues.iterator();
 		Iterator<PType> typeIter = type.getParameters().iterator();
 		NameValuePairMap args = new NameValuePairMap();
 
-		for (PPattern p: paramPatterns)
+		for (PPattern p : paramPatterns)
 		{
 			Value pv = valIter.next();
 
-			if (checkInvariants)	// Don't even convert invariant arg values
+			if (checkInvariants) // Don't even convert invariant arg values
 			{
 				pv = pv.convertTo(typeIter.next(), ctxt);
 			}
 
 			try
 			{
-				for (NameValuePair nvp: PPatternAssistantInterpreter.getNamedValues(p,pv, ctxt))
+				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
 					if (v == null)
 					{
 						args.put(nvp);
-					}
-					else	// Names match, so values must also
+					} else
+					// Names match, so values must also
 					{
 						if (!v.equals(nvp.value))
 						{
@@ -342,8 +345,7 @@ public class FunctionValue extends Value
 						}
 					}
 				}
-			}
-			catch (PatternMatchException e)
+			} catch (PatternMatchException e)
 			{
 				abort(e.number, e, ctxt);
 			}
@@ -351,8 +353,7 @@ public class FunctionValue extends Value
 
 		if (self != null)
 		{
-			evalContext.put(
-				new LexNameToken(location.getModule(), "self", location), self);
+			evalContext.put(new LexNameToken(location.getModule(), "self", location), self);
 		}
 
 		evalContext.putAll(args);
@@ -370,8 +371,7 @@ public class FunctionValue extends Value
 					evalContext.threadState.setAtomic(true);
 					evalContext.setPrepost(4055, "Precondition failure: ");
 					precondition.eval(from, argValues, evalContext);
-				}
-				finally
+				} finally
 				{
 					evalContext.setPrepost(0, null);
 					evalContext.threadState.setAtomic(false);
@@ -382,12 +382,13 @@ public class FunctionValue extends Value
 
 			if (isMeasure)
 			{
-				if (measuringThreads.contains(tid))		// We are measuring on this thread
+				if (measuringThreads.contains(tid)) // We are measuring on this thread
 				{
-    				if (!callingThreads.add(tid))		// And we've been here already
-    				{
-    					abort(4148, "Measure function is called recursively: " + name, evalContext);
-    				}
+					if (!callingThreads.add(tid)) // And we've been here already
+					{
+						abort(4148, "Measure function is called recursively: "
+								+ name, evalContext);
+					}
 				}
 			}
 
@@ -397,9 +398,9 @@ public class FunctionValue extends Value
 				{
 					measure = evalContext.lookup(measureName).functionValue(ctxt);
 
-					if (typeValues != null)		// Function is polymorphic, so measure copies type args
+					if (typeValues != null) // Function is polymorphic, so measure copies type args
 					{
-						measure = (FunctionValue)measure.clone();
+						measure = (FunctionValue) measure.clone();
 						measure.uninstantiated = false;
 						measure.typeValues = typeValues;
 					}
@@ -411,30 +412,28 @@ public class FunctionValue extends Value
 
 				// If this is a curried function, then the measure is called with all of the
 				// previously applied argument values, in addition to the argValues.
-				
+
 				ValueList measureArgs = null;
-				
+
 				if (curriedArgs == null)
 				{
 					measureArgs = argValues;
-				}
-				else
+				} else
 				{
 					measureArgs = new ValueList();
-					measureArgs.addAll(curriedArgs);	// Previous args
-					measureArgs.addAll(argValues);		// Final args
+					measureArgs.addAll(curriedArgs); // Previous args
+					measureArgs.addAll(argValues); // Final args
 				}
-				
+
 				// We disable the swapping and time (RT) as measure checks should be "free".
 				Value mv;
-				
+
 				try
 				{
 					measure.measuringThreads.add(tid);
 					evalContext.threadState.setAtomic(true);
 					mv = measure.eval(measure.location, measureArgs, evalContext);
-				}
-				finally
+				} finally
 				{
 					evalContext.threadState.setAtomic(false);
 					measure.measuringThreads.remove(tid);
@@ -450,44 +449,63 @@ public class FunctionValue extends Value
 
 				if (!stack.isEmpty())
 				{
-					Value old = stack.peek();		// Previous value
+					Value old = stack.peek(); // Previous value
 
-    				if (old != null && mv.compareTo(old) >= 0)		// Not decreasing order
-    				{
-    					abort(4146, "Measure failure: " +
-    						name + Utils.listToString("(", argValues, ", ", ")") + ", measure " +
-    						measure.name + ", current " + mv + ", previous " + old, evalContext);
-    				}
+					if (old != null && mv.compareTo(old) >= 0) // Not decreasing order
+					{
+						abort(4146, "Measure failure: " + name
+								+ Utils.listToString("(", argValues, ", ", ")")
+								+ ", measure " + measure.name + ", current "
+								+ mv + ", previous " + old, evalContext);
+					}
 				}
 
 				stack.push(mv);
-			}	
-			
-			Value rv = null;
-			try
-			{
-				rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
-			} catch (AnalysisException e)
-			{
-				if(e instanceof ValueException)
-				{
-					throw (ValueException) e;
-				}
-				e.printStackTrace();
 			}
-    		
-    		if (ctxt.prepost > 0)	// Note, caller's context is checked
-    		{
-    			if (!rv.boolValue(ctxt))
-    			{
-    				// Note that this calls getLocation to find out where the body
-    				// wants to report its location for this error - this may be an
-    				// errs clause in some circumstances.
 
-    				throw new ContextException(ctxt.prepost,
-    					ctxt.prepostMsg + name, body.getLocation(), evalContext);
-    			}
-    		}
+			Value rv = null;
+
+			if (body == null)
+			{
+
+				IConstraintSolver solver = SolverFactory.getSolver(Settings.dialect);
+
+				if (solver != null)
+				{
+					rv = invokeSolver(ctxt, evalContext, args, solver);
+
+				} else
+				{
+					abort(4051, "Cannot apply implicit function: " + name, ctxt);
+				}
+
+			} else
+			{
+				try
+				{
+					rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
+				} catch (AnalysisException e)
+				{
+					if (e instanceof ValueException)
+					{
+						throw (ValueException) e;
+					}
+					e.printStackTrace();
+				}
+			}
+
+			if (ctxt.prepost > 0) // Note, caller's context is checked
+			{
+				if (!rv.boolValue(ctxt))
+				{
+					// Note that this calls getLocation to find out where the body
+					// wants to report its location for this error - this may be an
+					// errs clause in some circumstances.
+
+					throw new ContextException(ctxt.prepost, ctxt.prepostMsg
+							+ name, body.getLocation(), evalContext);
+				}
+			}
 
 			if (postcondition != null && Settings.postchecks)
 			{
@@ -503,8 +521,7 @@ public class FunctionValue extends Value
 					evalContext.threadState.setAtomic(true);
 					evalContext.setPrepost(4056, "Postcondition failure: ");
 					postcondition.eval(from, postArgs, evalContext);
-				}
-				finally
+				} finally
 				{
 					evalContext.setPrepost(0, null);
 					evalContext.threadState.setAtomic(false);
@@ -522,8 +539,8 @@ public class FunctionValue extends Value
 			}
 
 			return rv;
-		}
-		else	// This is a curried function
+		} else
+		// This is a curried function
 		{
 			if (type.getResult() instanceof AFunctionType)
 			{
@@ -550,55 +567,72 @@ public class FunctionValue extends Value
 				{
 					evalContext.putAll(freeVariables);
 				}
-				
-				
+
 				// Curried arguments are collected so that we can invoke any measure functions
 				// once we reach the final apply that does not return a function.
-				
+
 				ValueList argList = new ValueList();
-				
+
 				if (curriedArgs != null)
 				{
 					argList.addAll(curriedArgs);
 				}
-				
+
 				argList.addAll(argValues);
 
-    			FunctionValue rv = new FunctionValue(location, "curried",
-    				(AFunctionType)type.getResult(),
-    				paramPatternList.subList(1, paramPatternList.size()),
-    				body, newpre, newpost, evalContext, false, argList,
-    				measureName, measureValues);
+				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues);
 
-    			rv.setSelf(self);
-    			rv.typeValues = typeValues;
-    			
-        		return rv;
+				rv.setSelf(self);
+				rv.typeValues = typeValues;
+
+				return rv;
 			}
 
-			VdmRuntimeError.abort(type.getLocation(),4057, "Curried function return type is not a function", ctxt);
+			VdmRuntimeError.abort(type.getLocation(), 4057, "Curried function return type is not a function", ctxt);
 			return null;
 		}
 	}
 
-	private RootContext newContext(ILexLocation from, String title, Context ctxt, Context sctxt)
+		public Value invokeSolver(Context ctxt, RootContext argContext,
+			NameValuePairMap args,  IConstraintSolver solver)
+			throws ValueException
+	{
+			Value rv=null;
+		try
+		{
+			Map<String, String> argExps = new HashMap<String, String>();
+			for (Entry<ILexNameToken, Value> argVal : args.entrySet())
+			{
+				argExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+			}
+
+			Map<String, String> stateExps = new HashMap<String, String>();
+
+			PExp res = solver.solve(this.name, this.postcondition.body,result, stateExps, argExps, Console.out, Console.err);
+
+			rv = res.apply(VdmRuntime.getExpressionEvaluator(), argContext);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			abort(4066, "Cannot call implicit operation: " + name, ctxt);
+		}
+		return rv;
+	}
+
+	private RootContext newContext(ILexLocation from, String title,
+			Context ctxt, Context sctxt)
 	{
 		RootContext evalContext;
 
 		if (self != null)
 		{
-			evalContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),
-				from, title, freeVariables, ctxt, self);
-		}
-		else if (classdef != null)
+			evalContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(), from, title, freeVariables, ctxt, self);
+		} else if (classdef != null)
 		{
-			evalContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),
-				from, title, freeVariables, ctxt, classdef);
-		}
-		else
+			evalContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(), from, title, freeVariables, ctxt, classdef);
+		} else
 		{
-			evalContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),
-				from, title, freeVariables, ctxt, sctxt);
+			evalContext = new StateContext(Interpreter.getInstance().getAssistantFactory(), from, title, freeVariables, ctxt, sctxt);
 		}
 
 		return evalContext;
@@ -609,18 +643,18 @@ public class FunctionValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-			if (val instanceof CompFunctionValue || val instanceof IterFunctionValue)
+			if (val instanceof CompFunctionValue
+					|| val instanceof IterFunctionValue)
 			{
-				return false;	// Play safe - we can't really tell
+				return false; // Play safe - we can't really tell
+			} else if (val instanceof FunctionValue)
+			{
+				FunctionValue ov = (FunctionValue) val;
+				return ov.type.equals(type) && // Param and result types same
+						ov.body.equals(body); // Not ideal - a string comparison in fact
 			}
-			else if (val instanceof FunctionValue)
-    		{
-    			FunctionValue ov = (FunctionValue)val;
-    			return ov.type.equals(type) &&		// Param and result types same
-    				   ov.body.equals(body);		// Not ideal - a string comparison in fact
-    		}
 		}
 
 		return false;
@@ -647,11 +681,10 @@ public class FunctionValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,AFunctionType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AFunctionType.class))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -662,18 +695,13 @@ public class FunctionValue extends Value
 		// Remove first set of parameters, and set the free variables instead.
 		// And adjust the return type to be the result type (a function).
 
-		return new FunctionValue(location, name, (AFunctionType)type.getResult(),
-			paramPatternList.subList(1, paramPatternList.size()),
-			body, precondition, postcondition, newFreeVariables, false, null, null, null);
+		return new FunctionValue(location, name, (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, precondition, postcondition, newFreeVariables, false, null, null, null);
 	}
 
 	@Override
 	public Object clone()
 	{
-		FunctionValue copy = new FunctionValue(location, name, type,
-			paramPatternList, body, precondition, postcondition,
-			freeVariables, checkInvariants, curriedArgs,
-			measureName, measureValues);
+		FunctionValue copy = new FunctionValue(location, name, type, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues);
 
 		copy.typeValues = typeValues;
 		return copy;
