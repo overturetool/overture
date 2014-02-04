@@ -115,6 +115,12 @@ public class GeneralCodeGenUtils
 	public static void copyDirectory(File sourceLocation, File targetLocation)
 			throws IOException
 	{
+		if(!sourceLocation.exists())
+			sourceLocation.getParentFile().mkdirs();
+		
+		if(!targetLocation.exists())
+			targetLocation.getParentFile().mkdirs();
+		
 		if (sourceLocation.isDirectory())
 		{
 			if (!targetLocation.exists())
