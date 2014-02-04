@@ -49,6 +49,8 @@ public class NoteBook {
         IO.printf("Message 1 is NOT equal to 'Bye!': %s\n",
             SeqUtil.seq(nb1.isNotMessage(1L, "Bye!")));
         IO.print("\n");
+        IO.print("Adding duplicate message 'yellow'\n\n");
+        nb1.addMessage("yellow");
         IO.println("Printing messages reversed");
 
         long temp_1 = nb1.noOfMessgages().longValue();
@@ -57,12 +59,32 @@ public class NoteBook {
             VDMSeq reversed = nb1.getReverseMessages();
             IO.println(((String) reversed.get(Utils.index(i))));
         }
+
+        IO.print("\n");
+        IO.println("Printing message indices of nb1");
+
+        Iterator temp_2 = nb1.getMessageIndices().iterator();
+
+        while (temp_2.hasNext()) {
+            Number idx = ((Number) temp_2.next());
+            IO.printf("%s ", SeqUtil.seq(idx));
+        }
+
+        IO.println("\n");
+        IO.println("Printing messages of nb1 using 'elems' operator");
+
+        Iterator temp_3 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
+
+        while (temp_3.hasNext()) {
+            String msg = ((String) temp_3.next());
+            IO.print(msg + "\n");
+        }
     }
 
     public void printMessages() {
-        long temp_2 = messages.size();
+        long temp_4 = messages.size();
 
-        for (long i = 1L; i <= temp_2; i++) {
+        for (long i = 1L; i <= temp_4; i++) {
             String msg = getMessage(i);
             IO.println(msg);
         }

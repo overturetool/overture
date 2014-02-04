@@ -16,8 +16,6 @@ let nb1 = new NoteBook(),
 in 
 (
 	--Left do be done:
-	--Cannot test 'indices' (set not implemented)
-	--Cannot test 'elems' operator yet (set not implemented)
 	--Cannot test sequence for loops yet
 
 	IO`println("Notebooks nb1 and nb2 has been created\n");
@@ -69,11 +67,28 @@ in
 	IO`printf("Message 1 is NOT equal to 'Bye!': %s\n", [nb1.isNotMessage(1, "Bye!")]);
 	IO`print("\n");
 	
+	IO`print("Adding duplicate message 'yellow'\n\n");
+	nb1.addMessage("yellow");
+	
 	IO`println("Printing messages reversed");
 	for i = 1 to nb1.noOfMessgages() do 
 		let reversed = nb1.getReverseMessages()
 		in
 			IO`println(reversed(i));
+			
+	IO`print("\n");
+	
+	IO`println("Printing message indices of nb1");
+	for all idx in set nb1.getMessageIndices() do
+		IO`printf("%s ", [idx]);
+	
+	IO`println("\n");
+	
+	
+	IO`println("Printing messages of nb1 using 'elems' operator");
+	for all msg in set elems nb1.getMessagesOrdered() do
+		IO`print(msg ^ "\n");	
+	
 );
 
 public printMessages : () ==> ()
