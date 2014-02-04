@@ -233,6 +233,7 @@
           </executions>
           <configuration>
             <failOnError>false</failOnError>
+            <quiet>true</quiet>
           </configuration>
         </plugin>
 
