@@ -87,7 +87,7 @@ public class SeqUtil
 		
 		VDMSet indices = SetUtil.set();
 		
-		for(long i = 0; i < seq.size(); i++)
+		for(long i = 1; i <= seq.size(); i++)
 		{
 			indices.add(i);
 		}
