@@ -1,4 +1,8 @@
 language: java
 jdk:
   - oraclejdk7
-script: "mvn install && mvn install -f ide/pom.xml"
+script: 
+  - mvn install
+  - mvn install -f ide/pom.xml
+env:
+  - MAVEN_OPTS=-Dgit-commit-id.skip=true
