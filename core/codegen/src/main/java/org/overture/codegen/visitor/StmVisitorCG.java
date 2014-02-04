@@ -9,6 +9,7 @@ import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
@@ -18,6 +19,7 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
@@ -31,6 +33,7 @@ import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -377,8 +380,47 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		AForAllStmCG forAll = new AForAllStmCG();
 		forAll.setVar(var);
-		forAll.setSet(setExpCg);
+		forAll.setExp(setExpCg);
 		forAll.setBody(bodyCg);
+		
+		return forAll;
+	}
+	
+	@Override
+	public PStmCG caseAForPatternBindStm(AForPatternBindStm node,
+			OoAstInfo question) throws AnalysisException
+	{
+		ADefPatternBind patternBind = node.getPatternBind();
+
+		PPattern pattern = patternBind.getPattern();
+		
+		if(!(pattern instanceof AIdentifierPattern))
+			return null;
+		
+		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
+		Boolean reverse = node.getReverse();
+		PExp exp = node.getExp();
+		PStm stm = node.getStatement();
+
+		String var = identifier.getName().getName();
+		PExpCG seqExpCg = exp.apply(question.getExpVisitor(), question);
+		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
+		
+		AForAllStmCG forAll = new AForAllStmCG();
+		forAll.setVar(var);
+		forAll.setBody(stmCg);
+		
+		if(reverse != null && reverse)
+		{
+			AReverseUnaryExpCG reversedExp = new AReverseUnaryExpCG();
+			reversedExp.setType(seqExpCg.getType().clone());
+			reversedExp.setExp(seqExpCg);
+			forAll.setExp(reversedExp);
+		}
+		else
+		{
+			forAll.setExp(seqExpCg);
+		}
 		
 		return forAll;
 	}

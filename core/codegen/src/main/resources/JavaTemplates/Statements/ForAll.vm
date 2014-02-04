@@ -1,12 +1,12 @@
 #set( $iterator = $JavaFormat.nextVarName() )
-#set( $set = $JavaFormat.format($node.getSet()) )
+#set( $exp = $JavaFormat.format($node.getExp()) )
 #set( $var = $node.getVar() )
-#set( $elementType = $JavaFormat.formatSetElementType($node.getSet().getType()) )
+#set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )
 #set( $body = $JavaFormat.format($node.getBody()) )
 ##
-Iterator ${iterator} = ${set}.iterator();
+Iterator ${iterator} = ${exp}.iterator();
 while (${iterator}.hasNext())
 {
-	${elementType} ${var} = ((${elementType}) ${iterator}.next());
+	${elementType} ${var} = (${elementType}) ${iterator}.next();
 	${body}
 }

@@ -240,6 +240,7 @@ public class JavaFormat
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
+	//TODO: Possible repeat
 	public String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
 	{
 		PTypeCG type = exp.getType();
@@ -875,14 +876,23 @@ public class JavaFormat
 		return sb.toString();
 	}
 	
-	public String formatSetElementType(PTypeCG type) throws AnalysisException
+	public String formatElementType(PTypeCG type) throws AnalysisException
 	{
-		if(!(type instanceof SSetTypeCG))
-			throw new AnalysisException("Expected set type when trying to format element type");
+		if(type instanceof SSetTypeCG)
+		{
+			SSetTypeCG setType = (SSetTypeCG) type;
+			
+			return format(setType.getSetOf());
+		}
+		else if(type instanceof SSeqTypeCG)
+		{
+			SSeqTypeCG seqType = (SSeqTypeCG) type;
+			
+			return format(seqType.getSeqOf());
+		}
 		
-		SSetTypeCG setType = (SSetTypeCG) type;
+		throw new AnalysisException("Expected set or seq type when trying to format element type");
 		
-		return format(setType.getSetOf());
 	}
 	
 	public String nextVarName()

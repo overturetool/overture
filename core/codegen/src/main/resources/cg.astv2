@@ -132,7 +132,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{call} [type]:typeCG [classType]:typeCG.class [name]:java_String [args]:expCG*
            |	{notImplemented}
            |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
-           |	{forAll} [var]:java_String [set]:expCG [body]:stmCG
+           |	{forAll} [var]:java_String [exp]:expCG [body]:stmCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}
