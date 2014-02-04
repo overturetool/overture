@@ -458,21 +458,19 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		PExp exp = node.getExp();
 		PType type = node.getType();
-		
+
+		if (!(type instanceof SSeqType))
+			throw new AnalysisExceptionCG("Unexpected sequence type for reverse unary expression: "
+					+ type.getClass().getName(), node.getLocation());
+
+		SSeqType seqType = ((SSeqType) type);
+
+		PTypeCG seqTypeCg = seqType.apply(question.getTypeVisitor(), question);
 		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		
+
 		AReverseUnaryExpCG reverse = new AReverseUnaryExpCG();
 		reverse.setExp(expCg);
-		
-		if(type instanceof SSeqType)
-		{
-			PTypeCG seqType = ((SSeqType) type).getSeqof().apply(question.getTypeVisitor(), question);
-			reverse.setType(seqType);
-		}
-		else
-		{
-			throw new AnalysisExceptionCG("Unexpected sequence type for reverse unary expression: " + type.getClass().getName(), node.getLocation());
-		}
+		reverse.setType(seqTypeCg);
 
 		return reverse;
 	}
