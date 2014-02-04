@@ -1,8 +1,9 @@
 language: java
 jdk:
   - oraclejdk7
+before_install:
+  - echo "This may take a short while; it is downloading all of the maven plugins and their dependencies, but quietly to hide the downloads from the log."
+  - mvn -B -q dependency:resolve-plugins -PWith-IDE -Dtycho.mode=maven
 script: 
-  - mvn install
-  - mvn install -f ide/pom.xml
-env:
-  - MAVEN_OPTS=-Dgit-commit-id.skip=true
+  - mvn -B install
+  - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true
