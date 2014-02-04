@@ -2,6 +2,7 @@ package org.overture.ide.plugins.codegen.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
@@ -115,7 +117,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
 
 					// Clean folder with generated Java code
-					PluginVdm2JavaUtil.deleteFolderContents(outputFolder);
+					GeneralUtils.deleteFolderContents(outputFolder);
 
 					// Generate user specified classes
 					List<IVdmSourceUnit> sources = model.getSourceUnits();

@@ -101,28 +101,6 @@ public class PluginVdm2JavaUtil
 		outputDir.mkdirs();
 		return outputDir;
 	}
-	
-	public static void deleteFolderContents(File folder)
-	{
-		if (folder == null)
-			return;
-
-		File[] files = folder.listFiles();
-
-		if (files == null)
-			return;
-
-		for (File f : files)
-		{
-			if (f.isDirectory())
-			{
-				deleteFolderContents(f);
-			} else
-			{
-				f.delete();
-			}
-		}
-	}
 
 	public static File getQuotesFolder(IVdmProject project) throws CoreException
 	{

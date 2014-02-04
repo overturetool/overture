@@ -3,6 +3,7 @@ package org.overture.codegen.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,5 +55,33 @@ public class GeneralUtils
 		}
 		
 		return files;
+	}
+	
+	public static void deleteFolderContents(File folder)
+	{
+		deleteFolderContents(folder, new ArrayList<String>());
+	}
+	
+	public static void deleteFolderContents(File folder, List<String> folderNamesToAvoid)
+	{
+		if (folder == null)
+			return;
+
+		File[] files = folder.listFiles();
+
+		if (files == null)
+			return;
+
+		for (File f : files)
+		{
+			if (f.isDirectory())
+			{
+				if(!folderNamesToAvoid.contains(f.getName()))
+					deleteFolderContents(f, folderNamesToAvoid);
+			} else
+			{
+				f.delete();
+			}
+		}
 	}
 }
