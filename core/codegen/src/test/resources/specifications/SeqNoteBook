@@ -1,5 +1,5 @@
 --
---VDM model exercising sequences
+-- VDM model exercising sequences
 --
 class NoteBook  
 
@@ -15,9 +15,6 @@ let nb1 = new NoteBook(),
 		nb2 = new NoteBook()
 in 
 (
-	--Left do be done:
-	--Cannot test sequence for loops yet
-
 	IO`println("Notebooks nb1 and nb2 has been created\n");
 
 	IO`println("Adding messages for nb1 while leaving nb2 empty\n");
@@ -84,9 +81,14 @@ in
 	
 	IO`println("\n");
 	
-	
 	IO`println("Printing messages of nb1 using 'elems' operator");
 	for all msg in set elems nb1.getMessagesOrdered() do
+		IO`print(msg ^ "\n");	
+	
+	IO`println("\n");
+	
+	IO`println("Printing messages of nb1 using the sequence loop");
+	for msg in nb1.getMessagesOrdered() do
 		IO`print(msg ^ "\n");	
 	
 );

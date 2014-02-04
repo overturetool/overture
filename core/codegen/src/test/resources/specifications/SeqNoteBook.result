@@ -79,12 +79,22 @@ public class NoteBook {
             String msg = (String) temp_3.next();
             IO.print(msg + "\n");
         }
+
+        IO.println("\n");
+        IO.println("Printing messages of nb1 using the sequence loop");
+
+        Iterator temp_4 = nb1.getMessagesOrdered().iterator();
+
+        while (temp_4.hasNext()) {
+            String msg = (String) temp_4.next();
+            IO.print(msg + "\n");
+        }
     }
 
     public void printMessages() {
-        long temp_4 = messages.size();
+        long temp_5 = messages.size();
 
-        for (long i = 1L; i <= temp_4; i++) {
+        for (long i = 1L; i <= temp_5; i++) {
             String msg = getMessage(i);
             IO.println(msg);
         }
