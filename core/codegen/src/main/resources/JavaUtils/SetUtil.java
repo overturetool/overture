@@ -105,6 +105,43 @@ public class SetUtil
 		return result;
 	}
 	
+	public static VDMSet powerset(VDMSet originalSet) {
+		
+		VDMSet sets = SetUtil.set();
+		
+	    if (originalSet.isEmpty()) {
+	    	sets.add(SetUtil.set());
+	    	return sets;
+	    }
+	    
+	    VDMSeq seq = SeqUtil.seq();
+	    seq.addAll(originalSet);
+	    
+	    Object firstElement = seq.get(0);
+	    VDMSet rest = SetUtil.set();
+	    rest.addAll(seq.subList(1, seq.size()));
+	    
+	    VDMSet powerSets = powerset(rest);
+	    Object[] powerSetsArray = powerSets.toArray();
+	    
+	    for(int i = 0; i < powerSets.size(); i++)
+	    {
+	    	Object obj = powerSetsArray[i];
+	    	if(!(obj instanceof VDMSet))
+	    		throw new IllegalArgumentException("Power set operation is only applicable to sets. Got: " + obj);
+	    	
+	    	VDMSet set = (VDMSet) obj;
+	    	
+	    	VDMSet newSet = SetUtil.set();
+	    	newSet.add(firstElement);
+	    	newSet.addAll(set);
+	    	sets.add(newSet);
+	    	sets.add(set);
+	    }
+	    
+	    return sets;
+	}
+	
 	public static boolean equals(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)

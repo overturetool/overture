@@ -223,7 +223,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{not}
     |	{distConcat}
     |	{distUnion}
-    |	{distIntersect}  
+    |	{distIntersect}
+    |	{powerSet}  
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
