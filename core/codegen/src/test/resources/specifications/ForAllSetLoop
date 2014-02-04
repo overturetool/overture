@@ -1,0 +1,34 @@
+class A
+
+types
+
+Rec :: x : int;
+
+operations 
+
+public op : () ==> ()
+op () == 
+let x = {mk_Rec(1),mk_Rec(2),mk_Rec(3)}
+in
+	for all e in set x do
+	( 
+		IO`printf("%s ", [e]);
+	);
+
+public op1 : () ==> ()
+op1 () == 
+	for all n in set {1,2,3} do IO`printf("%s ", [n]);
+	
+public op2 : () ==> ()
+op2 () == for all e in set {} do IO`print("x");
+
+public op3 : () ==> ()
+op3 () == 
+	for all n in set f() do IO`printf("%s ", [n]);
+
+functions
+
+public f :  () -> set of nat
+f () == {1,2,3};
+
+end A
