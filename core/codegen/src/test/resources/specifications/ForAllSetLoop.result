@@ -9,7 +9,7 @@ public class A {
         Iterator temp_1 = x.iterator();
 
         while (temp_1.hasNext()) {
-            Rec e = ((Rec) temp_1.next());
+            Rec e = (Rec) temp_1.next();
             IO.printf("%s ", SeqUtil.seq(e.clone()));
         }
     }
@@ -18,7 +18,7 @@ public class A {
         Iterator temp_2 = SetUtil.set(1L, 2L, 3L).iterator();
 
         while (temp_2.hasNext()) {
-            Number n = ((Number) temp_2.next());
+            Number n = (Number) temp_2.next();
             IO.printf("%s ", SeqUtil.seq(n));
         }
     }
@@ -27,7 +27,7 @@ public class A {
         Iterator temp_3 = SetUtil.set().iterator();
 
         while (temp_3.hasNext()) {
-            Object e = ((Object) temp_3.next());
+            Object e = (Object) temp_3.next();
             IO.print("x");
         }
     }
@@ -36,7 +36,7 @@ public class A {
         Iterator temp_4 = f().iterator();
 
         while (temp_4.hasNext()) {
-            Number n = ((Number) temp_4.next());
+            Number n = (Number) temp_4.next();
             IO.printf("%s ", SeqUtil.seq(n));
         }
     }

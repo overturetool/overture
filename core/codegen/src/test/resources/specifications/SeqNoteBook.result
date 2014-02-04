@@ -66,7 +66,7 @@ public class NoteBook {
         Iterator temp_2 = nb1.getMessageIndices().iterator();
 
         while (temp_2.hasNext()) {
-            Number idx = ((Number) temp_2.next());
+            Number idx = (Number) temp_2.next();
             IO.printf("%s ", SeqUtil.seq(idx));
         }
 
@@ -76,7 +76,7 @@ public class NoteBook {
         Iterator temp_3 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
 
         while (temp_3.hasNext()) {
-            String msg = ((String) temp_3.next());
+            String msg = (String) temp_3.next();
             IO.print(msg + "\n");
         }
     }
