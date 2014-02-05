@@ -233,6 +233,7 @@
           </executions>
           <configuration>
             <failOnError>false</failOnError>
+            <quiet>true</quiet>
           </configuration>
         </plugin>
 
@@ -309,7 +310,7 @@
         <plugin>
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
-          <version>2.1.7</version>
+          <version>2.1.8</version>
           <configuration>
             <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
           </configuration>

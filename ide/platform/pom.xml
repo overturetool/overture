@@ -15,6 +15,10 @@
   <artifactId>org.overture.ide.platform</artifactId>
   <name>org.overture.ide.platform</name>
 
+  <properties>
+    <git-commit-id.skip>false</git-commit-id.skip>
+  </properties>
+
   <build>
     <resources>
       <resource>
@@ -40,6 +44,7 @@
           </execution>
         </executions>
         <configuration>
+          <skip>${git-commit-id.skip}</skip>
           <prefix>git</prefix>
           <dateFormat>yyyy MMM dd HH:mm z</dateFormat>
           <verbose>false</verbose>
@@ -51,7 +56,6 @@
             <dirty>-dirty</dirty>
             <forceLongFormat>false</forceLongFormat>
           </gitDescribe>
-          <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
         </configuration>
       </plugin>
     </plugins>
