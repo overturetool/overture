@@ -9,7 +9,9 @@ Bundle-SymbolicName: org.overture.ide.plugins.probruntime.core;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  jars/probsolver.jar,
- jars/probsolverintegration-jar-with-dependencies.jar
+ jars/probsolverintegration-distribution-with-prob.jar,
+ jars/log4j.jar,
+ jars/slf4j-log4j12.jar
 Require-Bundle: org.eclipse.ui.workbench
 Import-Package: org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.7.0"

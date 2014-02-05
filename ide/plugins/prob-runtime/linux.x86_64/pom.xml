@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-	 <groupId>org.overture.ide.plugins</groupId>
-  <artifactId>org.overture.ide.plugins.probruntime</artifactId>
+		<groupId>org.overture.ide.plugins</groupId>
+		<artifactId>org.overture.ide.plugins.probruntime</artifactId>
 		<version>2.0.1-SNAPSHOT<!--Replaceable: Main Version-->
 		</version>
 		<relativePath>../pom.xml</relativePath>
@@ -17,117 +17,95 @@
 	<artifactId>org.overture.ide.plugins.probruntime.linux.x86_64</artifactId>
 
 
-	<name>Prob interpreter runtime</name>
+	<name>Prob interpreter runtime linux x64</name>
 	<description>ProB modelchecker integration for the VDM interpreter</description>
+
+	<properties>
+		<!-- release -->
+		<prob.cli.zip>probcli_linux64.zip</prob.cli.zip>
+	</properties>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<executions>
+					<execution>
+						<id>download-probcli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>download-single</goal>
+						</goals>
+						<configuration>
+							<url>${prob.cli.url}</url>
+							<fromFile>${prob.cli.zip}</fromFile>
+							<toFile>${project.build.directory}/prob.zip</toFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare</id>
+						<phase>process-sources</phase>
+						<configuration>
+							<tasks>
+								<echo message="unzipping downloaded binaries" />
+								<unzip src="target/prob.zip" dest="prob">
+									<mapper>
+										<globmapper from="ProB/*" to="*"/>
+									</mapper>
+									<patternset>
+										<include name="**/probcli"/>
+										<include name="**/lib/**.so"/>
+										<include name="**/lib/**.jar"/>
+										<include name="**/send_user_interrupt"/>
+										<include name="**/build_info.txt"/>
+									</patternset>
+								</unzip>
+								<echo file="prob/build_info.txt" append="true">
+									${prob.cli.url}
+								</echo>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<failOnError>false</failOnError>
+					<filesets>
+						<fileset>
+							<directory>prob</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
 
 	<profiles>
 		<profile>
-			<id>createFile</id>
-			<activation>
-				<file>
-					<missing>build_info.txt</missing>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>wagon-maven-plugin</artifactId>
-						<version>1.0-beta-3</version>
-						<executions>
-							<execution>
-								<id>download-probcli</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>download-single</goal>
-								</goals>
-								<configuration>
-									<url>http://nightly.cobra.cs.uni-duesseldorf.de</url>
-									<fromFile>cli/probcli_linux64.zip</fromFile>
-									<toDir>${project.build.directory}/</toDir>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>prepare</id>
-								<phase>process-sources</phase>
-								<configuration>
-									<tasks>
-										<echo message="unzipping downloaded binaries" />
-										<unzip src="target/probcli_linux64.zip" dest="." />
-									</tasks>
-								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+			<id>prob-debug</id>
+			<properties>
+				<prob.cli.zip>probcli_linux64.zip</prob.cli.zip>
+			</properties>
 		</profile>
 	</profiles>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-antrun-plugin
-										</artifactId>
-										<versionRange>
-											[1.6,)
-										</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											wagon-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.0-beta-3,)
-										</versionRange>
-										<goals>
-											<goal>download-single</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>
