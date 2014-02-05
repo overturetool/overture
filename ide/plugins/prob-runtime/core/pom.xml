@@ -13,15 +13,15 @@
 
 	<groupId>org.overture.ide.plugins.probruntime</groupId>
 	<artifactId>org.overture.ide.plugins.probruntime.core</artifactId>
-	
-	
+
+
 	<name>Prob interpreter runtime</name>
 	<description>ProB modelchecker integration for the VDM interpreter</description>
 
 
 	<build>
 		<plugins>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -42,7 +42,7 @@
 								<artifactItem>
 									<groupId>org.overture.core.modelcheckers</groupId>
 									<artifactId>probsolverintegration</artifactId>
-									 <classifier>jar-with-dependencies</classifier>
+									<classifier>distribution-with-prob</classifier>
 									<version>${project.version}</version>
 								</artifactItem>
 								<artifactItem>
@@ -50,7 +50,16 @@
 									<artifactId>probsolver</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
-								
+								<artifactItem>
+									<groupId>log4j</groupId>
+									<artifactId>log4j</artifactId>
+									<version>1.2.17</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.slf4j</groupId>
+									<artifactId>slf4j-log4j12</artifactId>
+									<version>1.7.5</version>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>

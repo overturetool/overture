@@ -367,7 +367,7 @@ public class ProbSolverUtil
 				name = arg.getKey() + VdmToBConverter.OLD_POST_FIX;
 			}
 			AEqualPredicate eqp = new AEqualPredicate(VdmToBConverter.createIdentifier(name), (PExpression) arg.getValue().apply(translator));
-			if (post == null)
+			if (post != null)
 			{
 				post = new AConjunctPredicate((PPredicate) post, eqp);
 			} else
