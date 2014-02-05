@@ -263,11 +263,6 @@ public class OperationValue extends Value
 	public Value localEval(ILexLocation from, ValueList argValues,
 			Context ctxt, boolean logreq) throws ValueException
 	{
-		// if (body == null)
-		// {
-		// abort(4066, "Cannot call implicit operation: " + name, ctxt);
-		// }
-
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
@@ -503,20 +498,24 @@ public class OperationValue extends Value
 			} else
 			{
 				// TODO
-				for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
+				if (self != null)
 				{
-					if(argVal.getValue() instanceof FunctionValue|| argVal.getValue() instanceof  OperationValue)
+					for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
 					{
-						continue;
-					}
-					if (argVal.getValue() instanceof UpdatableValue)
-					{
-						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						if (argVal.getValue() instanceof FunctionValue
+								|| argVal.getValue() instanceof OperationValue)
+						{
+							continue;
+						}
+						if (argVal.getValue() instanceof UpdatableValue)
+						{
+							stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						}
 					}
 				}
 			}
 
-			PStm res = solver.solve(name, this.impldef, stateExps, argExps, Console.out, Console.err);
+			PStm res = solver.solve(name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)

@@ -27,7 +27,6 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class VoidValue extends Value
