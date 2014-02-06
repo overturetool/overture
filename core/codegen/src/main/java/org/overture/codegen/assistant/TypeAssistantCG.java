@@ -1,6 +1,9 @@
 package org.overture.codegen.assistant;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -21,11 +24,32 @@ import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeAssistantCG
 {
+	public static PDefinition getTypeDef(ILexNameToken nameToken)
+	{
+		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
+		if (def == null)
+			return null;
+
+		SClassDefinition enclosingClass = nameToken.getAncestor(SClassDefinition.class);
+
+		if (enclosingClass == null)
+			return null;
+
+		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
+		PDefinitionAssistantTC defAssistant = factory.createPDefinitionAssistant();
+		
+		enclosingClass.getName().getModule();
+		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
+	
+		return typeDef;
+	}
+	
 	public static PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
 			throws AnalysisException
 	{
