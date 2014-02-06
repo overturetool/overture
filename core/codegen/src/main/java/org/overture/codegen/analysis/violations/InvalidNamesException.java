@@ -8,13 +8,15 @@ public class InvalidNamesException extends Exception
 	
 	private Set<Violation> reservedWordViolations;
 	private Set<Violation> typenameViolations;
+	private Set<Violation> tempVarViolations;
 	
 	public InvalidNamesException(String message, Set<Violation> reservedWordViolations,
-			Set<Violation> typenameViolations)
+			Set<Violation> typenameViolations, Set<Violation> tempVarViolations)
 	{
 		super(message);
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
+		this.tempVarViolations = tempVarViolations;
 	}
 
 	public Set<Violation> getReservedWordViolations()
@@ -25,5 +27,10 @@ public class InvalidNamesException extends Exception
 	public Set<Violation> getTypenameViolations()
 	{
 		return typenameViolations;
+	}
+
+	public Set<Violation> getTempVarViolations()
+	{
+		return tempVarViolations;
 	}
 }

@@ -113,6 +113,7 @@ public class JavaCodeGenUtil
 		
 		List<Violation> reservedWordViolations = asSortedList(e.getReservedWordViolations());
 		List<Violation> typenameViolations = asSortedList(e.getTypenameViolations());
+		List<Violation> tempVarViolations = asSortedList(e.getTempVarViolations());
 		
 		for (Violation violation : reservedWordViolations)
 		{
@@ -123,6 +124,11 @@ public class JavaCodeGenUtil
 		for (Violation violation : typenameViolations)
 		{
 			buffer.append("Type name violation: " + violation + IText.NEW_LINE);
+		}
+		
+		for(Violation violation : tempVarViolations)
+		{
+			buffer.append("Temporary variable violation: " + violation + IText.NEW_LINE);
 		}
 		
 		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);

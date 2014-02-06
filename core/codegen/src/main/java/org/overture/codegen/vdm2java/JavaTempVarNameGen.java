@@ -2,7 +2,6 @@ package org.overture.codegen.vdm2java;
 
 public class JavaTempVarNameGen
 {
-	private static final String VAR_NAME_PREFIX = "temp_";
 	private long nextVar;
 	
 	public JavaTempVarNameGen()
@@ -13,6 +12,6 @@ public class JavaTempVarNameGen
 	
 	public String nextVarName()
 	{
-		return VAR_NAME_PREFIX + nextVar++;
+		return JavaCodeGen.GENERATED_TEMP_VAR_NAME_PREFIX + nextVar++;
 	}
 }

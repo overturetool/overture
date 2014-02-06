@@ -13,6 +13,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
+import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
 import org.overture.codegen.analysis.violations.TypenameComparison;
@@ -61,6 +62,8 @@ public class JavaCodeGen
 		//Classes used from the Java standard library
 		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
 	};
+	
+	public static final String GENERATED_TEMP_VAR_NAME_PREFIX = "temp_";
 	
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
@@ -276,9 +279,10 @@ public class JavaCodeGen
 	{
 		Set<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
 		Set<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
+		Set<Violation> tempVarViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(new String[]{GENERATED_TEMP_VAR_NAME_PREFIX}));
 		
-		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty())
-			throw new InvalidNamesException("The model either uses words that are reserved by Java or declares VDM types that uses Java type names", reservedWordViolations, typenameViolations);
+		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty() || !tempVarViolations.isEmpty())
+			throw new InvalidNamesException("The model either uses words that are reserved by Java, declares VDM types that uses Java type names or uses variable names that potentially conflicts with code generated temporary variable names", reservedWordViolations, typenameViolations, tempVarViolations);
 	}
 	
 	private static void validateVdmModelingConstructs(List<? extends INode> mergedParseLists) throws AnalysisException, UnsupportedModelingException
