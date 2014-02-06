@@ -240,20 +240,6 @@ public class JavaFormat
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
-	//TODO: Possible repeat
-	public String formatElementType(AElemsUnaryExpCG exp) throws AnalysisException
-	{
-		PTypeCG type = exp.getType();
-		
-		if(type instanceof ASetSetTypeCG)
-		{
-			ASetSetTypeCG seqType = (ASetSetTypeCG) type;
-			return formatTemplateParam(seqType.getSetOf());
-		}
-		
-		throw new AnalysisException("Type was not a sequence type!");
-	}
-	
 	public String generateCloneMethod(ARecordDeclCG record) throws AnalysisException
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
