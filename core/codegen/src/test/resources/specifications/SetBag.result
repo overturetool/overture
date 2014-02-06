@@ -1,0 +1,180 @@
+import utils.*;
+
+import java.util.*;
+
+
+public class Bag {
+    private VDMSet numbers;
+
+    public Bag(VDMSet pNumbers) {
+        numbers = pNumbers.clone();
+
+        return;
+    }
+
+    public static void Test() {
+        Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
+        Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));
+        IO.println(
+            "Creating two bags, bag1 and bag2 wih numbers {1 2 3} and {3 4 5}, respectively.\n");
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.println("Printing content of bag2");
+        bag2.printBag();
+        IO.println("\n");
+        IO.printf("bag1 has number 2: %s\n", SeqUtil.seq(bag1.hasNumber(2L)));
+        IO.printf("bag1 has number 4: %s\n", SeqUtil.seq(bag1.hasNumber(4L)));
+        IO.printf("bag1 has NOT number 2: %s\n",
+            SeqUtil.seq(bag1.hasNotNumber(2L)));
+        IO.printf("bag1 has NOT number 4: %s\n",
+            SeqUtil.seq(bag1.hasNotNumber(4L)));
+        IO.print("\n");
+        IO.print("Adding content of bag2 to bag1..\n");
+        bag1.addNumbers(bag2);
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.print("Adding '6' to bag1");
+        bag1.addNumbers(new Bag(SetUtil.set(6L)));
+        IO.print("\n");
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.print("Setting bag1 to have the numbers shared with bag 2\n");
+        bag1.setSharedNumbers(bag2);
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.print("Removing number '4' from bag1");
+        bag1.removeNumbers(new Bag(SetUtil.set(4L)));
+        IO.print("\n");
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.printf("bag2 contains bag1: %s\n", SeqUtil.seq(bag2.contains(bag1)));
+        IO.printf("bag1 contains bag2: %s\n", SeqUtil.seq(bag1.contains(bag2)));
+        IO.print("\n");
+        IO.printf("bag2 \"proper\" contains a bag with elements {3 4 5}: %s\n",
+            SeqUtil.seq(bag2.properContains(new Bag(SetUtil.set(3L, 4L, 5L)))));
+        IO.printf("bag2 \"proper\" contains bag1: %s\n",
+            SeqUtil.seq(bag2.properContains(bag1)));
+        IO.print("\n");
+        IO.printf("bag1 equals bag2: %s\n", SeqUtil.seq(bag1.eq(bag2)));
+        IO.printf("bag1 equals a bag containing elements {3 5}: %s\n",
+            SeqUtil.seq(bag1.eq(new Bag(SetUtil.set(3L, 5L)))));
+        IO.printf("bag1 NOT equals bag2: %s\n", SeqUtil.seq(bag1.neq(bag2)));
+        IO.printf("bag1 NOT equals a bag containing elements {3 5}: %s\n",
+            SeqUtil.seq(bag1.neq(new Bag(SetUtil.set(3L, 5L)))));
+        IO.print("\n");
+        IO.printf("Size of bag1: %s\n", SeqUtil.seq(bag1.size()));
+        IO.print("\n");
+        IO.println(
+            "Adding numbers '4' and '6' to bag1 using distributed union..");
+        bag1.addNumbersDist(new Bag(SetUtil.set(4L)), new Bag(SetUtil.set(6L)));
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.println(
+            "Setting bag1 to have numbers shared with {4 5} and then {5} using disributed intersection...");
+        bag1.setSharedNumbersDist(new Bag(SetUtil.set(4L, 5L)),
+            new Bag(SetUtil.set(5L)));
+        IO.println("Printing content of bag1");
+        bag1.printBag();
+        IO.println("\n");
+        IO.print("Printing power bags of bag2..\n");
+
+        Iterator temp_1 = bag2.powerBag().iterator();
+
+        while (temp_1.hasNext()) {
+            Bag b = (Bag) temp_1.next();
+            b.printBag();
+            IO.print("\n");
+        }
+    }
+
+    public void printBag() {
+        IO.print("{");
+
+        if (numbers.size() == 0L) {
+            IO.print(" ");
+        } else {
+            Iterator temp_2 = numbers.iterator();
+
+            while (temp_2.hasNext()) {
+                Number e = (Number) temp_2.next();
+                IO.printf(" %s ", SeqUtil.seq(e));
+            }
+        }
+
+        IO.print("}");
+    }
+
+    public VDMSet getNumbers() {
+        return numbers.clone();
+    }
+
+    public boolean hasNumber(Number n) {
+        return numbers.contains(n);
+    }
+
+    public boolean hasNotNumber(Number n) {
+        return !(numbers.contains(n));
+    }
+
+    public void addNumbers(Bag bag) {
+        numbers = SetUtil.union(numbers.clone(), bag.getNumbers());
+    }
+
+    public void setSharedNumbers(Bag bag) {
+        numbers = SetUtil.intersect(numbers.clone(), bag.getNumbers());
+    }
+
+    public void removeNumbers(Bag bag) {
+        numbers = SetUtil.diff(numbers.clone(), bag.getNumbers());
+    }
+
+    public boolean contains(Bag bag) {
+        return numbers.containsAll(bag.getNumbers());
+    }
+
+    public boolean properContains(Bag bag) {
+        return SetUtil.psubset(bag.getNumbers(), numbers);
+    }
+
+    public boolean eq(Bag bag) {
+        return SetUtil.equals(numbers, bag.getNumbers());
+    }
+
+    public boolean neq(Bag bag) {
+        return !(SetUtil.equals(numbers, bag.getNumbers()));
+    }
+
+    public Number size() {
+        return numbers.size();
+    }
+
+    public void addNumbersDist(Bag bag1, Bag bag2) {
+        numbers = SetUtil.dunion(SetUtil.set(numbers.clone(),
+                    bag1.getNumbers(), bag2.getNumbers()));
+    }
+
+    public void setSharedNumbersDist(Bag bag1, Bag bag2) {
+        numbers = SetUtil.dinter(SetUtil.set(numbers.clone(),
+                    bag1.getNumbers(), bag2.getNumbers()));
+    }
+
+    public VDMSet powerBag() {
+        VDMSet powerSets = SetUtil.powerset(numbers.clone());
+        VDMSet bags = SetUtil.set();
+        Iterator temp_3 = powerSets.iterator();
+
+        while (temp_3.hasNext()) {
+            VDMSet s = (VDMSet) temp_3.next();
+            bags = SetUtil.union(bags.clone(), SetUtil.set(new Bag(s.clone())));
+        }
+
+        return bags.clone();
+    }
+}
+##########
