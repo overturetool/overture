@@ -25,9 +25,7 @@
 		<!-- release -->
 		<!--prob.cli.zip>ProB.windows.zip</prob.cli.zip-->
 		
-		<!-- tmp fix the two properties below must be deleted-->
-		<prob.cli.url>https://dl.dropboxusercontent.com/u/2377527</prob.cli.url>
-		<prob.cli.zip>probcli.zip</prob.cli.zip>
+		<prob.cli.zip>probcli_win32.zip</prob.cli.zip>
 	</properties>
 
 	<build>
