@@ -4,8 +4,10 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
+import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -53,6 +55,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.utils.AnalysisExceptionCG;
 
 
 public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
@@ -165,6 +168,24 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			throws AnalysisException
 	{
 		PExp exp = node.getExpression();
+
+		AExplicitOperationDefinition operation = node.getAncestor(AExplicitOperationDefinition.class);
+		
+		if(operation != null && operation.getIsConstructor())
+		{
+			if(exp instanceof ASelfExp)
+			{
+				//The expression of the return statement points to 'null' since the OO AST
+				//does not allow constructors to return references to explicitly
+				//created types. Simply 'returning' in a constructor means returning
+				//a reference for the object currently being created.
+				return new AReturnStmCG();
+			}
+			else
+			{
+				throw new AnalysisExceptionCG("Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.", operation.getLocation());
+			}
+		}
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		
