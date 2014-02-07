@@ -1,3 +1,5 @@
+import java.util.Set;
+
 
 public class MapUtil
 {
@@ -10,24 +12,44 @@ public class MapUtil
 	{
 		if(elements == null)
 			throw new IllegalArgumentException("Cannot instantiate map from null");
-		
-		return putAll(map(), elements);
-	}
-	
-	public static VDMMap putAll(VDMMap to, Maplet... from)
-	{
-		if(to == null || from == null)
-			throw new IllegalArgumentException("Arguments to putAll cannot be null");
 
-		for (Maplet maplet : from)
+		VDMMap map = map();
+		
+		if(elements.length == 0)
 		{
-			Object left = maplet.getLeft();
-			Object right = maplet.getRight();
-			
-			to.put(left ,right);
+			return map;
+		}
+		else
+		{
+			Maplet firstElement = elements[0];
+			map.put(firstElement.getLeft(), firstElement.getRight());
 		}
 		
-		return to;
+		for (int i = 1; i < elements.length; i++)
+		{
+			Maplet maplet = elements[i];
+			
+			Object mapletKey = maplet.getLeft();
+			Object mapletValue = maplet.getRight();
+
+			if(map.containsKey(mapletKey))
+			{
+				Object mapValue = map.get(mapletKey);
+				
+				if (differentValues(mapletValue, mapValue))
+					throw new IllegalArgumentException("Duplicate keys that have different values are not allowed");
+			}
+			
+			map.put(mapletKey ,mapletValue);
+		}
+		
+		return map;
+	}
+	
+	private static boolean differentValues(Object leftVal, Object rightVal)
+	{
+		return (leftVal == null && rightVal != null)
+				|| (leftVal != null && !leftVal.equals(rightVal));
 	}
 	
 	public static VDMSet dom(VDMMap map)
@@ -56,6 +78,34 @@ public class MapUtil
 	{
 		if(left == null || right == null)
 			throw new IllegalArgumentException("Cannot munion null");
+		
+		VDMMap result = map();
+		
+		result.putAll(left);
+		
+		Set rightKeys = right.keySet();
+
+		for(Object rightKey : rightKeys)
+		{
+			if(left.containsKey(rightKey))
+			{
+				Object leftVal = left.get(rightKey);
+				Object rightVal = right.get(rightKey);
+				
+				if(differentValues(leftVal, rightVal))
+					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
+
+				result.put(rightKey, rightVal);		
+			}
+		}
+		
+		return result;
+	}
+	
+	public static VDMMap override(VDMMap left, VDMMap right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("Cannot override null");
 		
 		VDMMap result = map();
 		
