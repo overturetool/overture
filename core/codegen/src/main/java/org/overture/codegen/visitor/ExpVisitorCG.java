@@ -85,6 +85,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -114,6 +115,7 @@ import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapOverrideBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
@@ -499,7 +501,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return expAssistant.handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
+		PType leftType = node.getLeft().getType();
+		
+		if(leftType instanceof SSeqType)
+			return expAssistant.handleBinaryExp(node, new ASeqModificationBinaryExpCG(), question);
+		else if(leftType instanceof SMapType)
+			return expAssistant.handleBinaryExp(node, new AMapOverrideBinaryExpCG(), question);
+					
+		throw new AnalysisExceptionCG("Expected sequence or map type for '++' binary expression but got: " + leftType, node.getLocation());			
 	}
 	
 	@Override

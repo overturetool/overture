@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapOverrideBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
@@ -333,6 +334,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASetProperSubsetBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetProperSubset");
 		
 		nodeTemplateFileNames.put(AMapUnionBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "MapUnion");
+		
+		nodeTemplateFileNames.put(AMapOverrideBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "MapOverride");
 		
 		// Numeric binary expressions
 
