@@ -1,7 +1,7 @@
 
 import java.util.*;
 
-public class VDMSet extends HashSet implements ValueType, VDMCollection
+public class VDMSet extends HashSet implements ValueType
 {
 	public VDMSet clone()
 	{
