@@ -37,4 +37,12 @@ public class MapUtil
 			
 		return set;
 	}
+	
+	public static VDMSet rng(VDMMap map)
+	{
+		VDMSet set = SetUtil.set();
+		set.addAll(map.values());
+		
+		return set;
+	}
 }
