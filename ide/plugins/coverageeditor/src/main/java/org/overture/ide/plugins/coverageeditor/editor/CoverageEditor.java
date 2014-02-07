@@ -177,16 +177,6 @@ public abstract class CoverageEditor
 		Color red = new Color(display, 252, 114, 114);// display.getSystemColor(SWT.COLOR_RED);
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
 
-		// getSourceViewer().getTextWidget().addLineStyleListener(new LineStyleListener()
-		// {
-		//
-		// public void lineGetStyle(LineStyleEvent event)
-		// {
-		// event.styles = styleRanges.toArray(new StyleRange[0]);
-		//
-		// }
-		// });
-
 		LexLocation.resetLocations();
 		LexLocation.clearLocations();
 		Properties.parser_tabstop = 1;
@@ -222,7 +212,6 @@ public abstract class CoverageEditor
 			case CML:
 				break;
 		}
-		// SourceLocationConverter converter = new SourceLocationConverter(content);
 
 		BufferedReader br;
 		if (selectedFile != null)
@@ -235,12 +224,13 @@ public abstract class CoverageEditor
 				{
 					if (l.hits == 0)
 					{
-						int start = l.getStartOffset();// converter.getStartPos(l);
-						int end = l.getEndOffset();// converter.getEndPos(l);
+						int start = l.getStartOffset();
+						int end = l.getEndOffset();
 						if (start < content.length() && start < end
 								&& end < content.length())
 						{
-							styleRanges.add(new StyleRange(start, end - start, black, red));
+							styleRanges.add(new StyleRange(start - 1, end
+									- start, black, red));
 						}
 					}
 
@@ -276,12 +266,12 @@ public abstract class CoverageEditor
 							{
 								l.hits += hits;
 
-								int start = l.getStartOffset();//converter.getStartPos(l);
-								int end = l.getEndOffset();//converter.getEndPos(l);
+								int start = l.getStartOffset();// converter.getStartPos(l);
+								int end = l.getEndOffset();// converter.getEndPos(l);
 								if (start < content.length() && start < end
 										&& end < content.length())
 								{
-									styleRanges.add(new StyleRange(start, end
+									styleRanges.add(new StyleRange(start - 1, end
 											- start, black, green));
 								}
 
@@ -397,13 +387,4 @@ public abstract class CoverageEditor
 		return sb.toString();
 	}
 
-	// public void setInitDocument(IDocumentProvider documentProvider, IEditorInput input)
-	// {
-	// IDocument document= documentProvider.getDocument(input);
-	// if(document instanceof VdmDocument)
-	// {
-	// IFile res = ((FileEditorInput) input).getFile();
-	// ((VdmDocument)document).setSourceUnit(new CoverageSourceUnit(project, res));
-	// }
-	// }
 }

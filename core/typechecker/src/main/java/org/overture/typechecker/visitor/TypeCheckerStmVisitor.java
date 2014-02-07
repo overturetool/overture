@@ -15,6 +15,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -85,8 +86,6 @@ import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
@@ -890,12 +889,31 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAReturnStm(AReturnStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		PDefinition encl = question.env.getEnclosingDefinition();
+		boolean inConstructor = false;
+		
+		if (encl instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition) encl;
+			inConstructor = op.getIsConstructor();
+		}
+		else if (encl instanceof AImplicitOperationDefinition)
+		{
+			AImplicitOperationDefinition op = (AImplicitOperationDefinition) encl;
+			inConstructor = op.getIsConstructor();
+		}
+		
+		if (inConstructor && !(node.getExpression() instanceof ASelfExp))
+		{
+			TypeCheckerErrors.report(3326, "Constructor can only return 'self'", node.getLocation(), node);
+		}
 
 		if (node.getExpression() == null)
 		{
 			node.setType(AstFactory.newAVoidReturnType(node.getLocation()));
 			return node.getType();
-		} else
+		}
+		else
 		{
 			node.setType(node.getExpression().apply(THIS, question));
 			return node.getType();

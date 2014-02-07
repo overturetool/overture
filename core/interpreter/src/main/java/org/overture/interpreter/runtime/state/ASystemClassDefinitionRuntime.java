@@ -1,15 +1,16 @@
 package org.overture.interpreter.runtime.state;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 
 
 public class ASystemClassDefinitionRuntime extends SClassDefinitionRuntime
 {
-	public ASystemClassDefinitionRuntime(ASystemClassDefinition def)
+	public ASystemClassDefinitionRuntime(IInterpreterAssistantFactory assistantFactory,ASystemClassDefinition def)
 	{
-		super(def);
+		super(assistantFactory,def);
 	}
 
 	public static ObjectValue system = null;

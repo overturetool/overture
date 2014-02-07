@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.NewClassTestCase">
 <message column="8" line="18" message="Operation returns unexpected type" messageType="error" number="3027" resource="constructor-06.vpp.result"/>
+<message column="3" line="21" message="Constructor can only return 'self'" messageType="error" number="3326" resource="constructor-06.vpp.result"/>
 <result/>
 </testResult>

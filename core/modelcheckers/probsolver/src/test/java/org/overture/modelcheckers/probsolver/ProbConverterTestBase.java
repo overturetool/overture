@@ -48,7 +48,7 @@ public class ProbConverterTestBase
 			AImplicitOperationDefinition opDef = findOperation(name);
 
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
-		PStm stm=	ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
+		PStm stm=	ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, new SolverConsole());
 		
 		System.out.println("Result="+stm);
 

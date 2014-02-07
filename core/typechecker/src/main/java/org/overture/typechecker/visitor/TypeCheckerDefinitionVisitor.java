@@ -242,12 +242,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		
 		if (node.getTypeParams() != null)
 		{
-			defs.addAll(AExplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node));
+			defs.addAll(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node));
 		}
 
-		PType expectedResult = AExplicitFunctionDefinitionAssistantTC.checkParams(node, node.getParamPatternList().listIterator(), (AFunctionType) node.getType());
+		PType expectedResult = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().checkParams(node, node.getParamPatternList().listIterator(), (AFunctionType) node.getType());
 		node.setExpectedResult(expectedResult);
-		List<List<PDefinition>> paramDefinitionList = AExplicitFunctionDefinitionAssistantTC.getParamDefinitions(node, (AFunctionType) node.getType(), node.getParamPatternList(), node.getLocation());
+		List<List<PDefinition>> paramDefinitionList = question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getParamDefinitions(node, (AFunctionType) node.getType(), node.getParamPatternList(), node.getLocation());
 
 		Collections.reverse(paramDefinitionList);
 
@@ -328,7 +328,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			if (question.env.isVDMPP())
 			{
-				node.getMeasure().setTypeQualifier(AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
+				node.getMeasure().setTypeQualifier(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
 			}
 			node.setMeasureDef(question.env.findName(node.getMeasure(), question.scope));
 
@@ -364,10 +364,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 				AFunctionType mtype = (AFunctionType) efd.getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node), question.assistantFactory))
+				if (!TypeComparator.compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node), question.assistantFactory))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
-					TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", AExplicitFunctionDefinitionAssistantTC.getMeasureParams(node));
+					TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
 				}
 
 				if (!(mtype.getResult() instanceof ANatNumericBasicType))
@@ -424,7 +424,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (node.getTypeParams() != null)
 		{
-			defs.addAll(AImplicitFunctionDefinitionAssistantTC.getTypeParamDefinitions(node));
+			defs.addAll(question.assistantFactory.createAImplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node));
 		}
 
 		List<PDefinition> argdefs = new Vector<PDefinition>();
@@ -607,7 +607,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			return null;
 		}
 
-		node.setParamDefinitions(AExplicitOperationDefinitionAssistantTC.getParamDefinitions(node));
+		node.setParamDefinitions(question.assistantFactory.createAExplicitOperationDefinitionAssistant().getParamDefinitions(node));
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getParamDefinitions(), THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers));
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, node.getParamDefinitions(), question.env, NameScope.NAMESANDSTATE);

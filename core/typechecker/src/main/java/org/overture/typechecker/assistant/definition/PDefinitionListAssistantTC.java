@@ -100,7 +100,7 @@ public class PDefinitionListAssistantTC
 		return set;
 	}
 
-	public static List<PDefinition> singleDefinitions(
+	public List<PDefinition> singleDefinitions(
 			List<PDefinition> definitions)
 	{
 		List<PDefinition> all = new ArrayList<PDefinition>();

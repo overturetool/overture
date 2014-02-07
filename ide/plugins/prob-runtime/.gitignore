@@ -1,8 +1,1 @@
-*.dll
-*.sh
-*.exe
-*.bundle
-send_user_interrupt*
-Microsoft.VC80.CRT.manifest
-build_info.txt
-probcli
+prob

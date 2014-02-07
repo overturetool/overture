@@ -50,7 +50,7 @@ public class AModuleImportsAssistantTC
 		return defs;
 	}
 
-	public static void typeCheck(AModuleImports imports, ModuleEnvironment env)
+	public void typeCheck(AModuleImports imports, ModuleEnvironment env)
 			throws AnalysisException
 	{
 

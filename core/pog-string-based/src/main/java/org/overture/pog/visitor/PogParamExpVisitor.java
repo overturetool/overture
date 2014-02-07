@@ -1562,7 +1562,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		ProofObligationList obligations = new ProofObligationList();
 
 		PExp first = node.getFirst();
-		question.push(new POForAllPredicateContext(node));
+		question.push(new POForAllPredicateContext(node, question.assistantFactory));
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
@@ -1571,7 +1571,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
 		{
-			question.push(new POForAllContext(node));
+			question.push(new POForAllContext(node, question.assistantFactory));
 			obligations.addAll(predicate.apply(mainVisitor, question));
 			question.pop();
 		}

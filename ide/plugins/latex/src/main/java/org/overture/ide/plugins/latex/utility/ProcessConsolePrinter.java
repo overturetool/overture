@@ -32,14 +32,14 @@ public class ProcessConsolePrinter extends Thread
 	ConsoleWriter cw = null;
 	InputStream stream = null;
 	List<String> fails = new ArrayList<String>();
-	PdfLatex pdfLatex = null;
+	PdfGenerator generator = null;
 
 	public ProcessConsolePrinter(ConsoleWriter cw, InputStream inputStream,
-			PdfLatex pdfLatex)
+			PdfGenerator pdfLatex)
 	{
 		this.cw = cw;
 		this.stream = inputStream;
-		this.pdfLatex = pdfLatex;
+		this.generator = pdfLatex;
 	}
 
 	@Override
@@ -54,9 +54,12 @@ public class ProcessConsolePrinter extends Thread
 			{
 				detectFail(line);
 				if (cw != null)
+				{
 					cw.println(line);
-				else
+				} else
+				{
 					System.out.println(line);
+				}
 			}
 		} catch (IOException e)
 		{
@@ -75,7 +78,7 @@ public class ProcessConsolePrinter extends Thread
 		if (line.contains("Emergency stop") || line.contains("LaTeX Error"))
 		{
 			fails.add(line);
-			pdfLatex.setLatexFail(true);
+			generator.setFail(true);
 		}
 
 	}
