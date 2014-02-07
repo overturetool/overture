@@ -24,7 +24,7 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static AExplicitFunctionDefinition getInitDefinition(
+	public AExplicitFunctionDefinition getInitDefinition(
 			AStateDefinition d)
 	{
 		ILexLocation loc = d.getInitPattern().getLocation();
@@ -45,7 +45,7 @@ public class AStateDefinitionAssistantTC
 		return def;
 	}
 
-	public static AExplicitFunctionDefinition getInvDefinition(
+	public AExplicitFunctionDefinition getInvDefinition(
 			AStateDefinition d)
 	{
 

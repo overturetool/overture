@@ -84,7 +84,7 @@ public class BooleanValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to,ABooleanBasicType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,ABooleanBasicType.class))
 		{
 			return this;
 		}

@@ -42,6 +42,6 @@ Verlag, March 1996.
 #PRE_CHECKS=true
 #DYNAMIC_TYPE_CHECKS=true
 #SUPPRESS_WARNINGS=false
-#ENTRY_POINT=DEFAULT`Occurs("peter87topsecrethere next", "topsecret")
+#ENTRY_POINT=DEFAULT`Occurs("topsecret","peter87topsecrethere next")
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #******************************************************

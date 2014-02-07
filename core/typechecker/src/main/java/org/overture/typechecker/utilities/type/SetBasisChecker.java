@@ -50,7 +50,8 @@ public class SetBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getSet(type) != null;
+		//return af.createAUnionTypeAssistant().getSet(type) != null;
+		return type.apply(af.getSetTypeFinder()) != null;
 	}
 
 	@Override

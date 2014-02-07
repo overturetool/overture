@@ -33,8 +33,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
  * Define the type checking environment for a modular specification.
@@ -74,14 +72,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionListAssistantTC.findName(module.getDefs(), name, scope);
+		PDefinition def = af.createPDefinitionListAssistant().findName(module.getDefs(), name, scope);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = PDefinitionListAssistantTC.findName(module.getImportdefs(), name, scope);
+		def = af.createPDefinitionListAssistant().findName(module.getImportdefs(), name, scope);
 
 		if (def != null)
 		{
@@ -94,14 +92,14 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistantTC.findType(module.getDefs(), name, module.getName().getName());
+		PDefinition def = af.createPDefinitionAssistant().findType(module.getDefs(), name, module.getName().getName());
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		def = PDefinitionAssistantTC.findType(module.getImportdefs(), name, module.getName().getName());
+		def = af.createPDefinitionAssistant().findType(module.getImportdefs(), name, module.getName().getName());
 
 		if (def != null)
 		{
@@ -130,7 +128,7 @@ public class ModuleEnvironment extends Environment
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = PDefinitionListAssistantTC.findStateDefinition(module.getDefs());
+		AStateDefinition def = af.createPDefinitionListAssistant().findStateDefinition(module.getDefs());
 
 		if (def != null)
 		{

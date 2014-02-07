@@ -124,7 +124,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		LexNameList names = new LexNameList();
 		// TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
 		DefinitionTypeFinder.checkSuperDefinition(node);
-
+		
 
 		for (ILexNameToken vn : node.getSuperdef().apply(THIS))
 		{

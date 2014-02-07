@@ -24,7 +24,6 @@
 package org.overture.pog.obligation;
 
 import org.overture.ast.expressions.ACompBinaryExp;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class FuncComposeObligation extends ProofObligation
 {
@@ -40,7 +39,7 @@ public class FuncComposeObligation extends ProofObligation
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("forall arg:");
-		sb.append(PTypeAssistantTC.getFunction(exp.getLeft().getType()).getParameters().get(0));
+		sb.append(ctxt.assistantFactory.createPTypeAssistant().getFunction(exp.getLeft().getType()).getParameters().get(0));
 		sb.append(" & ");
 
 		if (pref2 == null || !pref2.equals(""))

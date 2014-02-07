@@ -10,9 +10,6 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
@@ -28,23 +25,23 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		question.assistantFactory.createPPatternListAssistant().typeResolve(node.getPlist(), THIS, question);
 		question.qualifiers = null;
 		PType type = node.getSet().apply(THIS, question);
 		PType result = AstFactory.newAUnknownType(node.getLocation());
 
-		if (!PTypeAssistantTC.isSet(type))
+		if (!question.assistantFactory.createPTypeAssistant().isSet(type))
 		{
 			TypeCheckerErrors.report(3197, "Expression matching set bind is not a set", node.getSet().getLocation(), node.getSet());
 			TypeCheckerErrors.detail("Actual type", type);
 		} else
 		{
-			ASetType st = PTypeAssistantTC.getSet(type);
+			ASetType st = question.assistantFactory.createPTypeAssistant().getSet(type);
 
 			if (!st.getEmpty())
 			{
 				result = st.getSetof();
-				PType ptype = PMultipleBindAssistantTC.getPossibleType(node);
+				PType ptype = question.assistantFactory.createPMultipleBindAssistant().getPossibleType(node);
 
 				if (!TypeComparator.compatible(ptype, result))
 				{
@@ -65,9 +62,9 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 
-		PPatternListAssistantTC.typeResolve(node.getPlist(), THIS, question);
+		question.assistantFactory.createPPatternListAssistant().typeResolve(node.getPlist(), THIS, question);
 		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
-		PType ptype = PPatternListAssistantTC.getPossibleType(node.getPlist(), node.getLocation());
+		PType ptype = question.assistantFactory.createPPatternListAssistant().getPossibleType(node.getPlist(), node.getLocation());
 
 		if (!TypeComparator.compatible(ptype, type))
 		{

@@ -44,10 +44,13 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -58,6 +61,8 @@ public class Delegate implements Serializable
 	private static final long serialVersionUID = 1L;
 	private final String name;
 	private List<PDefinition> definitions;
+	
+	
 
 	public Delegate(String name, List<PDefinition> definitions)
 	{
@@ -70,7 +75,7 @@ public class Delegate implements Serializable
 	private Map<String, Method> delegateMethods = null;
 	private Map<String, LexNameList> delegateArgs = null;
 
-	public boolean hasDelegate()
+	public boolean hasDelegate(ITypeCheckerAssistantFactory assistantFactory)
 	{
 		if (!delegateChecked)
 		{
@@ -82,7 +87,7 @@ public class Delegate implements Serializable
 				delegateClass = this.getClass().getClassLoader().loadClass(classname);
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
-				definitions = PDefinitionListAssistantTC.singleDefinitions(definitions);
+				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -115,8 +120,8 @@ public class Delegate implements Serializable
 				"Cannot access native object: " + e.getMessage());
 		}
 	}
-
-	private Method getDelegateMethod(String title)
+	//gkanos:added parameters to pass the context as argument.
+	private Method getDelegateMethod(String title, Context ctxt)
 	{
 		Method m = delegateMethods.get(title);
 
@@ -133,7 +138,7 @@ public class Delegate implements Serializable
 			{
 				if (d.getName().getName().equals(mname))
 				{
-    	 			if (PDefinitionAssistantTC.isOperation(d))
+    	 			if (ctxt.assistantFactory.createPDefinitionAssistant().isOperation(d))
     	 			{
     	 				if (d instanceof AExplicitOperationDefinition)
     	 				{
@@ -143,12 +148,12 @@ public class Delegate implements Serializable
     	 				else if (d instanceof AImplicitOperationDefinition)
     	 				{
     	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
-    	 					plist = AImplicitOperationDefinitionAssistantTC.getParamPatternList(e);
+    	 					plist = ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(e);
     	 				}
 
     	 				break;
     	 			}
-    	 			else if (PDefinitionAssistantTC.isFunction(d))
+    	 			else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
     	 			{
     	 				if (d instanceof AExplicitFunctionDefinition)
     	 				{
@@ -158,7 +163,7 @@ public class Delegate implements Serializable
     	 				else if (d instanceof AImplicitFunctionDefinition)
     	 				{
     	 					AImplicitFunctionDefinition e = (AImplicitFunctionDefinition)d;
-    	 					plist = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(e).get(0);
+    	 					plist = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(e).get(0);
     	 				}
 
     	 				break;
@@ -223,7 +228,7 @@ public class Delegate implements Serializable
 
 	public Value invokeDelegate(Object delegateObject, Context ctxt)
 	{
-		Method m = getDelegateMethod(ctxt.title);
+		Method m = getDelegateMethod(ctxt.title, ctxt);
 
 		if ((m.getModifiers() & Modifier.STATIC) == 0 &&
 			delegateObject == null)

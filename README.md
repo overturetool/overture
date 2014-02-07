@@ -1,4 +1,5 @@
-# The Overture Tool
+# The Overture Tool [![Build Status](https://travis-ci.org/overturetool/overture.png?branch=release)](https://travis-ci.org/overturetool/overture)
+
 
 ## General Information
 

@@ -8,16 +8,25 @@
 
 	<includeBaseDirectory>false</includeBaseDirectory>
 	
-	<!-- Include all dependencies except all overture ones-->
+	<!-- Include all dependencies except all overture ones and logback-->
 	<dependencySets>
 		<dependencySet>
 			<excludes>
 				<exclude>org.overture.core*:*</exclude>
+				<exclude>ch.qos.logback:logback-classic</exclude>
+				<exclude>ch.qos.logback:logback-core</exclude>
 			</excludes>
 			<outputDirectory>/</outputDirectory>
 			<useProjectArtifact>true</useProjectArtifact>
 			<unpack>true</unpack>
 			<scope>runtime</scope>
+			
+			 <unpackOptions>
+             <excludes>
+              <exclude>production.xml</exclude>
+              <exclude>logback.xml</exclude>
+            </excludes>
+            </unpackOptions>
 		</dependencySet>
 	</dependencySets>
 
@@ -26,6 +35,8 @@
 		<fileSet>
 			<includes>
 				<include>**/*.class</include>
+				<!-- include>**/*.properties</include-->
+				<!-- include>**/*.xml</include-->
 			</includes>
 			<directory>target/classes</directory>
 			<outputDirectory>/</outputDirectory>

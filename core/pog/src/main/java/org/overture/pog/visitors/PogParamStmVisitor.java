@@ -128,9 +128,9 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			obligations.addAll(node.getTarget().apply(rootVisitor, question));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType()))
+			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question);
+				SubTypeObligation sto = SubTypeObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -588,7 +588,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			for (PDefinition localDef : node.getLocalDefs())
 			{
 				// PDefinitionAssistantTC.get
-				question.push(new PONameContext(PDefinitionAssistantTC.getVariableNames(localDef)));
+				question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(localDef)));
 				obligations.addAll(localDef.apply(rootVisitor, question));
 				question.pop();
 			}

@@ -55,7 +55,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			sb.append(func.getPredef().getName().getName());
 			sb.append("(");
 			separator = "";
-			appendParamPatterns(sb, func.getParamPatterns());
+			appendParamPatterns(sb, func.getParamPatterns(),ctxt);
 			sb.append(")");
 			sb.append(" => ");
 		}
@@ -66,7 +66,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		sb.append(func.getPostdef().getName().getName());
 		sb.append("(");
 		separator = "";
-		appendParamPatterns(sb, func.getParamPatterns());
+		appendParamPatterns(sb, func.getParamPatterns(), ctxt);
 		sb.append(separator);
 		sb.append(func.getResult().getPattern());
 		sb.append(")");
@@ -85,7 +85,7 @@ public class SatisfiabilityObligation extends ProofObligation
 			sb.append(op.getPredef().getName().getName());
 			sb.append("(");
 			separator = "";
-			appendParamPatterns(sb, op.getParameterPatterns());
+			appendParamPatterns(sb, op.getParameterPatterns(), ctxt);
 			appendStatePatterns(sb, stateDefinition, true, false);
 			sb.append(")");
 			sb.append(" =>\n");
@@ -103,7 +103,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		sb.append(op.getPostdef().getName().getName());
 		sb.append("(");
 		separator = "";
-		appendParamPatterns(sb, op.getParameterPatterns());
+		appendParamPatterns(sb, op.getParameterPatterns(), ctxt);
 		appendResultPattern(sb, op.getResult());
 		appendStatePatterns(sb, stateDefinition, true, false);
 		appendStatePatterns(sb, stateDefinition, false, false);
@@ -180,11 +180,11 @@ public class SatisfiabilityObligation extends ProofObligation
 	}
 
 	private void appendParamPatterns(StringBuilder sb,
-			List<APatternListTypePair> params)
+			List<APatternListTypePair> params, POContextStack ctxt)
 	{
 		for (APatternListTypePair pltp : params)
 		{
-			List<PExp> expList = PPatternListAssistantTC.getMatchingExpressionList(pltp.getPatterns());
+			List<PExp> expList = ctxt.assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pltp.getPatterns());
 			sb.append(separator);
 			sb.append(Utils.listToString(expList));
 			separator = ", ";

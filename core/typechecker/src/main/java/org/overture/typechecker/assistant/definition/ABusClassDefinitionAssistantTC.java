@@ -24,7 +24,7 @@ public class ABusClassDefinitionAssistantTC
 			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
 			+ "	BUS(policy, speed, cpus) == is not yet specified;";
 
-	public static List<PDefinition> operationDefs() throws ParserException,
+	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);

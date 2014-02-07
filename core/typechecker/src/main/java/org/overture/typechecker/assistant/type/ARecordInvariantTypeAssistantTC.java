@@ -14,7 +14,7 @@ public class ARecordInvariantTypeAssistantTC
 		this.af = af;
 	}
 
-	public static AFieldField findField(ARecordInvariantType rec, String tag)
+	public AFieldField findField(ARecordInvariantType rec, String tag)
 	{
 		for (AFieldField f : rec.getFields())
 		{

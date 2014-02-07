@@ -34,8 +34,8 @@ public class AMapPatternMapletAssistantInterpreter extends
 			return true;
 		}
 
-		return PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom()))
-				|| PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo()));
+		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
+				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
 	}
 
 	public static List<NameValuePairList> getAllNamedValues(

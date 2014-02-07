@@ -24,7 +24,7 @@ public class ACallStmAssistantTC
 		this.af = af;
 	}
 
-	public static List<PType> getArgTypes(LinkedList<PExp> args,
+	public List<PType> getArgTypes(LinkedList<PExp> args,
 			QuestionAnswerAdaptor<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -38,7 +38,7 @@ public class ACallStmAssistantTC
 		return types;
 	}
 
-	public static void checkArgTypes(ACallStm node, PType type,
+	public void checkArgTypes(ACallStm node, PType type,
 			List<PType> ptypes, List<PType> atypes)
 	{
 		if (ptypes.size() != atypes.size())
