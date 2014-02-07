@@ -93,7 +93,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		List<PExp> params = new LinkedList<PExp>();
 
 		
-		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
+		for (List<PPattern> pl : assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
 			params.addAll(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl));
 		}

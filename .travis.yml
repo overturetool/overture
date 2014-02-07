@@ -1,0 +1,17 @@
+# This file is in YAML syntax (see http://www.yaml.org)
+#
+# The syntax is INDENTATION-SENSITIVE.  Mess it up at your peril!
+#
+language: java
+jdk:
+  - oraclejdk7
+before_install:
+  - echo "This may take a short while; it is downloading many of the maven plugins and their dependencies, but quietly to hide the downloads from the log."
+  - mvn -B -q dependency:resolve-plugins -PWith-IDE -Dtycho.mode=maven
+install:
+  - mvn -B -q install -PWith-IDE -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
+after_install:
+  - mvn -B -q -PWith-IDE -Dtycho.mode=maven clean
+script: 
+  - mvn -B install
+  - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms

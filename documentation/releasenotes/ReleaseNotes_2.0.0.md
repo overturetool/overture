@@ -24,7 +24,7 @@ https://sourceforge.net/projects/overture/files/Overture_IDE/2.0.0/.
 
 Documentation, including download instructions, tutorials and a
 language manual, are bundled in the download package, and are also
-available from the [Overture website](http://www.overturetool.com/).
+available from the [Overture website](http://www.overturetool.org/).
 
 
 Installing

@@ -37,7 +37,7 @@ public class AModuleModulesAssistantTC
 		}
 	}
 
-	public static void processImports(AModuleModules m,
+	public void processImports(AModuleModules m,
 			List<AModuleModules> allModules)
 	{
 
@@ -79,12 +79,12 @@ public class AModuleModulesAssistantTC
 		return null;
 	}
 
-	public static void typeCheckImports(AModuleModules m)
+	public void typeCheckImports(AModuleModules m)
 			throws AnalysisException
 	{
 		if (m.getImports() != null)
 		{
-			AModuleImportsAssistantTC.typeCheck(m.getImports(), new ModuleEnvironment(af, m));
+			af.createAModuleImportsAssistant().typeCheck(m.getImports(), new ModuleEnvironment(af, m));
 		}
 
 	}

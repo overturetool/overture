@@ -336,8 +336,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));
 			}
-
-			question.push(new POFunctionDefinitionContext(node, false));
+			//I pass one more argument to the method POFunctionDefinitionContext to pass the assistantFactory.
+			question.push(new POFunctionDefinitionContext(node, false, assistantFactory));
 
 			if (node.getPrecondition() != null)
 			{
@@ -521,7 +521,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (node.getPostcondition() != null)
 				{
-					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition()));
+					//passed 1 more argument to give the assistantFactory to the constructor.
+					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition(), assistantFactory));
 					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question));
 					question.pop();
 				}

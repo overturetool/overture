@@ -53,13 +53,13 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * A class for static type checking comparisons.
  */
-//I had to add to all methods an extra parameter to pass the assistantFactory gkanos
+
 public class TypeComparator
 {
 	/**
@@ -69,6 +69,8 @@ public class TypeComparator
 	
 	private static Vector<TypePair> done = new Vector<TypePair>(256);
 	
+	
+	public final static ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 	/**
 	 * A result value for comparison of types. The "Maybe" value is needed so that the fact that a type's subtypes are
 	 * being actively compared in a recursive call can be recorded. For example, if a MySetType contains references to
@@ -94,6 +96,8 @@ public class TypeComparator
 			this.b = b;
 			this.result = Result.Maybe;
 		}
+		
+		
 
 		@Override
 		public boolean equals(Object other)
@@ -130,7 +134,7 @@ public class TypeComparator
 	}
 
 	public synchronized static boolean compatible(PType to, PType from,
-			boolean paramOnly, ITypeCheckerAssistantFactory assistantFactory)
+			boolean paramOnly)
 	{
 		done.clear();
 		return searchCompatible(to, from, paramOnly) == Result.Yes;
@@ -186,6 +190,7 @@ public class TypeComparator
 	 * 
 	 * @param to
 	 * @param from
+	 * @param assistantFactory 
 	 * @return Yes or No.
 	 */
 
@@ -241,7 +246,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation(), from);
 		}
 
-		if (PTypeAssistantTC.equals(to, from))
+		if (assistantFactory.createPTypeAssistant().equals(to, from))
 		{
 			return Result.Yes; // Same object!
 		}
@@ -444,7 +449,7 @@ public class TypeComparator
 				ARecordInvariantType rf = (ARecordInvariantType) from;
 				ARecordInvariantType rt = (ARecordInvariantType) to;
 
-				return PTypeAssistantTC.equals(rf, rt) ? Result.Yes : Result.No;
+				return assistantFactory.createPTypeAssistant().equals(rf, rt) ? Result.Yes : Result.No;
 			} else if (to instanceof AClassType)
 			{
 				if (!(from instanceof AClassType))
@@ -458,8 +463,8 @@ public class TypeComparator
 				// VDMTools doesn't seem to worry about sub/super type
 				// assignments. This was "cfrom.equals(cto)".
 
-				if (PTypeAssistantTC.hasSupertype(cfrom, cto)
-						|| PTypeAssistantTC.hasSupertype(cto, cfrom))
+				if (assistantFactory.createPTypeAssistant().hasSupertype(cfrom, cto)
+						|| assistantFactory.createPTypeAssistant().hasSupertype(cto, cfrom))
 				{
 					return Result.Yes;
 				}
@@ -484,7 +489,7 @@ public class TypeComparator
 				}
 			} else
 			{
-				return PTypeAssistantTC.equals(to, from) ? Result.Yes
+				return assistantFactory.createPTypeAssistant().equals(to, from) ? Result.Yes
 						: Result.No;
 			}
 		}
@@ -845,7 +850,7 @@ public class TypeComparator
 				ARecordInvariantType subr = (ARecordInvariantType) sub;
 				ARecordInvariantType supr = (ARecordInvariantType) sup;
 
-				return PTypeAssistantTC.equals(subr, supr) ? Result.Yes
+				return assistantFactory.createPTypeAssistant().equals(subr, supr) ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof AClassType)
 			{
@@ -863,7 +868,7 @@ public class TypeComparator
 				}
 			} else
 			{
-				return PTypeAssistantTC.equals(sub, sup) ? Result.Yes
+				return assistantFactory.createPTypeAssistant().equals(sub, sup) ? Result.Yes
 						: Result.No;
 			}
 		}

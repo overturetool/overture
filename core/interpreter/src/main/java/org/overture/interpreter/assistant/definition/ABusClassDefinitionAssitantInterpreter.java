@@ -30,7 +30,7 @@ public class ABusClassDefinitionAssitantInterpreter
 	{
 		try
 		{
-			return new BUSValue((AClassType) AstFactoryTC.newABusClassDefinition().getType(), cpus);
+			return new BUSValue((AClassType) AstFactoryTC.newABusClassDefinition(af).getType(), cpus);
 		} catch (ParserException e)
 		{
 

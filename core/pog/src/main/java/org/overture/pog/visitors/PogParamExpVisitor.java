@@ -1678,7 +1678,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp first = node.getFirst();
-		question.push(new POForAllPredicateContext(node));
+		question.push(new POForAllPredicateContext(node, assistantFactory));
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
@@ -1687,7 +1687,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
 		{
-			question.push(new POForAllContext(node));
+			question.push(new POForAllContext(node,assistantFactory));
 			obligations.addAll(predicate.apply(mainVisitor, question));
 			question.pop();
 		}

@@ -41,6 +41,8 @@ import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /**
  * The main class of the VDMJ parser/checker/interpreter.
@@ -56,7 +58,15 @@ abstract public class VDMJ
 	protected static String outfile = null;
 	protected static String logfile = null;
 
+	
 	public static String filecharset = Charset.defaultCharset().name();
+
+	final protected ITypeCheckerAssistantFactory assistantFactory ;//= new TypeCheckerAssistantFactory();
+	
+	public VDMJ()
+	{
+		this.assistantFactory = new TypeCheckerAssistantFactory();
+	}
 
 	/**
 	 * The main method. This validates the arguments, then parses and type

@@ -20,9 +20,7 @@ public class ASetBindAssistantTC
 		this.af = af;
 	}
 
-	//TODO: used in the File POForAllContext. I don't know what to do.
-	//need to ask immediately.
-	public static List<PMultipleBind> getMultipleBindList(ASetBind bind)
+	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
 	{
 
 		List<PPattern> plist = new ArrayList<PPattern>();

@@ -5,6 +5,8 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class AModuleModulesRuntime implements IRuntimeState
 {
@@ -13,6 +15,8 @@ public class AModuleModulesRuntime implements IRuntimeState
 	private Delegate delegate = null;
 	/** A delegate Java object, if one exists. */
 	private Object delegateObject = null;
+	
+	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	
 	public AModuleModulesRuntime(AModuleModules node)
@@ -22,7 +26,7 @@ public class AModuleModulesRuntime implements IRuntimeState
 
 	public boolean hasDelegate()
 	{
-		if (delegate.hasDelegate())
+		if (delegate.hasDelegate(assistantFactory))
 		{
 			if (delegateObject == null)
 			{

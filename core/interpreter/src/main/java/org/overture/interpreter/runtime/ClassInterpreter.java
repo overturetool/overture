@@ -180,7 +180,7 @@ public class ClassInterpreter extends Interpreter
 
 		scheduler.init();
 		SystemClock.init();
-		CPUValue.init(scheduler);
+		CPUValue.init(scheduler, assistantFactory);
 		BUSValue.init();
 		ObjectValue.init();
 

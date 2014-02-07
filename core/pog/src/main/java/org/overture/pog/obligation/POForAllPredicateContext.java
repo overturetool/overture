@@ -33,6 +33,7 @@ import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class POForAllPredicateContext extends POForAllContext
 {
@@ -50,9 +51,9 @@ public class POForAllPredicateContext extends POForAllContext
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ASeqCompSeqExp exp)
+	public POForAllPredicateContext(ASeqCompSeqExp exp, IPogAssistantFactory assistantFactory)
 	{
-		super(exp);
+		super(exp, assistantFactory);
 		this.predicate = exp.getPredicate();
 	}
 

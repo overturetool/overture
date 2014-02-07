@@ -24,6 +24,7 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
@@ -129,12 +130,13 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(File file)
 			throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition());
-		classes.add(AstFactoryTC.newABusClassDefinition());
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
+		classes.add(AstFactoryTC.newACpuClassDefinition(af));
+		classes.add(AstFactoryTC.newABusClassDefinition(af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
 	}
 
 	public static TypeCheckResult<PExp> typeCheckExpression(String content)
@@ -147,12 +149,13 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
 			String content) throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition());
-		classes.add(AstFactoryTC.newABusClassDefinition());
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
+		classes.add(AstFactoryTC.newACpuClassDefinition(af));
+		classes.add(AstFactoryTC.newABusClassDefinition(af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
 	}
 
 	public static <P> TypeCheckResult<P> typeCheck(
