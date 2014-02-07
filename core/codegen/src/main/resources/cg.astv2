@@ -185,6 +185,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{setDifference}
     |	{setSubset}
     |	{setProperSubset}
+    |	{mapUnion}
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}

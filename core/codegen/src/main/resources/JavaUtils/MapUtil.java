@@ -32,6 +32,9 @@ public class MapUtil
 	
 	public static VDMSet dom(VDMMap map)
 	{
+		if(map == null)
+			throw new IllegalArgumentException("Map domain is undefined for null");
+		
 		VDMSet set = SetUtil.set();
 		set.addAll(map.entrySet());
 			
@@ -40,9 +43,25 @@ public class MapUtil
 	
 	public static VDMSet rng(VDMMap map)
 	{
+		if(map == null)
+			throw new IllegalArgumentException("Map range is undefined for null");
+		
 		VDMSet set = SetUtil.set();
 		set.addAll(map.values());
 		
 		return set;
+	}
+	
+	public static VDMMap munion(VDMMap left, VDMMap right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("Cannot munion null");
+		
+		VDMMap result = map();
+		
+		result.putAll(left);
+		result.putAll(right);
+		
+		return result;
 	}
 }
