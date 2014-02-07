@@ -107,7 +107,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 
     			if (cls != null)
     			{
-    				SClassDefinitionRuntime state =VdmRuntime.getNodeState(cls);
+    				SClassDefinitionRuntime state =VdmRuntime.getNodeState(ctxt.assistantFactory,cls);
     				if (state.hasDelegate())
     				{
     					return state.invokeDelegate(ctxt);

@@ -100,7 +100,6 @@ public class OperationValue extends Value
 	public final FunctionValue postcondition;
 	public final AStateDefinition state;
 	public final SClassDefinition classdef;
-	public final IInterpreterAssistantFactory assistantFactory;
 
 	private ILexNameToken stateName = null;
 	private Context stateContext = null;
@@ -136,7 +135,15 @@ public class OperationValue extends Value
 
 	public OperationValue(AExplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state, IInterpreterAssistantFactory assistantFactory)
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AExplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.expldef = def;
 		this.impldef = null;
@@ -148,8 +155,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess());
-		this.assistantFactory = assistantFactory;
+		this.isAsync = async;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -161,7 +167,15 @@ public class OperationValue extends Value
 
 	public OperationValue(AImplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state, IInterpreterAssistantFactory assistantFactory)
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AImplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.impldef = def;
 		this.expldef = null;
@@ -179,8 +193,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess());
-		this.assistantFactory = assistantFactory;
+		this.isAsync = async;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -339,14 +352,12 @@ public class OperationValue extends Value
 			{
 				Value sigma = argContext.lookup(stateName);
 				originalSigma = (Value) sigma.clone();
-			}
-			else if (self != null)
+			} else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
-			}
-			else if (classdef != null)
+			} else if (classdef != null)
 			{
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				SClassDefinitionAssistantInterpreter assistant = ctxt.assistantFactory.createSClassDefinitionAssistant();
@@ -380,8 +391,7 @@ public class OperationValue extends Value
 					ctxt.threadState.setAtomic(true);
 					ctxt.setPrepost(4071, "Precondition failure: ");
 					precondition.eval(from, preArgs, ctxt);
-				}
-				finally
+				} finally
 				{
 					ctxt.setPrepost(0, null);
 					ctxt.threadState.setAtomic(false);
@@ -430,16 +440,14 @@ public class OperationValue extends Value
 					postArgs.add(originalSigma);
 					Value sigma = argContext.lookup(stateName);
 					postArgs.add(sigma);
-				}
-				else if (self != null)
+				} else if (self != null)
 				{
 					postArgs.add(originalValues);
 					postArgs.add(self);
+				} else if (classdef != null)
+				{
+					postArgs.add(originalValues);
 				}
-    			else if (classdef != null)
-    			{
-    				postArgs.add(originalValues);
-    			}
 
 				// We disable the swapping and time (RT) as postcondition checks should be "free".
 
@@ -448,8 +456,7 @@ public class OperationValue extends Value
 					ctxt.threadState.setAtomic(true);
 					ctxt.setPrepost(4072, "Postcondition failure: ");
 					postcondition.eval(from, postArgs, ctxt);
-				}
-				finally
+				} finally
 				{
 					ctxt.setPrepost(0, null);
 					ctxt.threadState.setAtomic(false);
@@ -548,23 +555,21 @@ public class OperationValue extends Value
 	{
 		if (ctxt instanceof ClassContext)
 		{
-			ClassContext cctxt = (ClassContext)ctxt;
-			return VdmRuntime.getNodeState(cctxt.classdef).guardLock;
-		}
-		else
+			ClassContext cctxt = (ClassContext) ctxt;
+			return VdmRuntime.getNodeState(ctxt.assistantFactory, cctxt.classdef).guardLock;
+		} else
 		{
 			return self.guardLock;
 		}
 	}
-	
+
 	private Object getGuardObject(Context ctxt)
 	{
 		if (ctxt instanceof ClassContext)
 		{
-			ClassContext cctxt = (ClassContext)ctxt;
+			ClassContext cctxt = (ClassContext) ctxt;
 			return cctxt.classdef;
-		}
-		else
+		} else
 		{
 			return self;
 		}
@@ -584,7 +589,7 @@ public class OperationValue extends Value
 
 		while (true)
 		{
-			synchronized (getGuardObject(ctxt))		// So that test and act() are atomic
+			synchronized (getGuardObject(ctxt)) // So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
@@ -595,12 +600,11 @@ public class OperationValue extends Value
 				{
 					debug("guard TEST");
 					ctxt.threadState.setAtomic(true);
-					
+
 					try
 					{
 						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-					}
-					catch (AnalysisException e)
+					} catch (AnalysisException e)
 					{
 						if (e instanceof ValueException)
 						{
@@ -608,8 +612,7 @@ public class OperationValue extends Value
 						}
 						e.printStackTrace();
 					}
-				}
-				finally
+				} finally
 				{
 					ctxt.threadState.setAtomic(false);
 				}
@@ -749,10 +752,10 @@ public class OperationValue extends Value
 	{
 		if (expldef != null)
 		{
-			return new OperationValue(expldef, precondition, postcondition, state, assistantFactory);
+			return new OperationValue(expldef, precondition, postcondition, state, isAsync);
 		} else
 		{
-			return new OperationValue(impldef, precondition, postcondition, state, assistantFactory);
+			return new OperationValue(impldef, precondition, postcondition, state, isAsync);
 		}
 	}
 
