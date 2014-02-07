@@ -46,6 +46,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
@@ -298,6 +299,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ADistIntersectUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistInter");
 		
 		nodeTemplateFileNames.put(APowerSetUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "PowerSet");
+		
+		nodeTemplateFileNames.put(AMapDomainUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapDom");
 		
 		// Binary expressions
 		

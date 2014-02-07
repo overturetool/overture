@@ -1,14 +1,12 @@
-import java.util.HashMap;
-import java.util.Map;
 
 public class MapUtil
 {
-	public static Map map()
+	public static VDMMap map()
 	{
-		return new HashMap();
+		return new VDMMap();
 	}
 	
-	public static Map map(Maplet... elements)
+	public static VDMMap map(Maplet... elements)
 	{
 		if(elements == null)
 			throw new IllegalArgumentException("Cannot instantiate map from null");
@@ -16,7 +14,7 @@ public class MapUtil
 		return putAll(map(), elements);
 	}
 	
-	public static Map putAll(Map to, Maplet... from)
+	public static VDMMap putAll(VDMMap to, Maplet... from)
 	{
 		if(to == null || from == null)
 			throw new IllegalArgumentException("Arguments to putAll cannot be null");
@@ -26,21 +24,17 @@ public class MapUtil
 			Object left = maplet.getLeft();
 			Object right = maplet.getRight();
 			
-			if (left instanceof ValueType)
-			{
-				ValueType valueType = (ValueType) left;
-				left = valueType.clone();
-			}
-			
-			if(right instanceof ValueType)
-			{
-				ValueType valueType = (ValueType) right;
-				right = valueType.clone();
-			}
-			
 			to.put(left ,right);
 		}
 		
 		return to;
+	}
+	
+	public static VDMSet dom(VDMMap map)
+	{
+		VDMSet set = SetUtil.set();
+		set.addAll(map.entrySet());
+			
+		return set;
 	}
 }
