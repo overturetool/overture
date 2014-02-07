@@ -22,6 +22,9 @@ public class SeqUtil
 	
 	public static VDMSeq mod(VDMSeq seq, Maplet... maplets)
 	{
+		if(maplets == null)
+			throw new IllegalArgumentException("Cannot modify sequence from null");
+		
 		for(Maplet maplet : maplets)
 		{
 			Object left = maplet.getLeft();

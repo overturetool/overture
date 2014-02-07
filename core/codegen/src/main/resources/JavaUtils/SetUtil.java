@@ -107,6 +107,9 @@ public class SetUtil
 	
 	public static VDMSet powerset(VDMSet originalSet) {
 		
+		if(originalSet == null)
+			throw new IllegalArgumentException("Powerset is undefined for null");
+		
 		VDMSet sets = SetUtil.set();
 		
 	    if (originalSet.isEmpty()) {
@@ -128,7 +131,7 @@ public class SetUtil
 	    {
 	    	Object obj = powerSetsArray[i];
 	    	if(!(obj instanceof VDMSet))
-	    		throw new IllegalArgumentException("Power set operation is only applicable to sets. Got: " + obj);
+	    		throw new IllegalArgumentException("Powerset operation is only applicable to sets. Got: " + obj);
 	    	
 	    	VDMSet set = (VDMSet) obj;
 	    	
