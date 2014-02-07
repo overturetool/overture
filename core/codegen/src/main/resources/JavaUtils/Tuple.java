@@ -52,18 +52,18 @@ public class Tuple implements ValueType
 	}
 
 	@Override
-	public boolean equals(Object object)
+	public boolean equals(Object obj)
 	{
-		if (object == null)
+		if (obj == null)
 			return false;
 
-		if (this == object)
+		if (this == obj)
 			return true;
 
-		if (!(object instanceof Tuple))
+		if (!(obj instanceof Tuple))
 			return false;
 
-		final Tuple other = (Tuple) object;
+		final Tuple other = (Tuple) obj;
 		if (other.size() != size())
 			return false;
 
