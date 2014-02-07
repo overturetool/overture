@@ -70,6 +70,7 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
+import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -715,7 +716,9 @@ public class JavaFormat
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
 	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG || type instanceof SSeqTypeCG || type instanceof SSetTypeCG;
+		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
+				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
+				|| type instanceof SMapTypeCG;
 	}
 	
 	public String generateEqualsMethod(ARecordDeclCG record) throws AnalysisException
