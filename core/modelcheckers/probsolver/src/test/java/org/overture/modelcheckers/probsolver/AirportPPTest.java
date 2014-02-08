@@ -10,6 +10,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
@@ -20,7 +21,7 @@ public class AirportPPTest extends ProbConverterTestBase
 	{
 		super(new File("src/test/resources/classes/Airport.vdmpp".replace('/', File.separatorChar)));
 	}
-	
+
 	@Before
 	public void setup() throws BException
 	{
@@ -29,31 +30,41 @@ public class AirportPPTest extends ProbConverterTestBase
 	}
 
 	@Test
-	public void testInit() throws IOException, AnalysisException, SolverException
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
+	public void testInit() throws IOException, AnalysisException,
+			SolverException
 	{
 		testMethod("Init");
 	}
 
 	@Test
-	public void testGivePermission() throws IOException, AnalysisException, SolverException
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
+	public void testGivePermission() throws IOException, AnalysisException,
+			SolverException
 	{
 		testMethod("GivePermission");
 	}
 
 	@Test
-	public void testRecordLanding() throws IOException, AnalysisException, SolverException
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
+	public void testRecordLanding() throws IOException, AnalysisException,
+			SolverException
 	{
 		testMethod("RecordLanding");
 	}
 
 	@Test
-	public void testRecordTakeOff() throws IOException, AnalysisException, SolverException
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
+	public void testRecordTakeOff() throws IOException, AnalysisException,
+			SolverException
 	{
 		testMethod("RecordTakeOff");
 	}
 
 	@Test
-	public void testNumberWaiting() throws IOException, AnalysisException, SolverException
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
+	public void testNumberWaiting() throws IOException, AnalysisException,
+			SolverException
 	{
 		testMethod("NumberWaiting");
 	}
