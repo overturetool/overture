@@ -83,25 +83,11 @@ public class MapUtil
 		
 		result.putAll(left);
 		
-		Set rightKeys = right.keySet();
-
-		for(Object rightKey : rightKeys)
-		{
-			if(left.containsKey(rightKey))
-			{
-				Object leftVal = left.get(rightKey);
-				Object rightVal = right.get(rightKey);
-				
-				if(differentValues(leftVal, rightVal))
-					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
-
-				result.put(rightKey, rightVal);		
-			}
-		}
+		putAll(left, right);
 		
 		return result;
 	}
-	
+
 	public static VDMMap override(VDMMap left, VDMMap right)
 	{
 		if(left == null || right == null)
@@ -113,5 +99,44 @@ public class MapUtil
 		result.putAll(right);
 		
 		return result;
+	}
+	
+	public static VDMMap merge(VDMSet maps)
+	{
+		if(maps == null)
+			throw new IllegalArgumentException("Set of maps to merge cannot be null");
+		
+		VDMMap result = map();
+
+		for(Object map : maps)
+		{
+			if(!(map instanceof VDMMap))
+				throw new IllegalArgumentException("Only maps can be merged. Got: " + map);
+			
+			VDMMap vdmMap = (VDMMap) map;
+			
+			putAll(result, vdmMap);
+		}
+		
+		return result;
+	}
+	
+	private static void putAll(VDMMap to, VDMMap from)
+	{
+		Set fromKeys = from.keySet();
+
+		for(Object fromKey : fromKeys)
+		{
+			Object fromVal = from.get(fromKey);
+
+			if(to.containsKey(fromKey))
+			{
+				Object toVal = to.get(fromKey);
+				if(differentValues(toVal, fromVal))
+					throw new IllegalAccessError("Duplicate keys that have different values are not allowed");
+			}
+			
+			to.put(fromKey, fromVal);		
+		}
 	}
 }
