@@ -31,6 +31,10 @@ public class ClassPathCollector
 			StringBuffer classPath = new StringBuffer(" ");
 			for (String cp : new HashSet<String>(entries))// remove dublicates
 			{
+				if(cp == null)
+				{
+					continue;
+				}
 				classPath.append(toPlatformPath(cp));
 				classPath.append(getCpSeperator());
 			}
