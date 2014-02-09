@@ -373,11 +373,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 				ValueMap result = new ValueMap();
 				result.putAll(lm);
-				Iterator<Value> i = rm.keySet().iterator();
-
-				while (i.hasNext())
+				
+				for (Value k: rm.keySet())
 				{
-					Value k = i.next();
 					Value rng = rm.get(k);
 					Value old = result.put(k, rng);
 
