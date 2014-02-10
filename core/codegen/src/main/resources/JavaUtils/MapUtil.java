@@ -140,11 +140,11 @@ public class MapUtil
 		}
 	}
 	
-	public static VDMMap domResTo(VDMSet set, VDMMap map)
+	public static VDMMap domResTo(VDMSet domValues, VDMMap map)
 	{
 		VDMMap result = map();
 		
-		for(Object key : set)
+		for(Object key : domValues)
 		{
 			if(map.containsKey(key))
 			{
@@ -156,7 +156,7 @@ public class MapUtil
 		return result;
 	}
 	
-	public static VDMMap domResBy(VDMSet set, VDMMap map)
+	public static VDMMap domResBy(VDMSet domValues, VDMMap map)
 	{
 		VDMMap result = map();
 		
@@ -164,9 +164,28 @@ public class MapUtil
 		
 		for(Object key : dom)
 		{
-			if(!set.contains(key))
+			if(!domValues.contains(key))
 			{
 				Object value = map.get(key);
+				result.put(key, value);
+			}
+		}
+		
+		return result;
+	}
+	
+	public static VDMMap rngResTo(VDMMap map, VDMSet rngValues)
+	{
+		VDMMap result = map();
+		
+		Set dom = map.keySet();
+		
+		for(Object key : dom)
+		{
+			Object value = map.get(key);
+			
+			if(rngValues.contains(value))
+			{
 				result.put(key, value);
 			}
 		}
