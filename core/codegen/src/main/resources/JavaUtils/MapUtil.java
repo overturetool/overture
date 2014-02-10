@@ -140,7 +140,7 @@ public class MapUtil
 		}
 	}
 	
-	public static VDMMap resTo(VDMSet set, VDMMap map)
+	public static VDMMap domResTo(VDMSet set, VDMMap map)
 	{
 		VDMMap result = map();
 		
@@ -156,7 +156,7 @@ public class MapUtil
 		return result;
 	}
 	
-	public static VDMMap resBy(VDMSet set, VDMMap map)
+	public static VDMMap domResBy(VDMSet set, VDMMap map)
 	{
 		VDMMap result = map();
 		

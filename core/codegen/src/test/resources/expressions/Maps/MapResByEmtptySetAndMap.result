@@ -1,1 +1,1 @@
-MapUtil.resBy(SetUtil.set(), MapUtil.map())
+MapUtil.domResBy(SetUtil.set(), MapUtil.map())
