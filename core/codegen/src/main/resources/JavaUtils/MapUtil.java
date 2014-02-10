@@ -142,6 +142,9 @@ public class MapUtil
 	
 	public static VDMMap domResTo(VDMSet domValues, VDMMap map)
 	{
+		if(domValues == null || map == null)
+			throw new IllegalArgumentException("'Domain restrict to' is undefined for null");
+		
 		VDMMap result = map();
 		
 		for(Object key : domValues)
@@ -158,6 +161,9 @@ public class MapUtil
 	
 	public static VDMMap domResBy(VDMSet domValues, VDMMap map)
 	{
+		if(domValues == null || map == null)
+			throw new IllegalArgumentException("'Domain restrict by' is undefined for null");
+		
 		VDMMap result = map();
 		
 		Set dom = map.keySet();
@@ -176,6 +182,9 @@ public class MapUtil
 	
 	public static VDMMap rngResTo(VDMMap map, VDMSet rngValues)
 	{
+		if(map == null || rngValues == null)
+			throw new IllegalArgumentException("'Range restrict to' is undefined for null");
+		
 		VDMMap result = map();
 		
 		Set dom = map.keySet();
@@ -195,6 +204,9 @@ public class MapUtil
 	
 	public static VDMMap rngResBy(VDMMap map, VDMSet rngValues)
 	{
+		if(map == null || rngValues == null)
+			throw new IllegalArgumentException("'Range restrict by' is undefined for null");
+		
 		VDMMap result = map();
 		
 		Set dom = map.keySet();
