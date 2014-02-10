@@ -139,4 +139,20 @@ public class MapUtil
 			to.put(fromKey, fromVal);		
 		}
 	}
+	
+	public static VDMMap resTo(VDMSet set, VDMMap map)
+	{
+		VDMMap result = map();
+		
+		for(Object key : set)
+		{
+			if(map.containsKey(key))
+			{
+				Object value = map.get(key);
+				result.put(key, value);
+			}
+		}
+		
+		return result;
+	}
 }
