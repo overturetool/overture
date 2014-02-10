@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistUnionUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ADomainResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ADomainResToBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
@@ -342,6 +343,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMapOverrideBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "MapOverride");
 		
 		nodeTemplateFileNames.put(ADomainResToBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "DomResTo");
+		
+		nodeTemplateFileNames.put(ADomainResByBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "DomResBy");
 		
 		// Numeric binary expressions
 

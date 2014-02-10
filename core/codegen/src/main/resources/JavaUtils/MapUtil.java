@@ -155,4 +155,22 @@ public class MapUtil
 		
 		return result;
 	}
+	
+	public static VDMMap resBy(VDMSet set, VDMMap map)
+	{
+		VDMMap result = map();
+		
+		Set dom = map.keySet();
+		
+		for(Object key : dom)
+		{
+			if(!set.contains(key))
+			{
+				Object value = map.get(key);
+				result.put(key, value);
+			}
+		}
+		
+		return result;
+	}
 }

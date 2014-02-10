@@ -188,6 +188,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{mapUnion}
     |	{mapOverride}
     |	{domainResTo} //Syntax: '<:'
+    |	{domainResBy} //Syntax: '<-:'
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
