@@ -69,6 +69,7 @@ import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
@@ -348,6 +349,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ADomainResByBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "DomResBy");
 		
 		nodeTemplateFileNames.put(ARangeResToBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "RngResTo");
+		
+		nodeTemplateFileNames.put(ARangeResByBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "RngResBy");
 		
 		// Numeric binary expressions
 

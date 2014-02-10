@@ -192,4 +192,23 @@ public class MapUtil
 		
 		return result;
 	}
+	
+	public static VDMMap rngResBy(VDMMap map, VDMSet rngValues)
+	{
+		VDMMap result = map();
+		
+		Set dom = map.keySet();
+		
+		for(Object key : dom)
+		{
+			Object value = map.get(key);
+			
+			if(!rngValues.contains(value))
+			{
+				result.put(key, value);
+			}
+		}
+		
+		return result;
+	}
 }
