@@ -57,6 +57,7 @@ import org.overture.ast.expressions.AMapInverseUnaryExp; //added -> AReverseExpr
 import org.overture.ast.expressions.AMapRangeUnaryExp; //added -> ARrangeExpression
 import org.overture.ast.expressions.AMapUnionBinaryExp; //used  -> AUnionExpression
 import org.overture.ast.expressions.AMapletExp; //added -> ACoupleExpression
+import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp; //added -> AModuleExpression
 import org.overture.ast.expressions.ANotEqualBinaryExp; //added -> ANotEqualPredicate
 import org.overture.ast.expressions.ANotInSetBinaryExp; //added -> ANotMemberPredicate
@@ -100,6 +101,7 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType; //added -> ANat1SetExpression
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -160,6 +162,7 @@ import de.be4.classicalb.core.parser.node.ARangeExpression; //added
 import de.be4.classicalb.core.parser.node.ARangeRestrictionExpression; //added
 import de.be4.classicalb.core.parser.node.ARangeSubtractionExpression; //added
 import de.be4.classicalb.core.parser.node.ARecEntry;
+import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ARecordFieldExpression;
 import de.be4.classicalb.core.parser.node.ARevExpression; //added
 import de.be4.classicalb.core.parser.node.AReverseExpression; //added
@@ -251,6 +254,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public static final String OLD_POST_FIX = "~";
 
 	public static final String TOKEN_SET = "TOKEN";
+
+	/**
+	 * This adds the state-init expression to the translated constraint
+	 */
+	public static boolean USE_INITIAL_FIXED_STATE = false;
 
 	/**
 	 * future use
@@ -1179,6 +1187,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate after = new AMemberPredicate(getIdentifier(name), new AStructExpression(getEntities(node.getFields())));
 		PPredicate p = new AConjunctPredicate(before, after);
 
+		if ( node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
+		{
+			PExpression right = (PExpression) ((AEqualsBinaryExp) node.getInitExpression()).getRight().apply(this);
+			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), right);
+			p = new AConjunctPredicate(p, init);
+		}
+
 		for (AFieldField f : node.getFields())
 		{
 			nameSubstitution.put(f.getTagname().getName() + OLD_POST_FIX, nameOld
@@ -1218,6 +1233,28 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		}
 
 		return p;
+	}
+
+	@Override
+	public Node caseAMkTypeExp(AMkTypeExp node) throws AnalysisException
+	{
+		if (node.getType() instanceof ARecordInvariantType)// properly needs type compare
+		{
+			List<PRecEntry> entities = new ArrayList<PRecEntry>();
+
+			Iterator<PExp> argItr = node.getArgs().iterator();
+			Iterator<AFieldField> fieldItr = node.getRecordType().getFields().iterator();
+
+			while (argItr.hasNext() && fieldItr.hasNext())
+			{
+				entities.add(new ARecEntry(getIdentifier(fieldItr.next().getTag()), exp(argItr.next())));
+			}
+
+			Node r = new ARecExpression(entities);
+
+			return r;
+		}
+		return super.caseAMkTypeExp(node);
 	}
 
 	@Override
@@ -1286,6 +1323,9 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			}
 		}
 
+		// TODO: add the rest of the constants as well. If a state component isn't mentioned in the frame condition it
+		// is implicit Read only
+
 		for (ILexNameToken id : constants)
 		{
 			PPredicate conjoin = new AEqualPredicate(getIdentifier(id), getIdentifier(id.getName()
@@ -1331,7 +1371,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseANamedInvariantType(ANamedInvariantType node)
 			throws AnalysisException
 	{
-		// handle inv
+		// TODO: handle inv
 		return node.getType().apply(this);
 
 	}

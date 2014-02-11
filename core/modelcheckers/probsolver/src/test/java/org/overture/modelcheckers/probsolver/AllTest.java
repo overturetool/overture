@@ -20,6 +20,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
@@ -148,6 +149,7 @@ public class AllTest extends ProbConverterTestBase
 	{
 		Settings.dialect = dialect;
 		Settings.release = Release.VDM_10;
+		VdmToBConverter.USE_INITIAL_FIXED_STATE = true;
 	}
 
 	@Test
@@ -158,7 +160,16 @@ public class AllTest extends ProbConverterTestBase
 		System.out.println("==============================================================\n\t"
 				+ name
 				+ "\n==============================================================");
-		testMethod(operationName);
+		try
+		{
+			testMethod(operationName);
+		} catch (SolverException e)
+		{
+			//We just test the translation so some of the invocations may not be valid
+			if(!(e.getMessage().startsWith("no solution found")||e.getMessage().startsWith("cannot be solved")))
+			{
+				throw e;
+			}
+		}
 	}
-
 }
