@@ -42,6 +42,7 @@ import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
@@ -417,9 +418,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
+	public PExpCG caseALetBeStExp(ALetBeStExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+//		if(ExpAssistantCG.isAssigned(node))
+//		{
+//			question.addUnsupportedNode(node, "Let expression not supported in assignments");
+//			return null;
+//		}
+		
+		return super.caseALetBeStExp(node, question);
+	}
+	
+	@Override
 	public PExpCG caseALetDefExp(ALetDefExp node, OoAstInfo question)
 			throws AnalysisException
 	{
+		if(ExpAssistantCG.isAssigned(node))
+		{
+			question.addUnsupportedNode(node, "Let expression not supported in assignments");
+			return null;
+		}
+		
 		ALetDefExpCG localDefExp = new ALetDefExpCG();
 	
 		DeclAssistantCG.setLocalDefs(node.getLocalDefs(), localDefExp.getLocalDefs(), question);
