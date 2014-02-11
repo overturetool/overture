@@ -6,7 +6,6 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -28,7 +27,7 @@ public class OoAstGenerator
 		codeGenInfo.clearNodes();
 		
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-		Set<INode> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
 		return new ClassDeclStatus(classCg, unsupportedNodes);
 	}
@@ -38,14 +37,14 @@ public class OoAstGenerator
 		codeGenInfo.clearNodes();
 		
 		PExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
-		Set<INode> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
 		return new ExpStatus(expCg, unsupportedNodes);
 	}
 	
-	private Set<INode> copyGetUnsupportedNodes()
+	private Set<NodeInfo> copyGetUnsupportedNodes()
 	{
-		return new HashSet<INode>(codeGenInfo.getUnsupportedNodes());
+		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
 	
 	public AInterfaceDeclCG getQuotes()

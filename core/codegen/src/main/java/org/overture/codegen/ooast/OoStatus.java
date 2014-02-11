@@ -2,18 +2,16 @@ package org.overture.codegen.ooast;
 
 import java.util.Set;
 
-import org.overture.ast.node.INode;
-
 public class OoStatus
 {
-	protected Set<INode> unsupportedNodes;
+	protected Set<NodeInfo> unsupportedNodes;
 
-	public OoStatus(Set<INode> unsupportedNodes)
+	public OoStatus(Set<NodeInfo> unsupportedNodes)
 	{
 		this.unsupportedNodes = unsupportedNodes;
 	}
 	
-	public Set<INode> getUnsupportedNodes()
+	public Set<NodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
 	}

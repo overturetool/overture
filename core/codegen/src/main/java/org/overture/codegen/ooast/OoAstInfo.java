@@ -44,7 +44,7 @@ public class OoAstInfo
 	private Set<String> quoteVaues;
 
 	//Unsupported VDM nodes
-	private Set<INode> unsupportedNodes;
+	private Set<NodeInfo> unsupportedNodes;
 	
 	public OoAstInfo(OoAstGenerator rootVisitor)
 	{
@@ -62,7 +62,7 @@ public class OoAstInfo
 		
 		this.quoteVaues = new HashSet<String>();
 		
-		this.unsupportedNodes = new HashSet<INode>();
+		this.unsupportedNodes = new HashSet<NodeInfo>();
 	}
 
 	public OoAstGenerator getRootVisitor()
@@ -164,10 +164,17 @@ public class OoAstInfo
 	
 	public void addUnsupportedNode(INode node)
 	{
-		unsupportedNodes.add(node);
+		NodeInfo info = new NodeInfo(node);
+		unsupportedNodes.add(info);
 	}
 	
-	public Set<INode> getUnsupportedNodes()
+	public void addUnsupportedNode(INode node, String reason)
+	{
+		NodeInfo info = new NodeInfo(node, reason);
+		unsupportedNodes.add(info);
+	}
+	
+	public Set<NodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
 	}

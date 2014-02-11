@@ -2,14 +2,14 @@ package org.overture.codegen.utils;
 
 import java.util.Set;
 
-import org.overture.ast.node.INode;
+import org.overture.codegen.ooast.NodeInfo;
 
 public class Generated
 {
 	protected String content;
-	protected Set<INode> unsupportedNodes;
+	protected Set<NodeInfo> unsupportedNodes;
 	
-	public Generated(String content, Set<INode> unsupportedNodes)
+	public Generated(String content, Set<NodeInfo> unsupportedNodes)
 	{
 		this.content = content;
 		this.unsupportedNodes = unsupportedNodes;
@@ -20,7 +20,7 @@ public class Generated
 		return content;
 	}
 	
-	public Set<INode> getUnsupportedNodes()
+	public Set<NodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
 	}

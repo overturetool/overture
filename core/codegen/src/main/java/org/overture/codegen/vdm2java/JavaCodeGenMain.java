@@ -8,13 +8,13 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.ooast.NodeInfo;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -24,20 +24,28 @@ import org.overture.config.Settings;
 
 public class JavaCodeGenMain
 {
-	private static void printUnsupportedNodes(Set<INode> unsupportedNodes)
+	private static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
 	{
-		List<INode> nodesSorted = LocationAssistantCG.getNodeLocationsSorted(unsupportedNodes);
+		List<NodeInfo> nodesSorted = LocationAssistantCG.getNodesLocationSorted(unsupportedNodes);
 		
 		Logger.getLog().println("Following constructs are not supported: ");
 		
-		for (INode node : nodesSorted)
+		for (NodeInfo nodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(node.toString());
+			Logger.getLog().print(nodeInfo.getNode().toString());
 			
-			ILexLocation location = LocationAssistantCG.findLocation(node);
+			ILexLocation location = LocationAssistantCG.findLocation(nodeInfo.getNode());
 			
-			Logger.getLog().println(location != null ? " at [line, pos] = [" + location.getStartLine() + ", " + location.getStartPos() + "]": "");
+			Logger.getLog().print(location != null ? " at [line, pos] = [" + location.getStartLine() + ", " + location.getStartPos() + "]": "");
 			
+			String reason = nodeInfo.getReason();
+			
+			if(reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+			
+			Logger.getLog().println("");
 		}
 	}
 	

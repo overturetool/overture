@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.codegen.ooast.NodeInfo;
 
 public class LocationAssistantCG
 {
@@ -53,21 +54,21 @@ public class LocationAssistantCG
 		}
 	}
 	
-	public static List<INode> getNodeLocationsSorted(Set<INode> nodes)
+	public static List<NodeInfo> getNodesLocationSorted(Set<NodeInfo> nodes)
 	{
-		List<INode> list = new LinkedList<INode>(nodes);
+		List<NodeInfo> list = new LinkedList<NodeInfo>(nodes);
 		
-		Collections.sort(list,new Comparator<INode>()
+		Collections.sort(list,new Comparator<NodeInfo>()
 		{
 			@Override
-			public int compare(INode first, INode second)
+			public int compare(NodeInfo first, NodeInfo second)
 			{
-				ILexLocation firstLoc = findLocation(first);
+				ILexLocation firstLoc = findLocation(first.getNode());
 				
 				if(firstLoc == null)
 					return -1;
 				
-				ILexLocation secondLoc = findLocation(second);
+				ILexLocation secondLoc = findLocation(second.getNode());
 				
 				if(secondLoc == null)
 					return 1;
