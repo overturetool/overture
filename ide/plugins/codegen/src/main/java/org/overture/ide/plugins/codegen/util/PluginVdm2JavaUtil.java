@@ -159,7 +159,7 @@ public class PluginVdm2JavaUtil
 		String reason = nodeInfo.getReason();
 
 		String message = "Code generation support not implemented: " + node.toString();
-		message += (reason != null ? "Reason: " + reason : "");
+		message += (reason != null ? ". Reason: " + reason : "");
 		
 		FileUtility.addMarker(ifile, message, location, IMarker.PRIORITY_NORMAL, ICodeGenConstants.PLUGIN_ID, -1);
 	}
