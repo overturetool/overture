@@ -112,12 +112,15 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			ALocalVarDeclCG localDecl = new ALocalVarDeclCG();
 			localDecl.setType(typeCg);
 			localDecl.setName(name);
-			localDecl.setExp(expCg);
 			
 			if(exp instanceof AUndefinedExp)
+			{
 				DeclAssistantCG.setDefaultValue(localDecl, typeCg);
+			}
 			else
-				localDecl.setExp(def.getExpression().apply(question.getExpVisitor(), question));
+			{
+				localDecl.setExp(expCg);
+			}
 			
 			blockStm.getLocalDefs().add(localDecl);
 		}
