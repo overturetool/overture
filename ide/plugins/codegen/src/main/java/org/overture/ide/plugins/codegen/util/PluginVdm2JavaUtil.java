@@ -23,6 +23,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.ooast.NodeInfo;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -123,8 +124,9 @@ public class PluginVdm2JavaUtil
 		}
 	}
 	
-	public static String formatNodeString(INode node)
+	public static String formatNodeString(NodeInfo nodeInfo)
 	{
+		INode node = nodeInfo.getNode();
 		StringBuilder messageSb = new StringBuilder();
 		messageSb.append(node.toString());
 		messageSb.append(" (" + node.getClass().getSimpleName() + ")");
@@ -132,23 +134,34 @@ public class PluginVdm2JavaUtil
 		ILexLocation location = LocationAssistantCG.findLocation(node);
 		if(location != null)
 			messageSb.append(" " + location.toShortString());
+		
+		String reason = nodeInfo.getReason();
+		if(reason != null)
+			messageSb.append(". Reason: " + reason);
 			
 		return messageSb.toString();
 	}
 	
-	public static void addMarkers(INode unsupportedNode)
+	public static void addMarkers(NodeInfo nodeInfo)
 	{
-		if(unsupportedNode == null)
+		if(nodeInfo == null)
 			return;
+
+		INode node = nodeInfo.getNode();
 		
-		ILexLocation location = LocationAssistantCG.findLocation(unsupportedNode);
+		ILexLocation location = LocationAssistantCG.findLocation(node);
 		
 		if(location == null)
 			return;
 		
 		IFile ifile = PluginVdm2JavaUtil.convert(location.getFile());
 
-		FileUtility.addMarker(ifile, "Code generation support not implemented: " + unsupportedNode.toString(), location, IMarker.PRIORITY_NORMAL, ICodeGenConstants.PLUGIN_ID, -1);
+		String reason = nodeInfo.getReason();
+
+		String message = "Code generation support not implemented: " + node.toString();
+		message += (reason != null ? "Reason: " + reason : "");
+		
+		FileUtility.addMarker(ifile, message, location, IMarker.PRIORITY_NORMAL, ICodeGenConstants.PLUGIN_ID, -1);
 	}
 	
 	private static File getProjectDir(IVdmProject project)

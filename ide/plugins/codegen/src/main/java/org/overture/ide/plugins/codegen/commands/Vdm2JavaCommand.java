@@ -28,6 +28,7 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.ooast.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
@@ -185,16 +186,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 			}
 			else
 			{
-				List<INode> nodes = LocationAssistantCG.getNodeLocationsSorted(generatedModule.getUnsupportedNodes());
+				List<NodeInfo> unsupportedNodes = LocationAssistantCG.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
 				CodeGenConsole.GetInstance().println("Could not code generate module: " + generatedModule.getName() + ".");
 				CodeGenConsole.GetInstance().println("Following constructs are not supported:");
 				
-				for(INode node : nodes)
+				for(NodeInfo nodeInfo : unsupportedNodes)
 				{
-					String message = PluginVdm2JavaUtil.formatNodeString(node);
+					String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo);
 					CodeGenConsole.GetInstance().println(message);
 
-					PluginVdm2JavaUtil.addMarkers(node);
+					PluginVdm2JavaUtil.addMarkers(nodeInfo);
 					
 				}
 			}
