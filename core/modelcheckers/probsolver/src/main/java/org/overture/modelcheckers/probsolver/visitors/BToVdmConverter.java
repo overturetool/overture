@@ -147,23 +147,25 @@ public class BToVdmConverter extends DepthFirstAdapter
 		{
 			List<PExp> arg_ = new Vector<PExp>();
 
-			for (PRecEntry entry : node.getEntries())
+			for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
 			{
-				ARecEntry re = (ARecEntry) entry;
-				String fieldName = re.getIdentifier().toString().trim();
-				PType fieldType = null;
-				for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
+
+				for (PRecEntry entry : node.getEntries())
 				{
+					ARecEntry re = (ARecEntry) entry;
+					String fieldName = re.getIdentifier().toString().trim();
+					PType fieldType = null;
+
 					if (f.getTagname().getName().equals(fieldName))
 					{
 						fieldType = f.getType();
+						arg_.add(convert(fieldType, re.getValue()));
 						break;
 					}
-				}
-				arg_.add(convert(fieldType, re.getValue()));
-			}
 
-			Collections.reverse(arg_);
+					
+				}
+			}
 
 			AMkTypeExp res = AstFactory.newAMkTypeExp(((ARecordInvariantType) expectedType).getName().clone(), arg_);
 			res.setRecordType((ARecordInvariantType) expectedType);
