@@ -2,10 +2,14 @@ package org.overture.codegen.assistant;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
+import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -166,5 +170,13 @@ public class ExpAssistantCG
 	public static ANullExpCG getDefaultClassValue()
 	{
 		return new ANullExpCG();
+	}
+	
+	public static boolean isAssigned(PExp exp)
+	{
+		return exp.getAncestor(AInstanceVariableDefinition.class) != null ||
+			   exp.getAncestor(AValueDefinition.class) != null ||
+			   exp.getAncestor(AAssignmentDefinition.class) != null ||
+			   exp.getAncestor(AAssignmentStm.class) != null;
 	}
 }
