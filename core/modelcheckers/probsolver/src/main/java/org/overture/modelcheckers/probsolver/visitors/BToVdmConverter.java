@@ -161,7 +161,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 						break;
 					}
 				}
-				arg_.add(convert(fieldType, re.getValue()));
+				arg_.add(convert(fieldType, re.getValue()));//System.out.println("in caseARecExpression: " + arg_);
 			}
 
 			Collections.reverse(arg_);

@@ -324,8 +324,8 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    // { x+y | x in set A, y in set B & P } -> { x, y, _target_ | x : A & y : B & P & _target = x+y }
 	    //console.out.println("Setcompset: " + scs.getPredicates());
 	    //return scs;
-	    console.out.println("Setcompset: " + scs.getIdentifiers());
-	    console.out.println("Setcompset: " + scs.getPredicates());
+	    //console.out.println("Setcompset: " + scs.getIdentifiers());
+	    //console.out.println("Setcompset: " + scs.getPredicates());
 	    return new ARangeExpression(scs);
 	}
 

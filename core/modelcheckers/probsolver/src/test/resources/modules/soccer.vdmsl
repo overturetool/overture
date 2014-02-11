@@ -49,26 +49,30 @@ within_allowed_limits (ngk , nfp ) ==
 operations
 
 Init()
-ext wr on_field_players
-    wr potential_substitutes
-    wr goalkeeper
-    wr nb_gk_subs
-    wr nb_fp_subs
+ext wr on_field_players : set of player
+    wr potential_substitutes : set of player
+    wr goalkeeper : player
+    wr nb_gk_subs : nat
+    wr nb_fp_subs : nat
 post on_field_players = {1,2,3,4,5,6,7,8,9,10,11} and
                potential_substitutes = {12,13,14,15,16} and
                goalkeeper = 1 and
                nb_gk_subs = 2 and
                nb_fp_subs = 3;
 
--- test1:() ==> R_Book
--- test1() ==  (
---  Init();
---  RED_CARD(1);
+test1:() ==> R_Book
+test1() ==  let  on_field_players = {1,2,3,4,5,6,7,8,9,10,11},
+               potential_substitutes = {12,13,14,15,16},
+               goalkeeper = 1,
+               nb_gk_subs = 2,
+               nb_fp_subs = 3 in (
+-- Init();
+ RED_CARD(1);
 --  SUBSTITUTION(10,12);
 --  SUBSTITUTION(2,13);
 --  SUBSTITUTION(3,14);
---  return  mk_R_Book(on_field_players,potential_substitutes , goalkeeper , nb_gk_subs, nb_fp_subs);
--- );
+ return  mk_R_Book(on_field_players,potential_substitutes , goalkeeper , nb_gk_subs, nb_fp_subs);
+);
 
 test:() ==> R_Book
 test() == let on_field_players = {1,2,3,4,5,6,7,8,9,10,11},
