@@ -261,4 +261,12 @@ public class MapUtil
 		
 		return result;
 	}
+	
+	public static boolean equals(VDMMap left, VDMMap right)
+	{
+		if(left == null || right == null)
+			throw new IllegalArgumentException("A map cannot be compared to null");
+		
+		return left.equals(right);
+	}
 }

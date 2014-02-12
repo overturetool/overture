@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
@@ -384,6 +385,10 @@ public class JavaFormat
 		{
 			return handleSetComparison(node);
 		}
+		else if(leftNodeType instanceof SMapTypeCG)
+		{
+			return handleMapComparison(node);
+		}
 		
 		return format(node.getLeft()) + " == " + format(node.getRight());
 	}
@@ -403,6 +408,11 @@ public class JavaFormat
 			return formatNotUnary(transformed.getExp());
 		}
 		else if(leftNodeType instanceof SSetTypeCG)
+		{
+			ANotUnaryExpCG transformed = transNotEquals(node);
+			return formatNotUnary(transformed.getExp());
+		}
+		else if(leftNodeType instanceof SMapTypeCG)
 		{
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
@@ -451,6 +461,11 @@ public class JavaFormat
 		return handleCollectionComparison(node, IJavaCodeGenConstants.SEQ_UTIL_FILE);
 	}
 	
+	private String handleMapComparison(SBinaryExpCGBase node) throws AnalysisException
+	{
+		return handleCollectionComparison(node, IJavaCodeGenConstants.MAP_UTIL_FILE);
+	}
+	
 	private String handleCollectionComparison(SBinaryExpCGBase node, String className) throws AnalysisException
 	{
 		//In VDM the types of the equals are compatible when the AST passes the type check
@@ -474,15 +489,21 @@ public class JavaFormat
 	{
 		if(exp instanceof AEnumSeqExpCG)
 		{
-			AEnumSeqExpCG v = (AEnumSeqExpCG) exp;
+			AEnumSeqExpCG seq = (AEnumSeqExpCG) exp;
 
-			return v.getMembers().isEmpty();
+			return seq.getMembers().isEmpty();
 		}
 		else if(exp instanceof AEnumSetExpCG)
 		{
-			AEnumSetExpCG v = (AEnumSetExpCG) exp;
+			AEnumSetExpCG set = (AEnumSetExpCG) exp;
 			
-			return v.getMembers().isEmpty();
+			return set.getMembers().isEmpty();
+		}
+		else if(exp instanceof AEnumMapExpCG)
+		{
+			AEnumMapExpCG map = (AEnumMapExpCG) exp;
+			
+			return map.getMembers().isEmpty();
 		}
 		
 		return false;
