@@ -84,7 +84,7 @@ public class MapUtil
 		
 		result.putAll(left);
 		
-		putAll(left, right);
+		putAll(result, right);
 		
 		return result;
 	}
