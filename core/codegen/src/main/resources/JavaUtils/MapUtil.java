@@ -58,7 +58,7 @@ public class MapUtil
 			throw new IllegalArgumentException("Map domain is undefined for null");
 		
 		VDMSet set = SetUtil.set();
-		set.addAll(map.entrySet());
+		set.addAll(map.keySet());
 			
 		return set;
 	}
