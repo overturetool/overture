@@ -146,11 +146,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 
+			// Currently the code generator only supports the union of quotes case
 			if (TypeAssistantCG.isUnionOfQuotes(unionType))
+			{
 				return new AIntNumericBasicTypeCG();
+			}
 		}
 
-		return null; // Currently the code generator only supports the union of quotes case
+		return type.apply(question.getTypeVisitor(), question);
 	}
 
 	@Override
