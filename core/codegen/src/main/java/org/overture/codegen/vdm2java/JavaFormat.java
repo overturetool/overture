@@ -832,6 +832,11 @@ public class JavaFormat
 		return exp.getType() instanceof SSeqTypeCG;
 	}
 	
+	public boolean isMapType(PExpCG exp)
+	{
+		return exp.getType() instanceof SMapTypeCG;
+	}
+	
 	public boolean isStringType(PTypeCG type)
 	{
 		return type instanceof AStringTypeCG; 

@@ -13,6 +13,14 @@
 	#end
 	(($JavaFormat.format($node.getType())) ${root}.get(Utils.index($index)))$clone
 ##
+#elseif ($JavaFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
+	#set( $key = $JavaFormat.format($node.getArgs().get(0)))
+	#set( $clone = "")
+	#if ($JavaFormat.shouldClone($node))
+		#set( $clone = ".clone()")
+	#end
+	(($JavaFormat.format($node.getType())) ${root}.get(${key}))$clone
+##
 #elseif ($JavaFormat.isCharType($node.getType()))
 	#set( $index = $JavaFormat.format($node.getArgs().get(0)))
 	${root}.charAt(Utils.index($index))##
