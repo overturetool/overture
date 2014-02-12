@@ -103,14 +103,7 @@ public class SeqUtil
 		if(left == null || right == null)
 			throw new IllegalArgumentException("A sequences cannot be compared to null");
 		
-		if(left.size() != right.size())
-			return false;
-		
-		for(int i = 0; i < left.size(); i++)
-			if(!left.get(i).equals(right.get(i)))
-				return false;
-				
-		return true;
+		return left.equals(right);
 	}
 	
 	public static VDMSeq conc(VDMSeq left, VDMSeq right)
