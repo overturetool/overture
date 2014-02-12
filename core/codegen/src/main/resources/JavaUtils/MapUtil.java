@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.Set;
 
 
@@ -218,6 +219,43 @@ public class MapUtil
 			if(!rngValues.contains(value))
 			{
 				result.put(key, value);
+			}
+		}
+		
+		return result;
+	}
+	
+	public static VDMMap inverse(VDMMap map)
+	{
+		if(map == null)
+			throw new IllegalArgumentException("Cannot find the inverse map of null");
+		
+		VDMMap result = map();
+		
+		if(map.size() == 0)
+		{
+			return result;
+		}
+		
+		Set keysSet = map.keySet();
+		LinkedList keyList = new LinkedList(keysSet);
+		
+		Object firstKey = keyList.get(0);
+		Object firstValue = map.get(firstKey);
+		result.put(firstValue, firstKey);
+		
+		for (int i = 1; i < keyList.size(); i++)
+		{
+			Object nextKey = keyList.get(i);
+			Object nextValue = map.get(nextKey);
+			
+			if(result.containsKey(nextKey))
+			{
+				throw new IllegalArgumentException("Cannot invert non-injective map");
+			}
+			else
+			{
+				result.put(nextValue, nextKey);
 			}
 		}
 		

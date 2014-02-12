@@ -235,6 +235,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{mapDomain}
     |	{mapRange} 
     |	{distMerge}
+    |	{mapInverse}
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

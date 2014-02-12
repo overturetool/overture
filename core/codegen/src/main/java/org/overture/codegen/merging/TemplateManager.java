@@ -53,6 +53,7 @@ import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapOverrideBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
@@ -313,6 +314,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMapRangeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapRange");
 
 		nodeTemplateFileNames.put(ADistMergeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistMerge");
+		
+		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapInverse");
 		
 		// Binary expressions
 		
