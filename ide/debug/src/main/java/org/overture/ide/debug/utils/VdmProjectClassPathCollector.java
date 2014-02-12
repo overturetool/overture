@@ -11,15 +11,15 @@ import org.eclipse.core.resources.IProject;
 
 public class VdmProjectClassPathCollector extends ClassPathCollector
 {
-	
-	public static List<String> getClassPath(IProject project, String[] bundleIds,
-			File vdmProperties)
+
+	public static List<String> getClassPath(IProject project,
+			String[] bundleIds, File vdmProperties)
 	{
 		return getClassPath(project, bundleIds, vdmProperties.getParentFile().getAbsolutePath());
 	}
-	
-	public static List<String> getClassPath(IProject project, String[] bundleIds,
-			String... additionalCpEntries)
+
+	public static List<String> getClassPath(IProject project,
+			String[] bundleIds, String... additionalCpEntries)
 	{
 		List<String> entries = new Vector<String>();
 		// get the class path for all jars in the project lib folder
@@ -36,14 +36,13 @@ public class VdmProjectClassPathCollector extends ClassPathCollector
 				entries.add(f.getAbsolutePath());
 			}
 		}
-		
-		//add custom properties file vdmj.properties
-//		entries.add(vdmjPropertiesFile.getParentFile().getAbsolutePath());
+
+		// add custom properties file vdmj.properties
+		// entries.add(vdmjPropertiesFile.getParentFile().getAbsolutePath());
 		entries.addAll(Arrays.asList(additionalCpEntries));
-		return ClassPathCollector.getClassPath(project, bundleIds, entries.toArray(new String[]{}));
+		return ClassPathCollector.getClassPath(project, bundleIds, entries.toArray(new String[] {}));
 	}
 
-	
 	private static List<File> getAllDirectories(File file)
 	{
 		List<File> files = new Vector<File>();
