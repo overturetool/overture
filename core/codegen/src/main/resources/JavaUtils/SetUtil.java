@@ -150,9 +150,6 @@ public class SetUtil
 		if(left == null || right == null)
 			throw new IllegalArgumentException("A set cannot be compared to null");
 		
-		if(left.size() != right.size())
-			return false;
-		
-		return left.containsAll(right);
+		return left.equals(right);
 	}
 }
