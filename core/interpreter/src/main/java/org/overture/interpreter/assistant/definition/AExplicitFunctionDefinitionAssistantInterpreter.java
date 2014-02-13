@@ -72,7 +72,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		return nvl;
 	}
 
-	public static FunctionValue getPolymorphicValue(
+	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AExplicitFunctionDefinition expdef, PTypeList actualTypes)
 	{
 		AExplicitFunctionDefinitionRuntimeState state = VdmRuntime.getNodeState(expdef);
@@ -101,7 +101,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (expdef.getPredef() != null)
 		{
-			prefv = getPolymorphicValue(expdef.getPredef(), actualTypes);
+			prefv = getPolymorphicValue(af,expdef.getPredef(), actualTypes);
 		}
 		else
 		{
@@ -110,14 +110,14 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (expdef.getPostdef() != null)
 		{
-			postfv = getPolymorphicValue(expdef.getPostdef(), actualTypes);
+			postfv = getPolymorphicValue(af,expdef.getPostdef(), actualTypes);
 		}
 		else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(expdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(af,expdef, actualTypes, prefv, postfv, null);
 
 		state.polyfuncs.put(actualTypes, rv);
 		return rv;

@@ -50,6 +50,7 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
@@ -65,8 +66,6 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class FunctionValue extends Value
@@ -82,8 +81,6 @@ public class FunctionValue extends Value
 	public final FunctionValue postcondition;
 	public final Context freeVariables;
 
-	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
-	
 	// Causes parameter assignments to check their invariants (if any).
 	// This is set to false for inv_() functions, which cannot check them.
 	private final boolean checkInvariants;
@@ -204,13 +201,13 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public FunctionValue(AImplicitFunctionDefinition fdef,
+	public FunctionValue(IInterpreterAssistantFactory af,AImplicitFunctionDefinition fdef,
 			PTypeList actualTypes, FunctionValue precondition,
 			FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type =  assistantFactory.createAImplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
+		this.type =  af.createAImplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
@@ -221,13 +218,13 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public FunctionValue(AExplicitFunctionDefinition fdef,
+	public FunctionValue(IInterpreterAssistantFactory af, AExplicitFunctionDefinition fdef,
 			PTypeList actualTypes, FunctionValue precondition,
 			FunctionValue postcondition, Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = assistantFactory.createAExplicitFunctionDefinitionAssistant().getType(fdef,actualTypes);
+		this.type = af.createAExplicitFunctionDefinitionAssistant().getType(fdef,actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 

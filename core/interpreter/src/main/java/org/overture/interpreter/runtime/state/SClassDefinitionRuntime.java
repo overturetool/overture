@@ -1,14 +1,13 @@
 package org.overture.interpreter.runtime.state;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
@@ -29,10 +28,11 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	protected Delegate delegate = null;
 	
 	// I instanciate the assistantFactory to pass it as parameter to the needed method.
-	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+	public final IInterpreterAssistantFactory assistantFactory;
 
-	public SClassDefinitionRuntime(SClassDefinition def)
+	public SClassDefinitionRuntime(IInterpreterAssistantFactory assistantFactory,SClassDefinition def)
 	{
+		this.assistantFactory =assistantFactory;
 		delegate = new Delegate(def.getName().getName(), assistantFactory.createPDefinitionAssistant().getDefinitions(def));
 		guardLock = new Lock();
 	}
