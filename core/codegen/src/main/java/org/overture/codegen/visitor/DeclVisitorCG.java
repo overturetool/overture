@@ -141,7 +141,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = true;
 		String operationName = node.getName().getName();
-
+		
 		PTypeCG returnType = ((AFunctionType) node.getType()).getResult().apply(question.getTypeVisitor(), question);
 		
 		PStmCG body = null;
@@ -159,6 +159,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		method.setReturnType(returnType);
 		method.setName(operationName);		
 		method.setBody(body);
+		method.setIsConstructor(false);
 		method.setAbstract(isAbstract);
 		
 		List<PType> ptypes = ((AFunctionType) node.getType()).getParameters();
