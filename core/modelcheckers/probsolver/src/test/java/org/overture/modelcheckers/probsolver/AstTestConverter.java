@@ -125,20 +125,20 @@ public class AstTestConverter
 			File f = new File("src/test/resources/modules/AirportNat.vdmsl".replace('/', File.separatorChar));
 			List<AModuleModules> modules = parse(f);
 
-//			SOperationDefinition postExp = null;
-//			AStateDefinition state = null;
+			// SOperationDefinition postExp = null;
+			// AStateDefinition state = null;
 			AImplicitOperationDefinition opDef = null;
 			for (PDefinition d : modules.get(0).getDefs())
 			{
 				if (d instanceof AImplicitOperationDefinition
 						&& d.getName().getName().equals(name))
 				{
-//					postExp = (AImplicitOperationDefinition) d;
+					// postExp = (AImplicitOperationDefinition) d;
 					opDef = (AImplicitOperationDefinition) d;
 					break;
 				} else if (d instanceof AStateDefinition)
 				{
-//					state = (AStateDefinition) d;
+					// state = (AStateDefinition) d;
 				}
 			}
 

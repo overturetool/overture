@@ -59,7 +59,7 @@ public class VdmToBTranslatorTest
 						line = line.substring(0, end);
 					}
 					data.add(new Object[] { line,
-							line.replace("(", " ").replace(")", " "),lineIndex });
+							line.replace("(", " ").replace(")", " "), lineIndex });
 				}
 			}
 			br.close();
@@ -90,7 +90,7 @@ public class VdmToBTranslatorTest
 	@Test
 	public void test() throws IOException, AnalysisException
 	{
-		Assume.assumeTrue(false);//comment this when the tests parse
+		Assume.assumeTrue(false);// comment this when the tests parse
 		PExp exp = null;
 
 		try
@@ -98,7 +98,8 @@ public class VdmToBTranslatorTest
 			exp = parse(expression);
 		} catch (AnalysisException e)
 		{
-			System.err.println("Line: "+lineIndex+" Remove this expression it is invalid: "+expression);
+			System.err.println("Line: " + lineIndex
+					+ " Remove this expression it is invalid: " + expression);
 			return;
 			// Assert.fail("Invalid expression: " + expression);
 		}
@@ -107,10 +108,11 @@ public class VdmToBTranslatorTest
 		try
 		{
 			exp.apply(translator);
-			
-			if(!translator.unsupportedConstructs.isEmpty())
+
+			if (!translator.unsupportedConstructs.isEmpty())
 			{
-				Assert.fail("Missing implementation for: "+translator.unsupportedConstructs);
+				Assert.fail("Missing implementation for: "
+						+ translator.unsupportedConstructs);
 			}
 		} catch (Exception e)
 		{

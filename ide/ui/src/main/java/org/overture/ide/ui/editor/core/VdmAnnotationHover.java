@@ -96,6 +96,11 @@ public class VdmAnnotationHover extends DefaultAnnotationHover
 			Annotation ann = it.next();
 
 			Position pos = model.getPosition(ann);
+			
+			if(pos==null)
+			{
+				continue;
+			}
 
 			try
 			{
