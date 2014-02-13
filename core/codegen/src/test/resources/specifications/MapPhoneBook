@@ -1,0 +1,154 @@
+--
+-- VDM model exercising maps
+--
+class PhoneBook
+
+types
+
+public Str = seq of char; 
+
+instance variables
+
+phoneNumbers : map Str to Str := {|->}; 
+
+operations 
+
+public static Test : () ==> ()
+Test () == 
+let pb1 = new PhoneBook(),
+		pb2 = new PhoneBook()
+in
+(	
+	IO`print("Creating phone books pb1 and pb2 populated with the same default entries\n");
+	pb1.loadDemo();
+	pb2.loadDemo();
+	
+	IO`print("\n");
+	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);
+	
+	IO`print("\n");
+	
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+
+	IO`println("Printing entries in pb1 as <number>, <name>:");
+	for all number in set pb1.getNumbers() do
+		IO`print("Number: " ^ number ^ ". Name: " ^ pb1.getName(number) ^ "\n");
+
+	IO`print("\n");
+	
+	IO`println("Overriding Martin |-> 11, Jens |-> 22, Denver |-> 8");
+	IO`println("Printing entries in pb1");
+	pb1.override({"Martin" |-> "11", "Jens" |-> "22", "Denver" |-> "8"});
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);	
+
+	IO`print("\n");
+
+	IO`println("Loading default entries in pb1...");	
+	pb1.loadDemo();
+	IO`print("Resitrct to names: Jens, Lala\n");		
+	pb1.restrictToNames({"Jens", "Denver", "Lala"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();		
+	IO`print("Resitrct by names: Mads, Cat, Lala\n");
+	pb1.restrictByNames({"Mads", "Cat", "Lala"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();
+	IO`print("Resitrct to numbers 2, 4, 6, 8\n");
+	pb1.restrictToNumbers({"2", "4", "6", "8"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();
+	IO`print("Resitrct by numbers 0,1,2,3\n");
+	pb1.restrictByNumbers({"0", "1", "2", "3"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+);
+
+public PhoneBook : (map Str to Str) ==> PhoneBook
+PhoneBook (pPhoneNumbers) == phoneNumbers := pPhoneNumbers;
+
+public loadDemo : () ==> ()
+loadDemo () ==
+(
+	phoneNumbers := {|->};
+	addEntry("Martin", "1");
+	addEntry("Jens", "2");
+	addEntry("Morten", "3");
+	addEntry("Cat", "4");
+	addEntry("Dog", "5");
+
+	addTwoEntries(mk_("Tom", "6"), mk_("Mads", "7"));
+);
+
+public listEntries: () ==> ()
+listEntries () == 	
+	for all name in set getNames() do
+		IO`print("Name: " ^ name ^ ". Number: " ^ getNumber(name) ^ "\n");
+
+public addEntry : Str * Str ==> ()
+addEntry (name, number) == phoneNumbers := phoneNumbers munion {name |-> number};
+
+public addTwoEntries : (Str * Str) * (Str * Str) ==> ()
+addTwoEntries (first, second) == phoneNumbers := merge {phoneNumbers, {first.#1 |-> first.#2}, {second.#1 |-> second.#2}};
+
+public getNames : () ==> set of Str
+getNames () == return dom phoneNumbers;
+
+public getNumbers : () ==> set of Str
+getNumbers () == return rng phoneNumbers;
+
+public getNumber : Str ==> Str
+getNumber (name) == return phoneNumbers(name);
+
+public getName : Str ==> Str
+getName (number) == return (inverse phoneNumbers)(number);
+
+public invertPhoneBook : () ==> PhoneBook
+invertPhoneBook () == return new PhoneBook(inverse phoneNumbers);
+
+public override : map Str to Str ==> ()
+override (overrides) == phoneNumbers := phoneNumbers ++ overrides;
+
+public restrictToNames : set of Str ==> ()
+restrictToNames (names) == phoneNumbers := names <: phoneNumbers;
+
+public restrictByNames : set of Str ==> ()
+restrictByNames (names) == phoneNumbers := names <-: phoneNumbers;
+
+public restrictToNumbers : set of Str ==> ()
+restrictToNumbers (numbers) == phoneNumbers := phoneNumbers :> numbers;
+
+public restrictByNumbers : set of Str ==> ()
+restrictByNumbers (numbers) == phoneNumbers := phoneNumbers :-> numbers;
+
+public eq : PhoneBook ==> bool
+eq (other) == return phoneNumbers = other.phoneNumbers;
+
+public neq : PhoneBook ==> bool
+neq (other) == return phoneNumbers <> other.phoneNumbers;
+
+end PhoneBook
