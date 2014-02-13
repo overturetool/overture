@@ -406,8 +406,8 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		// { x+y | x in set A, y in set B & P } -> { x, y, _target_ | x : A & y : B & P & _target = x+y }
 		// console.out.println("Setcompset: " + scs.getPredicates());
 		// return scs;
-		console.out.println("Setcompset: " + scs.getIdentifiers());
-		console.out.println("Setcompset: " + scs.getPredicates());
+		// console.out.println("Setcompset: " + scs.getIdentifiers());
+		// console.out.println("Setcompset: " + scs.getPredicates());
 		return new ARangeExpression(scs);
 	}
 
@@ -1187,7 +1187,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate after = new AMemberPredicate(getIdentifier(name), new AStructExpression(getEntities(node.getFields())));
 		PPredicate p = new AConjunctPredicate(before, after);
 
-		if ( node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
+		if (node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
 		{
 			PExpression right = (PExpression) ((AEqualsBinaryExp) node.getInitExpression()).getRight().apply(this);
 			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), right);
