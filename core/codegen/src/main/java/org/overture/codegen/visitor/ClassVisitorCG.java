@@ -12,6 +12,9 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
@@ -72,6 +75,32 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 			{
 				throw new AnalysisExceptionCG("Unexpected definition in class: " + name + ": " + def.getName().getName(), def.getLocation());
 			}
+		}
+		
+		boolean defaultConstructorExplicit = false;
+		for(AMethodDeclCG method : methods)
+		{
+			if(method.getIsConstructor() && method.getFormalParams().isEmpty())
+			{
+				defaultConstructorExplicit = true;
+				break;
+			}
+		}
+		
+		if(!defaultConstructorExplicit)
+		{
+			AMethodDeclCG constructor = new AMethodDeclCG();
+
+			AClassTypeCG classType = new AClassTypeCG();
+			classType.setName(name);
+			
+			constructor.setReturnType(classType);
+			constructor.setAccess(IOoAstConstants.PUBLIC);
+			constructor.setIsConstructor(true);
+			constructor.setName(name);
+			constructor.setBody(new ABlockStmCG());
+			
+			methods.add(constructor);
 		}
 		
 		return classCg;
