@@ -1,0 +1,12 @@
+public class A {
+    public A() {
+    }
+}
+
+##########
+public class B {
+    public B() {
+        //Skip;
+    }
+}
+##########
