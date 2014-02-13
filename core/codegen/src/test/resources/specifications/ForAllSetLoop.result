@@ -4,6 +4,9 @@ import java.util.*;
 
 
 public class A {
+    public A() {
+    }
+
     public void op() {
         VDMSet x = SetUtil.set(new Rec(1L), new Rec(2L), new Rec(3L));
         Iterator temp_1 = x.iterator();

@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public boolean op() {
         Object a = null;
 

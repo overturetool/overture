@@ -11,6 +11,9 @@ public class A {
     private static final String es = new String(new char[] { 'a', 'b' });
     private static final VDMSeq fs = SeqUtil.seq("a", "b");
 
+    public A() {
+    }
+
     public void op() {
         VDMSeq as_ = SeqUtil.reverse(as.clone());
 

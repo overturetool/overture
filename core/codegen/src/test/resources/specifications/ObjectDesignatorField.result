@@ -1,6 +1,9 @@
 public class A {
     private A x;
 
+    public A() {
+    }
+
     public Number op() {
         A a = new A();
 

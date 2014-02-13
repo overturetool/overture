@@ -6,6 +6,9 @@ import java.util.*;
 public class NoteBook {
     private VDMSeq messages = SeqUtil.seq();
 
+    public NoteBook() {
+    }
+
     public void Test() {
         NoteBook nb1 = new NoteBook();
         NoteBook nb2 = new NoteBook();

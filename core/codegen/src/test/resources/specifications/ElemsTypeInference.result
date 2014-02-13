@@ -11,5 +11,8 @@ public class A {
     private static final VDMSet c = SeqUtil.elems(SeqUtil.seq(x1.clone()));
     private static final VDMSet d = SeqUtil.elems(SeqUtil.seq(SeqUtil.seq(
                     x1.clone())));
+
+    public A() {
+    }
 }
 ##########

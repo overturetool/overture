@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public Number op() {
         Number n = 1L;
         boolean b = true;

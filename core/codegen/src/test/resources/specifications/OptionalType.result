@@ -4,5 +4,8 @@ public class A {
     private Character b2 = null;
     private Boolean b3 = null;
     private A a = null;
+
+    public A() {
+    }
 }
 ##########

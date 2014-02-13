@@ -1,4 +1,7 @@
 public class C {
+    public C() {
+    }
+
     public Number op() {
         return Q.pi;
     }
@@ -7,5 +10,8 @@ public class C {
 ##########
 public class Q {
     public static final Number pi = 3.14;
+
+    public Q() {
+    }
 }
 ##########

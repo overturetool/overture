@@ -12,6 +12,9 @@ public class Bag {
         return;
     }
 
+    public Bag() {
+    }
+
     public static void Test() {
         Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
         Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));

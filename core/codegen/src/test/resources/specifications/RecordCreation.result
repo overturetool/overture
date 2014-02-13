@@ -4,6 +4,9 @@ import utils.*;
 public class Records {
     private Vector2D v = new Vector2D(1L, 1L);
 
+    public Records() {
+    }
+
     public static Vector2D f() {
         return new Vector2D(1L, 2L);
     }

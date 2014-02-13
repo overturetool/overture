@@ -1,4 +1,7 @@
 public class A {
     private static final String x = "hej";
+
+    public A() {
+    }
 }
 ##########

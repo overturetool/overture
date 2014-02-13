@@ -5,6 +5,9 @@ public class A {
     public static final boolean a = new R(1L).equals(new R(2L));
     public static final boolean b = !(new R(1L).equals(new R(2L)));
 
+    public A() {
+    }
+
     public static class R implements Record {
         public Number x;
 

@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public Number op() {
         return this.f(1L);
     }

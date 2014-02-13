@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public void op() {
         long temp_1 = 10L;
 

@@ -2,6 +2,9 @@ import utils.*;
 
 
 public class A {
+    public A() {
+    }
+
     public static class RecA implements Record {
         public B.RecB b;
 
@@ -38,6 +41,9 @@ import utils.*;
 
 
 public class B {
+    public B() {
+    }
+
     public static class RecB implements Record {
         public A.RecA a;
 

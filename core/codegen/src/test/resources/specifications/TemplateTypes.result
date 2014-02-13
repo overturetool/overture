@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public static <T> T f(T arg1) {
         return null;
     }

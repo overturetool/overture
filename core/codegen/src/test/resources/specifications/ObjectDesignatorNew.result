@@ -3,6 +3,9 @@ public class A {
         //Skip;
     }
 
+    public A() {
+    }
+
     public Number op() {
         return new A(2L).f(1L);
     }

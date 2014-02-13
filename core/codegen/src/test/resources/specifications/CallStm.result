@@ -1,4 +1,7 @@
 public class C {
+    public C() {
+    }
+
     public void op1(Number arg) {
         op2(arg);
     }

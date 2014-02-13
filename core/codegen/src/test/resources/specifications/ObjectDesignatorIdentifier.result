@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public Number op() {
         A a = new A();
 

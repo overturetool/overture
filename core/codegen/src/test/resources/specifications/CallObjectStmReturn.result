@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public void op() {
         A a = new A();
         a.op();

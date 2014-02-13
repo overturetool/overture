@@ -1,4 +1,7 @@
 abstract public class Employee {
+    public Employee() {
+    }
+
     public abstract Number getSalary();
 }
 
@@ -10,6 +13,9 @@ public class HourlyPaidEmployee extends Employee {
     public HourlyPaidEmployee(Number pHours, Number pRate) {
         hours = pHours;
         rate = pRate;
+    }
+
+    public HourlyPaidEmployee() {
     }
 
     public Number getSalary() {
@@ -33,6 +39,9 @@ public class FixedSalaryEmployee extends Employee {
 
     public FixedSalaryEmployee(Number pFixedSalary) {
         fixedSalary = pFixedSalary;
+    }
+
+    public FixedSalaryEmployee() {
     }
 
     public Number getSalary() {
@@ -88,6 +97,9 @@ public class Company {
 
 ##########
 public class World {
+    public World() {
+    }
+
     public Number run() {
         HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
         FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);

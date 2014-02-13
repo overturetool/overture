@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public static Number f(Number x) {
         return x;
     }
@@ -28,6 +31,9 @@ public class A {
 
 ##########
 public class B {
+    public B() {
+    }
+
     public static Number f(Number x) {
         return x;
     }

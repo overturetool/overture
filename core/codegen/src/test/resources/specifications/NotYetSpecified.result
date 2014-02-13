@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public void op() {
         throw new UnsupportedOperationException();
     }

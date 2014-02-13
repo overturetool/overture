@@ -9,6 +9,9 @@ public class A {
     private static final boolean e = a.<Tuple>get(0).<Boolean>get(1);
     private static final Number f = a.<Number>get(1);
 
+    public A() {
+    }
+
     public Number op1() {
         Tuple r = Tuple.mk_(1L, 2L);
 

@@ -2,6 +2,9 @@ import quotes.*;
 
 
 public class A {
+    public A() {
+    }
+
     public void op(Number v) {
         if (v == Quotes.Red) {
             //Skip;

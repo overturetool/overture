@@ -9,6 +9,9 @@ public class A {
     private static final VDMSet y = MapUtil.dom(op());
     private static final VDMSet z = MapUtil.dom(a.clone());
 
+    public A() {
+    }
+
     public static VDMMap op() {
         return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
     }

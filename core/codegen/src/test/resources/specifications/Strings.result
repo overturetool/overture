@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public static String f() {
         return "";
     }

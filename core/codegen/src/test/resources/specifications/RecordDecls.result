@@ -2,6 +2,9 @@ import utils.*;
 
 
 public class A {
+    public A() {
+    }
+
     private static class Vector2D implements Record {
         public Number x;
         public Number y;

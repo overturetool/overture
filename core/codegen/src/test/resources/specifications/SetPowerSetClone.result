@@ -9,6 +9,9 @@ public class A {
                 a.clone(), a.clone()));
     private static final VDMSet c = SetUtil.powerset(op());
 
+    public A() {
+    }
+
     public static VDMSet op() {
         return SetUtil.set(1L, 2L, 3L);
     }

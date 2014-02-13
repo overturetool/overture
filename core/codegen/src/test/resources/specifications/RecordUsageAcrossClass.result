@@ -5,6 +5,9 @@ public class A {
     private static final B.RecB x = new B.RecB(1L);
     private static final RecA y = new RecA(new B.RecB(2L));
 
+    public A() {
+    }
+
     public static class RecA implements Record {
         public B.RecB b;
 
@@ -41,6 +44,9 @@ import utils.*;
 
 
 public class B {
+    public B() {
+    }
+
     public static class RecB implements Record {
         public Number b;
 

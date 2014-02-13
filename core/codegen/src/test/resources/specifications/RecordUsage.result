@@ -7,6 +7,9 @@ public class A {
     private static final R1 c = a.r1.clone();
     private static final Number d = a.r1.x;
 
+    public A() {
+    }
+
     public Number op1() {
         R1 r = new R1(2L);
         r.x = 3L;

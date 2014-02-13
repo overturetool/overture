@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public static Number f1() {
         return g(1L, 2L);
     }

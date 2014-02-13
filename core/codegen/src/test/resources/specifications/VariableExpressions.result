@@ -1,6 +1,9 @@
 public class A {
     private Number n = 2L;
 
+    public A() {
+    }
+
     public Number getN() {
         return n;
     }

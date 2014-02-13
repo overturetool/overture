@@ -1,4 +1,7 @@
 public class A {
+    public A() {
+    }
+
     public char op() {
         return s().charAt(Utils.index(1L));
     }

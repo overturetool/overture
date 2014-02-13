@@ -7,6 +7,9 @@ public class A {
     private static final VDMSet a = SetUtil.set(1L, 2L);
     private static final VDMMap x = MapUtil.domResTo(a.clone(), m1());
 
+    public A() {
+    }
+
     public static VDMMap m1() {
         return MapUtil.map(new Maplet(1L, 5L), new Maplet(2L, 10L),
             new Maplet(3L, 15L));

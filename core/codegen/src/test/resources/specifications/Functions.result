@@ -1,4 +1,7 @@
 public class Functions {
+    public Functions() {
+    }
+
     public static Number f1() {
         if (1L == 1L) {
             return 1L;
