@@ -6,9 +6,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ARecordInvariantTypeAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ARecordInvariantTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;

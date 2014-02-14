@@ -28,9 +28,8 @@ import org.overture.typechecker.utilities.NameFinder;
 
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);

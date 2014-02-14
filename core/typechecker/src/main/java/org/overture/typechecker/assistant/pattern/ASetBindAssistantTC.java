@@ -12,9 +12,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASetBindAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ASetBindAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;

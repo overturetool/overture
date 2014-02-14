@@ -9,9 +9,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ANonDeterministicSimpleBlockStmAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ANonDeterministicSimpleBlockStmAssistantTC(
 			ITypeCheckerAssistantFactory af)
 	{

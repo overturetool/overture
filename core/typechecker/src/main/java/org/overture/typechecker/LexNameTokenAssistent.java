@@ -5,14 +5,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class LexNameTokenAssistent
 {
-	public static ITypeCheckerAssistantFactory af;
+	public ITypeCheckerAssistantFactory af;
 	
 	public LexNameTokenAssistent(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 	
-	public static boolean isEqual(ILexNameToken token, Object other)
+	public boolean isEqual(ILexNameToken token, Object other)
 	{
 		if (!(other instanceof ILexNameToken))
 		{

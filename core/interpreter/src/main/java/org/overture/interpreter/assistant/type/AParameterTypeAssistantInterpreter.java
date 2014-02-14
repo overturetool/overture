@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.types.AParameterType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -7,10 +8,8 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ParameterValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 
-public class AParameterTypeAssistantInterpreter extends
-		AParameterTypeAssistantTC
+public class AParameterTypeAssistantInterpreter extends AParameterTypeAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

@@ -14,9 +14,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PMultipleBindAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PMultipleBindAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
