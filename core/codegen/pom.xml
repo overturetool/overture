@@ -14,7 +14,7 @@
 	<name>VDM Code Generator</name>
 
   <properties> 
-    <astcreator.version>1.5.1</astcreator.version>
+    <astcreator.version>1.6.2</astcreator.version>
   </properties>
 
 	<dependencies>
@@ -70,8 +70,8 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.overture.maven.tools</groupId>
-				<artifactId>ast-creator-plugin</artifactId>
+				<groupId>org.overture.astcreator</groupId>
+ 				<artifactId>astcreator-plugin</artifactId>
 				<version>${astcreator.version}</version>
 				<executions>
 				  <execution>
@@ -124,8 +124,8 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		    <groupId>org.overture.maven.tools</groupId>
-		    <artifactId>ast-creator-plugin</artifactId>
+		   	<groupId>org.overture.astcreator</groupId>
+ 			<artifactId>astcreator-plugin</artifactId>
 		    <versionRange>${astcreator.version}</versionRange>
 		    <goals>
 		      <goal>generate</goal>
