@@ -17,9 +17,8 @@ public class PatternListTC extends Vector<PPattern>
 	 */
 	private static final long serialVersionUID = 8197456560367128159L;
 
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PatternListTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;

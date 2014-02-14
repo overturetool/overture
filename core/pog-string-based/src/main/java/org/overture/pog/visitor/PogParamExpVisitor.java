@@ -326,7 +326,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 			POContextStack question) throws AnalysisException
 	{
 		ProofObligationList obligations = new ProofObligationList();
-		question.push(new POForAllContext(node));
+		question.push(new POForAllContext(assistantFactory,node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;
@@ -466,7 +466,7 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 		ProofObligationList obligations = node.getBind().apply(rootVisitor, question);
 		obligations.add(new UniqueExistenceObligation(node, question));
 
-		question.push(new POForAllContext(node));
+		question.push(new POForAllContext(assistantFactory,node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;

@@ -6,9 +6,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AInstanceVariableDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AInstanceVariableDefinitionAssistantTC(
 			ITypeCheckerAssistantFactory af)
 	{

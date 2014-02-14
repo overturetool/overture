@@ -16,9 +16,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AOperationTypeAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AOperationTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
