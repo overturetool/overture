@@ -58,7 +58,7 @@ public class JavaExecution
 
 			input.close();
 
-			return out.toString().trim();
+			return out.toString();
 
 		} catch (IOException e)
 		{

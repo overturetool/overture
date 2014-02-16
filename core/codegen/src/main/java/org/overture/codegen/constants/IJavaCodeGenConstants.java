@@ -1,12 +1,13 @@
 package org.overture.codegen.constants;
 
-
 public interface IJavaCodeGenConstants
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaTemplates";
 	public static final String JAVA_UTILS_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaUtils";
 	public static final String JAVA_FILE_EXTENSION = ".java";
+
 	public static final String UTILS_PACKAGE = "package utils;";
+	public static final String QUOTES_PACKAHE = "quotes";
 	
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
