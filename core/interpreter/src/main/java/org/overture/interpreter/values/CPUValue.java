@@ -31,14 +31,10 @@ import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AClassType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.FCFSPolicy;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.scheduler.SchedulingPolicy;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 
 public class CPUValue extends ObjectValue
@@ -48,7 +44,6 @@ public class CPUValue extends ObjectValue
 	private final List<ObjectValue> deployed;
 	public static CPUValue vCPU;
 	
-	//public final ITypeCheckerAssistantFactory assistantFactory;// new TypeCheckerAssistantFactory();
 
 	public CPUValue(AClassType aClassType, NameValuePairMap map, ValueList argvals)
 	{

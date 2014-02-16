@@ -264,7 +264,8 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add(0, "java");
 
 		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
-		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
+		String classpath = VdmProjectClassPathCollector.toCpCliArgument(VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
+		commandList.addAll(1, Arrays.asList(new String[]{"-cp", classpath}));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
