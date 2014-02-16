@@ -1,6 +1,7 @@
 package org.overture.codegen.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,6 +25,21 @@ public class GeneralUtils
 		}
 		input.close();
 
+		return data;
+	}
+	
+	public static String readFromFile(File file) throws IOException
+	{
+		FileInputStream input = new FileInputStream(file);
+		
+		String data = "";
+		
+		int c = 0;
+		while ((c = input.read()) != -1)
+			data += (char) c;
+		
+		input.close();
+		
 		return data;
 	}
 	
