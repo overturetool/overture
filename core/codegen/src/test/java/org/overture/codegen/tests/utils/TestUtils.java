@@ -9,14 +9,27 @@ import java.util.Vector;
 
 public class TestUtils
 {	
-	public static List<File> getResultFiles(File file)
+	public static List<File> getFiles(File file, String extension)
 	{
 		List<File> files = new Vector<File>();
 		for (File f : file.listFiles())
 		{
 			if (f.isDirectory())
-				files.addAll(getResultFiles(f));
-			else if (f.getName().toLowerCase().endsWith(".result"))
+				files.addAll(getFiles(f, extension));
+			else if(f.getName().toLowerCase().endsWith(extension))
+				files.add(f);
+		}
+		return files;
+	}
+	
+	public static List<File> getTestInputFiles(File file)
+	{
+		List<File> files = new Vector<File>();
+		for (File f : file.listFiles())
+		{
+			if (f.isDirectory())
+				files.addAll(getTestInputFiles(f));
+			else if(!f.getName().contains("."))
 				files.add(f);
 		}
 		return files;
@@ -34,21 +47,6 @@ public class TestUtils
 		String className = moduleContent.substring(1+startClassIdx, endClassIdx);
 		
 		return className;
-	}
-	
-	public static String readJavaExpFromResultFile(File file) throws IOException
-	{
-		FileInputStream input = new FileInputStream(file);
-		
-		String data = "";
-		
-		int c = 0;
-		while ((c = input.read()) != -1)
-			data += (char) c;
-		
-		input.close();
-		
-		return data;
 	}
 	
 	public static List<StringBuffer> readJavaModulesFromResultFile(File file) throws IOException
