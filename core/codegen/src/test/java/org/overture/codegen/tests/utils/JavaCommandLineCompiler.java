@@ -11,17 +11,10 @@ import junit.framework.Assert;
 
 public class JavaCommandLineCompiler
 {
-	public static Boolean isWindows()
-	{
-		String osName = System.getProperty("os.name");
-
-		return osName.toUpperCase().indexOf("Windows".toUpperCase()) > -1;
-	}
-
 	public static boolean compile(File dir, File cpJar)
 	{
-		String javaHome = System.getenv("JAVA_HOME");
-		File javac = new File(new File(javaHome, "bin"), "javac");
+		String javaHome = System.getenv(JavaToolsUtils.JAVA_HOME);
+		File javac = new File(new File(javaHome, JavaToolsUtils.BIN_FOLDER), JavaToolsUtils.JAVAC);
 		return compile(javac, dir, cpJar);
 	}
 
@@ -33,7 +26,7 @@ public class JavaCommandLineCompiler
 		}
 		boolean compileOk = true;
 
-		List<File> files = getFiles(dir);
+		List<File> files = getJavaSourceFiles(dir);
 
 		String arguments = buildFileArgs(files);
 
@@ -47,7 +40,7 @@ public class JavaCommandLineCompiler
 			ProcessBuilder pb = null;
 			String arg = "";
 
-			if (isWindows())
+			if (JavaToolsUtils.isWindows())
 
 				pb = new ProcessBuilder(javac.getAbsolutePath(), (cpJar == null ? ""
 						: " -cp " + cpJar.getAbsolutePath()), arguments.trim());
@@ -123,7 +116,7 @@ public class JavaCommandLineCompiler
 		return sb.toString();
 	}
 
-	private static List<File> getFiles(File file)
+	private static List<File> getJavaSourceFiles(File file)
 	{
 		List<File> files = new Vector<File>();
 
@@ -133,7 +126,7 @@ public class JavaCommandLineCompiler
 		for (File f : file.listFiles())
 		{
 			if (f.isDirectory())
-				files.addAll(getFiles(f));
+				files.addAll(getJavaSourceFiles(f));
 			else if (f.getName().toLowerCase().endsWith(".java"))
 				files.add(f);
 		}
