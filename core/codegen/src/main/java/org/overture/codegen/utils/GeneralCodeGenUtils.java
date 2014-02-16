@@ -115,19 +115,13 @@ public class GeneralCodeGenUtils
 	public static void copyDirectory(File sourceLocation, File targetLocation)
 			throws IOException
 	{
-		if(!sourceLocation.exists())
-			sourceLocation.getParentFile().mkdirs();
-		
 		if(!targetLocation.exists())
+		{
 			targetLocation.getParentFile().mkdirs();
-		
+		}
+	
 		if (sourceLocation.isDirectory())
 		{
-			if (!targetLocation.exists())
-			{
-				targetLocation.mkdir();
-			}
-
 			String[] children = sourceLocation.list();
 			for (int i = 0; i < children.length; i++)
 			{
@@ -135,7 +129,8 @@ public class GeneralCodeGenUtils
 			}
 		} else
 		{
-
+			targetLocation.createNewFile();
+			
 			InputStream in = new FileInputStream(sourceLocation);
 			OutputStream out = new FileOutputStream(targetLocation);
 
