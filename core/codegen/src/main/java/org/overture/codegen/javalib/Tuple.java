@@ -1,8 +1,11 @@
+package org.overture.codegen.javalib;
+import java.io.Serializable;
+
 /*
  * The source of inspiration for the implementation of this class:
  * https://github.com/ripper234/Basic/tree/master/java/src/main/java/org/basic/datastructures/tuple
  */
-public class Tuple implements ValueType
+public class Tuple implements ValueType, Comparable, Serializable
 {
 	private final Object[] values;
 
@@ -114,5 +117,48 @@ public class Tuple implements ValueType
 		}
 
 		return "mk_(" + str + ")";
+	}
+
+	@Override
+	public int compareTo(Object o)
+	{
+		if (o instanceof Tuple)
+		{
+			Tuple ot = (Tuple)o;
+			int diff = values.length - ot.values.length;
+
+			if (diff != 0)
+			{
+				return diff;
+			}
+			else
+			{
+				for (int i=0; i < values.length; i++)
+				{
+					Object val = values[i];
+					
+					if(val instanceof Comparable)
+					{
+						Comparable compVal = (Comparable) val;
+
+						int c = compVal.compareTo(ot.values[i]);
+
+						if (c != 0)
+						{
+							return c;
+						}
+					}
+					else
+						return 1;
+				}
+
+				return 0;
+			}
+		}
+		
+		if(o == null)
+			return 1;
+
+		return this.toString().compareTo(o.toString());
 	}
 }

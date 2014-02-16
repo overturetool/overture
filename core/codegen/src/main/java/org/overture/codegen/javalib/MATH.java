@@ -1,3 +1,4 @@
+package org.overture.codegen.javalib;
 import java.util.Random;
 
 public class MATH
