@@ -32,7 +32,7 @@ public class AExplicitOperationDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static List<? extends PDefinition> getParamDefinitions(
+	public List<? extends PDefinition> getParamDefinitions(
 			AExplicitOperationDefinition node)
 	{
 
@@ -48,7 +48,7 @@ public class AExplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 
@@ -96,7 +96,7 @@ public class AExplicitOperationDefinitionAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AExplicitOperationDefinition d, Environment base)
 	{
 
@@ -127,7 +127,7 @@ public class AExplicitOperationDefinitionAssistantTC
 		return def;
 	}
 
-	public static List<List<PPattern>> getParamPatternList(
+	public List<List<PPattern>> getParamPatternList(
 			AExplicitOperationDefinition func)
 	{
 		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();

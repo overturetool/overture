@@ -65,10 +65,6 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7899640121529246521L;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
 
@@ -1678,7 +1674,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp first = node.getFirst();
-		question.push(new POForAllPredicateContext(node));
+		question.push(new POForAllPredicateContext(node, assistantFactory));
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
@@ -1687,7 +1683,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
 		{
-			question.push(new POForAllContext(node));
+			question.push(new POForAllContext(node,assistantFactory));
 			obligations.addAll(predicate.apply(mainVisitor, question));
 			question.pop();
 		}

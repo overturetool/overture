@@ -6,7 +6,7 @@
 
   <groupId>org.overture</groupId>
   <artifactId>root</artifactId>
-  <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+  <version>2.0.3-SNAPSHOT</version>
   <name>OvertureTool</name>
 
   <modules>
@@ -157,6 +157,32 @@
   <build>
     <defaultGoal>install</defaultGoal>
 
+    <plugins>
+      <plugin>
+        <!--
+            This plugin allows you to run
+
+            $ mvn versions:set -Dtycho.mode=maven -PWith-IDE -DnewVersion=2.0.4
+
+            and get all the version numbers updated nearly for free.
+            The tycho bit on the end just tells tycho (used in the
+            eclipse plugin build) to piss off.
+
+            Note that the versions in MANIFEST.MF files, etc, still
+            need to be set.
+
+            More details on the versions-maven-plugin are at
+            http://mojo.codehaus.org/versions-maven-plugin/
+        -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <configuration>
+          <!-- Version control obviates the need for this. -->
+          <generateBackupPoms>false</generateBackupPoms>
+        </configuration>
+      </plugin>
+    </plugins>
+
     <!-- Configuration of plugins for inheriting pom.xml files should
          be in the pluginManagement tag
     -->
@@ -207,6 +233,7 @@
           </executions>
           <configuration>
             <failOnError>false</failOnError>
+            <quiet>true</quiet>
           </configuration>
         </plugin>
 
@@ -275,9 +302,15 @@
         </plugin>
 
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+
+        <plugin>
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
-          <version>2.1.4</version>
+          <version>2.1.8</version>
           <configuration>
             <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
           </configuration>

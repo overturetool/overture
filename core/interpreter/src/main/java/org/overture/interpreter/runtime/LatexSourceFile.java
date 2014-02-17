@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexLocation;
@@ -32,12 +30,7 @@ public class LatexSourceFile extends SourceFile
 	// The argument to lstset is: escapeinside={(*@}{@*)}
 	public final String LST_ESCAPE_BEGIN = "(*@";
 	public final String LST_ESCAPE_END = "@*)";
-	private static final String sectionFont = "{\\jmsg{";
-	private static final String docFont = "{\\jmsm{";
-	private static final String fontEnd = "}}";
 
-	public boolean useJPNFont;
-	
 	public LatexSourceFile(SourceFile source) throws IOException
 	{
 		this(source.filename, source.charset);
@@ -92,31 +85,19 @@ public class LatexSourceFile extends SourceFile
 			out.println("\\usepackage[color]{vdmlisting}");
 			out.println("\\usepackage{fullpage}");
 			out.println("\\usepackage{hyperref}");
-			out.println("%JPNFONT\\usepackage{fontspec}"); // added by his 2013/10/08
-			out.println("%JPNFONT\\setmainfont{Times New Roman}");  // added by his 2013/10/24
-			out.println("%JPNFONT\\setmonofont[Scale=0.9]{Courier New}");  // added by his 2013/10/24
-			out.println("%JPNFONT\\newfontfamily\\jmsm[Scale=0.92]{MS Mincho}");  // added by his 2013/10/24
-			out.println("%JPNFONT\\newfontfamily\\jmsg[Scale=0.92]{MS Gothic}");  // added by his 2013/10/24
 			out.println("\\begin{document}");
 			out.println("\\title{}");
 			out.println("\\author{}");
 		}
 
-		// move here
-		boolean endDocFound = false;
-		boolean inVdmAlModelTag = false;
-		useJPNFont = checkFont("MS Gothic");
-		
 		if (!hasVdm_al)
 		{
 			out.println(BEGIN + getListingEnvironment());
-			inVdmAlModelTag = true; // added
 		}
 
-		//boolean endDocFound = false;
-		//boolean inVdmAlModelTag = false;
-		//useJPNFont = checkFont("MS Gothic");
-		
+		boolean endDocFound = false;
+		boolean inVdmAlModelTag = false;
+
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
 			String line = rawLines.get(lnum - 1);
@@ -132,14 +113,9 @@ public class LatexSourceFile extends SourceFile
 				inVdmAlModelTag = true;
 			}
 
-			//if (line.contains("\\subsection{")) // added by his 2013/10/16
-			//{
-			//	inVdmAlModelTag = false;
-			//}
-
 			if (hasVdm_al && modelOnly && !inVdmAlModelTag)
 			{
-				//continue;
+				continue;
 			}
 
 			String spaced = detab(line, Properties.parser_tabstop);
@@ -149,32 +125,14 @@ public class LatexSourceFile extends SourceFile
 
 			if (markCoverage)
 			{
-					//List<LexLocation> list = hits.get(lnum);
-					//out.println(markup(spaced, list));
-				if(inVdmAlModelTag) {
-					List<LexLocation> list = hits.get(lnum);
-					out.println(markup(spaced, list));
-				} else {
-					//List<LexLocation> list = hits.get(lnum);
-					
-					if(spaced.contains("\\subsection{") || spaced.contains("\\subsubsection{")) {
-						spaced = utfIncludeCheck(spaced, false);
-						out.println(spaced.replace(docFont, sectionFont));
-					} else
-					{ 
-						out.println(utfIncludeCheck(spaced, false));
-					}
-				}
+				List<LexLocation> list = hits.get(lnum);
+				out.println(markup(spaced, list));
 			} else
 			{
 				out.println(spaced);
 			}
 
-			//if (line.contains(END + getListingEnvironment()))
-			//{
-			//	inVdmAlModelTag = false;
-			//}
-			if (spaced.contains(END + getListingEnvironment()))
+			if (line.contains(END + getListingEnvironment()))
 			{
 				inVdmAlModelTag = false;
 			}
@@ -183,7 +141,6 @@ public class LatexSourceFile extends SourceFile
 		if (!hasVdm_al)
 		{
 			out.println(END + getListingEnvironment());
-			inVdmAlModelTag = false; // added
 		}
 
 		if (includeCoverageTable)
@@ -232,7 +189,7 @@ public class LatexSourceFile extends SourceFile
 			long calls = LexLocation.getSpanCalls(name);
 			total += calls;
 
-			sb.append(utfIncludeCheck(latexQuote(name.toString()), false) + " & "
+			sb.append(latexQuote(name.toString()) + " & "
 					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");
@@ -252,8 +209,7 @@ public class LatexSourceFile extends SourceFile
 	{
 		if (list == null)
 		{
-			//return line;
-			return utfIncludeCheck(line, true);
+			return line;
 		} else
 		{
 			StringBuilder sb = new StringBuilder();
@@ -267,94 +223,25 @@ public class LatexSourceFile extends SourceFile
 
 				if (start >= p) // Backtracker produces duplicate tokens
 				{
-					//sb.append(line.substring(p, start));
-					sb.append(utfIncludeCheck(line.substring(p, start), true));
+					sb.append(line.substring(p, start));
 					sb.append(LST_ESCAPE_BEGIN + "\\vdmnotcovered{");
-					//String temp = utfIncludeCheck(latexQuote(line.substring(start, end)), false);
-					//if(temp.charAt(temp.length()-1)==' ') temp=temp.substring(0, temp.length()-1);
-					sb.append(utfIncludeCheck(latexQuote(line.substring(start, end)), false));  // modified by his
+					sb.append(latexQuote(line.substring(start, end)));
 					sb.append("}" + LST_ESCAPE_END); // \u00A3");
 
 					p = end;
 				}
 			}
 
-			//sb.append(line.substring(p));
-			sb.append(utfIncludeCheck(line.substring(p), true));
+			sb.append(line.substring(p));
 			return sb.toString();
 		}
 	}
 
-	
 	private String latexQuote(String s)
 	{
 		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
 
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
-	
-	// add by his 2013/10/08
-	private String utfIncludeCheck(String line, Boolean addatsign)
-	{
-		String checked="";
-		boolean start=false;
-		
-	    for(int i=0;i<line.length();i++)
-	    {
-	        if(isOneByte(line.substring(i, i+1)))
-	        {
-	        	if(start)
-	        	{
-	        		start=false;
-	        		checked+=((addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : fontEnd) + line.substring(i, i+1));
-	        	} else
-	        	{
-	        		checked+=line.substring(i, i+1);
-	        	}
-	        } else
-	        {
-	        	if(!start)
-	        	{
-	        		checked+=((addatsign ? (useJPNFont ? LST_ESCAPE_BEGIN : "") : "") + (useJPNFont ? docFont : "") + line.substring(i, i+1));
-	        		start=true;
-	        	} else
-	        	{
-	        		checked+=line.substring(i, i+1);
-	        	}
-	        }
-	    }
-	    if(start) 
-   		{
-	    	checked+=(addatsign ? (useJPNFont ? (fontEnd + LST_ESCAPE_END) : "" ) : fontEnd);
-   		}
-		return checked;
-	}
-	
-	private boolean isOneByte(String a_String)
-	{
-		boolean result=false;
-		try {
-			byte[] code = a_String.getBytes("UTF-8");
-			result = (code.length == 1 ? true : false);
-		} catch(IOException ex) {
-		}
-		return result;
-	}
-	
-	private boolean checkFont(String FontName)
-	{
-		boolean checked=false;
-		
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-		Font fonts[] = ge.getAllFonts();
-	      
-		for (int i = 0; i < fonts.length; i++ ) {
-			if(fonts[i].getName().toString().equals(FontName)) {
-				checked = true;
-				break;
-			}
-		}
-		return checked;
-	}
 }

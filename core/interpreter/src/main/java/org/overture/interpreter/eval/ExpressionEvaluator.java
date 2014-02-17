@@ -521,10 +521,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (node.getExpdef() == null)
 			{
-				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getImpdef(), fixed);
+				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getImpdef(), fixed);
 			} else
 			{
-				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getExpdef(), fixed);
+				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getExpdef(), fixed);
 			}
 
 			rv.setSelf(fv.self);

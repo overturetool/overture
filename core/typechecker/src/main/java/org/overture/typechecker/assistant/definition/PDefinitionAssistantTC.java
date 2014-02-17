@@ -70,8 +70,8 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return false;
 
 	}
-	//TODO: Used at places of the interpreter without the posibility to call the assistantFactory to call the method dynamically.
-	//places like ClassInterpreter.
+	
+	
 	public boolean isFunctionOrOperation(PDefinition possible)
 	{
 		return af.createPDefinitionAssistant().isFunction(possible) || af.createPDefinitionAssistant().isOperation(possible);
@@ -149,7 +149,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void markUsed(PDefinition d)
+	public void markUsed(PDefinition d)
 	{
 		try
 		{
@@ -182,7 +182,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static List<PDefinition> getDefinitions(PDefinition d)
+	public List<PDefinition> getDefinitions(PDefinition d)
 	{
 		try
 		{

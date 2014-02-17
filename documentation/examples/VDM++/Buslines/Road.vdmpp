@@ -22,7 +22,7 @@ class Road
 			roadLength := length;
 			speedlimit := Config`DefaultRoadSpeedLimit;
 			wps := waypoints;
-			timePenalty := floor(roadLength / speedlimit);
+			timePenalty := floor(length / Config`DefaultRoadSpeedLimit);
 			)
 		)
 		pre card waypoints > 1;

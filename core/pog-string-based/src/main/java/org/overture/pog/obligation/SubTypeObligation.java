@@ -205,7 +205,7 @@ public class SubTypeObligation extends ProofObligation
 		StringBuilder sb = new StringBuilder();
 		String prefix = "";
 
-		etype = PTypeAssistantTC.deBracket(etype);
+		etype = ctxt.createPTypeAssistant().deBracket(etype);
 
 		if (etype instanceof AUnionType)
 		{

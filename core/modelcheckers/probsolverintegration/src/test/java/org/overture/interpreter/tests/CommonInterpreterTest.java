@@ -12,6 +12,7 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -20,6 +21,8 @@ import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.test.framework.ConditionalIgnoreMethodRule;
+import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -42,8 +45,12 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 		Settings.dialect = dialect;
 		Settings.release = Release.VDM_10;
 	}
+	
+	@Rule
+	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
 	@Test
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
 	public void test() throws Exception
 	{
 		configureResultGeneration();
