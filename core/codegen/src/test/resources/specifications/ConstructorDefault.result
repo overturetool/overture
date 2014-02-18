@@ -1,9 +1,19 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class A {
     public A() {
     }
 }
 
 ##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class B {
     public B() {
         //Skip;

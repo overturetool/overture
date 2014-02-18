@@ -1,4 +1,6 @@
-import utils.*;
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
 
 
 public class A {
@@ -40,7 +42,9 @@ public class A {
 }
 
 ##########
-import utils.*;
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
 
 
 public class B {

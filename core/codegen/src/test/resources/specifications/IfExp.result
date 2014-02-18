@@ -1,3 +1,8 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class A {
     public static final Number x = 1L + ((2L == 3L) ? 4L : (5L + 6L));
     public static final Number y = (2L == 3L) ? 4L

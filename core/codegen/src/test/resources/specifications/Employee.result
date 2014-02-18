@@ -1,3 +1,8 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 abstract public class Employee {
     public Employee() {
     }
@@ -6,6 +11,11 @@ abstract public class Employee {
 }
 
 ##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class HourlyPaidEmployee extends Employee {
     public Number hours;
     private Number rate;
@@ -34,6 +44,11 @@ public class HourlyPaidEmployee extends Employee {
 }
 
 ##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
@@ -50,7 +65,7 @@ public class FixedSalaryEmployee extends Employee {
 }
 
 ##########
-import utils.*;
+import org.overture.codegen.javalib.*;
 
 import java.util.*;
 
@@ -96,6 +111,11 @@ public class Company {
 }
 
 ##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class World {
     public World() {
     }

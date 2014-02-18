@@ -1,4 +1,6 @@
-import utils.*;
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
 
 
 public class Records {

@@ -1,3 +1,8 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
 public class A {
     public static final A a0 = new A();
     public static final A a1 = new A();
