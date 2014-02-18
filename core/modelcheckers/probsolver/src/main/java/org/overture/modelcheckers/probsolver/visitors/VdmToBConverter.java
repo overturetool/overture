@@ -21,7 +21,7 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.NodeList;//added
-
+import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;           //added -> ADisjunctPredicate
 import org.overture.ast.expressions.ANotUnaryExp;                  //added -> ANegationPredicate
 //import org.overture.ast.expressions.ABooleanConstExp;              //added -> ATruethPredicate, AFalsityPredicate
@@ -75,8 +75,30 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.ANotEqualBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AApplyExp;
+import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.AMapInverseUnaryExp;
+import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.ALenUnaryExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
+import org.overture.ast.expressions.ADistUnionUnaryExp;
+import org.overture.ast.expressions.APowerSetUnaryExp;
+import org.overture.ast.expressions.ADistIntersectUnaryExp;
+import org.overture.ast.expressions.ANotInSetBinaryExp;
+import org.overture.ast.expressions.AProperSubsetBinaryExp;
+import org.overture.ast.expressions.AElseIfExp;
+
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+//import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;//added -> AIdentifireExpression
@@ -94,6 +116,11 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ASeq1SeqType;
+
 import org.overture.modelcheckers.probsolver.SolverConsole;
 
 import de.be4.classicalb.core.parser.node.AAddExpression;//added
