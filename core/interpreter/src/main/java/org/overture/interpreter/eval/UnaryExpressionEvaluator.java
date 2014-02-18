@@ -160,7 +160,18 @@ public class UnaryExpressionEvaluator extends LiteralEvaluator
 
     		for (Value v: setmap)
     		{
-   				result.putAll(v.mapValue(ctxt));
+    			ValueMap m = v.mapValue(ctxt);
+    			
+    			for (Value k: m.keySet())
+    			{
+    				Value rng = m.get(k);
+    				Value old = result.put(k, rng);
+
+    				if (old != null && !old.equals(rng))
+    				{
+    					VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: " + k, ctxt);
+    				}
+    			}
     		}
 
     		return new MapValue(result);

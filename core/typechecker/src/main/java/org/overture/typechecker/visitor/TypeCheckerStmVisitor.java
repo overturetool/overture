@@ -586,34 +586,15 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 
-		if (node.getCycles() instanceof AIntLiteralExp)
+		PType argType = node.getCycles().apply(THIS, question);
+
+		if (!TypeComparator.compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
-			AIntLiteralExp i = (AIntLiteralExp) node.getCycles();
-
-			if (i.getValue().getValue() < 0)
-			{
-				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
-			}
-
-			node.setValue(i.getValue().getValue());
-		} else if (node.getCycles() instanceof ARealLiteralExp)
-		{
-			ARealLiteralExp i = (ARealLiteralExp) node.getCycles();
-
-			if (i.getValue().getValue() < 0
-					|| Math.floor(i.getValue().getValue()) != i.getValue().getValue())
-			{
-				TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
-			}
-
-			node.setValue((long) i.getValue().getValue());
-		} else
-		{
-			TypeCheckerErrors.report(3282, "Argument to cycles must be integer >= 0", node.getCycles().getLocation(), node.getCycles());
+			TypeCheckerErrors.report(3282, "Arguments to cycles must be a nat", node.getLocation(), node);
+			TypeCheckerErrors.detail("Actual", argType);
 		}
 
-		node.setType(node.getStatement().apply(THIS, question));
-		return node.getType();
+		return node.getStatement().apply(THIS, question);
 	}
 
 	// TODO: Missing the other DefStatement
