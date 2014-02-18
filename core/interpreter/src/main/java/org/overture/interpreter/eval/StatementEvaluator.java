@@ -425,12 +425,12 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		else
 		{
 			// We disable the swapping and time (RT) as cycles evaluation should be "free".
-			Long value;
+			Long cycles;
 			
 			try
 			{
 				ctxt.threadState.setAtomic(true);
-				value = node.getValue();
+				cycles = node.getCycles().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);;
 			}
 			finally
 			{
@@ -440,7 +440,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
 			me.inOuterTimestep(false);
-			me.duration(ctxt.threadState.CPU.getDuration(value), ctxt, node.getLocation());
+			me.duration(ctxt.threadState.CPU.getDuration(cycles), ctxt, node.getLocation());
 			return rv;
 		}
 	}
@@ -467,7 +467,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			try
 			{
 				ctxt.threadState.setAtomic(true);
-				step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
+				step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);
 			}
 			finally
 			{

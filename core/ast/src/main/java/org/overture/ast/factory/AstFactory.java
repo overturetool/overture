@@ -3361,7 +3361,7 @@ public class AstFactory
 	public static AStateInitExp newAStateInitExp(AStateDefinition state)
 	{
 		AStateInitExp result = new AStateInitExp();
-		initExpression(result, state.getLocation());
+		initExpression(result, state.getInitExpression().getLocation());
 		result.setState(state);
 		result.getLocation().executable(false);
 		return result;
