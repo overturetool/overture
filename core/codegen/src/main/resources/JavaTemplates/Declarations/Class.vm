@@ -2,34 +2,16 @@
 #if ($OoAstAnalysis.usesQuoteLiterals($node))
 	#set( $quoteImport = "import quotes.*;")
 #end
-
-#set( $javaUtilImport = "")
-#set( $utilImport = "")
-#if ($OoAstAnalysis.usesSequences($node) || $OoAstAnalysis.usesSets($node))
-	#set($javaUtilImport = "import java.util.*;")
-	#set($utilImport = "import utils.*;")
-#end
-
-#set( $tupleImport = "")
-#if ($OoAstAnalysis.usesTuples($node))
-	#set( $tupleImport = "import org.javatuples.*;")
-#end
-
-#if ($OoAstAnalysis.usesUtils($node))
-	#set( $utilImport = "import utils.*;")
-#end
-
-$javaUtilImport
-$utilImport
+##
+import org.overture.codegen.javalib.*;
+import java.util.*;
 $quoteImport
-$tupleImport
-
+##
 #set( $abstract = "")
 #if ($node.getAbstract())
 	#set( $abstract = "abstract")
 #end
 ##
-
 #set( $static = "")
 #if ($node.getStatic())
 	#set( $static = "static")
@@ -37,17 +19,15 @@ $tupleImport
 
 $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
 {
+	#foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
 
-#foreach( $field in $node.getFields() )
-$JavaFormat.format($field)
-#end
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
 
-#foreach( $method in $node.getMethods() )
-$JavaFormat.format($method)
-#end
-
-#foreach( $innerClass in $node.getRecords() )
-$JavaFormat.format($innerClass)
-#end
-
+	#foreach( $innerClass in $node.getRecords() )
+	$JavaFormat.format($innerClass)
+	#end
 }
