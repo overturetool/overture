@@ -6506,9 +6506,9 @@ The stop statement can be used to terminate a thread or to prevent a periodic th
 \begin{enumerate}
 \item \Lop{self} can be passed as an argument to \texttt{stop} or \texttt{stoplist}, effectively killing the current thread
 \item Note that \emph{thread identifiers} can \emph{not} be passed as an argument
-\item in contrast to \texttt{start} and \texttt{startlist}, \texttt{stop} and \texttt{stoplist} will block until the thread(s), identified by their object identifiers that are passed as an argument, are dead.
-\item passing the thread identifier of a task that is already dead, will yield a run-time error
-\item killed threads can be restarted by calling \texttt{start} and \texttt{startlist} again
+\item in contrast to \texttt{start} and \texttt{startlist}, \texttt{stop} and \texttt{stoplist} will block until the thread(s), identified by their object identifiers that are passed as an argument, are dead; if \Lop{self} is part of the set, it will be stopped last
+\item passing the object identifier of a task that has never been started or is already dead, will yield a run-time error
+\item  objects can be restarted by calling \texttt{start} and \texttt{startlist} again, which will create a fresh and unique \emph{thread identifier} for each thread.
 \item it is only possible to stop threads that are running on the same CPU
 \end{enumerate}
 
@@ -6575,7 +6575,9 @@ enclosed statement, the value (an expression that must yield a natural number as
 given in the duration statement should
 be used instead of the increment which would normally be computed for that
 statement. Thus the duration statement provides a mechanism to
-override the VDM interpreter's default execution time computation.
+override the VDM interpreter's default execution time computation. Note that the execution
+of the expression is done in zero time and cannot cause thread switches.
+ 
 
 \item[Example:] First a simple example:
 \begin{lstlisting}
@@ -6655,7 +6657,8 @@ be computed for that statement. Thus the cycles statement provides a
 mechanism to override the VDM interpreter's default execution time
 computation similar to the duration statement but in a way that is
 relative to the speed of the \texttt{CPU} that the computation is carried
-out on.
+out on. Note that the execution
+of the expression is done in zero time and cannot cause thread switches.
 
 \item[Example:] First a simple example:
 \begin{lstlisting}
@@ -8459,8 +8462,6 @@ of describing stochastic activities in a class.
     \Lop{sporadic}, \lfeed \Lit{(}, \Ruleref{expression},  \Ruleref{expression},   \Ruleref{expression}, 
     \Lit{)}, \lfeed \Lit{(}, \Ruleref{name}, \Lit{)}
   }
-
-The type of the expressions must yield natural number, as we use a natural number valued wall-clock in the interpreter, otherwise a run-time error will occur. Note that the evaluation of the expressions causes time to elapse whenever the \Lop{start} or \Lop{start\_list} statement is executed. The expressions all denote a time value with a resolution of 1~nsec.
 
 \item[Semantics:] The type of the expressions should all yield a natural number (as we use a natural number valued wall-clock in the VDM-RT interpreter), otherwise a run-time error will occur. Note that the evaluation of the expressions also causes time to elapse whenever the \Lop{start} or \Lop{start\_list} statement is executed. The expressions all denote a time value with a resolution of 1~nsec.
 For each sporadic obligation, three different numbers are used. They are, in order 
