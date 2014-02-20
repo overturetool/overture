@@ -5,7 +5,7 @@
   Production
  
 ## Description:
-The main UI plugin for the Overture IDE
+The main UI plugin for the Overture IDE 
 
 
 ## Known Issues:
