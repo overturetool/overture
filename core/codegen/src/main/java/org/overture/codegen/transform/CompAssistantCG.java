@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -140,7 +141,7 @@ public class CompAssistantCG
 		return seqTypeCg.clone();
 	}
 	
-	public AIfStmCG consConditionalAdd(String resultingSeqName, ACompSeqExpCG seqComp)
+	public PStmCG consConditionalAdd(String resultingSeqName, ACompSeqExpCG seqComp)
 	{
 		AVariableExpCG col = new AVariableExpCG();
 		col.setOriginal(resultingSeqName);
@@ -155,11 +156,16 @@ public class CompAssistantCG
 		callStm.getArgs().add(seqComp.getFirst());
 		callStm.setType(new AVoidTypeCG());
 		
-		AIfStmCG ifStm = new AIfStmCG();
-		ifStm.setIfExp(seqComp.getPredicate());
-		ifStm.setThenStm(callStm);
+		if(seqComp.getPredicate() != null)
+		{
+			AIfStmCG ifStm = new AIfStmCG();
+			ifStm.setIfExp(seqComp.getPredicate());
+			ifStm.setThenStm(callStm);
+			
+			return ifStm;
+		}
 		
-		return ifStm;
+		return callStm;
 	}
 	
 	public ALocalVarDeclCG consIteratorDecl(String iteratorName, String collectionName)
