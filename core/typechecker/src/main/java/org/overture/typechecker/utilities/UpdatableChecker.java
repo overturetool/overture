@@ -13,7 +13,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to check if a definition is updatable from a node in the AST
@@ -69,8 +68,8 @@ public class UpdatableChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
-	{		
-		return  node.getNameScope().matches(NameScope.STATE) 
+	{
+		return node.getNameScope().matches(NameScope.STATE)
 				|| af.createPTypeAssistant().isClass(af.createPDefinitionAssistant().getType(node));
 	}
 

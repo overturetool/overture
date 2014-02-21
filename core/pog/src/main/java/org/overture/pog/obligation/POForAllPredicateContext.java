@@ -57,9 +57,9 @@ public class POForAllPredicateContext extends POForAllContext
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(AExists1Exp exp)
+	public POForAllPredicateContext(ITypeCheckerAssistantFactory af,AExists1Exp exp)
 	{
-		super(exp);
+		super(af,exp);
 		this.predicate = exp.getPredicate();
 	}
 

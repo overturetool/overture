@@ -89,7 +89,7 @@
 			</activation>
 
 			<properties>
-				<prob.cli.url>http://nightly.cobra.cs.uni-duesseldorf.de/cli</prob.cli.url>
+				<prob.cli.url>http://nightly.cobra.cs.uni-duesseldorf.de/prob2/cli-milestone-13</prob.cli.url>
 				<!--prob.cli.url>http://nightly.cobra.cs.uni-duesseldorf.de/releases/1.3.6-v1</prob.cli.url-->
 			</properties>
 		</profile>

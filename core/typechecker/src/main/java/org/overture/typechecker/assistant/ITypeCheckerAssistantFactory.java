@@ -88,10 +88,7 @@ import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
@@ -107,9 +104,8 @@ import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
-	//Typechecker
-	
-	
+	// Typechecker
+
 	// Definition
 	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
@@ -124,7 +120,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AImplicitOperationDefinitionAssistantTC createAImplicitOperationDefinitionAssistant();
 
-	//AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
+	// AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
 
 	AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant();
 
@@ -138,7 +134,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	ATypeDefinitionAssistantTC createATypeDefinitionAssistant();
 
-	//AValueDefinitionAssistantTC createAValueDefinitionAssistant();
+	// AValueDefinitionAssistantTC createAValueDefinitionAssistant();
 
 	PAccessSpecifierAssistantTC createPAccessSpecifierAssistant();
 
@@ -178,9 +174,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	PImportAssistantTC createPImportAssistant();
 
 	// pattern
-	//ABooleanPatternAssistantTC createABooleanPatternAssistant();
+	// ABooleanPatternAssistantTC createABooleanPatternAssistant();
 
-	//ACharacterPatternAssistantTC createACharacterPatternAssistant();
+	// ACharacterPatternAssistantTC createACharacterPatternAssistant();
 
 	AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
 
@@ -262,13 +258,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AFunctionTypeAssistantTC createAFunctionTypeAssistant();
 
-	ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant();
-
 	AOperationTypeAssistantTC createAOperationTypeAssistant();
-
-	AOptionalTypeAssistantTC createAOptionalTypeAssistant();
-
-	AParameterTypeAssistantTC createAParameterTypeAssistant();
 
 	APatternListTypePairAssistantTC createAPatternListTypePairAssistant();
 

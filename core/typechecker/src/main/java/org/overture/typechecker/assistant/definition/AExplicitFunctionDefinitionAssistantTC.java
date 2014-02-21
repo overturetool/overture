@@ -23,9 +23,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AExplicitFunctionDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AExplicitFunctionDefinitionAssistantTC(
 			ITypeCheckerAssistantFactory af)
 	{

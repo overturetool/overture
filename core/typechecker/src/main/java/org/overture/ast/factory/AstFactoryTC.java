@@ -9,13 +9,12 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class AstFactoryTC extends AstFactory
 {
-	
-	
-	public static SClassDefinition newACpuClassDefinition(ITypeCheckerAssistantFactory assistantFactory)
+
+	public static SClassDefinition newACpuClassDefinition(
+			ITypeCheckerAssistantFactory assistantFactory)
 			throws ParserException, LexException
 	{
 		ACpuClassDefinition result = new ACpuClassDefinition();
@@ -24,7 +23,8 @@ public class AstFactoryTC extends AstFactory
 		return result;
 	}
 
-	public static SClassDefinition newABusClassDefinition(ITypeCheckerAssistantFactory assistantFactory)
+	public static SClassDefinition newABusClassDefinition(
+			ITypeCheckerAssistantFactory assistantFactory)
 			throws ParserException, LexException
 	{
 		ABusClassDefinition result = new ABusClassDefinition();

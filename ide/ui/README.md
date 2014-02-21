@@ -3,8 +3,9 @@
   Kenneth Lausdahl, Augusto Ribeiro
 - **Status:**
   Production
-
+ 
 ## Description:
+The main UI plugin for the Overture IDE 
 
 
 ## Known Issues:

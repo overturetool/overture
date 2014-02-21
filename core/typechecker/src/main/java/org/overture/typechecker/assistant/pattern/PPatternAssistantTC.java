@@ -20,9 +20,8 @@ import org.overture.typechecker.utilities.pattern.PatternResolver;
 
 public class PPatternAssistantTC extends PPatternAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PPatternAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);

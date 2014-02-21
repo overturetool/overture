@@ -75,14 +75,14 @@ public class POForAllContext extends POContext
 		this.bindings = exp.getBindList();
 	}
 
-	public POForAllContext(AExists1Exp exp)
+	public POForAllContext(ITypeCheckerAssistantFactory af, AExists1Exp exp)
 	{
-		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
-	public POForAllContext(AIotaExp exp)
+	public POForAllContext(ITypeCheckerAssistantFactory af,AIotaExp exp)
 	{
-		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
 	public POForAllContext(ALambdaExp exp)
