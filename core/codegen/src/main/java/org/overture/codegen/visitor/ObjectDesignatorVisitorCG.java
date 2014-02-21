@@ -45,15 +45,10 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 			AIdentifierObjectDesignator node, OoAstInfo question)
 			throws AnalysisException
 	{
-		ILexNameToken name = node.getName();
 		AVariableExp exp = node.getExpression();
 
-		String nameCg = name.getName();
 		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
-
 		AIdentifierObjectDesignatorCG idObjDesignator = new AIdentifierObjectDesignatorCG();
-
-		idObjDesignator.setName(nameCg);
 
 		if (!(expCg instanceof AVariableExpCG))
 			throw new AnalysisExceptionCG("Expected expression of identifier object designator to be a variable expression but got: "
