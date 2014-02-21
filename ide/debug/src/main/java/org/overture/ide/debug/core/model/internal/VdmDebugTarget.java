@@ -38,6 +38,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -842,8 +844,14 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
 
+				
+				IContentType externalContentType = Platform.getContentTypeManager().getContentType("org.overture.ide.vdm.external.content-type");
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
+					if(externalContentType.isAssociatedWith(source.getFile().getName()))
+					{
+						continue;
+					}
 					String name = source.getSystemFile().getName() + "cov";
 
 					IProject p = (IProject) vdmProject.getAdapter(IProject.class);
