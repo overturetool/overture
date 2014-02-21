@@ -39,7 +39,7 @@ public class TestCase
 						{
 							throw e;
 						}
-						return ClassInterpreter.getInstance().evaluate("Error`throw(\""+e.getMessage().replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'").replaceAll("\\\\", "\\\\\\\\")+"\")", mainContext);
+						return ClassInterpreter.getInstance().evaluate("Error`throw(\""+e.getMessage().replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'")+"\")", mainContext);
 					}
 				}
 			}
