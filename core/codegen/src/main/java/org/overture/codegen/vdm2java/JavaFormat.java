@@ -75,6 +75,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaFormat
 {
@@ -89,17 +90,17 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
-	private JavaTempVarNameGen tempVarNameGen;
+	private TempVarNameGen tempVarNameGen;
 	
-	public JavaFormat(List<AClassDeclCG> classes)
+	public JavaFormat(List<AClassDeclCG> classes, TempVarNameGen tempVarNameGen)
 	{
-		this();
+		this.tempVarNameGen = tempVarNameGen;
 		this.classes = classes;
 	}
 	
 	public JavaFormat()
 	{
-		this.tempVarNameGen = new JavaTempVarNameGen();
+		this.tempVarNameGen = new TempVarNameGen();
 	}
 	
 	public String format(INode node) throws AnalysisException

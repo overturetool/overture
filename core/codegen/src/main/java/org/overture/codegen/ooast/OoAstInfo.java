@@ -15,6 +15,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.utils.TempVarNameGen;
 import org.overture.codegen.visitor.ClassVisitorCG;
 import org.overture.codegen.visitor.DeclVisitorCG;
 import org.overture.codegen.visitor.ExpVisitorCG;
@@ -26,7 +27,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class OoAstInfo
 {
-	
 	//Visitors:
 	private OoAstGenerator rootVisitor;
 	private ClassVisitorCG classVisitor;
@@ -45,11 +45,13 @@ public class OoAstInfo
 
 	//Unsupported VDM nodes
 	private Set<NodeInfo> unsupportedNodes;
+
+	//For generating variable names
+	private TempVarNameGen tempVarNameGen;
 	
-	public OoAstInfo(OoAstGenerator rootVisitor)
+	public OoAstInfo()
 	{
 		super();
-		this.rootVisitor = rootVisitor;
 		this.classVisitor = new ClassVisitorCG();
 		this.declVisitor = new DeclVisitorCG();
 		this.expVisitor = new ExpVisitorCG();
@@ -63,6 +65,8 @@ public class OoAstInfo
 		this.quoteVaues = new HashSet<String>();
 		
 		this.unsupportedNodes = new HashSet<NodeInfo>();
+		
+		this.tempVarNameGen = new TempVarNameGen();
 	}
 
 	public OoAstGenerator getRootVisitor()
@@ -177,5 +181,10 @@ public class OoAstInfo
 	public Set<NodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
+	}
+	
+	public TempVarNameGen getTempVarNameGen()
+	{
+		return tempVarNameGen;
 	}
 }
