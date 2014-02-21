@@ -34,9 +34,11 @@ import org.overture.codegen.ooast.ClassDeclStatus;
 import org.overture.codegen.ooast.ExpStatus;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.ooast.OoAstGenerator;
+import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaCodeGen
 {
@@ -44,27 +46,11 @@ public class JavaCodeGen
 	
 	private OoAstGenerator generator;
 	
-	public static final String[] RESERVED_WORDS = {
-		
-			//Java Keywords
-			"abstract", "continue", "for", "new",
-			"switch", "assert", "default", "goto", "package", "synchronized",
-			"boolean", "do", "if", "private", "this", "break", "double",
-			"implements", "protected", "throw", "byte", "else", "import",
-			"public", "throws", "case", "enum", "instanceof", "return",
-			"transient", "catch", "extends", "int", "short", "try", "char",
-			"final", "interface", "static", "void", "class", "finally", "long",
-			"strictfp", "volatile", "const", "float", "native", "super",
-			"while"
-	};
-	
 	public static final String[] RESERVED_TYPE_NAMES = {
 		//Classes used from the Java standard library
 		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
 	};
-	
-	public static final String GENERATED_TEMP_VAR_NAME_PREFIX = "temp_";
-	
+
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
 	
@@ -147,7 +133,7 @@ public class JavaCodeGen
 			if (fileContent != null)
 			{
 				StringBuffer generated = new StringBuffer();
-				generated.append(IJavaCodeGenConstants.UTILS_PACKAGE
+				generated.append(IJavaCodeGenConstants.UTILS_PACKAGE_HEADER
 						+ IText.NEW_LINE + IText.NEW_LINE);
 
 				generated.append(fileContent);
@@ -184,7 +170,9 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(new JavaFormat(getClassDecls(statuses)), new OoAstAnalysis()));
+		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), generator.getOoAstInfo().getTempVarNameGen());
+		OoAstAnalysis ooAstAnalysis = new OoAstAnalysis();
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (ClassDeclStatus status : statuses)
@@ -194,6 +182,7 @@ public class JavaCodeGen
 			{
 				AClassDeclCG classCg = status.getClassCg();
 
+				classCg.apply(new TransformationVisitor(generator.getOoAstInfo()));
 				classCg.apply(mergeVisitor, writer);
 				String code = writer.toString();
 
@@ -277,9 +266,9 @@ public class JavaCodeGen
 	
 	private static void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		Set<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(RESERVED_WORDS));
+		Set<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS));
 		Set<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
-		Set<Violation> tempVarViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(new String[]{GENERATED_TEMP_VAR_NAME_PREFIX}));
+		Set<Violation> tempVarViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(new String[]{TempVarNameGen.GENERATED_TEMP_VAR_NAME_PREFIX}));
 		
 		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty() || !tempVarViolations.isEmpty())
 			throw new InvalidNamesException("The model either uses words that are reserved by Java, declares VDM types that uses Java type names or uses variable names that potentially conflicts with code generated temporary variable names", reservedWordViolations, typenameViolations, tempVarViolations);
