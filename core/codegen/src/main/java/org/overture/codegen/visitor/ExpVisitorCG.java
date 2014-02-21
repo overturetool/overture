@@ -69,6 +69,7 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.AReverseUnaryExp;
 import org.overture.ast.expressions.ASelfExp;
+import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
@@ -88,6 +89,8 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -99,6 +102,7 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
@@ -438,7 +442,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		if(ExpAssistantCG.isAssigned(node))
 		{
-			question.addUnsupportedNode(node, "Let expression not supported in assignments");
+			question.addUnsupportedNode(node, "Generation of a let expression is not supported in assignments");
 			return null;
 		}
 		
@@ -520,6 +524,41 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			OoAstInfo question) throws AnalysisException
 	{
 		return expAssistant.handleUnaryExp(node, new ADistConcatUnaryExpCG(), question);
+	}
+	
+	@Override
+	public PExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PPattern pattern = node.getSetBind().getPattern();
+		
+		if(!(pattern instanceof AIdentifierPattern))
+		{
+			question.addUnsupportedNode(node, "Generation of a sequence comprehension only supports identifier patterns");
+			return null;
+		}
+		AIdentifierPattern setBindId = (AIdentifierPattern) pattern;
+		PType type = node.getType();
+		PExp first = node.getFirst();
+		PExp set = node.getSetBind().getSet();
+		PExp predicate = node.getPredicate();
+
+		String setBindIdCg = setBindId.getName().getName();
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
+		PExpCG setCg = set.apply(question.getExpVisitor(), question);
+		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		String varCg = question.getTempVarNameGen().nextVarName();
+		
+		ACompSeqExpCG seqComp = new ACompSeqExpCG();
+		seqComp.setSetBindId(setBindIdCg);
+		seqComp.setType(typeCg);
+		seqComp.setFirst(firstCg);
+		seqComp.setSet(setCg);
+		seqComp.setPredicate(predicateCg);
+		seqComp.setVar(varCg);
+		
+		return seqComp;
 	}
 	
 	@Override
@@ -793,7 +832,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		boolean isImplicit = !node.getName().getExplicit();
 		
-		if (isDefInOwningClass || isImplicit)
+		if (owningClass == null || isDefInOwningClass || isImplicit)
 		{
 			AVariableExpCG varExp = new AVariableExpCG();
 			

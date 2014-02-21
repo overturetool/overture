@@ -109,7 +109,7 @@ objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
 //	|	[location]:location}
 //  =   {apply} [object]:objectDesignator [args]:exp*
     =   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
-    |   {identifier} [name]:java_String [exp]:expCG.variable
+    |   {identifier} [exp]:expCG.variable//[name]:java_String
     |   {new} [exp]:expCG.new
     |   {self}// [self]:java_String
     ;
@@ -133,6 +133,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{notImplemented}
            |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
            |	{forAll} [var]:java_String [exp]:expCG [body]:stmCG
+           |	{while} [exp]:expCG [body]:stmCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}
@@ -240,6 +241,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
+	| {comp} [first]:expCG [setBindId]:java_String [set]:expCG [predicate]:expCG [var]:java_String
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
 	;

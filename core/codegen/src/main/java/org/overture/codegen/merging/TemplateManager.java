@@ -25,6 +25,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
@@ -108,6 +109,7 @@ import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -239,6 +241,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AForIndexStmCG.class, templateStructure.STM_PATH + "ForIndex");
 		
 		nodeTemplateFileNames.put(AForAllStmCG.class, templateStructure.STM_PATH + "ForAll");
+		
+		nodeTemplateFileNames.put(AWhileStmCG.class, templateStructure.STM_PATH + "While");
 		
 		// Expressions
 		
@@ -415,6 +419,9 @@ public class TemplateManager
 		//Seq expressions
 		nodeTemplateFileNames.put(AEnumSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
 				+ "Enum");
+		
+		nodeTemplateFileNames.put(ACompSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
+				+ "Comp");
 		
 		//Set expressions
 		nodeTemplateFileNames.put(AEnumSetExpCG.class, templateStructure.SET_EXPS_PATH
