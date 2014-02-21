@@ -21,7 +21,6 @@ package org.overture.ide.plugins.coverageeditor.editor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
@@ -119,10 +118,9 @@ public abstract class CoverageEditor
 			IFile res = ((FileEditorInput) input).getFile();
 			if (res.exists())
 			{
-				org.eclipse.core.internal.resources.File f = (org.eclipse.core.internal.resources.File) res;
-				charset = f.getCharset();
-				sourceFile = f.getLocation().toFile();
-				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
+				charset = res.getCharset();
+				sourceFile = res.getLocation().toFile();
+				content = readFile(res);
 				vdmSourceFile = (IFile) res;
 			} else
 			{
@@ -362,7 +360,7 @@ public abstract class CoverageEditor
 		{
 			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 		}
-		BufferedReader inputStream = new BufferedReader(new InputStreamReader(file.getContents()));
+		BufferedReader inputStream = new BufferedReader(new InputStreamReader(file.getContents(), file.getCharset()));
 		StringBuilder sb = new StringBuilder();
 
 		int inLine;
@@ -371,19 +369,6 @@ public abstract class CoverageEditor
 			sb.append((char) inLine);
 		}
 		inputStream.close();
-		return sb.toString();
-	}
-
-	public static String readFile(InputStream stream) throws IOException
-	{
-		StringBuilder sb = new StringBuilder();
-
-		int inLine;
-		while ((inLine = stream.read()) != -1)
-		{
-			sb.append((char) inLine);
-		}
-		stream.close();
 		return sb.toString();
 	}
 
