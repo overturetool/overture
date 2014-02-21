@@ -18,7 +18,7 @@ public class OoAstGenerator
 	
 	public OoAstGenerator(ILogger log)
 	{
-		this.codeGenInfo = new OoAstInfo(this);
+		this.codeGenInfo = new OoAstInfo();
 		Logger.setLog(log);
 	}
 			
@@ -50,5 +50,10 @@ public class OoAstGenerator
 	public AInterfaceDeclCG getQuotes()
 	{
 		return codeGenInfo.getQuotes();
+	}
+	
+	public OoAstInfo getOoAstInfo()
+	{
+		return codeGenInfo;
 	}
 }
