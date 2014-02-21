@@ -58,7 +58,10 @@ public class ConsoleTerminateAction extends Action implements IUpdate
 	public void update()
 	{
 		IProcess process = fConsole.getProcess();
-		setEnabled(process.canTerminate());
+		if (process != null)
+		{
+			setEnabled(process.canTerminate());
+		}
 	}
 
 	/*
@@ -69,10 +72,13 @@ public class ConsoleTerminateAction extends Action implements IUpdate
 	public void run()
 	{
 		IProcess process = fConsole.getProcess();
-		List targets = collectTargets(process);
-		targets.add(process);
-		DebugCommandService service = DebugCommandService.getService(fWindow);
-		service.executeCommand(ITerminateHandler.class, targets.toArray(), null);
+		if (process != null)
+		{
+			List targets = collectTargets(process);
+			targets.add(process);
+			DebugCommandService service = DebugCommandService.getService(fWindow);
+			service.executeCommand(ITerminateHandler.class, targets.toArray(), null);
+		}
 	}
 
 	/**
