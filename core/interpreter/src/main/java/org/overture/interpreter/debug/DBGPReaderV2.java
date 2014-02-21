@@ -170,7 +170,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 		Properties.init(); // Read properties file, if any
 
-		Properties.parser_tabstop = 1;
+		Properties.parser_tabstop = 1;// required to match locations with the editor representation
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
@@ -2036,6 +2036,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			throws IOException
 	{
 
+		Properties.init(); // Read properties file, if any
+
 		for (File f : interpreter.getSourceFiles())
 		{
 			final InputStreamReader reader = BacktrackInputReader.readerFactory(f, VDMJ.filecharset);
@@ -2076,6 +2078,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			}
 
 		}
+		
+		Properties.parser_tabstop = 1;// required to match locations with the editor representation
 	}
 
 	public static String getStackTrace(Throwable t)
