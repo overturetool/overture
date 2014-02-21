@@ -28,6 +28,7 @@ import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
+import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
@@ -49,6 +50,7 @@ import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
@@ -62,6 +64,23 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 {
 	public StmVisitorCG()
 	{
+	}
+	
+	@Override
+	public PStmCG caseAWhileStm(AWhileStm node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PStm stm = node.getStatement();
+		PExp exp = node.getExp();
+		
+		PStmCG bodyCg = stm.apply(question.getStatementVisitor(), question);
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		AWhileStmCG whileStm = new AWhileStmCG();
+		whileStm.setExp(expCg);
+		whileStm.setBody(bodyCg);
+		
+		return whileStm;
 	}
 	
 	@Override
