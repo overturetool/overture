@@ -6,6 +6,7 @@ language: java
 jdk:
   - oraclejdk7
 before_install:
+  - mvn -version
   - echo "This may take a short while; it is downloading many of the maven plugins and their dependencies, but quietly to hide the downloads from the log."
   - mvn -B -q dependency:resolve-plugins -PWith-IDE -Dtycho.mode=maven
 install:
