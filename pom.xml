@@ -2,9 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Needed to make deployment work -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+
   <packaging>pom</packaging>
 
-  <groupId>org.overture</groupId>
+  <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
   <version>2.0.3-SNAPSHOT</version>
   <name>OvertureTool</name>
@@ -35,124 +42,14 @@
     </dependency>
   </dependencies>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>overture-astcreator-github</id>
-      <name>Overture AstCreator maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/astcreator/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-    <pluginRepository>
-      <id>overture-example-packager-github</id>
-      <name>Overture Example Packager maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/example-packager/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-  </pluginRepositories>
-  
   <profiles>
     <profile>
       <id>With-IDE</id>
       <modules>
         <module>ide</module>
       </modules>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>overture.iha.dk</id>
-          <name>Overture Project Build Repository at AU/IHA</name>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <url>http://build.overturetool.org/builds/overture-m2repo/</url>
-          <layout>default</layout>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-    <profile>
-      <id>COMPASS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-compass</id>
-          <name>Overture Repo for COMPASS on the buildserver</name>
-          <url>file:///home/jenkins/web/overture-compass-m2repo/</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
-      </distributionManagement>
-    </profile>
-    <profile>
-      <id>DESTECS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-destecs</id>
-          <name>Overture Repo for DESTECS on the buildserver</name>
-          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/destecs-overture-m2repo</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/destecs-overture-m2repo/</downloadUrl>
-      </distributionManagement>
     </profile>
   </profiles>
-
-  <repositories>
-    <!-- <repository> -->
-    <!--   <id>overture.sf.net</id> -->
-    <!--   <name>Overture SF Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://overture.sourceforge.net/maven/repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-    <!-- <repository> -->
-    <!--   <id>IHA</id> -->
-    <!--   <name>Build server Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://build.overturetool.org/builds/overture-m2repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-  </repositories>
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -351,38 +248,64 @@
     </extensions>
   </build>
 
-  <distributionManagement>
-    <repository>
-      <id>build.overture.org</id>
-      <name>Overture Repo on the buildserver</name>
-      <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-m2repo</url>
-    </repository>
-    <downloadUrl>http://build.overturetool.org/builds/overture-m2repo/</downloadUrl>
-    <!-- <repository>  -->
-    <!--   <id>sourceforge.net</id>  -->
-    <!--   <name>Overture Repo af SF.Net</name>  -->
-    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>  -->
-    <!-- </repository>  -->
-    <!-- <snapshotRepository> -->
-    <!--   <id>sourceforge.net</id>  -->
-    <!--   <name>Overture Snapshot Repo af SF.Net</name>  -->
-    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>  -->
-    <!-- </snapshotRepository>  -->
-    <!-- <site>  -->
-    <!--   <id>sourceforge.net</id> -->
-    <!--   <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
-    <!-- </site>  -->
-    <!-- <downloadUrl>http://overture.sourceforge.net/maven/repo/</downloadUrl> -->
-  </distributionManagement>
+  <!-- <distributionManagement> -->
+  <!-- </distributionManagement> -->
 
-  <!-- <scm> -->
-  <!--   <connection>scm:git:git://git.code.sf.net/p/overture/code</connection> -->
-  <!--   <!-\- <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection> -\-> -->
-  <!--   <url>http://sourceforge.net/p/overture/code</url> -->
-  <!-- </scm> -->
+  <scm>
+    <url>https://github.com/overturetool/overture</url>
+    <connection>scm:git:git://github.com/overturetool/overture.git</connection>
+    <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>overture</id>
+      <email>info@overturetool.org</email>
+      <name>Information contact for the Overture project</name>
+      <url>http://overturetool.org/</url>
+    </developer>
+    <developer>
+      <id>jwc</id>
+      <email>jwc@eng.au.dk</email>
+      <name>Joey Coleman</name>
+      <roles>
+        <role>Release/Build Manager</role>
+      </roles>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+    </developer>
+    <developer>
+      <id>lausdahl</id>
+      <email>lausdahl@eng.au.dk</email>
+      <name>Kenneth Lausdahl</name>
+      <roles>
+        <role>Architect</role>
+        <role>Programmer</role>
+      </roles>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+    </developer>
+    <developer>
+      <id>nickbattle</id>
+      <email>nick.battle@gmail.com</email>
+      <name>Nick Battle</name>
+      <roles>
+        <role>Architect</role>
+        <role>Programmer</role>
+      </roles>
+      <organization>Fujitsu UK</organization>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License (GPL) version 3</name>
+      <url>http://www.gnu.org/licenses/gpl.txt</url>
+    </license>
+  </licenses>
 
   <organization>
-    <name>Overture</name>
-    <url>http://www.overturetool.org</url>
+    <name>The Overture Tool Platform</name>
+    <url>http://overturetool.org/</url>
   </organization>
 </project>

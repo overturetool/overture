@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 	
   <parent>
-    <groupId>org.overture</groupId>
+    <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
     <version>2.0.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.core</groupId>
+  <groupId>org.overturetool.core</groupId>
   <artifactId>typechecker</artifactId>
   <name>The VDM Type Checker </name>
 
@@ -22,17 +22,17 @@
 		</dependency>
   
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
     </dependency>		
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>

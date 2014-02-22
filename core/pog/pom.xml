@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture</groupId>
+    <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
     <version>2.0.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.core</groupId>
+  <groupId>org.overturetool.core</groupId>
   <artifactId>pog</artifactId>
   <name>New Proof Obligation Generator</name>
 
@@ -19,27 +19,27 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>parser</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>typechecker</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core.prettyprinting</groupId>
+      <groupId>org.overturetool.core.prettyprinting</groupId>
       <artifactId>prettyprinter</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -76,7 +76,7 @@
       </plugin>
 
       <plugin>
-	<groupId>org.overture.astcreator</groupId>
+	<groupId>org.overturetool.astcreator</groupId>
 	<artifactId>astcreator-plugin</artifactId>
 	<version>${astcreator.version}</version>
 	<executions>
@@ -134,7 +134,7 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		    <groupId>org.overture.maven.tools</groupId>
+		    <groupId>org.overturetool.maven.tools</groupId>
 		    <artifactId>ast-creator-plugin</artifactId>
 		    <versionRange>${astcreator.version}</versionRange>
 		    <goals>
@@ -147,7 +147,7 @@
 		</pluginExecution>
 		<pluginExecution>
 			<pluginExecutionFilter>
-				<groupId>org.overture.astcreator</groupId>
+				<groupId>org.overturetool.astcreator</groupId>
 				<artifactId>astcreator-plugin</artifactId>
 				<versionRange>[1.6.0,)</versionRange>
 				<goals>
