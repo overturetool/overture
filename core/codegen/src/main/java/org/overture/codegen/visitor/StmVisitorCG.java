@@ -13,6 +13,8 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ADefPatternBind;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -23,6 +25,7 @@ import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
@@ -46,6 +49,7 @@ import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -64,6 +68,54 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 {
 	public StmVisitorCG()
 	{
+	}
+	
+	@Override
+	public PStmCG caseALetBeStStm(ALetBeStStm node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PMultipleBind multipleBind = node.getBind();
+		
+		if(!(multipleBind instanceof ASetMultipleBind))
+		{
+			question.addUnsupportedNode(node, "Generation of Let Be St statement is only supported for a multiple set bind. Got: " + multipleBind);
+			return null;
+		}
+		
+		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
+		LinkedList<PPattern> patternList = setBind.getPlist();
+		
+		if(patternList.size() != 1)
+		{
+			question.addUnsupportedNode(node, "Let Be St statement is only supported for a single pattern bind. Number of patterns: " + patternList.size());
+			return null;
+		}
+		
+		PPattern pattern = patternList.get(0);
+		
+		if(!(pattern instanceof AIdentifierPattern))
+		{
+			question.addUnsupportedNode(node, "Let Be St statement is only supported for identifier patterns. Got: " + pattern);
+			return null;
+		}
+		
+		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
+		PExp suchThat = node.getSuchThat();
+		PStm stm = node.getStatement();
+		PExp set = setBind.getSet();
+		
+		String identifierCg = identifier.getName().getName();
+		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
+		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
+		PExpCG setCg = set.apply(question.getExpVisitor(), question);
+		
+		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
+		letBeSt.setBindId(identifierCg);
+		letBeSt.setSuchThat(suchThatCg);
+		letBeSt.setStatement(stmCg);
+		letBeSt.setSet(setCg);
+		
+		return letBeSt;
 	}
 	
 	@Override

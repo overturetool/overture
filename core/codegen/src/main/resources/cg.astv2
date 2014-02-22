@@ -134,6 +134,8 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
            |	{forAll} [var]:java_String [exp]:expCG [body]:stmCG
            |	{while} [exp]:expCG [body]:stmCG
+           |	{letBeSt} [bindId]:java_String [set]:expCG [suchThat]:expCG [statement]:stmCG
+           |	{throw} [exp]:expCG
            ;
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}

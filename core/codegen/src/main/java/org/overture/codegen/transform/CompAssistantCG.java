@@ -6,7 +6,6 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
-import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -14,15 +13,13 @@ import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.javalib.VDMSeq;
 
-public class CompAssistantCG
+public class CompAssistantCG extends TransformationAssistantCG
 {
 	public CompAssistantCG()
 	{
@@ -40,44 +37,7 @@ public class CompAssistantCG
 		
 		return cast;
 	}
-	
-	public AClassTypeCG consIteratorType()
-	{
-		return consClassType(IJavaCodeGenConstants.ITERATOR_TYPE);
-	}
-	
-	private AClassTypeCG consClassType(String classTypeName)
-	{
-		AClassTypeCG iteratorType = new AClassTypeCG();
-		iteratorType.setName(classTypeName);
-		
-		return iteratorType;
 
-	}
-	
-	public PExpCG consInstanceCall(PTypeCG instanceType, String instanceName, PTypeCG returnType, String memberName, PExpCG arg)
-	{
-		AVariableExpCG instance = new AVariableExpCG();
-		instance.setOriginal(instanceName);
-		instance.setType(instanceType.clone());
-
-		AFieldExpCG fieldExp = new AFieldExpCG();
-		fieldExp.setMemberName(memberName);
-		fieldExp.setObject(instance);
-		fieldExp.setType(returnType.clone());
-		
-		AApplyExpCG instanceCall = new AApplyExpCG();
-		instanceCall.setRoot(fieldExp);
-		instanceCall.setType(returnType.clone());
-		
-		if(arg != null)
-		{
-			instanceCall.getArgs().add(arg);
-		}
-			
-		return instanceCall;
-	}
-	
 	public ALocalVarDeclCG consSetBindIdDecl(String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		SSeqTypeCG seqType = getSeqTypeCloned(seqComp);
@@ -96,9 +56,10 @@ public class CompAssistantCG
 	
 	public ALocalVarDeclCG consSetBindDecl(String setBindName, ACompSeqExpCG seqComp) throws AnalysisException
 	{	
-		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
 		ASetSetTypeCG setType = new ASetSetTypeCG();
 		setType.setSetOf(getSeqTypeCloned(seqComp).getSeqOf());
+		
+		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
 		
 		setBindDecl.setType(setType);
 		setBindDecl.setName(setBindName);
@@ -166,16 +127,6 @@ public class CompAssistantCG
 		}
 		
 		return callStm;
-	}
-	
-	public ALocalVarDeclCG consIteratorDecl(String iteratorName, String collectionName)
-	{
-		ALocalVarDeclCG iterator = new ALocalVarDeclCG();
-		iterator.setName(iteratorName);
-		iterator.setType(consIteratorType());
-		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(), IJavaCodeGenConstants.GET_ITERATOR , null));
-		
-		return iterator;
 	}
 	
 	public ABlockStmCG consWhileBody(ACompSeqExpCG seqComp, String iteratorName,

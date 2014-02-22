@@ -103,12 +103,14 @@ import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -243,6 +245,10 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AForAllStmCG.class, templateStructure.STM_PATH + "ForAll");
 		
 		nodeTemplateFileNames.put(AWhileStmCG.class, templateStructure.STM_PATH + "While");
+		
+		nodeTemplateFileNames.put(ALetBeStStmCG.class, templateStructure.STM_PATH + "LetBeSt");
+		
+		nodeTemplateFileNames.put(AThrowStmCG.class, templateStructure.STM_PATH + "Throw");
 		
 		// Expressions
 		

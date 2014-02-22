@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -17,11 +18,45 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
 	private OoAstInfo info;
 	private CompAssistantCG compAssistant;
+	private LetBeStStmAssistantCG letBeStStmAssistant;
 	
 	public TransformationVisitor(OoAstInfo info)
 	{
 		this.info = info;
 		this.compAssistant = new CompAssistantCG();
+		this.letBeStStmAssistant = new LetBeStStmAssistantCG();
+	}
+	
+	@Override
+	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
+	{
+		INode parent = node.parent();
+
+		//Variable names
+		String setName = info.getTempVarNameGen().nextVarName();
+		String iteratorName = info.getTempVarNameGen().nextVarName();
+		String successVarName = info.getTempVarNameGen().nextVarName();
+		
+		AWhileStmCG whileStm = new AWhileStmCG();
+		whileStm.setExp(letBeStStmAssistant.consWhileCondition(node, iteratorName, successVarName));
+		whileStm.setBody(letBeStStmAssistant.consWhileBody(node, iteratorName, successVarName));
+		
+		ABlockStmCG block = new ABlockStmCG();
+		
+		LinkedList<ALocalVarDeclCG> blockLocalDefs = block.getLocalDefs();
+		blockLocalDefs.add(letBeStStmAssistant.consSetBindDecl(setName, node));
+		blockLocalDefs.add(letBeStStmAssistant.consIteratorDecl(iteratorName, setName));
+		blockLocalDefs.add(letBeStStmAssistant.consChosenElemenDecl(node));
+		blockLocalDefs.add(letBeStStmAssistant.consSuccessVarDecl(successVarName));
+		
+		LinkedList<PStmCG> blockStms = block.getStatements();
+		blockStms.add(whileStm);
+		blockStms.add(letBeStStmAssistant.consIfCheck(successVarName));
+		
+		parent.replaceChild(node, block);
+		node.parent(null);
+		
+		blockStms.add(node.getStatement());
 	}
 	
 	@Override
@@ -31,25 +66,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		if (enclosingStm == null)
 			throw new AnalysisException("Sequence comprehensions are currently only supported within methods");
-		
-		ACompSeqExpCG seqComp = (ACompSeqExpCG) node;
 
 		//Variable names 
-		String colName = info.getTempVarNameGen().nextVarName();
+		String setName = info.getTempVarNameGen().nextVarName();
 		String iteratorName = info.getTempVarNameGen().nextVarName();
-		String resSeqName = seqComp.getVar();
+		String resSeqName = node.getVar();
 
 		AWhileStmCG whileStm = new AWhileStmCG();
-		whileStm.setExp(compAssistant.consInstanceCall(compAssistant.consIteratorType(), iteratorName, compAssistant.getSeqTypeCloned(seqComp).getSeqOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
-		whileStm.setBody(compAssistant.consWhileBody(seqComp, iteratorName, resSeqName));
+		whileStm.setExp(compAssistant.consInstanceCall(compAssistant.consIteratorType(), iteratorName, compAssistant.getSeqTypeCloned(node).getSeqOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
+		whileStm.setBody(compAssistant.consWhileBody(node, iteratorName, resSeqName));
 
 		//Construct and set up block containing sequence comprehension
 		ABlockStmCG block = new ABlockStmCG();
 		
 		LinkedList<ALocalVarDeclCG> blockLocalDefs = block.getLocalDefs();
-		blockLocalDefs.add(compAssistant.consSetBindDecl(colName, seqComp));
-		blockLocalDefs.add(compAssistant.consIteratorDecl(iteratorName, colName));
-		blockLocalDefs.add(compAssistant.consResultSeqDecl(resSeqName, seqComp));
+		blockLocalDefs.add(compAssistant.consSetBindDecl(setName, node));
+		blockLocalDefs.add(compAssistant.consIteratorDecl(iteratorName, setName));
+		blockLocalDefs.add(compAssistant.consResultSeqDecl(resSeqName, node));
 		
 		LinkedList<PStmCG> blockStms = block.getStatements();
 		blockStms.add(whileStm);
