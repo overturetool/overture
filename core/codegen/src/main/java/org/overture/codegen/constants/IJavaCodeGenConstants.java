@@ -26,6 +26,8 @@ public interface IJavaCodeGenConstants
 	public static final String HAS_NEXT_ELEMENT_ITERATOR = "hasNext";
 	public static final String ITERATOR_TYPE = "Iterator";
 	
+	public static final String RUNTIME_EXCEPTION_TYPE_NAME = "RuntimeException";
+	
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaTemplates";
 	public static final String JAVA_UTILS_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaUtils";
 	
