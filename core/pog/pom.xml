@@ -14,7 +14,7 @@
   <name>New Proof Obligation Generator</name>
 
   <properties>
-    <astcreator.version>1.6.0</astcreator.version>
+    <astcreator.version>1.6.4</astcreator.version>
   </properties>
 
   <dependencies>
@@ -94,7 +94,7 @@
 	  <extendedName>POF</extendedName>
 	  <extendedTreeOnly>true</extendedTreeOnly>
 	  <useSrcOutput>false</useSrcOutput>
-	  <extendedAstGroupId>org.overture.core</extendedAstGroupId>
+	  <extendedAstGroupId>org.overturetool.core</extendedAstGroupId>
 	  <extendedAstArtifactId>ast</extendedAstArtifactId>
 	</configuration>
       </plugin>
