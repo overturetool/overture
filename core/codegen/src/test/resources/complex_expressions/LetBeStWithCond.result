@@ -1,0 +1,29 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSet temp_1 = SetUtil.set(3L, 5L, 7L, 8L, 9L);
+        Iterator temp_2 = temp_1.iterator();
+        Number x = null;
+        boolean temp_3 = false;
+
+        while (temp_2.hasNext() && !(temp_3)) {
+            x = ((Number) temp_2.next());
+            temp_3 = (x.longValue() -
+                (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L;
+        }
+
+        if (!(temp_3)) {
+            throw new RuntimeException("Let Be St found no applicable bindings");
+        }
+
+        return x;
+    }
+}
+##########
