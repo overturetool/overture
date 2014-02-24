@@ -74,13 +74,13 @@ public class LatexPlugin extends AbstractUIPlugin
 
 	public static boolean usePdfLatex()
 	{
-		String builder = getDefault().getPreferenceStore().getDefaultString(ILatexConstants.PDF_BUILDER);
+		String builder = getDefault().getPreferenceStore().getString(ILatexConstants.PDF_BUILDER);
 		return builder == null || builder.equals("pdflatex");
 	}
 
 	public static boolean useXetex()
 	{
-		String builder = getDefault().getPreferenceStore().getDefaultString(ILatexConstants.PDF_BUILDER);
+		String builder = getDefault().getPreferenceStore().getString(ILatexConstants.PDF_BUILDER);
 		return builder != null && builder.equals("xetex");
 	}
 
