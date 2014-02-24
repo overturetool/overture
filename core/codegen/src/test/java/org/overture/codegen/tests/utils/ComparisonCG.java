@@ -16,12 +16,19 @@ import org.overture.interpreter.values.NumericValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TupleValue;
+import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 
 public class ComparisonCG
 {
 	public static boolean compare(Object cgValue, Value vdmValue)
 	{
+		while(vdmValue instanceof UpdatableValue)
+		{
+			UpdatableValue upValue = (UpdatableValue)vdmValue;
+			vdmValue = upValue.getConstant();
+		}
+		
 		if(cgValue instanceof Boolean)
 		{
 			return handleBoolean(cgValue, vdmValue);
