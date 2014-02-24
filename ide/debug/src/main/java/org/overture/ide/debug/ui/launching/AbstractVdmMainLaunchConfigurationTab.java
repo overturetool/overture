@@ -58,10 +58,10 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
@@ -91,6 +91,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		AbstractLaunchConfigurationTab
 {
 	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+
 	/**
 	 * Custom content provider for the operation selection. Overloads the default one to merge DEFAULT modules into one
 	 * module
@@ -100,8 +101,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private class MergedModuleVdmOutlineTreeContentProvider extends
 			VdmOutlineTreeContentProvider
 	{
-		
-		
+
 		@Override
 		public Object[] getElements(Object inputElement)
 		{
@@ -129,11 +129,9 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
-		
-		
+
 		public void modifyText(ModifyEvent e)
 		{
-			// validatePage();
 			updateLaunchConfigurationDialog();
 		}
 
@@ -144,17 +142,14 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 		public void widgetSelected(SelectionEvent e)
 		{
-			// fOperationText.setEnabled(!fdebugInConsole.getSelection());
-
 			updateLaunchConfigurationDialog();
 		}
 	}
-	
+
 	protected final static String STATIC_CALL_SEPERATOR = "`";
 	protected final static String CALL_SEPERATOR = ".";
 
 	private Text fProjectText;
-	// private Button enableLogging;
 	private Button fOperationButton;
 	private Text fModuleNameText;
 	private Text fOperationText;
@@ -165,16 +160,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	private Button radioLaunchModeConsole = null;
 	private Button radioLaunchModeEntryPoint = null;
 	private Button radioLaunchModeRemoteControl = null;
-	// private Button checkBoxRemoteDebug = null;
-	// private Button checkBoxEnableLogging = null;
-	// private String expressionPathseperator = "";
 	private String defaultModule = "";
 	private String expression = "";
 	private boolean staticOperation = false;
 	private WidgetListener fListener = new WidgetListener();
-	
-
-	// private String moduleDefinitionPath;
 
 	protected IProject getProject()
 	{
@@ -192,10 +181,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	@Override
 	public boolean isValid(ILaunchConfiguration config)
 	{
-		// return true;
 		setErrorMessage(null);
-		// if (fRemoteControlClassText.getText().length() > 0)
-		// return true;// super.validate();
 		if (super.isValid(config))
 		{
 			if (getProject() == null || !getProject().exists()
@@ -218,7 +204,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			{
 				e.printStackTrace();
 			}
-			//
 
 			if (radioLaunchModeConsole.getSelection())
 			{
@@ -252,8 +237,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 			return true;
 		}
-		//
-		//
 		return false;
 
 	}
@@ -269,27 +252,37 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	public static boolean isFullyQualifiedClassname(String classname)
 	{
 		if (classname == null || classname.endsWith("."))
+		{
 			return false;
+		}
 		String[] parts = classname.split("[\\.]");
 		if (parts.length == 0)
+		{
 			return false;
+		}
 		for (String part : parts)
 		{
 			CharacterIterator iter = new StringCharacterIterator(part);
 			// Check first character (there should at least be one character for each part) ...
 			char c = iter.first();
 			if (c == CharacterIterator.DONE)
+			{
 				return false;
+			}
 			if (!Character.isJavaIdentifierStart(c)
 					&& !Character.isIdentifierIgnorable(c))
+			{
 				return false;
+			}
 			c = iter.next();
 			// Check the remaining characters, if there are any ...
 			while (c != CharacterIterator.DONE)
 			{
 				if (!Character.isJavaIdentifierPart(c)
 						&& !Character.isIdentifierIgnorable(c))
+				{
 					return false;
+				}
 				c = iter.next();
 			}
 		}
@@ -301,7 +294,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	private boolean validateOperation()
 	{
-		if ((fOperationText == null || fOperationText.getText().length() == 0))
+		if (fOperationText == null || fOperationText.getText().length() == 0)
 		{
 			setErrorMessage("No operation specified");
 			return false;
@@ -310,7 +303,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		ltr = new LexTokenReader(fOperationText.getText(), Dialect.VDM_RT, Console.charset);
 
 		ExpressionReader reader = new ExpressionReader(ltr);
-		// reader.setCurrentModule(module);
 		try
 		{
 			reader.readExpression();
@@ -332,7 +324,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 
 	private boolean validateClass()
 	{
-		if ((fModuleNameText == null || fModuleNameText.getText().length() == 0))
+		if (fModuleNameText == null || fModuleNameText.getText().length() == 0)
 		{
 			setErrorMessage("No " + getModuleLabelName() + " specified");
 			return false;
@@ -341,7 +333,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		ltr = new LexTokenReader(fModuleNameText.getText(), Dialect.VDM_PP, Console.charset);
 
 		ExpressionReader reader = new ExpressionReader(ltr);
-		// reader.setCurrentModule(module);
 		try
 		{
 			reader.readExpression();
@@ -364,8 +355,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		Composite comp = new Composite(parent, SWT.NONE);
 
 		setControl(comp);
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-		// IDebugHelpContextIds.LAUNCH_CONFIGURATION_DIALOG_COMMON_TAB);
 		comp.setLayout(new GridLayout(1, true));
 		comp.setFont(parent.getFont());
 
@@ -418,12 +407,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
-				// ListSelectionDialog dlg = new ListSelectionDialog(getShell(),
-				// ResourcesPlugin.getWorkspace().getRoot(), new
-				// BaseWorkbenchContentProvider(), new
-				// WorkbenchLabelProvider(), "Select the Project:");
-				// dlg.setTitle("Project Selection");
-				// dlg.open();
 				class ProjectContentProvider extends
 						BaseWorkbenchContentProvider
 				{
@@ -451,7 +434,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 								try
 								{
 									if (object instanceof IProject
-											&& (((IProject) object).getAdapter(IVdmProject.class) != null)
+											&& ((IProject) object).getAdapter(IVdmProject.class) != null
 											&& isSupported((IProject) object))
 									{
 										elements.add((IProject) object);
@@ -714,17 +697,12 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	protected void chooseOperation() throws CoreException
 	{
 		final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), new DecorationgVdmLabelProvider(new VdmUILabelProvider()), new MergedModuleVdmOutlineTreeContentProvider());
-		// ElementTreeSelectionDialog dialog = new
-		// ElementTreeSelectionDialog(getShell(), new
-		// WorkbenchLabelProvider(), new BaseWorkbenchContentProvider());
 
 		dialog.setTitle(getModuleLabelName()
 				+ " and function/operation selection");
 		dialog.setMessage("Select a function or operation");
 
 		dialog.addFilter(new ExecutableFilter());
-		// dialog.setComparator(new
-		// ResourceComparator(ResourceComparator.NAME));
 		dialog.setAllowMultiple(false);
 		dialog.setValidator(new ISelectionStatusValidator()
 		{
@@ -732,11 +710,10 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 			public IStatus validate(Object[] selection)
 			{
 				if (selection.length == 1
-						&& (selection[0] instanceof AExplicitOperationDefinition || selection[0] instanceof AExplicitFunctionDefinition))
+						&& (selection[0] instanceof SOperationDefinition
+								&& ((SOperationDefinition) selection[0]).getBody() != null || selection[0] instanceof SFunctionDefinition
+								&& ((SFunctionDefinition) selection[0]).getBody() != null))
 				{
-					// new
-					// Status(IStatus.OK,IDebugConstants.PLUGIN_ID,IStatus.OK,"Selection: "+
-					// ((IAstNode)selection[0]).getName(),null);
 					return Status.OK_STATUS;
 				}
 				return new Status(IStatus.CANCEL, IDebugConstants.PLUGIN_ID, "Invalid selection");
@@ -750,8 +727,6 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		{
 			dialog.setInput(vdmProject.getModel());
 			dialog.addFilter(new ExecutableFilter());
-			// dialog.setComparator(new
-			// ResourceComparator(ResourceComparator...NAME));
 			if (dialog.open() == IDialogConstants.OK_ID)
 			{
 				if (dialog.getFirstResult() instanceof AModuleModules)
@@ -838,12 +813,12 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		boolean staticAccess = true;
 		if (module != null && !(module instanceof AModuleModules))
 		{
-			if (operation instanceof AExplicitOperationDefinition
-					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitOperationDefinition) operation).getAccess()))
+			if (operation instanceof SOperationDefinition
+					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((SOperationDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
-			} else if (operation instanceof AExplicitFunctionDefinition
-					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((AExplicitFunctionDefinition) operation).getAccess()))
+			} else if (operation instanceof SFunctionDefinition
+					&& !assistantFactory.createPAccessSpecifierAssistant().isStatic(((SFunctionDefinition) operation).getAccess()))
 			{
 				staticAccess = false;
 			}
