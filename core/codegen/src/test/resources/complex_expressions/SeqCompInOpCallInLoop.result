@@ -1,0 +1,46 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return Test();
+    }
+
+    public static boolean pick() {
+        return true;
+    }
+
+    public static VDMSeq Op() {
+        VDMSet temp_2 = SeqUtil.elems(SeqUtil.seq(1L, 2L, 3L));
+        Iterator temp_3 = temp_2.iterator();
+        VDMSeq temp_1 = SeqUtil.seq();
+
+        while (temp_3.hasNext()) {
+            Number x = ((Number) temp_3.next());
+
+            if (pick()) {
+                temp_1.add(x.longValue() * 2L);
+            }
+        }
+
+        return temp_1;
+    }
+
+    public static Number Test() {
+        Number sum = 0L;
+        Iterator temp_4 = Op().iterator();
+
+        while (temp_4.hasNext()) {
+            Number e = (Number) temp_4.next();
+            sum = sum.longValue() + e.longValue();
+        }
+
+        return sum;
+    }
+}
+##########
