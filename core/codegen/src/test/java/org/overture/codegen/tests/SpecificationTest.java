@@ -12,14 +12,15 @@ import org.overture.test.framework.Properties;
 
 public class SpecificationTest extends BaseTestSuite
 {
+	public static final String ROOT = "src\\test\\resources\\specifications";
+	
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = false;
 		
 		String name = "Specifications test case";
-		String root = "src\\test\\resources\\specifications";
-		TestSuite test =  createTestCompleteFile(name, root, SpecificationTestCase.class,"");
+		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");
 		return test;
 	}
 }
