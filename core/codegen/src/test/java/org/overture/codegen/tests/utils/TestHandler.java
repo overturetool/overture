@@ -1,0 +1,93 @@
+package org.overture.codegen.tests.utils;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.overture.ast.lex.Dialect;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.interpreter.values.Value;
+
+public abstract class TestHandler
+{
+	public static final String MAIN_CLASS = "Exp";
+	
+	public static final String SERIALIZE_METHOD = 	
+			
+			"  public static void serialize(){" 
+			+ "     try{"
+			+ "       File file = new File(\"myData.bin\");"
+			+ "	      FileOutputStream fout = new FileOutputStream( file );" 
+			+ "	      ObjectOutputStream oos = new ObjectOutputStream(fout);"
+			+ "       Object exp = exp();"
+			+ "		  System.out.println(exp);" 
+			+ "	      oos.writeObject( exp );" 
+			+ "	      oos.close();"
+			+ "     }catch(Exception ex){ "
+			+ "	      ex.printStackTrace(); " 
+			+ "     }" 
+			+ "  }"; 
+		
+	public static final String EXP_WRAPPER_CODE = 
+		  "import java.io.File;"
+		+ "import java.io.FileOutputStream;"
+		+ "import java.io.ObjectOutputStream;"
+		+ "import org.overture.codegen.javalib.*;"
+		+ "import java.util.*; " 
+		+ "public class Exp { "
+		
+		+ "  public static Object exp(){ return %s ; } "
+		
+		+ "  public static void main(String[] args){ "
+		+ "      serialize(); "
+		+ "  } "
+		+ 	SERIALIZE_METHOD
+		+ "}";
+	
+	public abstract Value interpretVdm(File intputFile) throws Exception;
+	
+	public void initVdmEnv()
+	{
+		Settings.release = Release.VDM_10;
+		Settings.dialect = Dialect.VDM_RT;
+	}
+
+	public abstract void writeGeneratedCode(File parent, String generatedCode) throws IOException;
+	
+	public void injectArgIntoMainClassFile(File parent, String argument) throws IOException
+	{
+		File mainClassFile = getMainClassFile(parent);
+		writeToFile(String.format(EXP_WRAPPER_CODE, argument), mainClassFile);
+	}
+	
+	public void writeToFile(String toWrite, File file) throws IOException
+	{
+		FileWriter fileWriter = new FileWriter(file);
+
+		fileWriter.write(toWrite);
+
+		fileWriter.flush();
+		fileWriter.close();
+
+	}
+	
+	public File getFile(File parent, String className) throws IOException
+	{
+		File file = new File(parent, className
+				+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+		
+		if (!file.exists())
+			file.createNewFile();
+		
+		return file;
+	}
+	
+	private File getMainClassFile(File parent) throws IOException
+	{
+		return getFile(parent, MAIN_CLASS);
+	}
+}
+
+
