@@ -22,6 +22,8 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -46,10 +48,10 @@ public class DisplayNameCreator
 			else if (element instanceof PDefinition)
 			{
 				// sb.append(((Definition) element).name.name);
-				if (element instanceof AExplicitOperationDefinition)
+				if (element instanceof SOperationDefinition)
 				{
 
-					AExplicitOperationDefinition def = (AExplicitOperationDefinition) element;
+					SOperationDefinition def = (SOperationDefinition) element;
 
 					sb.append(def.getName().getName());
 					if (def.getType() instanceof AOperationType)
@@ -74,9 +76,9 @@ public class DisplayNameCreator
 							sb.append(getSimpleTypeString(definition) + ")");
 						}
 					}
-				} else if (element instanceof AExplicitFunctionDefinition)
+				} else if (element instanceof SFunctionDefinition)
 				{
-					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) element;
+					SFunctionDefinition def = (SFunctionDefinition) element;
 
 					if (def.getType() instanceof AFunctionType)
 					{
