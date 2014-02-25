@@ -100,4 +100,17 @@ public class GeneralUtils
 			}
 		}
 	}
+	
+	public static String[] concat(String[] left, String[] right)
+	{
+		int leftLength = left.length;
+		int rightLeft = right.length;
+
+		String[] result = new String[leftLength + rightLeft];
+		
+		System.arraycopy(left, 0, result, 0, leftLength);
+		System.arraycopy(right, 0, result, leftLength, rightLeft);
+
+		return result;
+	}
 }
