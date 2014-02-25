@@ -9,37 +9,37 @@ public class A {
 
     public void op() {
         VDMSet x = SetUtil.set(new Rec(1L), new Rec(2L), new Rec(3L));
-        Iterator temp_1 = x.iterator();
+        Iterator iterator_1 = x.iterator();
 
-        while (temp_1.hasNext()) {
-            Rec e = (Rec) temp_1.next();
+        while (iterator_1.hasNext()) {
+            Rec e = (Rec) iterator_1.next();
             IO.printf("%s ", SeqUtil.seq(e.clone()));
         }
     }
 
     public void op1() {
-        Iterator temp_2 = SetUtil.set(1L, 2L, 3L).iterator();
+        Iterator iterator_2 = SetUtil.set(1L, 2L, 3L).iterator();
 
-        while (temp_2.hasNext()) {
-            Number n = (Number) temp_2.next();
+        while (iterator_2.hasNext()) {
+            Number n = (Number) iterator_2.next();
             IO.printf("%s ", SeqUtil.seq(n));
         }
     }
 
     public void op2() {
-        Iterator temp_3 = SetUtil.set().iterator();
+        Iterator iterator_3 = SetUtil.set().iterator();
 
-        while (temp_3.hasNext()) {
-            Object e = (Object) temp_3.next();
+        while (iterator_3.hasNext()) {
+            Object e = (Object) iterator_3.next();
             IO.print("x");
         }
     }
 
     public void op3() {
-        Iterator temp_4 = f().iterator();
+        Iterator iterator_4 = f().iterator();
 
-        while (temp_4.hasNext()) {
-            Number n = (Number) temp_4.next();
+        while (iterator_4.hasNext()) {
+            Number n = (Number) iterator_4.next();
             IO.printf("%s ", SeqUtil.seq(n));
         }
     }

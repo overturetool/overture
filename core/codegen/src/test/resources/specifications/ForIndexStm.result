@@ -8,35 +8,35 @@ public class A {
     }
 
     public void op() {
-        long temp_1 = 10L;
-        long temp_2 = 5L;
+        long toVar_1 = 10L;
+        long byVar_1 = 5L;
 
-        for (long i = 1L; (temp_2 < 0) ? (i >= temp_1) : (i <= temp_1);
-                i += temp_2) {
+        for (long i = 1L; (byVar_1 < 0) ? (i >= toVar_1) : (i <= toVar_1);
+                i += byVar_1) {
             //Skip;
         }
 
-        long temp_3 = -1L;
-        long temp_4 = -2L;
+        long toVar_2 = -1L;
+        long byVar_2 = -2L;
 
-        for (long j = 10L; (temp_4 < 0) ? (j >= temp_3) : (j <= temp_3);
-                j += temp_4) {
+        for (long j = 10L; (byVar_2 < 0) ? (j >= toVar_2) : (j <= toVar_2);
+                j += byVar_2) {
             //Skip;
         }
 
-        long temp_5 = 1L;
-        long temp_6 = 1L;
+        long toVar_3 = 1L;
+        long byVar_3 = 1L;
 
-        for (long i = 1L; (temp_6 < 0) ? (i >= temp_5) : (i <= temp_5);
-                i += temp_6) {
+        for (long i = 1L; (byVar_3 < 0) ? (i >= toVar_3) : (i <= toVar_3);
+                i += byVar_3) {
             //Skip;
         }
 
-        long temp_7 = 0L;
-        long temp_8 = 1L;
+        long toVar_4 = 0L;
+        long byVar_4 = 1L;
 
-        for (long i = 1L; (temp_8 < 0) ? (i >= temp_7) : (i <= temp_7);
-                i += temp_8) {
+        for (long i = 1L; (byVar_4 < 0) ? (i >= toVar_4) : (i <= toVar_4);
+                i += byVar_4) {
             //Skip;
         }
     }

@@ -8,9 +8,9 @@ public class A {
     }
 
     public void op() {
-        long temp_1 = 10L;
+        long toVar_1 = 10L;
 
-        for (long i = 1L; i <= temp_1; i++) {
+        for (long i = 1L; i <= toVar_1; i++) {
             //Skip;
         }
     }

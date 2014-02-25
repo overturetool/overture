@@ -56,9 +56,9 @@ public class NoteBook {
         nb1.addMessage("yellow");
         IO.println("Printing messages reversed");
 
-        long temp_1 = nb1.noOfMessgages().longValue();
+        long toVar_1 = nb1.noOfMessgages().longValue();
 
-        for (long i = 1L; i <= temp_1; i++) {
+        for (long i = 1L; i <= toVar_1; i++) {
             VDMSeq reversed = nb1.getReverseMessages();
             IO.println(((String) reversed.get(Utils.index(i))));
         }
@@ -66,38 +66,38 @@ public class NoteBook {
         IO.print("\n");
         IO.println("Printing message indices of nb1");
 
-        Iterator temp_2 = nb1.getMessageIndices().iterator();
+        Iterator iterator_1 = nb1.getMessageIndices().iterator();
 
-        while (temp_2.hasNext()) {
-            Number idx = (Number) temp_2.next();
+        while (iterator_1.hasNext()) {
+            Number idx = (Number) iterator_1.next();
             IO.printf("%s ", SeqUtil.seq(idx));
         }
 
         IO.println("\n");
         IO.println("Printing messages of nb1 using 'elems' operator");
 
-        Iterator temp_3 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
+        Iterator iterator_2 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
 
-        while (temp_3.hasNext()) {
-            String msg = (String) temp_3.next();
+        while (iterator_2.hasNext()) {
+            String msg = (String) iterator_2.next();
             IO.print(msg + "\n");
         }
 
         IO.println("\n");
         IO.println("Printing messages of nb1 using the sequence loop");
 
-        Iterator temp_4 = nb1.getMessagesOrdered().iterator();
+        Iterator iterator_3 = nb1.getMessagesOrdered().iterator();
 
-        while (temp_4.hasNext()) {
-            String msg = (String) temp_4.next();
+        while (iterator_3.hasNext()) {
+            String msg = (String) iterator_3.next();
             IO.print(msg + "\n");
         }
     }
 
     public void printMessages() {
-        long temp_5 = messages.size();
+        long toVar_2 = messages.size();
 
-        for (long i = 1L; i <= temp_5; i++) {
+        for (long i = 1L; i <= toVar_2; i++) {
             String msg = getMessage(i);
             IO.println(msg);
         }

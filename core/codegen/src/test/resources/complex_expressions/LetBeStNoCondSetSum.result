@@ -15,17 +15,17 @@ public class Entry {
         if (xs.isEmpty()) {
             return 0L;
         } else {
-            VDMSet temp_1 = xs.clone();
-            Iterator temp_2 = temp_1.iterator();
+            VDMSet set_1 = xs.clone();
+            Iterator iterator_1 = set_1.iterator();
             Number x = null;
-            boolean temp_3 = false;
+            boolean success_1 = false;
 
-            while (temp_2.hasNext() && !(temp_3)) {
-                x = ((Number) temp_2.next());
-                temp_3 = true;
+            while (iterator_1.hasNext() && !(success_1)) {
+                x = ((Number) iterator_1.next());
+                success_1 = true;
             }
 
-            if (!(temp_3)) {
+            if (!(success_1)) {
                 throw new RuntimeException(
                     "Let Be St found no applicable bindings");
             }

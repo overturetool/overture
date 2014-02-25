@@ -87,10 +87,10 @@ public class Bag {
         IO.println("\n");
         IO.print("Printing power bags of bag2..\n");
 
-        Iterator temp_1 = bag2.powerBag().iterator();
+        Iterator iterator_1 = bag2.powerBag().iterator();
 
-        while (temp_1.hasNext()) {
-            Bag b = (Bag) temp_1.next();
+        while (iterator_1.hasNext()) {
+            Bag b = (Bag) iterator_1.next();
             b.printBag();
             IO.print("\n");
         }
@@ -102,10 +102,10 @@ public class Bag {
         if (numbers.size() == 0L) {
             IO.print(" ");
         } else {
-            Iterator temp_2 = numbers.iterator();
+            Iterator iterator_2 = numbers.iterator();
 
-            while (temp_2.hasNext()) {
-                Number e = (Number) temp_2.next();
+            while (iterator_2.hasNext()) {
+                Number e = (Number) iterator_2.next();
                 IO.printf(" %s ", SeqUtil.seq(e));
             }
         }
@@ -170,10 +170,10 @@ public class Bag {
     public VDMSet powerBag() {
         VDMSet powerSets = SetUtil.powerset(numbers.clone());
         VDMSet bags = SetUtil.set();
-        Iterator temp_3 = powerSets.iterator();
+        Iterator iterator_3 = powerSets.iterator();
 
-        while (temp_3.hasNext()) {
-            VDMSet s = (VDMSet) temp_3.next();
+        while (iterator_3.hasNext()) {
+            VDMSet s = (VDMSet) iterator_3.next();
             bags = SetUtil.union(bags.clone(), SetUtil.set(new Bag(s.clone())));
         }
 

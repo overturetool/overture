@@ -14,19 +14,19 @@ public class Entry {
     }
 
     public static VDMSeq Test() {
-        VDMSet temp_2 = SeqUtil.elems(Entry.s);
-        Iterator temp_3 = temp_2.iterator();
-        VDMSeq temp_1 = SeqUtil.seq();
+        VDMSet set_1 = SeqUtil.elems(Entry.s);
+        Iterator iterator_1 = set_1.iterator();
+        VDMSeq seqCompResult_1 = SeqUtil.seq();
 
-        while (temp_3.hasNext()) {
-            Number x = ((Number) temp_3.next());
+        while (iterator_1.hasNext()) {
+            Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                temp_1.add(x);
+                seqCompResult_1.add(x);
             }
         }
 
-        VDMSeq a = temp_1;
+        VDMSeq a = seqCompResult_1;
 
         return a.clone();
     }
