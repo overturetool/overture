@@ -172,6 +172,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
@@ -537,6 +538,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			question.addUnsupportedNode(node, "Generation of a sequence comprehension only supports identifier patterns");
 			return null;
 		}
+		
 		AIdentifierPattern setBindId = (AIdentifierPattern) pattern;
 		PType type = node.getType();
 		PExp first = node.getFirst();
@@ -548,7 +550,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
-		String varCg = question.getTempVarNameGen().nextVarName();
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		
 		ACompSeqExpCG seqComp = new ACompSeqExpCG();
 		seqComp.setSetBindId(setBindIdCg);

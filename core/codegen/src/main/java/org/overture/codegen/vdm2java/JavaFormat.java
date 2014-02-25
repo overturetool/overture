@@ -4,7 +4,6 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
@@ -73,6 +72,7 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.utils.TempVarNameGen;
@@ -115,7 +115,7 @@ public class JavaFormat
 	
 	private String format(INode node, boolean ignoreContext) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class));
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, JavaTempVarPrefixes.class));
 		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
@@ -909,8 +909,8 @@ public class JavaFormat
 		
 	}
 	
-	public String nextVarName()
+	public String nextVarName(String prefix)
 	{
-		return tempVarNameGen.nextVarName();
+		return tempVarNameGen.nextVarName(prefix);
 	}
 }

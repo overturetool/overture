@@ -1,19 +1,25 @@
 package org.overture.codegen.utils;
 
+import java.util.HashMap;
+
 public class TempVarNameGen
 {
-	public static final String GENERATED_TEMP_VAR_NAME_PREFIX = "temp_";
+	private static final int START_VALUE = 1;
 	
-	private long nextVar;
+	private HashMap<String, Integer> counters;
 	
 	public TempVarNameGen()
 	{
 		super();
-		this.nextVar = 1;
+		this.counters = new HashMap<String, Integer>();
 	}
 	
-	public String nextVarName()
+	public String nextVarName(String prefix)
 	{
-		return GENERATED_TEMP_VAR_NAME_PREFIX + nextVar++;
+		int count = counters.containsKey(prefix) ? 1 + counters.get(prefix) : START_VALUE;
+		
+		counters.put(prefix, count);
+		
+		return prefix + count;
 	}
 }

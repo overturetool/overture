@@ -24,6 +24,8 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
@@ -38,7 +40,6 @@ import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaCodeGen
 {
@@ -53,12 +54,13 @@ public class JavaCodeGen
 
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
+	private static final String TEMP_VAR = "TempVar";
 	
-	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class);
+	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class, JavaTempVarPrefixes.class);
 	
-	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis)
+	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis, Object tempVarPrefixes)
 	{
-		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(OO_AST_ANALYSIS_KEY, ooAstAnalysis)};
+		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(OO_AST_ANALYSIS_KEY, ooAstAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes)};
 	}
 	
 	public JavaCodeGen()
@@ -172,7 +174,7 @@ public class JavaCodeGen
 
 		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), generator.getOoAstInfo().getTempVarNameGen());
 		OoAstAnalysis ooAstAnalysis = new OoAstAnalysis();
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis));
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis, JavaTempVarPrefixes.class));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (ClassDeclStatus status : statuses)
@@ -268,7 +270,10 @@ public class JavaCodeGen
 	{
 		Set<Violation> reservedWordViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS));
 		Set<Violation> typenameViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES));
-		Set<Violation> tempVarViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(new String[]{TempVarNameGen.GENERATED_TEMP_VAR_NAME_PREFIX}));
+		
+		String[] generatedTempVarNames = GeneralUtils.concat(IOoAstConstants.GENERATED_TEMP_NAMES, JavaTempVarPrefixes.GENERATED_TEMP_NAMES);
+		
+		Set<Violation> tempVarViolations = VdmAstAnalysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames));
 		
 		if(!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty() || !tempVarViolations.isEmpty())
 			throw new InvalidNamesException("The model either uses words that are reserved by Java, declares VDM types that uses Java type names or uses variable names that potentially conflicts with code generated temporary variable names", reservedWordViolations, typenameViolations, tempVarViolations);

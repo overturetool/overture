@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
@@ -33,9 +34,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		INode parent = node.parent();
 
 		//Variable names
-		String setName = info.getTempVarNameGen().nextVarName();
-		String iteratorName = info.getTempVarNameGen().nextVarName();
-		String successVarName = info.getTempVarNameGen().nextVarName();
+		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
+		String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+		String successVarName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
 		
 		AWhileStmCG whileStm = new AWhileStmCG();
 		whileStm.setExp(letBeStStmAssistant.consWhileCondition(node, iteratorName, successVarName));
@@ -68,8 +69,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			throw new AnalysisException("Sequence comprehensions are currently only supported within methods");
 
 		//Variable names 
-		String setName = info.getTempVarNameGen().nextVarName();
-		String iteratorName = info.getTempVarNameGen().nextVarName();
+		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
+		String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 		String resSeqName = node.getVar();
 
 		AWhileStmCG whileStm = new AWhileStmCG();
