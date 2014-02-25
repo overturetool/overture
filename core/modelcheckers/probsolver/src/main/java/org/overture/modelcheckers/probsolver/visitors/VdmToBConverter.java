@@ -95,11 +95,14 @@ import org.overture.ast.expressions.ADistIntersectUnaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.ATupleExp;
+import org.overture.ast.expressions.AFieldNumberExp;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 //import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.intf.lex.ILexIntegerToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;//added -> AIdentifireExpression
 import org.overture.ast.patterns.ARecordPattern;
@@ -120,6 +123,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ASeq1SeqType;
+import org.overture.ast.types.AProductType;
 
 import org.overture.modelcheckers.probsolver.SolverConsole;
 
@@ -197,73 +201,6 @@ import de.be4.classicalb.core.parser.node.PPredicate;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
-//added
-//added -> ANegationPredicate
-//added -> ADisjunctPredicate
-//added -> ADomainRestrictionExpression
-//added -> ADomainSubtractionExpression
-//added -> ARangeSubtractionExpression
-//added -> ACompositionExpression
-//added -> AReverseExpression
-//added -> AForallPredicate
-//added -> AExistsPredicate
-//added -> AEquivalencePeredicate
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//import de.be4.classicalb.core.parser.node.APowSubsetExpression; //added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
-//added
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -1162,7 +1099,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	}
 
 	@Override
-	public Node caseADistConcatUnaryExp(ADistConcatUnaryExp node)// under construction
+	public Node caseADistConcatUnaryExp(ADistConcatUnaryExp node)// added
 			throws AnalysisException
 	{
 
@@ -1189,6 +1126,44 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			}
 		}
 		return new AGeneralConcatExpression(seq);
+	}
+
+	@Override
+	public Node caseATupleExp(ATupleExp node)// added
+			throws AnalysisException
+	{
+	    LinkedList<PExp> args = node.getArgs();
+	    ACoupleExpression cpl = new ACoupleExpression();
+	    cpl.getList().add(exp(args.get(0)));
+	    cpl.getList().add(exp(args.get(1)));
+	    /*
+	    for(int i=2;i<args.size();i++) {
+		cpl.getList().add(exp(args.get(i)));
+	    }
+	    */
+	    /*
+	    ASetExtensionExpression set = new ASetExtensionExpression();
+	    set.getExpressions().add(cpl);
+	    */
+	    return cpl;
+
+	}
+
+	@Override
+	public Node caseAFieldNumberExp(AFieldNumberExp node)// added
+			throws AnalysisException
+	{
+	    ATupleExp tpl = (ATupleExp)node.getTuple();
+	    ILexIntegerToken lint = node.getField();
+	    //System.out.println("tuple!! : " + tpl);
+	    ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
+	    seq.getExpression().add(exp(tpl.getArgs().getFirst()));
+	    seq.getExpression().add(exp(tpl.getArgs().getLast()));
+	    ASetExtensionExpression arg = new ASetExtensionExpression();
+	    AIntegerExpression fld = new AIntegerExpression(new TIntegerLiteral(new Long(lint.getValue()).toString()));
+	    arg.getExpressions().add(fld);
+	    return new AImageExpression(seq, arg);
+
 	}
 
 	// StateDefinition

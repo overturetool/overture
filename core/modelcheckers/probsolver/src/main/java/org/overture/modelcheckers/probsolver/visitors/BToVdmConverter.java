@@ -26,6 +26,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.AProductType;//added
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
@@ -185,6 +186,30 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public void caseAEmptySetExpression(AEmptySetExpression node)
 	{
 		result = AstFactory.newASetEnumSetExp(loc);
+	}
+
+	@Override
+	public void caseACoupleExpression(ACoupleExpression node)
+	{
+	    if(expectedType instanceof AProductType) {
+		PType type;
+		List<PExp> args = new Vector<PExp>();
+		type = ((AProductType) expectedType).getTypes().getFirst();
+		args.add(convert(type, node.getList().getFirst()));
+		type = ((AProductType) expectedType).getTypes().getLast();
+		args.add(convert(type, node.getList().getLast()));
+		result = AstFactory.newATupleExp(loc, args);
+	    } else { //MapMapType
+		/*
+		PType typeFrom = ((AMapMapType) expectedType).getFrom();
+		PType typeTo = ((AMapMapType) expectedType).getTo();
+
+		PExp mapFrom = convert(typeFrom, node.getList().getFirst());
+		PExp mapTo = convert(typeTo, node.getList().getLast());
+		LexToken op = new LexToken();
+		result = AstFactory.newAMapletExp(mapFrom, op, mapTo);
+		*/
+	    }
 	}
 
 	@Override
