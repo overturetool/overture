@@ -100,6 +100,7 @@ import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -249,6 +250,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ALetBeStStmCG.class, templateStructure.STM_PATH + "LetBeSt");
 		
 		nodeTemplateFileNames.put(AThrowStmCG.class, templateStructure.STM_PATH + "Throw");
+		
+		nodeTemplateFileNames.put(AForLoopStmCG.class, templateStructure.STM_PATH + "ForLoop");
 		
 		// Expressions
 		
