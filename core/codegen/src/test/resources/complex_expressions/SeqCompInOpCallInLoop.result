@@ -33,9 +33,8 @@ public class Entry {
 
     public static Number Test() {
         Number sum = 0L;
-        Iterator iterator_2 = Op().iterator();
 
-        while (iterator_2.hasNext()) {
+        for (Iterator iterator_2 = Op().iterator(); iterator_2.hasNext();) {
             Number e = (Number) iterator_2.next();
             sum = sum.longValue() + e.longValue();
         }

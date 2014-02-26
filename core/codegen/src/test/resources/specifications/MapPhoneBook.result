@@ -29,9 +29,8 @@ public class PhoneBook {
         IO.print("\n");
         IO.println("Printing entries in pb1 as <number>, <name>:");
 
-        Iterator iterator_1 = pb1.getNumbers().iterator();
-
-        while (iterator_1.hasNext()) {
+        for (Iterator iterator_1 = pb1.getNumbers().iterator();
+                iterator_1.hasNext();) {
             String number = (String) iterator_1.next();
             IO.print("Number: " + number + ". Name: " + pb1.getName(number) +
                 "\n");
@@ -87,9 +86,7 @@ public class PhoneBook {
     }
 
     public void listEntries() {
-        Iterator iterator_2 = getNames().iterator();
-
-        while (iterator_2.hasNext()) {
+        for (Iterator iterator_2 = getNames().iterator(); iterator_2.hasNext();) {
             String name = (String) iterator_2.next();
             IO.print("Name: " + name + ". Number: " + getNumber(name) + "\n");
         }

@@ -66,9 +66,8 @@ public class NoteBook {
         IO.print("\n");
         IO.println("Printing message indices of nb1");
 
-        Iterator iterator_1 = nb1.getMessageIndices().iterator();
-
-        while (iterator_1.hasNext()) {
+        for (Iterator iterator_1 = nb1.getMessageIndices().iterator();
+                iterator_1.hasNext();) {
             Number idx = (Number) iterator_1.next();
             IO.printf("%s ", SeqUtil.seq(idx));
         }
@@ -76,9 +75,8 @@ public class NoteBook {
         IO.println("\n");
         IO.println("Printing messages of nb1 using 'elems' operator");
 
-        Iterator iterator_2 = SeqUtil.elems(nb1.getMessagesOrdered()).iterator();
-
-        while (iterator_2.hasNext()) {
+        for (Iterator iterator_2 = SeqUtil.elems(nb1.getMessagesOrdered())
+                                          .iterator(); iterator_2.hasNext();) {
             String msg = (String) iterator_2.next();
             IO.print(msg + "\n");
         }
@@ -86,9 +84,8 @@ public class NoteBook {
         IO.println("\n");
         IO.println("Printing messages of nb1 using the sequence loop");
 
-        Iterator iterator_3 = nb1.getMessagesOrdered().iterator();
-
-        while (iterator_3.hasNext()) {
+        for (Iterator iterator_3 = nb1.getMessagesOrdered().iterator();
+                iterator_3.hasNext();) {
             String msg = (String) iterator_3.next();
             IO.print(msg + "\n");
         }
