@@ -16,11 +16,11 @@ public class Entry {
             return 0L;
         } else {
             VDMSet set_1 = xs.clone();
-            Iterator iterator_1 = set_1.iterator();
             Number x = null;
             boolean success_1 = false;
 
-            while (iterator_1.hasNext() && !(success_1)) {
+            for (Iterator iterator_1 = set_1.iterator();
+                    iterator_1.hasNext() && !(success_1);) {
                 x = ((Number) iterator_1.next());
                 success_1 = true;
             }
