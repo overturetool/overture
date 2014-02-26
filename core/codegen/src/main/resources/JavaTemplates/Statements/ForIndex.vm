@@ -20,8 +20,8 @@ long ${toVar} = ${toExp};
 	#set( $condition = "${index} <= ${toVar}" )
 	#set( $step = "${index}++" )
 #end
-
-for(long ${index} = ${fromExp}; ${condition} ; ${step})
+##
+for(long ${index} = ${fromExp}; ${condition}; ${step})
 {
 	$body
 }
