@@ -51,12 +51,12 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
 import org.overture.parser.config.Properties;
+import org.overture.parser.lex.BacktrackInputReader.ReaderType;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ModuleReader;
@@ -176,12 +176,12 @@ public abstract class CoverageEditor
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
 
 		LexLocation.resetLocations();
-		LexLocation.clearLocations();
+		// LexLocation.clearLocations();
 		Properties.parser_tabstop = 1;
 		LexTokenReader ltr = null;
 		try
 		{
-			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset, AbstractParserParticipant.findStreamReaderType(vdmSourceFile));
+			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset, getReaderType(sourceFile));
 		} catch (CoreException e1)
 		{
 			// TODO Auto-generated catch block
@@ -322,6 +322,11 @@ public abstract class CoverageEditor
 		}
 
 		getEditorSourceViewer().getTextWidget().setEditable(false);
+	}
+
+	protected ReaderType getReaderType(File file) throws CoreException
+	{
+		return ReaderType.Latex;
 	}
 
 	protected abstract ISourceViewer getEditorSourceViewer();
