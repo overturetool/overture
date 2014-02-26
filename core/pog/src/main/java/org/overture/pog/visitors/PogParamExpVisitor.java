@@ -346,7 +346,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
-		question.push(new POForAllContext(node));
+		question.push(new POForAllContext(assistantFactory,node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;
@@ -489,7 +489,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = node.getBind().apply(rootVisitor, question);
 		obligations.add(new UniqueExistenceObligation(node, question));
 
-		question.push(new POForAllContext(node));
+		question.push(new POForAllContext(assistantFactory,node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;

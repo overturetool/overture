@@ -29,8 +29,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 
 /**
@@ -375,7 +373,7 @@ public class NameFinder extends
 	@Override
 	public PDefinition caseARenamedDefinition(ARenamedDefinition node,
 			Newquestion question) throws AnalysisException
-	{		
+	{
 		PDefinition renamed = af.createPDefinitionAssistant().findNameBaseCase(node, question.sought, question.scope);
 
 		if (renamed != null)

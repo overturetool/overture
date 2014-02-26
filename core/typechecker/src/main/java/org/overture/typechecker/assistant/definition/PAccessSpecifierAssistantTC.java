@@ -13,9 +13,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PAccessSpecifierAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);

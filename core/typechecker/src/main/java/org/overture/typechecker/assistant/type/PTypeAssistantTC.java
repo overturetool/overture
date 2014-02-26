@@ -29,9 +29,8 @@ import org.overture.typechecker.utilities.type.PTypeResolver;
 
 public class PTypeAssistantTC extends PTypeAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);

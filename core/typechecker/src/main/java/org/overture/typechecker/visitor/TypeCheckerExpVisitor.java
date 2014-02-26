@@ -2448,7 +2448,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (!canBeExecuted)
 		{
 			TypeCheckerErrors.warning(5010, "State init expression cannot be executed", node.getLocation(), node);
-			TypeCheckerErrors.detail("Expected", "p == p = mk_Record(...)");
+			TypeCheckerErrors.detail("Expected", "p == p = mk_" + node.getState().getName().getName() + "(...)");
 		}
 
 		node.getState().setCanBeExecuted(canBeExecuted);
