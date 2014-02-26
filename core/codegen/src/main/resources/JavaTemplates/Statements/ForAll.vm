@@ -4,8 +4,7 @@
 #set( $elementType = $JavaFormat.formatElementType($node.getExp().getType()) )
 #set( $body = $JavaFormat.format($node.getBody()) )
 ##
-Iterator ${iterator} = ${exp}.iterator();
-while (${iterator}.hasNext())
+for (Iterator ${iterator} = ${exp}.iterator(); ${iterator}.hasNext();)
 {
 	${elementType} ${var} = (${elementType}) ${iterator}.next();
 	${body}
