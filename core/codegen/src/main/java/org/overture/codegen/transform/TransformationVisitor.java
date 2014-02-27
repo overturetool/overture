@@ -52,7 +52,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		LinkedList<AIdentifierPatternCG> ids = node.getIds();
 		int numberOfIds = ids.size();
 		
-		for (int i = 0;; i++)
+		for (int i = 0;;)
 		{
 			AIdentifierPatternCG id = ids.get(i);
 
@@ -72,7 +72,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 			nextBlock.getStatements().add(forLoop);
 			
-			if (i < numberOfIds) 
+			if (++i < numberOfIds) 
 			{
 				nextBlock = forBody;
 			}
