@@ -14,11 +14,12 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -26,14 +27,17 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.ooast.OoAstInfo;
 
 public class LetBeStStmAssistantCG extends TransformationAssistantCG
 {
-	public SSetTypeCG getSetTypeCloned(ALetBeStStmCG letBeStStm)
+	public SSetTypeCG getSetTypeCloned(AHeaderLetBeStCG header)
 			throws AnalysisException
 	{
-		PTypeCG typeCg = letBeStStm.getSet().getType();
+		PTypeCG typeCg = header.getSet().getType();
 
 		return getSetTypeCloned(typeCg);
 	}
@@ -49,13 +53,13 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 
 	}
 	
-	public ALocalVarDeclCG consSetBindDecl(String setBindName, ALetBeStStmCG letBeStStm) throws AnalysisException
+	public ALocalVarDeclCG consSetBindDecl(String setBindName, AHeaderLetBeStCG header) throws AnalysisException
 	{
 		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
 		
-		setBindDecl.setType(getSetTypeCloned(letBeStStm));
+		setBindDecl.setType(getSetTypeCloned(header));
 		setBindDecl.setName(setBindName);
-		setBindDecl.setExp(letBeStStm.getSet().clone());
+		setBindDecl.setExp(header.getSet().clone());
 		
 		return setBindDecl;
 	}
@@ -71,15 +75,26 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 		return successVarDecl;
 	}
 	
-	public ALocalVarDeclCG consChosenElemenDecl(PTypeCG setType, String id) throws AnalysisException
+	public ALocalVarDeclCG consIdDecl(PTypeCG setType, String id) throws AnalysisException
 	{
-		ALocalVarDeclCG chosenElement = new ALocalVarDeclCG();
+		ALocalVarDeclCG idDecl = new ALocalVarDeclCG();
 		
-		chosenElement.setType(getSetTypeCloned(setType).getSetOf());
-		chosenElement.setName(id);
-		chosenElement.setExp(new ANullExpCG());
+		idDecl.setType(getSetTypeCloned(setType).getSetOf());
+		idDecl.setName(id);
+		idDecl.setExp(new ANullExpCG());
 		
-		return chosenElement;
+		return idDecl;
+	}
+	
+	public ALocalVarDeclCG consLetBeStExpResulDecl(String varName, PExpCG exp)
+	{
+		ALocalVarDeclCG resultDecl = new ALocalVarDeclCG();
+		
+		resultDecl.setType(exp.getType().clone());
+		resultDecl.setName(varName);
+		resultDecl.setExp(exp);
+		
+		return resultDecl;
 	}
 	
 	public ABlockStmCG consForBody(PTypeCG setType, PExpCG suchThat, String id, String iteratorName, String successVarName) throws AnalysisException
@@ -127,12 +142,12 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 		return successAssignment;
 	}
 
-	public PExpCG consWhileCondition(ALetBeStStmCG node, String iteratorName, String successVarName) throws AnalysisException
+	public PExpCG consWhileCondition(AHeaderLetBeStCG header, String iteratorName, String successVarName) throws AnalysisException
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		
 		andExp.setType(new ABoolBasicTypeCG());
-		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, getSetTypeCloned(node).getSetOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
+		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, getSetTypeCloned(header).getSetOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
 		andExp.setRight(consSuccessCheck(successVarName));
 		
 		return andExp;
@@ -183,5 +198,61 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 		ifStm.setThenStm(consThrowException());
 		
 		return ifStm;
+	}
+	
+	public ABlockStmCG consBlock(AHeaderLetBeStCG header, OoAstInfo info)
+			throws AnalysisException
+	{
+		PTypeCG setType = header.getSet().getType();
+		
+		//Variable names
+		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
+		String successVarName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
+
+		ABlockStmCG outerBlock = new ABlockStmCG();
+		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
+
+		outerBlockDecls.add(consSetBindDecl(setName, header));
+		outerBlockDecls.add(consSuccessVarDecl(successVarName));
+		
+		ABlockStmCG nextBlock = outerBlock;
+		
+		LinkedList<AIdentifierPatternCG> ids = header.getIds();
+		int numberOfIds = ids.size();
+		
+		for (int i = 0;;)
+		{
+			AIdentifierPatternCG id = ids.get(i);
+
+			//Add next id to outer block
+			outerBlockDecls.add(consIdDecl(setType, id.getName()));
+
+			//Construct next for loop
+			String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+			
+			AForLoopStmCG forLoop = new AForLoopStmCG();
+			forLoop.setInit(consIteratorDecl(iteratorName, setName));
+			forLoop.setCond(consWhileCondition(header, iteratorName, successVarName));
+			forLoop.setInc(null);
+			
+			ABlockStmCG forBody = consForBody(setType, header.getSuchThat(), id.getName(), iteratorName, successVarName);
+			forLoop.setBody(forBody);
+
+			nextBlock.getStatements().add(forLoop);
+			
+			if (++i < numberOfIds) 
+			{
+				nextBlock = forBody;
+			}
+			else
+			{
+				forBody.getStatements().add(consSuccessAssignment(header.getSuchThat(), successVarName));
+				break;
+			}
+		}
+
+		LinkedList<PStmCG> outerBlockStms = outerBlock.getStatements();
+		outerBlockStms.add(consIfCheck(successVarName));
+		return outerBlock;
 	}
 }
