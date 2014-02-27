@@ -1,5 +1,6 @@
 package org.overture.codegen.transform;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -12,6 +13,13 @@ import org.overture.codegen.javalib.VDMSeq;
 
 public class TransformationAssistantCG
 {
+	public void replaceNodeWith(INode original, INode replacement)
+	{
+		INode parent = original.parent();
+		parent.replaceChild(original, replacement);
+		original.parent(null);
+	}
+	
 	public AClassTypeCG consIteratorType()
 	{
 		return consClassType(IJavaCodeGenConstants.ITERATOR_TYPE);
