@@ -37,8 +37,10 @@ import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -62,6 +64,7 @@ import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
@@ -73,6 +76,29 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	}
 	
 	@Override
+	public PStmCG defaultPExp(PExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PExpCG exp =  node.apply(question.getExpVisitor(), question);
+		
+		if(exp instanceof ALetDefExpCG)
+		{
+			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
+		}
+		else if(exp instanceof ALetBeStExpCG)
+		{
+			return StmAssistantCG.convertToLetBeStStm((ALetBeStExpCG) exp);
+		}
+		else
+		{
+			AReturnStmCG returnStm = new AReturnStmCG();
+			returnStm.setExp(exp);
+			
+			return returnStm;
+		}
+	}	
+		
+	@Override
 	public PStmCG caseALetBeStStm(ALetBeStStm node, OoAstInfo question)
 			throws AnalysisException
 	{
@@ -80,44 +106,35 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		if(!(multipleBind instanceof ASetMultipleBind))
 		{
-			question.addUnsupportedNode(node, "Generation of Let Be St statement is only supported for a multiple set bind. Got: " + multipleBind);
+			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: " + multipleBind);
 			return null;
 		}
 		
 		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
 		LinkedList<PPattern> patternList = setBind.getPlist();
 		
-		List<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
+		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
 		
-		for (PPattern pattern : patternList)
+		if(idsCg == null)
 		{
-			if (!(pattern instanceof AIdentifierPattern))
-			{
-				question.addUnsupportedNode(node, "Let Be St statement is only supported for identifier patterns. Got: " + pattern);
-				return null;
-			}
-			
-			AIdentifierPattern id = (AIdentifierPattern) pattern;
-			
-			AIdentifierPatternCG idCg = new AIdentifierPatternCG();
-			idCg.setName(id.getName().getName());
-			
-			idsCg.add(idCg);
+			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for list of identifier patterns. Got: " + patternList);
+			return null;
 		}
 		
 		PExp suchThat = node.getSuchThat();
-		PStm stm = node.getStatement();
 		PExp set = setBind.getSet();
+		PStm stm = node.getStatement();
 		
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
-		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
+		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
 		
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
-		letBeSt.setIds(idsCg);
-		letBeSt.setSuchThat(suchThatCg);
+		
+		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(idsCg, suchThatCg, setCg);
+				
+		letBeSt.setHeader(header);
 		letBeSt.setStatement(stmCg);
-		letBeSt.setSet(setCg);
 		
 		return letBeSt;
 	}
@@ -145,24 +162,6 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	{
 		return new ANotImplementedStmCG();
 	}
-	
-	@Override
-	public PStmCG defaultPExp(PExp node, OoAstInfo question)
-			throws AnalysisException
-	{
-		
-		PExpCG exp =  node.apply(question.getExpVisitor(), question);
-		
-		if(exp instanceof ALetDefExpCG)
-			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
-		else
-		{
-			AReturnStmCG returnStm = new AReturnStmCG();
-			returnStm.setExp(exp);
-			
-			return returnStm;
-		}
-	}	
 	
 	@Override
 	public PStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,

@@ -1,6 +1,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -8,6 +9,8 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
@@ -90,6 +93,8 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -127,6 +132,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
@@ -168,10 +174,12 @@ import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -428,13 +436,52 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseALetBeStExp(ALetBeStExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-//		if(ExpAssistantCG.isAssigned(node))
-//		{
-//			question.addUnsupportedNode(node, "Let expression not supported in assignments");
-//			return null;
-//		}
+		if (node.getAncestor(SOperationDefinition.class) == null && node.getAncestor(SFunctionDefinition.class) == null)
+		{
+			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported within operations/functions");
+			return null;
+		}
 		
-		return super.caseALetBeStExp(node, question);
+		PMultipleBind multipleBind = node.getBind();
+		
+		if(!(multipleBind instanceof ASetMultipleBind))
+		{
+			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a multiple set bind. Got: " + multipleBind);
+			return null;
+		}
+		
+		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
+		LinkedList<PPattern> patternList = setBind.getPlist();
+		
+		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
+		
+		if(idsCg == null)
+		{
+			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for list of identifier patterns. Got: " + patternList);
+			return null;
+		}
+		
+		PType type = node.getType();
+		PExp suchThat = node.getSuchThat();
+		PExp set = setBind.getSet();
+		PExp value = node.getValue();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
+		PExpCG setCg = set.apply(question.getExpVisitor(), question);
+		PExpCG valueCg = value.apply(question.getExpVisitor(), question);
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
+		
+		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
+		
+		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(idsCg, suchThatCg, setCg);
+
+		letBeStExp.setType(typeCg);
+		letBeStExp.setHeader(header);
+		letBeStExp.setValue(valueCg);
+		letBeStExp.setVar(varCg);
+		
+		return letBeStExp;
 	}
 	
 	@Override

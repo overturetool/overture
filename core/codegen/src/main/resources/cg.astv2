@@ -33,7 +33,6 @@ Abstract Syntax Tree
 /*
     Expressions
 */
-
 patternCG {-> package='org.overture.codegen.cgast.pattern'}
 	= {identifier} [name]:java_String 
 	;
@@ -139,10 +138,15 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
            |	{forAll} [var]:java_String [exp]:expCG [body]:stmCG
            |	{while} [exp]:expCG [body]:stmCG
-           |	{letBeSt} [ids]:patternCG.identifier* [set]:expCG [suchThat]:expCG [statement]:stmCG
+           |	{letBeSt} [header]:letBeStCG.header [statement]:stmCG
            |	{throw} [exp]:expCG
            |	{forLoop} [init]:declCG.localVar [cond]:expCG [inc]:expCG [body]:stmCG
            ;
+           
+letBeStCG {-> package='org.overture.codegen.cgast.utils'}
+	= {header} [ids]:patternCG.identifier* [set]:expCG [suchThat]:expCG
+	;
+
 
 expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
@@ -162,6 +166,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
     |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
     |   {maplet}  [left]:expCG [right]:expCG
+    |	{letBeSt} [header]:letBeStCG.header [value]:expCG [var]:java_String
     |	#Seq
     |	#Set
     |	#Map

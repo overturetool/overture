@@ -52,6 +52,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
@@ -104,7 +105,6 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
@@ -247,8 +247,6 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AWhileStmCG.class, templateStructure.STM_PATH + "While");
 		
-		nodeTemplateFileNames.put(ALetBeStStmCG.class, templateStructure.STM_PATH + "LetBeSt");
-		
 		nodeTemplateFileNames.put(AThrowStmCG.class, templateStructure.STM_PATH + "Throw");
 		
 		nodeTemplateFileNames.put(AForLoopStmCG.class, templateStructure.STM_PATH + "ForLoop");
@@ -282,6 +280,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXPS_PATH + "TernaryIf");
 		
 		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXPS_PATH + "Maplet");
+		
+		nodeTemplateFileNames.put(ALetBeStExpCG.class, templateStructure.EXPS_PATH + "LetBeSt");
 		
 		// Unary expressions
 

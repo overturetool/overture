@@ -41,6 +41,8 @@ public class IOoAstConstants
 	public static final String[] RESERVED_CLASS_NAMES = (String[]) ArrayUtils.addAll(new String[]{QUOTES_INTERFACE_NAME}, CLASS_NAMES_USED_IN_VDM);
 	
 	public static final String GENERATED_TEMP_SEQ_COMP_NAME_PREFIX = "seqCompResult_";
+	public static final String GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX = "letBeStExp_";
 	
-	public static final String[] GENERATED_TEMP_NAMES = {GENERATED_TEMP_SEQ_COMP_NAME_PREFIX};
+	public static final String[] GENERATED_TEMP_NAMES = {GENERATED_TEMP_SEQ_COMP_NAME_PREFIX, 
+														 GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX};
 }
