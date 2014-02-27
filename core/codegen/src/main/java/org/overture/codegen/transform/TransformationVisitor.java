@@ -21,8 +21,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private OoAstInfo info;
 	private CompAssistantCG compAssistant;
 	
-	//TODO: Rename type it is not a "stm" assistant anymore. It is more a header assistant
-	private LetBeStStmAssistantCG letBeStAssistant;
+	private LetBeStAssistantCG letBeStAssistant;
 	
 	private TransformationAssistantCG transformationAssistant;
 	
@@ -30,7 +29,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		this.info = info;
 		this.compAssistant = new CompAssistantCG();
-		this.letBeStAssistant = new LetBeStStmAssistantCG();
+		this.letBeStAssistant = new LetBeStAssistantCG();
 		this.transformationAssistant = new TransformationAssistantCG();
 	}
 	

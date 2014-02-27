@@ -32,7 +32,7 @@ import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 
-public class LetBeStStmAssistantCG extends TransformationAssistantCG
+public class LetBeStAssistantCG extends TransformationAssistantCG
 {
 	public SSetTypeCG getSetTypeCloned(AHeaderLetBeStCG header)
 			throws AnalysisException
