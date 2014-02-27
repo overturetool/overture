@@ -34,13 +34,19 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 			throws AnalysisException
 	{
 		PTypeCG typeCg = letBeStStm.getSet().getType();
-		
+
+		return getSetTypeCloned(typeCg);
+	}
+	
+	private SSetTypeCG getSetTypeCloned(PTypeCG typeCg) throws AnalysisException
+	{
 		if(!(typeCg instanceof SSetTypeCG))
 			throw new AnalysisException("Exptected set type for set expression in Let Be St statement. Got: " + typeCg);
 		
 		SSetTypeCG setTypeCg = (SSetTypeCG) typeCg;
 		
 		return setTypeCg.clone();
+
 	}
 	
 	public ALocalVarDeclCG consSetBindDecl(String setBindName, ALetBeStStmCG letBeStStm) throws AnalysisException
@@ -65,25 +71,24 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 		return successVarDecl;
 	}
 	
-	public ALocalVarDeclCG consChosenElemenDecl(ALetBeStStmCG letBeStStm) throws AnalysisException
+	public ALocalVarDeclCG consChosenElemenDecl(PTypeCG setType, String id) throws AnalysisException
 	{
 		ALocalVarDeclCG chosenElement = new ALocalVarDeclCG();
 		
-		chosenElement.setType(getSetTypeCloned(letBeStStm).getSetOf());
-		chosenElement.setName(letBeStStm.getBindId());
+		chosenElement.setType(getSetTypeCloned(setType).getSetOf());
+		chosenElement.setName(id);
 		chosenElement.setExp(new ANullExpCG());
 		
 		return chosenElement;
 	}
 	
-	public ABlockStmCG consWhileBody(ALetBeStStmCG letBeStStm, String iteratorName, String successVarName) throws AnalysisException
+	public ABlockStmCG consForBody(PTypeCG setType, PExpCG suchThat, String id, String iteratorName, String successVarName) throws AnalysisException
 	{
 		ABlockStmCG whileBody = new ABlockStmCG();
 		
 		LinkedList<PStmCG> stms = whileBody.getStatements();
 		
-		stms.add(consNextElement(letBeStStm, iteratorName));
-		stms.add(consSuccessAssignment(letBeStStm, successVarName));
+		stms.add(consNextElement(setType, id, iteratorName));
 		
 		return whileBody;
 	}
@@ -96,30 +101,28 @@ public class LetBeStStmAssistantCG extends TransformationAssistantCG
 		return identifier;
 	}
 	
-	private AAssignmentStmCG consNextElement(ALetBeStStmCG letBeStStm, String iteratorName)
+	private AAssignmentStmCG consNextElement(PTypeCG setType, String id, String iteratorName)
 			throws AnalysisException
 	{
-		PTypeCG elementType = getSetTypeCloned(letBeStStm).getSetOf();
+		PTypeCG elementType = getSetTypeCloned(setType).getSetOf();
 
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(consInstanceCall(consIteratorType(), iteratorName, elementType.clone(), IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, null));
 		
 		AAssignmentStmCG assignment = new AAssignmentStmCG();
-		assignment.setTarget(consIdentifier(letBeStStm.getBindId()));
+		assignment.setTarget(consIdentifier(id));
 		assignment.setExp(cast);
 
 		return assignment;
 	}
 	
-	private AAssignmentStmCG consSuccessAssignment(ALetBeStStmCG letBeStStm, String successVarName)
+	public AAssignmentStmCG consSuccessAssignment(PExpCG suchThat, String successVarName)
 	{
-		PExpCG letBeSt = letBeStStm.getSuchThat();
-		
 		AAssignmentStmCG successAssignment = new AAssignmentStmCG();
 
 		successAssignment.setTarget(consIdentifier(successVarName));
-		successAssignment.setExp(letBeSt != null ? letBeSt.clone() : ExpAssistantCG.consBoolLiteral(true));
+		successAssignment.setExp(suchThat != null ? suchThat.clone() : ExpAssistantCG.consBoolLiteral(true));
 		
 		return successAssignment;
 	}

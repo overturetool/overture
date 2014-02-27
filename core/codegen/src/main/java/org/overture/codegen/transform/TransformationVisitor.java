@@ -7,10 +7,12 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
@@ -32,33 +34,62 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
 	{
 		INode parent = node.parent();
-
+		
+		PTypeCG setType = node.getSet().getType();
+		
 		//Variable names
 		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
-		String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 		String successVarName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
+
+		ABlockStmCG outerBlock = new ABlockStmCG();
+		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
+
+		outerBlockDecls.add(letBeStStmAssistant.consSetBindDecl(setName, node));
+		outerBlockDecls.add(letBeStStmAssistant.consSuccessVarDecl(successVarName));
 		
-		AForLoopStmCG forLoop = new AForLoopStmCG();
-		forLoop.setInit(letBeStStmAssistant.consIteratorDecl(iteratorName, setName));
-		forLoop.setCond(letBeStStmAssistant.consWhileCondition(node, iteratorName, successVarName));
-		forLoop.setInc(null);
-		forLoop.setBody(letBeStStmAssistant.consWhileBody(node, iteratorName, successVarName));
+		ABlockStmCG nextBlock = outerBlock;
 		
-		ABlockStmCG block = new ABlockStmCG();
+		LinkedList<AIdentifierPatternCG> ids = node.getIds();
+		int numberOfIds = ids.size();
 		
-		LinkedList<ALocalVarDeclCG> blockLocalDefs = block.getLocalDefs();
-		blockLocalDefs.add(letBeStStmAssistant.consSetBindDecl(setName, node));
-		blockLocalDefs.add(letBeStStmAssistant.consChosenElemenDecl(node));
-		blockLocalDefs.add(letBeStStmAssistant.consSuccessVarDecl(successVarName));
+		for (int i = 0;; i++)
+		{
+			AIdentifierPatternCG id = ids.get(i);
+
+			//Add next id to outer block
+			outerBlockDecls.add(letBeStStmAssistant.consChosenElemenDecl(setType, id.getName()));
+
+			//Construct next for loop
+			String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+			
+			AForLoopStmCG forLoop = new AForLoopStmCG();
+			forLoop.setInit(letBeStStmAssistant.consIteratorDecl(iteratorName, setName));
+			forLoop.setCond(letBeStStmAssistant.consWhileCondition(node, iteratorName, successVarName));
+			forLoop.setInc(null);
+			
+			ABlockStmCG forBody = letBeStStmAssistant.consForBody(setType, node.getSuchThat(), id.getName(), iteratorName, successVarName);
+			forLoop.setBody(forBody);
+
+			nextBlock.getStatements().add(forLoop);
+			
+			if (i < numberOfIds) 
+			{
+				nextBlock = forBody;
+			}
+			else
+			{
+				forBody.getStatements().add(letBeStStmAssistant.consSuccessAssignment(node.getSuchThat(), successVarName));
+				break;
+			}
+		}
+
+		LinkedList<PStmCG> outerBlockStms = outerBlock.getStatements();
 		
-		LinkedList<PStmCG> blockStms = block.getStatements();
-		blockStms.add(forLoop);
-		blockStms.add(letBeStStmAssistant.consIfCheck(successVarName));
+		outerBlockStms.add(letBeStStmAssistant.consIfCheck(successVarName));
+		outerBlockStms.add(node.getStatement());
 		
-		parent.replaceChild(node, block);
+		parent.replaceChild(node, outerBlock);
 		node.parent(null);
-		
-		blockStms.add(node.getStatement());
 	}
 	
 	@Override

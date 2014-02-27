@@ -1,6 +1,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -41,6 +42,7 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
@@ -85,32 +87,34 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
 		LinkedList<PPattern> patternList = setBind.getPlist();
 		
-		if(patternList.size() != 1)
+		List<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
+		
+		for (PPattern pattern : patternList)
 		{
-			question.addUnsupportedNode(node, "Let Be St statement is only supported for a single pattern bind. Number of patterns: " + patternList.size());
-			return null;
+			if (!(pattern instanceof AIdentifierPattern))
+			{
+				question.addUnsupportedNode(node, "Let Be St statement is only supported for identifier patterns. Got: " + pattern);
+				return null;
+			}
+			
+			AIdentifierPattern id = (AIdentifierPattern) pattern;
+			
+			AIdentifierPatternCG idCg = new AIdentifierPatternCG();
+			idCg.setName(id.getName().getName());
+			
+			idsCg.add(idCg);
 		}
 		
-		PPattern pattern = patternList.get(0);
-		
-		if(!(pattern instanceof AIdentifierPattern))
-		{
-			question.addUnsupportedNode(node, "Let Be St statement is only supported for identifier patterns. Got: " + pattern);
-			return null;
-		}
-		
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		PExp suchThat = node.getSuchThat();
 		PStm stm = node.getStatement();
 		PExp set = setBind.getSet();
 		
-		String identifierCg = identifier.getName().getName();
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
 		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
-		letBeSt.setBindId(identifierCg);
+		letBeSt.setIds(idsCg);
 		letBeSt.setSuchThat(suchThatCg);
 		letBeSt.setStatement(stmCg);
 		letBeSt.setSet(setCg);
