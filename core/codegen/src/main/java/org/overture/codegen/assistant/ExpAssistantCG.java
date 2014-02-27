@@ -1,5 +1,8 @@
 package org.overture.codegen.assistant;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -9,6 +12,8 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
+import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -25,12 +30,14 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
 
 public class ExpAssistantCG
@@ -178,5 +185,38 @@ public class ExpAssistantCG
 			   exp.getAncestor(AValueDefinition.class) != null ||
 			   exp.getAncestor(AAssignmentDefinition.class) != null ||
 			   exp.getAncestor(AAssignmentStm.class) != null;
+	}
+	
+	public static LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
+	{
+		LinkedList<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
+		
+		for (PPattern pattern : patternList)
+		{
+			if (!(pattern instanceof AIdentifierPattern))
+			{
+				return null;
+			}
+			
+			AIdentifierPattern id = (AIdentifierPattern) pattern;
+			
+			AIdentifierPatternCG idCg = new AIdentifierPatternCG();
+			idCg.setName(id.getName().getName());
+			
+			idsCg.add(idCg);
+		}
+		
+		return idsCg;
+	}
+	
+	public static AHeaderLetBeStCG consHeader(List<AIdentifierPatternCG> ids, PExpCG suchThat, PExpCG set)
+	{
+		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
+		
+		header.setIds(ids);
+		header.setSuchThat(suchThat);
+		header.setSet(set);
+		
+		return header;
 	}
 }
