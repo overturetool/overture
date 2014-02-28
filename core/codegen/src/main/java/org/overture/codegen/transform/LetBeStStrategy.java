@@ -15,14 +15,16 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private String successVarName;
 	private LetBeStAssistantCG letBeStAssistant;
 	private PExpCG suchThat;
+	private SSetTypeCG setType;
 
 	public LetBeStStrategy(TempVarNameGen tempVarGen,
-			LetBeStAssistantCG letBeStAssistant, PExpCG suchThat)
+			LetBeStAssistantCG letBeStAssistant, PExpCG suchThat, SSetTypeCG setType)
 	{
 		super();
 		this.successVarName = tempVarGen.nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
 		this.letBeStAssistant = letBeStAssistant;
 		this.suchThat = suchThat;
+		this.setType = setType;
 	}
 
 	@Override
@@ -32,13 +34,13 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopCond(SSetTypeCG setType, String iteratorName) throws AnalysisException
+	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
 		return letBeStAssistant.conForCondition(setType, iteratorName, successVarName);
 	}
 
 	@Override
-	public List<PStmCG> getCurrentForLoopStms()
+	public List<PStmCG> getLastForLoopStms()
 	{
 		return packStm(letBeStAssistant.consSuccessAssignment(suchThat, successVarName));
 	}

@@ -7,15 +7,14 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
 
 public abstract class AbstractIterationStrategy
 {
-	abstract public List<ALocalVarDeclCG> getOuterBlockDecls();
+	abstract public List<ALocalVarDeclCG> getOuterBlockDecls() throws AnalysisException;
 	
-	abstract public PExpCG getForLoopCond(SSetTypeCG setType, String iteratorName) throws AnalysisException;
+	abstract public PExpCG getForLoopCond(String iteratorName) throws AnalysisException;
 	
-	abstract public List<PStmCG> getCurrentForLoopStms();
+	abstract public List<PStmCG> getLastForLoopStms();
 	
 	abstract public List<PStmCG> getOuterBlockStms();
 	
