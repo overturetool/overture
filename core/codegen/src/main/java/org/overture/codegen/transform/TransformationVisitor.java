@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
+import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
@@ -24,6 +25,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private LetBeStAssistantCG letBeStAssistant;
 	
+	//TODO: Why have this when it is sub super class for the other two?
 	private TransformationAssistantCG transformationAssistant;
 	
 	public TransformationVisitor(OoAstInfo info)
@@ -39,9 +41,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat());
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info, strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -59,9 +61,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat());
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info, strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
@@ -73,8 +75,27 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
+	{
+		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+
+		if (enclosingStm == null)
+			//TODO: Pick up on this earlier (see above to do msg)
+			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
+		
+		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node);
+		
+		ABlockStmCG block = compAssistant.consBlock(node.getIds(), node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
+		
+		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		
+		block.getStatements().add(enclosingStm);
+	}
+	
+	@Override
 	public void caseACompSeqExpCG(ACompSeqExpCG node) throws AnalysisException
 	{
+		//TODO: Make it use the approach adopted by set comprehensions generation
 		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
 
 		if (enclosingStm == null)
