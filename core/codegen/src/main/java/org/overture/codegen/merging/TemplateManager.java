@@ -26,6 +26,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
+import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
@@ -435,6 +436,9 @@ public class TemplateManager
 		//Set expressions
 		nodeTemplateFileNames.put(AEnumSetExpCG.class, templateStructure.SET_EXPS_PATH
 				+ "Enum");
+
+		nodeTemplateFileNames.put(ACompSetExpCG.class, templateStructure.SET_EXPS_PATH
+				+ "Comp");
 		
 		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Enum");
 		

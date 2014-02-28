@@ -261,6 +261,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*
+	| {comp} [first]:expCG [ids]:patternCG.identifier* [set]:expCG [predicate]:expCG [var]:java_String
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}

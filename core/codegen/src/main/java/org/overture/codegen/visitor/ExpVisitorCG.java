@@ -75,6 +75,7 @@ import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
@@ -108,6 +109,7 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
+import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
@@ -329,6 +331,50 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
+	public PExpCG caseASetCompSetExp(ASetCompSetExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		LinkedList<PMultipleBind> bindings = node.getBindings();
+
+		if(bindings.size() != 1 || !(bindings.get(0) instanceof ASetMultipleBind))
+		{
+			question.addUnsupportedNode(node, "Generation of a set comprehensions is only supporting for a single multiple set bind. Got: " + bindings);
+			return null;
+		}
+		
+		ASetMultipleBind setBind = (ASetMultipleBind) bindings.get(0);
+		PType type = node.getType();
+		PExp first = node.getFirst();
+		PExp set = setBind.getSet();
+		PExp predicate = node.getPredicate();
+		
+		LinkedList<PPattern> patternList = setBind.getPlist();
+		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
+		
+		if(idsCg == null)
+		{
+			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported for a list of identifier patterns. Got: " + patternList);
+			return null;
+		}
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
+		PExpCG setCg = set.apply(question.getExpVisitor(), question);
+		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
+
+		ACompSetExpCG setComp = new ACompSetExpCG();
+		setComp.setIds(idsCg);
+		setComp.setType(typeCg);
+		setComp.setFirst(firstCg);
+		setComp.setSet(setCg);
+		setComp.setPredicate(predicateCg);
+		setComp.setVar(varCg);
+		
+		return setComp;
+	}
+	
+	@Override
 	public PExpCG caseAIfExp(AIfExp node, OoAstInfo question)
 			throws AnalysisException
 	{
@@ -457,7 +503,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		if(idsCg == null)
 		{
-			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for list of identifier patterns. Got: " + patternList);
+			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a list of identifier patterns. Got: " + patternList);
 			return null;
 		}
 		
@@ -582,7 +628,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		if(!(pattern instanceof AIdentifierPattern))
 		{
-			question.addUnsupportedNode(node, "Generation of a sequence comprehension only supports identifier patterns");
+			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported for identifier patterns");
 			return null;
 		}
 		
