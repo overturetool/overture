@@ -129,13 +129,13 @@ public class CompAssistantCG extends TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consWhileBody(ACompSeqExpCG seqComp, String iteratorName,
+	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorName,
 			String resSeqName) throws AnalysisException
 	{
-		ABlockStmCG whileBody = new ABlockStmCG();
-		whileBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
-		whileBody.getStatements().add(consConditionalAdd(resSeqName, seqComp));
+		ABlockStmCG forBody = new ABlockStmCG();
+		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
+		forBody.getStatements().add(consConditionalAdd(resSeqName, seqComp));
 		
-		return whileBody;
+		return forBody;
 	}
 }

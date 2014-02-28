@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
@@ -36,7 +37,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
 	{
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(node.getHeader(), info);
+		AHeaderLetBeStCG header = node.getHeader();
+		
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -49,11 +52,14 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
 
 		if (enclosingStm == null)
+			//FIXME: pick up on this already during the construction of the OO AST and report the unsupported node.
 			throw new AnalysisException("Generation of the let be st expressions is only supported within operations/functions");
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(node.getHeader(), info);
+		AHeaderLetBeStCG header = node.getHeader();
 		
-		ALocalVarDeclCG resultDecl = letBeStAssistant.consLetBeStExpResulDecl(node.getVar(), node.getValue());
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info);
+		
+		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
 		StmAssistantCG.injectDeclAsStm(outerBlock, resultDecl);
 		
@@ -68,6 +74,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
 
 		if (enclosingStm == null)
+			//TODO: Pick up on this earlier (see above to do msg)
 			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
 
 		//Variable names 
@@ -79,7 +86,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		forLoop.setInit(compAssistant.consIteratorDecl(iteratorName, setName));
 		forLoop.setCond(compAssistant.consInstanceCall(compAssistant.consIteratorType(), iteratorName, compAssistant.getSeqTypeCloned(node).getSeqOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
 		forLoop.setInc(null);
-		forLoop.setBody(compAssistant.consWhileBody(node, iteratorName, resSeqName));
+		forLoop.setBody(compAssistant.consForBody(node, iteratorName, resSeqName));
 
 		//Construct and set up block containing sequence comprehension
 		ABlockStmCG block = new ABlockStmCG();
