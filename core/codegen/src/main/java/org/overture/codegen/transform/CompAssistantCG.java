@@ -2,19 +2,11 @@ package org.overture.codegen.transform;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -70,23 +62,7 @@ public class CompAssistantCG extends TransformationAssistantCG
 	
 	public ALocalVarDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
-		PTypeCG seqType = getSeqTypeCloned(seqComp);
-		
-		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
-		member.setType(seqType);
-		member.setClassType(consClassType(IJavaCodeGenConstants.SEQ_UTIL_FILE));
-		member.setName(IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
-
-		AApplyExpCG call = new AApplyExpCG();
-		call.setType(seqType.clone());
-		call.setRoot(member);
-		
-		ALocalVarDeclCG resSeq = new ALocalVarDeclCG();
-		resSeq.setType(seqType.clone());
-		resSeq.setName(varDeclName);
-		resSeq.setExp(call);
-		
-		return resSeq; 
+		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, IJavaCodeGenConstants.SEQ_UTIL_FILE, IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
 	}
 
 	public SSeqTypeCG getSeqTypeCloned(ACompSeqExpCG seqComp)
@@ -102,39 +78,12 @@ public class CompAssistantCG extends TransformationAssistantCG
 		return seqTypeCg.clone();
 	}
 	
-	public PStmCG consConditionalAdd(String resultingSeqName, ACompSeqExpCG seqComp)
-	{
-		AVariableExpCG col = new AVariableExpCG();
-		col.setOriginal(resultingSeqName);
-		
-		AIdentifierObjectDesignatorCG identifier = new AIdentifierObjectDesignatorCG();
-		identifier.setExp(col);
-		
-		ACallObjectStmCG callStm = new ACallObjectStmCG();
-		callStm.setClassName(null);
-		callStm.setFieldName(IJavaCodeGenConstants.ADD_ELEMENT_TO_COLLECTION);
-		callStm.setDesignator(identifier);
-		callStm.getArgs().add(seqComp.getFirst());
-		callStm.setType(new AVoidTypeCG());
-		
-		if(seqComp.getPredicate() != null)
-		{
-			AIfStmCG ifStm = new AIfStmCG();
-			ifStm.setIfExp(seqComp.getPredicate());
-			ifStm.setThenStm(callStm);
-			
-			return ifStm;
-		}
-		
-		return callStm;
-	}
-	
 	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorName,
 			String resSeqName) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
-		forBody.getStatements().add(consConditionalAdd(resSeqName, seqComp));
+		forBody.getStatements().add(consConditionalAdd(resSeqName, seqComp.getFirst(), seqComp.getPredicate()));
 		
 		return forBody;
 	}

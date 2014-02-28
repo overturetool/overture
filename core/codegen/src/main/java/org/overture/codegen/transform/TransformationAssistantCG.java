@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
@@ -15,19 +16,30 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.javalib.VDMSeq;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class TransformationAssistantCG
 {
+	public void replaceNodeWith(INode original, INode replacement)
+	{
+		INode parent = original.parent();
+		parent.replaceChild(original, replacement);
+		original.parent(null);
+	}
+	
 	public SSetTypeCG getSetTypeCloned(PExpCG set)
 			throws AnalysisException
 	{
@@ -85,13 +97,6 @@ public class TransformationAssistantCG
 		identifier.setName(name);
 
 		return identifier;
-	}
-	
-	public void replaceNodeWith(INode original, INode replacement)
-	{
-		INode parent = original.parent();
-		parent.replaceChild(original, replacement);
-		original.parent(null);
 	}
 	
 	public AClassTypeCG consIteratorType()
@@ -165,13 +170,59 @@ public class TransformationAssistantCG
 		return assignment;
 	}
 	
-	public ABlockStmCG consBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG suchThat, OoAstInfo info, AbstractIterationStrategy strategy)
+	public ALocalVarDeclCG consCompResultDecl(PTypeCG collectionType, String varDeclName, String className, String memberName) throws AnalysisException
+	{
+		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
+		member.setType(collectionType);
+		member.setClassType(consClassType(className));
+		member.setName(memberName);
+
+		AApplyExpCG call = new AApplyExpCG();
+		call.setType(collectionType.clone());
+		call.setRoot(member);
+		
+		ALocalVarDeclCG resCollection = new ALocalVarDeclCG();
+		resCollection.setType(collectionType.clone());
+		resCollection.setName(varDeclName);
+		resCollection.setExp(call);
+		
+		return resCollection; 
+	}
+	
+	public PStmCG consConditionalAdd(String resCollectionName, PExpCG first, PExpCG predicate)
+	{
+		AVariableExpCG col = new AVariableExpCG();
+		col.setOriginal(resCollectionName);
+		
+		AIdentifierObjectDesignatorCG identifier = new AIdentifierObjectDesignatorCG();
+		identifier.setExp(col);
+		
+		ACallObjectStmCG callStm = new ACallObjectStmCG();
+		callStm.setClassName(null);
+		callStm.setFieldName(IJavaCodeGenConstants.ADD_ELEMENT_TO_COLLECTION);
+		callStm.setDesignator(identifier);
+		callStm.getArgs().add(first);
+		callStm.setType(new AVoidTypeCG());
+		
+		if(predicate != null)
+		{
+			AIfStmCG ifStm = new AIfStmCG();
+			ifStm.setIfExp(predicate);
+			ifStm.setThenStm(callStm);
+			
+			return ifStm;
+		}
+		
+		return callStm;
+	}
+	
+	public ABlockStmCG consBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG suchThat, TempVarNameGen tempGen, AbstractIterationStrategy strategy)
 			throws AnalysisException
 	{
 		PTypeCG setType = set.getType();
 		
 		//Variable names
-		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
+		String setName = tempGen.nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
@@ -197,11 +248,11 @@ public class TransformationAssistantCG
 			outerBlockDecls.add(consIdDecl(setType, id.getName()));
 
 			//Construct next for loop
-			String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+			String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 			
 			AForLoopStmCG forLoop = new AForLoopStmCG();
 			forLoop.setInit(consIteratorDecl(iteratorName, setName));
-			forLoop.setCond(strategy.getForLoopCond(getSetTypeCloned(set), iteratorName));
+			forLoop.setCond(strategy.getForLoopCond(iteratorName));
 			forLoop.setInc(null);
 			
 			ABlockStmCG forBody = consForBody(setType, id.getName(), iteratorName);
@@ -215,7 +266,7 @@ public class TransformationAssistantCG
 			}
 			else
 			{
-				List<PStmCG> extraForLoopStatements = strategy.getCurrentForLoopStms();
+				List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms();
 				
 				if(extraForLoopStatements != null)
 				{
