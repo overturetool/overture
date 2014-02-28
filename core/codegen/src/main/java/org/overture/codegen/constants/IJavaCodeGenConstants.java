@@ -40,6 +40,7 @@ public interface IJavaCodeGenConstants
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
 	public static final String SEQ_UTIL_EMPTY_SEQ_CALL = "seq";
+	public static final String SET_UTIL_EMPTY_SET_CALL = "set";
 	
 	public static final String MATH_FILE = "MATH";
 	public static final String IO_FILE = "IO";
