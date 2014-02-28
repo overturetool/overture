@@ -39,7 +39,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info);
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat());
+		
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info, strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -57,7 +59,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info);
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat());
+		
+		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info, strategy);
 		
 		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
