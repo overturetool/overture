@@ -1,61 +1,60 @@
 package org.overture.codegen.transform;
 
-import java.util.List;
-
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 
-public class SetCompStrategy extends AbstractIterationStrategy
+public class SetCompStrategy extends CompStrategy
 {
-	private TransformationAssistantCG transformationAssitant;
-	private ACompSetExpCG setComp;
+	protected ACompSetExpCG setComp;
 	
-	public SetCompStrategy(TransformationAssistantCG transformationAssitant, ACompSetExpCG setComp)
+	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
+			ACompSetExpCG setComp)
 	{
-		super();
-		this.transformationAssitant = transformationAssitant;
+		super(transformationAssitant);
 		this.setComp = setComp;
 	}
 
-	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls() throws AnalysisException
+	public PTypeCG getCollectionType() throws AnalysisException
 	{
-		SSetTypeCG setType = transformationAssitant.getSetTypeCloned(setComp.getSet());
-		String varDeclName = setComp.getVar();
-		
-		return packDecl(transformationAssitant.consCompResultDecl(setType, varDeclName, IJavaCodeGenConstants.SET_UTIL_FILE, IJavaCodeGenConstants.SET_UTIL_EMPTY_SET_CALL));
+		return transformationAssitant.getSetTypeCloned(setComp.getSet());
 	}
 
 	@Override
-	public PExpCG getForLoopCond(String iteratorName)
-			throws AnalysisException
+	public String getVar()
 	{
-		AClassTypeCG iteratorType = transformationAssitant.consIteratorType();
-		SSetTypeCG setType = transformationAssitant.getSetTypeCloned(setComp.getSet());
-		
-		return transformationAssitant.consInstanceCall(iteratorType, iteratorName, setType.getSetOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
+		return setComp.getVar();
 	}
 
 	@Override
-	public List<PStmCG> getLastForLoopStms()
+	public String getClassName()
 	{
-		String varDeclName = setComp.getVar();
-		PExpCG first = setComp.getFirst();
-		PExpCG predicate = setComp.getPredicate();
-		
-		return packStm(transformationAssitant.consConditionalAdd(varDeclName, first, predicate));
+		return IJavaCodeGenConstants.SET_UTIL_FILE;
 	}
 
 	@Override
-	public List<PStmCG> getOuterBlockStms()
+	public String getMemberName()
 	{
-		return null;//Indicates that there are no extra statements to be added to the outer block
+		return IJavaCodeGenConstants.SET_UTIL_EMPTY_SET_CALL;
 	}
 
+	@Override
+	public PTypeCG getElementType() throws AnalysisException
+	{
+		return transformationAssitant.getSetTypeCloned(setComp.getSet()).getSetOf();
+	}
+
+	@Override
+	public PExpCG getFirst()
+	{
+		return setComp.getFirst();
+	}
+
+	@Override
+	public PExpCG getPredicate()
+	{
+		return setComp.getPredicate();
+	}
 }
