@@ -2,121 +2,21 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
-  <repositories>
-    <!-- <repository> -->
-    <!--   <id>overture.sf.net</id> -->
-    <!--   <name>Overture SF Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://overture.sourceforge.net/maven/repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-    <!-- <repository> -->
-    <!--   <id>IHA</id> -->
-    <!--   <name>Build server Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://build.overturetool.org/builds/overture-m2repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-  </repositories>
+  <!-- You will only need the two Sonatype server entries if you plan
+       to either deploy snapshots to the sonatype servers or perform
+       full releases.
+  -->
+  <servers>
+    <server>
+      <id>sonatype-nexus-snapshots</id>
+      <username>your-sonatype-username</username>
+      <password>your-sonatype-password</password>
+    </server>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>overture-astcreator-github</id>
-      <name>Overture AstCreator maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/astcreator/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-    <pluginRepository>
-      <id>overture-example-packager-github</id>
-      <name>Overture Example Packager maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/example-packager/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-  </pluginRepositories>
-  
-  <profiles>
-    <profile>
-      <id>With-IDE</id>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>overture.iha.dk</id>
-          <name>Overture Project Build Repository at AU/IHA</name>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <url>http://build.overturetool.org/builds/overture-m2repo/</url>
-          <layout>default</layout>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-    <profile>
-      <id>COMPASS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-compass</id>
-          <name>Overture Repo for COMPASS on the buildserver</name>
-          <url>file:///home/jenkins/web/overture-compass-m2repo/</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
-      </distributionManagement>
-    </profile>
-    <profile>
-      <id>DESTECS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-destecs</id>
-          <name>Overture Repo for DESTECS on the buildserver</name>
-          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/destecs-overture-m2repo</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/destecs-overture-m2repo/</downloadUrl>
-      </distributionManagement>
-    </profile>
-  </profiles>
-
-
+    <server>
+      <id>sonatype-nexus-staging</id>
+      <username>your-sonatype-username</username>
+      <password>your-sonatype-password</password>
+    </server>
+  </servers>
 </settings>
