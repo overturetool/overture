@@ -1,31 +1,16 @@
 package org.overture.codegen.transform;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class SetCompStrategy extends CompStrategy
 {
-	protected ACompSetExpCG setComp;
-	
 	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
-			ACompSetExpCG setComp)
+			PExpCG first, PExpCG predicate, PExpCG set, String var)
 	{
-		super(transformationAssitant);
-		this.setComp = setComp;
-	}
-
-	public PTypeCG getCollectionType() throws AnalysisException
-	{
-		return transformationAssitant.getSetTypeCloned(setComp.getSet());
-	}
-
-	@Override
-	public String getVar()
-	{
-		return setComp.getVar();
+		super(transformationAssitant, first, predicate, set, var);
 	}
 
 	@Override
@@ -41,20 +26,9 @@ public class SetCompStrategy extends CompStrategy
 	}
 
 	@Override
-	public PTypeCG getElementType() throws AnalysisException
+	public PTypeCG getCollectionType() throws AnalysisException
 	{
-		return transformationAssitant.getSetTypeCloned(setComp.getSet()).getSetOf();
-	}
-
-	@Override
-	public PExpCG getFirst()
-	{
-		return setComp.getFirst();
-	}
-
-	@Override
-	public PExpCG getPredicate()
-	{
-		return setComp.getPredicate();
+		
+		return transformationAssitant.getSetTypeCloned(set);
 	}
 }
