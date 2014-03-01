@@ -10,19 +10,16 @@ public class Entry {
     public static VDMSet Run() {
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
         VDMSet setCompResult_1 = SetUtil.set();
-        Number x = null;
-        Number y = null;
-        Number z = null;
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            x = ((Number) iterator_1.next());
+            Number x = ((Number) iterator_1.next());
 
             for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                y = ((Number) iterator_2.next());
+                Number y = ((Number) iterator_2.next());
 
                 for (Iterator iterator_3 = set_1.iterator();
                         iterator_3.hasNext();) {
-                    z = ((Number) iterator_3.next());
+                    Number z = ((Number) iterator_3.next());
 
                     if (1L == 1L) {
                         setCompResult_1.add(x.longValue() + y.longValue() +
