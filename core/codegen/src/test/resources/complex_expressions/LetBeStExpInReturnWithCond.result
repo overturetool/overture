@@ -9,10 +9,10 @@ public class Entry {
 
     public static Number Run() {
         VDMSet set_1 = SetUtil.set(2L, 4L, 6L);
-        boolean success_1 = false;
         Number x = null;
         Number y = null;
         Number z = null;
+        boolean success_1 = false;
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {

@@ -9,8 +9,8 @@ public class Entry {
 
     public static Number Run() {
         VDMSet set_1 = SetUtil.set(45L);
-        boolean success_1 = false;
         Number x = null;
+        boolean success_1 = false;
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
