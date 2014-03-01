@@ -9,13 +9,11 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
@@ -83,7 +81,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			//TODO: Pick up on this earlier (see above to do msg)
 			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
 		
-		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node);
+		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getSet(), node.getVar());
 		
 		ABlockStmCG block = compAssistant.consBlock(node.getIds(), node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
@@ -102,32 +100,15 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			//TODO: Pick up on this earlier (see above to do msg)
 			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
 
-		//Variable names 
-		String setName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
-		String iteratorName = info.getTempVarNameGen().nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
-		String resSeqName = node.getVar();
-
-		AForLoopStmCG forLoop = new AForLoopStmCG();
-		forLoop.setInit(compAssistant.consIteratorDecl(iteratorName, setName));
-		forLoop.setCond(compAssistant.consInstanceCall(compAssistant.consIteratorType(), iteratorName, compAssistant.getSeqTypeCloned(node).getSeqOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
-		forLoop.setInc(null);
-		forLoop.setBody(compAssistant.consForBody(node, iteratorName, resSeqName));
-
-		//Construct and set up block containing sequence comprehension
-		ABlockStmCG block = new ABlockStmCG();
+		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getSet(), node.getVar(), transformationAssistant.getSeqTypeCloned(node));
 		
-		LinkedList<ALocalVarDeclCG> blockLocalDefs = block.getLocalDefs();
-		blockLocalDefs.add(compAssistant.consSetBindDecl(setName, node));
-		blockLocalDefs.add(compAssistant.consResultSeqDecl(resSeqName, node));
+		LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
+		ids.add(node.getId());
 		
-		LinkedList<PStmCG> blockStms = block.getStatements();
-		blockStms.add(forLoop);
-
-		//Now replace the statement with the result of the sequence comprehension with the
-		//block statement doing the sequence comprehension and add to this block statement
-		//the statement with the result of the sequence comprehension
+		ABlockStmCG block = compAssistant.consBlock(ids, node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
+		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
-		blockStms.add(enclosingStm);
+		block.getStatements().add(enclosingStm);
 	}
 }
