@@ -1,0 +1,15 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+		
+public static Test : () ==> set of nat 
+Test () ==
+let x = { x * 2 | x in set elems [1,2,3] & 1 = 1 }
+in
+	return x;
+
+end Entry

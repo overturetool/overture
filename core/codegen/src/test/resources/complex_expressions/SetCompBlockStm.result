@@ -1,0 +1,33 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final VDMSeq s = SeqUtil.seq(4L, 5L, 6L);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return Test();
+    }
+
+    public static VDMSet Test() {
+        VDMSet set_1 = SeqUtil.elems(s.clone());
+        VDMSet setCompResult_1 = SetUtil.set();
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            Number x = ((Number) iterator_1.next());
+
+            if (1L == 1L) {
+                setCompResult_1.add(x);
+            }
+        }
+
+        VDMSet a = setCompResult_1;
+
+        return a.clone();
+    }
+}
+##########
