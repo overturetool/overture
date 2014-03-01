@@ -638,7 +638,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PExp set = node.getSetBind().getSet();
 		PExp predicate = node.getPredicate();
 
-		String setBindIdCg = setBindId.getName().getName();
+		AIdentifierPatternCG id = new AIdentifierPatternCG();
+		id.setName(setBindId.getName().getName());
+		
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
@@ -646,7 +648,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		
 		ACompSeqExpCG seqComp = new ACompSeqExpCG();
-		seqComp.setSetBindId(setBindIdCg);
+		seqComp.setId(id);
 		seqComp.setType(typeCg);
 		seqComp.setFirst(firstCg);
 		seqComp.setSet(setCg);

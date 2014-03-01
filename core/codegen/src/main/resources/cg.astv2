@@ -254,7 +254,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
-	| {comp} [first]:expCG [setBindId]:java_String [set]:expCG [predicate]:expCG [var]:java_String
+	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG [var]:java_String
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
 	;
