@@ -1,10 +1,13 @@
 package org.overture.codegen.transform;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
@@ -28,15 +31,31 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls()
+	public List<ALocalVarDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		return packDecl(letBeStAssistant.consSuccessVarDecl(successVarName));
+		List<ALocalVarDeclCG> outerBlockDecls = new LinkedList<ALocalVarDeclCG>();
+		
+		for(AIdentifierPatternCG id : ids)
+		{
+			outerBlockDecls.add(letBeStAssistant.consIdDecl(setType, id.getName()));
+		}
+		
+		outerBlockDecls.add(letBeStAssistant.consSuccessVarDecl(successVarName));
+		
+		return outerBlockDecls;
 	}
 
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
 		return letBeStAssistant.conForCondition(setType, iteratorName, successVarName);
+	}
+	
+	@Override
+	public ABlockStmCG getForLoopBody(AIdentifierPatternCG id,
+			String iteratorName) throws AnalysisException
+	{
+		return letBeStAssistant.consForBodyNextElementAssigned(setType, id.getName(), iteratorName);
 	}
 
 	@Override
@@ -50,5 +69,4 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	{
 		return packStm(letBeStAssistant.consIfCheck(successVarName));
 	}
-
 }
