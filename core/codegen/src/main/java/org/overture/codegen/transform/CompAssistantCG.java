@@ -35,12 +35,12 @@ public class CompAssistantCG extends TransformationAssistantCG
 		SSeqTypeCG seqType = getSeqTypeCloned(seqComp);
 		
 		PTypeCG elementType = seqType.getSeqOf();
-		String setBindId = seqComp.getSetBindId();
+		String id = seqComp.getId().getName();
 		ACastUnaryExpCG initExp = consNextElementCall(instanceName, memberName, seqComp);
 		
 		ALocalVarDeclCG idDecl = new ALocalVarDeclCG();
 		idDecl.setType(elementType);
-		idDecl.setName(setBindId);
+		idDecl.setName(id);
 		idDecl.setExp(initExp);
 		
 		return idDecl;
@@ -63,19 +63,6 @@ public class CompAssistantCG extends TransformationAssistantCG
 	public ALocalVarDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, IJavaCodeGenConstants.SEQ_UTIL_FILE, IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
-	}
-
-	public SSeqTypeCG getSeqTypeCloned(ACompSeqExpCG seqComp)
-			throws AnalysisException
-	{
-		PTypeCG typeCg = seqComp.getType();
-		
-		if(!(typeCg instanceof SSeqTypeCG))
-			throw new AnalysisException("Exptected sequence type for sequence comprehension. Got: " + typeCg);
-		
-		SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
-		
-		return seqTypeCg.clone();
 	}
 	
 	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorName,

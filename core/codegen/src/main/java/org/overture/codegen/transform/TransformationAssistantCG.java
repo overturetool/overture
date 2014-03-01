@@ -3,6 +3,7 @@ package org.overture.codegen.transform;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
@@ -25,6 +26,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
@@ -51,11 +53,29 @@ public class TransformationAssistantCG
 	public SSetTypeCG getSetTypeCloned(PTypeCG typeCg) throws AnalysisException
 	{
 		if(!(typeCg instanceof SSetTypeCG))
-			throw new AnalysisException("Exptected set type for set expression. Got: " + typeCg);
+			throw new AnalysisException("Exptected set type. Got: " + typeCg);
 		
 		SSetTypeCG setTypeCg = (SSetTypeCG) typeCg;
 		
 		return setTypeCg.clone();
+	}
+	
+	public SSeqTypeCG getSeqTypeCloned(PExpCG seq) throws AnalysisException
+	{
+		PTypeCG typeCg = seq.getType();
+		
+		return getSeqTypeCloned(typeCg);
+	}
+	
+	public SSeqTypeCG getSeqTypeCloned(PTypeCG typeCg)
+			throws AnalysisException
+	{
+		if(!(typeCg instanceof SSeqTypeCG))
+			throw new AnalysisException("Exptected sequence type. Got: " + typeCg);
+		
+		SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
+		
+		return seqTypeCg.clone();
 	}
 	
 	public ALocalVarDeclCG consSetBindDecl(String setBindName, PExpCG set) throws AnalysisException
@@ -145,29 +165,58 @@ public class TransformationAssistantCG
 		return iterator;
 	}
 	
-	public ABlockStmCG consForBody(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	public ABlockStmCG consForBodyNextElementAssigned(PTypeCG setType, String id, String iteratorName) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		forBody.getStatements().add(consNextElement(setType, id, iteratorName));
+		forBody.getStatements().add(consNextElementAssignment(setType, id, iteratorName));
 		
 		return forBody;
 	}
+	
+	public ABlockStmCG consForBodyNextElementDeclared(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	{
+		ABlockStmCG forBody = new ABlockStmCG();
+		
+		StmAssistantCG.injectDeclAsStm(forBody, consNextElementDeclared(setType, id, iteratorName));
+		
+		return forBody;
+	}
+	
+	public ALocalVarDeclCG consNextElementDeclared(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	{
+		PTypeCG elementType = getSetTypeCloned(setType).getSetOf();
 
-	private AAssignmentStmCG consNextElement(PTypeCG setType, String id, String iteratorName)
+		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
+		ALocalVarDeclCG decl = new ALocalVarDeclCG();
+		
+		decl.setType(elementType);
+		decl.setName(id);
+		decl.setExp(cast);;
+		
+		return decl;
+	}
+
+	public AAssignmentStmCG consNextElementAssignment(PTypeCG setType, String id, String iteratorName)
 			throws AnalysisException
 	{
 		PTypeCG elementType = getSetTypeCloned(setType).getSetOf();
 
-		ACastUnaryExpCG cast = new ACastUnaryExpCG();
-		cast.setType(elementType.clone());
-		cast.setExp(consInstanceCall(consIteratorType(), iteratorName, elementType.clone(), IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, null));
+		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
 		
 		AAssignmentStmCG assignment = new AAssignmentStmCG();
 		assignment.setTarget(consIdentifier(id));
 		assignment.setExp(cast);
 
 		return assignment;
+	}
+
+	public ACastUnaryExpCG consNextElementCall(String iteratorName, PTypeCG elementType)
+	{
+		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		cast.setType(elementType.clone());
+		cast.setExp(consInstanceCall(consIteratorType(), iteratorName, elementType.clone(), IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, null));
+		return cast;
 	}
 	
 	public ALocalVarDeclCG consCompResultDecl(PTypeCG collectionType, String varDeclName, String className, String memberName) throws AnalysisException
@@ -219,8 +268,6 @@ public class TransformationAssistantCG
 	public ABlockStmCG consBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG suchThat, TempVarNameGen tempGen, AbstractIterationStrategy strategy)
 			throws AnalysisException
 	{
-		PTypeCG setType = set.getType();
-		
 		//Variable names
 		String setName = tempGen.nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
 
@@ -229,7 +276,7 @@ public class TransformationAssistantCG
 
 		outerBlockDecls.add(consSetBindDecl(setName, set));
 		
-		List<ALocalVarDeclCG> extraDecls = strategy.getOuterBlockDecls();
+		List<ALocalVarDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
 		
 		if(extraDecls != null)
 		{
@@ -244,9 +291,6 @@ public class TransformationAssistantCG
 		{
 			AIdentifierPatternCG id = ids.get(i);
 
-			//Add next id to outer block
-			outerBlockDecls.add(consIdDecl(setType, id.getName()));
-
 			//Construct next for loop
 			String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 			
@@ -255,7 +299,7 @@ public class TransformationAssistantCG
 			forLoop.setCond(strategy.getForLoopCond(iteratorName));
 			forLoop.setInc(null);
 			
-			ABlockStmCG forBody = consForBody(setType, id.getName(), iteratorName);
+			ABlockStmCG forBody = strategy.getForLoopBody(id, iteratorName);
 			forLoop.setBody(forBody);
 
 			nextBlock.getStatements().add(forLoop);
