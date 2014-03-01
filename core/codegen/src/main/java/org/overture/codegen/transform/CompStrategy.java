@@ -5,6 +5,8 @@ import java.util.List;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -13,31 +15,34 @@ import org.overture.codegen.constants.IJavaCodeGenConstants;
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
 	protected TransformationAssistantCG transformationAssitant;
+	protected PExpCG first;
+	protected PExpCG predicate;
+	protected PExpCG set;
+	protected String var;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssitant)
+	public abstract String getClassName();
+	public abstract String getMemberName();
+	public abstract PTypeCG getCollectionType() throws AnalysisException;
+	
+	public CompStrategy(TransformationAssistantCG transformationAssitant,
+			PExpCG first, PExpCG predicate, PExpCG set, String var)
 	{
 		super();
 		this.transformationAssitant = transformationAssitant;
+		this.first = first;
+		this.predicate = predicate;
+		this.set = set;
+		this.var = var;
 	}
 	
-	public abstract PTypeCG getCollectionType() throws AnalysisException;
-	public abstract String getVar();
-	public abstract String getClassName();
-	public abstract String getMemberName();
-	public abstract PTypeCG getElementType() throws AnalysisException;
-	public abstract PExpCG getFirst();
-	public abstract PExpCG getPredicate();
-	
-	
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls() throws AnalysisException
+	public List<ALocalVarDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		PTypeCG setType = getCollectionType();
-		String varDeclName = getVar();
 		String className = getClassName();
 		String memberName = getMemberName();
+		PTypeCG collectionType = getCollectionType();
 		
-		return packDecl(transformationAssitant.consCompResultDecl(setType, varDeclName, className, memberName));
+		return packDecl(transformationAssitant.consCompResultDecl(collectionType, var, className, memberName));
 	}
 
 	@Override
@@ -45,21 +50,23 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			throws AnalysisException
 	{
 		AClassTypeCG iteratorType = transformationAssitant.consIteratorType();
-		PTypeCG elementType = getElementType();
+		PTypeCG elementType = transformationAssitant.getSetTypeCloned(set).getSetOf();
 		
 		return transformationAssitant.consInstanceCall(iteratorType, iteratorName, elementType, IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
 	}
 
 	@Override
+	public ABlockStmCG getForLoopBody(AIdentifierPatternCG id, String iteratorName) throws AnalysisException
+	{
+		return transformationAssitant.consForBodyNextElementDeclared(set.getType(), id.getName(), iteratorName);
+	}
+	
+	@Override
 	public List<PStmCG> getLastForLoopStms()
 	{
-		String varDeclName = getVar();
-		PExpCG first = getFirst();
-		PExpCG predicate = getPredicate();
-		
-		return packStm(transformationAssitant.consConditionalAdd(varDeclName, first, predicate));
+		return packStm(transformationAssitant.consConditionalAdd(var, first, predicate));
 	}
-
+	
 	@Override
 	public List<PStmCG> getOuterBlockStms()
 	{
