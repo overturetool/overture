@@ -36,6 +36,14 @@ Abstract Syntax Tree
 patternCG {-> package='org.overture.codegen.cgast.pattern'}
 	= {identifier} [name]:java_String 
 	;
+	
+//This is used in PExp and PDefinition
+multipleBindCG {-> package='org.overture.codegen.cgast.patterns'
+//	|	[location]:location 
+	|	[patterns]:patternCG.identifier*} //In the Overture AST pList is multiple patterns. Here it is limited to identifiers
+    =   {set}  [set]:expCG //binds
+//  |   {type} (type):type //binds
+    ;
    
 nameCG {-> package='org.overture.codegen.cgast.name'}
 	=	{type}
@@ -261,7 +269,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*
-	| {comp} [first]:expCG [ids]:patternCG.identifier* [set]:expCG [predicate]:expCG [var]:java_String
+	| {comp} [first]:expCG [bindings]:multipleBindCG.set* [predicate]:expCG [var]:java_String //In the Overture AST bindings are of type multipleBind* as it also allows type binds.
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
