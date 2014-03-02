@@ -19,6 +19,7 @@ import org.overture.codegen.utils.TempVarNameGen;
 import org.overture.codegen.visitor.ClassVisitorCG;
 import org.overture.codegen.visitor.DeclVisitorCG;
 import org.overture.codegen.visitor.ExpVisitorCG;
+import org.overture.codegen.visitor.MultipleBindVisitorCG;
 import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
 import org.overture.codegen.visitor.StateDesignatorVisitorCG;
 import org.overture.codegen.visitor.StmVisitorCG;
@@ -36,6 +37,7 @@ public class OoAstInfo
 	private StmVisitorCG stmVisitor;
 	private StateDesignatorVisitorCG stateDesignatorVisitor;
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
+	private MultipleBindVisitorCG multipleBindVisitor;
 	
 	//VDM assistant factory
 	private TypeCheckerAssistantFactory tcFactory;
@@ -59,6 +61,7 @@ public class OoAstInfo
 		this.stmVisitor = new StmVisitorCG();
 		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
+		this.multipleBindVisitor = new MultipleBindVisitorCG();
 		
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		
@@ -107,6 +110,11 @@ public class OoAstInfo
 	public ObjectDesignatorVisitorCG getObjectDesignatorVisitor()
 	{
 		return objectDesignatorVisitor;
+	}
+	
+	public MultipleBindVisitorCG getMultipleBindVisitor()
+	{
+		return multipleBindVisitor;
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException
