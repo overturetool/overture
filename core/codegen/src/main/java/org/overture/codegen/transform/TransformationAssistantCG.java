@@ -265,69 +265,78 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG suchThat, TempVarNameGen tempGen, AbstractIterationStrategy strategy)
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG predicate, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	{
+		ABlockStmCG outerBlock = new ABlockStmCG(); 
+		
+		consIterationBlock(outerBlock, ids, set, predicate, tempGen, strategy);
+		
+		return outerBlock;
+	}
+	
+	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
+			List<AIdentifierPatternCG> ids, PExpCG set, PExpCG predicate,
+			TempVarNameGen tempGen, AbstractIterationStrategy strategy)
 			throws AnalysisException
 	{
-		//Variable names
+		// Variable names
 		String setName = tempGen.nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
 
-		ABlockStmCG outerBlock = new ABlockStmCG();
 		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
 
 		outerBlockDecls.add(consSetBindDecl(setName, set));
-		
+
 		List<ALocalVarDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
-		
-		if(extraDecls != null)
+
+		if (extraDecls != null)
 		{
 			outerBlockDecls.addAll(extraDecls);
 		}
-		
+
 		ABlockStmCG nextBlock = outerBlock;
-		
-		int numberOfIds = ids.size();
-		
+
+		ABlockStmCG forBody = null;
+
 		for (int i = 0;;)
 		{
 			AIdentifierPatternCG id = ids.get(i);
 
-			//Construct next for loop
+			// Construct next for loop
 			String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
-			
+
 			AForLoopStmCG forLoop = new AForLoopStmCG();
 			forLoop.setInit(consIteratorDecl(iteratorName, setName));
 			forLoop.setCond(strategy.getForLoopCond(iteratorName));
 			forLoop.setInc(null);
-			
-			ABlockStmCG forBody = strategy.getForLoopBody(id, iteratorName);
+
+			forBody = strategy.getForLoopBody(id, iteratorName);
 			forLoop.setBody(forBody);
 
 			nextBlock.getStatements().add(forLoop);
-			
-			if (++i < numberOfIds) 
+
+			if (++i < ids.size())
 			{
 				nextBlock = forBody;
-			}
-			else
+			} else
 			{
 				List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms();
-				
-				if(extraForLoopStatements != null)
+
+				if (extraForLoopStatements != null)
 				{
 					forBody.getStatements().addAll(extraForLoopStatements);
 				}
-				
+
 				break;
 			}
 		}
 
 		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms();
-		
-		if(extraOuterBlockStms != null)
+
+		if (extraOuterBlockStms != null)
 		{
 			outerBlock.getStatements().addAll(extraOuterBlockStms);
 		}
-		
-		return outerBlock;
+
+		return forBody;
 	}
 }
