@@ -165,28 +165,26 @@ public class TransformationAssistantCG
 		return iterator;
 	}
 	
-	public ABlockStmCG consForBodyNextElementAssigned(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	public ABlockStmCG consForBodyNextElementAssigned(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		forBody.getStatements().add(consNextElementAssignment(setType, id, iteratorName));
+		forBody.getStatements().add(consNextElementAssignment(elementType, id, iteratorName));
 		
 		return forBody;
 	}
 	
-	public ABlockStmCG consForBodyNextElementDeclared(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	public ABlockStmCG consForBodyNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		StmAssistantCG.injectDeclAsStm(forBody, consNextElementDeclared(setType, id, iteratorName));
+		StmAssistantCG.injectDeclAsStm(forBody, consNextElementDeclared(elementType, id, iteratorName));
 		
 		return forBody;
 	}
 	
-	public ALocalVarDeclCG consNextElementDeclared(PTypeCG setType, String id, String iteratorName) throws AnalysisException
+	public ALocalVarDeclCG consNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
 	{
-		PTypeCG elementType = getSetTypeCloned(setType).getSetOf();
-
 		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
 		ALocalVarDeclCG decl = new ALocalVarDeclCG();
 		
@@ -197,11 +195,9 @@ public class TransformationAssistantCG
 		return decl;
 	}
 
-	public AAssignmentStmCG consNextElementAssignment(PTypeCG setType, String id, String iteratorName)
+	public AAssignmentStmCG consNextElementAssignment(PTypeCG elementType, String id, String iteratorName)
 			throws AnalysisException
 	{
-		PTypeCG elementType = getSetTypeCloned(setType).getSetOf();
-
 		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
 		
 		AAssignmentStmCG assignment = new AAssignmentStmCG();
@@ -309,7 +305,7 @@ public class TransformationAssistantCG
 			forLoop.setCond(strategy.getForLoopCond(iteratorName));
 			forLoop.setInc(null);
 
-			forBody = strategy.getForLoopBody(id, iteratorName);
+			forBody = strategy.getForLoopBody(getSetTypeCloned(set).getSetOf(), id, iteratorName);
 			forLoop.setBody(forBody);
 
 			nextBlock.getStatements().add(forLoop);
