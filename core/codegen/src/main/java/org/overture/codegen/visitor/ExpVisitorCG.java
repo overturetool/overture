@@ -79,6 +79,7 @@ import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
@@ -156,6 +157,7 @@ import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
@@ -375,6 +377,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		setComp.setVar(varCg);
 		
 		return setComp;
+	}
+	
+	@Override
+	public PExpCG caseASetRangeSetExp(ASetRangeSetExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		PExp firstExp = node.getFirst();
+		PExp lastExp = node.getLast();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG firstExpCg = firstExp.apply(question.getExpVisitor(), question);
+		PExpCG lastExpCg = lastExp.apply(question.getExpVisitor(), question);
+		
+		ARangeSetExpCG setRange = new ARangeSetExpCG();
+		
+		setRange.setType(typeCg);
+		setRange.setFirst(firstExpCg);
+		setRange.setLast(lastExpCg);
+		
+		return setRange;
 	}
 	
 	@Override

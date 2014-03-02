@@ -270,6 +270,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*
 	| {comp} [first]:expCG [bindings]:multipleBindCG.set* [predicate]:expCG [var]:java_String //In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {range} [first]:expCG [last]:expCG
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}

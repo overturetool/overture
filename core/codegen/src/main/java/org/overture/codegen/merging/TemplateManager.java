@@ -75,6 +75,7 @@ import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
@@ -439,6 +440,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACompSetExpCG.class, templateStructure.SET_EXPS_PATH
 				+ "Comp");
+
+		nodeTemplateFileNames.put(ARangeSetExpCG.class, templateStructure.SET_EXPS_PATH
+				+ "Range");
 		
 		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Enum");
 		

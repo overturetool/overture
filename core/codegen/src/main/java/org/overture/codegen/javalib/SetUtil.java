@@ -146,6 +146,21 @@ public class SetUtil
 	    return sets;
 	}
 	
+	public static VDMSet range(double first, double last)
+	{
+		long from = (long) Math.ceil(first);
+		long to = (long) Math.floor(last);
+		
+		VDMSet result = new VDMSet();
+		
+		for (long i = from; i <= to; i++)
+		{
+			result.add(i);
+		}
+		
+		return result;
+	}
+	
 	public static boolean equals(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
