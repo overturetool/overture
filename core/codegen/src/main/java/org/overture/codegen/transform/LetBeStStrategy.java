@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.utils.TempVarNameGen;
@@ -48,14 +49,14 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return letBeStAssistant.conForCondition(setType, iteratorName, successVarName);
+		return letBeStAssistant.conForCondition(iteratorName, successVarName);
 	}
 	
 	@Override
-	public ABlockStmCG getForLoopBody(AIdentifierPatternCG id,
+	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id,
 			String iteratorName) throws AnalysisException
 	{
-		return letBeStAssistant.consForBodyNextElementAssigned(setType, id.getName(), iteratorName);
+		return letBeStAssistant.consForBodyNextElementAssigned(setElementType, id.getName(), iteratorName);
 	}
 
 	@Override

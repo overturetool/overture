@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -17,22 +18,22 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected TransformationAssistantCG transformationAssitant;
 	protected PExpCG first;
 	protected PExpCG predicate;
-	protected PExpCG set;
 	protected String var;
+	protected PTypeCG compType;
 	
 	public abstract String getClassName();
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
 	public CompStrategy(TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, PExpCG set, String var)
+			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
 	{
 		super();
 		this.transformationAssitant = transformationAssitant;
 		this.first = first;
 		this.predicate = predicate;
-		this.set = set;
 		this.var = var;
+		this.compType = compType;
 	}
 	
 	@Override
@@ -50,15 +51,14 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			throws AnalysisException
 	{
 		AClassTypeCG iteratorType = transformationAssitant.consIteratorType();
-		PTypeCG elementType = transformationAssitant.getSetTypeCloned(set).getSetOf();
 		
-		return transformationAssitant.consInstanceCall(iteratorType, iteratorName, elementType, IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
+		return transformationAssitant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
 	}
 
 	@Override
-	public ABlockStmCG getForLoopBody(AIdentifierPatternCG id, String iteratorName) throws AnalysisException
+	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
 	{
-		return transformationAssitant.consForBodyNextElementDeclared(set.getType(), id.getName(), iteratorName);
+		return transformationAssitant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
 	}
 	
 	@Override

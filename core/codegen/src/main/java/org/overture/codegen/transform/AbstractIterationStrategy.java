@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class AbstractIterationStrategy
 {
@@ -16,7 +17,7 @@ public abstract class AbstractIterationStrategy
 	
 	abstract public PExpCG getForLoopCond(String iteratorName) throws AnalysisException;
 
-	abstract public ABlockStmCG getForLoopBody(AIdentifierPatternCG id, String iteratorName) throws AnalysisException;
+	abstract public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException;
 
 	abstract public List<PStmCG> getLastForLoopStms();
 	

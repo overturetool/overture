@@ -16,22 +16,12 @@ public class SetCompStrategy extends CompStrategy
 	private boolean lastBind;
 	
 	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, PExpCG set, String var)
+			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super(transformationAssitant, first, predicate, set, var);
+		super(transformationAssitant, first, predicate, var, compType);
 		
 		this.firstBind = false;
 		this.lastBind = false;
-	}
- 
-	
-	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, PExpCG set, String var, boolean firstBind, boolean lastBind)
-	{
-		super(transformationAssitant, first, predicate, set, var);
-		
-		this.firstBind = firstBind;
-		this.lastBind = lastBind;
 	}
 
 	@Override
@@ -50,7 +40,7 @@ public class SetCompStrategy extends CompStrategy
 	public PTypeCG getCollectionType() throws AnalysisException
 	{
 		
-		return transformationAssitant.getSetTypeCloned(set);
+		return transformationAssitant.getSetTypeCloned(compType);
 	}
 	
 	@Override
