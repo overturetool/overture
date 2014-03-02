@@ -1,15 +1,19 @@
 package org.overture.codegen.transform;
 
+import java.util.List;
+
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class CompAssistantCG extends TransformationAssistantCG
 {
@@ -73,5 +77,26 @@ public class CompAssistantCG extends TransformationAssistantCG
 		forBody.getStatements().add(consConditionalAdd(resSeqName, seqComp.getFirst(), seqComp.getPredicate()));
 		
 		return forBody;
+	}
+	
+	public ABlockStmCG consSetCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, SetCompStrategy strategy) throws AnalysisException
+	{
+		ABlockStmCG outerBlock = new ABlockStmCG();
+		
+		ABlockStmCG nextMultiBindBlock = outerBlock;
+		
+		strategy.setFirstBind(true);
+		
+		for(int i = 0; i < multipleSetBinds.size(); i++)
+		{
+			strategy.setLastBind(i == multipleSetBinds.size() - 1);
+			
+			ASetMultipleBindCG mb = multipleSetBinds.get(i);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), predicate, tempGen, strategy);
+			
+			strategy.setFirstBind(false);
+		}
+		
+		return outerBlock;
 	}
 }
