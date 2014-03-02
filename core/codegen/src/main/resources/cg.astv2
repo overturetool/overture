@@ -40,7 +40,7 @@ patternCG {-> package='org.overture.codegen.cgast.pattern'}
 //This is used in PExp and PDefinition
 multipleBindCG {-> package='org.overture.codegen.cgast.patterns'
 //	|	[location]:location 
-	|	[patterns]:patternCG.identifier*} //In the Overture AST pList is multiple patterns. Here it is limited to identifiers
+	|	[patterns]:patternCG.identifier*} //In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
     =   {set}  [set]:expCG //binds
 //  |   {type} (type):type //binds
     ;
@@ -152,7 +152,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            ;
            
 letBeStCG {-> package='org.overture.codegen.cgast.utils'}
-	= {header} [ids]:patternCG.identifier* [set]:expCG [suchThat]:expCG
+	= {header} [binding]:multipleBindCG.set [suchThat]:expCG //The Overture AST uses a multiplebind 
 	;
 
 

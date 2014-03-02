@@ -1,7 +1,6 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -522,31 +521,30 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			return null;
 		}
 		
-		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
-		LinkedList<PPattern> patternList = setBind.getPlist();
+		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
 		
-		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
+		PMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
 		
-		if(idsCg == null)
+		if(!(multipleBindCg instanceof ASetMultipleBindCG))
 		{
-			question.addUnsupportedNode(node, "Generation of the let be st expression is only supported for a list of identifier patterns. Got: " + patternList);
+			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
 			return null;
 		}
 		
+		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
+		
 		PType type = node.getType();
 		PExp suchThat = node.getSuchThat();
-		PExp set = setBind.getSet();
 		PExp value = node.getValue();
 		
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
-		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PExpCG valueCg = value.apply(question.getExpVisitor(), question);
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 		
 		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
 		
-		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(idsCg, suchThatCg, setCg);
+		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(multipleSetBindCg, suchThatCg);
 
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);

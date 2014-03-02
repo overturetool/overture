@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -209,13 +210,12 @@ public class ExpAssistantCG
 		return idsCg;
 	}
 	
-	public static AHeaderLetBeStCG consHeader(List<AIdentifierPatternCG> ids, PExpCG suchThat, PExpCG set)
+	public static AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, PExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
 		
-		header.setIds(ids);
+		header.setBinding(binding);
 		header.setSuchThat(suchThat);
-		header.setSet(set);
 		
 		return header;
 	}

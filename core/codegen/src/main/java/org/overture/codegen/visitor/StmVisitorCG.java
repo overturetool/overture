@@ -1,7 +1,6 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -44,7 +43,8 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
@@ -110,28 +110,27 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			return null;
 		}
 		
-		ASetMultipleBind setBind = (ASetMultipleBind) multipleBind;
-		LinkedList<PPattern> patternList = setBind.getPlist();
+		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
+
+		PMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
 		
-		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
-		
-		if(idsCg == null)
+		if(!(multipleBindCg instanceof ASetMultipleBindCG))
 		{
-			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for list of identifier patterns. Got: " + patternList);
+			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
 			return null;
 		}
 		
+		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
+		
 		PExp suchThat = node.getSuchThat();
-		PExp set = setBind.getSet();
 		PStm stm = node.getStatement();
 		
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
-		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
 		
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
 		
-		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(idsCg, suchThatCg, setCg);
+		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(multipleSetBindCg, suchThatCg);
 				
 		letBeSt.setHeader(header);
 		letBeSt.setStatement(stmCg);

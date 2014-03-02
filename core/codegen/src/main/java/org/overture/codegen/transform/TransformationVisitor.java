@@ -39,9 +39,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -59,9 +59,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
