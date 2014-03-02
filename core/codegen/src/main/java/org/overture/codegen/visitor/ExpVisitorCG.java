@@ -177,6 +177,8 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -329,45 +331,46 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 		return enumSet;
 	}
-	
+
 	@Override
 	public PExpCG caseASetCompSetExp(ASetCompSetExp node, OoAstInfo question)
 			throws AnalysisException
 	{
 		LinkedList<PMultipleBind> bindings = node.getBindings();
 
-		if(bindings.size() != 1 || !(bindings.get(0) instanceof ASetMultipleBind))
+		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		for (PMultipleBind multipleBind : bindings)
 		{
-			question.addUnsupportedNode(node, "Generation of a set comprehensions is only supporting for a single multiple set bind. Got: " + bindings);
-			return null;
+			if(!(multipleBind instanceof ASetMultipleBind))
+			{
+				question.addUnsupportedNode(node, "Generation of a set comprehensions is only supporting for multiple set binds. Got: "
+						+ multipleBind);
+				return null;
+			}
+			
+			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			
+			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			{
+				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
+			}
+			
+			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
 		}
 		
-		ASetMultipleBind setBind = (ASetMultipleBind) bindings.get(0);
 		PType type = node.getType();
 		PExp first = node.getFirst();
-		PExp set = setBind.getSet();
 		PExp predicate = node.getPredicate();
 		
-		LinkedList<PPattern> patternList = setBind.getPlist();
-		List<AIdentifierPatternCG> idsCg = ExpAssistantCG.getIdsFromPatternList(patternList);
-		
-		if(idsCg == null)
-		{
-			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported for a list of identifier patterns. Got: " + patternList);
-			return null;
-		}
-
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
-		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
 
 		ACompSetExpCG setComp = new ACompSetExpCG();
-		setComp.setIds(idsCg);
+		setComp.setBindings(bindingsCg);
 		setComp.setType(typeCg);
 		setComp.setFirst(firstCg);
-		setComp.setSet(setCg);
 		setComp.setPredicate(predicateCg);
 		setComp.setVar(varCg);
 		
