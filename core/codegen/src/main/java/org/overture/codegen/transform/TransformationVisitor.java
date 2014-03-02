@@ -41,7 +41,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -61,7 +61,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getSet()));
 		
-		ABlockStmCG outerBlock = letBeStAssistant.consBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getIds(), header.getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
@@ -81,9 +81,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			//TODO: Pick up on this earlier (see above to do msg)
 			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
 		
-		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getSet(), node.getVar());
+		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
-		ABlockStmCG block = compAssistant.consBlock(node.getIds(), node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG block = compAssistant.consSetCompIterationBlock(node.getBindings(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
@@ -100,12 +100,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			//TODO: Pick up on this earlier (see above to do msg)
 			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
 
-		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getSet(), node.getVar(), transformationAssistant.getSeqTypeCloned(node));
+		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
 		ids.add(node.getId());
 		
-		ABlockStmCG block = compAssistant.consBlock(ids, node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG block = compAssistant.consIterationBlock(ids, node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
