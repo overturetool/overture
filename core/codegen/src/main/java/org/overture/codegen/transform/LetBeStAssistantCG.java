@@ -16,7 +16,6 @@ import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class LetBeStAssistantCG extends TransformationAssistantCG
@@ -42,12 +41,12 @@ public class LetBeStAssistantCG extends TransformationAssistantCG
 		return successAssignment;
 	}
 
-	public PExpCG conForCondition(SSetTypeCG setType, String iteratorName, String successVarName) throws AnalysisException
+	public PExpCG conForCondition(String iteratorName, String successVarName) throws AnalysisException
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		
 		andExp.setType(new ABoolBasicTypeCG());
-		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, setType.getSetOf(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
+		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
 		andExp.setRight(consSuccessCheck(successVarName));
 		
 		return andExp;
