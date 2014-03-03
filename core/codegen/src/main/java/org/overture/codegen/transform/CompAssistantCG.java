@@ -74,12 +74,12 @@ public class CompAssistantCG extends TransformationAssistantCG
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
-		forBody.getStatements().add(consConditionalAdd(resSeqName, seqComp.getFirst(), seqComp.getPredicate()));
+		forBody.getStatements().add(consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, resSeqName, seqComp.getPredicate(), seqComp.getFirst()));
 		
 		return forBody;
 	}
 	
-	public ABlockStmCG consSetCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, SetCompStrategy strategy) throws AnalysisException
+	public ABlockStmCG consSetCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, ComplexCompStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		

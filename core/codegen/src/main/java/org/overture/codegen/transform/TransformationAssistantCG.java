@@ -26,6 +26,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -76,6 +77,24 @@ public class TransformationAssistantCG
 		SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
 		
 		return seqTypeCg.clone();
+	}
+	
+	public SMapTypeCG getMapTypeCloned(PExpCG map) throws AnalysisException
+	{
+		PTypeCG typeCg = map.getType();
+		
+		return getMapTypeCloned(typeCg);
+	}
+	
+	public SMapTypeCG getMapTypeCloned(PTypeCG typeCg)
+			throws AnalysisException
+	{
+		if(!(typeCg instanceof SMapTypeCG))
+			throw new AnalysisException("Exptected map type. Got: " + typeCg);
+		
+		SMapTypeCG mapTypeCg = (SMapTypeCG) typeCg;
+		
+		return mapTypeCg.clone();
 	}
 	
 	public ALocalVarDeclCG consSetBindDecl(String setBindName, PExpCG set) throws AnalysisException
@@ -234,7 +253,7 @@ public class TransformationAssistantCG
 		return resCollection; 
 	}
 	
-	public PStmCG consConditionalAdd(String resCollectionName, PExpCG first, PExpCG predicate)
+	public PStmCG consConditionalAdd(String addMethod, String resCollectionName, PExpCG predicate, PExpCG... args)
 	{
 		AVariableExpCG col = new AVariableExpCG();
 		col.setOriginal(resCollectionName);
@@ -244,9 +263,14 @@ public class TransformationAssistantCG
 		
 		ACallObjectStmCG callStm = new ACallObjectStmCG();
 		callStm.setClassName(null);
-		callStm.setFieldName(IJavaCodeGenConstants.ADD_ELEMENT_TO_COLLECTION);
+		callStm.setFieldName(addMethod);
 		callStm.setDesignator(identifier);
-		callStm.getArgs().add(first);
+		
+		for(PExpCG arg : args)
+		{
+			callStm.getArgs().add(arg);
+		}
+		
 		callStm.setType(new AVoidTypeCG());
 		
 		if(predicate != null)
