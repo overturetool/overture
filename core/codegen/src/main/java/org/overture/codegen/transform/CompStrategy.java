@@ -16,7 +16,6 @@ import org.overture.codegen.constants.IJavaCodeGenConstants;
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
 	protected TransformationAssistantCG transformationAssitant;
-	protected PExpCG first;
 	protected PExpCG predicate;
 	protected String var;
 	protected PTypeCG compType;
@@ -25,12 +24,10 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
+	public CompStrategy(TransformationAssistantCG transformationAssitant, PExpCG predicate, String var, PTypeCG compType)
 	{
 		super();
 		this.transformationAssitant = transformationAssitant;
-		this.first = first;
 		this.predicate = predicate;
 		this.var = var;
 		this.compType = compType;
@@ -59,12 +56,6 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
 	{
 		return transformationAssitant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
-	}
-	
-	@Override
-	public List<PStmCG> getLastForLoopStms()
-	{
-		return packStm(transformationAssitant.consConditionalAdd(var, first, predicate));
 	}
 	
 	@Override
