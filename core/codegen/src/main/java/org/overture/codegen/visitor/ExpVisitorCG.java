@@ -46,6 +46,7 @@ import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
@@ -108,6 +109,7 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
@@ -344,7 +346,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		{
 			if(!(multipleBind instanceof ASetMultipleBind))
 			{
-				question.addUnsupportedNode(node, "Generation of a set comprehensions is only supporting for multiple set binds. Got: "
+				question.addUnsupportedNode(node, "Generation of a set comprehension is only supported for multiple set binds. Got: "
 						+ multipleBind);
 				return null;
 			}
@@ -748,6 +750,58 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		maplet.setRight(rightCg);
 		
 		return maplet;
+	}
+	
+	@Override
+	public PExpCG caseAMapCompMapExp(AMapCompMapExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		LinkedList<PMultipleBind> bindings = node.getBindings();
+		PType type = node.getType();
+		AMapletExp first = node.getFirst();
+		PExp predicate = node.getPredicate();
+		
+		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		for (PMultipleBind multipleBind : bindings)
+		{
+			if(!(multipleBind instanceof ASetMultipleBind))
+			{
+				question.addUnsupportedNode(node, "Generation of a map comprehension is only supported for multiple set binds. Got: "
+						+ multipleBind);
+				return null;
+			}
+			
+			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			
+			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			{
+				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
+			}
+			
+			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+		}
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
+		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
+		
+		if(!(firstCg instanceof AMapletExpCG))
+		{
+			question.addUnsupportedNode(node, "Generation of map comprehension expected a maplet expression. Got: " + firstCg);
+		}
+		
+		AMapletExpCG mapletExpCg = (AMapletExpCG) firstCg;
+		
+		ACompMapExpCG mapComp = new ACompMapExpCG();
+		
+		mapComp.setBindings(bindingsCg);
+		mapComp.setType(typeCg);
+		mapComp.setFirst(mapletExpCg);
+		mapComp.setPredicate(predicateCg);
+		mapComp.setVar(varCg);
+
+		return mapComp;
 	}
 	
 	@Override

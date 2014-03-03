@@ -25,6 +25,7 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
@@ -444,7 +445,11 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ARangeSetExpCG.class, templateStructure.SET_EXPS_PATH
 				+ "Range");
 		
+		//Map expressions
+		
 		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Enum");
+		
+		nodeTemplateFileNames.put(ACompMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Comp");
 		
 		//State designators
 		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "Field");

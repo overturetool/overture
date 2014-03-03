@@ -275,6 +275,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG.maplet*
+	| {comp} [first]:expCG.maplet [bindings]:multipleBindCG.set* [predicate]:expCG [var]:java_String
 	;
 
 typeCG {-> package='org.overture.codegen.cgast.types'}
