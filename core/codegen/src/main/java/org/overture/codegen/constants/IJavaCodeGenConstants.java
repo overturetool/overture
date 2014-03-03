@@ -21,7 +21,9 @@ public interface IJavaCodeGenConstants
 	public static final String JAVA_FILE_EXTENSION = ".java";
 	
 	public static final String GET_ITERATOR = "iterator";
-	public static final String ADD_ELEMENT_TO_COLLECTION = "add";
+	public static final String ADD_ELEMENT_TO_SET = "add";
+	public static final String ADD_ELEMENT_TO_LIST = "add";
+	public static final String ADD_ELEMENT_TO_MAP = "put";
 	public static final String NEXT_ELEMENT_ITERATOR = "next";
 	public static final String HAS_NEXT_ELEMENT_ITERATOR = "hasNext";
 	public static final String ITERATOR_TYPE = "Iterator";
@@ -41,6 +43,7 @@ public interface IJavaCodeGenConstants
 
 	public static final String SEQ_UTIL_EMPTY_SEQ_CALL = "seq";
 	public static final String SET_UTIL_EMPTY_SET_CALL = "set";
+	public static final String MAP_UTIL_EMPTY_MAP_CALL = "map";
 	
 	public static final String MATH_FILE = "MATH";
 	public static final String IO_FILE = "IO";
