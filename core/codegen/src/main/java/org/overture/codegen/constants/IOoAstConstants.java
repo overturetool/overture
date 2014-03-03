@@ -42,9 +42,11 @@ public class IOoAstConstants
 	
 	public static final String GENERATED_TEMP_SEQ_COMP_NAME_PREFIX = "seqCompResult_";
 	public static final String GENERATED_TEMP_SET_COMP_NAME_PREFIX = "setCompResult_";
+	public static final String GENERATED_TEMP_MAP_COMP_NAME_PREFIX = "mapCompResult_";
 	public static final String GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX = "letBeStExp_";
 	
 	public static final String[] GENERATED_TEMP_NAMES = {GENERATED_TEMP_SEQ_COMP_NAME_PREFIX,
 														 GENERATED_TEMP_SET_COMP_NAME_PREFIX,
+														 GENERATED_TEMP_MAP_COMP_NAME_PREFIX,
 														 GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX};
 }
