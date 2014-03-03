@@ -6,6 +6,7 @@ import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -73,15 +74,33 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
+	{
+		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+
+		if (enclosingStm == null)
+			//TODO: Pick up on this earlier (see above to do msg)
+			throw new AnalysisException("Generation of a map comprehension is only supported within operations/functions");
+		
+		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		
+		ABlockStmCG block = compAssistant.consSetCompIterationBlock(node.getBindings(), node.getPredicate(), info.getTempVarNameGen(), strategy);
+		
+		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		
+		block.getStatements().add(enclosingStm);
+	}
+	
+	@Override
 	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
 	{
 		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
 
 		if (enclosingStm == null)
 			//TODO: Pick up on this earlier (see above to do msg)
-			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
+			throw new AnalysisException("Generation of a set comprehension is only supported within operations/functions");
 		
-		SetCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		ABlockStmCG block = compAssistant.consSetCompIterationBlock(node.getBindings(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
