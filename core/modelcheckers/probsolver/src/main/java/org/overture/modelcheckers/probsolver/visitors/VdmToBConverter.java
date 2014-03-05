@@ -1169,7 +1169,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return new AImageExpression(seq, arg);
 
 	}
-
+	/*
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node)// added(original by  kenneth)
 			throws AnalysisException
@@ -1180,7 +1180,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return super.caseAMkBasicExp(node);
 
 	}
-
+	*/
 	// StateDefinition
 	@Override
 	public Node caseAStateDefinition(AStateDefinition node)
