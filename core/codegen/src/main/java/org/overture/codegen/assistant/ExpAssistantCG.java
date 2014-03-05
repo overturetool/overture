@@ -8,6 +8,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
@@ -218,5 +220,10 @@ public class ExpAssistantCG
 		header.setSuchThat(suchThat);
 		
 		return header;
+	}
+	
+	public boolean existWithinOpOrFunc(PExp exp)
+	{
+		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 }
