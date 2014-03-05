@@ -3,43 +3,43 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.overture</groupId>
+		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
 		<version>2.0.3-SNAPSHOT<!--Replaceable: Main Version--></version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.overture.core</groupId>
+	<groupId>org.overturetool.core</groupId>
 	<artifactId>codegen</artifactId>
 	<name>VDM Code Generator</name>
 
   <properties> 
-    <astcreator.version>1.6.2</astcreator.version>
+    <astcreator.version>1.6.4</astcreator.version>
   </properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overture.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>ast</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overture.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>parser</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overture.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>typechecker</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overture.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>interpreter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overture.core</groupId>
+			<groupId>org.overturetool.core</groupId>
 			<artifactId>testframework</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -70,7 +70,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.overture.astcreator</groupId>
+				<groupId>org.overturetool.astcreator</groupId>
  				<artifactId>astcreator-plugin</artifactId>
 				<version>${astcreator.version}</version>
 				<executions>
@@ -85,7 +85,7 @@
 				<configuration>
 				  <!-- <deletePackageOnGenerate> -->
 				  <!--   <param>vdm.generated.node</param> -->
-				  <!--   <param>org.overture.ast</param> -->
+				  <!--   <param>org.overturetool.ast</param> -->
 				  <!-- </deletePackageOnGenerate> -->
 				  <ast>cg.astv2</ast>
 				</configuration>
@@ -124,7 +124,7 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		   	<groupId>org.overture.astcreator</groupId>
+		   	<groupId>org.overturetool.astcreator</groupId>
  			<artifactId>astcreator-plugin</artifactId>
 		    <versionRange>${astcreator.version}</versionRange>
 		    <goals>
