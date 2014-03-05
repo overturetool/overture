@@ -38,11 +38,13 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.PPattern;
@@ -54,9 +56,11 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -606,8 +610,26 @@ public class FunctionValue extends Value
 			}
 
 			Map<String, String> stateExps = new HashMap<String, String>();
+			
+			
+			Interpreter interpreter = Interpreter.getInstance();
+			List<PDefinition> allDefs = new Vector<PDefinition>();
+			if (interpreter instanceof ClassInterpreter)
+			{
+				for (SClassDefinition c : ((ClassInterpreter) interpreter).getClasses())
+				{
+					allDefs.addAll(c.getDefinitions());
+				}
+			} else if (interpreter instanceof ModuleInterpreter)
+			{
+				for (AModuleModules c : ((ModuleInterpreter) interpreter).getModules())
+				{
+					allDefs.addAll(c.getDefs());
+				}
+			}
+			
 
-			PExp res = solver.solve(this.name, this.postcondition.body,result, stateExps, argExps, Console.out, Console.err);
+			PExp res = solver.solve(this.name, this.postcondition.body,result, stateExps, argExps,solver.calculateTokenType(allDefs), Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getExpressionEvaluator(), argContext);
 		} catch (Exception e)

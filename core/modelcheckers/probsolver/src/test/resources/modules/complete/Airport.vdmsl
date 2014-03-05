@@ -21,6 +21,9 @@ types
     PreRecordLanding(a,p,l) ==
       permitted(a,p) and not down(a,l)
 
+	  -- dummy
+	  values
+	  v:token =mk_token("kl")
   operations
 
     Init()
@@ -33,14 +36,51 @@ types
   --      wr landed
   --   post mk_Airport({},{})=mk_Airport(permission , landed );
 
-	 test:() ==> ()
-	 test() == GivePermission(mk_token("kl"));
+--	 test:() ==> ()
+	-- test() == GivePermission(mk_token("kl"));
 	 
+	 
+	 
+/*
+Currently the prob solver integration has a problem with this:
+			$airport~:struct(permission:POW(STRING),landed:POW(STRING)) & 
+			$airport:struct(permission:POW(STRING),landed:POW(STRING)) & 
+			$airport~=rec(permission:{},landed:{}) & 
+			($airport'landed<:$airport'permission & 
+			$airport~'landed<:$airport~'permission) & 
+			$airport'permission=$airport~'permission\/{a} & 
+			a:STRING
+but the cli can handle it:
+
+C:\Users\kel\Downloads\ProB.windows\ProB>probcli.exe -p MAXINT 30 -eval "Rairpor
+tOLD:struct(permission:POW(STRING),landed:POW(STRING)) & Rairport:struct(permiss
+ion:POW(STRING),landed:POW(STRING)) & RairportOLD=rec(permission:{},landed:{}) &
+ (Rairport'landed<:Rairport'permission &  RairportOLD'landed<:RairportOLD'permis
+sion) &  Rairport'permission=RairportOLD'permission\/{a} &a:STRING" -p BOOL_AS_P
+REDICATE true -p CLPFD true -p MININT -128
+message id: 50195
+eval: RairportOLD:struct(permission:POW(STRING),landed:POW(STRING)) & Rairport:s
+truct(permission:POW(STRING),landed:POW(STRING)) & RairportOLD=rec(permission:{}
+,landed:{}) & (Rairport'landed<:Rairport'permission &  RairportOLD'landed<:Rairp
+ortOLD'permission) &  Rairport'permission=RairportOLD'permission\/{a} &a:STRING
+### Warning: enumerating STRING : inf ---> "STR1","STR2",...
+Existentially Quantified Predicate over RairportOLD,Rairport,a is TRUE
+Solution:
+       RairportOLD = rec(landed:{},permission:{}) &
+       Rairport = rec(landed:{},permission:{""STR1""}) &
+       a = ""STR1""
+
+Evaluation results: [TRUE/1]
+
+C:\Users\kel\Downloads\ProB.windows\ProB>
+
+
+ 
     GivePermission(a : Aircraft) 
     ext wr permission
     pre not permitted(a,permission)
     post permission = permission~ union {a};
-    
+    */	
 
     RecordLanding(a: Aircraft) 
     ext wr landed

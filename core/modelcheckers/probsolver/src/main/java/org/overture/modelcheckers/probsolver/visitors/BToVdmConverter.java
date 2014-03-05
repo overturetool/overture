@@ -336,15 +336,10 @@ public class BToVdmConverter extends DepthFirstAdapter
 		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
-	/*
-	 * @Override public void caseAStringExpression(AStringExpression node) // added { if(expectedType instanceof
-	 * ATokenBasicType) { result = AstFactory.newAMkBasicExp((ATokenBasicType)expectedType, convert(expectedType,
-	 * node)); } }
-	 */
-	public void defaultIn(Node node)
+	public void defaultCase(Node node)
 	{
 		System.err.println("Hit unsupported node: "
-				+ node.getClass().getSimpleName() + " - " + node);
+				+ node.getClass().getSimpleName() + " - \"" + node+"\"");
 	}
 
 }

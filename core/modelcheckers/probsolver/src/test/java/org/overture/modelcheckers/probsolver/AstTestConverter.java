@@ -128,8 +128,11 @@ public class AstTestConverter
 			// SOperationDefinition postExp = null;
 			// AStateDefinition state = null;
 			AImplicitOperationDefinition opDef = null;
+			final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
+
 			for (PDefinition d : modules.get(0).getDefs())
 			{
+				d.apply(tokenTypeFinder);
 				if (d instanceof AImplicitOperationDefinition
 						&& d.getName().getName().equals(name))
 				{
@@ -140,12 +143,13 @@ public class AstTestConverter
 				{
 					// state = (AStateDefinition) d;
 				}
+
 			}
 
 			// solve(postExp, state);
 
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
-			ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, ProbConverterTestBase.getArgTypes(opDef), new SolverConsole());
+			ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, ProbConverterTestBase.getArgTypes(opDef), tokenTypeFinder.getTokenType(), new SolverConsole());
 
 		} catch (AnalysisException e)
 		{

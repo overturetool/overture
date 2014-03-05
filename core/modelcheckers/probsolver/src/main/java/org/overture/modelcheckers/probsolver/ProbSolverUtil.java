@@ -42,6 +42,7 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import de.be4.classicalb.core.parser.exceptions.BException;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
+import de.be4.classicalb.core.parser.node.AMemberPredicate;
 import de.be4.classicalb.core.parser.node.APredicateParseUnit;
 import de.be4.classicalb.core.parser.node.EOF;
 import de.be4.classicalb.core.parser.node.Node;
@@ -93,10 +94,10 @@ public class ProbSolverUtil
 
 	public static PStm solve(String name, AImplicitOperationDefinition opDef,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes, SolverConsole console)
+			Map<String, PType> argumentTypes,PType tokenType, SolverConsole console)
 			throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes);
+		VdmSolution solution = new ProbSolverUtil(console).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes,tokenType);
 		if (solution.isStatement())
 		{
 			return solution.getStatement();
@@ -106,10 +107,10 @@ public class ProbSolverUtil
 
 	public static PExp solve(String name, PExp body, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes, SolverConsole console)
+			Map<String, PType> argumentTypes,PType tokenType, SolverConsole console)
 			throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, body, result, stateContext, argContext, argumentTypes);
+		VdmSolution solution = new ProbSolverUtil(console).solve(name, body, result, stateContext, argContext, argumentTypes,tokenType);
 		if (solution.isExpression())
 		{
 			return solution.getExpression();
@@ -119,7 +120,7 @@ public class ProbSolverUtil
 
 	public VdmSolution solve(String name, INode opDef, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes) throws SolverException
+			Map<String, PType> argumentTypes,PType tokenType) throws SolverException
 	{
 		List<PDefinition> states = new Vector<PDefinition>();
 
@@ -174,7 +175,7 @@ public class ProbSolverUtil
 			console.out.println("---------------------------------------------------------------------------------");
 			console.out.println("Solver running for operation: " + name);
 
-			VdmContext context = translate(states, opDef, result, arguments, argumentTypes, stateConstraints);
+			VdmContext context = translate(states, opDef, result, arguments, argumentTypes,tokenType, stateConstraints);
 
 			VdmSolution val = solve(context);
 			return val;
@@ -321,10 +322,10 @@ public class ProbSolverUtil
 	private VdmContext translate(List<PDefinition> stateDefinitions,
 			INode opDef, APatternTypePair result,
 			Map<String, INode> argContext, Map<String, PType> argumentTypes,
-			Map<String, INode> stateConstraints) throws AnalysisException,
+			PType tokenType, Map<String, INode> stateConstraints) throws AnalysisException,
 			SolverException
 	{
-		VdmToBConverter translator = new VdmToBConverter(console);
+		VdmToBConverter translator = new VdmToBConverter(console,tokenType);
 
 		AStateDefinition stateDef = null;
 
@@ -459,9 +460,8 @@ public class ProbSolverUtil
 		{
 			if (!argContext.containsKey(arg.getKey()))
 			{
-				// AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()),
-				// (PExpression) arg.getValue().apply(translator));
-				// post = new AConjunctPredicate((PPredicate) post, eqp);
+				AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
+				post = new AConjunctPredicate((PPredicate) post, eqp);
 			}
 		}
 
@@ -475,8 +475,7 @@ public class ProbSolverUtil
 		try
 		{
 			formula = new ClassicalB(s);
-			console.out.println("Solver input:\n\t\t\t"
-					+ formula.getCode().replace("&", " & \n\t\t\t"));
+			console.out.println(displayFormat(formula));
 		} catch (Exception e)
 		{
 			throw new SolverException("Syntax error in: " + post, e);
@@ -485,6 +484,13 @@ public class ProbSolverUtil
 	}
 
 	private static IAnimator animator;
+	
+	
+	public String displayFormat(AbstractEvalElement formula)
+	{
+	return "Solver input:\n\t\t\t"
+			+ formula.getCode().replace("&", " & \n\t\t\t");	
+	}
 
 	private void initialize() throws BException
 	{
@@ -530,7 +536,7 @@ public class ProbSolverUtil
 					message = "error";
 				}
 
-				throw new SolverException(message + " - " + e.getMessage(), e);
+				throw new SolverException(message + " - \n\n" + e.getMessage()+"\n\n"+displayFormat(context.solverInput), e);
 			}
 
 			if (solverResult != null)

@@ -59,16 +59,18 @@ public class ProbConverterTestBase
 			INode result = null;
 			PDefinition def = findFunctionOrOperation(name);
 
+			PType tokenType = calculateTokenType();
+
 			if (def instanceof AImplicitOperationDefinition)
 			{
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, new SolverConsole());
 
 			} else
 			{
 				AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, new SolverConsole());
 			}
 			System.out.println("Result=" + result);
 
@@ -86,6 +88,16 @@ public class ProbConverterTestBase
 				throw e;
 			}
 		}
+	}
+
+	protected PType calculateTokenType() throws AnalysisException
+	{
+		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
+		for (PDefinition d : defs)
+		{
+			d.apply(tokenTypeFinder);
+		}
+		return tokenTypeFinder.getTokenType();
 	}
 
 	public static Map<String, PType> getArgTypes(PDefinition def)
@@ -126,11 +138,11 @@ public class ProbConverterTestBase
 		return argTypes;
 	}
 
+	List<PDefinition> defs = null;
+
 	protected PDefinition findFunctionOrOperation(String name)
 			throws AnalysisException
 	{
-
-		List<PDefinition> defs = null;
 
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
@@ -151,7 +163,9 @@ public class ProbConverterTestBase
 				opDef = d;
 				break;
 			}
+
 		}
+
 		return opDef;
 	}
 
