@@ -43,8 +43,13 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
 
-public class ExpAssistantCG
+public class ExpAssistantCG extends AssistantBase
 {
+	public ExpAssistantCG(AssistantManager assistantManager)
+	{
+		super(assistantManager);
+	}
+
 	public PExpCG isolateExpression(PExpCG exp)
 	{
 		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();

@@ -14,8 +14,13 @@ import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.ooast.OoAstInfo;
 
-public class StmAssistantCG
+public class StmAssistantCG extends AssistantBase
 {
+	public StmAssistantCG(AssistantManager assistantManager)
+	{
+		super(assistantManager);
+	}
+
 	public ALetDefStmCG convertToLetDefStm(ALetDefExpCG letDefExp)
 	{
 		AReturnStmCG returnStm = new AReturnStmCG();

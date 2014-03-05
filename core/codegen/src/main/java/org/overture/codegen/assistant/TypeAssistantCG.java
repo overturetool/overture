@@ -27,8 +27,13 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class TypeAssistantCG
+public class TypeAssistantCG extends AssistantBase
 {
+	public TypeAssistantCG(AssistantManager assistantManager)
+	{
+		super(assistantManager);
+	}
+
 	public PDefinition getTypeDef(ILexNameToken nameToken)
 	{
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);

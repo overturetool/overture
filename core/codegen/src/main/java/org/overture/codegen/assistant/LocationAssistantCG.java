@@ -11,8 +11,13 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.codegen.ooast.NodeInfo;
 
-public class LocationAssistantCG
+public class LocationAssistantCG extends AssistantBase
 {
+	public LocationAssistantCG(AssistantManager assistantManager)
+	{
+		super(assistantManager);
+	}
+
 	public ILexLocation findLocation(INode node)
 	{
 		Map<String, Object> children = node.getChildren(true);

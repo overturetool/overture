@@ -29,8 +29,13 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
-public class DeclAssistantCG
+public class DeclAssistantCG extends AssistantBase
 {
+	public DeclAssistantCG(AssistantManager assistantManager)
+	{
+		super(assistantManager);
+	}
+
 	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
@@ -120,7 +125,7 @@ public class DeclAssistantCG
 	
 	public void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
 	{
-		ExpAssistantCG expAssistant = new ExpAssistantCG();
+		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 		
 		if(typeCg instanceof AStringTypeCG)
 		{
