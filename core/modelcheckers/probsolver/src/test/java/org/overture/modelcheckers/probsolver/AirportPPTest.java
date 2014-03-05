@@ -10,6 +10,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
@@ -25,6 +26,7 @@ public class AirportPPTest extends ProbConverterTestBase
 	@Before
 	public void setup() throws BException
 	{
+		super.setup();
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 	}
