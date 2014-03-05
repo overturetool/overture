@@ -8,7 +8,6 @@ import org.overture.codegen.assistant.TypeAssistantCG;
 
 public class GeneratedVarComparison extends NamingComparison
 {
-
 	public GeneratedVarComparison(String[] names)
 	{
 		super(names);
@@ -17,7 +16,9 @@ public class GeneratedVarComparison extends NamingComparison
 	@Override
 	public boolean isInvalid(ILexNameToken nameToken)
 	{
-		if(TypeAssistantCG.getTypeDef(nameToken) != null)
+		TypeAssistantCG typeAssistant = new TypeAssistantCG();
+		
+		if(typeAssistant.getTypeDef(nameToken) != null)
 			return false;
 		
 		PDefinition def = nameToken.getAncestor(PDefinition.class);

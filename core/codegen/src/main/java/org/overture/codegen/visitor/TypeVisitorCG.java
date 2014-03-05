@@ -28,7 +28,6 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -147,7 +146,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 			AUnionType unionType = (AUnionType) type;
 
 			// Currently the code generator only supports the union of quotes case
-			if (TypeAssistantCG.isUnionOfQuotes(unionType))
+			if (question.getTypeAssistant().isUnionOfQuotes(unionType))
 			{
 				return new AIntNumericBasicTypeCG();
 			}
@@ -184,14 +183,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	public PTypeCG caseASeqSeqType(ASeqSeqType node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return TypeAssistantCG.constructSeqType(node, question);
+		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 	
 	@Override
 	public PTypeCG caseASeq1SeqType(ASeq1SeqType node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return TypeAssistantCG.constructSeqType(node, question);
+		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 
 	@Override

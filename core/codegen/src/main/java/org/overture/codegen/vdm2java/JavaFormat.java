@@ -322,7 +322,8 @@ public class JavaFormat
 
 			assignment.setTarget(id);
 			
-			if (!TypeAssistantCG.isBasicType(varExp.getType()))
+			TypeAssistantCG typeAssistant = new TypeAssistantCG();
+			if (!typeAssistant.isBasicType(varExp.getType()))
 			{
 				//Example: b = (_b != null) ? _b.clone() : null;
 				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
@@ -352,8 +353,10 @@ public class JavaFormat
 		
 		PTypeCG firstType = types.get(0);
 		
-		if(TypeAssistantCG.isBasicType(firstType))
-			firstType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) firstType);
+		TypeAssistantCG typeAssistant = new TypeAssistantCG();
+		
+		if(typeAssistant.isBasicType(firstType))
+			firstType = typeAssistant.getWrapperType((SBasicTypeCGBase) firstType);
 		
 		writer.append(format(firstType));
 		
@@ -361,8 +364,8 @@ public class JavaFormat
 		{
 			PTypeCG currentType = types.get(i);
 			
-			if(TypeAssistantCG.isBasicType(currentType))
-				currentType = TypeAssistantCG.getWrapperType((SBasicTypeCGBase) currentType);
+			if(typeAssistant.isBasicType(currentType))
+				currentType = typeAssistant.getWrapperType((SBasicTypeCGBase) currentType);
 			
 			writer.append(", " + format(currentType));
 		}

@@ -18,7 +18,6 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
@@ -46,7 +45,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 			
-			if(TypeAssistantCG.isUnionOfQuotes(unionType))
+			if(question.getTypeAssistant().isUnionOfQuotes(unionType))
 				//The VDM translation ignores named invariant types that are not
 				//union of quotes as they are represented as integers instead
 				return new AEmptyDeclCG();

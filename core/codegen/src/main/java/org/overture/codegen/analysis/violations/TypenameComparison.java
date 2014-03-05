@@ -14,9 +14,11 @@ public class TypenameComparison extends NamingComparison
 	@Override
 	public boolean isInvalid(ILexNameToken nameToken)
 	{
+		TypeAssistantCG typeAsssitant = new TypeAssistantCG();
+		
 		if (this.getNames().contains(nameToken.getName()))
 		{
-			return TypeAssistantCG.getTypeDef(nameToken) != null;
+			return typeAsssitant.getTypeDef(nameToken) != null;
 		}
 
 		return false;

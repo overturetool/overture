@@ -29,7 +29,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeAssistantCG
 {
-	public static PDefinition getTypeDef(ILexNameToken nameToken)
+	public PDefinition getTypeDef(ILexNameToken nameToken)
 	{
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
@@ -50,7 +50,7 @@ public class TypeAssistantCG
 		return typeDef;
 	}
 	
-	public static PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
+	public PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
 			throws AnalysisException
 	{
 		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
@@ -65,12 +65,12 @@ public class TypeAssistantCG
 		return seqType;
 	}
 	
-	public static boolean isBasicType(PTypeCG type)
+	public boolean isBasicType(PTypeCG type)
 	{
 		return type instanceof SBasicTypeCGBase;
 	}
 
-	public static SBasicTypeWrappersTypeCGBase getWrapperType(
+	public SBasicTypeWrappersTypeCGBase getWrapperType(
 			SBasicTypeCGBase basicType)
 	{
 
@@ -92,7 +92,7 @@ public class TypeAssistantCG
 	}
 	
 	//TODO: Copied from UML2VDM. Factor out in assistant
-	public static boolean isUnionOfQuotes(AUnionType type)
+	public boolean isUnionOfQuotes(AUnionType type)
 	{
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();

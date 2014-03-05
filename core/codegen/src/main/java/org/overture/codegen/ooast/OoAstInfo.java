@@ -13,6 +13,7 @@ import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -48,6 +49,7 @@ public class OoAstInfo
 	private DeclAssistantCG declAssistant;
 	private DesignatorAssistantCG designatorAssistant;
 	private StmAssistantCG stmAssistant;
+	private TypeAssistantCG typeAssistant;
 	
 	//VDM assistant factory
 	private TypeCheckerAssistantFactory tcFactory;
@@ -78,6 +80,7 @@ public class OoAstInfo
 		this.declAssistant = new DeclAssistantCG();
 		this.designatorAssistant = new DesignatorAssistantCG();
 		this.stmAssistant = new StmAssistantCG();
+		this.typeAssistant = new TypeAssistantCG();
 		
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		
@@ -151,6 +154,11 @@ public class OoAstInfo
 	public StmAssistantCG getStmAssistant()
 	{
 		return stmAssistant;
+	}
+	
+	public TypeAssistantCG getTypeAssistant()
+	{
+		return typeAssistant;
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException
