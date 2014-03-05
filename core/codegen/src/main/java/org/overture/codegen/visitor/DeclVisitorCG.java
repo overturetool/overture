@@ -139,7 +139,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		if(node.getIsUndefined())
 		   body = new ANotImplementedStmCG();
 		else
-			body = node.getBody().apply(question.getStatementVisitor(), question);
+			body = node.getBody().apply(question.getStmVisitor(), question);
 		
 		boolean isAbstract = body == null;
 		
@@ -194,7 +194,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();
 		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
-		PStmCG body = node.getBody().apply(question.getStatementVisitor(), question);
+		PStmCG body = node.getBody().apply(question.getStmVisitor(), question);
 		boolean isConstructor = node.getIsConstructor();
 		boolean isAbstract = body == null;
 		

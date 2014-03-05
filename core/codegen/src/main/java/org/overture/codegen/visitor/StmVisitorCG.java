@@ -123,7 +123,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		PStm stm = node.getStatement();
 		
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
-		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
+		PStmCG stmCg = stm.apply(question.getStmVisitor(), question);
 		
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
 		
@@ -142,7 +142,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		PStm stm = node.getStatement();
 		PExp exp = node.getExp();
 		
-		PStmCG bodyCg = stm.apply(question.getStatementVisitor(), question);
+		PStmCG bodyCg = stm.apply(question.getStmVisitor(), question);
 		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
 		
 		AWhileStmCG whileStm = new AWhileStmCG();
@@ -199,7 +199,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		for (PStm pStm : stms)
 		{
-			PStmCG stmCg = pStm.apply(question.getStatementVisitor(), question);
+			PStmCG stmCg = pStm.apply(question.getStmVisitor(), question);
 			
 			if(stmCg != null)
 				blockStm.getStatements().add(stmCg);
@@ -230,7 +230,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
 		
-		PStmCG stm = node.getStatement().apply(question.getStatementVisitor(), question);
+		PStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
 		localDefStm.setStm(stm);
 		
 		return localDefStm;
@@ -346,7 +346,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			throws AnalysisException
 	{
 		PExpCG ifExp = node.getTest().apply(question.getExpVisitor(), question);
-		PStmCG then = node.getThen().apply(question.getStatementVisitor(), question);
+		PStmCG then = node.getThen().apply(question.getStmVisitor(), question);
 
 		AIfStmCG ifStm = new AIfStmCG();
 
@@ -357,7 +357,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		for (AElseIfExp exp : elseIfs)
 		{
 			ifExp = exp.getElseIf().apply(question.getExpVisitor(), question);
-			then = exp.getThen().apply(question.getStatementVisitor(), question);
+			then = exp.getThen().apply(question.getStmVisitor(), question);
 						
 			AElseIfStmCG elseIfStm = new AElseIfStmCG();
 			elseIfStm.setElseIf(ifExp);
@@ -368,7 +368,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		if(node.getElse() != null)
 		{
-			PStmCG elseStm = node.getElse().apply(question.getStatementVisitor(), question);
+			PStmCG elseStm = node.getElse().apply(question.getStmVisitor(), question);
 			ifStm.setElseStm(elseStm);
 		}
 
@@ -380,7 +380,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			throws AnalysisException
 	{
 		PExpCG ifExp = node.getIfExp().apply(question.getExpVisitor(), question);
-		PStmCG thenStm = node.getThenStm().apply(question.getStatementVisitor(), question);
+		PStmCG thenStm = node.getThenStm().apply(question.getStmVisitor(), question);
 		
 		
 		AIfStmCG ifStm = new AIfStmCG();
@@ -393,7 +393,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		for (AElseIfStm stm : elseIfs)
 		{
 			ifExp = stm.getElseIf().apply(question.getExpVisitor(), question);
-			thenStm = stm.getThenStm().apply(question.getStatementVisitor(), question);
+			thenStm = stm.getThenStm().apply(question.getStmVisitor(), question);
 			
 			AElseIfStmCG elseIfStm = new AElseIfStmCG();
 			elseIfStm.setElseIf(ifExp);
@@ -405,7 +405,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		if(node.getElseStm() != null)
 		{
-			PStmCG elseStm = node.getElseStm().apply(question.getStatementVisitor(), question);
+			PStmCG elseStm = node.getElseStm().apply(question.getStmVisitor(), question);
 			ifStm.setElseStm(elseStm);
 		}
 		
@@ -443,7 +443,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		PExpCG fromCg = from.apply(question.getExpVisitor(), question);
 		PExpCG toCg = to.apply(question.getExpVisitor(), question);
 		PExpCG byCg = by != null ? by.apply(question.getExpVisitor(), question) : null;
-		PStmCG bodyCg = stm.apply(question.getStatementVisitor(), question);
+		PStmCG bodyCg = stm.apply(question.getStmVisitor(), question);
 		
 		AForIndexStmCG forStm = new AForIndexStmCG();
 		forStm.setVar(varCg);
@@ -470,7 +470,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		String var = identifier.getName().getName();
 		PExpCG setExpCg = set.apply(question.getExpVisitor(), question);
-		PStmCG bodyCg = body.apply(question.getStatementVisitor(), question);
+		PStmCG bodyCg = body.apply(question.getStmVisitor(), question);
 		
 		AForAllStmCG forAll = new AForAllStmCG();
 		forAll.setVar(var);
@@ -498,7 +498,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 
 		String var = identifier.getName().getName();
 		PExpCG seqExpCg = exp.apply(question.getExpVisitor(), question);
-		PStmCG stmCg = stm.apply(question.getStatementVisitor(), question);
+		PStmCG stmCg = stm.apply(question.getStmVisitor(), question);
 		
 		AForAllStmCG forAll = new AForAllStmCG();
 		forAll.setVar(var);

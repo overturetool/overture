@@ -92,9 +92,9 @@ public class OoAstInfo
 		return visitorManager.getTypeVisitor();
 	}
 	
-	public StmVisitorCG getStatementVisitor()
+	public StmVisitorCG getStmVisitor()
 	{
-		return visitorManager.getStatementVisitor();
+		return visitorManager.getStmVisitor();
 	}
 	
 	public StateDesignatorVisitorCG getStateDesignatorVisitor()

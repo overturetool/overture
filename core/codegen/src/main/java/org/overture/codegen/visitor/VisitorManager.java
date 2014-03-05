@@ -44,7 +44,7 @@ public class VisitorManager
 		return typeVisitor;
 	}
 	
-	public StmVisitorCG getStatementVisitor()
+	public StmVisitorCG getStmVisitor()
 	{
 		return stmVisitor;
 	}
