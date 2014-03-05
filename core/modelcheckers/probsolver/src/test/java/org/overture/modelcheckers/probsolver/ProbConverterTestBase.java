@@ -19,7 +19,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;

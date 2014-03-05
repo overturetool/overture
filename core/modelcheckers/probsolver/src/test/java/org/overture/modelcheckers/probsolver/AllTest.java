@@ -8,9 +8,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -31,17 +28,17 @@ import de.be4.classicalb.core.parser.exceptions.BException;
 //@RunWith(value = Parameterized.class)
 public abstract class AllTest extends ProbConverterTestBase
 {
-//	@Parameters(name = "{3}")
-//	public static Collection<Object[]> getData()
-//	{
-//		String root = "src/test/resources/";
-//
-//		Collection<Object[]> tests = new LinkedList<Object[]>();
-//
-//		tests.addAll(getTests(new File(root)));
-//
-//		return tests;
-//	}
+	// @Parameters(name = "{3}")
+	// public static Collection<Object[]> getData()
+	// {
+	// String root = "src/test/resources/";
+	//
+	// Collection<Object[]> tests = new LinkedList<Object[]>();
+	//
+	// tests.addAll(getTests(new File(root)));
+	//
+	// return tests;
+	// }
 
 	protected static Collection<Object[]> getTests(File root)
 	{
@@ -79,7 +76,8 @@ public abstract class AllTest extends ProbConverterTestBase
 			{
 				for (PDefinition def : m.getDefs())
 				{
-					if (def instanceof AImplicitOperationDefinition || def instanceof AImplicitFunctionDefinition)
+					if (def instanceof AImplicitOperationDefinition
+							|| def instanceof AImplicitFunctionDefinition)
 					{
 						tests.add(new Object[] {
 								Dialect.VDM_SL,
@@ -166,8 +164,8 @@ public abstract class AllTest extends ProbConverterTestBase
 			testMethod(operationName);
 		} catch (SolverException e)
 		{
-			//We just test the translation so some of the invocations may not be valid
-			if(!(e.getMessage().startsWith("no solution found")||e.getMessage().startsWith("cannot be solved")))
+			// We just test the translation so some of the invocations may not be valid
+			if (!(e.getMessage().startsWith("no solution found") || e.getMessage().startsWith("cannot be solved")))
 			{
 				throw e;
 			}

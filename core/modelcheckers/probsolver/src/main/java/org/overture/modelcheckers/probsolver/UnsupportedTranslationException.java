@@ -14,7 +14,8 @@ public class UnsupportedTranslationException extends AnalysisException
 
 	public UnsupportedTranslationException(Set<String> unsupportedConstructs)
 	{
-		super("Reached unsupported construct(s) in translation: "+ unsupportedConstructs);
+		super("Reached unsupported construct(s) in translation: "
+				+ unsupportedConstructs);
 	}
 
 }

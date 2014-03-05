@@ -42,7 +42,6 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import de.be4.classicalb.core.parser.exceptions.BException;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
-import de.be4.classicalb.core.parser.node.AMemberPredicate;
 import de.be4.classicalb.core.parser.node.APredicateParseUnit;
 import de.be4.classicalb.core.parser.node.EOF;
 import de.be4.classicalb.core.parser.node.Node;
@@ -460,8 +459,9 @@ public class ProbSolverUtil
 		{
 			if (!argContext.containsKey(arg.getKey()))
 			{
-//				AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
-//				post = new AConjunctPredicate((PPredicate) post, eqp);
+				// AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()),
+				// (PExpression) arg.getValue().apply(translator));
+				// post = new AConjunctPredicate((PPredicate) post, eqp);
 			}
 		}
 

@@ -145,7 +145,7 @@ public class AstTestConverter
 			// solve(postExp, state);
 
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
-			ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap,ProbConverterTestBase.getArgTypes(opDef), new SolverConsole());
+			ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, ProbConverterTestBase.getArgTypes(opDef), new SolverConsole());
 
 		} catch (AnalysisException e)
 		{

@@ -1,7 +1,6 @@
 package org.overture.modelcheckers.probsolver.visitors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,12 +21,11 @@ import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AMapMapType;//added
+import org.overture.ast.types.AProductType;//added
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.AProductType;//added
-import org.overture.ast.types.ATokenBasicType;//added
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
@@ -35,7 +33,6 @@ import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;// added
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
-import de.be4.classicalb.core.parser.node.AStringExpression;
 import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
@@ -45,7 +42,8 @@ import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;// added
-import de.be4.classicalb.core.parser.node.TStringLiteral;// added
+//added
+// added
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -167,7 +165,6 @@ public class BToVdmConverter extends DepthFirstAdapter
 						break;
 					}
 
-					
 				}
 			}
 
@@ -194,25 +191,24 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseACoupleExpression(ACoupleExpression node)
 	{
-	    if(expectedType instanceof AProductType) {
-		PType type;
-		List<PExp> args = new Vector<PExp>();
-		type = ((AProductType) expectedType).getTypes().getFirst();
-		args.add(convert(type, node.getList().getFirst()));
-		type = ((AProductType) expectedType).getTypes().getLast();
-		args.add(convert(type, node.getList().getLast()));
-		result = AstFactory.newATupleExp(loc, args);
-	    } else { //MapMapType
-		/*
-		PType typeFrom = ((AMapMapType) expectedType).getFrom();
-		PType typeTo = ((AMapMapType) expectedType).getTo();
-
-		PExp mapFrom = convert(typeFrom, node.getList().getFirst());
-		PExp mapTo = convert(typeTo, node.getList().getLast());
-		LexToken op = new LexToken();
-		result = AstFactory.newAMapletExp(mapFrom, op, mapTo);
-		*/
-	    }
+		if (expectedType instanceof AProductType)
+		{
+			PType type;
+			List<PExp> args = new Vector<PExp>();
+			type = ((AProductType) expectedType).getTypes().getFirst();
+			args.add(convert(type, node.getList().getFirst()));
+			type = ((AProductType) expectedType).getTypes().getLast();
+			args.add(convert(type, node.getList().getLast()));
+			result = AstFactory.newATupleExp(loc, args);
+		} else
+		{ // MapMapType
+			/*
+			 * PType typeFrom = ((AMapMapType) expectedType).getFrom(); PType typeTo = ((AMapMapType)
+			 * expectedType).getTo(); PExp mapFrom = convert(typeFrom, node.getList().getFirst()); PExp mapTo =
+			 * convert(typeTo, node.getList().getLast()); LexToken op = new LexToken(); result =
+			 * AstFactory.newAMapletExp(mapFrom, op, mapTo);
+			 */
+		}
 	}
 
 	@Override
@@ -273,7 +269,8 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	@Override
-	public void caseASequenceExtensionExpression(ASequenceExtensionExpression node)
+	public void caseASequenceExtensionExpression(
+			ASequenceExtensionExpression node)
 	{
 
 		List<PExp> list = new Vector<PExp>();
@@ -339,20 +336,15 @@ public class BToVdmConverter extends DepthFirstAdapter
 		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
-    /*
-	@Override
-	public void caseAStringExpression(AStringExpression node) // added
-	{
-	    if(expectedType instanceof ATokenBasicType) {
-
-		result = AstFactory.newAMkBasicExp((ATokenBasicType)expectedType, convert(expectedType, node));
-	    }
-	}
-    */
+	/*
+	 * @Override public void caseAStringExpression(AStringExpression node) // added { if(expectedType instanceof
+	 * ATokenBasicType) { result = AstFactory.newAMkBasicExp((ATokenBasicType)expectedType, convert(expectedType,
+	 * node)); } }
+	 */
 	public void defaultIn(Node node)
 	{
-		 System.err.println("Hit unsupported node: "
-		 + node.getClass().getSimpleName() + " - " + node);
+		System.err.println("Hit unsupported node: "
+				+ node.getClass().getSimpleName() + " - " + node);
 	}
 
 }

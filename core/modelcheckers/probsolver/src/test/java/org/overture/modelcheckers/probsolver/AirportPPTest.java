@@ -10,7 +10,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
-import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
