@@ -1,0 +1,41 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return Test();
+    }
+
+    public static VDMMap Test() {
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+        VDMMap mapCompResult_1 = MapUtil.map();
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            Number x = ((Number) iterator_1.next());
+
+            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
+                VDMSet set_2 = SetUtil.set(2L, 3L, 4L);
+                Number y = ((Number) iterator_2.next());
+
+                for (Iterator iterator_3 = set_2.iterator();
+                        iterator_3.hasNext();) {
+                    Number z = ((Number) iterator_3.next());
+
+                    if ((x.longValue() + y.longValue() + z.longValue()) > 3L) {
+                        mapCompResult_1.put(x.longValue() + y.longValue() +
+                            z.longValue(),
+                            z.longValue() + y.longValue() + x.longValue());
+                    }
+                }
+            }
+        }
+
+        return mapCompResult_1;
+    }
+}
+##########
