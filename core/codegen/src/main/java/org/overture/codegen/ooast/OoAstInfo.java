@@ -30,21 +30,16 @@ import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
 import org.overture.codegen.visitor.StateDesignatorVisitorCG;
 import org.overture.codegen.visitor.StmVisitorCG;
 import org.overture.codegen.visitor.TypeVisitorCG;
+import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class OoAstInfo
 {
-	//Visitors:
-	private OoAstGenerator rootVisitor;
-	private ClassVisitorCG classVisitor;
-	private DeclVisitorCG declVisitor;
-	private ExpVisitorCG expVisitor;
-	private TypeVisitorCG typeVisitor;
-	private StmVisitorCG stmVisitor;
-	private StateDesignatorVisitorCG stateDesignatorVisitor;
-	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
-	private MultipleBindVisitorCG multipleBindVisitor;
 	
+	//Visitors
+	private VisitorManager visitorManager;
+	
+	//Assistants
 	private AssistantManager assistantManager;
 	
 	//VDM assistant factory
@@ -63,69 +58,52 @@ public class OoAstInfo
 	{
 		super();
 		
-		this.classVisitor = new ClassVisitorCG();
-		this.declVisitor = new DeclVisitorCG();
-		this.expVisitor = new ExpVisitorCG();
-		this.typeVisitor = new TypeVisitorCG();
-		this.stmVisitor = new StmVisitorCG();
-		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
-		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
-		this.multipleBindVisitor = new MultipleBindVisitorCG();
-		
+		this.visitorManager = new VisitorManager();
 		this.assistantManager = new AssistantManager();
-		
 		this.tcFactory = new TypeCheckerAssistantFactory();
-		
 		this.quoteVaues = new HashSet<String>();
-		
 		this.unsupportedNodes = new HashSet<NodeInfo>();
-		
 		this.tempVarNameGen = new TempVarNameGen();
 	}
 
-	public OoAstGenerator getRootVisitor()
-	{
-		return rootVisitor;
-	}
-	
 	public ClassVisitorCG getClassVisitor()
 	{
-		return classVisitor;
+		return visitorManager.getClassVisitor();
 	}
 	
 	public DeclVisitorCG getDeclVisitor()
 	{
-		return declVisitor;
+		return visitorManager.getDeclVisitor();
 	}
 	
 	public ExpVisitorCG getExpVisitor()
 	{
-		return expVisitor;
+		return visitorManager.getExpVisitor();
 	}
 	
 	public TypeVisitorCG getTypeVisitor()
 	{
-		return typeVisitor;
+		return visitorManager.getTypeVisitor();
 	}
 	
 	public StmVisitorCG getStatementVisitor()
 	{
-		return stmVisitor;
+		return visitorManager.getStatementVisitor();
 	}
 	
 	public StateDesignatorVisitorCG getStateDesignatorVisitor()
 	{
-		return stateDesignatorVisitor;
+		return visitorManager.getStateDesignatorVisitor();
 	}
 	
 	public ObjectDesignatorVisitorCG getObjectDesignatorVisitor()
 	{
-		return objectDesignatorVisitor;
+		return visitorManager.getObjectDesignatorVisitor();
 	}
 	
 	public MultipleBindVisitorCG getMultipleBindVisitor()
 	{
-		return multipleBindVisitor;
+		return visitorManager.getMultipleBindVisitor();
 	}
 	
 	public ExpAssistantCG getExpAssistant()
