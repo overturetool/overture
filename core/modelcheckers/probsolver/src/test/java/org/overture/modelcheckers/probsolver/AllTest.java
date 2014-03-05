@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -27,22 +28,22 @@ import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
-@RunWith(value = Parameterized.class)
-public class AllTest extends ProbConverterTestBase
+//@RunWith(value = Parameterized.class)
+public abstract class AllTest extends ProbConverterTestBase
 {
-	@Parameters(name = "{3}")
-	public static Collection<Object[]> getData()
-	{
-		String root = "src/test/resources/";
+//	@Parameters(name = "{3}")
+//	public static Collection<Object[]> getData()
+//	{
+//		String root = "src/test/resources/";
+//
+//		Collection<Object[]> tests = new LinkedList<Object[]>();
+//
+//		tests.addAll(getTests(new File(root)));
+//
+//		return tests;
+//	}
 
-		Collection<Object[]> tests = new LinkedList<Object[]>();
-
-		tests.addAll(getTests(new File(root)));
-
-		return tests;
-	}
-
-	private static Collection<Object[]> getTests(File root)
+	protected static Collection<Object[]> getTests(File root)
 	{
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 		if (root.isFile())
@@ -78,7 +79,7 @@ public class AllTest extends ProbConverterTestBase
 			{
 				for (PDefinition def : m.getDefs())
 				{
-					if (def instanceof AImplicitOperationDefinition)
+					if (def instanceof AImplicitOperationDefinition || def instanceof AImplicitFunctionDefinition)
 					{
 						tests.add(new Object[] {
 								Dialect.VDM_SL,
