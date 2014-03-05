@@ -102,7 +102,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -436,7 +435,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		nextTernaryIf.setFalseValue(elseExp);
 		
 		if(node.parent() instanceof SBinaryExp)
-			return ExpAssistantCG.isolateExpression(ternaryIf);
+			return question.getExpAssistant().isolateExpression(ternaryIf);
 		
 		return ternaryIf;
 	}
@@ -542,7 +541,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
 		
-		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(multipleSetBindCg, suchThatCg);
+		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
 
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);
@@ -556,7 +555,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseALetDefExp(ALetDefExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if(ExpAssistantCG.isAssigned(node))
+		if(question.getExpAssistant().isAssigned(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a let expression is not supported in assignments");
 			return null;
@@ -1140,7 +1139,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		PExpCG leftExpCG = divide.getLeft();
 		
-		if(ExpAssistantCG.isIntegerType(leftExp) && ExpAssistantCG.isIntegerType(rightExp))
+		if(question.getExpAssistant().isIntegerType(leftExp) && question.getExpAssistant().isIntegerType(rightExp))
 		{
 			ARealLiteralExpCG one = new ARealLiteralExpCG();
 			one.setType(new ARealNumericBasicTypeCG());
@@ -1151,7 +1150,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			neutralMul.setLeft(one);
 			neutralMul.setRight(leftExpCG);
 			
-			divide.setLeft(ExpAssistantCG.isolateExpression(neutralMul));
+			divide.setLeft(question.getExpAssistant().isolateExpression(neutralMul));
 		}
 		
 		return divide;
@@ -1189,7 +1188,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		sub.setLeft(leftExpCg);
 		sub.setRight(times);
 		
-		return (node.parent() instanceof SBinaryExp) ? ExpAssistantCG.isolateExpression(sub) : sub;
+		return (node.parent() instanceof SBinaryExp) ? question.getExpAssistant().isolateExpression(sub) : sub;
 	}
 	
 	@Override
@@ -1209,13 +1208,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
 		times.setLeft(rightExpCg);
-		times.setRight(ExpAssistantCG.isolateExpression(div));
+		times.setRight(question.getExpAssistant().isolateExpression(div));
 		
 		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
 		sub.setLeft(leftExpCg);
 		sub.setRight(times);
 		
-		return (node.parent() instanceof SBinaryExp) ? ExpAssistantCG.isolateExpression(sub) : sub;
+		return (node.parent() instanceof SBinaryExp) ? question.getExpAssistant().isolateExpression(sub) : sub;
 	}
 				
 	@Override
@@ -1257,7 +1256,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
 		notExp.setType(typeCg);
-		notExp.setExp(ExpAssistantCG.isolateExpression(xorExp));
+		notExp.setExp(question.getExpAssistant().isolateExpression(xorExp));
 
 		return notExp;
 	}
@@ -1349,35 +1348,35 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return ExpAssistantCG.consBoolLiteral(node.getValue().getValue());
+		return question.getExpAssistant().consBoolLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return ExpAssistantCG.consRealLiteral(node.getValue().getValue());
+		return question.getExpAssistant().consRealLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return ExpAssistantCG.consIntLiteral(node.getValue().getValue());
+		return question.getExpAssistant().consIntLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return ExpAssistantCG.consCharLiteral(node.getValue().getValue());
+		return question.getExpAssistant().consCharLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return ExpAssistantCG.consStringLiteral(node.getValue().getValue(), false);
+		return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
 	}
 	
 	@Override

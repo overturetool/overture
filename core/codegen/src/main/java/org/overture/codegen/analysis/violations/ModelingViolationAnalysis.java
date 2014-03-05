@@ -61,7 +61,9 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 		{
 			PExp leftExp = exp.getLeft();
 			PExp rightExp = exp.getRight();
+			
+			ExpAssistantCG expAssistant = new ExpAssistantCG();
 
-			return !ExpAssistantCG.isIntegerType(leftExp) || !ExpAssistantCG.isIntegerType(rightExp);
+			return !expAssistant.isIntegerType(leftExp) || !expAssistant.isIntegerType(rightExp);
 		}
 }

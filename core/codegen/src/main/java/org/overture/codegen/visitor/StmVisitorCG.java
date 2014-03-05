@@ -35,7 +35,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -129,7 +128,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
 		
-		AHeaderLetBeStCG header = ExpAssistantCG.consHeader(multipleSetBindCg, suchThatCg);
+		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
 				
 		letBeSt.setHeader(header);
 		letBeSt.setStatement(stmCg);

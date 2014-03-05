@@ -1,6 +1,5 @@
 package org.overture.codegen.transform;
 
-import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -17,16 +16,24 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.ooast.OoAstInfo;
 
 public class LetBeStAssistantCG extends TransformationAssistantCG
 {
+	private OoAstInfo info;
+	
+	public LetBeStAssistantCG(OoAstInfo info)
+	{
+		this.info = info;
+	}
+	
 	public ALocalVarDeclCG consSuccessVarDecl(String successVarName)
 	{
 		ALocalVarDeclCG successVarDecl = new ALocalVarDeclCG();
 		
 		successVarDecl.setType(new ABoolBasicTypeCG());
 		successVarDecl.setName(successVarName);
-		successVarDecl.setExp(ExpAssistantCG.consBoolLiteral(false));
+		successVarDecl.setExp(info.getExpAssistant().consBoolLiteral(false));
 		
 		return successVarDecl;
 	}
@@ -36,7 +43,7 @@ public class LetBeStAssistantCG extends TransformationAssistantCG
 		AAssignmentStmCG successAssignment = new AAssignmentStmCG();
 
 		successAssignment.setTarget(consIdentifier(successVarName));
-		successAssignment.setExp(suchThat != null ? suchThat.clone() : ExpAssistantCG.consBoolLiteral(true));
+		successAssignment.setExp(suchThat != null ? suchThat.clone() : info.getExpAssistant().consBoolLiteral(true));
 		
 		return successAssignment;
 	}

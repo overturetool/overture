@@ -120,29 +120,31 @@ public class DeclAssistantCG
 	
 	public void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
 	{
+		ExpAssistantCG expAssistant = new ExpAssistantCG();
+		
 		if(typeCg instanceof AStringTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultStringlValue());
+			localDecl.setExp(expAssistant.getDefaultStringlValue());
 		}
 		else if(typeCg instanceof ACharBasicTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultCharlValue());
+			localDecl.setExp(expAssistant.getDefaultCharlValue());
 		}
 		else if(typeCg instanceof AIntNumericBasicTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultIntValue());
+			localDecl.setExp(expAssistant.getDefaultIntValue());
 		}
 		else if(typeCg instanceof ARealNumericBasicTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultRealValue());
+			localDecl.setExp(expAssistant.getDefaultRealValue());
 		}
 		else if(typeCg instanceof ABoolBasicTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultBoolValue());
+			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		}
 		else if(typeCg instanceof AClassTypeCG)
 		{
-			localDecl.setExp(ExpAssistantCG.getDefaultClassValue());
+			localDecl.setExp(expAssistant.getDefaultClassValue());
 		}
 		else
 		{

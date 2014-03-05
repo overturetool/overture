@@ -45,7 +45,7 @@ import org.overture.codegen.ooast.OoAstInfo;
 
 public class ExpAssistantCG
 {
-	public static PExpCG isolateExpression(PExpCG exp)
+	public PExpCG isolateExpression(PExpCG exp)
 	{
 		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
 		isolationExp.setExp(exp);
@@ -92,7 +92,7 @@ public class ExpAssistantCG
 		return codeGenExp;
 	}
 	
-	public static boolean isIntegerType(PExp exp)
+	public boolean isIntegerType(PExp exp)
 	{	
 		PType type = exp.getType();
 
@@ -105,7 +105,7 @@ public class ExpAssistantCG
 				&& !(exp instanceof ARealLiteralExp);
 	}
 	
-	public static ABoolLiteralExpCG consBoolLiteral(boolean val)
+	public ABoolLiteralExpCG consBoolLiteral(boolean val)
 	{
 		ABoolLiteralExpCG boolLiteral = new ABoolLiteralExpCG();
 		boolLiteral.setType(new ABoolBasicTypeCG());
@@ -114,7 +114,7 @@ public class ExpAssistantCG
 		return boolLiteral;
 	}
 	
-	public static AIntLiteralExpCG consIntLiteral(long value)
+	public AIntLiteralExpCG consIntLiteral(long value)
 	{
 		AIntLiteralExpCG intLiteral = new AIntLiteralExpCG();
 		intLiteral.setType(new AIntNumericBasicTypeCG());
@@ -123,7 +123,7 @@ public class ExpAssistantCG
 		return intLiteral;
 	}
 	
-	public static ARealLiteralExpCG consRealLiteral(double value)
+	public ARealLiteralExpCG consRealLiteral(double value)
 	{
 		ARealLiteralExpCG realLiteral = new ARealLiteralExpCG();
 		realLiteral.setType(new ARealNumericBasicTypeCG());
@@ -132,7 +132,7 @@ public class ExpAssistantCG
 		return realLiteral;
 	}
 	
-	public static ACharLiteralExpCG consCharLiteral(char value)
+	public ACharLiteralExpCG consCharLiteral(char value)
 	{
 		ACharLiteralExpCG charLiteral = new ACharLiteralExpCG();
 		charLiteral.setType(new ACharBasicTypeCG());
@@ -141,7 +141,7 @@ public class ExpAssistantCG
 		return charLiteral;
 	}
 	
-	public static AStringLiteralExpCG consStringLiteral(String value, boolean isNull)
+	public AStringLiteralExpCG consStringLiteral(String value, boolean isNull)
 	{
 		AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
 
@@ -152,37 +152,37 @@ public class ExpAssistantCG
 		return stringLiteral;
 	}
 	
-	public static AIntLiteralExpCG getDefaultIntValue()
+	public AIntLiteralExpCG getDefaultIntValue()
 	{
 		return consIntLiteral(0L);
 	}
 	
-	public static ARealLiteralExpCG getDefaultRealValue()
+	public ARealLiteralExpCG getDefaultRealValue()
 	{
 		return consRealLiteral(0.0);
 	}
 	
-	public static ABoolLiteralExpCG getDefaultBoolValue()
+	public ABoolLiteralExpCG getDefaultBoolValue()
 	{
 		return consBoolLiteral(false);
 	}
 	
-	public static ACharLiteralExpCG getDefaultCharlValue()
+	public ACharLiteralExpCG getDefaultCharlValue()
 	{
 		return consCharLiteral('0');
 	}
 	
-	public static AStringLiteralExpCG getDefaultStringlValue()
+	public AStringLiteralExpCG getDefaultStringlValue()
 	{
 		return consStringLiteral("", true);
 	}
 	
-	public static ANullExpCG getDefaultClassValue()
+	public ANullExpCG getDefaultClassValue()
 	{
 		return new ANullExpCG();
 	}
 	
-	public static boolean isAssigned(PExp exp)
+	public boolean isAssigned(PExp exp)
 	{
 		return exp.getAncestor(AInstanceVariableDefinition.class) != null ||
 			   exp.getAncestor(AValueDefinition.class) != null ||
@@ -190,7 +190,7 @@ public class ExpAssistantCG
 			   exp.getAncestor(AAssignmentStm.class) != null;
 	}
 	
-	public static LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
+	public LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
 	{
 		LinkedList<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
 		
@@ -212,7 +212,7 @@ public class ExpAssistantCG
 		return idsCg;
 	}
 	
-	public static AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, PExpCG suchThat)
+	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, PExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
 		

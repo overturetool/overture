@@ -29,7 +29,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		this.info = info;
 		this.compAssistant = new CompAssistantCG();
-		this.letBeStAssistant = new LetBeStAssistantCG();
+		this.letBeStAssistant = new LetBeStAssistantCG(info);
 	}
 	
 	@Override

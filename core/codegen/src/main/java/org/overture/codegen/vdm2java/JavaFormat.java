@@ -770,7 +770,9 @@ public class JavaFormat
 		negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
 		ifStm.setIfExp(negated);
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
-		returnIncompatibleTypes.setExp(ExpAssistantCG.consBoolLiteral(false));
+		
+		ExpAssistantCG expAssistant = new ExpAssistantCG();
+		returnIncompatibleTypes.setExp(expAssistant.consBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
 		
 		//If the inital check is passed we can safely cast the formal parameter
