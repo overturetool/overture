@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
+import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -44,12 +45,7 @@ public class OoAstInfo
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
 	private MultipleBindVisitorCG multipleBindVisitor;
 	
-	//Assistants
-	private ExpAssistantCG expAssistant;
-	private DeclAssistantCG declAssistant;
-	private DesignatorAssistantCG designatorAssistant;
-	private StmAssistantCG stmAssistant;
-	private TypeAssistantCG typeAssistant;
+	private AssistantManager assistantManager;
 	
 	//VDM assistant factory
 	private TypeCheckerAssistantFactory tcFactory;
@@ -76,11 +72,7 @@ public class OoAstInfo
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
 		this.multipleBindVisitor = new MultipleBindVisitorCG();
 		
-		this.expAssistant = new ExpAssistantCG();
-		this.declAssistant = new DeclAssistantCG();
-		this.designatorAssistant = new DesignatorAssistantCG();
-		this.stmAssistant = new StmAssistantCG();
-		this.typeAssistant = new TypeAssistantCG();
+		this.assistantManager = new AssistantManager();
 		
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		
@@ -138,27 +130,27 @@ public class OoAstInfo
 	
 	public ExpAssistantCG getExpAssistant()
 	{
-		return expAssistant;
+		return assistantManager.getExpAssistant();
 	}
 
 	public DeclAssistantCG getDeclAssistant()
 	{
-		return declAssistant;
+		return assistantManager.getDeclAssistant();
 	}
 
 	public DesignatorAssistantCG getDesignatorAssistant()
 	{
-		return designatorAssistant;
+		return assistantManager.getDesignatorAssistant();
 	}
 	
 	public StmAssistantCG getStmAssistant()
 	{
-		return stmAssistant;
+		return assistantManager.getStmAssistant();
 	}
 	
 	public TypeAssistantCG getTypeAssistant()
 	{
-		return typeAssistant;
+		return assistantManager.getTypeAssistant();
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException
