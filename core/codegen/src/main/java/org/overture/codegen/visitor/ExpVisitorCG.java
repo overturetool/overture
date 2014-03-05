@@ -783,7 +783,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
-		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
 		
 		if(!(firstCg instanceof AMapletExpCG))
