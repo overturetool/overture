@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
@@ -20,19 +21,15 @@ import org.overture.codegen.ooast.OoAstInfo;
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
 	private OoAstInfo info;
-	private CompAssistantCG compAssistant;
 	
+	private CompAssistantCG compAssistant;	
 	private LetBeStAssistantCG letBeStAssistant;
-	
-	//TODO: Why have this when it is sub super class for the other two?
-	private TransformationAssistantCG transformationAssistant;
 	
 	public TransformationVisitor(OoAstInfo info)
 	{
 		this.info = info;
 		this.compAssistant = new CompAssistantCG();
 		this.letBeStAssistant = new LetBeStAssistantCG();
-		this.transformationAssistant = new TransformationAssistantCG();
 	}
 	
 	@Override
@@ -40,27 +37,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), letBeStAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
 		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
-		transformationAssistant.replaceNodeWith(node, outerBlock);
+		letBeStAssistant.replaceNodeWith(node, outerBlock);
 	}
 	
 	@Override
 	public void caseALetBeStExpCG(ALetBeStExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
-
-		if (enclosingStm == null)
-			//FIXME: pick up on this already during the construction of the OO AST and report the unsupported node.
-			throw new AnalysisException("Generation of the let be st expressions is only supported within operations/functions");
+		PStmCG enclosingStm = getEnclosingStm(node, "let be st expressions");
 		
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), letBeStAssistant, header.getSuchThat(), letBeStAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
 		ABlockStmCG outerBlock = letBeStAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), header.getSuchThat(), info.getTempVarNameGen(), strategy);
 		
@@ -68,7 +61,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		StmAssistantCG.injectDeclAsStm(outerBlock, resultDecl);
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
+		letBeStAssistant.replaceNodeWith(enclosingStm, outerBlock);
 		
 		outerBlock.getStatements().add(enclosingStm);
 	}
@@ -76,17 +69,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+		PStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
 
-		if (enclosingStm == null)
-			//TODO: Pick up on this earlier (see above to do msg)
-			throw new AnalysisException("Generation of a map comprehension is only supported within operations/functions");
-		
-		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		ComplexCompStrategy strategy = new MapCompStrategy(compAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		ABlockStmCG block = compAssistant.consSetCompIterationBlock(node.getBindings(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		compAssistant.replaceNodeWith(enclosingStm, block);
 		
 		block.getStatements().add(enclosingStm);
 	}
@@ -94,17 +83,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
-
-		if (enclosingStm == null)
-			//TODO: Pick up on this earlier (see above to do msg)
-			throw new AnalysisException("Generation of a set comprehension is only supported within operations/functions");
+		PStmCG enclosingStm = getEnclosingStm(node, "set comprehension");
 		
-		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		ComplexCompStrategy strategy = new SetCompStrategy(compAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		ABlockStmCG block = compAssistant.consSetCompIterationBlock(node.getBindings(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		compAssistant.replaceNodeWith(enclosingStm, block);
 		
 		block.getStatements().add(enclosingStm);
 	}
@@ -112,22 +97,28 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSeqExpCG(ACompSeqExpCG node) throws AnalysisException
 	{
-		//TODO: Make it use the approach adopted by set comprehensions generation
-		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+		PStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
 
-		if (enclosingStm == null)
-			//TODO: Pick up on this earlier (see above to do msg)
-			throw new AnalysisException("Generation of a sequence comprehension is only supported within operations/functions");
-
-		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		SeqCompStrategy strategy = new SeqCompStrategy(compAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
 		ids.add(node.getId());
 		
 		ABlockStmCG block = compAssistant.consIterationBlock(ids, node.getSet(), node.getPredicate(), info.getTempVarNameGen(), strategy);
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		compAssistant.replaceNodeWith(enclosingStm, block);
 		
 		block.getStatements().add(enclosingStm);
+	}
+
+	private PStmCG getEnclosingStm(PExpCG node, String nodeStr) throws AnalysisException
+	{
+		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+
+		//This case should never occur as it must be checked for during the construction of the OO AST
+		if (enclosingStm == null)
+			throw new AnalysisException(String.format("Generation of a %s is only supported within operations/functions", node));
+		
+		return enclosingStm;
 	}
 }
