@@ -28,9 +28,12 @@ public class InspectBAst
 		//f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
+		f = new ClassicalB("{1,2}*{11,12}*{101,102}");
+		f.getAst().apply(new ASTPrinter(System.out));
+		
 		//f = new ClassicalB("[1,2,3,4,5](3)");
 		//f.getAst().apply(new ASTPrinter(System.out));
-		
+	
 		//f = new ClassicalB("POW({1,2,3})");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
@@ -82,7 +85,10 @@ public class InspectBAst
 		//f = new ClassicalB("{1,2,3}*{10,20}*{100,200,300}");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("conc([[1,2],[3],[4,5]])");
+		//f = new ClassicalB("conc([[1,2],[3],[4,5]])");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("{2|->3|->4}");
 		f.getAst().apply(new ASTPrinter(System.out));
 	}
 

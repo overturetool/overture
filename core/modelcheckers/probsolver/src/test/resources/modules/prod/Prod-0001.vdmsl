@@ -1,0 +1,4 @@
+operations
+
+prodcttest1() m : nat * nat
+  post m = mk_(2, 3)
