@@ -27,6 +27,7 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.AProductType;//added
+import org.overture.ast.types.ATokenBasicType;//added
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
@@ -34,6 +35,7 @@ import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;// added
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
+import de.be4.classicalb.core.parser.node.AStringExpression;
 import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
@@ -43,6 +45,7 @@ import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;// added
+import de.be4.classicalb.core.parser.node.TStringLiteral;// added
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -270,8 +273,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	@Override
-	public void caseASequenceExtensionExpression(
-			ASequenceExtensionExpression node)
+	public void caseASequenceExtensionExpression(ASequenceExtensionExpression node)
 	{
 
 		List<PExp> list = new Vector<PExp>();
@@ -337,10 +339,20 @@ public class BToVdmConverter extends DepthFirstAdapter
 		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
+    /*
+	@Override
+	public void caseAStringExpression(AStringExpression node) // added
+	{
+	    if(expectedType instanceof ATokenBasicType) {
+
+		result = AstFactory.newAMkBasicExp((ATokenBasicType)expectedType, convert(expectedType, node));
+	    }
+	}
+    */
 	public void defaultIn(Node node)
 	{
-		// System.err.println("Hit unsupported node: "
-		// + node.getClass().getSimpleName() + " - " + node);
+		 System.err.println("Hit unsupported node: "
+		 + node.getClass().getSimpleName() + " - " + node);
 	}
 
 }

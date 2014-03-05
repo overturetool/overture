@@ -97,6 +97,7 @@ import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.expressions.AMkBasicExp;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -195,12 +196,14 @@ import de.be4.classicalb.core.parser.node.ASubsetStrictPredicate; //added
 import de.be4.classicalb.core.parser.node.ATailExpression; //added
 import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AUnionExpression;
+import de.be4.classicalb.core.parser.node.AStringExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PPredicate;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
+import de.be4.classicalb.core.parser.node.TStringLiteral;
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -1134,6 +1137,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 	    LinkedList<PExp> args = node.getArgs();
 	    ACoupleExpression cpl = new ACoupleExpression();
+	    System.out.println("in Tuple : " + args);// add 2014/03/03
 	    cpl.getList().add(exp(args.get(0)));
 	    cpl.getList().add(exp(args.get(1)));
 	    /*
@@ -1163,6 +1167,17 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    AIntegerExpression fld = new AIntegerExpression(new TIntegerLiteral(new Long(lint.getValue()).toString()));
 	    arg.getExpressions().add(fld);
 	    return new AImageExpression(seq, arg);
+
+	}
+
+	@Override
+	public Node caseAMkBasicExp(AMkBasicExp node)// added(original by  kenneth)
+			throws AnalysisException
+	{
+	    if(node.getType() instanceof ATokenBasicType ) {
+		return node.getArg().apply(this);
+	    }
+	    return super.caseAMkBasicExp(node);
 
 	}
 
