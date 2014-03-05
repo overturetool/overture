@@ -3,7 +3,6 @@ package org.overture.codegen.transform;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
@@ -32,10 +31,18 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.javalib.VDMSeq;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class TransformationAssistantCG
 {
+	protected OoAstInfo info;
+	
+	public TransformationAssistantCG(OoAstInfo info)
+	{
+		this.info = info;
+	}
+	
 	public void replaceNodeWith(INode original, INode replacement)
 	{
 		INode parent = original.parent();
@@ -197,7 +204,7 @@ public class TransformationAssistantCG
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		StmAssistantCG.injectDeclAsStm(forBody, consNextElementDeclared(elementType, id, iteratorName));
+		info.getStmAssistant().injectDeclAsStm(forBody, consNextElementDeclared(elementType, id, iteratorName));
 		
 		return forBody;
 	}

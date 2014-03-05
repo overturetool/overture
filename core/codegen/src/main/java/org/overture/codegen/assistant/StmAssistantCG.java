@@ -16,7 +16,7 @@ import org.overture.codegen.ooast.OoAstInfo;
 
 public class StmAssistantCG
 {
-	public static ALetDefStmCG convertToLetDefStm(ALetDefExpCG letDefExp)
+	public ALetDefStmCG convertToLetDefStm(ALetDefExpCG letDefExp)
 	{
 		AReturnStmCG returnStm = new AReturnStmCG();
 		returnStm.setExp(letDefExp.getExp());
@@ -30,7 +30,7 @@ public class StmAssistantCG
 		return letDefStm;
 	}
 	
-	public static ALetBeStStmCG convertToLetBeStStm(ALetBeStExpCG letBeStExp)
+	public ALetBeStStmCG convertToLetBeStStm(ALetBeStExpCG letBeStExp)
 	{
 		AReturnStmCG returnStm = new AReturnStmCG();
 		returnStm.setExp(letBeStExp.getValue());
@@ -42,7 +42,7 @@ public class StmAssistantCG
 		return letBeStStm;
 	}
 	
-	public static void generateArguments(List<PExp> args, List<PExpCG> generatedArgs, OoAstInfo question) throws AnalysisException
+	public void generateArguments(List<PExp> args, List<PExpCG> generatedArgs, OoAstInfo question) throws AnalysisException
 	{
 		for (int i = 0; i < args.size(); i++)
 		{
@@ -51,7 +51,7 @@ public class StmAssistantCG
 		}
 	}
 	
-	public static void injectDeclAsStm(ABlockStmCG block, ALocalVarDeclCG decl)
+	public void injectDeclAsStm(ABlockStmCG block, ALocalVarDeclCG decl)
 	{
 		ABlockStmCG wrappingBlock = new ABlockStmCG();
 		

@@ -26,7 +26,9 @@ public class JavaCodeGenMain
 {
 	private static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
 	{
-		List<NodeInfo> nodesSorted = LocationAssistantCG.getNodesLocationSorted(unsupportedNodes);
+		LocationAssistantCG locAssistant = new LocationAssistantCG();
+		
+		List<NodeInfo> nodesSorted = locAssistant.getNodesLocationSorted(unsupportedNodes);
 		
 		Logger.getLog().println("Following constructs are not supported: ");
 		
@@ -34,7 +36,7 @@ public class JavaCodeGenMain
 		{
 			Logger.getLog().print(nodeInfo.getNode().toString());
 			
-			ILexLocation location = LocationAssistantCG.findLocation(nodeInfo.getNode());
+			ILexLocation location = locAssistant.findLocation(nodeInfo.getNode());
 			
 			Logger.getLog().print(location != null ? " at [line, pos] = [" + location.getStartLine() + ", " + location.getStartPos() + "]": "");
 			

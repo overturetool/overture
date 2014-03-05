@@ -2,7 +2,6 @@ package org.overture.codegen.transform;
 
 import java.util.LinkedList;
 
-import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
@@ -28,7 +27,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public TransformationVisitor(OoAstInfo info)
 	{
 		this.info = info;
-		this.compAssistant = new CompAssistantCG();
+		this.compAssistant = new CompAssistantCG(info);
 		this.letBeStAssistant = new LetBeStAssistantCG(info);
 	}
 	
@@ -59,7 +58,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		ALocalVarDeclCG resultDecl = letBeStAssistant.consDecl(node.getVar(), node.getValue());
 
-		StmAssistantCG.injectDeclAsStm(outerBlock, resultDecl);
+		info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
 		
 		letBeStAssistant.replaceNodeWith(enclosingStm, outerBlock);
 		

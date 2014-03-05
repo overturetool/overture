@@ -45,6 +45,7 @@ public class Violation implements Comparable<Violation>
 	@Override
 	public int compareTo(Violation other)
 	{
-		return LocationAssistantCG.compareLocations(this.location, other.location);
+		LocationAssistantCG locAssistant = new LocationAssistantCG();
+		return locAssistant.compareLocations(this.location, other.location);
 	}
 }

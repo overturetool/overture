@@ -20,11 +20,9 @@ import org.overture.codegen.ooast.OoAstInfo;
 
 public class LetBeStAssistantCG extends TransformationAssistantCG
 {
-	private OoAstInfo info;
-	
 	public LetBeStAssistantCG(OoAstInfo info)
 	{
-		this.info = info;
+		super(info);
 	}
 	
 	public ALocalVarDeclCG consSuccessVarDecl(String successVarName)

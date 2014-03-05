@@ -13,7 +13,7 @@ import org.overture.codegen.ooast.NodeInfo;
 
 public class LocationAssistantCG
 {
-	public static ILexLocation findLocation(INode node)
+	public ILexLocation findLocation(INode node)
 	{
 		Map<String, Object> children = node.getChildren(true);
 		
@@ -30,7 +30,7 @@ public class LocationAssistantCG
 		return null;
 	}
 	
-	public static int compareLocations(ILexLocation firstLoc, ILexLocation secondLoc)
+	public int compareLocations(ILexLocation firstLoc, ILexLocation secondLoc)
 	{
 		String firstModule = firstLoc.getModule();
 		String secondModule = secondLoc.getModule();
@@ -54,7 +54,7 @@ public class LocationAssistantCG
 		}
 	}
 	
-	public static List<NodeInfo> getNodesLocationSorted(Set<NodeInfo> nodes)
+	public List<NodeInfo> getNodesLocationSorted(Set<NodeInfo> nodes)
 	{
 		List<NodeInfo> list = new LinkedList<NodeInfo>(nodes);
 		

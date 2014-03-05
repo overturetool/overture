@@ -35,7 +35,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
@@ -81,11 +80,11 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		if(exp instanceof ALetDefExpCG)
 		{
-			return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) exp);
+			return question.getStmAssistant().convertToLetDefStm((ALetDefExpCG) exp);
 		}
 		else if(exp instanceof ALetBeStExpCG)
 		{
-			return StmAssistantCG.convertToLetBeStStm((ALetBeStExpCG) exp);
+			return question.getStmAssistant().convertToLetBeStStm((ALetBeStExpCG) exp);
 		}
 		else
 		{
@@ -267,7 +266,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		{
 			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
 			if(expCg instanceof ALetDefExpCG)
-				return StmAssistantCG.convertToLetDefStm((ALetDefExpCG) expCg);
+				return question.getStmAssistant().convertToLetDefStm((ALetDefExpCG) expCg);
 			
 			returnStm.setExp(expCg);
 		}
@@ -299,7 +298,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callStm.setClassType(classType);
 		callStm.setName(name);
 		callStm.setType(typeCg);
-		StmAssistantCG.generateArguments(args, callStm.getArgs(), question);
+		question.getStmAssistant().generateArguments(args, callStm.getArgs(), question);
 		
 		return callStm;
 	}
@@ -329,7 +328,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callObject.setDesignator(objectDesignatorCg);
 		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
-		StmAssistantCG.generateArguments(args, callObject.getArgs(), question);
+		question.getStmAssistant().generateArguments(args, callObject.getArgs(), question);
 		
 		return callObject;
 	}

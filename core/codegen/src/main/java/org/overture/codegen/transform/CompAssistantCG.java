@@ -13,12 +13,14 @@ import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class CompAssistantCG extends TransformationAssistantCG
 {
-	public CompAssistantCG()
+	public CompAssistantCG(OoAstInfo info)
 	{
+		super(info);
 	}
 
 	public ACastUnaryExpCG consNextElementCall(String instance, String member, ACompSeqExpCG seqComp) throws AnalysisException
