@@ -7,6 +7,6 @@ public abstract class AssistantBase
 	public AssistantBase(AssistantManager assistantManager)
 	{
 		super();
-		this.assistantManager = assistantManager != null ? assistantManager : new AssistantManager();
+		this.assistantManager = assistantManager;
 	}
 }

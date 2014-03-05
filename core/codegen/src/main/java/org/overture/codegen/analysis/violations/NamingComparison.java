@@ -14,7 +14,7 @@ public abstract class NamingComparison
 	public NamingComparison(String[] names, AssistantManager assistantManager)
 	{
 		this.names = Arrays.asList(names);
-		this.assistantManager = assistantManager != null ? assistantManager : new AssistantManager();
+		this.assistantManager = assistantManager;
 	}
 	
 	public abstract boolean isInvalid(ILexNameToken nameToken);

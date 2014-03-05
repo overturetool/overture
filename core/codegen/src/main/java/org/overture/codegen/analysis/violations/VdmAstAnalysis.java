@@ -14,7 +14,7 @@ public class VdmAstAnalysis
 	
 	public VdmAstAnalysis(AssistantManager assistantManager)
 	{
-		this.assistantManager = assistantManager != null ? assistantManager : new AssistantManager();	
+		this.assistantManager = assistantManager;	
 	}
 	
 	public Set<Violation> usesIllegalNames(List<? extends INode> nodes, NamingComparison comparison) throws AnalysisException
