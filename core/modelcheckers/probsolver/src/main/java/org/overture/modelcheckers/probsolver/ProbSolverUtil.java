@@ -42,6 +42,7 @@ import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import de.be4.classicalb.core.parser.exceptions.BException;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
+import de.be4.classicalb.core.parser.node.AMemberPredicate;
 import de.be4.classicalb.core.parser.node.APredicateParseUnit;
 import de.be4.classicalb.core.parser.node.EOF;
 import de.be4.classicalb.core.parser.node.Node;
@@ -93,9 +94,10 @@ public class ProbSolverUtil
 
 	public static PStm solve(String name, AImplicitOperationDefinition opDef,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			SolverConsole console) throws SolverException
+			Map<String, PType> argumentTypes, SolverConsole console)
+			throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, opDef, opDef.getResult(), stateContext, argContext);
+		VdmSolution solution = new ProbSolverUtil(console).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes);
 		if (solution.isStatement())
 		{
 			return solution.getStatement();
@@ -105,9 +107,10 @@ public class ProbSolverUtil
 
 	public static PExp solve(String name, PExp body, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			SolverConsole console) throws SolverException
+			Map<String, PType> argumentTypes, SolverConsole console)
+			throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, body, result, stateContext, argContext);
+		VdmSolution solution = new ProbSolverUtil(console).solve(name, body, result, stateContext, argContext, argumentTypes);
 		if (solution.isExpression())
 		{
 			return solution.getExpression();
@@ -116,8 +119,8 @@ public class ProbSolverUtil
 	}
 
 	public VdmSolution solve(String name, INode opDef, APatternTypePair result,
-			Map<String, String> stateContext, Map<String, String> argContext)
-			throws SolverException
+			Map<String, String> stateContext, Map<String, String> argContext,
+			Map<String, PType> argumentTypes) throws SolverException
 	{
 		List<PDefinition> states = new Vector<PDefinition>();
 
@@ -172,7 +175,7 @@ public class ProbSolverUtil
 			console.out.println("---------------------------------------------------------------------------------");
 			console.out.println("Solver running for operation: " + name);
 
-			VdmContext context = translate(states, opDef, result, arguments, stateConstraints);
+			VdmContext context = translate(states, opDef, result, arguments, argumentTypes, stateConstraints);
 
 			VdmSolution val = solve(context);
 			return val;
@@ -318,8 +321,9 @@ public class ProbSolverUtil
 
 	private VdmContext translate(List<PDefinition> stateDefinitions,
 			INode opDef, APatternTypePair result,
-			Map<String, INode> argContext, Map<String, INode> stateConstraints)
-			throws AnalysisException, SolverException
+			Map<String, INode> argContext, Map<String, PType> argumentTypes,
+			Map<String, INode> stateConstraints) throws AnalysisException,
+			SolverException
 	{
 		VdmToBConverter translator = new VdmToBConverter(console);
 
@@ -376,7 +380,7 @@ public class ProbSolverUtil
 			}
 		}
 
-		AbstractEvalElement formula = createFormula(opDef, argContext, translator, statePredicate, post);
+		AbstractEvalElement formula = createFormula(opDef, argContext, argumentTypes, translator, statePredicate, post);
 
 		// AOperationType opType = (AOperationType) opDef.getType();
 
@@ -428,9 +432,9 @@ public class ProbSolverUtil
 	}
 
 	private AbstractEvalElement createFormula(INode def,
-			Map<String, INode> argContext, VdmToBConverter translator,
-			Node statePredicate, Node post) throws AnalysisException,
-			SolverException
+			Map<String, INode> argContext, Map<String, PType> argumentTypes,
+			VdmToBConverter translator, Node statePredicate, Node post)
+			throws AnalysisException, SolverException
 	{
 		if (post == null)
 		{
@@ -450,6 +454,15 @@ public class ProbSolverUtil
 		{
 			AEqualPredicate eqp = new AEqualPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
 			post = new AConjunctPredicate((PPredicate) post, eqp);
+		}
+		// add argument types (only if no values are given)
+		for (Entry<String, PType> arg : argumentTypes.entrySet())
+		{
+			if (!argContext.containsKey(arg.getKey()))
+			{
+//				AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
+//				post = new AConjunctPredicate((PPredicate) post, eqp);
+			}
 		}
 
 		PPredicate p = (PPredicate) post;
