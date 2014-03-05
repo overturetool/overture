@@ -18,27 +18,28 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.AAbsoluteUnaryExp; //added -> AMaxExpression
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.node.NodeList;//added
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;           //added -> ADisjunctPredicate
-import org.overture.ast.expressions.ANotUnaryExp;                  //added -> ANegationPredicate
+import org.overture.ast.expressions.AApplyExp;
 //import org.overture.ast.expressions.ABooleanConstExp;              //added -> ATruethPredicate, AFalsityPredicate
-import org.overture.ast.expressions.ABooleanConstExp;              //added -> ABooleanTrueExpression, ABooleanFalseExpression
-import org.overture.ast.expressions.APlusNumericBinaryExp;         //added -> AAddExpression
-import org.overture.ast.expressions.ASubtractNumericBinaryExp;     //added -> AMinusOrSetSubtractExpression
-import org.overture.ast.expressions.ATimesNumericBinaryExp;        //added -> AMultiplicationExpression
-import org.overture.ast.expressions.ADivideNumericBinaryExp;       //added -> ADivExpression
-import org.overture.ast.expressions.ADivNumericBinaryExp;          //added -> ADivExpression
-import org.overture.ast.expressions.ARemNumericBinaryExp;          //added -> ASubtractExpression, AMultiplicationExpression, ADivExpression
-import org.overture.ast.expressions.AModNumericBinaryExp;          //added -> AModuleExpression
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;           //added -> AUnaryMinusExpression
-import org.overture.ast.expressions.AAbsoluteUnaryExp;             //added -> AMaxExpression
-import org.overture.ast.expressions.AStarStarBinaryExp;            //added -> APowerOfExpression, AIterationExpression
-import org.overture.ast.expressions.ALessNumericBinaryExp;         //added -> ALessPredicate
-import org.overture.ast.expressions.ALessEqualNumericBinaryExp;    //added -> ALessEqualPredicate
-import org.overture.ast.expressions.AGreaterNumericBinaryExp;      //added -> AGreaterPredicate
+import org.overture.ast.expressions.ABooleanConstExp; //added -> ABooleanTrueExpression, ABooleanFalseExpression
+import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
+import org.overture.ast.expressions.ADistIntersectUnaryExp;
+import org.overture.ast.expressions.ADistUnionUnaryExp;
+import org.overture.ast.expressions.ADivNumericBinaryExp; //added -> ADivExpression
+import org.overture.ast.expressions.ADivideNumericBinaryExp; //added -> ADivExpression
+import org.overture.ast.expressions.ADomainResByBinaryExp; //added -> ADomainSubtractionExpression
+import org.overture.ast.expressions.ADomainResToBinaryExp; //added -> ADomainRestrictionExpression
+import org.overture.ast.expressions.AElementsUnaryExp;
+import org.overture.ast.expressions.AElseIfExp;
+import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
+import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFieldNumberExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp; //added -> AGreaterEqualPredicate
 import org.overture.ast.expressions.AGreaterNumericBinaryExp; //added -> AGreaterPredicate
 //         AEmptySequenceExpression,ASequenceExtensionExpression
@@ -47,13 +48,15 @@ import org.overture.ast.expressions.AIfExp; //added
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp; //added -> AImplicationPredicate
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp; //added -> AIntervalExpression
-import org.overture.ast.expressions.AReverseUnaryExp;              //added -> ARevExpression
-import org.overture.ast.expressions.ASeqConcatBinaryExp;           //added -> AConcatExpression
-import org.overture.ast.expressions.AMapEnumMapExp;                //added
-import org.overture.ast.expressions.AMapletExp;                    //added -> ACoupleExpression
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALenUnaryExp;
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp; //added -> ALessEqualPredicate
+import org.overture.ast.expressions.ALessNumericBinaryExp; //added -> ALessPredicate
+import org.overture.ast.expressions.AMapDomainUnaryExp;
+import org.overture.ast.expressions.AMapEnumMapExp; //added
+import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp; //added -> ARrangeExpression
 import org.overture.ast.expressions.AMapUnionBinaryExp; //used  -> AUnionExpression
-
 import org.overture.ast.expressions.AMapletExp; //added -> ACoupleExpression
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
@@ -66,59 +69,31 @@ import org.overture.ast.expressions.APlusNumericBinaryExp; //added -> AAddExpres
 import org.overture.ast.expressions.APlusPlusBinaryExp; //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
 import org.overture.ast.expressions.APowerSetUnaryExp; //added -> APowSubsetExpression
 import org.overture.ast.expressions.AProperSubsetBinaryExp; //added -> ASubsetStrictPredicate
-
-import org.overture.ast.expressions.APlusPlusBinaryExp;            //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
-import org.overture.ast.expressions.ADomainResToBinaryExp;         //added -> ADomainRestrictionExpression
-import org.overture.ast.expressions.ADomainResByBinaryExp;         //added -> ADomainSubtractionExpression
-
 import org.overture.ast.expressions.ARangeResByBinaryExp; //added -> ARangeSubtractionExpression
 import org.overture.ast.expressions.ARangeResToBinaryExp; //added -> ARangeRestrictionExpression
-import org.overture.ast.expressions.ARemNumericBinaryExp;
-import org.overture.ast.expressions.AReverseUnaryExp;
-import org.overture.ast.expressions.ASeqConcatBinaryExp;
+import org.overture.ast.expressions.ARemNumericBinaryExp; //added -> ASubtractExpression, AMultiplicationExpression, ADivExpression
+import org.overture.ast.expressions.AReverseUnaryExp; //added -> ARevExpression
+import org.overture.ast.expressions.ASeqConcatBinaryExp; //added -> AConcatExpression
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp; //added -> AComprehensionSetExpression
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
-import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.AStarStarBinaryExp; //added -> APowerOfExpression, AIterationExpression
 import org.overture.ast.expressions.ASubsetBinaryExp;
-import org.overture.ast.expressions.ASubtractNumericBinaryExp;
+import org.overture.ast.expressions.ASubtractNumericBinaryExp; //added -> AMinusOrSetSubtractExpression
 import org.overture.ast.expressions.ATailUnaryExp;
-import org.overture.ast.expressions.ATimesNumericBinaryExp;
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;
+import org.overture.ast.expressions.ATimesNumericBinaryExp; //added -> AMultiplicationExpression
+import org.overture.ast.expressions.ATupleExp;
+import org.overture.ast.expressions.AUnaryMinusUnaryExp; //added -> AUnaryMinusExpression
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.ACardinalityUnaryExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.ANotEqualBinaryExp;
-import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ACompBinaryExp;
-import org.overture.ast.expressions.AMapInverseUnaryExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AMapDomainUnaryExp;
-import org.overture.ast.expressions.ALenUnaryExp;
-import org.overture.ast.expressions.ADistConcatUnaryExp;
-import org.overture.ast.expressions.ADistUnionUnaryExp;
-import org.overture.ast.expressions.APowerSetUnaryExp;
-import org.overture.ast.expressions.ADistIntersectUnaryExp;
-import org.overture.ast.expressions.ANotInSetBinaryExp;
-import org.overture.ast.expressions.AProperSubsetBinaryExp;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AFieldNumberExp;
-import org.overture.ast.expressions.AMkBasicExp;
-
+import org.overture.ast.intf.lex.ILexIntegerToken;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 //import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
-import org.overture.ast.intf.lex.ILexIntegerToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;//added -> AIdentifireExpression
 import org.overture.ast.patterns.ARecordPattern;
@@ -137,12 +112,6 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.ABooleanBasicType;
-import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AMapMapType;
-import org.overture.ast.types.ASeq1SeqType;
-import org.overture.ast.types.AProductType;
-
 import org.overture.modelcheckers.probsolver.SolverConsole;
 
 import de.be4.classicalb.core.parser.node.AAddExpression;//added
@@ -215,14 +184,20 @@ import de.be4.classicalb.core.parser.node.ASubsetStrictPredicate; //added
 import de.be4.classicalb.core.parser.node.ATailExpression; //added
 import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;//added
 import de.be4.classicalb.core.parser.node.AUnionExpression;
-import de.be4.classicalb.core.parser.node.AStringExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PPredicate;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
-import de.be4.classicalb.core.parser.node.TStringLiteral;
+//added
+//added -> AGreaterPredicate
+//added -> ACoupleExpression
+//added -> AModuleExpression
+//added -> ANegationPredicate
+//added -> ADisjunctPredicate
+//added -> AAddExpression
+//added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -1156,21 +1131,18 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseATupleExp(ATupleExp node)// added
 			throws AnalysisException
 	{
-	    LinkedList<PExp> args = node.getArgs();
-	    ACoupleExpression cpl = new ACoupleExpression();
-	    System.out.println("in Tuple : " + args);// add 2014/03/03
-	    cpl.getList().add(exp(args.get(0)));
-	    cpl.getList().add(exp(args.get(1)));
-	    /*
-	    for(int i=2;i<args.size();i++) {
-		cpl.getList().add(exp(args.get(i)));
-	    }
-	    */
-	    /*
-	    ASetExtensionExpression set = new ASetExtensionExpression();
-	    set.getExpressions().add(cpl);
-	    */
-	    return cpl;
+		LinkedList<PExp> args = node.getArgs();
+		ACoupleExpression cpl = new ACoupleExpression();
+		System.out.println("in Tuple : " + args);// add 2014/03/03
+		cpl.getList().add(exp(args.get(0)));
+		cpl.getList().add(exp(args.get(1)));
+		/*
+		 * for(int i=2;i<args.size();i++) { cpl.getList().add(exp(args.get(i))); }
+		 */
+		/*
+		 * ASetExtensionExpression set = new ASetExtensionExpression(); set.getExpressions().add(cpl);
+		 */
+		return cpl;
 
 	}
 
@@ -1178,27 +1150,16 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAFieldNumberExp(AFieldNumberExp node)// added
 			throws AnalysisException
 	{
-	    ATupleExp tpl = (ATupleExp)node.getTuple();
-	    ILexIntegerToken lint = node.getField();
-	    //System.out.println("tuple!! : " + tpl);
-	    ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
-	    seq.getExpression().add(exp(tpl.getArgs().getFirst()));
-	    seq.getExpression().add(exp(tpl.getArgs().getLast()));
-	    ASetExtensionExpression arg = new ASetExtensionExpression();
-	    AIntegerExpression fld = new AIntegerExpression(new TIntegerLiteral(new Long(lint.getValue()).toString()));
-	    arg.getExpressions().add(fld);
-	    return new AImageExpression(seq, arg);
-
-	}
-
-	@Override
-	public Node caseAMkBasicExp(AMkBasicExp node)// added(original by  kenneth)
-			throws AnalysisException
-	{
-	    if(node.getType() instanceof ATokenBasicType ) {
-		return node.getArg().apply(this);
-	    }
-	    return super.caseAMkBasicExp(node);
+		ATupleExp tpl = (ATupleExp) node.getTuple();
+		ILexIntegerToken lint = node.getField();
+		// System.out.println("tuple!! : " + tpl);
+		ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
+		seq.getExpression().add(exp(tpl.getArgs().getFirst()));
+		seq.getExpression().add(exp(tpl.getArgs().getLast()));
+		ASetExtensionExpression arg = new ASetExtensionExpression();
+		AIntegerExpression fld = new AIntegerExpression(new TIntegerLiteral(new Long(lint.getValue()).toString()));
+		arg.getExpressions().add(fld);
+		return new AImageExpression(seq, arg);
 
 	}
 
@@ -1214,7 +1175,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate after = new AMemberPredicate(getIdentifier(name), new AStructExpression(getEntities(node.getFields())));
 		PPredicate p = new AConjunctPredicate(before, after);
 
-		if ( node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
+		if (node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
 		{
 			PExpression right = (PExpression) ((AEqualsBinaryExp) node.getInitExpression()).getRight().apply(this);
 			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), right);
@@ -1388,8 +1349,6 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return entities;
 	}
 
-
-
 	@Override
 	public Node caseAIntLiteralExp(AIntLiteralExp node)
 			throws AnalysisException
@@ -1397,27 +1356,26 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new AIntegerExpression(new TIntegerLiteral(""
 				+ node.getValue().getValue()));
 	}
-	
+
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
-		if(node.getType() instanceof ATokenBasicType)
+		if (node.getType() instanceof ATokenBasicType)
 		{
-		return node.getArg().apply(this);	
+			return node.getArg().apply(this);
 		}
 		return super.caseAMkBasicExp(node);
 	}
-	
-	
-	/*types*/
-	
+
+	/* types */
+
 	@Override
 	public Node caseABooleanBasicType(ABooleanBasicType node)
 			throws AnalysisException
 	{
-	return new ABoolSetExpression();
+		return new ABoolSetExpression();
 	}
-	
+
 	@Override
 	public Node caseASetType(ASetType node) throws AnalysisException
 	{
@@ -1429,7 +1387,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return new ASeq1Expression(exp(node.getSeqof()));
 	}
-	
+
 	@Override
 	public Node caseANamedInvariantType(ANamedInvariantType node)
 			throws AnalysisException
