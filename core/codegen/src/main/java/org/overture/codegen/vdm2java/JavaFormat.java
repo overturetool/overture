@@ -647,7 +647,8 @@ public class JavaFormat
 			
 			String memberName = exp.getMemberName();
 			
-			AFieldDeclCG memberField = DeclAssistantCG.getFieldDecl(classes, recordType, memberName);
+			DeclAssistantCG declAssistant = new DeclAssistantCG();
+			AFieldDeclCG memberField = declAssistant.getFieldDecl(classes, recordType, memberName);
 			
 			if (memberField != null && usesStructuralEquivalence(memberField.getType()))
 				return true;

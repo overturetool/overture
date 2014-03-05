@@ -27,7 +27,9 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 				if(classDef.getSupernames().size() > 1)
 					addViolation(new Violation("Multiple inheritance not supported.", classDef.getLocation()));
 				
-				Set<ILexNameToken> overloadedNameTokens = DeclAssistantCG.getOverloadedMethodNames(classDef);
+				DeclAssistantCG declAssistant = new DeclAssistantCG();
+				
+				Set<ILexNameToken> overloadedNameTokens = declAssistant.getOverloadedMethodNames(classDef);
 				
 				if(overloadedNameTokens.size() > 0)
 				{

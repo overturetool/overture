@@ -10,6 +10,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -44,6 +45,7 @@ public class OoAstInfo
 	//Assistants
 	private ExpAssistantCG expAssistant;
 	private DeclAssistantCG declAssistant;
+	private DesignatorAssistantCG designatorAssistant;
 	
 	//VDM assistant factory
 	private TypeCheckerAssistantFactory tcFactory;
@@ -72,6 +74,7 @@ public class OoAstInfo
 		
 		this.expAssistant = new ExpAssistantCG();
 		this.declAssistant = new DeclAssistantCG();
+		this.designatorAssistant = new DesignatorAssistantCG();
 		
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		
@@ -135,6 +138,11 @@ public class OoAstInfo
 	public DeclAssistantCG getDeclAssistant()
 	{
 		return declAssistant;
+	}
+
+	public DesignatorAssistantCG getDesignatorAssistant()
+	{
+		return designatorAssistant;
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException

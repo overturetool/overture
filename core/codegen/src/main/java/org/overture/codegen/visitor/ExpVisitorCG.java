@@ -102,7 +102,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -565,7 +564,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		ALetDefExpCG localDefExp = new ALetDefExpCG();
 	
-		DeclAssistantCG.setLocalDefs(node.getLocalDefs(), localDefExp.getLocalDefs(), question);
+		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefExp.getLocalDefs(), question);
 		
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		localDefExp.setExp(exp);

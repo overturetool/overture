@@ -35,7 +35,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
@@ -188,7 +187,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			
 			if(exp instanceof AUndefinedExp)
 			{
-				DeclAssistantCG.setDefaultValue(localDecl, typeCg);
+				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
 			}
 			else
 			{
@@ -231,7 +230,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	{
 		ALetDefStmCG localDefStm = new ALetDefStmCG();
 		
-		DeclAssistantCG.setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
+		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
 		
 		PStmCG stm = node.getStatement().apply(question.getStatementVisitor(), question);
 		localDefStm.setStm(stm);

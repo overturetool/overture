@@ -31,19 +31,19 @@ import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG
 {
-	public static void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
+	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
 			if(def instanceof AValueDefinition)
 			{
 				AValueDefinition valueDef = (AValueDefinition) def;
-				localDecls.add(DeclAssistantCG.constructLocalVarDecl(valueDef, question));
+				localDecls.add(constructLocalVarDecl(valueDef, question));
 			}
 		}
 	}
 	
-	private static ALocalVarDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
+	private ALocalVarDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
 	{
 		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		String name = valueDef.getPattern().toString();
@@ -71,7 +71,7 @@ public class DeclAssistantCG
 		return field;
 	}
 	
-	public static Set<ILexNameToken> getOverloadedMethodNames(AClassClassDefinition classDef)
+	public Set<ILexNameToken> getOverloadedMethodNames(AClassClassDefinition classDef)
 	{
 		List<LexNameTokenWrapper> methodNames = getMethodNames(classDef);
 		Set<LexNameTokenWrapper> duplicates = findDuplicates(methodNames);
@@ -87,7 +87,7 @@ public class DeclAssistantCG
 		return overloadedMethodNames; 
 	}
 	
-	private static Set<LexNameTokenWrapper> findDuplicates(List<LexNameTokenWrapper> nameWrappers)
+	private Set<LexNameTokenWrapper> findDuplicates(List<LexNameTokenWrapper> nameWrappers)
 	{
 		Set<LexNameTokenWrapper> duplicates = new HashSet<LexNameTokenWrapper>();
 		Set<LexNameTokenWrapper> temp = new HashSet<LexNameTokenWrapper>();
@@ -103,7 +103,7 @@ public class DeclAssistantCG
 		return duplicates;
 	}
 	
-	private static List<LexNameTokenWrapper> getMethodNames(AClassClassDefinition classDef)
+	private List<LexNameTokenWrapper> getMethodNames(AClassClassDefinition classDef)
 	{
 		List<LexNameTokenWrapper> methodNames = new LinkedList<LexNameTokenWrapper>();
 
@@ -118,7 +118,7 @@ public class DeclAssistantCG
 		return methodNames;
 	}
 	
-	public static void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
+	public void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
 	{
 		if(typeCg instanceof AStringTypeCG)
 		{
@@ -150,7 +150,7 @@ public class DeclAssistantCG
 		}
 	}
 
-	public static AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)
+	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)
 	{
 		ATypeNameCG name = recordType.getName();
 		
