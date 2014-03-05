@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-	 <groupId>org.overture.ide.plugins</groupId>
+	 <groupId>org.overturetool.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.probruntime</artifactId>
 		<version>2.0.3-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
@@ -12,7 +12,7 @@
 	<packaging>eclipse-plugin</packaging>
 	<!--packaging>jar</packaging-->
 
-	<groupId>org.overture.ide.plugins.probruntime</groupId>
+	<groupId>org.overturetool.ide.plugins.probruntime</groupId>
 	<artifactId>org.overture.ide.plugins.probruntime.macosx.x86_64</artifactId>
 
 
