@@ -5,13 +5,21 @@
 language: java
 jdk:
   - oraclejdk7
+env:
+  global:
+    - SONATYPE_USERNAME=joeycoleman
+    - secure: "LV3gkLdIXN/W10xeoIZ5lxFbVGeOPjwEvWjYzoCeX/MQrSWiY+oK22mhL1H84RczHHk9jvwlRK9ZEElKOj0vl/ywL/mF7WJgoUIDMUIAQ/jeZsJ7tF4S5o1Drjgwa6dZYLgEkNXWE4cb63vDGUQhRJz3Qq3/fntmvbKL2qCmJcE="
 before_install:
-  - echo "This may take a short while; it is downloading many of the maven plugins and their dependencies, but quietly to hide the downloads from the log."
-  - mvn -B -q dependency:resolve-plugins -PWith-IDE -Dtycho.mode=maven
+  - mvn -version
 install:
-  - mvn -B -q install -PWith-IDE -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
-after_install:
-  - mvn -B -q -PWith-IDE -Dtycho.mode=maven clean
+  - echo "-*- Precompile Core -*-"
+  - mvn -B install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
+  - echo "-*- Precompile IDE -*-"
+  - mvn -B install -f ide/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
 script: 
+  - echo "-*- Compile Core -*-"
   - mvn -B install
+  - echo "-*- Compile IDE -*-"
   - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms
+after_success:
+  - "[[ $TRAVIS_BRANCH == \"development\" ]] && { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn deploy --settings ~/.m2/mySettings.xml; };"

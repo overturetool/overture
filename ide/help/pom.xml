@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture</groupId>
+    <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
     <version>2.0.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
@@ -11,7 +11,7 @@
 
   <packaging>eclipse-plugin</packaging>
 
-  <groupId>org.overture.ide</groupId>
+  <groupId>org.overturetool.ide</groupId>
   <artifactId>org.overture.ide.help</artifactId>
   <name>org.overture.ide.help</name>
 
@@ -49,7 +49,7 @@
 
     <plugins>
       <plugin>
-        <groupId>org.overture.build</groupId>
+        <groupId>org.overturetool.build</groupId>
         <artifactId>example-packager-plugin</artifactId>
         <version>${example-packager.version}</version>
         <configuration>
@@ -88,7 +88,7 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		    <groupId>org.overture.tools.maven</groupId>
+		    <groupId>org.overturetool.tools.maven</groupId>
 		    <artifactId>example-packager</artifactId>
 		    <versionRange>[1.0.1,)</versionRange>
 		    <goals>
@@ -103,7 +103,7 @@
 		</pluginExecution>
 		<pluginExecution>
 			<pluginExecutionFilter>
-				<groupId>org.overture.build</groupId>
+				<groupId>org.overturetool.build</groupId>
 				<artifactId>example-packager-plugin</artifactId>
 				<versionRange>[2.0.2,)</versionRange>
 				<goals>
