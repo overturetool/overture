@@ -174,7 +174,11 @@ public class CompileTests
 			
 			resultWriter.writeGeneratedCode(parent, generatedCode);
 			
-			System.out.println("Test:" + (1 + i)  + ". Name: " + file.getName() + " " + (JavaCommandLineCompiler.compile(parent, null) ? "Compile OK" : "ERROR"));
+			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
+			System.out.println("Test:" + (1 + i)  + ". Name: " + file.getName() + " " + (compileOk ? "Compile OK" : "ERROR"));
+
+			if(!compileOk)
+				continue;
 			
 			String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
 
