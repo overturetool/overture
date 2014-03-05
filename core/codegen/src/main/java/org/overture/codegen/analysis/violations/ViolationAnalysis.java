@@ -4,16 +4,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.assistant.AssistantManager;
 
 public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 {
 	private List<Violation> violations;
+	protected AssistantManager assistantManager;
 	
-	public ViolationAnalysis()
+	public ViolationAnalysis(AssistantManager assistantManager)
 	{
 		this.violations = new LinkedList<Violation>();
+		this.assistantManager = assistantManager != null ? assistantManager : new AssistantManager();
 	}
-	
+
 	public List<Violation> getViolations()
 	{
 		return violations;
