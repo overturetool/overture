@@ -2,7 +2,6 @@ package org.overture.ide.plugins.codegen.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -21,10 +20,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
@@ -44,6 +43,13 @@ import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
 public class Vdm2JavaCommand extends AbstractHandler
 {
+	private AssistantManager assistantManager;
+	
+	public Vdm2JavaCommand()
+	{
+		this.assistantManager = new AssistantManager();
+	}
+	
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		// Validate project
@@ -186,16 +192,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 			}
 			else
 			{
-				List<NodeInfo> unsupportedNodes = LocationAssistantCG.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
+				LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+				
+				List<NodeInfo> unsupportedNodes = locationAssistant.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
 				CodeGenConsole.GetInstance().println("Could not code generate module: " + generatedModule.getName() + ".");
 				CodeGenConsole.GetInstance().println("Following constructs are not supported:");
 				
 				for(NodeInfo nodeInfo : unsupportedNodes)
 				{
-					String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo);
+					String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo, locationAssistant);
 					CodeGenConsole.GetInstance().println(message);
 
-					PluginVdm2JavaUtil.addMarkers(nodeInfo);
+					PluginVdm2JavaUtil.addMarkers(nodeInfo, locationAssistant);
 					
 				}
 			}

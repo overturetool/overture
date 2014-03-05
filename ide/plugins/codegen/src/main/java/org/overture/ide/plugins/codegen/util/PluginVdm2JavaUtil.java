@@ -124,14 +124,14 @@ public class PluginVdm2JavaUtil
 		}
 	}
 	
-	public static String formatNodeString(NodeInfo nodeInfo)
+	public static String formatNodeString(NodeInfo nodeInfo, LocationAssistantCG locationAssistant)
 	{
 		INode node = nodeInfo.getNode();
 		StringBuilder messageSb = new StringBuilder();
 		messageSb.append(node.toString());
 		messageSb.append(" (" + node.getClass().getSimpleName() + ")");
 		
-		ILexLocation location = LocationAssistantCG.findLocation(node);
+		ILexLocation location = locationAssistant.findLocation(node);
 		if(location != null)
 			messageSb.append(" " + location.toShortString());
 		
@@ -142,14 +142,14 @@ public class PluginVdm2JavaUtil
 		return messageSb.toString();
 	}
 	
-	public static void addMarkers(NodeInfo nodeInfo)
+	public static void addMarkers(NodeInfo nodeInfo, LocationAssistantCG locationAssistant)
 	{
 		if(nodeInfo == null)
 			return;
 
 		INode node = nodeInfo.getNode();
 		
-		ILexLocation location = LocationAssistantCG.findLocation(node);
+		ILexLocation location = locationAssistant.findLocation(node);
 		
 		if(location == null)
 			return;
