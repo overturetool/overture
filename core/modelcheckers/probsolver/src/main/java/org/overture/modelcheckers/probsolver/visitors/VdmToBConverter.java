@@ -56,6 +56,18 @@ import org.overture.ast.expressions.AMapUnionBinaryExp; //used  -> AUnionExpress
 import org.overture.ast.expressions.APlusPlusBinaryExp;            //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
 import org.overture.ast.expressions.ADomainResToBinaryExp;         //added -> ADomainRestrictionExpression
 import org.overture.ast.expressions.ADomainResByBinaryExp;         //added -> ADomainSubtractionExpression
+import org.overture.ast.expressions.AMapletExp; //added -> ACoupleExpression
+import org.overture.ast.expressions.AMkBasicExp;
+import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.AModNumericBinaryExp; //added -> AModuleExpression
+import org.overture.ast.expressions.ANotEqualBinaryExp; //added -> ANotEqualPredicate
+import org.overture.ast.expressions.ANotInSetBinaryExp; //added -> ANotMemberPredicate
+import org.overture.ast.expressions.ANotUnaryExp; //added -> ANegationPredicate
+import org.overture.ast.expressions.AOrBooleanBinaryExp; //added -> ADisjunctPredicate
+import org.overture.ast.expressions.APlusNumericBinaryExp; //added -> AAddExpression
+import org.overture.ast.expressions.APlusPlusBinaryExp; //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
+import org.overture.ast.expressions.APowerSetUnaryExp; //added -> APowSubsetExpression
+import org.overture.ast.expressions.AProperSubsetBinaryExp; //added -> ASubsetStrictPredicate
 import org.overture.ast.expressions.ARangeResByBinaryExp; //added -> ARangeSubtractionExpression
 import org.overture.ast.expressions.ARangeResToBinaryExp; //added -> ARangeRestrictionExpression
 import org.overture.ast.expressions.ARemNumericBinaryExp;
@@ -112,11 +124,13 @@ import org.overture.ast.patterns.ASetMultipleBind;//added
 import org.overture.ast.patterns.PMultipleBind;//added
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AExternalClause;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType; //added -> ANat1SetExpression
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
@@ -129,6 +143,7 @@ import org.overture.ast.types.AProductType;
 import org.overture.modelcheckers.probsolver.SolverConsole;
 
 import de.be4.classicalb.core.parser.node.AAddExpression;//added
+import de.be4.classicalb.core.parser.node.ABoolSetExpression;
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;//added
 import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;//added
 import de.be4.classicalb.core.parser.node.ACardExpression;
@@ -187,6 +202,7 @@ import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ARecordFieldExpression;
 import de.be4.classicalb.core.parser.node.ARevExpression; //added
 import de.be4.classicalb.core.parser.node.AReverseExpression; //added
+import de.be4.classicalb.core.parser.node.ASeq1Expression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression; //added
 import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASizeExpression; //added
@@ -207,6 +223,8 @@ import de.be4.classicalb.core.parser.node.TStringLiteral;
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
+	public static final String STATE_ID_PREFIX = "$";
+
 	public static final String OLD_POST_FIX = "~";
 
 	public static final String TOKEN_SET = "TOKEN";
@@ -554,7 +572,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 */
 	public static String getStateId(PDefinition node, boolean old)
 	{
-		String name = "$" + node.getName().getName().toLowerCase();
+		String name = STATE_ID_PREFIX + node.getName().getName().toLowerCase();
 		if (old)
 		{
 			name += OLD_POST_FIX;
@@ -565,7 +583,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	public static LexNameToken getStateIdToken(PDefinition node, boolean old)
 	{
-		String name = "$" + node.getName().getName().toLowerCase();
+		String name = STATE_ID_PREFIX + node.getName().getName().toLowerCase();
 		if (old)
 		{
 			name += OLD_POST_FIX;
@@ -1367,12 +1385,48 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return entities;
 	}
 
+
+
+	@Override
+	public Node caseAIntLiteralExp(AIntLiteralExp node)
+			throws AnalysisException
+	{
+		return new AIntegerExpression(new TIntegerLiteral(""
+				+ node.getValue().getValue()));
+	}
+	
+	@Override
+	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
+	{
+		if(node.getType() instanceof ATokenBasicType)
+		{
+		return node.getArg().apply(this);	
+		}
+		return super.caseAMkBasicExp(node);
+	}
+	
+	
+	/*types*/
+	
+	@Override
+	public Node caseABooleanBasicType(ABooleanBasicType node)
+			throws AnalysisException
+	{
+	return new ABoolSetExpression();
+	}
+	
 	@Override
 	public Node caseASetType(ASetType node) throws AnalysisException
 	{
 		return new APowSubsetExpression(exp(node.getSetof()));
 	}
 
+	@Override
+	public Node caseASeqSeqType(ASeqSeqType node) throws AnalysisException
+	{
+		return new ASeq1Expression(exp(node.getSeqof()));
+	}
+	
 	@Override
 	public Node caseANamedInvariantType(ANamedInvariantType node)
 			throws AnalysisException
@@ -1401,14 +1455,6 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			throws AnalysisException
 	{
 		return getIdentifier(new LexNameToken("", TOKEN_SET, null));
-	}
-
-	@Override
-	public Node caseAIntLiteralExp(AIntLiteralExp node)
-			throws AnalysisException
-	{
-		return new AIntegerExpression(new TIntegerLiteral(""
-				+ node.getValue().getValue()));
 	}
 
 	@Override
