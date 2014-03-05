@@ -31,11 +31,6 @@ import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG
 {
-
-	public DeclAssistantCG()
-	{	
-	}
-	
 	public static void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
