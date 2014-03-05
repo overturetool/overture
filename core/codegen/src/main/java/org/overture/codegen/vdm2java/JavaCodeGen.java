@@ -20,6 +20,7 @@ import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -40,6 +41,7 @@ import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaCodeGen
 {
@@ -172,8 +174,13 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), generator.getOoAstInfo().getTempVarNameGen());
+		TempVarNameGen tempVarNameGen = generator.getOoAstInfo().getTempVarNameGen();
+		AssistantManager assistantManager = generator.getOoAstInfo().getAssistantManager();
+		
+		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), tempVarNameGen, assistantManager);
+		
 		OoAstAnalysis ooAstAnalysis = new OoAstAnalysis();
+		
 		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis, JavaTempVarPrefixes.class));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();

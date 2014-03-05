@@ -4,9 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.ExpAssistantCG;
-import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -91,16 +89,19 @@ public class JavaFormat
 	
 	private List<AClassDeclCG> classes;
 	private TempVarNameGen tempVarNameGen;
+	private AssistantManager assistantManager;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarNameGen tempVarNameGen)
+	public JavaFormat(List<AClassDeclCG> classes, TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
 	{
 		this.tempVarNameGen = tempVarNameGen;
 		this.classes = classes;
+		this.assistantManager = assistantManager;
 	}
 	
 	public JavaFormat()
 	{
 		this.tempVarNameGen = new TempVarNameGen();
+		this.assistantManager = new AssistantManager();
 	}
 	
 	public String format(INode node) throws AnalysisException
@@ -322,8 +323,7 @@ public class JavaFormat
 
 			assignment.setTarget(id);
 			
-			TypeAssistantCG typeAssistant = new TypeAssistantCG();
-			if (!typeAssistant.isBasicType(varExp.getType()))
+			if (!assistantManager.getTypeAssistant().isBasicType(varExp.getType()))
 			{
 				//Example: b = (_b != null) ? _b.clone() : null;
 				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
@@ -353,10 +353,8 @@ public class JavaFormat
 		
 		PTypeCG firstType = types.get(0);
 		
-		TypeAssistantCG typeAssistant = new TypeAssistantCG();
-		
-		if(typeAssistant.isBasicType(firstType))
-			firstType = typeAssistant.getWrapperType((SBasicTypeCGBase) firstType);
+		if(assistantManager.getTypeAssistant().isBasicType(firstType))
+			firstType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCGBase) firstType);
 		
 		writer.append(format(firstType));
 		
@@ -364,8 +362,8 @@ public class JavaFormat
 		{
 			PTypeCG currentType = types.get(i);
 			
-			if(typeAssistant.isBasicType(currentType))
-				currentType = typeAssistant.getWrapperType((SBasicTypeCGBase) currentType);
+			if(assistantManager.getTypeAssistant().isBasicType(currentType))
+				currentType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCGBase) currentType);
 			
 			writer.append(", " + format(currentType));
 		}
@@ -650,8 +648,7 @@ public class JavaFormat
 			
 			String memberName = exp.getMemberName();
 			
-			DeclAssistantCG declAssistant = new DeclAssistantCG();
-			AFieldDeclCG memberField = declAssistant.getFieldDecl(classes, recordType, memberName);
+			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
 			
 			if (memberField != null && usesStructuralEquivalence(memberField.getType()))
 				return true;
@@ -774,8 +771,7 @@ public class JavaFormat
 		ifStm.setIfExp(negated);
 		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
 		
-		ExpAssistantCG expAssistant = new ExpAssistantCG();
-		returnIncompatibleTypes.setExp(expAssistant.consBoolLiteral(false));
+		returnIncompatibleTypes.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
 		ifStm.setThenStm(returnIncompatibleTypes);
 		
 		//If the inital check is passed we can safely cast the formal parameter

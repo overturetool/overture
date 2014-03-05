@@ -65,6 +65,11 @@ public class OoAstInfo
 		this.unsupportedNodes = new HashSet<NodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 	}
+	
+	public AssistantManager getAssistantManager()
+	{
+		return assistantManager;
+	}
 
 	public ClassVisitorCG getClassVisitor()
 	{
