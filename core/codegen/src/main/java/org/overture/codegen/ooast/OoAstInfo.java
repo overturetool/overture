@@ -9,6 +9,8 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
+import org.overture.codegen.assistant.DeclAssistantCG;
+import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -39,6 +41,10 @@ public class OoAstInfo
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
 	private MultipleBindVisitorCG multipleBindVisitor;
 	
+	//Assistants
+	private ExpAssistantCG expAssistant;
+	private DeclAssistantCG declAssistant;
+	
 	//VDM assistant factory
 	private TypeCheckerAssistantFactory tcFactory;
 	
@@ -54,6 +60,7 @@ public class OoAstInfo
 	public OoAstInfo()
 	{
 		super();
+		
 		this.classVisitor = new ClassVisitorCG();
 		this.declVisitor = new DeclVisitorCG();
 		this.expVisitor = new ExpVisitorCG();
@@ -62,6 +69,9 @@ public class OoAstInfo
 		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
 		this.multipleBindVisitor = new MultipleBindVisitorCG();
+		
+		this.expAssistant = new ExpAssistantCG();
+		this.declAssistant = new DeclAssistantCG();
 		
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		
@@ -115,6 +125,16 @@ public class OoAstInfo
 	public MultipleBindVisitorCG getMultipleBindVisitor()
 	{
 		return multipleBindVisitor;
+	}
+	
+	public ExpAssistantCG getExpAssistant()
+	{
+		return expAssistant;
+	}
+
+	public DeclAssistantCG getDeclAssistant()
+	{
+		return declAssistant;
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException

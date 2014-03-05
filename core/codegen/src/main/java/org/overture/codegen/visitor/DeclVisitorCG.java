@@ -18,7 +18,6 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -37,13 +36,6 @@ import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
-	private DeclAssistantCG declAssistant;
-	
-	public DeclVisitorCG()
-	{
-		this.declAssistant = new DeclAssistantCG();
-	}
-		
 	@Override
 	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			OoAstInfo question) throws AnalysisException
@@ -110,7 +102,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		PExpCG exp = null;
 		
-		return declAssistant.constructField(access, name, isStatic, isFinal, type, exp);
+		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
 	
 	@Override
@@ -250,7 +242,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		
 		
-		return declAssistant.constructField(access, name, isStatic, isFinal, type, exp);
+		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
 	
 	@Override
@@ -263,6 +255,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		PExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		
-		return declAssistant.constructField(access, name, isStatic, isFinal, type, exp);
+		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
 }
