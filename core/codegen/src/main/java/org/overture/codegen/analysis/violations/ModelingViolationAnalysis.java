@@ -13,7 +13,6 @@ import org.overture.ast.expressions.SNumericBinaryBase;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 
 public class ModelingViolationAnalysis extends ViolationAnalysis
@@ -31,18 +30,16 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 			AClassClassDefinition classDef = (AClassClassDefinition) node;
 
 			if (classDef.getSupernames().size() > 1)
-				addViolation(new Violation("Multiple inheritance not supported.", classDef.getLocation()));
+				addViolation(new Violation("Multiple inheritance not supported.", classDef.getLocation(), assistantManager.getLocationAssistant()));
 
-			DeclAssistantCG declAssistant = new DeclAssistantCG();
-
-			Set<ILexNameToken> overloadedNameTokens = declAssistant.getOverloadedMethodNames(classDef);
+			Set<ILexNameToken> overloadedNameTokens = assistantManager.getDeclAssistant().getOverloadedMethodNames(classDef);
 
 			if (overloadedNameTokens.size() > 0)
 			{
 				for (ILexNameToken name : overloadedNameTokens)
 				{
 					addViolation(new Violation("Overloading of operation and function names is not allowed. Caused by: "
-							+ classDef.getName() + "." + name.getName(), name.getLocation()));
+							+ classDef.getName() + "." + name.getName(), name.getLocation(), assistantManager.getLocationAssistant()));
 				}
 			}
 		} else if (node instanceof AFuncInstatiationExp)
@@ -50,7 +47,7 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 			AFuncInstatiationExp exp = (AFuncInstatiationExp) node;
 
 			if (exp.getImpdef() != null)
-				addViolation(new Violation("Implicit functions cannot be instantiated since they are not supported.", exp.getLocation()));
+				addViolation(new Violation("Implicit functions cannot be instantiated since they are not supported.", exp.getLocation(), assistantManager.getLocationAssistant()));
 		} else if (node instanceof ADivNumericBinaryExp
 				|| node instanceof AModNumericBinaryExp
 				|| node instanceof ARemNumericBinaryExp)
@@ -58,7 +55,7 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 			SNumericBinaryBase binBinaryExp = (SNumericBinaryBase) node;
 
 			if (operandsAreIntegerTypes(binBinaryExp))
-				addViolation(new Violation("Expression requires that operands are guaranteed to be integers", binBinaryExp.getLocation()));
+				addViolation(new Violation("Expression requires that operands are guaranteed to be integers", binBinaryExp.getLocation(), assistantManager.getLocationAssistant()));
 		}
 	}
 

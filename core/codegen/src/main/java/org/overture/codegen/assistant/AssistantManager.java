@@ -7,17 +7,18 @@ public class AssistantManager
 	private DesignatorAssistantCG designatorAssistant;
 	private StmAssistantCG stmAssistant;
 	private TypeAssistantCG typeAssistant;
+	private LocationAssistantCG locationAssistant;
 	
 	public AssistantManager()
 	{
-		this.expAssistant = new ExpAssistantCG();
-		this.declAssistant = new DeclAssistantCG();
-		this.designatorAssistant = new DesignatorAssistantCG();
-		this.stmAssistant = new StmAssistantCG();
-		this.typeAssistant = new TypeAssistantCG();
+		this.expAssistant = new ExpAssistantCG(this);
+		this.declAssistant = new DeclAssistantCG(this);
+		this.designatorAssistant = new DesignatorAssistantCG(this);
+		this.stmAssistant = new StmAssistantCG(this);
+		this.typeAssistant = new TypeAssistantCG(this);
+		this.locationAssistant = new LocationAssistantCG(this);
 	}
-	
-	
+
 	public ExpAssistantCG getExpAssistant()
 	{
 		return expAssistant;
@@ -41,5 +42,10 @@ public class AssistantManager
 	public TypeAssistantCG getTypeAssistant()
 	{
 		return typeAssistant;
+	}
+	
+	public LocationAssistantCG getLocationAssistant()
+	{
+		return locationAssistant;
 	}
 }

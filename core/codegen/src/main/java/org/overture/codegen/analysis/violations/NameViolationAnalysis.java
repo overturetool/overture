@@ -28,7 +28,7 @@ public class NameViolationAnalysis extends ViolationAnalysis
 				String name = nameToken.getName();
 				ILexLocation location = nameToken.getLocation();
 
-				Violation violation = new Violation(name, location);
+				Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
 				addViolation(violation);
 			}
 		}

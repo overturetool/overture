@@ -13,6 +13,7 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
+import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -134,6 +135,11 @@ public class OoAstInfo
 	public TypeAssistantCG getTypeAssistant()
 	{
 		return assistantManager.getTypeAssistant();
+	}
+	
+	public LocationAssistantCG getLocationAssistant()
+	{
+		return assistantManager.getLocationAssistant();
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException

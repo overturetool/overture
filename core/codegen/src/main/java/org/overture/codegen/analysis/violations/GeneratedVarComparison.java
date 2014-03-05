@@ -4,21 +4,20 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.assistant.AssistantManager;
 
 public class GeneratedVarComparison extends NamingComparison
 {
-	public GeneratedVarComparison(String[] names)
+	public GeneratedVarComparison(String[] names,
+			AssistantManager assistantManager)
 	{
-		super(names);
+		super(names, assistantManager);
 	}
 
 	@Override
 	public boolean isInvalid(ILexNameToken nameToken)
 	{
-		TypeAssistantCG typeAssistant = new TypeAssistantCG();
-		
-		if(typeAssistant.getTypeDef(nameToken) != null)
+		if(assistantManager.getTypeAssistant().getTypeDef(nameToken) != null)
 			return false;
 		
 		PDefinition def = nameToken.getAncestor(PDefinition.class);

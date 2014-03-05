@@ -5,14 +5,16 @@ import org.overture.codegen.assistant.LocationAssistantCG;
 
 public class Violation implements Comparable<Violation>
 {
-	protected ILexLocation location;
-	protected String description;
+	private ILexLocation location;
+	private String description;
+	private LocationAssistantCG locationAssistant;
 	
-	public Violation(String description, ILexLocation location)
+	public Violation(String description, ILexLocation location, LocationAssistantCG locationAssistant)
 	{
 		super();
 		this.description = description;
 		this.location = location;
+		this.locationAssistant = locationAssistant;
 	}
 
 	public String getDescripton()
@@ -45,7 +47,6 @@ public class Violation implements Comparable<Violation>
 	@Override
 	public int compareTo(Violation other)
 	{
-		LocationAssistantCG locAssistant = new LocationAssistantCG();
-		return locAssistant.compareLocations(this.location, other.location);
+		return locationAssistant.compareLocations(this.location, other.location);
 	}
 }

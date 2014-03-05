@@ -10,6 +10,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
+import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
@@ -26,7 +27,7 @@ public class JavaCodeGenMain
 {
 	private static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
 	{
-		LocationAssistantCG locAssistant = new LocationAssistantCG();
+		LocationAssistantCG locAssistant = new LocationAssistantCG(new AssistantManager());
 		
 		List<NodeInfo> nodesSorted = locAssistant.getNodesLocationSorted(unsupportedNodes);
 		
