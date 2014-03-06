@@ -100,9 +100,11 @@ public class PhoneBook {
     public void addTwoEntries(Tuple first, Tuple second) {
         phoneNumbers = MapUtil.merge(SetUtil.set(phoneNumbers.clone(),
                     MapUtil.map(
-                        new Maplet(first.<String>get(0), first.<String>get(1))),
+                        new Maplet(((String) first.get(0)),
+                            ((String) first.get(1)))),
                     MapUtil.map(
-                        new Maplet(second.<String>get(0), second.<String>get(1)))));
+                        new Maplet(((String) second.get(0)),
+                            ((String) second.get(1))))));
     }
 
     public VDMSet getNames() {
