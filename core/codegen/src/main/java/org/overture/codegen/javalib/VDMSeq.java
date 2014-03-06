@@ -2,8 +2,12 @@ package org.overture.codegen.javalib;
 
 import java.util.*;
 
+@SuppressWarnings("rawtypes")
 public class VDMSeq extends ArrayList implements ValueType
 {	
+	private static final long serialVersionUID = 5083307947808060044L;
+
+	@SuppressWarnings("unchecked")
 	public VDMSeq clone()
 	{
 		VDMSeq seqClone = new VDMSeq();

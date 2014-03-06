@@ -9,6 +9,7 @@ public class SeqUtil
 		return new VDMSeq();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq seq(Object... elements)
 	{
 		if(elements == null)
@@ -21,6 +22,7 @@ public class SeqUtil
 		return seq;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq mod(VDMSeq seq, Maplet... maplets)
 	{
 		if(maplets == null)
@@ -41,6 +43,7 @@ public class SeqUtil
 		return seq;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet elems(VDMSeq seq)
 	{
 		if(seq == null)
@@ -52,6 +55,7 @@ public class SeqUtil
 		return elems;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq reverse(VDMSeq seq)
 	{
 		if(seq == null)
@@ -65,6 +69,7 @@ public class SeqUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq tail(VDMSeq seq)
 	{
 		if(seq == null)
@@ -84,6 +89,7 @@ public class SeqUtil
 		return tail;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet inds(VDMSeq seq)
 	{
 		if(seq == null)
@@ -107,6 +113,7 @@ public class SeqUtil
 		return left.equals(right);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq conc(VDMSeq left, VDMSeq right)
 	{
 		if(left == null || right == null)
@@ -120,6 +127,7 @@ public class SeqUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq distConc(VDMSeq sequences)
 	{
 		if(sequences == null)

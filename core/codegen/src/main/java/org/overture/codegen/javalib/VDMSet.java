@@ -3,8 +3,12 @@ package org.overture.codegen.javalib;
 import java.util.HashSet;
 import java.util.Iterator;
 
+@SuppressWarnings("rawtypes")
 public class VDMSet extends HashSet implements ValueType
 {
+	private static final long serialVersionUID = 2984495719595419443L;
+
+	@SuppressWarnings("unchecked")
 	public VDMSet clone()
 	{
 		VDMSet setClone = new VDMSet();

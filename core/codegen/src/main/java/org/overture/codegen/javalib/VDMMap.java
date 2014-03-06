@@ -6,8 +6,12 @@ import java.util.Map;
 import java.util.Set;
 
 
+@SuppressWarnings("rawtypes")
 public class VDMMap extends HashMap implements ValueType
 {
+	private static final long serialVersionUID = -3288711341768577550L;
+
+	@SuppressWarnings("unchecked")
 	public VDMMap clone()
 	{
 		VDMMap mapClone = new VDMMap();

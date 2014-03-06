@@ -1,4 +1,5 @@
 package org.overture.codegen.javalib;
+
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class MapUtil
 		return new VDMMap();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap map(Maplet... elements)
 	{
 		if(elements == null)
@@ -54,6 +56,7 @@ public class MapUtil
 				|| (leftVal != null && !leftVal.equals(rightVal));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet dom(VDMMap map)
 	{
 		if(map == null)
@@ -65,6 +68,7 @@ public class MapUtil
 		return set;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet rng(VDMMap map)
 	{
 		if(map == null)
@@ -76,6 +80,7 @@ public class MapUtil
 		return set;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap munion(VDMMap left, VDMMap right)
 	{
 		if(left == null || right == null)
@@ -90,6 +95,7 @@ public class MapUtil
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static VDMMap override(VDMMap left, VDMMap right)
 	{
 		if(left == null || right == null)
@@ -123,8 +129,10 @@ public class MapUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static void putAll(VDMMap to, VDMMap from)
 	{
+		@SuppressWarnings("rawtypes")
 		Set fromKeys = from.keySet();
 
 		for(Object fromKey : fromKeys)
@@ -142,6 +150,7 @@ public class MapUtil
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap domResTo(VDMSet domValues, VDMMap map)
 	{
 		if(domValues == null || map == null)
@@ -161,6 +170,7 @@ public class MapUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap domResBy(VDMSet domValues, VDMMap map)
 	{
 		if(domValues == null || map == null)
@@ -168,6 +178,7 @@ public class MapUtil
 		
 		VDMMap result = map();
 		
+		@SuppressWarnings("rawtypes")
 		Set dom = map.keySet();
 		
 		for(Object key : dom)
@@ -182,6 +193,7 @@ public class MapUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap rngResTo(VDMMap map, VDMSet rngValues)
 	{
 		if(map == null || rngValues == null)
@@ -189,6 +201,7 @@ public class MapUtil
 		
 		VDMMap result = map();
 		
+		@SuppressWarnings("rawtypes")
 		Set dom = map.keySet();
 		
 		for(Object key : dom)
@@ -204,6 +217,7 @@ public class MapUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap rngResBy(VDMMap map, VDMSet rngValues)
 	{
 		if(map == null || rngValues == null)
@@ -211,6 +225,7 @@ public class MapUtil
 		
 		VDMMap result = map();
 		
+		@SuppressWarnings("rawtypes")
 		Set dom = map.keySet();
 		
 		for(Object key : dom)
@@ -226,6 +241,7 @@ public class MapUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMMap inverse(VDMMap map)
 	{
 		if(map == null)
@@ -238,7 +254,9 @@ public class MapUtil
 			return result;
 		}
 		
+		@SuppressWarnings("rawtypes")
 		Set keysSet = map.keySet();
+		@SuppressWarnings("rawtypes")
 		LinkedList keyList = new LinkedList(keysSet);
 		
 		Object firstKey = keyList.get(0);

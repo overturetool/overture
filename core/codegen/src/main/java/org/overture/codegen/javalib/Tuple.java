@@ -1,12 +1,16 @@
 package org.overture.codegen.javalib;
+
 import java.io.Serializable;
 
 /*
  * The source of inspiration for the implementation of this class:
  * https://github.com/ripper234/Basic/tree/master/java/src/main/java/org/basic/datastructures/tuple
  */
+@SuppressWarnings("rawtypes")
 public class Tuple implements ValueType, Comparable, Serializable
 {
+	private static final long serialVersionUID = 8013562414260810880L;
+
 	private final Object[] values;
 
 	public static Tuple mk_(Object... values)
@@ -140,6 +144,7 @@ public class Tuple implements ValueType, Comparable, Serializable
 					{
 						Comparable compVal = (Comparable) val;
 
+						@SuppressWarnings("unchecked")
 						int c = compVal.compareTo(ot.values[i]);
 
 						if (c != 0)

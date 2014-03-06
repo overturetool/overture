@@ -7,6 +7,7 @@ public class SetUtil
 		return new VDMSet();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet set(Object... elements)
 	{
 		if(elements == null)
@@ -20,6 +21,7 @@ public class SetUtil
 		return set;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet union(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
@@ -33,6 +35,7 @@ public class SetUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet dunion(VDMSet sets)
 	{
 		if(sets == null)
@@ -52,6 +55,7 @@ public class SetUtil
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static VDMSet dinter(VDMSet sets)
 	{
 		if(sets == null)
@@ -72,6 +76,7 @@ public class SetUtil
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet diff(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
@@ -85,6 +90,7 @@ public class SetUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static boolean psubset(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
@@ -93,6 +99,7 @@ public class SetUtil
 		return left.size() < right.size() && right.containsAll(left);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet intersect(VDMSet left, VDMSet right)
 	{
 		if(left == null || right == null)
@@ -106,6 +113,7 @@ public class SetUtil
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet powerset(VDMSet originalSet) {
 		
 		if(originalSet == null)
@@ -146,6 +154,7 @@ public class SetUtil
 	    return sets;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static VDMSet range(double first, double last)
 	{
 		long from = (long) Math.ceil(first);
