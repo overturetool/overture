@@ -156,15 +156,17 @@ public class JavaCodeGen
 			{
 				AClassDeclCG classCg = status.getClassCg();
 
-				classCg.apply(new TransformationVisitor(generator.getOoAstInfo()));
-				classCg.apply(mergeVisitor, writer);
-				String code = writer.toString();
-
 				String formattedJavaCode = "";
 
 				if (status.canBeGenerated())
+				{
+					classCg.apply(new TransformationVisitor(generator.getOoAstInfo()));
+					classCg.apply(mergeVisitor, writer);
+					String code = writer.toString();
+					
 					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
-
+				}
+				
 				generated.add(new GeneratedModule(classCg.getName(), formattedJavaCode, status.getUnsupportedNodes()));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
