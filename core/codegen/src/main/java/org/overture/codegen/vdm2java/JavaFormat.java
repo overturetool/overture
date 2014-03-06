@@ -427,14 +427,20 @@ public class JavaFormat
 		
 		AEqualsBinaryExpCG equal = new AEqualsBinaryExpCG();
 		equal.setType(new ABoolBasicTypeCG());
-		equal.setLeft(notEqual.getLeft());
-		equal.setRight(notEqual.getRight());
+		equal.setLeft(notEqual.getLeft().clone());
+		equal.setRight(notEqual.getRight().clone());
 		
 		notUnary.setExp(equal);
 		
 		//Replace the "notEqual" expression with the transformed expression
-		notUnary.parent(notEqual.parent());
-		notEqual.parent(null);
+		INode parent = notEqual.parent();
+
+		//It may be the case that the parent is null if we execute e.g. [1] <> [1] in isolation
+		if (parent != null)
+		{
+			parent.replaceChild(notEqual, notUnary);
+			notEqual.parent(null);
+		}
 		
 		return notUnary;
 	}
