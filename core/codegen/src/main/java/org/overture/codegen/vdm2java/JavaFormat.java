@@ -246,7 +246,6 @@ public class JavaFormat
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
 
-		method.parent(record);
 		method.setAccess(JAVA_PUBLIC);
 		method.setName("clone");
 		
@@ -277,6 +276,8 @@ public class JavaFormat
 		AReturnStmCG body = new AReturnStmCG();
 		body.setExp(newExp);
 		method.setBody(body);
+
+		record.getMethods().add(method);
 		
 		return format(method);
 	}
@@ -288,7 +289,6 @@ public class JavaFormat
 		AMethodDeclCG constructor = new AMethodDeclCG();
 		//Since Java does not have records but the OO AST does a record is generated as a Java class.
 		//To make sure that the record can be instantiated we must explicitly add a constructor.
-		constructor.parent(record);
 		constructor.setAccess(JAVA_PUBLIC);
 		constructor.setIsConstructor(true);
 		constructor.setName(record.getName());
@@ -340,6 +340,8 @@ public class JavaFormat
 			
 			bodyStms.add(assignment);
 		}
+		
+		record.getMethods().add(constructor);
 		
 		return format(constructor);
 	}
@@ -737,7 +739,6 @@ public class JavaFormat
 		//"structural" equivalence
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
 		
-		equalsMethod.parent(record);
 		equalsMethod.setAccess(JAVA_PUBLIC);
 		equalsMethod.setName("equals");
 		equalsMethod.setReturnType(new ABoolBasicTypeCG());
@@ -789,6 +790,8 @@ public class JavaFormat
 		equalsStms.add(fieldsComparison);
 		equalsMethod.setBody(equalsMethodBody);
 		
+		record.getMethods().add(equalsMethod);
+		
 		return format(equalsMethod);
 	}
 	
@@ -798,7 +801,6 @@ public class JavaFormat
 		
 		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
 		
-		hashcodeMethod.parent(record);
 		hashcodeMethod.setAccess(JAVA_PUBLIC);
 		hashcodeMethod.setName(hashCode);
 
@@ -811,6 +813,8 @@ public class JavaFormat
 		returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
 		
 		hashcodeMethod.setBody(returnStm);
+
+		record.getMethods().add(hashcodeMethod);
 		
 		return format(hashcodeMethod);
 	}
@@ -819,7 +823,6 @@ public class JavaFormat
 	{
 		AMethodDeclCG toStringMethod = new AMethodDeclCG();
 		
-		toStringMethod.parent(record);
 		toStringMethod.setAccess(JAVA_PUBLIC);
 		toStringMethod.setName("toString");
 
@@ -831,6 +834,8 @@ public class JavaFormat
 		returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
 		
 		toStringMethod.setBody(returnStm);
+		
+		record.getMethods().add(toStringMethod);
 		
 		return format(toStringMethod);
 	}

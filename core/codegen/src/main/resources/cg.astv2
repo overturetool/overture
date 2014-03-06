@@ -90,6 +90,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[name]:java_String
     	[access]:java_String
     	[fields]:field*
+    	[methods]:declCG.method*
     |	{empty}
 //    |	{typDecl} //Consider removing this
 //    	[name]:java_String
