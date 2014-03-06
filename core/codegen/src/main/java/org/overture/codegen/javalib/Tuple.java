@@ -48,10 +48,9 @@ public class Tuple implements ValueType, Comparable, Serializable
 		return values.length;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> T get(int i)
+	public Object get(int i)
 	{
-		return (T) values[i];
+		return values[i];
 	}
 
 	@Override
