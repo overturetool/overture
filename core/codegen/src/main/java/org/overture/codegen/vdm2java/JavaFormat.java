@@ -399,22 +399,11 @@ public class JavaFormat
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
 
-		if (isTupleOrRecord(leftNodeType) || leftNodeType instanceof AStringTypeCG)
-		{
-			ANotUnaryExpCG transformed = transNotEquals(node);
-			return formatNotUnary(transformed.getExp());
-		}
-		else if(leftNodeType instanceof SSeqTypeCG)
-		{
-			ANotUnaryExpCG transformed = transNotEquals(node);
-			return formatNotUnary(transformed.getExp());
-		}
-		else if(leftNodeType instanceof SSetTypeCG)
-		{
-			ANotUnaryExpCG transformed = transNotEquals(node);
-			return formatNotUnary(transformed.getExp());
-		}
-		else if(leftNodeType instanceof SMapTypeCG)
+		if (isTupleOrRecord(leftNodeType)
+				|| leftNodeType instanceof AStringTypeCG
+				|| leftNodeType instanceof SSeqTypeCG
+				|| leftNodeType instanceof SSetTypeCG
+				|| leftNodeType instanceof SMapTypeCG)
 		{
 			ANotUnaryExpCG transformed = transNotEquals(node);
 			return formatNotUnary(transformed.getExp());
