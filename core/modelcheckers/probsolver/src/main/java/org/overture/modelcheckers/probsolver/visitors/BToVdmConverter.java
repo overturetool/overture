@@ -340,6 +340,8 @@ public class BToVdmConverter extends DepthFirstAdapter
 	{
 		System.err.println("Hit unsupported node: "
 				+ node.getClass().getSimpleName() + " - \"" + node+"\"");
+	    // System.err.println("Hit unsupported node: "
+	    // + node.getClass().getSimpleName() + " - " + node);
 	}
 
 }

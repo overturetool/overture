@@ -58,6 +58,9 @@ import org.overture.ast.expressions.AMapEnumMapExp; //added
 import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp; //added -> ARrangeExpression
 import org.overture.ast.expressions.AMapUnionBinaryExp; //used  -> AUnionExpression
+import org.overture.ast.expressions.APlusPlusBinaryExp;            //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
+import org.overture.ast.expressions.ADomainResToBinaryExp;         //added -> ADomainRestrictionExpression
+import org.overture.ast.expressions.ADomainResByBinaryExp;         //added -> ADomainSubtractionExpression
 import org.overture.ast.expressions.AMapletExp; //added -> ACoupleExpression
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
@@ -1142,7 +1145,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return cpl;
 
 	}
-
+	/*
 	@Override
 	public Node caseAFieldNumberExp(AFieldNumberExp node)
 			throws AnalysisException
@@ -1159,7 +1162,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new AImageExpression(seq, arg);
 
 	}
-
+	*/
 	// StateDefinition
 	@Override
 	public Node caseAStateDefinition(AStateDefinition node)
