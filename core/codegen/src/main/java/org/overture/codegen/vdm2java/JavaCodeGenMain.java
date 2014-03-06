@@ -1,7 +1,6 @@
 package org.overture.codegen.vdm2java;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -104,9 +103,6 @@ public class JavaCodeGenMain
 
 				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
 				
-				List<GeneratedModule> utils = JavaCodeGenUtil.generateJavaCodeGenUtils();
-				JavaCodeGenUtil.generateJavaSourceFiles(file, utils);
-				
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().println(e.getMessage());
@@ -121,10 +117,6 @@ public class JavaCodeGenMain
 				Logger.getLog().println("Could not generate model: "
 						+ e.getMessage());
 				Logger.getLog().println(JavaCodeGenUtil.constructUnsupportedModelingString(e));
-			} catch (IOException e)
-			{
-				Logger.getLog().println("Could not generate utils: "
-						+ e.getMessage());
 			}
 		}
 		else if(setting.toLowerCase().equals("exp"))

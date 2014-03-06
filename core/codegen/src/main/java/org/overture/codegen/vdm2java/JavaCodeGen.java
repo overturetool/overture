@@ -1,7 +1,6 @@
 package org.overture.codegen.vdm2java;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -25,9 +24,8 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.constants.IText;
+import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -114,39 +112,6 @@ public class JavaCodeGen
 		}
 
 		return null;
-	}
-	
-	public List<GeneratedModule> generateJavaCodeGenUtils() throws IOException
-	{
-		List<GeneratedModule> utils = new LinkedList<GeneratedModule>();
-		
-		String utilsRoot = IJavaCodeGenConstants.JAVA_UTILS_ROOT_FOLDER + IText.SEPARATOR_CHAR;
-		String fileExt = IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
-		
-		String utilPath = utilsRoot + IJavaCodeGenConstants.UTILS_FILE + fileExt;
-		String mathPath = utilsRoot + IJavaCodeGenConstants.MATH_FILE + fileExt;
-		String ioPath = utilsRoot + IJavaCodeGenConstants.IO_FILE + fileExt;
-		
-		String[] paths = {utilPath, mathPath, ioPath};
-		String[] filenames = {IJavaCodeGenConstants.UTILS_FILE, IJavaCodeGenConstants.MATH_FILE, IJavaCodeGenConstants.IO_FILE};
-		
-		for (int i = 0; i < paths.length; i++)
-		{
-			StringBuffer fileContent = GeneralUtils.readFromFile(paths[i]);
-
-			if (fileContent != null)
-			{
-				StringBuffer generated = new StringBuffer();
-				generated.append(IJavaCodeGenConstants.UTILS_PACKAGE_HEADER
-						+ IText.NEW_LINE + IText.NEW_LINE);
-
-				generated.append(fileContent);
-
-				utils.add(new GeneratedModule(filenames[i], generated.toString()));
-			}
-		}
-		
-		return utils;
 	}
 	
 	public List<GeneratedModule> generateJavaFromVdm(

@@ -1,7 +1,6 @@
 package org.overture.ide.plugins.codegen.commands;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -136,11 +135,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					// Quotes generation
 					handleQuotesGeneration(vdmProject, outputFolder, vdm2java);
 
-					// Utils generation
-					handleUtilsGeneration(vdmProject, vdm2java);
-
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-
+				
 				} catch (InvalidNamesException ex)
 				{
 					handleInvalidNames(ex);
@@ -209,13 +205,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 			}
 			CodeGenConsole.GetInstance().println("");
 		}
-	}
-
-	private void handleUtilsGeneration(IVdmProject vdmProject, JavaCodeGen vdm2java) throws IOException, CoreException
-	{
-		List<GeneratedModule> utils = vdm2java.generateJavaCodeGenUtils();
-		File utilsFolder = PluginVdm2JavaUtil.getUtilsFolder(vdmProject);
-		vdm2java.generateJavaSourceFiles(utilsFolder, utils);
 	}
 
 	private void handleQuotesGeneration(IVdmProject vdmProject, File outputFolder, JavaCodeGen vdm2java) throws CoreException

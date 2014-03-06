@@ -170,12 +170,6 @@ public class JavaCodeGenUtil
 		vdmCodGen.generateJavaSourceFile(file, module);
 	}
 	
-	public static List<GeneratedModule> generateJavaCodeGenUtils() throws IOException
-	{
-		JavaCodeGen vdmCodeGen = new JavaCodeGen();
-		return vdmCodeGen.generateJavaCodeGenUtils();
-	}
-	
 	public static String formatJavaCode(String code)
 	{
 		StringBuffer b = new StringBuffer();
