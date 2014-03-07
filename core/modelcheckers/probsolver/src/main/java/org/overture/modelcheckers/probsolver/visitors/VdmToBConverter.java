@@ -1360,6 +1360,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
+	    System.err.println("AMkBasicExp: " + node + " -- " + node.getArg());
 		if (node.getType() instanceof ATokenBasicType)
 		{
 			return node.getArg().apply(this);
