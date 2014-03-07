@@ -19,8 +19,9 @@ public class ExecutionToResultTranslator
 	public static Result<Value> wrapValue(Exception e)
 	{
 		Result<String> result = wrap(e);
-		return new Result<Value>(new SeqValue(result.getStringResult()),result.warnings,result.errors);
+		return new Result<Value>(new SeqValue(result.getStringResult()), result.warnings, result.errors);
 	}
+
 	public static Result<String> wrap(Exception e)
 	{
 		List<IMessage> errors = new Vector<IMessage>();

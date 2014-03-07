@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -61,16 +62,18 @@ public class ProbConverterTestBase
 
 			PType tokenType = calculateTokenType();
 
+			Set<String> quotes=calculateQuotes();
+			
 			if (def instanceof AImplicitOperationDefinition)
 			{
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType,quotes, new SolverConsole());
 
 			} else
 			{
 				AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType,quotes, new SolverConsole());
 			}
 			System.out.println("Result=" + result);
 
@@ -88,6 +91,16 @@ public class ProbConverterTestBase
 				throw e;
 			}
 		}
+	}
+
+	private Set<String> calculateQuotes() throws AnalysisException
+	{
+		final QuoteLiteralFinder quoteFinder = new QuoteLiteralFinder();
+		for (PDefinition d : defs)
+		{
+			d.apply(quoteFinder);
+		}
+		return quoteFinder.getQuoteLiterals();
 	}
 
 	protected PType calculateTokenType() throws AnalysisException
@@ -217,7 +230,7 @@ public class ProbConverterTestBase
 				|| !typeCheckResult.parserResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
-					+ file);
+					+ file + "\n\n" + typeCheckResult.errors);
 		}
 
 		return typeCheckResult.result;

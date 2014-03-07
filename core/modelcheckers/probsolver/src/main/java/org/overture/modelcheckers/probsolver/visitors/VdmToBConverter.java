@@ -1,6 +1,7 @@
 package org.overture.modelcheckers.probsolver.visitors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -70,6 +71,7 @@ import org.overture.ast.expressions.APlusNumericBinaryExp; //added -> AAddExpres
 import org.overture.ast.expressions.APlusPlusBinaryExp; //added -> AOverwriteExpression(for map ++ map), (for seq ++ map)
 import org.overture.ast.expressions.APowerSetUnaryExp; //added -> APowSubsetExpression
 import org.overture.ast.expressions.AProperSubsetBinaryExp; //added -> ASubsetStrictPredicate
+import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp; //added -> ARangeSubtractionExpression
 import org.overture.ast.expressions.ARangeResToBinaryExp; //added -> ARangeRestrictionExpression
 import org.overture.ast.expressions.ARemNumericBinaryExp; //added -> ASubtractExpression, AMultiplicationExpression, ADivExpression
@@ -111,6 +113,7 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType; //added -> ANat1SetExpression
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
@@ -210,9 +213,13 @@ import de.be4.classicalb.core.parser.node.TIntegerLiteral;
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
+	public static final String QUOTE_LIT_PREFIX = "QUOTE_LIT_";
+
 	public static final String STATE_ID_PREFIX = "$";
 
 	public static final String OLD_POST_FIX = "~";
+
+	public static final String QUOTES_SET = "QUOTES";
 
 	// public static final String TOKEN_SET = "TOKEN";
 
@@ -556,6 +563,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		ident.add(new TIdentifierLiteral(n));
 
 		return new AIdentifierExpression(ident);
+	}
+
+	public static String getQuoteLiteralName(String name)
+	{
+		return QUOTE_LIT_PREFIX + name;
 	}
 
 	/**
@@ -1364,6 +1376,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return super.caseAMkBasicExp(node);
 	}
 
+	@Override
+	public Node caseAQuoteLiteralExp(AQuoteLiteralExp node)
+			throws AnalysisException
+	{
+		return createIdentifier(getQuoteLiteralName(node.getValue().getValue()));
+	}
+
 	/* types */
 
 	@Override
@@ -1421,24 +1440,30 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new ARelationsExpression(exp(node.getFrom()), exp(node.getTo()));
 	}
 
-	
 	@Override
 	public Node caseASeq1SeqType(ASeq1SeqType node) throws AnalysisException
 	{
-		if(node.getSeqof() instanceof ACharBasicType)
+		if (node.getSeqof() instanceof ACharBasicType)
 		{
 			return new AStringSetExpression();
 		}
-		
-	return new ASeq1Expression(exp(node.getSeqof()));
+
+		return new ASeq1Expression(exp(node.getSeqof()));
 	}
-	
-	 @Override
-	 public Node caseATokenBasicType(ATokenBasicType node)
-	 throws AnalysisException
-	 {
-		 return tokenType.apply(this);
-	 }
+
+	@Override
+	public Node caseATokenBasicType(ATokenBasicType node)
+			throws AnalysisException
+	{
+		return tokenType.apply(this);
+	}
+
+	@Override
+	public Node caseAQuoteType(AQuoteType node) throws AnalysisException
+	{
+		final List<PExpression> exps = Arrays.asList(new PExpression[] { createIdentifier(getQuoteLiteralName(node.getValue().getValue())) });
+		return new ASetExtensionExpression(exps);
+	}
 
 	@Override
 	public Node createNewReturnValue(INode node) throws AnalysisException

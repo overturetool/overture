@@ -1,14 +1,15 @@
 package org.overture.modelcheckers.probsolver;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
@@ -18,33 +19,57 @@ import org.overture.interpreter.solver.IConstraintSolver;
 public class ProbSolverIntegration implements IConstraintSolver
 {
 	@Override
-	public PStm solve(String name, AImplicitOperationDefinition opDef,
-			Map<String, String> stateExps, Map<String, String> argExps, PType tokenType,
-			PrintWriter out, PrintWriter err) throws Exception
+	public PStm solve(Collection<? extends INode> ast, String name,
+			AImplicitOperationDefinition opDef, Map<String, String> stateExps,
+			Map<String, String> argExps, PrintWriter out, PrintWriter err)
+			throws Exception
 	{
-		return ProbSolverUtil.solve(name, opDef, stateExps, argExps,new HashMap<String,PType>(),tokenType, new SolverConsole(out, err));
+		return ProbSolverUtil.solve(name, opDef, stateExps, argExps, new HashMap<String, PType>(), calculateTokenType(ast), calculateQuoteNames(ast), new SolverConsole(out, err));
 	}
 
 	@Override
-	public PExp solve(String name, PExp body, APatternTypePair result,
-			Map<String, String> stateExps, Map<String, String> argExps, PType tokenType,
-			Redirector out, Redirector err) throws Exception
+	public PExp solve(Collection<? extends INode> ast, String name, PExp body,
+			APatternTypePair result, Map<String, String> stateExps,
+			Map<String, String> argExps, Redirector out, Redirector err)
+			throws Exception
 	{
-		return ProbSolverUtil.solve(name, body, result, stateExps, argExps,new HashMap<String,PType>(),tokenType, new SolverConsole(out, err));
+		return ProbSolverUtil.solve(name, body, result, stateExps, argExps, new HashMap<String, PType>(), calculateTokenType(ast), calculateQuoteNames(ast), new SolverConsole(out, err));
 	}
 
-	@Override
-	public PType calculateTokenType(List<PDefinition> defs) throws AnalysisException
+	/**
+	 * Scans all mk_token expressions for their argument type
+	 * 
+	 * @param defs
+	 * @return
+	 * @throws AnalysisException
+	 */
+	public PType calculateTokenType(Collection<? extends INode> defs)
+			throws AnalysisException
 	{
 		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
-		for (PDefinition d : defs)
+		for (INode d : defs)
 		{
 			d.apply(tokenTypeFinder);
 		}
 		return tokenTypeFinder.getTokenType();
 	}
-	
-	
-	
-	
+
+	/**
+	 * Scans all quotes for their name and collect them
+	 * 
+	 * @param defs
+	 * @return
+	 * @throws AnalysisException
+	 */
+	public Set<String> calculateQuoteNames(Collection<? extends INode> defs)
+			throws AnalysisException
+	{
+		final QuoteLiteralFinder finder = new QuoteLiteralFinder();
+		for (INode d : defs)
+		{
+			d.apply(finder);
+		}
+		return finder.getQuoteLiterals();
+	}
+
 }

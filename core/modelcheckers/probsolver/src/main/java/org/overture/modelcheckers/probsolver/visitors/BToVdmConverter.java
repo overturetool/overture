@@ -13,10 +13,12 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexQuoteToken;
 import org.overture.ast.lex.LexBooleanToken;//added
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -41,6 +43,7 @@ import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
+import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;// added
 //added
 // added
@@ -52,10 +55,28 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public PExp result = new AUndefinedExp();
 
 	private final PType expectedType;
+	private final String QUOTE_PREFIX;
 
-	private BToVdmConverter(PType stateType)
+	private BToVdmConverter(PType stateType, String quotePrefix)
 	{
 		this.expectedType = stateType;
+		this.QUOTE_PREFIX = quotePrefix;
+	}
+
+	/**
+	 * This converts a B construct to the corresponding VDM construct typed by expectedType. The expected type is needed
+	 * in cases like mk_ type (make record
+	 * 
+	 * @param expectedType
+	 * @param quotePrefix
+	 * @param node
+	 * @return
+	 */
+	public static PExp convert(PType expectedType, String quotePrefix, Node node)
+	{
+		BToVdmConverter visitor = new BToVdmConverter(expectedType, quotePrefix);
+		node.apply(visitor);
+		return visitor.result;
 	}
 
 	/**
@@ -66,9 +87,9 @@ public class BToVdmConverter extends DepthFirstAdapter
 	 * @param node
 	 * @return
 	 */
-	public static PExp convert(PType expectedType, Node node)
+	public PExp convert(PType expectedType, Node node)
 	{
-		BToVdmConverter visitor = new BToVdmConverter(expectedType);
+		BToVdmConverter visitor = new BToVdmConverter(expectedType, QUOTE_PREFIX);
 		node.apply(visitor);
 		return visitor.result;
 	}
@@ -211,6 +232,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void caseASetExtensionExpression(ASetExtensionExpression node)
 	{
@@ -268,6 +290,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void caseASequenceExtensionExpression(
 			ASequenceExtensionExpression node)
@@ -336,10 +359,23 @@ public class BToVdmConverter extends DepthFirstAdapter
 		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
+	@Override
+	public void caseTIdentifierLiteral(TIdentifierLiteral node)
+	{
+		if (node.getText().startsWith(QUOTE_PREFIX))
+		{
+			String quote = node.getText().substring(QUOTE_PREFIX.length());
+			ILexQuoteToken token = new LexQuoteToken(quote, loc);
+			result = AstFactory.newAQuoteLiteralExp(token);
+			return;
+		}
+		super.caseTIdentifierLiteral(node);
+	}
+
 	public void defaultCase(Node node)
 	{
 		System.err.println("Hit unsupported node: "
-				+ node.getClass().getSimpleName() + " - \"" + node+"\"");
+				+ node.getClass().getSimpleName() + " - \"" + node + "\"");
 	}
 
 }

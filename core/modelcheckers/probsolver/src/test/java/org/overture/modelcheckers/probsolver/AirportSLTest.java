@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 
