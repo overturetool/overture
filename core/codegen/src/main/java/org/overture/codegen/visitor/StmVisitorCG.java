@@ -27,12 +27,14 @@ import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
+import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
@@ -212,13 +214,16 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 	public PStmCG caseAAssignmentStm(AAssignmentStm node, OoAstInfo question)
 			throws AnalysisException
 	{
-		PStateDesignatorCG target = node.getTarget().apply(question.getStateDesignatorVisitor(), question);
-		PExpCG exp = node.getExp().apply(question.getExpVisitor(), question);
+		PStateDesignator target = node.getTarget();
+		PExp exp = node.getExp();
 		
+		PStateDesignatorCG targetCg = target.apply(question.getStateDesignatorVisitor(), question);
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+
 		AAssignmentStmCG assignment = new AAssignmentStmCG();
-		assignment.setTarget(target);
-		assignment.setExp(exp);
-		
+		assignment.setTarget(targetCg);
+		assignment.setExp(expCg);
+
 		return assignment;
 	}
 	
