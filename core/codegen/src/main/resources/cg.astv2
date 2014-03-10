@@ -181,6 +181,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Seq
     |	#Set
     |	#Map
+    |	{mkBasic} [arg]:expCG
     ;
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
     =	{int} [value]:java_Long
@@ -324,6 +325,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #numeric
     |	{char}
     |	{bool}
+    |	{token}
     ;
 
 #numeric {-> package='org.overture.codegen.cgast.types'}

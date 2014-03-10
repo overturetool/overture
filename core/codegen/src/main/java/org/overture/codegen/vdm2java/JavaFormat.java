@@ -64,6 +64,7 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -404,8 +405,10 @@ public class JavaFormat
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
 	{
 		PTypeCG leftNodeType = node.getLeft().getType();
-		
-		if(isTupleOrRecord(leftNodeType) || leftNodeType instanceof AStringTypeCG)
+
+		if (isTupleOrRecord(leftNodeType)
+				|| leftNodeType instanceof AStringTypeCG
+				|| leftNodeType instanceof ATokenBasicTypeCG)
 		{
 			return handleEquals(node);
 		}
@@ -431,6 +434,7 @@ public class JavaFormat
 
 		if (isTupleOrRecord(leftNodeType)
 				|| leftNodeType instanceof AStringTypeCG
+				|| leftNodeType instanceof ATokenBasicTypeCG
 				|| leftNodeType instanceof SSeqTypeCG
 				|| leftNodeType instanceof SSetTypeCG
 				|| leftNodeType instanceof SMapTypeCG)

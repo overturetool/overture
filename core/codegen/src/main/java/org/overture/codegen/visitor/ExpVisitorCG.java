@@ -51,6 +51,7 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANewExp;
@@ -99,6 +100,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -142,6 +144,7 @@ import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
@@ -181,6 +184,7 @@ import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IOoAstConstants;
@@ -194,6 +198,30 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			throws AnalysisException
 	{
 		return new ANullExpCG();
+	}
+	
+	@Override
+	public PExpCG caseAMkBasicExp(AMkBasicExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		if(!(type instanceof ATokenBasicType))
+		{
+			question.addUnsupportedNode(node, "Expected token type for mk basic expression. Got: " + type);
+			return null;
+		}
+		
+		PExp arg = node.getArg();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+
+		AMkBasicExpCG mkBasicExp = new AMkBasicExpCG();
+		mkBasicExp.setType(typeCg);
+		mkBasicExp.setArg(argCg);
+		
+		return mkBasicExp;
 	}
 	
 	@Override

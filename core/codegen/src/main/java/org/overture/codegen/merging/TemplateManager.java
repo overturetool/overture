@@ -64,6 +64,7 @@ import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
@@ -134,6 +135,7 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.utils.GeneralUtils;
@@ -220,6 +222,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACharBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Char");
 		
+		nodeTemplateFileNames.put(ATokenBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Token");
+		
 		// Basic numeric types
 		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Integer");
@@ -286,6 +291,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXPS_PATH + "Maplet");
 		
 		nodeTemplateFileNames.put(ALetBeStExpCG.class, templateStructure.EXPS_PATH + "LetBeSt");
+		
+		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXPS_PATH + "MkBasic");
 		
 		// Unary expressions
 
