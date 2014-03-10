@@ -1,0 +1,15 @@
+class Entry
+
+values
+
+x = mk_token(nil);
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+(
+ 	return x;
+)
+
+end Entry

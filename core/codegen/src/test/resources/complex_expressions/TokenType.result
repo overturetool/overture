@@ -1,0 +1,16 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final Token x = new Token(null);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return x;
+    }
+}
+##########
