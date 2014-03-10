@@ -110,9 +110,11 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 //		[body]:stmCG
 	;
 	
-stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
+stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'
+	| [type]:typeCG}
 	= {identifier} [name]:java_String
 	| {field} [object]:stateDesignatorCG [field]:java_String
+	| {mapSeq} [mapseq]:stateDesignatorCG [exp]:expCG// (mapType):type.#Map (seqType):type.#seq
 	;
 //    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
 //   |   {identifier} [name]:LexNameToken

@@ -49,7 +49,9 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -139,6 +141,32 @@ public class JavaFormat
 		{
 			return "";
 		}
+	}
+	
+	public static boolean isMapSeq(PStateDesignatorCG stateDesignator)
+	{
+		return stateDesignator instanceof AMapSeqStateDesignatorCG;
+	}
+	
+	public String formatMapSeqStateDesignator(AMapSeqStateDesignatorCG mapSeq) throws AnalysisException
+	{
+		INode parent = mapSeq.parent();
+		
+		if(!(parent instanceof AAssignmentStmCG))
+			throw new AnalysisException("Generation of map sequence state designator was expecting an assignment statement as parent. Got : " + parent);
+		
+		AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
+		
+		PStateDesignatorCG stateDesignator = mapSeq.getMapseq();
+		PExpCG domValue = mapSeq.getExp();
+		PExpCG rngValue = assignment.getExp();
+		
+		String stateDesignatorStr = format(stateDesignator);
+		String domValStr = format(domValue);
+		String rngValStr = format(rngValue);
+		
+		//e.g. counters.put("c1", 4);
+		return stateDesignatorStr + "." + IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
 	}
 	
 	private static String getNumberDereference(INode node, boolean ignoreContext)
