@@ -4,6 +4,7 @@ package org.overture.codegen.tests.utils;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.javalib.Token;
 import org.overture.codegen.javalib.Tuple;
 import org.overture.codegen.javalib.VDMMap;
 import org.overture.codegen.javalib.VDMSeq;
@@ -15,6 +16,7 @@ import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.NumericValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
+import org.overture.interpreter.values.TokenValue;
 import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
@@ -61,6 +63,10 @@ public class ComparisonCG
 		{
 			return handString(cgValue, vdmValue);
 		}
+		else if(cgValue instanceof Token)
+		{
+			return handleToken(cgValue, vdmValue);
+		}
 		else if(cgValue == null)
 		{
 			if(!(vdmValue instanceof NilValue))
@@ -71,6 +77,17 @@ public class ComparisonCG
 		
 		
 		return false;
+	}
+
+	private static boolean handleToken(Object cgValue, Value vdmValue)
+	{
+		if(!(vdmValue instanceof TokenValue))
+			 return false;
+		
+		Token cgToken = (Token) cgValue;
+		TokenValue vdmToken = (TokenValue) vdmValue;
+		
+		return compare(cgToken.getValue(), vdmToken.value);
 	}
 
 	private static boolean handleCharacter(Object cgValue, Value vdmValue)
