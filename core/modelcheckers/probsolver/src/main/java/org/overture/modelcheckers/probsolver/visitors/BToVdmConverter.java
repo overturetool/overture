@@ -234,7 +234,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseACoupleExpression(ACoupleExpression node)
 	{
-		System.err.println("In caseACouple...: " + expectedType);//added
+		System.err.println("In caseACouple...: " + expectedType);
 
 		if (expectedType instanceof AProductType)
 		{
@@ -294,7 +294,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 				{
 					exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
 				}
-				result = AstFactory.newASeqEnumSeqExp(loc, exps);// added
+				result = AstFactory.newASeqEnumSeqExp(loc, exps);
 
 			}
 			result = AstFactory.newASeqEnumSeqExp(loc, exps);
@@ -311,7 +311,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 				mems.add(new AMapletExp(expectedType, loc, mapFrom, mapTo));
 
 			}
-			result = AstFactory.newAMapEnumMapExp(loc, mems);// added
+			result = AstFactory.newAMapEnumMapExp(loc, mems);
 
 		} else if(expectedType instanceof ATokenBasicType) {
 		    ASetEnumSetExp arg = new ASetEnumSetExp();
@@ -335,7 +335,6 @@ public class BToVdmConverter extends DepthFirstAdapter
 			}
 		    }
 		    result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
-                } else 
 		} else if (expectedType instanceof ATokenBasicType)
 		{
 			ASetEnumSetExp arg = new ASetEnumSetExp();
@@ -380,8 +379,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 			arg.getMembers().add(convert(type, pExp));
 		    }
 		    result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
-		} else if (expectedType instanceof AMapMapType) // added from here
-		if (expectedType instanceof AMapMapType)
+		} else if (expectedType instanceof AMapMapType)
 		{ // map A to B
 			PType typeFrom = ((AMapMapType) expectedType).getFrom();
 			PType typeTo = ((AMapMapType) expectedType).getTo();
@@ -397,8 +395,6 @@ public class BToVdmConverter extends DepthFirstAdapter
 				seqNo++;
 			}
 			result = AstFactory.newAMapEnumMapExp(loc, mems);
-		}
-		else
 		} else
 		{
 			/*
