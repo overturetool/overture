@@ -17,7 +17,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;

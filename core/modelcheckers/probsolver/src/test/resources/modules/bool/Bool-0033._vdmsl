@@ -1,0 +1,11 @@
+
+types
+
+T=set of nat
+operations
+
+
+f(ns : T) r : nat
+pre ns <> {}
+post r in set ns and true
+

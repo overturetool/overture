@@ -629,7 +629,7 @@ public class FunctionValue extends Value
 			}
 			
 
-			PExp res = solver.solve(this.name, this.postcondition.body,result, stateExps, argExps,solver.calculateTokenType(allDefs), Console.out, Console.err);
+			PExp res = solver.solve(allDefs, this.name, this.postcondition.body,result, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getExpressionEvaluator(), argContext);
 		} catch (Exception e)

@@ -542,7 +542,7 @@ public class OperationValue extends Value
 				}
 			}
 
-			PStm res = solver.solve(name.getName(), this.impldef, stateExps, argExps, solver.calculateTokenType(allDefs), Console.out, Console.err);
+			PStm res = solver.solve(allDefs,name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)

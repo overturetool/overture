@@ -1,11 +1,12 @@
 package org.overture.modelcheckers.probsolver;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -35,11 +36,12 @@ import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter;
+import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter.ProBToVdmAnalysisException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-import de.be4.classicalb.core.parser.exceptions.BException;
+import de.be4.classicalb.core.parser.analysis.prolog.ASTProlog;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
 import de.be4.classicalb.core.parser.node.AMemberPredicate;
@@ -50,54 +52,52 @@ import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PParseUnit;
 import de.be4.classicalb.core.parser.node.PPredicate;
 import de.be4.classicalb.core.parser.node.Start;
-import de.prob.animator.IAnimator;
-import de.prob.animator.command.AbstractCommand;
 import de.prob.animator.command.CbcSolveCommand;
-import de.prob.animator.command.LoadBProjectFromStringCommand;
-import de.prob.animator.command.SetPreferenceCommand;
-import de.prob.animator.command.StartAnimationCommand;
 import de.prob.animator.domainobjects.AbstractEvalElement;
 import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.animator.domainobjects.ComputationNotCompletedResult;
 import de.prob.animator.domainobjects.EvalResult;
 import de.prob.animator.domainobjects.IEvalResult;
-import de.prob.webconsole.ServletContextListener;
+import de.prob.prolog.output.PrologTermStringOutput;
 
-public class ProbSolverUtil
+public class ProbSolverUtil extends AbstractProbSolverUtil
 {
-	public static class SolverException extends Exception
+	private class VdmSolution
 	{
+		INode result;
 
-		/**
-		 * Generated serial
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public SolverException(String message)
+		public VdmSolution(INode result)
 		{
-			super(message);
+			this.result = result;
 		}
 
-		public SolverException(String message, Throwable reason)
+		public PExp getExpression()
 		{
-			super(message, reason);
+			return isExpression() ? (PExp) this.result : null;
 		}
 
-	}
+		public PStm getStatement()
+		{
+			return isStatement() ? (PStm) this.result : null;
+		}
 
-	private final SolverConsole console;
+		public boolean isExpression()
+		{
+			return result instanceof PExp;
+		}
 
-	private ProbSolverUtil(SolverConsole console)
-	{
-		this.console = console;
+		public boolean isStatement()
+		{
+			return result instanceof PStm;
+		}
 	}
 
 	public static PStm solve(String name, AImplicitOperationDefinition opDef,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes,PType tokenType, SolverConsole console)
-			throws SolverException
+			Map<String, PType> argumentTypes, PType tokenType,
+			Set<String> quotes, SolverConsole console) throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes,tokenType);
+		VdmSolution solution = new ProbSolverUtil(console, quotes).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isStatement())
 		{
 			return solution.getStatement();
@@ -107,10 +107,10 @@ public class ProbSolverUtil
 
 	public static PExp solve(String name, PExp body, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes,PType tokenType, SolverConsole console)
-			throws SolverException
+			Map<String, PType> argumentTypes, PType tokenType,
+			Set<String> quotes, SolverConsole console) throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console).solve(name, body, result, stateContext, argContext, argumentTypes,tokenType);
+		VdmSolution solution = new ProbSolverUtil(console, quotes).solve(name, body, result, stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isExpression())
 		{
 			return solution.getExpression();
@@ -118,9 +118,189 @@ public class ProbSolverUtil
 		throw new SolverException("Unable to produce a expression result");
 	}
 
+	private final Map<String, Set<String>> sets = new HashMap<String, Set<String>>();
+
+	private ProbSolverUtil(SolverConsole console, Set<String> quotes)
+	{
+		super(console);
+		this.sets.put(VdmToBConverter.QUOTES_SET, getQuoteNames(quotes));
+	}
+
+	private Set<String> getQuoteNames(Set<String> quotes)
+	{
+		Set<String> names = new HashSet<String>();
+		for (String string : quotes)
+		{
+			names.add(VdmToBConverter.getQuoteLiteralName(string));
+		}
+		return names;
+	}
+
+	private AbstractEvalElement createFormula(INode def,
+			Map<String, INode> argContext, Map<String, PType> argumentTypes,
+			VdmToBConverter translator, Node statePredicate, Node post)
+			throws AnalysisException, SolverException
+	{
+		if (post == null)
+		{
+			post = def.apply(translator);
+		} else
+		{
+			post = new AConjunctPredicate((PPredicate) post, (PPredicate) def.apply(translator));
+		}
+
+		if (statePredicate != null)
+		{
+			post = new AConjunctPredicate((PPredicate) statePredicate, (PPredicate) post);
+		}
+
+		// add argument constraints
+		for (Entry<String, INode> arg : argContext.entrySet())
+		{
+			AEqualPredicate eqp = new AEqualPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
+			post = new AConjunctPredicate((PPredicate) post, eqp);
+		}
+		// add argument types (only if no values are given)
+		for (Entry<String, PType> arg : argumentTypes.entrySet())
+		{
+			if (!argContext.containsKey(arg.getKey()))
+			{
+				AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
+				post = new AConjunctPredicate((PPredicate) post, eqp);
+			}
+		}
+
+		PPredicate p = (PPredicate) post;
+
+		Start s = new Start(new APredicateParseUnit(p), new EOF());
+
+		// s.apply(new ASTPrinter(System.out));
+
+		AbstractEvalElement formula = null;
+		try
+		{
+			formula = new ClassicalB(s);
+			console.out.println(displayFormat(formula));
+		} catch (Exception e)
+		{
+			throw new SolverException("Syntax error in: " + post, e);
+		}
+		return formula;
+	}
+
+	/**
+	 * Extracts the B solution and converts it to VDM expressions and then constructs a VDM block with the assignments
+	 * and return value
+	 * 
+	 * @param context
+	 * @param r
+	 * @return
+	 * @throws SolverException
+	 * @throws UnsupportedTranslationException 
+	 */
+	private VdmSolution extractSolution(VdmContext context, EvalResult r)
+			throws SolverException, UnsupportedTranslationException
+	{
+		ABlockSimpleBlockStm block = AstFactory.newABlockSimpleBlockStm(new LexLocation(), new Vector<AAssignmentDefinition>());
+		PStm resultStm = null;
+
+		Map<String, PExp> returnExpressions = new HashMap<String, PExp>();
+		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
+
+		for (Entry<String, String> entry : r.getSolutions().entrySet())
+		{
+			String solutionName = entry.getKey();
+
+			{
+				if (context.hasId(solutionName))
+				{
+					ClassicalB b = new ClassicalB(entry.getValue());
+					PParseUnit p = b.getAst().getPParseUnit();
+					console.out.println("\t\t\t" + solutionName + " = "
+							+ b.getCode());
+
+					if (context.isState(solutionName))
+					{
+						try
+						{
+							if (context instanceof VdmSlContext)
+							{
+								VdmSlContext slContext = (VdmSlContext) context;
+								PExp stateExp = BToVdmConverter.convert(slContext.getStateType(), VdmToBConverter.QUOTE_LIT_PREFIX, p);
+								block.getStatements().add(BToVdmConverter.getStateAssignment(slContext.getStateType(), (AMkTypeExp) stateExp));
+							} else
+							{
+								PExp stateExp = BToVdmConverter.convert(context.types.get(solutionName), VdmToBConverter.QUOTE_LIT_PREFIX, p);
+								assignments.add(BToVdmConverter.getAssignment(context.getStateId(solutionName), stateExp));
+							}
+
+						} catch (Exception e)
+						{
+							throw new SolverException("Error converting state expression", e);
+						}
+					} else if (context.isResult(solutionName))
+					{
+						try
+						{
+							PExp retExp = BToVdmConverter.convert(context.types.get(solutionName), VdmToBConverter.QUOTE_LIT_PREFIX, p);
+							returnExpressions.put(solutionName, retExp);
+
+						} catch (ProBToVdmAnalysisException e)
+						{
+							throw new UnsupportedTranslationException(e.getMessage(), e);
+						} catch (Exception e)
+						{
+							throw new SolverException("Error converting result expression. Expected output type: "
+									+ context.types.get(solutionName), e);
+						}
+					}
+				}
+			}
+		}
+
+		if (!assignments.isEmpty())
+		{
+			// there might be invs so use atomic assignment
+			block.getStatements().add(BToVdmConverter.getAtomicBlock(assignments));
+		}
+
+		if (!returnExpressions.isEmpty())
+		{
+			if (returnExpressions.size() == 1)
+			{
+				PExp exp = returnExpressions.values().iterator().next();
+				if (context instanceof VdmExpContext)
+				{
+					return new VdmSolution(exp);
+				}
+				resultStm = BToVdmConverter.getReturnStatement(null, exp);
+			} else
+			{
+				List<PExp> exps = new Vector<PExp>();
+				// sorting the return expression according to the return type spec
+				for (String id : context.resultIds)
+				{
+					exps.add(returnExpressions.get(id));
+				}
+				PExp tuple = BToVdmConverter.createTuple(exps);
+				if (context instanceof VdmExpContext)
+				{
+					return new VdmSolution(tuple);
+				}
+				resultStm = BToVdmConverter.getReturnStatement(null, tuple);
+			}
+
+			// this needs to be inserted last since this will be the return of the operation
+			block.getStatements().add(resultStm);
+		}
+
+		return new VdmSolution(block);
+	}
+
 	public VdmSolution solve(String name, INode opDef, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
-			Map<String, PType> argumentTypes,PType tokenType) throws SolverException
+			Map<String, PType> argumentTypes, PType tokenType)
+			throws SolverException
 	{
 		List<PDefinition> states = new Vector<PDefinition>();
 
@@ -175,7 +355,7 @@ public class ProbSolverUtil
 			console.out.println("---------------------------------------------------------------------------------");
 			console.out.println("Solver running for operation: " + name);
 
-			VdmContext context = translate(states, opDef, result, arguments, argumentTypes,tokenType, stateConstraints);
+			VdmContext context = translate(states, opDef, result, arguments, argumentTypes, tokenType, stateConstraints);
 
 			VdmSolution val = solve(context);
 			return val;
@@ -185,147 +365,75 @@ public class ProbSolverUtil
 		}
 	}
 
-	private static class VdmContext
+	private VdmSolution solve(VdmContext context) throws SolverException
 	{
-		public final AbstractEvalElement solverInput;
-		public final Map<String, PType> types;
-		/**
-		 * Sorted list of return values matching the mk_(...) ret that will be generated
-		 */
-		public final List<String> resultIds;
-		public final List<ILexNameToken> stateIds;
-
-		public VdmContext(AbstractEvalElement solverInput,
-				Map<String, PType> types, List<ILexNameToken> stateIds,
-				List<String> resultIds)
+		try
 		{
-			this.solverInput = solverInput;
-			this.types = types;
-			this.stateIds = stateIds;
-			this.resultIds = resultIds;
-		}
+			initialize(sets);
+			CbcSolveCommand command = new CbcSolveCommand(context.solverInput);
 
-		public boolean hasId(String id)
-		{
-			return resultIds.contains(id) || isState(id);
-		}
+			// // http://nightly.cobra.cs.uni-duesseldorf.de/cli/
+			IEvalResult solverResult = null;
 
-		public boolean isState(String id)
-		{
-			return getStateId(id) != null;
-		}
-
-		public boolean isResult(String id)
-		{
-			return resultIds.contains(id);
-		}
-
-		public ILexNameToken getStateId(String id)
-		{
-			for (ILexNameToken stateId : stateIds)
+			try
 			{
-				if (stateId.getName().equals(id))
+				animator.execute(command);
+				solverResult = command.getValue();
+			} catch (Exception e)
+			{
+				String message = "";
+				if (e.getMessage().startsWith("Uncovered boolean expression"))
 				{
-					return stateId;
+					message = "not a predicate";
+				} else
+				{
+					message = "error";
+				}
+				PrologTermStringOutput pout = new PrologTermStringOutput();
+				ASTProlog prolog = new ASTProlog(pout, null);
+				if (context.solverInput instanceof ClassicalB)
+				{
+					((ClassicalB) context.solverInput).getAst().apply(prolog);
+				}
+
+				throw new SolverException(message + " - \n\n" + e.getMessage()
+						+ "\n\n" + displayFormat(context.solverInput) + "\n\n"
+						+ pout.toString() + "\n\n", e);
+			}
+
+			if (solverResult != null)
+			{
+				if (solverResult instanceof ComputationNotCompletedResult)
+				{
+					ComputationNotCompletedResult r = (ComputationNotCompletedResult) solverResult;
+					throw new SolverException(r.getReason());
+				} else if (solverResult instanceof EvalResult)
+				{
+					EvalResult r = (EvalResult) solverResult;
+					console.out.println("Solver solution:");
+
+					return extractSolution(context, r);
+
 				}
 			}
 			return null;
-		}
-	}
-
-	private static class VdmSlContext extends VdmContext
-	{
-
-		public VdmSlContext(AbstractEvalElement solverInput,
-				ILexNameToken stateId, ARecordInvariantType stateType,
-				List<String> resultIds, Map<String, PType> resultTypes)
+		} catch (Exception e)
 		{
-			super(solverInput, resultTypes, Arrays.asList(new ILexNameToken[] { stateId }), resultIds);
-			this.types.put(stateId.getName(), stateType);
-			this.types.putAll(resultTypes);
-		}
-
-		public ILexNameToken getStateId()
-		{
-			return this.stateIds.iterator().next();
-		}
-
-		public ARecordInvariantType getStateType()
-		{
-			return (ARecordInvariantType) this.types.get(getStateId().getName());
-		}
-	}
-
-	private static class VdmPpContext extends VdmContext
-	{
-
-		public VdmPpContext(AbstractEvalElement solverInput,
-				Map<String, PType> types, List<ILexNameToken> stateIds,
-				List<String> resultIds)
-		{
-			super(solverInput, types, stateIds, resultIds);
-		}
-
-		public VdmPpContext(AbstractEvalElement formula,
-				List<ILexNameToken> stateIds, Map<String, PType> stateTypes,
-				List<String> resultIds, Map<String, PType> resultTypes)
-		{
-			super(formula, resultTypes, stateIds, resultIds);
-			this.types.putAll(stateTypes);
-			this.types.putAll(resultTypes);
-		}
-
-	}
-
-	private static class VdmExpContext extends VdmContext
-	{
-
-		public VdmExpContext(AbstractEvalElement solverInput,
-				Map<String, PType> types, List<ILexNameToken> stateIds,
-				List<String> resultIds)
-		{
-			super(solverInput, types, stateIds, resultIds);
-		}
-
-	}
-
-	private class VdmSolution
-	{
-		INode result;
-
-		public VdmSolution(INode result)
-		{
-			this.result = result;
-		}
-
-		public boolean isExpression()
-		{
-			return result instanceof PExp;
-		}
-
-		public boolean isStatement()
-		{
-			return result instanceof PStm;
-		}
-
-		public PStm getStatement()
-		{
-			return isStatement() ? (PStm) this.result : null;
-		}
-
-		public PExp getExpression()
-		{
-			return isExpression() ? (PExp) this.result : null;
+			if (e instanceof SolverException)
+			{
+				throw (SolverException) e;
+			}
+			throw new SolverException("Internal error in solver invocation", e);
 		}
 	}
 
 	private VdmContext translate(List<PDefinition> stateDefinitions,
 			INode opDef, APatternTypePair result,
 			Map<String, INode> argContext, Map<String, PType> argumentTypes,
-			PType tokenType, Map<String, INode> stateConstraints) throws AnalysisException,
-			SolverException
+			PType tokenType, Map<String, INode> stateConstraints)
+			throws AnalysisException, SolverException
 	{
-		VdmToBConverter translator = new VdmToBConverter(console,tokenType);
+		VdmToBConverter translator = new VdmToBConverter(console, tokenType);
 
 		AStateDefinition stateDef = null;
 
@@ -429,245 +537,6 @@ public class ProbSolverUtil
 
 		return new VdmPpContext(formula, stateIds, stateTypes, resultIds, resultTypes);
 
-	}
-
-	private AbstractEvalElement createFormula(INode def,
-			Map<String, INode> argContext, Map<String, PType> argumentTypes,
-			VdmToBConverter translator, Node statePredicate, Node post)
-			throws AnalysisException, SolverException
-	{
-		if (post == null)
-		{
-			post = def.apply(translator);
-		} else
-		{
-			post = new AConjunctPredicate((PPredicate) post, (PPredicate) def.apply(translator));
-		}
-
-		if (statePredicate != null)
-		{
-			post = new AConjunctPredicate((PPredicate) statePredicate, (PPredicate) post);
-		}
-
-		// add argument constraints
-		for (Entry<String, INode> arg : argContext.entrySet())
-		{
-			AEqualPredicate eqp = new AEqualPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
-			post = new AConjunctPredicate((PPredicate) post, eqp);
-		}
-		// add argument types (only if no values are given)
-		for (Entry<String, PType> arg : argumentTypes.entrySet())
-		{
-			if (!argContext.containsKey(arg.getKey()))
-			{
-				AMemberPredicate eqp = new AMemberPredicate(VdmToBConverter.createIdentifier(arg.getKey()), (PExpression) arg.getValue().apply(translator));
-				post = new AConjunctPredicate((PPredicate) post, eqp);
-			}
-		}
-
-		PPredicate p = (PPredicate) post;
-
-		Start s = new Start(new APredicateParseUnit(p), new EOF());
-
-		// s.apply(new ASTPrinter(System.out));
-
-		AbstractEvalElement formula = null;
-		try
-		{
-			formula = new ClassicalB(s);
-			console.out.println(displayFormat(formula));
-		} catch (Exception e)
-		{
-			throw new SolverException("Syntax error in: " + post, e);
-		}
-		return formula;
-	}
-
-	private static IAnimator animator;
-	
-	
-	public String displayFormat(AbstractEvalElement formula)
-	{
-	return "Solver input:\n\t\t\t"
-			+ formula.getCode().replace("&", " & \n\t\t\t");	
-	}
-
-	private void initialize() throws BException
-	{
-		if (animator == null)
-		{
-			animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
-			AbstractCommand[] init = {
-					/* We load a machine with the token type installed */
-					new LoadBProjectFromStringCommand("MACHINE tmp1 SETS TOKEN END"),
-					// new LoadBProjectFromStringCommand("MACHINE empty END"),
-					new SetPreferenceCommand("CLPFD", "TRUE"),
-					new SetPreferenceCommand("BOOL_AS_PREDICATE", "TRUE"),
-					new SetPreferenceCommand("MAXINT", "127"),
-					new SetPreferenceCommand("MININT", "-128"),
-					new SetPreferenceCommand("TIME_OUT", "500"),
-					new StartAnimationCommand() };
-			animator.execute(init);
-		}
-	}
-
-	private VdmSolution solve(VdmContext context) throws SolverException
-	{
-		try
-		{
-			initialize();
-			CbcSolveCommand command = new CbcSolveCommand(context.solverInput);
-
-			// // http://nightly.cobra.cs.uni-duesseldorf.de/cli/
-			IEvalResult solverResult = null;
-
-			try
-			{
-				animator.execute(command);
-				solverResult = command.getValue();
-			} catch (Exception e)
-			{
-				String message = "";
-				if (e.getMessage().startsWith("Uncovered boolean expression"))
-				{
-					message = "not a predicate";
-				} else
-				{
-					message = "error";
-				}
-
-				throw new SolverException(message + " - \n\n" + e.getMessage()+"\n\n"+displayFormat(context.solverInput), e);
-			}
-
-			if (solverResult != null)
-			{
-				if (solverResult instanceof ComputationNotCompletedResult)
-				{
-					ComputationNotCompletedResult r = (ComputationNotCompletedResult) solverResult;
-					throw new SolverException(r.getReason());
-				} else if (solverResult instanceof EvalResult)
-				{
-					EvalResult r = (EvalResult) solverResult;
-					console.out.println("Solver solution:");
-
-					return extractSolution(context, r);
-
-				}
-			}
-			return null;
-		} catch (Exception e)
-		{
-			if (e instanceof SolverException)
-			{
-				throw (SolverException) e;
-			}
-			throw new SolverException("Internal error in solver invocation", e);
-		}
-	}
-
-	/**
-	 * Extracts the B solution and converts it to VDM expressions and then constructs a VDM block with the assignments
-	 * and return value
-	 * 
-	 * @param context
-	 * @param r
-	 * @return
-	 * @throws SolverException
-	 */
-	public VdmSolution extractSolution(VdmContext context, EvalResult r)
-			throws SolverException
-	{
-		ABlockSimpleBlockStm block = AstFactory.newABlockSimpleBlockStm(new LexLocation(), new Vector<AAssignmentDefinition>());
-		PStm resultStm = null;
-
-		Map<String, PExp> returnExpressions = new HashMap<String, PExp>();
-		List<AAssignmentStm> assignments = new Vector<AAssignmentStm>();
-
-		for (Entry<String, String> entry : r.getSolutions().entrySet())
-		{
-			String solutionName = entry.getKey();
-
-			{
-				if (context.hasId(solutionName))
-				{
-					ClassicalB b = new ClassicalB(entry.getValue());
-					PParseUnit p = b.getAst().getPParseUnit();
-					console.out.println("\t\t\t" + solutionName + " = "
-							+ b.getCode());
-
-					if (context.isState(solutionName))
-					{
-						try
-						{
-							if (context instanceof VdmSlContext)
-							{
-								VdmSlContext slContext = (VdmSlContext) context;
-								PExp stateExp = BToVdmConverter.convert(slContext.getStateType(), p);
-								block.getStatements().add(BToVdmConverter.getStateAssignment(slContext.getStateType(), (AMkTypeExp) stateExp));
-							} else
-							{
-								PExp stateExp = BToVdmConverter.convert(context.types.get(solutionName), p);
-								assignments.add(BToVdmConverter.getAssignment(context.getStateId(solutionName), stateExp));
-							}
-
-						} catch (Exception e)
-						{
-							throw new SolverException("Error converting state expression", e);
-						}
-					} else if (context.isResult(solutionName))
-					{
-						try
-						{
-							PExp retExp = BToVdmConverter.convert(context.types.get(solutionName), p);
-							returnExpressions.put(solutionName, retExp);
-
-						} catch (Exception e)
-						{
-							throw new SolverException("Error converting result expression. Expected output type: "
-									+ context.types.get(solutionName), e);
-						}
-					}
-				}
-			}
-		}
-
-		if (!assignments.isEmpty())
-		{
-			// there might be invs so use atomic assignment
-			block.getStatements().add(BToVdmConverter.getAtomicBlock(assignments));
-		}
-
-		if (!returnExpressions.isEmpty())
-		{
-			if (returnExpressions.size() == 1)
-			{
-				PExp exp = returnExpressions.values().iterator().next();
-				if (context instanceof VdmExpContext)
-				{
-					return new VdmSolution(exp);
-				}
-				resultStm = BToVdmConverter.getReturnStatement(null, exp);
-			} else
-			{
-				List<PExp> exps = new Vector<PExp>();
-				// sorting the return expression according to the return type spec
-				for (String id : context.resultIds)
-				{
-					exps.add(returnExpressions.get(id));
-				}
-				PExp tuple = BToVdmConverter.createTuple(exps);
-				if (context instanceof VdmExpContext)
-				{
-					return new VdmSolution(tuple);
-				}
-				resultStm = BToVdmConverter.getReturnStatement(null, tuple);
-			}
-
-			// this needs to be inserted last since this will be the return of the operation
-			block.getStatements().add(resultStm);
-		}
-
-		return new VdmSolution(block);
 	}
 
 }
