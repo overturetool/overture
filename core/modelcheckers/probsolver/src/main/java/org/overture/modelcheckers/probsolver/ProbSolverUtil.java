@@ -40,6 +40,7 @@ import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
+import de.be4.classicalb.core.parser.analysis.prolog.ASTProlog;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;
 import de.be4.classicalb.core.parser.node.AEqualPredicate;
 import de.be4.classicalb.core.parser.node.AMemberPredicate;
@@ -56,6 +57,7 @@ import de.prob.animator.domainobjects.ClassicalB;
 import de.prob.animator.domainobjects.ComputationNotCompletedResult;
 import de.prob.animator.domainobjects.EvalResult;
 import de.prob.animator.domainobjects.IEvalResult;
+import de.prob.prolog.output.PrologTermStringOutput;
 
 public class ProbSolverUtil extends AbstractProbSolverUtil
 {
@@ -222,11 +224,11 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 							if (context instanceof VdmSlContext)
 							{
 								VdmSlContext slContext = (VdmSlContext) context;
-								PExp stateExp = BToVdmConverter.convert(slContext.getStateType(),VdmToBConverter.QUOTE_LIT_PREFIX, p);
+								PExp stateExp = BToVdmConverter.convert(slContext.getStateType(), VdmToBConverter.QUOTE_LIT_PREFIX, p);
 								block.getStatements().add(BToVdmConverter.getStateAssignment(slContext.getStateType(), (AMkTypeExp) stateExp));
 							} else
 							{
-								PExp stateExp = BToVdmConverter.convert(context.types.get(solutionName),VdmToBConverter.QUOTE_LIT_PREFIX, p);
+								PExp stateExp = BToVdmConverter.convert(context.types.get(solutionName), VdmToBConverter.QUOTE_LIT_PREFIX, p);
 								assignments.add(BToVdmConverter.getAssignment(context.getStateId(solutionName), stateExp));
 							}
 
@@ -238,7 +240,7 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 					{
 						try
 						{
-							PExp retExp = BToVdmConverter.convert(context.types.get(solutionName),VdmToBConverter.QUOTE_LIT_PREFIX, p);
+							PExp retExp = BToVdmConverter.convert(context.types.get(solutionName), VdmToBConverter.QUOTE_LIT_PREFIX, p);
 							returnExpressions.put(solutionName, retExp);
 
 						} catch (Exception e)
@@ -382,9 +384,16 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 				{
 					message = "error";
 				}
+				PrologTermStringOutput pout = new PrologTermStringOutput();
+				ASTProlog prolog = new ASTProlog(pout, null);
+				if (context.solverInput instanceof ClassicalB)
+				{
+					((ClassicalB) context.solverInput).getAst().apply(prolog);
+				}
 
 				throw new SolverException(message + " - \n\n" + e.getMessage()
-						+ "\n\n" + displayFormat(context.solverInput), e);
+						+ "\n\n" + displayFormat(context.solverInput) + "\n\n"
+						+ pout.toString() + "\n\n", e);
 			}
 
 			if (solverResult != null)
