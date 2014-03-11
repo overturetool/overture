@@ -36,6 +36,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter;
+import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter.ProBToVdmAnalysisException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -195,9 +196,10 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	 * @param r
 	 * @return
 	 * @throws SolverException
+	 * @throws UnsupportedTranslationException 
 	 */
 	private VdmSolution extractSolution(VdmContext context, EvalResult r)
-			throws SolverException
+			throws SolverException, UnsupportedTranslationException
 	{
 		ABlockSimpleBlockStm block = AstFactory.newABlockSimpleBlockStm(new LexLocation(), new Vector<AAssignmentDefinition>());
 		PStm resultStm = null;
@@ -243,6 +245,9 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 							PExp retExp = BToVdmConverter.convert(context.types.get(solutionName), VdmToBConverter.QUOTE_LIT_PREFIX, p);
 							returnExpressions.put(solutionName, retExp);
 
+						} catch (ProBToVdmAnalysisException e)
+						{
+							throw new UnsupportedTranslationException(e.getMessage(), e);
 						} catch (Exception e)
 						{
 							throw new SolverException("Error converting result expression. Expected output type: "

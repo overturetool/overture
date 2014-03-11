@@ -62,18 +62,18 @@ public class ProbConverterTestBase
 
 			PType tokenType = calculateTokenType();
 
-			Set<String> quotes=calculateQuotes();
-			
+			Set<String> quotes = calculateQuotes();
+
 			if (def instanceof AImplicitOperationDefinition)
 			{
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType,quotes, new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
 
 			} else
 			{
 				AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
 				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType,quotes, new SolverConsole());
+				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
 			}
 			System.out.println("Result=" + result);
 
@@ -81,11 +81,11 @@ public class ProbConverterTestBase
 		{
 			if (e.getCause() instanceof UnsupportedTranslationException)
 			{
-				Assert.fail(e.getCause().getMessage());
-				// } else if(e.getCause() instanceof ProvisionException && e.getCause().getCause() instanceof
-				// NullPointerException)
-				// {
-				// Assume.assumeFalse("ProB not installed", false);
+				//TODO we should change to the test framework here for better handling
+				if (!e.getCause().getMessage().startsWith("Not supported"))
+				{
+					Assert.fail(e.getCause().getMessage());
+				}
 			} else
 			{
 				throw e;
