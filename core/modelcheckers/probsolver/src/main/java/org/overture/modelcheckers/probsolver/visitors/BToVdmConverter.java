@@ -10,6 +10,7 @@ import org.overture.ast.expressions.AMapletExp; //added
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -17,6 +18,7 @@ import org.overture.ast.intf.lex.ILexQuoteToken;
 import org.overture.ast.lex.LexBooleanToken;//added
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
+import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.statements.AAssignmentStm;
@@ -28,6 +30,8 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.SBasicType;
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
 import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
@@ -239,7 +243,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 		List<PExp> exps = new Vector<PExp>();
 		List<AMapletExp> mems = new Vector<AMapletExp>();
 
-		// System.err.println("In caseASetExtension...: " + expectedType);//added
+		System.err.println("In caseASetExtension...: " + expectedType);//added
 
 		if (expectedType instanceof ASetType)
 		{
@@ -282,12 +286,25 @@ public class BToVdmConverter extends DepthFirstAdapter
 			}
 			result = AstFactory.newAMapEnumMapExp(loc, mems);// added
 
-		} else
+		} else if(expectedType instanceof ATokenBasicType) {
+		    ASetEnumSetExp arg = new ASetEnumSetExp();
+		    PType type = (ATokenBasicType)expectedType;
+		    for(PExpression pExp : node.getExpressions()) {
+			arg.getMembers().add(convert(type, pExp));
+		    }
+		    result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
+                } else 
 		{
 			PExpression pExp = node.getExpressions().getFirst();
 			result = AstFactory.newAIntLiteralExp(new LexIntegerToken(pExp.toString().trim(), loc));
 		}
+		/*
+	    if(expectedType instanceof ATokenBasicType) {
+		ASetEnumSetExp arg = new ASetEnumSetExp();
+		result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
+	    }
 
+		*/
 	}
 
 	@SuppressWarnings("deprecation")
