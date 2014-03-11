@@ -21,10 +21,9 @@ public class ModulesSlTest extends CommonInterpreterTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		String name = "Interpreter Modules SL TestSuite";
-		String root = "src\\test\\resources\\modules";
+		String root = "src/test/resources/modules/complete/";
 
-		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_SL, name, root, "vdmsl", "");
+		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_SL, "", root, "vdmsl", "");
 		return tests;
 	}
 

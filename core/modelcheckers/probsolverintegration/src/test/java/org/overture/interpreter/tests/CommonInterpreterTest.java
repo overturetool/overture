@@ -45,7 +45,7 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 		Settings.dialect = dialect;
 		Settings.release = Release.VDM_10;
 	}
-	
+
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
@@ -168,29 +168,29 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 
 	protected String search(File file, String name) throws IOException
 	{
-		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
-		if (readme.exists())
-		{
-			BufferedReader reader = null;
-			try
-			{
-				reader = new BufferedReader(new FileReader(readme));
+//		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
+//		if (readme.exists())
+//		{
+//			BufferedReader reader = null;
+//			try
+//			{
+//				reader = new BufferedReader(new FileReader(readme));
 
-				String text = null;
-				while ((text = reader.readLine()) != null)
-				{
-					text = text.trim();
-					if (text.startsWith("#ENTRY_POINT"))
-					{
-						return text.substring(text.indexOf('=') + 1).trim();
-					}
-				}
-			} finally
-			{
-				reader.close();
-			}
-		}
-		return null;
+		return "test()";
+//				while ((text = reader.readLine()) != null)
+//				{
+//					text = text.trim();
+//					if (text.startsWith("#ENTRY_POINT"))
+//					{
+//						return text.substring(text.indexOf('=') + 1).trim();
+//					}
+//				}
+//			} finally
+//			{
+//				reader.close();
+//			}
+//		}
+//		return null;
 	}
 
 	private List<String> getEntries() throws IOException
