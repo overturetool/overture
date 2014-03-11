@@ -90,6 +90,9 @@ public class InspectBAst
 
 		f = new ClassicalB("{2|->3|->4}");
 		f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("1 - 2");
+		f.getAst().apply(new ASTPrinter(System.out));
 	}
 
 }

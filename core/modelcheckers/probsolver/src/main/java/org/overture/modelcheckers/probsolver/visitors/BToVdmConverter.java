@@ -11,6 +11,7 @@ import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -189,12 +190,20 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseAEmptySetExpression(AEmptySetExpression node)
 	{
+	    /*
+	    if(expectedType instanceof ATokenBasicType) {
+		ASetEnumSetExp arg = new ASetEnumSetExp();
+		result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
+	    }
+	    */
 		result = AstFactory.newASetEnumSetExp(loc);
 	}
 
 	@Override
 	public void caseACoupleExpression(ACoupleExpression node)
 	{
+		System.err.println("In caseACouple...: " + expectedType);//added
+
 		if (expectedType instanceof AProductType)
 		{
 			PType type;
@@ -204,6 +213,19 @@ public class BToVdmConverter extends DepthFirstAdapter
 			type = ((AProductType) expectedType).getTypes().getLast();
 			args.add(convert(type, node.getList().getLast()));
 			result = AstFactory.newATupleExp(loc, args);
+		} else if(expectedType instanceof ATokenBasicType)
+		{ 
+		    System.err.println("In caseACouple...: reached here");
+		    //PType typeFrom = ((AMapMapType) expectedType).getFrom();
+		    //System.err.println(typeFrom + " |-> ");
+
+		    /*
+		    PType typeTo = (PType)node.getList().getLast().getType();
+		    PExp mapFrom = convert(typeFrom, node.getList().getFirst());
+		    PExp mapTo = convert(typeTo, node.getList().getLast());
+		    System.err.println(typeFrom + " |-> " + typeTo);
+		    //result = AstFactory.newAMapletExp(mapFrom, op, mapTo);
+		    */
 		} else
 		{ // MapMapType
 			/*
@@ -268,7 +290,22 @@ public class BToVdmConverter extends DepthFirstAdapter
 		    ASetEnumSetExp arg = new ASetEnumSetExp();
 		    PType type = (ATokenBasicType)expectedType;
 		    for(PExpression pExp : node.getExpressions()) {
-			arg.getMembers().add(convert(type, pExp));
+
+			if(pExp instanceof ACoupleExpression) {
+			    System.err.println("In ACoupleExpression -> ATokenBasicType -> ASetExtensionSet: under construction");
+			    /*
+			    PType typeFrom = ((AMapMapType) expectedType).getFrom();
+			    PType typeTo = ((AMapMapType) expectedType).getTo();
+
+			    PExp mapFrom = convert(typeFrom, ((ACoupleExpression) pExp).getList().getFirst());
+			    PExp mapTo = convert(typeTo, ((ACoupleExpression) pExp).getList().getLast());
+
+			    arg.getMembers().add(new AMapletExp(loc, mapFrom, mapTo));
+			    */
+			} else {
+
+			    arg.getMembers().add(convert(type, pExp));
+			}
 		    }
 		    result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
                 } else 
@@ -292,9 +329,16 @@ public class BToVdmConverter extends DepthFirstAdapter
 
 		List<PExp> list = new Vector<PExp>();
 		List<AMapletExp> mems = new Vector<AMapletExp>();
-		// System.err.println("In caseASequenceExtension...: " + expectedType);
+		//System.err.println("In caseASequenceExtension...: " + expectedType);
 
-		if (expectedType instanceof AMapMapType) // added from here
+		if(expectedType instanceof ATokenBasicType) {
+		    ASeqEnumSeqExp arg = new ASeqEnumSeqExp();
+		    PType type = ((ATokenBasicType)expectedType);
+		    for(PExpression pExp : node.getExpression()) {
+			arg.getMembers().add(convert(type, pExp));
+		    }
+		    result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
+		} else if (expectedType instanceof AMapMapType) // added from here
 		{ // map A to B
 			PType typeFrom = ((AMapMapType) expectedType).getFrom();
 			PType typeTo = ((AMapMapType) expectedType).getTo();
@@ -310,7 +354,7 @@ public class BToVdmConverter extends DepthFirstAdapter
 				seqNo++;
 			}
 			result = AstFactory.newAMapEnumMapExp(loc, mems);
-		} // added to here
+		}
 		else
 		{
 			/*

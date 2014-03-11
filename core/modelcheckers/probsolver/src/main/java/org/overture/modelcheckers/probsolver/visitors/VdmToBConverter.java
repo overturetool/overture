@@ -1133,7 +1133,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		LinkedList<PExp> args = node.getArgs();
 		ACoupleExpression cpl = new ACoupleExpression();
-		System.out.println("in Tuple : " + args);// add 2014/03/03
+		//System.out.println("in Tuple : " + args);// add 2014/03/03
 		cpl.getList().add(exp(args.get(0)));
 		cpl.getList().add(exp(args.get(1)));
 		/*
@@ -1360,7 +1360,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
-	    System.err.println("AMkBasicExp: " + node + " -- " + node.getArg());
+	    //System.err.println("AMkBasicExp: " + node + " -- " + node.getArg());
 		if (node.getType() instanceof ATokenBasicType)
 		{
 			return node.getArg().apply(this);
