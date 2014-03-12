@@ -39,6 +39,7 @@ import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 public class RTLogger
 {
 	static int eventCount = 0;
+	static boolean enabled = false;
 
 	private static List<IRTLogger> loggers = new Vector<IRTLogger>();
 
@@ -59,6 +60,8 @@ public class RTLogger
 		{
 			logger.enable(on);
 		}
+		
+		enabled = on;
 	}
 
 	/**
@@ -68,10 +71,14 @@ public class RTLogger
 	 */
 	public static synchronized void log(RTMessage message)
 	{
-		eventCount++;
-		for (IRTLogger logger : loggers)
+		if (enabled)
 		{
-			logger.log(message);
+			eventCount++;
+			
+			for (IRTLogger logger : loggers)
+			{
+				logger.log(message);
+			}
 		}
 	}
 
@@ -93,6 +100,8 @@ public class RTLogger
 				logger.dump(true); // Write out and close previous
 			}
 		}
+		
+		enable(true);
 	}
 
 	/**
@@ -116,6 +125,7 @@ public class RTLogger
 		{
 			logger.dump(close);
 		}
+		
 		eventCount = 0;
 	}
 }
