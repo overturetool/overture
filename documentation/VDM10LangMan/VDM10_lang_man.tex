@@ -223,9 +223,10 @@
         Nick Battle\\
         John Fitzgerald\\
         Sune Wolff\\
-        Shin Sahara}
+        Shin Sahara\\
+        Marcel Verhoef}
 
-\date{April 2013}
+\date{March 2014}
 \reportno{TR-001}     
 
 \pagenumbering{roman}
@@ -234,13 +235,15 @@
 
 {\textbf{Document history}}
 
-\begin{tabular}{|l|l|l|l|}\hline
-Month   & Year & Version & Version of Overture.exe \\ \hline
-April   & 2010 &         & 0.2   \\ \hline
-May     & 2010 & 1       & 0.2   \\ \hline
-February& 2011 & 2       & 1.0.0 \\ \hline
-July    & 2012 & 3       & 1.2.2 \\ \hline
-April   & 2013 & 4       & 2.0.0 \\ \hline
+\begin{tabular}{|l|l|l|l|l|}\hline
+Month   & Year & Version & Version of Overture.exe & Comment \\ \hline
+April   & 2010 &         & 0.2   & \\ \hline
+May     & 2010 & 1       & 0.2   &  \\ \hline
+February& 2011 & 2       & 1.0.0 &  \\ \hline
+July    & 2012 & 3       & 1.2.2 & \\ \hline
+April   & 2013 & 4       & 2.0.0 & \\ \hline
+March & 2014 & 5 & 2.0.4 &
+Includes RMs \#16, \#17, \#18, \#20 \\ \hline
 \end{tabular}
 
 %\addtocounter{page}{2}
@@ -3941,7 +3944,7 @@ values after the interval [\textbf{S},\textbf{T}]:
  \Rule{time expression}{\Lop{time}}
 
 \item[Semantics:] This is simply an easy way to refer to the current time on 
-     a given CPU. The time is provided as a natural number.
+     a given CPU. The time is provided as a natural number, with a resolution of 1~nsec.
 \item[Examples:] If for example one would like to log when a certain operation takes place one can create an operation such as \texttt{logEnvToSys} below.
 \begin{lstlisting}
   public logEnvToSys: nat ==> ()
@@ -4802,10 +4805,8 @@ only be used in the VDM-RT dialect.
     \Lop{operations}, 
     \OptPt{\Ruleref{access operation definition}}, \lfeed
            \SeqPt{\Lit{;}, 
-                  \Ruleref{access operation definition}}
-                 }, 
-           \OptPt{\Lit{;}
-    }
+                  \Ruleref{access operation definition}} ,  \OptPt{\Lit{;}
+    }}
 
     \Rule{access operation definition}{(
       \OptPt{\Lop{async}}
@@ -6475,6 +6476,42 @@ bootSequenceList(rl) ==
 \end{lstlisting}
 \end{description}
 
+\section{Stop and Stop List Statements (VDM++ and VDM-RT)}\label{sec:stop}
+\label{sc:stopstmt}
+
+\begin{description}
+\item[Syntax:] 
+  \Rule{statement}{
+    \ldots \dsep
+    \Ruleref{stop statement} \dsep
+    \Ruleref{stop list statement}
+    }
+
+  \Rule{stop statement}{
+    \Lop{stop}, \Lit{(}, \Ruleref{expression}, \Lit{)}}
+
+  \Rule{stop list statement}{
+    \Lop{stoplist}, \Lit{(}, \Ruleref{expression}, \Lit{)}
+  }
+    
+\item[Semantics:] The {\it stop} and {\it stop list} statements have the following form:
+  \begin{lstlisting}
+    stop(aRef)
+    stoplist(aRef_s)
+  \end{lstlisting}
+\end{description}
+
+The stop statement can be used to terminate a thread or to prevent a periodic thread from being invoked again, whereby a thread is identified by the object reference \emph{aRef}. The stop list statement is available to stop a number of active objects, in arbitrary order. The parameter {\tt aRef\_s} to \keyw{stoplist} must be a set of object references. A few additional remarks can be made:
+
+\begin{enumerate}
+\item \Lop{self} can be passed as an argument to \texttt{stop} or \texttt{stoplist}, effectively killing the current thread
+\item Note that \emph{thread identifiers} can \emph{not} be passed as an argument
+\item in contrast to \texttt{start} and \texttt{startlist}, \texttt{stop} and \texttt{stoplist} will block until the thread(s), identified by their object identifiers that are passed as an argument, are dead; if \Lop{self} is part of the set, it will be stopped last
+\item passing the object identifier of a task that has never been started or is already dead, will yield a run-time error
+\item  objects can be restarted by calling \texttt{start} and \texttt{startlist} again, which will create a fresh and unique \emph{thread identifier} for each thread.
+\item it is only possible to stop threads that are running on the same CPU
+\end{enumerate}
+
 \section{The Specification Statement} \label{se:specification}
 
 \begin{description}
@@ -6527,18 +6564,20 @@ Sort2 () ==
     \Ruleref{duration statement}
   }
   \Rule{duration statement}{
-    \Lop{duration}, \Lit{(}, \Ruleref{numeral}, \Lit{)},
+    \Lop{duration}, \Lit{(}, \Ruleref{expression}, \Lit{)},
     \Ruleref{statement}
   }
 
 \item[Semantics:]
 The duration statement is a runtime directive to the VDM
 interpreters telling it that when incrementing the internal clock for the
-enclosed statement, the value (a natural number)
+enclosed statement, the value (an expression that must yield a natural number as its return type, otherwise causing a run-time error)
 given in the duration statement should
 be used instead of the increment which would normally be computed for that
 statement. Thus the duration statement provides a mechanism to
-override the VDM interpreter's default execution time computation.
+override the VDM interpreter's default execution time computation. Note that the execution
+of the expression is done in zero time and cannot cause thread switches.
+ 
 
 \item[Example:] First a simple example:
 \begin{lstlisting}
@@ -6586,6 +6625,11 @@ the duration statement in the environment of the call. Thus in
 \texttt{n := op1(1);} the internal clock is incremented by 10 time units
 only. 
 
+\begin{lstlisting}
+  ( n := 1; while n < 10 do duration(n) n := n + 1 )
+\end{lstlisting}
+
+The final example demonstrates the use of a general expression as the argument to the duration statement, whereby the consecutive executions of the body of the while loop take more time as $n$ increases.
 
 \end{description}
 
@@ -6598,14 +6642,14 @@ only.
     \Ruleref{cycles statement}
   }
   \Rule{cycles statement}{
-    \Lop{cycles}, \Lit{(}, \Ruleref{numeral}, \Lit{)},
+    \Lop{cycles}, \Lit{(}, \Ruleref{expression}, \Lit{)},
     \Ruleref{statement}
   }
 
 \item[Semantics:]
 The cycles statement is a runtime directive to the VDM interpreters
 telling it that when incrementing the internal clock for the enclosed
-statement, the value (a natural number)
+statement, the value (an expression that must yield a natural number as its return type, otherwise causing a run-time error)
 given in the cycles statement should be used as
 an indication of how many clock cycles that the enclosed statement
 should be incremented by instead of the increment which would normally
@@ -6613,7 +6657,8 @@ be computed for that statement. Thus the cycles statement provides a
 mechanism to override the VDM interpreter's default execution time
 computation similar to the duration statement but in a way that is
 relative to the speed of the \texttt{CPU} that the computation is carried
-out on.
+out on. Note that the execution
+of the expression is done in zero time and cannot cause thread switches.
 
 \item[Example:] First a simple example:
 \begin{lstlisting}
@@ -6662,6 +6707,13 @@ the cycles statement in the environment of the call. Thus in
 \texttt{n := op1(1);} the internal clock is incremented by the time
 it takes to process 1000 instructions on the given \texttt{CPU}
 only. 
+
+\begin{lstlisting}
+  ( n := 1; while n < 10 do cycles(n) n := n + 1 )
+\end{lstlisting}
+
+The final example demonstrates the use of a general expression as the argument to the cycles statement, whereby the consecutive executions of the body of the while loop take more time as $n$ increases.
+
 \end{description}
 
 
@@ -8259,6 +8311,11 @@ explained in Chapter~\ref{ch:sync}.
 \OptPt{\Ruleref{thread definition}} } \Rule{thread definition}{
     \Ruleref{periodic thread definition} \dsep 
     \Ruleref{procedural thread definition} }
+
+  \Ruledef{periodic thread definition}{
+    \Ruleref{periodic obligation}  \dsep
+    \Ruleref{sporadic obligation}
+  }
 \end{description}
 
 Subclasses inherit threads from superclasses. 
@@ -8268,36 +8325,31 @@ declaring a thread in a subclass will override any inherited thread.
 
 \section{Periodic Thread Definitions}\label{se:periodic-thread}
 
-The periodic thread definition can be regarded as the implicit way
-of describing the activities in a thread.
+The periodic obligation can be regarded as the way of describing repetitive activities in a class.
 
 \begin{description}
-\item[Syntax:] 
-  \Ruledef{periodic thread definition}{
-    \Ruleref{periodic obligation}
-  }
-
-For VDM++ where time is not explicit it looks like:
+\item[Syntax (VDM++):] For VDM++, where time is not explicit, it looks like:
   
 \Ruledef{periodic obligation}{
-  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+  \Lop{periodic},\Lit{(}, \Ruleref{expression}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
 }
 
-For VDM-RT where time is explicit it looks like:
+\item[Semantics (VDM++):] The type of the expression should always yield a natural number, otherwise a run-time error will occur. The expression denotes the size of the time slice, after which the operation \Lop{name} is called, repetitively. The size of the time slice can be used to specify \emph{execution ratios} between multiple periodic threads in VDM++. Its behavior in relation to the other parts of the specification is defined by the interpreter settings with respect to time slicing and scheduling. Note however, that these values have \emph{no} explicit relation to real time.
+
+\item[Syntax(VDM-RT):] Time is explicit in VDM-RT, using a discrete clock with a 1~nsec resolution, where the periodic obligation looks like:
 
   \Ruledef{periodic obligation}{
-    \Lop{periodic},\Lit{(}, \Ruleref{numeral},
-    \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
-    \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+    \Lop{periodic}, \lfeed 
+    \Lit{(}, \Ruleref{expression}, \Ruleref{expression}, \Ruleref{expression},  \Ruleref{expression}, \Lit{)}, \lfeed \Lit{(}, \Ruleref{name}, \Lit{)}
   }
 
-\item[Semantics:] 
-For each periodic thread four different numbers are used. They are in order 
+\item[Semantics (VDM-RT):] The type of the expressions should all yield a natural number (as we use a natural number valued wall-clock in the VDM-RT interpreter), otherwise a run-time error will occur. Note that the evaluation of the expressions also causes time to elapse whenever the \Lop{start} or \Lop{start\_list} statement is executed. The expressions all denote a time value with a resolution of 1~nsec.
+For each periodic obligation, four different numbers are used. They are, in order 
 of appearance (also illustrated in Figure~\ref{fig:PeriodJitterDelayOffset}): 
 
 \begin{enumerate}
 \item \textbf{period:} This is a non-negative, non-zero value that describes the length of the 
-time interval between two adjacent events in a strictly periodic event stream (where jitter = 0)
+time interval between two adjacent events in a strictly periodic event stream (where jitter = 0). Hence, a value of 1E9 denotes a period of 1~second.
 \item \textbf{jitter:} This is a non-negative value that describes the amount of time variance that is allowed
 around a single event. We assume that the interval is balanced [-j, j]. Note that jitter is
 allowed to be bigger than the period to characterize so-called event bursts.
@@ -8305,7 +8357,7 @@ allowed to be bigger than the period to characterize so-called event bursts.
 inter arrival distance between two adjacent events.
 \item \textbf{offset:} This is a non-negative value which is used to denote the absolute time value at which
 the first period of the event stream starts. Note that the first event occurs in the interval
-[offset, offset+ jitter].
+[offset, offset + jitter].
 \end{enumerate}
 
 \begin{figure}
@@ -8335,9 +8387,9 @@ the fairness criteria for the invocation of these other operations are
 maintained by reasoning about the time slices used internally and
 available for external invocations.
 
-A periodic thread is \textit{not} created or started when an instance of the
-corresponding class is created. Instead, as with procedural threads,
-start statements should be used with periodic threads. 
+Note that a periodic thread is \textit{neither} created \textit{nor} started when an instance
+of the corresponding class is created. Instead, as with procedural threads,
+\Lop{start} (or \Lop{start\_list}) statements should be used with periodic threads. 
 
 
 \item[Examples:]
@@ -8347,6 +8399,8 @@ and reading the current time.
 
 \begin{lstlisting}
 class Timer
+values
+  PERIOD : nat = 1000
 \end{lstlisting}
 
 The Timer has two instance variables the current time and a flag
@@ -8389,13 +8443,54 @@ no offset has been used.
 
 \begin{lstlisting}
 thread
-periodic(1000,10,200,0)(IncTime)
+  periodic (PERIOD, PERIOD/100, PERIOD/5, 0) (IncTime)
 
 end Timer
 \end{lstlisting}
 
 \end{description}
 
+
+\section{Sporadic Thread Definitions}\label{se:sporadic-thread}
+
+The sporadic obligation can be regarded as the way
+of describing stochastic activities in a class.
+
+\begin{description}
+\item[Syntax:]
+  \Ruledef{sporadic obligation}{
+    \Lop{sporadic}, \lfeed \Lit{(}, \Ruleref{expression},  \Ruleref{expression},   \Ruleref{expression}, 
+    \Lit{)}, \lfeed \Lit{(}, \Ruleref{name}, \Lit{)}
+  }
+
+\item[Semantics:] The type of the expressions should all yield a natural number (as we use a natural number valued wall-clock in the VDM-RT interpreter), otherwise a run-time error will occur. Note that the evaluation of the expressions also causes time to elapse whenever the \Lop{start} or \Lop{start\_list} statement is executed. The expressions all denote a time value with a resolution of 1~nsec.
+For each sporadic obligation, three different numbers are used. They are, in order 
+of appearance:
+
+\begin{enumerate}
+\item \textbf{delay:} This value is used to denote the minimum
+inter arrival distance between two adjacent thread invocations.
+\item \textbf{bound:} This value, greater than \textbf{delay}, is the maximum inter arrival distance between two adjacent thread invocations.
+\item \textbf{offset:} This is a non-negative value which is used to denote the absolute time value at which the first period starts, randomly in the interval $[offset, offset + bound]$.
+\end{enumerate}
+
+Given these definitions, and assuming the last thread was invoked at $t_0$ then the next invocation is randomly scheduled in the interval $[t_0 + delay, t_0 + bound]$.
+
+\item[Examples:]
+
+Analogous to the example in \Lop{periodic} for the \texttt{Timer} class, the sporadic definition could be as follows:
+
+\begin{lstlisting}
+class Timer
+...
+
+thread
+  sporadic (100, 1000, 0) (IncTime)
+
+end Timer
+\end{lstlisting}
+
+\end{description}
 
 \section{Procedural Thread Definitions}\label{se:proc-thread}
 
@@ -10254,21 +10349,29 @@ In VDM++ and VDM-RT extended explicit function definition looks like:
     \Ruleref{procedural thread definition} }
 
 \Ruledef{periodic thread definition}{
-    \Ruleref{periodic obligation} }
+    \Ruleref{periodic obligation}  \dsep
+    \Ruleref{sporadic obligation} }
 
-For VDM++ where time is not explicit it looks like:
+For VDM++ where time is not explicit, it looks like:
   
 \Ruledef{periodic obligation}{
-  \Lop{periodic},\Lit{(}, \Ruleref{numeral}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+  \Lop{periodic},\Lit{(}, \Ruleref{expression}, \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
 }
 
-For VDM-RT where time is explicit it looks like:
+For VDM-RT where time is explicit, it looks like:
 
 \Ruledef{periodic obligation}{
-  \Lop{periodic},\Lit{(}, \Ruleref{numeral},
-  \Ruleref{numeral}, \Ruleref{numeral}, \lfeed \Ruleref{numeral}, 
-  \Lit{)}, \Lit{(}, \Ruleref{name}, \Lit{)}
+  \Lop{periodic}, \lfeed \Lit{(}, \Ruleref{expression},
+  \Ruleref{expression}, \Ruleref{expression}, \Ruleref{expression}, 
+  \Lit{)},\lfeed \Lit{(}, \Ruleref{name}, \Lit{)}
 }
+
+\Ruledef{sporadic obligation}{
+  \Lop{sporadic}, \lfeed \Lit{(}, \Ruleref{expression}, \Ruleref{expression},
+  \Ruleref{expression},  \Lit{)}, \lfeed \Lit{(}, \Ruleref{name}, \Lit{)}
+}
+
+For both VDM++ and VDM-RT, we can define:
    
 \Ruledef{procedural thread definition}{
       \Ruleref{statement}}
@@ -11044,6 +11147,8 @@ For VDM-RT where time is explicit it looks like:
 %  \Ruleref{select statement} \dsep
   \Ruleref{start statement} \dsep
   \Ruleref{start list statement} \dsep
+  \Ruleref{stop statement} \dsep
+  \Ruleref{stop list statement} \dsep
 %  \Ruleref{delay statement} \dsep
 %#endif VDMPP
 %#ifdef VICEMAN
@@ -11261,6 +11366,14 @@ In VDM++ and VDM-RT a call statement looks like:
 \Ruledef{start list statement}{
       \Lop{startlist}, \Lit{(}, \Ruleref{expression}, \Lit{)}}
 
+\subsection{Stop and Stop List Statements (VDM++ and VDM-RT)}
+
+\Ruledef{stop statement}{
+    \Lop{stop}, \Lit{(}, \Ruleref{expression}, \Lit{)}}
+
+\Ruledef{stop list statement}{
+      \Lop{stoplist}, \Lit{(}, \Ruleref{expression}, \Lit{)}}
+
 %\subsection{The Delay Statement}
 %
 %\Ruledef{delay statement}{
@@ -11271,12 +11384,12 @@ In VDM++ and VDM-RT a call statement looks like:
 \subsection{The Duration and Cycles Statements (VDM-RT)}
 
 \Ruledef{duration statement}{
-  \Lop{duration}, \Lit{(}, \Ruleref{numeric literal}, \Lit{)},\lfeed
+  \Lop{duration}, \Lit{(}, \Ruleref{expression}, \Lit{)},\lfeed
   \Ruleref{statement}
 }
 
 \Ruledef{cycles statement}{
-    \Lop{cycles}, \Lit{(}, \Ruleref{numeral}, \Lit{)},\lfeed
+    \Lop{cycles}, \Lit{(}, \Ruleref{expression}, \Lit{)},\lfeed
     \Ruleref{statement}
   }
 
@@ -11665,10 +11778,13 @@ consecutive symbols must be separated by a separator.
   \Lks{set}
   \Lks{skip}
   \Lks{specified}
+  \Lks{sporadic}
   \Lks{st}
-  \Lks{start}
-  \Lksb{startlist}
+  \Lksb{start}
+  \Lks{startlist}
   \Lks{state}
+  \Lks{stop}
+  \Lksb{stoplist}
   \Lks{struct}
   \Lks{subclass}
   \Lks{subset}
