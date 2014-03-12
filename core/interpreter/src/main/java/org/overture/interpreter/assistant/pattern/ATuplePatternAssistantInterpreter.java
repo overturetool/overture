@@ -18,16 +18,15 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
 
-public class ATuplePatternAssistantInterpreter extends ATuplePatternAssistantTC
+public class ATuplePatternAssistantInterpreter 
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ATuplePatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

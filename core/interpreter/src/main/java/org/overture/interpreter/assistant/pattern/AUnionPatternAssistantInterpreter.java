@@ -18,16 +18,15 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 
-public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
+public class AUnionPatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AUnionPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
