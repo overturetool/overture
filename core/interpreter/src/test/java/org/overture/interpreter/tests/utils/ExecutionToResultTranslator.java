@@ -1,5 +1,6 @@
 package org.overture.interpreter.tests.utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -29,7 +30,8 @@ public class ExecutionToResultTranslator
 		if (e instanceof ICollectedRuntimeExceptions)
 		{
 			List<String> messages = new Vector<String>();
-			for (Exception err : ((ICollectedRuntimeExceptions) e).getCollectedExceptions())
+			List<Exception> collectedExceptions = new ArrayList<Exception>(((ICollectedRuntimeExceptions) e).getCollectedExceptions());
+			for (Exception err : collectedExceptions)
 			{
 				if (err instanceof ContextException)
 				{
@@ -46,6 +48,7 @@ public class ExecutionToResultTranslator
 				} else
 				{
 					messages.add(err.getMessage());
+					err.printStackTrace();
 				}
 			}
 			Collections.sort(messages);

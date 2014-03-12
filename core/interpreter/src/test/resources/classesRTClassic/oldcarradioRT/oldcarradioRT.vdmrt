@@ -361,7 +361,7 @@ operations
   InterruptEvent (pne) == Event(pne)
 
 end InterruptEvent
-\end{vdm_al}
+
 
 
 --IO.vdmrt
