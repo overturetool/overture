@@ -46,7 +46,7 @@ public class RTLogger
 	static
 	{
 		loggers.add(new RTTextLogger());
-		loggers.add(NextGenRTLogger.getInstance());
+		loggers.add(new NextGenRTLogger());
 	}
 
 	/**

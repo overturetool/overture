@@ -30,7 +30,6 @@ import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class CharacterValue extends Value
