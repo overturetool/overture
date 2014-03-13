@@ -354,17 +354,17 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, PExpCG predicate, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
-		consIterationBlock(outerBlock, ids, set, predicate, tempGen, strategy);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy);
 		
 		return outerBlock;
 	}
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
-			List<AIdentifierPatternCG> ids, PExpCG set, PExpCG predicate,
+			List<AIdentifierPatternCG> ids, PExpCG set,
 			TempVarNameGen tempGen, AbstractIterationStrategy strategy)
 			throws AnalysisException
 	{
@@ -429,7 +429,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		
@@ -442,7 +442,7 @@ public class TransformationAssistantCG
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 			
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), predicate, tempGen, strategy);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
 			
 			strategy.setFirstBind(false);
 		}
