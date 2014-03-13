@@ -27,7 +27,6 @@ import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
-import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
