@@ -41,7 +41,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 			outerBlockDecls.add(letBeStAssistant.consIdDecl(setType, id.getName()));
 		}
 		
-		outerBlockDecls.add(letBeStAssistant.consSuccessVarDecl(successVarName));
+		outerBlockDecls.add(letBeStAssistant.consBoolVarDecl(successVarName, false));
 		
 		return outerBlockDecls;
 	}
@@ -49,7 +49,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return letBeStAssistant.conForCondition(iteratorName, successVarName);
+		return letBeStAssistant.conForCondition(iteratorName, successVarName, true);
 	}
 	
 	@Override
@@ -62,7 +62,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public List<PStmCG> getLastForLoopStms()
 	{
-		return packStm(letBeStAssistant.consSuccessAssignment(suchThat, successVarName));
+		return packStm(letBeStAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
