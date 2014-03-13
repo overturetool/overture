@@ -1,0 +1,26 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final VDMSet s = SetUtil.set();
+
+    public Entry() {
+    }
+
+    public static boolean Run() {
+        VDMSet set_1 = SetUtil.set(5L);
+        boolean forAllExpResult_1 = true;
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && forAllExpResult_1;) {
+            Number z = ((Number) iterator_1.next());
+
+            forAllExpResult_1 = true;
+        }
+
+        return forAllExpResult_1;
+    }
+}
+##########
