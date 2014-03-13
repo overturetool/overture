@@ -1,6 +1,7 @@
 package org.overture.codegen.tests.utils;
 
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,7 +88,19 @@ public class ComparisonCG
 		Token cgToken = (Token) cgValue;
 		TokenValue vdmToken = (TokenValue) vdmValue;
 		
-		return compare(cgToken.getValue(), vdmToken.value);
+		try
+		{
+			Field f = vdmToken.getClass().getDeclaredField("value");
+			f.setAccessible(true);
+			Value value = (Value) f.get(vdmToken);
+
+			return compare(cgToken.getValue(), value);
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	private static boolean handleCharacter(Object cgValue, Value vdmValue)
