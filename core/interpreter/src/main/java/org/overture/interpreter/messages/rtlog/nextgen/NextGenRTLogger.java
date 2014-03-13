@@ -49,27 +49,14 @@ public class NextGenRTLogger implements IRTLogger
 {
 
 	private boolean enabled = false;
-	private static NextGenRTLogger instance = null;
 
-	public synchronized static IRTLogger getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new NextGenRTLogger();
-			return instance;
-		} else
-		{
-			return instance;
-		}
-
-	}
 
 	public static NextGenRTLogger getInstanceFromFile(String filename)
 			throws IOException, ClassNotFoundException
 	{
-		instance = new NextGenRTLogger();
-		instance.readFromFile(filename);
-		return instance;
+		final NextGenRTLogger logger = new NextGenRTLogger();
+		logger.readFromFile(filename);
+		return logger;
 	}
 
 	private Map<Integer, NextGenCpu> cpuMap = new HashMap<Integer, NextGenCpu>();
@@ -86,7 +73,7 @@ public class NextGenRTLogger implements IRTLogger
 	private long currentAbsoluteTime = -1L;
 	private int currentRelativeTime = -1;
 
-	private NextGenRTLogger()
+	public NextGenRTLogger()
 	{
 		this.addBus(0, new ArrayList<Integer>(), "vBus");
 		vBus = this.busMap.get(0);

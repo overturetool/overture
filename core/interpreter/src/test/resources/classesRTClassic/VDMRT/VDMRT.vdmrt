@@ -581,11 +581,6 @@ sync
 
 end Environment
 
-\end{vdm_al}
-
-\begin{rtinfo}
-[TotalxCoverage]{vdm.tc}[Environment]
-\end{rtinfo}
 
 
 --IO.vdmrt
@@ -839,11 +834,6 @@ operations
   
 end Printer
 
-\end{vdm_al}
-
-\begin{rtinfo}
-[TotalxCoverage]{vdm.tc}[Printer]
-\end{rtinfo}
 
 
 --Test.vdmrt
@@ -1183,16 +1173,7 @@ operations
   
 end TestResult
 
-\end{vdm_al}
 
-\begin{rtinfo}
-[TotalxCoverage]{vdm.tc}[TestResult]
-\end{rtinfo}
-
-
---TestSuite.vdmrt
-
-\begin{vdm_al}
 class TestSuite
   is subclass of Test
 
@@ -2748,11 +2729,6 @@ mutex (CalculateInRange)
 end VDMController
 
 
-\end{vdm_al}
-
-\begin{rtinfo}
-[TotalxCoverage]{vdm.tc}[VDMController]
-\end{rtinfo}
 
 
 --VDMUtil.vdmrt
