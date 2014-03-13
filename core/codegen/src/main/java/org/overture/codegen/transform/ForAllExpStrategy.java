@@ -12,7 +12,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public class ForAllExpStrategy extends AbstractIterationStrategy
 {
-	private TransformationAssistantCG transformationAssistant;
 	private PExpCG predicate;
 	private String resultVarName;
 
