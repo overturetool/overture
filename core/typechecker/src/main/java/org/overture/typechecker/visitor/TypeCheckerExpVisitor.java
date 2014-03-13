@@ -83,6 +83,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAApplyExp(AApplyExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		node.setArgtypes(new ArrayList<PType>());
 
 		for (PExp a : node.getArgs())
@@ -203,6 +204,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType defaultSBooleanBinaryExp(SBooleanBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		node.setType(question.assistantFactory.createSBinaryExpAssistant().binaryCheck(node, AstFactory.newABooleanBasicType(node.getLocation()), THIS, question));
 		return node.getType();
 	}
@@ -211,6 +213,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseACompBinaryExp(ACompBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
+		
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -288,6 +292,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADomainResByBinaryExp(ADomainResByBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+		
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -317,6 +323,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADomainResToBinaryExp(ADomainResToBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+		
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -348,6 +356,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAEqualsBinaryExp(AEqualsBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -365,6 +375,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAInSetBinaryExp(AInSetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+
 		PType ltype = node.getLeft().apply(THIS, question);
 		PType rtype = node.getRight().apply(THIS, question);
 
@@ -391,6 +403,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -428,6 +442,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotEqualBinaryExp(ANotEqualBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
 
@@ -445,6 +461,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotInSetBinaryExp(ANotInSetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
+
 		PType ltype = node.getLeft().apply(THIS, question);
 		PType rtype = node.getRight().apply(THIS, question);
 
@@ -471,7 +489,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
@@ -481,7 +499,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		return node.getType();
@@ -492,7 +510,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
@@ -502,7 +520,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
@@ -512,7 +530,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAModNumericBinaryExp(AModNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
@@ -523,6 +541,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 
 		SNumericBasicType ln = PTypeAssistantTC.getNumeric(node.getLeft().getType());
@@ -560,18 +579,17 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseARemNumericBinaryExp(ARemNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
-
 	}
 
 	@Override
 	public PType caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 
 		if (node.getLeft().getType() instanceof ARealNumericBasicType
@@ -590,7 +608,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 
 		SNumericBasicType ln = PTypeAssistantTC.getNumeric(node.getLeft().getType());
@@ -631,6 +649,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -701,6 +720,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -728,6 +748,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseARangeResByBinaryExp(ARangeResByBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -761,6 +782,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseARangeResToBinaryExp(ARangeResToBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -793,6 +815,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -832,6 +855,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -863,6 +887,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -896,6 +921,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetUnionBinaryExp(ASetUnionBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -926,6 +952,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAStarStarBinaryExp(AStarStarBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -968,6 +995,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASubsetBinaryExp(ASubsetBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.getLeft().apply(THIS, question);
 		node.getRight().apply(THIS, question);
@@ -1006,7 +1034,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseACasesExp(ACasesExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		question.qualifiers = null;
 
 		PType expType = node.getExpression().apply(THIS, question);
@@ -1031,7 +1059,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseACharLiteralExp(ACharLiteralExp node,
 			TypeCheckInfo question)
 	{
-
+		question.constraint = null;
 		node.setType(AstFactory.newACharBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -1040,6 +1068,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAElseIfExp(AElseIfExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		if (!question.assistantFactory.createPTypeAssistant().isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
 		{
@@ -1054,6 +1083,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAExists1Exp(AExists1Exp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind())));
 		node.getDef().apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
@@ -1079,6 +1109,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAExistsExp(AExistsExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
 		def.apply(THIS, question);
@@ -1099,6 +1130,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAFieldExp(AFieldExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PType root = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
@@ -1233,6 +1265,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAFieldNumberExp(AFieldNumberExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp tuple = node.getTuple();
 		question.qualifiers = null;
@@ -1265,6 +1298,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAForAllExp(AForAllExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
 		def.apply(THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
@@ -1282,6 +1316,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAFuncInstatiationExp(AFuncInstatiationExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		// If there are no type qualifiers passed because the poly function
 		// value
@@ -1405,6 +1440,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAHistoryExp(AHistoryExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		SClassDefinition classdef = question.env.findClassDefinition();
 
 		for (ILexNameToken opname : node.getOpnames())
@@ -1448,8 +1484,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfExp(AIfExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		question.qualifiers = null;
+		
 		if (!question.assistantFactory.createPTypeAssistant().isType(node.getTest().apply(THIS, question), ABooleanBasicType.class))
 		{
 			TypeChecker.report(3108, "If expression is not a boolean", node.getLocation());
@@ -1493,6 +1530,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIotaExp(AIotaExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
 
@@ -1532,7 +1570,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIsExp(AIsExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		question.qualifiers = null;
 		node.getTest().apply(THIS, question);
 
@@ -1568,6 +1606,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		if (question.env.findType(node.getBaseClass(), null) == null)
 		{
@@ -1591,6 +1630,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIsOfClassExp(AIsOfClassExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		ILexNameToken classname = node.getClassName();
 		PDefinition cls = question.env.findType(classname, null);
@@ -1620,6 +1660,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALambdaExp(ALambdaExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		List<PMultipleBind> mbinds = new Vector<PMultipleBind>();
 		List<PType> ptypes = new Vector<PType>();
 
@@ -1661,6 +1702,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) node.getBind()));
 
 		def.apply(THIS, question);
@@ -1688,6 +1730,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetDefExp(ALetDefExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		// Each local definition is in scope for later local definitions...
 
 		Environment local = question.env;
@@ -1731,6 +1774,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADefExp(ADefExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		// Each local definition is in scope for later local definitions...
 
 		Environment local = question.env;
@@ -1775,6 +1819,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapCompMapExp(AMapCompMapExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindings());
 		def.apply(THIS, question);
@@ -1799,6 +1844,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapEnumMapExp(AMapEnumMapExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.setDomTypes(new Vector<PType>());
 		node.setRngTypes(new Vector<PType>());
@@ -1837,6 +1883,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapletExp(AMapletExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PType ltype = node.getLeft().apply(THIS, question);
 		PType rtype = node.getRight().apply(THIS, question);
@@ -1848,6 +1895,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMkBasicExp(AMkBasicExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PType argtype = node.getArg().apply(THIS, question);
 
 		if (!(node.getType() instanceof ATokenBasicType)
@@ -1864,7 +1912,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMkTypeExp(AMkTypeExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		PDefinition typeDef = question.env.findType(node.getTypeName(), node.getLocation().getModule());
 
 		if (typeDef == null)
@@ -1955,7 +2003,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMuExp(AMuExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		PType rtype = node.getRecord().apply(THIS, question);
 
 		if (question.assistantFactory.createPTypeAssistant().isUnknown(rtype))
@@ -2003,7 +2051,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANarrowExp(ANarrowExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		node.getTest().setType(node.getTest().apply(THIS, question));
 
 		PType result = null;
@@ -2042,7 +2090,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANewExp(ANewExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
+		question.constraint = null;
 		PDefinition cdef = question.env.findType(node.getClassName().getClassName(), null);
 
 		if (cdef == null || !(cdef instanceof SClassDefinition))
@@ -2109,6 +2157,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseANilExp(ANilExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newAOptionalType(node.getLocation(), AstFactory.newAUnknownType(node.getLocation())));
 		return node.getType();
 	}
@@ -2117,6 +2166,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType(); // Because we terminate anyway
 	}
@@ -2125,6 +2175,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPostOpExp(APostOpExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		node.setType(node.getPostexpression().apply(THIS, question));
 		return node.getType();
 	}
@@ -2133,6 +2184,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPreExp(APreExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		question.qualifiers = null;
 		node.getFunction().apply(THIS, question);
@@ -2151,6 +2203,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPreOpExp(APreOpExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		question.qualifiers = null;
 		node.setType(node.getExpression().apply(THIS, question));
 		return node.getType();
@@ -2160,6 +2213,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newAQuoteType(node.getValue().clone()));
 		return node.getType();
 	}
@@ -2168,7 +2222,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseARealLiteralExp(ARealLiteralExp node,
 			TypeCheckInfo question)
 	{
-
+		question.constraint = null;
 		ILexRealToken value = node.getValue();
 
 		if (Math.round(value.getValue()) == value.getValue())
@@ -2197,6 +2251,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASameBaseClassExp(ASameBaseClassExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
@@ -2225,6 +2280,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASameClassExp(ASameClassExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PExp left = node.getLeft();
 		PExp right = node.getRight();
 
@@ -2251,6 +2307,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseASelfExp(ASelfExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		PDefinition cdef = question.env.findName(node.getName(), question.scope);
 
 		if (cdef == null)
@@ -2268,6 +2325,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASeqCompSeqExp(ASeqCompSeqExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		// TODO: check if this is still needed?!
 		// save these so we can clone them after they have been type checked
 		// PExp setBindSet = node.getSetBind().getSet();
@@ -2315,6 +2373,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASeqEnumSeqExp(ASeqEnumSeqExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PTypeSet ts = new PTypeSet();
 		node.setTypes(new LinkedList<PType>());
@@ -2338,6 +2397,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetCompSetExp(ASetCompSetExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getFirst().getLocation(), node.getBindings());
 		def.apply(THIS, question);
 
@@ -2401,6 +2461,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetRangeSetExp(ASetRangeSetExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp first = node.getFirst();
 		PExp last = node.getLast();
@@ -2431,6 +2492,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAStateInitExp(AStateInitExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PPattern pattern = node.getState().getInitPattern();
 		PExp exp = node.getState().getInitExpression();
@@ -2479,11 +2541,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newACharBasicType(node.getLocation()));
 			node.setType(tt);
-			// return node.getType();
-		} else
+		}
+		else
 		{
 			node.setType(AstFactory.newASeq1SeqType(node.getLocation(), AstFactory.newACharBasicType(node.getLocation())));
-			// return node.getType();
 		}
 		
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(
@@ -2494,6 +2555,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASubclassResponsibilityExp(
 			ASubclassResponsibilityExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType(); // Because we terminate anyway
 	}
@@ -2502,6 +2564,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASubseqExp(ASubseqExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		question.qualifiers = null;
 		PType stype = node.getSeq().apply(THIS, question);
 		question.qualifiers = null;
@@ -2532,6 +2595,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAThreadIdExp(AThreadIdExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -2539,6 +2603,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseATimeExp(ATimeExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -2547,6 +2612,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseATupleExp(ATupleExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		node.setTypes(new LinkedList<PType>());
 		List<PType> types = node.getTypes();
@@ -2564,6 +2630,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAUndefinedExp(AUndefinedExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 		node.setType(AstFactory.newAUndefinedType(node.getLocation()));
 		return node.getType();
 	}
@@ -2571,6 +2638,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAVariableExp(AVariableExp node, TypeCheckInfo question)
 	{
+		question.constraint = null;
 
 		Environment env = question.env;
 		ILexNameToken name = node.getName();
@@ -2702,6 +2770,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			ALessEqualNumericBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
@@ -2712,6 +2781,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return node.getType();
@@ -2726,6 +2796,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		question.qualifiers = null;
 		PType t = node.getExp().apply(THIS, question);
 
@@ -2745,9 +2816,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
+		
 		if (!question.assistantFactory.createPTypeAssistant().isSet(exp.apply(THIS, question)))
 		{
 			TypeCheckerErrors.report(3067, "Argument of 'card' is not a set", exp.getLocation(), exp);
@@ -2761,6 +2833,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADistConcatUnaryExp(ADistConcatUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 		PType result = exp.apply(THIS, question);
@@ -2785,6 +2858,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2811,6 +2885,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADistMergeUnaryExp(ADistMergeUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2836,6 +2911,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADistUnionUnaryExp(ADistUnionUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2862,6 +2938,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAFloorUnaryExp(AFloorUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2879,6 +2956,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAHeadUnaryExp(AHeadUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
@@ -2899,6 +2977,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIndicesUnaryExp(AIndicesUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2919,6 +2998,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALenUnaryExp(ALenUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2938,6 +3018,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2960,6 +3041,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -2984,6 +3066,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
@@ -3005,6 +3088,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotUnaryExp(ANotUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
@@ -3023,6 +3107,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPowerSetUnaryExp(APowerSetUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
@@ -3043,6 +3128,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAReverseUnaryExp(AReverseUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp exp = node.getExp();
 		question.qualifiers = null;
@@ -3065,6 +3151,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseATailUnaryExp(ATailUnaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
+		question.constraint = null;
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
@@ -3084,6 +3171,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		question.qualifiers = null;
 		PType t = node.getExp().apply(THIS, question);
 
@@ -3101,6 +3189,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 		question.qualifiers = null;
 		node.setType(node.getExp().apply(THIS, question));
 		return node.getType();
@@ -3110,6 +3199,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAElementsUnaryExp(AElementsUnaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
+		question.constraint = null;
 
 		PExp etype = node.getExp();
 		question.qualifiers = null;
@@ -3128,5 +3218,4 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				: AstFactory.newASetType(node.getLocation(), seq.getSeqof()));
 		return node.getType();
 	}
-
 }
