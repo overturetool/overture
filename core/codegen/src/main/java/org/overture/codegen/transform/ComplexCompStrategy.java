@@ -11,17 +11,11 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class ComplexCompStrategy extends CompStrategy
 {
-	protected boolean firstBind;
-	protected boolean lastBind;
-
 	public ComplexCompStrategy(
 			TransformationAssistantCG transformationAssitant, PExpCG predicate,
 			String var, PTypeCG compType)
 	{
 		super(transformationAssitant, predicate, var, compType);
-
-		this.firstBind = false;
-		this.lastBind = false;
 	}
 	
 	protected abstract List<PStmCG> getConditionalAdd();
@@ -37,15 +31,5 @@ public abstract class ComplexCompStrategy extends CompStrategy
 	public List<PStmCG> getLastForLoopStms()
 	{
 		return lastBind ? getConditionalAdd() : null;
-	}
-
-	public void setLastBind(boolean lastBind)
-	{
-		this.lastBind = lastBind;
-	}
-
-	public void setFirstBind(boolean firstBind)
-	{
-		this.firstBind = firstBind;
 	}
 }

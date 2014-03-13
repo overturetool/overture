@@ -23,6 +23,18 @@ public abstract class AbstractIterationStrategy
 	
 	abstract public List<PStmCG> getOuterBlockStms();
 	
+	protected boolean firstBind;
+	protected boolean lastBind;
+
+	public void setFirstBind(boolean firstBind)
+	{
+		this.firstBind = firstBind;
+	}
+
+	public void setLastBind(boolean lastBind)
+	{
+		this.lastBind = lastBind;
+	}
 	
 	protected List<PStmCG> packStm(PStmCG stm)
 	{
