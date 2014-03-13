@@ -114,7 +114,7 @@ pre (pl = goalkeeper =>
                               mk_R_Book(on_field_players,potential_substitutes,
                                         goalkeeper,nb_gk_subs,nb_fp_subs)));
 
-test:() -> ()
+test:() ==> ()
 test() == (
  RED_CARD(1);
  SUBSTITUTION(10,12);
