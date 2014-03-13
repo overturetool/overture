@@ -227,7 +227,7 @@ public class ExpAssistantCG extends AssistantBase
 		return header;
 	}
 	
-	public boolean existWithinOpOrFunc(PExp exp)
+	public boolean existsOutsideOpOrFunc(PExp exp)
 	{
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
