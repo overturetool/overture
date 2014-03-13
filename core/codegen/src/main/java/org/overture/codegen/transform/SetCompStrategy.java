@@ -35,12 +35,12 @@ public class SetCompStrategy extends ComplexCompStrategy
 	@Override
 	public PTypeCG getCollectionType() throws AnalysisException
 	{
-		return transformationAssitant.getSetTypeCloned(compType);
+		return transformationAssistant.getSetTypeCloned(compType);
 	}
 
 	@Override
 	protected List<PStmCG> getConditionalAdd()
 	{
-		return packStm(transformationAssitant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_SET, var, predicate, first));
+		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_SET, var, predicate, first));
 	}
 }

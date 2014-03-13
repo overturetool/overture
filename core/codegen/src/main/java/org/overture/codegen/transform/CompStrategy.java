@@ -15,7 +15,6 @@ import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
-	protected TransformationAssistantCG transformationAssitant;
 	protected PExpCG predicate;
 	protected String var;
 	protected PTypeCG compType;
@@ -24,10 +23,9 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssitant, PExpCG predicate, String var, PTypeCG compType)
+	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super();
-		this.transformationAssitant = transformationAssitant;
+		super(transformationAssistant);
 		this.predicate = predicate;
 		this.var = var;
 		this.compType = compType;
@@ -40,22 +38,22 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		String memberName = getMemberName();
 		PTypeCG collectionType = getCollectionType();
 		
-		return packDecl(transformationAssitant.consCompResultDecl(collectionType, var, className, memberName));
+		return packDecl(transformationAssistant.consCompResultDecl(collectionType, var, className, memberName));
 	}
 
 	@Override
 	public PExpCG getForLoopCond(String iteratorName)
 			throws AnalysisException
 	{
-		AClassTypeCG iteratorType = transformationAssitant.consIteratorType();
+		AClassTypeCG iteratorType = transformationAssistant.consIteratorType();
 		
-		return transformationAssitant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
+		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
 	}
 
 	@Override
 	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
 	{
-		return transformationAssitant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
+		return transformationAssistant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
 	}
 	
 	@Override

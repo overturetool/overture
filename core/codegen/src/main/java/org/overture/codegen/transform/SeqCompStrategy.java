@@ -35,12 +35,12 @@ public class SeqCompStrategy extends CompStrategy
 	@Override
 	public PTypeCG getCollectionType() throws AnalysisException
 	{
-		return transformationAssitant.getSeqTypeCloned(compType);
+		return transformationAssistant.getSeqTypeCloned(compType);
 	}
 
 	@Override
 	public List<PStmCG> getLastForLoopStms()
 	{
-		return packStm(transformationAssitant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, var, predicate, first));
+		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, var, predicate, first));
 	}
 }

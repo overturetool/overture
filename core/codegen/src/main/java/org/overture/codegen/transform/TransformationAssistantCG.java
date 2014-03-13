@@ -9,13 +9,18 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
@@ -23,9 +28,12 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -418,6 +426,119 @@ public class TransformationAssistantCG
 			outerBlock.getStatements().addAll(extraOuterBlockStms);
 		}
 
+		return forBody;
+	}
+	
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	{
+		ABlockStmCG outerBlock = new ABlockStmCG();
+		
+		ABlockStmCG nextMultiBindBlock = outerBlock;
+		
+		strategy.setFirstBind(true);
+		
+		for(int i = 0; i < multipleSetBinds.size(); i++)
+		{
+			strategy.setLastBind(i == multipleSetBinds.size() - 1);
+			
+			ASetMultipleBindCG mb = multipleSetBinds.get(i);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), predicate, tempGen, strategy);
+			
+			strategy.setFirstBind(false);
+		}
+		
+		return outerBlock;
+	}
+	
+	private AThrowStmCG consThrowException(String exceptionMessage)
+	{
+		AStringLiteralExpCG runtimeErrorMessage = new AStringLiteralExpCG();
+		runtimeErrorMessage.setIsNull(false);
+		runtimeErrorMessage.setType(new AStringTypeCG());
+		runtimeErrorMessage.setValue(exceptionMessage);
+		
+		AClassTypeCG exceptionType = new AClassTypeCG();
+		exceptionType.setName(IJavaCodeGenConstants.RUNTIME_EXCEPTION_TYPE_NAME);
+		
+		ATypeNameCG exceptionTypeName = new ATypeNameCG();
+		exceptionTypeName.setDefiningClass(null);
+		exceptionTypeName.setName(IJavaCodeGenConstants.RUNTIME_EXCEPTION_TYPE_NAME);
+		
+		ANewExpCG runtimeException = new ANewExpCG();
+		runtimeException.setType(exceptionType);
+		runtimeException.setName(exceptionTypeName);
+		runtimeException.getArgs().add(runtimeErrorMessage);
+		
+		AThrowStmCG throwStm = new AThrowStmCG();
+		throwStm.setExp(runtimeException);
+		
+		return throwStm;
+	}
+	
+	public AIfStmCG consIfCheck(String successVarName, String exceptionMessage)
+	{
+		AIfStmCG ifStm = new AIfStmCG();
+		ifStm.setIfExp(consBoolCheck(successVarName, true));
+		ifStm.setThenStm(consThrowException(exceptionMessage));
+		
+		return ifStm;
+	}
+	
+	public ACastUnaryExpCG consNextElementCall(String instance, String member, ACompSeqExpCG seqComp) throws AnalysisException
+	{
+		
+		PTypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
+		
+		PExpCG nextCall = consInstanceCall(consIteratorType() , instance, elementType.clone(), member , null);
+		ACastUnaryExpCG cast = new ACastUnaryExpCG();
+		cast.setType(elementType.clone());
+		cast.setExp(nextCall);
+		
+		return cast;
+	}
+
+	public ALocalVarDeclCG consSetBindIdDecl(String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
+	{
+		SSeqTypeCG seqType = getSeqTypeCloned(seqComp);
+		
+		PTypeCG elementType = seqType.getSeqOf();
+		String id = seqComp.getId().getName();
+		ACastUnaryExpCG initExp = consNextElementCall(instanceName, memberName, seqComp);
+		
+		ALocalVarDeclCG idDecl = new ALocalVarDeclCG();
+		idDecl.setType(elementType);
+		idDecl.setName(id);
+		idDecl.setExp(initExp);
+		
+		return idDecl;
+	}
+	
+	public ALocalVarDeclCG consSetBindDecl(String setBindName, ACompSeqExpCG seqComp) throws AnalysisException
+	{	
+		ASetSetTypeCG setType = new ASetSetTypeCG();
+		setType.setSetOf(getSeqTypeCloned(seqComp).getSeqOf());
+		
+		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
+		
+		setBindDecl.setType(setType);
+		setBindDecl.setName(setBindName);
+		setBindDecl.setExp(seqComp.getSet());
+		
+		return setBindDecl;
+	}
+	
+	public ALocalVarDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
+	{
+		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, IJavaCodeGenConstants.SEQ_UTIL_FILE, IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
+	}
+	
+	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorName,
+			String resSeqName) throws AnalysisException
+	{
+		ABlockStmCG forBody = new ABlockStmCG();
+		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
+		forBody.getStatements().add(consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, resSeqName, seqComp.getPredicate(), seqComp.getFirst()));
+		
 		return forBody;
 	}
 }

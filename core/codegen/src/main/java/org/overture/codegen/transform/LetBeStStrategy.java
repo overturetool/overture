@@ -17,16 +17,14 @@ import org.overture.codegen.utils.TempVarNameGen;
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	private String successVarName;
-	private LetBeStAssistantCG letBeStAssistant;
 	private PExpCG suchThat;
 	private SSetTypeCG setType;
 
 	public LetBeStStrategy(TempVarNameGen tempVarGen,
-			LetBeStAssistantCG letBeStAssistant, PExpCG suchThat, SSetTypeCG setType)
+			TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType)
 	{
-		super();
+		super(transformationAssistant);
 		this.successVarName = tempVarGen.nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
-		this.letBeStAssistant = letBeStAssistant;
 		this.suchThat = suchThat;
 		this.setType = setType;
 	}
@@ -38,10 +36,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 		
 		for(AIdentifierPatternCG id : ids)
 		{
-			outerBlockDecls.add(letBeStAssistant.consIdDecl(setType, id.getName()));
+			outerBlockDecls.add(transformationAssistant.consIdDecl(setType, id.getName()));
 		}
 		
-		outerBlockDecls.add(letBeStAssistant.consBoolVarDecl(successVarName, false));
+		outerBlockDecls.add(transformationAssistant.consBoolVarDecl(successVarName, false));
 		
 		return outerBlockDecls;
 	}
@@ -49,25 +47,25 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return letBeStAssistant.conForCondition(iteratorName, successVarName, true);
+		return transformationAssistant.conForCondition(iteratorName, successVarName, true);
 	}
 	
 	@Override
 	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id,
 			String iteratorName) throws AnalysisException
 	{
-		return letBeStAssistant.consForBodyNextElementAssigned(setElementType, id.getName(), iteratorName);
+		return transformationAssistant.consForBodyNextElementAssigned(setElementType, id.getName(), iteratorName);
 	}
 
 	@Override
 	public List<PStmCG> getLastForLoopStms()
 	{
-		return packStm(letBeStAssistant.consBoolVarAssignment(suchThat, successVarName));
+		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
 	public List<PStmCG> getOuterBlockStms()
 	{
-		return packStm(letBeStAssistant.consIfCheck(successVarName));
+		return packStm(transformationAssistant.consIfCheck(successVarName, "Let Be St found no applicable bindings"));
 	}
 }

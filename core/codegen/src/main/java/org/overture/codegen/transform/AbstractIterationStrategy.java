@@ -23,8 +23,15 @@ public abstract class AbstractIterationStrategy
 	
 	abstract public List<PStmCG> getOuterBlockStms();
 	
+	protected TransformationAssistantCG transformationAssistant;
+	
 	protected boolean firstBind;
 	protected boolean lastBind;
+	
+	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant)
+	{
+		this.transformationAssistant = transformationAssistant;
+	}
 
 	public void setFirstBind(boolean firstBind)
 	{

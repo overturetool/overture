@@ -36,13 +36,13 @@ public class MapCompStrategy extends ComplexCompStrategy
 	@Override
 	public PTypeCG getCollectionType() throws AnalysisException
 	{
-		return transformationAssitant.getMapTypeCloned(compType);
+		return transformationAssistant.getMapTypeCloned(compType);
 	}
 
 	@Override
 	protected List<PStmCG> getConditionalAdd()
 	{
-		return packStm(transformationAssitant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP, var, predicate, first.getLeft(), first.getRight()));
+		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP, var, predicate, first.getLeft(), first.getRight()));
 	}
 
 }
