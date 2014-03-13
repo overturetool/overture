@@ -81,7 +81,7 @@ public class CompAssistantCG extends TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consSetCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, ComplexCompStrategy strategy) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, PExpCG predicate, TempVarNameGen tempGen, ComplexCompStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		

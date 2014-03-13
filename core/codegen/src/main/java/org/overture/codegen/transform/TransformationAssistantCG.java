@@ -6,10 +6,12 @@ import java.util.List;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -22,6 +24,7 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -102,6 +105,57 @@ public class TransformationAssistantCG
 		SMapTypeCG mapTypeCg = (SMapTypeCG) typeCg;
 		
 		return mapTypeCg.clone();
+	}
+	
+	public ALocalVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
+	{
+		ALocalVarDeclCG boolVarDecl = new ALocalVarDeclCG();
+		
+		boolVarDecl.setType(new ABoolBasicTypeCG());
+		boolVarDecl.setName(boolVarName);
+		boolVarDecl.setExp(info.getExpAssistant().consBoolLiteral(initValue));
+		
+		return boolVarDecl;
+	}
+	
+	public PExpCG conForCondition(String iteratorName, String successVarName, boolean negate) throws AnalysisException
+	{
+		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
+		
+		andExp.setType(new ABoolBasicTypeCG());
+		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
+		andExp.setRight(consBoolCheck(successVarName, negate));
+		
+		return andExp;
+	}
+	
+	protected PExpCG consBoolCheck(String boolVarName, boolean negate)
+	{
+		AVariableExpCG boolVarExp = new AVariableExpCG();
+		boolVarExp.setType(new ABoolBasicTypeCG());
+		boolVarExp.setOriginal(boolVarName);
+
+		if (negate)
+		{
+			ANotUnaryExpCG negated = new ANotUnaryExpCG();
+			negated.setType(new ABoolBasicTypeCG());
+			negated.setExp(boolVarExp);
+
+			return negated;
+		} else
+		{
+			return boolVarExp;
+		}
+	}
+	
+	public AAssignmentStmCG consBoolVarAssignment(PExpCG predicate, String boolVarName)
+	{
+		AAssignmentStmCG boolVarAssignment = new AAssignmentStmCG();
+
+		boolVarAssignment.setTarget(consIdentifier(boolVarName));
+		boolVarAssignment.setExp(predicate != null ? predicate.clone() : info.getExpAssistant().consBoolLiteral(true));
+		
+		return boolVarAssignment;
 	}
 	
 	public ALocalVarDeclCG consSetBindDecl(String setBindName, PExpCG set) throws AnalysisException
