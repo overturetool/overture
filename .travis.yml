@@ -5,12 +5,16 @@
 language: java
 jdk:
   - oraclejdk7
+branches:
+  except:
+    - docs
 env:
   global:
     - SONATYPE_USERNAME=joeycoleman
     - secure: "LV3gkLdIXN/W10xeoIZ5lxFbVGeOPjwEvWjYzoCeX/MQrSWiY+oK22mhL1H84RczHHk9jvwlRK9ZEElKOj0vl/ywL/mF7WJgoUIDMUIAQ/jeZsJ7tF4S5o1Drjgwa6dZYLgEkNXWE4cb63vDGUQhRJz3Qq3/fntmvbKL2qCmJcE="
 before_install:
   - mvn -version
+  - if [ $TRAVIS_BRANCH == "development" ] ; then { sudo apt-get update -qq; sudo apt-get install -qq nsis nsis-common nsis-pluginapi; } ; fi
 install:
   - echo "-*- Precompile Core -*-"
   - mvn -B install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
