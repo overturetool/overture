@@ -317,11 +317,13 @@ public class VDMPP extends VDMJ
 		{
 			println("Initialization: " + e);
 			e.ctxt.printStackTrace(Console.out, true);
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 		catch (Exception e)
 		{
 			println("Initialization: " + e.getMessage());
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 
@@ -358,7 +360,9 @@ public class VDMPP extends VDMJ
 		{
 			println("Execution: " + e);
 		}
-
+		
+		dumpLogs();
+		
 		return ExitStatus.EXIT_ERRORS;
 	}
 
