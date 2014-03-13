@@ -29,6 +29,7 @@ import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -126,6 +127,7 @@ import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AForAllExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -184,7 +186,6 @@ import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IOoAstConstants;
@@ -351,12 +352,62 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 		return enumSet;
 	}
+	
+	
+	@Override
+	public PExpCG caseAForAllExp(AForAllExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		
+		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
+		{
+			question.addUnsupportedNode(node, "Generation of a for all expression is only supported within operations/functions");
+			return null;
+		}
+		
+		LinkedList<PMultipleBind> bindings = node.getBindList();
+
+		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		for (PMultipleBind multipleBind : bindings)
+		{
+			if(!(multipleBind instanceof ASetMultipleBind))
+			{
+				question.addUnsupportedNode(node, "Generation of a for all expression is only supported for multiple set binds. Got: "
+						+ multipleBind);
+				return null;
+			}
+			
+			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			
+			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			{
+				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
+			}
+			
+			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+		}
+		
+		PType type = node.getType();
+		PExp predicate = node.getPredicate();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
+		
+		AForAllExpCG forAll = new AForAllExpCG();
+		forAll.setType(typeCg);
+		forAll.setBindList(bindingsCg);
+		forAll.setPredicate(predicateCg);
+		forAll.setVar(varCg);
+		
+		return forAll;
+	}
 
 	@Override
 	public PExpCG caseASetCompSetExp(ASetCompSetExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existWithinOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
 			return null;
@@ -532,7 +583,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseALetBeStExp(ALetBeStExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existWithinOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
 			return null;
@@ -673,7 +724,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existWithinOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return null;
@@ -785,7 +836,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAMapCompMapExp(AMapCompMapExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existWithinOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
 			return null;

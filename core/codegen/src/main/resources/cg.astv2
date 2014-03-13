@@ -182,7 +182,9 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Set
     |	#Map
     |	{mkBasic} [arg]:expCG
+    |	{forAll} [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
     ;
+    
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
     =	{int} [value]:java_Long
     |	{real} [value]:java_Double
