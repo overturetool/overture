@@ -998,7 +998,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question)
 	{
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+				question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override
@@ -1484,7 +1485,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.setType(AstFactory.newANatOneNumericBasicType(node.getLocation()));
 		}
 
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+				question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override
@@ -2367,6 +2369,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PTypeSet ts = new PTypeSet();
 		node.setTypes(new LinkedList<PType>());
 		List<PType> types = node.getTypes();
+		PType elemType = null;
+		
+		if (question.constraint != null)
+		{
+			ASetType setType = question.assistantFactory.createPTypeAssistant().getSet(question.constraint);
+			
+			if (setType != null)
+			{
+				elemType = setType.getSetof();
+			}
+		}
+		
+		question = question.newConstraint(elemType);
 
 		for (PExp ex : node.getMembers())
 		{
@@ -2460,17 +2475,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAStringLiteralExp(AStringLiteralExp node,
 			TypeCheckInfo question)
 	{
-
 		if (node.getValue().getValue().isEmpty())
 		{
 			ASeqSeqType tt = AstFactory.newASeqSeqType(node.getLocation(), AstFactory.newACharBasicType(node.getLocation()));
 			node.setType(tt);
-			return node.getType();
+			// return node.getType();
 		} else
 		{
 			node.setType(AstFactory.newASeq1SeqType(node.getLocation(), AstFactory.newACharBasicType(node.getLocation())));
-			return node.getType();
+			// return node.getType();
 		}
+		
+		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+				question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override

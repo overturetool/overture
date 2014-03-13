@@ -8,6 +8,7 @@ import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ABracketType;
@@ -23,6 +24,8 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
@@ -484,5 +487,19 @@ public class PTypeAssistantTC extends PTypeAssistant
 		{
 			return new PTypeList();
 		}
+	}
+	
+	public PType checkConstraint(PType constraint, PType actual, ILexLocation location)
+	{
+		if (constraint != null)
+		{
+			if (!TypeComparator.isSubType(actual, constraint, true, af))
+			{
+				TypeChecker.report(3327, "Value is not of the right type", location);
+				TypeChecker.detail2("Actual", actual, "Expected", constraint);
+			}
+		}
+		
+		return actual;
 	}
 }
