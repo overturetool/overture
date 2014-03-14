@@ -12,11 +12,11 @@ public class Entry {
     }
 
     public static Number f() {
-        VDMSet set_1 = SetUtil.set(2L, 4L, 6L);
         Number x = null;
         Number y = null;
         Number z = null;
         boolean success_1 = false;
+        VDMSet set_1 = SetUtil.set(2L, 4L, 6L);
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {

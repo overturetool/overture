@@ -12,8 +12,8 @@ public class Entry {
     }
 
     public static VDMSet Test() {
-        VDMSet set_1 = SetUtil.set(1L, 2L);
         VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_1 = SetUtil.set(1L, 2L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number a = ((Number) iterator_1.next());
