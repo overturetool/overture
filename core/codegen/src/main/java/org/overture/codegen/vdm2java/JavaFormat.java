@@ -503,38 +503,40 @@ public class JavaFormat
 		PExpCG leftNode = node.getLeft();
 		PExpCG rightNode = node.getRight();
 		
-		if(isEmptyCollection(leftNode))
+		final String EMPTY = ".isEmpty()";
+		
+		if(isEmptyCollection(leftNode.getType()))
 		{
-			return format(node.getRight()) + ".isEmpty()";
+			return format(node.getRight()) + EMPTY;
 		}
-		else if(isEmptyCollection(rightNode))
+		else if(isEmptyCollection(rightNode.getType()))
 		{
-			return format(node.getLeft()) + ".isEmpty()";
+			return format(node.getLeft()) + EMPTY;
 		}
 	
 		return className + ".equals(" + format(node.getLeft()) + ", " + format(node.getRight()) + ")";
 
 	}
 	
-	private boolean isEmptyCollection(PExpCG exp)
+	private boolean isEmptyCollection(PTypeCG type)
 	{
-		if(exp instanceof AEnumSeqExpCG)
+		if(type instanceof SSeqTypeCG)
 		{
-			AEnumSeqExpCG seq = (AEnumSeqExpCG) exp;
+			SSeqTypeCG seq = (SSeqTypeCG) type;
 
-			return seq.getMembers().isEmpty();
+			return seq.getEmpty();
 		}
-		else if(exp instanceof AEnumSetExpCG)
+		else if(type instanceof SSetTypeCG)
 		{
-			AEnumSetExpCG set = (AEnumSetExpCG) exp;
+			SSetTypeCG set = (SSetTypeCG) type;
 			
-			return set.getMembers().isEmpty();
+			return set.getEmpty();
 		}
-		else if(exp instanceof AEnumMapExpCG)
+		else if(type instanceof SMapTypeCG)
 		{
-			AEnumMapExpCG map = (AEnumMapExpCG) exp;
+			SMapTypeCG map = (SMapTypeCG) type;
 			
-			return map.getMembers().isEmpty();
+			return map.getEmpty();
 		}
 		
 		return false;
