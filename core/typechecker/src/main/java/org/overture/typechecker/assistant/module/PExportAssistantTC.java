@@ -10,15 +10,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PExportAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PExportAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static Collection<? extends PDefinition> getDefinition(PExport exp,
+	public Collection<? extends PDefinition> getDefinition(PExport exp,
 			LinkedList<PDefinition> actualDefs)
 	{
 		try
@@ -31,7 +30,7 @@ public class PExportAssistantTC
 
 	}
 
-	public static Collection<? extends PDefinition> getDefinition(PExport exp)
+	public Collection<? extends PDefinition> getDefinition(PExport exp)
 	{
 		try
 		{

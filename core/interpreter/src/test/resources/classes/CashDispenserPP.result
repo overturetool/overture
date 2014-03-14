@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.framework.ClassTestCase">
-<result>
-<output object="Error 3133: Class name SimpleTest not in scope in 'Account' (console) at line 1:1" resource="CashDispenserPP" value="Error 3133: Class name SimpleTest not in scope in 'Account' (console) at line 1:1"/>
-</result>
-</testResult>

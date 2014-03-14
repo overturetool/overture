@@ -110,6 +110,18 @@ public class TypeCheckInfo
 	final public Environment env;
 	public NameScope scope;
 	public LinkedList<PType> qualifiers;
+	public PType constraint;
+
+	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
+			Environment env, NameScope scope, LinkedList<PType> qualifiers,
+			PType constraint)
+	{
+		this.assistantFactory = assistantFactory;
+		this.env = env;
+		this.scope = scope;
+		this.qualifiers = qualifiers;
+		this.constraint = constraint;
+	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers)
@@ -145,6 +157,12 @@ public class TypeCheckInfo
 	public String toString()
 	{
 		return "Scope: " + scope + "\n" + env;
+	}
+
+	public TypeCheckInfo newConstraint(PType newConstraint)
+	{
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, newConstraint);
+		return info;
 	}
 
 	public TypeCheckInfo newScope(NameScope newScope)

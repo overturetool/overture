@@ -2,10 +2,17 @@ package org.overture.typechecker.util;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class HelpLexNameToken
 {
-
+	protected static ITypeCheckerAssistantFactory af;
+	
+	public HelpLexNameToken(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	
 	public static boolean isEqual(ILexNameToken one, Object other)
 	{
 		if (!(other instanceof ILexNameToken))
@@ -17,7 +24,7 @@ public class HelpLexNameToken
 
 		if (one.getTypeQualifier() != null && lother.getTypeQualifier() != null)
 		{
-			if (!TypeComparator.compatible(one.getTypeQualifier(), lother.getTypeQualifier()))
+			if (!TypeComparator.compatible(one.getTypeQualifier(), lother.getTypeQualifier(), af ))
 			{
 				return false;
 			}

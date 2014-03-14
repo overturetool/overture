@@ -8,18 +8,17 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PExpAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 	// A LexNameToken to indicate that a function has no precondition name, rather than
 	// that it is not a pure function (indicated by null).
 	public final static LexNameToken NO_PRECONDITION = new LexNameToken("", "", null);
 
-	@SuppressWarnings("static-access")
 	public PExpAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static ILexNameToken getPreName(PExp expression)
+	public ILexNameToken getPreName(PExp expression)
 	{
 		try
 		{

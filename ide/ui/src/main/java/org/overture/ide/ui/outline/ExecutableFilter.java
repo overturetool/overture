@@ -20,32 +20,33 @@ package org.overture.ide.ui.outline;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.modules.AModuleModules;
 
-public class ExecutableFilter extends ViewerFilter {
+public class ExecutableFilter extends ViewerFilter
+{
 
 	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
+	public boolean select(Viewer viewer, Object parentElement, Object element)
+	{
 		return element instanceof SClassDefinition
 				|| element instanceof AModuleModules
-				|| (parentElement instanceof SClassDefinition
-					&& (element instanceof AExplicitOperationDefinition
-						|| element instanceof AExplicitFunctionDefinition
-						|| element instanceof AInheritedDefinition
-						)
-					&& (element instanceof PDefinition
-						&& ((PDefinition)element).getAccess().getAccess() instanceof APublicAccess
-						)
-					)
-				|| (parentElement instanceof AModuleModules
-					&& (element instanceof AExplicitFunctionDefinition
-						|| element instanceof AExplicitOperationDefinition));
+				|| parentElement instanceof SClassDefinition
+				&& (element instanceof SOperationDefinition
+						&& ((SOperationDefinition) element).getBody() != null
+						|| element instanceof SFunctionDefinition
+						&& ((SFunctionDefinition) element).getBody() != null || element instanceof AInheritedDefinition)
+				&& element instanceof PDefinition
+				&& ((PDefinition) element).getAccess().getAccess() instanceof APublicAccess
+				|| parentElement instanceof AModuleModules
+				&& (element instanceof SFunctionDefinition
+						&& ((SFunctionDefinition) element).getBody() != null || element instanceof SOperationDefinition
+						&& ((SOperationDefinition) element).getBody() != null);
 
 	}
 

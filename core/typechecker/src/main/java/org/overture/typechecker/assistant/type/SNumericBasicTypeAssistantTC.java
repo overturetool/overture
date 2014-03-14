@@ -13,9 +13,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public SNumericBasicTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);

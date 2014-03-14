@@ -12,7 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AParameterType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to check if a node is a function.
@@ -60,8 +59,9 @@ public class FunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		return (node.getValueDefinition() || af.createPTypeAssistant().isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
-		:af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node)); 
+		return node.getValueDefinition()
+				|| af.createPTypeAssistant().isType(af.createPDefinitionAssistant().getType(node), AParameterType.class) ? false
+				: af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node));
 	}
 
 	@Override

@@ -8,15 +8,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AExternalClauseAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AExternalClauseAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static void typeResolve(AExternalClause clause,
+	public void typeResolve(AExternalClause clause,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)
 	{

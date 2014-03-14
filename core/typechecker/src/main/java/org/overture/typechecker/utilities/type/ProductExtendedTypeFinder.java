@@ -19,7 +19,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to check if a type of some size is a product type
@@ -80,7 +79,7 @@ public class ProductExtendedTypeFinder extends
 		if (type.getProdCard() != size)
 		{
 			type.setProdCard(size);
-			type.setProdType(PTypeAssistantTC.getProduct(AstFactory.newAUnknownType(type.getLocation()), size));
+			type.setProdType(af.createPTypeAssistant().getProduct(AstFactory.newAUnknownType(type.getLocation()), size));
 
 			// Build a N-ary product type, making the types the union of the
 			// original N-ary products' types...
@@ -89,10 +88,10 @@ public class ProductExtendedTypeFinder extends
 
 			for (PType t : type.getTypes())
 			{
-				if (size == 0 && PTypeAssistantTC.isProduct(t)
-						|| PTypeAssistantTC.isProduct(t, size))
+				if (size == 0 && af.createPTypeAssistant().isProduct(t)
+						|| af.createPTypeAssistant().isProduct(t, size))
 				{
-					AProductType pt = PTypeAssistantTC.getProduct(t, size);
+					AProductType pt = af.createPTypeAssistant().getProduct(t, size);
 					int i = 0;
 
 					for (PType member : pt.getTypes())

@@ -4,6 +4,8 @@ import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /***
  * VDM RT builder
@@ -31,8 +33,10 @@ public class BuilderRt extends BuilderPp {
 	{
 		try
 		{
-			classes.add(AstFactoryTC.newACpuClassDefinition());
-  			classes.add(AstFactoryTC.newABusClassDefinition());
+			ITypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
+			
+			classes.add(AstFactoryTC.newACpuClassDefinition(factory));
+  			classes.add(AstFactoryTC.newABusClassDefinition(factory));
 		}
 		catch (Exception e)
 		{

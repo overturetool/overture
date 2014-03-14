@@ -34,10 +34,9 @@ import org.overture.ast.typechecker.Pass;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 /**
@@ -58,6 +57,8 @@ public class ModuleTypeChecker extends TypeChecker
 	 * @param modules
 	 */
 
+	public final ITypeCheckerAssistantFactory assistantFactory  = new TypeCheckerAssistantFactory();
+	
 	public ModuleTypeChecker(List<AModuleModules> modules)
 	{
 		super();
@@ -126,7 +127,7 @@ public class ModuleTypeChecker extends TypeChecker
    			{
 	   			for (PDefinition definition: module.getDefs())
 	   			{
-   					PDefinitionAssistantTC.markUsed(definition);
+   					assistantFactory.createPDefinitionAssistant().markUsed(definition);
 	   			}
    			}
    		}
@@ -138,7 +139,7 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				Environment env = new ModuleEnvironment(assistantFactory, m);
-				PDefinitionListAssistantTC.implicitDefinitions(m.getDefs(), env);
+				assistantFactory.createPDefinitionListAssistant().implicitDefinitions(m.getDefs(), env);
 			}
 		}
 
@@ -148,7 +149,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processExports(m); // Populate exportDefs
+				assistantFactory.createAModuleModulesAssistant().processExports(m); // Populate exportDefs
 			}
 		}
 
@@ -159,7 +160,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				AModuleModulesAssistantTC.processImports(m, modules); // Populate importDefs
+				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Populate importDefs
 			}
 		}
 
@@ -200,7 +201,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-				PDefinitionAssistantTC.typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
+				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
 			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);
@@ -253,12 +254,12 @@ public class ModuleTypeChecker extends TypeChecker
 			if (!m.getTypeChecked())
 			{
 				// TODO
-				AModuleModulesAssistantTC.processImports(m, modules); // Re-populate importDefs
+				assistantFactory.createAModuleModulesAssistant().processImports(m, modules); // Re-populate importDefs
 
 				try
 				{
 					// TODO
-					AModuleModulesAssistantTC.typeCheckImports(m);
+					assistantFactory.createAModuleModulesAssistant().typeCheckImports(m);
 					// m.typeCheckImports(); // Imports compared to exports
 				} catch (TypeCheckException te)
 				{
@@ -277,8 +278,8 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			if (!m.getTypeChecked())
 			{
-				PDefinitionListAssistantTC.unusedCheck(m.getImportdefs());
-				PDefinitionListAssistantTC.unusedCheck(m.getDefs());
+				assistantFactory.createPDefinitionListAssistant().unusedCheck(m.getImportdefs());
+				assistantFactory.createPDefinitionListAssistant().unusedCheck(m.getDefs());
 			}
 		}
 	}

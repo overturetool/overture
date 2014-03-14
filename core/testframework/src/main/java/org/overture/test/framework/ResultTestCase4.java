@@ -29,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.IResultCombiner;
 import org.overture.test.framework.results.Result;
@@ -76,7 +75,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		File file = getResultFile(filename);
 
 		Assert.assertNotNull("Result file " + filename + " was not found", file);
-		Assert.assertTrue("The result files does not exist: "+file.getPath(),file.exists());
+		Assert.assertTrue("The result files does not exist: "+file.getPath()+ "\n\n Cannot compare result:\n "+result,file.exists());
 		if(!file.exists())
 		{
 			//Assume doesn't always work.

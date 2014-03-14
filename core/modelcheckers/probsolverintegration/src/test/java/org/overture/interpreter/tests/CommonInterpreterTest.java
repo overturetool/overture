@@ -12,6 +12,7 @@ import java.util.Vector;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -20,6 +21,8 @@ import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.test.framework.ConditionalIgnoreMethodRule;
+import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Result;
 import org.overture.typechecker.util.TypeCheckerUtil;
@@ -43,7 +46,11 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 		Settings.release = Release.VDM_10;
 	}
 
+	@Rule
+	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
+
 	@Test
+	@ConditionalIgnore(condition = ProbNotInstalledCondition.class)
 	public void test() throws Exception
 	{
 		configureResultGeneration();
@@ -161,29 +168,29 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 
 	protected String search(File file, String name) throws IOException
 	{
-		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
-		if (readme.exists())
-		{
-			BufferedReader reader = null;
-			try
-			{
-				reader = new BufferedReader(new FileReader(readme));
+//		File readme = new File(new File(file, name.substring(0, name.length() - 2)), "README.txt");
+//		if (readme.exists())
+//		{
+//			BufferedReader reader = null;
+//			try
+//			{
+//				reader = new BufferedReader(new FileReader(readme));
 
-				String text = null;
-				while ((text = reader.readLine()) != null)
-				{
-					text = text.trim();
-					if (text.startsWith("#ENTRY_POINT"))
-					{
-						return text.substring(text.indexOf('=') + 1).trim();
-					}
-				}
-			} finally
-			{
-				reader.close();
-			}
-		}
-		return null;
+		return "test()";
+//				while ((text = reader.readLine()) != null)
+//				{
+//					text = text.trim();
+//					if (text.startsWith("#ENTRY_POINT"))
+//					{
+//						return text.substring(text.indexOf('=') + 1).trim();
+//					}
+//				}
+//			} finally
+//			{
+//				reader.close();
+//			}
+//		}
+//		return null;
 	}
 
 	private List<String> getEntries() throws IOException

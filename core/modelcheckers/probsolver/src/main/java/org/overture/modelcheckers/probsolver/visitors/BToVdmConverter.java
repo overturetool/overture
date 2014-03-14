@@ -1,32 +1,41 @@
 package org.overture.modelcheckers.probsolver.visitors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexQuoteToken;
+import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
-import org.overture.ast.types.AMapMapType;//added
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
-import org.overture.ast.lex.LexBooleanToken;//added
+import org.overture.ast.types.SBasicType;
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
+import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;
+import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
@@ -34,23 +43,54 @@ import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
+import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
-import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;// added
-import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
+import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
+import de.be4.classicalb.core.parser.node.TIntegerLiteral;
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
+	public static class ProBToVdmAnalysisException extends RuntimeException
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public ProBToVdmAnalysisException(String message)
+		{
+			super(message);
+		}
+	}
 
 	final static ILexLocation loc = new LexLocation();
 	public PExp result = new AUndefinedExp();
 
 	private final PType expectedType;
+	private final String QUOTE_PREFIX;
 
-	private BToVdmConverter(PType stateType)
+	private BToVdmConverter(PType stateType, String quotePrefix)
 	{
 		this.expectedType = stateType;
+		this.QUOTE_PREFIX = quotePrefix;
+	}
+
+	/**
+	 * This converts a B construct to the corresponding VDM construct typed by expectedType. The expected type is needed
+	 * in cases like mk_ type (make record
+	 * 
+	 * @param expectedType
+	 * @param quotePrefix
+	 * @param node
+	 * @return
+	 */
+	public static PExp convert(PType expectedType, String quotePrefix, Node node)
+	{
+		BToVdmConverter visitor = new BToVdmConverter(expectedType, quotePrefix);
+		node.apply(visitor);
+		return visitor.result;
 	}
 
 	/**
@@ -61,9 +101,9 @@ public class BToVdmConverter extends DepthFirstAdapter
 	 * @param node
 	 * @return
 	 */
-	public static PExp convert(PType expectedType, Node node)
+	public PExp convert(PType expectedType, Node node)
 	{
-		BToVdmConverter visitor = new BToVdmConverter(expectedType);
+		BToVdmConverter visitor = new BToVdmConverter(expectedType, QUOTE_PREFIX);
 		node.apply(visitor);
 		return visitor.result;
 	}
@@ -126,15 +166,14 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	/**
-	 * Creates a new return tuple with the approbate return expressions
+	 * Creates a new tuple with the approbate return expressions
 	 * 
-	 * @param resultType
 	 * @param exp
 	 * @return
 	 */
-	public static PStm getReturnStatement(PType resultType, List<PExp> exps)
+	public static PExp createTuple(List<PExp> exps)
 	{
-		return AstFactory.newAReturnStm(loc, AstFactory.newATupleExp(loc, exps));
+		return AstFactory.newATupleExp(loc, exps);
 	}
 
 	@Override
@@ -145,23 +184,24 @@ public class BToVdmConverter extends DepthFirstAdapter
 		{
 			List<PExp> arg_ = new Vector<PExp>();
 
-			for (PRecEntry entry : node.getEntries())
+			for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
 			{
-				ARecEntry re = (ARecEntry) entry;
-				String fieldName = re.getIdentifier().toString().trim();
-				PType fieldType = null;
-				for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
+
+				for (PRecEntry entry : node.getEntries())
 				{
+					ARecEntry re = (ARecEntry) entry;
+					String fieldName = re.getIdentifier().toString().trim();
+					PType fieldType = null;
+
 					if (f.getTagname().getName().equals(fieldName))
 					{
 						fieldType = f.getType();
+						arg_.add(convert(fieldType, re.getValue()));
 						break;
 					}
-				}
-				arg_.add(convert(fieldType, re.getValue()));
-			}
 
-			Collections.reverse(arg_);
+				}
+			}
 
 			AMkTypeExp res = AstFactory.newAMkTypeExp(((ARecordInvariantType) expectedType).getName().clone(), arg_);
 			res.setRecordType((ARecordInvariantType) expectedType);
@@ -184,9 +224,34 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	@Override
+	public void caseACoupleExpression(ACoupleExpression node)
+	{
+		if (expectedType instanceof AProductType)
+		{
+			PType type;
+			List<PExp> args = new Vector<PExp>();
+			type = ((AProductType) expectedType).getTypes().getFirst();
+			args.add(convert(type, node.getList().getFirst()));
+			type = ((AProductType) expectedType).getTypes().getLast();
+			args.add(convert(type, node.getList().getLast()));
+			result = AstFactory.newATupleExp(loc, args);
+		} else
+		{ // MapMapType
+			/*
+			 * PType typeFrom = ((AMapMapType) expectedType).getFrom(); PType typeTo = ((AMapMapType)
+			 * expectedType).getTo(); PExp mapFrom = convert(typeFrom, node.getList().getFirst()); PExp mapTo =
+			 * convert(typeTo, node.getList().getLast()); LexToken op = new LexToken(); result =
+			 * AstFactory.newAMapletExp(mapFrom, op, mapTo);
+			 */
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
 	public void caseASetExtensionExpression(ASetExtensionExpression node)
 	{
 		List<PExp> exps = new Vector<PExp>();
+		List<AMapletExp> mems = new Vector<AMapletExp>();
 
 		if (expectedType instanceof ASetType)
 		{
@@ -206,53 +271,136 @@ public class BToVdmConverter extends DepthFirstAdapter
 				{
 					exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
 				}
+				result = AstFactory.newASeqEnumSeqExp(loc, exps);// added
 
 			}
 			result = AstFactory.newASeqEnumSeqExp(loc, exps);
+		} else if (expectedType instanceof AMapMapType)
+		{
+			PType typeFrom = ((AMapMapType) expectedType).getFrom();
+			PType typeTo = ((AMapMapType) expectedType).getTo();
+
+			for (PExpression pExp : node.getExpressions())
+			{
+
+				PExp mapFrom = convert(typeFrom, ((ACoupleExpression) pExp).getList().getFirst());
+				PExp mapTo = convert(typeTo, ((ACoupleExpression) pExp).getList().getLast());
+				mems.add(new AMapletExp(expectedType, loc, mapFrom, mapTo));
+
+			}
+			result = AstFactory.newAMapEnumMapExp(loc, mems);// added
+
+		} else if (expectedType instanceof ATokenBasicType)
+		{
+			ASetEnumSetExp arg = new ASetEnumSetExp();
+			PType type = (ATokenBasicType) expectedType;
+			for (PExpression pExp : node.getExpressions())
+			{
+				if (pExp instanceof ACoupleExpression)
+				{
+					/*
+					 * We dont know the type of the token so this coupled exp aka tuple may belong to a map or a set but
+					 * we dont know this so we give up. We could either have searched all assignments of the identifier
+					 * that the owner of the expected type is included in to deduce the type from there, or used type
+					 * embeding in prolog
+					 */
+					throw new ProBToVdmAnalysisException("Not supported: Tuple used in either a set or map as the value of a token.");
+				}
+				arg.getMembers().add(convert(type, pExp));
+			}
+			result = AstFactory.newAMkBasicExp((SBasicType) expectedType, (PExp) arg);
+		} else
+		{
+			PExpression pExp = node.getExpressions().getFirst();
+			result = AstFactory.newAIntLiteralExp(new LexIntegerToken(pExp.toString().trim(), loc));
 		}
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void caseASequenceExtensionExpression(
 			ASequenceExtensionExpression node)
 	{
+
 		List<PExp> list = new Vector<PExp>();
+		List<AMapletExp> mems = new Vector<AMapletExp>();
 
-		List<PExpression> copy = new ArrayList<PExpression>(node.getExpression());
-		for (PExpression e : copy)
+		if (expectedType instanceof AMapMapType)
+		{ // map A to B
+			PType typeFrom = ((AMapMapType) expectedType).getFrom();
+			PType typeTo = ((AMapMapType) expectedType).getTo();
+			int seqNo = 1;
+			for (PExpression pExp : node.getExpression())
+			{
+
+				AIntegerExpression aint = new AIntegerExpression(new TIntegerLiteral(new String(new Integer(seqNo).toString())));
+				PExp mapFrom = convert(typeFrom, aint);
+				PExp mapTo = convert(typeTo, pExp);
+				mems.add(new AMapletExp(expectedType, loc, mapFrom, mapTo));
+
+				seqNo++;
+			}
+			result = AstFactory.newAMapEnumMapExp(loc, mems);
+		} else
 		{
-			e.apply(this);
-			list.add(result);
+			/*
+			 * String size = new String(new Integer(seqmem.size()).toString()); return new AIntervalExpression(new
+			 * AIntegerExpression(new TIntegerLiteral("1")), new AIntegerExpression(new TIntegerLiteral(size)));
+			 */
+			List<PExpression> copy = new ArrayList<PExpression>(node.getExpression());
+			for (PExpression e : copy)
+			{
+				e.apply(this);
+				list.add(result);
+			}
+
+			result = AstFactory.newASeqEnumSeqExp(loc, list);
 		}
-
-		result = AstFactory.newASeqEnumSeqExp(loc, list);
-
 	}
 
 	@Override
 	public void caseAIntegerExpression(AIntegerExpression node)
 	{
-	    System.out.println("In caseAInteger...: " + node.getLiteral().getText());
 		result = AstFactory.newAIntLiteralExp(new LexIntegerToken(node.getLiteral().getText(), loc));
 	}
 
 	@Override
-        public void caseABooleanTrueExpression(ABooleanTrueExpression node) //added
+	public void caseAUnaryMinusExpression(AUnaryMinusExpression node)
 	{
-	    result = AstFactory.newABooleanConstExp(new LexBooleanToken(true, loc));
+		node.getExpression().apply(this);
+		result = AstFactory.newAUnaryMinusUnaryExp(loc, result);
 	}
 
 	@Override
-        public void caseABooleanFalseExpression(ABooleanFalseExpression node) //added
+	public void caseABooleanTrueExpression(ABooleanTrueExpression node) // added
 	{
-	    result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
+		result = AstFactory.newABooleanConstExp(new LexBooleanToken(true, loc));
 	}
 
-	public void defaultIn(Node node)
+	@Override
+	public void caseABooleanFalseExpression(ABooleanFalseExpression node) // added
 	{
-		// System.err.println("Hit unsupported node: "
-		// + node.getClass().getSimpleName() + " - " + node);
+		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
+	}
+
+	@Override
+	public void caseTIdentifierLiteral(TIdentifierLiteral node)
+	{
+		if (node.getText().startsWith(QUOTE_PREFIX))
+		{
+			String quote = node.getText().substring(QUOTE_PREFIX.length());
+			ILexQuoteToken token = new LexQuoteToken(quote, loc);
+			result = AstFactory.newAQuoteLiteralExp(token);
+			return;
+		}
+		super.caseTIdentifierLiteral(node);
+	}
+
+	public void defaultCase(Node node)
+	{
+		System.err.println("Hit unsupported node: "
+				+ node.getClass().getSimpleName() + " - \"" + node + "\"");
 	}
 
 }

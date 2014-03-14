@@ -14,9 +14,8 @@ public class ACpuClassDefinitionAssistantTC
 {
 
 	public static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ACpuClassDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
@@ -32,7 +31,7 @@ public class ACpuClassDefinitionAssistantTC
 			+ "public setPriority: ? * nat ==> () "
 			+ "	setPriority(opname, priority) == is not yet specified;";
 
-	public static List<PDefinition> operationDefs() throws ParserException,
+	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(defs, Dialect.VDM_PP);

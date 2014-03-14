@@ -40,7 +40,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
@@ -191,7 +190,7 @@ public class ModuleInterpreter extends Interpreter
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
-		CPUValue.init(scheduler);
+		CPUValue.init(scheduler,assistantFactory);
 		initialContext = ModuleListAssistantInterpreter.initialize(modules,dbgp);
 	}
 

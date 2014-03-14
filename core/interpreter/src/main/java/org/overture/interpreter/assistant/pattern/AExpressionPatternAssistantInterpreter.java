@@ -12,10 +12,9 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
 
-public class AExpressionPatternAssistantInterpreter extends
-		AExpressionPatternAssistantTC
+public class AExpressionPatternAssistantInterpreter 
+
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -23,7 +22,7 @@ public class AExpressionPatternAssistantInterpreter extends
 	public AExpressionPatternAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

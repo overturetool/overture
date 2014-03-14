@@ -11,15 +11,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PTraceDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PTraceDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static void typeCheck(List<PTraceDefinition> term,
+	public void typeCheck(List<PTraceDefinition> term,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{

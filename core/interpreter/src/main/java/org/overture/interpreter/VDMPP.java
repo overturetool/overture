@@ -67,6 +67,7 @@ public class VDMPP extends VDMJ
 
 	public VDMPP()
 	{
+		super();
 		Settings.dialect = Dialect.VDM_PP;
 	}
 
@@ -183,7 +184,7 @@ public class VDMPP extends VDMJ
 
    		try
    		{
-   			TypeChecker typeChecker = new ClassTypeChecker(classes);
+   			TypeChecker typeChecker = new ClassTypeChecker(classes, assistantFactory);
    			typeChecker.typeCheck();
    		}
 		catch (InternalException e)
@@ -316,11 +317,13 @@ public class VDMPP extends VDMJ
 		{
 			println("Initialization: " + e);
 			e.ctxt.printStackTrace(Console.out, true);
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 		catch (Exception e)
 		{
 			println("Initialization: " + e.getMessage());
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 
@@ -357,7 +360,9 @@ public class VDMPP extends VDMJ
 		{
 			println("Execution: " + e);
 		}
-
+		
+		dumpLogs();
+		
 		return ExitStatus.EXIT_ERRORS;
 	}
 

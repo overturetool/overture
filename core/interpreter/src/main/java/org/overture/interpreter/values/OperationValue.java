@@ -36,6 +36,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -45,6 +46,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
@@ -53,6 +55,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
@@ -63,8 +66,10 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -85,8 +90,6 @@ import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class OperationValue extends Value
 {
@@ -136,7 +139,15 @@ public class OperationValue extends Value
 
 	public OperationValue(AExplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state)
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AExplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.expldef = def;
 		this.impldef = null;
@@ -148,7 +159,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = async;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -160,7 +171,15 @@ public class OperationValue extends Value
 
 	public OperationValue(AImplicitOperationDefinition def,
 			FunctionValue precondition, FunctionValue postcondition,
-			AStateDefinition state)
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AImplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.impldef = def;
 		this.expldef = null;
@@ -178,7 +197,7 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = async;
 
 		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
 				&& !(classdef instanceof ASystemClassDefinition)
@@ -261,11 +280,6 @@ public class OperationValue extends Value
 	public Value localEval(ILexLocation from, ValueList argValues,
 			Context ctxt, boolean logreq) throws ValueException
 	{
-		// if (body == null)
-		// {
-		// abort(4066, "Cannot call implicit operation: " + name, ctxt);
-		// }
-
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
@@ -342,14 +356,12 @@ public class OperationValue extends Value
 			{
 				Value sigma = argContext.lookup(stateName);
 				originalSigma = (Value) sigma.clone();
-			}
-			else if (self != null)
+			} else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
-			}
-			else if (classdef != null)
+			} else if (classdef != null)
 			{
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				SClassDefinitionAssistantInterpreter assistant = ctxt.assistantFactory.createSClassDefinitionAssistant();
@@ -383,8 +395,7 @@ public class OperationValue extends Value
 					ctxt.threadState.setAtomic(true);
 					ctxt.setPrepost(4071, "Precondition failure: ");
 					precondition.eval(from, preArgs, ctxt);
-				}
-				finally
+				} finally
 				{
 					ctxt.setPrepost(0, null);
 					ctxt.threadState.setAtomic(false);
@@ -433,16 +444,14 @@ public class OperationValue extends Value
 					postArgs.add(originalSigma);
 					Value sigma = argContext.lookup(stateName);
 					postArgs.add(sigma);
-				}
-				else if (self != null)
+				} else if (self != null)
 				{
 					postArgs.add(originalValues);
 					postArgs.add(self);
+				} else if (classdef != null)
+				{
+					postArgs.add(originalValues);
 				}
-    			else if (classdef != null)
-    			{
-    				postArgs.add(originalValues);
-    			}
 
 				// We disable the swapping and time (RT) as postcondition checks should be "free".
 
@@ -451,8 +460,7 @@ public class OperationValue extends Value
 					ctxt.threadState.setAtomic(true);
 					ctxt.setPrepost(4072, "Postcondition failure: ");
 					postcondition.eval(from, postArgs, ctxt);
-				}
-				finally
+				} finally
 				{
 					ctxt.setPrepost(0, null);
 					ctxt.threadState.setAtomic(false);
@@ -501,20 +509,40 @@ public class OperationValue extends Value
 			} else
 			{
 				// TODO
-				for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
+				if (self != null)
 				{
-					if(argVal.getValue() instanceof FunctionValue|| argVal.getValue() instanceof  OperationValue)
+					for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
 					{
-						continue;
-					}
-					if (argVal.getValue() instanceof UpdatableValue)
-					{
-						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						if (argVal.getValue() instanceof FunctionValue
+								|| argVal.getValue() instanceof OperationValue)
+						{
+							continue;
+						}
+						if (argVal.getValue() instanceof UpdatableValue)
+						{
+							stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						}
 					}
 				}
 			}
 
-			PStm res = solver.solve(name, this.impldef, stateExps, argExps, Console.out, Console.err);
+			Interpreter interpreter = Interpreter.getInstance();
+			List<PDefinition> allDefs = new Vector<PDefinition>();
+			if (interpreter instanceof ClassInterpreter)
+			{
+				for (SClassDefinition c : ((ClassInterpreter) interpreter).getClasses())
+				{
+					allDefs.addAll(c.getDefinitions());
+				}
+			} else if (interpreter instanceof ModuleInterpreter)
+			{
+				for (AModuleModules c : ((ModuleInterpreter) interpreter).getModules())
+				{
+					allDefs.addAll(c.getDefs());
+				}
+			}
+
+			PStm res = solver.solve(allDefs,name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)
@@ -547,23 +575,21 @@ public class OperationValue extends Value
 	{
 		if (ctxt instanceof ClassContext)
 		{
-			ClassContext cctxt = (ClassContext)ctxt;
-			return VdmRuntime.getNodeState(cctxt.classdef).guardLock;
-		}
-		else
+			ClassContext cctxt = (ClassContext) ctxt;
+			return VdmRuntime.getNodeState(ctxt.assistantFactory, cctxt.classdef).guardLock;
+		} else
 		{
 			return self.guardLock;
 		}
 	}
-	
+
 	private Object getGuardObject(Context ctxt)
 	{
 		if (ctxt instanceof ClassContext)
 		{
-			ClassContext cctxt = (ClassContext)ctxt;
+			ClassContext cctxt = (ClassContext) ctxt;
 			return cctxt.classdef;
-		}
-		else
+		} else
 		{
 			return self;
 		}
@@ -583,7 +609,7 @@ public class OperationValue extends Value
 
 		while (true)
 		{
-			synchronized (getGuardObject(ctxt))		// So that test and act() are atomic
+			synchronized (getGuardObject(ctxt)) // So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
@@ -594,12 +620,11 @@ public class OperationValue extends Value
 				{
 					debug("guard TEST");
 					ctxt.threadState.setAtomic(true);
-					
+
 					try
 					{
 						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-					}
-					catch (AnalysisException e)
+					} catch (AnalysisException e)
 					{
 						if (e instanceof ValueException)
 						{
@@ -607,8 +632,7 @@ public class OperationValue extends Value
 						}
 						e.printStackTrace();
 					}
-				}
-				finally
+				} finally
 				{
 					ctxt.threadState.setAtomic(false);
 				}
@@ -728,7 +752,7 @@ public class OperationValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to, AOperationType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{
 			return this;
 		} else
@@ -748,10 +772,10 @@ public class OperationValue extends Value
 	{
 		if (expldef != null)
 		{
-			return new OperationValue(expldef, precondition, postcondition, state);
+			return new OperationValue(expldef, precondition, postcondition, state, isAsync);
 		} else
 		{
-			return new OperationValue(impldef, precondition, postcondition, state);
+			return new OperationValue(impldef, precondition, postcondition, state, isAsync);
 		}
 	}
 

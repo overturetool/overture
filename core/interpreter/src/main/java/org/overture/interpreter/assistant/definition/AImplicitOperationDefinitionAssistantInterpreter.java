@@ -12,7 +12,6 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class AImplicitOperationDefinitionAssistantInterpreter extends
 		AImplicitOperationDefinitionAssistantTC
@@ -43,20 +42,20 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 		// when the function is invoked. The value is needed to implement
 		// the pre_() expression for implicit functions.
 
-		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState());
+		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState(), af);
 		op.isConstructor = d.getIsConstructor();
-		op.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		op.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		nvl.add(new NameValuePair(d.getName(), op));
 
 		if (d.getPredef() != null)
 		{
-			prefunc.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+			prefunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
 		}
 
 		if (d.getPostdef() != null)
 		{
-			postfunc.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+			postfunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
 		}
 

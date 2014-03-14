@@ -97,9 +97,22 @@ public class LatexSourceFile extends SourceFile
 
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
+		
+		LexNameList spans = LexLocation.getSpanNames(filename);
 
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
 		{
+			for (ILexNameToken name : spans)
+			{
+				if (name.getLocation().getStartLine() == lnum)
+				{
+					out.println(LST_ESCAPE_BEGIN);
+					out.println("\\label{" + latexLabel(name.getName()) + ":"
+							+ name.getLocation().getStartLine() + "}");
+					out.println(LST_ESCAPE_END);
+				}
+			}
+			
 			String line = rawLines.get(lnum - 1);
 
 			if (line.contains("\\end{document}"))
@@ -189,7 +202,8 @@ public class LatexSourceFile extends SourceFile
 			long calls = LexLocation.getSpanCalls(name);
 			total += calls;
 
-			sb.append(latexQuote(name.toString()) + " & "
+			sb.append("\\hyperref[" + latexLabel(name.getName()) + ":"
+					+ name.getLocation().getStartLine() + "]{"+latexQuote(name.toString()) + ": "+name.getLocation().getStartLine() + "} & "
 					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");
@@ -244,4 +258,9 @@ public class LatexSourceFile extends SourceFile
 		return s.replace("\\", "\\textbackslash ").replace("#", "\\#").replace("$", "\\$").replace("%", "\\%").replace("&", "\\&").replace("_", "\\_").replace("{", "\\{").replace("}", "\\}").replace("~", "\\~").replaceAll("\\^{1}", "\\\\^{}");
 	}
 
+	private String latexLabel(String s)
+	{
+		// Latex specials: \# \$ \% \^{} \& \_ \{ \} \~{} \\
+		return s.replace("\\", ":").replace("#", ":").replace("$", ":").replace("%", ":").replace("&", ":").replace("_", ":").replace("{", ":").replace("}", ":").replace("~", ":").replaceAll("\\^{1}", ":");
+	}
 }

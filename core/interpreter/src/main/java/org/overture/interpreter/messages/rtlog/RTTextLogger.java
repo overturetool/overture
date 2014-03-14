@@ -3,7 +3,9 @@ package org.overture.interpreter.messages.rtlog;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,10 +14,10 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 
 public class RTTextLogger implements IRTLogger
 {
-	private static List<RTMessage> events = new LinkedList<RTMessage>();
-	private static File logfile = null;
-	private static RTMessage cached = null;
-	private static boolean enabled = false;
+	private List<RTMessage> events = new LinkedList<RTMessage>();
+	private File logfile = null;
+	private RTMessage cached = null;
+	private boolean enabled = false;
 
 	/*
 	 * (non-Javadoc)
@@ -85,8 +87,12 @@ public class RTTextLogger implements IRTLogger
 			
 			try
 			{
-				writer = new PrintWriter(new FileOutputStream(logfile, true));
+				writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(logfile, true), "UTF-8"));
 			} catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+				return;
+			} catch (UnsupportedEncodingException e)
 			{
 				e.printStackTrace();
 				return;

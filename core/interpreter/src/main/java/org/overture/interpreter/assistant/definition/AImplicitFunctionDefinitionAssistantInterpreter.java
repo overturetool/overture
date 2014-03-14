@@ -18,7 +18,6 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		AImplicitFunctionDefinitionAssistantTC
@@ -51,7 +50,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		// the pre_() expression for implicit functions.
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
-		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		func.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		func.uninstantiated = !d.getTypeParams().isEmpty();
 		nvl.add(new NameValuePair(d.getName(), func));
 
@@ -76,7 +75,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		return nvl;
 	}
 
-	public static FunctionValue getPolymorphicValue(
+	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AImplicitFunctionDefinition impdef, PTypeList actualTypes)
 	{
 
@@ -105,7 +104,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPredef() != null)
 		{
-			prefv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPredef(), actualTypes);
+			prefv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(af,impdef.getPredef(), actualTypes);
 		} else
 		{
 			prefv = null;
@@ -113,13 +112,13 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPostdef() != null)
 		{
-			postfv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(impdef.getPostdef(), actualTypes);
+			postfv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(af,impdef.getPostdef(), actualTypes);
 		} else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(impdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(af,impdef, actualTypes, prefv, postfv, null);
 
 		polyfuncs.put(actualTypes, rv);
 		return rv;

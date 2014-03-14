@@ -21,7 +21,6 @@ package org.overture.ide.plugins.coverageeditor.editor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
@@ -52,12 +51,12 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.ide.core.parser.AbstractParserParticipant;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.coverageeditor.Activator;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.editor.core.VdmDocumentProvider;
 import org.overture.parser.config.Properties;
+import org.overture.parser.lex.BacktrackInputReader.ReaderType;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ModuleReader;
@@ -119,10 +118,9 @@ public abstract class CoverageEditor
 			IFile res = ((FileEditorInput) input).getFile();
 			if (res.exists())
 			{
-				org.eclipse.core.internal.resources.File f = (org.eclipse.core.internal.resources.File) res;
-				charset = f.getCharset();
-				sourceFile = f.getLocation().toFile();
-				content = readFile(((org.eclipse.core.internal.resources.File) res).getContents());
+				charset = res.getCharset();
+				sourceFile = res.getLocation().toFile();
+				content = readFile(res);
 				vdmSourceFile = (IFile) res;
 			} else
 			{
@@ -177,23 +175,13 @@ public abstract class CoverageEditor
 		Color red = new Color(display, 252, 114, 114);// display.getSystemColor(SWT.COLOR_RED);
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
 
-		// getSourceViewer().getTextWidget().addLineStyleListener(new LineStyleListener()
-		// {
-		//
-		// public void lineGetStyle(LineStyleEvent event)
-		// {
-		// event.styles = styleRanges.toArray(new StyleRange[0]);
-		//
-		// }
-		// });
-
 		LexLocation.resetLocations();
-		LexLocation.clearLocations();
+		// LexLocation.clearLocations();
 		Properties.parser_tabstop = 1;
 		LexTokenReader ltr = null;
 		try
 		{
-			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset, AbstractParserParticipant.findStreamReaderType(vdmSourceFile));
+			ltr = new LexTokenReader(content, project.getDialect(), sourceFile, charset, getReaderType(sourceFile));
 		} catch (CoreException e1)
 		{
 			// TODO Auto-generated catch block
@@ -222,7 +210,6 @@ public abstract class CoverageEditor
 			case CML:
 				break;
 		}
-		// SourceLocationConverter converter = new SourceLocationConverter(content);
 
 		BufferedReader br;
 		if (selectedFile != null)
@@ -235,12 +222,13 @@ public abstract class CoverageEditor
 				{
 					if (l.hits == 0)
 					{
-						int start = l.getStartOffset();// converter.getStartPos(l);
-						int end = l.getEndOffset();// converter.getEndPos(l);
+						int start = l.getStartOffset();
+						int end = l.getEndOffset();
 						if (start < content.length() && start < end
 								&& end < content.length())
 						{
-							styleRanges.add(new StyleRange(start, end - start, black, red));
+							styleRanges.add(new StyleRange(start - 1, end
+									- start, black, red));
 						}
 					}
 
@@ -276,12 +264,12 @@ public abstract class CoverageEditor
 							{
 								l.hits += hits;
 
-								int start = l.getStartOffset();//converter.getStartPos(l);
-								int end = l.getEndOffset();//converter.getEndPos(l);
+								int start = l.getStartOffset();// converter.getStartPos(l);
+								int end = l.getEndOffset();// converter.getEndPos(l);
 								if (start < content.length() && start < end
 										&& end < content.length())
 								{
-									styleRanges.add(new StyleRange(start, end
+									styleRanges.add(new StyleRange(start - 1, end
 											- start, black, green));
 								}
 
@@ -336,6 +324,11 @@ public abstract class CoverageEditor
 		getEditorSourceViewer().getTextWidget().setEditable(false);
 	}
 
+	protected ReaderType getReaderType(File file) throws CoreException
+	{
+		return ReaderType.Latex;
+	}
+
 	protected abstract ISourceViewer getEditorSourceViewer();
 
 	protected abstract void setEditorDocumentProvider(IDocumentProvider provider);
@@ -372,7 +365,7 @@ public abstract class CoverageEditor
 		{
 			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
 		}
-		BufferedReader inputStream = new BufferedReader(new InputStreamReader(file.getContents()));
+		BufferedReader inputStream = new BufferedReader(new InputStreamReader(file.getContents(), file.getCharset()));
 		StringBuilder sb = new StringBuilder();
 
 		int inLine;
@@ -384,26 +377,4 @@ public abstract class CoverageEditor
 		return sb.toString();
 	}
 
-	public static String readFile(InputStream stream) throws IOException
-	{
-		StringBuilder sb = new StringBuilder();
-
-		int inLine;
-		while ((inLine = stream.read()) != -1)
-		{
-			sb.append((char) inLine);
-		}
-		stream.close();
-		return sb.toString();
-	}
-
-	// public void setInitDocument(IDocumentProvider documentProvider, IEditorInput input)
-	// {
-	// IDocument document= documentProvider.getDocument(input);
-	// if(document instanceof VdmDocument)
-	// {
-	// IFile res = ((FileEditorInput) input).getFile();
-	// ((VdmDocument)document).setSourceUnit(new CoverageSourceUnit(project, res));
-	// }
-	// }
 }

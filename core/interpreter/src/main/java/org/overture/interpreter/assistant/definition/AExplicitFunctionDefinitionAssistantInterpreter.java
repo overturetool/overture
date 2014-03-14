@@ -18,7 +18,6 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		AExplicitFunctionDefinitionAssistantTC
@@ -47,7 +46,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 				: new FunctionValue(d.getPostdef(), null, null, free);
 
 		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
-		func.isStatic = PAccessSpecifierAssistantTC.isStatic(d.getAccess());
+		func.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
 		func.uninstantiated = !d.getTypeParams().isEmpty();
 		nvl.add(new NameValuePair(d.getName(), func));
 
@@ -72,7 +71,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		return nvl;
 	}
 
-	public static FunctionValue getPolymorphicValue(
+	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AExplicitFunctionDefinition expdef, PTypeList actualTypes)
 	{
 		AExplicitFunctionDefinitionRuntimeState state = VdmRuntime.getNodeState(expdef);
@@ -101,7 +100,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (expdef.getPredef() != null)
 		{
-			prefv = getPolymorphicValue(expdef.getPredef(), actualTypes);
+			prefv = getPolymorphicValue(af,expdef.getPredef(), actualTypes);
 		}
 		else
 		{
@@ -110,14 +109,14 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (expdef.getPostdef() != null)
 		{
-			postfv = getPolymorphicValue(expdef.getPostdef(), actualTypes);
+			postfv = getPolymorphicValue(af,expdef.getPostdef(), actualTypes);
 		}
 		else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(expdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(af,expdef, actualTypes, prefv, postfv, null);
 
 		state.polyfuncs.put(actualTypes, rv);
 		return rv;

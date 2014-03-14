@@ -26,9 +26,6 @@ import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * Used to get if a possible type out of a pattern.
@@ -76,7 +73,6 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
-		// return AIdentifierPatternAssistantTC.getPossibleTypes(pattern);
 		return AstFactory.newAUnknownType(pattern.getLocation());
 	}
 

@@ -27,8 +27,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+
+
+
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
+import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 
 
@@ -57,6 +61,7 @@ public class ValueFactory
 	 * Interpreter used to look up types
 	 */
 	private Interpreter interpreter;
+	public final Context context;
 	
 	/**
 	 * Default constructor which sets the interpreter used to look up types
@@ -64,6 +69,8 @@ public class ValueFactory
 	public ValueFactory()
 	{
 		this.interpreter= Interpreter.getInstance();
+		//This is how I got the assistantFactory for this class.
+		this.context = (Context) Interpreter.getInstance().getAssistantFactory();
 	}
 
 	public static BooleanValue create(boolean b) throws ValueFactoryException
@@ -166,6 +173,7 @@ public class ValueFactory
 	
 	public RecordValue createRecord(String recordName, Value... fields) throws ValueFactoryException
 	{
+		
 		PType type = interpreter.findType(recordName);
 		if(type instanceof ARecordInvariantType)
 		{
@@ -179,7 +187,7 @@ public class ValueFactory
 			{
 				list.add(rType.getFields().get(i).getTagname(), fields[i]);
 			}
-			return new RecordValue(rType,list);
+			return new RecordValue(rType,list,context); //add the context here as argument.
 		}
 		throw new ValueFactoryException("Record "+recordName+ " not found");
 	}

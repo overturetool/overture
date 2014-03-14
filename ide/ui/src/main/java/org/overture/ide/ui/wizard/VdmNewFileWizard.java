@@ -59,6 +59,7 @@ public abstract class VdmNewFileWizard extends Wizard implements
 	{
 		super.addPages();
 		_pageOne = new WizardNewFileCreationPage(this.fPageName, this.fStructuredSelection);
+		_pageOne.setFileExtension(getFileExtension());
 		_pageOne.setTitle(this.fPageTitle);
 		_pageOne.setDescription(this.fPageDescription);
 
@@ -103,7 +104,6 @@ public abstract class VdmNewFileWizard extends Wizard implements
 	@Override
 	public boolean performFinish()
 	{
-		_pageOne.setFileExtension(getFileExtension());
 		IFile file = _pageOne.createNewFile();
 		if (file.exists())
 		{

@@ -43,6 +43,8 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
@@ -61,9 +63,9 @@ public class POForAllContext extends POContext
 		this.bindings = exp.getBindings();
 	}
 
-	public POForAllContext(ASeqCompSeqExp exp)
+	public POForAllContext(ASeqCompSeqExp exp, IPogAssistantFactory assistantFactory)
 	{
-		this.bindings = ASetBindAssistantTC.getMultipleBindList(exp.getSetBind());
+		this.bindings = assistantFactory.createASetBindAssistant().getMultipleBindList(exp.getSetBind());
 	}
 
 	public POForAllContext(AForAllExp exp)
@@ -76,14 +78,14 @@ public class POForAllContext extends POContext
 		this.bindings = exp.getBindList();
 	}
 
-	public POForAllContext(AExists1Exp exp)
+	public POForAllContext(ITypeCheckerAssistantFactory af, AExists1Exp exp)
 	{
-		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
-	public POForAllContext(AIotaExp exp)
+	public POForAllContext(ITypeCheckerAssistantFactory af,AIotaExp exp)
 	{
-		this.bindings = PBindAssistantTC.getMultipleBindList(exp.getBind());
+		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
 	public POForAllContext(ALambdaExp exp)
@@ -99,9 +101,9 @@ public class POForAllContext extends POContext
 		}
 	}
 
-	public POForAllContext(ALetBeStExp exp)
+	public POForAllContext(ALetBeStExp exp, IPogAssistantFactory assistantFactory)
 	{
-		this.bindings = cloneBinds(PMultipleBindAssistantTC.getMultipleBindList(exp.getBind()));
+		this.bindings = cloneBinds(assistantFactory.createPMultipleBindAssistant().getMultipleBindList(exp.getBind()));
 	}
 
 	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList) {
