@@ -1,1 +1,5 @@
-$node.getVar()
+#if ( $JavaFormat.isNull($node.getHeader().getBinding().getSet()) )
+	null
+#else
+	$node.getVar()
+#end
