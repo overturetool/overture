@@ -1,1 +1,5 @@
-$node.getVar()
+#if ( $node.getBindList().isEmpty() )
+	true
+#else
+	$node.getVar()
+#end
