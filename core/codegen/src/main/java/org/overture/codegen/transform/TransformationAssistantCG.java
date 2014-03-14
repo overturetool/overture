@@ -554,4 +554,21 @@ public class TransformationAssistantCG
 		
 		return forBody;
 	}
+	
+	public Boolean hasEmptySet(ASetMultipleBindCG binding)
+			throws AnalysisException
+	{
+		return isEmptySet(binding.getSet());
+	}
+
+	public Boolean isEmptySet(PExpCG set) throws AnalysisException
+	{
+		return getSetTypeCloned(set).getEmpty();
+	}
+
+	public void cleanUpBinding(ASetMultipleBindCG binding)
+	{
+		binding.setSet(null);
+		binding.getPatterns().clear();
+	}
 }

@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.expressions.AForAllExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
@@ -37,38 +38,53 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
-		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), info.getTempVarNameGen(), strategy);
+		ASetMultipleBindCG binding = header.getBinding();
+		
+		if (transformationAssistant.hasEmptySet(binding))
+		{
+			transformationAssistant.cleanUpBinding(binding);
+			node.setStatement(new ABlockStmCG());
+		}
+		
+		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(binding.getPatterns(), header.getBinding().getSet(), info.getTempVarNameGen(), strategy);
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
 		transformationAssistant.replaceNodeWith(node, outerBlock);
 	}
-	
+
 	@Override
 	public void caseALetBeStExpCG(ALetBeStExpCG node) throws AnalysisException
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, "let be st expressions");
-		
-		AHeaderLetBeStCG header = node.getHeader();
-		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
-		
-		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(header.getBinding().getPatterns(), header.getBinding().getSet(), info.getTempVarNameGen(), strategy);
-		
-		ALocalVarDeclCG resultDecl = transformationAssistant.consDecl(node.getVar(), node.getValue());
 
-		info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+		AHeaderLetBeStCG header = node.getHeader();
+		ASetMultipleBindCG binding = header.getBinding();
+		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(binding.getSet()));
+
+		ABlockStmCG outerBlock = new ABlockStmCG();
+
+		if (transformationAssistant.hasEmptySet(binding))
+		{
+			transformationAssistant.cleanUpBinding(binding);
+		}
+		else
+		{
+			ALocalVarDeclCG resultDecl = transformationAssistant.consDecl(node.getVar(), node.getValue());
+			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+		}
 		
+		outerBlock.getStatements().addFirst(transformationAssistant.consIterationBlock(binding.getPatterns(), binding.getSet(), info.getTempVarNameGen(), strategy));
+
 		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
-		
 		outerBlock.getStatements().add(enclosingStm);
 	}
-	
+
 	@Override
 	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
-
+		
 		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindings(), info.getTempVarNameGen(), strategy);
@@ -98,15 +114,22 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
 
 		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
-		
-		LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
-		ids.add(node.getId());
-		
-		ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
-		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
-		
-		block.getStatements().add(enclosingStm);
+
+		if (transformationAssistant.isEmptySet(node.getSet()))
+		{
+			node.setSet(null);
+		}
+		else
+		{
+			LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
+			ids.add(node.getId());
+
+			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
+
+			transformationAssistant.replaceNodeWith(enclosingStm, block);
+
+			block.getStatements().add(enclosingStm);
+		}
 	}
 	
 	@Override
@@ -119,10 +142,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), info.getTempVarNameGen(), strategy);
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
-		
 		block.getStatements().add(enclosingStm);
 	}
-
+	
 	private PStmCG getEnclosingStm(PExpCG node, String nodeStr) throws AnalysisException
 	{
 		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
@@ -130,7 +152,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		//This case should never occur as it must be checked for during the construction of the OO AST
 		if (enclosingStm == null)
 			throw new AnalysisException(String.format("Generation of a %s is only supported within operations/functions", node));
-		
+			
 		return enclosingStm;
 	}
 }
