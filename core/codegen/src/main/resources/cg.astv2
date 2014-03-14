@@ -316,11 +316,13 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     ;
   
     
-#seq {-> package='org.overture.codegen.cgast.types'}
+#seq {-> package='org.overture.codegen.cgast.types'
+	| [empty]:java_Boolean}
     =   {seq}
     ;
     
-#map {-> package='org.overture.codegen.cgast.types'}
+#map {-> package='org.overture.codegen.cgast.types'
+	| [empty]:java_Boolean}
     =   {map}
     ;
     

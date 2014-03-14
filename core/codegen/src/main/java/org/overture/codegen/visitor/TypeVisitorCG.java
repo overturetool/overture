@@ -87,6 +87,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	{
 		PType from = node.getFrom();
 		PType to = node.getTo();
+		boolean empty = node.getEmpty();
 		
 		PTypeCG fromCg = from.apply(question.getTypeVisitor(), question);
 		PTypeCG toCg = to.apply(question.getTypeVisitor(), question);
@@ -94,6 +95,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 		AMapMapTypeCG mapType = new AMapMapTypeCG();
 		mapType.setFrom(fromCg);
 		mapType.setTo(toCg);
+		mapType.setEmpty(empty);
 		
 		return mapType;
 	}

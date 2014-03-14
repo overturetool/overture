@@ -58,14 +58,16 @@ public class TypeAssistantCG extends AssistantBase
 	public PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
 			throws AnalysisException
 	{
-		PTypeCG seqOf = node.getSeqof().apply(question.getTypeVisitor(), question);
+		PTypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
+		boolean emptyCg = node.getEmpty();
 
 		// This is a special case since sequence of characters are strings
-		if (seqOf instanceof ACharBasicTypeCG)
+		if (seqOfCg instanceof ACharBasicTypeCG)
 			return new AStringTypeCG();
 
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
-		seqType.setSeqOf(seqOf);
+		seqType.setSeqOf(seqOfCg);
+		seqType.setEmpty(emptyCg);
 
 		return seqType;
 	}
