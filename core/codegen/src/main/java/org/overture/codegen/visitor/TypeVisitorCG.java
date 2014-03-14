@@ -72,10 +72,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	{
 		PType setOf = node.getSetof();
 		PTypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
+		boolean empty = node.getEmpty();
 		
 		ASetSetTypeCG setType = new ASetSetTypeCG();
 		setType.setSetOf(typeCg);
-
+		setType.setEmpty(empty);
+		
 		return setType;
 	}
 	

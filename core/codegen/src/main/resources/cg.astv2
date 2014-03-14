@@ -310,7 +310,8 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
 	| {Bool}
 	;
 
-#set {-> package='org.overture.codegen.cgast.types'}
+#set {-> package='org.overture.codegen.cgast.types'
+	| [empty]:java_Boolean}
     =   {set} 
     ;
   
