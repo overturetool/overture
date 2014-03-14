@@ -1093,11 +1093,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		boolean isImplicit = !node.getName().getExplicit();
 		
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
 		if (owningClass == null || isDefInOwningClass || isImplicit)
 		{
 			AVariableExpCG varExp = new AVariableExpCG();
 			
-			PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
 			varExp.setOriginal(name);
 			varExp.setType(typeCg);
 			
@@ -1111,7 +1112,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			
 			AClassTypeCG classType = new AClassTypeCG();
 			classType.setName(className);
-			
+
+			varExp.setType(typeCg);
 			varExp.setClassType(classType);
 			varExp.setName(name);
 			
