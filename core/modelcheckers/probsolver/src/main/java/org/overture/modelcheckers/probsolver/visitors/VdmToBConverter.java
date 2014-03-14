@@ -297,7 +297,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 */
 	private PPredicate pred(INode n) throws AnalysisException
 	{
-		Node result = n.apply(this);
+	    Node result = n.apply(this);
 		if (result instanceof PExpression)
 		{
 			if (result instanceof PExpression)
@@ -1096,7 +1096,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		LinkedList<PExp> args = node.getArgs();
 		ACoupleExpression cpl = new ACoupleExpression();
-		//System.out.println("in Tuple : " + args);// add 2014/03/03
+		//System.out.println("in Tuple : " + args);
 		cpl.getList().add(exp(args.get(0)));
 		cpl.getList().add(exp(args.get(1)));
 
