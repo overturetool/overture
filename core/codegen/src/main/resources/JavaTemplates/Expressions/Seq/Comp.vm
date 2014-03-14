@@ -1,1 +1,5 @@
-$node.getVar()
+#if ( $JavaFormat.isNull($node.getSet()) )
+	SeqUtil.seq()
+#else
+	$node.getVar()
+#end
