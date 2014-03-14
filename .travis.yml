@@ -21,9 +21,11 @@ install:
   - echo "-*- Precompile IDE -*-"
   - mvn -B install -f ide/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
 script: 
-  - echo "-*- Compile Core -*-"
+  - echo travis_fold:start:compile_core
   - mvn -B install
-  - echo "-*- Compile IDE -*-"
+  - echo travis_fold:end:compile_core
+  - echo travis_fold:start:compile_ide
   - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms
+  - echo travis_fold:end:compile_ide
 after_success:
-  - "[[ $TRAVIS_BRANCH == \"development\" ]] && { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn deploy --settings ~/.m2/mySettings.xml; };"
+  - if [ $TRAVIS_BRANCH == "development" ] ; then { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn deploy --settings ~/.m2/mySettings.xml; } ; fi
