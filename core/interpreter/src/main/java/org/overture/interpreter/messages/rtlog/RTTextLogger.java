@@ -12,10 +12,10 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 
 public class RTTextLogger implements IRTLogger
 {
-	private static List<RTMessage> events = new LinkedList<RTMessage>();
-	private static File logfile = null;
-	private static RTMessage cached = null;
-	private static boolean enabled = false;
+	private List<RTMessage> events = new LinkedList<RTMessage>();
+	private File logfile = null;
+	private RTMessage cached = null;
+	private boolean enabled = false;
 
 	/*
 	 * (non-Javadoc)

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.ClassesRtClassicTest">
+<result>
+<output object="[Cannot find native method: IO.freadval(org.overture.interpreter.values.Value)]" resource="MSAWRT" value="[Cannot find native method: IO.freadval(org.overture.interpreter.values.Value)]"/>
+</result>
+</testResult>

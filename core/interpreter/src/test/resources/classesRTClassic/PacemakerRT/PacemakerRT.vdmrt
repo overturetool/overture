@@ -556,7 +556,6 @@ mutex(followPlan);
 per isFinished =>  scheduledPulse = nil;
 
 end Lead 
-\end{vdm_al}
 
 
 --IO.vdmrt
