@@ -373,52 +373,54 @@ public class TransformationAssistantCG
 
 		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
 
-		outerBlockDecls.add(consSetBindDecl(setName, set));
-
+		ABlockStmCG forBody = null;
 		List<ALocalVarDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
-
+		
 		if (extraDecls != null)
 		{
 			outerBlockDecls.addAll(extraDecls);
 		}
-
-		ABlockStmCG nextBlock = outerBlock;
-
-		ABlockStmCG forBody = null;
-
-		for (int i = 0;;)
+		
+		if (set != null)
 		{
-			AIdentifierPatternCG id = ids.get(i);
+			outerBlockDecls.add(consSetBindDecl(setName, set));
 
-			// Construct next for loop
-			String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+			ABlockStmCG nextBlock = outerBlock;
 
-			AForLoopStmCG forLoop = new AForLoopStmCG();
-			forLoop.setInit(consIteratorDecl(iteratorName, setName));
-			forLoop.setCond(strategy.getForLoopCond(iteratorName));
-			forLoop.setInc(null);
-
-			forBody = strategy.getForLoopBody(getSetTypeCloned(set).getSetOf(), id, iteratorName);
-			forLoop.setBody(forBody);
-
-			nextBlock.getStatements().add(forLoop);
-
-			if (++i < ids.size())
+			for (int i = 0;;)
 			{
-				nextBlock = forBody;
-			} else
-			{
-				List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms();
+				AIdentifierPatternCG id = ids.get(i);
 
-				if (extraForLoopStatements != null)
+				// Construct next for loop
+				String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+
+				AForLoopStmCG forLoop = new AForLoopStmCG();
+				forLoop.setInit(consIteratorDecl(iteratorName, setName));
+				forLoop.setCond(strategy.getForLoopCond(iteratorName));
+				forLoop.setInc(null);
+
+				forBody = strategy.getForLoopBody(getSetTypeCloned(set).getSetOf(), id, iteratorName);
+				forLoop.setBody(forBody);
+
+				nextBlock.getStatements().add(forLoop);
+
+				if (++i < ids.size())
 				{
-					forBody.getStatements().addAll(extraForLoopStatements);
-				}
+					nextBlock = forBody;
+				} else
+				{
+					List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms();
 
-				break;
+					if (extraForLoopStatements != null)
+					{
+						forBody.getStatements().addAll(extraForLoopStatements);
+					}
+
+					break;
+				}
 			}
 		}
-
+		
 		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms();
 
 		if (extraOuterBlockStms != null)
@@ -435,22 +437,33 @@ public class TransformationAssistantCG
 		
 		ABlockStmCG nextMultiBindBlock = outerBlock;
 		
-		strategy.setFirstBind(true);
-		
-		for(int i = 0; i < multipleSetBinds.size(); i++)
+		for(ASetMultipleBindCG bind : multipleSetBinds)
 		{
-			strategy.setLastBind(i == multipleSetBinds.size() - 1);
+			SSetTypeCG setType = getSetTypeCloned(bind.getSet());
 			
-			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
-			
-			strategy.setFirstBind(false);
+			if(setType.getEmpty())
+			{
+				multipleSetBinds.clear();
+				return outerBlock;
+			}
 		}
 		
+		strategy.setFirstBind(true);
+
+		for (int i = 0; i < multipleSetBinds.size(); i++)
+		{
+			strategy.setLastBind(i == multipleSetBinds.size() - 1);
+
+			ASetMultipleBindCG mb = multipleSetBinds.get(i);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
+
+			strategy.setFirstBind(false);
+		}
+
 		return outerBlock;
 	}
 	
-	private AThrowStmCG consThrowException(String exceptionMessage)
+	public AThrowStmCG consThrowException(String exceptionMessage)
 	{
 		AStringLiteralExpCG runtimeErrorMessage = new AStringLiteralExpCG();
 		runtimeErrorMessage.setIsNull(false);
