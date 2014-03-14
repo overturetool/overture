@@ -1,0 +1,1191 @@
+
+
+--Accelerometer.vdmrt
+
+\section{Accelerometer}
+
+This class models the accelerometer physical device containing 
+one only operation called stimulate wich will hand in the 
+stimulus to the rateController that process the information 
+from this sensor.
+
+\begin{vdm_al}
+class Accelerometer is subclass of GLOBAL
+
+operations
+
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (a) == Pacemaker`rateController.stimulate(a);
+
+end Accelerometer
+\end{vdm_al}
+
+
+
+--Environment.vdmrt
+
+\section{Environment class}
+
+The environment class is the class responsible for read a file containing 
+inputs labelled by time and deliver them to the correct system sensor at 
+the right time. It also collects the (re)actions from the system and 
+provides functionality to enable the inspection of them.
+
+\begin{vdm_al}
+class Environment is subclass of GLOBAL
+
+ types 
+public InputTP   = (Time * seq of Inpline)
+inv inp == forall line in set elems inp.#2 & inp.#1 >= line.#4;
+
+public Inpline = (Sense * Chamber * ActivityData * Time);
+
+public Outline = (Pulse * Chamber * Time);  
+
+ instance variables
+
+-- Input/Output 
+io : IO := new IO();
+
+inplines : seq of Inpline := [];
+outlines : seq of Outline := [];
+
+-- Environment  
+
+busy : bool := true;
+
+-- Amount of time we want to simulate
+simtime : Time;
+\end{vdm_al}
+
+Then we define the sensors attachment place where the physician will screw the leads and where the accelerometer is set up.
+
+\begin{vdm_al}
+ instance variables
+-- Sensors
+
+-- Leads
+
+leads : map Chamber to Lead := {|->};
+
+-- Accelerometer
+accelerometer : Accelerometer;
+
+\end{vdm_al}
+
+The environment constructor reads the test file which name is provided in the variable fname, extracting the amount of time we want to simulate and the inputs in that amount of time.
+
+\begin{vdm_al}
+ operations
+
+-- Constructor
+public 
+Environment : seq1 of char ==> Environment
+Environment (fname) ==
+  def mk_(-,mk_(timeval,input)) = io.freadval[InputTP](fname) 
+  in (inplines := input;
+      simtime  := timeval
+     );
+
+\end{vdm_al}
+
+The operations to connect the environment with the system.
+
+\begin{vdm_al}
+public 
+addLeadSensor : Lead ==> ()
+addLeadSensor(lsens) == 
+   leads := leads ++ {lsens.getChamber() |-> lsens};
+
+public 
+addAccelerometer : Accelerometer ==> ()
+addAccelerometer(acc) == 
+   accelerometer := acc;
+
+\end{vdm_al}
+
+createSignal delivers stimuli to the different components
+
+\begin{vdm_al}
+private 
+createSignal : () ==> ()
+createSignal () == 
+   ( 
+    if len inplines > 0 
+    then (dcl curtime : Time := time,
+              done : bool := false;
+          while not done do
+             let mk_(sensed,chamber,accinfo,stime) = hd inplines 
+             in if stime <= curtime
+                then
+                (
+                 leads(chamber).stimulate(sensed);
+                 accelerometer.stimulate(accinfo);
+                 inplines := inplines(2,...,len(inplines));
+                 done := len inplines = 0
+                )
+                else done := true
+           );
+     if len inplines = 0 then busy := false;
+    );
+
+\end{vdm_al}
+
+The (re)actions from the pacemaker are delivered to the environment through the handleEvent operation which updates the collection of outputs.
+
+\begin{vdm_al}
+
+public 
+handleEvent : Pulse * Chamber * Time ==> ()
+handleEvent(p,c,t) == 
+  outlines := outlines ^ [mk_(p,c,t)]; 
+\end{vdm_al}
+
+ShowResult is an operation used to inspect that collection.
+
+\begin{vdm_al}
+public
+showResult : () ==> ()
+showResult () ==
+   def - = io.writeval[seq of Outline](convert(outlines)) in skip;
+
+functions
+
+convert : seq of Outline -> seq of Outline
+convert (s) == [mk_(s(i).#1,s(i).#2,floor(s(i).#3 / 10)) | i in set inds s];
+\end{vdm_al}
+
+The last operation called isFinished its used to have a mean of knowing if the environment finished the stimulation of the system phase.
+
+\begin{vdm_al}
+operations
+public 
+isFinished: () ==> ()
+isFinished () == skip
+\end{vdm_al}
+
+The complex concurrent thread definition is now redifined by a beautifull and clean periodic thread invocation.
+
+\begin{vdm_al}
+
+thread
+  periodic (1000,10,900,0) (createSignal);
+
+
+\end{vdm_al}
+
+\begin{vdm_al}
+sync 
+mutex (handleEvent,showResult);
+mutex (createSignal);
+
+per isFinished => not busy and time >= simtime;
+
+
+end Environment
+\end{vdm_al}
+
+
+--GLOBAL.vdmrt
+
+\section{Global class}
+
+This is the common parent of the other classes where the shared knowledge 
+between all the objects as types definitions is defined.
+
+\begin{vdm_al}
+class GLOBAL
+
+types 
+
+\end{vdm_al}
+
+While poling the leads either a pulse is sensed or nothing, that is 
+modelled by the union type LeadSense.
+
+\begin{vdm_al}
+-- Sensed activity
+public
+Sense = <NONE> | <PULSE>;
+\end{vdm_al}
+
+These senses are associated to the chamber where they were produced and 
+again the uninon type is a good representation of it.
+
+\begin{vdm_al}
+-- Heart chamber identifier
+public 
+Chamber = <ATRIA> | <VENTRICLE>;
+\end{vdm_al}
+
+Diferently the output the accelerometer provides to the heart-controller
+is defined below consitently to the requirement analisys definition that 
+is a linear order and thus the choice of a subset of the natural numbers. 
+
+\begin{vdm_al}
+
+-- Accelerometer output
+public 
+ActivityData = nat1
+inv a == a <= 7;
+
+\end{vdm_al}
+
+The heart controller can actuate in two different manners: either do 
+nothing or discharge a pulse. The pulse was refined into two categories 
+to distinguish if the system outputed an totally artificial pulse or a 
+triggered response to sensing.
+
+\begin{vdm_al}
+-- Paced actvity
+public
+Pulse = <PULSE> | <TRI_PULSE>;
+\end{vdm_al}
+
+The operation modes are defined as a enumeration of the different
+quotes corresponding to each mode.
+
+\begin{vdm_al}
+-- Operation mode
+public 
+Mode = <OFF> | <AOO> | <AAI> | <AOOR> | <AAT> | <DOO> | <DDD>;
+
+\end{vdm_al}
+
+Pulses per minute is an instance of nat1
+
+\begin{vdm_al}
+-- PPM
+public 
+PPM = nat1
+inv ppm == ppm >= 30 and ppm <= 175;
+
+\end{vdm_al}
+
+And to promote readabillity Time is defined as nat type synonym. 
+
+\begin{vdm_al}
+-- Time
+public 
+Time = nat;
+    
+end GLOBAL
+\end{vdm_al}
+
+
+
+
+
+--HeartController.vdmrt
+
+\section{HeartController class}
+
+This is the core class monitoring and regulating the heart.
+
+\begin{vdm_al}
+class HeartController is subclass of GLOBAL
+
+instance variables 
+
+ leads     : map Chamber to Lead;
+ sensed    : map Chamber to Sense;
+ finished  : bool;
+ mode      : Mode;
+ FixedAV   : Time;
+ lastpulse : Time;
+ ARP       : Time;
+ interval  : Time;
+\end{vdm_al}
+
+\begin{vdm_al}
+
+operations
+ 
+ public 
+ HeartController : () ==> HeartController
+ HeartController() == 
+   (
+    leads     := {|->};
+    sensed    := {|->};
+    finished  := false;
+    mode      := <AAT>;
+    FixedAV   := 1500;
+    lastpulse := 0;
+    ARP       := 2500;
+    interval  := Pacemaker`rateController.getInterval();
+   );
+
+\end{vdm_al}
+
+\begin{vdm_al}
+
+ public 
+ addLeadPacer : Lead ==> ()
+ addLeadPacer (lead) == 
+   leads := leads ++ {lead.getChamber() |-> lead};
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ pace : ()  ==> ()
+ pace () == 
+   (cases mode :
+         <AOO>  -> PaceAOO(),
+         <AAT>  -> PaceAAT(),
+         <DOO>  -> PaceDOO(),
+         <OFF>  -> skip,
+         others -> error
+    end;
+    sensed := {|->}
+   );
+
+\end{vdm_al}
+
+AOO mode.
+
+\begin{vdm_al}
+ private
+ PaceAOO : () ==> ()
+ PaceAOO () == 
+   let curTime : Time = time
+   in if (interval + lastpulse <= curTime)
+      then (
+            lastpulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  ;
+\end{vdm_al}
+
+AAT mode.
+
+\begin{vdm_al}
+ private
+ PaceAAT : () ==> ()
+ PaceAAT () == 
+   let curTime : Time = time
+   in if <ATRIA> in set dom sensed and sensed(<ATRIA>) = <PULSE>
+      then if curTime - lastpulse <= ARP 
+           then skip
+           else (
+                 lastpulse := curTime;
+                 leads(<ATRIA>).addLeadPace(<TRI_PULSE>,curTime)
+                 )
+      elseif (interval + lastpulse <= curTime)
+      then (
+            lastpulse  := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime)
+           )
+      else skip
+  ;
+\end{vdm_al}
+
+DOO mode.
+
+\begin{vdm_al}
+ private
+ PaceDOO : () ==> ()
+ PaceDOO () == 
+   let curTime : Time = time
+   in (if (interval + lastpulse <= curTime)
+       then (
+            lastpulse := curTime;
+            leads(<ATRIA>).addLeadPace(<PULSE>,curTime);
+            leads(<VENTRICLE>).addLeadPace(<PULSE>,curTime + FixedAV)
+           )
+       else skip;
+       )
+  ;
+\end{vdm_al}
+
+
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> ()
+ isFinished () == for all lead in set rng leads do
+                     lead.isFinished();
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ sensorNotify : Sense * Chamber ==> ()
+ sensorNotify (s,c) == 
+   (sensed := sensed ++ {c |-> s});
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ setInterval : Time ==> ()
+ setInterval (t) == interval := t;
+\end{vdm_al}
+
+To switch the operating modes one should use
+
+\begin{vdm_al}
+ public 
+ setMode : Mode ==> ()
+ setMode (m) == 
+   (mode := m);
+\end{vdm_al}
+
+\begin{vdm_al}
+thread
+ periodic (200,0,190,0) (pace);
+   
+sync
+
+per isFinished => sensed = {|->} and #active(pace) = 0;
+
+
+
+mutex(sensorNotify,pace,setInterval);
+mutex(sensorNotify,PaceAOO,PaceDOO,PaceAAT);
+end HeartController
+\end{vdm_al}
+
+
+--Lead.vdmrt
+
+\section{Lead class}
+
+The Lead models a Pacemaker lead that read and write pulse values from 
+and to the heart. Each lead its attached to a specific chamber and this 
+is captured using the instance variable chamber.
+
+
+\begin{vdm_al}
+class Lead is subclass of GLOBAL
+
+instance variables
+
+ private chamber : Chamber;       
+ private scheduledPulse : [(Time * Pulse)];
+
+operations
+
+ public 
+ Lead: Chamber ==> Lead
+ Lead(chm) == 
+   (
+    chamber := chm;
+    scheduledPulse := nil
+   );
+\end{vdm_al}
+
+This is an auxiliar function that inspect the chamber where this lead is 
+attached to.
+
+\begin{vdm_al} 
+
+ public 
+ getChamber: () ==> Chamber
+ getChamber () == return chamber;
+\end{vdm_al}
+
+Whenever theres an electrical pulse in that chamber the environment will 
+call the following stimulate operation.
+
+\begin{vdm_al}
+
+ public 
+ stimulate : Sense ==> ()
+ stimulate (s) == Pacemaker`heartController.sensorNotify(s,chamber);
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip;
+
+\end{vdm_al}
+
+The following operation discharges a pulse to the heart.
+
+\begin{vdm_al}
+ public 
+ addLeadPace : Pulse * Time ==> ()
+ addLeadPace (p,t) == 
+   if t <= time
+   then dischargePulse(p,chamber)
+   else (scheduledPulse := mk_(t,p);
+         return);
+\end{vdm_al}
+
+\begin{vdm_al}
+ private 
+ dischargePulse : Pulse * Chamber ==> ()
+ dischargePulse (p,c) ==
+    duration(4)
+    World`env.handleEvent(p,c,time);
+\end{vdm_al}
+
+\begin{vdm_al}
+ private 
+ followPlan : () ==> ()
+ followPlan () ==
+    (
+     dcl curTime : Time := time;
+     if scheduledPulse <> nil
+     then if(curTime >= scheduledPulse.#1) 
+          then (dischargePulse(scheduledPulse.#2,chamber);
+                scheduledPulse := nil);
+     
+   );
+   
+      
+\end{vdm_al}
+
+
+\begin{vdm_al}
+thread
+  periodic (50,0,49,0) (followPlan)
+
+
+\end{vdm_al}
+
+\begin{vdm_al}
+sync
+
+mutex(addLeadPace);
+mutex(dischargePulse);
+mutex(followPlan);
+per isFinished =>  scheduledPulse = nil;
+
+end Lead 
+
+
+--IO.vdmrt
+
+
+class IO
+
+-- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+
+types
+ 
+public
+filedirective = <start>|<append> 
+
+functions
+
+-- Write VDM value in ASCII format to std out:
+public
+writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+-- Write VDM value in ASCII format to file.
+-- fdir = <start> will overwrite existing file,
+-- fdir = <append> will append output to the file (created if
+-- not existing).
+public
+fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+-- Read VDM value in ASCII format from file
+public
+freadval[@p]:seq1 of char -> bool * [@p]
+freadval(f) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+operations
+
+-- Write text to std out. Surrounding double quotes will be stripped,
+-- backslashed characters should be interpreted.
+public
+echo: seq of char ==> bool
+echo(text) ==
+  fecho ("",text,nil);
+
+-- Write text to file like 'echo'
+public
+fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre filename = "" <=> fdir = nil;
+
+-- The in/out functions  will return false if an error occur. In this
+-- case an internal error string will be set. 'ferror' returns this
+-- string and set it to "".
+public
+ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+-- The questionmark in the signature simply means any type
+public static print: ? ==> ()
+print(arg) ==
+  is not yet specified;
+
+-- New simplified format printing operations
+-- The questionmark in the signature simply means any type
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+  is not yet specified;
+
+end IO
+
+
+--Pacemaker.vdmrt
+
+\section{Pacemaker class}
+
+This is the pacemaker system and will contain the components of it as 
+static variables the first ones are the atrial and ventricular leads 
+responsibles for discharge and sense electrical pulses.
+
+
+\begin{vdm_al}
+system Pacemaker 
+
+ instance variables
+
+ public static 
+ atriaLead       : Lead       := new Lead(<ATRIA>);
+
+ public static 
+ ventricleLead   : Lead       := new Lead(<VENTRICLE>);
+
+\end{vdm_al}
+
+The accelerometer component and the RateContoller.
+
+\begin{vdm_al}
+instance variables
+
+ public static 
+ accelerometer       : Accelerometer   := new Accelerometer();
+
+ public static 
+ rateController      : RateController  := new RateController();
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ instance variables
+
+ public static 
+ heartController : HeartController := new HeartController();
+\end{vdm_al}
+
+Below we define the physical architecture.
+
+\begin{vdm_al}
+instance variables
+
+ cpu1 : CPU := new CPU(<FCFS>,1E3); 
+ cpu2 : CPU := new CPU(<FCFS>,1E3); 
+ cpu3 : CPU := new CPU(<FCFS>,1E3); 
+ cpu4 : CPU := new CPU(<FP>,1E3); 
+
+ -- Lead (artia) <-> HeartController
+ bus1 : BUS := new BUS(<FCFS>,1E6,{cpu1,cpu4});
+
+ -- Lead (ventricle) <-> HeartController
+ bus2 : BUS := new BUS(<FCFS>,1E6,{cpu2,cpu4});
+
+ -- Accelerometer <-> RateController
+ bus3 : BUS := new BUS(<FCFS>,1E6,{cpu3,cpu4});
+
+\end{vdm_al}
+
+And now we need ...
+
+\begin{vdm_al}
+
+operations
+ 
+ public Pacemaker: () ==> Pacemaker
+ Pacemaker () == 
+   ( 
+    cpu1.deploy(atriaLead);
+    cpu2.deploy(ventricleLead);
+    cpu3.deploy(accelerometer);
+    cpu4.deploy(rateController);
+    cpu4.deploy(heartController);
+ --   cpu4.setPriority(HeartController`pace,3);
+ --   cpu4.setPriority(RateController`increaseRate,1);
+ --   cpu4.setPriority(RateController`decreaseRate,1);
+   );
+   
+end Pacemaker
+\end{vdm_al}
+
+
+--RateController.vdmrt
+
+\section{RateController class}
+
+The RateController is the class that models the rate adaptation control.
+
+\begin{vdm_al}
+class RateController is subclass of GLOBAL
+
+instance variables
+ rateplan : map Time to Time;
+ sensed   : [ActivityData];
+ interval : Time;
+ finished : bool;
+
+ 
+\end{vdm_al}
+
+\begin{vdm_al}
+instance variables
+-- programmable values
+ LRL       : PPM;
+ MSR       : PPM;
+ threshold : nat1;
+ reactionT : Time;
+ recoveryT : Time;
+ responseF : nat1;
+
+inv threshold < 8
+    and
+    reactionT in set {10,...,50}
+    and
+    recoveryT in set {2,...,16}
+    and 
+    responseF <= 16;
+\end{vdm_al} 
+
+The Constructor initializes the instance variables with the 
+default values as consulted in (citation needed);
+
+\begin{vdm_al}
+operations
+  
+ public 
+ RateController: () ==> RateController
+ RateController() ==
+   (LRL       := 60;
+    MSR       := 120;
+    threshold := MED;
+    reactionT := 10; -- 10 s
+    recoveryT := 2; -- 2 minutes;
+    responseF := 8;
+    sensed    := nil; 
+    interval  := 1/((LRL/60)/10000);
+    finished  := false;
+
+   );
+\end{vdm_al} 
+
+\begin{vdm_al}
+public
+getInterval : () ==> Time
+getInterval () == return interval;
+\end{vdm_al}
+
+
+\begin{vdm_al}
+ private
+ controlRate : () ==> ()
+ controlRate () == 
+    (
+    (if sensed > threshold
+     then increaseRate()
+     elseif sensed < threshold
+     then decreaseRate()
+     else skip;
+     );
+    sensed := nil;
+    );
+\end{vdm_al}
+
+\begin{vdm_al}
+
+ public 
+ stimulate : ActivityData ==> ()
+ stimulate (ad) == sensed := ad;
+\end{vdm_al} 
+
+
+\begin{vdm_al}
+ public
+ increaseRate : () ==> ()
+ increaseRate () == 
+   (
+    interval := 1 / ((MSR / 60) / 10000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+
+\end{vdm_al}
+
+\begin{vdm_al}
+ public
+ decreaseRate : () ==> ()
+ decreaseRate () == 
+   (
+    interval := 1 / ((LRL / 60) / 10000);
+    Pacemaker`heartController.setInterval(interval)
+   );
+\end{vdm_al}
+
+\begin{vdm_al}
+ public 
+ finish : () ==> ()
+ finish () == finished := true; 
+
+ public 
+ isFinished : () ==> ()
+ isFinished () == skip; 
+\end{vdm_al}
+
+\begin{vdm_al}
+
+thread
+ while true do
+    controlRate();
+    
+
+sync
+mutex(stimulate);
+
+per isFinished => finished;
+
+per controlRate => sensed <> nil;
+\end{vdm_al} 
+
+\begin{vdm_al}
+values
+
+--V-LOW 1
+--LOW 2
+--MED-LOW 4
+MED : ActivityData = 4;
+--MED-HIGH 4
+--HIGH 6
+--V-HIGH 6
+
+end RateController
+\end{vdm_al} 
+
+
+--testBrokenHeartAAI.vdmrt
+
+class Test4
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioBrokenHeart.arg",<AAI>).Run()
+;
+end Test4
+
+
+--testBrokenHeartAAT.vdmrt
+
+class Test5
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioBrokenHeart.arg",<AAT>).Run()
+;
+end Test5
+
+
+--testBrokenHeartAOO.vdmrt
+
+class Test1
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioBrokenHeart.arg",<AOO>).Run()
+;
+end Test1
+
+
+--testBrokenHeartDDD.vdmrt
+
+class Test2
+
+operations
+
+public Test : () ==> ()
+Test() == new World ("tests/scenarioBrokenHeart.arg",<DDD>).Run()
+;
+end Test2
+
+
+--testBrokenHeartDOO.vdmrt
+
+class Test3
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioBrokenHeart.arg",<DOO>).Run()
+;
+end Test3
+
+
+--testDoubleHeartAAI.vdmrt
+
+class Test9
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioDoubleHeart.arg",<AAI>).Run()
+;
+end Test9
+
+
+--testDoubleHeartAAT.vdmrt
+
+class Test10
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioDoubleHeart.arg",<AAT>).Run()
+;
+end Test10
+
+
+--testDoubleHeartAOO.vdmrt
+
+class Test6
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioDoubleHeart.arg",<AOO>).Run()
+;
+end Test6
+
+
+--testDoubleHeartDDD.vdmrt
+
+class Test7
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioDoubleHeart.arg",<DDD>).Run()
+;
+end Test7
+
+
+--testDoubleHeartDOO.vdmrt
+
+class Test8
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioDoubleHeart.arg",<DOO>).Run()
+;
+end Test8
+
+
+--testGoodHeartAAI.vdmrt
+
+class Test15
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<AAI>).Run()
+;
+end Test15
+
+
+--testGoodHeartAAT.vdmrt
+
+class Test16
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<AAT>).Run()
+;
+end Test16
+
+
+--testGoodHeartAOO.vdmrt
+
+class Test11
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<AOO>).Run()
+;
+end Test11
+
+
+--testGoodHeartDDD.vdmrt
+
+class Test13
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<DDD>).Run()
+;
+end Test13
+
+
+--testGoodHeartDOO.vdmrt
+
+class Test14
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioGoodHeart.arg",<DOO>).Run()
+;
+end Test14
+
+
+--testSometimesHeartAAI.vdmrt
+
+class Test20
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioSometimesHeart.arg",<AAI>).Run()
+;
+end Test20
+
+
+--testSometimesHeartAAT.vdmrt
+
+class Test21
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioSometimesHeart.arg",<AAT>).Run()
+;
+end Test21
+
+
+--testSometimesHeartAOO.vdmrt
+
+class Test17
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioSometimesHeart.arg",<AOO>).Run()
+;
+end Test17
+
+
+--testSometimesHeartDDD.vdmrt
+
+class Test18
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioSometimesHeart.arg",<DDD>).Run()
+;
+end Test18
+
+
+--testSometimesHeartDOO.vdmrt
+
+class Test19
+
+operations
+
+public Test : () ==> ()
+Test () == new World("tests/scenarioSometimesHeart.arg",<DOO>).Run()
+;
+end Test19
+
+
+--World.vdmrt
+
+\section{World class}
+
+The World class as its name tell is the class modelling the world 
+where the system and environment will co-exist.
+
+\begin{vdm_al}
+class World is subclass of GLOBAL 
+
+types
+
+instance variables
+
+public static env : [Environment] := nil;
+\end{vdm_al}
+
+The World constructor its the responsible for connect system and 
+environment.
+
+\begin{vdm_al}
+operations
+
+public World: seq of char * GLOBAL`Mode ==> World
+World(filename,mode) == 
+  (  -- create an environment
+     env := new Environment(filename);
+
+     -- bind leads to the environment
+     env.addLeadSensor(Pacemaker`atriaLead);
+     env.addLeadSensor(Pacemaker`ventricleLead);
+   
+     -- bind accelerometer to the environment
+     env.addAccelerometer(Pacemaker`accelerometer);
+    
+     -- bind leads to the controler
+        -- bind leads to the controler
+     Pacemaker`heartController.addLeadPacer(Pacemaker`atriaLead);
+     Pacemaker`heartController.addLeadPacer(Pacemaker`ventricleLead);
+     
+     -- set up mode
+     Pacemaker`heartController.setMode(mode);        
+
+     start(Pacemaker`heartController);
+     start(Pacemaker`rateController);
+     start(Pacemaker`atriaLead);
+     start(Pacemaker`ventricleLead);
+     
+     
+  );
+\end{vdm_al}
+
+And Run is the operation that starts a test sequence.
+
+\begin{vdm_al}
+
+public Run: () ==> ()
+Run () == 
+  ( 
+   start(env); 
+   env.isFinished();
+   Pacemaker`heartController.isFinished();
+   env.showResult()
+  );
+  
+
+end World
+\end{vdm_al}

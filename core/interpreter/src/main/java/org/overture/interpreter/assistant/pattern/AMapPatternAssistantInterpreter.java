@@ -19,16 +19,15 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
-import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 
-public class AMapPatternAssistantInterpreter extends AMapPatternAssistantTC
+public class AMapPatternAssistantInterpreter 
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AMapPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

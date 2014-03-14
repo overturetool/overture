@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.ClassesPpClassicTest">
+<result>
+<output object="mk_({mk_token(&quot;Monday day&quot;)}, Expert{#3, quali:={&lt;Bio&gt;, &lt;Mech&gt;}})" resource="AlarmPP" value="mk_({mk_token(&quot;Monday day&quot;)}, Expert{#3, quali:={&lt;Bio&gt;, &lt;Mech&gt;}})"/>
+</result>
+</testResult>

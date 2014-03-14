@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.internal.core.resources.VdmProject;
+import org.overture.parser.lex.BacktrackInputReader.ReaderType;
 import org.overture.parser.lex.DocStreamReader;
 import org.overture.parser.lex.DocxStreamReader;
 import org.overture.parser.lex.ODFStreamReader;
@@ -231,28 +232,44 @@ public class FileUtility
 			return getContentPlainText(file);
 		}
 	}
-
-	public static InputStreamReader getReader(IFile file)
+	
+	public static ReaderType getReaderType(IFile file)
 			throws FileNotFoundException, IOException, CoreException
 	{
 		if (VdmProject.externalFileContentType.isAssociatedWith(file.getName()))
 		{
 			if (file.getName().endsWith("doc"))
 			{
-				return new DocStreamReader(new FileInputStream(file.getLocation().toFile()), file.getCharset());
+				return ReaderType.Doc;
 			} else if (file.getName().endsWith("docx"))
 			{
-				return new DocxStreamReader(new FileInputStream(file.getLocation().toFile()));
+				return ReaderType.Docx;
 			} else if (file.getName().endsWith("odt"))
 			{
-				return new ODFStreamReader(new FileInputStream(file.getLocation().toFile()));
+				return ReaderType.Odf;
 			}
 		} else
 		{
-			return new InputStreamReader(file.getContents(), file.getCharset());
+			return ReaderType.Latex;
 		}
 
 		return null;
+	}
+
+	public static InputStreamReader getReader(ReaderType type,IFile file)
+			throws FileNotFoundException, IOException, CoreException
+	{
+		switch(type)
+		{
+			case Doc:
+				return new DocStreamReader(new FileInputStream(file.getLocation().toFile()), file.getCharset());
+			case Docx:
+				return new DocxStreamReader(new FileInputStream(file.getLocation().toFile()));
+			case Odf:
+				return new ODFStreamReader(new FileInputStream(file.getLocation().toFile()));
+			default:
+				return new InputStreamReader(file.getContents(), file.getCharset());
+		}
 	}
 
 	public static List<Character> convert(String text, String encoding)
@@ -282,10 +299,24 @@ public class FileUtility
 		}
 		return content;
 	}
-
+	
 	public static String getContentExternalText(IFile file)
 	{
-		InputStreamReader in = null;
+		try
+		{
+			return getContentExternalText(file, getReader(getReaderType(file),file));
+		} catch (CoreException e)
+		{
+			VdmCore.log("FileUtility getContentDocxText", e);
+		} catch (IOException e)
+		{
+			VdmCore.log("FileUtility getContentDocxText", e);
+		}
+		return null;
+	}
+
+	public static String getContentExternalText(IFile file,InputStreamReader in)
+	{
 
 		StringBuffer fileData = new StringBuffer();
 
@@ -293,7 +324,7 @@ public class FileUtility
 		{
 			long length = 0;
 
-			in = getReader(file);
+			
 
 			if (in instanceof DocxStreamReader)
 			{
@@ -318,10 +349,7 @@ public class FileUtility
 		} catch (IOException e)
 		{
 			VdmCore.log("FileUtility getContentDocxText", e);
-		} catch (CoreException e)
-		{
-			VdmCore.log("FileUtility getContentDocxText", e);
-		} finally
+		}  finally
 		{
 			try
 			{

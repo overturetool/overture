@@ -1346,6 +1346,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		}
 		
+		// Comment the following line in to enable constraint checking
+		question.constraint = node.getType();
+		
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
 		node.setExpType(expType);

@@ -21,17 +21,16 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
 
-public class ARecordPatternAssistantInterpreter extends
-		ARecordPatternAssistantTC
+public class ARecordPatternAssistantInterpreter 
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ARecordPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

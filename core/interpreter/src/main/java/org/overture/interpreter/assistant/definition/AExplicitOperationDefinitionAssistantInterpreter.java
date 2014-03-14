@@ -11,7 +11,6 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class AExplicitOperationDefinitionAssistantInterpreter extends
 		AExplicitOperationDefinitionAssistantTC

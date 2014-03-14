@@ -39,7 +39,6 @@ import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitio
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
@@ -59,19 +58,11 @@ import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AExpressionPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
-import org.overture.typechecker.assistant.pattern.ARecordPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASeqPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.ATuplePatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -301,11 +292,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AStateDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
-	{
-		return new ASystemClassDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
+//	{
+//		return new ASystemClassDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
@@ -445,17 +436,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ACharacterPatternAssistantTC(this);
 	// }
 
-	@Override
-	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
-	{
-		return new AConcatenationPatternAssistantTC(this);
-	}
-
-	@Override
-	public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
-	{
-		return new AExpressionPatternAssistantTC(this);
-	}
+//	@Override
+//	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
+//	{
+//		return new AConcatenationPatternAssistantTC(this);
+//	}
+//
+//	@Override
+//	public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
+//	{
+//		return new AExpressionPatternAssistantTC(this);
+//	}
 
 	@Override
 	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
@@ -463,11 +454,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AMapletPatternMapletAssistantTC(this);
 	}
 
-	@Override
-	public AMapPatternAssistantTC createAMapPatternAssistant()
-	{
-		return new AMapPatternAssistantTC(this);
-	}
+//	@Override
+//	public AMapPatternAssistantTC createAMapPatternAssistant()
+//	{
+//		return new AMapPatternAssistantTC(this);
+//	}
 
 	@Override
 	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
@@ -481,17 +472,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new APatternTypePairAssistant(this);
 	}
 
-	@Override
-	public ARecordPatternAssistantTC createARecordPatternAssistant()
-	{
-		return new ARecordPatternAssistantTC(this);
-	}
+//	@Override
+//	public ARecordPatternAssistantTC createARecordPatternAssistant()
+//	{
+//		return new ARecordPatternAssistantTC(this);
+//	}
 
-	@Override
-	public ASeqPatternAssistantTC createASeqPatternAssistant()
-	{
-		return new ASeqPatternAssistantTC(this);
-	}
+//	@Override
+//	public ASeqPatternAssistantTC createASeqPatternAssistant()
+//	{
+//		return new ASeqPatternAssistantTC(this);
+//	}
 
 	@Override
 	public ASetBindAssistantTC createASetBindAssistant()
@@ -499,17 +490,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ASetBindAssistantTC(this);
 	}
 
-	@Override
-	public ASetPatternAssistantTC createASetPatternAssistant()
-	{
-		return new ASetPatternAssistantTC(this);
-	}
+//	@Override
+//	public ASetPatternAssistantTC createASetPatternAssistant()
+//	{
+//		return new ASetPatternAssistantTC(this);
+//	}
 
-	@Override
-	public ATuplePatternAssistantTC createATuplePatternAssistant()
-	{
-		return new ATuplePatternAssistantTC(this);
-	}
+//	@Override
+//	public ATuplePatternAssistantTC createATuplePatternAssistant()
+//	{
+//		return new ATuplePatternAssistantTC(this);
+//	}
 
 	@Override
 	public ATypeBindAssistantTC createATypeBindAssistant()
@@ -517,11 +508,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeBindAssistantTC(this);
 	}
 
-	@Override
-	public AUnionPatternAssistantTC createAUnionPatternAssistant()
-	{
-		return new AUnionPatternAssistantTC(this);
-	}
+//	@Override
+//	public AUnionPatternAssistantTC createAUnionPatternAssistant()
+//	{
+//		return new AUnionPatternAssistantTC(this);
+//	}
 
 	@Override
 	public PatternListTC createPatternList()

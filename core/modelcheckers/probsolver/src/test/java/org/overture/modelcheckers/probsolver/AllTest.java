@@ -8,10 +8,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -19,7 +17,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
@@ -27,22 +25,22 @@ import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
-@RunWith(value = Parameterized.class)
-public class AllTest extends ProbConverterTestBase
+//@RunWith(value = Parameterized.class)
+public abstract class AllTest extends ProbConverterTestBase
 {
-	@Parameters(name = "{3}")
-	public static Collection<Object[]> getData()
-	{
-		String root = "src/test/resources/";
+	// @Parameters(name = "{3}")
+	// public static Collection<Object[]> getData()
+	// {
+	// String root = "src/test/resources/";
+	//
+	// Collection<Object[]> tests = new LinkedList<Object[]>();
+	//
+	// tests.addAll(getTests(new File(root)));
+	//
+	// return tests;
+	// }
 
-		Collection<Object[]> tests = new LinkedList<Object[]>();
-
-		tests.addAll(getTests(new File(root)));
-
-		return tests;
-	}
-
-	private static Collection<Object[]> getTests(File root)
+	protected static Collection<Object[]> getTests(File root)
 	{
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 		if (root.isFile())
@@ -78,7 +76,8 @@ public class AllTest extends ProbConverterTestBase
 			{
 				for (PDefinition def : m.getDefs())
 				{
-					if (def instanceof AImplicitOperationDefinition)
+					if (def instanceof AImplicitOperationDefinition
+							|| def instanceof AImplicitFunctionDefinition)
 					{
 						tests.add(new Object[] {
 								Dialect.VDM_SL,
@@ -165,8 +164,8 @@ public class AllTest extends ProbConverterTestBase
 			testMethod(operationName);
 		} catch (SolverException e)
 		{
-			//We just test the translation so some of the invocations may not be valid
-			if(!(e.getMessage().startsWith("no solution found")||e.getMessage().startsWith("cannot be solved")))
+			// We just test the translation so some of the invocations may not be valid
+			if (!(e.getMessage().startsWith("no solution found") || e.getMessage().startsWith("cannot be solved")))
 			{
 				throw e;
 			}

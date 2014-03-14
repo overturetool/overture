@@ -54,7 +54,6 @@ import org.overture.parser.syntax.ClassReader;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.ClassTypeChecker;
 import org.overture.typechecker.TypeChecker;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 
 
@@ -318,11 +317,13 @@ public class VDMPP extends VDMJ
 		{
 			println("Initialization: " + e);
 			e.ctxt.printStackTrace(Console.out, true);
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 		catch (Exception e)
 		{
 			println("Initialization: " + e.getMessage());
+			dumpLogs();
 			return ExitStatus.EXIT_ERRORS;
 		}
 
@@ -359,7 +360,9 @@ public class VDMPP extends VDMJ
 		{
 			println("Execution: " + e);
 		}
-
+		
+		dumpLogs();
+		
 		return ExitStatus.EXIT_ERRORS;
 	}
 

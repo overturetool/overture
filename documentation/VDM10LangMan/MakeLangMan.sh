@@ -7,6 +7,9 @@ pdflatex -quiet VDM10_lang_man
 echo Bibtex pass...
 bibtex -quiet VDM10_lang_man
 
+echo Makeindex pass...
+makeindex -quiet VDM10_lang_man
+
 echo Second pass...
 pdflatex -quiet VDM10_lang_man
 

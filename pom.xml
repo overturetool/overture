@@ -1,23 +1,29 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <!-- Needed to make deployment work -->
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
 
   <packaging>pom</packaging>
 
-  <groupId>org.overture</groupId>
+  <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
-  <name>OvertureTool</name>
+
+  <version>2.0.5-SNAPSHOT</version>
+
+  <name>The Overture Tool Platform root</name>
+  <description>
+    Overture is a community-based project developing the next generation of open-source tools to support modelling and analysis in the design of computer-based systems. Overture supports VDM: The Vienna Development Method, a set of modelling techniques with a long and successful history of industrial application and research. Overture is an integrated development environment (IDE) for developing VDM models. The Overture tools are written entirely in Java and build on top of the Eclipse platform. Overture supports the VDM-SL, VDM++, and VDM-RT language dialects.
+  </description>
 
   <modules>
     <module>core</module>
     <module>tools</module>
-    <!--
-        The ide module will now be built using Tycho, so lets remove
-        it from the main build cycle (as JWC has had trouble
-        integrating mixed tycho-maven and pure-maven build setups in
-        the past). -jwc/13Feb2013
-    -->
+    <!-- The ide module is Tycho and the -PWith-IDE profile. -->
     <!-- <module>ide</module> -->
   </modules>
 
@@ -26,7 +32,6 @@
   </properties>
 
   <dependencies>
-    <!-- Add JUnit for testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -35,124 +40,14 @@
     </dependency>
   </dependencies>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>overture-astcreator-github</id>
-      <name>Overture AstCreator maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/astcreator/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-    <pluginRepository>
-      <id>overture-example-packager-github</id>
-      <name>Overture Example Packager maven development repo on GitHub</name>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-      <url>https://github.com/overturetool/example-packager/raw/mvn-dev-repo</url>
-      <layout>default</layout>
-    </pluginRepository>
-  </pluginRepositories>
-  
   <profiles>
     <profile>
       <id>With-IDE</id>
       <modules>
         <module>ide</module>
       </modules>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>overture.iha.dk</id>
-          <name>Overture Project Build Repository at AU/IHA</name>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>always</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-            <updatePolicy>daily</updatePolicy>
-            <checksumPolicy>warn</checksumPolicy>
-          </snapshots>
-          <url>http://build.overturetool.org/builds/overture-m2repo/</url>
-          <layout>default</layout>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-    <profile>
-      <id>COMPASS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-compass</id>
-          <name>Overture Repo for COMPASS on the buildserver</name>
-          <url>file:///home/jenkins/web/overture-compass-m2repo/</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/overture-compass-m2repo/</downloadUrl>
-      </distributionManagement>
-    </profile>
-    <profile>
-      <id>DESTECS-Repo</id>
-      <distributionManagement>
-        <repository>
-          <id>build.overture.org-destecs</id>
-          <name>Overture Repo for DESTECS on the buildserver</name>
-          <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/destecs-overture-m2repo</url>
-        </repository>
-        <downloadUrl>http://build.overturetool.org/builds/destecs-overture-m2repo/</downloadUrl>
-      </distributionManagement>
     </profile>
   </profiles>
-
-  <repositories>
-    <!-- <repository> -->
-    <!--   <id>overture.sf.net</id> -->
-    <!--   <name>Overture SF Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://overture.sourceforge.net/maven/repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-    <!-- <repository> -->
-    <!--   <id>IHA</id> -->
-    <!--   <name>Build server Snapshots</name> -->
-    <!--   <releases> -->
-    <!--     <enabled>true</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </releases> -->
-    <!--   <snapshots> -->
-    <!--     <enabled>false</enabled> -->
-    <!--     <updatePolicy>daily</updatePolicy> -->
-    <!--     <checksumPolicy>warn</checksumPolicy> -->
-    <!--   </snapshots> -->
-    <!--   <url>http://build.overturetool.org/builds/overture-m2repo</url> -->
-    <!--   <layout>default</layout> -->
-    <!-- </repository> -->
-  </repositories>
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -316,29 +211,14 @@
           </configuration>
         </plugin>
 
-        <!-- Apparently maven-site-plugin doesn't work with Maven 3 as
-             it did in Maven 2.  Do not re-enable this until the
-             necessary configuration has been updated per
-             http://maven.apache.org/plugins/maven-site-plugin/maven-3.html
-             -jwc/28Feb2013
-        -->
-        <!-- <plugin> -->
-        <!--    <groupId>org.apache.maven.plugins</groupId> -->
-        <!--    <artifactId>maven-site-plugin</artifactId> -->
-        <!--    <version>2.0.1</version> -->
-        <!-- </plugin> -->
-
-        <!-- I would love to be using this, but we're more sensitive to
-             version numbering than just the pom files. -jwc/28Feb2013
-        -->
-        <!-- <plugin> -->
-        <!--    <groupId>org.apache.maven.plugins</groupId> -->
-        <!--    <artifactId>maven-release-plugin</artifactId> -->
-        <!--    <version>2.4</version> -->
-        <!--    <configuration> -->
-        <!--      <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
-        <!--    </configuration> -->
-        <!-- </plugin> -->
+        <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-release-plugin</artifactId>
+           <version>2.4.2</version>
+           <configuration>
+             <tagNameFormat>Release/@{project.version}</tagNameFormat>
+           </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -351,38 +231,66 @@
     </extensions>
   </build>
 
-  <distributionManagement>
-    <repository>
-      <id>build.overture.org</id>
-      <name>Overture Repo on the buildserver</name>
-      <url>sftp://jenkins@overture.iha.dk/home/jenkins/web/overture-m2repo</url>
-    </repository>
-    <downloadUrl>http://build.overturetool.org/builds/overture-m2repo/</downloadUrl>
-    <!-- <repository>  -->
-    <!--   <id>sourceforge.net</id>  -->
-    <!--   <name>Overture Repo af SF.Net</name>  -->
-    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/repo</url>  -->
-    <!-- </repository>  -->
-    <!-- <snapshotRepository> -->
-    <!--   <id>sourceforge.net</id>  -->
-    <!--   <name>Overture Snapshot Repo af SF.Net</name>  -->
-    <!--   <url>sftp://web.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/snapshotrepo</url>  -->
-    <!-- </snapshotRepository>  -->
-    <!-- <site>  -->
-    <!--   <id>sourceforge.net</id> -->
-    <!--   <url>scp://shell.sourceforge.net/home/groups/o/ov/overture/htdocs/maven/doc</url> -->
-    <!-- </site>  -->
-    <!-- <downloadUrl>http://overture.sourceforge.net/maven/repo/</downloadUrl> -->
-  </distributionManagement>
+  <scm>
+    <url>git@github.com:overturetool/overture.git</url>
+    <connection>scm:git:git://github.com/overturetool/overture.git</connection>
+    <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 
-  <!-- <scm> -->
-  <!--   <connection>scm:git:git://git.code.sf.net/p/overture/code</connection> -->
-  <!--   <!-\- <developerConnection>scm:svn:https://overture.svn.sourceforge.net/svnroot/overture/trunk</developerConnection> -\-> -->
-  <!--   <url>http://sourceforge.net/p/overture/code</url> -->
-  <!-- </scm> -->
+  <developers>
+    <developer>
+      <id>overture</id>
+      <email>info@overturetool.org</email>
+      <name>Information contact for the Overture project</name>
+      <url>http://overturetool.org/</url>
+      <roles>
+        <role>Primary point of contact</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jwc</id>
+      <email>jwc@eng.au.dk</email>
+      <name>Joey Coleman</name>
+      <roles>
+        <role>coordinator</role>
+        <role>developer</role>
+      </roles>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+    </developer>
+    <developer>
+      <id>lausdahl</id>
+      <email>lausdahl@eng.au.dk</email>
+      <name>Kenneth Lausdahl</name>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <organization>Aarhus University</organization>
+      <organizationUrl>http://eng.au.dk/</organizationUrl>
+    </developer>
+    <developer>
+      <id>nickbattle</id>
+      <email>nick.battle@gmail.com</email>
+      <name>Nick Battle</name>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <organization>Fujitsu UK</organization>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>GNU General Public License (GPL) version 3</name>
+      <url>http://www.gnu.org/licenses/gpl.txt</url>
+    </license>
+  </licenses>
 
   <organization>
-    <name>Overture</name>
-    <url>http://www.overturetool.org</url>
+    <name>The Overture Tool Platform</name>
+    <url>http://overturetool.org/</url>
   </organization>
 </project>

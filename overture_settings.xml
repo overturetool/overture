@@ -1,0 +1,22 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <!-- You will only need the two Sonatype server entries if you plan
+       to either deploy snapshots to the sonatype servers or perform
+       full releases.
+  -->
+  <servers>
+    <server>
+      <id>sonatype-nexus-snapshots</id>
+      <username>your-sonatype-username</username>
+      <password>your-sonatype-password</password>
+    </server>
+
+    <server>
+      <id>sonatype-nexus-staging</id>
+      <username>your-sonatype-username</username>
+      <password>your-sonatype-password</password>
+    </server>
+  </servers>
+</settings>
