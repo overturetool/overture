@@ -10,8 +10,7 @@ import org.overture.interpreter.values.InvariantValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 
-public class ANamedInvariantTypeAssistantInterpreter extends
-		ANamedInvariantTypeAssistant
+public class ANamedInvariantTypeAssistantInterpreter extends ANamedInvariantTypeAssistant
 
 {
 	protected static IInterpreterAssistantFactory af;

@@ -18,10 +18,8 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.pattern.AConcatenationPatternAssistantTC;
 
-public class AConcatenationPatternAssistantInterpreter extends
-		AConcatenationPatternAssistantTC
+public class AConcatenationPatternAssistantInterpreter 
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -29,7 +27,7 @@ public class AConcatenationPatternAssistantInterpreter extends
 	public AConcatenationPatternAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
