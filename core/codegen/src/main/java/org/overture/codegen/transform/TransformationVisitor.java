@@ -8,9 +8,11 @@ import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
-import org.overture.codegen.cgast.expressions.AForAllExpCG;
+import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.expressions.STraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -133,11 +135,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAForAllExpCG(AForAllExpCG node) throws AnalysisException
+	public void caseAForAllTraditionalQuantifierExpCG(AForAllTraditionalQuantifierExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "for all expression");
+		handleTraditionalQuantifier(node, "forall expression", TraditionalQuantifier.FORALL);
+	}
+	
+	@Override
+	public void caseAExistsTraditionalQuantifierExpCG(
+			AExistsTraditionalQuantifierExpCG node) throws AnalysisException
+	{
+		handleTraditionalQuantifier(node, "exists expression", TraditionalQuantifier.EXISTS);
+	}
+
+	private void handleTraditionalQuantifier(STraditionalQuantifierExpCG node, String nodeStr, TraditionalQuantifier quantifierType) throws AnalysisException
+	{
+		PStmCG enclosingStm = getEnclosingStm(node, nodeStr);
 		
-		ForAllExpStrategy strategy = new ForAllExpStrategy(transformationAssistant, node.getPredicate(), node.getVar());
+		QuantifierStrategy strategy = new QuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), quantifierType);
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), info.getTempVarNameGen(), strategy);
 		
