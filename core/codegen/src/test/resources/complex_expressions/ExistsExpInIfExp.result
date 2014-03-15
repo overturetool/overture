@@ -1,0 +1,24 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        boolean existsExpResult_1 = false;
+        VDMSet set_1 = SetUtil.set(5L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && !(existsExpResult_1);) {
+            Number x = ((Number) iterator_1.next());
+
+            existsExpResult_1 = x.longValue() > 2L;
+        }
+
+        return existsExpResult_1 ? 42L : 49L;
+    }
+}
+##########
