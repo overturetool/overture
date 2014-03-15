@@ -15,6 +15,8 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
@@ -31,9 +33,11 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.expressions.STraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -230,5 +234,46 @@ public class ExpAssistantCG extends AssistantBase
 	public boolean existsOutsideOpOrFunc(PExp exp)
 	{
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
+	}
+	
+	public PExpCG handleTraditionalQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, STraditionalQuantifierExpCG traditionalQuantifier, String varCg, OoAstInfo question, String nodeStr)
+			throws AnalysisException
+	{
+		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
+		{
+			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
+			return null;
+		}
+		
+		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
+		for (PMultipleBind multipleBind : bindings)
+		{
+			if(!(multipleBind instanceof ASetMultipleBind))
+			{
+				question.addUnsupportedNode(node, String.format("Generation of a %s is only supported for multiple set binds. Got: %s", nodeStr, multipleBind));
+				return null;
+			}
+			
+			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			
+			if (!(multipleBindCg instanceof ASetMultipleBindCG))
+			{
+				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
+			}
+			
+			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
+		}
+		
+		PType type = node.getType();
+		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		
+		traditionalQuantifier.setType(typeCg);
+		traditionalQuantifier.setBindList(bindingsCg);
+		traditionalQuantifier.setPredicate(predicateCg);
+		traditionalQuantifier.setVar(varCg);
+		
+		return traditionalQuantifier;
 	}
 }
