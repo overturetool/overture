@@ -40,11 +40,12 @@ import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AForAllExpCG;
+import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -295,7 +296,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXPS_PATH + "MkBasic");
 		
-		nodeTemplateFileNames.put(AForAllExpCG.class, templateStructure.EXPS_PATH + "ForAll");
+		nodeTemplateFileNames.put(AForAllTraditionalQuantifierExpCG.class, templateStructure.EXPS_PATH + "ForAll");
+		
+		nodeTemplateFileNames.put(AExistsTraditionalQuantifierExpCG.class, templateStructure.EXPS_PATH + "Exists");
 		
 		// Unary expressions
 
