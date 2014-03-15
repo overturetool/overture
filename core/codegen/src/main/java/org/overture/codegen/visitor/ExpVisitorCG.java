@@ -26,6 +26,7 @@ import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
@@ -123,11 +124,12 @@ import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AForAllExpCG;
+import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -352,55 +354,25 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 		return enumSet;
 	}
-	
-	
+
 	@Override
 	public PExpCG caseAForAllExp(AForAllExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		
-		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a for all expression is only supported within operations/functions");
-			return null;
-		}
-		
-		LinkedList<PMultipleBind> bindings = node.getBindList();
-
-		LinkedList<ASetMultipleBindCG> bindingsCg = new LinkedList<ASetMultipleBindCG>();
-		for (PMultipleBind multipleBind : bindings)
-		{
-			if(!(multipleBind instanceof ASetMultipleBind))
-			{
-				question.addUnsupportedNode(node, "Generation of a for all expression is only supported for multiple set binds. Got: "
-						+ multipleBind);
-				return null;
-			}
-			
-			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
-			
-			if (!(multipleBindCg instanceof ASetMultipleBindCG))
-			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
-			}
-			
-			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
-		}
-		
-		PType type = node.getType();
-		PExp predicate = node.getPredicate();
-		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
+
+		//The inheritance hierarchy of the VDM AST tree is structured such that the bindings and the predicate
+		//must also be passed to the method that handles the forall and the exists quantifiers
+		return question.getExpAssistant().handleTraditionalQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllTraditionalQuantifierExpCG(), varCg, question, "forall expression");
+	}
+	
+	@Override
+	public PExpCG caseAExistsExp(AExistsExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		
-		AForAllExpCG forAll = new AForAllExpCG();
-		forAll.setType(typeCg);
-		forAll.setBindList(bindingsCg);
-		forAll.setPredicate(predicateCg);
-		forAll.setVar(varCg);
-		
-		return forAll;
+		return question.getExpAssistant().handleTraditionalQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsTraditionalQuantifierExpCG(), varCg, question, "exists expression");
 	}
 
 	@Override
