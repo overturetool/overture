@@ -17,8 +17,6 @@ import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
-import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
-import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
