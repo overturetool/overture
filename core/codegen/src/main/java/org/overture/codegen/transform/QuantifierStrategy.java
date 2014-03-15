@@ -10,30 +10,32 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 
-public class ForAllExpStrategy extends AbstractIterationStrategy
+public class QuantifierStrategy extends AbstractIterationStrategy
 {
 	private PExpCG predicate;
 	private String resultVarName;
-
-	public ForAllExpStrategy(TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName)
+	private TraditionalQuantifier quantifier;
+	
+	public QuantifierStrategy(TransformationAssistantCG transformationAssistant,
+			PExpCG predicate, String resultVarName, TraditionalQuantifier quantifier)
 	{
 		super(transformationAssistant);
 		this.predicate = predicate;
 		this.resultVarName = resultVarName;
+		this.quantifier = quantifier;
 	}
 
 	@Override
 	public List<ALocalVarDeclCG> getOuterBlockDecls(
 			List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, true)) : null;
+		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == TraditionalQuantifier.FORALL)) : null;
 	}
 
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.conForCondition(iteratorName, resultVarName, false);
+		return transformationAssistant.conForCondition(iteratorName, resultVarName, quantifier == TraditionalQuantifier.EXISTS);
 	}
 
 	@Override
