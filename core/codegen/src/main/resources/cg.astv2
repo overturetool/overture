@@ -157,8 +157,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
 letBeStCG {-> package='org.overture.codegen.cgast.utils'}
 	= {header} [binding]:multipleBindCG.set [suchThat]:expCG //The Overture AST uses a multiplebind 
 	;
-
-
+	
 expCG {-> package='org.overture.codegen.cgast.expressions'}
     =	#Unary
     |	#Binary
@@ -182,7 +181,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Set
     |	#Map
     |	{mkBasic} [arg]:expCG
-    |	{forAll} [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
+    |	#TraditionalQuantifier
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -192,6 +191,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{char} [value]:java_Character
     |	{quote} [value]:java_String
     |	{string} [value]:java_String [isNull]:java_Boolean
+	;
+	
+#TraditionalQuantifier {-> package='org.overture.codegen.cgast.expressions'}
+	= {forAll}
+	| {exists}
 	;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
@@ -350,6 +354,10 @@ Aspect Declaration
     ;
     
 %expCG->#Binary = [left]:expCG [right]:expCG
+	;
+	
+%expCG->#TraditionalQuantifier //The Overture AST uses a multiplebind
+	= [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
 	;
 	
 //TODO: Consider moving seq, set and map up to typeCG	
