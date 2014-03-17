@@ -10,6 +10,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
@@ -23,6 +24,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.visitor.BindVisitorCG;
 import org.overture.codegen.visitor.ClassVisitorCG;
 import org.overture.codegen.visitor.DeclVisitorCG;
 import org.overture.codegen.visitor.ExpVisitorCG;
@@ -36,7 +38,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class OoAstInfo
 {
-	
 	//Visitors
 	private VisitorManager visitorManager;
 	
@@ -112,6 +113,11 @@ public class OoAstInfo
 		return visitorManager.getMultipleBindVisitor();
 	}
 	
+	public BindVisitorCG getBindVisitor()
+	{
+		return visitorManager.getBindVisitor();
+	}
+	
 	public ExpAssistantCG getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
@@ -140,6 +146,11 @@ public class OoAstInfo
 	public LocationAssistantCG getLocationAssistant()
 	{
 		return assistantManager.getLocationAssistant();
+	}
+	
+	public BindAssistantCG getBindAssistant()
+	{
+		return assistantManager.getBindAssistant();
 	}
 	
 	public void registerQuoteValue(String value) throws AnalysisException

@@ -8,6 +8,7 @@ public class AssistantManager
 	private StmAssistantCG stmAssistant;
 	private TypeAssistantCG typeAssistant;
 	private LocationAssistantCG locationAssistant;
+	private BindAssistantCG bindAssistant;
 	
 	public AssistantManager()
 	{
@@ -17,6 +18,7 @@ public class AssistantManager
 		this.stmAssistant = new StmAssistantCG(this);
 		this.typeAssistant = new TypeAssistantCG(this);
 		this.locationAssistant = new LocationAssistantCG(this);
+		this.bindAssistant = new BindAssistantCG(this);
 	}
 
 	public ExpAssistantCG getExpAssistant()
@@ -47,5 +49,10 @@ public class AssistantManager
 	public LocationAssistantCG getLocationAssistant()
 	{
 		return locationAssistant;
+	}
+	
+	public BindAssistantCG getBindAssistant()
+	{
+		return bindAssistant;
 	}
 }

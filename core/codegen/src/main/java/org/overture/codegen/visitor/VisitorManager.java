@@ -11,6 +11,7 @@ public class VisitorManager
 	private StateDesignatorVisitorCG stateDesignatorVisitor;
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
 	private MultipleBindVisitorCG multipleBindVisitor;
+	private BindVisitorCG bindVisitor;
 	
 	public VisitorManager()
 	{
@@ -22,6 +23,7 @@ public class VisitorManager
 		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
 		this.multipleBindVisitor = new MultipleBindVisitorCG();
+		this.bindVisitor = new BindVisitorCG();
 	}
 	
 	public ClassVisitorCG getClassVisitor()
@@ -62,5 +64,10 @@ public class VisitorManager
 	public MultipleBindVisitorCG getMultipleBindVisitor()
 	{
 		return multipleBindVisitor;
+	}
+	
+	public BindVisitorCG getBindVisitor()
+	{
+		return bindVisitor;
 	}
 }
