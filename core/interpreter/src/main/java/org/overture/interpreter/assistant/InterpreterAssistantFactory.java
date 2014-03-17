@@ -2,7 +2,9 @@ package org.overture.interpreter.assistant;
 
 import java.io.Serializable;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
@@ -154,7 +156,12 @@ import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.ValueCollector;
+import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
@@ -938,6 +945,18 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<LexNameList> getOldNameCollector()
 	{
 		return new OldNameCollector(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, ValueList> getBindValuesCollector()
+	{
+		return new BindValuesCollector(this);
+	}
+	
+	@Override
+	public QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector()
+	{
+		return new ValueCollector(this);
 	}
 
 }

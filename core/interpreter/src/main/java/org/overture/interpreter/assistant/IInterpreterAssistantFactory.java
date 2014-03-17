@@ -1,6 +1,8 @@
 package org.overture.interpreter.assistant;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
@@ -152,6 +154,9 @@ import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public interface IInterpreterAssistantFactory extends
@@ -471,4 +476,8 @@ public interface IInterpreterAssistantFactory extends
 
 	/* visitors */
 	IAnswer<LexNameList> getOldNameCollector();
+	
+	IQuestionAnswer<Context, ValueList> getBindValuesCollector();
+	
+	QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector();
 }
