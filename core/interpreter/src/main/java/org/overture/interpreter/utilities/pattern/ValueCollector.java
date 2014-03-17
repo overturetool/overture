@@ -7,8 +7,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.ASetMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeMultipleBindAssistantInterpreter;
+import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
@@ -25,14 +24,16 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 	public ValueList caseASetMultipleBind(ASetMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		return ASetMultipleBindAssistantInterpreter.getValues(node, ctxt);
+		//return ASetMultipleBindAssistantInterpreter.getValues(node, ctxt);
+		return PExpAssistantInterpreter.getValues(node.getSet(), ctxt);
 	}
 	
 	@Override
 	public ValueList caseATypeMultipleBind(ATypeMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		return ATypeMultipleBindAssistantInterpreter.getValues(node, ctxt);
+		//return ATypeMultipleBindAssistantInterpreter.getValues(node, ctxt);
+		return new ValueList();
 	}
 	
 	@Override

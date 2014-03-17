@@ -4,7 +4,6 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
 
@@ -24,9 +23,9 @@ public class ATypeMultipleBindAssistantInterpreter
 		return PTypeAssistantInterpreter.getAllValues(mb.getType(), ctxt);
 	}
 
-	public static ValueList getValues(ATypeMultipleBind mb, ObjectContext ctxt)
-	{
-		return new ValueList();
-	}
+//	public static ValueList getValues(ATypeMultipleBind mb, ObjectContext ctxt)
+//	{
+//		return new ValueList();
+//	}
 
 }
