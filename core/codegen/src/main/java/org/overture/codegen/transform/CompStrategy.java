@@ -3,7 +3,7 @@ package org.overture.codegen.transform;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -32,7 +32,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		String className = getClassName();
 		String memberName = getMemberName();

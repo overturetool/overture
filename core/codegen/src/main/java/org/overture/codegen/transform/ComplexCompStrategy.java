@@ -3,7 +3,7 @@ package org.overture.codegen.transform;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
@@ -21,7 +21,7 @@ public abstract class ComplexCompStrategy extends CompStrategy
 	protected abstract List<PStmCG> getConditionalAdd();
 	
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls(
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(
 			List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		return firstBind ? super.getOuterBlockDecls(ids) : null;

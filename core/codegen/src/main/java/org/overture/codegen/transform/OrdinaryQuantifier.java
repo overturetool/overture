@@ -1,6 +1,6 @@
 package org.overture.codegen.transform;
 
-public enum TraditionalQuantifier
+public enum OrdinaryQuantifier
 {
 	FORALL,EXISTS;
 }

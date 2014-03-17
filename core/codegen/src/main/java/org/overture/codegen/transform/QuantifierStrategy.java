@@ -3,7 +3,8 @@ package org.overture.codegen.transform;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -12,12 +13,12 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public class QuantifierStrategy extends AbstractIterationStrategy
 {
-	private PExpCG predicate;
-	private String resultVarName;
-	private TraditionalQuantifier quantifier;
+	protected PExpCG predicate;
+	protected String resultVarName;
+	protected OrdinaryQuantifier quantifier;
 	
 	public QuantifierStrategy(TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName, TraditionalQuantifier quantifier)
+			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier)
 	{
 		super(transformationAssistant);
 		this.predicate = predicate;
@@ -26,16 +27,16 @@ public class QuantifierStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls(
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(
 			List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == TraditionalQuantifier.FORALL)) : null;
+		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL)) : null;
 	}
 
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.conForCondition(iteratorName, resultVarName, quantifier == TraditionalQuantifier.EXISTS);
+		return transformationAssistant.consForCondition(iteratorName, resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
 	}
 
 	@Override

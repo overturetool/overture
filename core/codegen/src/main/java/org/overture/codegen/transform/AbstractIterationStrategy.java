@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -13,7 +14,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class AbstractIterationStrategy
 {
-	abstract public List<ALocalVarDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException;
+	abstract public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException;
 	
 	abstract public PExpCG getForLoopCond(String iteratorName) throws AnalysisException;
 
@@ -52,9 +53,9 @@ public abstract class AbstractIterationStrategy
 		return stms;
 	}
 	
-	protected List<ALocalVarDeclCG> packDecl(ALocalVarDeclCG decl)
+	protected List<SLocalDeclCG> packDecl(SLocalDeclCG decl)
 	{
-		List<ALocalVarDeclCG> decls = new LinkedList<ALocalVarDeclCG>();
+		List<SLocalDeclCG> decls = new LinkedList<SLocalDeclCG>();
 		
 		decls.add(decl);
 		

@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -30,9 +31,9 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<ALocalVarDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		List<ALocalVarDeclCG> outerBlockDecls = new LinkedList<ALocalVarDeclCG>();
+		List<AVarLocalDeclCG> outerBlockDecls = new LinkedList<AVarLocalDeclCG>();
 		
 		for(AIdentifierPatternCG id : ids)
 		{
@@ -47,7 +48,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.conForCondition(iteratorName, successVarName, true);
+		return transformationAssistant.consForCondition(iteratorName, successVarName, true);
 	}
 	
 	@Override
