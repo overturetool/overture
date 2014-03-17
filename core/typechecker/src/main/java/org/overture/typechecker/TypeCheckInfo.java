@@ -107,10 +107,10 @@ public class TypeCheckInfo
 		return null;
 	}
 
-	final public Environment env;
+	public final Environment env;
 	public NameScope scope;
 	public LinkedList<PType> qualifiers;
-	public PType constraint;
+	public final PType constraint;
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers,
@@ -126,31 +126,24 @@ public class TypeCheckInfo
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers)
 	{
-		this.assistantFactory = assistantFactory;
-		this.env = env;
-		this.scope = scope;
-		this.qualifiers = qualifiers;
+		this(assistantFactory, env, scope, qualifiers, null);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope)
 	{
-		this.assistantFactory = assistantFactory;
-		this.env = env;
-		this.scope = scope;
+		this(assistantFactory, env, scope, null, null);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env)
 	{
-		this.assistantFactory = assistantFactory;
-		this.env = env;
+		this(assistantFactory, env, null, null, null);
 	}
 
 	public TypeCheckInfo()
 	{
-		this.assistantFactory = null;
-		env = null;
+		this(null, null, null, null, null);
 	}
 
 	@Override

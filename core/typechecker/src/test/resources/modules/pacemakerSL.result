@@ -30,5 +30,7 @@
 <message column="1" line="659" message="Definition 'Pacemaker' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="4" line="771" message="Definition 'ResponseFactor' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
 <message column="1" line="780" message="Definition 'Simulate' not used" messageType="warning" number="5000" resource="pacemakerSL.result"/>
+<message column="2" line="492" message="Value is not of the right type" messageType="error" number="3327" resource="pacemakerSL.result"/>
+<message column="2" line="494" message="Value is not of the right type" messageType="error" number="3327" resource="pacemakerSL.result"/>
 <result/>
 </testResult>
