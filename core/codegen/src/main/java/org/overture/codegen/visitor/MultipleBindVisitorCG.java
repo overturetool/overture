@@ -29,7 +29,7 @@ public class MultipleBindVisitorCG extends AbstractVisitorCG<OoAstInfo, PMultipl
 		{
 			if(!(pattern instanceof AIdentifierPattern))
 			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind only support identifier patterns. Got: " + pattern);
+				question.addUnsupportedNode(node, "Generation of a multiple set bind only supports identifier patterns. Got: " + pattern);
 				return null;
 			}
 			
