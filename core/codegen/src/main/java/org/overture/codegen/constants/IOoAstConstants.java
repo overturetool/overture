@@ -46,11 +46,13 @@ public class IOoAstConstants
 	public static final String GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX = "letBeStExp_";
 	public static final String GENERATED_TEMP_FORALL_EXP_NAME_PREFIX = "forAllExpResult_";
 	public static final String GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX = "existsExpResult_";
+	public static final String GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX = "exists1Counter_";
 	
 	public static final String[] GENERATED_TEMP_NAMES = {GENERATED_TEMP_SEQ_COMP_NAME_PREFIX,
 														 GENERATED_TEMP_SET_COMP_NAME_PREFIX,
 														 GENERATED_TEMP_MAP_COMP_NAME_PREFIX,
 														 GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX,
 														 GENERATED_TEMP_FORALL_EXP_NAME_PREFIX,
-														 GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX};
+														 GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX,
+														 GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX};
 }
