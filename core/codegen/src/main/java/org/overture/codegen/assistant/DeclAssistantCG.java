@@ -14,8 +14,8 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -36,7 +36,7 @@ public class DeclAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<ALocalVarDeclCG> localDecls, OoAstInfo question) throws AnalysisException
+	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<AVarLocalDeclCG> localDecls, OoAstInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
@@ -48,13 +48,13 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 	
-	private ALocalVarDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
+	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
 	{
 		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		String name = valueDef.getPattern().toString();
 		PExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
 		
-		ALocalVarDeclCG localVarDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
 		localVarDecl.setType(type);
 		localVarDecl.setName(name);
 		localVarDecl.setExp(exp);
@@ -123,7 +123,7 @@ public class DeclAssistantCG extends AssistantBase
 		return methodNames;
 	}
 	
-	public void setDefaultValue(ALocalVarDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
+	public void setDefaultValue(AVarLocalDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 		

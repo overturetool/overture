@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
@@ -56,7 +56,7 @@ public class StmAssistantCG extends AssistantBase
 		}
 	}
 	
-	public void injectDeclAsStm(ABlockStmCG block, ALocalVarDeclCG decl)
+	public void injectDeclAsStm(ABlockStmCG block, AVarLocalDeclCG decl)
 	{
 		ABlockStmCG wrappingBlock = new ABlockStmCG();
 		
