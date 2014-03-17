@@ -113,7 +113,7 @@ pre (pl = goalkeeper =>
                               mk_R_Book(on_field_players,potential_substitutes,
                                         goalkeeper,nb_gk_subs,nb_fp_subs)))
 ;
-
+/*
 test:()==> R_Book
 test() == let red=1, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   RED_CARD(red);
@@ -122,7 +122,7 @@ test() == let red=1, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   SUBSTITUTION(out3, in3);
   return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
 );
-/*
+*/
 test:()==> R_Book
 test() == let red=1, gp=10, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   RED_CARD(red);
@@ -132,7 +132,7 @@ test() == let red=1, gp=10, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   SUBSTITUTION(out3, in3);
   return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
 );
-*/
+
 end SOCCER_IMPL
 
 
