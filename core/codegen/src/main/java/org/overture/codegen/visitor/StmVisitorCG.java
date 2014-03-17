@@ -36,7 +36,7 @@ import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
@@ -180,7 +180,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
 			
-			ALocalVarDeclCG localDecl = new ALocalVarDeclCG();
+			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
 			localDecl.setType(typeCg);
 			localDecl.setName(name);
 			
