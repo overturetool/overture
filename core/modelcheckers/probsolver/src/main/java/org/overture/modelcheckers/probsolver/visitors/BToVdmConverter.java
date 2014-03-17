@@ -223,12 +223,12 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public void caseAEmptySetExpression(AEmptySetExpression node)
 	{
 	    /*
-	    if(expectedType instanceof ATokenBasicType) {
-		ASetEnumSetExp arg = new ASetEnumSetExp();
-		result = AstFactory.newAMkBasicExp((SBasicType)expectedType, (PExp)arg);
+	    if(expectedType instanceof AMapMapType) {
+		List<AMapletExp> mems = new Vector<AMapletExp>();
+		result = AstFactory.newAMapEnumMapExp(loc, mems.add(new AMapletExp()));
 	    }
 	    */
-		result = AstFactory.newASetEnumSetExp(loc);
+	    result = AstFactory.newASetEnumSetExp(loc);
 	}
 
 	@Override
