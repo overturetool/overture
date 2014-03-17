@@ -33,7 +33,7 @@ import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
-import org.overture.codegen.cgast.expressions.STraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -236,7 +236,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleTraditionalQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, STraditionalQuantifierExpCG traditionalQuantifier, String varCg, OoAstInfo question, String nodeStr)
+	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, String varCg, OoAstInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -259,6 +259,7 @@ public class ExpAssistantCG extends AssistantBase
 			if (!(multipleBindCg instanceof ASetMultipleBindCG))
 			{
 				question.addUnsupportedNode(node, String.format("Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: %s", multipleBindCg));
+				return null;
 			}
 			
 			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
@@ -269,11 +270,11 @@ public class ExpAssistantCG extends AssistantBase
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
 		
-		traditionalQuantifier.setType(typeCg);
-		traditionalQuantifier.setBindList(bindingsCg);
-		traditionalQuantifier.setPredicate(predicateCg);
-		traditionalQuantifier.setVar(varCg);
+		quantifier.setType(typeCg);
+		quantifier.setBindList(bindingsCg);
+		quantifier.setPredicate(predicateCg);
+		quantifier.setVar(varCg);
 		
-		return traditionalQuantifier;
+		return quantifier;
 	}
 }
