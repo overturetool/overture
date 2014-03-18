@@ -26,6 +26,7 @@ import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFieldNumberExp;
@@ -96,7 +97,9 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
@@ -124,12 +127,13 @@ import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -183,7 +187,9 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.patterns.PBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -363,7 +369,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		//The inheritance hierarchy of the VDM AST tree is structured such that the bindings and the predicate
 		//must also be passed to the method that handles the forall and the exists quantifiers
-		return question.getExpAssistant().handleTraditionalQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllTraditionalQuantifierExpCG(), varCg, question, "forall expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllQuantifierExpCG(), varCg, question, "forall expression");
 	}
 	
 	@Override
@@ -372,7 +378,46 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		
-		return question.getExpAssistant().handleTraditionalQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsTraditionalQuantifierExpCG(), varCg, question, "exists expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpCG(), varCg, question, "exists expression");
+	}
+	
+	@Override
+	public PExpCG caseAExists1Exp(AExists1Exp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PBind bind = node.getBind();
+
+		if(!(bind instanceof ASetBind))
+		{
+			question.addUnsupportedNode(node, String.format("Generation of a exist1 expression is only supported for set binds. Got: %s", bind));
+			return null;
+		}
+
+		PBindCG bindCg = bind.apply(question.getBindVisitor(), question);
+
+		if (!(bindCg instanceof ASetBindCG))
+		{
+			question.addUnsupportedNode(node, String.format("Generation of 	a set bind was expected to yield a ASetBindCG. Got: %s", bindCg));
+			return null;
+		}
+		
+		ASetBindCG setBind = (ASetBindCG) bindCg;
+		
+		PType type = node.getType();
+		PExp predicate = node.getPredicate();
+
+		ASetMultipleBindCG multipleSetBind = question.getBindAssistant().convertToMultipleSetBind(setBind);
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
+		
+		AExists1QuantifierExpCG exists1Exp = new AExists1QuantifierExpCG();
+		exists1Exp.getBindList().add(multipleSetBind);
+		exists1Exp.setType(typeCg);
+		exists1Exp.setPredicate(predicateCg);
+		exists1Exp.setVar(varCg);
+		
+		return exists1Exp;
 	}
 
 	@Override
