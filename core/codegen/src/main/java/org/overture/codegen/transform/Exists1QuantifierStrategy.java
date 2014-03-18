@@ -13,7 +13,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
 	public Exists1QuantifierStrategy(
 			TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier)
+			PExpCG predicate, String resultVarName)
 	{
 		super(transformationAssistant, predicate, resultVarName);
 	}
