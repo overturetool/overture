@@ -36,8 +36,14 @@ Abstract Syntax Tree
 patternCG {-> package='org.overture.codegen.cgast.pattern'}
 	= {identifier} [name]:java_String 
 	;
-	
-//This is used in PExp and PDefinition
+
+bindCG {-> package='org.overture.codegen.cgast.patterns'
+//	|	[location]:location 
+	|	[pattern]:patternCG.identifier} ////In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
+    =   {set} [set]:expCG //binds
+//    |   {type} (type):type //binds
+    ;
+		
 multipleBindCG {-> package='org.overture.codegen.cgast.patterns'
 //	|	[location]:location 
 	|	[patterns]:patternCG.identifier*} //In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
@@ -70,10 +76,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[type]:typeCG
     	[name]:java_String
     	[initial]:expCG
-    |	{localVar}
-    	[type]:typeCG
-    	[name]:java_String
-    	[exp]:expCG
+    |	#Local
    	|	{class}
       	[access]:java_String
       	[abstract]:java_Boolean
@@ -109,6 +112,16 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 		//[throws]:type*
 //		[body]:stmCG
 	;
+
+#Local  {-> package='org.overture.codegen.cgast.declarations'}
+    =	{var}
+    	[type]:typeCG
+    	[name]:java_String
+    	[exp]:expCG
+    |	{counter}
+    	[name]:java_String
+    	[init]:expCG
+	;
 	
 stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'
 	| [type]:typeCG}
@@ -138,10 +151,10 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
            | 	{skip}
            |	{return} [exp]:expCG
-           |	{letDef} [localDefs]:declCG.localVar* [stm]:stmCG
+           |	{letDef} [localDefs]:declCG.#Local.var* [stm]:stmCG
            |	{abstractBody}
            |	{assignment} [target]:stateDesignatorCG [exp]:expCG
-           |	{block}	[localDefs]:declCG.localVar* [statements]:stmCG*
+           |	{block}	[localDefs]:declCG.#Local* [statements]:stmCG*
            |	{callObject} [type]:typeCG [designator]:objectDesignatorCG [className]:java_String [fieldName]:java_String 
            					 [args]:expCG*// [explicit]:java_Boolean [field]:LexNameToken
            |	{call} [type]:typeCG [classType]:typeCG.class [name]:java_String [args]:expCG*
@@ -151,7 +164,9 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{while} [exp]:expCG [body]:stmCG
            |	{letBeSt} [header]:letBeStCG.header [statement]:stmCG
            |	{throw} [exp]:expCG
-           |	{forLoop} [init]:declCG.localVar [cond]:expCG [inc]:expCG [body]:stmCG
+           |	{forLoop} [init]:declCG.#Local.var [cond]:expCG [inc]:expCG [body]:stmCG
+           |	{increment} [var]:expCG
+           |	{decrement} [var]:expCG
            ;
            
 letBeStCG {-> package='org.overture.codegen.cgast.utils'}
@@ -170,7 +185,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Literal
     |	{self}
     |	{null}
-    |	{letDef} [localDefs]:declCG.localVar* [exp]:expCG
+    |	{letDef} [localDefs]:declCG.#Local.var* [exp]:expCG
     |	{methodInstantiation} [name]:java_String [actualTypes]:typeCG*
     |	{tuple} [args]:expCG* [tupleType]:typeCG.tuple
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
@@ -181,7 +196,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Set
     |	#Map
     |	{mkBasic} [arg]:expCG
-    |	#TraditionalQuantifier
+    |	#Quantifier
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -193,9 +208,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{string} [value]:java_String [isNull]:java_Boolean
 	;
 	
-#TraditionalQuantifier {-> package='org.overture.codegen.cgast.expressions'}
+#Quantifier {-> package='org.overture.codegen.cgast.expressions'}
 	= {forAll}
 	| {exists}
+	| {exists1}
 	;
     
 #Binary {-> package='org.overture.codegen.cgast.expressions'}
@@ -356,7 +372,7 @@ Aspect Declaration
 %expCG->#Binary = [left]:expCG [right]:expCG
 	;
 	
-%expCG->#TraditionalQuantifier //The Overture AST uses a multiplebind
+%expCG->#Quantifier //The Overture AST uses a multiplebind
 	= [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
 	;
 	
