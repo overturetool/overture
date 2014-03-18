@@ -10,46 +10,55 @@ public class TemplateStructure
 	
 	public final String DECL_PATH;
 	public final String LOCAL_DECLS_PATH;
+
 	public final String STM_PATH;
-	public final String EXPS_PATH;
-	public final String BINARY_EXPS_PATH;
-	public final String NUMERIC_BINARY_EXPS_PATH;
-	public final String BOOL_BINARY_EXPS_PATH;
-	public final String UNARY_EXPS_PATH;
-	public final String SEQ_EXPS_PATH;
-	public final String SET_EXPS_PATH;
-	public final String MAP_EXPS_PATH;
-	public final String TYPE_PATH;
 	
+	public final String EXP_PATH;
+	public final String BINARY_EXP_PATH;
+	public final String NUMERIC_BINARY_EXP_PATH;
+	public final String BOOL_BINARY_EXP_PATH;
+	public final String UNARY_EXP_PATH;
+	public final String SEQ_EXP_PATH;
+	public final String SET_EXP_PATH;
+	public final String MAP_EXP_PATH;
+	public final String QUANTIFIER_EXP_PATH;
+	
+	public final String TYPE_PATH;
 	public final String BASIC_TYPE_PATH;
 	public final String BASIC_TYPE_WRAPPERS_PATH;
 	public final String SET_TYPE_PATH;
 	public final String SEQ_TYPE_PATH;
 	public final String MAP_TYPE_PATH;
+	
 	public final String STATE_DESIGNATOR_PATH; 
 	public final String OBJECT_DESIGNATOR_PATH;
 	
 	public TemplateStructure(String rootFolder)
 	{
 		root = rootFolder + IText.SEPARATOR_CHAR;
+		
 		DECL_PATH = root + "Declarations" + IText.SEPARATOR_CHAR;
 		LOCAL_DECLS_PATH = root + "LocalDecls" + IText.SEPARATOR_CHAR;
-		STM_PATH = root + "Statements" + IText.SEPARATOR_CHAR;
-		EXPS_PATH = root + "Expressions" + IText.SEPARATOR_CHAR;
-		BINARY_EXPS_PATH = EXPS_PATH + "Binary" + IText.SEPARATOR_CHAR;
-		NUMERIC_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Numeric" + IText.SEPARATOR_CHAR;
-		BOOL_BINARY_EXPS_PATH = BINARY_EXPS_PATH + "Bool" + IText.SEPARATOR_CHAR;
-		UNARY_EXPS_PATH = EXPS_PATH + "Unary" + IText.SEPARATOR_CHAR;
-		SEQ_EXPS_PATH = EXPS_PATH + "Seq" + IText.SEPARATOR_CHAR;
-		SET_EXPS_PATH = EXPS_PATH + "Set" + IText.SEPARATOR_CHAR;
-		MAP_EXPS_PATH = EXPS_PATH + "Map" + IText.SEPARATOR_CHAR;
-		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;
 		
+		STM_PATH = root + "Statements" + IText.SEPARATOR_CHAR;
+		
+		EXP_PATH = root + "Expressions" + IText.SEPARATOR_CHAR;
+		BINARY_EXP_PATH = EXP_PATH + "Binary" + IText.SEPARATOR_CHAR;
+		NUMERIC_BINARY_EXP_PATH = BINARY_EXP_PATH + "Numeric" + IText.SEPARATOR_CHAR;
+		BOOL_BINARY_EXP_PATH = BINARY_EXP_PATH + "Bool" + IText.SEPARATOR_CHAR;
+		UNARY_EXP_PATH = EXP_PATH + "Unary" + IText.SEPARATOR_CHAR;
+		SEQ_EXP_PATH = EXP_PATH + "Seq" + IText.SEPARATOR_CHAR;
+		SET_EXP_PATH = EXP_PATH + "Set" + IText.SEPARATOR_CHAR;
+		MAP_EXP_PATH = EXP_PATH + "Map" + IText.SEPARATOR_CHAR;
+		QUANTIFIER_EXP_PATH = EXP_PATH + "Quantifier" + IText.SEPARATOR_CHAR;
+		
+		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;
 		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + IText.SEPARATOR_CHAR;
 		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + IText.SEPARATOR_CHAR;
 		SET_TYPE_PATH = TYPE_PATH + "Set" + IText.SEPARATOR_CHAR;
 		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + IText.SEPARATOR_CHAR;
 		MAP_TYPE_PATH = TYPE_PATH + "Map" + IText.SEPARATOR_CHAR;
+		
 		STATE_DESIGNATOR_PATH = root + "StateDesignator" + IText.SEPARATOR_CHAR;
 		OBJECT_DESIGNATOR_PATH = root + "ObjectDesignator" + IText.SEPARATOR_CHAR;
 	}
