@@ -103,7 +103,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 			bindList.add(tbind);
 			existsExp.setBindList(bindList);
 
-			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression(), matching);
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), matching);
 			existsExp.setPredicate(equalsExp);
 
 			return existsExp;
