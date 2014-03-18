@@ -5,13 +5,16 @@ import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
@@ -28,10 +31,12 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -52,6 +57,11 @@ public class TransformationAssistantCG
 	public TransformationAssistantCG(OoAstInfo info)
 	{
 		this.info = info;
+	}
+	
+	public OoAstInfo getInto()
+	{
+		return info;
 	}
 	
 	public void replaceNodeWith(INode original, INode replacement)
@@ -115,9 +125,9 @@ public class TransformationAssistantCG
 		return mapTypeCg.clone();
 	}
 	
-	public ALocalVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
+	public AVarLocalDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
 	{
-		ALocalVarDeclCG boolVarDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG boolVarDecl = new AVarLocalDeclCG();
 		
 		boolVarDecl.setType(new ABoolBasicTypeCG());
 		boolVarDecl.setName(boolVarName);
@@ -126,15 +136,36 @@ public class TransformationAssistantCG
 		return boolVarDecl;
 	}
 	
-	public PExpCG conForCondition(String iteratorName, String successVarName, boolean negate) throws AnalysisException
+	public PExpCG consForCondition(String iteratorName, String successVarName, boolean negate) throws AnalysisException
+	{
+		return consForCondition(iteratorName, successVarName, consBoolCheck(successVarName, negate));
+	}
+	
+	public PExpCG consForCondition(String iteratorName, String successVarName, PExpCG exp) throws AnalysisException
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		
 		andExp.setType(new ABoolBasicTypeCG());
 		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
-		andExp.setRight(consBoolCheck(successVarName, negate));
+		andExp.setRight(exp);
 		
 		return andExp;
+	}
+	
+	public PExpCG consLessThanCheck(String varName, long value)
+	{
+		AVariableExpCG left = new AVariableExpCG();
+		left.setType(new AIntNumericBasicTypeCG());
+		left.setOriginal(varName);
+		
+		AIntLiteralExpCG right = info.getExpAssistant().consIntLiteral(value);
+		
+		ALessNumericBinaryExpCG less = new ALessNumericBinaryExpCG();
+		less.setType(new ABoolBasicTypeCG());
+		less.setLeft(left);
+		less.setRight(right);
+		
+		return less;
 	}
 	
 	protected PExpCG consBoolCheck(String boolVarName, boolean negate)
@@ -166,9 +197,9 @@ public class TransformationAssistantCG
 		return boolVarAssignment;
 	}
 	
-	public ALocalVarDeclCG consSetBindDecl(String setBindName, PExpCG set) throws AnalysisException
+	public AVarLocalDeclCG consSetBindDecl(String setBindName, PExpCG set) throws AnalysisException
 	{
-		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
 		
 		setBindDecl.setType(getSetTypeCloned(set));
 		setBindDecl.setName(setBindName);
@@ -177,9 +208,9 @@ public class TransformationAssistantCG
 		return setBindDecl;
 	}
 	
-	public ALocalVarDeclCG consIdDecl(PTypeCG setType, String id) throws AnalysisException
+	public AVarLocalDeclCG consIdDecl(PTypeCG setType, String id) throws AnalysisException
 	{
-		ALocalVarDeclCG idDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
 		
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
 		idDecl.setName(id);
@@ -188,9 +219,9 @@ public class TransformationAssistantCG
 		return idDecl;
 	}
 
-	public ALocalVarDeclCG consDecl(String varName, PExpCG exp)
+	public AVarLocalDeclCG consDecl(String varName, PExpCG exp)
 	{
-		ALocalVarDeclCG resultDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 		
 		resultDecl.setType(exp.getType().clone());
 		resultDecl.setName(varName);
@@ -243,9 +274,9 @@ public class TransformationAssistantCG
 		return instanceCall;
 	}
 	
-	public ALocalVarDeclCG consIteratorDecl(String iteratorName, String collectionName)
+	public AVarLocalDeclCG consIteratorDecl(String iteratorName, String collectionName)
 	{
-		ALocalVarDeclCG iterator = new ALocalVarDeclCG();
+		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
 		iterator.setName(iteratorName);
 		iterator.setType(consIteratorType());
 		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(), IJavaCodeGenConstants.GET_ITERATOR , null));
@@ -271,10 +302,10 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ALocalVarDeclCG consNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
+	public AVarLocalDeclCG consNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
-		ALocalVarDeclCG decl = new ALocalVarDeclCG();
+		AVarLocalDeclCG decl = new AVarLocalDeclCG();
 		
 		decl.setType(elementType);
 		decl.setName(id);
@@ -303,7 +334,7 @@ public class TransformationAssistantCG
 		return cast;
 	}
 	
-	public ALocalVarDeclCG consCompResultDecl(PTypeCG collectionType, String varDeclName, String className, String memberName) throws AnalysisException
+	public AVarLocalDeclCG consCompResultDecl(PTypeCG collectionType, String varDeclName, String className, String memberName) throws AnalysisException
 	{
 		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
 		member.setType(collectionType);
@@ -314,7 +345,7 @@ public class TransformationAssistantCG
 		call.setType(collectionType.clone());
 		call.setRoot(member);
 		
-		ALocalVarDeclCG resCollection = new ALocalVarDeclCG();
+		AVarLocalDeclCG resCollection = new AVarLocalDeclCG();
 		resCollection.setType(collectionType.clone());
 		resCollection.setName(varDeclName);
 		resCollection.setExp(call);
@@ -322,8 +353,25 @@ public class TransformationAssistantCG
 		return resCollection; 
 	}
 	
+	public PStmCG consConditionalIncrement(String counterName, PExpCG predicate)
+	{
+		AVariableExpCG col = new AVariableExpCG();
+		col.setType(new AIntNumericBasicTypeCG());
+		col.setOriginal(counterName);
+		
+		AIncrementStmCG inc = new AIncrementStmCG();
+		inc.setVar(col);
+		
+		AIfStmCG ifStm = new AIfStmCG();
+		ifStm.setIfExp(predicate);
+		ifStm.setThenStm(inc);
+		
+		return ifStm;
+	}
+	
 	public PStmCG consConditionalAdd(String addMethod, String resCollectionName, PExpCG predicate, PExpCG... args)
 	{
+		//TODO: Set type
 		AVariableExpCG col = new AVariableExpCG();
 		col.setOriginal(resCollectionName);
 		
@@ -331,6 +379,7 @@ public class TransformationAssistantCG
 		identifier.setExp(col);
 		
 		ACallObjectStmCG callStm = new ACallObjectStmCG();
+		callStm.setType(new AVoidTypeCG());
 		callStm.setClassName(null);
 		callStm.setFieldName(addMethod);
 		callStm.setDesignator(identifier);
@@ -339,8 +388,6 @@ public class TransformationAssistantCG
 		{
 			callStm.getArgs().add(arg);
 		}
-		
-		callStm.setType(new AVoidTypeCG());
 		
 		if(predicate != null)
 		{
@@ -371,10 +418,10 @@ public class TransformationAssistantCG
 		// Variable names
 		String setName = tempGen.nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
 
-		LinkedList<ALocalVarDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
+		LinkedList<SLocalDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
 
 		ABlockStmCG forBody = null;
-		List<ALocalVarDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
+		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
 		
 		if (extraDecls != null)
 		{
@@ -510,7 +557,7 @@ public class TransformationAssistantCG
 		return cast;
 	}
 
-	public ALocalVarDeclCG consSetBindIdDecl(String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
+	public AVarLocalDeclCG consSetBindIdDecl(String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		SSeqTypeCG seqType = getSeqTypeCloned(seqComp);
 		
@@ -518,7 +565,7 @@ public class TransformationAssistantCG
 		String id = seqComp.getId().getName();
 		ACastUnaryExpCG initExp = consNextElementCall(instanceName, memberName, seqComp);
 		
-		ALocalVarDeclCG idDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
 		idDecl.setType(elementType);
 		idDecl.setName(id);
 		idDecl.setExp(initExp);
@@ -526,12 +573,12 @@ public class TransformationAssistantCG
 		return idDecl;
 	}
 	
-	public ALocalVarDeclCG consSetBindDecl(String setBindName, ACompSeqExpCG seqComp) throws AnalysisException
+	public AVarLocalDeclCG consSetBindDecl(String setBindName, ACompSeqExpCG seqComp) throws AnalysisException
 	{	
 		ASetSetTypeCG setType = new ASetSetTypeCG();
 		setType.setSetOf(getSeqTypeCloned(seqComp).getSeqOf());
 		
-		ALocalVarDeclCG setBindDecl = new ALocalVarDeclCG();
+		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
 		
 		setBindDecl.setType(setType);
 		setBindDecl.setName(setBindName);
@@ -540,7 +587,7 @@ public class TransformationAssistantCG
 		return setBindDecl;
 	}
 	
-	public ALocalVarDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
+	public AVarLocalDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, IJavaCodeGenConstants.SEQ_UTIL_FILE, IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
 	}
