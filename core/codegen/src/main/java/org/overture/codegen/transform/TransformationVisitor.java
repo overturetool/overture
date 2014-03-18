@@ -4,15 +4,16 @@ import java.util.LinkedList;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
-import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
-import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.expressions.STraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -72,7 +73,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			ALocalVarDeclCG resultDecl = transformationAssistant.consDecl(node.getVar(), node.getValue());
+			AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(node.getVar(), node.getValue());
 			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
 		}
 		
@@ -135,23 +136,31 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAForAllTraditionalQuantifierExpCG(AForAllTraditionalQuantifierExpCG node) throws AnalysisException
+	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node) throws AnalysisException
 	{
-		handleTraditionalQuantifier(node, "forall expression", TraditionalQuantifier.FORALL);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.FORALL);
+		handleQuantifier(node, "forall expression", strategy);
 	}
 	
 	@Override
-	public void caseAExistsTraditionalQuantifierExpCG(
-			AExistsTraditionalQuantifierExpCG node) throws AnalysisException
+	public void caseAExistsQuantifierExpCG(
+			AExistsQuantifierExpCG node) throws AnalysisException
 	{
-		handleTraditionalQuantifier(node, "exists expression", TraditionalQuantifier.EXISTS);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.EXISTS);
+		handleQuantifier(node, "exists expression", strategy);
+	}
+	
+	@Override
+	public void caseAExists1QuantifierExpCG(
+			AExists1QuantifierExpCG node) throws AnalysisException
+	{
+		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar());
+		handleQuantifier(node, "exists1 expression", strategy);
 	}
 
-	private void handleTraditionalQuantifier(STraditionalQuantifierExpCG node, String nodeStr, TraditionalQuantifier quantifierType) throws AnalysisException
+	private void handleQuantifier(SQuantifierExpCG node, String nodeStr, QuantifierBaseStrategy strategy) throws AnalysisException
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, nodeStr);
-		
-		QuantifierStrategy strategy = new QuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), quantifierType);
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), info.getTempVarNameGen(), strategy);
 		
