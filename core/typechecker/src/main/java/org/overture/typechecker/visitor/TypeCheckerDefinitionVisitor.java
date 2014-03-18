@@ -74,10 +74,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 
@@ -1346,8 +1342,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		}
 		
-		// Comment the following line in to enable constraint checking
-		question.constraint = node.getType();
+		// Enable constraint checking
+		question = question.newConstraint(node.getType());
 		
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
@@ -1389,7 +1385,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PPattern pattern = node.getPattern();
 		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
 //		PPatternAssistantTC.typeResolve(pattern, THIS, question);
 //		question.assistantFactory.getTypeResolver().updateDefs(node, question);
