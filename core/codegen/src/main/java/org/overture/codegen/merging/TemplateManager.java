@@ -11,12 +11,13 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.ALocalVarDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
@@ -40,12 +41,13 @@ import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExistsTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AForAllTraditionalQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -103,6 +105,7 @@ import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.ADecrementStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -111,6 +114,7 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
@@ -171,7 +175,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodDeclCG.class, templateStructure.DECL_PATH
 				+ "Method");
 		
-		nodeTemplateFileNames.put(ALocalVarDeclCG.class, templateStructure.DECL_PATH + "LocalVar");
+		nodeTemplateFileNames.put(AVarLocalDeclCG.class, templateStructure.DECL_PATH + "LocalVar");
+		
+		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH + "Counter");
 		
 		// Local declarations
 
@@ -262,208 +268,216 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AForLoopStmCG.class, templateStructure.STM_PATH + "ForLoop");
 		
+		nodeTemplateFileNames.put(AIncrementStmCG.class, templateStructure.STM_PATH + "Increment");
+		
+		nodeTemplateFileNames.put(ADecrementStmCG.class, templateStructure.STM_PATH + "Decrement");
+		
 		// Expressions
 		
-		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXPS_PATH + "Apply");
+		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH + "Apply");
 		
-		nodeTemplateFileNames.put(AFieldExpCG.class, templateStructure.EXPS_PATH + "Field");
+		nodeTemplateFileNames.put(AFieldExpCG.class, templateStructure.EXP_PATH + "Field");
 		
-		nodeTemplateFileNames.put(ANewExpCG.class, templateStructure.EXPS_PATH + "New");
+		nodeTemplateFileNames.put(ANewExpCG.class, templateStructure.EXP_PATH + "New");
 		
-		nodeTemplateFileNames.put(AVariableExpCG.class, templateStructure.EXPS_PATH + "Variable");
+		nodeTemplateFileNames.put(AVariableExpCG.class, templateStructure.EXP_PATH + "Variable");
 		
-		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, templateStructure.EXPS_PATH + "ExplicitVariable");
+		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, templateStructure.EXP_PATH + "ExplicitVariable");
 		
-		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXPS_PATH + "InstanceOf");
+		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXP_PATH + "InstanceOf");
 		
-		nodeTemplateFileNames.put(ASelfExpCG.class, templateStructure.EXPS_PATH + "Self");
+		nodeTemplateFileNames.put(ASelfExpCG.class, templateStructure.EXP_PATH + "Self");
 		
-		nodeTemplateFileNames.put(ANullExpCG.class, templateStructure.EXPS_PATH + "Null");
+		nodeTemplateFileNames.put(ANullExpCG.class, templateStructure.EXP_PATH + "Null");
 		
-		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXPS_PATH + "LetDef");
+		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXP_PATH + "LetDef");
 		
-		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXPS_PATH + "MethodInstantiation");
+		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXP_PATH + "MethodInstantiation");
 		
-		nodeTemplateFileNames.put(ATupleExpCG.class, templateStructure.EXPS_PATH + "Tuple");
+		nodeTemplateFileNames.put(ATupleExpCG.class, templateStructure.EXP_PATH + "Tuple");
 		
-		nodeTemplateFileNames.put(AFieldNumberExpCG.class, templateStructure.EXPS_PATH + "FieldNumber");
+		nodeTemplateFileNames.put(AFieldNumberExpCG.class, templateStructure.EXP_PATH + "FieldNumber");
 		
-		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXPS_PATH + "TernaryIf");
+		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXP_PATH + "TernaryIf");
 		
-		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXPS_PATH + "Maplet");
+		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXP_PATH + "Maplet");
 		
-		nodeTemplateFileNames.put(ALetBeStExpCG.class, templateStructure.EXPS_PATH + "LetBeSt");
+		nodeTemplateFileNames.put(ALetBeStExpCG.class, templateStructure.EXP_PATH + "LetBeSt");
 		
-		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXPS_PATH + "MkBasic");
+		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXP_PATH + "MkBasic");
 		
-		nodeTemplateFileNames.put(AForAllTraditionalQuantifierExpCG.class, templateStructure.EXPS_PATH + "ForAll");
+		// Quantifier expressions
 		
-		nodeTemplateFileNames.put(AExistsTraditionalQuantifierExpCG.class, templateStructure.EXPS_PATH + "Exists");
+		nodeTemplateFileNames.put(AForAllQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "ForAll");
+		
+		nodeTemplateFileNames.put(AExistsQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "Exists");
+		
+		nodeTemplateFileNames.put(AExists1QuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "Exists1");
 		
 		// Unary expressions
 
-		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Plus");
-		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(AMinusUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Minus");
 
-		nodeTemplateFileNames.put(ACastUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(ACastUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Cast");
 
-		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH
+		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Isolation");
 		
-		nodeTemplateFileNames.put(ASizeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Size");
+		nodeTemplateFileNames.put(ASizeUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Size");
 		
-		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Elems");
+		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Elems");
 		
-		nodeTemplateFileNames.put(AIndicesUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Indices");
+		nodeTemplateFileNames.put(AIndicesUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Indices");
 		
-		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Head");
+		nodeTemplateFileNames.put(AHeadUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Head");
 		
-		nodeTemplateFileNames.put(ATailUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Tail");
+		nodeTemplateFileNames.put(ATailUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Tail");
 		
-		nodeTemplateFileNames.put(AReverseUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Reverse");
+		nodeTemplateFileNames.put(AReverseUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Reverse");
 		
-		nodeTemplateFileNames.put(AFloorUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Floor");
+		nodeTemplateFileNames.put(AFloorUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Floor");
 		
-		nodeTemplateFileNames.put(AAbsUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Abs");
+		nodeTemplateFileNames.put(AAbsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Abs");
 		
-		nodeTemplateFileNames.put(ANotUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "Not");
+		nodeTemplateFileNames.put(ANotUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "Not");
 
-		nodeTemplateFileNames.put(ADistConcatUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistConcat");
+		nodeTemplateFileNames.put(ADistConcatUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "DistConcat");
 		
-		nodeTemplateFileNames.put(ADistUnionUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistUnion");
+		nodeTemplateFileNames.put(ADistUnionUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "DistUnion");
 		
-		nodeTemplateFileNames.put(ADistIntersectUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistInter");
+		nodeTemplateFileNames.put(ADistIntersectUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "DistInter");
 		
-		nodeTemplateFileNames.put(APowerSetUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "PowerSet");
+		nodeTemplateFileNames.put(APowerSetUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "PowerSet");
 		
-		nodeTemplateFileNames.put(AMapDomainUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapDom");
+		nodeTemplateFileNames.put(AMapDomainUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "MapDom");
 		
-		nodeTemplateFileNames.put(AMapRangeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapRange");
+		nodeTemplateFileNames.put(AMapRangeUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "MapRange");
 
-		nodeTemplateFileNames.put(ADistMergeUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "DistMerge");
+		nodeTemplateFileNames.put(ADistMergeUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "DistMerge");
 		
-		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXPS_PATH + "MapInverse");
+		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXP_PATH + "MapInverse");
 		
 		// Binary expressions
 		
-		nodeTemplateFileNames.put(AAddrEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "AddrEquals");
+		nodeTemplateFileNames.put(AAddrEqualsBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "AddrEquals");
 
-		nodeTemplateFileNames.put(AAddrNotEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "AddrNotEquals");
+		nodeTemplateFileNames.put(AAddrNotEqualsBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "AddrNotEquals");
 		
-		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "Equals");
+		nodeTemplateFileNames.put(AEqualsBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "Equals");
 		
-		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "NotEquals");
+		nodeTemplateFileNames.put(ANotEqualsBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "NotEquals");
 		
-		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SeqConcat");
+		nodeTemplateFileNames.put(ASeqConcatBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SeqConcat");
 		
-		nodeTemplateFileNames.put(ASeqModificationBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SeqModification");
+		nodeTemplateFileNames.put(ASeqModificationBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SeqModification");
 		
-		nodeTemplateFileNames.put(AInSetBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "InSet");
+		nodeTemplateFileNames.put(AInSetBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "InSet");
 		
-		nodeTemplateFileNames.put(ASetUnionBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetUnion");
+		nodeTemplateFileNames.put(ASetUnionBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SetUnion");
 		
-		nodeTemplateFileNames.put(ASetIntersectBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetIntersect");
+		nodeTemplateFileNames.put(ASetIntersectBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SetIntersect");
 		
-		nodeTemplateFileNames.put(ASetDifferenceBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetDifference");
+		nodeTemplateFileNames.put(ASetDifferenceBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SetDifference");
 		
-		nodeTemplateFileNames.put(ASetSubsetBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetSubset");
+		nodeTemplateFileNames.put(ASetSubsetBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SetSubset");
 		
-		nodeTemplateFileNames.put(ASetProperSubsetBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "SetProperSubset");
+		nodeTemplateFileNames.put(ASetProperSubsetBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "SetProperSubset");
 		
-		nodeTemplateFileNames.put(AMapUnionBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "MapUnion");
+		nodeTemplateFileNames.put(AMapUnionBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "MapUnion");
 		
-		nodeTemplateFileNames.put(AMapOverrideBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "MapOverride");
+		nodeTemplateFileNames.put(AMapOverrideBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "MapOverride");
 		
-		nodeTemplateFileNames.put(ADomainResToBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "DomResTo");
+		nodeTemplateFileNames.put(ADomainResToBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "DomResTo");
 		
-		nodeTemplateFileNames.put(ADomainResByBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "DomResBy");
+		nodeTemplateFileNames.put(ADomainResByBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "DomResBy");
 		
-		nodeTemplateFileNames.put(ARangeResToBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "RngResTo");
+		nodeTemplateFileNames.put(ARangeResToBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "RngResTo");
 		
-		nodeTemplateFileNames.put(ARangeResByBinaryExpCG.class, templateStructure.BINARY_EXPS_PATH + "RngResBy");
+		nodeTemplateFileNames.put(ARangeResByBinaryExpCG.class, templateStructure.BINARY_EXP_PATH + "RngResBy");
 		
 		// Numeric binary expressions
 
-		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ATimesNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Mul");
-		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(APlusNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Plus");
-		nodeTemplateFileNames.put(ASubtractNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ASubtractNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Minus");
 
-		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Divide");
 
-		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "GreaterEqual");
 
-		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AGreaterNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Greater");
 
-		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ALessEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "LessEqual");
 
-		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(ALessNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Less");
 		
-		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Power");
 
 		// Connective binary expressions
 
-		nodeTemplateFileNames.put(AOrBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AOrBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH
 				+ "Or");
 		
-		nodeTemplateFileNames.put(AAndBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AAndBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH
 				+ "And");
 		
-		nodeTemplateFileNames.put(AXorBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXPS_PATH
+		nodeTemplateFileNames.put(AXorBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH
 				+ "Xor");
 		
 		// Literal expressions
 
-		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(AIntLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "IntLiteral");
-		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(ARealLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "RealLiteral");
 		
-		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(ABoolLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "BoolLiteral");
 		
-		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(ACharLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "CharLiteral");
 		
-		nodeTemplateFileNames.put(AStringLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(AStringLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "StringLiteral");
 		
-		nodeTemplateFileNames.put(AQuoteLiteralExpCG.class, templateStructure.EXPS_PATH
+		nodeTemplateFileNames.put(AQuoteLiteralExpCG.class, templateStructure.EXP_PATH
 				+ "QuoteLiteral");
 		
 		//Seq expressions
-		nodeTemplateFileNames.put(AEnumSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
+		nodeTemplateFileNames.put(AEnumSeqExpCG.class, templateStructure.SEQ_EXP_PATH
 				+ "Enum");
 		
-		nodeTemplateFileNames.put(ACompSeqExpCG.class, templateStructure.SEQ_EXPS_PATH
+		nodeTemplateFileNames.put(ACompSeqExpCG.class, templateStructure.SEQ_EXP_PATH
 				+ "Comp");
 		
 		//Set expressions
-		nodeTemplateFileNames.put(AEnumSetExpCG.class, templateStructure.SET_EXPS_PATH
+		nodeTemplateFileNames.put(AEnumSetExpCG.class, templateStructure.SET_EXP_PATH
 				+ "Enum");
 
-		nodeTemplateFileNames.put(ACompSetExpCG.class, templateStructure.SET_EXPS_PATH
+		nodeTemplateFileNames.put(ACompSetExpCG.class, templateStructure.SET_EXP_PATH
 				+ "Comp");
 
-		nodeTemplateFileNames.put(ARangeSetExpCG.class, templateStructure.SET_EXPS_PATH
+		nodeTemplateFileNames.put(ARangeSetExpCG.class, templateStructure.SET_EXP_PATH
 				+ "Range");
 		
 		//Map expressions
 		
-		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Enum");
+		nodeTemplateFileNames.put(AEnumMapExpCG.class, templateStructure.MAP_EXP_PATH + "Enum");
 		
-		nodeTemplateFileNames.put(ACompMapExpCG.class, templateStructure.MAP_EXPS_PATH + "Comp");
+		nodeTemplateFileNames.put(ACompMapExpCG.class, templateStructure.MAP_EXP_PATH + "Comp");
 		
 		//State designators
 		nodeTemplateFileNames.put(AFieldStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "Field");
