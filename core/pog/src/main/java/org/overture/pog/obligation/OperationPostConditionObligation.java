@@ -46,7 +46,7 @@ public class OperationPostConditionObligation extends ProofObligation
 	{
 		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition().clone(), op.getPostcondition().clone(), null)));
+		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), null)));
 	}
 
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
@@ -79,7 +79,7 @@ public class OperationPostConditionObligation extends ProofObligation
 		} else
 		{// handled prepost or errors
 			AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
-			orExp.setLeft(handlePrePost(preexp, postexp, errs));
+			orExp.setLeft(handlePrePost(preexp.clone(), postexp, errs));
 			PExp errorsExp = (buildErrsExp(errs));
 			orExp.setRight(errorsExp);
 

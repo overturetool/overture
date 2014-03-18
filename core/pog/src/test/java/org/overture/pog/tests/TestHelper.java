@@ -54,7 +54,7 @@ public abstract class TestHelper {
 						return parseTcRt(name);
 					} else {
 						fail("Unexpected extension in file " + name
-								+ ". Only vdmpp, vdmsl and vdmrt allowed");
+								+ ". Only .vdmpp, .vdmsl and .vdmrt allowed");
 					}
 				}
 			}
