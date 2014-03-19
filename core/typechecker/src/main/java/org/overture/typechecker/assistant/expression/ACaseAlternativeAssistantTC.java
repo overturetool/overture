@@ -64,7 +64,7 @@ public class ACaseAlternativeAssistantTC
 		}
 
 		Environment local = new FlatCheckedEnvironment(af, c.getDefs(), question.env, question.scope);
-		question = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers);
+		question = question.newInfo(local);
 		c.setType(c.getResult().apply(rootVisitor, question));
 		local.unusedCheck();
 		return c.getType();

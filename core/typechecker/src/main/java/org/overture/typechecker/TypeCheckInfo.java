@@ -160,7 +160,7 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newScope(NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers, constraint);
 		return info;
 	}
 
@@ -171,13 +171,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newInfo(Environment newEnv)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers, constraint);
 		return info;
 	}
 
 	public TypeCheckInfo newInfo(Environment newEnv, NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers, constraint);
 		return info;
 	}
 

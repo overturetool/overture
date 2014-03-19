@@ -4,14 +4,12 @@
 <message column="17" line="38" message="Definition 'a' not used" messageType="warning" number="5000" resource="ifexpr-87.vdm"/>
 <message column="18" line="40" message="Definition 'a' not used" messageType="warning" number="5000" resource="ifexpr-87.vdm"/>
 <message column="15" line="42" message="Definition 'a' not used" messageType="warning" number="5000" resource="ifexpr-87.vdm"/>
+<message column="10" line="34" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
 <message column="10" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
-<message column="27" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
-<message column="33" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
-<message column="28" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
-<message column="34" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
 <message column="10" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
 <message column="25" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
 <message column="31" line="42" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
+<message column="10" line="43" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-87.vdm"/>
 <message column="15" line="32" message="Expression does not match declared type" messageType="error" number="3051" resource="ifexpr-87.vdm"/>
 <result/>
 </testResult>

@@ -502,4 +502,18 @@ public class PTypeAssistantTC extends PTypeAssistant
 		
 		return actual;
 	}
+
+	public PType possibleConstraint(PType constraint, PType actual, ILexLocation location)
+	{
+		if (constraint != null)
+		{
+			if (!TypeComparator.compatible(constraint, actual))
+			{
+				TypeChecker.report(3327, "Value is not of the right type", location);
+				TypeChecker.detail2("Actual", actual, "Expected", constraint);
+			}
+		}
+
+		return actual;
+	}
 }
