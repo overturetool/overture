@@ -1,5 +1,7 @@
 package org.overture.codegen.analysis.violations;
 
+import org.overture.ast.definitions.ATypeDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.assistant.AssistantManager;
 
@@ -15,7 +17,15 @@ public class TypenameComparison extends NamingComparison
 	{
 		if (this.getNames().contains(nameToken.getName()))
 		{
-			return assistantManager.getTypeAssistant().getTypeDef(nameToken) != null;
+			PDefinition def = assistantManager.getTypeAssistant().getTypeDef(nameToken);
+
+			if (def instanceof ATypeDefinition)
+			{
+				ATypeDefinition typeDef = (ATypeDefinition) def;
+				return typeDef.getInvType() == null;
+			}
+
+			return def != null;
 		}
 
 		return false;
