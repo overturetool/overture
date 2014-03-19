@@ -2094,7 +2094,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3317, "Expression can never match narrow type", node.getLocation(), node);
 		}
 
-		return result;
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
+				question.constraint, result, node.getLocation());
 	}
 
 	@Override
@@ -2803,7 +2804,22 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
-		PType t = node.getExp().apply(THIS, question.newConstraint(null));
+		TypeCheckInfo absConstraint = question.newConstraint(null);
+		
+		if (question.constraint != null && PTypeAssistantTC.isNumeric(question.constraint))
+		{
+			if (question.constraint instanceof AIntNumericBasicType ||
+				question.constraint instanceof ANatOneNumericBasicType)
+			{
+				absConstraint = question.newConstraint(AstFactory.newAIntNumericBasicType(node.getLocation()));
+			}
+			else
+			{
+				absConstraint = question;
+			}
+		}
+
+		PType t = node.getExp().apply(THIS, absConstraint);
 
 		if (!PTypeAssistantTC.isNumeric(t))
 		{
