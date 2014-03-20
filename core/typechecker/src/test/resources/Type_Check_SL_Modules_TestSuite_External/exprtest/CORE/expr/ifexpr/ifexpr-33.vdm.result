@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
+<message column="10" line="36" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <message column="14" line="38" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <message column="25" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <message column="27" line="40" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
@@ -27,11 +28,6 @@
 <message column="29" line="60" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <message column="36" line="60" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <message column="42" line="60" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="25" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="27" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="29" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="34" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="36" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
-<message column="38" line="62" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
+<message column="10" line="63" message="Value is not of the right type" messageType="error" number="3327" resource="ifexpr-33.vdm"/>
 <result/>
 </testResult>

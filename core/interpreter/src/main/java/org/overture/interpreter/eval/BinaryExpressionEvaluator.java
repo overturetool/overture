@@ -223,6 +223,12 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 					for (Value v: rm.keySet())
 					{
 						Value rng = lm.get(rm.get(v));
+						
+						if (rng == null)
+						{
+							VdmRuntimeError.abort(node.getLocation(), 4162, "The RHS range is not a subset of the LHS domain", ctxt);
+						}
+						
 						Value old = result.put(v, rng);
 
 						if (old != null && !old.equals(rng))

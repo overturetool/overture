@@ -194,7 +194,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(results.getType(node.getLocation()));
-		return node.getType(); // Union of possible applications
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
+				question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override
@@ -454,8 +455,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotEqualBinaryExp(ANotEqualBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.getLeft().apply(THIS, question);
-		node.getRight().apply(THIS, question);
+		node.getLeft().apply(THIS, question.newConstraint(null));
+		node.getRight().apply(THIS, question.newConstraint(null));
 
 		if (!TypeComparator.compatible(node.getLeft().getType(), node.getRight().getType()))
 		{
@@ -1065,7 +1066,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		for (ACaseAlternative c : node.getCases())
 		{
-			rtypes.add(question.assistantFactory.createACaseAlternativeAssistant().typeCheck(c, THIS, noConstraint, expType));
+			rtypes.add(question.assistantFactory.createACaseAlternativeAssistant().typeCheck(c, THIS, question, expType));
 		}
 
 		if (node.getOthers() != null)
@@ -1104,7 +1105,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind())));
-		node.getDef().apply(THIS, question);
+		node.getDef().apply(THIS, question.newConstraint(null));
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
 
 		if (node.getBind() instanceof ATypeBind)
@@ -1114,7 +1115,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		question.qualifiers = null;
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(
+				THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, AstFactory.newABooleanBasicType(node.getLocation()))),
+				ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3088, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -1130,11 +1133,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
-		def.apply(THIS, question);
+		def.apply(THIS, question.newConstraint(null));
 		def.setNameScope(NameScope.LOCAL);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		question = new TypeCheckInfo(question.assistantFactory, local, question.scope);
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, question.newConstraint(null)), ABooleanBasicType.class))
+		question = new TypeCheckInfo(question.assistantFactory, local, question.scope, null,
+				AstFactory.newABooleanBasicType(node.getLocation()));
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(
+				THIS, question), ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3089, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -1316,7 +1321,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), node.getBindList());
 		def.apply(THIS, question.newConstraint(null));
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
+		if (!question.assistantFactory.createPTypeAssistant().isType(node.getPredicate().apply(
+				THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null,
+						AstFactory.newABooleanBasicType(node.getLocation()))),
+				ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3097, "Predicate is not boolean", node.getPredicate().getLocation(), node.getPredicate());
 		}
@@ -2086,7 +2094,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3317, "Expression can never match narrow type", node.getLocation(), node);
 		}
 
-		return result;
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
+				question.constraint, result, node.getLocation());
 	}
 
 	@Override
@@ -2749,7 +2758,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			// we don't need to retry at the top level (assuming all names
 			// are in the environment).
 			node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node.getVardef()), null, THIS, question));
-			return node.getType();
+
+			// If a constraint is passed in, we can raise an error if it is
+			// not possible for the type to match the constraint (rather than
+			// certain, as checkConstraint would).
+
+			return question.assistantFactory.createPTypeAssistant().possibleConstraint(
+					question.constraint, node.getType(), node.getLocation());
 		}
 	}
 
@@ -2789,7 +2804,22 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
-		PType t = node.getExp().apply(THIS, question.newConstraint(null));
+		TypeCheckInfo absConstraint = question.newConstraint(null);
+		
+		if (question.constraint != null && PTypeAssistantTC.isNumeric(question.constraint))
+		{
+			if (question.constraint instanceof AIntNumericBasicType ||
+				question.constraint instanceof ANatOneNumericBasicType)
+			{
+				absConstraint = question.newConstraint(AstFactory.newAIntNumericBasicType(node.getLocation()));
+			}
+			else
+			{
+				absConstraint = question;
+			}
+		}
+
+		PType t = node.getExp().apply(THIS, absConstraint);
 
 		if (!PTypeAssistantTC.isNumeric(t))
 		{
@@ -2858,15 +2888,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PExp exp = node.getExp();
 		question.qualifiers = null;
-		TypeCheckInfo expConstraint = question;
-		
-		if (question.constraint != null)
-		{
-			PType stype = AstFactory.newASetType(node.getLocation(), question.constraint);
-			expConstraint = question.newConstraint(stype);
-		}
-
-		PType arg = exp.apply(THIS, expConstraint);
+		PType arg = exp.apply(THIS, question.newConstraint(null));
 
 		if (question.assistantFactory.createPTypeAssistant().isSet(arg))
 		{
