@@ -33,7 +33,23 @@ public class JavaCodeGenUtil
 {
 	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
+		List<SClassDefinition> mergedParseList = consMergedParseList(files);
+		
+		JavaCodeGen vdmCodGen = new JavaCodeGen();
+
+		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
+		
+		GeneratedModule quoteValues = vdmCodGen.generateJavaFromVdmQuotes();
+		
+		GeneratedData dataToReturn = new GeneratedData(generatedModules, quoteValues);
+		
+		return dataToReturn;
+	}
+	
+	public static List<SClassDefinition> consMergedParseList(List<File> files) throws AnalysisException
+	{
 		VDMRT vdmrt = new VDMRT();
+		vdmrt.setQuiet(true);
 		
 		ExitStatus status = vdmrt.parse(files);
 		
@@ -54,20 +70,12 @@ public class JavaCodeGenUtil
 			throw new AnalysisException("Could not get classes from class list interpreter!");
 		}
 		
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
 		
 		for (SClassDefinition vdmClass : classes)
 			mergedParseList.add(vdmClass);
-		
-		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
-		
-		GeneratedModule quoteValues = vdmCodGen.generateJavaFromVdmQuotes();
-		
-		GeneratedData dataToReturn = new GeneratedData(generatedModules, quoteValues);
-		
-		return dataToReturn;
-		
+
+		return mergedParseList;
 	}
 
 	private static List<GeneratedModule> generateJavaFromVdm(
