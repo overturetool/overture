@@ -6,11 +6,15 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.SpecificationTest;
@@ -31,6 +35,8 @@ public class CompileTests
 	
 	public static void main(String[] args) throws IOException
 	{
+		addPath(new File(TEMP_DIR));
+		
 		long startTimeMs = System.currentTimeMillis();
 		
 		File srcJavaLib = new File(SRC_JAVA_LIB);
@@ -38,10 +44,10 @@ public class CompileTests
 		
 		GeneralCodeGenUtils.copyDirectory(srcJavaLib, utils);
 		
+		System.out.println("Beginning expressions..\n");
+
 		List<File> testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
 		List<File>  resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-
-		System.out.println("Beginning expressions..\n");
 		
 		runExpressionTests(testInputFiles, resultFiles, new ExpressionTestHandler(), true);
 		
@@ -49,16 +55,30 @@ public class CompileTests
 		System.out.println("Finished with expressions");
 		System.out.println("********\n");
 		
+		System.out.println("Beginning complex expressions..\n");
+
 		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-		
-		System.out.println("Beginning complex expressions..\n");
 		
 		runExpressionTests(testInputFiles, resultFiles, new ComplexExpressionTestHandler(), false);
 		
 		System.out.println("\n********");
 		System.out.println("Finished with complex expressions");
 		System.out.println("********\n");
+
+		
+		System.out.println("Beginning classic specifications..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runExpressionTests(testInputFiles, resultFiles, new ClassicSpecificationTestHandler(), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with classic specifications");
+		System.out.println("********\n");
+
+		
 		
 		System.out.println("Beginning with specifications..");
 		
@@ -76,6 +96,22 @@ public class CompileTests
 		long seconds = (totalTimeMs % (60 * 1000)) / 1000;
 		
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+	
+	private static void addPath(File f)
+	{
+		try
+		{
+			URL u = f.toURL();
+			URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+			Class urlClass = URLClassLoader.class;
+			Method method = urlClass.getDeclaredMethod("addURL", new Class[] { URL.class });
+			method.setAccessible(true);
+			method.invoke(urlClassLoader, new Object[] { u });
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	private static void runSpecificationTests() throws IOException
@@ -152,10 +188,11 @@ public class CompileTests
 		
 		for(int i = 0; i < testCount; i++)
 		{
+			File currentInputFile = testInputFiles.get(i);
+			
 			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
 			
 			//Calculating the VDM Result:
-			File currentInputFile = testInputFiles.get(i);
 			Value vdmResult;
 			
 			try
@@ -170,9 +207,7 @@ public class CompileTests
 			//Calculating the Java result:
 			File file = resultFiles.get(i);
 			
-			String generatedCode = GeneralUtils.readFromFile(file).replace('#', ' ');
-			
-			resultWriter.writeGeneratedCode(parent, generatedCode);
+			resultWriter.writeGeneratedCode(parent, file);
 			
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
 			System.out.println("Test:" + (1 + i)  + ". Name: " + file.getName() + " " + (compileOk ? "Compile OK" : "ERROR"));
@@ -201,13 +236,15 @@ public class CompileTests
 			}
 			
 			//Comparison of VDM and Java results
-			boolean equal = ComparisonCG.compare(cgValue, vdmResult);
+			ComparisonCG comp = new ComparisonCG(currentInputFile);
+			boolean equal = comp.compare(cgValue, vdmResult);
 			
 			if (printInput)
 			{
 				String vdmInput = GeneralUtils.readFromFile(currentInputFile);
-
 				System.out.println("VDM:  " + vdmInput);
+				
+				String generatedCode = GeneralUtils.readFromFile(file).replace('#', ' ');
 				System.out.println("Java: " + generatedCode);
 			}
 			else
@@ -218,9 +255,12 @@ public class CompileTests
 			
 			System.out.println("VDM ~>  " + vdmResult);
 			System.out.print("Java ~> " + javaResult);
-			System.out.println("\n");
 			
-			if(!equal)
+			if(equal)
+			{
+				System.out.println("Evaluation OK: VDM value and Java value are equal"); 
+			}
+			else
 			{
 				System.err.println("ERROR: VDM value and Java value are different");
 			}
