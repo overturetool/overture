@@ -9,8 +9,9 @@ import org.overture.interpreter.values.Value;
 
 class ExpressionTestHandler extends TestHandler
 {
-	public void writeGeneratedCode(File parent, String generatedExpression) throws IOException
+	public void writeGeneratedCode(File parent, File resultFile) throws IOException
 	{
+		String generatedExpression = readFromFile(resultFile);
 		injectArgIntoMainClassFile(parent, generatedExpression);
 	}
 

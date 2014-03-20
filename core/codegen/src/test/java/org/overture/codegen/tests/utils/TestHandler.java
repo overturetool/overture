@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.values.Value;
@@ -46,6 +47,11 @@ public abstract class TestHandler
 		+ 	SERIALIZE_METHOD
 		+ "}";
 	
+	public TestHandler()
+	{
+		initVdmEnv();
+	}
+	
 	public abstract Value interpretVdm(File intputFile) throws Exception;
 	
 	public void initVdmEnv()
@@ -54,7 +60,7 @@ public abstract class TestHandler
 		Settings.dialect = Dialect.VDM_RT;
 	}
 
-	public abstract void writeGeneratedCode(File parent, String generatedCode) throws IOException;
+	public abstract void writeGeneratedCode(File parent, File resultFile) throws IOException;
 	
 	public void injectArgIntoMainClassFile(File parent, String argument) throws IOException
 	{
@@ -87,6 +93,11 @@ public abstract class TestHandler
 	private File getMainClassFile(File parent) throws IOException
 	{
 		return getFile(parent, MAIN_CLASS);
+	}
+	
+	public String readFromFile(File resultFile) throws IOException
+	{
+		return GeneralUtils.readFromFile(resultFile).replace('#', ' ');
 	}
 }
 
