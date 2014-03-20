@@ -54,6 +54,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		outerBlock.getStatements().add(node.getStatement());
 		
 		transformationAssistant.replaceNodeWith(node, outerBlock);
+		outerBlock.apply(this);
 	}
 
 	@Override
@@ -81,6 +82,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
 		outerBlock.getStatements().add(enclosingStm);
+		outerBlock.apply(this);
 	}
 
 	@Override
@@ -95,6 +97,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
 		block.getStatements().add(enclosingStm);
+		block.apply(this);
 	}
 	
 	@Override
@@ -109,6 +112,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
 		block.getStatements().add(enclosingStm);
+		block.apply(this);
 	}
 	
 	@Override
@@ -132,6 +136,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			transformationAssistant.replaceNodeWith(enclosingStm, block);
 
 			block.getStatements().add(enclosingStm);
+			block.apply(this);
 		}
 	}
 	
@@ -166,6 +171,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		block.getStatements().add(enclosingStm);
+		block.apply(this);
 	}
 	
 	private PStmCG getEnclosingStm(PExpCG node, String nodeStr) throws AnalysisException
