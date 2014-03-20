@@ -102,9 +102,9 @@ public class CompileTests
 	{
 		try
 		{
-			URL u = f.toURL();
+			URL u = f.toURI().toURL();
 			URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-			Class urlClass = URLClassLoader.class;
+			Class<URLClassLoader> urlClass = URLClassLoader.class;
 			Method method = urlClass.getDeclaredMethod("addURL", new Class[] { URL.class });
 			method.setAccessible(true);
 			method.invoke(urlClassLoader, new Object[] { u });
@@ -258,7 +258,7 @@ public class CompileTests
 			
 			if(equal)
 			{
-				System.out.println("Evaluation OK: VDM value and Java value are equal"); 
+				System.out.println("Evaluation OK: VDM value and Java value are equal\n"); 
 			}
 			else
 			{
