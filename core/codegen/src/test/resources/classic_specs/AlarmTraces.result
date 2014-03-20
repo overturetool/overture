@@ -1,0 +1,210 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Alarm {
+    private String descr;
+    private Number reqQuali;
+
+    public Alarm(Number quali, String str) {
+        descr = str;
+        reqQuali = quali;
+    }
+
+    public Alarm() {
+    }
+
+    public Number GetReqQuali() {
+        return reqQuali;
+    }
+}
+
+##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Expert {
+    private VDMSet quali;
+
+    public Expert(VDMSet qs) {
+        quali = qs.clone();
+    }
+
+    public Expert() {
+    }
+
+    public VDMSet GetQuali() {
+        return quali.clone();
+    }
+}
+
+##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Plant {
+    private VDMSet alarms;
+    private VDMMap schedule;
+
+    public Plant(VDMSet als, VDMMap sch) {
+        alarms = als.clone();
+        schedule = sch.clone();
+    }
+
+    public Plant() {
+    }
+
+    private static boolean PlantInv(VDMSet as, VDMMap sch) {
+        boolean forAllExpResult_1 = true;
+        VDMSet set_1 = MapUtil.dom(sch.clone());
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && forAllExpResult_1;) {
+            Token p = ((Token) iterator_1.next());
+
+            forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
+        }
+
+        boolean forAllExpResult_2 = true;
+        VDMSet set_2 = as.clone();
+
+        for (Iterator iterator_2 = set_2.iterator();
+                iterator_2.hasNext() && forAllExpResult_2;) {
+            Alarm a = ((Alarm) iterator_2.next());
+
+            boolean forAllExpResult_3 = true;
+            VDMSet set_3 = MapUtil.dom(sch.clone());
+
+            for (Iterator iterator_3 = set_3.iterator();
+                    iterator_3.hasNext() && forAllExpResult_3;) {
+                Token p = ((Token) iterator_3.next());
+
+                boolean existsExpResult_1 = false;
+                VDMSet set_4 = ((VDMSet) sch.get(p)).clone();
+
+                for (Iterator iterator_4 = set_4.iterator();
+                        iterator_4.hasNext() && !(existsExpResult_1);) {
+                    Expert expert = ((Expert) iterator_4.next());
+
+                    existsExpResult_1 = expert.GetQuali()
+                                              .contains(a.GetReqQuali());
+                }
+
+                forAllExpResult_3 = existsExpResult_1;
+            }
+
+            forAllExpResult_2 = forAllExpResult_3;
+        }
+
+        return forAllExpResult_1 && forAllExpResult_2;
+    }
+
+    public Expert ExpertToPage(Alarm a, Token p) {
+        Expert expert = null;
+        boolean success_1 = false;
+        VDMSet set_5 = ((VDMSet) schedule.get(p)).clone();
+
+        for (Iterator iterator_5 = set_5.iterator();
+                iterator_5.hasNext() && !(success_1);) {
+            expert = ((Expert) iterator_5.next());
+            success_1 = expert.GetQuali().contains(a.GetReqQuali());
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Let Be St found no applicable bindings");
+        }
+
+        return expert;
+    }
+
+    public Number NumberOfExperts(Token p) {
+        return ((VDMSet) schedule.get(p)).size();
+    }
+
+    public VDMSet ExpertIsOnDuty(Expert ex) {
+        VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_6 = MapUtil.dom(schedule.clone());
+
+        for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
+            Token p = ((Token) iterator_6.next());
+
+            if (((VDMSet) schedule.get(p)).contains(ex)) {
+                setCompResult_1.add(p);
+            }
+        }
+
+        return setCompResult_1;
+    }
+
+    public void AddExpertToSchedule(Token p, Expert ex) {
+        schedule.put(p,
+            MapUtil.dom(schedule.clone()).contains(p)
+            ? SetUtil.union(((VDMSet) schedule.get(p)).clone(), SetUtil.set(ex))
+            : SetUtil.set(ex));
+    }
+
+    public void RemoveExpertFromSchedule(Token p, Expert ex) {
+        VDMSet exs = ((VDMSet) schedule.get(p)).clone();
+
+        schedule = (exs.size() == 1L)
+            ? MapUtil.domResBy(SetUtil.set(p), schedule.clone())
+            : MapUtil.override(schedule.clone(),
+                MapUtil.map(
+                    new Maplet(p, SetUtil.diff(exs.clone(), SetUtil.set(ex)))));
+    }
+}
+
+##########
+import org.overture.codegen.javalib.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final Token p1 = new Token("Monday day");
+    private static final Token p2 = new Token("Monday night");
+    private static final Token p3 = new Token("Tuesday day");
+    private static final Token p4 = new Token("Tuesday night");
+    private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
+    private Alarm a1 = new Alarm(Quotes.Mech, "Mechanical fault");
+    private Alarm a2 = new Alarm(Quotes.Chem, "Tank overflow");
+    private Expert ex1 = new Expert(SetUtil.set(Quotes.Mech, Quotes.Bio));
+    private Expert ex2 = new Expert(SetUtil.set(Quotes.Elec));
+    private Expert ex3 = new Expert(SetUtil.set(Quotes.Chem, Quotes.Bio,
+                Quotes.Mech));
+    private Expert ex4 = new Expert(SetUtil.set(Quotes.Elec, Quotes.Chem));
+    private Plant plant = new Plant(SetUtil.set(a1),
+            MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
+                new Maplet(p2, SetUtil.set(ex2, ex3))));
+    private VDMSet exs = SetUtil.set(ex1, ex2, ex3, ex4);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Entry entry = new Entry();
+        VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
+        Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
+
+        return Tuple.mk_(periods.clone(), expert.GetQuali());
+    }
+}
+
+##########
+package quotes;
+
+public interface Quotes {
+    public static Number Bio = 1L;
+    public static Number Chem = 2L;
+    public static Number Elec = 3L;
+    public static Number Mech = 4L;
+}
+
+##########
