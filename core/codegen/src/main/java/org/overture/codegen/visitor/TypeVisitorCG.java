@@ -53,6 +53,13 @@ import org.overture.codegen.ooast.OoAstInfo;
 public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 {
 	@Override
+	public PTypeCG caseAUnionType(AUnionType node, OoAstInfo question)
+			throws AnalysisException
+	{
+		return new AObjectTypeCG();
+	}
+	
+	@Override
 	public PTypeCG caseAUnknownType(AUnknownType node, OoAstInfo question)
 			throws AnalysisException
 	{
