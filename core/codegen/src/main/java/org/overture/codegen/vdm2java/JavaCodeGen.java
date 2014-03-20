@@ -35,6 +35,7 @@ import org.overture.codegen.ooast.ClassDeclStatus;
 import org.overture.codegen.ooast.ExpStatus;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.ooast.OoAstGenerator;
+import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -83,6 +84,11 @@ public class JavaCodeGen
 	{
 		Velocity.setProperty("runtime.log.logsystem.class" , "org.apache.velocity.runtime.log.NullLogSystem");
 		Velocity.init();
+	}
+	
+	public OoAstInfo getInfo()
+	{
+		return generator.getOoAstInfo();
 	}
 
 	public GeneratedModule generateJavaFromVdmQuotes()
