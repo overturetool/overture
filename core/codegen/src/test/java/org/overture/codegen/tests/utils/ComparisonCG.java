@@ -59,55 +59,48 @@ public class ComparisonCG
 			vdmValue = vdmValue.deref();
 		}
 		
-		if(cgValue instanceof Boolean)
+		if(vdmValue instanceof BooleanValue)
 		{
 			return handleBoolean(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof Character)
+		else if(vdmValue instanceof CharacterValue)
 		{
 			return handleCharacter(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof VDMMap)
+		else if(vdmValue instanceof MapValue)
 		{
 			return handleMap(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof Number)
+		else if(vdmValue instanceof QuoteValue)
 		{
-			if(vdmValue instanceof QuoteValue)
-			{
-				return handleQuote(cgValue, vdmValue);
-			}
+			return handleQuote(cgValue, vdmValue);
+		}
+		else if(vdmValue instanceof NumericValue)
+		{
+			return handleNumber(cgValue, vdmValue);
+		}
+		else if(vdmValue instanceof SeqValue)
+		{
+			if(cgValue instanceof String)
+				return handleString(cgValue, vdmValue);
 			else
-			{
-				return handleNumber(cgValue, vdmValue);
-			}
+				return handleSeq(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof VDMSeq)
-		{
-			return handleSeq(cgValue, vdmValue);
-		}
-		else if(cgValue instanceof VDMSet)
+		else if(vdmValue instanceof SetValue)
 		{
 			return handleSet(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof Tuple)
+		else if(vdmValue instanceof TupleValue)
 		{
 			return handleTuple(cgValue, vdmValue);
 		}
-		else if(cgValue instanceof String)
-		{
-			return handString(cgValue, vdmValue);
-		}
-		else if(cgValue instanceof Token)
+		else if(vdmValue instanceof TokenValue)
 		{
 			return handleToken(cgValue, vdmValue);
 		}
-		else if(cgValue == null)
+		else if(vdmValue instanceof NilValue)
 		{
-			if(!(vdmValue instanceof NilValue))
-				return false;
-			
-			return true;
+			return cgValue == null;
 		}
 		
 		return false;
@@ -115,9 +108,6 @@ public class ComparisonCG
 
 	private boolean handleQuote(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof QuoteValue))
-			 return false;
-		
 		if(!(cgValue instanceof Number))
 			return false;
 
@@ -165,7 +155,7 @@ public class ComparisonCG
 
 	private boolean handleToken(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof TokenValue))
+		if(!(cgValue instanceof Token))
 			 return false;
 		
 		Token cgToken = (Token) cgValue;
@@ -188,7 +178,7 @@ public class ComparisonCG
 
 	private static boolean handleCharacter(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof CharacterValue))
+		if(!(cgValue instanceof Character))
 			return false;
 		
 		Character cgChar = (Character) cgValue;
@@ -199,7 +189,7 @@ public class ComparisonCG
 
 	private static boolean handleNumber(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof NumericValue))
+		if(!(cgValue instanceof Number))
 			return false;
 		
 		Number number = (Number) cgValue;
@@ -210,7 +200,7 @@ public class ComparisonCG
 
 	private boolean handleSeq(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof SeqValue))
+		if(!(cgValue instanceof VDMSeq))
 			return false;
 		
 		VDMSeq cgSeq = (VDMSeq) cgValue;
@@ -233,7 +223,7 @@ public class ComparisonCG
 
 	private boolean handleSet(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof SetValue))
+		if(!(cgValue instanceof VDMSet))
 			return false;
 		
 		VDMSet cgSet = (VDMSet) cgValue;
@@ -271,7 +261,7 @@ public class ComparisonCG
 
 	private boolean handleTuple(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof TupleValue))
+		if(!(cgValue instanceof Tuple))
 			return false;
 		
 		Tuple javaTuple = (Tuple) cgValue;
@@ -287,9 +277,9 @@ public class ComparisonCG
 		return true;
 	}
 
-	private boolean handString(Object cgValue, Value vdmValue)
+	private boolean handleString(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof SeqValue))
+		if(!(cgValue instanceof String))
 			return false;
 		
 		String cgString = (String) cgValue;
@@ -308,7 +298,7 @@ public class ComparisonCG
 
 	private boolean handleMap(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof MapValue))
+		if(!(cgValue instanceof VDMMap))
 			return false;
 		
 		VDMMap cgMap = (VDMMap) cgValue;
@@ -344,7 +334,7 @@ public class ComparisonCG
 
 	private boolean handleBoolean(Object cgValue, Value vdmValue)
 	{
-		if(!(vdmValue instanceof BooleanValue))
+		if(!(cgValue instanceof Boolean))
 			return false;
 		
 		Boolean cgBool = (Boolean) cgValue;
