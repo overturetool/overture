@@ -30,7 +30,20 @@ public class CompileTests
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
 	
+	public static final boolean RUN_EXP_TESTS = true;
+	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
+	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
+	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
+
+	private List<File> testInputFiles;
+	private List<File> resultFiles;
+	
 	public static void main(String[] args) throws IOException
+	{
+		new CompileTests().runTests();
+	}
+
+	private void runTests() throws IOException
 	{
 		addPath(new File(TEMP_DIR));
 		
@@ -40,51 +53,26 @@ public class CompileTests
 		File utils = new File(TARGET_JAVA_LIB);
 		
 		GeneralCodeGenUtils.copyDirectory(srcJavaLib, utils);
-		
-		System.out.println("Beginning expressions..\n");
 
-		List<File> testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
-		List<File>  resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-		
-		runTests(testInputFiles, resultFiles, new ExpressionTestHandler(Release.VDM_10), true);
-		
-		System.out.println("\n********");
-		System.out.println("Finished with expressions");
-		System.out.println("********\n");
-		
-		System.out.println("Beginning complex expressions..\n");
+		if(RUN_EXP_TESTS)
+		{
+			runExpTests();
+		}
 
-		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
-		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-		
-		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
-		System.out.println("\n********");
-		System.out.println("Finished with complex expressions");
-		System.out.println("********\n");
+		if (RUN_COMPLEX_EXP_TESTS)
+		{
+			runComplexExpTests();
+		}
 
-		
-		System.out.println("Beginning classic specifications..\n");
+		if (RUN_EXECUTING_CLASSIC_SPEC_TESTS)
+		{
+			runExecutingClassicSpecTests();
+		}
 
-		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
-		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
-		
-		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
-		
-		System.out.println("\n********");
-		System.out.println("Finished with classic specifications");
-		System.out.println("********\n");
-		
-		System.out.println("Beginning with specifications..");
-		
-		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
-		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
-		
-		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
-		
-		System.out.println("\n********");
-		System.out.println("Finished with specifications");
-		System.out.println("********\n");
+		if(RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
+		{
+			runNonExecutingVdm10Tests();
+		}
 		
 		long endTimeMs = System.currentTimeMillis();
 		
@@ -95,8 +83,64 @@ public class CompileTests
 		
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
 	}
+
+	private void runNonExecutingVdm10Tests() throws IOException
+	{
+		System.out.println("Beginning with specifications..");
+		
+		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with specifications");
+		System.out.println("********\n");
+	}
+
+	private void runExecutingClassicSpecTests() throws IOException
+	{
+		System.out.println("Beginning classic specifications..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with classic specifications");
+		System.out.println("********\n");
+	}
+
+	private void runComplexExpTests() throws IOException
+	{
+		System.out.println("Beginning complex expressions..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with complex expressions");
+		System.out.println("********\n");
+	}
+
+	private void runExpTests() throws IOException
+	{
+		System.out.println("Beginning expressions..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExpressionTestHandler(Release.VDM_10), true);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with expressions");
+		System.out.println("********\n");
+	}
 	
-	private static void addPath(File f)
+	private void addPath(File f)
 	{
 		try
 		{
@@ -112,7 +156,7 @@ public class CompileTests
 		}
 	}
 	
-	public static void runTests(List<File> testInputFiles, List<File> resultFiles, TestHandler testHandler, boolean printInput) throws IOException
+	public void runTests(List<File> testInputFiles, List<File> resultFiles, TestHandler testHandler, boolean printInput) throws IOException
 	{
 		if(testInputFiles.size() != resultFiles.size())
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
