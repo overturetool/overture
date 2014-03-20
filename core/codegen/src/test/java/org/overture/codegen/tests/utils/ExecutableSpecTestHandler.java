@@ -4,22 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
 import org.overture.config.Release;
-import org.overture.config.Settings;
-import org.overture.interpreter.values.Value;
 
-public class ClassicSpecificationTestHandler extends EntryBasedTest
+public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
-	@Override
-	public Value interpretVdm(File intputFile) throws Exception
+	public ExecutableSpecTestHandler(Release release)
 	{
-		Settings.release = Release.CLASSIC;
-		return super.interpretVdm(intputFile);
+		super(release);
 	}
-	
+
 	@Override
 	public void writeGeneratedCode(File parent, File resultFile) throws IOException
 	{
@@ -38,21 +33,7 @@ public class ClassicSpecificationTestHandler extends EntryBasedTest
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			File outputDir = parent;
-
-			if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
-			{
-				outputDir = new File(parent, IJavaCodeGenConstants.QUOTES_PACKAGE_NAME);
-				outputDir.mkdirs();
-			}
-
-			File tempFile = new File(outputDir, className
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-
-			if (!tempFile.exists())
-			{
-				tempFile.createNewFile();
-			}
+			File tempFile = consTempFile(className, parent, classCgStr);
 			
 			String output;
 			

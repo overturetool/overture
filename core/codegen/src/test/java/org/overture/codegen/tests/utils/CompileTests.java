@@ -1,9 +1,7 @@
 package org.overture.codegen.tests.utils;
 
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Method;
@@ -12,14 +10,13 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.config.Release;
 import org.overture.interpreter.values.Value;
 
 public class CompileTests
@@ -49,7 +46,7 @@ public class CompileTests
 		List<File> testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
 		List<File>  resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
 		
-		runExpressionTests(testInputFiles, resultFiles, new ExpressionTestHandler(), true);
+		runTests(testInputFiles, resultFiles, new ExpressionTestHandler(Release.VDM_10), true);
 		
 		System.out.println("\n********");
 		System.out.println("Finished with expressions");
@@ -60,7 +57,7 @@ public class CompileTests
 		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
 		
-		runExpressionTests(testInputFiles, resultFiles, new ComplexExpressionTestHandler(), false);
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
 		
 		System.out.println("\n********");
 		System.out.println("Finished with complex expressions");
@@ -72,17 +69,18 @@ public class CompileTests
 		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
 		
-		runExpressionTests(testInputFiles, resultFiles, new ClassicSpecificationTestHandler(), false);
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
 		
 		System.out.println("\n********");
 		System.out.println("Finished with classic specifications");
 		System.out.println("********\n");
-
-		
 		
 		System.out.println("Beginning with specifications..");
 		
-		runSpecificationTests();
+		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
 		
 		System.out.println("\n********");
 		System.out.println("Finished with specifications");
@@ -113,61 +111,8 @@ public class CompileTests
 			e.printStackTrace();
 		}
 	}
-
-	private static void runSpecificationTests() throws IOException
-	{
-		List<File> resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
-
-		File parent = new File(TEMP_DIR);
-
-		for (int i = 0; i < resultFiles.size(); i++)
-		{
-			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
-			File file = resultFiles.get(i);
-
-			if (!file.getName().endsWith(RESULT_FILE_EXTENSION))
-				continue;
-
-			List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(file);
-
-			if (content.size() == 0)
-			{
-				System.out.println("Got no clases for: " + file.getName());
-				continue;
-			}
-
-			parent.mkdirs();
-
-			for (StringBuffer classCgStr : content)
-			{
-				String className = TestUtils.getJavaModuleName(classCgStr);
-				File outputDir = parent;
-
-				if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
-				{
-					outputDir = new File(parent, IOoAstConstants.QUOTES_INTERFACE_NAME);
-					outputDir.mkdirs();
-				}
-
-				File tempFile = new File(outputDir, className
-						+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-
-				if (!tempFile.exists())
-				{
-					tempFile.createNewFile();
-				}
-
-				FileWriter xwriter = new FileWriter(tempFile);
-				xwriter.write(classCgStr.toString());
-				xwriter.flush();
-				xwriter.close();
-			}
-				
-			System.out.println("Test: " + (1 + i) + ". " + (JavaCommandLineCompiler.compile(parent, null) ? "Compile OK" :"ERROR") + ": " + file.getName());
-		}
-	}
 	
-	public static void runExpressionTests(List<File> testInputFiles, List<File> resultFiles, TestHandler resultWriter, boolean printInput) throws IOException
+	public static void runTests(List<File> testInputFiles, List<File> resultFiles, TestHandler testHandler, boolean printInput) throws IOException
 	{
 		if(testInputFiles.size() != resultFiles.size())
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
@@ -192,22 +137,10 @@ public class CompileTests
 			
 			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
 			
-			//Calculating the VDM Result:
-			Value vdmResult;
-			
-			try
-			{
-				vdmResult = resultWriter.interpretVdm(currentInputFile);
-			} catch (Exception e1)
-			{
-				e1.printStackTrace();
-				return;
-			}
-
 			//Calculating the Java result:
 			File file = resultFiles.get(i);
 			
-			resultWriter.writeGeneratedCode(parent, file);
+			testHandler.writeGeneratedCode(parent, file);
 			
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
 			System.out.println("Test:" + (1 + i)  + ". Name: " + file.getName() + " " + (compileOk ? "Compile OK" : "ERROR"));
@@ -215,54 +148,67 @@ public class CompileTests
 			if(!compileOk)
 				continue;
 			
-			String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
+			if (testHandler instanceof ExecutableTestHandler)
+			{
+				ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
+			
+				// Calculating the VDM Result:
+				Value vdmResult;
 
-			File dataFile = new File(CG_VALUE_BINARY_FILE);
-			FileInputStream fin = new FileInputStream(dataFile);
-			ObjectInputStream ois = new ObjectInputStream(fin);
-			
-			Object cgValue = null;
-			try
-			{
-				cgValue = (Object) ois.readObject();
-			} catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-			finally
-			{
-				ois.close();
-			}
-			
-			//Comparison of VDM and Java results
-			ComparisonCG comp = new ComparisonCG(currentInputFile);
-			boolean equal = comp.compare(cgValue, vdmResult);
-			
-			if (printInput)
-			{
-				String vdmInput = GeneralUtils.readFromFile(currentInputFile);
-				System.out.println("VDM:  " + vdmInput);
-				
-				String generatedCode = GeneralUtils.readFromFile(file).replace('#', ' ');
-				System.out.println("Java: " + generatedCode);
-			}
-			else
-			{
-				
-				System.out.println("CG Test: " + currentInputFile.getName());
-			}
-			
-			System.out.println("VDM ~>  " + vdmResult);
-			System.out.print("Java ~> " + javaResult);
-			
-			if(equal)
-			{
-				System.out.println("Evaluation OK: VDM value and Java value are equal\n"); 
-			}
-			else
-			{
-				System.err.println("ERROR: VDM value and Java value are different");
+				try
+				{
+					vdmResult = executableTestHandler.interpretVdm(currentInputFile);
+				} catch (Exception e1)
+				{
+					e1.printStackTrace();
+					return;
+				}
+
+				String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
+
+				File dataFile = new File(CG_VALUE_BINARY_FILE);
+				FileInputStream fin = new FileInputStream(dataFile);
+				ObjectInputStream ois = new ObjectInputStream(fin);
+
+				Object cgValue = null;
+				try
+				{
+					cgValue = (Object) ois.readObject();
+				} catch (ClassNotFoundException e)
+				{
+					e.printStackTrace();
+					return;
+				} finally
+				{
+					ois.close();
+				}
+
+				// Comparison of VDM and Java results
+				ComparisonCG comp = new ComparisonCG(currentInputFile);
+				boolean equal = comp.compare(cgValue, vdmResult);
+
+				if (printInput)
+				{
+					String vdmInput = GeneralUtils.readFromFile(currentInputFile);
+					System.out.println("VDM:  " + vdmInput);
+
+					String generatedCode = GeneralUtils.readFromFile(file).replace('#', ' ');
+					System.out.println("Java: " + generatedCode);
+				} else
+				{
+					System.out.println("CG Test: " + currentInputFile.getName());
+				}
+
+				System.out.println("VDM ~>  " + vdmResult);
+				System.out.print("Java ~> " + javaResult);
+
+				if (equal)
+				{
+					System.out.println("Evaluation OK: VDM value and Java value are equal\n");
+				} else
+				{
+					System.err.println("ERROR: VDM value and Java value are different");
+				}
 			}
 		}
 	}

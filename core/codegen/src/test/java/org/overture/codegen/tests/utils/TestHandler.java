@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.interpreter.values.Value;
 
 public abstract class TestHandler
 {
@@ -51,8 +51,6 @@ public abstract class TestHandler
 	{
 		initVdmEnv();
 	}
-	
-	public abstract Value interpretVdm(File intputFile) throws Exception;
 	
 	public void initVdmEnv()
 	{
@@ -98,6 +96,27 @@ public abstract class TestHandler
 	public String readFromFile(File resultFile) throws IOException
 	{
 		return GeneralUtils.readFromFile(resultFile).replace('#', ' ');
+	}
+	
+	protected File consTempFile(String className, File parent, StringBuffer classCgStr)
+			throws IOException
+	{
+		File outputDir = parent;
+
+		if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
+		{
+			outputDir = new File(parent, IOoAstConstants.QUOTES_INTERFACE_NAME);
+			outputDir.mkdirs();
+		}
+
+		File tempFile = new File(outputDir, className
+				+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+
+		if (!tempFile.exists())
+		{
+			tempFile.createNewFile();
+		}
+		return tempFile;
 	}
 }
 
