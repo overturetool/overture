@@ -1,20 +1,30 @@
 package org.overture.codegen.tests.utils;
 
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.javalib.Token;
 import org.overture.codegen.javalib.Tuple;
 import org.overture.codegen.javalib.VDMMap;
 import org.overture.codegen.javalib.VDMSeq;
 import org.overture.codegen.javalib.VDMSet;
+import org.overture.codegen.vdm2java.JavaCodeGen;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
+import org.overture.interpreter.values.InvariantValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.NumericValue;
+import org.overture.interpreter.values.QuoteValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TokenValue;
@@ -24,12 +34,29 @@ import org.overture.interpreter.values.Value;
 
 public class ComparisonCG
 {
-	public static boolean compare(Object cgValue, Value vdmValue)
+	private File testInputFile;
+	private AInterfaceDeclCG quotes;
+	
+	public ComparisonCG(File testInputFile)
+	{
+		if(testInputFile == null)
+			throw new IllegalArgumentException("Test file cannot be null");
+		
+		this.testInputFile = testInputFile;
+		this.quotes = null;
+	}
+	
+	public boolean compare(Object cgValue, Value vdmValue)
 	{
 		while(vdmValue instanceof UpdatableValue)
 		{
 			UpdatableValue upValue = (UpdatableValue)vdmValue;
 			vdmValue = upValue.getConstant();
+		}
+		
+		while(vdmValue instanceof InvariantValue)
+		{
+			vdmValue = vdmValue.deref();
 		}
 		
 		if(cgValue instanceof Boolean)
@@ -46,7 +73,14 @@ public class ComparisonCG
 		}
 		else if(cgValue instanceof Number)
 		{
-			return handleNumber(cgValue, vdmValue);
+			if(vdmValue instanceof QuoteValue)
+			{
+				return handleQuote(cgValue, vdmValue);
+			}
+			else
+			{
+				return handleNumber(cgValue, vdmValue);
+			}
 		}
 		else if(cgValue instanceof VDMSeq)
 		{
@@ -76,11 +110,60 @@ public class ComparisonCG
 			return true;
 		}
 		
-		
 		return false;
 	}
 
-	private static boolean handleToken(Object cgValue, Value vdmValue)
+	private boolean handleQuote(Object cgValue, Value vdmValue)
+	{
+		if(!(vdmValue instanceof QuoteValue))
+			 return false;
+		
+		if(!(cgValue instanceof Number))
+			return false;
+
+		QuoteValue vdmQuote = (QuoteValue) vdmValue; 
+		Number cgQuote = (Number) cgValue;
+		
+		try
+		{
+			if (quotes == null)
+			{
+				List<File> files = new LinkedList<File>();
+				files.add(testInputFile);
+
+				List<SClassDefinition> mergedParseList = JavaCodeGenUtil.consMergedParseList(files);
+
+				JavaCodeGen javaCg = new JavaCodeGen();
+				javaCg.generateJavaFromVdm(mergedParseList);
+
+				quotes = javaCg.getInfo().getQuotes();
+			}
+			
+			for(AFieldDeclCG quote: quotes.getFields())
+			{
+				if(quote.getName().equals(vdmQuote.value))
+				{
+					PExpCG exp = quote.getInitial();
+					
+					if(exp instanceof AIntLiteralExpCG)
+					{
+						AIntLiteralExpCG intLit = (AIntLiteralExpCG) exp;
+						return cgQuote.equals(intLit.getValue());
+					}
+				}
+			}
+			
+			return false;
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	private boolean handleToken(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof TokenValue))
 			 return false;
@@ -125,7 +208,7 @@ public class ComparisonCG
 		return number.doubleValue() == vdmNumeric.value;
 	}
 
-	private static boolean handleSeq(Object cgValue, Value vdmValue)
+	private boolean handleSeq(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof SeqValue))
 			return false;
@@ -148,7 +231,7 @@ public class ComparisonCG
 		return true;
 	}
 
-	private static boolean handleSet(Object cgValue, Value vdmValue)
+	private boolean handleSet(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof SetValue))
 			return false;
@@ -186,7 +269,7 @@ public class ComparisonCG
 		return true;
 	}
 
-	private static boolean handleTuple(Object cgValue, Value vdmValue)
+	private boolean handleTuple(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof TupleValue))
 			return false;
@@ -204,7 +287,7 @@ public class ComparisonCG
 		return true;
 	}
 
-	private static boolean handString(Object cgValue, Value vdmValue)
+	private boolean handString(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof SeqValue))
 			return false;
@@ -223,7 +306,7 @@ public class ComparisonCG
 		return true;
 	}
 
-	private static boolean handleMap(Object cgValue, Value vdmValue)
+	private boolean handleMap(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof MapValue))
 			return false;
@@ -259,7 +342,7 @@ public class ComparisonCG
 		return true;
 	}
 
-	private static boolean handleBoolean(Object cgValue, Value vdmValue)
+	private boolean handleBoolean(Object cgValue, Value vdmValue)
 	{
 		if(!(vdmValue instanceof BooleanValue))
 			return false;
