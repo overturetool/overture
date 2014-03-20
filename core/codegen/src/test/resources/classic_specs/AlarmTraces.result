@@ -193,7 +193,7 @@ public class Entry {
         VDMSet periods = entry.plant.ExpertIsOnDuty(entry.ex1);
         Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
 
-        return Tuple.mk_(periods.clone(), expert.GetQuali());
+        return Tuple.mk_(periods.clone(), expert);
     }
 }
 
