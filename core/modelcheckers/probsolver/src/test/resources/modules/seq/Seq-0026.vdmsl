@@ -1,0 +1,4 @@
+operations
+
+str() m : seq of char
+  post m = "This is a string"

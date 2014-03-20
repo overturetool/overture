@@ -81,6 +81,7 @@ import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -184,6 +185,7 @@ import de.be4.classicalb.core.parser.node.ASeq1Expression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASizeExpression;
+import de.be4.classicalb.core.parser.node.AStringExpression;
 import de.be4.classicalb.core.parser.node.AStringSetExpression;
 import de.be4.classicalb.core.parser.node.AStructExpression;
 import de.be4.classicalb.core.parser.node.ASubsetPredicate;
@@ -197,6 +199,7 @@ import de.be4.classicalb.core.parser.node.PPredicate;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
+import de.be4.classicalb.core.parser.node.TStringLiteral;
 
 public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 {
@@ -1316,6 +1319,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return createIdentifier(getQuoteLiteralName(node.getValue().getValue()));
 	}
 
+	@Override
+	public Node caseAStringLiteralExp(AStringLiteralExp node)
+			throws AnalysisException
+	{
+	    return new AStringExpression(new TStringLiteral(node.getValue().toString()));
+	}
+
 	/* types */
 
 	@Override
@@ -1324,6 +1334,14 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return new ABoolSetExpression();
 	}
+	/*
+	@Override
+	public Node caseACharBasicType(ACharBasicType node)
+			throws AnalysisException
+	{
+	    return new AStringExpression();
+	}
+	*/
 
 	@Override
 	public Node caseAIntNumericBasicType(AIntNumericBasicType node)
@@ -1378,7 +1396,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		if (node.getSeqof() instanceof ACharBasicType)
 		{
-			return new AStringSetExpression();
+		    return new AStringSetExpression();
 		}
 
 		return new ASeq1Expression(exp(node.getSeqof()));
