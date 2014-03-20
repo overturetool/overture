@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
@@ -35,6 +38,31 @@ import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 {
+	@Override
+	public PDeclCG caseAClassInvariantDefinition(
+			AClassInvariantDefinition node, OoAstInfo question)
+			throws AnalysisException
+	{
+		//Do not report the node as unsupported and generate nothing
+		return null;
+	}
+	
+	@Override
+	public PDeclCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
+			OoAstInfo question) throws AnalysisException
+	{
+		//Do not report the node as unsupported and generate nothing
+		return null;
+	}
+	
+	@Override
+	public PDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
+			OoAstInfo question) throws AnalysisException
+	{
+		//Do not report the node as unsupported and generate nothing
+		return null;
+	}
+	
 	@Override
 	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			OoAstInfo question) throws AnalysisException
