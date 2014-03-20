@@ -5,8 +5,10 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -22,9 +24,12 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.InvariantValue;
 import org.overture.interpreter.values.MapValue;
+import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.NumericValue;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.QuoteValue;
+import org.overture.interpreter.values.ReferenceValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TokenValue;
@@ -102,8 +107,58 @@ public class ComparisonCG
 		{
 			return cgValue == null;
 		}
+		else if(vdmValue instanceof ObjectValue)
+		{
+			return handleObject(cgValue, vdmValue);
+		}
 		
 		return false;
+	}
+
+	private boolean handleObject(Object cgValue, Value vdmValue)
+	{
+		ObjectValue vdmObject = (ObjectValue) vdmValue;
+		
+		Field[] fields = cgValue.getClass().getFields();
+		NameValuePairMap memberValues = vdmObject.getMemberValues();
+		Set<ILexNameToken> keySet = memberValues.keySet();
+		
+		for(Field field : fields)
+		{
+			boolean foundMatchingField = false;
+			
+			for(ILexNameToken tok : keySet)
+			{
+				if(field.getName().equals(tok.getName()))
+				{
+					Value vdmFieldValue = memberValues.get(tok);
+					
+					if(vdmFieldValue != null)
+					{
+						try
+						{
+							Object cgFieldValue = field.get(cgValue);
+							
+							if(compare(cgFieldValue, vdmFieldValue))
+							{
+								foundMatchingField = true;
+								break;
+							}
+							
+						} catch (Exception e)
+						{
+							e.printStackTrace();
+							return false;
+						}
+					}
+				}
+			}
+			
+			if(!foundMatchingField)
+				return false;
+		}
+		
+		return true;
 	}
 
 	private boolean handleQuote(Object cgValue, Value vdmValue)
