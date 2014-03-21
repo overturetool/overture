@@ -486,4 +486,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder();
 	
+	IAnswer<Integer> getLengthFinder();
+	
 }

@@ -163,6 +163,7 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
+import org.overture.interpreter.utilities.pattern.LengthFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -966,6 +967,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder()
 	{
 		return new IdentifierPatternFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Integer> getLengthFinder()
+	{
+		return new LengthFinder(this);
 	}
 
 }

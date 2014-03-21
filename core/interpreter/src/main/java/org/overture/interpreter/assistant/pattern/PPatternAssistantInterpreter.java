@@ -29,7 +29,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class PPatternAssistantInterpreter extends PPatternAssistantTC
@@ -188,37 +187,44 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 
 	public static int getLength(PPattern pattern)
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
+			return pattern.apply(af.getLengthFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AIgnorePattern)
-		{
-			return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
-		} else if (pattern instanceof AMapPattern)
-		{
-			return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
-		} else if (pattern instanceof AStringPattern)
-		{
-			return AStringPatternAssistantInterpreter.getLength((AStringPattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
-		} else
-		{
-			return 1; // Most only identify one member
+			return 1; // Most have none
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AIgnorePattern)
+//		{
+//			return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
+//		} else if (pattern instanceof AStringPattern)
+//		{
+//			return AStringPatternAssistantInterpreter.getLength((AStringPattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
+//		} else
+//		{
+//			return 1; // Most only identify one member
+//		}
 	}
 
 	/**
