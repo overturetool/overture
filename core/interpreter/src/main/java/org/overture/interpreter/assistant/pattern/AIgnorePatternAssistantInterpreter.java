@@ -33,9 +33,9 @@ public class AIgnorePatternAssistantInterpreter
 		return false;
 	}
 
-	public static int getLength(AIgnorePattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIgnorePattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -205,14 +204,14 @@ public class AConcatenationPatternAssistantInterpreter
 				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
 	}
 
-	public static int getLength(AConcatenationPattern pattern)
-	{
-		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
-		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
-		return llen == PPatternAssistantInterpreter.ANY
-				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
-				: llen + rlen;
-	}
+//	public static int getLength(AConcatenationPattern pattern)
+//	{
+//		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
+//		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
+//		return llen == PPatternAssistantInterpreter.ANY
+//				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
+//				: llen + rlen;
+//	}
 
 //	public static List<AIdentifierPattern> findIdentifiers(
 //			AConcatenationPattern p)

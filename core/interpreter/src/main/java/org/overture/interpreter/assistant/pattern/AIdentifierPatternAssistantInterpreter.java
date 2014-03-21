@@ -37,10 +37,10 @@ public class AIdentifierPatternAssistantInterpreter
 		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
 	}
 
-	public static int getLength(AIdentifierPattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIdentifierPattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
 //	public static List<AIdentifierPattern> findIdentifiers(
 //			AIdentifierPattern pattern)

@@ -43,7 +43,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	}
 
 	/** A value for getLength meaning "any length" */
-	protected static int ANY = -1;
+	public static int ANY = -1;
 
 	public static NameValuePairList getNamedValues(PPattern p, Value expval,
 			Context ctxt) throws PatternMatchException

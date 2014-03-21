@@ -118,10 +118,10 @@ public class ASeqPatternAssistantInterpreter
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static int getLength(ASeqPattern pattern)
-	{
-		return pattern.getPlist().size();
-	}
+//	public static int getLength(ASeqPattern pattern)
+//	{
+//		return pattern.getPlist().size();
+//	}
 
 //	public static List<AIdentifierPattern> findIdentifiers(ASeqPattern pattern)
 //	{

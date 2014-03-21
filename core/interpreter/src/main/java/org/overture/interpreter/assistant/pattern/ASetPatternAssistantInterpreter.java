@@ -152,10 +152,10 @@ public class ASetPatternAssistantInterpreter
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static int getLength(ASetPattern pattern)
-	{
-		return pattern.getPlist().size();
-	}
+//	public static int getLength(ASetPattern pattern)
+//	{
+//		return pattern.getPlist().size();
+//	}
 
 //	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
 //	{
