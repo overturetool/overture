@@ -8,5 +8,6 @@
 <message column="10" line="15" message="For all statement does not contain a set type" messageType="error" number="3219" resource="casesstmt-11.vdm"/>
 <message column="5" line="17" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
 <message column="5" line="19" message="Pattern cannot match" messageType="error" number="3311" resource="casesstmt-11.vdm"/>
+<message column="12" line="20" message="Statement may return void value" messageType="error" number="3328" resource="casesstmt-11.vdm"/>
 <result/>
 </testResult>
