@@ -1,11 +1,13 @@
 package org.overture.interpreter.assistant;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
@@ -160,6 +162,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -948,7 +951,7 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 
 	@Override
-	public IQuestionAnswer<Context, ValueList> getBindValuesCollector()
+	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
 	{
 		return new BindValuesCollector(this);
 	}
@@ -957,6 +960,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector()
 	{
 		return new ValueCollector(this);
+	}
+	
+	@Override
+	public IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder()
+	{
+		return new IdentifierPatternFinder(this);
 	}
 
 }

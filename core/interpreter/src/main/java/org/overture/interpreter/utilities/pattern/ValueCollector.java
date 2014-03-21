@@ -11,6 +11,13 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
+/***************************************
+ * 
+ * This class implements a way to collect values from binds in a node type
+ * 
+ * @author gkanos
+ *
+ ****************************************/
 public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
@@ -24,7 +31,6 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 	public ValueList caseASetMultipleBind(ASetMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return ASetMultipleBindAssistantInterpreter.getValues(node, ctxt);
 		return PExpAssistantInterpreter.getValues(node.getSet(), ctxt);
 	}
 	
@@ -32,7 +38,6 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 	public ValueList caseATypeMultipleBind(ATypeMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return ATypeMultipleBindAssistantInterpreter.getValues(node, ctxt);
 		return new ValueList();
 	}
 	
@@ -48,7 +53,7 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 			throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return new ValueList();
 	}
 
 	@Override
@@ -56,7 +61,7 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 			throws AnalysisException
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return new ValueList();
 	}
 
 }

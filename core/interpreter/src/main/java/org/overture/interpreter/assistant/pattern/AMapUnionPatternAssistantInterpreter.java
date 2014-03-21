@@ -238,13 +238,13 @@ public class AMapUnionPatternAssistantInterpreter extends
 				: llen + rlen;
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AMapUnionPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(
+//			AMapUnionPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+//		return list;
+//	}
 
 }

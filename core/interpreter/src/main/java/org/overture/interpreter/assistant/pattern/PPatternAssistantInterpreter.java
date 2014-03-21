@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.pattern;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
@@ -28,6 +29,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class PPatternAssistantInterpreter extends PPatternAssistantTC
@@ -76,37 +78,44 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 
 	public static List<AIdentifierPattern> findIdentifiers(PPattern pattern)
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
-		{
-			return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AMapPattern)
-		{
-			return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern) pattern);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
-		} else
+			return pattern.apply(af.getIdentifierPatternFinder());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return new Vector<AIdentifierPattern>(); // Most have none
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern) pattern);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
+//		} else
+//		{
+//			return new Vector<AIdentifierPattern>(); // Most have none
+//		}
 	}
 
 	public static List<NameValuePairList> getAllNamedValues(PPattern pattern,

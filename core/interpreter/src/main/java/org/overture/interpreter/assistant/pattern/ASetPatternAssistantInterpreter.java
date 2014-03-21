@@ -157,15 +157,15 @@ public class ASetPatternAssistantInterpreter
 		return pattern.getPlist().size();
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 }

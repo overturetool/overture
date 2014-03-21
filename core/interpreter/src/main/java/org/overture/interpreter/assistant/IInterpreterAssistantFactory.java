@@ -1,9 +1,12 @@
 package org.overture.interpreter.assistant;
 
+import java.util.List;
+
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
@@ -477,7 +480,10 @@ public interface IInterpreterAssistantFactory extends
 	/* visitors */
 	IAnswer<LexNameList> getOldNameCollector();
 	
-	IQuestionAnswer<Context, ValueList> getBindValuesCollector();
+	QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector();
 	
 	QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector();
+	
+	IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder();
+	
 }

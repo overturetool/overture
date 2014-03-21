@@ -214,13 +214,13 @@ public class AConcatenationPatternAssistantInterpreter
 				: llen + rlen;
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AConcatenationPattern p)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getLeft()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getRight()));
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(
+//			AConcatenationPattern p)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getLeft()));
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getRight()));
+//		return list;
+//	}
 
 }

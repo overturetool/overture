@@ -130,17 +130,17 @@ public class ARecordPatternAssistantInterpreter
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static List<AIdentifierPattern> findIndentifiers(
-			ARecordPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIndentifiers(
+//			ARecordPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 
 }
