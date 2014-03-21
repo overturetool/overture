@@ -223,7 +223,7 @@ public class AMapUnionPatternAssistantInterpreter extends
 		return finalResults;
 	}
 
-	static boolean isConstrained(AMapUnionPattern pattern)
+	public static boolean isConstrained(AMapUnionPattern pattern)
 	{
 		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
 				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());

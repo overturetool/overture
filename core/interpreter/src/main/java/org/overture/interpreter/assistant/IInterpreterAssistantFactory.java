@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
@@ -487,5 +486,7 @@ public interface IInterpreterAssistantFactory extends
 	IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder();
 	
 	IAnswer<Integer> getLengthFinder();
+	
+	IAnswer<Boolean> getConstrainedPatternChecker();
 	
 }

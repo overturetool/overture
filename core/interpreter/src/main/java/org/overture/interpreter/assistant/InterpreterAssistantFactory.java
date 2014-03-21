@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
@@ -162,6 +161,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
@@ -973,6 +973,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<Integer> getLengthFinder()
 	{
 		return new LengthFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getConstrainedPatternChecker()
+	{
+		return new ConstrainedPatternChecker(this);
 	}
 
 }

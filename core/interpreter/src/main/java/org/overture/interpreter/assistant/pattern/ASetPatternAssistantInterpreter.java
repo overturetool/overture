@@ -141,7 +141,7 @@ public class ASetPatternAssistantInterpreter
 		return finalResults;
 	}
 
-	static boolean isConstrained(ASetPattern pattern)
+	public static boolean isConstrained(ASetPattern pattern)
 	{
 
 		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))

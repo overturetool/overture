@@ -218,7 +218,7 @@ public class AUnionPatternAssistantInterpreter
 		return finalResults;
 	}
 
-	static boolean isConstrained(AUnionPattern pattern)
+	public static boolean isConstrained(AUnionPattern pattern)
 	{
 		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
 				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());

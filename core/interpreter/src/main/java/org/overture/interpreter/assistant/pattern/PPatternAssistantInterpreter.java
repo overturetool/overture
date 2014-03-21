@@ -192,7 +192,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 			return pattern.apply(af.getLengthFinder());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			return 1; // Most have none
+			return 1; //Most only identify one member
 		}
 //		if (pattern instanceof AConcatenationPattern)
 //		{
@@ -233,39 +233,46 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 */
 	public static boolean isConstrained(PPattern pattern)
 	{
-		if (pattern instanceof AConcatenationPattern)
+		try
 		{
-			return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern) pattern);
-		} else if (pattern instanceof AIdentifierPattern)
-		{
-			return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern) pattern);
-		} else if (pattern instanceof AIgnorePattern)
-		{
-			return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern) pattern);
-		} else if (pattern instanceof AMapPattern)
-		{
-			return AMapPatternAssistantInterpreter.isConstrained((AMapPattern) pattern);
-		} else if (pattern instanceof AMapUnionPattern)
-		{
-			return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern) pattern);
-		} else if (pattern instanceof ARecordPattern)
-		{
-			return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
-		} else if (pattern instanceof ASeqPattern)
-		{
-			return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
-		} else if (pattern instanceof ASetPattern)
-		{
-			return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
-		} else if (pattern instanceof ATuplePattern)
-		{
-			return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
-		} else if (pattern instanceof AUnionPattern)
-		{
-			return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern) pattern);
-		} else
+			return pattern.apply(af.getConstrainedPatternChecker());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return true;
 		}
+//		if (pattern instanceof AConcatenationPattern)
+//		{
+//			return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern) pattern);
+//		} else if (pattern instanceof AIdentifierPattern)
+//		{
+//			return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern) pattern);
+//		} else if (pattern instanceof AIgnorePattern)
+//		{
+//			return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern) pattern);
+//		} else if (pattern instanceof AMapPattern)
+//		{
+//			return AMapPatternAssistantInterpreter.isConstrained((AMapPattern) pattern);
+//		} else if (pattern instanceof AMapUnionPattern)
+//		{
+//			return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern) pattern);
+//		} else if (pattern instanceof ARecordPattern)
+//		{
+//			return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
+//		} else if (pattern instanceof ASeqPattern)
+//		{
+//			return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
+//		} else if (pattern instanceof ASetPattern)
+//		{
+//			return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
+//		} else if (pattern instanceof ATuplePattern)
+//		{
+//			return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
+//		} else if (pattern instanceof AUnionPattern)
+//		{
+//			return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern) pattern);
+//		} else
+//		{
+//			return true;
+//		}
 	}
 }
