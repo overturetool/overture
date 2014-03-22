@@ -913,26 +913,50 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
-		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
+		PType lset = null;
+		PType rset = null;
+		
+		PTypeAssistantTC assistant = question.assistantFactory.createPTypeAssistant();
+
+		if (!assistant.isSet(ltype))
 		{
 			TypeCheckerErrors.report(3163, "Left hand of " + node.getLocation()
 					+ " is not a set", node.getLocation(), node);
 		}
+		else
+		{
+			lset = assistant.getSet(ltype).getSetof();
+		}
 
-		if (!question.assistantFactory.createPTypeAssistant().isSet(rtype))
+		if (!assistant.isSet(rtype))
 		{
 			TypeCheckerErrors.report(3164, "Right hand of "
 					+ node.getLocation() + " is not a set", node.getLocation(), node);
 		}
-
-		if (!TypeComparator.compatible(ltype, rtype))
+		else
 		{
-			TypeCheckerErrors.report(3165, "Left and right of intersect are different types", node.getLocation(), node);
-			TypeCheckerErrors.detail2("Left", ltype, "Right", rtype);
+			rset = assistant.getSet(rtype).getSetof();
+		}
+		
+		PType result = ltype;	// A guess
+		
+		if (lset != null && !assistant.isUnknown(lset) && rset != null && !assistant.isUnknown(rset))
+		{
+			PType interTypes = TypeComparator.intersect(lset, rset);
+	
+			if (interTypes == null)
+			{
+				TypeCheckerErrors.report(3165, "Left and right of intersect are different types", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Left", ltype, "Right", rtype);
+			}
+			else
+			{
+				result = AstFactory.newASetType(node.getLocation(), interTypes);
+			}
 		}
 
-		node.setType(ltype);
-		return ltype;
+		node.setType(result);
+		return result;
 	}
 
 	@Override
