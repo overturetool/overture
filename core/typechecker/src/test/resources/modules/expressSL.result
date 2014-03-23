@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.ModulesSlTypeCheckTest">
-<message column="50" line="241" message="Value is not of the right type" messageType="error" number="3327" resource="expressSL"/>
 <result/>
 </testResult>
