@@ -198,11 +198,11 @@ public class AConcatenationPatternAssistantInterpreter
 		return finalResults;
 	}
 
-	public static boolean isConstrained(AConcatenationPattern pattern)
-	{
-		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
-				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
-	}
+//	public static boolean isConstrained(AConcatenationPattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
+//				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
+//	}
 
 //	public static int getLength(AConcatenationPattern pattern)
 //	{

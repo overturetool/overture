@@ -107,10 +107,10 @@ public class ATuplePatternAssistantInterpreter
 		return finalResults;
 	}
 
-	public static boolean isConstrained(ATuplePattern pattern)
-	{
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
-	}
+//	public static boolean isConstrained(ATuplePattern pattern)
+//	{
+//		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+//	}
 
 //	public static List<AIdentifierPattern> findIdentifiers(ATuplePattern pattern)
 //	{

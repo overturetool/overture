@@ -28,10 +28,10 @@ public class AIgnorePatternAssistantInterpreter
 		return result;
 	}
 
-	public static boolean isConstrained(AIgnorePattern pattern)
-	{
-		return false;
-	}
+//	public static boolean isConstrained(AIgnorePattern pattern)
+//	{
+//		return false;
+//	}
 
 //	public static int getLength(AIgnorePattern pattern)
 //	{

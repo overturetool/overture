@@ -125,10 +125,10 @@ public class ARecordPatternAssistantInterpreter
 		return finalResults;
 	}
 
-	public static boolean isConstrained(ARecordPattern pattern)
-	{
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
-	}
+//	public static boolean isConstrained(ARecordPattern pattern)
+//	{
+//		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+//	}
 
 //	public static List<AIdentifierPattern> findIndentifiers(
 //			ARecordPattern pattern)
