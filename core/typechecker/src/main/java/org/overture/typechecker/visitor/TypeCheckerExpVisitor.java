@@ -2503,19 +2503,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PExp first = node.getFirst();
 		PExp last = node.getLast();
 
-		TypeCheckInfo elemConstraint = question;
-		
-		if (question.constraint != null &&
-			question.assistantFactory.createPTypeAssistant().isSet(question.constraint))
-		{
-			PType setType = question.assistantFactory.createPTypeAssistant().getSet(question.constraint).getSetof();
-			elemConstraint = question.newConstraint(setType);
-		}
-
 		question.qualifiers = null;
-		node.setFtype(first.apply(THIS, elemConstraint));
+		node.setFtype(first.apply(THIS, question.newConstraint(null)));
 		question.qualifiers = null;
-		node.setLtype(last.apply(THIS, elemConstraint));
+		node.setLtype(last.apply(THIS, question.newConstraint(null)));
 
 		PType ftype = node.getFtype();
 		PType ltype = node.getLtype();
@@ -2531,7 +2522,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(AstFactory.newASetType(first.getLocation(), AstFactory.newAIntNumericBasicType(node.getLocation())));
-		return node.getType();
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
+				question.constraint, node.getType(), node.getLocation());
 	}
 
 	@Override
@@ -2660,15 +2652,37 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		node.setTypes(new LinkedList<PType>());
 		List<PType> types = node.getTypes();
-
+		List<PType> elemConstraints = null;
+		
+		if (question.constraint != null &&
+			question.assistantFactory.createPTypeAssistant().isProduct(question.constraint))
+		{
+			elemConstraints = question.assistantFactory.createPTypeAssistant().getProduct(question.constraint).getTypes();
+			
+			if (elemConstraints.size() != node.getArgs().size())
+			{
+				elemConstraints = null;
+			}
+		}
+		
+		int i = 0;
+		
 		for (PExp arg : node.getArgs())
 		{
 			question.qualifiers = null;
-			types.add(arg.apply(THIS, question.newConstraint(null)));
+			
+			if (elemConstraints == null)
+			{
+				types.add(arg.apply(THIS, question.newConstraint(null)));
+			}
+			else
+			{
+				types.add(arg.apply(THIS, question.newConstraint(elemConstraints.get(i++))));
+			}
 		}
 
 		node.setType(AstFactory.newAProductType(node.getLocation(), types));
-		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
 				question.constraint, node.getType(), node.getLocation());
 	}
 
@@ -2886,7 +2900,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
-		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
 				question.constraint, node.getType(), node.getLocation());
 	}
 
@@ -3080,7 +3094,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		node.setType(AstFactory.newANatNumericBasicType(node.getLocation()));
-		return question.assistantFactory.createPTypeAssistant().checkConstraint(
+		return question.assistantFactory.createPTypeAssistant().possibleConstraint(
 				question.constraint, node.getType(), node.getLocation());
 	}
 
