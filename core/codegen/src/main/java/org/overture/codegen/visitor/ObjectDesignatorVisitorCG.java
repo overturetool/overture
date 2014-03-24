@@ -1,9 +1,13 @@
 package org.overture.codegen.visitor;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.ANewObjectDesignator;
@@ -12,6 +16,7 @@ import org.overture.ast.statements.PObjectDesignator;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
@@ -22,6 +27,27 @@ import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObjectDesignatorCG>
 {
+	@Override
+	public PObjectDesignatorCG caseAApplyObjectDesignator(
+			AApplyObjectDesignator node, OoAstInfo question)
+			throws AnalysisException
+	{
+		PObjectDesignator obj = node.getObject();
+		PObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
+		
+		AApplyObjectDesignatorCG applyObjDesignator = new AApplyObjectDesignatorCG();
+		applyObjDesignator.setObject(objCg);
+		
+		LinkedList<PExpCG> newExpArgs = applyObjDesignator.getArgs();
+		for (PExp arg : node.getArgs())
+		{
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			newExpArgs.add(argCg);
+		}
+
+		return applyObjDesignator;
+	}
+	
 	@Override
 	public PObjectDesignatorCG caseAFieldObjectDesignator(
 			AFieldObjectDesignator node, OoAstInfo question)
@@ -48,13 +74,10 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 		AVariableExp exp = node.getExpression();
 
 		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+
 		AIdentifierObjectDesignatorCG idObjDesignator = new AIdentifierObjectDesignatorCG();
-
-		if (!(expCg instanceof AVariableExpCG))
-			throw new AnalysisExceptionCG("Expected expression of identifier object designator to be a variable expression but got: "
-					+ expCg.getClass().getName(), node.getLocation());
-
-		idObjDesignator.setExp((AVariableExpCG) expCg);
+		
+		idObjDesignator.setExp(expCg);
 
 		return idObjDesignator;
 	}
