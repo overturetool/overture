@@ -5,7 +5,7 @@
 ##
 #set( $returnType = "")
 #if (!$node.getIsConstructor())
-	#set( $returnType = $JavaFormat.format($node.getReturnType()))
+	#set( $returnType = $JavaFormat.format($node.getMethodType().getResult()) )
 #end
 #set( $abstract = "")
 #if ($node.getAbstract())
