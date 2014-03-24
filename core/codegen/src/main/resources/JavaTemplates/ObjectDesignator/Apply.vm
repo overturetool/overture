@@ -1,0 +1,9 @@
+#set( $args = $JavaFormat.formatArgs($node.getArgs()) )
+##
+#set( $elementType = $JavaFormat.findElementType($node) )
+##
+#if ( $JavaFormat.isNull($elementType) )
+	${JavaFormat.format($node.getObject())}(${args})
+#else
+	((${JavaFormat.format($elementType)}) ${JavaFormat.format($node.getObject())}.get(${args}))
+#end

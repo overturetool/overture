@@ -101,6 +101,7 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
@@ -485,6 +486,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMapSeqStateDesignatorCG.class, templateStructure.STATE_DESIGNATOR_PATH + "MapSeq");
 		
 		//Object designators
+		nodeTemplateFileNames.put(AApplyObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "Apply");
 		nodeTemplateFileNames.put(AFieldObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "Field");
 		nodeTemplateFileNames.put(AIdentifierObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "Identifier");
 		nodeTemplateFileNames.put(ANewObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "New");
