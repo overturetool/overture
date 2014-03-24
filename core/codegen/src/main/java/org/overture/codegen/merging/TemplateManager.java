@@ -43,7 +43,7 @@ import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
@@ -51,6 +51,7 @@ import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
@@ -99,7 +100,6 @@ import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -281,9 +281,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ANewExpCG.class, templateStructure.EXP_PATH + "New");
 		
-		nodeTemplateFileNames.put(AVariableExpCG.class, templateStructure.EXP_PATH + "Variable");
+		nodeTemplateFileNames.put(AIdentifierVarExpCG.class, templateStructure.EXP_PATH + "Variable");
 		
-		nodeTemplateFileNames.put(AExplicitVariableExpCG.class, templateStructure.EXP_PATH + "ExplicitVariable");
+		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH + "ExplicitVariable");
 		
 		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXP_PATH + "InstanceOf");
 		

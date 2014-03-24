@@ -137,7 +137,7 @@ objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
 //	|	[location]:location}
 	=   {apply} [object]:objectDesignatorCG [args]:expCG*
     |   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
-    |   {identifier} [exp]:expCG//[name]:java_String
+    |   {identifier} [exp]:expCG.#Var//[name]:java_String
     |   {new} [exp]:expCG.new
     |   {self}// [self]:java_String
     ;
@@ -179,8 +179,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{field} [object]:expCG [memberName]: java_String//[memberName]:LexNameToken [field]:LexIdentifierToken
     |	{apply} [root]:expCG [args]:expCG*// (argtypes):type* (recursive):definition
 	|	{new} [name]:nameCG.type [args]:expCG*
-	|   {variable} [original]:java_String //Change original to name...
-	|	{explicitVariable} [classType]:typeCG.class [name]:java_String
+	|	#Var
 	|	{instanceof} [classType]:typeCG.class [objRef]:expCG
     |	#Literal
     |	{self}
@@ -197,6 +196,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Map
     |	{mkBasic} [arg]:expCG
     |	#Quantifier
+    ;
+
+#Var {-> package='org.overture.codegen.cgast.expressions'}
+    =   {identifier} [original]:java_String //Change original to name...
+	|	{explicit} [classType]:typeCG.class [name]:java_String
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}

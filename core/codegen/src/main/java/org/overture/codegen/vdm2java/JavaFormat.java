@@ -18,10 +18,11 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
@@ -35,7 +36,6 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
@@ -303,7 +303,7 @@ public class JavaFormat
 		{
 			String name = field.getName();
 			
-			AVariableExpCG varExp = new AVariableExpCG();
+			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			varExp.setOriginal(name);
 			varExp.setType(field.getType().clone());
 			args.add(varExp);
@@ -353,7 +353,7 @@ public class JavaFormat
 			AIdentifierStateDesignatorCG id = new AIdentifierStateDesignatorCG();
 			id.setName(name);
 			
-			AVariableExpCG varExp = new AVariableExpCG();
+			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			varExp.setType(field.getType().clone());
 			varExp.setOriginal(paramName);
 
@@ -774,10 +774,10 @@ public class JavaFormat
 		AApplyExpCG applyExp = (AApplyExpCG) node;
 		PExpCG root = applyExp.getRoot();
 		
-		if(!(root instanceof AExplicitVariableExpCG))
+		if(!(root instanceof AExplicitVarExpCG))
 			return false;
 		
-		AExplicitVariableExpCG explicitVar = (AExplicitVariableExpCG) root;
+		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
 		
 		AClassTypeCG classType = explicitVar.getClassType();
 		

@@ -12,12 +12,12 @@ import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -62,7 +62,7 @@ public class JavaFormatAssistant
 		
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
-		AVariableExpCG varExp = new AVariableExpCG();
+		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 		varExp.setOriginal(formalParamName);
 		varExp.setType(new AObjectTypeCG());
 		cast.setExp(varExp);
@@ -94,7 +94,7 @@ public class JavaFormatAssistant
 
 		instanceOfExp.setType(new ABoolBasicTypeCG());
 
-		AVariableExpCG objRef = new AVariableExpCG();
+		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
 		objRef.setOriginal(formalParamName);
 		objRef.setType(new AObjectTypeCG());
 		instanceOfExp.setObjRef(objRef);
@@ -106,13 +106,13 @@ public class JavaFormatAssistant
 		return instanceOfExp;
 	}
 	
-	public static AAddrNotEqualsBinaryExpCG consParamNotNullComp(AVariableExpCG param)
+	public static AAddrNotEqualsBinaryExpCG consParamNotNullComp(AIdentifierVarExpCG param)
 	{
 		AAddrNotEqualsBinaryExpCG fieldComparison = new AAddrNotEqualsBinaryExpCG();
 		
 		fieldComparison.setType(new ABoolBasicTypeCG());
 		
-		AVariableExpCG instanceField = new AVariableExpCG();
+		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(param.getType().clone());
 		instanceField.setOriginal(param.getOriginal());
 		
@@ -129,11 +129,11 @@ public class JavaFormatAssistant
 		AClassTypeCG classType = new AClassTypeCG();
 		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
 		
-		AVariableExpCG root = new AVariableExpCG();
+		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
 		root.setType(classType);
 		root.setOriginal(field.getName());
 		
-		AVariableExpCG argument = new AVariableExpCG();
+		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
 		//argument.setType(field.getType().clone());
 		argument.setOriginal(field.getName());
 
@@ -152,14 +152,14 @@ public class JavaFormatAssistant
 		AEqualsBinaryExpCG fieldComparison = new AEqualsBinaryExpCG();
 		fieldComparison.setType(new ABoolBasicTypeCG());
 		
-		AVariableExpCG instanceField = new AVariableExpCG();
+		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(field.getType().clone());
 		instanceField.setOriginal(field.getName());
 
 		AFieldExpCG formalParamField = new AFieldExpCG();
 		formalParamField.setType(field.getType().clone());
 
-		AVariableExpCG formalParam = new AVariableExpCG();
+		AIdentifierVarExpCG formalParam = new AIdentifierVarExpCG();
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
 		formalParam.setType(recordType);
@@ -192,7 +192,7 @@ public class JavaFormatAssistant
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
-		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
+		AExplicitVarExpCG member = new AExplicitVarExpCG();
 		member.setType(returnType.clone());
 		AClassTypeCG classType = new AClassTypeCG();
 		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
@@ -205,7 +205,7 @@ public class JavaFormatAssistant
 
 		for (AFieldDeclCG field : fields)
 		{
-			AVariableExpCG nextArg = new AVariableExpCG();
+			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
 			nextArg.setOriginal(field.getName());
 			nextArg.setType(field.getType().clone());
 			args.add(nextArg);

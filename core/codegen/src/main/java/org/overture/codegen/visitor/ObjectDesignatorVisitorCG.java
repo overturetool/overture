@@ -15,6 +15,7 @@ import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
@@ -76,7 +77,13 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 
 		AIdentifierObjectDesignatorCG idObjDesignator = new AIdentifierObjectDesignatorCG();
 		
-		idObjDesignator.setExp(expCg);
+		if(!(expCg instanceof SVarExpCG))
+		{
+			question.addUnsupportedNode(node, "Expected variable expression for identifier object designator. Got: " + expCg);
+			return null;
+		}
+		
+		idObjDesignator.setExp((SVarExpCG) expCg);
 
 		return idObjDesignator;
 	}

@@ -11,15 +11,15 @@ import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVariableExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.expressions.AVariableExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
@@ -154,7 +154,7 @@ public class TransformationAssistantCG
 	
 	public PExpCG consLessThanCheck(String varName, long value)
 	{
-		AVariableExpCG left = new AVariableExpCG();
+		AIdentifierVarExpCG left = new AIdentifierVarExpCG();
 		left.setType(new AIntNumericBasicTypeCG());
 		left.setOriginal(varName);
 		
@@ -170,7 +170,7 @@ public class TransformationAssistantCG
 	
 	protected PExpCG consBoolCheck(String boolVarName, boolean negate)
 	{
-		AVariableExpCG boolVarExp = new AVariableExpCG();
+		AIdentifierVarExpCG boolVarExp = new AIdentifierVarExpCG();
 		boolVarExp.setType(new ABoolBasicTypeCG());
 		boolVarExp.setOriginal(boolVarName);
 
@@ -253,7 +253,7 @@ public class TransformationAssistantCG
 	
 	public PExpCG consInstanceCall(PTypeCG instanceType, String instanceName, PTypeCG returnType, String memberName, PExpCG arg)
 	{
-		AVariableExpCG instance = new AVariableExpCG();
+		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
 		instance.setOriginal(instanceName);
 		instance.setType(instanceType.clone());
 
@@ -336,7 +336,7 @@ public class TransformationAssistantCG
 	
 	public AVarLocalDeclCG consCompResultDecl(PTypeCG collectionType, String varDeclName, String className, String memberName) throws AnalysisException
 	{
-		AExplicitVariableExpCG member = new AExplicitVariableExpCG();
+		AExplicitVarExpCG member = new AExplicitVarExpCG();
 		member.setType(collectionType);
 		member.setClassType(consClassType(className));
 		member.setName(memberName);
@@ -355,7 +355,7 @@ public class TransformationAssistantCG
 	
 	public PStmCG consConditionalIncrement(String counterName, PExpCG predicate)
 	{
-		AVariableExpCG col = new AVariableExpCG();
+		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
 		col.setType(new AIntNumericBasicTypeCG());
 		col.setOriginal(counterName);
 		
@@ -372,7 +372,7 @@ public class TransformationAssistantCG
 	public PStmCG consConditionalAdd(String addMethod, String resCollectionName, PExpCG predicate, PExpCG... args)
 	{
 		//TODO: Set type
-		AVariableExpCG col = new AVariableExpCG();
+		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
 		col.setOriginal(resCollectionName);
 		
 		AIdentifierObjectDesignatorCG identifier = new AIdentifierObjectDesignatorCG();
