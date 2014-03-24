@@ -1,0 +1,80 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class X {
+    public static final VDMMap xs = MapUtil.map(new Maplet(1L, new X()));
+    public static final VDMMap ys = MapUtil.map(new Maplet(1L,
+                MapUtil.map(new Maplet(1L, new X()))));
+    public static final VDMMap zs = MapUtil.map(new Maplet(1L,
+                MapUtil.map(
+                    new Maplet(1L, MapUtil.map(new Maplet(1L, new X()))))));
+
+    public X() {
+    }
+
+    public static Number f() {
+        return 1L;
+    }
+
+    public Number m1() {
+        return ((X) xs.get(1L)).f();
+    }
+
+    public Number m2() {
+        return ((X) ((VDMMap) ys.get(1L)).get(1L)).f();
+    }
+
+    public Number m3() {
+        return ((X) ((VDMMap) ((VDMMap) zs.get(1L)).get(1L)).get(1L)).f();
+    }
+
+    public Number m4() {
+        return new X().f();
+    }
+
+    public Number m5() {
+        return ((X) map_xs(1L, 2L).get(1L)).f();
+    }
+
+    public Number m6() {
+        return ((X) ((VDMMap) map_ys(1L, 2L).get(1L)).get(1L)).f();
+    }
+
+    public Number m7() {
+        return ((X) ((VDMMap) ((VDMMap) map_zs(1L, 2L).get(1L)).get(1L)).get(1L)).f();
+    }
+
+    public VDMMap map_xs(Number pa, Number pb) {
+        return xs.clone();
+    }
+
+    public VDMMap map_ys(Number pa, Number pb) {
+        return ys.clone();
+    }
+
+    public VDMMap map_zs(Number pa, Number pb) {
+        return zs.clone();
+    }
+}
+
+##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        X x = new X();
+
+        return x.m1().longValue() + x.m2().longValue() + x.m3().longValue() +
+        x.m4().longValue() + x.m5().longValue() + x.m6().longValue() +
+        x.m7().longValue();
+    }
+}
+##########
