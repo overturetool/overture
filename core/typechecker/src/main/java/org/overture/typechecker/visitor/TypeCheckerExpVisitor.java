@@ -1575,7 +1575,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPBindAssistant().getMultipleBindList(node.getBind()));
 
-		def.apply(THIS, question);
+		def.apply(THIS, question.newConstraint(null));
 
 		PType rt = null;
 		PBind bind = node.getBind();
@@ -3066,7 +3066,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
-		PType etype = exp.apply(THIS, question);
+		PType etype = exp.apply(THIS, question.newConstraint(null));
 
 		if (!question.assistantFactory.createPTypeAssistant().isSeq(etype))
 		{

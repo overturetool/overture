@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="10" line="31" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm"/>
-<message column="10" line="32" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm"/>
 <message column="19" line="32" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm"/>
+<message column="10" line="32" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesexpr-03.vdm"/>
 <result/>
 </testResult>
