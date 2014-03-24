@@ -217,14 +217,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<OoAstInfo, PTypeCG>
 	public PTypeCG caseAOperationType(AOperationType node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return node.getResult().apply(question.getTypeVisitor(), question);
+		return question.getTypeAssistant().consMethodType(node.getParameters(), node.getResult(), question);
 	}
 
 	@Override
 	public PTypeCG caseAFunctionType(AFunctionType node, OoAstInfo question)
 			throws AnalysisException
 	{
-		return node.getResult().apply(question.getTypeVisitor(), question);
+		return question.getTypeAssistant().consMethodType(node.getParameters(), node.getResult(), question);
 	}
 	
 	@Override
