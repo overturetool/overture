@@ -42,13 +42,16 @@ import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -57,6 +60,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -280,9 +284,14 @@ public class JavaFormat
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(defClass.getName());
 		typeName.setName(record.getName());
+		
 		ARecordTypeCG returnType = new ARecordTypeCG();
 		returnType.setName(typeName);
-		method.setReturnType(returnType);
+		
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType);
+		
+		method.setMethodType(methodType);
 		
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(returnType.clone());
@@ -686,7 +695,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public boolean shouldClone(PExpCG exp)//Called with AVariableExpCG and AHeadUnaryExpCG 
+	public boolean shouldClone(PExpCG exp) 
 	{
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
@@ -695,7 +704,18 @@ public class JavaFormat
 		}
 		
 		PTypeCG type = exp.getType();
-		if(usesStructuralEquivalence(type))
+		
+		if(parent instanceof AIdentifierObjectDesignatorCG)
+		{
+			//Don't clone the variable associated with an identifier object designator
+			return false;
+		}
+		else if(parent instanceof AApplyObjectDesignatorCG)
+		{
+			//No need to clone the expression - we only use it for lookup
+			return findElementType((AApplyObjectDesignatorCG) parent) == null;
+		}
+		else if(usesStructuralEquivalence(type))
 		{
 			if(parent instanceof ANewExpCG)
 			{
@@ -777,9 +797,14 @@ public class JavaFormat
 		//"structural" equivalence
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
 		
+		
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.getParams().add(new AObjectTypeCG());
+		methodType.setResult(new ABoolBasicTypeCG());
+		
 		equalsMethod.setAccess(JAVA_PUBLIC);
 		equalsMethod.setName("equals");
-		equalsMethod.setReturnType(new ABoolBasicTypeCG());
+		equalsMethod.setMethodType(methodType);
 		
 		//Add the formal parameter "Object obj" to the method
 		AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
@@ -845,7 +870,11 @@ public class JavaFormat
 		String intTypeName = JAVA_INT;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		intBasicType.setName(intTypeName);
-		hashcodeMethod.setReturnType(intBasicType);
+		
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(intBasicType);
+		
+		hashcodeMethod.setMethodType(methodType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
@@ -865,7 +894,11 @@ public class JavaFormat
 		toStringMethod.setName("toString");
 
 		AStringTypeCG returnType = new AStringTypeCG();
-		toStringMethod.setReturnType(returnType);
+		
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType);
+		
+		toStringMethod.setMethodType(methodType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		
@@ -946,5 +979,69 @@ public class JavaFormat
 	public String nextVarName(String prefix)
 	{
 		return tempVarNameGen.nextVarName(prefix);
+	}
+	
+	public PTypeCG findElementType(AApplyObjectDesignatorCG designator)
+	{
+		int appliesCount = 0;
+		
+		PObjectDesignatorCG object = designator.getObject();
+
+		while(object != null)
+		{
+			if(object instanceof AIdentifierObjectDesignatorCG)
+			{
+				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
+			
+				PTypeCG type = id.getExp().getType();
+				
+				int methodTypesCount = 0;
+				
+				while (type instanceof AMethodTypeCG)
+				{
+					methodTypesCount++;
+					AMethodTypeCG methodType = (AMethodTypeCG) type;
+					type = methodType.getResult();
+				}
+				
+				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
+				{
+					if (appliesCount == methodTypesCount)
+					{
+						if (type instanceof SSeqTypeCG)
+						{
+							return ((SSeqTypeCG) type).getSeqOf();
+						}
+
+						if (type instanceof SMapTypeCG)
+						{
+							return ((SMapTypeCG) type).getTo();
+						}
+					}
+					
+					if(type instanceof SSeqTypeCG)
+					{
+						type = ((SSeqTypeCG) type).getSeqOf();
+					}
+
+					if(type instanceof SMapTypeCG)
+					{
+						type = ((SMapTypeCG) type).getTo();
+					}
+					
+					methodTypesCount++;
+				}
+
+				return null;
+			}
+			else if(object instanceof AApplyObjectDesignatorCG)
+			{
+				AApplyObjectDesignatorCG applyObj = (AApplyObjectDesignatorCG) object;
+				appliesCount++;
+				object = applyObj.getObject();
+			}
+		}
+		
+		return null;
 	}
 }
