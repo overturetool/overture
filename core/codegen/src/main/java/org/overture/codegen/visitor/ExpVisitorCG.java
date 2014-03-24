@@ -4,10 +4,13 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
@@ -1104,9 +1107,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		boolean isLocalDef = varDef instanceof ALocalDefinition;
 		boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
+		boolean isExplOp = varDef instanceof SOperationDefinition;
+		boolean isExplFunc = varDef instanceof SFunctionDefinition;
 		boolean isAssignmentDef = varDef instanceof AAssignmentDefinition;
 		
-		boolean isDefInOwningClass = inOwningClass && (isLocalDef || isInstanceVarDef || isAssignmentDef);
+		boolean isDefInOwningClass = inOwningClass && (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc || isAssignmentDef);
 
 		boolean isImplicit = !node.getName().getExplicit();
 		
