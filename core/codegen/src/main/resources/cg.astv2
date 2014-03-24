@@ -62,7 +62,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
-		[return_type]:typeCG
+		[methodType]:typeCG.method
 		[name]:java_String
 		[formalParams]:localDeclCG.formalParam*
 		[isConstructor]:java_Boolean //Is it appropriate to call it method then?
@@ -135,9 +135,9 @@ stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'
 
 objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
 //	|	[location]:location}
-//  =   {apply} [object]:objectDesignator [args]:exp*
-    =   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
-    |   {identifier} [exp]:expCG.variable//[name]:java_String
+	=   {apply} [object]:objectDesignatorCG [args]:expCG*
+    |   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
+    |   {identifier} [exp]:expCG//[name]:java_String
     |   {new} [exp]:expCG.new
     |   {self}// [self]:java_String
     ;
@@ -317,6 +317,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*
+    |   {method} [params]:typeCG* [result]:typeCG
     |	#map
     |	#set
     |	#seq
