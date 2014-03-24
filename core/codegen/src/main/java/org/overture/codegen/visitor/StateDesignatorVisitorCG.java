@@ -16,10 +16,6 @@ import org.overture.codegen.ooast.OoAstInfo;
 
 public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
 {
-	public StateDesignatorVisitorCG()
-	{
-	}
-	
 	@Override
 	public PStateDesignatorCG caseAFieldStateDesignator(
 			AFieldStateDesignator node, OoAstInfo question)
