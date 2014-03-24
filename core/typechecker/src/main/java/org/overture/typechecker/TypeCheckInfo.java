@@ -110,40 +110,42 @@ public class TypeCheckInfo
 	public final Environment env;
 	public NameScope scope;
 	public LinkedList<PType> qualifiers;
-	public final PType constraint;
+	public final PType constraint;	// expressions
+	public final PType returnType;	// statements
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers,
-			PType constraint)
+			PType constraint, PType returnType)
 	{
 		this.assistantFactory = assistantFactory;
 		this.env = env;
 		this.scope = scope;
 		this.qualifiers = qualifiers;
 		this.constraint = constraint;
+		this.returnType = returnType;
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers)
 	{
-		this(assistantFactory, env, scope, qualifiers, null);
+		this(assistantFactory, env, scope, qualifiers, null, null);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope)
 	{
-		this(assistantFactory, env, scope, null, null);
+		this(assistantFactory, env, scope, null, null, null);
 	}
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env)
 	{
-		this(assistantFactory, env, null, null, null);
+		this(assistantFactory, env, null, null, null, null);
 	}
 
 	public TypeCheckInfo()
 	{
-		this(null, null, null, null, null);
+		this(null, null, null, null, null, null);
 	}
 
 	@Override
@@ -154,13 +156,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newConstraint(PType newConstraint)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, newConstraint);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, scope, qualifiers, newConstraint, returnType);
 		return info;
 	}
 
 	public TypeCheckInfo newScope(NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers, constraint);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, env, newScope, qualifiers, constraint, returnType);
 		return info;
 	}
 
@@ -171,13 +173,13 @@ public class TypeCheckInfo
 
 	public TypeCheckInfo newInfo(Environment newEnv)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers, constraint);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, scope, qualifiers, constraint, returnType);
 		return info;
 	}
 
 	public TypeCheckInfo newInfo(Environment newEnv, NameScope newScope)
 	{
-		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers, constraint);
+		TypeCheckInfo info = new TypeCheckInfo(assistantFactory, newEnv, newScope, qualifiers, constraint, returnType);
 		return info;
 	}
 

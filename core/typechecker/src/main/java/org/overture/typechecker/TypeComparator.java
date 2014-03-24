@@ -23,12 +23,15 @@
 
 package org.overture.typechecker;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -962,5 +965,63 @@ public class TypeComparator
 		}
 
 		return undefined;
+	}
+
+	/**
+	 * Calculate the intersection of two types.
+	 */
+	public static PType intersect(PType a, PType b)
+	{
+		Set<PType> tsa = new HashSet<PType>();
+		Set<PType> tsb = new HashSet<PType>();
+
+		if (a instanceof AUnionType)
+		{
+			AUnionType uta = (AUnionType)a;
+			tsa.addAll(uta.getTypes());
+		}
+		else
+		{
+			tsa.add(a);
+		}
+		
+		if (b instanceof AUnionType)
+		{
+			AUnionType utb = (AUnionType)b;
+			tsb.addAll(utb.getTypes());
+		}
+		else
+		{
+			tsb.add(b);
+		}
+		
+		// Keep largest types which are compatible (eg. nat and int choses int)
+		Set<PType> result = new HashSet<PType>();
+		
+		for (PType atype: tsa)
+		{
+			for (PType btype: tsb)
+			{
+				if (isSubType(atype, btype, assistantFactory))
+				{
+					result.add(btype);
+				}
+				else if (isSubType(btype, atype, assistantFactory))
+				{
+					result.add(atype);
+				}
+			}
+		}
+		
+		if (result.isEmpty())
+		{
+			return null;
+		}
+		else
+		{
+			List<PType> list = new Vector<PType>();
+			list.addAll(result);
+			return AstFactory.newAUnionType(a.getLocation(), list);
+		}
 	}
 }

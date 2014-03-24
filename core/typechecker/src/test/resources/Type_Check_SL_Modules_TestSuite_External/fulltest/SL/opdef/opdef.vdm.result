@@ -31,6 +31,7 @@
 <message column="3" line="62" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="opdef.vdm"/>
 <message column="3" line="66" message="State variable a is not this type" messageType="error" number="3032" resource="opdef.vdm"/>
 <message column="14" line="72" message="Errs clause is not bool -&gt; bool" messageType="error" number="3307" resource="opdef.vdm"/>
+<message column="4" line="88" message="Value is not of the right type" messageType="error" number="3327" resource="opdef.vdm"/>
 <message column="3" line="86" message="Operation returns unexpected type" messageType="error" number="3027" resource="opdef.vdm"/>
 <result/>
 </testResult>

@@ -20,6 +20,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
+import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
@@ -508,6 +509,27 @@ public class PTypeAssistantTC extends PTypeAssistant
 		if (constraint != null)
 		{
 			if (!TypeComparator.compatible(constraint, actual))
+			{
+				TypeChecker.report(3327, "Value is not of the right type", location);
+				TypeChecker.detail2("Actual", actual, "Expected", constraint);
+			}
+		}
+
+		return actual;
+	}
+
+	public PType checkReturnType(PType constraint, PType actual, ILexLocation location)
+	{
+		PTypeAssistantTC assistant = af.createPTypeAssistant();
+		
+		if (constraint != null && !(actual instanceof AVoidType) && !(assistant.isUnknown(actual)))
+		{
+			if (assistant.hasVoid(actual) && !(constraint instanceof AVoidType))
+			{
+				TypeChecker.report(3328, "Statement may return void value", location);
+				TypeChecker.detail2("Actual", actual, "Expected", constraint);
+			}
+			else if (!TypeComparator.compatible(constraint, actual))
 			{
 				TypeChecker.report(3327, "Value is not of the right type", location);
 				TypeChecker.detail2("Actual", actual, "Expected", constraint);
