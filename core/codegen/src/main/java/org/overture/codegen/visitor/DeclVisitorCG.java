@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
@@ -161,7 +162,15 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		boolean isStatic = true;
 		String operationName = node.getName().getName();
 		
-		PTypeCG returnType = ((AFunctionType) node.getType()).getResult().apply(question.getTypeVisitor(), question);
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		
+		if(!(type instanceof AMethodTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + type);
+			return null;
+		}
+		
+		AMethodTypeCG methodType = (AMethodTypeCG) type;
 		
 		PStmCG body = null;
 		if(node.getIsUndefined())
@@ -175,7 +184,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		method.setAccess(access);
 		method.setStatic(isStatic);
-		method.setReturnType(returnType);
+		method.setMethodType(methodType);
 		method.setName(operationName);		
 		method.setBody(body);
 		method.setIsConstructor(false);
@@ -188,11 +197,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		for(int i = 0; i < ptypes.size(); i++)
 		{
-			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			PTypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-			param.setType(type);
+			param.setType(paramType);
 			param.setName(name);
 			
 			formalParameters.add(param);
@@ -221,7 +230,15 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();
-		PTypeCG returnType = node.getType().apply(question.getTypeVisitor(), question);		
+		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);	
+		
+		if(!(type instanceof AMethodTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: " + type);
+			return null;
+		}
+		
+		AMethodTypeCG methodType = (AMethodTypeCG) type;
 		PStmCG body = node.getBody().apply(question.getStmVisitor(), question);
 		boolean isConstructor = node.getIsConstructor();
 		boolean isAbstract = body == null;
@@ -230,7 +247,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		method.setAccess(access);
 		method.setStatic(isStatic);
-		method.setReturnType(returnType);
+		method.setMethodType(methodType);
 		method.setName(operationName);
 		method.setBody(body);
 		method.setIsConstructor(isConstructor);
@@ -243,11 +260,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 		for(int i = 0; i < ptypes.size(); i++)
 		{
-			PTypeCG type = ptypes.get(i).apply(question.getTypeVisitor(), question);
+			PTypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-			param.setType(type);
+			param.setType(paramType);
 			param.setName(name);
 			
 			formalParameters.add(param);
