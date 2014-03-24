@@ -1,5 +1,8 @@
 package org.overture.codegen.assistant;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -14,6 +17,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
@@ -96,6 +100,23 @@ public class TypeAssistantCG extends AssistantBase
 			return null;
 		}
 
+	}
+	
+	public AMethodTypeCG consMethodType(List<PType> paramTypes, PType resultType, OoAstInfo question) throws AnalysisException
+	{
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		
+		PTypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
+		
+		methodType.setResult(resultCg);
+		
+		LinkedList<PTypeCG> paramsCg = methodType.getParams();
+		for(PType paramType : paramTypes)
+		{
+			paramsCg.add(paramType.apply(question.getTypeVisitor(), question));
+		}
+		
+		return methodType;
 	}
 	
 	//TODO: Copied from UML2VDM. Factor out in assistant
