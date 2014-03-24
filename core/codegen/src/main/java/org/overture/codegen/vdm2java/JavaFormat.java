@@ -1006,19 +1006,6 @@ public class JavaFormat
 				
 				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
 				{
-					if (appliesCount == methodTypesCount)
-					{
-						if (type instanceof SSeqTypeCG)
-						{
-							return ((SSeqTypeCG) type).getSeqOf();
-						}
-
-						if (type instanceof SMapTypeCG)
-						{
-							return ((SMapTypeCG) type).getTo();
-						}
-					}
-					
 					if(type instanceof SSeqTypeCG)
 					{
 						type = ((SSeqTypeCG) type).getSeqOf();
@@ -1027,6 +1014,11 @@ public class JavaFormat
 					if(type instanceof SMapTypeCG)
 					{
 						type = ((SMapTypeCG) type).getTo();
+					}
+					
+					if (appliesCount == methodTypesCount)
+					{
+						return type;						
 					}
 					
 					methodTypesCount++;
