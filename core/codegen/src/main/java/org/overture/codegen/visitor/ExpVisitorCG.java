@@ -990,21 +990,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAIndicesUnaryExp(AIndicesUnaryExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		PType expType = node.getExp().getType();
-		
-		if(!(expType instanceof SSeqType))
-			throw new AnalysisExceptionCG("Expected sequence type for indices unary expression. Got: " + node.getClass().getName(), node.getLocation());
-		
-		PExp exp = node.getExp();
-		
-		PTypeCG typeCg = expType.apply(question.getTypeVisitor(), question);
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		
-		AIndicesUnaryExpCG indicesExp = new AIndicesUnaryExpCG();
-		indicesExp.setType(typeCg);
-		indicesExp.setExp(expCg);
-		
-		return indicesExp;
+		return question.getExpAssistant().handleUnaryExp(node, new AIndicesUnaryExpCG(), question);
 	}
 	
 	@Override
