@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -94,7 +95,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 			AClassTypeCG classType = new AClassTypeCG();
 			classType.setName(name);
 			
-			constructor.setReturnType(classType);
+			AMethodTypeCG methodType = new AMethodTypeCG();
+			methodType.setResult(classType);
+			
+			constructor.setMethodType(methodType);
 			constructor.setAccess(IOoAstConstants.PUBLIC);
 			constructor.setIsConstructor(true);
 			constructor.setName(name);
