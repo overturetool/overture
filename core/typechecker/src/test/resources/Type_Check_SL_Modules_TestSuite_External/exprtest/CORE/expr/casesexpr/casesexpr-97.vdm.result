@@ -4,6 +4,5 @@
 <message column="18" line="41" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
 <message column="19" line="44" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
 <message column="16" line="47" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesexpr-97.vdm"/>
-<message column="25" line="47" message="Value is not of the right type" messageType="error" number="3327" resource="casesexpr-97.vdm"/>
 <result/>
 </testResult>
