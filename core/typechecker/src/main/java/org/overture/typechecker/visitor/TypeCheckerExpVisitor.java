@@ -3194,7 +3194,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			question.assistantFactory.createPTypeAssistant().isSet(question.constraint))
 		{
 			 PType stype = question.assistantFactory.createPTypeAssistant().getSet(question.constraint).getSetof();
-			 argConstraint = question.newConstraint(AstFactory.newASetType(node.getLocation(), stype));
+			 argConstraint = question.newConstraint(stype);
 		}
 
 		PType etype = exp.apply(THIS, argConstraint);
