@@ -1,0 +1,35 @@
+class A
+
+operations
+
+public op1 : A ==> nat
+op1 (a) == a.getMe().f();
+
+public  op2 : A ==> nat
+op2 (a) == a.getMe().getMe().f();
+
+public  op3 : A ==> nat
+op3 (a) == a.getMe().getMe().getMe().f();
+
+public getMe : () ==> A
+getMe () == return self;
+
+functions
+
+public f :  () -> nat
+f () == 1;
+
+end A
+
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	let a = new A()
+	in
+		return a.op1(a) + a.op2(a) + a.op3(a);
+
+end Entry
