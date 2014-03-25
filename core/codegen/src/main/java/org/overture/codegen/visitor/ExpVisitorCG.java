@@ -1102,7 +1102,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
-		if (owningClass == null || isDefInOwningClass || isImplicit)
+		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isImplicit)
 		{
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			
