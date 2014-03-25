@@ -17,6 +17,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
@@ -94,7 +95,24 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			
 			return returnStm;
 		}
-	}	
+	}
+	
+	@Override
+	public PStmCG caseAAtomicStm(AAtomicStm node, OoAstInfo question)
+			throws AnalysisException
+	{
+		LinkedList<AAssignmentStm> assignments = node.getAssignments();
+		
+		ABlockStmCG stmBlock = new ABlockStmCG();
+		LinkedList<PStmCG> stmsCg = stmBlock.getStatements();
+		
+		for(AAssignmentStm assignment : assignments)
+		{
+			stmsCg.add(assignment.apply(question.getStmVisitor(), question));
+		}
+		
+		return stmBlock;
+	}
 		
 	@Override
 	public PStmCG caseALetBeStStm(ALetBeStStm node, OoAstInfo question)
