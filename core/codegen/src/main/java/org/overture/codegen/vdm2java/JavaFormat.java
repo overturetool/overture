@@ -204,10 +204,11 @@ public class JavaFormat
 	
 	private static boolean isNumberDereferenceCandidate(PExpCG node)
 	{
-		return !(node instanceof SNumericBinaryExpCG)
+		return (!(node instanceof SNumericBinaryExpCG)
 				&& !(node instanceof SLiteralExpCGBase)
 				&& !(node instanceof AIsolationUnaryExpCG)
-				&& !(node instanceof SUnaryExpCG);
+				&& !(node instanceof SUnaryExpCG))
+				|| node instanceof AHeadUnaryExpCG;
 	}
 
 	public String formatName(INode node) throws AnalysisException
