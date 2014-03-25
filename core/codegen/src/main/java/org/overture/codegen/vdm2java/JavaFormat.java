@@ -714,7 +714,7 @@ public class JavaFormat
 		else if(parent instanceof AApplyObjectDesignatorCG)
 		{
 			//No need to clone the expression - we only use it for lookup
-			return findElementType((AApplyObjectDesignatorCG) parent) == null;
+			return usesStructuralEquivalence(exp.getType()) && findElementType((AApplyObjectDesignatorCG) parent) == null;
 		}
 		else if(usesStructuralEquivalence(type))
 		{
