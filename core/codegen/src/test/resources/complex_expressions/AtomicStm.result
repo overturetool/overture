@@ -1,0 +1,34 @@
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op() {
+        Number a = 0L;
+        Number b = 0L;
+        a = 2L;
+        b = 4L;
+
+        return a.longValue() + b.longValue();
+    }
+}
+
+##########
+import org.overture.codegen.javalib.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new A().op();
+    }
+}
+##########
