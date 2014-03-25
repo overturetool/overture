@@ -21,6 +21,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
@@ -48,7 +49,7 @@ public class JavaCodeGenUtil
 	
 	public static List<SClassDefinition> consMergedParseList(List<File> files) throws AnalysisException
 	{
-		VDMRT vdmrt = new VDMRT();
+		VDMPP vdmrt = new VDMPP();
 		vdmrt.setQuiet(true);
 		
 		ExitStatus status = vdmrt.parse(files);

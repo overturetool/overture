@@ -55,7 +55,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Settings.dialect = Dialect.VDM_RT;
+		Settings.dialect = Dialect.VDM_PP;
 		
 		if (args.length <= 1)
 			Logger.getLog().println("Wrong input!");
