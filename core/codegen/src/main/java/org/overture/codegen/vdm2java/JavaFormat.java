@@ -1032,6 +1032,10 @@ public class JavaFormat
 				appliesCount++;
 				object = applyObj.getObject();
 			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		return null;
