@@ -32,6 +32,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -67,17 +68,20 @@ public class Vdm2JavaCommand extends AbstractHandler
 		final IProject project = ((IProject) firstElement);
 		final IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 
+		try
+		{
+			Settings.release = vdmProject.getLanguageVersion();
+			Settings.dialect = vdmProject.getDialect();
+		} catch (CoreException e)
+		{
+			Activator.log("Problems setting VDM language version and dialect", e);
+			e.printStackTrace();
+		}
+		
 		CodeGenConsole.GetInstance().show();
 		
 		deleteMarkers(project);
 
-		// Validate model before attempting to code generate it
-		if (vdmProject == null)
-		{
-			CodeGenConsole.GetInstance().println("Could not get project from selection");
-			return null;
-		}
-		
 		final IVdmModel model = vdmProject.getModel();
 
 		if(!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
