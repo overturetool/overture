@@ -28,4 +28,4 @@ script:
   - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms
   - echo travis_fold:end:compile_ide
 after_success:
-  - if [ $TRAVIS_BRANCH == "development" ] ; then { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn deploy --settings ~/.m2/mySettings.xml; } ; fi
+  - if [ $TRAVIS_BRANCH == "development" ] ; then { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true deploy --settings ~/.m2/mySettings.xml; } ; fi
