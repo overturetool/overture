@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
@@ -62,7 +63,6 @@ public class XmlResultReaderWriter<R>
 	public void saveInXml() throws ParserConfigurationException,
 			TransformerException
 	{
-
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
@@ -73,6 +73,14 @@ public class XmlResultReaderWriter<R>
 		rootElement.setAttribute("type", type);
 
 		createWarningsAndErrors(doc, rootElement);
+
+		String oldLineSeparator = System.getProperty("line.separator");
+		if (Properties.forceUnixLineEndings) {
+			// Output using LF line endings (UNIX-style),
+			// but only for this file.
+			oldLineSeparator = System.getProperty("line.separator");
+			System.setProperty("line.separator", "\n");
+		}
 
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -86,6 +94,10 @@ public class XmlResultReaderWriter<R>
 
 		transformer.transform(source, result);
 
+		if (Properties.forceUnixLineEndings) {
+			// Restore line endings
+			System.setProperty("line.separator", oldLineSeparator);
+		}
 	}
 
 	private void createWarningsAndErrors(Document doc, Element rootElement)
