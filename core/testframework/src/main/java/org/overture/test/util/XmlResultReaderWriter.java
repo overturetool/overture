@@ -23,7 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XmlResultReaderWritter<R>
+public class XmlResultReaderWriter<R>
 {
 	public interface IResultStore<T>
 	{
@@ -37,17 +37,17 @@ public class XmlResultReaderWritter<R>
 	private String type;
 	private IResultStore<R> resultStore;
 
-	public XmlResultReaderWritter()
+	public XmlResultReaderWriter()
 	{
 	}
 
-	public XmlResultReaderWritter(File file, IResultStore<R> store)
+	public XmlResultReaderWriter(File file, IResultStore<R> store)
 	{
 		this.file = file;
 		this.resultStore = store;
 	}
 
-	// public XmlResultReaderWritter(String path)
+	// public XmlResultReaderWriter(String path)
 	// {
 	// this(new File(path));
 	// }

@@ -23,7 +23,7 @@ import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
 
-public class MessageReaderWritter
+public class MessageReaderWriter
 {
 
 	enum MsgType
@@ -40,12 +40,12 @@ public class MessageReaderWritter
 	String result = "";
 	final File file;
 
-	public MessageReaderWritter(File file)
+	public MessageReaderWriter(File file)
 	{
 		this.file = file;
 	}
 
-	public MessageReaderWritter(String path)
+	public MessageReaderWriter(String path)
 	{
 		this(new File(path));
 	}
