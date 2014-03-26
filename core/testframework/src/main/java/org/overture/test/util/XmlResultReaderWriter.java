@@ -28,7 +28,7 @@ public class XmlResultReaderWriter<R>
 {
 	public interface IResultStore<T>
 	{
-		void encondeResult(T result, Document doc, Element resultElement);
+		void encodeResult(T result, Document doc, Element resultElement);
 
 		T decodeResult(Node node);
 	}
@@ -137,7 +137,7 @@ public class XmlResultReaderWriter<R>
 		}
 
 		Element resultElement = doc.createElement("result");
-		resultStore.encondeResult(result.result, doc, resultElement);
+		resultStore.encodeResult(result.result, doc, resultElement);
 		rootElement.appendChild(resultElement);
 
 	}
