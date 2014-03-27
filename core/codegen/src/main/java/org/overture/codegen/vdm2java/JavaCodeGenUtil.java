@@ -22,7 +22,6 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.interpreter.VDMPP;
-import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
