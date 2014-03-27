@@ -15,8 +15,6 @@ public class IOoAstConstants
 	public static final String MATH_CLASS_NAME = "MATH";
 	public static final String UTIL_CLASS_NAME = "VDMUtil";
 	
-	public static final String UTIL_RESOURCE_FOLDER = "lib";
-	
 	public static final String[] UTIL_NAMES = {IO_CLASS_NAME, MATH_CLASS_NAME, UTIL_CLASS_NAME};
 
 	public static final String[] CLASS_NAMES_USED_IN_VDM = {

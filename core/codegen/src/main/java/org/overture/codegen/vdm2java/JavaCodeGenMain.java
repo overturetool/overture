@@ -11,7 +11,6 @@ import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.ooast.NodeInfo;
@@ -67,7 +66,7 @@ public class JavaCodeGenMain
 			{
 				List<File> files = GeneralUtils.getFilesFromPaths(args);
 				
-				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources", IOoAstConstants.UTIL_RESOURCE_FOLDER));
+				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				files.addAll(libFiles);
 				
 				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files);
