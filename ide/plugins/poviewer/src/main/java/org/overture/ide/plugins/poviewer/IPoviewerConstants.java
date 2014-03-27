@@ -21,9 +21,9 @@ package org.overture.ide.plugins.poviewer;
 public interface IPoviewerConstants
 {
 
-	String PoTableViewId = "org.overture.ide.plugins.poviewer.views.PoTableView";
-	String PoOverviewTableViewId = "org.overture.ide.plugins.poviewer.views.PoOverviewTableView";
-	String ProofObligationPerspectiveId = "org.overture.ide.plugins.poviewer.perspective";
+	String PoTableViewId = "org.overture.ide.plugins.poviewer.views.PoTableView-new";
+	String PoOverviewTableViewId = "org.overture.ide.plugins.poviewer.views.PoOverviewTableView-new";
+	String ProofObligationPerspectiveId = "org.overture.ide.plugins.poviewer.perspective-new";
 	String PoViewerId = "org.overture.ide.plugins.poviewer";
 	final String ExternalEditorId = "org.overture.ide.plugins.externaleditor.ui.VdmExternalEditor";
 	
