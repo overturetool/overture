@@ -3,8 +3,8 @@
 <message column="13" line="14" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
 <message column="11" line="14" message="Definition 'a' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
 <message column="9" line="34" message="Definition 'i' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
-<message column="13" line="45" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
 <message column="11" line="45" message="Definition 'a' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
+<message column="13" line="45" message="Definition 'b' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
 <message column="20" line="48" message="r at 48:12 hidden by r" messageType="warning" number="5008" resource="modules06.vdm"/>
 <message column="20" line="48" message="Definition 'r' not used" messageType="warning" number="5000" resource="modules06.vdm"/>
 <message column="13" line="76" message="Duplicate definition: n" messageType="warning" number="5007" resource="modules06.vdm"/>

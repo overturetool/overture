@@ -14,6 +14,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.overture.test.framework.Properties;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
@@ -23,11 +24,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XmlResultReaderWritter<R>
+public class XmlResultReaderWriter<R>
 {
 	public interface IResultStore<T>
 	{
-		void encondeResult(T result, Document doc, Element resultElement);
+		void encodeResult(T result, Document doc, Element resultElement);
 
 		T decodeResult(Node node);
 	}
@@ -37,17 +38,17 @@ public class XmlResultReaderWritter<R>
 	private String type;
 	private IResultStore<R> resultStore;
 
-	public XmlResultReaderWritter()
+	public XmlResultReaderWriter()
 	{
 	}
 
-	public XmlResultReaderWritter(File file, IResultStore<R> store)
+	public XmlResultReaderWriter(File file, IResultStore<R> store)
 	{
 		this.file = file;
 		this.resultStore = store;
 	}
 
-	// public XmlResultReaderWritter(String path)
+	// public XmlResultReaderWriter(String path)
 	// {
 	// this(new File(path));
 	// }
@@ -62,7 +63,6 @@ public class XmlResultReaderWritter<R>
 	public void saveInXml() throws ParserConfigurationException,
 			TransformerException
 	{
-
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
@@ -73,6 +73,14 @@ public class XmlResultReaderWritter<R>
 		rootElement.setAttribute("type", type);
 
 		createWarningsAndErrors(doc, rootElement);
+
+		String oldLineSeparator = System.getProperty("line.separator");
+		if (Properties.forceUnixLineEndings) {
+			// Output using LF line endings (UNIX-style),
+			// but only for this file.
+			oldLineSeparator = System.getProperty("line.separator");
+			System.setProperty("line.separator", "\n");
+		}
 
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -86,6 +94,10 @@ public class XmlResultReaderWritter<R>
 
 		transformer.transform(source, result);
 
+		if (Properties.forceUnixLineEndings) {
+			// Restore line endings
+			System.setProperty("line.separator", oldLineSeparator);
+		}
 	}
 
 	private void createWarningsAndErrors(Document doc, Element rootElement)
@@ -125,7 +137,7 @@ public class XmlResultReaderWritter<R>
 		}
 
 		Element resultElement = doc.createElement("result");
-		resultStore.encondeResult(result.result, doc, resultElement);
+		resultStore.encodeResult(result.result, doc, resultElement);
 		rootElement.appendChild(resultElement);
 
 	}
