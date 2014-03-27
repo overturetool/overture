@@ -12,7 +12,8 @@ public class A {
 
         for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext();) {
             Rec e = (Rec) iterator_1.next();
-            IO.printf("%s ", SeqUtil.seq(e.clone()));
+
+            //Skip;
         }
     }
 
@@ -20,7 +21,8 @@ public class A {
         for (Iterator iterator_2 = SetUtil.set(1L, 2L, 3L).iterator();
                 iterator_2.hasNext();) {
             Number n = (Number) iterator_2.next();
-            IO.printf("%s ", SeqUtil.seq(n));
+
+            //Skip;
         }
     }
 
@@ -28,14 +30,16 @@ public class A {
         for (Iterator iterator_3 = SetUtil.set().iterator();
                 iterator_3.hasNext();) {
             Object e = (Object) iterator_3.next();
-            IO.print("x");
+
+            //Skip;
         }
     }
 
     public void op3() {
         for (Iterator iterator_4 = f().iterator(); iterator_4.hasNext();) {
             Number n = (Number) iterator_4.next();
-            IO.printf("%s ", SeqUtil.seq(n));
+
+            //Skip;
         }
     }
 

@@ -11,13 +11,13 @@ public class A {
         long toVar_1 = 1L;
 
         for (long i = 1L; i <= toVar_1; i++) {
-            IO.print("kat");
+            //Skip;
         }
 
         long toVar_2 = 1L;
 
         for (long i = 4L; i <= toVar_2; i++) {
-            IO.print("hej");
+            //Skip;
         }
     }
 }

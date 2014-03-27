@@ -5,8 +5,8 @@ operations
 public op : () ==> ()
 op () ==
 (
-	for i = 1 to 1 do IO`print("kat");
-	for i = 4 to 1 do IO`print("hej");
+	for i = 1 to 1 do skip;
+	for i = 4 to 1 do skip;
 )
 
 end A

@@ -12,19 +12,19 @@ let x = {mk_Rec(1),mk_Rec(2),mk_Rec(3)}
 in
 	for all e in set x do
 	( 
-		IO`printf("%s ", [e]);
+		skip;
 	);
 
 public op1 : () ==> ()
 op1 () == 
-	for all n in set {1,2,3} do IO`printf("%s ", [n]);
+	for all n in set {1,2,3} do skip;
 	
 public op2 : () ==> ()
-op2 () == for all e in set {} do IO`print("x");
+op2 () == for all e in set {} do skip;
 
 public op3 : () ==> ()
 op3 () == 
-	for all n in set f() do IO`printf("%s ", [n]);
+	for all n in set f() do skip;
 
 functions
 
