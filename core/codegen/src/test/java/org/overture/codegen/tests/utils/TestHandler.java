@@ -23,7 +23,7 @@ public abstract class TestHandler
 			+ "	      FileOutputStream fout = new FileOutputStream( file );" 
 			+ "	      ObjectOutputStream oos = new ObjectOutputStream(fout);"
 			+ "       Object exp = exp();"
-			+ "		  System.out.println(exp);" 
+			+ "		  java.lang.System.out.println(exp);" 
 			+ "	      oos.writeObject( exp );" 
 			+ "	      oos.close();"
 			+ "     }catch(Exception ex){ "
@@ -55,7 +55,7 @@ public abstract class TestHandler
 	public void initVdmEnv()
 	{
 		Settings.release = Release.VDM_10;
-		Settings.dialect = Dialect.VDM_RT;
+		Settings.dialect = Dialect.VDM_PP;
 	}
 
 	public abstract void writeGeneratedCode(File parent, File resultFile) throws IOException;
@@ -105,7 +105,7 @@ public abstract class TestHandler
 
 		if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
 		{
-			outputDir = new File(parent, IOoAstConstants.QUOTES_INTERFACE_NAME);
+			outputDir = new File(parent, IJavaCodeGenConstants.QUOTES_PACKAGE_NAME);
 			outputDir.mkdirs();
 		}
 
