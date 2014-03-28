@@ -29,7 +29,8 @@ public class Records {
 
             Vector2D other = ((Vector2D) obj);
 
-            return (x == other.x) && (y == other.y);
+            return (x.longValue() == other.x.longValue()) &&
+            (y.longValue() == other.y.longValue());
         }
 
         public int hashCode() {

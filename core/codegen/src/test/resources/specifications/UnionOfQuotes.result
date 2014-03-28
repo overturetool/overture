@@ -10,13 +10,13 @@ public class A {
     }
 
     public void op(Number v) {
-        if (v == Quotes.Red) {
+        if (v.longValue() == Quotes.Red) {
             //Skip;
         }
     }
 
     public void op2(Number v) {
-        if (v == Quotes.A) {
+        if (v.longValue() == Quotes.A) {
             //Skip;
         }
     }

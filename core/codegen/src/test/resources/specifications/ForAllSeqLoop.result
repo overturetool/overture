@@ -70,7 +70,7 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return x == other.x;
+            return x.longValue() == other.x.longValue();
         }
 
         public int hashCode() {

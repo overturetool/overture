@@ -65,7 +65,7 @@ public class B {
 
             RecB other = ((RecB) obj);
 
-            return b == other.b;
+            return b.longValue() == other.b.longValue();
         }
 
         public int hashCode() {

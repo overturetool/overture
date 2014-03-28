@@ -15,7 +15,7 @@ public class Entry {
                 iterator_1.hasNext() && forAllExpResult_1;) {
             Number x = ((Number) iterator_1.next());
 
-            forAllExpResult_1 = x != 10L;
+            forAllExpResult_1 = x.longValue() != 10L;
         }
 
         boolean forAllExpResult_2 = true;
@@ -25,7 +25,7 @@ public class Entry {
                 iterator_2.hasNext() && forAllExpResult_2;) {
             Number y = ((Number) iterator_2.next());
 
-            forAllExpResult_2 = y == 2L;
+            forAllExpResult_2 = y.longValue() == 2L;
         }
 
         return MapUtil.map(new Maplet(forAllExpResult_1, forAllExpResult_2));

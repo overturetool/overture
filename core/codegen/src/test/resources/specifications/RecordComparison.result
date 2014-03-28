@@ -24,7 +24,7 @@ public class A {
 
             R other = ((R) obj);
 
-            return x == other.x;
+            return x.longValue() == other.x.longValue();
         }
 
         public int hashCode() {

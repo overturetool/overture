@@ -15,7 +15,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             x = ((Number) iterator_1.next());
-            success_1 = x == 45L;
+            success_1 = x.longValue() == 45L;
         }
 
         if (!(success_1)) {
