@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.constants.IText;
 import org.overture.config.Release;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
@@ -35,20 +34,33 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			String className = TestUtils.getJavaModuleName(classCgStr);
 			File tempFile = consTempFile(className, parent, classCgStr);
 			
-			String output;
-			
 			if(!className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
 			{
-				output = classCgStr.toString().replaceFirst(className, className + " implements Serializable");
-				output = output.replaceFirst("public", "import java.io.*;" + IText.NEW_LINE + IText.NEW_LINE + " public");
+				int classNameIdx = classCgStr.indexOf(className);
 				
+				int prv = classCgStr.indexOf("private");
+				int pub = classCgStr.indexOf("public");
+				int abstr = classCgStr.indexOf("abstract");
+				
+				int min = prv >= 0 && prv < pub ? prv : pub;
+				min = abstr >= 0  && abstr < min ? abstr : min;
+				
+				if(min < 0)
+				{
+					min = classNameIdx;
+				}
+				
+				int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
+				
+				String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
+				
+				String replacement = "import java.io.*;\n\n" + 
+									 toReplace + " implements Serializable";
+				
+				classCgStr.replace(min, firstLeftBraceIdx, replacement);
 			}
-			else
-			{
-				output = classCgStr.toString();
-			}
-			
-			writeToFile(output, tempFile);
+
+			writeToFile(classCgStr.toString(), tempFile);
 		}		
 	}
 }
