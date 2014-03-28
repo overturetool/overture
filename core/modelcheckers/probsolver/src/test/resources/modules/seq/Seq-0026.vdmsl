@@ -1,4 +1,4 @@
 operations
 
-str() m : seq of char
-  post m = "This is a string"
+str() m : token
+  post m = mk_token("This is a string")

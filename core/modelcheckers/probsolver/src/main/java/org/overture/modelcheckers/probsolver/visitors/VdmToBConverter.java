@@ -109,6 +109,7 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeq1SeqType;
@@ -1097,12 +1098,18 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseATupleExp(ATupleExp node) throws AnalysisException
 	{
+	    // It is necessary that tyeps of all arguments are same.
 		LinkedList<PExp> args = node.getArgs();
+		//System.err.println("in caseATupleExp: linkedlist: " + args);
 		ACoupleExpression cpl = new ACoupleExpression();
-		//System.out.println("in Tuple : " + args);
+		for(PExp elem : args) {
+		    cpl.getList().add(exp(elem));
+		}
+		/*
 		cpl.getList().add(exp(args.get(0)));
 		cpl.getList().add(exp(args.get(1)));
-
+		*/
+		//System.err.println("in caseATupleExp: linkedlist: " + cpl);
 		return cpl;
 
 	}
@@ -1170,6 +1177,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAMkTypeExp(AMkTypeExp node) throws AnalysisException
 	{
+	    System.err.println("In caseAMkTypeExp: " + node);
 		if (node.getType() instanceof ARecordInvariantType)// properly needs type compare
 		{
 			List<PRecEntry> entities = new ArrayList<PRecEntry>();
@@ -1304,7 +1312,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
-	    //System.err.println("AMkBasicExp: " + node + " -- " + node.getArg());
+	    // System.err.println("In caseAMkBasicExp: " + node + " -- " + node.getArg());
 		if (node.getType() instanceof ATokenBasicType)
 		{
 			return node.getArg().apply(this);
@@ -1323,7 +1331,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAStringLiteralExp(AStringLiteralExp node)
 			throws AnalysisException
 	{
-	    return new AStringExpression(new TStringLiteral(node.getValue().toString()));
+	    return new AStringExpression(new TStringLiteral(node.getValue().getValue()));
 	}
 
 	/* types */
@@ -1334,14 +1342,14 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return new ABoolSetExpression();
 	}
-	/*
+
 	@Override
 	public Node caseACharBasicType(ACharBasicType node)
 			throws AnalysisException
 	{
 	    return new AStringExpression();
 	}
-	*/
+
 
 	@Override
 	public Node caseAIntNumericBasicType(AIntNumericBasicType node)
@@ -1393,7 +1401,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	@Override
 	public Node caseASeq1SeqType(ASeq1SeqType node) throws AnalysisException
-	{
+	    {
 		if (node.getSeqof() instanceof ACharBasicType)
 		{
 		    return new AStringSetExpression();
@@ -1416,6 +1424,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new ASetExtensionExpression(exps);
 	}
 
+	/*
+	@Override
+	public Node caseAProductType(AProductType node) throws AnalysisException
+	{
+	    return
+	}
+	*/
 	/**
 	 * Unknown types may exist in a type check VDM specification as the inner type for e.g. set, seq etc.
 	 * <p>

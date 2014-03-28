@@ -240,10 +240,19 @@ public class BToVdmConverter extends DepthFirstAdapter
 		{
 			PType type;
 			List<PExp> args = new Vector<PExp>();
+			/*
 			type = ((AProductType) expectedType).getTypes().getFirst();
 			args.add(convert(type, node.getList().getFirst()));
 			type = ((AProductType) expectedType).getTypes().getLast();
 			args.add(convert(type, node.getList().getLast()));
+			*/
+			// It is needed that types of all elements are same.
+			type = ((AProductType) expectedType).getTypes().getFirst();
+
+			for (PExpression pExp : node.getList())
+			{
+			    args.add(convert(type, pExp));
+			}
 			result = AstFactory.newATupleExp(loc, args);
 		} else if(expectedType instanceof ATokenBasicType)
 		{ 
