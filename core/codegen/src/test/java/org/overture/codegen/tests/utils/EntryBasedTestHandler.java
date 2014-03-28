@@ -22,6 +22,6 @@ public abstract class EntryBasedTestHandler extends ExecutableTestHandler
 	@Override
 	public Value interpretVdm(File intputFile) throws Exception
 	{
-		return InterpreterUtil.interpret(Dialect.VDM_RT, VDM_ENTRY_CALL, intputFile);
+		return InterpreterUtil.interpret(Dialect.VDM_PP, VDM_ENTRY_CALL, intputFile);
 	}
 }
