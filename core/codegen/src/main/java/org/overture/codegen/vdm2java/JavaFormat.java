@@ -187,7 +187,9 @@ public class JavaFormat
 		
 		INode parent = node.parent();
 			
-		if (parent instanceof SNumericBinaryExpCG)
+		if (parent instanceof SNumericBinaryExpCG ||
+			parent instanceof AEqualsBinaryExpCG ||
+			parent instanceof ANotEqualsBinaryExpCG)
 		{
 			PExpCG exp = (PExpCG) node;
 			PTypeCG type = exp.getType();
