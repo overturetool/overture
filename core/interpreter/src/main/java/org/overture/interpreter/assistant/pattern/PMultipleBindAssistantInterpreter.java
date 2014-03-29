@@ -1,8 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.patterns.ASetMultipleBind;
-import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -27,21 +25,21 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	{
 //		try
 //		{
-//			return mb.apply(af.getBindValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
+			return mb.apply(af.getBindValuesCollector(), ctxt);
 //		} catch (AnalysisException e)
 //		{
-//			return new ValueList();
+//			return null;
 //		}
-		if (mb instanceof ASetMultipleBind)
-		{
-			return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb, ctxt);
-		} else if (mb instanceof ATypeMultipleBind)
-		{
-			return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind) mb, ctxt);
-		} else
-		{
-		}
-		return null;
+//		if (mb instanceof ASetMultipleBind)
+//		{
+//			return ASetMultipleBindAssistantInterpreter.getBindValues((ASetMultipleBind) mb, ctxt);
+//		} else if (mb instanceof ATypeMultipleBind)
+//		{
+//			return ATypeMultipleBindAssistantInterpreter.getBindValues((ATypeMultipleBind) mb, ctxt);
+//		} else
+//		{
+//		}
+//		return null;
 	}
 
 	public static ValueList getValues(PMultipleBind mb, ObjectContext ctxt)

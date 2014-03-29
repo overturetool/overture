@@ -1,16 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-import org.overture.interpreter.runtime.VdmRuntime;
-import org.overture.interpreter.runtime.VdmRuntimeError;
-import org.overture.interpreter.values.SetValue;
-import org.overture.interpreter.values.Value;
-import org.overture.interpreter.values.ValueList;
-import org.overture.interpreter.values.ValueSet;
 
 public class ASetMultipleBindAssistantInterpreter
 {
@@ -22,39 +12,39 @@ public class ASetMultipleBindAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getBindValues(ASetMultipleBind mb, Context ctxt)
-	{
-		try
-		{
-			ValueList vl = new ValueList();
-			ValueSet vs = mb.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
-			vs.sort();
-
-			for (Value v : vs)
-			{
-				v = v.deref();
-
-				if (v instanceof SetValue)
-				{
-					SetValue sv = (SetValue) v;
-					vl.addAll(sv.permutedSets());
-				} else
-				{
-					vl.add(v);
-				}
-			}
-
-			return vl;
-		} catch (AnalysisException e)
-		{
-			if (e instanceof ValueException)
-			{
-				VdmRuntimeError.abort(mb.getLocation(), (ValueException) e);
-			}
-			return null;
-
-		}
-	}
+//	public static ValueList getBindValues(ASetMultipleBind mb, Context ctxt)
+//	{
+//		try
+//		{
+//			ValueList vl = new ValueList();
+//			ValueSet vs = mb.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+//			vs.sort();
+//
+//			for (Value v : vs)
+//			{
+//				v = v.deref();
+//
+//				if (v instanceof SetValue)
+//				{
+//					SetValue sv = (SetValue) v;
+//					vl.addAll(sv.permutedSets());
+//				} else
+//				{
+//					vl.add(v);
+//				}
+//			}
+//
+//			return vl;
+//		} catch (AnalysisException e)
+//		{
+//			if (e instanceof ValueException)
+//			{
+//				VdmRuntimeError.abort(mb.getLocation(), (ValueException) e);
+//			}
+//			return null;
+//
+//		}
+//	}
 
 //	public static ValueList getValues(ASetMultipleBind mb, ObjectContext ctxt)
 //	{

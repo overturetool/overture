@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant.pattern;
 
+import java.awt.print.Printable;
+import java.io.Console;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,6 +29,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
+import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
@@ -120,6 +123,13 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	public static List<NameValuePairList> getAllNamedValues(PPattern pattern,
 			Value expval, Context ctxt) throws PatternMatchException
 	{
+//		try
+//		{
+//			return pattern.apply(af.getAllNamedValuesLocator(), new AllNamedValuesLocator.Newquestion(expval, ctxt));
+//		} catch (AnalysisException e)
+//		{
+//			return new List<NameValuePairList>;
+//		}
 		if (pattern instanceof ABooleanPattern)
 		{
 			return ABooleanPatternAssistantInterpreter.getAllNamedValues((ABooleanPattern) pattern, expval, ctxt);
