@@ -11,7 +11,6 @@ import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.ooast.NodeInfo;
 import org.overture.codegen.utils.GeneralUtils;
@@ -97,8 +96,8 @@ public class JavaCodeGenMain
 					Logger.getLog().println(quotes.getContent());
 				}
 
-				File file = new File("target" + IText.SEPARATOR_CHAR + "sources"
-						+ IText.SEPARATOR_CHAR);
+				File file = new File("target" + File.separatorChar + "sources"
+						+ File.separatorChar);
 
 				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
 				

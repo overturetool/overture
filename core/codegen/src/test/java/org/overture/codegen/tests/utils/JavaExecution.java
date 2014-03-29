@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.overture.codegen.constants.IText;
-
 public class JavaExecution
 {
 	public static String run(File cp, String mainClassName)
@@ -53,7 +51,7 @@ public class JavaExecution
 			
 			while ((line = input.readLine()) != null)
 			{
-				out.append(line + IText.NEW_LINE);
+				out.append(line + "\n");
 			}
 
 			input.close();

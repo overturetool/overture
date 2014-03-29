@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.overture.codegen.constants.IText;
-
 public class CodeGenTestUtil
 {
 	
@@ -20,7 +18,7 @@ public class CodeGenTestUtil
 			String line = "";
 			while ((line = reader.readLine()) != null)
 			{								
-				content.append(line + IText.NEW_LINE);
+				content.append(line + "\n");
 			}
 			reader.close();
 			

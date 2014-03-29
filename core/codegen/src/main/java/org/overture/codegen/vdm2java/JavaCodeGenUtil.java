@@ -15,7 +15,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -126,17 +125,17 @@ public class JavaCodeGenUtil
 		for (Violation violation : reservedWordViolations)
 		{
 			buffer.append("Reserved name violation: " + violation
-					+ IText.NEW_LINE);
+					+ "\n");
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + IText.NEW_LINE);
+			buffer.append("Type name violation: " + violation + "\n");
 		}
 		
 		for(Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + IText.NEW_LINE);
+			buffer.append("Temporary variable violation: " + violation + "\n");
 		}
 		
 		return buffer.toString();
@@ -150,13 +149,13 @@ public class JavaCodeGenUtil
 		
 		for (Violation violation : violations)
 		{
-			buffer.append(violation + IText.NEW_LINE);
+			buffer.append(violation + "\n");
 		}
 		
-		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);
+		int lastIndex = buffer.lastIndexOf("\n");
 		
 		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
+			buffer.replace(lastIndex, lastIndex + 1, "");
 		
 		return buffer.toString();
 	}

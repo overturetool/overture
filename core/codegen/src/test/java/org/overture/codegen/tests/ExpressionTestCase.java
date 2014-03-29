@@ -3,7 +3,6 @@ package org.overture.codegen.tests;
 import java.io.File;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase
@@ -33,9 +32,9 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 	protected String getTestOverview(String input, String expectedResult, String actualResult)
 	{
 		return "Input:   \t" + input
-		+ IText.NEW_LINE + "Expected:\t"
-		+ expectedResult + IText.NEW_LINE
-		+ "Actual:  \t" + actualResult;
+		+ "\nExpected:\t"
+		+ expectedResult
+		+ "\nActual:  \t" + actualResult;
 	}
 		
 }

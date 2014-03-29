@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -95,8 +94,8 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 
 		System.out.println("\n*******");
 		Assert.assertTrue("The code generator did not produce the expected output: "
-				+ IText.NEW_LINE + testOverview, resultOk);
-		System.out.println("Test passed: " + IText.NEW_LINE + testOverview);
+				+ "\n" + testOverview, resultOk);
+		System.out.println("Test passed: \n" + testOverview);
 		System.out.println();
 	}
 

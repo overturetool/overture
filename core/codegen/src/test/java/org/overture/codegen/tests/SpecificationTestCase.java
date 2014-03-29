@@ -7,14 +7,13 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {
-	private static final String MODULE_DELIMITER = IText.NEW_LINE  + "##########" + IText.NEW_LINE ;
+	private static final String MODULE_DELIMITER = "\n##########\n";
 
 	public SpecificationTestCase()
 	{
@@ -59,8 +58,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		if(quoteData != null)
 		{
-			generatedCode.append(IText.NEW_LINE);
-			generatedCode.append(quoteData.getContent());
+			generatedCode.append("\n" + quoteData.getContent());
 			generatedCode.append(MODULE_DELIMITER);
 		}
 				

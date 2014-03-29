@@ -14,7 +14,6 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.constants.IText;
 import org.overture.codegen.logging.Logger;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
@@ -96,7 +95,7 @@ public class GeneralCodeGenUtils
 			String line = "", oldtext = "";
 			while ((line = reader.readLine()) != null)
 			{
-				oldtext += line + IText.NEW_LINE;
+				oldtext += line + "\n";
 			}
 			reader.close();
 			String newtext = oldtext.replaceAll(regex, replacement);

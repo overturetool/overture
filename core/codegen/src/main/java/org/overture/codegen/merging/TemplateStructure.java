@@ -1,6 +1,7 @@
 package org.overture.codegen.merging;
 
-import org.overture.codegen.constants.IText;
+import java.io.File;
+
 
 public class TemplateStructure
 {
@@ -35,32 +36,32 @@ public class TemplateStructure
 	
 	public TemplateStructure(String rootFolder)
 	{
-		root = rootFolder + IText.SEPARATOR_CHAR;
+		root = rootFolder + File.separatorChar;
 		
-		DECL_PATH = root + "Declarations" + IText.SEPARATOR_CHAR;
-		LOCAL_DECLS_PATH = root + "LocalDecls" + IText.SEPARATOR_CHAR;
+		DECL_PATH = root + "Declarations" + File.separatorChar;
+		LOCAL_DECLS_PATH = root + "LocalDecls" + File.separatorChar;
 		
-		STM_PATH = root + "Statements" + IText.SEPARATOR_CHAR;
+		STM_PATH = root + "Statements" + File.separatorChar;
 		
-		EXP_PATH = root + "Expressions" + IText.SEPARATOR_CHAR;
-		BINARY_EXP_PATH = EXP_PATH + "Binary" + IText.SEPARATOR_CHAR;
-		NUMERIC_BINARY_EXP_PATH = BINARY_EXP_PATH + "Numeric" + IText.SEPARATOR_CHAR;
-		BOOL_BINARY_EXP_PATH = BINARY_EXP_PATH + "Bool" + IText.SEPARATOR_CHAR;
-		UNARY_EXP_PATH = EXP_PATH + "Unary" + IText.SEPARATOR_CHAR;
-		SEQ_EXP_PATH = EXP_PATH + "Seq" + IText.SEPARATOR_CHAR;
-		SET_EXP_PATH = EXP_PATH + "Set" + IText.SEPARATOR_CHAR;
-		MAP_EXP_PATH = EXP_PATH + "Map" + IText.SEPARATOR_CHAR;
-		QUANTIFIER_EXP_PATH = EXP_PATH + "Quantifier" + IText.SEPARATOR_CHAR;
+		EXP_PATH = root + "Expressions" + File.separatorChar;
+		BINARY_EXP_PATH = EXP_PATH + "Binary" + File.separatorChar;
+		NUMERIC_BINARY_EXP_PATH = BINARY_EXP_PATH + "Numeric" + File.separatorChar;
+		BOOL_BINARY_EXP_PATH = BINARY_EXP_PATH + "Bool" + File.separatorChar;
+		UNARY_EXP_PATH = EXP_PATH + "Unary" + File.separatorChar;
+		SEQ_EXP_PATH = EXP_PATH + "Seq" + File.separatorChar;
+		SET_EXP_PATH = EXP_PATH + "Set" + File.separatorChar;
+		MAP_EXP_PATH = EXP_PATH + "Map" + File.separatorChar;
+		QUANTIFIER_EXP_PATH = EXP_PATH + "Quantifier" + File.separatorChar;
 		
-		TYPE_PATH = root + "Types" + IText.SEPARATOR_CHAR;
-		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + IText.SEPARATOR_CHAR;
-		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + IText.SEPARATOR_CHAR;
-		SET_TYPE_PATH = TYPE_PATH + "Set" + IText.SEPARATOR_CHAR;
-		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + IText.SEPARATOR_CHAR;
-		MAP_TYPE_PATH = TYPE_PATH + "Map" + IText.SEPARATOR_CHAR;
+		TYPE_PATH = root + "Types" + File.separatorChar;
+		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + File.separatorChar;
+		BASIC_TYPE_WRAPPERS_PATH = TYPE_PATH + "BasicWrappers" + File.separatorChar;
+		SET_TYPE_PATH = TYPE_PATH + "Set" + File.separatorChar;
+		SEQ_TYPE_PATH = TYPE_PATH + "Seq" + File.separatorChar;
+		MAP_TYPE_PATH = TYPE_PATH + "Map" + File.separatorChar;
 		
-		STATE_DESIGNATOR_PATH = root + "StateDesignator" + IText.SEPARATOR_CHAR;
-		OBJECT_DESIGNATOR_PATH = root + "ObjectDesignator" + IText.SEPARATOR_CHAR;
+		STATE_DESIGNATOR_PATH = root + "StateDesignator" + File.separatorChar;
+		OBJECT_DESIGNATOR_PATH = root + "ObjectDesignator" + File.separatorChar;
 	}
 	
 }
