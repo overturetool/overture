@@ -27,6 +27,7 @@ public class A {
 }
 
 ##########
+
 package quotes;
 
 public interface Quotes {

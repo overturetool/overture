@@ -16,4 +16,5 @@ public class A {
         return SetUtil.set(1L, 2L, 3L);
     }
 }
+
 ##########

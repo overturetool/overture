@@ -26,4 +26,5 @@ public class Entry {
         return seqCompResult_1;
     }
 }
+
 ##########

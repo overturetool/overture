@@ -15,4 +15,5 @@ public class A {
         return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
     }
 }
+
 ##########

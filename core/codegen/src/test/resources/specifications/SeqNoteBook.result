@@ -171,4 +171,5 @@ public class NoteBook {
         return !(SeqUtil.equals(messages, other.messages));
     }
 }
+
 ##########

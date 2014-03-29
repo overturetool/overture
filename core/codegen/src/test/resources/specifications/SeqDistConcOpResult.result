@@ -18,4 +18,5 @@ public class A {
         return SeqUtil.seq("hej", "kat");
     }
 }
+
 ##########

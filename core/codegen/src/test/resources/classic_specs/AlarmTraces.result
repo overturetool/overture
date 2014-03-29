@@ -198,6 +198,7 @@ public class Entry {
 }
 
 ##########
+
 package quotes;
 
 public interface Quotes {

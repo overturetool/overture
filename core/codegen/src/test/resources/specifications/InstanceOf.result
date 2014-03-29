@@ -13,4 +13,5 @@ public class A {
         return a instanceof A;
     }
 }
+
 ##########

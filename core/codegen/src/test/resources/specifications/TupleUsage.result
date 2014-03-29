@@ -46,4 +46,5 @@ public class A {
         return ((Tuple) a.get(0)).clone();
     }
 }
+
 ##########
