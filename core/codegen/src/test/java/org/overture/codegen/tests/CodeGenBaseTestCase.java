@@ -73,7 +73,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		assertTrue("Result file " + resultFile.getAbsolutePath()
 				+ " does not exist", resultFile.exists());
 
-		String parsedResult = CodeGenTestUtil.getFileContent(resultFile);
+		String parsedResult = CodeGenTestUtil.getFileContent(resultFile).replaceAll("\r", "");
 		boolean parsed = parsedResult != null;
 
 		Assert.assertTrue("Could not read result file: " + resultFile.getName(), parsed);
@@ -87,7 +87,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 			Assert.fail("Could not generate actual output from file: "
 					+ getName());
 		}
-		boolean resultOk = actual.equals(parsedResult);
+		boolean resultOk = actual.trim().equals(parsedResult);
 
 		String input = CodeGenTestUtil.getFileContent(this.file);
 

@@ -30,8 +30,8 @@ public interface IJavaCodeGenConstants
 	
 	public static final String RUNTIME_EXCEPTION_TYPE_NAME = "RuntimeException";
 	
-	public static final String JAVA_TEMPLATES_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaTemplates";
-	public static final String JAVA_UTILS_ROOT_FOLDER = IText.SEPARATOR_CHAR + "JavaUtils";
+	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
+	public static final String JAVA_UTILS_ROOT_FOLDER = "JavaUtils";
 	
 	public static final String UTILS_PACKAGE_HEADER =  PACKAGE_JAVA_KEYWORD + " utils;";
 	public static final String QUOTES_PACKAGE_NAME = "quotes";

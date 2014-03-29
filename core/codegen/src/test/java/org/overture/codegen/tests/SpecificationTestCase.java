@@ -54,12 +54,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(classCg.getContent());
 			generatedCode.append(MODULE_DELIMITER);
 		}
-		
-		int lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
-		
-		if(lastIndex >= 0)
-			generatedCode.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
-		
+			
 		GeneratedModule quoteData = data.getQuoteValues();
 		
 		if(quoteData != null)
@@ -68,12 +63,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(quoteData.getContent());
 			generatedCode.append(MODULE_DELIMITER);
 		}
-		
-		lastIndex = generatedCode.lastIndexOf(IText.NEW_LINE);
-		
-		if(lastIndex >= 0)
-			generatedCode.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
-		
+				
 		return generatedCode.toString();
 	}
 
@@ -82,5 +72,4 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 	{
 		return getName();
 	}
-	
 }

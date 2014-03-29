@@ -139,11 +139,6 @@ public class JavaCodeGenUtil
 			buffer.append("Temporary variable violation: " + violation + IText.NEW_LINE);
 		}
 		
-		int lastIndex = buffer.lastIndexOf(IText.NEW_LINE);
-		
-		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
-		
 		return buffer.toString();
 	}
 	
@@ -197,13 +192,17 @@ public class JavaCodeGenUtil
 			xwriter.close();
 			tempFile.delete();
 
+			String result = null;
+			
 			if (jalopy.getState() == Jalopy.State.OK
 					|| jalopy.getState() == Jalopy.State.PARSED)
-				return b.toString();
+				result = b.toString();
 			else if (jalopy.getState() == Jalopy.State.WARN)
-				return code;// formatted with warnings
+				result = code;// formatted with warnings
 			else if (jalopy.getState() == Jalopy.State.ERROR)
-				return code; // could not be formatted
+				 result = code; // could not be formatted
+			
+			return result.toString().replaceAll("\r", "");
 
 		} catch (Exception e)
 		{

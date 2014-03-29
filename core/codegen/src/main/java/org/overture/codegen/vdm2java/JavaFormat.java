@@ -621,7 +621,7 @@ public class JavaFormat
 	
 	public String formatOperationBody(PStmCG body) throws AnalysisException
 	{
-		String NEWLINE = "\r\n";
+		String NEWLINE = "\n";
 		if(body == null)
 			return ";";
 		

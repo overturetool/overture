@@ -28,13 +28,8 @@ public class CodeGenTestUtil
 		{
 			return null;
 		}
-		
-		int lastIndex = content.lastIndexOf(IText.NEW_LINE);
-		
-		if(lastIndex >= 0)
-			content.replace(lastIndex, lastIndex + IText.NEW_LINE.length(), "");
-		
-		return content.toString();
+				
+		return content.toString().trim();
 	}
 
 }
