@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -107,12 +106,8 @@ import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.config.Properties;
-import org.overture.parser.lex.BacktrackInputReader;
-import org.overture.parser.lex.DocStreamReader;
-import org.overture.parser.lex.DocxStreamReader;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
-import org.overture.parser.lex.ODFStreamReader;
 import org.overture.util.Base64;
 
 /**
@@ -2040,42 +2035,14 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 		for (File f : interpreter.getSourceFiles())
 		{
-			final InputStreamReader reader = BacktrackInputReader.readerFactory(f, VDMJ.filecharset);
-			if (reader instanceof DocStreamReader
-					|| reader instanceof DocxStreamReader
-					|| reader instanceof ODFStreamReader)
-			{
-				try
-				{
-					SourceFile source = interpreter.getSourceFile(f);
 
-					if (source == null)
-					{
-						System.err.println(f + ": file not found");
-					}
-					else
-					{
-						File html = new File(coverage.getPath() + File.separator
-								+ f.getName() + ".html");
-						PrintWriter pw = new PrintWriter(html, "UTF-8");
-						source.printWordCoverage(pw);
-						pw.close();
-					}
-				}
-				catch (Exception e)
-				{
-					System.err.println("word: " + e.getMessage());
-				}
-			} else
-			{
-				SourceFile source = interpreter.getSourceFile(f);
+			SourceFile source = interpreter.getSourceFile(f);
 
-				File data = new File(coverage.getPath() + File.separator
-						+ f.getName() + ".covtbl");
-				PrintWriter pw = new PrintWriter(data);
-				source.writeCoverage(pw);
-				pw.close();
-			}
+			File data = new File(coverage.getPath() + File.separator
+					+ f.getName() + ".covtbl");
+			PrintWriter pw = new PrintWriter(data);
+			source.writeCoverage(pw);
+			pw.close();
 
 		}
 		

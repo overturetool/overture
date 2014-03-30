@@ -36,6 +36,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -45,6 +46,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
@@ -64,8 +66,10 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -522,7 +526,23 @@ public class OperationValue extends Value
 				}
 			}
 
-			PStm res = solver.solve(name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
+			Interpreter interpreter = Interpreter.getInstance();
+			List<PDefinition> allDefs = new Vector<PDefinition>();
+			if (interpreter instanceof ClassInterpreter)
+			{
+				for (SClassDefinition c : ((ClassInterpreter) interpreter).getClasses())
+				{
+					allDefs.addAll(c.getDefinitions());
+				}
+			} else if (interpreter instanceof ModuleInterpreter)
+			{
+				for (AModuleModules c : ((ModuleInterpreter) interpreter).getModules())
+				{
+					allDefs.addAll(c.getDefs());
+				}
+			}
+
+			PStm res = solver.solve(allDefs,name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)

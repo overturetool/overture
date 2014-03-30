@@ -4,20 +4,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.statements.PStm;
+import org.overture.ast.node.INode;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.PType;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
+import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -39,6 +46,7 @@ public class ProbConverterTestBase
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
+		VdmToBConverter.USE_INITIAL_FIXED_STATE = true;
 	}
 
 	@Rule
@@ -49,23 +57,35 @@ public class ProbConverterTestBase
 	{
 		try
 		{
+			INode result = null;
+			PDefinition def = findFunctionOrOperation(name);
 
-			AImplicitOperationDefinition opDef = findOperation(name);
+			PType tokenType = calculateTokenType();
 
-			HashMap<String, String> emptyMap = new HashMap<String, String>();
-			PStm stm = ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, new SolverConsole());
+			Set<String> quotes = calculateQuotes();
 
-			System.out.println("Result=" + stm);
+			if (def instanceof AImplicitOperationDefinition)
+			{
+				HashMap<String, String> emptyMap = new HashMap<String, String>();
+				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+
+			} else
+			{
+				AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
+				HashMap<String, String> emptyMap = new HashMap<String, String>();
+				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+			}
+			System.out.println("Result=" + result);
 
 		} catch (SolverException e)
 		{
 			if (e.getCause() instanceof UnsupportedTranslationException)
 			{
-				Assert.fail(e.getCause().getMessage());
-				// } else if(e.getCause() instanceof ProvisionException && e.getCause().getCause() instanceof
-				// NullPointerException)
-				// {
-				// Assume.assumeFalse("ProB not installed", false);
+				//TODO we should change to the test framework here for better handling
+				if (!e.getCause().getMessage().startsWith("Not supported"))
+				{
+					Assert.fail(e.getCause().getMessage());
+				}
 			} else
 			{
 				throw e;
@@ -73,11 +93,69 @@ public class ProbConverterTestBase
 		}
 	}
 
-	protected AImplicitOperationDefinition findOperation(String name)
+	private Set<String> calculateQuotes() throws AnalysisException
+	{
+		final QuoteLiteralFinder quoteFinder = new QuoteLiteralFinder();
+		for (PDefinition d : defs)
+		{
+			d.apply(quoteFinder);
+		}
+		return quoteFinder.getQuoteLiterals();
+	}
+
+	protected PType calculateTokenType() throws AnalysisException
+	{
+		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
+		for (PDefinition d : defs)
+		{
+			d.apply(tokenTypeFinder);
+		}
+		return tokenTypeFinder.getTokenType();
+	}
+
+	public static Map<String, PType> getArgTypes(PDefinition def)
+	{
+		Map<String, PType> argTypes = new HashMap<String, PType>();
+
+		if (def instanceof AImplicitOperationDefinition)
+		{
+			final AImplicitOperationDefinition op = (AImplicitOperationDefinition) def;
+			for (APatternListTypePair pl : op.getParameterPatterns())
+			{
+				for (PPattern p : pl.getPatterns())
+				{
+					argTypes.put(p.toString(), pl.getType());
+				}
+			}
+			if (op.getResult() != null)
+			{
+				argTypes.put(op.getResult().getPattern().toString(), op.getResult().getType());
+			}
+		} else if (def instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition fun = (AImplicitFunctionDefinition) def;
+			for (APatternListTypePair pl : fun.getParamPatterns())
+			{
+				for (PPattern p : pl.getPatterns())
+				{
+					argTypes.put(p.toString(), pl.getType());
+				}
+			}
+
+			if (fun.getResult() != null)
+			{
+				argTypes.put(fun.getResult().getPattern().toString(), fun.getResult().getType());
+			}
+		}
+
+		return argTypes;
+	}
+
+	List<PDefinition> defs = null;
+
+	protected PDefinition findFunctionOrOperation(String name)
 			throws AnalysisException
 	{
-
-		List<PDefinition> defs = null;
 
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
@@ -88,17 +166,19 @@ public class ProbConverterTestBase
 			defs = parsePP(file).get(0).getDefinitions();
 		}
 
-		AImplicitOperationDefinition opDef = null;
+		PDefinition opDef = null;
 
 		for (PDefinition d : defs)
 		{
-			if (d instanceof AImplicitOperationDefinition
+			if ((d instanceof AImplicitOperationDefinition || d instanceof AImplicitFunctionDefinition)
 					&& d.getName().getName().equals(name))
 			{
-				opDef = (AImplicitOperationDefinition) d;
+				opDef = d;
 				break;
 			}
+
 		}
+
 		return opDef;
 	}
 
@@ -150,7 +230,7 @@ public class ProbConverterTestBase
 				|| !typeCheckResult.parserResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
-					+ file);
+					+ file + "\n\n" + typeCheckResult.errors);
 		}
 
 		return typeCheckResult.result;

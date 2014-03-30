@@ -1,0 +1,35 @@
+module freetypes
+exports all
+definitions 
+
+
+types BoolOrNat= bool ;
+
+values v : set of BoolOrNat = {true,1}
+
+values v2 : set of bool = {1,'c',true}
+
+values v3 : set of (bool|char) = {1,true}
+
+values v4 : set of (bool|char) = let x : set of bool in x union {1} 
+
+state S of
+ f : set of BoolOrNat
+
+init s == s= mk_S({})
+end 
+
+
+
+operations 
+
+AddNumber(nn : nat) 
+ext wr f : set of BoolOrNat 
+post f = f union {nn};
+
+
+AddBool(nn : bool)
+ext wr f : set of BoolOrNat 
+post f = f union {nn};
+
+end freetypes

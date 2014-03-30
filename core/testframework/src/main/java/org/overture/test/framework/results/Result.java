@@ -46,6 +46,8 @@ public class Result<R>
 			}
 		}
 		buf.append("Result:\n");
+		buf.append(result);
+		
 		return buf.toString();
 	}
 	

@@ -54,6 +54,7 @@ public abstract class AbstractExternalTest extends CommonInterpreterTest
 			Object[] array = new Object[temp.length + 1];
 			System.arraycopy(temp, 0, array, 0, temp.length);
 			array[temp.length] = externalSuiteName;
+			array[1] = ((File)array[3]).getAbsolutePath().substring(((File)array[2]).getAbsolutePath().length()+1).replace("\\", "/");
 			actualTests.add(array);
 		}
 

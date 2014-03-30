@@ -25,8 +25,8 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.getLeft().apply(rootVisitor, question);
-		node.getRight().apply(rootVisitor, question);
+		node.getLeft().apply(rootVisitor, question.newConstraint(null));
+		node.getRight().apply(rootVisitor, question.newConstraint(null));
 
 		if (!PTypeAssistantTC.isNumeric(node.getLeft().getType()))
 		{

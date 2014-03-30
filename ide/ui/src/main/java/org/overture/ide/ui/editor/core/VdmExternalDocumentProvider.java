@@ -38,6 +38,11 @@ import org.overture.ide.ui.editor.partitioning.VdmPartitionScanner;
 
 public class VdmExternalDocumentProvider extends FileDocumentProvider
 {
+	
+	protected boolean isExternalAssociated(IFile file)
+	{
+		return IVdmProject.externalFileContentType.isAssociatedWith(file.getName());
+	}
 
 	@Override
 	protected IDocument createDocument(Object element) throws CoreException
@@ -47,7 +52,7 @@ public class VdmExternalDocumentProvider extends FileDocumentProvider
 		if (element instanceof FileEditorInput)
 		{
 			IFile file = ((FileEditorInput) element).getFile();
-			if (IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
+			if (isExternalAssociated(file))
 			{
 				document = new VdmExternalDocument();
 				if (setDocumentContent(document, (IEditorInput) element, getEncoding(element)))
@@ -120,10 +125,15 @@ public class VdmExternalDocumentProvider extends FileDocumentProvider
 			}
 			if (editorInput instanceof IStorageEditorInput)
 			{
-				document.set(FileUtility.getContentExternalText(file));
+				document.set(getExternalContent(file));
 				return true;
 			}
 		}
 		return false;
+	}
+
+	protected String getExternalContent(IFile file)
+	{
+		return FileUtility.getContentExternalText(file);
 	}
 }

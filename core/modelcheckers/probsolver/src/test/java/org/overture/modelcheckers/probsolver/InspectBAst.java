@@ -25,64 +25,70 @@ public class InspectBAst
 		System.out.println(f.getAst());
 		f.getAst().apply(new ASTPrinter(System.out));
 
-		//f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("[1,2,3,4,5](3)");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("POW({1,2,3})");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("({(1 |-> 3), (2|->4)} ; { (3 |-> 5) ,(4|->1)})");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("{(1 |-> 3), (2|->4)}~");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("iterate({(1 |-> 3), (2|->1), 3 |->2}, 3)");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
+		// f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("{1,2}*{11,12}*{101,102}");
+		f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("[1,2,3,4,5](3)");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("POW({1,2,3})");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("({(1 |-> 3), (2|->4)} ; { (3 |-> 5) ,(4|->1)})");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("{(1 |-> 3), (2|->4)}~");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("iterate({(1 |-> 3), (2|->1), 3 |->2}, 3)");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
 		f = new ClassicalB("1..5");
 		f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("max({1,2,3})");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("5 mod 3");
-		//f.getAst().apply(new ASTPrinter(System.out));
 
-		//f = new ClassicalB("!(n).(n:{1,2,3} => mx>=n)");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("rev([1,2,3])");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("#x.(x:{1,2,3} & x>2)");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("2*2>0 <=> 2>0");
-		//f.getAst().apply(new ASTPrinter(System.out));
+		// f = new ClassicalB("max({1,2,3})");
+		// f.getAst().apply(new ASTPrinter(System.out));
 
-		//f = new ClassicalB("{ x | x:{1,2,3,4,5} & x > 3 }");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("{1|->2|->3}");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("-7-(-3)*(-7/-3)");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("TRUE");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("{\"abc\"|->3, \"def\"|->2}");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		//f = new ClassicalB("{1,2,3}*{10,20}*{100,200,300}");
-		//f.getAst().apply(new ASTPrinter(System.out));
-		
-		f = new ClassicalB("conc([[1,2],[3],[4,5]])");
+		// f = new ClassicalB("5 mod 3");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("!(n).(n:{1,2,3} => mx>=n)");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("rev([1,2,3])");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("#x.(x:{1,2,3} & x>2)");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("2*2>0 <=> 2>0");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("{ x | x:{1,2,3,4,5} & x > 3 }");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("{1|->2|->3}");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("-7-(-3)*(-7/-3)");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("TRUE");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("{\"abc\"|->3, \"def\"|->2}");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("{1,2,3}*{10,20}*{100,200,300}");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		// f = new ClassicalB("conc([[1,2],[3],[4,5]])");
+		// f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("{2|->3|->4}");
 		f.getAst().apply(new ASTPrinter(System.out));
 	}
 
