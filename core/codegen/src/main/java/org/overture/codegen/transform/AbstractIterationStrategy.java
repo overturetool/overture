@@ -23,13 +23,15 @@ public abstract class AbstractIterationStrategy
 	
 	abstract public List<PStmCG> getOuterBlockStms();
 	
+	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
 	
 	protected boolean firstBind;
 	protected boolean lastBind;
 	
-	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant)
+	public AbstractIterationStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant)
 	{
+		this.config = config;
 		this.transformationAssistant = transformationAssistant;
 	}
 

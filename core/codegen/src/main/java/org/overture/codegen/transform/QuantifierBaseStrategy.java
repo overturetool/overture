@@ -15,10 +15,10 @@ public abstract class QuantifierBaseStrategy extends
 	protected PExpCG predicate;
 	protected String resultVarName;
 
-	public QuantifierBaseStrategy(
-			TransformationAssistantCG transformationAssistant, PExpCG predicate, String resultVarName)
+	public QuantifierBaseStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String resultVarName)
 	{
-		super(transformationAssistant);
+		super(config, transformationAssistant);
+		
 		this.predicate = predicate;
 		this.resultVarName = resultVarName;
 	}
@@ -28,7 +28,7 @@ public abstract class QuantifierBaseStrategy extends
 			AIdentifierPatternCG id, String iteratorName)
 			throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
+		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
 	}
 	
 	@Override

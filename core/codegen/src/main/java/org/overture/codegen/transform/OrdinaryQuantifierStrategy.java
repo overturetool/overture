@@ -12,10 +12,10 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 {
 	protected OrdinaryQuantifier quantifier;
 	
-	public OrdinaryQuantifierStrategy(TransformationAssistantCG transformationAssistant,
+	public OrdinaryQuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
 			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier)
 	{
-		super(transformationAssistant, predicate, resultVarName);
+		super(config, transformationAssistant, predicate, resultVarName);
 		this.quantifier = quantifier;
 	}
 
@@ -29,7 +29,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(iteratorName, resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
+		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, resultVarName, quantifier == OrdinaryQuantifier.EXISTS, config.hasNextElement());
 	}
 
 	@Override

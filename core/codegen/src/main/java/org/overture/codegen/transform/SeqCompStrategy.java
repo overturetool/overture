@@ -6,16 +6,15 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class SeqCompStrategy extends CompStrategy
 {
 	protected PExpCG first;
 	
-	public SeqCompStrategy(TransformationAssistantCG transformationAssitant,
+	public SeqCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
 			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super(transformationAssitant, predicate, var, compType);
+		super(config, transformationAssitant, predicate, var, compType);
 		
 		this.first = first;
 	}
@@ -23,13 +22,13 @@ public class SeqCompStrategy extends CompStrategy
 	@Override
 	public String getClassName()
 	{
-		return IJavaCodeGenConstants.SEQ_UTIL_FILE;
+		return config.seqUtilFile();
 	}
 
 	@Override
 	public String getMemberName()
 	{
-		return IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL;
+		return config.seqUtilEmptySeqCall();
 	}
 
 	@Override
@@ -41,6 +40,6 @@ public class SeqCompStrategy extends CompStrategy
 	@Override
 	public List<PStmCG> getLastForLoopStms()
 	{
-		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, var, predicate, first));
+		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSeq(), var, predicate, first));
 	}
 }

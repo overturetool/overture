@@ -11,11 +11,11 @@ import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class ComplexCompStrategy extends CompStrategy
 {
-	public ComplexCompStrategy(
+	public ComplexCompStrategy(ITransformationConfig config,
 			TransformationAssistantCG transformationAssitant, PExpCG predicate,
 			String var, PTypeCG compType)
 	{
-		super(transformationAssitant, predicate, var, compType);
+		super(config, transformationAssitant, predicate, var, compType);
 	}
 	
 	protected abstract List<PStmCG> getConditionalAdd();

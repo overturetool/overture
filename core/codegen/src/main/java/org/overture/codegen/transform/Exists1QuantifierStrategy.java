@@ -11,11 +11,10 @@ import org.overture.codegen.cgast.statements.PStmCG;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
-	public Exists1QuantifierStrategy(
-			TransformationAssistantCG transformationAssistant,
+	public Exists1QuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
 			PExpCG predicate, String resultVarName)
 	{
-		super(transformationAssistant, predicate, resultVarName);
+		super(config, transformationAssistant, predicate, resultVarName);
 	}
 	
 	@Override
@@ -32,7 +31,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(iteratorName, resultVarName, transformationAssistant.consLessThanCheck(resultVarName, 2));
+		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, resultVarName, transformationAssistant.consLessThanCheck(resultVarName, 2), config.hasNextElement());
 	}
 	
 	@Override

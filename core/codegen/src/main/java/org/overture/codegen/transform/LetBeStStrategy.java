@@ -13,19 +13,18 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
-import org.overture.codegen.utils.TempVarNameGen;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	private String successVarName;
 	private PExpCG suchThat;
 	private SSetTypeCG setType;
-
-	public LetBeStStrategy(TempVarNameGen tempVarGen,
-			TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType)
+	
+	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType)
 	{
-		super(transformationAssistant);
-		this.successVarName = tempVarGen.nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
+		super(config, transformationAssistant);
+		
+		this.successVarName = transformationAssistant.getInto().getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
 		this.suchThat = suchThat;
 		this.setType = setType;
 	}
@@ -48,14 +47,14 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(iteratorName, successVarName, true);
+		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, successVarName, true, config.hasNextElement());
 	}
 	
 	@Override
 	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id,
 			String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementAssigned(setElementType, id.getName(), iteratorName);
+		return transformationAssistant.consForBodyNextElementAssigned(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
 	}
 
 	@Override
@@ -67,6 +66,6 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	@Override
 	public List<PStmCG> getOuterBlockStms()
 	{
-		return packStm(transformationAssistant.consIfCheck(successVarName, "Let Be St found no applicable bindings"));
+		return packStm(transformationAssistant.consIfCheck(successVarName, config.runtimeExceptionTypeName(), "Let Be St found no applicable bindings"));
 	}
 }

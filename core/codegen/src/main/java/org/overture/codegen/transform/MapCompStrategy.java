@@ -7,16 +7,15 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class MapCompStrategy extends ComplexCompStrategy
 {
 	protected AMapletExpCG first;
 	
-	public MapCompStrategy(TransformationAssistantCG transformationAssitant,
+	public MapCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
 			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super(transformationAssitant, predicate, var, compType);
+		super(config, transformationAssitant, predicate, var, compType);
 		
 		this.first = first;
 	}
@@ -24,13 +23,13 @@ public class MapCompStrategy extends ComplexCompStrategy
 	@Override
 	public String getClassName()
 	{
-		return IJavaCodeGenConstants.MAP_UTIL_FILE;
+		return config.mapUtilFile();
 	}
 
 	@Override
 	public String getMemberName()
 	{
-		return IJavaCodeGenConstants.MAP_UTIL_EMPTY_MAP_CALL;
+		return config.mapUtilEmptyMapCall();
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class MapCompStrategy extends ComplexCompStrategy
 	@Override
 	protected List<PStmCG> getConditionalAdd()
 	{
-		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP, var, predicate, first.getLeft(), first.getRight()));
+		return packStm(transformationAssistant.consConditionalAdd(config.addElementToMap(), var, predicate, first.getLeft(), first.getRight()));
 	}
 
 }

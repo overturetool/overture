@@ -6,16 +6,15 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class SetCompStrategy extends ComplexCompStrategy
 {
 	protected PExpCG first;
 	
-	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
+	public SetCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
 			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super(transformationAssitant, predicate, var, compType);
+		super(config, transformationAssitant, predicate, var, compType);
 		
 		this.first = first;
 	}
@@ -23,13 +22,13 @@ public class SetCompStrategy extends ComplexCompStrategy
 	@Override
 	public String getClassName()
 	{
-		return IJavaCodeGenConstants.SET_UTIL_FILE;
+		return config.setUtilFile();
 	}
 
 	@Override
 	public String getMemberName()
 	{
-		return IJavaCodeGenConstants.SET_UTIL_EMPTY_SET_CALL;
+		return config.setUtilEmptySetCall();
 	}
 
 	@Override
@@ -41,6 +40,6 @@ public class SetCompStrategy extends ComplexCompStrategy
 	@Override
 	protected List<PStmCG> getConditionalAdd()
 	{
-		return packStm(transformationAssistant.consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_SET, var, predicate, first));
+		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSet(), var, predicate, first));
 	}
 }

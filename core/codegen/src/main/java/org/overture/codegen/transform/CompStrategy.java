@@ -11,7 +11,6 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
@@ -23,9 +22,10 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType)
+	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType)
 	{
-		super(transformationAssistant);
+		super(config, transformationAssistant);
+		
 		this.predicate = predicate;
 		this.var = var;
 		this.compType = compType;
@@ -45,15 +45,15 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public PExpCG getForLoopCond(String iteratorName)
 			throws AnalysisException
 	{
-		AClassTypeCG iteratorType = transformationAssistant.consIteratorType();
+		AClassTypeCG iteratorType = transformationAssistant.consIteratorType(config.iteratorType());
 		
-		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null);
+		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), config.hasNextElement(), null);
 	}
 
 	@Override
 	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementDeclared(setElementType, id.getName(), iteratorName);
+		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
 	}
 	
 	@Override
