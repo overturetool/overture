@@ -22,7 +22,7 @@ public interface IJavaCodeGenConstants
 	
 	public static final String GET_ITERATOR = "iterator";
 	public static final String ADD_ELEMENT_TO_SET = "add";
-	public static final String ADD_ELEMENT_TO_LIST = "add";
+	public static final String ADD_ELEMENT_TO_SEQ = "add";
 	public static final String ADD_ELEMENT_TO_MAP = "put";
 	public static final String NEXT_ELEMENT_ITERATOR = "next";
 	public static final String HAS_NEXT_ELEMENT_ITERATOR = "hasNext";
