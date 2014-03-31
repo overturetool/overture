@@ -44,7 +44,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.javalib.VDMSeq;
 import org.overture.codegen.ooast.OoAstInfo;
@@ -136,17 +135,17 @@ public class TransformationAssistantCG
 		return boolVarDecl;
 	}
 	
-	public PExpCG consForCondition(String iteratorName, String successVarName, boolean negate) throws AnalysisException
+	public PExpCG consForCondition(String iteratorTypeName, String iteratorName, String successVarName, boolean negate, String hasNextMethodName) throws AnalysisException
 	{
-		return consForCondition(iteratorName, successVarName, consBoolCheck(successVarName, negate));
+		return consForCondition(iteratorTypeName, iteratorName, successVarName, consBoolCheck(successVarName, negate), hasNextMethodName);
 	}
 	
-	public PExpCG consForCondition(String iteratorName, String successVarName, PExpCG exp) throws AnalysisException
+	public PExpCG consForCondition(String iteratorTypeName, String iteratorName, String successVarName, PExpCG exp, String hasNextMethodName) throws AnalysisException
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		
 		andExp.setType(new ABoolBasicTypeCG());
-		andExp.setLeft(consInstanceCall(consIteratorType(), iteratorName, new ABoolBasicTypeCG(), IJavaCodeGenConstants.HAS_NEXT_ELEMENT_ITERATOR, null));
+		andExp.setLeft(consInstanceCall(consIteratorType(iteratorTypeName), iteratorName, new ABoolBasicTypeCG(), hasNextMethodName, null));
 		andExp.setRight(exp);
 		
 		return andExp;
@@ -238,9 +237,9 @@ public class TransformationAssistantCG
 		return identifier;
 	}
 	
-	public AClassTypeCG consIteratorType()
+	public AClassTypeCG consIteratorType(String iteratorType)
 	{
-		return consClassType(IJavaCodeGenConstants.ITERATOR_TYPE);
+		return consClassType(iteratorType);
 	}
 	
 	public AClassTypeCG consClassType(String classTypeName)
@@ -274,37 +273,37 @@ public class TransformationAssistantCG
 		return instanceCall;
 	}
 	
-	public AVarLocalDeclCG consIteratorDecl(String iteratorName, String collectionName)
+	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionName, String getIteratorMethod)
 	{
 		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
 		iterator.setName(iteratorName);
-		iterator.setType(consIteratorType());
-		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(), IJavaCodeGenConstants.GET_ITERATOR , null));
+		iterator.setType(consIteratorType(iteratorType));
+		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
 		
 		return iterator;
 	}
 	
-	public ABlockStmCG consForBodyNextElementAssigned(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
+	public ABlockStmCG consForBodyNextElementAssigned(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		forBody.getStatements().add(consNextElementAssignment(elementType, id, iteratorName));
+		forBody.getStatements().add(consNextElementAssignment(iteratorTypeName, elementType, id, iteratorName, nextElementMethod));
 		
 		return forBody;
 	}
 	
-	public ABlockStmCG consForBodyNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
+	public ABlockStmCG consForBodyNextElementDeclared(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
 		
-		info.getStmAssistant().injectDeclAsStm(forBody, consNextElementDeclared(elementType, id, iteratorName));
+		info.getStmAssistant().injectDeclAsStm(forBody, consNextElementDeclared(iteratorTypeName, elementType, id, iteratorName, nextElementMethod));
 		
 		return forBody;
 	}
 	
-	public AVarLocalDeclCG consNextElementDeclared(PTypeCG elementType, String id, String iteratorName) throws AnalysisException
+	public AVarLocalDeclCG consNextElementDeclared(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
+		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 		AVarLocalDeclCG decl = new AVarLocalDeclCG();
 		
 		decl.setType(elementType);
@@ -314,10 +313,10 @@ public class TransformationAssistantCG
 		return decl;
 	}
 
-	public AAssignmentStmCG consNextElementAssignment(PTypeCG elementType, String id, String iteratorName)
+	public AAssignmentStmCG consNextElementAssignment(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod)
 			throws AnalysisException
 	{
-		ACastUnaryExpCG cast = consNextElementCall(iteratorName, elementType);
+		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 		
 		AAssignmentStmCG assignment = new AAssignmentStmCG();
 		assignment.setTarget(consIdentifier(id));
@@ -326,11 +325,11 @@ public class TransformationAssistantCG
 		return assignment;
 	}
 
-	public ACastUnaryExpCG consNextElementCall(String iteratorName, PTypeCG elementType)
+	public ACastUnaryExpCG consNextElementCall(String iteratorType, String iteratorName, PTypeCG elementType, String nextElementMethod)
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
-		cast.setExp(consInstanceCall(consIteratorType(), iteratorName, elementType.clone(), IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, null));
+		cast.setExp(consInstanceCall(consIteratorType(iteratorType), iteratorName, elementType.clone(), nextElementMethod, null));
 		return cast;
 	}
 	
@@ -401,18 +400,18 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod);
 		
 		return outerBlock;
 	}
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
-			TempVarNameGen tempGen, AbstractIterationStrategy strategy)
+			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod)
 			throws AnalysisException
 	{
 		// Variable names
@@ -442,7 +441,7 @@ public class TransformationAssistantCG
 				String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 
 				AForLoopStmCG forLoop = new AForLoopStmCG();
-				forLoop.setInit(consIteratorDecl(iteratorName, setName));
+				forLoop.setInit(consIteratorDecl(iteratorTypeName, iteratorName, setName, getIteratorMethod));
 				forLoop.setCond(strategy.getForLoopCond(iteratorName));
 				forLoop.setInc(null);
 
@@ -478,7 +477,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		
@@ -502,7 +501,7 @@ public class TransformationAssistantCG
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod);
 
 			strategy.setFirstBind(false);
 		}
@@ -510,7 +509,7 @@ public class TransformationAssistantCG
 		return outerBlock;
 	}
 	
-	public AThrowStmCG consThrowException(String exceptionMessage)
+	public AThrowStmCG consThrowException(String runtimeExceptionTypeName, String exceptionMessage)
 	{
 		AStringLiteralExpCG runtimeErrorMessage = new AStringLiteralExpCG();
 		runtimeErrorMessage.setIsNull(false);
@@ -518,11 +517,11 @@ public class TransformationAssistantCG
 		runtimeErrorMessage.setValue(exceptionMessage);
 		
 		AClassTypeCG exceptionType = new AClassTypeCG();
-		exceptionType.setName(IJavaCodeGenConstants.RUNTIME_EXCEPTION_TYPE_NAME);
+		exceptionType.setName(runtimeExceptionTypeName);
 		
 		ATypeNameCG exceptionTypeName = new ATypeNameCG();
 		exceptionTypeName.setDefiningClass(null);
-		exceptionTypeName.setName(IJavaCodeGenConstants.RUNTIME_EXCEPTION_TYPE_NAME);
+		exceptionTypeName.setName(runtimeExceptionTypeName);
 		
 		ANewExpCG runtimeException = new ANewExpCG();
 		runtimeException.setType(exceptionType);
@@ -535,21 +534,21 @@ public class TransformationAssistantCG
 		return throwStm;
 	}
 	
-	public AIfStmCG consIfCheck(String successVarName, String exceptionMessage)
+	public AIfStmCG consIfCheck(String successVarName, String runtimeExceptionTypeName, String exceptionMessage)
 	{
 		AIfStmCG ifStm = new AIfStmCG();
 		ifStm.setIfExp(consBoolCheck(successVarName, true));
-		ifStm.setThenStm(consThrowException(exceptionMessage));
+		ifStm.setThenStm(consThrowException(runtimeExceptionTypeName, exceptionMessage));
 		
 		return ifStm;
 	}
 	
-	public ACastUnaryExpCG consNextElementCall(String instance, String member, ACompSeqExpCG seqComp) throws AnalysisException
+	public ACastUnaryExpCG consNextElementCall(String iteratorTypeName, String instance, String member, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		
 		PTypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
 		
-		PExpCG nextCall = consInstanceCall(consIteratorType() , instance, elementType.clone(), member , null);
+		PExpCG nextCall = consInstanceCall(consIteratorType(iteratorTypeName) , instance, elementType.clone(), member , null);
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);
@@ -557,13 +556,13 @@ public class TransformationAssistantCG
 		return cast;
 	}
 
-	public AVarLocalDeclCG consSetBindIdDecl(String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
+	public AVarLocalDeclCG consSetBindIdDecl(String iteratorTypeName, String instanceName, String memberName, ACompSeqExpCG seqComp) throws AnalysisException
 	{
 		SSeqTypeCG seqType = getSeqTypeCloned(seqComp);
 		
 		PTypeCG elementType = seqType.getSeqOf();
 		String id = seqComp.getId().getName();
-		ACastUnaryExpCG initExp = consNextElementCall(instanceName, memberName, seqComp);
+		ACastUnaryExpCG initExp = consNextElementCall(iteratorTypeName, instanceName, memberName, seqComp);
 		
 		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
 		idDecl.setType(elementType);
@@ -587,17 +586,17 @@ public class TransformationAssistantCG
 		return setBindDecl;
 	}
 	
-	public AVarLocalDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp) throws AnalysisException
+	public AVarLocalDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp, String seqUtilFile, String seqUtilEmptySeqCall) throws AnalysisException
 	{
-		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, IJavaCodeGenConstants.SEQ_UTIL_FILE, IJavaCodeGenConstants.SEQ_UTIL_EMPTY_SEQ_CALL);
+		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, seqUtilFile, seqUtilEmptySeqCall);
 	}
 	
-	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorName,
-			String resSeqName) throws AnalysisException
+	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorTypeName, String iteratorName,
+			String resSeqName, String nextElementMethod, String addElementToSeqMethod) throws AnalysisException
 	{
 		ABlockStmCG forBody = new ABlockStmCG();
-		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorName, IJavaCodeGenConstants.NEXT_ELEMENT_ITERATOR, seqComp));
-		forBody.getStatements().add(consConditionalAdd(IJavaCodeGenConstants.ADD_ELEMENT_TO_LIST, resSeqName, seqComp.getPredicate(), seqComp.getFirst()));
+		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorTypeName, iteratorName, nextElementMethod, seqComp));
+		forBody.getStatements().add(consConditionalAdd(addElementToSeqMethod, resSeqName, seqComp.getPredicate(), seqComp.getFirst()));
 		
 		return forBody;
 	}
