@@ -196,6 +196,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Map
     |	{mkBasic} [arg]:expCG
     |	#Quantifier
+    |	{preInc}
+    |	{preDec}
+    |	{postInc}
+    |	{postDec}
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'}
