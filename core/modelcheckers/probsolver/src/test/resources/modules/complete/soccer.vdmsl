@@ -4,7 +4,7 @@ exports all
 
 definitions
 values gk_subs_max : nat1 = 1;
-       fp_subs_max : nat1 = 3 -- original 2
+       fp_subs_max : nat1 = 2
 
 types  player = nat1
 
