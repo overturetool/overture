@@ -28,9 +28,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private TransformationAssistantCG transformationAssistant;
 	
-	public TransformationVisitor(OoAstInfo info)
+	private ITransformationConfig config;
+	
+	public TransformationVisitor(OoAstInfo info, ITransformationConfig config)
 	{
 		this.info = info;
+		this.config = config;
 		this.transformationAssistant = new TransformationAssistantCG(info);
 	}
 	
@@ -39,7 +42,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AHeaderLetBeStCG header = node.getHeader();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(config, transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(header.getBinding().getSet()));
 		
 		ASetMultipleBindCG binding = header.getBinding();
 		
@@ -49,7 +52,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			node.setStatement(new ABlockStmCG());
 		}
 		
-		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(binding.getPatterns(), header.getBinding().getSet(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(binding.getPatterns(), header.getBinding().getSet(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod());
 		
 		outerBlock.getStatements().add(node.getStatement());
 		
@@ -64,7 +67,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		AHeaderLetBeStCG header = node.getHeader();
 		ASetMultipleBindCG binding = header.getBinding();
-		LetBeStStrategy strategy = new LetBeStStrategy(info.getTempVarNameGen(), transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(binding.getSet()));
+		LetBeStStrategy strategy = new LetBeStStrategy(config, transformationAssistant, header.getSuchThat(), transformationAssistant.getSetTypeCloned(binding.getSet()));
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
@@ -78,7 +81,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
 		}
 		
-		outerBlock.getStatements().addFirst(transformationAssistant.consIterationBlock(binding.getPatterns(), binding.getSet(), info.getTempVarNameGen(), strategy));
+		outerBlock.getStatements().addFirst(transformationAssistant.consIterationBlock(binding.getPatterns(), binding.getSet(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod()));
 
 		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
 		outerBlock.getStatements().add(enclosingStm);
@@ -90,9 +93,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
 		
-		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		ComplexCompStrategy strategy = new MapCompStrategy(config, transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindings(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindings(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod());
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
@@ -105,9 +108,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, "set comprehension");
 		
-		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		ComplexCompStrategy strategy = new SetCompStrategy(config, transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindings(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindings(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod());
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
@@ -120,7 +123,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
 
-		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
+		SeqCompStrategy strategy = new SeqCompStrategy(config, transformationAssistant, node.getFirst(), node.getPredicate(), node.getVar(), node.getType());
 
 		if (transformationAssistant.isEmptySet(node.getSet()))
 		{
@@ -131,7 +134,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
 			ids.add(node.getId());
 
-			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
+			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod());
 
 			transformationAssistant.replaceNodeWith(enclosingStm, block);
 
@@ -143,7 +146,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node) throws AnalysisException
 	{
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.FORALL);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.FORALL);
 		handleQuantifier(node, "forall expression", strategy);
 	}
 	
@@ -151,7 +154,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExistsQuantifierExpCG(
 			AExistsQuantifierExpCG node) throws AnalysisException
 	{
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.EXISTS);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, node.getPredicate(), node.getVar(), OrdinaryQuantifier.EXISTS);
 		handleQuantifier(node, "exists expression", strategy);
 	}
 	
@@ -159,7 +162,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExists1QuantifierExpCG(
 			AExists1QuantifierExpCG node) throws AnalysisException
 	{
-		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, node.getPredicate(), node.getVar());
+		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(config, transformationAssistant, node.getPredicate(), node.getVar());
 		handleQuantifier(node, "exists1 expression", strategy);
 	}
 
@@ -167,7 +170,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		PStmCG enclosingStm = getEnclosingStm(node, nodeStr);
 		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), info.getTempVarNameGen(), strategy, config.iteratorType(), config.iteratorMethod());
 		
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		block.getStatements().add(enclosingStm);

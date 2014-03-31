@@ -166,7 +166,7 @@ public class JavaCodeGen
 
 				if (status.canBeGenerated())
 				{
-					classCg.apply(new TransformationVisitor(generator.getOoAstInfo()));
+					classCg.apply(new TransformationVisitor(generator.getOoAstInfo(), new JavaTransformationConfig()));
 					classCg.apply(mergeVisitor, writer);
 					String code = writer.toString();
 					
