@@ -196,11 +196,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	#Map
     |	{mkBasic} [arg]:expCG
     |	#Quantifier
-    |	{preInc}
-    |	{preDec}
-    |	{postInc}
-    |	{postDec}
-    |	{deRef} //For pointer dereference
+    |	{preInc} [exp]:expCG
+    |	{preDec} [exp]:expCG
+    |	{postInc} [exp]:expCG
+    |	{postDec} [exp]:expCG
+    |	{deRef} [exp]:expCG //For pointer dereference
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'}
@@ -321,7 +321,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
-    |	{external} [name]:java_String
+    |	{external} [name]:java_String [info]:externalType.info
     |	{record} [name]:nameCG.type
     |	{string}
     |	{template} [name]:java_String
@@ -333,6 +333,10 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	#basicTypeWrappers
     ;
     
+externalType {-> package='org.overture.codegen.cgast.utils'}
+	= {info} [namespace]:java_String [filePath]:java_String 
+	;
+
 #basicTypeWrappers {-> package='org.overture.codegen.cgast.types'}
 	= {Int}
 	| {Real}
