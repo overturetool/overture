@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -46,6 +47,7 @@ import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -1042,5 +1044,10 @@ public class JavaFormat
 		}
 		
 		return null;
+	}
+	
+	public boolean isLoopVar(AVarLocalDeclCG localVar)
+	{
+		return localVar.parent() instanceof AForLoopStmCG;
 	}
 }

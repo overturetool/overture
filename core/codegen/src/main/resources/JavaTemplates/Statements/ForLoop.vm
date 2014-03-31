@@ -1,4 +1,4 @@
-#set( $init = ";" )
+#set( $init = "" )
 #if ( !$JavaFormat.isNull($node.getInit()) )
 	#set( $init = $JavaFormat.format($node.getInit()) )
 #end
@@ -14,7 +14,7 @@
 #end
 ##
 #set( $body = $JavaFormat.format($node.getBody()) )
-for(${init} ${cond}; ${inc})
+for(${init}; ${cond}; ${inc})
 {
 	${body}
 }
