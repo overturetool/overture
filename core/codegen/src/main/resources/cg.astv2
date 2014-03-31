@@ -200,6 +200,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{preDec}
     |	{postInc}
     |	{postDec}
+    |	{deRef} //For pointer dereference
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'}
