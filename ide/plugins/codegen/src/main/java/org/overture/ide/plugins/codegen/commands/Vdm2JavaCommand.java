@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -86,7 +87,9 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		if(!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
 		{
-			CodeGenConsole.GetInstance().println("VDM dialect is not supported");
+			CodeGenConsole.GetInstance().println("Project : "
+					+ project.getName()
+					+ " is not supported by the Java code generator. Currently, VDM++ is the only supported dialect.");
 			return null;
 		}
 		
