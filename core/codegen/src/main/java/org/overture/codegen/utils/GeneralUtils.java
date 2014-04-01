@@ -12,7 +12,7 @@ public class GeneralUtils
 {
 	public static StringBuffer readFromFile(String relativepath) throws IOException
 	{
-		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath);
+		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath.replace("\\", "/"));
 
 		if (input == null)
 			return null;
