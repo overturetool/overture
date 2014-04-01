@@ -18,17 +18,7 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.AConcatenationPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIdentifierPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapUnionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARecordPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATuplePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AUnionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 
 /***************************************
  * 

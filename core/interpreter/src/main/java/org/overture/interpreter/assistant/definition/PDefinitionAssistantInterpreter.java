@@ -13,13 +13,11 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -50,55 +48,62 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	public static NameValuePairList getNamedValues(PDefinition def,
 			Context initialContext)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) def, initialContext);
-		} else if (def instanceof AEqualsDefinition)
+			return def.apply(af.getNamedValueLister(), initialContext);
+		} catch (AnalysisException e)
 		{
-			return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition) def, initialContext);
-		} else if (def instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition) def, initialContext);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition) def, initialContext);
-		} else if (def instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition) def, initialContext);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition) def, initialContext);
-		} else if (def instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition) def, initialContext);
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition) def, initialContext);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition) def, initialContext);
-		} else if (def instanceof ALocalDefinition)
-		{
-			return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition) def, initialContext);
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition) def, initialContext);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition) def, initialContext);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition) def, initialContext);
-		} else if (def instanceof AUntypedDefinition)
-		{
-			return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition) def, initialContext);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition) def, initialContext);
-		} else
-		{
-			return new NameValuePairList(); // Overridden
+			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) def, initialContext);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition) def, initialContext);
+//		} else if (def instanceof AExplicitFunctionDefinition)
+//		{
+//			return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition) def, initialContext);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition) def, initialContext);
+//		} else if (def instanceof AImplicitFunctionDefinition)
+//		{
+//			return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition) def, initialContext);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition) def, initialContext);
+//		} else if (def instanceof AImportedDefinition)
+//		{
+//			return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition) def, initialContext);
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition) def, initialContext);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition) def, initialContext);
+//		} else if (def instanceof ALocalDefinition)
+//		{
+//			return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition) def, initialContext);
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition) def, initialContext);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition) def, initialContext);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition) def, initialContext);
+//		} else if (def instanceof AUntypedDefinition)
+//		{
+//			return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition) def, initialContext);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition) def, initialContext);
+//		} else
+//		{
+//			return new NameValuePairList(); // Overridden
+//		}
 	}
 
 	public static ProofObligationList getProofObligations(PDefinition def,

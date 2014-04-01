@@ -5,8 +5,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.values.NameValuePairList;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 
 public class AThreadDefinitionAssistantInterpreter extends
@@ -21,11 +19,11 @@ public class AThreadDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static NameValuePairList getNamedValues(AThreadDefinition d,
-			Context initialContext)
-	{
-		return PDefinitionAssistantInterpreter.getNamedValues(d.getOperationDef(), initialContext);
-	}
+//	public static NameValuePairList getNamedValues(AThreadDefinition d,
+//			Context initialContext)
+//	{
+//		return PDefinitionAssistantInterpreter.getNamedValues(d.getOperationDef(), initialContext);
+//	}
 
 	public static PExp findExpression(AThreadDefinition d, int lineno)
 	{

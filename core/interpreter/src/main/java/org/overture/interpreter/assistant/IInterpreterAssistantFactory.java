@@ -494,4 +494,5 @@ public interface IInterpreterAssistantFactory extends
 	
 	QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator();
 	
+	IQuestionAnswer<Context, NameValuePairList> getNamedValueLister();
 }

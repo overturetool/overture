@@ -3,10 +3,8 @@ package org.overture.interpreter.assistant;
 import java.io.Serializable;
 import java.util.List;
 
-import org.omg.CORBA.ORB;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
-import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
@@ -162,13 +160,13 @@ import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.NamedValueLister;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
-import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator.Newquestion;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -990,6 +988,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator()
 	{
 		return new AllNamedValuesLocator(this);
+	}
+
+	@Override
+	public QuestionAnswerAdaptor<Context, NameValuePairList> getNamedValueLister()
+	{
+		return new NamedValueLister(this);
 	}
 
 }

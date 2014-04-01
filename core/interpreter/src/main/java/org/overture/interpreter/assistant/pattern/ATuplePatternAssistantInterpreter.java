@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
@@ -58,6 +59,7 @@ public class ATuplePatternAssistantInterpreter
 		for (PPattern p : pattern.getPlist())
 		{
 			List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p, iter.next(), ctxt);
+			
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}

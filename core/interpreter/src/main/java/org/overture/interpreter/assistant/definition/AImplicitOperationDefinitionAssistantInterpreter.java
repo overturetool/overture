@@ -27,40 +27,40 @@ public class AImplicitOperationDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static NameValuePairList getNamedValues(
-			AImplicitOperationDefinition d, Context initialContext)
-	{
-		NameValuePairList nvl = new NameValuePairList();
-
-		FunctionValue prefunc = d.getPredef() == null ? null
-				: new FunctionValue(d.getPredef(), null, null, null);
-
-		FunctionValue postfunc = d.getPostdef() == null ? null
-				: new FunctionValue(d.getPostdef(), null, null, null);
-
-		// Note, body may be null if it is really implicit. This is caught
-		// when the function is invoked. The value is needed to implement
-		// the pre_() expression for implicit functions.
-
-		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState(), af);
-		op.isConstructor = d.getIsConstructor();
-		op.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
-		nvl.add(new NameValuePair(d.getName(), op));
-
-		if (d.getPredef() != null)
-		{
-			prefunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
-			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
-		}
-
-		if (d.getPostdef() != null)
-		{
-			postfunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
-			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
-		}
-
-		return nvl;
-	}
+//	public static NameValuePairList getNamedValues(
+//			AImplicitOperationDefinition d, Context initialContext)
+//	{
+//		NameValuePairList nvl = new NameValuePairList();
+//
+//		FunctionValue prefunc = d.getPredef() == null ? null
+//				: new FunctionValue(d.getPredef(), null, null, null);
+//
+//		FunctionValue postfunc = d.getPostdef() == null ? null
+//				: new FunctionValue(d.getPostdef(), null, null, null);
+//
+//		// Note, body may be null if it is really implicit. This is caught
+//		// when the function is invoked. The value is needed to implement
+//		// the pre_() expression for implicit functions.
+//
+//		OperationValue op = new OperationValue(d, prefunc, postfunc, d.getState(), af);
+//		op.isConstructor = d.getIsConstructor();
+//		op.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
+//		nvl.add(new NameValuePair(d.getName(), op));
+//
+//		if (d.getPredef() != null)
+//		{
+//			prefunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
+//			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
+//		}
+//
+//		if (d.getPostdef() != null)
+//		{
+//			postfunc.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
+//			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
+//		}
+//
+//		return nvl;
+//	}
 
 	public static PExp findExpression(AImplicitOperationDefinition d, int lineno)
 	{
