@@ -2,45 +2,45 @@
 	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.overturetool.ide</groupId>
-		<artifactId>org.overture.ide.plugins</artifactId>
-		<version>2.0.3-SNAPSHOT<!--Replaceable: Main Version--></version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+  <parent>
+    <groupId>org.overturetool.ide</groupId>
+    <artifactId>org.overture.ide.plugins</artifactId>
+    <version>2.0.5-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
   <packaging>eclipse-plugin</packaging>
 
   <groupId>org.overturetool.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.codegen</artifactId>
-  <name>Code Generator</name>
-   
-   <dependencies>
+  <name>Code Generator Plugin</name>
+  
+  <dependencies>
     <dependency>
       <groupId>org.apache.velocity</groupId>
       <artifactId>velocity</artifactId>
       <version>1.7</version>
     </dependency>
     <dependency>
-	  <groupId>commons-collections</groupId>
-	  <artifactId>commons-collections</artifactId>
-	  <version>3.2.1</version>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.1</version>
     </dependency>
     <dependency>
-	  <groupId>commons-lang</groupId>
-	  <artifactId>commons-lang</artifactId>
-	  <version>2.4</version>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
     </dependency>
-	<dependency>
-		<groupId>jalopy</groupId>
-		<artifactId>jalopy</artifactId>
-		<version>1.5rc3</version>
-	</dependency>
-	<dependency>
-		<groupId>log4j</groupId>
-		<artifactId>log4j</artifactId>
-		<version>1.2.8</version>
-	</dependency>
+    <dependency>
+      <groupId>jalopy</groupId>
+      <artifactId>jalopy</artifactId>
+      <version>1.5rc3</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -67,31 +67,31 @@
                   <artifactId>codegen</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>
-				<artifactItem>
+		<artifactItem>
                   <groupId>org.apache.velocity</groupId>
                   <artifactId>velocity</artifactId>
                   <version>1.7</version>
                 </artifactItem>
                 <artifactItem>
                	  <groupId>commons-collections</groupId>
-			      <artifactId>commons-collections</artifactId>
-	               <version>3.2.1</version>
+		  <artifactId>commons-collections</artifactId>
+	          <version>3.2.1</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>commons-lang</groupId>
-	              <artifactId>commons-lang</artifactId>
-	              <version>2.4</version>
+	          <artifactId>commons-lang</artifactId>
+	          <version>2.4</version>
                 </artifactItem>
-				<artifactItem>
-					<groupId>jalopy</groupId>
-					<artifactId>jalopy</artifactId>
-					<version>1.5rc3</version>
+		<artifactItem>
+		  <groupId>jalopy</groupId>
+		  <artifactId>jalopy</artifactId>
+		  <version>1.5rc3</version>
                 </artifactItem>
                 <artifactItem>
-               		<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-					<version>1.2.8</version>
-				</artifactItem>
+               	  <groupId>log4j</groupId>
+		  <artifactId>log4j</artifactId>
+		  <version>1.2.8</version>
+		</artifactItem>
               </artifactItems>
 	    </configuration>
 	  </execution>
