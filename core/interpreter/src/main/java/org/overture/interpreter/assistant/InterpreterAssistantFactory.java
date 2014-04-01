@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
@@ -160,6 +161,7 @@ import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
@@ -994,6 +996,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public QuestionAnswerAdaptor<Context, NameValuePairList> getNamedValueLister()
 	{
 		return new NamedValueLister(this);
+	}
+
+	@Override
+	public QuestionAnswerAdaptor<Integer, PExp> getExpressionFinder()
+	{
+		return new ExpressionFinder(this);
 	}
 
 }

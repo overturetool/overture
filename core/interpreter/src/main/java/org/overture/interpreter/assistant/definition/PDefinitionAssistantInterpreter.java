@@ -149,52 +149,59 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static PExp findExpression(PDefinition def, int lineno)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
-		} else if (def instanceof SClassDefinition)
-		{
-			return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition) def, lineno);
-		} else if (def instanceof AClassInvariantDefinition)
-		{
-			return AClassInvariantDefinitionAssistantInterpreter.findExpression((AClassInvariantDefinition)def, lineno);
-		} else if (def instanceof AEqualsDefinition)
-		{
-			return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition) def, lineno);
-		} else if (def instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition) def, lineno);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition) def, lineno);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition) def, lineno);
-		} else if (def instanceof APerSyncDefinition)
-		{
-			return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition) def, lineno);
-		} else if (def instanceof AStateDefinition)
-		{
-			return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition) def, lineno);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition) def, lineno);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition) def, lineno);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition) def, lineno);
-		} else
+			return def.apply(af.getExpressionFinder(),lineno);
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
+//		} else if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition) def, lineno);
+//		} else if (def instanceof AClassInvariantDefinition)
+//		{
+//			return AClassInvariantDefinitionAssistantInterpreter.findExpression((AClassInvariantDefinition)def, lineno);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition) def, lineno);
+//		} else if (def instanceof AExplicitFunctionDefinition)
+//		{
+//			return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition) def, lineno);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AImplicitFunctionDefinition)
+//		{
+//			return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition) def, lineno);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition) def, lineno);
+//		} else if (def instanceof APerSyncDefinition)
+//		{
+//			return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition) def, lineno);
+//		} else if (def instanceof AStateDefinition)
+//		{
+//			return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition) def, lineno);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition) def, lineno);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition) def, lineno);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition) def, lineno);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 	public static boolean isTypeDefinition(PDefinition def)
