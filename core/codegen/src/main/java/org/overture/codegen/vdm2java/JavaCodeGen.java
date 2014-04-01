@@ -173,7 +173,7 @@ public class JavaCodeGen
 					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 				}
 				
-				generated.add(new GeneratedModule(classCg.getName(), formattedJavaCode, status.getUnsupportedNodes()));
+				generated.add(new GeneratedModule(status.getClassName(), formattedJavaCode, status.getUnsupportedNodes()));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -235,7 +235,10 @@ public class JavaCodeGen
 
 	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
 	{
-		JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+		if(generatedModule != null && generatedModule.canBeGenerated())
+		{
+			JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+		}
 	}
 	
 	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
