@@ -12,7 +12,7 @@ public class A {
     }
 
     public static String g() {
-        return "";
+        return "txt";
     }
 }
 
