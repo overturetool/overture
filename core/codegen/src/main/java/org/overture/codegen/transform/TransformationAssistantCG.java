@@ -44,8 +44,8 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
-import org.overture.codegen.javalib.VDMSeq;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.TempVarNameGen;
 
@@ -278,7 +278,7 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
 		iterator.setName(iteratorName);
 		iterator.setType(consIteratorType(iteratorType));
-		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
+		iterator.setExp(consInstanceCall(consClassType(IJavaCodeGenConstants.SEQ_UTIL_FILE), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
 		
 		return iterator;
 	}

@@ -39,6 +39,11 @@
     </dependency>
     <dependency>
       <groupId>org.overturetool.core</groupId>
+      <artifactId>codegen-runtime</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>
