@@ -44,7 +44,6 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.JavaTempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.TempVarNameGen;
@@ -273,12 +272,12 @@ public class TransformationAssistantCG
 		return instanceCall;
 	}
 	
-	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionName, String getIteratorMethod)
+	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionTypeName, String collectionName, String getIteratorMethod)
 	{
 		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
 		iterator.setName(iteratorName);
 		iterator.setType(consIteratorType(iteratorType));
-		iterator.setExp(consInstanceCall(consClassType(IJavaCodeGenConstants.SEQ_UTIL_FILE), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
+		iterator.setExp(consInstanceCall(consClassType(collectionTypeName), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
 		
 		return iterator;
 	}
@@ -400,18 +399,18 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
 		
 		return outerBlock;
 	}
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
-			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod)
+			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName)
 			throws AnalysisException
 	{
 		// Variable names
@@ -441,7 +440,7 @@ public class TransformationAssistantCG
 				String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
 
 				AForLoopStmCG forLoop = new AForLoopStmCG();
-				forLoop.setInit(consIteratorDecl(iteratorTypeName, iteratorName, setName, getIteratorMethod));
+				forLoop.setInit(consIteratorDecl(iteratorTypeName, iteratorName, setTypeName, setName, getIteratorMethod));
 				forLoop.setCond(strategy.getForLoopCond(iteratorName));
 				forLoop.setInc(null);
 
@@ -477,7 +476,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		
@@ -501,7 +500,7 @@ public class TransformationAssistantCG
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
 
 			strategy.setFirstBind(false);
 		}
