@@ -9,6 +9,11 @@
 		id="org.overture.ide.plugins.codegen.vdm2java"
 		name="VDM to Java">
 	</command>
+	<command
+		defaultHandler="org.overture.ide.plugins.codegen.commands.AboutCommand"
+		id="org.overture.ide.plugins.codegen.about"
+		name="About">
+	</command>
 </extension>
 
 <extension
@@ -18,10 +23,27 @@
 		<menu
 			icon="icons/codegen.png"
 			id="org.overture.ide.plugins.codegen"
-			label="Code Generation">
+			label="Code Generation (Experimental)">
 			<command
 				commandId="org.overture.ide.plugins.codegen.vdm2java"
-				label="Convert to Java"
+				label="Generate Java"
+				style="push">
+				<visibleWhen
+					checkEnabled="false">
+					<iterate ifEmpty="false">
+						<adapt
+							type="org.overture.ide.core.resources.IVdmProject">
+							<test
+								property="org.overture.ide.core.resources.dialect"
+								value="VDM_PP">
+							</test>
+						</adapt>
+					</iterate>
+				</visibleWhen>
+			</command>
+			<command
+				commandId="org.overture.ide.plugins.codegen.about"
+				label="About"
 				style="push">
 				<visibleWhen
 					checkEnabled="false">
