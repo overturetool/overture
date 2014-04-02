@@ -13,7 +13,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.0.5-SNAPSHOT</version>
+  <version>2.0.7-SNAPSHOT</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -214,7 +214,7 @@
         <plugin>
            <groupId>org.apache.maven.plugins</groupId>
            <artifactId>maven-release-plugin</artifactId>
-           <version>2.4.2</version>
+           <version>2.5</version>
            <configuration>
              <tagNameFormat>Release/@{project.version}</tagNameFormat>
            </configuration>
