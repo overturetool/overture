@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
@@ -30,11 +31,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private ITransformationConfig config;
 	
-	public TransformationVisitor(OoAstInfo info, ITransformationConfig config)
+	public TransformationVisitor(OoAstInfo info, ITransformationConfig config, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
 		this.config = config;
-		this.transformationAssistant = new TransformationAssistantCG(info);
+		this.transformationAssistant = new TransformationAssistantCG(info, varPrefixes);
 	}
 	
 	@Override

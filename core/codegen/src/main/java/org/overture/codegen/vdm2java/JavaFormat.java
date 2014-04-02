@@ -77,7 +77,7 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.utils.TempVarNameGen;
@@ -95,13 +95,15 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
+	private TempVarPrefixes varPrefixes;
 	private TempVarNameGen tempVarNameGen;
 	private AssistantManager assistantManager;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
 	{
-		this.tempVarNameGen = tempVarNameGen;
 		this.classes = classes;
+		this.varPrefixes = varPrefixes;
+		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
 	}
 	
@@ -123,7 +125,7 @@ public class JavaFormat
 	
 	private String format(INode node, boolean ignoreContext) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, JavaTempVarPrefixes.class));
+		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
 		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);

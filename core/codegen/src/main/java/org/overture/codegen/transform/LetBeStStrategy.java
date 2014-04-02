@@ -12,7 +12,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
@@ -24,7 +24,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	{
 		super(config, transformationAssistant);
 		
-		this.successVarName = transformationAssistant.getInto().getTempVarNameGen().nextVarName(JavaTempVarPrefixes.SUCCESS_VAR_NAME_PREFIX);
+		String successVarNamePrefix = transformationAssistant.getVarPrefixes().getSuccessVarNamePrefix();
+		TempVarNameGen tempVarNameGen = transformationAssistant.getInfo().getTempVarNameGen();
+		
+		this.successVarName = tempVarNameGen.nextVarName(successVarNamePrefix);
 		this.suchThat = suchThat;
 		this.setType = setType;
 	}
