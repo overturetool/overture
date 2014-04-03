@@ -14,6 +14,11 @@ public class GeneralUtils
 	{
 		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath.replace("\\", "/"));
 
+		return readFromInputStream(input);
+	}
+
+	public static StringBuffer readFromInputStream(InputStream input) throws IOException
+	{
 		if (input == null)
 			return null;
 
