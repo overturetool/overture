@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ public class Alarm {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -42,7 +42,7 @@ public class Expert {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -160,7 +160,7 @@ public class Plant {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import quotes.*;
 

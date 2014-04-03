@@ -1,4 +1,4 @@
-package org.overture.codegen.javalib;
+package org.overture.codegen.runtime;
 
 import java.io.File;
 import java.util.List;

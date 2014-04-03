@@ -4,20 +4,31 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class AbstractIterationStrategy
 {
 	abstract public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException;
-	
+
+	public AVarLocalDeclCG getForLoopInit(String iteratorName, String setTypeName, String setName,
+			String getIteratorMethod)
+	{
+		return transformationAssistant.consIteratorDecl(config.iteratorType(), iteratorName, setTypeName, setName, getIteratorMethod);
+	}
+
 	abstract public PExpCG getForLoopCond(String iteratorName) throws AnalysisException;
 
-	abstract public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException;
+	public PExpCG getForLoopInc(String iteratorName)
+	{
+		return null;
+	}
+	
+	abstract public ABlockStmCG getForLoopBody(PExpCG set, AIdentifierPatternCG id, String iteratorName) throws AnalysisException;
 
 	abstract public List<PStmCG> getLastForLoopStms();
 	
@@ -34,7 +45,7 @@ public abstract class AbstractIterationStrategy
 		this.config = config;
 		this.transformationAssistant = transformationAssistant;
 	}
-
+	
 	public void setFirstBind(boolean firstBind)
 	{
 		this.firstBind = firstBind;

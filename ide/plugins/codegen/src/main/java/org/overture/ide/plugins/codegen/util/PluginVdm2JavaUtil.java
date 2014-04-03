@@ -51,7 +51,7 @@ public class PluginVdm2JavaUtil
 		
 	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
 	{
-		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_RT;
+		return vdmProject.getDialect() == Dialect.VDM_PP;
 	}
 	
 	public static IVdmProject getVdmProject(ExecutionEvent event)

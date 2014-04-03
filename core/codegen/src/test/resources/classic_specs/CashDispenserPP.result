@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class Entry {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import quotes.*;
 
@@ -53,7 +53,7 @@ public class SimpleTest {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -204,7 +204,7 @@ public class Account {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -237,7 +237,7 @@ public class Card {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -266,7 +266,7 @@ public class Cardholder {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -356,7 +356,7 @@ public class CentralResource {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -377,7 +377,7 @@ public class Clock {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -404,7 +404,7 @@ public class Letter {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -425,7 +425,7 @@ public class Letterbox {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import quotes.*;
 
@@ -516,7 +516,7 @@ public class Till {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -529,7 +529,7 @@ abstract public class Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -558,7 +558,7 @@ public class GetBalance extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -583,7 +583,7 @@ public class IllegalCard extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -610,7 +610,7 @@ public class InsertCard extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -641,7 +641,7 @@ public class ReturnCard extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -670,7 +670,7 @@ public class SendStatement extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -736,7 +736,7 @@ public class System {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -761,7 +761,7 @@ public class Validate extends Event {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 

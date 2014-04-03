@@ -23,10 +23,10 @@ public class CompileTests
 {
 	private static final String CG_VALUE_BINARY_FILE = "target\\cgtest\\myData.bin";
 	private static final String TEMP_DIR = "target\\cgtest";
-	private static final String SRC_JAVA_LIB = "src\\main\\java\\org\\overture\\codegen\\javalib";
-	private static final String TARGET_JAVA_LIB = "target\\cgtest\\org\\overture\\codegen\\javalib";
+	private static final String SRC_JAVA_LIB = "..\\codegen-runtime\\src\\main\\java\\org\\overture\\codegen\\runtime";
+	private static final String TARGET_JAVA_LIB = "target\\cgtest\\org\\overture\\codegen\\runtime";
 	
-	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"javalib"});
+	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"runtime"});
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
 	

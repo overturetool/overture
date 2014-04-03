@@ -35,7 +35,7 @@ public abstract class TestHandler
 		  "import java.io.File;"
 		+ "import java.io.FileOutputStream;"
 		+ "import java.io.ObjectOutputStream;"
-		+ "import org.overture.codegen.javalib.*;"
+		+ "import org.overture.codegen.runtime.*;"
 		+ "import java.util.*; " 
 		+ "public class Exp { "
 		

@@ -51,9 +51,9 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
+	public ABlockStmCG getForLoopBody(PExpCG set, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
+		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), transformationAssistant.getSetTypeCloned(set).getSetOf(), id.getName(), iteratorName, config.nextElement());
 	}
 	
 	@Override

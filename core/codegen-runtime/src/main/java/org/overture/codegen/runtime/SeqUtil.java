@@ -1,4 +1,5 @@
-package org.overture.codegen.javalib;
+package org.overture.codegen.runtime;
+
 import java.util.Collections;
 
 

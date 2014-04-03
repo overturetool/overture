@@ -44,23 +44,29 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
-import org.overture.codegen.javalib.VDMSeq;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class TransformationAssistantCG
 {
 	protected OoAstInfo info;
+	protected TempVarPrefixes varPrefixes;
 	
-	public TransformationAssistantCG(OoAstInfo info)
+	public TransformationAssistantCG(OoAstInfo info, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
+		this.varPrefixes = varPrefixes;
 	}
 	
-	public OoAstInfo getInto()
+	public OoAstInfo getInfo()
 	{
 		return info;
+	}
+	
+	public TempVarPrefixes getVarPrefixes()
+	{
+		return varPrefixes;
 	}
 	
 	public void replaceNodeWith(INode original, INode replacement)
@@ -273,12 +279,12 @@ public class TransformationAssistantCG
 		return instanceCall;
 	}
 	
-	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionName, String getIteratorMethod)
+	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionTypeName, String collectionName, String getIteratorMethod)
 	{
 		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
 		iterator.setName(iteratorName);
 		iterator.setType(consIteratorType(iteratorType));
-		iterator.setExp(consInstanceCall(consClassType(VDMSeq.class.getName()), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
+		iterator.setExp(consInstanceCall(consClassType(collectionTypeName), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
 		
 		return iterator;
 	}
@@ -400,22 +406,22 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
 		
 		return outerBlock;
 	}
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
-			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod)
+			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName)
 			throws AnalysisException
 	{
 		// Variable names
-		String setName = tempGen.nextVarName(JavaTempVarPrefixes.SET_NAME_PREFIX);
+		String setName = tempGen.nextVarName(varPrefixes.getSetNamePrefix());
 
 		LinkedList<SLocalDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
 
@@ -438,14 +444,15 @@ public class TransformationAssistantCG
 				AIdentifierPatternCG id = ids.get(i);
 
 				// Construct next for loop
-				String iteratorName = tempGen.nextVarName(JavaTempVarPrefixes.ITERATOR_NAME_PREFIX);
+				String iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
 
 				AForLoopStmCG forLoop = new AForLoopStmCG();
-				forLoop.setInit(consIteratorDecl(iteratorTypeName, iteratorName, setName, getIteratorMethod));
+				
+				forLoop.setInit(strategy.getForLoopInit(iteratorName, setTypeName, setName, getIteratorMethod));
 				forLoop.setCond(strategy.getForLoopCond(iteratorName));
-				forLoop.setInc(null);
+				forLoop.setInc(strategy.getForLoopInc(iteratorName));
 
-				forBody = strategy.getForLoopBody(getSetTypeCloned(set).getSetOf(), id, iteratorName);
+				forBody = strategy.getForLoopBody(set, id, iteratorName);
 				forLoop.setBody(forBody);
 
 				nextBlock.getStatements().add(forLoop);
@@ -477,7 +484,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		
@@ -501,7 +508,7 @@ public class TransformationAssistantCG
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
 
 			strategy.setFirstBind(false);
 		}

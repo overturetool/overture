@@ -25,7 +25,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -57,7 +57,9 @@ public class JavaCodeGen
 	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
 	private static final String TEMP_VAR = "TempVar";
 	
-	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class, JavaTempVarPrefixes.class);
+	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
+	
+	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class, varPrefixes);
 	
 	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis, Object tempVarPrefixes)
 	{
@@ -148,11 +150,11 @@ public class JavaCodeGen
 		TempVarNameGen tempVarNameGen = generator.getOoAstInfo().getTempVarNameGen();
 		AssistantManager assistantManager = generator.getOoAstInfo().getAssistantManager();
 		
-		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), tempVarNameGen, assistantManager);
+		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), varPrefixes, tempVarNameGen, assistantManager);
 		
 		OoAstAnalysis ooAstAnalysis = new OoAstAnalysis();
 		
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis, JavaTempVarPrefixes.class));
+		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis, varPrefixes));
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (ClassDeclStatus status : statuses)
@@ -166,14 +168,14 @@ public class JavaCodeGen
 
 				if (status.canBeGenerated())
 				{
-					classCg.apply(new TransformationVisitor(generator.getOoAstInfo(), new JavaTransformationConfig()));
+					classCg.apply(new TransformationVisitor(generator.getOoAstInfo(), new JavaTransformationConfig(), varPrefixes));
 					classCg.apply(mergeVisitor, writer);
 					String code = writer.toString();
 					
 					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 				}
 				
-				generated.add(new GeneratedModule(classCg.getName(), formattedJavaCode, status.getUnsupportedNodes()));
+				generated.add(new GeneratedModule(status.getClassName(), formattedJavaCode, status.getUnsupportedNodes()));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -235,7 +237,10 @@ public class JavaCodeGen
 
 	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
 	{
-		JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+		if(generatedModule != null && generatedModule.canBeGenerated())
+		{
+			JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+		}
 	}
 	
 	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
@@ -254,7 +259,7 @@ public class JavaCodeGen
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, assistantManager));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, assistantManager));
 		
-		String[] generatedTempVarNames = GeneralUtils.concat(IOoAstConstants.GENERATED_TEMP_NAMES, JavaTempVarPrefixes.GENERATED_TEMP_NAMES);
+		String[] generatedTempVarNames = GeneralUtils.concat(IOoAstConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
 		
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, assistantManager));
 		

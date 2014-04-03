@@ -86,7 +86,9 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		if(!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
 		{
-			CodeGenConsole.GetInstance().println("VDM dialect is not supported");
+			CodeGenConsole.GetInstance().println("Project : "
+					+ project.getName()
+					+ " is not supported by the Java code generator. Currently, VDM++ is the only supported dialect.");
 			return null;
 		}
 		

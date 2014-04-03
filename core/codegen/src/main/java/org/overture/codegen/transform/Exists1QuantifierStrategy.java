@@ -23,7 +23,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	{
 		ACounterLocalDeclCG counter = new ACounterLocalDeclCG();
 		counter.setName(resultVarName);
-		counter.setInit(transformationAssistant.getInto().getExpAssistant().consIntLiteral(0));
+		counter.setInit(transformationAssistant.getInfo().getExpAssistant().consIntLiteral(0));
 		
 		return firstBind ? packDecl(counter) : null;
 	}

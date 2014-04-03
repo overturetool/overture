@@ -1,4 +1,4 @@
-package org.overture.codegen.javalib;
+package org.overture.codegen.runtime;
 
 public interface Record extends ValueType
 {
