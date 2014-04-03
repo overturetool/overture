@@ -32,16 +32,9 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 			if (classDef.getSupernames().size() > 1)
 				addViolation(new Violation("Multiple inheritance not supported.", classDef.getLocation(), assistantManager.getLocationAssistant()));
 
-			Set<ILexNameToken> overloadedNameTokens = assistantManager.getDeclAssistant().getOverloadedMethodNames(classDef);
-
-			if (overloadedNameTokens.size() > 0)
-			{
-				for (ILexNameToken name : overloadedNameTokens)
-				{
-					addViolation(new Violation("Overloading of operation and function names is not allowed. Caused by: "
-							+ classDef.getName() + "." + name.getName(), name.getLocation(), assistantManager.getLocationAssistant()));
-				}
-			}
+			//Currently this is allowed
+			//handleOverloadedMethods(classDef);
+			
 		} else if (node instanceof AFuncInstatiationExp)
 		{
 			AFuncInstatiationExp exp = (AFuncInstatiationExp) node;
@@ -56,6 +49,22 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 
 			if (operandsAreIntegerTypes(binBinaryExp))
 				addViolation(new Violation("Expression requires that operands are guaranteed to be integers", binBinaryExp.getLocation(), assistantManager.getLocationAssistant()));
+		}
+	}
+
+	//Currently the call to this is commented out
+	@SuppressWarnings("unused")
+	private void handleOverloadedMethods(AClassClassDefinition classDef)
+	{
+		Set<ILexNameToken> overloadedNameTokens = assistantManager.getDeclAssistant().getOverloadedMethodNames(classDef);
+
+		if (overloadedNameTokens.size() > 0)
+		{
+			for (ILexNameToken name : overloadedNameTokens)
+			{
+				addViolation(new Violation("Overloading of operation and function names is not allowed. Caused by: "
+						+ classDef.getName() + "." + name.getName(), name.getLocation(), assistantManager.getLocationAssistant()));
+			}
 		}
 	}
 
