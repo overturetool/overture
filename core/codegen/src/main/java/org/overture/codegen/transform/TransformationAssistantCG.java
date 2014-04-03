@@ -447,11 +447,12 @@ public class TransformationAssistantCG
 				String iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
 
 				AForLoopStmCG forLoop = new AForLoopStmCG();
-				forLoop.setInit(consIteratorDecl(iteratorTypeName, iteratorName, setTypeName, setName, getIteratorMethod));
+				
+				forLoop.setInit(strategy.getForLoopInit(iteratorName, setTypeName, setName, getIteratorMethod));
 				forLoop.setCond(strategy.getForLoopCond(iteratorName));
-				forLoop.setInc(null);
+				forLoop.setInc(strategy.getForLoopInc(iteratorName));
 
-				forBody = strategy.getForLoopBody(getSetTypeCloned(set).getSetOf(), id, iteratorName);
+				forBody = strategy.getForLoopBody(set, id, iteratorName);
 				forLoop.setBody(forBody);
 
 				nextBlock.getStatements().add(forLoop);

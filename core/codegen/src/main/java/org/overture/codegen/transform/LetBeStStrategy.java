@@ -10,7 +10,6 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.utils.TempVarNameGen;
 
@@ -54,10 +53,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public ABlockStmCG getForLoopBody(PTypeCG setElementType, AIdentifierPatternCG id,
+	public ABlockStmCG getForLoopBody(PExpCG set, AIdentifierPatternCG id,
 			String iteratorName) throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementAssigned(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
+		return transformationAssistant.consForBodyNextElementAssigned(config.iteratorType(), transformationAssistant.getSetTypeCloned(set).getSetOf(), id.getName(), iteratorName, config.nextElement());
 	}
 
 	@Override

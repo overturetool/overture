@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 
 public abstract class QuantifierBaseStrategy extends
 		AbstractIterationStrategy
@@ -24,11 +23,11 @@ public abstract class QuantifierBaseStrategy extends
 	}
 	
 	@Override
-	public ABlockStmCG getForLoopBody(PTypeCG setElementType,
+	public ABlockStmCG getForLoopBody(PExpCG set,
 			AIdentifierPatternCG id, String iteratorName)
 			throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), setElementType, id.getName(), iteratorName, config.nextElement());
+		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), transformationAssistant.getSetTypeCloned(set).getSetOf(), id.getName(), iteratorName, config.nextElement());
 	}
 	
 	@Override
