@@ -586,10 +586,10 @@ public class SClassDefinitionAssistantInterpreter extends
 		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
 	}
 
-	public static boolean isTypeDefinition(SClassDefinition def)
-	{
-		return true;
-	}
+//	public static boolean isTypeDefinition(SClassDefinition def)
+//	{
+//		return true;
+//	}
 
 	public static PStm findStatement(ClassListInterpreter classes, File file,
 			int lineno)

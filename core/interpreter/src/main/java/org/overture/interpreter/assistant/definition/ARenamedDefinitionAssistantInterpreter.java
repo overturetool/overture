@@ -34,9 +34,9 @@ public class ARenamedDefinitionAssistantInterpreter
 //		return renamed;
 //	}
 
-	public static boolean isTypeDefinition(ARenamedDefinition def)
-	{
-		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
-	}
+//	public static boolean isTypeDefinition(ARenamedDefinition def)
+//	{
+//		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+//	}
 
 }

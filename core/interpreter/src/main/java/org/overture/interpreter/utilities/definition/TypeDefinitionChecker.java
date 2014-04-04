@@ -14,6 +14,7 @@ import org.overture.interpreter.assistant.definition.AImportedDefinitionAssistan
 import org.overture.interpreter.assistant.definition.AInheritedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ATypeDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 
 /***************************************
@@ -36,35 +37,43 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean defaultSClassDefinition(SClassDefinition def)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return SClassDefinitionAssistantInterpreter.isTypeDefinition(def);
+		return true;
 	}
 	
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		return AImportedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return AImportedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+		return def.getDef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		return AInheritedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return AInheritedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
+		return def.getSuperdef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		return ARenamedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return ARenamedDefinitionAssistantInterpreter.isTypeDefinition(def);
+		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+		return def.getDef().apply(THIS);
 	}
 	
 	@Override
 	public Boolean caseATypeDefinition(ATypeDefinition def)
 			throws AnalysisException
 	{
-		return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
+		//return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
+		return true;
 	}
 	
 	@Override

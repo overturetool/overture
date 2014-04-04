@@ -503,4 +503,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IAnswer<Boolean> getTypeDefinitionChecker();
 	
+	IAnswer<Boolean> getDefinitionRunTimeChecker();
+	
 }

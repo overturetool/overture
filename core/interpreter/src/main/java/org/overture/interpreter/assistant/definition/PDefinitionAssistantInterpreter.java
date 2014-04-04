@@ -238,22 +238,29 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static boolean isRuntime(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isRuntime(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isRuntime(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isRuntime(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof ATypeDefinition)
-		{
-			return false;
-		} else
+			return def.apply(af.getDefinitionRunTimeChecker());
+		} catch (AnalysisException e)
 		{
 			return true;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isRuntime(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isRuntime(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isRuntime(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return false;
+//		} else
+//		{
+//			return true;
+//		}
 	}
 
 	public static boolean isValueDefinition(PDefinition def)

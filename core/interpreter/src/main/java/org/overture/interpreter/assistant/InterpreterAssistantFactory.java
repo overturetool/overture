@@ -162,6 +162,7 @@ import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
@@ -1017,6 +1018,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<Boolean> getTypeDefinitionChecker()
 	{
 		return new TypeDefinitionChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getDefinitionRunTimeChecker()
+	{
+		return new DefinitionRunTimeChecker(this);
 	}
 
 }
