@@ -87,17 +87,17 @@ public class AEqualsDefinitionAssistantInterpreter
 //		return nvpl;
 //	}
 
-	public static ValueList getValues(AEqualsDefinition d, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(d.getTest(), ctxt);
-
-		if (d.getSetbind() != null)
-		{
-			list.addAll(ASetBindAssistantInterpreter.getValues(d.getSetbind(), ctxt));
-		}
-
-		return list;
-	}
+//	public static ValueList getValues(AEqualsDefinition d, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(d.getTest(), ctxt);
+//
+//		if (d.getSetbind() != null)
+//		{
+//			list.addAll(ASetBindAssistantInterpreter.getValues(d.getSetbind(), ctxt));
+//		}
+//
+//		return list;
+//	}
 
 //	public static PExp findExpression(AEqualsDefinition d, int lineno)
 //	{

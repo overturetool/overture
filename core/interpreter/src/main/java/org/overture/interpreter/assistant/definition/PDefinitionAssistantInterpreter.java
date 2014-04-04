@@ -123,22 +123,29 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	 */
 	public static ValueList getValues(PDefinition def, ObjectContext ctxt)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition) def, ctxt);
-		} else if (def instanceof AEqualsDefinition)
+			return def.apply(af.getValuesDefinitionLocator(),ctxt);
+		} catch (AnalysisException e)
 		{
-			return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition) def, ctxt);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition) def, ctxt);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition) def, ctxt);
-		} else
-		{
-			return new ValueList();
+			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition) def, ctxt);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition) def, ctxt);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition) def, ctxt);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition) def, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
 
 	}
 

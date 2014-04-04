@@ -47,11 +47,11 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 //		}
 //	}
 
-	public static ValueList getValues(AInstanceVariableDefinition d,
-			ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
-	}
+//	public static ValueList getValues(AInstanceVariableDefinition d,
+//			ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
+//	}
 
 	public static PExp findExpression(AInstanceVariableDefinition d, int lineno)
 	{

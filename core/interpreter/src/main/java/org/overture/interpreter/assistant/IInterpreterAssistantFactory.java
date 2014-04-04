@@ -498,4 +498,7 @@ public interface IInterpreterAssistantFactory extends
 	IQuestionAnswer<Context, NameValuePairList> getNamedValueLister();
 	
 	IQuestionAnswer<Integer, PExp> getExpressionFinder();
+	
+	IQuestionAnswer<ObjectContext, ValueList> getValuesDefinitionLocator();
+	
 }

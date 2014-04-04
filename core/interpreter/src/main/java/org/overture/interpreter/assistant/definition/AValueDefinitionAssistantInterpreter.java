@@ -42,10 +42,10 @@ public class AValueDefinitionAssistantInterpreter
 //		return null;
 //	}
 
-	public static ValueList getValues(AValueDefinition d, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
-	}
+//	public static ValueList getValues(AValueDefinition d, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
+//	}
 
 //	public static PExp findExpression(AValueDefinition d, int lineno)
 //	{

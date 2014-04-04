@@ -43,11 +43,11 @@ public class AAssignmentDefinitionAssistantInterpreter /*
 //		}
 //	}
 
-	public static ValueList getValues(AAssignmentDefinition d,
-			ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
-	}
+//	public static ValueList getValues(AAssignmentDefinition d,
+//			ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
+//	}
 
 //	public static PExp findExpression(AAssignmentDefinition d, int lineno)
 //	{
