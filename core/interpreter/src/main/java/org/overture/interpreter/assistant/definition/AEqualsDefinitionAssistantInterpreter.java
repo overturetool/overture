@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
@@ -100,9 +99,9 @@ public class AEqualsDefinitionAssistantInterpreter
 		return list;
 	}
 
-	public static PExp findExpression(AEqualsDefinition d, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(d.getTest(), lineno);
-	}
+//	public static PExp findExpression(AEqualsDefinition d, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(d.getTest(), lineno);
+//	}
 
 }

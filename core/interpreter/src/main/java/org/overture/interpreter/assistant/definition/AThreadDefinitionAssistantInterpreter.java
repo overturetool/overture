@@ -25,10 +25,10 @@ public class AThreadDefinitionAssistantInterpreter extends
 //		return PDefinitionAssistantInterpreter.getNamedValues(d.getOperationDef(), initialContext);
 //	}
 
-	public static PExp findExpression(AThreadDefinition d, int lineno)
-	{
-		return PStmAssistantInterpreter.findExpression(d.getStatement(), lineno);
-	}
+//	public static PExp findExpression(AThreadDefinition d, int lineno)
+//	{
+//		return PStmAssistantInterpreter.findExpression(d.getStatement(), lineno);
+//	}
 
 	public static PStm findStatement(AThreadDefinition d, int lineno)
 	{

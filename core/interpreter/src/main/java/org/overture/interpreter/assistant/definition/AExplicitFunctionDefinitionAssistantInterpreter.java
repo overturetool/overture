@@ -5,10 +5,8 @@ import java.util.List;
 
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.values.FunctionValue;
@@ -117,27 +115,27 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		return rv;
 	}
 
-	public static PExp findExpression(AExplicitFunctionDefinition d, int lineno)
-	{
-		if (d.getPredef() != null)
-		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		if (d.getPostdef() != null)
-		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		return PExpAssistantInterpreter.findExpression(d.getBody(), lineno);
-	}
+//	public static PExp findExpression(AExplicitFunctionDefinition d, int lineno)
+//	{
+//		if (d.getPredef() != null)
+//		{
+//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		if (d.getPostdef() != null)
+//		{
+//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		return PExpAssistantInterpreter.findExpression(d.getBody(), lineno);
+//	}
 
 }

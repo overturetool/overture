@@ -16,9 +16,9 @@ public class APerSyncDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
-	public static PExp findExpression(APerSyncDefinition d, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(d.getGuard(), lineno);
-	}
+//	public static PExp findExpression(APerSyncDefinition d, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(d.getGuard(), lineno);
+//	}
 
 }

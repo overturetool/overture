@@ -52,28 +52,28 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends
 //		return nvl;
 //	}
 
-	public static PExp findExpression(AExplicitOperationDefinition d, int lineno)
-	{
-		if (d.getPredef() != null)
-		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		if (d.getPostdef() != null)
-		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		return PStmAssistantInterpreter.findExpression(d.getBody(), lineno);
-	}
+//	public static PExp findExpression(AExplicitOperationDefinition d, int lineno)
+//	{
+//		if (d.getPredef() != null)
+//		{
+//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		if (d.getPostdef() != null)
+//		{
+//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		return PStmAssistantInterpreter.findExpression(d.getBody(), lineno);
+//	}
 
 	public static PStm findStatement(AExplicitOperationDefinition d, int lineno)
 	{

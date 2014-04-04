@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 
@@ -31,19 +30,19 @@ public class ATypeDefinitionAssistantInterpreter extends
 //		return nvl;
 //	}
 
-	public static PExp findExpression(ATypeDefinition d, int lineno)
-	{
-		if (d.getInvdef() != null)
-		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getInvdef(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		return null;
-	}
+//	public static PExp findExpression(ATypeDefinition d, int lineno)
+//	{
+//		if (d.getInvdef() != null)
+//		{
+//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getInvdef(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		return null;
+//	}
 
 	public static boolean isTypeDefinition(ATypeDefinition def)
 	{

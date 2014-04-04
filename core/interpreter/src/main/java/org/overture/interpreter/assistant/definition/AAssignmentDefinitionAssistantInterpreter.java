@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -50,9 +49,9 @@ public class AAssignmentDefinitionAssistantInterpreter /*
 		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
 	}
 
-	public static PExp findExpression(AAssignmentDefinition d, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(d.getExpression(), lineno);
-	}
+//	public static PExp findExpression(AAssignmentDefinition d, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(d.getExpression(), lineno);
+//	}
 
 }
