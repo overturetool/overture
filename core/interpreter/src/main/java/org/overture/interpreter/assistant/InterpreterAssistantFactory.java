@@ -164,6 +164,7 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
+import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
@@ -1010,6 +1011,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<ObjectContext, ValueList> getValuesDefinitionLocator()
 	{
 		return new ValuesDefinitionLocator(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getTypeDefinitionChecker()
+	{
+		return new TypeDefinitionChecker(this);
 	}
 
 }

@@ -208,25 +208,32 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static boolean isTypeDefinition(PDefinition def)
 	{
-		if (def instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition) def);
-		} else if (def instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition) def);
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition) def);
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition) def);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
-		} else
+			return def.apply(af.getTypeDefinitionChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition) def);
+//		} else if (def instanceof AImportedDefinition)
+//		{
+//			return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition) def);
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition) def);
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition) def);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static boolean isRuntime(PDefinition def)

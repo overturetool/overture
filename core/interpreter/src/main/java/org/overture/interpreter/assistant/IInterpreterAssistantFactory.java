@@ -501,4 +501,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<ObjectContext, ValueList> getValuesDefinitionLocator();
 	
+	IAnswer<Boolean> getTypeDefinitionChecker();
+	
 }
