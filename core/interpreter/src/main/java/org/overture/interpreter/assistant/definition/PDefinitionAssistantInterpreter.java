@@ -292,22 +292,29 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static boolean isInstanceVariable(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isInstanceVariable(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isInstanceVariable(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isInstanceVariable(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return true;
-		} else
+			return def.apply(af.getInstanceVariableChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isInstanceVariable(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isInstanceVariable(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isInstanceVariable(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return true;
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static PStm findStatement(LinkedList<PDefinition> definitions,

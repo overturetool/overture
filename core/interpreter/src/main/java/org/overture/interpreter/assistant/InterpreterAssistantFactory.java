@@ -165,6 +165,7 @@ import org.overture.interpreter.utilities.OldNameCollector;
 import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
+import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
@@ -1031,6 +1032,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<Boolean> getDefintionValueChecker()
 	{
 		return new DefinitionValueChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getInstanceVariableChecker()
+	{
+		return new InstanceVariableChecker(this);
 	}
 
 }

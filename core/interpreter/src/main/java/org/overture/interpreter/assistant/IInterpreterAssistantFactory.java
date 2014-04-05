@@ -507,4 +507,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IAnswer<Boolean> getDefintionValueChecker();
 	
+	IAnswer<Boolean> getInstanceVariableChecker();
+	
 }
