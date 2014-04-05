@@ -265,22 +265,29 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static boolean isValueDefinition(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isValueDefinition(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isValueDefinition(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof AValueDefinition)
-		{
-			return true;
-		} else
+			return def.apply(af.getDefintionValueChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isValueDefinition(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isValueDefinition(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return true;
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static boolean isInstanceVariable(PDefinition def)
