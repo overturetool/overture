@@ -10,13 +10,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
-	/***************************************
-	 * 
-	 * This method checks if a definition can be executed at runtime. 
-	 * 
-	 * @author gkanos
-	 *
-	 ****************************************/
+/***************************************
+ * 
+ * This method checks if a definition can be executed at runtime. 
+ * 
+ * @author gkanos
+ *
+ ****************************************/
 public class DefinitionRunTimeChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;

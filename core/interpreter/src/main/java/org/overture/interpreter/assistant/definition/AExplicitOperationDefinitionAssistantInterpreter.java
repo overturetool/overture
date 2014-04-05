@@ -1,10 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 
 public class AExplicitOperationDefinitionAssistantInterpreter extends
@@ -75,9 +71,9 @@ public class AExplicitOperationDefinitionAssistantInterpreter extends
 //		return PStmAssistantInterpreter.findExpression(d.getBody(), lineno);
 //	}
 
-	public static PStm findStatement(AExplicitOperationDefinition d, int lineno)
-	{
-		return PStmAssistantInterpreter.findStatement(d.getBody(), lineno);
-	}
+//	public static PStm findStatement(AExplicitOperationDefinition d, int lineno)
+//	{
+//		return PStmAssistantInterpreter.findStatement(d.getBody(), lineno);
+//	}
 
 }

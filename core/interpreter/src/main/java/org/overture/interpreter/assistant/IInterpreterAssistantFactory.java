@@ -8,6 +8,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
@@ -508,5 +509,7 @@ public interface IInterpreterAssistantFactory extends
 	IAnswer<Boolean> getDefintionValueChecker();
 	
 	IAnswer<Boolean> getInstanceVariableChecker();
+	
+	IQuestionAnswer<Integer, PStm> getStatementFinder();
 	
 }

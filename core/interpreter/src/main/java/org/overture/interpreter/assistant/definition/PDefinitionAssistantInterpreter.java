@@ -335,22 +335,30 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	private static PStm findStatement(PDefinition def, int lineno)
 	{
-		if (def instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition) def, lineno);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition) def, lineno);
-		} else
+			return def.apply(af.getStatementFinder(),lineno);
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+		
+//		if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition) def, lineno);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition) def, lineno);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 }
