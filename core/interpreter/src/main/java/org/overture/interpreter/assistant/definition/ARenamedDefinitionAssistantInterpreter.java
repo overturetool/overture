@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class ARenamedDefinitionAssistantInterpreter

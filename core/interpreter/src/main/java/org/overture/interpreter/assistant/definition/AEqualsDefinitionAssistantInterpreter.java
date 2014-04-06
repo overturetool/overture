@@ -1,11 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.values.ValueList;
 
 public class AEqualsDefinitionAssistantInterpreter
 

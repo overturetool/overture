@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class AInheritedDefinitionAssistantInterpreter

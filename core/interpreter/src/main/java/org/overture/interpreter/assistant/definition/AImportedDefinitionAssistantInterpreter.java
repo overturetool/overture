@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class AImportedDefinitionAssistantInterpreter 
@@ -31,9 +30,9 @@ public class AImportedDefinitionAssistantInterpreter
 //		return renamed;
 //	}
 
-	public static boolean isTypeDefinition(AImportedDefinition def)
-	{
-		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
-	}
+//	public static boolean isTypeDefinition(AImportedDefinition def)
+//	{
+//		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
+//	}
 
 }

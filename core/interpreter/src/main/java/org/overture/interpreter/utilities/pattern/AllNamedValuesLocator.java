@@ -47,7 +47,8 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 
-public class AllNamedValuesLocator extends QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>>
+public class AllNamedValuesLocator 
+	extends QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>>
 {
 	public static class Newquestion
 	{
@@ -204,6 +205,7 @@ public class AllNamedValuesLocator extends QuestionAnswerAdaptor<AllNamedValuesL
 		assert false : "Should not happen!";
 		return null;
 	}
+	
 	@Override
 	public List<NameValuePairList> createNewReturnValue(INode node,
 			Newquestion question) throws AnalysisException

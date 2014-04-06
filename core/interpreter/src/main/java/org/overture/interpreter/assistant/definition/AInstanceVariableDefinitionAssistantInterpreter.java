@@ -1,11 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
 
 public class AInstanceVariableDefinitionAssistantInterpreter extends
@@ -53,9 +48,9 @@ public class AInstanceVariableDefinitionAssistantInterpreter extends
 //		return PExpAssistantInterpreter.getValues(d.getExpression(), ctxt);
 //	}
 
-	public static PExp findExpression(AInstanceVariableDefinition d, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(d.getExpression(), lineno);
-	}
+//	public static PExp findExpression(AInstanceVariableDefinition d, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(d.getExpression(), lineno);
+//	}
 
 }
