@@ -390,11 +390,11 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
-		consIterationBlock(outerBlock, ids, set, tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
+		consIterationBlock(outerBlock, ids, set, tempGen, strategy);
 		
 		return outerBlock;
 	}
@@ -416,7 +416,7 @@ public class TransformationAssistantCG
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
-			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName)
+			TempVarNameGen tempGen, AbstractIterationStrategy strategy)
 			throws AnalysisException
 	{
 		// Variable names
@@ -480,7 +480,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, AbstractIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		
@@ -504,7 +504,7 @@ public class TransformationAssistantCG
 			strategy.setLastBind(i == multipleSetBinds.size() - 1);
 
 			ASetMultipleBindCG mb = multipleSetBinds.get(i);
-			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy, iteratorTypeName, getIteratorMethod, setTypeName);
+			nextMultiBindBlock = consIterationBlock(nextMultiBindBlock, mb.getPatterns(), mb.getSet(), tempGen, strategy);
 
 			strategy.setFirstBind(false);
 		}
